@@ -1,0 +1,88 @@
+ <!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>Replacer</title>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+
+	<style type="text/css">
+	#article-content {
+		width: 80%;
+		margin-left: auto;
+		margin-right: auto;
+		border: 2px solid black;
+		font-family: monospace;
+		white-space: pre-wrap;
+		padding: 1em;
+	}
+	</style>
+
+</head>
+
+<body>
+
+<input id="button-get" type="button" value="Get Content">
+
+<div id="article-content">
+</div>
+
+<input id="button-append" type="button" value="Append" />
+
+<input id="button-commit" type="button" value="Commit" />
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+	getToken();
+	$('#article-content').html('This is Hello World by JQuery');
+
+	$('#button-get').click(function() {
+		getPageContent('Usuario_discusión:Benjavalero/Taller', apiCallback);
+	});
+
+	$("#button-append").click(function() {
+		$('#article-content').text($('#article-content').text() + 'X');
+	});
+
+	$('#button-commit').click(function() {
+		postPageContent('Usuario_discusión:Benjavalero/Taller', $('#article-content').text(), function() {
+			alert('Article content updated');
+		});
+	});
+});
+
+var editToken;
+
+function getToken() {
+	$.ajax({
+		url: 'https://es.wikipedia.org/w/api.php',
+		//type: 'POST',
+		dataType: 'json',
+		data: {
+			action: 'query',
+			meta: 'tokens',
+			format: 'json'
+		}
+	}).done(function(response) {
+		editToken = response.query.tokens.csrftoken;
+		alert('Edit token: ' + editToken);
+	}).fail(function(data) {
+		alert('Error getting edit token');
+	});
+};
+
+function apiCallback(response) {
+	var pages = response.query.pages;
+	var alumno;
+	for (var pageid in pages) {
+		var content = pages[pageid].revisions[0]['*'];
+		$('#article-content').text(content);
+	}
+};
+
+</script>
+
+</body>
+
+</html>
