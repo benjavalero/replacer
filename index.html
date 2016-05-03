@@ -6,48 +6,63 @@
 
 	<title>Replacer</title>
 
-	 <!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
-	<!-- jQuery library -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js" />
-
-	<!-- Latest compiled JavaScript -->
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" />
+	<script type="text/javascript" src="js/wikipedia-requests.js"></script>
 
 	<style type="text/css">
-	#article-content {
-		width: 80%;
-		margin-left: auto;
-		margin-right: auto;
-		border: 2px solid black;
+	.pre {
 		font-family: monospace;
 		white-space: pre-wrap;
+	}
+
+	#article-content {
+		border: 2px solid black;
 		padding: 1em;
 	}
-	</style>
 
+	#debug-logs {
+		height: 20ex;
+		overflow: scroll;
+		background-color: lightgray;
+		width: 100%;
+	}
+	</style>
 </head>
 
 <body class="container-fluid">
 
-<input id="button-get" type="button" value="Get Content">
+<h1>Replacer</h1>
 
-<div id="article-content">
+<p>The is a <strong>beta</strong> tool to fix the Spanish Wikipedia, mainly replacing misspellings by their correct form.</p>
+
+<form class="form-inline">
+<div class="form-group">
+	<label for="pageTitle">Page Title:</label>
+	<input type="text" class="form-control" id="pageTitle" value="Usuario:Benjavalero/Taller" size="100" />
+	<input id="button-get" type="button" value="Load Page Content">
 </div>
+</form>
 
-<input id="button-append" type="button" value="Append" />
+<div id="debug-logs" class="pre"></div>
 
-<input id="button-commit" type="button" value="Commit" />
+<div id="article-content" class="pre">To contain the content of a Wikipedia page...</div>
+
+<form class="form-inline">
+<div class="form-group">
+	<input id="button-append" type="button" value="Append" />
+	<input id="button-commit" type="button" value="Commit" />
+</div>
+</form>
 
 <script type="text/javascript">
-
 $(document).ready(function() {
-	getToken();
-	$('#article-content').html('This is Hello World by JQuery');
+	//postLogin('benjavalero', 'min2979');
 
 	$('#button-get').click(function() {
-		getPageContent('Usuario_discusión:Benjavalero/Taller', apiCallback);
+		getPageContent($('#pageTitle').val(), apiCallback);
 	});
 
 	$("#button-append").click(function() {
@@ -55,31 +70,12 @@ $(document).ready(function() {
 	});
 
 	$('#button-commit').click(function() {
-		postPageContent('Usuario_discusión:Benjavalero/Taller', $('#article-content').text(), function() {
-			alert('Article content updated');
+		getEditToken(pageTitle, function(token) {
+			log('Token from callback: ' + token);
+			postPageContent(pageTitle, $('#article-content').text(), token, null);
 		});
 	});
 });
-
-var editToken;
-
-function getToken() {
-	$.ajax({
-		url: 'https://es.wikipedia.org/w/api.php',
-		//type: 'POST',
-		dataType: 'json',
-		data: {
-			action: 'query',
-			meta: 'tokens',
-			format: 'json'
-		}
-	}).done(function(response) {
-		editToken = response.query.tokens.csrftoken;
-		alert('Edit token: ' + editToken);
-	}).fail(function(data) {
-		alert('Error getting edit token');
-	});
-};
 
 function apiCallback(response) {
 	var pages = response.query.pages;
@@ -88,6 +84,10 @@ function apiCallback(response) {
 		var content = pages[pageid].revisions[0]['*'];
 		$('#article-content').text(content);
 	}
+};
+
+function log(text) {
+	$('#debug-logs').text($('#debug-logs').text() + text + '\n');
 };
 
 </script>

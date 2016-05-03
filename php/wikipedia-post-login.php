@@ -1,19 +1,17 @@
 <?php
 /**
- * POST page to Spanish Wikipedia
+ * POST login to Spanish Wikipedia
  * Parameters:
- *    title : Title of the page to update
- *    text  : Text of the page to update
- *    token : Edit token
+ *    name : User name
+ *    password  : User password
  */
 
 // POST parameters
-$title = htmlspecialchars($_GET["title"]);
-$text = htmlspecialchars($_GET["text"]);
-$token = htmlspecialchars($_GET["token"]);
+$lgname = htmlspecialchars($_GET["name"]);
+$lgpswd = htmlspecialchars($_GET["password"]);
 
 $url = "https://es.wikipedia.org/w/api.php";
-$data = "action=edit&format=json&title=$title&text=$text&token=$token";
+$data = "action=login&format=json&lgname=$lgname&lgpassword=$lgpswd";
 
 // JSON encode data
 // $data_string = urlencode($data);
