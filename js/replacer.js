@@ -44,18 +44,26 @@ function parseContentJson(response) {
 		displayedContent = rawContent;
 
 		displayedContent = highlightMisspellings(displayedContent);
-		$('#article-content').html(displayedContent);
+		setDisplayedContent(displayedContent);
+
+		displayedContent = highlightSyntax(displayedContent);
+		setDisplayedContent(displayedContent);
 	}
 }
 
 function highlightMisspellings(content) {
 	var count = 1;
 	for (var [miss, fix] of misspellingsMap) {
-		var re = new RegExp('\\b(' + miss + ')\\b', 'gi'); // Global + Case Insensitive
+		var isCaseSensitive = fix[1];
+		var flags = 'g';
+		if (!isCaseSensitive) {
+			flags += 'i';
+		}
+		var re = new RegExp('\\b(' + miss + ')\\b', flags);
 		while ((reMatch = re.exec(content)) != null) {
 			// Apply case-insensitive fix if necessary
 			var missFix = fix[0];
-			if (!fix[1] && isUpperCase(reMatch[0][0])) {
+			if (!isCaseSensitive && isUpperCase(reMatch[0][0])) {
 				missFix = setFirstUpperCase(missFix);
 			}
 			var missMatch = {word : reMatch[0], position : reMatch.index, fix : missFix, fixed: false};
@@ -66,9 +74,7 @@ function highlightMisspellings(content) {
 	// Recorro inversamente el array de matches y sustituyo por inputs
 	for (var idx = missMatches.length - 1; idx >= 0; idx--) {
 		var missMatch = missMatches[idx];
-		var replacement = '<input id="miss-' + idx + '" type="button" '
-			+ 'title="' + missMatch.fix + '" value="' + missMatch.word + '" class="miss" '
-			+ 'onclick="turnMisspelling(' + idx + ')" />';
+		var replacement = '<span id="miss-' + idx + '" title="' + missMatch.fix + '" class="miss">' + missMatch.word + '</span>';
 		content = replaceAt(content, missMatch.position, missMatch.word, replacement);
 	}
 
@@ -76,16 +82,17 @@ function highlightMisspellings(content) {
 }
 
 function turnMisspelling(missId) {
-	var missMatch = missMatches[missId];
+	var idx = missId.split('-')[1];
+	var missMatch = missMatches[idx];
 	if (missMatch.fixed) {
-		$('#miss-' + missId).removeClass('fix');
-		$('#miss-' + missId).addClass('miss');
-		$('#miss-' + missId).val(missMatch.word);
+		$('#' + missId).removeClass('fix');
+		$('#' + missId).addClass('miss');
+		$('#' + missId).val(missMatch.word);
 		missMatch.fixed = false;
 	} else {
-		$('#miss-' + missId).removeClass('miss');
-		$('#miss-' + missId).addClass('fix');
-		$('#miss-' + missId).val(missMatch.fix);
+		$('#' + missId).removeClass('miss');
+		$('#' + missId).addClass('fix');
+		$('#' + missId).val(missMatch.fix);
 		missMatch.fixed = true;
 	}
 }
@@ -102,4 +109,26 @@ function postContent() {
 
 	var decodedContent = decodeHtml(fixedRawContent);
 	$('#content-to-post').text(decodedContent);
+}
+
+function highlightSyntax(content) {
+	var reComment = new RegExp('(&lt;!--.+?--&gt;)', 'g');
+	content = content.replace(reComment, '<span class="comment">$1</span>');
+
+	var reLink = new RegExp('(\\[\\[.+?\\]\\])', 'g');
+	content = content.replace(reLink, '<span class="link">$1</span>');
+
+	var reHeader = new RegExp('(\\={2,}.+?\\={2,})', 'g');
+	content = content.replace(reHeader, '<span class="header">$1</span>');
+
+	return content;
+}
+
+function setDisplayedContent(content) {
+	$('#article-content').html(content);
+
+	// Add event to the misspelling buttons
+	$('.miss').click(function() {
+		turnMisspelling(this.id);
+	});
 }

@@ -12,16 +12,16 @@
 	color: green;
 }
 
-/*
-#article-content {
-	border: 2px solid black;
-	padding: 1em;
+/* SYNTAX */
+
+.comment {
+	color: gray;
 }
 
-#debug-logs {
-	height: 20ex;
-	overflow: scroll;
-	background-color: lightgray;
-	width: 100%;
+.link {
+	background-color: lightblue;
 }
-*/
+
+.header {
+	font-weight: bold;
+}
