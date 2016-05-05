@@ -1,13 +1,13 @@
 function getPageContent(pageTitle, callback) {
 	log('Getting page content of ' + pageTitle + '...');
 	$.ajax({
-		url: 'php/wikipedia-get-page.php',
+		url:  baseUrl + 'php/wikipedia-get-page.php',
 		dataType: 'json',
 		data: {
 			title: pageTitle
 		}
 	}).done(function(response) {
-		log('Content retrieved');
+		log('Page content retrieved of ' + pageTitle);
 		callback(response);
 	}).fail(function(response) {
 		log('Error on retrieving page content from Wikipedia:\n', response);
@@ -17,7 +17,7 @@ function getPageContent(pageTitle, callback) {
 function postPageContent(pageTitle, pageContent, editToken, callback) {
 	log('Posting page content of ' + pageTitle + '...');
 	$.ajax({
-		url: 'php/wikipedia-post-page.php',
+		url: baseUrl + 'php/wikipedia-post-page.php',
 		data: {
 			title: pageTitle,
 			text: pageContent,
@@ -34,7 +34,7 @@ function postPageContent(pageTitle, pageContent, editToken, callback) {
 function getEditToken(pageTitle, callback) {
         log('Getting edit token...');
         $.ajax({
-                url: 'php/wikipedia-get-token.php',
+                url: baseUrl + 'php/wikipedia-get-token.php',
 		data: {
 			title: pageTitle
 		},
@@ -52,7 +52,7 @@ function getEditToken(pageTitle, callback) {
 function postLogin(userName, userPswd, callback) {
         log('Posting login...');
         $.ajax({
-                url: 'php/wikipedia-post-login.php',
+                url: baseUrl + 'php/wikipedia-post-login.php',
                 data: {
                         name: userName,
                         password: userPswd

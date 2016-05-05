@@ -1,0 +1,27 @@
+.pre {
+	font-family: monospace;
+	white-space: pre-wrap;
+	border: 1px black dashed;
+}
+
+.miss {
+	color: red;
+}
+
+.fix {
+	color: green;
+}
+
+/*
+#article-content {
+	border: 2px solid black;
+	padding: 1em;
+}
+
+#debug-logs {
+	height: 20ex;
+	overflow: scroll;
+	background-color: lightgray;
+	width: 100%;
+}
+*/
