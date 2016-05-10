@@ -74,7 +74,8 @@ function highlightMisspellings(content) {
 	// Recorro inversamente el array de matches y sustituyo por inputs
 	for (var idx = missMatches.length - 1; idx >= 0; idx--) {
 		var missMatch = missMatches[idx];
-		var replacement = '<span id="miss-' + idx + '" title="' + missMatch.fix + '" class="miss">' + missMatch.word + '</span>';
+		var replacement = '<button id="miss-' + idx + '" title="' + missMatch.fix
+			+ '" class="miss btn btn-danger" type="button">' + missMatch.word + '</button>';
 		content = replaceAt(content, missMatch.position, missMatch.word, replacement);
 	}
 
@@ -85,14 +86,14 @@ function turnMisspelling(missId) {
 	var idx = missId.split('-')[1];
 	var missMatch = missMatches[idx];
 	if (missMatch.fixed) {
-		$('#' + missId).removeClass('fix');
-		$('#' + missId).addClass('miss');
-		$('#' + missId).val(missMatch.word);
+		$('#' + missId).removeClass('btn-success');
+		$('#' + missId).addClass('btn-danger');
+		$('#' + missId).html(missMatch.word);
 		missMatch.fixed = false;
 	} else {
-		$('#' + missId).removeClass('miss');
-		$('#' + missId).addClass('fix');
-		$('#' + missId).val(missMatch.fix);
+		$('#' + missId).removeClass('btn-danger');
+		$('#' + missId).addClass('btn-success');
+		$('#' + missId).html(missMatch.fix);
 		missMatch.fixed = true;
 	}
 }

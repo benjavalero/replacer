@@ -1,42 +1,54 @@
- <!DOCTYPE html>
-<html>
-<head>
-	<meta charset="UTF-8" />
-	<title>ReplacerTool</title>
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Replacer Tool</title>
 
-	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" />
-	<link href="css/replacer.css" rel="stylesheet" />
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 
-	<script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
-<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
-	<script src="js/string-utils.js"></script>
-	<script src="js/replacer.js"></script>
-	<script src="js/wikipedia-requests.js"></script>
-</head>
+    <link href="css/replacer.css" rel="stylesheet">
 
-<body>
-<h1>ReplacerTool</h1>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <h1>ReplacerTool</h1>
 
-<p>The is a <strong>beta</strong> tool to fix the Spanish Wikipedia, mainly replacing misspellings by their correct form.</p>
+      <p>Esta es una herramienta aún en fase <strong>beta</strong> para corregir los errores ortográficos más comunes en la Wikipedia en español.</p>
 
-<div>
-	<label for="pageTitle">Page Title:</label>
-	<input id="pageTitle" type="text" value="Usuario:Benjavalero/Taller" />
-	<input id="button-get" type="button" value="Load Page Content" />
-</div>
+      <div class="form-group">
+        <label for="pageTitle">Artículo:</label>
+        <input id="pageTitle" class="form-control" type="text" value="Usuario:Benjavalero/Taller" />
+        <button id="button-get" class="btn btn-primary" type="button">Cargar contenido</button>
+      </div>
 
-<div id="debug-logs" class="pre">
-</div>
+      <div id="debug-logs" class="pre"></div>
 
-<div id="article-content" class="pre">
-</div>
+      <div id="article-content" class="pre"></div>
 
-<div>
-	<input id="button-commit" type="button" value="Commit" />
-</div>
+      <div>
+        <button id="button-commit" class="btn btn-primary" type="button">Guardar cambios</button>
+      </div>
 
-<div id="content-to-post" class="pre">
-</div>
+      <div id="content-to-post" class="pre"></div>
+    </div>
 
-</body>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/string-utils.js"></script>
+    <script src="js/wikipedia-requests.js"></script>
+    <script src="js/replacer.js"></script>
+  </body>
 </html>
