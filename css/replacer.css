@@ -1,7 +1,10 @@
 .pre {
 	font-family: monospace;
-	font-size: larger;
 	white-space: pre-wrap;
+}
+
+.pre, .btn {
+	font-size: 16px;
 }
 
 /* SYNTAX */

@@ -75,7 +75,8 @@ function highlightMisspellings(content) {
 	for (var idx = missMatches.length - 1; idx >= 0; idx--) {
 		var missMatch = missMatches[idx];
 		var replacement = '<button id="miss-' + idx + '" title="' + missMatch.fix
-			+ '" class="miss btn btn-danger" type="button">' + missMatch.word + '</button>';
+			+ '" data-toggle="tooltip" data-placement="top" class="miss btn btn-danger" type="button">'
+			+ missMatch.word + '</button>';
 		content = replaceAt(content, missMatch.position, missMatch.word, replacement);
 	}
 
@@ -131,5 +132,9 @@ function setDisplayedContent(content) {
 	// Add event to the misspelling buttons
 	$('.miss').click(function() {
 		turnMisspelling(this.id);
+	});
+
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip()
 	});
 }
