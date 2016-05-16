@@ -1,12 +1,12 @@
 function getMisspelledPages(callback) {
-	log('Getting pages with misspellings...');
+	showAlert('Getting pages with misspellings...');
 	$.ajax({
 		url:  baseUrl + 'php/db-select-replacement.php',
 		dataType: 'json',
 		data: {
 		}
 	}).done(function(response) {
-		log('Misspelled pages retrieved');
+		closeAlert();
 		callback(response);
 	}).fail(function(response) {
 		log('Error on retrieving misspelled pages content:\n', response);
@@ -14,7 +14,7 @@ function getMisspelledPages(callback) {
 };
 
 function getPageMisspellings(pageTitle, callback) {
-	log('Getting misspellings of: ' + pageTitle + '...');
+	showAlert('Getting misspellings of: ' + pageTitle + '...');
 	$.ajax({
 		url:  baseUrl + 'php/db-select-misspellings.php',
 		dataType: 'json',
@@ -22,7 +22,7 @@ function getPageMisspellings(pageTitle, callback) {
 			title : pageTitle
 		}
 	}).done(function(response) {
-		log('Page misspellings retrieved');
+		closeAlert();
 		callback(response);
 	}).fail(function(response) {
 		log('Error on retrieving page misspellings:\n', response);

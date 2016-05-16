@@ -25,18 +25,16 @@
 
       <p>Esta es una herramienta aún en fase <strong>beta</strong> para corregir los errores ortográficos más comunes en la Wikipedia en español.</p>
 
-      <div class="form-group">
+      <form class="form-group form-inline">
         <label for="pageTitle">Artículo:</label>
-        <input id="pageTitle" class="form-control" type="text" value="Usuario:Benjavalero/Taller" />
-        <button id="button-get" class="btn btn-primary" type="button">Cargar contenido</button>
-      </div>
-
-      <div id="debug-logs" class="pre"></div>
+        <input id="pageTitle" class="form-control" type="text" size="100" readonly value="Usuario:Benjavalero/Taller" />
+        <button id="button-get" class="btn btn-primary hidden" type="button">Cargar contenido</button>
+      </form>
 
       <div id="article-content" class="pre"></div>
 
       <div>
-        <button id="button-commit" class="btn btn-primary" type="button">Guardar cambios</button>
+        <button id="button-commit" class="btn btn-primary collapse" type="button">Guardar cambios</button>
       </div>
 
       <div id="content-to-post" class="pre"></div>
