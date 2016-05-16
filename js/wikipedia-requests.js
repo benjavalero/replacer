@@ -4,7 +4,7 @@ function getPageContent(pageTitle, callback) {
 		url:  baseUrl + 'php/wikipedia-get-page.php',
 		dataType: 'json',
 		data: {
-			title: pageTitle
+			title: pageTitle.replace(' ', '_')
 		}
 	}).done(function(response) {
 		log('Page content retrieved of ' + pageTitle);

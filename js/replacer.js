@@ -1,14 +1,9 @@
 var baseUrl = 'https://tools.wmflabs.org/replacer/'; // PROD: ./
 
-var misspelledPages = new Array();
+var misspelledPages;
 var rawContent;
 var displayedContent;
-
-// Key: misspelling
-// Value: [fix, case-sensitive]
-var misspellingsMap = new Map();
-misspellingsMap.set('pais', ['país', false]);
-misspellingsMap.set('Maria', ['María', true]);
+var misspellings;
 
 var missMatches = new Array();
 
@@ -24,7 +19,7 @@ $(document).ready(function() {
 	getMisspelledPages(function(response) {
 		misspelledPages = response.titles;
 		$('#pageTitle').val(misspelledPages.pop());
-                getPageContent($('#pageTitle').val(), parseContentJson);
+			getPageContent($('#pageTitle').val(), parseContentJson);
 	});
 
 /*
@@ -46,30 +41,36 @@ function log(logLine) {
 function parseContentJson(response) {
 	var pages = response.query.pages;
 	for (var pageId in pages) {
+		var pageTitle = pages[pageId].title;
 		var content = pages[pageId].revisions[0]['*'];
 		rawContent = encodeHtml(content);
 		displayedContent = rawContent;
-
-		displayedContent = highlightMisspellings(displayedContent);
 		setDisplayedContent(displayedContent);
 
-		displayedContent = highlightSyntax(displayedContent);
-		setDisplayedContent(displayedContent);
+		getPageMisspellings(pageTitle, function(response) {
+			misspellings = response.misspellings;
+
+			displayedContent = highlightMisspellings(displayedContent);
+			setDisplayedContent(displayedContent);
+
+			displayedContent = highlightSyntax(displayedContent);
+			setDisplayedContent(displayedContent);
+		});
 	}
 }
 
 function highlightMisspellings(content) {
 	var count = 1;
-	for (var [miss, fix] of misspellingsMap) {
-		var isCaseSensitive = fix[1];
+	for (var miss of misspellings) {
+		var isCaseSensitive = (miss.cs == 1);
 		var flags = 'g';
 		if (!isCaseSensitive) {
 			flags += 'i';
 		}
-		var re = new RegExp('\\b(' + miss + ')\\b', flags);
+		var re = new RegExp('\\b(' + miss.word + ')\\b', flags);
 		while ((reMatch = re.exec(content)) != null) {
 			// Apply case-insensitive fix if necessary
-			var missFix = fix[0];
+			var missFix = miss.suggestion;
 			if (!isCaseSensitive && isUpperCase(reMatch[0][0])) {
 				missFix = setFirstUpperCase(missFix);
 			}

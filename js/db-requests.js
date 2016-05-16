@@ -1,5 +1,5 @@
 function getMisspelledPages(callback) {
-	log('Getting pages with more misspellings...');
+	log('Getting pages with misspellings...');
 	$.ajax({
 		url:  baseUrl + 'php/db-select-replacement.php',
 		dataType: 'json',
@@ -12,6 +12,23 @@ function getMisspelledPages(callback) {
 		log('Error on retrieving misspelled pages content:\n', response);
 	});
 };
+
+function getPageMisspellings(pageTitle, callback) {
+	log('Getting misspellings of: ' + pageTitle + '...');
+	$.ajax({
+		url:  baseUrl + 'php/db-select-misspellings.php',
+		dataType: 'json',
+		data: {
+			title : pageTitle
+		}
+	}).done(function(response) {
+		log('Page misspellings retrieved');
+		callback(response);
+	}).fail(function(response) {
+		log('Error on retrieving page misspellings:\n', response);
+	});
+}
+
 /*
 function postPageContent(pageTitle, pageContent, editToken, callback) {
 	log('Posting page content of ' + pageTitle + '...');
