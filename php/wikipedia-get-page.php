@@ -6,7 +6,7 @@
  */
 
 // GET parameters
-$title = htmlspecialchars($_GET["title"]);
+$title = $_GET["title"];
 
 // Set up the curl resource
 $ch = curl_init();

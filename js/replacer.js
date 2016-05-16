@@ -1,5 +1,6 @@
 var baseUrl = 'https://tools.wmflabs.org/replacer/'; // PROD: ./
 
+var misspelledPages = new Array();
 var rawContent;
 var displayedContent;
 
@@ -18,6 +19,12 @@ $(document).ready(function() {
 
 	$('#button-commit').click(function() {
 		postContent();
+	});
+
+	getMisspelledPages(function(response) {
+		misspelledPages = response.titles;
+		$('#pageTitle').val(misspelledPages.pop());
+                getPageContent($('#pageTitle').val(), parseContentJson);
 	});
 
 /*
