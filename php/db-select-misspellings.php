@@ -13,18 +13,24 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT title, COUNT(*) FROM replacement WHERE dtfixed = 0 GROUP BY title ORDER BY COUNT(*) ASC LIMIT 10";
+$title = $_GET["title"];
+$sql = "SELECT m.word, m.cs, m.suggestion FROM replacement r, misspelling m WHERE r.word = m.word AND r.title = '$title'
+";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
-    $title_array = array();
+    $misspelling_array = array();
     while($row = $result->fetch_assoc()) {
-        array_push($title_array, utf8_encode($row["title"]));
+        $misspelling = array(
+            "word" => utf8_encode($row["word"]),
+            "cs" => $row["cs"],
+            "suggestion" => utf8_encode($row["suggestion"]));
+        array_push($misspelling_array, $misspelling);
     }
 }
 
-header("Content-type: application/json");
+header("Content-type: application/json");  
 
-$data = array("titles" => $title_array);
+$data = array("misspellings" => $misspelling_array);
 echo json_encode($data, JSON_UNESCAPED_UNICODE);
 
 $conn->close();
