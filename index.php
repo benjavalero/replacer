@@ -53,7 +53,7 @@ $errorCode = 200;
 // ****************** END CONFIGURATION ******************
 
 // Setup the session cookie
-session_name( 'OAuthHelloWorld' );
+session_name( 'ReplacerTool' );
 $params = session_get_cookie_params();
 session_set_cookie_params(
 	$params['lifetime'],
@@ -102,10 +102,13 @@ switch ( isset( $_GET['action'] ) ? $_GET['action'] : '' ) {
 		doAuthorizationRedirect();
 		return;
 
+	case 'get':
+		getPageContent();
+		return;
+
 	case 'edit':
 		doEdit();
-		break;
-
+		return;
 }
 
 
@@ -339,7 +342,10 @@ function doApiQuery( $post, &$ch = null ) {
 		echo 'Curl error: ' . htmlspecialchars( curl_error( $ch ) );
 		exit(0);
 	}
-	$ret = json_decode( $data );
+
+//	$ret = json_decode( $data );
+	$ret = $data;
+
 	if ( $ret === null ) {
 		header( "HTTP/1.1 $errorCode Internal Server Error" );
 		echo 'Unparsable API response: <pre>' . htmlspecialchars( $data ) . '</pre>';
@@ -349,10 +355,31 @@ function doApiQuery( $post, &$ch = null ) {
 }
 
 /**
+ * Get the content of a Wikipedia page 
+ */
+function getPageContent() {
+        $ch = null;
+
+        // First fetch the username
+        $res = doApiQuery( array(
+                'format' => 'json',
+                'action' => 'query',
+                'prop' => 'revisions',
+		'rvprop' => 'content',
+		'titles' => $_GET["title"]
+        ), $ch );
+
+	header("Content-type: application/json");
+	echo $res;                                                              
+}
+
+
+
+/**
  * Perform a generic edit
  * @return void
  */
-function getToken() {
+function doEdit() {
 	global $mwOAuthIW;
 
 	$ch = null;
@@ -395,7 +422,7 @@ function getToken() {
 		exit(0);
 	}
 	$token = $res->tokens->edittoken;
-/*
+
 	// Now perform the edit
 	$res = doApiQuery( array(
 		'format' => 'json',
@@ -404,13 +431,79 @@ function getToken() {
 		'section' => 'new',
 		'sectiontitle' => 'Hello, world',
 		'text' => 'This message was posted using the OAuth Hello World application, and should be seen as coming from yourself. To revoke this application\'s access to your account, visit [[:' . $mwOAuthIW . ':Special:OAuthManageMyGrants]]. ~~~~',
-		'summary' => '\/* Hello, world *\/ Hello from OAuth!',
+		'summary' => '/* Hello, world */ Hello from OAuth!',
 		'watchlist' => 'nochange',
 		'token' => $token,
 	), $ch );
 
 	echo 'API edit result: <pre>' . htmlspecialchars( var_export( $res, 1 ) ) . '</pre>';
 	echo '<hr>';
-*/
-	echo $token;
 }
+
+// ******************** WEBPAGE ********************
+
+?>
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Replacer Tool</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="css/replacer.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <h1>ReplacerTool</h1>
+
+      <p>Esta es una herramienta aún en fase <strong>beta</strong> para corregir los errores ortográficos más comunes en
+ la Wikipedia en español.</p>
+
+      <input id="tokenKey" type="hidden" value="<?php echo $gTokenKey; ?>" />
+      <?php if ( !$gTokenKey ) { ?>
+      <p>Haga clic <a href="index.php?action=authorize">aquí</a> para autenticarse.</p>
+      <?php } else { ?>
+
+      <form class="form-group form-inline">
+        <label for="pageTitle">Artículo:</label>
+        <input id="pageTitle" class="form-control" type="text" size="100" readonly value="" />
+<!--        <button id="button-get" class="btn btn-primary" type="button">Cargar contenido</button> -->
+      </form>
+
+      <div id="article-content" class="pre"></div>
+
+      <div>
+        <button id="button-commit" class="btn btn-primary collapse" type="button">Mostrar cambios</button>
+      </div>
+
+      <!-- Esto es solo para depuración -->
+      <div id="content-to-post" class="pre"></div>
+
+      <?php } ?>
+
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+<!--
+    <script src="js/db-requests.js"></script>
+    <script src="js/wikipedia-requests.js"></script>
+-->
+    <script src="js/replacer.js"></script>
+  </body>
+</html>

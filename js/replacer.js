@@ -1,30 +1,68 @@
-var baseUrl = 'https://tools.wmflabs.org/replacer/'; // PROD: ./
+/*** Global variables ***/
 
+// Array with titles (strings) of pages with misspellings 
 var misspelledPages;
+
+// String containing the original content of the page
 var rawContent;
+
+// String cointaining the displayed content in the screen
 var displayedContent;
+
+// Array with the misspellings of the page.
+// A misspelling contains the properties:
+// * word
+// * cs
+// * suggestion
 var misspellings;
 
+// Array with the misspelling matches of the page.
+// A misspelling match contains the properties:
+// * word
+// * position
+// * fix
+// * fixed (boolean)
 var missMatches = new Array();
 
 $(document).ready(function() {
-	$('#button-get').click(function() {
-		getPageContent($('#pageTitle').val(), parseContentJson);
-	});
 
 	$('#button-commit').click(function() {
 		postContent();
 	});
 
+if (isUserLogged()) {
 	getMisspelledPages(function(response) {
 		misspelledPages = response.titles;
-		$('#pageTitle').val(misspelledPages.pop());
-			getPageContent($('#pageTitle').val(), parseContentJson);
+
+// FIXME DEBUGGING
+misspelledPages = new Array();
+misspelledPages.push("Usuario:Benjavalero/Taller");
+
+		var pageTitle = misspelledPages.pop();
+		$('#pageTitle').val(pageTitle);
+		getPageContent(pageTitle, function(response) {
+			rawContent = response;
+			displayedContent = response;
+			$('#article-content').html(displayedContent);
+		});
+
+		getPageMisspellings(pageTitle, function(response) {
+			misspellings = response.misspellings;
+
+// FIXME DEBUGGING
+misspellings = new Array();
+var myMisspell = {word : 'herror', cs : 0, suggestion : 'error'};
+misspellings.push(myMisspell);
+myMisspell = {word : 'mnos', cs : 0, suggestion : 'menos'};
+misspellings.push(myMisspell);
+			highlightMisspellings();
+		});
+
+		// TODO Cargar más artículos cuando el array se vacíe
 	});
+}
 
 /*
-	//postLogin('benjavalero', 'min2979');
-
 	$('#button-commit').click(function() {
 		getEditToken(pageTitle, function(token) {
 			log('Token from callback: ' + token);
@@ -32,11 +70,44 @@ $(document).ready(function() {
 		});
 	});
 */
+
 });
 
-function log(logLine) {
-	console.log(logLine);
-};
+
+/*** UTILS ***/
+
+function isUserLogged() {
+	return $('#tokenKey').val().length > 0;
+}
+
+/*** STRING UTILS ***/
+
+// <div>  =>  &lt;div&gt;
+function encodeHtml(htmlText) {
+        return jQuery('<div />').text(htmlText).html();
+}
+
+// &lt;div&gt;  =>  <div>
+function decodeHtml(htmlText) {
+        return jQuery('<div />').html(htmlText).text();
+}
+
+// If a character is lower-case
+function isUpperCase(ch) {
+        return ch == ch.toUpperCase();
+}
+
+// país  =>  país
+function setFirstUpperCase(word) {
+        return word[0].toUpperCase() + word.substr(1);
+}
+
+// replaceAt('0123456789', 3, '34', 'XXXX')  =>  '012XXXX56789'
+function replaceAt(text, position, replaced, replacement) {
+        return text.substr(0, position) + replacement + text.substr(position + replaced.length);
+}
+
+/*** ALERT UTILS ***/
 
 function showAlert(message, type, closeDelay) {
 	if ($('#alerts-container').length == 0) {
@@ -65,29 +136,69 @@ function closeAlert() {
 	$('.close').click();
 }
 
-function parseContentJson(response) {
-	var pages = response.query.pages;
-	for (var pageId in pages) {
-		var pageTitle = pages[pageId].title;
-		var content = pages[pageId].revisions[0]['*'];
-		rawContent = encodeHtml(content);
-		displayedContent = rawContent;
-		setDisplayedContent(displayedContent);
+/*** DATABASE REQUESTS ***/
 
-		getPageMisspellings(pageTitle, function(response) {
-			misspellings = response.misspellings;
-
-			displayedContent = highlightMisspellings(displayedContent);
-			setDisplayedContent(displayedContent);
-
-			displayedContent = highlightSyntax(displayedContent);
-			setDisplayedContent(displayedContent);
-		});
-	}
+/* Run query in DB to get a list of pages with misspellings */
+function getMisspelledPages(callback) {
+        showAlert('Buscando artículos con errores ortográficos...');
+        $.ajax({
+                url: 'php/db-select-replacement.php',
+                dataType: 'json'
+        }).done(function(response) {
+                closeAlert();
+                callback(response);
+        }).fail(function(response) {
+                showAlert('Error buscando artículos con errores ortográficos', 'danger', '');
+        });
 }
 
-function highlightMisspellings(content) {
-	var count = 1;
+/* Run query in DB to get the misspellings of a page */
+function getPageMisspellings(pageTitle, callback) {
+        showAlert('Buscando errores ortográficos en el artículo: ' + pageTitle);
+        $.ajax({
+                url: 'php/db-select-misspellings.php',
+                dataType: 'json',
+                data: {
+                        title : pageTitle
+                }
+        }).done(function(response) {
+                closeAlert();
+                callback(response);
+        }).fail(function(response) {
+                showAlert('Error buscando errores ortográficos en el artículo: ' + pageTitle, 'danger', '');
+        });
+}
+
+/*** WIKIPEDIA REQUESTS ***/
+
+/* Retrieve the content of a page from Wikipedia */
+function getPageContent(pageTitle, callback) {
+        console.log('Obteniendo contenido del artículo: ' + pageTitle);
+        $.ajax({
+                url:  'index.php',
+                dataType: 'json',
+                data: {
+			action: 'get',
+                        title: pageTitle.replace(' ', '_')
+                }
+        }).done(function(response) {
+                console.log('Contenido obtenido del artículo: ' + pageTitle);
+
+		var pages = response.query.pages;     
+		// There is only one page  
+		var content;                                                      
+		for (var pageId in pages) {                                                                   
+			var pageTitle = pages[pageId].title;                                                  
+			content = pages[pageId].revisions[0]['*'];
+		} 
+		callback(encodeHtml(content));                                                     
+        }).fail(function(response) {
+                showAlert('Error obteniendo el contenido del artículo: ' + pageTitle, 'danger', '');
+        });
+}
+
+
+function highlightMisspellings() {
 	for (var miss of misspellings) {
 		var isCaseSensitive = (miss.cs == 1);
 		var flags = 'g';
@@ -95,7 +206,8 @@ function highlightMisspellings(content) {
 			flags += 'i';
 		}
 		var re = new RegExp('\\b(' + miss.word + ')\\b', flags);
-		while ((reMatch = re.exec(content)) != null) {
+		// En este momento, debería ser rawContent == displayedContent
+		while ((reMatch = re.exec(rawContent)) != null) {
 			// Apply case-insensitive fix if necessary
 			var missFix = miss.suggestion;
 			if (!isCaseSensitive && isUpperCase(reMatch[0][0])) {
@@ -112,10 +224,22 @@ function highlightMisspellings(content) {
 		var replacement = '<button id="miss-' + idx + '" title="' + missMatch.fix
 			+ '" data-toggle="tooltip" data-placement="top" class="miss btn btn-danger" type="button">'
 			+ missMatch.word + '</button>';
-		content = replaceAt(content, missMatch.position, missMatch.word, replacement);
+		displayedContent = replaceAt(displayedContent, missMatch.position, missMatch.word, replacement);
 	}
 
-	return content;
+	// Mostrar el contenido modificado
+        $('#article-content').html(displayedContent);                                                          
+        $('#button-commit').collapse('show');                                                         
+                                                                                                      
+        // Add event to the misspelling buttons                                                       
+        $('.miss').click(function() {                                                                 
+                turnMisspelling(this.id);                                                             
+        });                                                                                           
+                                             
+	// Show cool Bootstrap tooltips                                                         
+        $(function () {                                                                               
+                $('[data-toggle="tooltip"]').tooltip()                                                
+        });
 }
 
 function turnMisspelling(missId) {
@@ -135,6 +259,8 @@ function turnMisspelling(missId) {
 }
 
 function postContent() {
+	// FIXME Realmente enviar la página
+
 	// Recorro inversamente el array de matches y sustituyo por los fixes si procede
 	var fixedRawContent = rawContent;
 	for (var idx = missMatches.length - 1; idx >= 0; idx--) {
@@ -148,6 +274,7 @@ function postContent() {
 	$('#content-to-post').text(decodedContent);
 }
 
+/*
 function highlightSyntax(content) {
 	var reComment = new RegExp('(&lt;!--.+?--&gt;)', 'g');
 	content = content.replace(reComment, '<span class="comment">$1</span>');
@@ -161,16 +288,4 @@ function highlightSyntax(content) {
 	return content;
 }
 
-function setDisplayedContent(content) {
-	$('#article-content').html(content);
-	$('#button-commit').collapse('show');
-
-	// Add event to the misspelling buttons
-	$('.miss').click(function() {
-		turnMisspelling(this.id);
-	});
-
-	$(function () {
-		$('[data-toggle="tooltip"]').tooltip()
-	});
-}
+*/
