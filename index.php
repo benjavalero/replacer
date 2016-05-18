@@ -358,21 +358,20 @@ function doApiQuery( $post, &$ch = null ) {
  * Get the content of a Wikipedia page 
  */
 function getPageContent() {
-        $ch = null;
+	$ch = null;
 
-        // First fetch the username
-        $res = doApiQuery( array(
-                'format' => 'json',
-                'action' => 'query',
-                'prop' => 'revisions',
+	// First fetch the username
+	$res = doApiQuery( array(
+		'format' => 'json',
+		'action' => 'query',
+		'prop' => 'revisions',
 		'rvprop' => 'content',
 		'titles' => $_GET["title"]
-        ), $ch );
+	), $ch );
 
 	header("Content-type: application/json");
 	echo $res;                                                              
 }
-
 
 
 /**

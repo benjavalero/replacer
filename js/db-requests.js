@@ -1,4 +1,3 @@
-/*
 function postPageContent(pageTitle, pageContent, editToken, callback) {
 	log('Posting page content of ' + pageTitle + '...');
 	$.ajax({
@@ -15,4 +14,3 @@ function postPageContent(pageTitle, pageContent, editToken, callback) {
 		log('Error on updating page content in Wikipedia:\n' + JSON.stringify(response));
 	});
 };
-*/

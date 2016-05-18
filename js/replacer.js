@@ -28,49 +28,47 @@ $(document).ready(function() {
 
 	$('#button-commit').click(function() {
 		postContent();
-	});
 
-if (isUserLogged()) {
-	getMisspelledPages(function(response) {
-		misspelledPages = response.titles;
-
-// FIXME DEBUGGING
-misspelledPages = new Array();
-misspelledPages.push("Usuario:Benjavalero/Taller");
-
-		var pageTitle = misspelledPages.pop();
-		$('#pageTitle').val(pageTitle);
-		getPageContent(pageTitle, function(response) {
-			rawContent = response;
-			displayedContent = response;
-			$('#article-content').html(displayedContent);
-		});
-
-		getPageMisspellings(pageTitle, function(response) {
-			misspellings = response.misspellings;
-
-// FIXME DEBUGGING
-misspellings = new Array();
-var myMisspell = {word : 'herror', cs : 0, suggestion : 'error'};
-misspellings.push(myMisspell);
-myMisspell = {word : 'mnos', cs : 0, suggestion : 'menos'};
-misspellings.push(myMisspell);
-			highlightMisspellings();
-		});
-
-		// TODO Cargar más artículos cuando el array se vacíe
-	});
-}
-
-/*
-	$('#button-commit').click(function() {
+		/*
 		getEditToken(pageTitle, function(token) {
 			log('Token from callback: ' + token);
 			postPageContent(pageTitle, $('#article-content').text(), token, null);
 		});
+		*/
 	});
-*/
 
+	if (isUserLogged()) {
+		getMisspelledPages(function(response) {
+			misspelledPages = response.titles;
+
+			// FIXME DEBUGGING
+			misspelledPages = new Array();
+			misspelledPages.push("Usuario:Benjavalero/Taller");
+
+			var pageTitle = misspelledPages.pop();
+			$('#pageTitle').val(pageTitle);
+			getPageContent(pageTitle, function(response) {
+				rawContent = response;
+				displayedContent = response;
+				$('#article-content').html(displayedContent);
+			});
+
+			getPageMisspellings(pageTitle, function(response) {
+				misspellings = response.misspellings;
+
+				// FIXME DEBUGGING
+				misspellings = new Array();
+				var myMisspell = {word : 'herror', cs : 0, suggestion : 'error'};
+				misspellings.push(myMisspell);
+				myMisspell = {word : 'mnos', cs : 0, suggestion : 'menos'};
+				misspellings.push(myMisspell);
+
+				highlightMisspellings();
+			});
+
+			// TODO Cargar más artículos cuando el array se vacíe
+		});
+	}
 });
 
 
@@ -84,27 +82,27 @@ function isUserLogged() {
 
 // <div>  =>  &lt;div&gt;
 function encodeHtml(htmlText) {
-        return jQuery('<div />').text(htmlText).html();
+	return jQuery('<div />').text(htmlText).html();
 }
 
 // &lt;div&gt;  =>  <div>
 function decodeHtml(htmlText) {
-        return jQuery('<div />').html(htmlText).text();
+	return jQuery('<div />').html(htmlText).text();
 }
 
 // If a character is lower-case
 function isUpperCase(ch) {
-        return ch == ch.toUpperCase();
+	return ch == ch.toUpperCase();
 }
 
-// país  =>  país
+// país  =>  País
 function setFirstUpperCase(word) {
-        return word[0].toUpperCase() + word.substr(1);
+	return word[0].toUpperCase() + word.substr(1);
 }
 
 // replaceAt('0123456789', 3, '34', 'XXXX')  =>  '012XXXX56789'
 function replaceAt(text, position, replaced, replacement) {
-        return text.substr(0, position) + replacement + text.substr(position + replaced.length);
+	return text.substr(0, position) + replacement + text.substr(position + replaced.length);
 }
 
 /*** ALERT UTILS ***/
@@ -140,49 +138,49 @@ function closeAlert() {
 
 /* Run query in DB to get a list of pages with misspellings */
 function getMisspelledPages(callback) {
-        showAlert('Buscando artículos con errores ortográficos...');
-        $.ajax({
-                url: 'php/db-select-replacement.php',
-                dataType: 'json'
-        }).done(function(response) {
-                closeAlert();
-                callback(response);
-        }).fail(function(response) {
-                showAlert('Error buscando artículos con errores ortográficos', 'danger', '');
-        });
+	showAlert('Buscando artículos con errores ortográficos...');
+	$.ajax({
+		url: 'php/db-select-replacement.php',
+		dataType: 'json'
+	}).done(function(response) {
+		closeAlert();
+		callback(response);
+	}).fail(function(response) {
+		showAlert('Error buscando artículos con errores ortográficos', 'danger', '');
+	});
 }
 
 /* Run query in DB to get the misspellings of a page */
 function getPageMisspellings(pageTitle, callback) {
-        showAlert('Buscando errores ortográficos en el artículo: ' + pageTitle);
-        $.ajax({
-                url: 'php/db-select-misspellings.php',
-                dataType: 'json',
-                data: {
-                        title : pageTitle
-                }
-        }).done(function(response) {
-                closeAlert();
-                callback(response);
-        }).fail(function(response) {
-                showAlert('Error buscando errores ortográficos en el artículo: ' + pageTitle, 'danger', '');
-        });
+	showAlert('Buscando errores ortográficos en el artículo: ' + pageTitle);
+	$.ajax({
+		url: 'php/db-select-misspellings.php',
+		dataType: 'json',
+		data: {
+			title : pageTitle
+		}
+	}).done(function(response) {
+		closeAlert();
+		callback(response);
+	}).fail(function(response) {
+		showAlert('Error buscando errores ortográficos en el artículo: ' + pageTitle, 'danger', '');
+	});
 }
 
 /*** WIKIPEDIA REQUESTS ***/
 
 /* Retrieve the content of a page from Wikipedia */
 function getPageContent(pageTitle, callback) {
-        console.log('Obteniendo contenido del artículo: ' + pageTitle);
-        $.ajax({
-                url:  'index.php',
-                dataType: 'json',
-                data: {
+	console.log('Obteniendo contenido del artículo: ' + pageTitle);
+	$.ajax({
+		url:  'index.php',
+		dataType: 'json',
+		data: {
 			action: 'get',
-                        title: pageTitle.replace(' ', '_')
-                }
-        }).done(function(response) {
-                console.log('Contenido obtenido del artículo: ' + pageTitle);
+			title: pageTitle.replace(' ', '_')
+		}
+	}).done(function(response) {
+		console.log('Contenido obtenido del artículo: ' + pageTitle);
 
 		var pages = response.query.pages;     
 		// There is only one page  
@@ -192,9 +190,9 @@ function getPageContent(pageTitle, callback) {
 			content = pages[pageId].revisions[0]['*'];
 		} 
 		callback(encodeHtml(content));                                                     
-        }).fail(function(response) {
-                showAlert('Error obteniendo el contenido del artículo: ' + pageTitle, 'danger', '');
-        });
+	}).fail(function(response) {
+			showAlert('Error obteniendo el contenido del artículo: ' + pageTitle, 'danger', '');
+	});
 }
 
 
@@ -228,18 +226,18 @@ function highlightMisspellings() {
 	}
 
 	// Mostrar el contenido modificado
-        $('#article-content').html(displayedContent);                                                          
-        $('#button-commit').collapse('show');                                                         
-                                                                                                      
-        // Add event to the misspelling buttons                                                       
-        $('.miss').click(function() {                                                                 
-                turnMisspelling(this.id);                                                             
-        });                                                                                           
-                                             
-	// Show cool Bootstrap tooltips                                                         
-        $(function () {                                                                               
-                $('[data-toggle="tooltip"]').tooltip()                                                
-        });
+	$('#article-content').html(displayedContent);
+	$('#button-commit').collapse('show');
+
+	// Add event to the misspelling buttons
+	$('.miss').click(function() {
+		turnMisspelling(this.id);
+	});
+
+	// Show cool Bootstrap tooltips
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip()
+	});
 }
 
 function turnMisspelling(missId) {
@@ -287,5 +285,4 @@ function highlightSyntax(content) {
 
 	return content;
 }
-
 */

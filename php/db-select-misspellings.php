@@ -10,22 +10,22 @@ $dbname = "s52978__replacer";
 $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+	die("Connection failed: " . $conn->connect_error);
 }
 
 $title = $_GET["title"];
-$sql = "SELECT m.word, m.cs, m.suggestion FROM replacement r, misspelling m WHERE r.word = m.word AND r.title = '$title'
-";
+$sql = "SELECT m.word, m.cs, m.suggestion FROM replacement r, misspelling m WHERE r.word = m.word AND r.title = '$title'";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
-    $misspelling_array = array();
-    while($row = $result->fetch_assoc()) {
-        $misspelling = array(
-            "word" => utf8_encode($row["word"]),
-            "cs" => $row["cs"],
-            "suggestion" => utf8_encode($row["suggestion"]));
-        array_push($misspelling_array, $misspelling);
-    }
+	$misspelling_array = array();
+	while($row = $result->fetch_assoc()) {
+		$misspelling = array(
+			"word" => utf8_encode($row["word"]),
+			"cs" => $row["cs"],
+			"suggestion" => utf8_encode($row["suggestion"])
+		);
+		array_push($misspelling_array, $misspelling);
+	}
 }
 
 header("Content-type: application/json");  
