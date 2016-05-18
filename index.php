@@ -105,6 +105,9 @@ switch ( isset( $_GET['action'] ) ? $_GET['action'] : '' ) {
 	case 'get':
 		getPageContent();
 		return;
+}
+
+switch ( isset( $_POST['action'] ) ? $_POST['action'] : '' ) {
 
 	case 'edit':
 		doEdit();
@@ -383,55 +386,29 @@ function doEdit() {
 
 	$ch = null;
 
-	// First fetch the username
-	$res = doApiQuery( array(
-		'format' => 'json',
-		'action' => 'query',
-		'meta' => 'userinfo',
-	), $ch );
-
-	if ( isset( $res->error->code ) && $res->error->code === 'mwoauth-invalid-authorization' ) {
-		// We're not authorized!
-		echo 'You haven\'t authorized this application yet! Go <a href="' . htmlspecialchars( $_SERVER['SCRIPT_NAME'] ) . '?action=authorize">here</a> to do that.';
-		echo '<hr>';
-		return;
-	}
-
-	if ( !isset( $res->query->userinfo ) ) {
-		header( "HTTP/1.1 $errorCode Internal Server Error" );
-		echo 'Bad API response: <pre>' . htmlspecialchars( var_export( $res, 1 ) ) . '</pre>';
-		exit(0);
-	}
-	if ( isset( $res->query->userinfo->anon ) ) {
-		header( "HTTP/1.1 $errorCode Internal Server Error" );
-		echo 'Not logged in. (How did that happen?)';
-		exit(0);
-	}
-	$page = 'User talk:' . $res->query->userinfo->name;
-
 	// Next fetch the edit token
 	$res = doApiQuery( array(
 		'format' => 'json',
 		'action' => 'tokens',
 		'type' => 'edit',
 	), $ch );
-	if ( !isset( $res->tokens->edittoken ) ) {
+
+	$resDecoded = json_decode($res, true);
+        $token = $resDecoded["tokens"]["edittoken"];
+	if ( !isset( $token ) ) {
 		header( "HTTP/1.1 $errorCode Internal Server Error" );
 		echo 'Bad API response: <pre>' . htmlspecialchars( var_export( $res, 1 ) ) . '</pre>';
 		exit(0);
 	}
-	$token = $res->tokens->edittoken;
 
 	// Now perform the edit
 	$res = doApiQuery( array(
 		'format' => 'json',
 		'action' => 'edit',
-		'title' => $page,
-		'section' => 'new',
-		'sectiontitle' => 'Hello, world',
-		'text' => 'This message was posted using the OAuth Hello World application, and should be seen as coming from yourself. To revoke this application\'s access to your account, visit [[:' . $mwOAuthIW . ':Special:OAuthManageMyGrants]]. ~~~~',
-		'summary' => '/* Hello, world */ Hello from OAuth!',
-		'watchlist' => 'nochange',
+		'title' => $_POST["title"],
+		'text' => $_POST["text"],
+		'summary' => 'Correcciones ortográficas',
+		'minor' => 'true',
 		'token' => $token,
 	), $ch );
 
@@ -465,7 +442,10 @@ function doEdit() {
   </head>
   <body>
     <div class="container">
-      <h1>ReplacerTool</h1>
+      <div class="page-header">
+        <button id="button-save" class="btn btn-primary pull-right" type="button">Guardar cambios</button>
+        <h1>Replacer Tool</h1>
+      </div>
 
       <p>Esta es una herramienta aún en fase <strong>beta</strong> para corregir los errores ortográficos más comunes en
  la Wikipedia en español.</p>
@@ -475,20 +455,15 @@ function doEdit() {
       <p>Haga clic <a href="index.php?action=authorize">aquí</a> para autenticarse.</p>
       <?php } else { ?>
 
-      <form class="form-group form-inline">
-        <label for="pageTitle">Artículo:</label>
-        <input id="pageTitle" class="form-control" type="text" size="100" readonly value="" />
-<!--        <button id="button-get" class="btn btn-primary" type="button">Cargar contenido</button> -->
-      </form>
+      <h2><span id="pageTitle"></span></h2>
 
       <div id="article-content" class="pre"></div>
 
+      <!-- Para depuración -->
       <div>
-        <button id="button-commit" class="btn btn-primary collapse" type="button">Mostrar cambios</button>
+        <button id="button-show-changes" class="btn btn-default collapse" type="button">Mostrar cambios</button>
       </div>
-
-      <!-- Esto es solo para depuración -->
-      <div id="content-to-post" class="pre"></div>
+      <div id="content-to-post" class="pre collapse"></div>
 
       <?php } ?>
 
@@ -499,10 +474,6 @@ function doEdit() {
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
 
-<!--
-    <script src="js/db-requests.js"></script>
-    <script src="js/wikipedia-requests.js"></script>
--->
     <script src="js/replacer.js"></script>
   </body>
 </html>

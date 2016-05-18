@@ -22,48 +22,40 @@ var misspellings;
 // * position
 // * fix
 // * fixed (boolean)
-var missMatches = new Array();
+var missMatches;
 
 $(document).ready(function() {
 
-	$('#button-commit').click(function() {
-		postContent();
+	$('#button-show-changes').click(function() {
+		showChanges(true);
+	});
 
-		/*
-		getEditToken(pageTitle, function(token) {
-			log('Token from callback: ' + token);
-			postPageContent(pageTitle, $('#article-content').text(), token, null);
+	$('#button-save').click(function() {
+		showChanges(false);
+		postPageContent($('#pageTitle').text(), $('#content-to-post').text(), function(response) {
+			fixPageMisspellings($('#pageTitle').text());
 		});
-		*/
 	});
 
 	if (isUserLogged()) {
 		getMisspelledPages(function(response) {
 			misspelledPages = response.titles;
-
-			// FIXME DEBUGGING
-			misspelledPages = new Array();
-			misspelledPages.push("Usuario:Benjavalero/Taller");
+			console.log('MisspelledPages: ' + misspelledPages);
 
 			var pageTitle = misspelledPages.pop();
-			$('#pageTitle').val(pageTitle);
+			$('#pageTitle').text(pageTitle);
+
 			getPageContent(pageTitle, function(response) {
 				rawContent = response;
-				displayedContent = response;
+				displayedContent = rawContent;
 				$('#article-content').html(displayedContent);
-			});
 
-			getPageMisspellings(pageTitle, function(response) {
-				misspellings = response.misspellings;
+				getPageMisspellings(pageTitle, function(response) {
+					misspellings = response.misspellings;
+					console.log('Misspellings: ' + misspellings);
 
-				// FIXME DEBUGGING
-				misspellings = new Array();
-				var myMisspell = {word : 'herror', cs : 0, suggestion : 'error'};
-				misspellings.push(myMisspell);
-				myMisspell = {word : 'mnos', cs : 0, suggestion : 'menos'};
-				misspellings.push(myMisspell);
-
-				highlightMisspellings();
+					highlightMisspellings();
+				});
 			});
 
 			// TODO Cargar más artículos cuando el array se vacíe
@@ -167,36 +159,73 @@ function getPageMisspellings(pageTitle, callback) {
 	});
 }
 
+/* Run query in DB to mark as fixed the misspellings of a page */                                               
+function fixPageMisspellings(pageTitle) { 
+        $.ajax({                                                                                      
+                url: 'php/db-update-replacement.php',
+		method: 'POST',
+                dataType: 'json',                                                                     
+                data: {                                                                               
+                        title : pageTitle                                                             
+                }
+	}).done(function(response) {
+		console.log('dtfixed actualizada: ' + response);
+        }).fail(function(response) {                                                                  
+                // FIXME showAlert('Error marcando como corregidos los errores ortográficos en el artículo: ' + pageTitle, 'danger', '');
+        });                                                                                           
+} 
+
 /*** WIKIPEDIA REQUESTS ***/
 
 /* Retrieve the content of a page from Wikipedia */
 function getPageContent(pageTitle, callback) {
-	console.log('Obteniendo contenido del artículo: ' + pageTitle);
+	showAlert('Obteniendo contenido del artículo: ' + pageTitle);
 	$.ajax({
-		url:  'index.php',
+		url: 'index.php',
 		dataType: 'json',
 		data: {
 			action: 'get',
 			title: pageTitle.replace(' ', '_')
 		}
 	}).done(function(response) {
-		console.log('Contenido obtenido del artículo: ' + pageTitle);
-
 		var pages = response.query.pages;     
 		// There is only one page  
 		var content;                                                      
 		for (var pageId in pages) {                                                                   
 			var pageTitle = pages[pageId].title;                                                  
 			content = pages[pageId].revisions[0]['*'];
-		} 
+		}
+		closeAlert();
 		callback(encodeHtml(content));                                                     
 	}).fail(function(response) {
-			showAlert('Error obteniendo el contenido del artículo: ' + pageTitle, 'danger', '');
+		showAlert('Error obteniendo el contenido del artículo: ' + pageTitle, 'danger', '');
 	});
 }
 
+function postPageContent(pageTitle, pageContent, callback) {
+        showAlert('Guardando cambios del artículo: ' + pageTitle);
+        $.ajax({
+                url: 'index.php',
+		method: 'POST',
+                data: {
+			action: 'edit',
+                        title: pageTitle,
+                        text: pageContent
+                }
+        }).done(function(response) {
+		closeAlert();
+                showAlert('Contenido guardado', 'success', 2000);
+                callback(response);
+        }).fail(function(response) {
+                showAlert('Error guardando los cambios en: ' + pageTitle, 'danger', '');
+        });
+};
+
+
+/*** REPLACEMENT FUNCTIONS ***/
 
 function highlightMisspellings() {
+	missMatches = new Array();
 	for (var miss of misspellings) {
 		var isCaseSensitive = (miss.cs == 1);
 		var flags = 'g';
@@ -204,6 +233,7 @@ function highlightMisspellings() {
 			flags += 'i';
 		}
 		var re = new RegExp('\\b(' + miss.word + ')\\b', flags);
+
 		// En este momento, debería ser rawContent == displayedContent
 		while ((reMatch = re.exec(rawContent)) != null) {
 			// Apply case-insensitive fix if necessary
@@ -227,7 +257,7 @@ function highlightMisspellings() {
 
 	// Mostrar el contenido modificado
 	$('#article-content').html(displayedContent);
-	$('#button-commit').collapse('show');
+	$('#button-show-changes').collapse('show');
 
 	// Add event to the misspelling buttons
 	$('.miss').click(function() {
@@ -256,7 +286,7 @@ function turnMisspelling(missId) {
 	}
 }
 
-function postContent() {
+function showChanges(show) {
 	// FIXME Realmente enviar la página
 
 	// Recorro inversamente el array de matches y sustituyo por los fixes si procede
@@ -270,6 +300,9 @@ function postContent() {
 
 	var decodedContent = decodeHtml(fixedRawContent);
 	$('#content-to-post').text(decodedContent);
+	if (show) {
+		$('#content-to-post').collapse('show');
+	}
 }
 
 /*
