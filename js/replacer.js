@@ -52,7 +52,7 @@ $(document).ready(function() {
 
 				getPageMisspellings(pageTitle, function(response) {
 					misspellings = response.misspellings;
-					console.log('Misspellings: ' + misspellings);
+					console.log('Misspellings: ' + misspellings.length);
 
 					highlightMisspellings();
 				});

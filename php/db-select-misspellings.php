@@ -13,11 +13,11 @@ if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
 
-$title = $_GET["title"];
+$title = utf8_decode($_GET["title"]);
 $sql = "SELECT m.word, m.cs, m.suggestion FROM replacement r, misspelling m WHERE r.word = m.word AND r.title = '$title'";
 $result = $conn->query($sql);
+$misspelling_array = array();
 if ($result->num_rows > 0) {
-	$misspelling_array = array();
 	while($row = $result->fetch_assoc()) {
 		$misspelling = array(
 			"word" => utf8_encode($row["word"]),
@@ -28,7 +28,7 @@ if ($result->num_rows > 0) {
 	}
 }
 
-header("Content-type: application/json");  
+header("Content-type: application/json");
 
 $data = array("misspellings" => $misspelling_array);
 echo json_encode($data, JSON_UNESCAPED_UNICODE);
