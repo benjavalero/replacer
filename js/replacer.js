@@ -34,34 +34,45 @@ $(document).ready(function() {
 		showChanges(false);
 		postPageContent($('#pageTitle').text(), $('#content-to-post').text(), function(response) {
 			fixPageMisspellings($('#pageTitle').text());
+			loadMisspelledPage();
 		});
 	});
 
 	if (isUserLogged()) {
-		getMisspelledPages(function(response) {
-			misspelledPages = response.titles;
-			console.log('MisspelledPages: ' + misspelledPages);
-
-			var pageTitle = misspelledPages.pop();
-			$('#pageTitle').text(pageTitle);
-
-			getPageContent(pageTitle, function(response) {
-				rawContent = response;
-				displayedContent = rawContent;
-				$('#article-content').html(displayedContent);
-
-				getPageMisspellings(pageTitle, function(response) {
-					misspellings = response.misspellings;
-					console.log('Misspellings: ' + misspellings.length);
-
-					highlightMisspellings();
-				});
-			});
-
-			// TODO Cargar más artículos cuando el array se vacíe
-		});
+		findMisspelledPages();
 	}
 });
+
+function findMisspelledPages() {
+	getMisspelledPages(function(response) {
+		misspelledPages = response.titles;
+		console.log('MisspelledPages: ' + misspelledPages);
+
+		loadMisspelledPage();
+	});
+}
+
+function loadMisspelledPage() {
+	if (misspelledPages.length == 0) {
+		findMisspelledPages();
+	} else {
+		var pageTitle = misspelledPages.pop();
+		$('#pageTitle').text(pageTitle);
+
+		getPageContent(pageTitle, function(response) {
+			rawContent = response;
+			displayedContent = rawContent;
+			$('#article-content').html(displayedContent);
+
+			getPageMisspellings(pageTitle, function(response) {
+				misspellings = response.misspellings;
+				console.log('Misspellings: ' + misspellings.length);
+
+				highlightMisspellings();
+			});
+		});
+	}
+}
 
 
 /*** UTILS ***/
@@ -159,20 +170,20 @@ function getPageMisspellings(pageTitle, callback) {
 	});
 }
 
-/* Run query in DB to mark as fixed the misspellings of a page */                                               
-function fixPageMisspellings(pageTitle) { 
-        $.ajax({                                                                                      
-                url: 'php/db-update-replacement.php',
+/* Run query in DB to mark as fixed the misspellings of a page */
+function fixPageMisspellings(pageTitle) {
+	$.ajax({
+		url: 'php/db-update-replacement.php',
 		method: 'POST',
-                dataType: 'json',                                                                     
-                data: {                                                                               
-                        title : pageTitle                                                             
-                }
+		dataType: 'json',
+		data: {
+			title : pageTitle
+		}
 	}).done(function(response) {
 		console.log('dtfixed actualizada: ' + response);
-        }).fail(function(response) {                                                                  
-                // FIXME showAlert('Error marcando como corregidos los errores ortográficos en el artículo: ' + pageTitle, 'danger', '');
-        });                                                                                           
+	}).fail(function(response) {
+		// FIXME showAlert('Error marcando como corregidos los errores ortográficos en el artículo: ' + pageTitle, 'danger', '');
+	});
 } 
 
 /*** WIKIPEDIA REQUESTS ***/
@@ -188,37 +199,37 @@ function getPageContent(pageTitle, callback) {
 			title: pageTitle.replace(' ', '_')
 		}
 	}).done(function(response) {
-		var pages = response.query.pages;     
-		// There is only one page  
-		var content;                                                      
-		for (var pageId in pages) {                                                                   
-			var pageTitle = pages[pageId].title;                                                  
+		var pages = response.query.pages;
+		// There is only one page
+		var content;
+		for (var pageId in pages) {
+			var pageTitle = pages[pageId].title;
 			content = pages[pageId].revisions[0]['*'];
 		}
 		closeAlert();
-		callback(encodeHtml(content));                                                     
+		callback(encodeHtml(content));
 	}).fail(function(response) {
 		showAlert('Error obteniendo el contenido del artículo: ' + pageTitle, 'danger', '');
 	});
 }
 
 function postPageContent(pageTitle, pageContent, callback) {
-        showAlert('Guardando cambios del artículo: ' + pageTitle);
-        $.ajax({
-                url: 'index.php',
+	showAlert('Guardando cambios del artículo: ' + pageTitle);
+	$.ajax({
+		url: 'index.php',
 		method: 'POST',
-                data: {
+		data: {
 			action: 'edit',
-                        title: pageTitle,
-                        text: pageContent
-                }
-        }).done(function(response) {
+			title: pageTitle,
+			text: pageContent
+		}
+	}).done(function(response) {
 		closeAlert();
-                showAlert('Contenido guardado', 'success', 2000);
-                callback(response);
-        }).fail(function(response) {
-                showAlert('Error guardando los cambios en: ' + pageTitle, 'danger', '');
-        });
+		showAlert('Contenido guardado', 'success', 2000);
+		callback(response);
+	}).fail(function(response) {
+		showAlert('Error guardando los cambios en: ' + pageTitle, 'danger', '');
+	});
 };
 
 
