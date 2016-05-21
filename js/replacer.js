@@ -72,6 +72,7 @@ function loadMisspelledPage() {
 				debug('Misspellings: ' + JSON.stringify(misspellings));
 
 				highlightMisspellings();
+				highlightSyntax();
 			});
 		});
 	}
@@ -284,19 +285,7 @@ function highlightMisspellings() {
 		displayedContent = replaceAt(displayedContent, missMatch.position, missMatch.word, replacement);
 	}
 
-	// Mostrar el contenido modificado
-	$('#article-content').html(displayedContent);
-	$('#button-show-changes').collapse('show');
-
-	// Add event to the misspelling buttons
-	$('.miss').click(function() {
-		turnMisspelling(this.id);
-	});
-
-	// Show cool Bootstrap tooltips
-	$(function () {
-		$('[data-toggle="tooltip"]').tooltip()
-	});
+	updateDisplayedContent(displayedContent);
 }
 
 function turnMisspelling(missId) {
@@ -316,8 +305,6 @@ function turnMisspelling(missId) {
 }
 
 function showChanges(show) {
-	// FIXME Realmente enviar la página
-
 	// Recorro inversamente el array de matches y sustituyo por los fixes si procede
 	var fixedRawContent = rawContent;
 	for (var idx = missMatches.length - 1; idx >= 0; idx--) {
@@ -334,17 +321,36 @@ function showChanges(show) {
 	}
 }
 
-/*
-function highlightSyntax(content) {
+function highlightSyntax() {
+	var content = displayedContent;
+
 	var reComment = new RegExp('(&lt;!--.+?--&gt;)', 'g');
-	content = content.replace(reComment, '<span class="comment">$1</span>');
+	content = content.replace(reComment, '<span class="syntax comment">$1</span>');
 
 	var reLink = new RegExp('(\\[\\[.+?\\]\\])', 'g');
-	content = content.replace(reLink, '<span class="link">$1</span>');
+	content = content.replace(reLink, '<span class="syntax link">$1</span>');
 
 	var reHeader = new RegExp('(\\={2,}.+?\\={2,})', 'g');
-	content = content.replace(reHeader, '<span class="header">$1</span>');
+	content = content.replace(reHeader, '<span class="syntax header">$1</span>');
 
-	return content;
+	var reHyperlink = new RegExp('(https?://[\\w\\./\\-\\?&%=]+)', 'g');
+	content = content.replace(reHyperlink, '<span class="syntax hyperlink">$1</span>');
+
+	updateDisplayedContent(content);
 }
-*/
+
+function updateDisplayedContent(content) {
+        // Mostrar el contenido modificado
+        $('#article-content').html(content);
+        $('#button-show-changes').collapse('show');
+
+        // Add event to the misspelling buttons
+        $('.miss').click(function() {
+                turnMisspelling(this.id);
+        });
+
+        // Show cool Bootstrap tooltips
+        $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+        });
+}

@@ -9,12 +9,22 @@
 
 /* SYNTAX */
 
-.comment {
-	color: gray;
+.syntax {
+	border: 1px solid transparent;
+	border-radius: 4px;
+	padding: 2px;
 }
 
-.link {
-	background-color: lightblue;
+.comment {
+	background-color: #dcdcdc;
+	border-color: #444444;
+	color: #444444;
+}
+
+.link, .hyperlink {
+	background-color: #cceeff;
+	border-color: #005885;
+	color: #005885;
 }
 
 .header {
