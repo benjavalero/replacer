@@ -1,5 +1,8 @@
 /*** Global variables ***/
 
+// Constant to define if debug is enabled
+var DEBUG = true;
+
 // Array with titles (strings) of pages with misspellings 
 var misspelledPages;
 
@@ -46,7 +49,7 @@ $(document).ready(function() {
 function findMisspelledPages() {
 	getMisspelledPages(function(response) {
 		misspelledPages = response.titles;
-		console.log('MisspelledPages: ' + misspelledPages);
+		debug('MisspelledPages: ' + misspelledPages.toString());
 
 		loadMisspelledPage();
 	});
@@ -66,7 +69,7 @@ function loadMisspelledPage() {
 
 			getPageMisspellings(pageTitle, function(response) {
 				misspellings = response.misspellings;
-				console.log('Misspellings: ' + misspellings.length);
+				debug('Misspellings: ' + JSON.stringify(misspellings));
 
 				highlightMisspellings();
 			});
@@ -79,6 +82,12 @@ function loadMisspelledPage() {
 
 function isUserLogged() {
 	return $('#tokenKey').val().length > 0;
+}
+
+function debug(message) {
+	if (DEBUG) {
+		console.log(message);
+	}
 }
 
 /*** STRING UTILS ***/
@@ -180,7 +189,7 @@ function fixPageMisspellings(pageTitle) {
 			title : pageTitle
 		}
 	}).done(function(response) {
-		console.log('dtfixed actualizada: ' + response);
+		debug('dtfixed actualizada: ' + response);
 	}).fail(function(response) {
 		// FIXME showAlert('Error marcando como corregidos los errores ortográficos en el artículo: ' + pageTitle, 'danger', '');
 	});
@@ -246,6 +255,9 @@ function highlightMisspellings() {
 		var re = new RegExp('\\b(' + miss.word + ')\\b', flags);
 
 		// En este momento, debería ser rawContent == displayedContent
+		if (rawContent != displayedContent) {
+			debug('ERROR: los contenidos iniciales no coinciden');
+		}
 		while ((reMatch = re.exec(rawContent)) != null) {
 			// Apply case-insensitive fix if necessary
 			var missFix = miss.suggestion;
@@ -256,9 +268,15 @@ function highlightMisspellings() {
 			missMatches.push(missMatch);
 		}
 	}
+	debug('Miss Matches: ' + JSON.stringify(missMatches));
 
-	// Recorro inversamente el array de matches y sustituyo por inputs
-	for (var idx = missMatches.length - 1; idx >= 0; idx--) {
+	// Ordeno el array de errores por posición e inversamente
+	missMatches.sort(function(a, b) {
+		return b.position - a.position;
+	});
+
+	// Recorro el array de matches y sustituyo por inputs
+	for (var idx = 0; idx < missMatches.length; idx++) {
 		var missMatch = missMatches[idx];
 		var replacement = '<button id="miss-' + idx + '" title="' + missMatch.fix
 			+ '" data-toggle="tooltip" data-placement="top" class="miss btn btn-danger" type="button">'

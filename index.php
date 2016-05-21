@@ -444,11 +444,13 @@ function doEdit() {
     <div class="container">
       <div class="page-header">
         <button id="button-save" class="btn btn-primary pull-right" type="button">Guardar cambios</button>
-        <h1>Replacer Tool</h1>
+        <h1>Replacer</h1>
       </div>
 
       <p>Esta es una herramienta aún en fase <strong>beta</strong> para corregir los errores ortográficos más comunes en
  la Wikipedia en español.</p>
+
+      <p>Pulse en las palabras resaltadas para sustituirlas por su corrección (si procede). Finalmente pulse en el botón "Guardar cambios" para aplicar las correcciones. Si pulsa el botón sin haber hecho ningún cambio, simplemente se cargará una nueva página.</p>
 
       <input id="tokenKey" type="hidden" value="<?php echo $gTokenKey; ?>" />
       <?php if ( !$gTokenKey ) { ?>

@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT title, COUNT(*) FROM replacement WHERE dtfixed = 0 GROUP BY title ORDER BY COUNT(*) ASC LIMIT 10";
+$sql = "SELECT title, COUNT(*) FROM replacement WHERE dtfixed = 0 GROUP BY title LIMIT 10";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
 	$title_array = array();
