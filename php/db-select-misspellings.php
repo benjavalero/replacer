@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 
 $title = utf8_decode($_GET["title"]);
-$sql = "SELECT DISTINCT m.word, m.cs, m.suggestion FROM replacement r, misspelling m WHERE r.word = m.word AND r.title = '$title'";
+$sql = "SELECT m.word, m.cs, m.suggestion FROM replacement r, misspelling m WHERE r.word = m.word AND r.title = '$title'";
 $result = $conn->query($sql);
 $misspelling_array = array();
 if ($result->num_rows > 0) {
