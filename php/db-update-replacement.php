@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
 
-$title = utf8_decode($_POST["title"]);
+$title = mysql_real_escape_string(utf8_decode($_POST["title"]));
 $sql = "UPDATE replacement SET dtfixed = NOW() WHERE title = '$title'";
 
 header("Content-type: application/json");
