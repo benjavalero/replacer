@@ -261,7 +261,8 @@ function highlightMisspellings() {
 		}
 		while ((reMatch = re.exec(rawContent)) != null) {
 			// Apply case-insensitive fix if necessary
-			var missFix = miss.suggestion;
+			var suggestions = miss.suggestion.split(' ');
+			var missFix = suggestions[0];
 			if (!isCaseSensitive && isUpperCase(reMatch[0][0])) {
 				missFix = setFirstUpperCase(missFix);
 			}
