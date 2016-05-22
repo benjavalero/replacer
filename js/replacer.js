@@ -34,11 +34,15 @@ $(document).ready(function() {
 	});
 
 	$('#button-save').click(function() {
-		showChanges(false);
-		postPageContent($('#pageTitle').text(), $('#content-to-post').text(), function(response) {
-			fixPageMisspellings($('#pageTitle').text());
+		var isFixed = showChanges(false);
+		if (isFixed) {
 			loadMisspelledPage();
-		});
+		} else {
+			postPageContent($('#pageTitle').text(), $('#content-to-post').text(), function(response) {
+				fixPageMisspellings($('#pageTitle').text());
+				loadMisspelledPage();
+			});
+		}
 	});
 
 	if (isUserLogged()) {
@@ -72,6 +76,7 @@ function loadMisspelledPage() {
 				debug('Misspellings: ' + JSON.stringify(misspellings));
 
 				highlightMisspellings();
+				hideCorrectParagraphs();
 				highlightSyntax();
 			});
 		});
@@ -272,21 +277,25 @@ function highlightMisspellings() {
 	}
 	debug('Miss Matches: ' + JSON.stringify(missMatches));
 
-	// Ordeno el array de errores por posición e inversamente
-	missMatches.sort(function(a, b) {
-		return b.position - a.position;
-	});
+	if (missMatches.length == 0) {
+		loadMisspelledPage();
+	} else {
+		// Ordeno el array de errores por posición e inversamente
+		missMatches.sort(function(a, b) {
+			return b.position - a.position;
+		});
 
-	// Recorro el array de matches y sustituyo por inputs
-	for (var idx = 0; idx < missMatches.length; idx++) {
-		var missMatch = missMatches[idx];
-		var replacement = '<button id="miss-' + idx + '" title="' + missMatch.fix
-			+ '" data-toggle="tooltip" data-placement="top" class="miss btn btn-danger" type="button">'
-			+ missMatch.word + '</button>';
-		displayedContent = replaceAt(displayedContent, missMatch.position, missMatch.word, replacement);
+		// Recorro el array de matches y sustituyo por inputs
+		for (var idx = 0; idx < missMatches.length; idx++) {
+			var missMatch = missMatches[idx];
+			var replacement = '<button id="miss-' + idx + '" title="' + missMatch.fix
+				+ '" data-toggle="tooltip" data-placement="top" class="miss btn btn-danger" type="button">'
+				+ missMatch.word + '</button>';
+			displayedContent = replaceAt(displayedContent, missMatch.position, missMatch.word, replacement);
+		}
+
+		updateDisplayedContent(displayedContent);
 	}
-
-	updateDisplayedContent(displayedContent);
 }
 
 function turnMisspelling(missId) {
@@ -306,11 +315,14 @@ function turnMisspelling(missId) {
 }
 
 function showChanges(show) {
+	var isFixed = false;
+
 	// Recorro inversamente el array de matches y sustituyo por los fixes si procede
 	var fixedRawContent = rawContent;
 	for (var idx = missMatches.length - 1; idx >= 0; idx--) {
 		var missMatch = missMatches[idx];
 		if (missMatch.fixed) {
+			isFixed = true;
 			fixedRawContent = replaceAt(fixedRawContent, missMatch.position, missMatch.word, missMatch.fix);
 		}
 	}
@@ -320,6 +332,39 @@ function showChanges(show) {
 	if (show) {
 		$('#content-to-post').collapse('show');
 	}
+
+	return isFixed;
+}
+
+function hideCorrectParagraphs() {
+	var reNewLines = new RegExp('\\n{2,}', 'g');
+	var positions = new Array();
+	var content = displayedContent;
+
+	// Añado el inicio del documento como posición
+	positions.push(0);
+
+	while ((reMatch = reNewLines.exec(content)) != null) {
+		positions.push(reMatch.index);
+	}
+
+	// Añado el final del documento como posición
+	positions.push(content.length);
+
+	var reducedContent = '';
+	for (var idx = 1; idx < positions.length; idx++) {
+		var ini = positions[idx - 1];
+		var fin = positions[idx];
+		var paragraph = content.substring(ini, fin);
+		if (paragraph.indexOf('miss-') >= 0) {
+			reducedContent += paragraph + '\n<hr>\n';
+		}
+	}
+
+	// Quito los saltos de línea repetidos
+	reducedContent = reducedContent.replace(reNewLines, '');
+
+	updateDisplayedContent(reducedContent);
 }
 
 function highlightSyntax() {
@@ -342,6 +387,7 @@ function highlightSyntax() {
 
 function updateDisplayedContent(content) {
         // Mostrar el contenido modificado
+	displayedContent = content;
         $('#article-content').html(content);
         $('#button-show-changes').collapse('show');
 

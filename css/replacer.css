@@ -7,6 +7,12 @@
 	font-size: 14px;
 }
 
+hr {
+	border-color: #333;
+	border-style: double none none;
+	border-width: medium;
+}
+
 /* SYNTAX */
 
 .syntax {
