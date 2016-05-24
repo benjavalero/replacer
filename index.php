@@ -440,12 +440,25 @@ function doEdit() {
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
   </head>
+
   <body>
-    <div class="container">
-      <div class="page-header">
-        <button id="button-save" class="btn btn-primary pull-right" type="button">Guardar cambios</button>
-        <h1>Replacer</h1>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Replacer</a>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a id="button-save" href="#" class="btn btn-primary" role="button">Guardar cambios</a>
+            </li>
+          </ul>
+        </div>
       </div>
+    </nav>
+
+    <div class="container">
 
       <p>Esta es una herramienta aún en fase <strong>beta</strong> para corregir los errores ortográficos más comunes en
  la Wikipedia en español.</p>
