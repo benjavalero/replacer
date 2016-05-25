@@ -44,8 +44,6 @@ $mwOAuthIW = 'mw';
  */
 $apiUrl = 'https://es.wikipedia.org/w/api.php';
 
-$baseUrl = 'https://tools.wmflabs.org/replacer/';
-
 /**
  * This should normally be "500". But Tool Labs insists on overriding valid 500
  * responses with a useless error page.
@@ -297,8 +295,6 @@ function fetchAccessToken() {
 	$_SESSION['tokenKey'] = $gTokenKey = $token->key;
 	$_SESSION['tokenSecret'] = $gTokenSecret = $token->secret;
 	session_write_close();
-
-	header( "Location: $baseUrl" );
 }
 
 
