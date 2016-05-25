@@ -136,7 +136,7 @@ function showAlert(message, type, closeDelay) {
 
 	// create the alert div
 	var alert = $('<div class="alert alert-' + type + ' fade in">')
-		.append($('<button type="button" class="close" data-dismiss="alert">').append("&times;"))
+		.append($('<button type="button" class="close-' + type + '" data-dismiss="alert">').append("&times;"))
 		.append(message); 
 
 	// add the alert div to top of alerts-container, use append() to add to bottom
@@ -149,7 +149,7 @@ function showAlert(message, type, closeDelay) {
 }
 
 function closeAlert() {
-	$('.close').click();
+	$('.close-info').click();
 }
 
 /*** DATABASE REQUESTS ***/
@@ -164,7 +164,8 @@ function getMisspelledPages(callback) {
 		closeAlert();
 		callback(response);
 	}).fail(function(response) {
-		showAlert('Error buscando artículos con errores ortográficos', 'danger', '');
+		closeAlert();
+		showAlert('Error buscando artículos con errores ortográficos', 'danger', JSON.stringify(response));
 	});
 }
 
@@ -181,7 +182,7 @@ function getPageMisspellings(pageTitle, callback) {
 		closeAlert();
 		callback(response);
 	}).fail(function(response) {
-		showAlert('Error buscando errores ortográficos en el artículo: ' + pageTitle, 'danger', '');
+		showAlert('Error buscando errores ortográficos en el artículo: ' + pageTitle, 'danger', JSON.stringify(response));
 	});
 }
 
@@ -189,15 +190,14 @@ function getPageMisspellings(pageTitle, callback) {
 function fixPageMisspellings(pageTitle) {
 	$.ajax({
 		url: 'php/db-update-replacement.php',
-		method: 'POST',
 		dataType: 'json',
 		data: {
 			title : pageTitle
 		}
 	}).done(function(response) {
-		debug('dtfixed actualizada: ' + response);
+		debug('dtfixed actualizada: ' + JSON.stringify(response));
 	}).fail(function(response) {
-		// FIXME showAlert('Error marcando como corregidos los errores ortográficos en el artículo: ' + pageTitle, 'danger', '');
+		showAlert('Error marcando como corregidos los errores ortográficos en el artículo: ' + pageTitle, 'danger', JSON.stringify(response));
 	});
 } 
 
@@ -224,7 +224,8 @@ function getPageContent(pageTitle, callback) {
 		closeAlert();
 		callback(encodeHtml(content));
 	}).fail(function(response) {
-		showAlert('Error obteniendo el contenido del artículo: ' + pageTitle, 'danger', '');
+		closeAlert();
+		showAlert('Error obteniendo el contenido del artículo: ' + pageTitle, 'danger', JSON.stringify(response));
 	});
 }
 
@@ -240,10 +241,11 @@ function postPageContent(pageTitle, pageContent, callback) {
 		}
 	}).done(function(response) {
 		closeAlert();
-		showAlert('Contenido guardado', 'success', 2000);
+		showAlert('Contenido guardado', 'success', 3000);
 		callback(response);
 	}).fail(function(response) {
-		showAlert('Error guardando los cambios en: ' + pageTitle, 'danger', '');
+		closeAlert();
+		showAlert('Error guardando los cambios en: ' + pageTitle, 'danger', JSON.stringify(response));
 	});
 };
 
@@ -258,7 +260,6 @@ function highlightMisspellings() {
 			var posIni = excpMatch.index;
 			var text = excpMatch[0];
 			var posFin = posIni + text.length;
-			console.log('Ini: ' + posIni + ' / Length: ' + posFin);
 			exceptions.push({ini: posIni, fin: posFin});
 		}
 	}
@@ -301,6 +302,7 @@ function highlightMisspellings() {
 	debug('Miss Matches: ' + JSON.stringify(missMatches));
 
 	if (missMatches.length == 0) {
+		showAlert('No se han encontrado errores. Cargando siguiente artículo...', '', 3000);
 		loadMisspelledPage();
 	} else {
 		// Ordeno el array de errores por posición e inversamente
@@ -404,18 +406,18 @@ function highlightSyntax() {
 }
 
 function updateDisplayedContent(content) {
-        // Mostrar el contenido modificado
+	// Mostrar el contenido modificado
 	displayedContent = content;
-        $('#article-content').html(content);
-        $('#button-show-changes').collapse('show');
+	$('#article-content').html(content);
+	$('#button-show-changes').collapse('show');
 
-        // Add event to the misspelling buttons
-        $('.miss').click(function() {
-                turnMisspelling(this.id);
-        });
+	// Add event to the misspelling buttons
+	$('.miss').click(function() {
+		turnMisspelling(this.id);
+	});
 
-        // Show cool Bootstrap tooltips
-        $(function () {
-                $('[data-toggle="tooltip"]').tooltip()
-        });
+	// Show cool Bootstrap tooltips
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip()
+	});
 }
