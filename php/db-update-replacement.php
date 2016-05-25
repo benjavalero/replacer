@@ -15,10 +15,14 @@ if ($conn->connect_error) {
 
 $title = $conn->real_escape_string(utf8_decode($_POST["title"]));
 $sql = "UPDATE replacement SET dtfixed = NOW() WHERE title = '$title'";
+$results = $conn->query($sql);
 
 header("Content-type: application/json");
 
-if (!$conn->query($sql) === TRUE) {
+if ($results) {
+	$data = array("success" => $conn->affected_rows);
+	echo json_encode($data, JSON_UNESCAPED_UNICODE);
+} else {
 	$data = array("error" => $conn->error);
 	echo json_encode($data, JSON_UNESCAPED_UNICODE);
 }
