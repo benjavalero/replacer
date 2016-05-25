@@ -27,6 +27,10 @@ var misspellings;
 // * fixed (boolean)
 var missMatches;
 
+// Exceptions where misspellings will be ignored
+var excpRegex = new Array();
+excpRegex.push(new RegExp('https?://[\\w\\./\\-\\?&%=:]+', 'g'));
+
 $(document).ready(function() {
 
 	$('#button-show-changes').click(function() {
@@ -34,15 +38,11 @@ $(document).ready(function() {
 	});
 
 	$('#button-save').click(function() {
-		var isFixed = showChanges(false);
-		if (isFixed) {
+		showChanges(false);
+		postPageContent($('#pageTitle').text(), $('#content-to-post').text(), function(response) {
+			fixPageMisspellings($('#pageTitle').text());
 			loadMisspelledPage();
-		} else {
-			postPageContent($('#pageTitle').text(), $('#content-to-post').text(), function(response) {
-				fixPageMisspellings($('#pageTitle').text());
-				loadMisspelledPage();
-			});
-		}
+		});
 	});
 
 	if (isUserLogged()) {
@@ -251,6 +251,18 @@ function postPageContent(pageTitle, pageContent, callback) {
 /*** REPLACEMENT FUNCTIONS ***/
 
 function highlightMisspellings() {
+	// Busco las excepciones
+	var exceptions = new Array();
+	for (var excpRe of excpRegex) {
+		while ((excpMatch = excpRe.exec(rawContent)) != null) {
+			var posIni = excpMatch.index;
+			var text = excpMatch[0];
+			var posFin = posIni + text.length;
+			console.log('Ini: ' + posIni + ' / Length: ' + posFin);
+			exceptions.push({ini: posIni, fin: posFin});
+		}
+	}
+
 	missMatches = new Array();
 	for (var miss of misspellings) {
 		var isCaseSensitive = (miss.cs == 1);
@@ -271,8 +283,19 @@ function highlightMisspellings() {
 			if (!isCaseSensitive && isUpperCase(reMatch[0][0])) {
 				missFix = setFirstUpperCase(missFix);
 			}
-			var missMatch = {word : reMatch[0], position : reMatch.index, fix : missFix, fixed: false};
-			missMatches.push(missMatch);
+
+			// Compruebo que no esté en ninguna excepción
+			var inException = false;
+			for (var exception of exceptions) {
+				if (exception.ini <= reMatch.index && reMatch.index <= exception.fin) {
+					inException = true;
+				}
+			}
+
+			if (!inException) {
+				var missMatch = {word : reMatch[0], position : reMatch.index, fix : missFix, fixed: false};
+				missMatches.push(missMatch);
+			}
 		}
 	}
 	debug('Miss Matches: ' + JSON.stringify(missMatches));
@@ -315,14 +338,11 @@ function turnMisspelling(missId) {
 }
 
 function showChanges(show) {
-	var isFixed = false;
-
 	// Recorro inversamente el array de matches y sustituyo por los fixes si procede
 	var fixedRawContent = rawContent;
 	for (var idx = missMatches.length - 1; idx >= 0; idx--) {
 		var missMatch = missMatches[idx];
 		if (missMatch.fixed) {
-			isFixed = true;
 			fixedRawContent = replaceAt(fixedRawContent, missMatch.position, missMatch.word, missMatch.fix);
 		}
 	}
@@ -332,8 +352,6 @@ function showChanges(show) {
 	if (show) {
 		$('#content-to-post').collapse('show');
 	}
-
-	return isFixed;
 }
 
 function hideCorrectParagraphs() {
@@ -379,7 +397,7 @@ function highlightSyntax() {
 	var reHeader = new RegExp('(\\={2,}.+?\\={2,})', 'g');
 	content = content.replace(reHeader, '<span class="syntax header">$1</span>');
 
-	var reHyperlink = new RegExp('(https?://[\\w\\./\\-\\?&%=]+)', 'g');
+	var reHyperlink = new RegExp('(https?://[\\w\\./\\-\\?&%=:]+)', 'g');
 	content = content.replace(reHyperlink, '<span class="syntax hyperlink">$1</span>');
 
 	updateDisplayedContent(content);
