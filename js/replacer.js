@@ -128,7 +128,7 @@ function replaceAt(text, position, replaced, replacement) {
 function showAlert(message, type, closeDelay) {
 	if ($('#alerts-container').length == 0) {
 		// alerts-container does not exist, create it
-		$('body').append($('<div id="alerts-container" style="position: fixed; width: 50%; left: 25%; top: 10%;">'));
+		$('body').append($('<div id="alerts-container" style="position: fixed; width: 50%; left: 25%; top: 70px;">'));
 	}
 
 	// default to alert-info; other options include success, warning, danger
@@ -136,7 +136,7 @@ function showAlert(message, type, closeDelay) {
 
 	// create the alert div
 	var alert = $('<div class="alert alert-' + type + ' fade in">')
-		.append($('<button type="button" class="close-' + type + '" data-dismiss="alert">').append("&times;"))
+		.append($('<button type="button" class="close close-' + type + '" data-dismiss="alert">').append("&times;"))
 		.append(message); 
 
 	// add the alert div to top of alerts-container, use append() to add to bottom
@@ -342,7 +342,7 @@ function turnMisspelling(missId) {
 function showChanges(show) {
 	// Recorro inversamente el array de matches y sustituyo por los fixes si procede
 	var fixedRawContent = rawContent;
-	for (var idx = missMatches.length - 1; idx >= 0; idx--) {
+	for (var idx = 0; idx < missMatches.length; idx++) {
 		var missMatch = missMatches[idx];
 		if (missMatch.fixed) {
 			fixedRawContent = replaceAt(fixedRawContent, missMatch.position, missMatch.word, missMatch.fix);

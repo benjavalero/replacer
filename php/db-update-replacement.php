@@ -13,7 +13,7 @@ if ($conn->connect_error) {
 	die("Connection failed: " . $conn->connect_error);
 }
 
-$title = $conn->real_escape_string(utf8_decode($_POST["title"]));
+$title = $conn->real_escape_string(utf8_decode($_GET["title"]));
 $sql = "UPDATE replacement SET dtfixed = NOW() WHERE title = '$title'";
 $results = $conn->query($sql);
 

@@ -451,7 +451,7 @@ function doEdit() {
         <div class="navbar-collapse collapse" id="navbar">
           <ul class="nav navbar-nav navbar-right">
             <li>
-              <a id="button-save" href="#" class="btn btn-primary" role="button">Guardar cambios</a>
+              <a id="button-save" href="#" class="btn btn-default" role="button">Guardar cambios</a>
             </li>
           </ul>
         </div>
