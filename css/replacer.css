@@ -2,10 +2,6 @@ body {
   padding-top: 70px;
 }
 
-#button-save {
-	color: #ffffff;
-}
-
 .pre {
 	font-family: monospace;
 	white-space: pre-wrap;
