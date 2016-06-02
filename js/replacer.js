@@ -33,16 +33,25 @@ excpRegex.push(new RegExp('https?://[\\w\\./\\-\\?&%=:]+', 'g'));
 
 $(document).ready(function() {
 
+	// Muestra el texto final con los reemplazos hechos
 	$('#button-show-changes').click(function() {
 		showChanges(true);
 	});
 
 	$('#button-save').click(function() {
-		showChanges(false);
-		postPageContent($('#pageTitle').text(), $('#content-to-post').text(), function(response) {
-			fixPageMisspellings($('#pageTitle').text());
-			loadMisspelledPage();
-		});
+		// Realiza los reemplazos
+		if (showChanges(false)) {
+			postPageContent(
+				$('#pageTitle').text(),
+				$('#content-to-post').text(),
+				function(response) {
+					fixPageMisspellings($('#pageTitle').text());
+					loadMisspelledPage();
+				}
+			);
+		} else {
+			showAlert('No se han realizado cambios en el artículo');
+		}
 	});
 
 	if (isUserLogged()) {
@@ -59,8 +68,9 @@ function findMisspelledPages() {
 	});
 }
 
+// Carga el siguiente artículo con errores
 function loadMisspelledPage() {
-        $('#content-to-post').collapse('hide');
+	$('#content-to-post').collapse('hide');
 
 	if (misspelledPages.length == 0) {
 		findMisspelledPages();
@@ -347,6 +357,10 @@ function turnMisspelling(missId) {
 	}
 }
 
+
+// Realiza los reemplazos
+// Si "show = true", muestra el texto final.
+// Devuelve un booleano indicando si hay cambios
 function showChanges(show) {
 	// Recorro inversamente el array de matches y sustituyo por los fixes si procede
 	var fixedRawContent = rawContent;
@@ -362,6 +376,8 @@ function showChanges(show) {
 	if (show) {
 		$('#content-to-post').collapse('show');
 	}
+
+	return (missMatches.length > 0);
 }
 
 function hideCorrectParagraphs() {
