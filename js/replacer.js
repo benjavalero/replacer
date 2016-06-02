@@ -67,6 +67,7 @@ $(document).ready(function() {
 			);
 		} else {
 			showAlert('No se han realizado cambios en el artículo', 'info', 3000);
+			fixPageMisspellings($('#pageTitle').text());
 			loadMisspelledPage();
 		}
 	});
@@ -346,6 +347,7 @@ function highlightMisspellings() {
 
 	if (missMatches.length == 0) {
 		showAlert('No se han encontrado errores. Cargando siguiente artículo...', 'info', 3000);
+		fixPageMisspellings($('#pageTitle').text());
 		loadMisspelledPage();
 	} else {
 		// Ordeno el array de errores por posición e inversamente
