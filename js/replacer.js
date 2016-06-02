@@ -60,6 +60,8 @@ function findMisspelledPages() {
 }
 
 function loadMisspelledPage() {
+        $('#content-to-post').collapse('hide');
+
 	if (misspelledPages.length == 0) {
 		findMisspelledPages();
 	} else {
@@ -116,6 +118,11 @@ function isUpperCase(ch) {
 // país  =>  País
 function setFirstUpperCase(word) {
 	return word[0].toUpperCase() + word.substr(1);
+}
+
+function getRegexWordIgnoreCase(word) {
+	var ch = word[0];
+	return '[' + ch.toUpperCase() + ch.toLowerCase() + ']' + word.substring(1);
 }
 
 // replaceAt('0123456789', 3, '34', 'XXXX')  =>  '012XXXX56789'
@@ -268,10 +275,11 @@ function highlightMisspellings() {
 	for (var miss of misspellings) {
 		var isCaseSensitive = (miss.cs == 1);
 		var flags = 'g';
+		var word = miss.word;
 		if (!isCaseSensitive) {
-			flags += 'i';
+			word = getRegexWordIgnoreCase(word);
 		}
-		var re = new RegExp('\\b(' + miss.word + ')\\b', flags);
+		var re = new RegExp('\\b(' + word + ')\\b', flags);
 
 		// En este momento, debería ser rawContent == displayedContent
 		if (rawContent != displayedContent) {
