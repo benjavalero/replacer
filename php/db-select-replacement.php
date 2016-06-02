@@ -14,11 +14,11 @@ if ($conn->connect_error) {
 }
 
 // Get random offset
-$offset_result = $conn->query("SELECT FLOOR(RAND() * COUNT(*)) AS offset FROM replacement");
-$offset_row = $offset_result->fetch_assoc();
-$offset = intval($offset_row["offset"]);
+//$offset_result = $conn->query("SELECT FLOOR(RAND() * COUNT(*)) AS offset FROM replacement");
+//$offset_row = $offset_result->fetch_assoc();
+//$offset = intval($offset_row["offset"]);
 
-$sql = "SELECT DISTINCT title FROM replacement WHERE dtfixed = 0 LIMIT $offset, 1";
+$sql = "SELECT DISTINCT title FROM replacement WHERE dtfixed IS NULL LIMIT 5";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
 	$title_array = array();
