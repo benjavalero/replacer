@@ -50,7 +50,7 @@ $(document).ready(function() {
 				}
 			);
 		} else {
-			showAlert('No se han realizado cambios en el artículo', 'info', 5000);
+			showAlert('No se han realizado cambios en el artículo', 'info', 3000);
 			loadMisspelledPage();
 		}
 	});
@@ -155,22 +155,22 @@ function showAlert(message, type, closeDelay) {
 	type = type || "info";
 
 	// create the alert div
-	alertId++;
-	var alert = $('<div id="alert-' + alertId + '" class="alert alert-' + type + ' fade in">')
+	var msgId = alertId++;
+	var alert = $('<div id="alert-' + msgId + '" class="alert alert-' + type + ' fade in">')
 		.append($('<button type="button" class="close close-' + type + '" data-dismiss="alert">').append("&times;"))
 		.append(message); 
 
 	// add the alert div to top of alerts-container, use append() to add to bottom
-	$("#alerts-container").prepend(alert);
+	$("#alerts-container").append(alert);
 
 	// if closeDelay was passed - set a timeout to close the alert
 	if (closeDelay) {
-		window.setTimeout(function() {
-			$('#alert-' + alertId).alert("close")
+		setTimeout(function() {
+			$('#alert-' + msgId).alert("close")
 		}, closeDelay);
 	}
 
-	return alertId;
+	return 'alert-' + msgId;
 }
 
 function closeAlert(msgId) {
@@ -208,7 +208,7 @@ function getPageMisspellings(pageTitle, callback) {
 		callback(response);
 	}).fail(function(response) {
 		closeAlert(msgId);
-		showAlert('Error buscando errores ortográficos en el artículo: ' + pageTitle '. ' + JSON.stringify(response), 'danger');
+		showAlert('Error buscando errores ortográficos en el artículo: ' + pageTitle + '. ' + JSON.stringify(response), 'danger');
 	});
 }
 
@@ -267,7 +267,7 @@ function postPageContent(pageTitle, pageContent, callback) {
 		}
 	}).done(function(response) {
 		closeAlert(msgId);
-		showAlert('Contenido guardado', 'success', 5000);
+		showAlert('Contenido guardado', 'success', 3000);
 		callback(response);
 	}).fail(function(response) {
 		closeAlert(msgId);
@@ -329,7 +329,7 @@ function highlightMisspellings() {
 	debug('Miss Matches: ' + JSON.stringify(missMatches));
 
 	if (missMatches.length == 0) {
-		showAlert('No se han encontrado errores. Cargando siguiente artículo...', 'info', 5000);
+		showAlert('No se han encontrado errores. Cargando siguiente artículo...', 'info', 3000);
 		loadMisspelledPage();
 	} else {
 		// Ordeno el array de errores por posición e inversamente
