@@ -51,6 +51,7 @@ $(document).ready(function() {
 			);
 		} else {
 			showAlert('No se han realizado cambios en el artículo');
+			loadMisspelledPage();
 		}
 	});
 
