@@ -50,7 +50,7 @@ $(document).ready(function() {
 				}
 			);
 		} else {
-			showAlert('No se han realizado cambios en el artículo');
+			showAlert('No se han realizado cambios en el artículo', 'info', 5000);
 			loadMisspelledPage();
 		}
 	});
@@ -143,6 +143,8 @@ function replaceAt(text, position, replaced, replacement) {
 
 /*** ALERT UTILS ***/
 
+// Muestra una alerta y devuelve su ID por si la queremos cerrar manualmente
+var alertId = 0;
 function showAlert(message, type, closeDelay) {
 	if ($('#alerts-container').length == 0) {
 		// alerts-container does not exist, create it
@@ -153,7 +155,8 @@ function showAlert(message, type, closeDelay) {
 	type = type || "info";
 
 	// create the alert div
-	var alert = $('<div class="alert alert-' + type + ' fade in">')
+	alertId++;
+	var alert = $('<div id="alert-' + alertId + '" class="alert alert-' + type + ' fade in">')
 		.append($('<button type="button" class="close close-' + type + '" data-dismiss="alert">').append("&times;"))
 		.append(message); 
 
@@ -162,34 +165,38 @@ function showAlert(message, type, closeDelay) {
 
 	// if closeDelay was passed - set a timeout to close the alert
 	if (closeDelay) {
-		window.setTimeout(function() {alert.alert("close") }, closeDelay);
+		window.setTimeout(function() {
+			$('#alert-' + alertId).alert("close")
+		}, closeDelay);
 	}
+
+	return alertId;
 }
 
-function closeAlert() {
-	$('.close-info').click();
+function closeAlert(msgId) {
+	$('#' + msgId).alert('close');
 }
 
 /*** DATABASE REQUESTS ***/
 
 /* Run query in DB to get a list of pages with misspellings */
 function getMisspelledPages(callback) {
-	showAlert('Buscando artículos con errores ortográficos...');
+	var msgId = showAlert('Buscando artículos con errores ortográficos...');
 	$.ajax({
 		url: 'php/db-select-replacement.php',
 		dataType: 'json'
 	}).done(function(response) {
-		closeAlert();
+		closeAlert(msgId);
 		callback(response);
 	}).fail(function(response) {
-		closeAlert();
-		showAlert('Error buscando artículos con errores ortográficos', 'danger', JSON.stringify(response));
+		closeAlert(msgId);
+		showAlert('Error buscando artículos con errores ortográficos. ' + JSON.stringify(response), 'danger');
 	});
 }
 
 /* Run query in DB to get the misspellings of a page */
 function getPageMisspellings(pageTitle, callback) {
-	showAlert('Buscando errores ortográficos en el artículo: ' + pageTitle);
+	var msgId = showAlert('Buscando errores ortográficos en el artículo: ' + pageTitle);
 	$.ajax({
 		url: 'php/db-select-misspellings.php',
 		dataType: 'json',
@@ -197,10 +204,11 @@ function getPageMisspellings(pageTitle, callback) {
 			title : pageTitle
 		}
 	}).done(function(response) {
-		closeAlert();
+		closeAlert(msgId);
 		callback(response);
 	}).fail(function(response) {
-		showAlert('Error buscando errores ortográficos en el artículo: ' + pageTitle, 'danger', JSON.stringify(response));
+		closeAlert(msgId);
+		showAlert('Error buscando errores ortográficos en el artículo: ' + pageTitle '. ' + JSON.stringify(response), 'danger');
 	});
 }
 
@@ -215,7 +223,7 @@ function fixPageMisspellings(pageTitle) {
 	}).done(function(response) {
 		debug('dtfixed actualizada: ' + JSON.stringify(response));
 	}).fail(function(response) {
-		showAlert('Error marcando como corregidos los errores ortográficos en el artículo: ' + pageTitle, 'danger', JSON.stringify(response));
+		showAlert('Error marcando como corregidos los errores ortográficos en el artículo: ' + pageTitle + '. ' + JSON.stringify(response), 'danger');
 	});
 } 
 
@@ -223,7 +231,7 @@ function fixPageMisspellings(pageTitle) {
 
 /* Retrieve the content of a page from Wikipedia */
 function getPageContent(pageTitle, callback) {
-	showAlert('Obteniendo contenido del artículo: ' + pageTitle);
+	var msgId = showAlert('Obteniendo contenido del artículo: ' + pageTitle);
 	$.ajax({
 		url: 'index.php',
 		dataType: 'json',
@@ -239,16 +247,16 @@ function getPageContent(pageTitle, callback) {
 			var pageTitle = pages[pageId].title;
 			content = pages[pageId].revisions[0]['*'];
 		}
-		closeAlert();
+		closeAlert(msgId);
 		callback(encodeHtml(content));
 	}).fail(function(response) {
-		closeAlert();
-		showAlert('Error obteniendo el contenido del artículo: ' + pageTitle, 'danger', JSON.stringify(response));
+		closeAlert(msgId);
+		showAlert('Error obteniendo el contenido del artículo: ' + pageTitle + '. ' + JSON.stringify(response), 'danger');
 	});
 }
 
 function postPageContent(pageTitle, pageContent, callback) {
-	showAlert('Guardando cambios del artículo: ' + pageTitle);
+	var msgId = showAlert('Guardando cambios del artículo: ' + pageTitle);
 	$.ajax({
 		url: 'index.php',
 		method: 'POST',
@@ -258,12 +266,12 @@ function postPageContent(pageTitle, pageContent, callback) {
 			text: pageContent
 		}
 	}).done(function(response) {
-		closeAlert();
-		showAlert('Contenido guardado', 'success', 3000);
+		closeAlert(msgId);
+		showAlert('Contenido guardado', 'success', 5000);
 		callback(response);
 	}).fail(function(response) {
-		closeAlert();
-		showAlert('Error guardando los cambios en: ' + pageTitle, 'danger', JSON.stringify(response));
+		closeAlert(msgId);
+		showAlert('Error guardando los cambios en: ' + pageTitle + '. ' + JSON.stringify(response), 'danger');
 	});
 };
 
@@ -321,7 +329,7 @@ function highlightMisspellings() {
 	debug('Miss Matches: ' + JSON.stringify(missMatches));
 
 	if (missMatches.length == 0) {
-		showAlert('No se han encontrado errores. Cargando siguiente artículo...', '', 3000);
+		showAlert('No se han encontrado errores. Cargando siguiente artículo...', 'info', 5000);
 		loadMisspelledPage();
 	} else {
 		// Ordeno el array de errores por posición e inversamente
