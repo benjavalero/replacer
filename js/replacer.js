@@ -362,12 +362,15 @@ function turnMisspelling(missId) {
 // Si "show = true", muestra el texto final.
 // Devuelve un booleano indicando si hay cambios
 function showChanges(show) {
+	var numFixes = 0;
+
 	// Recorro inversamente el array de matches y sustituyo por los fixes si procede
 	var fixedRawContent = rawContent;
 	for (var idx = 0; idx < missMatches.length; idx++) {
 		var missMatch = missMatches[idx];
 		if (missMatch.fixed) {
 			fixedRawContent = replaceAt(fixedRawContent, missMatch.position, missMatch.word, missMatch.fix);
+			numFixes++;
 		}
 	}
 
@@ -377,7 +380,7 @@ function showChanges(show) {
 		$('#content-to-post').collapse('show');
 	}
 
-	return (missMatches.length > 0);
+	return (numFixes > 0);
 }
 
 function hideCorrectParagraphs() {
