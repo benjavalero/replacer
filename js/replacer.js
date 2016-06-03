@@ -61,14 +61,16 @@ $(document).ready(function() {
 				$('#pageTitle').text(),
 				$('#content-to-post').text(),
 				function(response) {
-					fixPageMisspellings($('#pageTitle').text());
-					loadMisspelledPage();
+					fixPageMisspellings($('#pageTitle').text(), function() {
+						loadMisspelledPage();
+					});
 				}
 			);
 		} else {
 			showAlert('No se han realizado cambios en el artículo', 'info', 3000);
-			fixPageMisspellings($('#pageTitle').text());
-			loadMisspelledPage();
+			fixPageMisspellings($('#pageTitle').text(), function() {
+				loadMisspelledPage();
+			});
 		}
 	});
 
@@ -230,7 +232,7 @@ function getPageMisspellings(pageTitle, callback) {
 }
 
 /* Run query in DB to mark as fixed the misspellings of a page */
-function fixPageMisspellings(pageTitle) {
+function fixPageMisspellings(pageTitle, callback) {
 	$.ajax({
 		url: 'php/db-update-replacement.php',
 		dataType: 'json',
@@ -239,6 +241,7 @@ function fixPageMisspellings(pageTitle) {
 		}
 	}).done(function(response) {
 		debug('dtfixed actualizada: ' + JSON.stringify(response));
+		callback(response);
 	}).fail(function(response) {
 		showAlert('Error marcando como corregidos los errores ortográficos en el artículo: ' + pageTitle + '. ' + JSON.stringify(response), 'danger');
 	});
@@ -347,8 +350,9 @@ function highlightMisspellings() {
 
 	if (missMatches.length == 0) {
 		showAlert('No se han encontrado errores. Cargando siguiente artículo...', 'info', 3000);
-		fixPageMisspellings($('#pageTitle').text());
-		loadMisspelledPage();
+		fixPageMisspellings($('#pageTitle').text(), function() {
+			loadMisspelledPage();
+		});
 	} else {
 		// Ordeno el array de errores por posición e inversamente
 		missMatches.sort(function(a, b) {
