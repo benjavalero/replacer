@@ -27,22 +27,27 @@ var misspellings;
 // * fixed (boolean)
 var missMatches;
 
+// \w doesn't include accentuated characters
+var WORD_CHARACTER_CLASS = '\\wÁáÉéÍíÓóÚúÜüÑñ';
+
 // Exceptions where misspellings will be ignored
+// JavaScript doesn't support regex lookbehind
+// JavaScript doesn't support dotall flag. Workaround: . => [\\S\\s]
 var excpRegex = new Array();
-excpRegex.push(new RegExp('\\|[\\wáéíóúÁÉÍÓÍÚüÜñÑ\\s]+\\=', 'g')); // Template Param
-excpRegex.push(new RegExp('\\|\\s*índice\\s*=.*?[\\}\\|]', 'g')); // Index value
+excpRegex.push(new RegExp('\\|[' + WORD_CHARACTER_CLASS + '\\s]+(?=\\=)', 'g')); // Template Param
+excpRegex.push(new RegExp('\\|\\s*índice\\s*=[\\S\\s]*?[\\}\\|]', 'g')); // Index value
 excpRegex.push(new RegExp('\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\|)[^\\}]*', 'g')); // Unreplaceable template
 excpRegex.push(new RegExp('\\{\\{[^\\|\\}]+', 'g')); // Template name
 excpRegex.push(new RegExp('\\{\\{(?:[Cc]ita|c?Quote)\\|[^\\}]*', 'g')); // Quote
-excpRegex.push(new RegExp("'{1,5}.+?'{1,5}", 'g')); // Quotes
+excpRegex.push(new RegExp("'{2,5}.+?'{2,5}", 'g')); // Quotes
 excpRegex.push(new RegExp('«[^»]+»', 'g')); // Angular Quotes
 excpRegex.push(new RegExp('“[^”]+”', 'g')); // Typographic Quotes
 excpRegex.push(new RegExp('"[^"]+"', 'g')); // Double Quotes
-excpRegex.push(new RegExp('[\\=\\|:][^\\=\\|:]+\\.(?:svg|jpe?g|png|gif|ogg|pdf)', 'g')); // File Name
+excpRegex.push(new RegExp('[\\=\\|:][^\\=\\|:]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|ogg|pdf)', 'g')); // File Name
 excpRegex.push(new RegExp('<ref[^>]*>', 'g')); // Ref Name
 excpRegex.push(new RegExp('\\[\\[Categoría:.*?\\]\\]', 'g')); // Category
-excpRegex.push(new RegExp('<!--.*?-->', 'g')); // Comment
-excpRegex.push(new RegExp('https?://[\\w\\./\\-\\?&%=:]+', 'g')); // URL
+excpRegex.push(new RegExp('<!--[\\S\\s]*?-->', 'g')); // Comment
+excpRegex.push(new RegExp('https?://[\\w\\./\\-\\+\\?&%=:#]+', 'g')); // URL
 
 // Ignore some misspellings with most false positives
 excpRegex.push(new RegExp('[Ss]ólo|[Ii]ndex|[Ll]ink|[Rr]eferences?', 'g'));
@@ -319,7 +324,7 @@ function highlightMisspellings() {
 		if (!isCaseSensitive) {
 			word = getRegexWordIgnoreCase(word);
 		}
-		var re = new RegExp('\\b(' + word + ')\\b', flags);
+		var re = new RegExp('[^' + WORD_CHARACTER_CLASS + '](' + word + ')[^' + WORD_CHARACTER_CLASS + ']', flags);
 
 		// En este momento, debería ser rawContent == displayedContent
 		if (rawContent != displayedContent) {
