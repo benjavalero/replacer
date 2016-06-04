@@ -47,7 +47,9 @@ excpRegex.push(new RegExp('[\\=\\|:][^\\=\\|:]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|o
 excpRegex.push(new RegExp('<ref[^>]*>', 'g')); // Ref Name
 excpRegex.push(new RegExp('\\[\\[Categoría:.*?\\]\\]', 'g')); // Category
 excpRegex.push(new RegExp('<!--[\\S\\s]*?-->', 'g')); // Comment
-excpRegex.push(new RegExp('https?://[\\w\\./\\-\\+\\?&%=:#]+', 'g')); // URL
+
+var reHyperlink = new RegExp('https?://[\\w\\./\\-\\+\\?&%=:#]+', 'g'); // URL
+excpRegex.push(reHyperlink); // URL
 
 // Ignore some misspellings with most false positives
 excpRegex.push(new RegExp('[Ss]ólo|[Ii]ndex|[Ll]ink|[Rr]eferences?', 'g'));
@@ -463,7 +465,6 @@ function highlightSyntax() {
 	var reHeader = new RegExp('(\\={2,}.+?\\={2,})', 'g');
 	content = content.replace(reHeader, '<span class="syntax header">$1</span>');
 
-	var reHyperlink = new RegExp('(https?://[\\w\\./\\-\\?&%=:]+)', 'g');
 	content = content.replace(reHyperlink, '<span class="syntax hyperlink">$1</span>');
 
 	updateDisplayedContent(content);
