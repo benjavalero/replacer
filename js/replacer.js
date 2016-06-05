@@ -1,7 +1,7 @@
 /*** Global variables ***/
 
 // Constant to define if debug is enabled
-var DEBUG = true;
+var DEBUG = false;
 
 // Array with titles (strings) of pages with misspellings 
 var misspelledPages;
@@ -306,9 +306,10 @@ function highlightMisspellings() {
 			var posIni = excpMatch.index;
 			var text = excpMatch[0];
 			var posFin = posIni + text.length;
-			exceptions.push({ini: posIni, fin: posFin});
+			exceptions.push({ini: posIni, fin: posFin, text: text});
 		}
 	}
+	debug('Exceptions: ' + JSON.stringify(exceptions));
 
 	missMatches = new Array();
 	for (var miss of misspellings) {
