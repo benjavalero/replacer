@@ -18,7 +18,7 @@ if ($conn->connect_error) {
 //$offset_row = $offset_result->fetch_assoc();
 //$offset = intval($offset_row["offset"]);
 
-$sql = "SELECT DISTINCT title FROM replacement WHERE dtfixed IS NULL LIMIT 5";
+$sql = "SELECT DISTINCT title FROM replacement WHERE dtfixed IS NULL LIMIT 1";
 $result = $conn->query($sql);
 if ($result->num_rows > 0) {
 	$title_array = array();
