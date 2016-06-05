@@ -48,11 +48,11 @@ excpRegex.push(new RegExp('<ref[^>]*>', 'g')); // Ref Name
 excpRegex.push(new RegExp('\\[\\[Categoría:.*?\\]\\]', 'g')); // Category
 excpRegex.push(new RegExp('<!--[\\S\\s]*?-->', 'g')); // Comment
 
-var reHyperlink = new RegExp('https?://[\\w\\./\\-\\+\\?&%=:#]+', 'g'); // URL
+var reHyperlink = new RegExp('(https?://[\\w\\./\\-\\+\\?&%=:#;]+)', 'g'); // URL
 excpRegex.push(reHyperlink); // URL
 
 // Ignore some misspellings with most false positives
-excpRegex.push(new RegExp('[Ss]ólo|[Ii]ndex|[Ll]ink|[Rr]eferences?', 'g'));
+excpRegex.push(new RegExp('[Ss]ólo|[Ii]ndex|[Ll]ink|[Oo]nline|[Rr]eferences?|[Aa]un así', 'g'));
 
 $(document).ready(function() {
 
@@ -333,24 +333,26 @@ function highlightMisspellings() {
 			debug('ERROR: los contenidos iniciales no coinciden');
 		}
 		while ((reMatch = re.exec(rawContent)) != null) {
+			// La regex captura los caracteres anterior y posterior de la palabra
 			// Apply case-insensitive fix if necessary
 			var suggestions = miss.suggestion.split(' ');
 			var missFix = suggestions[0];
-			if (!isCaseSensitive && isUpperCase(reMatch[1][0])) {
+			var matchWord = reMatch[1];
+			var matchIndex = reMatch.index + 1;
+			if (!isCaseSensitive && isUpperCase(matchWord[0])) {
 				missFix = setFirstUpperCase(missFix);
 			}
 
 			// Compruebo que no esté en ninguna excepción
 			var inException = false;
 			for (var exception of exceptions) {
-				if (exception.ini <= reMatch.index && reMatch.index <= exception.fin) {
+				if (exception.ini <= matchIndex && matchIndex <= exception.fin) {
 					inException = true;
 				}
 			}
 
 			if (!inException) {
-				// La regex captura los caracteres anterior y posterior de la palabra
-				var missMatch = {word : reMatch[1], position : reMatch.index + 1, fix : missFix, fixed: false};
+				var missMatch = {word : matchWord, position : matchIndex, fix : missFix, fixed: false};
 				missMatches.push(missMatch);
 			}
 		}
