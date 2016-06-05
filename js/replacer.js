@@ -336,7 +336,7 @@ function highlightMisspellings() {
 			// Apply case-insensitive fix if necessary
 			var suggestions = miss.suggestion.split(' ');
 			var missFix = suggestions[0];
-			if (!isCaseSensitive && isUpperCase(reMatch[0][0])) {
+			if (!isCaseSensitive && isUpperCase(reMatch[1][0])) {
 				missFix = setFirstUpperCase(missFix);
 			}
 
@@ -349,7 +349,8 @@ function highlightMisspellings() {
 			}
 
 			if (!inException) {
-				var missMatch = {word : reMatch[0], position : reMatch.index, fix : missFix, fixed: false};
+				// La regex captura los caracteres anterior y posterior de la palabra
+				var missMatch = {word : reMatch[1], position : reMatch.index + 1, fix : missFix, fixed: false};
 				missMatches.push(missMatch);
 			}
 		}
