@@ -272,10 +272,18 @@ function getPageContent(pageTitle, callback) {
 		var content;
 		for (var pageId in pages) {
 			var pageTitle = pages[pageId].title;
-			content = pages[pageId].revisions[0]['*'];
+			if (pages[pageId].revisions) {
+				content = pages[pageId].revisions[0]['*'];
+			}
 		}
 		closeAlert(msgId);
-		callback(encodeHtml(content));
+		if (content) {
+			callback(encodeHtml(content));
+		} else {
+			fixPageMisspellings(pageTitle, function() {
+				loadMisspelledPage();
+			});
+		}
 	}).fail(function(response) {
 		closeAlert(msgId);
 		showAlert('Error obteniendo el contenido del artículo: ' + pageTitle + '. ' + JSON.stringify(response), 'danger');
