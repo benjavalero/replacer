@@ -4,7 +4,7 @@
 var DEBUG = false;
 
 // Array with titles (strings) of pages with misspellings
-var misspelledPageTitles;
+var misspelledPageTitles = [];
 
 // String containing the original content of the page
 var rawContent;
@@ -104,13 +104,13 @@ $(document).ready(function() {
 						setPageMisspellingsAsFixed(
 								$('#pageTitle').text(),
 								function() {
-									loadMisspelledPage();
+									findAndLoadMisspelledPage();
 								});
 					});
 		} else {
 			showAlert('No se han realizado cambios en el artículo', 'info', 3000);
 			setPageMisspellingsAsFixed($('#pageTitle').text(), function() {
-				loadMisspelledPage();
+				findAndLoadMisspelledPage();
 			});
 		}
 	});
@@ -272,7 +272,7 @@ function getMisspelledPages(callback) {
 
 /** Run query in DB to get the misspellings of a page */
 function getPageMisspellings(pageTitle, callback) {
-	ino('Buscando errores ortográficos en el artículo «' + pageTitle + '»…');
+	info('Buscando errores ortográficos en el artículo «' + pageTitle + '»…');
 	$.ajax({
 		url : 'php/db-select-misspellings.php',
 		dataType : 'json',
@@ -369,7 +369,7 @@ function highlightMisspellings(content) {
 
 	/* 1. Find the exception matches */
 	var pageExceptions = [];
-	for ( var exceptionRegExp in exceptionRegExps) {
+	for (let exceptionRegExp of exceptionRegExps) {
 		while ((exceptionMatch = exceptionRegExp.exec(content)) != null) {
 			var startPosition = exceptionMatch.index;
 			var matchingText = exceptionMatch[0];
@@ -386,9 +386,9 @@ function highlightMisspellings(content) {
 	/* 2. Find the misspelling matches. Ignore the ones in exceptions. */
 	pageMisspellingMatches = [];
 
-	for ( var pageMisspelling in pageMisspellings) {
+	for (let pageMisspelling of pageMisspellings) {
 		// Build the misspelling regex
-		var isCaseSensitive = (pageMisspelling.cs === 1);
+		var isCaseSensitive = (pageMisspelling.cs === '1');
 		var flags = 'g';
 		var word = pageMisspelling.word;
 		if (!isCaseSensitive) {
@@ -411,7 +411,7 @@ function highlightMisspellings(content) {
 
 			// Only treat misspellings not in exception
 			var inException = false;
-			for ( var exception in pageExceptions) {
+			for (let exception of pageExceptions) {
 				if ((exception.ini <= matchIndex)
 						&& (matchIndex <= exception.fin)) {
 					inException = true;
