@@ -1,9 +1,9 @@
-/*** Global variables ***/
+/** Global variables */
 
 // Constant to define if debug is enabled
 var DEBUG = false;
 
-// Array with titles (strings) of pages with misspellings 
+// Array with titles (strings) of pages with misspellings
 var misspelledPages;
 
 // String containing the original content of the page
@@ -34,22 +34,49 @@ var WORD_CHARACTER_CLASS = '\\wÁáÉéÍíÓóÚúÜüÑñ';
 // JavaScript doesn't support regex lookbehind
 // JavaScript doesn't support dotall flag. Workaround: . => [\\S\\s]
 var excpRegex = new Array();
-excpRegex.push(new RegExp('\\|[' + WORD_CHARACTER_CLASS + '\\s]+(?=\\=)', 'g')); // Template Param
-excpRegex.push(new RegExp('\\|\\s*índice\\s*=[\\S\\s]*?[\\}\\|]', 'g')); // Index value
-excpRegex.push(new RegExp('\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\|)[^\\}]*', 'g')); // Unreplaceable template
-excpRegex.push(new RegExp('\\{\\{[^\\|\\}]+', 'g')); // Template name
-excpRegex.push(new RegExp('\\{\\{(?:[Cc]ita|c?Quote)\\|[^\\}]*', 'g')); // Quote
-excpRegex.push(new RegExp("'{2,5}.+?'{2,5}", 'g')); // Quotes
-excpRegex.push(new RegExp('«[^»]+»', 'g')); // Angular Quotes
-excpRegex.push(new RegExp('“[^”]+”', 'g')); // Typographic Quotes
-excpRegex.push(new RegExp('"[^"]+"', 'g')); // Double Quotes
-excpRegex.push(new RegExp('[\\=\\|:][^\\=\\|:]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|ogg|pdf)', 'g')); // File Name
-excpRegex.push(new RegExp('<ref[^>]*>', 'g')); // Ref Name
-excpRegex.push(new RegExp('\\[\\[Categoría:.*?\\]\\]', 'g')); // Category
-excpRegex.push(new RegExp('<!--[\\S\\s]*?-->', 'g')); // Comment
 
-var reHyperlink = new RegExp('(https?://[\\w\\./\\-\\+\\?&%=:#;]+)', 'g'); // URL
-excpRegex.push(reHyperlink); // URL
+// Template Param
+excpRegex.push(new RegExp('\\|[' + WORD_CHARACTER_CLASS + '\\s]+(?=\\=)', 'g'));
+
+// Index value
+excpRegex.push(new RegExp('\\|\\s*índice\\s*=[\\S\\s]*?[\\}\\|]', 'g')); 
+
+// Unreplaceable template
+excpRegex.push(new RegExp('\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\|)[^\\}]*', 'g')); 
+
+// Template name
+excpRegex.push(new RegExp('\\{\\{[^\\|\\}]+', 'g')); 
+
+// Quote
+excpRegex.push(new RegExp('\\{\\{(?:[Cc]ita|c?Quote)\\|[^\\}]*', 'g'));
+
+// Quotes
+excpRegex.push(new RegExp("'{2,5}.+?'{2,5}", 'g'));
+
+// Angular Quotes
+excpRegex.push(new RegExp('«[^»]+»', 'g')); 
+
+// Typographic Quotes
+excpRegex.push(new RegExp('“[^”]+”', 'g'));
+
+// Double Quotes
+excpRegex.push(new RegExp('"[^"]+"', 'g')); 
+
+// File Name
+excpRegex.push(new RegExp('[\\=\\|:][^\\=\\|:]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|ogg|pdf)', 'g'));
+
+// Ref Name
+excpRegex.push(new RegExp('<ref[^>]*>', 'g'));
+
+// Category
+excpRegex.push(new RegExp('\\[\\[Categoría:.*?\\]\\]', 'g'));
+
+// Comment
+excpRegex.push(new RegExp('<!--[\\S\\s]*?-->', 'g'));
+
+// URL
+var reHyperlink = new RegExp('(https?://[\\w\\./\\-\\+\\?&%=:#;]+)', 'g');
+excpRegex.push(reHyperlink);
 
 // Ignore some misspellings with most false positives
 excpRegex.push(new RegExp('[Ss]ólo|[Ii]ndex|[Ll]ink|[Oo]nline|[Rr]eferences?|[Aa]un así', 'g'));
@@ -123,7 +150,7 @@ function loadMisspelledPage() {
 }
 
 
-/*** UTILS ***/
+/** UTILS */
 
 function isUserLogged() {
 	return $('#tokenKey').val().length > 0;
@@ -135,14 +162,14 @@ function debug(message) {
 	}
 }
 
-/*** STRING UTILS ***/
+/** STRING UTILS */
 
-// <div>  =>  &lt;div&gt;
+// <div> => &lt;div&gt;
 function encodeHtml(htmlText) {
 	return jQuery('<div />').text(htmlText).html();
 }
 
-// &lt;div&gt;  =>  <div>
+// &lt;div&gt; => <div>
 function decodeHtml(htmlText) {
 	return jQuery('<div />').html(htmlText).text();
 }
@@ -152,7 +179,7 @@ function isUpperCase(ch) {
 	return ch == ch.toUpperCase();
 }
 
-// país  =>  País
+// país => País
 function setFirstUpperCase(word) {
 	return word[0].toUpperCase() + word.substr(1);
 }
@@ -162,12 +189,12 @@ function getRegexWordIgnoreCase(word) {
 	return '[' + ch.toUpperCase() + ch.toLowerCase() + ']' + word.substring(1);
 }
 
-// replaceAt('0123456789', 3, '34', 'XXXX')  =>  '012XXXX56789'
+// replaceAt('0123456789', 3, '34', 'XXXX') => '012XXXX56789'
 function replaceAt(text, position, replaced, replacement) {
 	return text.substr(0, position) + replacement + text.substr(position + replaced.length);
 }
 
-/*** ALERT UTILS ***/
+/** ALERT UTILS */
 
 // Muestra una alerta y devuelve su ID por si la queremos cerrar manualmente
 var alertId = 0;
@@ -186,7 +213,7 @@ function showAlert(message, type, closeDelay) {
 		.append($('<button type="button" class="close close-' + type + '" data-dismiss="alert">').append("&times;"))
 		.append(message); 
 
-	// add the alert div to top of alerts-container, use append() to add to bottom
+	// add alert div to top of alerts-container, use append() to add to bottom
 	$("#alerts-container").append(alert);
 
 	// if closeDelay was passed - set a timeout to close the alert
@@ -203,7 +230,7 @@ function closeAlert(msgId) {
 	$('#' + msgId).alert('close');
 }
 
-/*** DATABASE REQUESTS ***/
+/** DATABASE REQUESTS */
 
 /* Run query in DB to get a list of pages with misspellings */
 function getMisspelledPages(callback) {
@@ -254,7 +281,7 @@ function fixPageMisspellings(pageTitle, callback) {
 	});
 } 
 
-/*** WIKIPEDIA REQUESTS ***/
+/** WIKIPEDIA REQUESTS */
 
 /* Retrieve the content of a page from Wikipedia */
 function getPageContent(pageTitle, callback) {
@@ -311,7 +338,7 @@ function postPageContent(pageTitle, pageContent, callback) {
 };
 
 
-/*** REPLACEMENT FUNCTIONS ***/
+/** REPLACEMENT FUNCTIONS */
 
 function highlightMisspellings() {
 	// Busco las excepciones
@@ -341,7 +368,8 @@ function highlightMisspellings() {
 			debug('ERROR: los contenidos iniciales no coinciden');
 		}
 		while ((reMatch = re.exec(rawContent)) != null) {
-			// La regex captura los caracteres anterior y posterior de la palabra
+			// La regex captura los caracteres anterior y posterior de la
+			// palabra
 			// Apply case-insensitive fix if necessary
 			var suggestions = miss.suggestion.split(' ');
 			var missFix = suggestions[0];
@@ -414,7 +442,8 @@ function turnMisspelling(missId) {
 function showChanges(show) {
 	var numFixes = 0;
 
-	// Recorro inversamente el array de matches y sustituyo por los fixes si procede
+	// Recorro inversamente el array de matches y sustituyo por los fixes si
+	// procede
 	var fixedRawContent = rawContent;
 	for (var idx = 0; idx < missMatches.length; idx++) {
 		var missMatch = missMatches[idx];
