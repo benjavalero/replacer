@@ -392,7 +392,7 @@ function highlightMisspellings(content) {
 	pageMisspellingMatches = [];
 
 	for (var j = 0; j < pageMisspellings.length; j++) {
-		var pageMisspelling = pageMisspellings[i];
+		var pageMisspelling = pageMisspellings[j];
 
 		// Build the misspelling regex
 		var isCaseSensitive = (pageMisspelling.cs === '1');
