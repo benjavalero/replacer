@@ -82,7 +82,7 @@ exceptionRegExps.push(reHyperlink);
 
 // Ignore some misspellings with most false positives
 exceptionRegExps.push(new RegExp(
-		'[Ss]ólo|[Ii]ndex|[Ll]ink|[Oo]nline|[Rr]eferences?|[Aa]un así', 'g'));
+		'[Ss]ólo|[Ii]ndex|[Ll]ink|[Oo]nline|[Rr]eferences?|Jean|[Aa]un así', 'g'));
 
 $(document).ready(function() {
 
@@ -318,10 +318,14 @@ function getPageContent(pageTitle, callback) {
 			title : pageTitle.replace(' ', '_')
 		}
 	}).done(function(response) {
+		// FIXME Se pueden perder las credenciales. La respuesta es como esta:
+		// {"servedby":"mw1142","error":{"code":"mwoauth-invalid-authorization","info":"The authorization headers
+		// in your request are not valid: No approved grant was found for that authorization token.","*":"See https
+		// ://es.wikipedia.org/w/api.php for API usage"}}
 		var pages = response.query.pages;
 		// There is only one page
 		var content;
-		for ( var pageId in pages) {
+		for (var pageId in pages) {
 			var pageTitle = pages[pageId].title;
 			if (pages[pageId].revisions) {
 				content = pages[pageId].revisions[0]['*'];
@@ -369,7 +373,8 @@ function highlightMisspellings(content) {
 
 	/* 1. Find the exception matches */
 	var pageExceptions = [];
-	for (let exceptionRegExp of exceptionRegExps) {
+	for (var i = 0; i < exceptionRegExps.length; i++) {
+		var exceptionRegExp = exceptionRegExps[i];
 		while ((exceptionMatch = exceptionRegExp.exec(content)) != null) {
 			var startPosition = exceptionMatch.index;
 			var matchingText = exceptionMatch[0];
@@ -386,7 +391,9 @@ function highlightMisspellings(content) {
 	/* 2. Find the misspelling matches. Ignore the ones in exceptions. */
 	pageMisspellingMatches = [];
 
-	for (let pageMisspelling of pageMisspellings) {
+	for (var j = 0; j < pageMisspellings.length; j++) {
+		var pageMisspelling = pageMisspellings[i];
+
 		// Build the misspelling regex
 		var isCaseSensitive = (pageMisspelling.cs === '1');
 		var flags = 'g';
@@ -411,7 +418,8 @@ function highlightMisspellings(content) {
 
 			// Only treat misspellings not in exception
 			var inException = false;
-			for (let exception of pageExceptions) {
+			for (var k = 0; k < pageExceptions.length; k++) {
+				var exception = pageExceptions[k];
 				if ((exception.ini <= matchIndex)
 						&& (matchIndex <= exception.fin)) {
 					inException = true;
