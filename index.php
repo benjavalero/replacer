@@ -444,8 +444,8 @@ function doEdit() {
 			<div class="navbar-header">
 				<a class="navbar-brand" href="#">Replacer</a>
 			</div>
-			<ul class="nav navbar-nav navbar-right">
-				<li><a id="button-save" href="#" class="btn btn-default collapse"
+			<ul id="ul-save" class="nav navbar-nav navbar-right collapse">
+				<li><a id="button-save" href="#" class="btn btn-default"
 					role="button">Guardar cambios</a></li>
 			</ul>
 		</div>
