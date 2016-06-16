@@ -20,6 +20,7 @@ var pageMisspellings;
 // A misspelling match contains the properties:
 // * word
 // * position
+// * suggestions
 // * fix
 // * fixed (boolean)
 var pageMisspellingMatches;
@@ -407,8 +408,8 @@ function highlightMisspellings(content) {
 		while ((reMatch = re.exec(rawContent)) != null) {
 			// WARN: The regex captures the characters before and after the word
 			// TODO Improve the handling of fix and suggestion
-			var suggestions = pageMisspelling.suggestion.split(' ');
-			var misspellingFix = suggestions[0];
+			var matchSuggestions = pageMisspelling.suggestion.split(/\\s,/);
+			var misspellingFix = matchSuggestions[0];
 			var matchWord = reMatch[1];
 			var matchIndex = reMatch.index + 1;
 			// Apply case-insensitive fix if necessary
@@ -429,6 +430,7 @@ function highlightMisspellings(content) {
 				var missMatch = {
 					word : matchWord,
 					position : matchIndex,
+					suggestions : matchSuggestions,
 					fix : misspellingFix,
 					fixed : false
 				};
@@ -448,7 +450,7 @@ function highlightMisspellings(content) {
 		// Loop through the matches array and replace by inputs
 		for (var idx = 0; idx < pageMisspellingMatches.length; idx++) {
 			var misspellingMatch = pageMisspellingMatches[idx];
-			var replacement = '<button id="miss-' + idx + '" title="' + misspellingMatch.fix
+			var replacement = '<button id="miss-' + idx + '" title="' + misspellingMatch.suggestions
 					+ '" data-toggle="tooltip" data-placement="top" class="miss btn btn-danger" type="button">'
 					+ misspellingMatch.word + '</button>';
 			replacedContent = replaceAt(replacedContent,
