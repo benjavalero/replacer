@@ -95,6 +95,9 @@ $(document).ready(function() {
 		// Empty the article content
 		$('#article-content').html('');
 
+		// Hide the Save button
+		$('#button-save').collapse('hide');
+
 		// Realiza los reemplazos
 		if (showChanges(false)) {
 			postPageContent(
@@ -108,7 +111,7 @@ $(document).ready(function() {
 								});
 					});
 		} else {
-			showAlert('No se han realizado cambios en el artículo', 'info', 3000);
+			info('No se han realizado cambios en «' + $('#pageTitle').text() + '»');
 			setPageMisspellingsAsFixed($('#pageTitle').text(), function() {
 				findAndLoadMisspelledPage();
 			});
@@ -124,9 +127,6 @@ $(document).ready(function() {
 function findAndLoadMisspelledPage() {
 	// Hide the content of the previous page
 	$('#content-to-post').collapse('hide');
-
-	// Empty the article content
-	$('#article-content').html('');
 
 	// If there are titles available, load one of them.
 	// If not, find new titles before.
@@ -354,7 +354,7 @@ function postPageContent(pageTitle, pageContent, callback) {
 			text : pageContent
 		}
 	}).done(function(response) {
-		showAlert('Contenido guardado', 'success', 3000);
+		info('Contenido guardado');
 		callback(response);
 	}).fail(function(response) {
 		closeAlert(msgId);
@@ -563,7 +563,12 @@ function highlightSyntax(content) {
 
 /** Display the content in the screen and register some events */
 function updateDisplayedContent(content) {
+	// Display page content
 	$('#article-content').html(content);
+
+	// Show Save button
+	$('#button-save').collapse('show');
+
 	if (DEBUG) {
 		$('#button-show-changes').collapse('show');
 	}
