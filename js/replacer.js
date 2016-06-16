@@ -96,7 +96,7 @@ $(document).ready(function() {
 		$('#article-content').html('');
 
 		// Hide the Save button
-		$('#button-save').collapse('hide');
+		$('#ul-save').collapse('hide');
 
 		// Realiza los reemplazos
 		if (showChanges(false)) {
@@ -567,7 +567,7 @@ function updateDisplayedContent(content) {
 	$('#article-content').html(content);
 
 	// Show Save button
-	$('#button-save').collapse('show');
+	$('#ul-save').collapse('show');
 
 	if (DEBUG) {
 		$('#button-show-changes').collapse('show');
