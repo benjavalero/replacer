@@ -445,6 +445,9 @@ function doEdit() {
 				<a class="navbar-brand" href="#">Replacer</a>
 			</div>
 			<ul id="ul-save" class="nav navbar-nav navbar-right collapse">
+				<li><a id="page-title" href="#" target="_blank"></a></li>
+			</ul>
+			<ul id="ul-save" class="nav navbar-nav navbar-right collapse">
 				<li><a id="button-save" href="#" class="btn btn-default"
 					role="button">Guardar cambios</a></li>
 			</ul>
@@ -452,6 +455,9 @@ function doEdit() {
 	</nav>
 
 	<div class="container">
+
+		<input id="tokenKey" type="hidden" value="<?php echo $gTokenKey; ?>" />
+      <?php if ( !$gTokenKey ) { ?>
 
 		<p>
 			Esta es una herramienta aún en fase <strong>beta</strong> para
@@ -464,17 +470,11 @@ function doEdit() {
 			cambios" para aplicar las correcciones. Si pulsa el botón sin haber
 			hecho ningún cambio, simplemente se cargará una nueva página.</p>
 
-		<input id="tokenKey" type="hidden" value="<?php echo $gTokenKey; ?>" />
-      <?php if ( !$gTokenKey ) { ?>
-      <p>
+		<p>
 			Haga clic <a href="index.php?action=authorize">aquí</a> para
 			autenticarse.
 		</p>
       <?php } else { ?>
-
-      <h2>
-			<span id="pageTitle"></span>
-		</h2>
 
 		<div id="article-content" class="pre"></div>
 

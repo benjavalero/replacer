@@ -95,6 +95,7 @@ $(document).ready(function() {
 	$('#button-save').click(function() {
 		// Empty the article content
 		$('#article-content').html('');
+		$('#page-title').text('');
 
 		// Hide the Save button
 		$('#ul-save').collapse('hide');
@@ -102,18 +103,18 @@ $(document).ready(function() {
 		// Realiza los reemplazos
 		if (showChanges(false)) {
 			postPageContent(
-					$('#pageTitle').text(),
+					$('#page-title').text(),
 					$('#content-to-post').text(),
 					function() {
 						setPageMisspellingsAsFixed(
-								$('#pageTitle').text(),
+								$('#page-title').text(),
 								function() {
 									findAndLoadMisspelledPage();
 								});
 					});
 		} else {
-			info('No se han realizado cambios en «' + $('#pageTitle').text() + '»');
-			setPageMisspellingsAsFixed($('#pageTitle').text(), function() {
+			info('No se han realizado cambios en «' + $('#page-title').text() + '»');
+			setPageMisspellingsAsFixed($('#page-title').text(), function() {
 				findAndLoadMisspelledPage();
 			});
 		}
@@ -145,8 +146,6 @@ function findAndLoadMisspelledPage() {
 
 /** Load a misspelled page in the screen */
 function loadMisspelledPage(pageTitle) {
-	$('#pageTitle').text(pageTitle);
-
 	getPageContent(pageTitle, function(response) {
 		rawContent = response;
 
@@ -159,6 +158,9 @@ function loadMisspelledPage(pageTitle) {
 			if (displayedContent) {
 				displayedContent = hideParagraphsWithoutMisspellings(displayedContent);
 				displayedContent = highlightSyntax(displayedContent);
+
+				$('#page-title').text(pageTitle);
+				$('#page-title').attr("href", 'https://es.wikipedia.org/wiki/' + pageTitle);
 				updateDisplayedContent(displayedContent);
 			} else {
 				info('No se han encontrado errores en «' + pageTitle + '»');
