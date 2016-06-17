@@ -444,8 +444,8 @@ function doEdit() {
 			<div class="navbar-header">
 				<a class="navbar-brand" href="#">Replacer</a>
 			</div>
-			<ul id="ul-save" class="nav navbar-nav navbar-right collapse">
-				<li><a id="page-title" href="#" target="_blank"></a></li>
+			<ul class="nav navbar-nav">
+				<li><a id="link-title" href="#" target="_blank"></a></li>
 			</ul>
 			<ul id="ul-save" class="nav navbar-nav navbar-right collapse">
 				<li><a id="button-save" href="#" class="btn btn-default"
@@ -475,6 +475,8 @@ function doEdit() {
 			autenticarse.
 		</p>
       <?php } else { ?>
+
+		<input id="page-title" type="hidden" value="" />
 
 		<div id="article-content" class="pre"></div>
 
