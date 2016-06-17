@@ -411,8 +411,8 @@ function highlightMisspellings(content) {
 		while ((reMatch = re.exec(rawContent)) != null) {
 			// WARN: The regex captures the characters before and after the word
 			// TODO Improve the handling of fix and suggestion
-			var matchSuggestions = pageMisspelling.suggestion.split(/[\s,]/);
-			var misspellingFix = matchSuggestions[0];
+			var matchSuggestions = pageMisspelling.suggestion;
+			var misspellingFix = matchSuggestions.split(/[\s,]/)[0];
 			var matchWord = reMatch[1];
 			var matchIndex = reMatch.index + 1;
 			// Apply case-insensitive fix if necessary
