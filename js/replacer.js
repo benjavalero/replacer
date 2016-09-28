@@ -552,9 +552,9 @@ function highlightSyntax(content) {
 	replacedContent = replacedContent.replace(reComment,
 			'<span class="syntax comment">$1</span>');
 
-	var reLink = new RegExp('(\\[\\[.+?\\]\\])', 'g');
+	var reLink = new RegExp('(\\[\\[(.+?)(\\|.+)?\\]\\])', 'g');
 	replacedContent = replacedContent.replace(reLink,
-			'<span class="syntax link">$1</span>');
+			'<a href="https://es.wikipedia.org/wiki/$2" class="syntax link" target="_blank">$1</a>');
 
 	var reHeader = new RegExp('(\\={2,}.+?\\={2,})', 'g');
 	replacedContent = replacedContent.replace(reHeader,
