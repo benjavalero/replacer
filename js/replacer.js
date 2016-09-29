@@ -25,66 +25,6 @@ var pageMisspellings;
 // * fixed (boolean)
 var pageMisspellingMatches;
 
-/** REGEX */
-
-// \w doesn't include accentuated characters
-var WORD_CHARACTER_CLASS = '\\wÁáÉéÍíÓóÚúÜüÑñ';
-
-// Exceptions where misspellings will be ignored
-// JavaScript doesn't support regex lookbehind
-// JavaScript doesn't support dotall flag. Workaround: . => [\\S\\s]
-var exceptionRegExps = [];
-
-// Template Param
-exceptionRegExps.push(new RegExp(
-		'\\|[' + WORD_CHARACTER_CLASS + '\\s]+(?=\\=)', 'g'));
-
-// Index value
-exceptionRegExps.push(new RegExp('\\|\\s*índice\\s*=[\\S\\s]*?[\\}\\|]', 'g'));
-
-// Unreplaceable template
-exceptionRegExps.push(new RegExp(
-		'\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\|)[^\\}]*', 'g'));
-
-// Template name
-exceptionRegExps.push(new RegExp('\\{\\{[^\\|\\}]+', 'g'));
-
-// Quote
-exceptionRegExps.push(new RegExp('\\{\\{(?:[Cc]ita|c?Quote)\\|[^\\}]*', 'g'));
-
-// Quotes
-exceptionRegExps.push(new RegExp("'{2,5}.+?'{2,5}", 'g'));
-
-// Angular Quotes
-exceptionRegExps.push(new RegExp('«[^»]+»', 'g'));
-
-// Typographic Quotes
-exceptionRegExps.push(new RegExp('“[^”]+”', 'g'));
-
-// Double Quotes
-exceptionRegExps.push(new RegExp('"[^"]+"', 'g'));
-
-// File Name
-exceptionRegExps.push(new RegExp(
-		'[\\=\\|:][^\\=\\|:]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|ogg|pdf)', 'g'));
-
-// Ref Name
-exceptionRegExps.push(new RegExp('<ref[^>]*>', 'g'));
-
-// Category
-exceptionRegExps.push(new RegExp('\\[\\[Categoría:.*?\\]\\]', 'g'));
-
-// Comment
-exceptionRegExps.push(new RegExp('<!--[\\S\\s]*?-->', 'g'));
-
-// URL
-var reHyperlink = new RegExp('(https?://[\\w\\./\\-\\+\\?&%=:#;]+)', 'g');
-exceptionRegExps.push(reHyperlink);
-
-// Ignore some misspellings with most false positives
-exceptionRegExps.push(new RegExp(
-		'[Ss]ólo|[Ii]ndex|[Ll]ink|[Oo]nline|[Rr]eferences?|Jean|[Aa]un así', 'g'));
-
 $(document).ready(function() {
 
 	// Muestra el texto final con los reemplazos hechos
@@ -157,7 +97,7 @@ function loadMisspelledPage(pageTitle) {
 			// If there are no misspellings, result will be null
 			if (displayedContent) {
 				displayedContent = hideParagraphsWithoutMisspellings(displayedContent);
-				displayedContent = highlightSyntax(displayedContent);
+				displayedContent = ReplaceUtils.highlightSyntax(displayedContent);
 
 				$('#page-title').val(pageTitle);
 				$('#link-title').text(pageTitle);
@@ -190,21 +130,6 @@ function debug(message) {
 }
 
 /** STRING UTILS */
-
-// <div> => &lt;div&gt;
-function encodeHtml(htmlText) {
-	return jQuery('<div />').text(htmlText).html();
-}
-
-// &lt;div&gt; => <div>
-function decodeHtml(htmlText) {
-	return jQuery('<div />').html(htmlText).text();
-}
-
-// If a character is lower-case
-function isUpperCase(ch) {
-	return ch === ch.toUpperCase();
-}
 
 // país => País
 function setFirstUpperCase(word) {
@@ -336,7 +261,7 @@ function getPageContent(pageTitle, callback) {
 			}
 		}
 		if (content) {
-			callback(encodeHtml(content));
+			callback(StringUtils.encodeHtml(content));
 		} else {
 			setPageMisspellingsAsFixed(pageTitle, function() {
 				findAndLoadMisspelledPage();
@@ -376,20 +301,7 @@ function highlightMisspellings(content) {
 	info('Buscando errores ortográficos en el contenido del artículo…');
 
 	/* 1. Find the exception matches */
-	var pageExceptions = [];
-	for (var i = 0; i < exceptionRegExps.length; i++) {
-		var exceptionRegExp = exceptionRegExps[i];
-		while ((exceptionMatch = exceptionRegExp.exec(content)) != null) {
-			var startPosition = exceptionMatch.index;
-			var matchingText = exceptionMatch[0];
-			var endPosition = startPosition + matchingText.length;
-			pageExceptions.push({
-				ini : startPosition,
-				fin : endPosition,
-				text : matchingText
-			});
-		}
-	}
+	var pageExceptions = ReplaceUtils.findExceptionMatches(content);
 	debug('Exceptions: ' + JSON.stringify(pageExceptions));
 
 	/* 2. Find the misspelling matches. Ignore the ones in exceptions. */
@@ -405,8 +317,8 @@ function highlightMisspellings(content) {
 		if (!isCaseSensitive) {
 			word = getRegexWordIgnoreCase(word);
 		}
-		var re = new RegExp('[^' + WORD_CHARACTER_CLASS + '](' + word + ')[^'
-				+ WORD_CHARACTER_CLASS + ']', flags);
+		var re = new RegExp('[^' + RegEx.wordCharacterClass + '](' + word + ')[^'
+				+ RegEx.wordCharacterClass + ']', flags);
 
 		while ((reMatch = re.exec(rawContent)) != null) {
 			// WARN: The regex captures the characters before and after the word
@@ -416,7 +328,7 @@ function highlightMisspellings(content) {
 			var matchWord = reMatch[1];
 			var matchIndex = reMatch.index + 1;
 			// Apply case-insensitive fix if necessary
-			if (!isCaseSensitive && isUpperCase(matchWord[0])) {
+			if (!isCaseSensitive && StringUtils.isUpperCase(matchWord[0])) {
 				misspellingFix = setFirstUpperCase(misspellingFix);
 			}
 
@@ -504,7 +416,7 @@ function showChanges(show) {
 		}
 	}
 
-	var decodedContent = decodeHtml(fixedRawContent);
+	var decodedContent = StringUtils.decodeHtml(fixedRawContent);
 	$('#content-to-post').text(decodedContent);
 	if (show) {
 		$('#content-to-post').collapse('show');
@@ -542,28 +454,6 @@ function hideParagraphsWithoutMisspellings(content) {
 	reducedContent = reducedContent.replace(reNewLines, '');
 
 	return reducedContent;
-}
-
-/** Add highlight to some places in the content */
-function highlightSyntax(content) {
-	var replacedContent = content;
-
-	var reComment = new RegExp('(&lt;!--.+?--&gt;)', 'g');
-	replacedContent = replacedContent.replace(reComment,
-			'<span class="syntax comment">$1</span>');
-
-	var reLink = new RegExp('(\\[\\[(.+?)(\\|.+)?\\]\\])', 'g');
-	replacedContent = replacedContent.replace(reLink,
-			'<a href="https://es.wikipedia.org/wiki/$2" class="syntax link" target="_blank">$1</a>');
-
-	var reHeader = new RegExp('(\\={2,}.+?\\={2,})', 'g');
-	replacedContent = replacedContent.replace(reHeader,
-			'<span class="syntax header">$1</span>');
-
-	replacedContent = replacedContent.replace(reHyperlink,
-			'<span class="syntax hyperlink">$1</span>');
-
-	return replacedContent;
 }
 
 /** Display the content in the screen and register some events */
