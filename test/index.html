@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Replacer Tests</title>
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+<link href="../css/replacer.css" rel="stylesheet">
+</head>
+<body>
+	<h1>Resaltado de errores y de sintaxis</h1>
+
+	<h2>Texto original</h2>
+	<div id="contentOrig" class="pre"></div>
+
+	<h2>Texto resaltado</h2>
+	<div id="contentHighlighted" class="pre"></div>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<!-- <script src="../js/bootstrap.min.js"></script> -->
+	<script src="../js/string-utils.js"></script>
+	<script src="../js/regex.js"></script>
+	<script src="../js/replace-utils.js"></script>
+
+	<script type="text/javascript">
+		var orig = '<!-- Comentario -->\n' + '== Una cabecera ==\n'
+				+ 'Esto es un <i>ejemplo</i> de [[código]] wiki.\n'
+				+ 'Un enlace: https://www.google.es a Google.';
+		var encoded = StringUtils.encodeHtml(orig);
+		$('#contentOrig').html(encoded);
+
+		var highlighted = ReplaceUtils.highlightSyntax(encoded);
+		$('#contentHighlighted').html(highlighted);
+	</script>
+</body>
+</html>
