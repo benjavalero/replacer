@@ -3,7 +3,8 @@ var RegEx = {
 	// JavaScript doesn't support regex lookbehind
 	// JavaScript doesn't support dotall flag. Workaround: . => [\\S\\s]
 
-	reCommentEncoded : new RegExp('(&lt;!--.+?--&gt;)', 'g'),
+	reCommentEncoded : new RegExp('(&lt;!--[\\S\\s]*?--&gt;)', 'g'),
+	reComment : new RegExp('<!--[\\S\\s]*?-->', 'g'),
 
 	reHeader : new RegExp('(\\={2,}.+?\\={2,})', 'g'),
 
@@ -14,10 +15,9 @@ var RegEx = {
 	// \w doesn't include accentuated characters
 	wordCharacterClass : '\\wÁáÉéÍíÓóÚúÜüÑñ',
 
-	reTemplateParam : new RegExp('\\|[' + this.wordCharacterClass
-			+ '\\s]+(?=\\=)', 'g'),
+	reTemplateParam : new RegExp('\\|[\\wÁáÉéÍíÓóÚúÜüÑñ\\s]+(?=\\=)', 'g'),
 
-	reIndexValue : new RegExp('\\|\\s*índice\\s*=[\\S\\s]*?[\\}\\|]', 'g'),
+	reIndexValue : new RegExp('\\|\\s*índice\\s*=[^\\}\\|]*', 'g'),
 
 	reUnreplaceableTemplate : new RegExp(
 			'\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\|)[^\\}]*', 'g'),
@@ -40,8 +40,6 @@ var RegEx = {
 	reRefName : new RegExp('<ref[^>]*>', 'g'),
 
 	reCategory : new RegExp('\\[\\[Categoría:.*?\\]\\]', 'g'),
-
-	reComment : new RegExp('<!--[\\S\\s]*?-->', 'g'),
 
 	reFalsePositives : new RegExp(
 			'[Ss]ólo|[Ii]ndex|[Ll]ink|[Oo]nline|[Rr]eferences?|Jean|[Aa]un así',
