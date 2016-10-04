@@ -96,7 +96,7 @@ function loadMisspelledPage(pageTitle) {
 			var displayedContent = highlightMisspellings(rawContent);
 			// If there are no misspellings, result will be null
 			if (displayedContent) {
-				displayedContent = hideParagraphsWithoutMisspellings(displayedContent);
+				displayedContent = ReplaceUtils.removeParagraphsWithoutMisspellings(displayedContent);
 				displayedContent = ReplaceUtils.highlightSyntax(displayedContent);
 
 				$('#page-title').val(pageTitle);
@@ -129,12 +129,6 @@ function debug(message) {
 	}
 }
 
-/** STRING UTILS */
-
-// replaceAt('0123456789', 3, '34', 'XXXX') => '012XXXX56789'
-function replaceAt(text, position, replaced, replacement) {
-	return text.substr(0, position) + replacement + text.substr(position + replaced.length);
-}
 
 /** ALERT UTILS */
 
@@ -294,28 +288,7 @@ function highlightMisspellings(content) {
 	var pageMisspellingMatches = StringUtils.findMisspellingMatches(rawContent, pageMisspellings);
 	debug('Miss Matches: ' + JSON.stringify(pageMisspellingMatches));
 
-	var replacedContent = content;
-	if (pageMisspellingMatches.length > 0) {
-		// Sort the matches array inversely by position
-		pageMisspellingMatches.sort(function(a, b) {
-			return b.position - a.position;
-		});
-
-		// Loop through the matches array and replace by inputs
-		for (var idx = 0; idx < pageMisspellingMatches.length; idx++) {
-			var misspellingMatch = pageMisspellingMatches[idx];
-			var replacement = '<button id="miss-' + idx + '" title="' + misspellingMatch.suggestions
-					+ '" data-toggle="tooltip" data-placement="top" class="miss btn btn-danger" type="button">'
-					+ misspellingMatch.word + '</button>';
-			replacedContent = replaceAt(replacedContent,
-					misspellingMatch.position, misspellingMatch.word,
-					replacement);
-		}
-	} else{
-		return null;
-	}
-
-	return replacedContent;
+	return replaceMisspellingsWithButtons(content, pageMisspellingMatches);
 }
 
 function turnMisspelling(missId) {
@@ -349,7 +322,7 @@ function showChanges(show) {
 	for (var idx = 0; idx < pageMisspellingMatches.length; idx++) {
 		var missMatch = pageMisspellingMatches[idx];
 		if (missMatch.fixed) {
-			fixedRawContent = replaceAt(fixedRawContent, missMatch.position,
+			fixedRawContent = StringUtils.replaceAt(fixedRawContent, missMatch.position,
 					missMatch.word, missMatch.fix);
 			numFixes++;
 		}
@@ -362,37 +335,6 @@ function showChanges(show) {
 	}
 
 	return (numFixes > 0);
-}
-
-/** Removes from the content the paragraphs without misspelings */
-function hideParagraphsWithoutMisspellings(content) {
-	var reNewLines = new RegExp('\\n{2,}', 'g');
-	var positions = [];
-
-	// Add the document start as a position
-	positions.push(0);
-
-	while ((reMatch = reNewLines.exec(content)) != null) {
-		positions.push(reMatch.index);
-	}
-
-	// Add the document end as a position
-	positions.push(content.length);
-
-	var reducedContent = '';
-	for (var idx = 1; idx < positions.length; idx++) {
-		var ini = positions[idx - 1];
-		var fin = positions[idx];
-		var paragraph = content.substring(ini, fin);
-		if (paragraph.indexOf('miss-') >= 0) {
-			reducedContent += paragraph + '\n<hr>\n';
-		}
-	}
-
-	// Remove the repeated new lines
-	reducedContent = reducedContent.replace(reNewLines, '');
-
-	return reducedContent;
 }
 
 /** Display the content in the screen and register some events */

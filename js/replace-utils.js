@@ -106,5 +106,86 @@ var ReplaceUtils = {
             }
         }
         return misspellingMatches;
-    }
+    },
+
+    /* Replaces the given misspelling matches in the text with buttons.
+     * Returns the replaced text, or NULL if there has been no replacement. */
+    replaceMisspellingsWithButtons : function(text, misspellingMatches) {
+        var replacedContent = null;
+        if (misspellingMatches.length > 0) {
+            replacedContent = text;
+
+            // Sort the matches array inversely by position
+            misspellingMatches.sort(function(a, b) {
+                return b.position - a.position;
+            });
+
+            // Loop through the matches array and replace by inputs
+            for (var idx = 0; idx < misspellingMatches.length; idx++) {
+                var misspellingMatch = misspellingMatches[idx];
+                var replacement = '<button id="miss-' + idx + '"'
+                        + ' title="' + misspellingMatch.suggestions + '"'
+                        + ' data-toggle="tooltip" data-placement="top" class="miss btn btn-danger" type="button">'
+                        + misspellingMatch.word + '</button>';
+                replacedContent = StringUtils.replaceAt(replacedContent,
+                        misspellingMatch.position, misspellingMatch.word,
+                        replacement);
+            }
+        }
+
+        return replacedContent;
+    },
+
+     trimParagraph : function(paragraph) {
+        var reButton = new RegExp('[\\S\\s]{0,50}<button[\\S\\s]+?</button>[\\S\\s]{0,50}', 'g');
+        var trimmed = '';
+
+        var reMatch;
+        while ((reMatch = reButton.exec(paragraph)) != null) {
+            if (reMatch.index > 0) {
+                trimmed += '\n...';
+            }
+            trimmed += reMatch[0];
+            if (reMatch.index + reMatch[0].length < paragraph.length) {
+                trimmed += '...\n';
+            }
+        }
+
+        return trimmed;
+     },
+
+     /* Removes from the text the paragraphs without misspelings */
+     removeParagraphsWithoutMisspellings : function(text) {
+        var positions = [];
+
+        // Add the document start as a position
+        positions.push(0);
+
+        var reMatch;
+        while ((reMatch = RegEx.reNewLines.exec(text)) != null) {
+            positions.push(reMatch.index);
+        }
+
+        // Add the document end as a position
+        positions.push(text.length);
+
+        var reducedContent = '';
+        for (var idx = 1; idx < positions.length; idx++) {
+            var ini = positions[idx - 1];
+            var fin = positions[idx];
+            var paragraph = text.substring(ini, fin);
+            if (paragraph.indexOf('miss-') != -1) {
+                if (reducedContent) {
+                    reducedContent += '\n<hr>\n';
+                }
+                reducedContent += this.trimParagraph(paragraph);
+            }
+        }
+
+        // Remove the repeated new lines
+        reducedContent = reducedContent.replace(RegEx.reNewLines, '');
+
+        return reducedContent;
+     }
+
 };
