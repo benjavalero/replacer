@@ -43,14 +43,5 @@ var RegEx = {
 
 	reFalsePositives : new RegExp(
 			'[Ss]ólo|[Ii]ndex|[Ll]ink|[Oo]nline|[Rr]eferences?|Jean|[Aa]un así',
-			'g'),
-
-	/* Exceptions where misspellings will be ignored */
-	exceptionRegExps : [ this.reTemplateParam, this.reIndexValue,
-			this.reUnreplaceableTemplate, this.reTemplateName, this.reQuote,
-			this.reQuotes, this.reAngularQuotes, this.reTypographicQuotes,
-			this.reDoubleQuotes, this.reFileName, this.reRefName,
-			this.reCategory, this.reComment, this.reHyperlink,
-			this.reFalsePositives ]
-
+			'g')
 };
