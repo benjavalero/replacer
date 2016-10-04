@@ -19,12 +19,15 @@
 	<h2>Texto original</h2>
 	<div id="contentOrig" class="pre"></div>
 
-	<h2>Texto resaltado</h2>
+	<h2>Texto con errores</h2>
+	<div id="contentMisspelled" class="pre"></div>
+
+	<h2>Texto resaltado con errores </h2>
 	<div id="contentHighlighted" class="pre"></div>
 
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<!-- <script src="../js/bootstrap.min.js"></script> -->
+	<script src="../js/bootstrap.min.js"></script>
 	<script src="../js/string-utils.js"></script>
 	<script src="../js/regex.js"></script>
 	<script src="../js/replace-utils.js"></script>
@@ -33,14 +36,34 @@
 	<script src="qunit-tests.js"></script>
 
 	<script type="text/javascript">
-		var orig = '<!-- Comentario -->\n' + '== Una cabecera ==\n'
-				+ 'Esto es un <i>ejemplo</i> de [[código]] wiki.\n'
-				+ 'Un enlace: https://www.google.es a Google.';
+		var orig = 'Z\n\n'
+			+ 'X\nX\nX\nX\n'
+			+ '<!-- Comentario -->\n' + '== Una google cabecera ==\n\n'
+			+ 'Esto es un <i>ejemplo</i> de [[código]] wiki.\n'
+			+ 'Un enlace: https://www.google.es a google.'
+			+ '\nX\nX\nX\nX'
+			+ '\n\nZ';
 		var encoded = StringUtils.encodeHtml(orig);
 		$('#contentOrig').html(encoded);
 
-		var highlighted = ReplaceUtils.highlightSyntax(encoded);
+		var misspellings = [{word : 'google', cs : 1, suggestion : 'Google'}];
+		var misspellingMatches = ReplaceUtils.findMisspellingMatches(encoded, misspellings);
+		var misspelled = ReplaceUtils.replaceMisspellingsWithButtons(encoded, misspellingMatches);
+		misspelled = ReplaceUtils.removeParagraphsWithoutMisspellings(misspelled);
+		$('#contentMisspelled').html(misspelled);
+
+		var highlighted = ReplaceUtils.highlightSyntax(misspelled);
 		$('#contentHighlighted').html(highlighted);
+
+		// Add event to the misspelling buttons
+		$('.miss').click(function() {
+			alert(this.id);
+		});
+
+		// Add cool Bootstrap tooltips
+		$(function() {
+			$('[data-toggle="tooltip"]').tooltip()
+		});
 	</script>
 </body>
 </html>

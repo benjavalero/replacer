@@ -43,5 +43,8 @@ var RegEx = {
 
 	reFalsePositives : new RegExp(
 			'[Ss]ólo|[Ii]ndex|[Ll]ink|[Oo]nline|[Rr]eferences?|Jean|[Aa]un así',
-			'g')
+			'g'),
+
+    reNewLines : new RegExp('\\n{2,}', 'g')
+
 };

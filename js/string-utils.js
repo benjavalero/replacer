@@ -24,6 +24,11 @@ var StringUtils = {
     // país => País
     setFirstUpperCase : function(word) {
         return word[0].toUpperCase() + word.substr(1);
+    },
+
+    // replaceAt('0123456789', 3, '34', 'XXXX') => '012XXXX56789'
+    replaceAt : function(text, position, replaced, replacement) {
+    	return text.substr(0, position) + replacement + text.substr(position + replaced.length);
     }
 
 };
