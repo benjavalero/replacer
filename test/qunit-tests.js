@@ -5,6 +5,12 @@ QUnit.test("String Utils", function(assert) {
     assert.notOk(StringUtils.isUpperCase('á'));
     assert.ok(StringUtils.isUpperCase('Ñ'));
     assert.notOk(StringUtils.isUpperCase('ñ'));
+
+    assert.equal(StringUtils.getRegexWordIgnoreCase('lenteja'), '[Ll]enteja');
+    assert.equal(StringUtils.getRegexWordIgnoreCase('Partido'), '[Pp]artido');
+
+    assert.equal(StringUtils.setFirstUpperCase('lenteja'), 'Lenteja');
+    assert.equal(StringUtils.setFirstUpperCase('Partido'), 'Partido');
 });
 
 QUnit.test("RegEx Utils", function(assert) {
@@ -170,4 +176,22 @@ QUnit.test("RegEx Utils", function(assert) {
         }
     }
     assert.ok(isFound);
+});
+
+QUnit.test("Replace Utils", function(assert) {
+    var text = 'Entre comillas «angulares» y "dobles".';
+    var excMatches = ReplaceUtils.findExceptionMatches(text);
+    assert.equal(excMatches.length, 2);
+    // The matches are found depending on the order of the regex in the exceptions array
+    assert.equal(excMatches[0].ini, 15);
+    assert.equal(excMatches[0].text, '«angulares»');
+    assert.equal(excMatches[1].ini, 29);
+    assert.equal(excMatches[1].text, '"dobles"');
+
+    text = 'Y Cayo entre españa y España con la excepción de "españa".';
+    var misspellings = [{word : 'cayo', cs : 0, suggestion : 'cayó'}, {word : 'españa', cs : 1, suggestion : 'España'}];
+    var misspellingMatches = ReplaceUtils.findMisspellingMatches(text, misspellings);
+    assert.equal(misspellingMatches.length, 2);
+    assert.equal(misspellingMatches[0].position, 2);
+    assert.equal(misspellingMatches[1].position, 13);
 });

@@ -131,16 +131,6 @@ function debug(message) {
 
 /** STRING UTILS */
 
-// país => País
-function setFirstUpperCase(word) {
-	return word[0].toUpperCase() + word.substr(1);
-}
-
-function getRegexWordIgnoreCase(word) {
-	var ch = word[0];
-	return '[' + ch.toUpperCase() + ch.toLowerCase() + ']' + word.substring(1);
-}
-
 // replaceAt('0123456789', 3, '34', 'XXXX') => '012XXXX56789'
 function replaceAt(text, position, replaced, replacement) {
 	return text.substr(0, position) + replacement + text.substr(position + replaced.length);
@@ -300,59 +290,8 @@ function postPageContent(pageTitle, pageContent, callback) {
 function highlightMisspellings(content) {
 	info('Buscando errores ortográficos en el contenido del artículo…');
 
-	/* 1. Find the exception matches */
-	var pageExceptions = ReplaceUtils.findExceptionMatches(content);
-	debug('Exceptions: ' + JSON.stringify(pageExceptions));
-
-	/* 2. Find the misspelling matches. Ignore the ones in exceptions. */
-	pageMisspellingMatches = [];
-
-	for (var j = 0; j < pageMisspellings.length; j++) {
-		var pageMisspelling = pageMisspellings[j];
-
-		// Build the misspelling regex
-		var isCaseSensitive = (pageMisspelling.cs === '1');
-		var flags = 'g';
-		var word = pageMisspelling.word;
-		if (!isCaseSensitive) {
-			word = getRegexWordIgnoreCase(word);
-		}
-		var re = new RegExp('[^' + RegEx.wordCharacterClass + '](' + word + ')[^'
-				+ RegEx.wordCharacterClass + ']', flags);
-
-		while ((reMatch = re.exec(rawContent)) != null) {
-			// WARN: The regex captures the characters before and after the word
-			// TODO Improve the handling of fix and suggestion
-			var matchSuggestions = pageMisspelling.suggestion;
-			var misspellingFix = matchSuggestions.split(/[\s,]/)[0];
-			var matchWord = reMatch[1];
-			var matchIndex = reMatch.index + 1;
-			// Apply case-insensitive fix if necessary
-			if (!isCaseSensitive && StringUtils.isUpperCase(matchWord[0])) {
-				misspellingFix = setFirstUpperCase(misspellingFix);
-			}
-
-			// Only treat misspellings not in exception
-			var inException = false;
-			for (var k = 0; k < pageExceptions.length; k++) {
-				var exception = pageExceptions[k];
-				if ((exception.ini <= matchIndex)
-						&& (matchIndex <= exception.fin)) {
-					inException = true;
-				}
-			}
-			if (!inException) {
-				var missMatch = {
-					word : matchWord,
-					position : matchIndex,
-					suggestions : matchSuggestions,
-					fix : misspellingFix,
-					fixed : false
-				};
-				pageMisspellingMatches.push(missMatch);
-			}
-		}
-	}
+	/* 1. Find the misspelling matches. Ignore the ones in exceptions. */
+	var pageMisspellingMatches = StringUtils.findMisspellingMatches(rawContent, pageMisspellings);
 	debug('Miss Matches: ' + JSON.stringify(pageMisspellingMatches));
 
 	var replacedContent = content;
