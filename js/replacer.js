@@ -75,9 +75,8 @@ function findAndLoadMisspelledPage() {
 	if (misspelledPageTitles.length > 0) {
 		loadMisspelledPage(misspelledPageTitles.pop());
 	} else {
-		getMisspelledPages(function(response) {
-			misspelledPageTitles = response.titles;
-			debug('MisspelledPages: ' + JSON.stringify(misspelledPageTitles));
+		DataBaseUtils.getMisspelledPage(function(response) {
+			misspelledPageTitles = response;
 
 			findAndLoadMisspelledPage();
 		});
@@ -89,9 +88,8 @@ function loadMisspelledPage(pageTitle) {
 	getPageContent(pageTitle, function(response) {
 		rawContent = response;
 
-		getPageMisspellings(pageTitle, function(response) {
-			pageMisspellings = response.misspellings;
-			debug('Misspellings: ' + JSON.stringify(pageMisspellings));
+		DataBaseUtils.getPageMisspellings(pageTitle, function(response) {
+			pageMisspellings = response;
 
 			var displayedContent = highlightMisspellings(rawContent);
 			// If there are no misspellings, result will be null
@@ -168,37 +166,6 @@ function closeAlert(msgId) {
 }
 
 /** DATABASE REQUESTS */
-
-/** Run query in DB to get a list of pages with misspellings */
-function getMisspelledPages(callback) {
-	info('Buscando artículos con errores ortográficos…');
-	$.ajax({
-		url : 'php/db-select-replacement.php',
-		dataType : 'json'
-	}).done(function(response) {
-		callback(response);
-	}).fail(function(response) {
-		closeAlert(msgId);
-		showAlert('Error buscando artículos con errores ortográficos. ' + JSON.stringify(response), 'danger');
-	});
-}
-
-/** Run query in DB to get the misspellings of a page */
-function getPageMisspellings(pageTitle, callback) {
-	info('Buscando errores ortográficos en el artículo «' + pageTitle + '»…');
-	$.ajax({
-		url : 'php/db-select-misspellings.php',
-		dataType : 'json',
-		data : {
-			title : pageTitle
-		}
-	}).done(function(response) {
-		callback(response);
-	}).fail(function(response) {
-		closeAlert(msgId);
-		showAlert('Error buscando errores ortográficos en el artículo: ' + pageTitle + '. ' + JSON.stringify(response), 'danger');
-	});
-}
 
 /** Run query in DB to mark as fixed the misspellings of a page */
 function setPageMisspellingsAsFixed(pageTitle, callback) {
@@ -314,28 +281,15 @@ function turnMisspelling(missId) {
  *            If true, show the replaced content in the screen.
  * @return A boolean if there have been changes.
  */
- // TODO Use the new function in ReplaceUtils
 function showChanges(show) {
-	var numFixes = 0;
-
-	// Loop through inversely the misspeling matches array and replace by the fixes
-	var fixedRawContent = rawContent;
-	for (var idx = 0; idx < pageMisspellingMatches.length; idx++) {
-		var missMatch = pageMisspellingMatches[idx];
-		if (missMatch.fixed) {
-			fixedRawContent = StringUtils.replaceAt(fixedRawContent, missMatch.position,
-					missMatch.word, missMatch.fix);
-			numFixes++;
-		}
-	}
-
+    var fixedRawContent = ReplaceUtils.replaceFixes(rawContent, pageMisspellingMatches);
 	var decodedContent = StringUtils.decodeHtml(fixedRawContent);
 	$('#content-to-post').text(decodedContent);
 	if (show) {
 		$('#content-to-post').collapse('show');
 	}
 
-	return (numFixes > 0);
+	return (fixedRawContent == rawContent);
 }
 
 /** Display the content in the screen and register some events */
