@@ -189,6 +189,7 @@ function setPageMisspellingsAsFixed(pageTitle, callback) {
 
 /* Retrieve the content of a page from Wikipedia */
 function getPageContent(pageTitle, callback) {
+	// TODO Use new method in WikipediaUtils, not needing credentials.
 	info('Obteniendo contenido del artículo «' + pageTitle + '»…');
 	$.ajax({
 		url : 'index.php',

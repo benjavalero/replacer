@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Replacer Tests</title>
-<link rel="stylesheet"
-	href="https://code.jquery.com/qunit/qunit-2.0.1.css">
+<link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.0.1.css">
 <link href="../css/bootstrap.min.css" rel="stylesheet">
 <link href="../css/replacer.css" rel="stylesheet">
 </head>
@@ -31,6 +30,7 @@
 	<script src="../js/regex.js"></script>
 	<script src="../js/replace-utils.js"></script>
 	<script src="../js/db-utils.js"></script>
+	<script src="../js/wikipedia-utils.js"></script>
 
 	<script src="https://code.jquery.com/qunit/qunit-2.0.1.js"></script>
 	<script src="qunit-tests.js"></script>
@@ -88,6 +88,9 @@
 			alert('Page with misspellings: ' + title);
 			DataBaseUtils.getPageMisspellings(title, function(misspellings) {
 				alert('Misspellings in the page: ' + JSON.stringify(misspellings));
+				WikipediaUtils.getPageContent(title, function(content) {
+					alert('Page content: ' + content);
+				});
 			});
 		});
 	</script>
