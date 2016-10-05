@@ -51,7 +51,7 @@ var ReplaceUtils = {
 	},
 
     /* Returns an array with matches in the text of the given misspellings.
-     * The mispellings are objects with (word, cs, suggestion).
+     * The misspellings are objects with (word, cs, suggestion).
      * The objects in the array have the properties (word, position, suggestions, fix, fixed).
      * The misspelling in the text exceptions are omitted. */
     findMisspellingMatches : function (text, misspellings) {
@@ -185,6 +185,21 @@ var ReplaceUtils = {
         reducedContent = reducedContent.replace(reNewLines, '');
 
         return reducedContent;
-     }
+     },
+
+    /* Replaces the original content with the accepted fixes. */
+    replaceFixes : function(text, misspellingMatches) {
+        // Loop through inversely the misspelling matches array and replace by the fixes
+        var fixedText = text;
+        for (var idx = 0; idx < misspellingMatches.length; idx++) {
+            var missMatch = misspellingMatches[idx];
+            if (missMatch.fixed) {
+                fixedText = StringUtils.replaceAt(fixedText, missMatch.position,
+                        missMatch.word, missMatch.fix);
+            }
+        }
+
+        return StringUtils.decodeHtml(fixedText);
+    }
 
 };

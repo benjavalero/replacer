@@ -19,11 +19,11 @@
 	<h2>Texto original</h2>
 	<div id="contentOrig" class="pre"></div>
 
-	<h2>Texto con errores</h2>
-	<div id="contentMisspelled" class="pre"></div>
-
 	<h2>Texto resaltado con errores </h2>
 	<div id="contentHighlighted" class="pre"></div>
+
+	<h2>Texto corregido</h2>
+	<div id="contentFixed" class="pre"></div>
 
 	<script
 		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -45,19 +45,36 @@
 			+ '\n\nZ';
 		var encoded = StringUtils.encodeHtml(orig);
 		$('#contentOrig').html(encoded);
+		$('#contentFixed').text(orig);
 
 		var misspellings = [{word : 'google', cs : 1, suggestion : 'Google'}];
 		var misspellingMatches = ReplaceUtils.findMisspellingMatches(encoded, misspellings);
 		var misspelled = ReplaceUtils.replaceMisspellingsWithButtons(encoded, misspellingMatches);
 		misspelled = ReplaceUtils.removeParagraphsWithoutMisspellings(misspelled);
-		$('#contentMisspelled').html(misspelled);
 
 		var highlighted = ReplaceUtils.highlightSyntax(misspelled);
 		$('#contentHighlighted').html(highlighted);
 
 		// Add event to the misspelling buttons
 		$('.miss').click(function() {
-			alert(this.id);
+			var missId = this.id;
+			var idx = missId.split('-')[1];
+			var missMatch = misspellingMatches[idx];
+			if (missMatch.fixed) {
+				$('#' + missId).removeClass('btn-success');
+				$('#' + missId).addClass('btn-danger');
+				$('#' + missId).html(missMatch.word);
+				missMatch.fixed = false;
+			} else {
+				$('#' + missId).removeClass('btn-danger');
+				$('#' + missId).addClass('btn-success');
+				$('#' + missId).html(missMatch.fix);
+				missMatch.fixed = true;
+			}
+
+			// Apply the fixes and show it
+			var fixed = ReplaceUtils.replaceFixes(encoded, misspellingMatches);
+			$('#contentFixed').text(fixed);
 		});
 
 		// Add cool Bootstrap tooltips
