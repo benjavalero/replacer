@@ -31,7 +31,7 @@ var StringUtils = {
     	return text.substr(0, position) + replacement + text.substr(position + replaced.length);
     },
 
-    threshold : 50,
+    threshold : 200,
     ellipsis : '[...]',
 
     /* Display only the last n characters of the text, with an ellipsis if needed. */

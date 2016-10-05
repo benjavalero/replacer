@@ -314,6 +314,7 @@ function turnMisspelling(missId) {
  *            If true, show the replaced content in the screen.
  * @return A boolean if there have been changes.
  */
+ // TODO Use the new function in ReplaceUtils
 function showChanges(show) {
 	var numFixes = 0;
 
