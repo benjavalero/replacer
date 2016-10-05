@@ -25,12 +25,12 @@
 	<h2>Texto corregido</h2>
 	<div id="contentFixed" class="pre"></div>
 
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="../js/bootstrap.min.js"></script>
 	<script src="../js/string-utils.js"></script>
 	<script src="../js/regex.js"></script>
 	<script src="../js/replace-utils.js"></script>
+	<script src="../js/db-utils.js"></script>
 
 	<script src="https://code.jquery.com/qunit/qunit-2.0.1.js"></script>
 	<script src="qunit-tests.js"></script>
@@ -74,12 +74,21 @@
 
 			// Apply the fixes and show it
 			var fixed = ReplaceUtils.replaceFixes(encoded, misspellingMatches);
-			$('#contentFixed').text(fixed);
+			var decodedFixed = StringUtils.decodeHtml(fixed);
+			$('#contentFixed').text(decodedFixed);
 		});
 
 		// Add cool Bootstrap tooltips
 		$(function() {
 			$('[data-toggle="tooltip"]').tooltip()
+		});
+
+		// Retrieve the title of a page with misspellings
+		DataBaseUtils.getMisspelledPage(function(title) {
+			alert('Page with misspellings: ' + title);
+			DataBaseUtils.getPageMisspellings(title, function(misspellings) {
+				alert('Misspellings in the page: ' + JSON.stringify(misspellings));
+			});
 		});
 	</script>
 </body>
