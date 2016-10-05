@@ -178,26 +178,6 @@ QUnit.test("RegEx Utils", function(assert) {
         }
     }
     assert.ok(isFound);
-
-    exp = "\n";
-    text = "xxx " + exp + " zzz";
-    isFound = false;
-    while ((match = RegEx.reNewLines.exec(text)) != null) {
-        if (match[0] == exp) {
-            isFound = true;
-        }
-    }
-    assert.notOk(isFound);
-
-    exp = "\n\n";
-    text = "xxx " + exp + " zzz";
-    isFound = false;
-    while ((match = RegEx.reNewLines.exec(text)) != null) {
-        if (match[0] == exp) {
-            isFound = true;
-        }
-    }
-    assert.ok(isFound);
 });
 
 QUnit.test("Replace Utils", function(assert) {
@@ -216,10 +196,4 @@ QUnit.test("Replace Utils", function(assert) {
     assert.equal(misspellingMatches.length, 2);
     assert.equal(misspellingMatches[0].position, 2);
     assert.equal(misspellingMatches[1].position, 13);
-
-	text = 'Z\n\n'
-        + '<button id="miss-X"></button>'
-        + '\n\nZ'
-        + '\n\nZ';
-     assert.equal(ReplaceUtils.removeParagraphsWithoutMisspellings(text), '<button id="miss-X"></button>');
 });
