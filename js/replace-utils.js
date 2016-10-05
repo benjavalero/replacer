@@ -136,54 +136,53 @@ var ReplaceUtils = {
         return replacedContent;
     },
 
-     trimParagraph : function(paragraph) {
-        var reButton = new RegExp('[\\S\\s]{0,50}<button[\\S\\s]+?</button>[\\S\\s]{0,50}', 'g');
-        var trimmed = '';
-
+    trimText : function(text) {
+        var reButton = new RegExp('<button[\\S\\s]+?</button>', 'g');
+        var matches = [];
         var reMatch;
-        while ((reMatch = reButton.exec(paragraph)) != null) {
-            if (reMatch.index > 0) {
-                trimmed += '\n...';
-            }
-            trimmed += reMatch[0];
-            if (reMatch.index + reMatch[0].length < paragraph.length) {
-                trimmed += '...\n';
-            }
+        while ((reMatch = reButton.exec(text)) != null) {
+            matches.push({pos : reMatch.index, text : reMatch[0]});
         }
-
-        return trimmed;
-     },
-
-     /* Removes from the text the paragraphs without misspelings */
-     removeParagraphsWithoutMisspellings : function(text) {
-        var positions = [];
-
-        // Add the document start as a position
-        positions.push(0);
-
-        var reMatch;
-        while ((reMatch = RegEx.reNewLines.exec(text)) != null) {
-            positions.push(reMatch.index);
-        }
-
-        // Add the document end as a position
-        positions.push(text.length);
 
         var reducedContent = '';
-        for (var idx = 1; idx < positions.length; idx++) {
-            var ini = positions[idx - 1];
-            var fin = positions[idx];
-            var paragraph = text.substring(ini, fin);
-            if (paragraph.indexOf('miss-') != -1) {
+        var lastFin = 0;
+        for (var idx = 0; idx < matches.length; idx++) {
+            var ini = matches[idx].pos;
+            var fin = ini + matches[idx].text.length;
+            var buttonText = text.substring(ini, fin);
+            var textBefore = text.substring(lastFin, ini);
+            lastFin = fin;
+
+            if (idx == 0) {
+                reducedContent += StringUtils.trimRight(textBefore) + buttonText;
+            } else {
+                reducedContent += StringUtils.trimLeftRight(textBefore) + buttonText;
+            }
+        }
+
+        reducedContent += StringUtils.trimLeft(text.substring(fin));
+
+        return reducedContent;
+     },
+
+     /* Removes from the text the paragraphs without misspellings */
+     removeParagraphsWithoutMisspellings : function(text) {
+        var reParagraph = new RegExp('(^|\\n{2,})[\\S\\s]+?(?=\\n{2,}|$)', 'g');
+        var reducedContent = '';
+
+        var reMatch;
+        while ((reMatch = reParagraph.exec(text)) != null) {
+            if (reMatch[0].indexOf('miss-') != -1) {
                 if (reducedContent) {
                     reducedContent += '\n<hr>\n';
                 }
-                reducedContent += this.trimParagraph(paragraph);
+                reducedContent += this.trimText(reMatch[0]);
             }
         }
 
         // Remove the repeated new lines
-        reducedContent = reducedContent.replace(RegEx.reNewLines, '');
+        var reNewLines = new RegExp('\\n{2,}', 'g'),
+        reducedContent = reducedContent.replace(reNewLines, '');
 
         return reducedContent;
      }

@@ -29,6 +29,36 @@ var StringUtils = {
     // replaceAt('0123456789', 3, '34', 'XXXX') => '012XXXX56789'
     replaceAt : function(text, position, replaced, replacement) {
     	return text.substr(0, position) + replacement + text.substr(position + replaced.length);
+    },
+
+    threshold : 50,
+    ellipsis : '[...]',
+
+    /* Display only the last n characters of the text, with an ellipsis if needed. */
+    trimRight : function(text) {
+        if (text.length <= this.threshold) {
+            return text;
+        } else {
+            return this.ellipsis + ' ' + text.substring(text.length - this.threshold, text.length);
+        }
+    },
+
+    /* Display only the first and last n characters of the text, with an ellipsis if needed. */
+    trimLeftRight : function(text) {
+        if (text.length <= this.threshold * 2) {
+            return text;
+        } else {
+            return text.substring(0, this.threshold) + ' ' + this.ellipsis + ' ' + text.substring(text.length - this.threshold, text.length);
+        }
+    },
+
+    /* Display only the first n characters of the text, with an ellipsis if needed. */
+    trimLeft : function(text) {
+        if (text.length <= this.threshold) {
+            return text;
+        } else {
+            return text.substring(0, this.threshold) + ' ' + this.ellipsis;
+        }
     }
 
 };
