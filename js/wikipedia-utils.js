@@ -11,7 +11,7 @@ var WikipediaUtils = {
 			dataType : 'json',
 			data : {
 				action : 'get',
-				titles : pageTitle.replace(' ', '_')
+				title : pageTitle.replace(' ', '_')
 			}
 		}).done(function(response) {
 			var pages = response.query.pages;
