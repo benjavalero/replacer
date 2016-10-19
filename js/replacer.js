@@ -27,6 +27,10 @@ var pageMisspellingMatches;
 
 $(document).ready(function() {
 
+	// Move down the body acording to the header height
+	var headerHeight = $('#cabecera').height();
+	$('body').css('padding-top', headerHeight);
+
 	// Muestra el texto final con los reemplazos hechos
 	$('#button-show-changes').click(function() {
 		showChanges(true);

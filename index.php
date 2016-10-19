@@ -97,10 +97,7 @@ switch (isset ( $_GET ['action'] ) ? $_GET ['action'] : '') {
 	case 'authorize' :
 		doAuthorizationRedirect ();
 		return;
-	
-	case 'get' :
-		getPageContent ();
-		return;
+
 }
 
 switch (isset ( $_POST ['action'] ) ? $_POST ['action'] : '') {
@@ -192,7 +189,6 @@ function doAuthorizationRedirect() {
 	$url .= "&oauth_signature=" . urlencode ( $signature );
 	$ch = curl_init ();
 	curl_setopt ( $ch, CURLOPT_URL, $url );
-	// curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
 	curl_setopt ( $ch, CURLOPT_USERAGENT, $gUserAgent );
 	curl_setopt ( $ch, CURLOPT_HEADER, 0 );
 	curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
@@ -260,7 +256,6 @@ function fetchAccessToken() {
 	$url .= "&oauth_signature=" . urlencode ( $signature );
 	$ch = curl_init ();
 	curl_setopt ( $ch, CURLOPT_URL, $url );
-	// curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
 	curl_setopt ( $ch, CURLOPT_USERAGENT, $gUserAgent );
 	curl_setopt ( $ch, CURLOPT_HEADER, 0 );
 	curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
@@ -328,10 +323,7 @@ function doApiQuery($post, &$ch = null) {
 	curl_setopt ( $ch, CURLOPT_POST, true );
 	curl_setopt ( $ch, CURLOPT_URL, $apiUrl );
 	curl_setopt ( $ch, CURLOPT_POSTFIELDS, http_build_query ( $post ) );
-	curl_setopt ( $ch, CURLOPT_HTTPHEADER, array (
-			$header 
-	) );
-	// curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+	curl_setopt ( $ch, CURLOPT_HTTPHEADER, array ( $header ) );
 	curl_setopt ( $ch, CURLOPT_USERAGENT, $gUserAgent );
 	curl_setopt ( $ch, CURLOPT_HEADER, 0 );
 	curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
@@ -351,25 +343,6 @@ function doApiQuery($post, &$ch = null) {
 		exit ( 0 );
 	}
 	return $ret;
-}
-
-/**
- * Get the content of a Wikipedia page
- */
-function getPageContent() {
-	$ch = null;
-	
-	// First fetch the username
-	$res = doApiQuery ( array (
-			'format' => 'json',
-			'action' => 'query',
-			'prop' => 'revisions',
-			'rvprop' => 'content',
-			'titles' => $_GET ["title"] 
-	), $ch );
-	
-	header ( "Content-type: application/json" );
-	echo $res;
 }
 
 /**
@@ -427,14 +400,12 @@ function doEdit() {
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
 
-<link href="css/replacer.css" rel="stylesheet">
+<style>
+body {
+	padding-top: 70px;
+}
+</style>
 
-<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 
 <body>
@@ -442,22 +413,20 @@ function doEdit() {
 	<nav class="navbar navbar-default navbar-fixed-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<a class="navbar-brand" href="#">Replacer</a>
+				<a class="navbar-brand" href="index.php">Replacer</a>
 			</div>
-			<ul class="nav navbar-nav">
-				<li><a id="link-title" href="#" target="_blank"></a></li>
-			</ul>
-			<ul id="ul-save" class="nav navbar-nav navbar-right collapse">
-				<li><a id="button-save" href="#" class="btn btn-default"
-					role="button">Guardar cambios</a></li>
-			</ul>
 		</div>
 	</nav>
 
 	<div class="container">
 
 		<input id="tokenKey" type="hidden" value="<?php echo $gTokenKey; ?>" />
-      <?php if ( !$gTokenKey ) { ?>
+
+		<?php if ( !$gTokenKey ) { ?>
+
+		<p>Haga clic <a href="index.php?action=authorize">aquí</a> para autenticarse.</p>
+
+		<?php } else { ?>
 
 		<p>
 			Esta es una herramienta aún en fase <strong>beta</strong> para
@@ -465,38 +434,24 @@ function doEdit() {
 			español.
 		</p>
 
-		<p>Pulse en las palabras resaltadas para sustituirlas por su
-			corrección (si procede). Finalmente pulse en el botón "Guardar
-			cambios" para aplicar las correcciones. Si pulsa el botón sin haber
-			hecho ningún cambio, simplemente se cargará una nueva página.</p>
-
 		<p>
-			Haga clic <a href="index.php?action=authorize">aquí</a> para
-			autenticarse.
+			A continuación se listan algunas de las herramientas disponibles:
 		</p>
-      <?php } else { ?>
 
-		<input id="page-title" type="hidden" value="" />
-
-		<div id="article-content" class="pre"></div>
-
-		<!-- Para depuración -->
-		<div>
-			<button id="button-show-changes" class="btn btn-default collapse"
-				type="button">Mostrar cambios</button>
+		<div class="list-group">
+			<a href="misspellings.php" class="list-group-item">
+				<strong>Errores ortográficos</strong>
+				Pulse en las palabras resaltadas para sustituirlas por su
+                corrección (si procede). Finalmente pulse en el botón «Guardar
+                cambios» para aplicar las correcciones. Si pulsa el botón sin haber
+				hecho ningún cambio, simplemente se cargará una nueva página
+				con posibles errores ortográficos.
+			</a>
 		</div>
-		<div id="content-to-post" class="pre collapse"></div>
 
-      <?php } ?>
+		<?php } ?>
 
     </div>
 
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="js/bootstrap.min.js"></script>
-
-	<script src="js/replacer.js"></script>
 </body>
 </html>
