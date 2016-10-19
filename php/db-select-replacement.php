@@ -21,7 +21,8 @@ if ($conn->connect_error) {
 	die ( "Connection failed: " . $conn->connect_error );
 }
 
-$sql = "SELECT DISTINCT title FROM replacement WHERE dtfixed IS NULL LIMIT 1";
+// $sql = "SELECT DISTINCT title FROM replacement WHERE dtfixed IS NULL LIMIT 1";
+$sql = "SELECT title FROM replacement WHERE id > (SELECT FLOOR(RAND()*(SELECT MAX(id) FROM replacement))) LIMIT 1";
 $result = $conn->query ( $sql );
 if ($result->num_rows > 0) {
 	$title_array = array ();
