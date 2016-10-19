@@ -98,6 +98,9 @@ switch (isset ( $_GET ['action'] ) ? $_GET ['action'] : '') {
 		doAuthorizationRedirect ();
 		return;
 
+	case 'get' :
+		getPageContent ();
+		return;
 }
 
 switch (isset ( $_POST ['action'] ) ? $_POST ['action'] : '') {
@@ -343,6 +346,25 @@ function doApiQuery($post, &$ch = null) {
 		exit ( 0 );
 	}
 	return $ret;
+}
+
+/**
+ * Get the content of a Wikipedia page
+ */
+function getPageContent() {
+	$ch = null;
+
+	// First fetch the username
+	$res = doApiQuery ( array (
+			'format' => 'json',
+			'action' => 'query',
+			'prop' => 'revisions',
+			'rvprop' => 'content',
+			'titles' => $_GET ["title"]
+	), $ch );
+
+	header ( "Content-type: application/json" );
+	echo $res;
 }
 
 /**
