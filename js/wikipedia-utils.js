@@ -7,14 +7,11 @@ var WikipediaUtils = {
 	 * Run the callback with the page contents. */
 	getPageContent : function(pageTitle, callback) {
 		$.ajax({
-			url : this.apiUrl,
+			url : this.baseUrl + 'index.php',
 			dataType : 'json',
 			data : {
-				action : 'query',
-				titles : pageTitle.replace(' ', '_'),
-				prop : 'revisions',
-				rvprop : 'content',
-				format : 'json'
+				action : 'get',
+				titles : pageTitle.replace(' ', '_')
 			}
 		}).done(function(response) {
 			var pages = response.query.pages;

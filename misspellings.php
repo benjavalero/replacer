@@ -1,5 +1,8 @@
 <?php
 
+// Setup the session cookie
+session_name ( 'ReplacerTool' );
+
 // Load the user token (request or access) from the session
 $gTokenKey = '';
 session_start ();
