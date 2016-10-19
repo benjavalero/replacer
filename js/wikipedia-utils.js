@@ -1,13 +1,11 @@
 var WikipediaUtils = {
 
-	// baseUrl : 'https://tools.wmflabs.org/replacer/',
+	baseUrl : 'https://tools.wmflabs.org/replacer/',
 	apiUrl : 'https://es.wikipedia.org/w/api.php',
 
 	/* Run query in Wikipedia API to get the contents of a page.
 	 * Run the callback with the page contents. */
 	getPageContent : function(pageTitle, callback) {
-		// TODO Enable console
-		// info('Obteniendo contenido del artículo «' + pageTitle + '»…');
 		$.ajax({
 			url : this.apiUrl,
 			dataType : 'json',
@@ -27,11 +25,26 @@ var WikipediaUtils = {
 					content = pages[pageId].revisions[0]['*'];
 				}
 			}
-			// debug('Page content: ' + content);
+
 			callback(content);
 		}).fail(function(response) {
-			// closeAlert(msgId);
-			// showAlert('Error buscando artículos con errores ortográficos. ' + JSON.stringify(response), 'danger');
+			alert('Error buscando artículos con errores ortográficos. ' + JSON.stringify(response));
+		});
+	},
+
+	postPageContent : function(pageTitle, pageContent, callback) {
+		$.ajax({
+			url : this.baseUrl + 'index.php',
+			method : 'POST',
+			data : {
+				action : 'edit',
+				title : pageTitle,
+				text : pageContent
+			}
+		}).done(function(response) {
+			callback();
+		}).fail(function(response) {
+			alert('Error guardando los cambios en: ' + pageTitle + '. ' + JSON.stringify(response));
 		});
 	}
 
