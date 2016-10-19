@@ -34,8 +34,7 @@ var DataBaseUtils = {
 			}
 		}).done(function(response) {
 			// debug('Misspellings: ' + JSON.stringify(response.misspellings));
-			alert('Misspellings: ' + JSON.stringify(response.misspellings));
-			// callback(response.misspellings);
+			callback(response.misspellings);
 		}).fail(function(response) {
 			// closeAlert(msgId);
 			// showAlert('Error buscando errores ortográficos en el artículo: ' + pageTitle + '. ' + JSON.stringify(response), 'danger');

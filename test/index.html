@@ -1,13 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Replacer Tests</title>
-<link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.0.1.css">
-<link href="../css/bootstrap.min.css" rel="stylesheet">
-<link href="../css/replacer.css" rel="stylesheet">
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<title>Replacer Tests</title>
+
+	<link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.0.1.css">
+	<link href="../css/bootstrap.min.css" rel="stylesheet">
+	<link href="../css/replacer.css" rel="stylesheet">
 </head>
 <body>
+
+	<nav id="cabecera" class="navbar navbar-default navbar-fixed-top">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">Replacer</a>
+			</div>
+			<ul class="nav navbar-nav">
+				<li>
+					<a id="link-title" href="#" target="_blank">Esto es un título muy largo que puede llegar a ocupar dos líneas en un móvil.</a>
+				</li>
+			</ul>
+			<ul id="ul-save" class="nav navbar-nav navbar-right">
+				<li>
+					<a id="button-save" href="#" class="btn btn-default" role="button">Guardar cambios</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
 	<h1>Tests unitarios</h1>
 
 	<div id="qunit"></div>
@@ -36,6 +59,10 @@
 	<script src="qunit-tests.js"></script>
 
 	<script type="text/javascript">
+		// Move down the body acording to the header height
+		var headerHeight = $('#cabecera').height();
+		$('body').css('padding-top', headerHeight);
+
 		var orig = 'Z\n\n'
 			+ 'X\nX\nX\nX\n'
 			+ '<!-- Comentario -->\n' + '== Una google cabecera de google ==\n\n'
@@ -89,7 +116,7 @@
 			DataBaseUtils.getPageMisspellings(title, function(misspellings) {
 				alert('Misspellings in the page: ' + JSON.stringify(misspellings));
 				WikipediaUtils.getPageContent(title, function(content) {
-					alert('Page content: ' + content);
+					alert('Page content:\n\n' + content);
 				});
 			});
 		});
