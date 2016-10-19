@@ -10,7 +10,7 @@ var RegEx = {
 
 	reHyperlink : new RegExp('(https?://[\\w\\./\\-\\+\\?&%=:#;]+)', 'g'),
 
-	reLink : new RegExp('(\\[\\[(.+?)(\\|.+)?\\]\\])', 'g'),
+	reLink : new RegExp('(\\[\\[[^\\]]+\\]\\])', 'g'),
 
 	// \w doesn't include accentuated characters
 	wordCharacterClass : '\\wÁáÉéÍíÓóÚúÜüÑñ',

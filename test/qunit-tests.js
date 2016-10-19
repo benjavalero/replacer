@@ -59,7 +59,7 @@ QUnit.test("RegEx Utils", function(assert) {
 	assert.ok(isFound);
 
 	exp = "[[España|país]]";
-	text = "xxx " + exp + " zzz";
+	text = "xxx " + exp + " [[Francia]] zzz";
 	isFound = false;
 	while ((match = RegEx.reLink.exec(text)) != null) {
 		if (match[0] == exp) {
