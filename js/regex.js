@@ -8,7 +8,7 @@ var RegEx = {
 
 	reHeader : new RegExp('(\\={2,}.+?\\={2,})', 'g'),
 
-	reHyperlink : new RegExp('(https?://[\\w\\./\\-\\+\\?&%=:#;]+)', 'g'),
+	reHyperlink : new RegExp('(https?://[\\w\\./\\-\\+\\?&%=:#;~]+)', 'g'),
 
 	reLink : new RegExp('(\\[\\[[^\\]]+\\]\\])', 'g'),
 
