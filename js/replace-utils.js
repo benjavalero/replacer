@@ -13,10 +13,8 @@ var ReplaceUtils = {
 		replacedText = replacedText.replace(RegEx.reHyperlink,
 				'<span class="syntax hyperlink">$1</span>');
 
-		replacedText = replacedText
-				.replace(
-						RegEx.reLink,
-						'<a href="https://es.wikipedia.org/wiki/$2" class="syntax link" target="_blank">$1</a>');
+		replacedText = replacedText.replace(RegEx.reLink,
+				'<span class="syntax link">$1</span>');
 
 		return replacedText;
 	},

@@ -17,6 +17,11 @@ hr {
 	border-width: medium;
 }
 
+.collapsing {
+    -webkit-transition: none;
+    transition: none;
+}
+
 /* SYNTAX */
 
 .syntax {
