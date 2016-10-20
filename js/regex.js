@@ -42,7 +42,7 @@ var RegEx = {
 	reCategory : new RegExp('\\[\\[Categoría:.*?\\]\\]', 'g'),
 
 	reFalsePositives : new RegExp(
-			'[Ss]ólo|[Ii]ndex|[Ll]ink|[Oo]nline|[Rr]eferences?|Jean|[Aa]un así',
+			'[Ss]ólo|[Ii]ndex|[Ll]ink|[Oo]nline|[Rr]eferences?|Jean|[Aa]un así|&lt;|fans|Comics|[Ss]e publica|Tropicos\\.org|euclíde[ao]s?',
 			'g')
 
 };
