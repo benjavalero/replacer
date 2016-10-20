@@ -48,7 +48,7 @@ QUnit.test("RegEx Utils", function(assert) {
 	}
 	assert.ok(isFound);
 
-	exp = "https://google.es?u=t&ja2+rl=http://www.marca.com#page2";
+	exp = "https://google.es?u=t&ja2+rl=http://www.marca.com#page~2";
 	text = "xxx " + exp + " zzz";
 	isFound = false;
 	while ((match = RegEx.reHyperlink.exec(text)) != null) {
