@@ -3,6 +3,10 @@
 	white-space: pre-wrap;
 }
 
+.btn {
+    vertical-align: baseline;
+}
+
 .pre, .btn {
 	font-size: 14px;
 }
