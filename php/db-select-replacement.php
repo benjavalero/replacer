@@ -22,7 +22,7 @@ if ($conn->connect_error) {
 }
 
 // $sql = "SELECT DISTINCT title FROM replacement WHERE dtfixed IS NULL LIMIT 1";
-$sql = "SELECT title FROM replacement WHERE dtfixed IS NULL AND id > (SELECT FLOOR(RAND()*(SELECT MAX(id) FROM replacement))) ORDER BY id LIMIT 1";
+$sql = "SELECT title FROM replacement WHERE dtfixed IS NULL AND id > (SELECT FLOOR(RAND()*(SELECT MAX(id) FROM replacement WHERE dtfixed IS NULL))) ORDER BY id LIMIT 1";
 $result = $conn->query ( $sql );
 if ($result->num_rows > 0) {
 	$title_array = array ();
@@ -32,7 +32,7 @@ if ($result->num_rows > 0) {
 }
 
 $data = array (
-		"titles" => $title_array 
+	"titles" => $title_array
 );
 echo json_encode ( $data, JSON_UNESCAPED_UNICODE );
 

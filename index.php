@@ -469,6 +469,10 @@ body {
 				hecho ningún cambio, simplemente se cargará una nueva página
 				con posibles errores ortográficos.
 			</a>
+			<a href="statistics.php" class="list-group-item">
+				<strong>Estadísticas</strong>
+				Muestra diversas estadísticas de la herramienta.
+			</a>
 		</div>
 
 		<?php } ?>
