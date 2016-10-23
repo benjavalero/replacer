@@ -12,24 +12,19 @@
 	<link href="../css/replacer.css" rel="stylesheet">
 </head>
 <body>
-
-	<nav id="cabecera" class="navbar navbar-default navbar-fixed-top">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="#">Replacer</a>
-			</div>
-			<ul class="nav navbar-nav">
-				<li>
-					<a id="link-title" href="#" target="_blank">Esto es un título muy largo que puede llegar a ocupar dos líneas en un móvil.</a>
-				</li>
-			</ul>
-			<ul id="ul-save" class="nav navbar-nav navbar-right">
-				<li>
-					<a id="button-save" href="#" class="btn btn-default" role="button">Guardar cambios</a>
-				</li>
-			</ul>
+	<div id="cabecera">
+		<div class="pull-left">
+			<a href="#"><strong>Replacer</strong></a>
 		</div>
-	</nav>
+		<div class="pull-right">
+			<a id="button-save" href="#" class="btn btn-default" role="button">Guardar cambios</a>
+		</div>
+		<div class="pull-left">
+			<a id="link-title" href="#" target="_blank">Esto es un título muy largo que puede llegar a ocupar dos líneas en un móvil.</a>
+		</div>
+	</div>
+
+	<div class="container">
 
 	<h1>Tests unitarios</h1>
 
@@ -46,6 +41,8 @@
 
 	<h2>Texto corregido</h2>
 	<div id="contentFixed" class="pre"></div>
+
+	</div>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="../js/bootstrap.min.js"></script>
@@ -112,11 +109,24 @@
 
 		// Retrieve the title of a page with misspellings
 		DataBaseUtils.getMisspelledPage(function(title) {
-			alert('Page with misspellings: ' + title);
+			title = '! (desambiguación)';
+			//alert('Page with misspellings: ' + title);
 			DataBaseUtils.getPageMisspellings(title, function(misspellings) {
-				alert('Misspellings in the page: ' + JSON.stringify(misspellings));
-				WikipediaUtils.getPageContent(title, function(content) {
-					alert('Page content:\n\n' + content);
+				//alert('Misspellings in the page: ' + JSON.stringify(misspellings));
+				WikipediaUtils.getPageContentWithoutCredentials(title, function(content) {
+					//alert('Page content:\n\n' + content);
+					orig = content;
+					var encoded = StringUtils.encodeHtml(orig);
+					$('#contentOrig').html(encoded);
+					$('#contentFixed').text(orig);
+
+					var misspellingMatches = ReplaceUtils.findMisspellingMatches(encoded, misspellings);
+					var misspelled = ReplaceUtils.replaceMisspellingsWithButtons(encoded, misspellingMatches);
+					misspelled = ReplaceUtils.removeParagraphsWithoutMisspellings(misspelled);
+
+					var highlighted = ReplaceUtils.highlightSyntax(misspelled);
+					//var highlighted = misspelled;
+					$('#contentHighlighted').html(highlighted);
 				});
 			});
 		});

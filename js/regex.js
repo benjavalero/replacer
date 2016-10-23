@@ -41,8 +41,11 @@ var RegEx = {
 
 	reCategory : new RegExp('\\[\\[Categoría:.*?\\]\\]', 'g'),
 
+	reTagMath : new RegExp('<math>[\\S\\s]*?</math>', 'g'),
+
 	reFalsePositives : new RegExp(
-			'[Ss]ólo|[Ii]ndex|[Ll]ink|[Oo]nline|[Rr]eferences?|Jean|[Aa]un así|&lt;|fans|Comics|[Ss]e publica|Tropicos\\.org|euclíde[ao]s?',
+			'[Ss]ólo|[Ii]ndex|[Ll]ink|[Oo]nline|[Rr]eferences?|Jean|[Aa]un así|&lt;|fans|Comics|[Ss]e publica|' +
+			'Tropicos\\.org|euclíde[ao]s?|[Gg]uión|Julio César|Magazine|Records|ést[aeo]s?[.,]',
 			'g')
 
 };

@@ -25,7 +25,7 @@ var ReplaceUtils = {
 			RegEx.reQuotes, RegEx.reAngularQuotes, RegEx.reTypographicQuotes,
 			RegEx.reDoubleQuotes, RegEx.reFileName, RegEx.reRefName,
 			RegEx.reCategory, RegEx.reComment, RegEx.reHyperlink,
-			RegEx.reFalsePositives ],
+			RegEx.reTagMath, RegEx.reFalsePositives ],
 
 	/* Returns an array with matches in the text of the replacement exceptions.
 	 * The objects in the array have the properties (ini, fin, text). */

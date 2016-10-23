@@ -1,3 +1,18 @@
+#cabecera {
+	position: fixed;
+	top: 0px;
+	width: 100%;
+	background-color: #f8f8f8;
+	border-bottom: solid 1px #e7e7e7;
+}
+
+#cabecera a {
+	padding: 6px 12px;
+	display: inline-block;
+	text-decoration: none;
+	color: #777;
+}
+
 .pre {
 	font-family: monospace;
 	white-space: pre-wrap;
