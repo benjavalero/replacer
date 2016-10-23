@@ -38,20 +38,17 @@ session_write_close ();
 
 <body>
 
-	<nav id="cabecera" class="navbar navbar-default navbar-fixed-top">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="index.php">Replacer</a>
-			</div>
-			<ul class="nav navbar-nav">
-				<li><a id="link-title" href="#" target="_blank"></a></li>
-			</ul>
-			<ul id="ul-save" class="nav navbar-nav navbar-right collapse">
-				<li><a id="button-save" href="#" class="btn btn-default"
-					role="button">Guardar cambios</a></li>
-			</ul>
+	<div id="cabecera">
+		<div class="pull-left">
+			<a href="index.php"><strong>Replacer</strong></a>
 		</div>
-	</nav>
+		<div class="pull-right">
+			<a id="button-save" href="#" class="btn btn-default" role="button">Guardar cambios</a>
+		</div>
+		<div class="pull-left">
+			<a id="link-title" href="#" target="_blank"></a>
+		</div>
+	</div>
 
 	<div class="container">
 

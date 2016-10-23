@@ -178,6 +178,29 @@ QUnit.test("RegEx Utils", function(assert) {
 		}
 	}
 	assert.ok(isFound);
+
+	exp = "<math>Esto es un <i>ejemplo</i>\n en LaTeX</math>";
+    var text = "xxx " + exp + " zzz";
+    var isFound = false;
+    while ((match = RegEx.reTagMath.exec(text)) != null) {
+        if (match[0] == exp) {
+            isFound = true;
+        }
+    }
+    assert.ok(isFound);
+
+    exp = "Un sólo espacio euclídeo en el index de Tropicos.org de éstos.";
+    text = "xxx " + exp + " vvv";
+    matches = [];
+    while ((match = RegEx.reFalsePositives.exec(text)) != null) {
+        matches.push(match[0]);
+    }
+    assert.equal(matches.length, 5);
+    assert.ok(matches.indexOf("sólo") != -1);
+    assert.ok(matches.indexOf("euclídeo") != -1);
+    assert.ok(matches.indexOf("index") != -1);
+    assert.ok(matches.indexOf("Tropicos.org") != -1);
+    assert.ok(matches.indexOf("éstos.") != -1);
 });
 
 QUnit.test("Replace Utils", function(assert) {
