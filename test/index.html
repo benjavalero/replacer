@@ -109,10 +109,11 @@
 
 		// Retrieve the title of a page with misspellings
 		DataBaseUtils.getMisspelledPage(function(title) {
-			title = '! (desambiguación)';
+			title = 'Usuario:Benjavalero/Taller';
 			//alert('Page with misspellings: ' + title);
 			DataBaseUtils.getPageMisspellings(title, function(misspellings) {
 				//alert('Misspellings in the page: ' + JSON.stringify(misspellings));
+				misspellings = [{word : 'titulo', cs : 0, suggestion : 'título'}];
 				WikipediaUtils.getPageContentWithoutCredentials(title, function(content) {
 					//alert('Page content:\n\n' + content);
 					orig = content;
