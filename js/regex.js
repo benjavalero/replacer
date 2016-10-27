@@ -3,8 +3,7 @@ var RegEx = {
 	// JavaScript doesn't support regex lookbehind
 	// JavaScript doesn't support dotall flag. Workaround: . => [\\S\\s]
 
-	reCommentEncoded : new RegExp('(&lt;!--[\\S\\s]*?--&gt;)', 'g'),
-	reComment : new RegExp('<!--[\\S\\s]*?-->', 'g'),
+	reComment : new RegExp('(&lt;!--[\\S\\s]*?--&gt;)', 'g'),
 
 	reHeader : new RegExp('(\\={2,}.+?\\={2,})', 'g'),
 
@@ -37,11 +36,11 @@ var RegEx = {
 	reFileName : new RegExp(
 			'[\\=\\|:][^\\=\\|:]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|ogg|pdf)', 'g'),
 
-	reRefName : new RegExp('<ref[^>]*>', 'g'),
+	reRefName : new RegExp('&lt;ref\\s*name\\s*=[\\S\\s]*?&gt;', 'g'),
 
 	reCategory : new RegExp('\\[\\[Categoría:.*?\\]\\]', 'g'),
 
-	reTagMath : new RegExp('<math>[\\S\\s]*?</math>', 'g'),
+	reTagMath : new RegExp('&lt;math&gt;[\\S\\s]*?&lt;/math&gt;', 'g'),
 
 	reFalsePositives : new RegExp(
 			'Index|Link|Online|[Rr]eferences?|[Aa]un así|&lt;|[Ff]ans|Comics|[Ss]e publica|' +

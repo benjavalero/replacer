@@ -18,20 +18,10 @@ QUnit.test("String Utils", function(assert) {
 QUnit.test("RegEx Utils", function(assert) {
 	var match;
 
-	var exp = "<!-- Esto es un \n comentario -->";
+	var exp = "&lt;!-- Esto es un \n comentario --&gt;";
 	var text = "xxx " + exp + " zzz";
 	var isFound = false;
 	while ((match = RegEx.reComment.exec(text)) != null) {
-		if (match[0] == exp) {
-			isFound = true;
-		}
-	}
-	assert.ok(isFound);
-
-	exp = "&lt;!-- Esto es un \n comentario --&gt;";
-	text = "xxx " + exp + " zzz";
-	isFound = false;
-	while ((match = RegEx.reCommentEncoded.exec(text)) != null) {
 		if (match[0] == exp) {
 			isFound = true;
 		}
@@ -159,7 +149,7 @@ QUnit.test("RegEx Utils", function(assert) {
 	}
 	assert.ok(isFound);
 
-	exp = "<ref name= España >";
+	exp = "&lt;ref name= España &gt;";
 	text = "xxx " + exp + " zzz";
 	isFound = false;
 	while ((match = RegEx.reRefName.exec(text)) != null) {
@@ -179,7 +169,7 @@ QUnit.test("RegEx Utils", function(assert) {
 	}
 	assert.ok(isFound);
 
-	exp = "<math>Esto es un <i>ejemplo</i>\n en LaTeX</math>";
+	exp = "&lt;math&gt;Esto es un ejemplo\n en LaTeX&lt;/math&gt;";
     var text = "xxx " + exp + " zzz";
     var isFound = false;
     while ((match = RegEx.reTagMath.exec(text)) != null) {

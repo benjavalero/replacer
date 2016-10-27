@@ -4,7 +4,7 @@ var ReplaceUtils = {
 	highlightSyntax : function(text) {
 		var replacedText = text;
 
-		replacedText = replacedText.replace(RegEx.reCommentEncoded,
+		replacedText = replacedText.replace(RegEx.reComment,
 				'<span class="syntax comment">$1</span>');
 
 		replacedText = replacedText.replace(RegEx.reHeader,
