@@ -1,0 +1,42 @@
+.pre {
+	font-family: monospace;
+	white-space: pre-wrap;
+	overflow-x: scroll;
+}
+
+.btn {
+    vertical-align: baseline;
+}
+
+hr {
+	border-color: #333;
+	border-style: double none none;
+	border-width: medium;
+}
+
+/* SYNTAX */
+
+.syntax {
+	border: 1px solid transparent;
+	border-radius: 4px;
+	padding: 2px;
+}
+
+.comment {
+	background-color: #dcdcdc;
+	border-color: #444444;
+	color: #444444;
+}
+
+.link, .hyperlink {
+	background-color: #cceeff;
+	border-color: #005885;
+	color: #005885;
+}
+
+.header {
+	background-color: #ffffff;
+	border-color: #000000;
+	color: #000000;
+	font-weight: bold;
+}
