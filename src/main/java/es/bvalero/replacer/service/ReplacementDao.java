@@ -42,7 +42,8 @@ class ReplacementDao extends AbstractDao<ReplacementPK, ReplacementBD> {
         Query query = getEntityManager().createQuery("FROM ReplacementBD WHERE dtfixed IS NULL");
         query.setFirstResult(startRow);
         query.setMaxResults(1);
-        return (ReplacementBD) query.getResultList().get(0);
+        List results = query.getResultList();
+        return results.isEmpty() ? null : (ReplacementBD) query.getResultList().get(0);
     }
 
     private Integer getNumReplacements() {

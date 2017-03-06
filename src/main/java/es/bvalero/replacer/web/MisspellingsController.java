@@ -35,6 +35,10 @@ class MisspellingsController {
     @RequestMapping(value = "/find/random")
     RandomArticle findRandom() {
         ReplacementBD randomReplacement = replacementService.findRandomReplacementToFix();
+        if (randomReplacement == null) {
+            return findRandom();
+        }
+
         String title = randomReplacement.getTitle();
         String content = wikipediaService.getArticleContent(title);
         if (content == null || RegExUtils.isRedirectionArticle(content)) {
