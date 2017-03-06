@@ -3,6 +3,7 @@ Link
 Online
 [Rr]eferences?
 [Aa]un así
+[Mm]ás aún
 &lt;
 [Ff]ans
 Comics
@@ -15,6 +16,5 @@ Jet Propulsion Laboratory
 
 [Éé]ste
 [Éé]stas?
-[Ée]stos
-[Gg]uión
+[Éé]stos
 [Ss]ólo
