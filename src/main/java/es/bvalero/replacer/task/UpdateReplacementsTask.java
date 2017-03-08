@@ -26,7 +26,7 @@ class UpdateReplacementsTask {
 
     @Scheduled(cron = "0 0 5 1 1/1 ?")
     void updateReplacements() {
-        String dumpPath = findLatestDumpPath();
+        String dumpPath = findLatestDumpPath(new File(dumpFolder));
 
         LOGGER.info("Parsing dump file: {}", dumpPath);
         FindMisspellingsHandler handler = new FindMisspellingsHandler();
@@ -34,16 +34,17 @@ class UpdateReplacementsTask {
         LOGGER.info("Parse completed with success: {}", success);
     }
 
-    private String findLatestDumpPath() {
-        File dumpFolderFile = new File(dumpFolder);
-        File[] files = dumpFolderFile.listFiles(new FilenameFilter() {
+    String findLatestDumpPath(File dumpFolderFile) {
+        File[] folders = dumpFolderFile.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                return name.matches("eswiki-[0-9]+-pages-articles.xml.bz2");
+                return name.matches("[0-9]+");
             }
         });
-        Arrays.sort(files);
-        return files[files.length - 1].getPath();
+        Arrays.sort(folders);
+        File dumpFolder = folders[folders.length - 1];
+        String dumpFileName = "eswiki-" + dumpFolder.getName() + "-pages-articles.xml.bz2";
+        return new File(dumpFolder, dumpFileName).getPath();
     }
 
 }
