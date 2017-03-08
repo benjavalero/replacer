@@ -24,9 +24,11 @@ public class RegExUtils {
     static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}]+";
     // We trust the quotes are well formed with matching leading and trailing quotes
     static final String REGEX_QUOTES = "'{2,5}.+?'{2,5}";
+    static final String REGEX_QUOTES_ESCAPED = "(&apos;){2,5}.+?(&apos;){2,5}";
     static final String REGEX_ANGULAR_QUOTES = "«[^»]+»";
     static final String REGEX_TYPOGRAPHIC_QUOTES = "“[^”]+”";
     static final String REGEX_DOUBLE_QUOTES = "\"[^\"]+\"";
+    static final String REGEX_DOUBLE_QUOTES_ESCAPED = "&quot;.+?&quot;";
     static final String REGEX_FILE_NAME = "[=|:][^=|:]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|ogg|pdf)";
     static final String REGEX_REF_NAME = "<ref\\s+name\\s+=[^>]+>";
     static final String REGEX_CATEGORY = "\\[\\[Categoría:[^]]+]]";
@@ -65,9 +67,11 @@ public class RegExUtils {
             exceptionPatterns.add(Pattern.compile(REGEX_UNREPLACEBLE_TEMPLATE));
             exceptionPatterns.add(Pattern.compile(REGEX_TEMPLATE_NAME));
             exceptionPatterns.add(Pattern.compile(REGEX_QUOTES));
+            exceptionPatterns.add(Pattern.compile(REGEX_QUOTES_ESCAPED));
             exceptionPatterns.add(Pattern.compile(REGEX_ANGULAR_QUOTES));
             exceptionPatterns.add(Pattern.compile(REGEX_TYPOGRAPHIC_QUOTES));
             exceptionPatterns.add(Pattern.compile(REGEX_DOUBLE_QUOTES));
+            exceptionPatterns.add(Pattern.compile(REGEX_DOUBLE_QUOTES_ESCAPED));
             exceptionPatterns.add(Pattern.compile(REGEX_FILE_NAME));
             exceptionPatterns.add(Pattern.compile(REGEX_REF_NAME));
             exceptionPatterns.add(Pattern.compile(REGEX_CATEGORY));
