@@ -7,6 +7,12 @@ import static org.junit.Assert.*;
 public class StringUtilsTest {
 
     @Test
+    public void testEscapeText() {
+        String text = "A \"B\" 'C' &D; <E> [F] : #G / «H» + “I”";
+        assertEquals(text, StringUtils.unescapeText(StringUtils.escapeText(text)));
+    }
+
+    @Test
     public void testReplaceAt() throws Exception {
         assertEquals("012XXXX56789",
                 StringUtils.replaceAt("0123456789", 3, "34", "XXXX"));

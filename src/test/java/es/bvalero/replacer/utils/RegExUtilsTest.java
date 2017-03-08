@@ -123,6 +123,22 @@ public class RegExUtilsTest {
     }
 
     @Test
+    public void testRegexQuotesEscaped() {
+        String quotes = "''Hola''";
+        String text = "xxx " + quotes + " zzz";
+        Pattern pattern = Pattern.compile(RegExUtils.REGEX_QUOTES_ESCAPED);
+        Matcher matcher = pattern.matcher(StringUtils.escapeText(text));
+        boolean isFound = false;
+        while (matcher.find()) {
+            if (StringUtils.unescapeText(matcher.group(0)).equals(quotes)) {
+                isFound = true;
+                break;
+            }
+        }
+        assertTrue(isFound);
+    }
+
+    @Test
     public void testRegexQuotesAngular() {
         String text = "xxx «yyy» zzz";
         Pattern pattern = Pattern.compile(RegExUtils.REGEX_ANGULAR_QUOTES);
@@ -160,6 +176,22 @@ public class RegExUtilsTest {
         boolean isFound = false;
         while (matcher.find()) {
             if (matcher.group(0).equals("\"yyy\"")) {
+                isFound = true;
+                break;
+            }
+        }
+        assertTrue(isFound);
+    }
+
+    @Test
+    public void testRegexQuotesDoubleEscaped() {
+        String quotes = "\"Hola\"";
+        String text = "xxx " + quotes + " zzz";
+        Pattern pattern = Pattern.compile(RegExUtils.REGEX_DOUBLE_QUOTES_ESCAPED);
+        Matcher matcher = pattern.matcher(StringUtils.escapeText(text));
+        boolean isFound = false;
+        while (matcher.find()) {
+            if (StringUtils.unescapeText(matcher.group(0)).equals(quotes)) {
                 isFound = true;
                 break;
             }
@@ -220,6 +252,22 @@ public class RegExUtilsTest {
         boolean isFound = false;
         while (matcher.find()) {
             if (matcher.group(0).contains("<!-- Esto es un \n comentario -->")) {
+                isFound = true;
+                break;
+            }
+        }
+        assertTrue(isFound);
+    }
+
+    @Test
+    public void testRegexCommentEscaped() {
+        String comment = "<!-- Esto es un \n comentario -->";
+        String text = "xxx " + comment + " zzz";
+        Pattern pattern = Pattern.compile(RegExUtils.REGEX_COMMENT_ESCAPED, Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(StringUtils.escapeText(text));
+        boolean isFound = false;
+        while (matcher.find()) {
+            if (StringUtils.unescapeText(matcher.group(0)).equals(comment)) {
                 isFound = true;
                 break;
             }

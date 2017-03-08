@@ -8,7 +8,6 @@ import es.bvalero.replacer.service.ReplacementService;
 import es.bvalero.replacer.service.WikipediaService;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.StringUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +46,7 @@ class MisspellingsController {
         }
 
         // Escape the content just in case it contains XML tags
-        String escapedContent = StringEscapeUtils.escapeXml10(content);
+        String escapedContent = StringUtils.escapeText(content);
 
         // We will work since now with the escaped content
         List<Replacement> replacements = replacementService.findReplacements(escapedContent);
@@ -90,7 +89,7 @@ class MisspellingsController {
         String title = article.getTitle();
         String content = wikipediaService.getArticleContent(title);
         // Escape the content just in case it contains XML tags
-        String escapedContent = StringEscapeUtils.escapeXml10(content);
+        String escapedContent = StringUtils.escapeText(content);
 
         List<Replacement> replacements = new ArrayList<>(article.getFixes().values());
         Collections.sort(replacements);
@@ -104,7 +103,7 @@ class MisspellingsController {
                             replacement.getWord(), replacement.getFix());
                 }
             }
-            String contentToUpload = StringEscapeUtils.unescapeXml(replacedContent);
+            String contentToUpload = StringUtils.unescapeText(replacedContent);
 
             // Upload the new content to Wikipedia
             // TODO Check it has not been modified meanwhile. Has the API any check? Yes, but it seems the library doesn't support it.

@@ -1,6 +1,7 @@
 package es.bvalero.replacer.utils;
 
 import es.bvalero.replacer.domain.Interval;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,14 @@ public class StringUtils {
     private static final String REGEX_BUTTON_TAG = "<button.+?</button>";
     private static final String ELLIPSIS = "[...]";
     private static final int THRESHOLD = 200;
+
+    public static String escapeText(String text) {
+        return StringEscapeUtils.escapeXml10(text);
+    }
+
+    public static String unescapeText(String text) {
+        return StringEscapeUtils.unescapeXml(text);
+    }
 
     /*
      * replaceAt('0123456789', 3, '34', 'XXXX') => '012XXXX56789'
