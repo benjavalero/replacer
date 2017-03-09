@@ -6,6 +6,7 @@ Online
 [Mm]ás aún
 [Aa]ún más
 &lt;
+Lt
 [Ff]ans
 Comics
 [Ss]e publica
@@ -15,7 +16,7 @@ Magazine
 Records
 Jet Propulsion Laboratory
 
-[Éé]ste
-[Éé]stas?
-[Éé]stos
+[Éé]st?[ea]
+[Éé]st?[oa]s
+[Aa]quél([ao]s?)?
 [Ss]ólo
