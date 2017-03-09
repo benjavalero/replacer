@@ -31,6 +31,8 @@ class MisspellingsController {
     @Autowired
     private WikipediaService wikipediaService;
 
+    // TODO Improve the logic of these methods, especially the recursion.
+
     @RequestMapping(value = "/find/random")
     RandomArticle findRandom() {
         ReplacementBD randomReplacement = replacementService.findRandomReplacementToFix();
@@ -58,7 +60,7 @@ class MisspellingsController {
         String replacedContent = escapedContent;
         Collections.sort(replacements);
 
-        // Replace the possible replacements with buttons to interactuate with them
+        // Replace the possible replacements with buttons to interact with them
         Map<Integer, Replacement> fixes = new TreeMap<>();
         for (Replacement replacement : replacements) {
             String buttonText = "<button id=\"miss-" + replacement.getPosition() + "\" " +
@@ -98,6 +100,10 @@ class MisspellingsController {
 
         if (fixes.isEmpty()) {
             LOGGER.info("Nothing to fix in article {}", title);
+
+            // Mark the article has reviewed in the database
+            replacementService.setArticleAsReviewed(title);
+
             return findRandom();
         }
 
