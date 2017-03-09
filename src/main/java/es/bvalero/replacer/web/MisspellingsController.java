@@ -87,27 +87,40 @@ class MisspellingsController {
     @RequestMapping(value = "/save/random")
     public RandomArticle saveRandom(@RequestBody RandomArticle article) {
         String title = article.getTitle();
+
+        // Find the fixes verified by the user
+        List<Replacement> fixes = new ArrayList<>();
+        for (Replacement replacement : article.getFixes().values()) {
+            if (replacement.isFixed()) {
+                fixes.add(replacement);
+            }
+        }
+
+        if (fixes.isEmpty()) {
+            LOGGER.info("Nothing to fix in article {}", title);
+            return findRandom();
+        }
+
+        // Apply the fixes
         String content = wikipediaService.getArticleContent(title);
         // Escape the content just in case it contains XML tags
         String escapedContent = StringUtils.escapeText(content);
 
-        List<Replacement> replacements = new ArrayList<>(article.getFixes().values());
-        Collections.sort(replacements);
+        Collections.sort(fixes);
         String replacedContent = escapedContent;
 
         try {
-            for (Replacement replacement : replacements) {
-                if (replacement.isFixed()) {
-                    LOGGER.debug("Fixing article {}: {} -> {}", title, replacement.getWord(), replacement.getFix());
-                    replacedContent = StringUtils.replaceAt(replacedContent, replacement.getPosition(),
-                            replacement.getWord(), replacement.getFix());
-                }
+            for (Replacement fix : fixes) {
+                LOGGER.debug("Fixing article {}: {} -> {}", title, fix.getWord(), fix.getFix());
+                replacedContent = StringUtils.replaceAt(replacedContent, fix.getPosition(),
+                        fix.getWord(), fix.getFix());
             }
             String contentToUpload = StringUtils.unescapeText(replacedContent);
 
             // Upload the new content to Wikipedia
             // TODO Check it has not been modified meanwhile. Has the API any check? Yes, but it seems the library doesn't support it.
             if (!contentToUpload.equals(content)) {
+                // TODO Try to add a reference in the summary to the tool
                 wikipediaService.editArticleContent(title, contentToUpload, "Correcciones ortográficas");
             }
 
