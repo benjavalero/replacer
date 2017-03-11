@@ -18,8 +18,6 @@ abstract class AbstractDao<K extends Serializable, T> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    // TODO Extract DB properties
-
     AbstractDao() {
         this.persistentClass = (Class<T>) ((ParameterizedType) this.getClass().getGenericSuperclass())
                 .getActualTypeArguments()[1];
