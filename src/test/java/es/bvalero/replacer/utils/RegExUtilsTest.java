@@ -51,31 +51,31 @@ public class RegExUtilsTest {
 
     @Test
     public void testRegexTemplateParameter() {
-        String text = "xxx {{Template| param1 = value1 | parám_ 2 = value2 }} {{Cita|Alea iacta est}} jajaja =";
+        String text = "xxx {{Template| param1 = value1 | parám_ 2 = value2|param3=|param4 }} {{Cita|Alea iacta est}} jajaja =";
         Pattern pattern = Pattern.compile(RegExUtils.REGEX_TEMPLATE_PARAM);
         Matcher matcher = pattern.matcher(text);
         Set<String> matches = new HashSet<>();
         while (matcher.find()) {
             matches.add(matcher.group(0));
         }
-        assertEquals(2, matches.size());
+        assertEquals(3, matches.size());
         assertTrue(matches.contains("| param1 ="));
         assertTrue(matches.contains("| parám_ 2 ="));
+        assertTrue(matches.contains("|param3="));
     }
 
     @Test
-    public void testRegexIndexValue() {
-        String text = "xxx | índice = yyyy \n zzz | ttt";
-        Pattern pattern = Pattern.compile(RegExUtils.REGEX_INDEX_VALUE);
+    public void testRegexParamValue() {
+        String text = "xxx | índice = yyyy \n zzz|param=value|title  = Hola\n Adiós }} ttt";
+        Pattern pattern = Pattern.compile(RegExUtils.REGEX_PARAM_VALUE);
         Matcher matcher = pattern.matcher(text);
-        boolean isFound = false;
+        Set<String> matches = new HashSet<>();
         while (matcher.find()) {
-            if (matcher.group(0).equals("| índice = yyyy \n zzz ")) {
-                isFound = true;
-                break;
-            }
+            matches.add(matcher.group(0));
         }
-        assertTrue(isFound);
+        assertEquals(2, matches.size());
+        assertTrue(matches.contains("| índice = yyyy \n zzz"));
+        assertTrue(matches.contains("|title  = Hola\n Adiós "));
     }
 
     @Test
@@ -230,6 +230,22 @@ public class RegExUtilsTest {
     }
 
     @Test
+    public void testRegexRefNameEscaped() {
+        String ref = "<ref  name  = España >";
+        String text = "xxx " + ref + " zzz";
+        Pattern pattern = Pattern.compile(RegExUtils.REGEX_REF_NAME_ESCAPED);
+        Matcher matcher = pattern.matcher(StringUtils.escapeText(text));
+        boolean isFound = false;
+        while (matcher.find()) {
+            if (StringUtils.unescapeText(matcher.group(0)).equals(ref)) {
+                isFound = true;
+                break;
+            }
+        }
+        assertTrue(isFound);
+    }
+
+    @Test
     public void testRegexCategory() {
         String text = "xxx [[Categoría:Lluvia]] zzz";
         Pattern pattern = Pattern.compile(RegExUtils.REGEX_CATEGORY);
@@ -308,6 +324,22 @@ public class RegExUtilsTest {
     }
 
     @Test
+    public void testRegexTagSource() {
+        String math = "<source>Un <i>ejemplo</i>\n en LaTeX</source>";
+        String text = "xxx " + math + " zzz";
+        Pattern pattern = Pattern.compile(RegExUtils.REGEX_TAG_SOURCE, Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(text);
+        boolean isFound = false;
+        while (matcher.find()) {
+            if (matcher.group(0).equals(math)) {
+                isFound = true;
+                break;
+            }
+        }
+        assertTrue(isFound);
+    }
+
+    @Test
     public void testRegexHeader() {
         String header = "== Esto es una cabecera ==";
         String text = "xxx " + header + " zzz";
@@ -358,18 +390,20 @@ public class RegExUtilsTest {
 
     @Test
     public void testRegexFalsePositives() {
-        String text = "Un Link en el Index Online de Tropicos.org.";
+        String text = "Un Link de Éstas en el Index Online de ésta Tropicos.org.";
         Pattern pattern = Pattern.compile(RegExUtils.getRegexFalsePositives());
         Matcher matcher = pattern.matcher(text);
         Set<String> matches = new HashSet<>();
         while (matcher.find()) {
             matches.add(matcher.group(0));
         }
-        assertEquals(4, matches.size());
+        assertEquals(6, matches.size());
         assertTrue(matches.contains("Link"));
         assertTrue(matches.contains("Index"));
         assertTrue(matches.contains("Online"));
         assertTrue(matches.contains("Tropicos.org"));
+        assertTrue(matches.contains("Éstas"));
+        assertTrue(matches.contains("ésta"));
     }
 
 }
