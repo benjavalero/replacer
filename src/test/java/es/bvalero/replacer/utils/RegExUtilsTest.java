@@ -51,7 +51,7 @@ public class RegExUtilsTest {
 
     @Test
     public void testRegexTemplateParameter() {
-        String text = "xxx {{Template| param1 = value1 | parám_ 2 = value2|param3=|param4 }} {{Cita|Alea iacta est}} jajaja =";
+        String text = "xxx {{Template| param1 = value1 | parám_ 2 = value2|param-3=|param4 }} {{Cita|Alea iacta est}} jajaja =";
         Pattern pattern = Pattern.compile(RegExUtils.REGEX_TEMPLATE_PARAM);
         Matcher matcher = pattern.matcher(text);
         Set<String> matches = new HashSet<>();
@@ -61,7 +61,7 @@ public class RegExUtilsTest {
         assertEquals(3, matches.size());
         assertTrue(matches.contains("| param1 ="));
         assertTrue(matches.contains("| parám_ 2 ="));
-        assertTrue(matches.contains("|param3="));
+        assertTrue(matches.contains("|param-3="));
     }
 
     @Test

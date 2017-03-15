@@ -18,7 +18,7 @@ public class RegExUtils {
     /* \w doesn't include accentuated characters. \w includes the underscore. */
     static final String REGEX_WORD = "\\b[\\wÁáÉéÍíÓóÚúÜüÑñ]+\\b";
     // We allow the different exceptions in a text to overlap
-    static final String REGEX_TEMPLATE_PARAM = "\\|[\\wÁáÉéÍíÓóÚúÜüÑñ\\s]+=";
+    static final String REGEX_TEMPLATE_PARAM = "\\|[\\wÁáÉéÍíÓóÚúÜüÑñ\\-\\s]+=";
     static final String REGEX_PARAM_VALUE = "\\|\\s*(?:índice|title)\\s*=[^}|]*";
     static final String REGEX_UNREPLACEBLE_TEMPLATE = "\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||coord\\|)[^}]+}}";
     static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}]+";
