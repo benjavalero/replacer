@@ -14,6 +14,11 @@ hr {
 	border-width: medium;
 }
 
+.button-save {
+    width: 100%;
+    margin: 1.5ex 0 1.5ex 0;
+}
+
 /* SYNTAX */
 
 .syntax {
