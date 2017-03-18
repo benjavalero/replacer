@@ -19,8 +19,8 @@ public class RegExUtils {
     static final String REGEX_WORD = "\\b[\\wÁáÉéÍíÓóÚúÜüÑñ]+\\b";
     // We allow the different exceptions in a text to overlap
     static final String REGEX_TEMPLATE_PARAM = "\\|[\\wÁáÉéÍíÓóÚúÜüÑñ\\s]+=";
-    static final String REGEX_PARAM_VALUE = "\\|\\s*(?:índice|title)\\s*=[^}|]*";
-    static final String REGEX_UNREPLACEBLE_TEMPLATE = "\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||coord\\|)[^}]+}}";
+    static final String REGEX_PARAM_VALUE = "\\|\\s*(?:índice)\\s*=[^}|]*";
+    static final String REGEX_UNREPLACEBLE_TEMPLATE = "\\{\\{(?:ORDENAR|DEFAULTSORT|NF|[Cc]ita|c?[Qq]uote|coord|[Bb]andera)[^}]+}}";
     static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}]+";
     // We trust the quotes are well formed with matching leading and trailing quotes
     static final String REGEX_QUOTES = "'{2,5}.+?'{2,5}";
@@ -36,8 +36,7 @@ public class RegExUtils {
     static final String REGEX_COMMENT = "<!--.*?-->";
     static final String REGEX_COMMENT_ESCAPED = "&lt;!--.*?--&gt;";
     static final String REGEX_URL = "https?://[\\w./\\-+?&%=:#;~]+";
-    static final String REGEX_TAG_MATH = "<math>.*?</math>";
-    static final String REGEX_TAG_SOURCE = "<source>.*?</source>";
+    static final String REGEX_TAG = "<(math|source)>.*?</\\1>";
     static final String REGEX_HEADERS = "={2,}.+?={2,}";
     static final String REGEX_WIKILINK = "\\[\\[[^\\]]+\\]\\]";
     private static final String TAG_REDIRECTION = "#REDIRECCIÓN";
@@ -63,8 +62,6 @@ public class RegExUtils {
      * Returns a list of intervals containing exceptions of the text
      */
     public static List<Interval> findExceptionIntervals(String text) {
-        // TODO Try to merge the escaped regex with the original ones
-        // TODO Try to merge the math and source tag regex
         if (exceptionPatterns.isEmpty()) {
             exceptionPatterns.add(Pattern.compile(REGEX_TEMPLATE_PARAM));
             exceptionPatterns.add(Pattern.compile(REGEX_PARAM_VALUE));
@@ -83,8 +80,7 @@ public class RegExUtils {
             exceptionPatterns.add(Pattern.compile(REGEX_COMMENT, Pattern.DOTALL));
             exceptionPatterns.add(Pattern.compile(REGEX_COMMENT_ESCAPED, Pattern.DOTALL));
             exceptionPatterns.add(Pattern.compile(REGEX_URL));
-            exceptionPatterns.add(Pattern.compile(REGEX_TAG_MATH, Pattern.DOTALL));
-            exceptionPatterns.add(Pattern.compile(REGEX_TAG_SOURCE, Pattern.DOTALL));
+            exceptionPatterns.add(Pattern.compile(REGEX_TAG, Pattern.DOTALL));
             exceptionPatterns.add(Pattern.compile(getRegexFalsePositives()));
         }
 

@@ -73,9 +73,8 @@ public class RegExUtilsTest {
         while (matcher.find()) {
             matches.add(matcher.group(0));
         }
-        assertEquals(2, matches.size());
+        assertEquals(1, matches.size());
         assertTrue(matches.contains("| índice = yyyy \n zzz"));
-        assertTrue(matches.contains("|title  = Hola\n Adiós "));
     }
 
     @Test
@@ -311,7 +310,7 @@ public class RegExUtilsTest {
     public void testRegexTagMath() {
         String math = "<math>Un <i>ejemplo</i>\n en LaTeX</math>";
         String text = "xxx " + math + " zzz";
-        Pattern pattern = Pattern.compile(RegExUtils.REGEX_TAG_MATH, Pattern.DOTALL);
+        Pattern pattern = Pattern.compile(RegExUtils.REGEX_TAG, Pattern.DOTALL);
         Matcher matcher = pattern.matcher(text);
         boolean isFound = false;
         while (matcher.find()) {
@@ -327,7 +326,7 @@ public class RegExUtilsTest {
     public void testRegexTagSource() {
         String math = "<source>Un <i>ejemplo</i>\n en LaTeX</source>";
         String text = "xxx " + math + " zzz";
-        Pattern pattern = Pattern.compile(RegExUtils.REGEX_TAG_SOURCE, Pattern.DOTALL);
+        Pattern pattern = Pattern.compile(RegExUtils.REGEX_TAG, Pattern.DOTALL);
         Matcher matcher = pattern.matcher(text);
         boolean isFound = false;
         while (matcher.find()) {
