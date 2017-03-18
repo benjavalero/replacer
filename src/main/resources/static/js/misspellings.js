@@ -2,8 +2,8 @@ var pageTitle;
 var pageFixes;
 
 $(document).ready(function() {
-    // TODO Enable/disable while loading new articles
-    $('#button-save').click(function() {
+    // TODO Enable/disable while loading new articles. Also hide/display the article link.
+    $('.button-save').click(function() {
         saveChanges();
     });
 
@@ -21,6 +21,7 @@ $(document).ready(function() {
 function loadArticle(response) {
     pageTitle = response.title;
     $('#article-title').text(pageTitle);
+    $('#article-link').attr("href", "https://es.wikipedia.org/wiki/" + pageTitle);
     $('#article-content').html(response.content);
     pageFixes = response.fixes;
 
