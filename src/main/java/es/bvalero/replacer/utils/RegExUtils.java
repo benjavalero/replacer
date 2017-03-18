@@ -19,8 +19,8 @@ public class RegExUtils {
     static final String REGEX_WORD = "\\b[\\wÁáÉéÍíÓóÚúÜüÑñ]+\\b";
     // We allow the different exceptions in a text to overlap
     static final String REGEX_TEMPLATE_PARAM = "\\|[\\wÁáÉéÍíÓóÚúÜüÑñ\\s]+=";
-    static final String REGEX_PARAM_VALUE = "\\|\\s*(?:índice)\\s*=[^}|]*";
-    static final String REGEX_UNREPLACEBLE_TEMPLATE = "\\{\\{(?:ORDENAR|DEFAULTSORT|NF|[Cc]ita|c?[Qq]uote|coord|[Bb]andera)[^}]+}}";
+    static final String REGEX_PARAM_VALUE = "\\|\\s*(?:índice|title)\\s*=[^}|]*";
+    static final String REGEX_UNREPLACEBLE_TEMPLATE = "\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||coord\\|)[^}]+}}";
     static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}]+";
     // We trust the quotes are well formed with matching leading and trailing quotes
     static final String REGEX_QUOTES = "'{2,5}.+?'{2,5}";
