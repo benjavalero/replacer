@@ -215,12 +215,13 @@ public class RegExUtilsTest {
 
     @Test
     public void testRegexRefName() {
-        String text = "xxx <ref  name  = España > zzz";
+        String ref = "<ref  name= España >";
+        String text = "xxx " + ref + " zzz";
         Pattern pattern = Pattern.compile(RegExUtils.REGEX_REF_NAME);
         Matcher matcher = pattern.matcher(text);
         boolean isFound = false;
         while (matcher.find()) {
-            if (matcher.group(0).equals("<ref  name  = España >")) {
+            if (matcher.group(0).equals(ref)) {
                 isFound = true;
                 break;
             }

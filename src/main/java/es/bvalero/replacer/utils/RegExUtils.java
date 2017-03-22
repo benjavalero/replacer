@@ -18,8 +18,8 @@ public class RegExUtils {
     /* \w doesn't include accentuated characters. \w includes the underscore. */
     static final String REGEX_WORD = "\\b[\\wÁáÉéÍíÓóÚúÜüÑñ]+\\b";
     // We allow the different exceptions in a text to overlap
-    static final String REGEX_TEMPLATE_PARAM = "\\|[\\wÁáÉéÍíÓóÚúÜüÑñ\\s]+=";
-    static final String REGEX_PARAM_VALUE = "\\|\\s*(?:índice|title)\\s*=[^}|]*";
+    static final String REGEX_TEMPLATE_PARAM = "\\|[\\wÁáÉéÍíÓóÚúÜüÑñ\\-\\s]+=";
+    static final String REGEX_PARAM_VALUE = "\\|\\s*(?:índice)\\s*=[^}|]*";
     static final String REGEX_UNREPLACEBLE_TEMPLATE = "\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||coord\\|)[^}]+}}";
     static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}]+";
     // We trust the quotes are well formed with matching leading and trailing quotes
@@ -30,7 +30,7 @@ public class RegExUtils {
     static final String REGEX_DOUBLE_QUOTES = "\"[^\"]+\"";
     static final String REGEX_DOUBLE_QUOTES_ESCAPED = "&quot;.+?&quot;";
     static final String REGEX_FILE_NAME = "[=|:][^=|:]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|ogg|pdf)";
-    static final String REGEX_REF_NAME = "<ref\\s+name\\s+=[^>]+>";
+    static final String REGEX_REF_NAME = "<ref\\s+name\\s*=[^>]+>";
     static final String REGEX_REF_NAME_ESCAPED = "&lt;ref\\s+name\\s+=.+?&gt;";
     static final String REGEX_CATEGORY = "\\[\\[Categoría:[^]]+]]";
     static final String REGEX_COMMENT = "<!--.*?-->";
