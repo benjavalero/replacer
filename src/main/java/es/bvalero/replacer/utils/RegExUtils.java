@@ -31,7 +31,7 @@ public class RegExUtils {
     static final String REGEX_DOUBLE_QUOTES_ESCAPED = "&quot;.+?&quot;";
     static final String REGEX_FILE_NAME = "[=|:][^=|:]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|ogg|pdf)";
     static final String REGEX_REF_NAME = "<ref\\s+name\\s*=[^>]+>";
-    static final String REGEX_REF_NAME_ESCAPED = "&lt;ref\\s+name\\s+=.+?&gt;";
+    static final String REGEX_REF_NAME_ESCAPED = "&lt;ref\\s+name\\s*=.+?&gt;";
     static final String REGEX_CATEGORY = "\\[\\[Categoría:[^]]+]]";
     static final String REGEX_COMMENT = "<!--.*?-->";
     static final String REGEX_COMMENT_ESCAPED = "&lt;!--.*?--&gt;";

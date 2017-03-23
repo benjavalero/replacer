@@ -231,7 +231,7 @@ public class RegExUtilsTest {
 
     @Test
     public void testRegexRefNameEscaped() {
-        String ref = "<ref  name  = España >";
+        String ref = "<ref  name  =España />";
         String text = "xxx " + ref + " zzz";
         Pattern pattern = Pattern.compile(RegExUtils.REGEX_REF_NAME_ESCAPED);
         Matcher matcher = pattern.matcher(StringUtils.escapeText(text));
