@@ -2,14 +2,11 @@ spring:
   main:
     banner-mode: 'off'
 
-debug: false
-
 logging:
   level:
     es.bvalero.replacer: INFO
     org.hibernate: ERROR
     org.springframework: ERROR
-  file: logs/replacer.log
 
 replacer:
   incremental.update: true
@@ -22,9 +19,24 @@ wikipedia:
 ---
 
 spring:
+  profiles: offline
+  datasource:
+    platform: h2
+
+logging:
+  level:
+    es.bvalero.replacer: DEBUG
+    org.hibernate.SQL: DEBUG
+
+---
+
+spring:
   profiles: default
   datasource:
     url: jdbc:mariadb://tools-db:3306/s52978__replacer
     username: s52978
     password: xxxxxx
     driver-class-name: org.mariadb.jdbc.Driver
+
+logging:
+  file: logs/replacer.log
