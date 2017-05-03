@@ -1,0 +1,30 @@
+spring:
+  main:
+    banner-mode: 'off'
+
+debug: false
+
+logging:
+  level:
+    es.bvalero.replacer: INFO
+    org.hibernate: ERROR
+    org.springframework: ERROR
+  file: logs/replacer.log
+
+replacer:
+  incremental.update: true
+  xml.path: /public/dumps/public/eswiki
+
+wikipedia:
+  username: BenjaBot
+  password: xxxxxx
+
+---
+
+spring:
+  profiles: default
+  datasource:
+    url: jdbc:mariadb://tools-db:3306/s52978__replacer
+    username: s52978
+    password: xxxxxx
+    driver-class-name: org.mariadb.jdbc.Driver
