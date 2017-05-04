@@ -24,7 +24,7 @@ public class UpdateReplacementsTaskTest {
         UpdateReplacementsTask task = new UpdateReplacementsTask();
         String dumpPath = task.findLatestDumpPath(dumpFolderFile);
         assertNotNull(dumpPath);
-        assertEquals("20170201/eswiki-20170201-pages-articles.xml.bz2", dumpPath);
+        assertEquals("20170201" + File.separator + "eswiki-20170201-pages-articles.xml.bz2", dumpPath);
     }
 
 }
