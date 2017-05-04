@@ -30,7 +30,6 @@ public class WikipediaServiceIT {
         assertNull(articleContent);
     }
 
-    @Test
     public void testEditContent() {
         String title = "Usuario:Benjavalero/Taller";
         String content = wikipediaService.getArticleContent(title);

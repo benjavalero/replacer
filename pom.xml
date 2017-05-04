@@ -82,6 +82,7 @@
                 </dependency>
             </dependencies>
             <build>
+                <finalName>replacer</finalName>
                 <plugins>
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
@@ -124,10 +125,7 @@
     </profiles>
 
     <build>
-        <finalName>replacer</finalName>
-
         <plugins>
-            <!-- TODO Not sure if remove this -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
