@@ -1,3 +1,24 @@
+/* FIXED FOOTER */
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 6ex;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 6ex;
+  background-color: #ffffff;
+}
+
+/* MISPELLINGS */
+
 .pre {
 	font-family: monospace;
 	white-space: pre-wrap;
@@ -14,9 +35,8 @@ hr {
 	border-width: medium;
 }
 
-.button-save {
+#button-save {
     width: 100%;
-    margin: 1.5ex 0 1.5ex 0;
 }
 
 /* SYNTAX */
