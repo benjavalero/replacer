@@ -3,7 +3,7 @@ var pageFixes;
 
 $(document).ready(function() {
     // TODO Enable/disable while loading new articles. Also hide/display the article link.
-    $('.button-save').click(function() {
+    $('#button-save').click(function() {
         saveChanges();
     });
 
