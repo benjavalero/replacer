@@ -5,7 +5,6 @@ $(document).ready(function() {
     // Enable the collapse effects
     $('.collapse').collapse();
 
-    // TODO Enable/disable while loading new articles
     $('#button-save').click(function() {
         saveChanges();
     });
@@ -25,7 +24,8 @@ function loadArticle(response) {
     pageTitle = response.title;
     $('#article-title').text(pageTitle);
     $('#article-link').attr("href", "https://es.wikipedia.org/wiki/" + pageTitle);
-    $('#article-link-div').collapse("show");
+    $('#article-link').removeClass("disabled");
+    $('#button-save').removeClass("disabled");
     $('#article-content').html(response.content);
     pageFixes = response.fixes;
 
@@ -59,7 +59,8 @@ function turnMisspelling(missId) {
 function saveChanges() {
     var data = {'title' : pageTitle, 'content' : '', 'fixes' : pageFixes}
 
-    $('#article-link-div').collapse("hide");
+    $('#button-save').addClass("disabled");
+    $('#article-link').addClass("disabled");
     $('#article-title').text("Cargando artículo…");
     $('#article-content').html('');
 
