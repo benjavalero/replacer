@@ -3,9 +3,9 @@ package es.bvalero.replacer.web;
 import es.bvalero.replacer.domain.RandomArticle;
 import es.bvalero.replacer.domain.Replacement;
 import es.bvalero.replacer.domain.ReplacementBD;
+import es.bvalero.replacer.service.IWikipediaService;
 import es.bvalero.replacer.service.MisspellingService;
 import es.bvalero.replacer.service.ReplacementService;
-import es.bvalero.replacer.service.WikipediaService;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.StringUtils;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ class MisspellingsController {
     private MisspellingService misspellingService;
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private IWikipediaService wikipediaService;
 
     // TODO Improve the logic of these methods, especially the recursion.
 

@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 public class MisspellingServiceTest {
 
     @Mock
-    private WikipediaService wikipediaService;
+    private IWikipediaService wikipediaService;
 
     @InjectMocks
     private MisspellingService misspellingService;
