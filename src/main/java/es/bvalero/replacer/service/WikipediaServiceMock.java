@@ -41,7 +41,6 @@ public class WikipediaServiceMock implements IWikipediaService {
             LOGGER.error("Error loading mock article content from: " + fileName, e);
         }
 
-        LOGGER.info("File Content: \n" + fileString);
         return fileString;
     }
 
