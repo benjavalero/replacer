@@ -22,7 +22,6 @@ body {
 .pre {
 	font-family: monospace;
 	white-space: pre-wrap;
-	overflow-x: scroll;
 }
 
 .btn {
@@ -37,6 +36,7 @@ hr {
 
 #button-save {
     width: 100%;
+    margin: 1ex 0 1ex 0;
 }
 
 /* SYNTAX */
