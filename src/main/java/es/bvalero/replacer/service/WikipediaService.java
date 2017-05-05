@@ -4,10 +4,12 @@ import com.bitplan.mediawiki.japi.Mediawiki;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-public class WikipediaService {
+@Profile("default")
+public class WikipediaService implements IWikipediaService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WikipediaService.class);
     private static final String WIKIPEDIA_URL = "https://es.wikipedia.org";

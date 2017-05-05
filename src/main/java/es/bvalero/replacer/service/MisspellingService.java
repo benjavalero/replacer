@@ -13,11 +13,11 @@ import java.util.*;
 @Service
 public class MisspellingService {
 
+    static final String MISSPELLING_LIST_ARTICLE = "Wikipedia:Corrector_ortográfico/Listado";
     private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingService.class);
-    private static final String MISSPELLING_LIST_ARTICLE = "Wikipedia:Corrector_ortográfico/Listado";
     private final Map<String, Misspelling> misspellingMap = new TreeMap<>();
     @Autowired
-    private WikipediaService wikipediaService;
+    private IWikipediaService wikipediaService;
 
     Map<String, Misspelling> getMisspellingMap() {
         if (misspellingMap.isEmpty()) {
