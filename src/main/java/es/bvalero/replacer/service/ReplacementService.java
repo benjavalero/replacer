@@ -136,4 +136,12 @@ public class ReplacementService {
         replacementDao.setArticleAsReviewed(title);
     }
 
+    public Integer countMisspellings() {
+        return replacementDao.countMisspellings();
+    }
+
+    public Integer countArticles() {
+        return replacementDao.countArticles();
+    }
+
 }

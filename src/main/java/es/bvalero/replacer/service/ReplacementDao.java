@@ -65,4 +65,14 @@ class ReplacementDao extends AbstractDao<ReplacementPK, ReplacementBD> {
         query.executeUpdate();
     }
 
+    Integer countMisspellings() {
+        Query query = getEntityManager().createQuery("SELECT COUNT(*) FROM ReplacementBD WHERE lastReviewed IS NULL");
+        return ((Long) query.getSingleResult()).intValue();
+    }
+
+    Integer countArticles() {
+        Query query = getEntityManager().createQuery("SELECT COUNT(DISTINCT title) FROM ReplacementBD WHERE lastReviewed IS NULL");
+        return ((Long) query.getSingleResult()).intValue();
+    }
+
 }
