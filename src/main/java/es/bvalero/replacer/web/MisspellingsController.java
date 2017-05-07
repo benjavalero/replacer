@@ -31,12 +31,13 @@ class MisspellingsController {
     @Autowired
     private IWikipediaService wikipediaService;
 
-    // TODO Improve the logic of these methods, especially the recursion.
-
     @RequestMapping(value = "/find/random")
     RandomArticle findRandom() {
+        LOGGER.info("Finding random article with misspellings...");
+
         ReplacementBD randomReplacement = replacementService.findRandomReplacementToFix();
         if (randomReplacement == null) {
+            LOGGER.info("No random replacement could be found. Try again...");
             return findRandom();
         }
 
@@ -66,13 +67,8 @@ class MisspellingsController {
             String buttonText = "<button id=\"miss-" + replacement.getPosition() + "\" " +
                     "title=\"" + replacement.getExplain() + "\" type=\"button\" class=\"miss btn btn-danger\" " +
                     "data-toggle=\"tooltip\" data-placement=\"top\">" + replacement.getWord() + "</button>";
-            try {
-                replacedContent = StringUtils.replaceAt(replacedContent, replacement.getPosition(),
-                        replacement.getWord(), buttonText);
-            } catch (Exception e) {
-                LOGGER.error("Error replacing the fixes with buttons", e);
-                return findRandom();
-            }
+            replacedContent = StringUtils.replaceAt(replacedContent, replacement.getPosition(),
+                    replacement.getWord(), buttonText);
 
             fixes.put(replacement.getPosition(), replacement);
         }
@@ -89,6 +85,7 @@ class MisspellingsController {
     @RequestMapping(value = "/save/random")
     public RandomArticle saveRandom(@RequestBody RandomArticle article) {
         String title = article.getTitle();
+        LOGGER.info("Saving changes in: {}", title);
 
         // Find the fixes verified by the user
         List<Replacement> fixes = new ArrayList<>();
@@ -99,7 +96,7 @@ class MisspellingsController {
         }
 
         if (fixes.isEmpty()) {
-            LOGGER.info("Nothing to fix in article {}", title);
+            LOGGER.info("Nothing to fix in article: {}", title);
 
             // Mark the article has reviewed in the database
             replacementService.setArticleAsReviewed(title);
