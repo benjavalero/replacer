@@ -2,6 +2,8 @@ package es.bvalero.replacer.utils;
 
 import es.bvalero.replacer.domain.Interval;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,7 @@ import java.util.regex.Pattern;
 
 public class StringUtils {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(StringUtils.class);
     private static final String REGEX_PARAGRAPH = "(^|\\n{2,})(.+?)(?=\\n{2,}|$)";
     private static final String REGEX_BUTTON_TAG = "<button.+?</button>";
     private static final String ELLIPSIS = "[...]";
@@ -25,16 +28,25 @@ public class StringUtils {
 
     /*
      * replaceAt('0123456789', 3, '34', 'XXXX') => '012XXXX56789'
-     * Throw an exception if the content to replace is not available.
+     * If an exception occurs, log the error and return the original text.
      */
-    public static String replaceAt(String text, int position, String replaced, String replacement)
-            throws Exception {
-        String toReplace = text.substring(position, position + replaced.length());
-        if (!toReplace.equals(replaced)) {
-            throw new Exception("Cannot replace " + replacement + " in position " + position);
-        }
+    public static String replaceAt(final String text, final int position, final String replaced, final String replacement) {
+        try {
+            String toReplace = text.substring(position, position + replaced.length());
+            if (!toReplace.equals(replaced)) {
+                LOGGER.error("The original replacement doesn't match." +
+                                "\nORIGINAL TEXT: {}\nPOSITION: {}\nOLD REPLACEMENT: {}\nNEW REPLACEMENT: {}",
+                        text, position, replaced, replacement);
+                return text;
+            }
 
-        return text.substring(0, position) + replacement + text.substring(position + replaced.length());
+            return text.substring(0, position) + replacement + text.substring(position + replaced.length());
+        } catch (Exception e) {
+            LOGGER.error("Error replacing text." +
+                            "\nORIGINAL TEXT: {}\nPOSITION: {}\nOLD REPLACEMENT: {}\nNEW REPLACEMENT: {}",
+                    text, position, replaced, replacement, e);
+            return text;
+        }
     }
 
     public static boolean startsWithUpperCase(String word) {

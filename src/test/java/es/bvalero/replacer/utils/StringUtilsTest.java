@@ -18,10 +18,11 @@ public class StringUtilsTest {
                 StringUtils.replaceAt("0123456789", 3, "34", "XXXX"));
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testReplaceAtModified() throws Exception {
+        // An error should be logged and the original text be returned
         assertEquals("012XXXX56789",
-                StringUtils.replaceAt("0123456789", 3, "00", "XXXX"));
+                StringUtils.replaceAt("012XXXX56789", 3, "00", "XXXX"));
     }
 
     @Test

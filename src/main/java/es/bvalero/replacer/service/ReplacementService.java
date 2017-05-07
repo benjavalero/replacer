@@ -6,6 +6,8 @@ import es.bvalero.replacer.domain.Replacement;
 import es.bvalero.replacer.domain.ReplacementBD;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,8 @@ import java.util.*;
 @Service
 @Transactional
 public class ReplacementService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReplacementService.class);
 
     @Autowired
     private ReplacementDao replacementDao;
@@ -111,13 +115,21 @@ public class ReplacementService {
         return replacements;
     }
 
-    private String getFixForReplacement(String word, Misspelling misspelling) {
+    private String getFixForReplacement(final String word, Misspelling misspelling) {
+        // In case of error return the same original word
         // TODO For the moment I only take the first suggestion
-        String misspellingFix = misspelling.getSuggestion().split("[,(]")[0].trim();
-        if (!misspelling.isCaseSensitive() && StringUtils.startsWithUpperCase(word)) {
-            misspellingFix = StringUtils.setFirstUpperCase(misspellingFix);
+        try {
+            String misspellingFix = misspelling.getSuggestion().split("[,(]")[0].trim();
+            if (!misspelling.isCaseSensitive() && StringUtils.startsWithUpperCase(word)) {
+                misspellingFix = StringUtils.setFirstUpperCase(misspellingFix);
+            }
+            return misspellingFix;
+        } catch (Exception e) {
+            LOGGER.error("Error when getting fix for replacement." +
+                            "\nORIGINAL WORD: {}\nMISSPELLING: {}",
+                    word, misspelling, e);
+            return word + " (ERROR)";
         }
-        return misspellingFix;
     }
 
     public void setArticleAsReviewed(String title) {
