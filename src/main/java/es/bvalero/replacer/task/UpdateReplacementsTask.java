@@ -19,6 +19,9 @@ class UpdateReplacementsTask {
     private static final Logger LOGGER = LoggerFactory.getLogger(UpdateReplacementsTask.class);
 
     @Autowired
+    private FindMisspellingsHandler handler;
+
+    @Autowired
     private ArticlesParser articlesParser;
 
     @Value("${replacer.xml.path}")
@@ -29,7 +32,6 @@ class UpdateReplacementsTask {
         String dumpPath = findLatestDumpPath(new File(dumpFolder));
 
         LOGGER.info("Parsing dump file: {}", dumpPath);
-        FindMisspellingsHandler handler = new FindMisspellingsHandler();
         boolean success = articlesParser.parse(dumpPath, handler);
         LOGGER.info("Parse completed with success: {}", success);
     }
