@@ -1,11 +1,13 @@
 package es.bvalero.replacer.service;
 
+import es.bvalero.replacer.domain.Count;
 import es.bvalero.replacer.domain.ReplacementBD;
 import es.bvalero.replacer.domain.ReplacementPK;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -73,6 +75,16 @@ class ReplacementDao extends AbstractDao<ReplacementPK, ReplacementBD> {
     Integer countArticles() {
         Query query = getEntityManager().createQuery("SELECT COUNT(DISTINCT title) FROM ReplacementBD WHERE lastReviewed IS NULL");
         return ((Long) query.getSingleResult()).intValue();
+    }
+
+    List<Count> findMisspellingsGrouped() {
+        List<Count> misspellingCount = new ArrayList<>();
+        Query query = getEntityManager().createQuery("SELECT word, COUNT(*) FROM ReplacementBD WHERE lastReviewed IS NULL GROUP BY word ORDER BY COUNT(*) DESC");
+        List<Object[]> results = query.getResultList();
+        for (Object[] result : results) {
+            misspellingCount.add(new Count((String) result[0], (Long) result[1]));
+        }
+        return misspellingCount;
     }
 
 }
