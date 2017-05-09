@@ -1,9 +1,12 @@
 package es.bvalero.replacer.web;
 
+import es.bvalero.replacer.domain.Count;
 import es.bvalero.replacer.service.ReplacementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 public class StatisticsController {
@@ -19,6 +22,11 @@ public class StatisticsController {
     @RequestMapping(value = "/count/articles")
     Integer countArticles() {
         return replacementService.countArticles();
+    }
+
+    @RequestMapping(value = "/list/misspellings")
+    List<Count> listMisspellings() {
+        return replacementService.findMisspellingsGrouped();
     }
 
 }

@@ -1,9 +1,6 @@
 package es.bvalero.replacer.service;
 
-import es.bvalero.replacer.domain.Interval;
-import es.bvalero.replacer.domain.Misspelling;
-import es.bvalero.replacer.domain.Replacement;
-import es.bvalero.replacer.domain.ReplacementBD;
+import es.bvalero.replacer.domain.*;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.StringUtils;
 import org.slf4j.Logger;
@@ -142,6 +139,10 @@ public class ReplacementService {
 
     public Integer countArticles() {
         return replacementDao.countArticles();
+    }
+
+    public List<Count> findMisspellingsGrouped() {
+        return replacementDao.findMisspellingsGrouped();
     }
 
 }
