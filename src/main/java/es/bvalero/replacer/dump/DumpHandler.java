@@ -1,8 +1,11 @@
-package es.bvalero.replacer.parse;
+package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.parse.ArticleHandler;
 import es.bvalero.replacer.utils.RegExUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -10,21 +13,32 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
-abstract class ArticlesHandler extends DefaultHandler {
+@Component
+public class DumpHandler extends DefaultHandler {
 
     static final TimeZone TIME_ZONE = TimeZone.getTimeZone("GMT");
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArticlesHandler.class);
+    static final Integer NAMESPACE_ARTICLE = 0;
+    static final Integer NAMESPACE_ANNEX = 104;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DumpHandler.class);
     private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_PATTERN);
-    private static final Integer NAMESPACE_ARTICLE = 0;
-    private static final Integer NAMESPACE_ANNEX = 104;
     private final StringBuilder currentChars = new StringBuilder();
     private String currentTitle;
     private Integer currentNamespace;
     private String currentText;
     private Date currentTimestamp;
+    private int numItemsProcessed;
+
+    @Autowired
+    private List<ArticleHandler> articleHandlers;
+
+    @Override
+    public void startDocument() {
+        numItemsProcessed = 0;
+    }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -35,9 +49,8 @@ abstract class ArticlesHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch (qName) {
             case "page":
-                if (hasToBeProcessed()) {
-                    processArticle();
-                }
+                processArticle();
+                this.numItemsProcessed++;
                 break;
             case "title":
                 setCurrentTitle(currentChars.toString());
@@ -65,7 +78,7 @@ abstract class ArticlesHandler extends DefaultHandler {
         return currentTitle;
     }
 
-    void setCurrentTitle(String currentTitle) {
+    private void setCurrentTitle(String currentTitle) {
         this.currentTitle = currentTitle;
     }
 
@@ -73,11 +86,15 @@ abstract class ArticlesHandler extends DefaultHandler {
         return currentNamespace;
     }
 
+    void setCurrentNamespace(Integer currentNamespace) {
+        this.currentNamespace = currentNamespace;
+    }
+
     Date getCurrentTimestamp() {
         return currentTimestamp;
     }
 
-    void setCurrentTimestamp(Date currentTimestamp) {
+    private void setCurrentTimestamp(Date currentTimestamp) {
         this.currentTimestamp = currentTimestamp;
     }
 
@@ -87,6 +104,10 @@ abstract class ArticlesHandler extends DefaultHandler {
 
     void setCurrentText(String currentText) {
         this.currentText = currentText;
+    }
+
+    int getNumItemsProcessed() {
+        return numItemsProcessed;
     }
 
     Date parseWikipediaDate(String dateStr) {
@@ -100,17 +121,25 @@ abstract class ArticlesHandler extends DefaultHandler {
         return wikiDate;
     }
 
-    abstract void processArticle();
+    void processArticle() {
+        if (hasToBeProcessed()) {
+            for (ArticleHandler articleHandler : articleHandlers) {
+                articleHandler.processArticle(getCurrentText(), getCurrentTitle(), getCurrentTimestamp());
+            }
+        }
+    }
 
-    private boolean hasToBeProcessed() {
+    boolean hasToBeProcessed() {
+        // Only process articles or annexes
+        // Skip redirection articles
         return (isArticle() || isAnnex()) && !isRedirectionArticle();
     }
 
-    private boolean isArticle() {
+    boolean isArticle() {
         return NAMESPACE_ARTICLE.equals(getCurrentNamespace());
     }
 
-    private boolean isAnnex() {
+    boolean isAnnex() {
         return NAMESPACE_ANNEX.equals(getCurrentNamespace());
     }
 

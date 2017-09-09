@@ -11,7 +11,8 @@ class UpdateMisspellingsTask {
     @Autowired
     private MisspellingService misspellingService;
 
-    @Scheduled(cron = "0 0 3 1/1 * ?")
+    // To run every day
+    @Scheduled(fixedDelay = 86400)
     void updateMisspellings() {
         misspellingService.updateMisspellingList();
     }
