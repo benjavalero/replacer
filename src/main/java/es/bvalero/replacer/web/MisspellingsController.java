@@ -2,9 +2,9 @@ package es.bvalero.replacer.web;
 
 import es.bvalero.replacer.domain.RandomArticle;
 import es.bvalero.replacer.domain.Replacement;
-import es.bvalero.replacer.domain.ReplacementBD;
+import es.bvalero.replacer.persistence.ReplacementDao;
+import es.bvalero.replacer.persistence.pojo.ReplacementDb;
 import es.bvalero.replacer.service.IWikipediaService;
-import es.bvalero.replacer.service.MisspellingService;
 import es.bvalero.replacer.service.ReplacementService;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.StringUtils;
@@ -23,10 +23,10 @@ class MisspellingsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingsController.class);
 
     @Autowired
-    private ReplacementService replacementService;
+    private ReplacementDao replacementDao;
 
     @Autowired
-    private MisspellingService misspellingService;
+    private ReplacementService replacementService;
 
     @Autowired
     private IWikipediaService wikipediaService;
@@ -35,7 +35,7 @@ class MisspellingsController {
     RandomArticle findRandom() {
         LOGGER.info("Finding random article with misspellings...");
 
-        ReplacementBD randomReplacement = replacementService.findRandomReplacementToFix();
+        ReplacementDb randomReplacement = replacementDao.findRandomReplacementToFix();
         if (randomReplacement == null) {
             LOGGER.info("No random replacement could be found. Try again...");
             return findRandom();
@@ -44,7 +44,7 @@ class MisspellingsController {
         String title = randomReplacement.getTitle();
         String content = wikipediaService.getArticleContent(title);
         if (content == null || RegExUtils.isRedirectionArticle(content)) {
-            replacementService.deleteReplacementsByTitle(title);
+            replacementDao.deleteReplacementsByTitle(title);
             return findRandom();
         }
 
@@ -54,7 +54,7 @@ class MisspellingsController {
         // We will work since now with the escaped content
         List<Replacement> replacements = replacementService.findReplacements(escapedContent);
         if (replacements.isEmpty()) {
-            replacementService.deleteReplacementsByTitle(title);
+            replacementDao.deleteReplacementsByTitle(title);
             return findRandom();
         }
 
@@ -99,7 +99,7 @@ class MisspellingsController {
             LOGGER.info("Nothing to fix in article: {}", title);
 
             // Mark the article has reviewed in the database
-            replacementService.setArticleAsReviewed(title);
+            replacementDao.setArticleAsReviewed(title);
 
             return findRandom();
         }
@@ -128,7 +128,7 @@ class MisspellingsController {
             }
 
             // Mark the article has reviewed in the database
-            replacementService.setArticleAsReviewed(title);
+            replacementDao.setArticleAsReviewed(title);
         } catch (IllegalArgumentException e) {
             LOGGER.warn("The article content could not be replaced with the fixes", e);
         } catch (Exception e) {

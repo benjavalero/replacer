@@ -406,4 +406,11 @@ public class RegExUtilsTest {
         assertTrue(matches.contains("ésta"));
     }
 
+    @Test
+    public void testIsRedirectionArticle() {
+        assertTrue(RegExUtils.isRedirectionArticle("xxx #REDIRECCIÓN [[A]] yyy"));
+        assertTrue(RegExUtils.isRedirectionArticle("xxx #REDIRECT [[A]] yyy"));
+        assertFalse(RegExUtils.isRedirectionArticle("Otro contenido"));
+    }
+
 }

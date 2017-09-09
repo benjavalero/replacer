@@ -62,6 +62,7 @@ public class RegExUtils {
      * Returns a list of intervals containing exceptions of the text
      */
     public static List<Interval> findExceptionIntervals(String text) {
+        // TODO Create an interface implemented for all the exception regex
         if (exceptionPatterns.isEmpty()) {
             exceptionPatterns.add(Pattern.compile(REGEX_TEMPLATE_PARAM));
             exceptionPatterns.add(Pattern.compile(REGEX_PARAM_VALUE));

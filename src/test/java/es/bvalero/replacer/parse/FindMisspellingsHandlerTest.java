@@ -1,7 +1,9 @@
 package es.bvalero.replacer.parse;
 
-import es.bvalero.replacer.domain.ReplacementBD;
-import es.bvalero.replacer.service.ReplacementService;
+import es.bvalero.replacer.domain.Misspelling;
+import es.bvalero.replacer.persistence.ReplacementDao;
+import es.bvalero.replacer.persistence.pojo.ReplacementDb;
+import es.bvalero.replacer.service.MisspellingService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +18,10 @@ import java.util.*;
 public class FindMisspellingsHandlerTest {
 
     @Mock
-    private ReplacementService replacementService;
+    private ReplacementDao replacementDao;
+
+    @Mock
+    private MisspellingService misspellingService;
 
     @InjectMocks
     private FindMisspellingsHandler handler;
@@ -35,14 +40,12 @@ public class FindMisspellingsHandlerTest {
         GregorianCalendar yesterday = new GregorianCalendar();
         yesterday.add(GregorianCalendar.DATE, -1);
 
-        ReplacementBD replacementBD = new ReplacementBD();
-        replacementBD.setTitle(articleTitle);
-        replacementBD.setLastReviewed(new Timestamp(today.getTimeInMillis()));
-        List<ReplacementBD> replacementList = new ArrayList<>();
-        replacementList.add(replacementBD);
-        Map<String, List<ReplacementBD>> replacementMap = new HashMap<>();
-        replacementMap.put(articleTitle, replacementList);
-        Mockito.when(replacementService.findAllReviewedReplacements()).thenReturn(replacementMap);
+        ReplacementDb replacementDb = new ReplacementDb();
+        replacementDb.setTitle(articleTitle);
+        replacementDb.setLastReviewed(new Timestamp(today.getTimeInMillis()));
+        List<ReplacementDb> replacementList = new ArrayList<>();
+        replacementList.add(replacementDb);
+        Mockito.when(replacementDao.findAllReviewedReplacements()).thenReturn(replacementList);
 
         Date articleTimestamp = yesterday.getTime();
 
@@ -50,18 +53,30 @@ public class FindMisspellingsHandlerTest {
 
         handler.processArticle(null, articleTitle, articleTimestamp);
 
-        Mockito.verify(replacementService, Mockito.times(0))
-                .insertReplacements(Mockito.anyListOf(ReplacementBD.class));
+        Mockito.verify(replacementDao, Mockito.times(0))
+                .insertAll(Mockito.anyListOf(ReplacementDb.class));
     }
 
     @Test
     public void testProcess() {
         Assert.assertFalse(handler.isReviewedAfter(null, null));
 
-        handler.processArticle(null, null, null);
+        handler.processArticle("", null, null);
 
-        Mockito.verify(replacementService).insertReplacements(Mockito.anyListOf(ReplacementBD.class));
-        Mockito.verify(replacementService).deleteReplacementsByTitle(Mockito.anyString());
+        Mockito.verify(replacementDao).insertAll(Mockito.anyListOf(ReplacementDb.class));
+        Mockito.verify(replacementDao).deleteReplacementsByTitle(Mockito.anyString());
+    }
+
+    @Test
+    public void testFindWordReplacements() {
+        Mockito.when(misspellingService.getWordMisspelling("A")).thenReturn(new Misspelling("A", true, "Á"));
+        Mockito.when(misspellingService.getWordMisspelling("E")).thenReturn(new Misspelling("E", true, "É"));
+        Mockito.when(misspellingService.getWordMisspelling("I")).thenReturn(new Misspelling("I", true, "Í"));
+        Mockito.when(misspellingService.getWordMisspelling("O")).thenReturn(new Misspelling("O", true, "Ó"));
+
+        String text = "A B E E ''I'' O";
+        Set<ReplacementDb> replacements = handler.findWordReplacements("", text);
+        Assert.assertEquals(3, replacements.size());
     }
 
 }

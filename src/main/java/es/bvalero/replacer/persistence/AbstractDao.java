@@ -1,16 +1,16 @@
-package es.bvalero.replacer.service;
+package es.bvalero.replacer.persistence;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-abstract class AbstractDao<K extends Serializable, T> {
+public abstract class AbstractDao<K extends Serializable, T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDao.class);
     private final Class<T> persistentClass;
@@ -32,7 +32,7 @@ abstract class AbstractDao<K extends Serializable, T> {
     }
 
     List<T> findAll() {
-        Query query = entityManager.createQuery("FROM " + persistentClass.getName());
+        TypedQuery<T> query = entityManager.createQuery("FROM " + persistentClass.getName(), persistentClass);
         return query.getResultList();
     }
 
@@ -40,7 +40,7 @@ abstract class AbstractDao<K extends Serializable, T> {
         entityManager.persist(entity);
     }
 
-    void insertAll(List<T> entities) {
+    public void insertAll(List<T> entities) {
         for (T entity : entities) {
             try {
                 insert(entity);
