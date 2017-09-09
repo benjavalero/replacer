@@ -1,8 +1,8 @@
-package es.bvalero.replacer.domain;
+package es.bvalero.replacer.persistence.pojo;
 
 import java.io.Serializable;
 
-public class ReplacementPK implements Serializable {
+public class ReplacementDbPk implements Serializable {
 
     private String title;
     private String word;
@@ -28,10 +28,9 @@ public class ReplacementPK implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ReplacementPK that = (ReplacementPK) o;
+        ReplacementDbPk that = (ReplacementDbPk) o;
 
-        if (!title.equals(that.title)) return false;
-        return word.equals(that.word);
+        return title.equals(that.title) && word.equals(that.word);
     }
 
     @Override
@@ -40,5 +39,4 @@ public class ReplacementPK implements Serializable {
         result = 31 * result + word.hashCode();
         return result;
     }
-
 }

@@ -1,13 +1,13 @@
-package es.bvalero.replacer.domain;
+package es.bvalero.replacer.persistence.pojo;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Entity
-@IdClass(ReplacementPK.class)
+@IdClass(ReplacementDbPk.class)
 @Table(name = "replacement")
-public class ReplacementBD implements Serializable {
+public class ReplacementDb implements Serializable {
 
     @Id
     @Column(name = "title", nullable = false, length = 190)
@@ -20,12 +20,13 @@ public class ReplacementBD implements Serializable {
     @Column(name = "dtfixed", columnDefinition = "TIMESTAMP")
     private Timestamp lastReviewed;
 
-    public ReplacementBD() {
+    public ReplacementDb() {
     }
 
-    public ReplacementBD(String title, String word) {
+    public ReplacementDb(String title, String word) {
         this.title = title;
         this.word = word;
+        this.lastReviewed = null;
     }
 
     public String getTitle() {
@@ -57,10 +58,9 @@ public class ReplacementBD implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ReplacementBD that = (ReplacementBD) o;
+        ReplacementDb that = (ReplacementDb) o;
 
-        if (!title.equals(that.title)) return false;
-        return word.equals(that.word);
+        return title.equals(that.title) && word.equals(that.word);
     }
 
     @Override
