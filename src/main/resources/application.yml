@@ -9,8 +9,8 @@ logging:
     org.springframework: ERROR
 
 replacer:
-  incremental.update: true
-  xml.path: /public/dumps/public/eswiki
+  # Path where the XML dumps are located for the Spanish Wikipedia
+  dump.folder.path: /public/dumps/public/eswiki
 
 wikipedia:
   username: BenjaBot

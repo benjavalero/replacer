@@ -1,68 +1,54 @@
 package es.bvalero.replacer.parse;
 
 import es.bvalero.replacer.domain.ReplacementBD;
-import es.bvalero.replacer.service.MisspellingService;
 import es.bvalero.replacer.service.ReplacementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-@Component
-public class FindMisspellingsHandler extends ArticlesHandler {
-
-    @Autowired
-    private MisspellingService misspellingService;
+class FindMisspellingsHandler implements ArticleHandler {
 
     @Autowired
     private ReplacementService replacementService;
-
-    @Value("${replacer.incremental.update}")
-    private boolean incremental;
 
     // Pre-load all articles already reviewed in database to reduce queries
     private Map<String, List<ReplacementBD>> reviewedReplacements;
 
     @Override
-    void processArticle() {
-        // In case of incremental update, if the article is not reviewed
-        // and it has not been modified since it was added to the database, do nothing
-        if (isIncremental() && !isReviewed() && !isRecentlyUpdated()) {
+    public void processArticle(String articleContent, String articleTitle, Date articleTimestamp) {
+        // If the article was reviewed, and it was not before the current articleTimestamp, do nothing.
+        if (isReviewedAfter(articleTitle, articleTimestamp)) {
             return;
         }
 
         // Find the possible replacements
-        List<ReplacementBD> replacementList = replacementService.findReplacementsForDB(getCurrentTitle(), getCurrentText());
+        List<ReplacementBD> replacementList = replacementService.findReplacementsForDB(articleTitle, articleContent);
 
-        if (isReviewed()) {
+        if (isReviewed(articleTitle)) {
             // If the article is already reviewed, only add the NEW replacements
-            replacementList.removeAll(getReviewedReplacements().get(getCurrentTitle()));
+            replacementList.removeAll(getReviewedReplacements().get(articleTitle));
             replacementService.insertReplacements(replacementList);
         } else {
             // For the rest of cases, replace (delete and insert) all replacements
-            replacementService.deleteReplacementsByTitle(getCurrentTitle());
+            replacementService.deleteReplacementsByTitle(articleTitle);
             replacementService.insertReplacements(replacementList);
         }
     }
 
-    boolean isIncremental() {
-        return this.incremental;
+    boolean isReviewedAfter(String articleTitle, Date articleTimestamp) {
+        if (isReviewed(articleTitle)) {
+            Timestamp lastReviewed = this.getReviewedReplacements().get(articleTitle).get(0).getLastReviewed();
+            return !(lastReviewed.before(articleTimestamp));
+        } else {
+            return false;
+        }
     }
 
-    void setIncremental(boolean incremental) {
-        this.incremental = incremental;
-    }
-
-    boolean isReviewed() {
-        return getReviewedReplacements().containsKey(getCurrentTitle());
-    }
-
-    boolean isRecentlyUpdated() {
-        long diff = System.currentTimeMillis() - getCurrentTimestamp().getTime();
-        long days = diff / (1000 * 60 * 60 * 24);
-        return days < 30;
+    private boolean isReviewed(String articleTitle) {
+        return this.getReviewedReplacements().containsKey(articleTitle);
     }
 
     private Map<String, List<ReplacementBD>> getReviewedReplacements() {
