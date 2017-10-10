@@ -20,10 +20,8 @@ public class DumpFinderTest {
         Mockito.when(dumpFolder.listFiles(Mockito.any(FilenameFilter.class))).thenReturn(files);
 
         DumpFinder dumpFinder = new DumpFinder();
-        dumpFinder.setDumpFolder(dumpFolder);
-
         Assert.assertEquals("20170201\\eswiki-20170201-pages-articles.xml.bz2",
-                dumpFinder.findLatestDumpFile().getPath());
+                dumpFinder.findLatestDumpFile(dumpFolder).getPath());
     }
 
     @Test(expected = FileNotFoundException.class)
@@ -33,8 +31,7 @@ public class DumpFinderTest {
         Mockito.when(dumpFolder.listFiles(Mockito.any(FilenameFilter.class))).thenReturn(files);
 
         DumpFinder dumpFinder = new DumpFinder();
-        dumpFinder.setDumpFolder(dumpFolder);
-        dumpFinder.findLatestDumpFile();
+        dumpFinder.findLatestDumpFile(dumpFolder);
     }
 
     @Test
@@ -46,10 +43,9 @@ public class DumpFinderTest {
         Mockito.when(dumpFolder.listFiles(Mockito.any(FilenameFilter.class))).thenReturn(files);
 
         DumpFinder dumpFinder = new DumpFinder();
-        dumpFinder.setDumpFolder(dumpFolder);
 
         GregorianCalendar cal = new GregorianCalendar(2017, 1, 1);
-        Assert.assertEquals(cal.getTime(), dumpFinder.findLatestDumpDate());
+        Assert.assertEquals(cal.getTime(), dumpFinder.findLatestDumpDate(dumpFolder));
     }
 
     @Test(expected = FileNotFoundException.class)
@@ -60,8 +56,7 @@ public class DumpFinderTest {
         Mockito.when(dumpFolder.listFiles(Mockito.any(FilenameFilter.class))).thenReturn(files);
 
         DumpFinder dumpFinder = new DumpFinder();
-        dumpFinder.setDumpFolder(dumpFolder);
-        dumpFinder.findLatestDumpDate();
+        dumpFinder.findLatestDumpDate(dumpFolder);
     }
 
 }

@@ -1,7 +1,5 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.parse.ArticleHandler;
-import es.bvalero.replacer.utils.RegExUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +11,17 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 @Component
 public class DumpHandler extends DefaultHandler {
 
     static final TimeZone TIME_ZONE = TimeZone.getTimeZone("GMT");
-    static final Integer NAMESPACE_ARTICLE = 0;
-    static final Integer NAMESPACE_ANNEX = 104;
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpHandler.class);
     private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_PATTERN);
     private final StringBuilder currentChars = new StringBuilder();
+    private Integer currentId;
     private String currentTitle;
     private Integer currentNamespace;
     private String currentText;
@@ -33,16 +29,17 @@ public class DumpHandler extends DefaultHandler {
     private int numItemsProcessed;
 
     @Autowired
-    private List<ArticleHandler> articleHandlers;
+    private DumpProcessor dumpProcessor;
 
     @Override
     public void startDocument() {
-        numItemsProcessed = 0;
+        this.numItemsProcessed = 0;
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        currentChars.delete(0, currentChars.length());
+    public void startElement(String uri, String localName, String qName, Attributes attributes)
+            throws SAXException {
+        this.currentChars.delete(0, this.currentChars.length());
     }
 
     @Override
@@ -51,18 +48,25 @@ public class DumpHandler extends DefaultHandler {
             case "page":
                 processArticle();
                 this.numItemsProcessed++;
+                setCurrentId(null);
+                break;
+            case "id":
+                // ID appears twice. We care about the first one.
+                if (getCurrentId() == null) {
+                    setCurrentId(Integer.parseInt(this.currentChars.toString()));
+                }
                 break;
             case "title":
-                setCurrentTitle(currentChars.toString());
+                setCurrentTitle(this.currentChars.toString());
                 break;
             case "ns":
-                currentNamespace = Integer.parseInt(currentChars.toString());
+                setCurrentNamespace(Integer.parseInt(this.currentChars.toString()));
                 break;
             case "text":
-                setCurrentText(currentChars.toString());
+                setCurrentText(this.currentChars.toString());
                 break;
             case "timestamp":
-                setCurrentTimestamp(parseWikipediaDate(currentChars.toString()));
+                setCurrentTimestamp(parseWikipediaDate(this.currentChars.toString()));
                 break;
             default:
                 break;
@@ -71,7 +75,15 @@ public class DumpHandler extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-        currentChars.append(ch, start, length);
+        this.currentChars.append(ch, start, length);
+    }
+
+    private Integer getCurrentId() {
+        return currentId;
+    }
+
+    private void setCurrentId(Integer currentId) {
+        this.currentId = currentId;
     }
 
     String getCurrentTitle() {
@@ -121,30 +133,12 @@ public class DumpHandler extends DefaultHandler {
         return wikiDate;
     }
 
-    void processArticle() {
-        if (hasToBeProcessed()) {
-            for (ArticleHandler articleHandler : articleHandlers) {
-                articleHandler.processArticle(getCurrentText(), getCurrentTitle(), getCurrentTimestamp());
-            }
+    private void processArticle() {
+        try {
+            dumpProcessor.processArticle(getCurrentId(), getCurrentText(), getCurrentNamespace(), getCurrentTitle(), getCurrentTimestamp());
+        } catch (Exception e) {
+            LOGGER.error("Error processing article: " + getCurrentTitle(), e);
         }
-    }
-
-    boolean hasToBeProcessed() {
-        // Only process articles or annexes
-        // Skip redirection articles
-        return (isArticle() || isAnnex()) && !isRedirectionArticle();
-    }
-
-    boolean isArticle() {
-        return NAMESPACE_ARTICLE.equals(getCurrentNamespace());
-    }
-
-    boolean isAnnex() {
-        return NAMESPACE_ANNEX.equals(getCurrentNamespace());
-    }
-
-    private boolean isRedirectionArticle() {
-        return RegExUtils.isRedirectionArticle(getCurrentText());
     }
 
 }

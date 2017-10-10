@@ -1,0 +1,36 @@
+/* MISPELLINGS */
+
+.pre {
+/*  font-family: monospace; */
+  white-space: pre-wrap;
+}
+
+.btn {
+  vertical-align: baseline;
+}
+
+hr {
+  border-color: #333;
+  border-style: double none none;
+  border-width: medium;
+}
+
+#button-save {
+  width: 100%;
+  margin: 1ex 0 1ex 0;
+}
+
+/* SYNTAX */
+
+.syntax {
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.exception {
+  background-color: #dcdcdc;
+  border-color: #444444;
+  color: #444444;
+}
+

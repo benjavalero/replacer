@@ -14,6 +14,7 @@ replacer:
 
 wikipedia:
   username: BenjaBot
+  # Externalized
   password: xxxxxx
 
 ---
@@ -28,6 +29,10 @@ logging:
     es.bvalero.replacer: DEBUG
     org.hibernate.SQL: DEBUG
 
+replacer:
+  # Path where the XML dumps are located for the Spanish Wikipedia
+  dump.folder.path: C:\Users\Benja\Desarrollo\pywikibot
+
 ---
 
 spring:
@@ -35,8 +40,10 @@ spring:
   datasource:
     url: jdbc:mariadb://tools-db:3306/s52978__replacer
     username: s52978
+    # Externalized
     password: xxxxxx
     driver-class-name: org.mariadb.jdbc.Driver
 
 logging:
+  # Rolling after 10M after the documentation
   file: logs/replacer.log

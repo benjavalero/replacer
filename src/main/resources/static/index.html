@@ -8,7 +8,8 @@
     <title>Replacer - WikiReemplazador</title>
 
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
+    <link rel="stylesheet"
+          href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -33,19 +34,45 @@
         A continuación se listan algunas de las herramientas disponibles:
     </p>
     <ul>
-        <li><a href="misspellings.html"><strong>Errores ortográficos</strong></a>
+        <li><a href="random.html"><strong>Errores ortográficos</strong></a>
             Pulse en las palabras resaltadas para sustituirlas por su
             corrección (si procede). Finalmente pulse en el botón «Guardar
-            cambios» para aplicar las correcciones.     <!-- TODOSi pulsa el botón sin haber
-        hecho ningún cambio, simplemente se cargará una nueva página
-        con posibles errores ortográficos.-->
+            cambios» para aplicar las correcciones.
+            <!-- TODO Si pulsa el botón sin haber hecho ningún cambio,
+             simplemente se cargará una nueva página con posibles errores ortográficos.-->
         </li>
         <li><a href="statistics.html"><strong>Estadísticas</strong></a>
             Muestra diversas estadísticas de la herramienta.
         </li>
+        <li><a href="dump.html"><strong>Indexación</strong></a>
+            Muestra el estado actual de la indexación.
+        </li>
     </ul>
 
 </div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- jQuery local fallback -->
+<script>window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')</script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<!-- Bootstrap JS local fallback -->
+<script>if(typeof($.fn.modal) === 'undefined') {document.write('<script src="js/bootstrap.min.js"><\/script>')}
+</script>
+
+<!-- Bootstrap CSS local fallback -->
+<div id="bootstrapCssTest" class="hidden"></div>
+<script>
+    $(function() {
+      if ($('#bootstrapCssTest').is(':visible')) {
+        $("head").prepend('<link rel="stylesheet" href="css/bootstrap.min.css">');
+      }
+    });
+</script>
 
 </body>
 </html>

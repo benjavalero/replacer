@@ -1,15 +1,19 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.article.ArticleService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,15 +21,19 @@ import java.util.GregorianCalendar;
 
 public class DumpHandlerTest {
 
+    @Spy
+    private ArticleService articleService;
+
+    @Mock
+    private DumpProcessor dumpProcessor;
+
+    @InjectMocks
     private DumpHandler dumpHandler;
 
     @Before
     public void setUp() {
-        dumpHandler = new DumpHandler() {
-            @Override
-            void processArticle() {
-            }
-        };
+        dumpHandler = new DumpHandler();
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
@@ -36,8 +44,7 @@ public class DumpHandlerTest {
         SAXParser saxParser = factory.newSAXParser();
 
         String dumpFilePath = getClass().getResource("/pages-articles.xml").getFile();
-        File dumpFile = new File(dumpFilePath);
-        InputStream xmlInput = new FileInputStream(dumpFile);
+        InputStream xmlInput = new FileInputStream(dumpFilePath);
         saxParser.parse(xmlInput, dumpHandler);
 
         Assert.assertEquals(1, dumpHandler.getNumItemsProcessed());
@@ -55,37 +62,6 @@ public class DumpHandlerTest {
     @Test
     public void testParseWikipediaDateError() {
         Assert.assertNull(dumpHandler.parseWikipediaDate("xxxxx"));
-    }
-
-    @Test
-    public void testIsArticle() {
-        dumpHandler.setCurrentNamespace(DumpHandler.NAMESPACE_ARTICLE);
-        Assert.assertTrue(dumpHandler.isArticle());
-
-        dumpHandler.setCurrentNamespace(DumpHandler.NAMESPACE_ANNEX);
-        Assert.assertFalse(dumpHandler.isArticle());
-    }
-
-    @Test
-    public void testIsAnnex() {
-        dumpHandler.setCurrentNamespace(DumpHandler.NAMESPACE_ANNEX);
-        Assert.assertTrue(dumpHandler.isAnnex());
-
-        dumpHandler.setCurrentNamespace(DumpHandler.NAMESPACE_ARTICLE);
-        Assert.assertFalse(dumpHandler.isAnnex());
-    }
-
-    @Test
-    public void testHasToBeProcessed() {
-        dumpHandler.setCurrentText("");
-        dumpHandler.setCurrentNamespace(DumpHandler.NAMESPACE_ANNEX);
-        Assert.assertTrue(dumpHandler.hasToBeProcessed());
-
-        dumpHandler.setCurrentNamespace(DumpHandler.NAMESPACE_ARTICLE);
-        Assert.assertTrue(dumpHandler.hasToBeProcessed());
-
-        dumpHandler.setCurrentText("#REDIRECCIÓN [[A]]");
-        Assert.assertFalse(dumpHandler.hasToBeProcessed());
     }
 
 }

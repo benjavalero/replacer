@@ -2,7 +2,6 @@ package es.bvalero.replacer.dump;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -23,30 +22,14 @@ import java.util.Date;
 class DumpFinder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpFinder.class);
-
-    @Value("${replacer.dump.folder.path:}")
-    private String dumpFolderPath;
-
-    private File dumpFolder;
-
-    private File getDumpFolder() {
-        if (this.dumpFolder == null) {
-            this.dumpFolder = new File(this.dumpFolderPath);
-        }
-        return this.dumpFolder;
-    }
-
-    void setDumpFolder(File dumpFolder) {
-        this.dumpFolder = dumpFolder;
-    }
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
 
     /**
      * @return Returns the path of the latest dump folder,  e. g.
      * /public/dumps/public/eswiki/20170820
      * @throws FileNotFoundException if the path contains no valid sub-folders
      */
-    private File findLatestDumpFolder() throws FileNotFoundException {
-        File dumpFolder = getDumpFolder();
+    private File findLatestDumpFolder(File dumpFolder) throws FileNotFoundException {
         File[] dumpSubFolders = dumpFolder.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -65,14 +48,13 @@ class DumpFinder {
     }
 
     /**
-     * Finds the date of the latest dump, or null in case of error or no folder found.
+     * @return The date of the latest dump, or null in case of error or no folder found.
      */
-    Date findLatestDumpDate() throws FileNotFoundException {
-        File latestDumpFolder = findLatestDumpFolder();
+    Date findLatestDumpDate(File dumpFolder) throws FileNotFoundException {
+        File latestDumpFolder = findLatestDumpFolder(dumpFolder);
         String dumpDateStr = latestDumpFolder.getName();
         try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-            return formatter.parse(dumpDateStr);
+            return DATE_FORMAT.parse(dumpDateStr);
         } catch (ParseException e) {
             LOGGER.error("Error parsing dump folder date: {}", dumpDateStr, e);
             throw new FileNotFoundException("Error parsing dump folder date: " + dumpDateStr);
@@ -84,8 +66,8 @@ class DumpFinder {
      * /public/dumps/public/eswiki/20170820/eswiki-20170820-pages-articles.xml.bz2
      * @throws FileNotFoundException if the dump folder cannot be found.
      */
-    File findLatestDumpFile() throws FileNotFoundException {
-        File latestDumpFolder = findLatestDumpFolder();
+    File findLatestDumpFile(File dumpFolder) throws FileNotFoundException {
+        File latestDumpFolder = findLatestDumpFolder(dumpFolder);
         String dumpFileName = "eswiki-" + latestDumpFolder.getName() + "-pages-articles.xml.bz2";
         return new File(latestDumpFolder, dumpFileName);
     }

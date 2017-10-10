@@ -1,17 +1,23 @@
 DROP TABLE IF EXISTS replacement;
 DROP TABLE IF EXISTS misspelling;
+DROP TABLE IF EXISTS potentialerror;
+DROP TABLE IF EXISTS article;
 
-CREATE TABLE misspelling (
-	word varchar(190) COLLATE utf8mb4_bin NOT NULL,
-	cs tinyint(1) NOT NULL DEFAULT '1',
-	suggestion varchar(255) NOT NULL,
-	PRIMARY KEY (word)
+CREATE TABLE article (
+    id INT NOT NULL,
+    title VARCHAR(190) NOT NULL,
+    dtadd TIMESTAMP NOT NULL,
+    dtreview TIMESTAMP NULL,
+    PRIMARY KEY (id),
+    INDEX (dtreview)
 );
 
-CREATE TABLE replacement (
-	title varchar(190) COLLATE utf8mb4_bin NOT NULL,
-	word varchar(190) COLLATE utf8mb4_bin NOT NULL,
-	dtadded timestamp NULL,
-	dtfixed timestamp NULL,
-	INDEX (title, word, dtfixed)
+CREATE TABLE potentialerror (
+    id INT NOT NULL AUTO_INCREMENT,
+    articleid INT NOT NULL,
+    type VARCHAR(25) NOT NULL,
+    text VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    INDEX (articleid, type),
+    FOREIGN KEY (articleid) REFERENCES article(id)
 );
