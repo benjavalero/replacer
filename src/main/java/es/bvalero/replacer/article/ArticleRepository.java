@@ -1,0 +1,25 @@
+package es.bvalero.replacer.article;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Repository
+@Transactional
+public interface ArticleRepository extends JpaRepository<Article, Integer> {
+
+    @Query("SELECT MAX(id) FROM Article")
+    Integer findMaxId();
+
+    List<Article> findByIdGreaterThanAndReviewDateNull(Integer minId);
+
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE Article SET reviewDate = NOW() WHERE id = :id")
+    void setArticleAsReviewed(@Param("id") Integer id);
+
+}
