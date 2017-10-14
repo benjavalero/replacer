@@ -75,11 +75,12 @@ public class ArticleController {
             String contentToUpload = StringUtils.unescapeText(replacedContent);
 
             // Upload the new content to Wikipedia
-            // TODO Check it has not been modified meanwhile. Has the API any check? Yes, but it seems the library doesn't support it.
+            // It may happen there has been changes during the edition, but in this point the fixes can be applied anyway.
             // Check just before uploading there are no changes during the edition
-            if (article.getContent().equals(currentContent)) {
-                LOGGER.warn("The content in Wikipedia doesn't match with the one edited");
+            if (contentToUpload.equals(currentContent)) {
+                LOGGER.warn("The content to upload matches with the current content");
                 markArticleAsReviewed(article);
+                return false;
             }
             // TODO Try to add a reference in the summary to the tool
             wikipediaFacade.editArticleContent(article.getTitle(), contentToUpload,
