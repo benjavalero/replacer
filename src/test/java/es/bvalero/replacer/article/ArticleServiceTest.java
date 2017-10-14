@@ -47,11 +47,9 @@ public class ArticleServiceTest {
         Mockito.when(articleRepository.findMaxId()).thenReturn(10);
 
         String articleTitle = "Un artículo aleatorio";
-        List<Article> articles = new ArrayList<>();
         Article article = new Article(1, articleTitle);
-        articles.add(article);
-        Mockito.when(articleRepository.findByIdGreaterThanAndReviewDateNull(Mockito.anyInt()))
-                .thenReturn(articles);
+        Mockito.when(articleRepository.findFirstByIdGreaterThanAndReviewDateNull(Mockito.anyInt()))
+                .thenReturn(article);
 
         String articleContent = "Contenido de Hejemplo con errores.";
         Mockito.when(wikipediaService.getArticleContent(Mockito.anyString()))
