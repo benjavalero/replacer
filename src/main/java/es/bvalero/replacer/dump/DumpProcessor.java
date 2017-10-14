@@ -28,6 +28,10 @@ class DumpProcessor {
     @Autowired
     private ArticleService articleService;
 
+    // Having this variable outside the method we try to improve the garbage collector
+    // TODO Check if this works
+    private Article article;
+
     void processArticle(Integer articleId, String articleContent, Integer articleNamespace, String articleTitle, Date articleTimestamp) {
         LOGGER.debug("Indexing article: {}...", articleTitle);
 
@@ -39,7 +43,7 @@ class DumpProcessor {
             return;
         }
 
-        Article article = articleRepository.findOne(articleId);
+        article = articleRepository.findOne(articleId);
 
         if (article != null) {
             if (article.getReviewDate() != null && !articleTimestamp.after(article.getReviewDate())) {
