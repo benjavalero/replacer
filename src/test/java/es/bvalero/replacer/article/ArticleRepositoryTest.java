@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -53,9 +52,9 @@ public class ArticleRepositoryTest {
         Article article3 = new Article(3, "");
         articleRepository.save(Arrays.asList(article1, article2, article3));
 
-        List<Article> articlesGreater = articleRepository.findByIdGreaterThanAndReviewDateNull(1);
-        Assert.assertFalse(articlesGreater.isEmpty());
-        Assert.assertEquals(Integer.valueOf(3), articlesGreater.get(0).getId());
+        Article articleGreater = articleRepository.findFirstByIdGreaterThanAndReviewDateNull(1);
+        Assert.assertNotNull(articleGreater);
+        Assert.assertEquals(Integer.valueOf(3), articleGreater.getId());
     }
 
     @Test

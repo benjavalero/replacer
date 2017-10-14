@@ -42,7 +42,7 @@ public class ArticleService {
         // Find random article in Replacer database
         Random randomGenerator = new Random();
         Integer startRow = randomGenerator.nextInt(articleRepository.findMaxId());
-        Article randomArticle = articleRepository.findByIdGreaterThanAndReviewDateNull(startRow).get(0);
+        Article randomArticle = articleRepository.findFirstByIdGreaterThanAndReviewDateNull(startRow);
         if (randomArticle == null) {
             LOGGER.warn("No random replacement could be found. Try again...");
             return findRandomArticleWithPotentialErrors();

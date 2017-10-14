@@ -7,8 +7,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Repository
 @Transactional
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
@@ -16,7 +14,7 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     @Query("SELECT MAX(id) FROM Article")
     Integer findMaxId();
 
-    List<Article> findByIdGreaterThanAndReviewDateNull(Integer minId);
+    Article findFirstByIdGreaterThanAndReviewDateNull(Integer minId);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Article SET reviewDate = NOW() WHERE id = :id")
