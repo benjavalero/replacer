@@ -11,6 +11,9 @@ logging:
 replacer:
   # Path where the XML dumps are located for the Spanish Wikipedia
   dump.folder.path: /public/dumps/public/eswiki
+  highlight.exceptions: false
+  hide.empty.paragraphs: true
+  trim.paragraphs: true
 
 wikipedia:
   username: BenjaBot

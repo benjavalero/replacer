@@ -9,6 +9,7 @@ import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -36,6 +37,15 @@ public class ArticleService {
 
     @Autowired
     private List<PotentialErrorFinder> potentialErrorFinders;
+
+    @Value("${replacer.highlight.exceptions}")
+    private boolean highlightExceptions;
+
+    @Value("${replacer.hide.empty.paragraphs}")
+    private boolean hideEmptyParagraphs;
+
+    @Value("${replacer.trim.paragraphs}")
+    private boolean trimParagraphs;
 
     ArticleData findRandomArticleWithPotentialErrors() {
 
@@ -86,7 +96,7 @@ public class ArticleService {
                     replacedContent = StringUtils.replaceAt(replacedContent, replacement.getPosition(),
                             replacement.getOriginalText(), buttonText);
                     proposedFixes.put(replacement.getPosition(), replacement);
-                } else {
+                } else if (highlightExceptions) {
                     String spanText = getErrorExceptionSpanText(regexMatch);
                     replacedContent = StringUtils.replaceAt(replacedContent, regexMatch.getPosition(),
                             regexMatch.getOriginalText(), spanText);
@@ -97,7 +107,9 @@ public class ArticleService {
         }
 
         // Return only the text blocks with replacements
-        replacedContent = removeParagraphsWithoutReplacements(replacedContent);
+        if (hideEmptyParagraphs) {
+            replacedContent = removeParagraphsWithoutReplacements(replacedContent);
+        }
 
         ArticleData articleData = new ArticleData();
         articleData.setId(randomArticle.getId());
@@ -195,7 +207,7 @@ public class ArticleService {
                 if (reducedContent.length() != 0) {
                     reducedContent.append("\n<hr>\n");
                 }
-                reducedContent.append(trimText(paragraph, THRESHOLD));
+                reducedContent.append(trimParagraphs ? trimText(paragraph, THRESHOLD) : paragraph);
             }
         }
 
