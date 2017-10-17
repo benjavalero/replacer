@@ -28,7 +28,7 @@ import java.util.Date;
 @Component
 class DumpManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpManager.class);
-    private static final double NUM_ARTICLES = 3002445 + 60257; // Rough amount of articles to be checked
+    private static final double NUM_ARTICLES = 3497972; // Rough amount of articles to be checked
     private static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.00");
     private static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
