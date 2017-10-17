@@ -70,19 +70,7 @@ public class StringUtils {
         if (text.length() <= threshold) {
             return text;
         } else {
-            // TODO Don't split words
-            int cutPosition = text.length() - threshold;
-
-            // If we split a span, we take the complete span.
-            String textCut = text.substring(cutPosition, text.length());
-            int firstSpanStart = textCut.indexOf("<span class=\"syntax exception\">");
-            int firstSpanEnd = textCut.indexOf("</span>");
-            if (firstSpanEnd >= 0 && firstSpanEnd < firstSpanStart) {
-                String textBeforeCut = text.substring(0, cutPosition);
-                cutPosition = textBeforeCut.lastIndexOf("<span");
-            }
-
-            return ELLIPSIS + ' ' + text.substring(cutPosition, text.length());
+            return ELLIPSIS + ' ' + text.substring(text.length() - threshold, text.length());
         }
     }
 
@@ -93,7 +81,6 @@ public class StringUtils {
         if (text.length() <= threshold * 2) {
             return text;
         } else {
-            // TODO Don't split words or spans
             return text.substring(0, threshold) + ' ' + ELLIPSIS + ' '
                     + text.substring(text.length() - threshold, text.length());
         }
@@ -106,19 +93,7 @@ public class StringUtils {
         if (text.length() <= threshold) {
             return text;
         } else {
-            // TODO Don't split words
-            int cutPosition = threshold;
-
-            // If we split a span, we take the complete span.
-            String textCut = text.substring(0, threshold);
-            int lastSpanStart = textCut.lastIndexOf("<span class=\"syntax exception\">");
-            int lastSpanEnd = textCut.lastIndexOf("</span>");
-            if (lastSpanStart >= 0 && lastSpanStart > lastSpanEnd) {
-                String textAfterCut = text.substring(cutPosition, text.length());
-                cutPosition += textAfterCut.indexOf("</span>") + "</span>".length();
-            }
-
-            return text.substring(0, cutPosition) + ' ' + ELLIPSIS;
+            return text.substring(0, threshold) + ' ' + ELLIPSIS;
         }
     }
 
