@@ -45,26 +45,10 @@ public class StringUtilsTest {
     }
 
     @Test
-    public void testTrimLeftWithSpan() {
-        int threshold = 200;
-        String text = "a Principios Del Siglo XVII: Un Recuento de Creencias Según Las Relaciones de Fe Del Tribunal de Cartagena de Indias |url=<span class=\"syntax exception\">http://books.google.com.mx/books?id=pxl4i7lM4IQC&amp;pg=PA102&amp;dq=giromancia&amp;hl=es&amp;sa=X&amp;ei=bCxjUoDjJOiUjAKjkID4AQ&amp;ved=0CD8Q6AEwAw#v=onepage&amp;q=giromancia&amp;f=false</span> |fechaacceso= |idioma= |otros= |edición= |año= 2011|editor= |editorial=Palibrio |ubicación= |isbn= 9781463305949 |capítulo= |páginas= |cita=}}<span class=\"syntax exception\">&lt;/ref&gt;</span> En la literatura se describen dos formas de practicar la giromancia.";
-        String expected = "a Principios Del Siglo XVII: Un Recuento de Creencias Según Las Relaciones de Fe Del Tribunal de Cartagena de Indias |url=<span class=\"syntax exception\">http://books.google.com.mx/books?id=pxl4i7lM4IQC&amp;pg=PA102&amp;dq=giromancia&amp;hl=es&amp;sa=X&amp;ei=bCxjUoDjJOiUjAKjkID4AQ&amp;ved=0CD8Q6AEwAw#v=onepage&amp;q=giromancia&amp;f=false</span> [...]";
-        Assert.assertEquals(expected, StringUtils.trimLeft(text, threshold));
-    }
-
-    @Test
     public void testTrimRight() {
         int threshold = 5;
         String text = "Mi casa es bonita";
         String expected = "[...] onita";
-        Assert.assertEquals(expected, StringUtils.trimRight(text, threshold));
-    }
-
-    @Test
-    public void testTrimRightWithSpan() {
-        int threshold = 200;
-        String text = "<span class=\"syntax exception\">&lt;ref&gt;</span>{{cita libro |apellido= C<span class=\"syntax exception\">&lt;small&gt;</span>RESPO<span class=\"syntax exception\">&lt;/small&gt;</span> V<span class=\"syntax exception\">&lt;small&gt;</span>ARGAS<span class=\"syntax exception\">&lt;/small&gt;</span>|nombre= Pablo L.|enlaceautor= |título=La Inquisicion Espanola Y Las Supersticiones en El Caribe ";
-        String expected = "[...] <span class=\"syntax exception\">&lt;small&gt;</span>ARGAS<span class=\"syntax exception\">&lt;/small&gt;</span>|nombre= Pablo L.|enlaceautor= |título=La Inquisicion Espanola Y Las Supersticiones en El Caribe ";
         Assert.assertEquals(expected, StringUtils.trimRight(text, threshold));
     }
 
