@@ -100,6 +100,7 @@ public class ArticleServiceTest {
         ArticleService articleService = new ArticleService();
 
         Assert.assertTrue(articleService.isRedirectionArticle("xxx #REDIRECCIÓN [[A]] yyy"));
+        Assert.assertTrue(articleService.isRedirectionArticle("xxx #redirección [[A]] yyy"));
         Assert.assertTrue(articleService.isRedirectionArticle("xxx #REDIRECT [[A]] yyy"));
         Assert.assertFalse(articleService.isRedirectionArticle("Otro contenido"));
     }

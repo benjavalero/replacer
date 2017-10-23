@@ -148,7 +148,8 @@ public class ArticleService {
     }
 
     public boolean isRedirectionArticle(String articleContent) {
-        return articleContent.contains(TAG_REDIRECTION) || articleContent.contains(TAG_REDIRECT);
+        return org.apache.commons.lang3.StringUtils.containsIgnoreCase(articleContent, TAG_REDIRECTION)
+                || org.apache.commons.lang3.StringUtils.containsIgnoreCase(articleContent, TAG_REDIRECT);
     }
 
     private List<RegexMatch> findErrorExceptions(String text) {
