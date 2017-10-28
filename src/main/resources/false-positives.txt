@@ -10,6 +10,7 @@ Lt
 [Ff]ans
 Comics
 [Ss]e publica
+[Ss]e especifica
 Tropicos.org
 Julio César
 Magazine
@@ -17,8 +18,13 @@ Records
 Jet Propulsion Laboratory
 Sky
 The Guardian
+Missouri Botanical Garden
+([Dd]e|[Ss]u) regreso
+Victor Hugo
+Carlos Menem
+Los Angeles Lakers
 
 [Éé]st?[oa]s
 [Éé]st?[ea]
-[Aa]quél([ao]s?)?
+[Aa]quél(l[ao]s?)?
 [Ss]ólo
