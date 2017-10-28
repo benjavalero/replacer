@@ -19,19 +19,21 @@ public class FalsePositiveFinderTest {
 
     @Test
     public void testRegexFalsePositives() {
-        String text = "Un Link de Éstas en el Index Online de ésta Tropicos.org.";
+        String text = "Un Link de Éstas en el Index Online de ésta Tropicos.org Aquél aquéllo.";
 
         FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
         List<RegexMatch> matches = falsePositiveFinder.findErrorExceptions(text);
 
         Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(6, matches.size());
+        Assert.assertEquals(8, matches.size());
         Assert.assertTrue(matches.contains(new RegexMatch(3, "Link")));
         Assert.assertTrue(matches.contains(new RegexMatch(11, "Éstas")));
         Assert.assertTrue(matches.contains(new RegexMatch(23, "Index")));
         Assert.assertTrue(matches.contains(new RegexMatch(29, "Online")));
         Assert.assertTrue(matches.contains(new RegexMatch(39, "ésta")));
         Assert.assertTrue(matches.contains(new RegexMatch(44, "Tropicos.org")));
+        Assert.assertTrue(matches.contains(new RegexMatch(57, "Aquél")));
+        Assert.assertTrue(matches.contains(new RegexMatch(63, "aquéllo")));
     }
 
 }
