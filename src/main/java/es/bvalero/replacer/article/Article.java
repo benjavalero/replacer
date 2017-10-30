@@ -15,7 +15,7 @@ public class Article implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "title", nullable = false, length = 190)
+    @Column(name = "title", nullable = false, length = 255)
     private String title;
 
     @Column(name = "dtadd", nullable = false, columnDefinition = "TIMESTAMP")
