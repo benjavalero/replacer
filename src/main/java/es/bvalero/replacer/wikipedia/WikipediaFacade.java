@@ -24,7 +24,11 @@ class WikipediaFacade implements IWikipediaFacade {
     @Override
     public String getArticleContent(String articleTitle) throws Exception {
         LOGGER.info("Getting content for article: {}", articleTitle);
-        return getWiki().getPageContent(articleTitle);
+        String articleContent = getWiki().getPageContent(articleTitle);
+        if (articleContent == null) {
+            throw new NullPointerException();
+        }
+        return articleContent;
     }
 
     public void editArticleContent(String articleTitle, String articleContent, String editSummary) {
