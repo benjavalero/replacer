@@ -24,10 +24,14 @@ public class WikipediaFacadeIT {
         Assert.assertTrue(articleContent.contains("África"));
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testGetNonExistingArticleContent() throws Exception {
-        String articleContent = wikipediaFacade.getArticleContent("jander");
-        Assert.assertNull(articleContent);
+        wikipediaFacade.getArticleContent("jander");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void testDeletedArticleContent() throws Exception {
+        wikipediaFacade.getArticleContent("Gigia Talarico");
     }
 
     @Test
