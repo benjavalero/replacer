@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS article;
 
 CREATE TABLE article (
     id INT NOT NULL,
-    title VARCHAR(190) NOT NULL,
+    title VARCHAR(255) NOT NULL,
     dtadd TIMESTAMP NOT NULL,
     dtreview TIMESTAMP NULL,
     PRIMARY KEY (id),
