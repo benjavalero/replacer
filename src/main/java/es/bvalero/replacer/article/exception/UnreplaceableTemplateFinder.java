@@ -11,7 +11,7 @@ import java.util.List;
 public class UnreplaceableTemplateFinder implements ErrorExceptionFinder {
 
     private static final String REGEX_UNREPLACEBLE_TEMPLATE =
-            "\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||coord\\|)[^}]+}}";
+            "\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||[Cc]oord\\|)[^}]+}}";
     private static final String REGEX_CATEGORY = "\\[\\[Categoría:[^]]+]]";
 
     @Override
