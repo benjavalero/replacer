@@ -4,6 +4,7 @@ import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -11,10 +12,14 @@ import java.util.regex.Pattern;
 public class SourceCodeFinder implements ErrorExceptionFinder {
 
     private static final String REGEX_TAG = "<(math|source)>.*?</\\1>";
+    private static final String REGEX_TAG_ESCAPED = "&lt;(math|source)&gt;.*?&lt;/\\1&gt;";
 
     @Override
     public List<RegexMatch> findErrorExceptions(String text) {
-        return RegExUtils.findMatches(text, REGEX_TAG, Pattern.DOTALL);
+        List<RegexMatch> matches = new ArrayList<>();
+        matches.addAll(RegExUtils.findMatches(text, REGEX_TAG, Pattern.DOTALL));
+        matches.addAll(RegExUtils.findMatches(text, REGEX_TAG_ESCAPED, Pattern.DOTALL));
+        return matches;
     }
 
 }
