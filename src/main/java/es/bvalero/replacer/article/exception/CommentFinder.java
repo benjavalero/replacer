@@ -9,16 +9,16 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @Component
-public class XmlTagFinder implements ErrorExceptionFinder {
+public class CommentFinder implements ErrorExceptionFinder {
 
-    private static final String REGEX_XML_TAG = "<[^>]+>";
-    private static final String REGEX_XML_TAG_ESCAPED = "&lt;.+?&gt;";
+    private static final String REGEX_COMMENT_TAG = "<!--.+?-->";
+    private static final String REGEX_COMMENT_TAG_ESCAPED = "&lt;!--.+?--&gt;";
 
     @Override
     public List<RegexMatch> findErrorExceptions(String text) {
         List<RegexMatch> matches = new ArrayList<>();
-        matches.addAll(RegExUtils.findMatches(text, REGEX_XML_TAG));
-        matches.addAll(RegExUtils.findMatches(text, REGEX_XML_TAG_ESCAPED));
+        matches.addAll(RegExUtils.findMatches(text, REGEX_COMMENT_TAG, Pattern.DOTALL));
+        matches.addAll(RegExUtils.findMatches(text, REGEX_COMMENT_TAG_ESCAPED, Pattern.DOTALL));
         return matches;
     }
 

@@ -33,28 +33,4 @@ public class XmlTagFinderTest {
         Assert.assertEquals(StringUtils.escapeText(ref), matches.get(0).getOriginalText());
     }
 
-    @Test
-    public void testRegexComment() {
-        String comment = "<!-- Esto es un \n comentario -->";
-        String text = "xxx " + comment + " zzz";
-
-        XmlTagFinder commentFinder = new XmlTagFinder();
-        List<RegexMatch> matches = commentFinder.findErrorExceptions(text);
-
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(comment, matches.get(0).getOriginalText());
-    }
-
-    @Test
-    public void testRegexCommentEscaped() {
-        String comment = "<!-- Esto es un \n comentario -->";
-        String text = "xxx " + comment + " zzz";
-
-        XmlTagFinder commentFinder = new XmlTagFinder();
-        List<RegexMatch> matches = commentFinder.findErrorExceptions(StringUtils.escapeText(text));
-
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(StringUtils.escapeText(comment), matches.get(0).getOriginalText());
-    }
-
 }
