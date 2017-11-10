@@ -109,13 +109,9 @@ class MisspellingManager {
     List<String> parseSuggestions(String suggestionLine, String mainWord) {
         List<String> suggestions = new ArrayList<>();
 
-        for (String suggestion : suggestionLine.split(",")) {
-            String word;
-            if (suggestion.contains("(")) {
-                word = suggestion.substring(0, suggestion.indexOf("(")).trim();
-            } else {
-                word = suggestion.trim();
-            }
+        String suggestionWithoutBrackets = suggestionLine.replaceAll("\\(.+?\\)", "");
+        for (String suggestion : suggestionWithoutBrackets.split(",")) {
+            String word = suggestion.trim();
 
             // Don't suggest the misspelling main word
             if (StringUtils.hasText(word) && !word.equals(mainWord)) {

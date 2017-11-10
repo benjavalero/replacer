@@ -80,7 +80,16 @@ public class MisspellingManagerTest {
 
         mainWord = "remake";
         comment = "(nueva) versión o adaptación";
-        Assert.assertTrue(misspellingManager.parseSuggestions(comment, mainWord).isEmpty());
+        Assert.assertFalse(misspellingManager.parseSuggestions(comment, mainWord).isEmpty());
+        Assert.assertEquals("versión o adaptación", misspellingManager.parseSuggestions(comment, mainWord).get(0));
+    }
+
+    @Test
+    public void testParseSuggestionsWithCommasBetweenBrackets() {
+        String mainWord = "desempeño";
+        String comment = "desempeño (sustantivo o verbo, 1.ª persona), desempeñó (verbo, 3.ª persona)";
+        Assert.assertEquals(1, misspellingManager.parseSuggestions(comment, mainWord).size());
+        Assert.assertEquals("desempeñó", misspellingManager.parseSuggestions(comment, mainWord).get(0));
     }
 
 }
