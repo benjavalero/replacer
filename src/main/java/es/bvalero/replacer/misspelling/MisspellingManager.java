@@ -1,12 +1,12 @@
 package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -21,12 +21,20 @@ class MisspellingManager {
     private IWikipediaFacade wikipediaService;
 
     private Map<String, Misspelling> misspellingMap = null;
+    private Set<String> uppercaseMisspellings = new HashSet<>();
 
     private Map<String, Misspelling> getMisspellingMap() {
         if (this.misspellingMap == null) {
             this.misspellingMap = findMisspellingsFromWikipedia();
         }
         return this.misspellingMap;
+    }
+
+    private Set<String> getUppercaseMisspellings() {
+        if (this.uppercaseMisspellings == null) {
+            updateMisspellings();
+        }
+        return this.uppercaseMisspellings;
     }
 
     // Reload daily the misspellings from Wikipedia
@@ -38,6 +46,7 @@ class MisspellingManager {
     /* Load the article in Spanish Wikipedia containing the most common misspellings */
     private Map<String, Misspelling> findMisspellingsFromWikipedia() {
         Map<String, Misspelling> misspellings = new TreeMap<>();
+        this.uppercaseMisspellings.clear();
 
         LOGGER.info("Loading misspelling list from Wikipedia...");
         try {
@@ -45,6 +54,10 @@ class MisspellingManager {
             List<Misspelling> misspellingList = parseMisspellingList(misspellingListText);
             for (Misspelling misspelling : misspellingList) {
                 misspellings.put(misspelling.getWord(), misspelling);
+
+                if (StringUtils.isAllUpperCase(misspelling.getWord())) {
+                    this.uppercaseMisspellings.add(misspelling.getWord());
+                }
             }
 
             LOGGER.info("Completed misspelling load: {} items", misspellings.size());
@@ -114,7 +127,7 @@ class MisspellingManager {
             String word = suggestion.trim();
 
             // Don't suggest the misspelling main word
-            if (StringUtils.hasText(word) && !word.equals(mainWord)) {
+            if (StringUtils.isNotBlank(word) && !word.equals(mainWord)) {
                 suggestions.add(word);
             }
         }
@@ -140,6 +153,10 @@ class MisspellingManager {
             }
         }
         return wordMisspelling;
+    }
+
+    boolean isUppercaseMisspelling(String word) {
+        return this.getUppercaseMisspellings().contains(word);
     }
 
 }
