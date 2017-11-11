@@ -20,4 +20,8 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     @Query("UPDATE Article SET reviewDate = NOW() WHERE id = :id")
     void setArticleAsReviewed(@Param("id") Integer id);
 
+    Long countByReviewDateNull();
+
+    Long countByReviewDateNotNull();
+
 }

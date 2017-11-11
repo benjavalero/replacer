@@ -24,25 +24,30 @@ public class StatisticsController {
     @RequestMapping(value = "/statistics/count/potentialErrors")
     Long countPotentialErrors() {
         LOGGER.info("Count potential errors...");
-        // TODO Count only the ones not reviewed
-        Long count = potentialErrorRepository.count();
+        Long count = potentialErrorRepository.countNotReviewed();
         LOGGER.info("Potential errors found: " + count);
         return count;
     }
 
     @RequestMapping(value = "/statistics/count/articles")
-    Long countArticles() {
-        LOGGER.info("Count articles...");
-        // TODO Count only the ones not reviewed
-        Long count = articleRepository.count();
-        LOGGER.info("Articles found: " + count);
+    Long countArticlesNotReviewed() {
+        LOGGER.info("Count articles not reviewed...");
+        Long count = articleRepository.countByReviewDateNull();
+        LOGGER.info("Articles not reviewed found: " + count);
+        return count;
+    }
+
+    @RequestMapping(value = "/statistics/count/articles-reviewed")
+    Long countArticlesReviewed() {
+        LOGGER.info("Count articles reviewed...");
+        Long count = articleRepository.countByReviewDateNotNull();
+        LOGGER.info("Articles reviewed found: " + count);
         return count;
     }
 
     @RequestMapping(value = "/statistics/count/misspellings")
     List<Object[]> listMisspellings() {
         LOGGER.info("Listing misspellings...");
-        // TODO Count only the ones not reviewed
         List<Object[]> list = potentialErrorRepository.findMisspellingsGrouped();
         LOGGER.info("Misspelling list found: " + list.size());
         return list;
