@@ -78,4 +78,16 @@ public class ArticleRepositoryTest {
         Assert.assertNull(articleRepository.findOne(1));
     }
 
+    @Test
+    public void testCountByReviewDate() {
+        Article article1 = new Article(1, "");
+        Article article2 = new Article(2, "");
+        article2.setReviewDate(new Timestamp(new Date().getTime()));
+        Article article3 = new Article(3, "");
+        articleRepository.save(Arrays.asList(article1, article2, article3));
+
+        Assert.assertEquals(1, articleRepository.countByReviewDateNotNull().longValue());
+        Assert.assertEquals(2, articleRepository.countByReviewDateNull().longValue());
+    }
+
 }

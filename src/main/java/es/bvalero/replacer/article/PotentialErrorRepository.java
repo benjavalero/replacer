@@ -11,13 +11,10 @@ import java.util.List;
 @Transactional
 public interface PotentialErrorRepository extends JpaRepository<PotentialError, Long> {
 
-    /* TODO Remove this query if not necessary
-    public Integer countMisspellings() {
-        Query query = getEntityManager().createQuery("SELECT COUNT(*) FROM ReplacementBD WHERE lastReviewed IS NULL");
-        return ((Long) query.getSingleResult()).intValue();
-    }
-*/
-    @Query("SELECT text, COUNT(*) FROM PotentialError WHERE type = 'MISSPELLING' GROUP BY text")
+    @Query("SELECT COUNT(*) FROM PotentialError WHERE type = 'MISSPELLING' AND article.reviewDate IS NULL")
+    Long countNotReviewed();
+
+    @Query("SELECT text, COUNT(*) FROM PotentialError WHERE type = 'MISSPELLING' AND article.reviewDate IS NULL GROUP BY text")
     List<Object[]> findMisspellingsGrouped();
 
 }

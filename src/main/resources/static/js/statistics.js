@@ -19,6 +19,15 @@ $(document).ready(function() {
     });
 
     $.ajax({
+        url : 'statistics/count/articles-reviewed',
+        dataType : 'json'
+    }).done(function(response) {
+        $('#count-articles-reviewed').text(response);
+    }).fail(function(response) {
+        alert('Error en estadísticas: ' + JSON.stringify(response));
+    });
+
+    $.ajax({
         url : 'statistics/count/misspellings',
         dataType : 'json'
     }).done(function(response) {
