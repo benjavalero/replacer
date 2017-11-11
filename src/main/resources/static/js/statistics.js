@@ -22,13 +22,13 @@ $(document).ready(function() {
         url : 'statistics/count/misspellings',
         dataType : 'json'
     }).done(function(response) {
-        var list = '<ul>';
-        for (var i = 0; i < response.length; i++) {
-            // var group = response[i];
-            list += '<li>' + response[i][0] + ': ' + response[i][1] + '</li>';
-        }
-        list += '</ul>';
-        $('#list-misspellings').html(list);
+        $('#list-misspellings').datatable({
+            data: response,
+            pageSize: 20,
+            sort: [true, true],
+            filters: [true, false],
+            pagingDivSelector: "#paging-list-misspellings"
+        });
     }).fail(function(response) {
         alert('Error en estadísticas: ' + JSON.stringify(response));
     });
