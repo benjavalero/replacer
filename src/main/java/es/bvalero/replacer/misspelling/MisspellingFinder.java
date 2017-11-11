@@ -34,7 +34,10 @@ public class MisspellingFinder implements PotentialErrorFinder {
         for (RegexMatch textWord : textWords) {
             String word = textWord.getOriginalText();
             Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(word);
-            if (wordMisspelling != null) {
+            // Ignore words all in uppercase except the ones in the misspelling list
+            if (wordMisspelling != null
+                    && (!org.apache.commons.lang3.StringUtils.isAllUpperCase(word)
+                        || misspellingManager.isUppercaseMisspelling(word))) {
                 ArticleReplacement replacement = new ArticleReplacement();
                 replacement.setPosition(textWord.getPosition());
                 replacement.setOriginalText(word);
@@ -54,7 +57,6 @@ public class MisspellingFinder implements PotentialErrorFinder {
     }
 
     List<String> findProposedFixes(String word, Misspelling misspelling) {
-        // TODO Ignore words all in uppercase
         List<String> proposedFixes = new ArrayList<>();
 
         for (final String suggestion : misspelling.getSuggestions()) {
