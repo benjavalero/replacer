@@ -29,7 +29,6 @@ class DumpProcessor {
     private ArticleService articleService;
 
     // Having this variable outside the method we try to improve the garbage collector
-    // TODO Check if this works
     private Article article;
 
     void processArticle(Integer articleId, String articleContent, Integer articleNamespace, String articleTitle, Date articleTimestamp) {
