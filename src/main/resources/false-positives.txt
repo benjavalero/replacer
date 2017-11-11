@@ -19,10 +19,12 @@ Jet Propulsion Laboratory
 Sky
 The Guardian
 Missouri Botanical Garden
-([Dd]e|[Ss]u) regreso
+([Dd]e|[Ss]u|[Ee]l) (regreso|retiro)
 Victor Hugo
 Carlos Menem
-Los Angeles Lakers
+Los Angeles (Lakers|Times)
+Instituto Brasileiro de Geografia e Estatística
+Juegos Olímpicos de (Verano|Invierno)
 
 [Éé]st?[oa]s
 [Éé]st?[ea]
