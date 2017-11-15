@@ -10,7 +10,7 @@ public class UrlFinderTest {
 
     @Test
     public void testRegexUrl() {
-        String url = "https://google.es?u=t&ja2+rl=http://www.marca.com#page~2";
+        String url = "https://google.es?u=t&ja2+rl=http://www.marca.com#!page~2";
         String text = "xxx " + url + " zzz";
 
         UrlFinder urlFinder = new UrlFinder();
