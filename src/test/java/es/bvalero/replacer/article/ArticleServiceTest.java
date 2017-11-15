@@ -107,8 +107,8 @@ public class ArticleServiceTest {
 
     @Test
     public void testRemoveParagraphsWithoutReplacements() {
-        String text = "A\n\nB\n\nC miss-2\n\nD miss-3\n\nE\n\nF miss-4\n\nG\n\nH\n\n";
-        String expected = "C miss-2\n<hr>\nD miss-3\n<hr>\nF miss-4";
+        String text = "A\n\nB\n\nC id=\"miss-2\"\n\nD id=\"miss-3\"\n\nE\n\nF id=\"miss-4\"\n\nG\n\nH\n\n";
+        String expected = "C id=\"miss-2\"\n<hr>\nD id=\"miss-3\"\n<hr>\nF id=\"miss-4\"";
         ArticleService articleService = new ArticleService();
         Assert.assertEquals(expected, articleService.removeParagraphsWithoutReplacements(text));
     }

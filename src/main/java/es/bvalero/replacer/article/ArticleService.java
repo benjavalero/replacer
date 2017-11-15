@@ -204,7 +204,7 @@ public class ArticleService {
         Matcher matcher = patternParagraph.matcher(text);
         while (matcher.find()) {
             String paragraph = matcher.group(2);
-            if (paragraph.contains("miss-")) {
+            if (paragraph.contains("id=\"miss-")) {
                 if (reducedContent.length() != 0) {
                     reducedContent.append("\n<hr>\n");
                 }
