@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 @Component
 public class SourceCodeFinder implements ErrorExceptionFinder {
 
-    private static final String REGEX_TAG = "<(math|source)>.*?</\\1>";
-    private static final String REGEX_TAG_ESCAPED = "&lt;(math|source)&gt;.*?&lt;/\\1&gt;";
+    private static final String REGEX_TAG = "<(math|source|syntaxhighlight )[^>]*>.*?</\\1>";
+    private static final String REGEX_TAG_ESCAPED = "&lt;(math|source|syntaxhighlight )[^&]*&gt;.*?&lt;/\\1&gt;";
 
     @Override
     public List<RegexMatch> findErrorExceptions(String text) {
