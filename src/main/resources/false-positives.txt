@@ -9,22 +9,31 @@ Online
 Lt
 [Ff]ans
 Comics
-[Ss]e publica
-[Ss]e especifica
-Tropicos.org
-Julio César
+Comic[\-\s]Con
+[Ss]e (publica|especifica|practica)
+Tropicos\.org
+(Domingo|Julio) [A-ZÁÉÍÓÚÑ]
 Magazine
 Records
 Jet Propulsion Laboratory
 Sky
 The Guardian
 Missouri Botanical Garden
-([Dd]e|[Ss]u|[Ee]l) (regreso|retiro)
+([Dd]e|[Ss]u|[Ee]l) (regreso|retiro|desempeño)
 Victor Hugo
 Carlos Menem
 Los Angeles (Lakers|Times)
 Instituto Brasileiro de Geografia e Estatística
 Juegos Olímpicos de (Verano|Invierno)
+(North|South|Central|Latin) America
+Manchester (City|United)
+Saint[\-\s]Martin
+Lista de espécies Flora do Brasil
+Superman
+Sandwich
+\[\[uruguay\]\][ao]s?
+\[\[italia\]\]n[ao]s?
+\[\[brasil\]\]eñ[ao]s?
 
 [Éé]st?[oa]s
 [Éé]st?[ea]
