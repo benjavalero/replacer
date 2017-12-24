@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class UrlFinder implements ErrorExceptionFinder {
 
-    private static final String REGEX_URL = "https?://[\\w./\\-+?&%=:#;~]+";
+    private static final String REGEX_URL = "https?://[\\w./\\-+?&%=:#;~!]+";
 
     @Override
     public List<RegexMatch> findErrorExceptions(String text) {
