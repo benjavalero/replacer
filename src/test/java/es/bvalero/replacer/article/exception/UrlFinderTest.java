@@ -20,4 +20,16 @@ public class UrlFinderTest {
         Assert.assertEquals(url, matches.get(0).getOriginalText());
     }
 
+    @Test
+    public void testRegexDomain() {
+        String url = "google.com";
+        String text = "xxx " + url + " zzz";
+
+        UrlFinder urlFinder = new UrlFinder();
+        List<RegexMatch> matches = urlFinder.findErrorExceptions(text);
+
+        Assert.assertFalse(matches.isEmpty());
+        Assert.assertEquals(url, matches.get(0).getOriginalText());
+    }
+
 }
