@@ -49,14 +49,10 @@ public class ArticleService {
 
     ArticleData findRandomArticleWithPotentialErrors() {
 
-        // Find random article in Replacer database
+        // Find random article in Replacer database. It should never be null.
         Random randomGenerator = new Random();
         Integer startRow = randomGenerator.nextInt(articleRepository.findMaxId());
         Article randomArticle = articleRepository.findFirstByIdGreaterThanAndReviewDateNull(startRow);
-        if (randomArticle == null) {
-            LOGGER.warn("No random replacement could be found. Try again...");
-            return findRandomArticleWithPotentialErrors();
-        }
 
         // Get the content of the article from Wikipedia
         String articleContent;
@@ -64,6 +60,7 @@ public class ArticleService {
             articleContent = wikipediaService.getArticleContent(randomArticle.getTitle());
         } catch (Exception e) {
             LOGGER.warn("Content could not be retrieved for title: " + randomArticle.getTitle() + ". Try again...", e);
+            articleRepository.delete(randomArticle.getId());
             return findRandomArticleWithPotentialErrors();
         }
 
