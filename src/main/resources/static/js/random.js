@@ -21,7 +21,7 @@ function findRandomArticle() {
     }).done(function(response) {
         loadArticle(response);
     }).fail(function(response) {
-        alert('Error buscando artículos con errores ortográficos: ' + JSON.stringify(response));
+        alert('Error cargando artículo con errores ortográfico. Recargue la página.');
     });
 }
 

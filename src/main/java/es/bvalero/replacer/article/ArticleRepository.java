@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
-    @Query("SELECT MAX(id) FROM Article")
+    @Query("SELECT MAX(id) FROM Article WHERE reviewDate IS NULL")
     Integer findMaxId();
 
     Article findFirstByIdGreaterThanAndReviewDateNull(Integer minId);
