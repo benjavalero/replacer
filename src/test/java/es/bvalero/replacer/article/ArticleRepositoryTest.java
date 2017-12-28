@@ -41,7 +41,7 @@ public class ArticleRepositoryTest {
         Article newArticle = new Article(3, "");
         articleRepository.save(newArticle);
 
-        Assert.assertEquals(Integer.valueOf(3), articleRepository.findMaxId());
+        Assert.assertEquals(Integer.valueOf(3), articleRepository.findMaxIdNotReviewed());
     }
 
     @Test

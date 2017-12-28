@@ -30,10 +30,12 @@ function loadArticle(response) {
     pageId = response.id;
     pageTitle = response.title;
     $('#article-title').text(pageTitle);
-    $('#article-link').attr("href", "https://es.wikipedia.org/wiki/" + pageTitle);
-    $('#article-link').removeClass("disabled");
-    $('#button-save').removeClass("disabled");
-    $('#article-content').html(response.content);
+    if (response.content) {
+        $('#article-link').attr("href", "https://es.wikipedia.org/wiki/" + pageTitle);
+        $('#article-link').removeClass("disabled");
+        $('#button-save').removeClass("disabled");
+        $('#article-content').html(response.content);
+    }
     pageFixes = response.fixes;
 
     // Add event to the misspelling buttons
