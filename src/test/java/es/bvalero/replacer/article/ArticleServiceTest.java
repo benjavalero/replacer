@@ -44,7 +44,7 @@ public class ArticleServiceTest {
 
     @Test
     public void findRandomArticleWithPotentialErrors() throws Exception {
-        Mockito.when(articleRepository.findMaxId()).thenReturn(10);
+        Mockito.when(articleRepository.findMaxIdNotReviewed()).thenReturn(10);
 
         String articleTitle = "Un artículo aleatorio";
         Article article = new Article(1, articleTitle);

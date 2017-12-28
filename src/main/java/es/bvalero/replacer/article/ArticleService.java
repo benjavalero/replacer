@@ -51,7 +51,13 @@ public class ArticleService {
 
         // Find random article in Replacer database. It should never be null.
         Random randomGenerator = new Random();
-        Integer startRow = randomGenerator.nextInt(articleRepository.findMaxId());
+        Integer maxRowIdNotReviewed = articleRepository.findMaxIdNotReviewed();
+        if (maxRowIdNotReviewed == null) {
+            ArticleData articleData = new ArticleData();
+            articleData.setTitle("No hay artículos por revisar");
+            return articleData;
+        }
+        Integer startRow = randomGenerator.nextInt(maxRowIdNotReviewed);
         Article randomArticle = articleRepository.findFirstByIdGreaterThanAndReviewDateNull(startRow);
 
         // Get the content of the article from Wikipedia
