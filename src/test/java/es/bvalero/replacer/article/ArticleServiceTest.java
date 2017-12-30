@@ -60,7 +60,7 @@ public class ArticleServiceTest {
         replacement.setOriginalText("Hejemplo");
         replacement.setComment("Sin hache");
         replacement.setType(RegexMatchType.MISSPELLING);
-        replacement.setProposedFixes(Collections.singletonList("Hejemplo"));
+        replacement.setProposedFixes(Collections.singletonList("Ejemplo"));
 
         // No exceptions found
         Mockito.when(errorExceptionFinders.iterator()).thenReturn(new ArrayList<ErrorExceptionFinder>().iterator());
