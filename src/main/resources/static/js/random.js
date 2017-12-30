@@ -1,8 +1,11 @@
 var pageId;
 var pageTitle;
 var pageFixes;
+var word;
 
 $(document).ready(function() {
+    word = $.url('?word');
+
     // Enable the collapse effects
     $('.collapse').collapse();
 
@@ -16,7 +19,7 @@ $(document).ready(function() {
 function findRandomArticle() {
     // Call REST to get the article to check
     $.ajax({
-        url : 'article/random',
+        url : 'article/random' + (word ? '/word/' + word : ''),
         dataType : 'json'
     }).done(function(response) {
         loadArticle(response);

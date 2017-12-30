@@ -36,6 +36,12 @@ $(document).ready(function() {
             pageSize: 20,
             sort: [true, true],
             filters: [true, false],
+            lineFormat: function (id, data) {
+                var res = $('<tr></tr>') ;
+                res.append('<td><a href="random.html?word=' + data[0] + '" target="_blank">' + data[0] + '</a></td>') ;
+                res.append('<td>' + data[1] + '</td>');
+                return res ;
+            },
             pagingDivSelector: "#paging-list-misspellings"
         });
     }).fail(function(response) {

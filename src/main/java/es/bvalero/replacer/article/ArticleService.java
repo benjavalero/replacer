@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,6 +31,9 @@ public class ArticleService {
     private ArticleRepository articleRepository;
 
     @Autowired
+    private PotentialErrorRepository potentialErrorRepository;
+
+    @Autowired
     private IWikipediaFacade wikipediaService;
 
     @Autowired
@@ -48,17 +52,25 @@ public class ArticleService {
     private boolean trimParagraphs;
 
     ArticleData findRandomArticleWithPotentialErrors() {
+        return findRandomArticleWithPotentialErrors(null);
+    }
+
+    ArticleData findRandomArticleWithPotentialErrors(String word) {
 
         // Find random article in Replacer database. It should never be null.
         Random randomGenerator = new Random();
-        Integer maxRowIdNotReviewed = articleRepository.findMaxIdNotReviewed();
+        Integer maxRowIdNotReviewed = (word == null
+                ? articleRepository.findMaxIdNotReviewed()
+                : potentialErrorRepository.findMaxArticleIdByWordAndNotReviewed(word));
         if (maxRowIdNotReviewed == null) {
             ArticleData articleData = new ArticleData();
             articleData.setTitle("No hay artículos por revisar");
             return articleData;
         }
         Integer startRow = randomGenerator.nextInt(maxRowIdNotReviewed);
-        Article randomArticle = articleRepository.findFirstByIdGreaterThanAndReviewDateNull(startRow);
+        Article randomArticle = (word == null
+                ? articleRepository.findFirstByIdGreaterThanAndReviewDateNull(startRow)
+                : potentialErrorRepository.findByWordAndIdGreaterThanAndReviewDateNull(startRow, word, new PageRequest(0, 1)).get(0));
 
         // Get the content of the article from Wikipedia
         String articleContent;
@@ -67,13 +79,13 @@ public class ArticleService {
         } catch (Exception e) {
             LOGGER.warn("Content could not be retrieved for title: " + randomArticle.getTitle() + ". Try again...", e);
             articleRepository.delete(randomArticle.getId());
-            return findRandomArticleWithPotentialErrors();
+            return findRandomArticleWithPotentialErrors(word);
         }
 
         if (isRedirectionArticle(articleContent)) {
             LOGGER.warn("Article found is a redirection page: " + randomArticle.getTitle() + ". Try again...");
             articleRepository.delete(randomArticle.getId());
-            return findRandomArticleWithPotentialErrors();
+            return findRandomArticleWithPotentialErrors(word);
         }
 
         // Escape the content just in case it contains XML tags
