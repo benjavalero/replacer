@@ -33,7 +33,7 @@ public class PotentialError implements Serializable {
         this.text = text;
     }
 
-    Article getArticle() {
+    public Article getArticle() {
         return article;
     }
 

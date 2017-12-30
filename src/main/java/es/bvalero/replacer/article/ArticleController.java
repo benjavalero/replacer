@@ -5,6 +5,7 @@ import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,12 +29,21 @@ public class ArticleController {
     private ArticleRepository articleRepository;
 
     /**
-     * @return An random article whose text contains potential errors.
+     * @return A random article whose text contains potential errors.
      */
     @RequestMapping(value = "/article/random")
     public ArticleData random() {
         LOGGER.info("Finding random article with potential errors...");
         return articleService.findRandomArticleWithPotentialErrors();
+    }
+
+    /**
+     * @return A random article whose text contains a specific error.
+     */
+    @RequestMapping(value = "/article/random/word/{word}")
+    public ArticleData randomByWord(@PathVariable("word") String word) {
+        LOGGER.info("Finding random article containing error: " + word);
+        return articleService.findRandomArticleWithPotentialErrors(word);
     }
 
     @RequestMapping(value = "/article/save")
@@ -94,7 +104,6 @@ public class ArticleController {
             LOGGER.error("The article fixed content could not be uploaded for unknown reasons", e);
         }
 
-        // Return a new article to check
         return true;
     }
 
