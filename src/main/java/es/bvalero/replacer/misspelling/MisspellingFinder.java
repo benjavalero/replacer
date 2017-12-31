@@ -40,7 +40,7 @@ public class MisspellingFinder implements PotentialErrorFinder {
                         || misspellingManager.isUppercaseMisspelling(word))) {
                 ArticleReplacement replacement = new ArticleReplacement();
                 replacement.setPosition(textWord.getPosition());
-                replacement.setOriginalText(wordMisspelling.getWord());
+                replacement.setOriginalText(word);
                 replacement.setType(RegexMatchType.MISSPELLING);
                 replacement.setProposedFixes(findProposedFixes(word, wordMisspelling));
                 replacement.setComment(wordMisspelling.getComment());
