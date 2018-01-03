@@ -63,6 +63,7 @@ public class ArticleService {
                 ? articleRepository.findMaxIdNotReviewed()
                 : potentialErrorRepository.findMaxArticleIdByWordAndNotReviewed(word));
         if (maxRowIdNotReviewed == null) {
+            LOGGER.info("No unreviewed article found for word: " + word);
             ArticleData articleData = new ArticleData();
             articleData.setTitle("No hay artículos por revisar");
             return articleData;

@@ -21,7 +21,7 @@ public class PotentialError implements Serializable {
     @Enumerated(EnumType.STRING)
     private RegexMatchType type;
 
-    @Column(name = "text", nullable = false)
+    @Column(name = "text", nullable = false, length = 30)
     private String text;
 
     public PotentialError() {
