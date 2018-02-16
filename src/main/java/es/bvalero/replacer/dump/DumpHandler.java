@@ -21,7 +21,7 @@ public class DumpHandler extends DefaultHandler {
     static final TimeZone TIME_ZONE = TimeZone.getTimeZone("GMT");
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpHandler.class);
     private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_PATTERN);
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
 
     private final StringBuilder currentChars = new StringBuilder();
 
@@ -86,8 +86,8 @@ public class DumpHandler extends DefaultHandler {
     Date parseWikipediaDate(String dateStr) {
         Date wikiDate = null;
         try {
-            DATE_FORMAT.setTimeZone(TIME_ZONE);
-            wikiDate = DATE_FORMAT.parse(dateStr);
+            dateFormat.setTimeZone(TIME_ZONE);
+            wikiDate = dateFormat.parse(dateStr);
         } catch (ParseException e) {
             LOGGER.error("Error parsing Wikipedia date: {}", dateStr, e);
         }

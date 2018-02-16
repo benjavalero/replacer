@@ -11,7 +11,7 @@ public class DumpStatus {
 
     private static final double NUM_ARTICLES = 3557238; // Rough amount of articles to be checked
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.00");
-    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
     private boolean running;
     private Date startDate;
@@ -65,7 +65,7 @@ public class DumpStatus {
                     .append("<ul>")
                     .append("<li>")
                     .append("Inicio: ")
-                    .append(DATE_FORMAT.format(getStartDate()))
+                    .append(dateFormat.format(getStartDate()))
                     .append("</li>")
                     .append("<li>")
                     .append("Núm. artículos procesados: ")
@@ -75,7 +75,7 @@ public class DumpStatus {
                     .append(" %)</li>")
                     .append("<li>")
                     .append("Finalización estimada: ")
-                    .append(DATE_FORMAT.format(new Date(estimatedFinishTime)))
+                    .append(dateFormat.format(new Date(estimatedFinishTime)))
                     .append("</li>")
                     .append("</ul>");
         } else {
@@ -84,7 +84,7 @@ public class DumpStatus {
                 message.append("<ul>")
                         .append("<li>")
                         .append("Última ejecución: ")
-                        .append(DATE_FORMAT.format(getEndDate()))
+                        .append(dateFormat.format(getEndDate()))
                         .append("</li>")
                         .append("<li>")
                         .append("Núm. artículos procesados: ")

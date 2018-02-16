@@ -23,7 +23,7 @@ class DumpFinder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpFinder.class);
     private static final String DATE_PATTERN = "yyyyMMdd";
-    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_PATTERN);
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
 
     /**
      * @return The path of the latest dump folder, e. g. /public/dumps/public/eswiki/20170820
@@ -65,7 +65,7 @@ class DumpFinder {
         // Date
         String dumpDateStr = latestDumpFolder.getName();
         try {
-            dumpFile.setDate(DATE_FORMAT.parse(dumpDateStr));
+            dumpFile.setDate(dateFormat.parse(dumpDateStr));
         } catch (ParseException e) {
             LOGGER.error("Error parsing dump folder date: {}", dumpDateStr, e);
             throw new FileNotFoundException("Error parsing dump folder date: " + dumpDateStr);
