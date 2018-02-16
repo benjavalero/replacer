@@ -59,26 +59,26 @@ class MisspellingManager {
 
     @NotNull
     private List<Misspelling> findWikipediaMisspellings() {
-        List<Misspelling> misspellingList = new ArrayList<>();
+        List<Misspelling> misspellings = new ArrayList<>();
 
         try {
             LOGGER.info("Start loading misspelling list from Wikipedia...");
 
             String misspellingListText = wikipediaFacade.getArticleContent(
                     IWikipediaFacade.MISSPELLING_LIST_ARTICLE);
-            misspellingList.addAll(parseMisspellingListText(misspellingListText));
+            misspellings.addAll(parseMisspellingListText(misspellingListText));
 
-            LOGGER.info("End loading misspelling list from Wikipedia: {} items", misspellingList.size());
+            LOGGER.info("End loading misspelling list from Wikipedia: {} items", misspellings.size());
         } catch (Exception e) {
             LOGGER.error("Error loading misspellings list from Wikipedia", e);
         }
 
-        return misspellingList;
+        return misspellings;
     }
 
     @NotNull
     List<Misspelling> parseMisspellingListText(@NotNull String misspellingListText) {
-        List<Misspelling> misspellingList = new ArrayList<>();
+        List<Misspelling> misspellings = new ArrayList<>();
 
         try (InputStream stream = new ByteArrayInputStream(misspellingListText.getBytes(StandardCharsets.UTF_8));
              BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
@@ -91,7 +91,7 @@ class MisspellingManager {
                 if (misspelling != null) {
                     String misspellingWord = misspelling.getWord();
                     if (usedWords.add(misspellingWord)) {
-                        misspellingList.add(misspelling);
+                        misspellings.add(misspelling);
                     } else {
                         LOGGER.warn("Duplicated misspelling term: {}", misspellingWord);
                     }
@@ -101,7 +101,7 @@ class MisspellingManager {
             LOGGER.error("Error parsing misspelling list", e);
         }
 
-        return misspellingList;
+        return misspellings;
     }
 
     @Nullable
