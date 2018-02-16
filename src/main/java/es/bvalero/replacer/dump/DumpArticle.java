@@ -2,6 +2,9 @@ package es.bvalero.replacer.dump;
 
 import java.util.Date;
 
+/**
+ * Domain class corresponding to a Wikipedia article in the XML dump.
+ */
 class DumpArticle {
 
     private Integer id;
@@ -9,14 +12,6 @@ class DumpArticle {
     private Integer namespace;
     private Date timestamp;
     private String content;
-
-    public DumpArticle(Integer id, String title, Integer namespace, Date timestamp, String content) {
-        this.id = id;
-        this.title = title;
-        this.namespace = namespace;
-        this.timestamp = timestamp;
-        this.content = content;
-    }
 
     Integer getId() {
         return id;

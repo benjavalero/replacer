@@ -30,24 +30,39 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testRunWithBz2Dump() throws FileNotFoundException {
-        Assert.assertNull(dumpManager.getStartDate());
-        Assert.assertNull(dumpManager.getEndDate());
+    public void testRunIndexationWithBz2Dump() throws FileNotFoundException {
+        Assert.assertNull(dumpManager.getStatus().getStartDate());
+        Assert.assertNull(dumpManager.getStatus().getEndDate());
 
+        int numArticles = 13;
         String bz2Path = getClass().getResource("/pages-articles.xml.bz2").getFile();
-        Mockito.when(dumpFinder.findLatestDumpFile(Mockito.any(File.class)))
-                .thenReturn(new File(bz2Path));
-
+        DumpFile dumpFile = new DumpFile();
+        dumpFile.setFile(new File(bz2Path));
+        Mockito.when(dumpFinder.findLatestDumpFile(Mockito.any(File.class))).thenReturn(dumpFile);
+        Mockito.when(dumpHandler.getNumProcessedItems()).thenReturn(numArticles);
         dumpManager.setDumpFolderPath("");
+
         dumpManager.runIndexation();
-        Mockito.verify(dumpFinder, Mockito.times(1))
-                .findLatestDumpDate(Mockito.any(File.class));
+
+        Mockito.verify(dumpFinder, Mockito.times(1)).findLatestDumpFile(Mockito.any(File.class));
+        Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
+
+        Assert.assertNotNull(dumpManager.getStatus().getStartDate());
+        Assert.assertNotNull(dumpManager.getStatus().getEndDate());
+        Assert.assertFalse(dumpManager.getStatus().getStartDate().after(dumpManager.getStatus().getEndDate()));
+        Assert.assertEquals(numArticles, dumpManager.getStatus().getNumProcessedItems());
+    }
+
+    @Test
+    public void testRunIndexationWithNonExistingDump() throws FileNotFoundException {
+        Mockito.when(dumpFinder.findLatestDumpFile(Mockito.any(File.class)))
+                .thenThrow(new FileNotFoundException());
+        dumpManager.setDumpFolderPath("");
+
+        dumpManager.runIndexation();
+
         Mockito.verify(dumpFinder, Mockito.times(1))
                 .findLatestDumpFile(Mockito.any(File.class));
-
-        Assert.assertNotNull(dumpManager.getStartDate());
-        Assert.assertNotNull(dumpManager.getEndDate());
-        Assert.assertFalse(dumpManager.getStartDate().after(dumpManager.getEndDate()));
     }
 
     @Test
@@ -56,15 +71,30 @@ public class DumpManagerTest {
         GregorianCalendar yesterday = new GregorianCalendar();
         yesterday.add(GregorianCalendar.DATE, -1);
 
-        dumpManager.setEndDate(today.getTime());
-        Mockito.when(dumpFinder.findLatestDumpDate(Mockito.any(File.class)))
-                .thenReturn(yesterday.getTime());
+        DumpFile dumpFile = new DumpFile();
+        dumpFile.setDate(yesterday.getTime());
+        Mockito.when(dumpFinder.findLatestDumpFile(Mockito.any(File.class))).thenReturn(dumpFile);
 
+        dumpManager.getStatus().setEndDate(today.getTime());
         dumpManager.setDumpFolderPath("");
+
         dumpManager.runIndexation();
+
         Mockito.verify(dumpFinder, Mockito.times(1))
-                .findLatestDumpDate(Mockito.any(File.class));
-        Mockito.verify(dumpFinder, Mockito.times(0))
+                .findLatestDumpFile(Mockito.any(File.class));
+    }
+
+    @Test
+    public void testRunIndexationWithParseException() throws FileNotFoundException {
+        String nonValidFilePath = getClass().getResource("/false-positives.txt").getFile();
+        DumpFile dumpFile = new DumpFile();
+        dumpFile.setFile(new File(nonValidFilePath));
+        Mockito.when(dumpFinder.findLatestDumpFile(Mockito.any(File.class))).thenReturn(dumpFile);
+        dumpManager.setDumpFolderPath(" ");
+
+        dumpManager.runIndexation();
+
+        Mockito.verify(dumpFinder, Mockito.times(1))
                 .findLatestDumpFile(Mockito.any(File.class));
     }
 
