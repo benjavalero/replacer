@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MisspellingManagerTest {
 
@@ -26,8 +27,15 @@ public class MisspellingManagerTest {
     }
 
     @Test
-    public void testParseMisspellingList() {
-        String content = "Texto\n" +
+    public void testFindWikipediaMisspellingsWithErrors() throws Exception {
+        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenThrow(Exception.class);
+
+        misspellingManager.updateMisspellings();
+    }
+
+    @Test
+    public void testParseMisspellingListText() {
+        String misspellingListText = "Texto\n" +
                 "\n" +
                 "A||B\n" +
                 " C|cs|D\n" +
@@ -37,7 +45,7 @@ public class MisspellingManagerTest {
                 " k||k (letra), que, qué, kg (kilogramo)\n" +
                 " I||J\n"; // Duplicated
 
-        List<Misspelling> misspellingList = misspellingManager.parseMisspellingList(content);
+        List<Misspelling> misspellingList = misspellingManager.parseMisspellingListText(misspellingListText);
         Assert.assertEquals(4, misspellingList.size());
 
         Assert.assertEquals("C", misspellingList.get(0).getWord());
@@ -63,10 +71,14 @@ public class MisspellingManagerTest {
         String wikiText = " conprar||comprar\n madrid|cs|Madrid\n álvaro|cs|Álvaro";
         Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenReturn(wikiText);
 
-        Assert.assertEquals("conprar", misspellingManager.findMisspellingByWord("conprar").getWord());
-        Assert.assertEquals("conprar", misspellingManager.findMisspellingByWord("Conprar").getWord());
-        Assert.assertEquals("madrid", misspellingManager.findMisspellingByWord("madrid").getWord());
-        Assert.assertEquals("álvaro", misspellingManager.findMisspellingByWord("álvaro").getWord());
+        Assert.assertEquals("conprar",
+                Objects.requireNonNull(misspellingManager.findMisspellingByWord("conprar")).getWord());
+        Assert.assertEquals("conprar",
+                Objects.requireNonNull(misspellingManager.findMisspellingByWord("Conprar")).getWord());
+        Assert.assertEquals("madrid",
+                Objects.requireNonNull(misspellingManager.findMisspellingByWord("madrid")).getWord());
+        Assert.assertEquals("álvaro",
+                Objects.requireNonNull(misspellingManager.findMisspellingByWord("álvaro")).getWord());
         Assert.assertNull(misspellingManager.findMisspellingByWord("Madrid"));
         Assert.assertNull(misspellingManager.findMisspellingByWord("Álvaro"));
     }

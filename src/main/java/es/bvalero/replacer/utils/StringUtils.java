@@ -1,6 +1,9 @@
 package es.bvalero.replacer.utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Locale;
 
 public class StringUtils {
 
@@ -47,6 +50,13 @@ public class StringUtils {
                     "\nNew replacement: " + replacement;
             throw new IllegalArgumentException(message, e);
         }
+    }
+
+    /**
+     * @return If all the characters in the given word are uppercase. Non-alphabetic characters are ignored.
+     */
+    public static boolean isAllUppercase(@NotNull String word) {
+        return word.toUpperCase(Locale.forLanguageTag("es")).equals(word);
     }
 
     /**

@@ -1,22 +1,76 @@
 package es.bvalero.replacer.misspelling;
 
+import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.utils.RegexMatch;
+import es.bvalero.replacer.utils.RegexMatchType;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Collections;
 import java.util.List;
 
 public class MisspellingFinderTest {
 
+    @Mock
+    private MisspellingManager misspellingManager;
+
+    @InjectMocks
+    private MisspellingFinder misspellingFinder;
+
+    @Before
+    public void setUp() {
+        misspellingFinder = new MisspellingFinder();
+        MockitoAnnotations.initMocks(this);
+    }
+
     @Test
-    public void testFindWords() {
-        String text = "#hola-adiós. <!-- Comentario --> [[España, Francia]]. Hola, adiós.";
+    public void testFindPotentialErrors() {
+        String articleContent = "UN2 vonito Exemplo";
+
+        Misspelling misspelling1 = new Misspelling();
+        Mockito.when(misspellingManager.findMisspellingByWord("UN2")).thenReturn(misspelling1);
+
+        Misspelling misspelling2 = new Misspelling();
+        misspelling2.setSuggestions(Collections.singletonList("bonito"));
+        Mockito.when(misspellingManager.findMisspellingByWord("vonito")).thenReturn(misspelling2);
+
+        Misspelling misspelling3 = new Misspelling();
+        misspelling3.setSuggestions(Collections.singletonList("ejemplo"));
+        Mockito.when(misspellingManager.findMisspellingByWord("Exemplo")).thenReturn(misspelling3);
+
+        List<ArticleReplacement> result = misspellingFinder.findPotentialErrors(articleContent);
+
+        Assert.assertNotNull(result);
+        Assert.assertEquals(2, result.size());
+
+        // "UN" will be ignored because it is all in uppercase and has a known misspelling
+        // Results are inverse order
+
+        ArticleReplacement result1 = result.get(1);
+        Assert.assertEquals("vonito", result1.getOriginalText());
+        Assert.assertEquals(4, result1.getPosition());
+        Assert.assertEquals(RegexMatchType.MISSPELLING, result1.getType());
+        Assert.assertEquals("bonito", result1.getProposedFixes().get(0));
+
+        ArticleReplacement result2 = result.get(0);
+        Assert.assertEquals("Exemplo", result2.getOriginalText());
+        Assert.assertEquals(11, result2.getPosition());
+        Assert.assertEquals("Ejemplo", result2.getProposedFixes().get(0));
+    }
+
+    @Test
+    public void testWordRegEx() {
+        String text = "#hola-adiós. <!-- Comentario --> [[España, Francia]]. Hola, adiós :Españísima|";
 
         MisspellingFinder misspellingFinder = new MisspellingFinder();
         List<RegexMatch> words = misspellingFinder.findTextWords(text);
 
-        Assert.assertEquals(7, words.size());
+        Assert.assertEquals(8, words.size());
         Assert.assertTrue(words.contains(new RegexMatch(1, "hola")));
         Assert.assertTrue(words.contains(new RegexMatch(6, "adiós")));
         Assert.assertTrue(words.contains(new RegexMatch(60, "adiós")));
@@ -24,30 +78,19 @@ public class MisspellingFinderTest {
         Assert.assertTrue(words.contains(new RegexMatch(35, "España")));
         Assert.assertTrue(words.contains(new RegexMatch(43, "Francia")));
         Assert.assertTrue(words.contains(new RegexMatch(54, "Hola")));
+        Assert.assertTrue(words.contains(new RegexMatch(67, "Españísima")));
     }
 
     @Test
-    public void testRegexWord() {
-        String text = ":Españísima|";
-
-        MisspellingFinder misspellingFinder = new MisspellingFinder();
-        List<RegexMatch> words = misspellingFinder.findTextWords(text);
-
-        Assert.assertEquals(1, words.size());
-        Assert.assertTrue(words.contains(new RegexMatch(1, "Españísima")));
-    }
-
-    @Test
-    public void testFindProposedFixes() {
-        MisspellingFinder misspellingFinder = new MisspellingFinder();
-
-        Misspelling misspelling1 = new Misspelling("españa", true,
-                "Nombre propio", Collections.singletonList("España"));
-        Assert.assertTrue(misspellingFinder.findProposedFixes("españa", misspelling1).contains("España"));
-
-        Misspelling misspelling2 = new Misspelling("adios", false,
-                "Falta la tilde", Collections.singletonList("adiós"));
-        Assert.assertTrue(misspellingFinder.findProposedFixes("Adios", misspelling2).contains("Adiós"));
+    public void testGetReplacementFromSuggestion() {
+        Assert.assertEquals("España", misspellingFinder
+                .getReplacementFromSuggestion("españa", "España", true));
+        Assert.assertEquals("domingo", misspellingFinder
+                .getReplacementFromSuggestion("Domingo", "domingo", true));
+        Assert.assertEquals("había", misspellingFinder
+                .getReplacementFromSuggestion("habia", "había", false));
+        Assert.assertEquals("Había", misspellingFinder
+                .getReplacementFromSuggestion("Habia", "había", false));
     }
 
 }

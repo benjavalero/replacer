@@ -1,13 +1,13 @@
 package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.RegexMatchType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleReplacement extends RegexMatch {
 
-    private List<String> proposedFixes;
+    private List<String> proposedFixes = new ArrayList<>();
     private String comment;
     private String fixedText;
     private boolean fixed = false;
