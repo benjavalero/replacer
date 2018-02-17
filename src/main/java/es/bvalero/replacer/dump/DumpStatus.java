@@ -1,7 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -10,8 +9,6 @@ import java.util.Date;
 public class DumpStatus {
 
     private static final double NUM_ARTICLES = 3557238; // Rough amount of articles to be checked
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.00");
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
     private boolean running;
     private Date startDate;
@@ -27,7 +24,7 @@ public class DumpStatus {
         this.running = running;
     }
 
-    Date getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
@@ -35,7 +32,7 @@ public class DumpStatus {
         this.startDate = startDate;
     }
 
-    Date getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
@@ -43,7 +40,7 @@ public class DumpStatus {
         this.endDate = endDate;
     }
 
-    int getNumProcessedItems() {
+    public int getNumProcessedItems() {
         return numProcessedItems;
     }
 
@@ -51,50 +48,21 @@ public class DumpStatus {
         this.numProcessedItems = numProcessedItems;
     }
 
-    /**
-     * @return A message about the indexation status to be displayed in the web client.
-     */
-    public String getMessage() {
-        // TODO Cover with unit tests. Take into account the case when it's not running but the dump is old. Build the message in the client.
-        StringBuilder message = new StringBuilder();
-        if (isRunning()) {
-            double percentProgress = getNumProcessedItems() / NUM_ARTICLES * 100;
-            double averageTimePerItem = (new Date().getTime() - getStartDate().getTime()) / (double) getNumProcessedItems();
-            long estimatedFinishTime = getStartDate().getTime() + (long) (averageTimePerItem * NUM_ARTICLES);
-            message.append("La indexación se está ejecutando.")
-                    .append("<ul>")
-                    .append("<li>")
-                    .append("Inicio: ")
-                    .append(dateFormat.format(getStartDate()))
-                    .append("</li>")
-                    .append("<li>")
-                    .append("Núm. artículos procesados: ")
-                    .append(getNumProcessedItems())
-                    .append(" (")
-                    .append(DECIMAL_FORMAT.format(percentProgress))
-                    .append(" %)</li>")
-                    .append("<li>")
-                    .append("Finalización estimada: ")
-                    .append(dateFormat.format(new Date(estimatedFinishTime)))
-                    .append("</li>")
-                    .append("</ul>");
-        } else {
-            message.append("La indexación no se está ejecutando.");
-            if (getEndDate() != null) {
-                message.append("<ul>")
-                        .append("<li>")
-                        .append("Última ejecución: ")
-                        .append(dateFormat.format(getEndDate()))
-                        .append("</li>")
-                        .append("<li>")
-                        .append("Núm. artículos procesados: ")
-                        .append(getNumProcessedItems())
-                        .append("</li>")
-                        .append("</ul>");
-            }
-        }
+    @SuppressWarnings("unused")
+    public BigDecimal getPercentProgress() {
+        double percentProgress = getNumProcessedItems() / NUM_ARTICLES * 100;
+        // Format with two decimals
+        return BigDecimal.valueOf(percentProgress).setScale(2, BigDecimal.ROUND_HALF_UP);
+    }
 
-        return message.toString();
+    @SuppressWarnings("unused")
+    public Date getEstimatedFinishTime() {
+        Date estimatedFinishTime = null;
+        if (isRunning()) {
+            double averageTimePerItem = (new Date().getTime() - getStartDate().getTime()) / (double) getNumProcessedItems();
+            estimatedFinishTime = new Date(getStartDate().getTime() + (long) (averageTimePerItem * NUM_ARTICLES));
+        }
+        return estimatedFinishTime;
     }
 
 }
