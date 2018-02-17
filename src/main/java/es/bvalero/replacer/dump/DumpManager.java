@@ -63,10 +63,8 @@ class DumpManager {
     @Scheduled(fixedDelay = 7 * 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
     @Async
     void runIndexation() {
-        // TODO Externalize frequency to re-index the dump
         // Start the task
         if (getStatus().isRunning()) {
-            // This should not happen but we check it just in case
             return;
         } else {
             getStatus().setRunning(true);

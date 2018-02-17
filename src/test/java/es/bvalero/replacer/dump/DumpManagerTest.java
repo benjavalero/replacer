@@ -30,6 +30,15 @@ public class DumpManagerTest {
     }
 
     @Test
+    public void testRunIndexationAlreadyRunning() throws FileNotFoundException {
+        dumpManager.getStatus().setRunning(true);
+
+        dumpManager.runIndexation();
+
+        Mockito.verify(dumpFinder, Mockito.times(0)).findLatestDumpFile(Mockito.any(File.class));
+    }
+
+    @Test
     public void testRunIndexationWithBz2Dump() throws FileNotFoundException {
         Assert.assertNull(dumpManager.getStatus().getStartDate());
         Assert.assertNull(dumpManager.getStatus().getEndDate());

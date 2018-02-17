@@ -20,7 +20,6 @@ class DumpProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpProcessor.class);
 
-    // TODO Move to an enumerate in Wikipedia package
     private static final Integer NAMESPACE_ARTICLE = 0;
     private static final Integer NAMESPACE_ANNEX = 104;
 
@@ -41,19 +40,13 @@ class DumpProcessor {
         LOGGER.debug("Indexing article: {}...", dumpArticle.getTitle());
 
         // Check if it is really needed to process the article
-
-        if (!NAMESPACE_ARTICLE.equals(dumpArticle.getNamespace()) && !NAMESPACE_ANNEX.equals(dumpArticle.getNamespace())) {
-            LOGGER.debug("Only articles and annexes are processed. Skipping namespace: {}", dumpArticle.getNamespace());
-            return;
-        } else if (articleService.isRedirectionArticle(dumpArticle.getContent())) {
-            LOGGER.debug("Redirection article. Skipping.");
+        if (!isArticleContentProcessable(dumpArticle)) {
             return;
         }
 
         article = articleRepository.findOne(dumpArticle.getId());
 
         if (article != null) {
-            // TODO Add a flag to re-process again old articles. We avoid processing old articles but we miss new checks.
             if (article.getReviewDate() != null && !dumpArticle.getTimestamp().after(article.getReviewDate())) {
                 LOGGER.debug("Article reviewed after dump timestamp. Skipping.");
                 return;
@@ -79,15 +72,30 @@ class DumpProcessor {
             }
 
             article.setAdditionDate(new Timestamp(new Date().getTime()));
-
-            for (RegexMatch regexMatch : regexMatches) {
-                if (!RegexMatchType.EXCEPTION.equals(regexMatch.getType())) {
-                    article.getPotentialErrors().add(
-                            new PotentialError(article, regexMatch.getType(), regexMatch.getOriginalText()));
-                }
-            }
+            addPotentialErrorsToArticle(article, regexMatches);
 
             articleRepository.save(article);
+        }
+    }
+
+    private boolean isArticleContentProcessable(DumpArticle dumpArticle) {
+        if (!NAMESPACE_ARTICLE.equals(dumpArticle.getNamespace()) && !NAMESPACE_ANNEX.equals(dumpArticle.getNamespace())) {
+            LOGGER.debug("Only articles and annexes are processed. Skipping namespace: {}", dumpArticle.getNamespace());
+            return false;
+        } else if (articleService.isRedirectionArticle(dumpArticle.getContent())) {
+            LOGGER.debug("Redirection article. Skipping.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void addPotentialErrorsToArticle(Article article, List<RegexMatch> regexMatches) {
+        for (RegexMatch regexMatch : regexMatches) {
+            if (!RegexMatchType.EXCEPTION.equals(regexMatch.getType())) {
+                article.getPotentialErrors().add(
+                        new PotentialError(article, regexMatch.getType(), regexMatch.getOriginalText()));
+            }
         }
     }
 

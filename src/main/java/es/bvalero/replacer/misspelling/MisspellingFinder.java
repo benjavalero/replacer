@@ -71,7 +71,8 @@ public class MisspellingFinder implements PotentialErrorFinder {
         return RegExUtils.findMatches(text, REGEX_WORD);
     }
 
-    String getReplacementFromSuggestion(String originalWord, String suggestion, boolean isCaseSensitive) {
+    @NotNull
+    String getReplacementFromSuggestion(@NotNull String originalWord, @NotNull String suggestion, boolean isCaseSensitive) {
         String replacement = suggestion;
 
         if (StringUtils.startsWithUpperCase(originalWord) && !isCaseSensitive) {

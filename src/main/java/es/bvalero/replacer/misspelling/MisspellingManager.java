@@ -25,8 +25,6 @@ class MisspellingManager {
     @Autowired
     private IWikipediaFacade wikipediaFacade;
 
-    private List<Misspelling> misspellingList = new ArrayList<>();
-
     // Derived from the misspelling list to access faster by word
     private Map<String, Misspelling> misspellingMap = new HashMap<>();
 
@@ -43,15 +41,11 @@ class MisspellingManager {
     @SuppressWarnings("WeakerAccess")
     @Scheduled(fixedDelay = 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
     void updateMisspellings() {
-        // TODO Externalize frequency to update the misspellings
         List<Misspelling> newMisspellingList = findWikipediaMisspellings();
         if (!newMisspellingList.isEmpty()) {
-            misspellingList.clear();
-            misspellingList.addAll(newMisspellingList);
-
             // Build a map to quick access the misspellings by word
             misspellingMap.clear();
-            for (Misspelling misspelling : misspellingList) {
+            for (Misspelling misspelling : newMisspellingList) {
                 misspellingMap.put(misspelling.getWord(), misspelling);
             }
         }
@@ -138,7 +132,6 @@ class MisspellingManager {
             String word = suggestion.trim();
 
             // Don't suggest the misspelling main word
-            // TODO This could be removed when implementing several suggestions
             if (StringUtils.isNotBlank(word) && !word.equals(mainWord)) {
                 suggestions.add(word);
             }
