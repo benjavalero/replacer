@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.List;
 import java.util.Objects;
 
 public class MisspellingManagerTest {
@@ -28,13 +27,13 @@ public class MisspellingManagerTest {
 
     @Test
     public void testFindWikipediaMisspellingsWithErrors() throws Exception {
-        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenThrow(Exception.class);
+        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenThrow(new Exception());
 
         misspellingManager.updateMisspellings();
     }
 
     @Test
-    public void testParseMisspellingListText() {
+    public void testUpdateMisspellings() throws Exception {
         String misspellingListText = "Texto\n" +
                 "\n" +
                 "A||B\n" +
@@ -43,27 +42,59 @@ public class MisspellingManagerTest {
                 " G|H\n" +
                 " I||J\n" +
                 " k||k (letra), que, qué, kg (kilogramo)\n" +
-                " I||J\n"; // Duplicated
+                " I||J\n" + // Duplicated
+                " renuncio||renunció (3.ª persona), renuncio (1.ª persona)\n" +
+                " remake||(nueva) versión o adaptación\n" +
+                " desempeño||desempeño (sustantivo o verbo, 1.ª persona), desempeñó (verbo, 3.ª persona)";
 
-        List<Misspelling> misspellingList = misspellingManager.parseMisspellingListText(misspellingListText);
-        Assert.assertEquals(4, misspellingList.size());
+        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenReturn(misspellingListText);
 
-        Assert.assertEquals("C", misspellingList.get(0).getWord());
-        Assert.assertTrue(misspellingList.get(0).isCaseSensitive());
-        Assert.assertEquals("D", misspellingList.get(0).getComment());
+        misspellingManager.updateMisspellings();
 
-        Assert.assertEquals("E", misspellingList.get(1).getWord());
-        Assert.assertTrue(misspellingList.get(1).isCaseSensitive());
-        Assert.assertEquals("F", misspellingList.get(1).getComment());
+        Assert.assertNull(misspellingManager.findMisspellingByWord("A"));
 
-        Assert.assertEquals("i", misspellingList.get(2).getWord());
-        Assert.assertFalse(misspellingList.get(2).isCaseSensitive());
-        Assert.assertEquals("J", misspellingList.get(2).getComment());
+        Misspelling misspellingC = misspellingManager.findMisspellingByWord("C");
+        Assert.assertNotNull(misspellingC);
+        Assert.assertEquals("C", misspellingC.getWord());
+        Assert.assertTrue(misspellingC.isCaseSensitive());
+        Assert.assertEquals("D", misspellingC.getComment());
 
-        Assert.assertEquals("k", misspellingList.get(3).getWord());
-        Assert.assertEquals(3, misspellingList.get(3).getSuggestions().size());
-        Assert.assertTrue(misspellingList.get(3).getSuggestions().contains("qué"));
-        Assert.assertFalse(misspellingList.get(3).getSuggestions().contains("k"));
+        Misspelling misspellingE = misspellingManager.findMisspellingByWord("E");
+        Assert.assertNotNull(misspellingE);
+        Assert.assertEquals("E", misspellingE.getWord());
+        Assert.assertTrue(misspellingE.isCaseSensitive());
+        Assert.assertEquals("F", misspellingE.getComment());
+
+        Assert.assertNull(misspellingManager.findMisspellingByWord("G"));
+
+        Misspelling misspellingI = misspellingManager.findMisspellingByWord("I");
+        Assert.assertNotNull(misspellingI);
+        Assert.assertEquals("i", misspellingI.getWord());
+        Assert.assertFalse(misspellingI.isCaseSensitive());
+        Assert.assertEquals("J", misspellingI.getComment());
+
+        Misspelling misspellingK = misspellingManager.findMisspellingByWord("K");
+        Assert.assertNotNull(misspellingK);
+        Assert.assertEquals("k", misspellingK.getWord());
+        Assert.assertEquals(3, misspellingK.getSuggestions().size());
+        Assert.assertTrue(misspellingK.getSuggestions().contains("qué"));
+        Assert.assertFalse(misspellingK.getSuggestions().contains("k"));
+
+        Misspelling misspellingRenuncio = misspellingManager.findMisspellingByWord("renuncio");
+        Assert.assertNotNull(misspellingRenuncio);
+        Assert.assertEquals(1, misspellingRenuncio.getSuggestions().size());
+        Assert.assertEquals("renunció", misspellingRenuncio.getSuggestions().get(0));
+
+        Misspelling misspellingRemake = misspellingManager.findMisspellingByWord("remake");
+        Assert.assertNotNull(misspellingRemake);
+        Assert.assertFalse(misspellingRemake.getSuggestions().isEmpty());
+        Assert.assertEquals("versión o adaptación", misspellingRemake.getSuggestions().get(0));
+
+        // Test with commas between brackets
+        Misspelling misspellingDesempeno = misspellingManager.findMisspellingByWord("desempeño");
+        Assert.assertNotNull(misspellingDesempeno);
+        Assert.assertEquals(1, misspellingDesempeno.getSuggestions().size());
+        Assert.assertEquals("desempeñó", misspellingDesempeno.getSuggestions().get(0));
     }
 
     @Test
@@ -81,27 +112,6 @@ public class MisspellingManagerTest {
                 Objects.requireNonNull(misspellingManager.findMisspellingByWord("álvaro")).getWord());
         Assert.assertNull(misspellingManager.findMisspellingByWord("Madrid"));
         Assert.assertNull(misspellingManager.findMisspellingByWord("Álvaro"));
-    }
-
-    @Test
-    public void testParseSuggestions() {
-        String mainWord = "renuncio";
-        String comment = "renunció (3.ª persona), renuncio (1.ª persona)";
-        Assert.assertEquals(1, misspellingManager.parseSuggestions(comment, mainWord).size());
-        Assert.assertEquals("renunció", misspellingManager.parseSuggestions(comment, mainWord).get(0));
-
-        mainWord = "remake";
-        comment = "(nueva) versión o adaptación";
-        Assert.assertFalse(misspellingManager.parseSuggestions(comment, mainWord).isEmpty());
-        Assert.assertEquals("versión o adaptación", misspellingManager.parseSuggestions(comment, mainWord).get(0));
-    }
-
-    @Test
-    public void testParseSuggestionsWithCommasBetweenBrackets() {
-        String mainWord = "desempeño";
-        String comment = "desempeño (sustantivo o verbo, 1.ª persona), desempeñó (verbo, 3.ª persona)";
-        Assert.assertEquals(1, misspellingManager.parseSuggestions(comment, mainWord).size());
-        Assert.assertEquals("desempeñó", misspellingManager.parseSuggestions(comment, mainWord).get(0));
     }
 
 }

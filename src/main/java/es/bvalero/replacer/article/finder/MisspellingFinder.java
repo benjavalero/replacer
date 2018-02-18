@@ -1,7 +1,9 @@
-package es.bvalero.replacer.misspelling;
+package es.bvalero.replacer.article.finder;
 
 import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.article.PotentialErrorFinder;
+import es.bvalero.replacer.misspelling.Misspelling;
+import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import es.bvalero.replacer.utils.RegexMatchType;

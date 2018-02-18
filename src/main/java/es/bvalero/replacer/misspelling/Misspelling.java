@@ -1,11 +1,14 @@
 package es.bvalero.replacer.misspelling;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Domain class corresponding to the lines in the Wikipedia article containing potential misspellings.
  */
-class Misspelling {
+public class Misspelling {
 
     private String word;
     private boolean caseSensitive;
@@ -14,36 +17,45 @@ class Misspelling {
     // Derived from the comment. In order not to calculate them every time.
     private List<String> suggestions;
 
-    String getWord() {
-        return word;
-    }
-
-    void setWord(String word) {
+    public Misspelling(String word, boolean caseSensitive, String comment) {
         this.word = word;
-    }
-
-    boolean isCaseSensitive() {
-        return caseSensitive;
-    }
-
-    void setCaseSensitive(boolean caseSensitive) {
         this.caseSensitive = caseSensitive;
-    }
-
-    String getComment() {
-        return comment;
-    }
-
-    void setComment(String comment) {
         this.comment = comment;
     }
 
-    List<String> getSuggestions() {
-        return suggestions;
+    public String getWord() {
+        return word;
     }
 
-    void setSuggestions(List<String> suggestions) {
-        this.suggestions = suggestions;
+    public boolean isCaseSensitive() {
+        return caseSensitive;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public List<String> getSuggestions() {
+        if (this.suggestions == null) {
+            this.suggestions = parseSuggestionsFromComment();
+        }
+        return this.suggestions;
+    }
+
+    private List<String> parseSuggestionsFromComment() {
+        List<String> commentSuggestions = new ArrayList<>();
+
+        String suggestionWithoutBrackets = getComment().replaceAll("\\(.+?\\)", "");
+        for (String suggestion : suggestionWithoutBrackets.split(",")) {
+            String suggestionWord = suggestion.trim();
+
+            // Don't suggest the misspelling main word
+            if (StringUtils.isNotBlank(suggestionWord) && !suggestionWord.equals(getWord())) {
+                commentSuggestions.add(suggestionWord);
+            }
+        }
+
+        return commentSuggestions;
     }
 
 }

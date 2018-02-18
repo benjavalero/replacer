@@ -1,7 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -18,7 +17,7 @@ import java.util.*;
  * Manages the cache for the misspelling list in order to reduce the calls to Wikipedia.
  */
 @Service
-class MisspellingManager {
+public class MisspellingManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingManager.class);
 
@@ -28,6 +27,7 @@ class MisspellingManager {
     // Derived from the misspelling list to access faster by word
     private Map<String, Misspelling> misspellingMap = new HashMap<>();
 
+    @NotNull
     private Map<String, Misspelling> getMisspellingMap() {
         if (this.misspellingMap.isEmpty()) { // For the first time
             updateMisspellings();
@@ -51,7 +51,6 @@ class MisspellingManager {
         }
     }
 
-    @NotNull
     private List<Misspelling> findWikipediaMisspellings() {
         List<Misspelling> misspellings = new ArrayList<>();
 
@@ -70,8 +69,7 @@ class MisspellingManager {
         return misspellings;
     }
 
-    @NotNull
-    List<Misspelling> parseMisspellingListText(@NotNull String misspellingListText) {
+    private List<Misspelling> parseMisspellingListText(String misspellingListText) {
         List<Misspelling> misspellings = new ArrayList<>();
 
         try (InputStream stream = new ByteArrayInputStream(misspellingListText.getBytes(StandardCharsets.UTF_8));
@@ -98,23 +96,19 @@ class MisspellingManager {
         return misspellings;
     }
 
-    @Nullable
-    private Misspelling parseMisspellingLine(@NotNull String misspellingLine) {
+    private Misspelling parseMisspellingLine(String misspellingLine) {
         Misspelling misspelling = null;
 
         String[] tokens = misspellingLine.split("\\|");
         // Ignore the lines not corresponding to misspelling lines
         if (!misspellingLine.isEmpty() && misspellingLine.startsWith(" ")) {
             if (tokens.length == 3) {
-                misspelling = new Misspelling();
-                misspelling.setCaseSensitive("cs".equalsIgnoreCase(tokens[1].trim()));
-                misspelling.setWord(misspelling.isCaseSensitive()
+                boolean isCaseSensitive = ("cs".equalsIgnoreCase(tokens[1].trim()));
+                String word = isCaseSensitive
                         ? tokens[0].trim()
-                        : tokens[0].trim().toLowerCase());
-                misspelling.setComment(tokens[2].trim());
-
-                misspelling.setSuggestions(
-                        parseSuggestions(misspelling.getComment(), misspelling.getWord()));
+                        : tokens[0].trim().toLowerCase();
+                String comment = tokens[2].trim();
+                misspelling = new Misspelling(word, isCaseSensitive, comment);
             } else {
                 LOGGER.warn("Bad formatted misspelling line: {}", misspellingLine);
             }
@@ -123,28 +117,11 @@ class MisspellingManager {
         return misspelling;
     }
 
-    @NotNull
-    List<String> parseSuggestions(@NotNull String suggestionLine, @NotNull String mainWord) {
-        List<String> suggestions = new ArrayList<>();
-
-        String suggestionWithoutBrackets = suggestionLine.replaceAll("\\(.+?\\)", "");
-        for (String suggestion : suggestionWithoutBrackets.split(",")) {
-            String word = suggestion.trim();
-
-            // Don't suggest the misspelling main word
-            if (StringUtils.isNotBlank(word) && !word.equals(mainWord)) {
-                suggestions.add(word);
-            }
-        }
-
-        return suggestions;
-    }
-
     /**
      * @return The misspelling related to the given word, or null if there is no such misspelling.
      */
     @Nullable
-    Misspelling findMisspellingByWord(@NotNull String word) {
+    public Misspelling findMisspellingByWord(@NotNull String word) {
         Misspelling wordMisspelling = null;
         if (getMisspellingMap().containsKey(word)) {
             wordMisspelling = getMisspellingMap().get(word);

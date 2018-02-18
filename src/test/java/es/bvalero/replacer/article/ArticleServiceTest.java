@@ -1,7 +1,7 @@
 package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.article.exception.ErrorExceptionFinder;
-import es.bvalero.replacer.misspelling.MisspellingFinder;
+import es.bvalero.replacer.article.finder.MisspellingFinder;
 import es.bvalero.replacer.utils.RegexMatchType;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import org.junit.Assert;

@@ -1,6 +1,8 @@
-package es.bvalero.replacer.misspelling;
+package es.bvalero.replacer.article.finder;
 
 import es.bvalero.replacer.article.ArticleReplacement;
+import es.bvalero.replacer.misspelling.Misspelling;
+import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.utils.RegexMatch;
 import es.bvalero.replacer.utils.RegexMatchType;
 import org.junit.Assert;
@@ -11,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
 import java.util.List;
 
 public class MisspellingFinderTest {
@@ -30,17 +31,15 @@ public class MisspellingFinderTest {
 
     @Test
     public void testFindPotentialErrors() {
-        String articleContent = "UN2 vonito Exemplo";
+        String articleContent = "M2 vonito Exemplo";
 
-        Misspelling misspelling1 = new Misspelling();
-        Mockito.when(misspellingManager.findMisspellingByWord("UN2")).thenReturn(misspelling1);
+        Misspelling misspelling1 = new Misspelling("m2", false, "m²");
+        Mockito.when(misspellingManager.findMisspellingByWord("M2")).thenReturn(misspelling1);
 
-        Misspelling misspelling2 = new Misspelling();
-        misspelling2.setSuggestions(Collections.singletonList("bonito"));
+        Misspelling misspelling2 = new Misspelling("vonito", false, "bonito");
         Mockito.when(misspellingManager.findMisspellingByWord("vonito")).thenReturn(misspelling2);
 
-        Misspelling misspelling3 = new Misspelling();
-        misspelling3.setSuggestions(Collections.singletonList("ejemplo"));
+        Misspelling misspelling3 = new Misspelling("exemplo", false, "ejemplo");
         Mockito.when(misspellingManager.findMisspellingByWord("Exemplo")).thenReturn(misspelling3);
 
         List<ArticleReplacement> result = misspellingFinder.findPotentialErrors(articleContent);
@@ -53,13 +52,13 @@ public class MisspellingFinderTest {
 
         ArticleReplacement result1 = result.get(1);
         Assert.assertEquals("vonito", result1.getOriginalText());
-        Assert.assertEquals(4, result1.getPosition());
+        Assert.assertEquals(3, result1.getPosition());
         Assert.assertEquals(RegexMatchType.MISSPELLING, result1.getType());
         Assert.assertEquals("bonito", result1.getProposedFixes().get(0));
 
         ArticleReplacement result2 = result.get(0);
         Assert.assertEquals("Exemplo", result2.getOriginalText());
-        Assert.assertEquals(11, result2.getPosition());
+        Assert.assertEquals(10, result2.getPosition());
         Assert.assertEquals("Ejemplo", result2.getProposedFixes().get(0));
     }
 
