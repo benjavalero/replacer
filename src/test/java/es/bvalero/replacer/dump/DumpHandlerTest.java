@@ -1,5 +1,7 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,23 +45,18 @@ public class DumpHandlerTest {
         saxParser.parse(xmlInput, dumpHandler);
 
         Assert.assertEquals(2, dumpHandler.getNumProcessedItems());
+        Assert.assertEquals(Integer.valueOf(7), dumpHandler.getCurrentArticle().getId());
         Assert.assertEquals("Andorra", dumpHandler.getCurrentArticle().getTitle());
-        Assert.assertEquals(Integer.valueOf(0), dumpHandler.getCurrentArticle().getNamespace());
+        Assert.assertEquals(WikipediaNamespace.ARTICLE, dumpHandler.getCurrentArticle().getNamespace());
         Assert.assertEquals("{{otros usos}}", dumpHandler.getCurrentArticle().getContent());
 
         GregorianCalendar cal = new GregorianCalendar(2016, 3, 17, 8, 55, 54);
-        cal.setTimeZone(DumpHandler.TIME_ZONE);
+        cal.setTimeZone(WikipediaUtils.TIME_ZONE);
         Assert.assertEquals(cal.getTime(), dumpHandler.getCurrentArticle().getTimestamp());
 
-        Mockito.verify(dumpProcessor, Mockito.times(2))
-                .processArticle(dumpHandler.getCurrentArticle());
+        Mockito.verify(dumpProcessor, Mockito.times(2)).processArticle(Mockito.any(DumpArticle.class));
 
         xmlInput.close();
-    }
-
-    @Test
-    public void testParseWikipediaDateError() {
-        Assert.assertNull(dumpHandler.parseWikipediaDate("xxxxx"));
     }
 
     @Test
@@ -74,8 +71,7 @@ public class DumpHandlerTest {
         InputStream xmlInput = new FileInputStream(dumpFilePath);
         saxParser.parse(xmlInput, dumpHandler);
 
-        Mockito.verify(dumpProcessor, Mockito.times(2))
-                .processArticle(dumpHandler.getCurrentArticle());
+        Mockito.verify(dumpProcessor, Mockito.times(2)).processArticle(Mockito.any(DumpArticle.class));
         Assert.assertEquals(0, dumpHandler.getNumProcessedItems());
 
         xmlInput.close();

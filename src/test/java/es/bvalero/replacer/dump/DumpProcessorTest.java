@@ -4,6 +4,7 @@ import es.bvalero.replacer.article.Article;
 import es.bvalero.replacer.article.ArticleRepository;
 import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.utils.RegexMatch;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -27,20 +28,16 @@ public class DumpProcessorTest {
     @InjectMocks
     private DumpProcessor dumpProcessor;
 
-    private DumpArticle dumpArticle;
-
     @Before
     public void setUp() {
         dumpProcessor = new DumpProcessor();
         MockitoAnnotations.initMocks(this);
-
-        dumpArticle = new DumpArticle();
-        dumpArticle.setNamespace(0);
-        dumpArticle.setContent("");
     }
 
     @Test
     public void testProcess() {
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, null, "");
+
         Mockito.when(articleService.findPotentialErrorsAndExceptions(Mockito.anyString()))
                 .thenReturn(Collections.singletonList(new RegexMatch()));
 
@@ -54,7 +51,8 @@ public class DumpProcessorTest {
 
     @Test
     public void testProcessExistingArticle() {
-        dumpArticle.setTimestamp(new Timestamp(new Date().getTime()));
+        Timestamp today = new Timestamp(new Date().getTime());
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, today, "");
 
         Mockito.when(articleService.findPotentialErrorsAndExceptions(Mockito.anyString()))
                 .thenReturn(Collections.singletonList(new RegexMatch()));
@@ -73,7 +71,8 @@ public class DumpProcessorTest {
 
     @Test
     public void testProcessArticleWithoutPotentialErrors() {
-        dumpArticle.setTimestamp(new Timestamp(new Date().getTime()));
+        Timestamp today = new Timestamp(new Date().getTime());
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, today, "");
 
         Article articleDb = new Article(1, "");
         articleDb.setAdditionDate(new Timestamp(new Date().getTime()));
@@ -89,15 +88,20 @@ public class DumpProcessorTest {
 
     @Test
     public void testProcessOnlyArticlesAndAnnexes() {
-        dumpArticle.setNamespace(1);
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.USER, null, "");
+
         dumpProcessor.processArticle(dumpArticle);
+
         Mockito.verify(articleRepository, Mockito.times(0)).findOne(Mockito.anyInt());
     }
 
     @Test
     public void testNotProcessRedirects() {
-        Mockito.when(articleService.isRedirectionArticle(Mockito.anyString())).thenReturn(true);
+        String redirectContent = "#REDIRECT xxx";
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, null, redirectContent);
+
         dumpProcessor.processArticle(dumpArticle);
+
         Mockito.verify(articleRepository, Mockito.times(0)).findOne(Mockito.anyInt());
     }
 
@@ -106,7 +110,8 @@ public class DumpProcessorTest {
         GregorianCalendar today = new GregorianCalendar();
         GregorianCalendar yesterday = new GregorianCalendar();
         yesterday.add(GregorianCalendar.DATE, -1);
-        dumpArticle.setTimestamp(new Timestamp(yesterday.getTimeInMillis()));
+        Timestamp timestampYesterday = new Timestamp(yesterday.getTimeInMillis());
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, timestampYesterday, "");
 
         Article articleDb = new Article(1, "");
         articleDb.setReviewDate(new Timestamp(today.getTimeInMillis()));
@@ -121,11 +126,11 @@ public class DumpProcessorTest {
 
     @Test
     public void testSkipArticleReviewedWhenDumpTimestamp() {
-        GregorianCalendar today = new GregorianCalendar();
-        dumpArticle.setTimestamp(new Timestamp(today.getTimeInMillis()));
+        Timestamp today = new Timestamp(new Date().getTime());
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, today, "");
 
         Article articleDb = new Article(1, "");
-        articleDb.setReviewDate(new Timestamp(today.getTimeInMillis()));
+        articleDb.setReviewDate(today);
         Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
 
         dumpProcessor.processArticle(dumpArticle);
@@ -140,7 +145,8 @@ public class DumpProcessorTest {
         GregorianCalendar today = new GregorianCalendar();
         GregorianCalendar yesterday = new GregorianCalendar();
         yesterday.add(GregorianCalendar.DATE, -1);
-        dumpArticle.setTimestamp(new Timestamp(yesterday.getTimeInMillis()));
+        Timestamp timestampYesterday = new Timestamp(yesterday.getTimeInMillis());
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, timestampYesterday, "");
 
         Article articleDb = new Article(1, "");
         articleDb.setAdditionDate(new Timestamp(today.getTimeInMillis()));

@@ -96,16 +96,6 @@ public class ArticleServiceTest {
     }
 
     @Test
-    public void testIsRedirectionArticle() {
-        ArticleService articleService = new ArticleService();
-
-        Assert.assertTrue(articleService.isRedirectionArticle("xxx #REDIRECCIÓN [[A]] yyy"));
-        Assert.assertTrue(articleService.isRedirectionArticle("xxx #redirección [[A]] yyy"));
-        Assert.assertTrue(articleService.isRedirectionArticle("xxx #REDIRECT [[A]] yyy"));
-        Assert.assertFalse(articleService.isRedirectionArticle("Otro contenido"));
-    }
-
-    @Test
     public void testRemoveParagraphsWithoutReplacements() {
         String text = "A\n\nB\n\nC id=\"miss-2\"\n\nD id=\"miss-3\"\n\nE\n\nF id=\"miss-4\"\n\nG\n\nH\n\n";
         String expected = "C id=\"miss-2\"\n<hr>\nD id=\"miss-3\"\n<hr>\nF id=\"miss-4\"";

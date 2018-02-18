@@ -1,5 +1,7 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +9,7 @@ import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * Handler to parse the Wikipedia XML dump.
@@ -18,14 +17,17 @@ import java.util.TimeZone;
 @Component
 public class DumpHandler extends DefaultHandler {
 
-    static final TimeZone TIME_ZONE = TimeZone.getTimeZone("GMT");
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpHandler.class);
-    private static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
 
     private final StringBuilder currentChars = new StringBuilder();
 
-    private DumpArticle currentArticle = new DumpArticle();
+    private Integer currentId;
+    private String currentTitle;
+    private WikipediaNamespace currentNamespace;
+    private Date currentTimestamp;
+    private String currentContent;
+
+    private DumpArticle currentArticle;
     private int numProcessedItems;
 
     @Autowired
@@ -44,26 +46,30 @@ public class DumpHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) {
         switch (qName) {
-            case "page":
-                processArticle();
-                break;
-            case "id":
-                // ID appears twice. We care about the first one.
-                if (getCurrentArticle().getId() == null) {
-                    getCurrentArticle().setId(Integer.parseInt(this.currentChars.toString()));
-                }
-                break;
             case "title":
-                getCurrentArticle().setTitle(this.currentChars.toString());
+                currentTitle = this.currentChars.toString();
                 break;
             case "ns":
-                getCurrentArticle().setNamespace(Integer.parseInt(this.currentChars.toString()));
+                currentNamespace = WikipediaNamespace.valueOf(Integer.valueOf(this.currentChars.toString()));
                 break;
-            case "text":
-                getCurrentArticle().setContent(this.currentChars.toString());
+            case "id":
+                // ID appears twice. We care about the first one. It will be rest after processing the article.
+                if (currentId == null) {
+                    currentId = Integer.parseInt(this.currentChars.toString());
+                }
                 break;
             case "timestamp":
-                getCurrentArticle().setTimestamp(parseWikipediaDate(this.currentChars.toString()));
+                currentTimestamp = WikipediaUtils.parseWikipediaDate(this.currentChars.toString());
+                break;
+            case "text":
+                currentContent = this.currentChars.toString();
+                break;
+            case "page":
+                currentArticle = new DumpArticle(
+                        currentId, currentTitle, currentNamespace, currentTimestamp, currentContent);
+                processArticle();
+                // Reset current ID to avoid duplicates
+                currentId = null;
                 break;
             default:
                 break;
@@ -83,23 +89,12 @@ public class DumpHandler extends DefaultHandler {
         return numProcessedItems;
     }
 
-    Date parseWikipediaDate(String dateStr) {
-        Date wikiDate = null;
-        try {
-            dateFormat.setTimeZone(TIME_ZONE);
-            wikiDate = dateFormat.parse(dateStr);
-        } catch (ParseException e) {
-            LOGGER.error("Error parsing Wikipedia date: {}", dateStr, e);
-        }
-        return wikiDate;
-    }
-
     private void processArticle() {
         try {
             dumpProcessor.processArticle(getCurrentArticle());
             this.numProcessedItems++;
         } catch (Exception e) {
-            LOGGER.error("Error processing article: " + getCurrentArticle().getTitle(), e);
+            LOGGER.error("Error processing article: " + currentTitle, e);
         }
     }
 

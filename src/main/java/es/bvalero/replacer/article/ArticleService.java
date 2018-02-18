@@ -6,6 +6,7 @@ import es.bvalero.replacer.utils.RegexMatch;
 import es.bvalero.replacer.utils.RegexMatchType;
 import es.bvalero.replacer.utils.StringUtils;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
+import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,7 @@ import java.util.regex.Pattern;
 public class ArticleService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
-    private static final String TAG_REDIRECTION = "#REDIRECCIÓN";
-    private static final String TAG_REDIRECT = "#REDIRECT";
+
     private static final String REGEX_PARAGRAPH = "(^|\\n{2,})(.+?)(?=\\n{2,}|$)";
     private static final String REGEX_BUTTON_TAG = "<button.+?</button>";
     private static final int THRESHOLD = 200;
@@ -83,7 +83,7 @@ public class ArticleService {
             return findRandomArticleWithPotentialErrors(word);
         }
 
-        if (isRedirectionArticle(articleContent)) {
+        if (WikipediaUtils.isRedirectionArticle(articleContent)) {
             LOGGER.warn("Article found is a redirection page: " + randomArticle.getTitle() + ". Try again...");
             articleRepository.delete(randomArticle.getId());
             return findRandomArticleWithPotentialErrors(word);
@@ -161,11 +161,6 @@ public class ArticleService {
             Collections.sort(regexMatches);
         }
         return regexMatches;
-    }
-
-    public boolean isRedirectionArticle(String articleContent) {
-        return org.apache.commons.lang3.StringUtils.containsIgnoreCase(articleContent, TAG_REDIRECTION)
-                || org.apache.commons.lang3.StringUtils.containsIgnoreCase(articleContent, TAG_REDIRECT);
     }
 
     private List<RegexMatch> findErrorExceptions(String text) {

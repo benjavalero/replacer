@@ -86,7 +86,7 @@ class DumpManager {
             LOGGER.info("Total number of articles processed: {}", getStatus().getNumProcessedItems());
         } catch (FileNotFoundException e) {
             LOGGER.error("Latest dump file not found", e);
-        } catch (@NotNull ParserConfigurationException | SAXException | IOException e) {
+        } catch (ParserConfigurationException | SAXException | IOException e) {
             LOGGER.error("Error parsing dump file", e);
         } finally {
             getStatus().setEndDate(new Date());
@@ -94,7 +94,7 @@ class DumpManager {
         }
     }
 
-    private void parseDumpFile(@NotNull File dumpFile)
+    private void parseDumpFile(File dumpFile)
             throws ParserConfigurationException, SAXException, IOException {
         LOGGER.info("Start parsing dump file: {}...", dumpFile);
 

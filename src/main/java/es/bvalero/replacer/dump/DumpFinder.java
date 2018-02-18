@@ -26,28 +26,6 @@ class DumpFinder {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_PATTERN);
 
     /**
-     * @return The path of the latest dump folder, e. g. /public/dumps/public/eswiki/20170820
-     * @throws FileNotFoundException if the path contains no valid sub-folders
-     */
-    private File findLatestDumpFolder(File dumpFolder) throws FileNotFoundException {
-        File[] dumpSubFolders = dumpFolder.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                // The sub-folders names are all numbers, e. g. 20170820
-                return name.matches("[0-9]+");
-            }
-        });
-
-        if (dumpSubFolders != null && dumpSubFolders.length > 0) {
-            Arrays.sort(dumpSubFolders);
-            return dumpSubFolders[dumpSubFolders.length - 1];
-        } else {
-            LOGGER.error("Sub-folders not found in dump: {}", dumpFolder);
-            throw new FileNotFoundException("Sub-folders not found in dump: " + dumpFolder);
-        }
-    }
-
-    /**
      * @return The latest dump file, e. g.
      * /public/dumps/public/eswiki/20170820/eswiki-20170820-pages-articles.xml.bz2
      * @throws FileNotFoundException if the dump folder cannot be found.
@@ -72,6 +50,28 @@ class DumpFinder {
         }
 
         return dumpFile;
+    }
+
+    /**
+     * @return The path of the latest dump folder, e. g. /public/dumps/public/eswiki/20170820
+     * @throws FileNotFoundException if the path contains no valid sub-folders
+     */
+    private File findLatestDumpFolder(File dumpFolder) throws FileNotFoundException {
+        File[] dumpSubFolders = dumpFolder.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                // The sub-folders names are all numbers, e. g. 20170820
+                return name.matches("[0-9]+");
+            }
+        });
+
+        if (dumpSubFolders != null && dumpSubFolders.length > 0) {
+            Arrays.sort(dumpSubFolders);
+            return dumpSubFolders[dumpSubFolders.length - 1];
+        } else {
+            LOGGER.error("Sub-folders not found in dump: {}", dumpFolder);
+            throw new FileNotFoundException("Sub-folders not found in dump: " + dumpFolder);
+        }
     }
 
 }

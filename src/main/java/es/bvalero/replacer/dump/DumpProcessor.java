@@ -6,6 +6,7 @@ import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.article.PotentialError;
 import es.bvalero.replacer.utils.RegexMatch;
 import es.bvalero.replacer.utils.RegexMatchType;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +21,6 @@ class DumpProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpProcessor.class);
 
-    private static final Integer NAMESPACE_ARTICLE = 0;
-    private static final Integer NAMESPACE_ANNEX = 104;
-
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -36,11 +34,11 @@ class DumpProcessor {
     /**
      * Process a dump article: find the potential errors and add them to the database.
      */
-    void processArticle(DumpArticle dumpArticle) {
+    void processArticle(@NotNull DumpArticle dumpArticle) {
         LOGGER.debug("Indexing article: {}...", dumpArticle.getTitle());
 
         // Check if it is really needed to process the article
-        if (!isArticleContentProcessable(dumpArticle)) {
+        if (!dumpArticle.isProcessable()) {
             return;
         }
 
@@ -75,18 +73,6 @@ class DumpProcessor {
             addPotentialErrorsToArticle(article, regexMatches);
 
             articleRepository.save(article);
-        }
-    }
-
-    private boolean isArticleContentProcessable(DumpArticle dumpArticle) {
-        if (!NAMESPACE_ARTICLE.equals(dumpArticle.getNamespace()) && !NAMESPACE_ANNEX.equals(dumpArticle.getNamespace())) {
-            LOGGER.debug("Only articles and annexes are processed. Skipping namespace: {}", dumpArticle.getNamespace());
-            return false;
-        } else if (articleService.isRedirectionArticle(dumpArticle.getContent())) {
-            LOGGER.debug("Redirection article. Skipping.");
-            return false;
-        } else {
-            return true;
         }
     }
 
