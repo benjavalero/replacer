@@ -6,6 +6,7 @@ import es.bvalero.replacer.utils.RegexMatch;
 import es.bvalero.replacer.utils.RegexMatchType;
 import es.bvalero.replacer.utils.StringUtils;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,7 +78,7 @@ public class ArticleService {
         String articleContent;
         try {
             articleContent = wikipediaService.getArticleContent(randomArticle.getTitle());
-        } catch (Exception e) {
+        } catch (WikipediaException e) {
             LOGGER.warn("Content could not be retrieved for title: " + randomArticle.getTitle() + ". Try again...", e);
             articleRepository.delete(randomArticle.getId());
             return findRandomArticleWithPotentialErrors(word);

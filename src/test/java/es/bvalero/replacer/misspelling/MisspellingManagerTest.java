@@ -1,6 +1,7 @@
 package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,13 +28,13 @@ public class MisspellingManagerTest {
 
     @Test
     public void testFindWikipediaMisspellingsWithErrors() throws Exception {
-        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenThrow(new Exception());
+        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenThrow(new WikipediaException());
 
         misspellingManager.updateMisspellings();
     }
 
     @Test
-    public void testUpdateMisspellings() throws Exception {
+    public void testUpdateMisspellings() throws WikipediaException {
         String misspellingListText = "Texto\n" +
                 "\n" +
                 "A||B\n" +
@@ -98,7 +99,7 @@ public class MisspellingManagerTest {
     }
 
     @Test
-    public void testFindMisspellingByWord() throws Exception {
+    public void testFindMisspellingByWord() throws WikipediaException {
         String wikiText = " conprar||comprar\n madrid|cs|Madrid\n álvaro|cs|Álvaro";
         Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenReturn(wikiText);
 

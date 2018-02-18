@@ -4,6 +4,7 @@ import es.bvalero.replacer.article.exception.ErrorExceptionFinder;
 import es.bvalero.replacer.article.finder.MisspellingFinder;
 import es.bvalero.replacer.utils.RegexMatchType;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +44,7 @@ public class ArticleServiceTest {
     }
 
     @Test
-    public void findRandomArticleWithPotentialErrors() throws Exception {
+    public void findRandomArticleWithPotentialErrors() throws WikipediaException {
         Mockito.when(articleRepository.findMaxIdNotReviewed()).thenReturn(10);
 
         String articleTitle = "Un artículo aleatorio";

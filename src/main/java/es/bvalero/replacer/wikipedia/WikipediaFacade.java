@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Profile("default")
-class WikipediaFacade implements IWikipediaFacade {
+public class WikipediaFacade implements IWikipediaFacade {
 
+    public static final String MISSPELLING_LIST_ARTICLE = "Wikipedia:Corrector_ortográfico/Listado";
     private static final Logger LOGGER = LoggerFactory.getLogger(WikipediaFacade.class);
     private static final String WIKIPEDIA_URL = "https://es.wikipedia.org";
+
     private Mediawiki wiki;
 
     @Value("${wikipedia.username}")
@@ -22,37 +24,48 @@ class WikipediaFacade implements IWikipediaFacade {
     private String password;
 
     @Override
-    public String getArticleContent(String articleTitle) throws Exception {
+    public String getArticleContent(String articleTitle) throws WikipediaException {
         LOGGER.info("Getting content for article: {}", articleTitle);
-        String articleContent = getWiki().getPageContent(articleTitle);
-        if (articleContent == null) {
-            throw new NullPointerException();
+        try {
+            String articleContent = getWiki().getPageContent(articleTitle);
+            if (articleContent == null) {
+                throw new WikipediaException("Article not available");
+            }
+            return articleContent;
+        } catch (Exception e) {
+            throw new WikipediaException(e);
         }
-        return articleContent;
     }
 
-    public void editArticleContent(String articleTitle, String articleContent, String editSummary) {
+    private Mediawiki getWiki() throws WikipediaException {
+        if (this.wiki == null) {
+            try {
+                this.wiki = new Mediawiki(WIKIPEDIA_URL);
+            } catch (Exception e) {
+                throw new WikipediaException(e);
+            }
+        }
+        return this.wiki;
+    }
+
+    public void editArticleContent(String articleTitle, String articleContent, String editSummary)
+            throws WikipediaException {
         try {
             login();
             getWiki().edit(articleTitle, articleContent, editSummary);
         } catch (Exception e) {
             LOGGER.error("Error saving content for article: " + articleTitle, e);
+            throw new WikipediaException(e);
         }
     }
 
-    private void login() {
+    private void login() throws WikipediaException {
         try {
             getWiki().login(username, password);
         } catch (Exception e) {
             LOGGER.error("Error logging into Wikipedia", e);
+            throw new WikipediaException(e);
         }
-    }
-
-    private Mediawiki getWiki() throws Exception {
-        if (this.wiki == null) {
-            this.wiki = new Mediawiki(WIKIPEDIA_URL);
-        }
-        return this.wiki;
     }
 
 }

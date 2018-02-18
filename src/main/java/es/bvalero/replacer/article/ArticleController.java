@@ -2,6 +2,7 @@ package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.utils.StringUtils;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +70,7 @@ public class ArticleController {
         String currentContent;
         try {
             currentContent = wikipediaFacade.getArticleContent(article.getTitle());
-        } catch (Exception e) {
+        } catch (WikipediaException e) {
             LOGGER.error("Error getting the current content of the article: " + article.getTitle(), e);
             return false;
         }
