@@ -2,18 +2,26 @@ package es.bvalero.replacer.utils;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
 
 public class StringUtils {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(StringUtils.class);
+
     private static final String ELLIPSIS = "[...]";
+
+    private StringUtils() {
+    }
 
     public static String escapeText(String text) {
         return StringEscapeUtils.escapeXml10(text);
     }
 
-    public static String unescapeText(String text) {
+    public static String unEscapeText(String text) {
         return StringEscapeUtils.unescapeXml(text);
     }
 
@@ -26,43 +34,40 @@ public class StringUtils {
      * @param position    The position of the text to be replaced.
      * @param replaced    The text portion to be replaced.
      * @param replacement The replacement for the text portion.
-     * @throws IllegalArgumentException If the text doesn't contain the portion to be replaced in the given position.
      */
-    public static String replaceAt(String text, int position, String replaced, String replacement)
-            throws IllegalArgumentException {
-        try {
-            String toReplace = text.substring(position, position + replaced.length());
-            if (!toReplace.equals(replaced)) {
-                String message = "The original replacement doesn't match." +
-                        "\nOriginal text: " + text +
-                        "\nPosition: " + position +
-                        "\nOld replacement: " + replaced +
-                        "\nNew replacement: " + replacement;
-                throw new IllegalArgumentException(message);
-            }
+    @Nullable
+    public static String replaceAt(@NotNull String text, int position, @NotNull String replaced, @NotNull String replacement) {
+        String toReplace = text.substring(position, position + replaced.length());
 
-            return text.substring(0, position) + replacement + text.substring(position + replaced.length());
-        } catch (Exception e) {
-            String message = "Error replacing text." +
-                    "\nOriginal text: " + text +
-                    "\nPosition: " + position +
-                    "\nOld replacement: " + replaced +
-                    "\nNew replacement: " + replacement;
-            throw new IllegalArgumentException(message, e);
+        if (!toReplace.equals(replaced)) {
+            LOGGER.error("The original replacement doesn't match." +
+                            "\nOriginal text: {}" +
+                            "\nPosition: {}" +
+                            "\nOld replacement: {}" +
+                            "\nNew replacement: {}",
+                    text, position, replaced, replacement);
+            return null;
         }
+
+        return text.substring(0, position) + replacement + text.substring(position + replaced.length());
     }
 
     /**
      * @return If all the characters in the given word are uppercase. Non-alphabetic characters are ignored.
      */
     public static boolean isAllUppercase(@NotNull String word) {
-        return word.toUpperCase(Locale.forLanguageTag("es")).equals(word);
+        if (org.apache.commons.lang3.StringUtils.isBlank(word)) {
+            return false;
+        } else {
+            String wordUppercase = word.toUpperCase(Locale.forLanguageTag("es"));
+            return word.equals(wordUppercase);
+        }
     }
 
     /**
      * @return If the first letter of the word is uppercase
      */
-    public static boolean startsWithUpperCase(String word) {
+    public static boolean startsWithUpperCase(@NotNull String word) {
         return Character.isUpperCase(word.charAt(0));
     }
 

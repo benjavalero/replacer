@@ -80,10 +80,11 @@ public class ArticleController {
             for (ArticleReplacement fix : userFixes) {
                 LOGGER.debug("Fixing article {}: {} -> {}",
                         article.getTitle(), fix.getOriginalText(), fix.getFixedText());
+                // FIXME Method "replaceAt" may return NULL
                 replacedContent = StringUtils.replaceAt(replacedContent, fix.getPosition(),
                         fix.getOriginalText(), fix.getFixedText());
             }
-            String contentToUpload = StringUtils.unescapeText(replacedContent);
+            String contentToUpload = StringUtils.unEscapeText(replacedContent);
 
             // Upload the new content to Wikipedia
             // It may happen there has been changes during the edition, but in this point the fixes can be applied anyway.

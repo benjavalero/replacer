@@ -8,19 +8,29 @@ public class StringUtilsTest {
     @Test
     public void testEscapeText() {
         String text = "A \"B\" 'C' &D; <E> [F] : #G / «H» + “I”";
-        Assert.assertEquals(text, StringUtils.unescapeText(StringUtils.escapeText(text)));
+        Assert.assertEquals(text, StringUtils.unEscapeText(StringUtils.escapeText(text)));
     }
 
     @Test
     public void testReplaceAt() {
-        Assert.assertEquals("012XXXX56789",
-                StringUtils.replaceAt("0123456789", 3, "34", "XXXX"));
+        String textReplaced = StringUtils.replaceAt("0123456789", 3, "34", "XXXX");
+        Assert.assertNotNull(textReplaced);
+        Assert.assertEquals("012XXXX56789", textReplaced);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testReplaceAtModified() {
-        Assert.assertEquals("012XXXX56789",
-                StringUtils.replaceAt("012XXXX56789", 3, "00", "XXXX"));
+        Assert.assertNull(StringUtils.replaceAt("012XXXX56789", 3, "00", "XXXX"));
+    }
+
+    @Test
+    public void testIsAllUppercase() {
+        Assert.assertFalse(StringUtils.isAllUppercase(""));
+        Assert.assertFalse(StringUtils.isAllUppercase("   "));
+        Assert.assertFalse(StringUtils.isAllUppercase("cd"));
+        Assert.assertTrue(StringUtils.isAllUppercase("CD"));
+        Assert.assertFalse(StringUtils.isAllUppercase("CDs"));
+        Assert.assertTrue(StringUtils.isAllUppercase("CO2"));
     }
 
     @Test
@@ -45,10 +55,27 @@ public class StringUtilsTest {
     }
 
     @Test
+    public void testTrimLeftNotModified() {
+        int threshold = 5;
+        String text = "Casas";
+        String expected = "Casas";
+        Assert.assertEquals(expected, StringUtils.trimLeft(text, threshold));
+    }
+
+    @Test
     public void testTrimRight() {
         int threshold = 5;
         String text = "Mi casa es bonita";
         String expected = "[...] onita";
+        Assert.assertEquals(expected, StringUtils.trimRight(text, threshold));
+    }
+
+
+    @Test
+    public void testTrimRightNotModified() {
+        int threshold = 5;
+        String text = "Casas";
+        String expected = "Casas";
         Assert.assertEquals(expected, StringUtils.trimRight(text, threshold));
     }
 
@@ -57,6 +84,14 @@ public class StringUtilsTest {
         int threshold = 5;
         String text = "Mi casa es bonita";
         String expected = "Mi ca [...] onita";
+        Assert.assertEquals(expected, StringUtils.trimLeftRight(text, threshold));
+    }
+
+    @Test
+    public void testTrimLeftRightNotModified() {
+        int threshold = 5;
+        String text = "Mi casa es";
+        String expected = "Mi casa es";
         Assert.assertEquals(expected, StringUtils.trimLeftRight(text, threshold));
     }
 

@@ -105,20 +105,17 @@ public class ArticleService {
         String replacedContent = escapedContent;
         Map<Integer, ArticleReplacement> proposedFixes = new TreeMap<>();
         for (RegexMatch regexMatch : regexMatches) {
-            try {
-                if (PotentialErrorType.MISSPELLING.equals(regexMatch.getType())) {
-                    ArticleReplacement replacement = (ArticleReplacement) regexMatch;
-                    String buttonText = getReplacementButtonText(replacement);
-                    replacedContent = StringUtils.replaceAt(replacedContent, replacement.getPosition(),
-                            replacement.getOriginalText(), buttonText);
-                    proposedFixes.put(replacement.getPosition(), replacement);
-                } else if (highlightExceptions) {
-                    String spanText = getErrorExceptionSpanText(regexMatch);
-                    replacedContent = StringUtils.replaceAt(replacedContent, regexMatch.getPosition(),
-                            regexMatch.getOriginalText(), spanText);
-                }
-            } catch (IllegalArgumentException iae) {
-                LOGGER.error("Error replacing text", iae);
+            // FIXME Method "replaceAt" may return NULL
+            if (PotentialErrorType.MISSPELLING.equals(regexMatch.getType())) {
+                ArticleReplacement replacement = (ArticleReplacement) regexMatch;
+                String buttonText = getReplacementButtonText(replacement);
+                replacedContent = StringUtils.replaceAt(replacedContent, replacement.getPosition(),
+                        replacement.getOriginalText(), buttonText);
+                proposedFixes.put(replacement.getPosition(), replacement);
+            } else if (highlightExceptions) {
+                String spanText = getErrorExceptionSpanText(regexMatch);
+                replacedContent = StringUtils.replaceAt(replacedContent, regexMatch.getPosition(),
+                        regexMatch.getOriginalText(), spanText);
             }
         }
 

@@ -25,7 +25,7 @@ public class StatisticsController {
     Long countPotentialErrors() {
         LOGGER.info("Count potential errors...");
         Long count = potentialErrorRepository.countNotReviewed();
-        LOGGER.info("Potential errors found: " + count);
+        LOGGER.info("Potential errors found: {}", count);
         return count;
     }
 
@@ -33,7 +33,7 @@ public class StatisticsController {
     Long countArticlesNotReviewed() {
         LOGGER.info("Count articles not reviewed...");
         Long count = articleRepository.countByReviewDateNull();
-        LOGGER.info("Articles not reviewed found: " + count);
+        LOGGER.info("Articles not reviewed found: {}", count);
         return count;
     }
 
@@ -41,7 +41,7 @@ public class StatisticsController {
     Long countArticlesReviewed() {
         LOGGER.info("Count articles reviewed...");
         Long count = articleRepository.countByReviewDateNotNull();
-        LOGGER.info("Articles reviewed found: " + count);
+        LOGGER.info("Articles reviewed found: {}", count);
         return count;
     }
 
@@ -49,7 +49,7 @@ public class StatisticsController {
     List<Object[]> listMisspellings() {
         LOGGER.info("Listing misspellings...");
         List<Object[]> list = potentialErrorRepository.findMisspellingsGrouped();
-        LOGGER.info("Misspelling list found: " + list.size());
+        LOGGER.info("Misspelling list found: {}", list.size());
         return list;
     }
 
