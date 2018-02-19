@@ -1,5 +1,7 @@
 package es.bvalero.replacer.utils;
 
+import es.bvalero.replacer.article.PotentialErrorType;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -7,7 +9,7 @@ public class RegexMatch implements Comparable<RegexMatch>, Serializable {
 
     private int position;
     private String originalText;
-    private RegexMatchType type;
+    private PotentialErrorType type; // TODO Remove this and check if it is an exception in a different way
 
     public RegexMatch() {
     }
@@ -33,11 +35,11 @@ public class RegexMatch implements Comparable<RegexMatch>, Serializable {
         this.originalText = originalText;
     }
 
-    public RegexMatchType getType() {
+    public PotentialErrorType getType() {
         return type;
     }
 
-    public void setType(RegexMatchType type) {
+    public void setType(PotentialErrorType type) {
         this.type = type;
     }
 

@@ -5,7 +5,7 @@ import es.bvalero.replacer.article.ArticleRepository;
 import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.article.PotentialError;
 import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.RegexMatchType;
+import es.bvalero.replacer.article.PotentialErrorType;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +78,7 @@ class DumpProcessor {
 
     private void addPotentialErrorsToArticle(Article article, List<RegexMatch> regexMatches) {
         for (RegexMatch regexMatch : regexMatches) {
-            if (!RegexMatchType.EXCEPTION.equals(regexMatch.getType())) {
+            if (!PotentialErrorType.EXCEPTION.equals(regexMatch.getType())) {
                 article.getPotentialErrors().add(
                         new PotentialError(article, regexMatch.getType(), regexMatch.getOriginalText()));
             }

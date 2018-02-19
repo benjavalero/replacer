@@ -3,7 +3,6 @@ package es.bvalero.replacer.article;
 import es.bvalero.replacer.article.exception.ErrorExceptionFinder;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.RegexMatchType;
 import es.bvalero.replacer.utils.StringUtils;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -107,7 +106,7 @@ public class ArticleService {
         Map<Integer, ArticleReplacement> proposedFixes = new TreeMap<>();
         for (RegexMatch regexMatch : regexMatches) {
             try {
-                if (RegexMatchType.MISSPELLING.equals(regexMatch.getType())) {
+                if (PotentialErrorType.MISSPELLING.equals(regexMatch.getType())) {
                     ArticleReplacement replacement = (ArticleReplacement) regexMatch;
                     String buttonText = getReplacementButtonText(replacement);
                     replacedContent = StringUtils.replaceAt(replacedContent, replacement.getPosition(),
@@ -184,7 +183,7 @@ public class ArticleService {
         for (int i = 0; i < allErrorExceptions.size(); i++) {
             if (!toDelete[i]) {
                 RegexMatch errorException = allErrorExceptions.get(i);
-                errorException.setType(RegexMatchType.EXCEPTION);
+                errorException.setType(PotentialErrorType.EXCEPTION);
                 resultErrorExceptions.add(errorException);
             }
         }

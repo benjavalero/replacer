@@ -4,7 +4,7 @@ import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.misspelling.Misspelling;
 import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.RegexMatchType;
+import es.bvalero.replacer.article.PotentialErrorType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +53,7 @@ public class MisspellingFinderTest {
         ArticleReplacement result1 = result.get(1);
         Assert.assertEquals("vonito", result1.getOriginalText());
         Assert.assertEquals(3, result1.getPosition());
-        Assert.assertEquals(RegexMatchType.MISSPELLING, result1.getType());
+        Assert.assertEquals(PotentialErrorType.MISSPELLING, result1.getType());
         Assert.assertEquals("bonito", result1.getProposedFixes().get(0));
 
         ArticleReplacement result2 = result.get(0);

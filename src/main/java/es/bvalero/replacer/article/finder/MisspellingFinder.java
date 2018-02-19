@@ -6,7 +6,7 @@ import es.bvalero.replacer.misspelling.Misspelling;
 import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.RegexMatchType;
+import es.bvalero.replacer.article.PotentialErrorType;
 import es.bvalero.replacer.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ public class MisspellingFinder implements PotentialErrorFinder {
 
                 replacement.setPosition(textWord.getPosition());
                 replacement.setOriginalText(originalText);
-                replacement.setType(RegexMatchType.MISSPELLING);
+                replacement.setType(PotentialErrorType.MISSPELLING);
                 replacement.setComment(wordMisspelling.getComment());
 
                 for (String suggestion : wordMisspelling.getSuggestions()) {

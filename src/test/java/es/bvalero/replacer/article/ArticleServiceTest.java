@@ -2,7 +2,6 @@ package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.article.exception.ErrorExceptionFinder;
 import es.bvalero.replacer.article.finder.MisspellingFinder;
-import es.bvalero.replacer.utils.RegexMatchType;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.junit.Assert;
@@ -60,7 +59,7 @@ public class ArticleServiceTest {
         replacement.setPosition(13);
         replacement.setOriginalText("Hejemplo");
         replacement.setComment("Sin hache");
-        replacement.setType(RegexMatchType.MISSPELLING);
+        replacement.setType(PotentialErrorType.MISSPELLING);
         replacement.setProposedFixes(Collections.singletonList("Hejemplo"));
 
         // No exceptions found

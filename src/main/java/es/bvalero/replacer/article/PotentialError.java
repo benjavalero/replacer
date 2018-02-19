@@ -1,7 +1,5 @@
 package es.bvalero.replacer.article;
 
-import es.bvalero.replacer.utils.RegexMatchType;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -19,7 +17,7 @@ public class PotentialError implements Serializable {
 
     @Column(name = "type", nullable = false, length = 25)
     @Enumerated(EnumType.STRING)
-    private RegexMatchType type;
+    private PotentialErrorType type;
 
     @Column(name = "text", nullable = false, length = 30)
     private String text;
@@ -27,7 +25,7 @@ public class PotentialError implements Serializable {
     public PotentialError() {
     }
 
-    public PotentialError(Article article, RegexMatchType type, String text) {
+    public PotentialError(Article article, PotentialErrorType type, String text) {
         this.article = article;
         this.type = type;
         this.text = text;
@@ -41,11 +39,11 @@ public class PotentialError implements Serializable {
         this.article = article;
     }
 
-    RegexMatchType getType() {
+    PotentialErrorType getType() {
         return type;
     }
 
-    void setType(RegexMatchType type) {
+    void setType(PotentialErrorType type) {
         this.type = type;
     }
 
