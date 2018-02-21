@@ -12,8 +12,8 @@ public class TemplateNameFinderTest {
     public void testRegexTemplateParam() {
         String text = "xxx {{Plantilla| yyy }} zzz";
 
-        TemplateNameFinder templateNameFinder = new TemplateNameFinder();
-        List<RegexMatch> matches = templateNameFinder.findErrorExceptions(text);
+        TemplateNameMatchFinder templateNameFinder = new TemplateNameMatchFinder();
+        List<RegexMatch> matches = templateNameFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(1, matches.size());

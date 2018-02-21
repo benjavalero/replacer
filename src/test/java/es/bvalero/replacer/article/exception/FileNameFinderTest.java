@@ -12,8 +12,8 @@ public class FileNameFinderTest {
     public void testRegexFileName() {
         String text = "[[File: de_españa.png | España]] {{ X | co-co.svg | a = pepe.pdf }}";
 
-        FileNameFinder fileNameFinder = new FileNameFinder();
-        List<RegexMatch> matches = fileNameFinder.findErrorExceptions(text);
+        FileNameMatchFinder fileNameFinder = new FileNameMatchFinder();
+        List<RegexMatch> matches = fileNameFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertTrue(matches.contains(new RegexMatch(7, " de_españa.png")));

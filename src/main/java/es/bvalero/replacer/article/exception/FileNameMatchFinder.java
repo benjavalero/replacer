@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class FileNameFinder implements ErrorExceptionFinder {
+public class FileNameMatchFinder implements ExceptionMatchFinder {
 
     private static final String REGEX_FILE_NAME = "(?<=[=|:])[^=|:]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|ogg|pdf)";
 
     @Override
-    public List<RegexMatch> findErrorExceptions(String text) {
+    public List<RegexMatch> findExceptionMatches(String text) {
         return RegExUtils.findMatches(text, REGEX_FILE_NAME);
     }
 

@@ -43,7 +43,7 @@ public class ArticleController {
      */
     @RequestMapping(value = "/article/random/word/{word}")
     public ArticleData randomByWord(@PathVariable("word") String word) {
-        LOGGER.info("Finding random article containing error: " + word);
+        LOGGER.info("Finding random article containing error: {}", word);
         return articleService.findRandomArticleWithPotentialErrors(word);
     }
 
@@ -94,7 +94,6 @@ public class ArticleController {
                 markArticleAsReviewed(article);
                 return false;
             }
-            // TODO Try to add a reference in the summary to the tool
             wikipediaFacade.editArticleContent(article.getTitle(), contentToUpload,
                     "Correcciones ortográficas");
 

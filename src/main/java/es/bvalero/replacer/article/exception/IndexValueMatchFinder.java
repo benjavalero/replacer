@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class IndexValueFinder implements ErrorExceptionFinder {
+public class IndexValueMatchFinder implements ExceptionMatchFinder {
 
     private static final String REGEX_INDEX_VALUE = "\\|\\s*(?:índice)\\s*=[^}|]*";
 
     @Override
-    public List<RegexMatch> findErrorExceptions(String text) {
+    public List<RegexMatch> findExceptionMatches(String text) {
         return RegExUtils.findMatches(text, REGEX_INDEX_VALUE);
     }
 

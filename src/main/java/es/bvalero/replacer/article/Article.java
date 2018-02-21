@@ -15,7 +15,7 @@ public class Article implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "title", nullable = false, length = 255)
+    @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "dtadd", nullable = false, columnDefinition = "TIMESTAMP")
@@ -75,16 +75,6 @@ public class Article implements Serializable {
 
     void setPotentialErrors(List<PotentialError> potentialErrors) {
         this.potentialErrors = potentialErrors;
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", additionDate=" + additionDate +
-                ", reviewDate=" + reviewDate +
-                '}';
     }
 
 }

@@ -1,15 +1,15 @@
 package es.bvalero.replacer.utils;
 
-import es.bvalero.replacer.article.PotentialErrorType;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class RegexMatch implements Comparable<RegexMatch>, Serializable {
+public class RegexMatch implements Comparable<RegexMatch> {
 
     private int position;
     private String originalText;
-    private PotentialErrorType type; // TODO Remove this and check if it is an exception in a different way
 
     public RegexMatch() {
     }
@@ -17,6 +17,28 @@ public class RegexMatch implements Comparable<RegexMatch>, Serializable {
     public RegexMatch(int position, String originalText) {
         this.position = position;
         this.originalText = originalText;
+    }
+
+    public static List<RegexMatch> removedNestedMatches(List<RegexMatch> matches) {
+        Collections.sort(matches);
+
+        boolean[] toDelete = new boolean[matches.size()];
+        for (int i = 0; i < matches.size(); i++) {
+            for (int j = i + 1; j < matches.size(); j++) {
+                if (matches.get(i).isContainedIn(matches.get(j))) {
+                    toDelete[i] = true;
+                }
+            }
+        }
+
+        List<RegexMatch> resultMatches = new ArrayList<>();
+        for (int i = 0; i < matches.size(); i++) {
+            if (!toDelete[i]) {
+                resultMatches.add(matches.get(i));
+            }
+        }
+
+        return resultMatches;
     }
 
     public int getPosition() {
@@ -33,14 +55,6 @@ public class RegexMatch implements Comparable<RegexMatch>, Serializable {
 
     public void setOriginalText(String originalText) {
         this.originalText = originalText;
-    }
-
-    public PotentialErrorType getType() {
-        return type;
-    }
-
-    public void setType(PotentialErrorType type) {
-        this.type = type;
     }
 
     @Override
@@ -61,17 +75,8 @@ public class RegexMatch implements Comparable<RegexMatch>, Serializable {
     }
 
     @Override
-    public String toString() {
-        return "RegexMatch{" +
-                "position=" + position +
-                ", originalText='" + originalText + '\'' +
-                ", type=" + type +
-                '}';
-    }
-
-    @Override
-    public int compareTo(RegexMatch r2) {
-        return r2.getPosition() - this.getPosition();
+    public int compareTo(@NotNull RegexMatch match) {
+        return match.getPosition() - this.getPosition();
     }
 
     public int getEnd() {

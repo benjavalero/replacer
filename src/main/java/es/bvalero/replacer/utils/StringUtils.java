@@ -6,22 +6,29 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StringUtils.class);
 
     private static final String ELLIPSIS = "[...]";
+    private static final String REGEX_PARAGRAPH = "(^|\\n{2,})(.+?)(?=\\n{2,}|$)";
 
     private StringUtils() {
     }
 
-    public static String escapeText(String text) {
+    @NotNull
+    public static String escapeText(@NotNull String text) {
         return StringEscapeUtils.escapeXml10(text);
     }
 
-    public static String unEscapeText(String text) {
+    @NotNull
+    public static String unEscapeText(@NotNull String text) {
         return StringEscapeUtils.unescapeXml(text);
     }
 
@@ -74,14 +81,16 @@ public class StringUtils {
     /**
      * @return The given word turning the first letter into uppercase (if needed)
      */
-    public static String setFirstUpperCase(String word) {
+    @NotNull
+    public static String setFirstUpperCase(@NotNull String word) {
         return word.substring(0, 1).toUpperCase() + word.substring(1);
     }
 
     /**
      * Display only the last n characters of the text, with an ellipsis if needed.
      */
-    public static String trimRight(String text, int threshold) {
+    @NotNull
+    static String trimRight(@NotNull String text, int threshold) {
         if (text.length() <= threshold) {
             return text;
         } else {
@@ -92,7 +101,8 @@ public class StringUtils {
     /**
      * Display only the first and last n characters of the text, with an ellipsis if needed.
      */
-    public static String trimLeftRight(String text, int threshold) {
+    @NotNull
+    static String trimLeftRight(@NotNull String text, int threshold) {
         if (text.length() <= threshold * 2) {
             return text;
         } else {
@@ -104,12 +114,62 @@ public class StringUtils {
     /**
      * Display only the first n characters of the text, with an ellipsis if needed.
      */
-    public static String trimLeft(String text, int threshold) {
+    @NotNull
+    static String trimLeft(@NotNull String text, int threshold) {
         if (text.length() <= threshold) {
             return text;
         } else {
             return text.substring(0, threshold) + ' ' + ELLIPSIS;
         }
+    }
+
+    /**
+     * Trims the text between matches, and also on the left and right sides.
+     */
+    @NotNull
+    public static String trimText(@NotNull String text, int threshold, @NotNull String match) {
+        List<RegexMatch> matches = RegExUtils.findMatches(text, match, Pattern.DOTALL);
+
+        StringBuilder reducedContent = new StringBuilder();
+        int lastMatchEnd = 0;
+        for (int i = 0; i < matches.size(); i++) {
+            int matchStart = matches.get(i).getPosition();
+            int matchEnd = matches.get(i).getEnd();
+            String matchText = text.substring(matchStart, matchEnd);
+            String textBeforeMatch = text.substring(lastMatchEnd, matchStart);
+            lastMatchEnd = matchEnd;
+
+            if (i == 0) {
+                reducedContent.append(StringUtils.trimRight(textBeforeMatch, threshold)).append(matchText);
+            } else {
+                reducedContent.append(StringUtils.trimLeftRight(textBeforeMatch, threshold)).append(matchText);
+            }
+        }
+
+        reducedContent.append(StringUtils.trimLeft(text.substring(lastMatchEnd), threshold));
+        return reducedContent.toString();
+    }
+
+    /**
+     * @return The text blocks (paragraphs) not containing the match.
+     */
+    @NotNull
+    public static List<String> removeParagraphsNotMatching(@NotNull String text, @NotNull String match) {
+        Pattern patternParagraph = Pattern.compile(REGEX_PARAGRAPH, Pattern.DOTALL);
+        Pattern patternMatch = Pattern.compile(match);
+
+        List<String> matchingParagraphs = new ArrayList<>();
+
+        Matcher matcherParagraph = patternParagraph.matcher(text);
+        while (matcherParagraph.find()) {
+            String paragraph = matcherParagraph.group(2);
+            Matcher matcherMatch = patternMatch.matcher(paragraph);
+            if (matcherMatch.find()) {
+                matchingParagraphs.add(paragraph);
+            }
+        }
+
+        return matchingParagraphs;
     }
 
 }

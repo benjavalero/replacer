@@ -50,13 +50,13 @@ public class MisspellingFinderTest {
         // "UN" will be ignored because it is all in uppercase and has a known misspelling
         // Results are inverse order
 
-        ArticleReplacement result1 = result.get(1);
+        ArticleReplacement result1 = result.get(0);
         Assert.assertEquals("vonito", result1.getOriginalText());
         Assert.assertEquals(3, result1.getPosition());
         Assert.assertEquals(PotentialErrorType.MISSPELLING, result1.getType());
         Assert.assertEquals("bonito", result1.getProposedFixes().get(0));
 
-        ArticleReplacement result2 = result.get(0);
+        ArticleReplacement result2 = result.get(1);
         Assert.assertEquals("Exemplo", result2.getOriginalText());
         Assert.assertEquals(10, result2.getPosition());
         Assert.assertEquals("Ejemplo", result2.getProposedFixes().get(0));

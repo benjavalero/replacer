@@ -14,8 +14,8 @@ public class SourceCodeFinderTest {
         String source = "<math>Un <i>ejemplo</i>\n en LaTeX</math>";
         String text = "xxx " + source + " zzz";
 
-        SourceCodeFinder sourceCodeFinder = new SourceCodeFinder();
-        List<RegexMatch> matches = sourceCodeFinder.findErrorExceptions(text);
+        SourceCodeMatchFinder sourceCodeFinder = new SourceCodeMatchFinder();
+        List<RegexMatch> matches = sourceCodeFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(source, matches.get(0).getOriginalText());
@@ -26,8 +26,8 @@ public class SourceCodeFinderTest {
         String source = "<math>Un <i>ejemplo</i>\n en LaTeX</math>";
         String text = "xxx " + source + " zzz";
 
-        SourceCodeFinder sourceCodeFinder = new SourceCodeFinder();
-        List<RegexMatch> matches = sourceCodeFinder.findErrorExceptions(StringUtils.escapeText(text));
+        SourceCodeMatchFinder sourceCodeFinder = new SourceCodeMatchFinder();
+        List<RegexMatch> matches = sourceCodeFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(StringUtils.escapeText(source), matches.get(0).getOriginalText());
@@ -38,8 +38,8 @@ public class SourceCodeFinderTest {
         String source = "<source>Un <i>ejemplo</i>\n en LaTeX</source>";
         String text = "xxx " + source + " zzz";
 
-        SourceCodeFinder sourceCodeFinder = new SourceCodeFinder();
-        List<RegexMatch> matches = sourceCodeFinder.findErrorExceptions(text);
+        SourceCodeMatchFinder sourceCodeFinder = new SourceCodeMatchFinder();
+        List<RegexMatch> matches = sourceCodeFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(source, matches.get(0).getOriginalText());
@@ -50,8 +50,8 @@ public class SourceCodeFinderTest {
         String source = "<source lang=\"python\">Un <i>ejemplo</i>\n en LaTeX</source>";
         String text = "xxx " + source + " zzz";
 
-        SourceCodeFinder sourceCodeFinder = new SourceCodeFinder();
-        List<RegexMatch> matches = sourceCodeFinder.findErrorExceptions(text);
+        SourceCodeMatchFinder sourceCodeFinder = new SourceCodeMatchFinder();
+        List<RegexMatch> matches = sourceCodeFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(source, matches.get(0).getOriginalText());

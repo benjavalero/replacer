@@ -1,6 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.Article;
+import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.article.ArticleRepository;
 import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.utils.RegexMatch;
@@ -38,13 +39,13 @@ public class DumpProcessorTest {
     public void testProcess() {
         DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, null, "");
 
-        Mockito.when(articleService.findPotentialErrorsAndExceptions(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(new RegexMatch()));
+        Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
+                .thenReturn(Collections.singletonList(new ArticleReplacement()));
 
         dumpProcessor.processArticle(dumpArticle);
 
         Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
-        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsAndExceptions(Mockito.anyString());
+        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.any(Article.class));
         Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.any(Article.class));
     }
@@ -54,8 +55,8 @@ public class DumpProcessorTest {
         Timestamp today = new Timestamp(new Date().getTime());
         DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, today, "");
 
-        Mockito.when(articleService.findPotentialErrorsAndExceptions(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(new RegexMatch()));
+        Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
+                .thenReturn(Collections.singletonList(new ArticleReplacement()));
 
         Article articleDb = new Article(1, "");
         articleDb.setAdditionDate(new Timestamp(new Date().getTime()));
@@ -64,7 +65,7 @@ public class DumpProcessorTest {
         dumpProcessor.processArticle(dumpArticle);
 
         Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
-        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsAndExceptions(Mockito.anyString());
+        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.any(Article.class));
         Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.any(Article.class));
     }
@@ -81,7 +82,7 @@ public class DumpProcessorTest {
         dumpProcessor.processArticle(dumpArticle);
 
         Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
-        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsAndExceptions(Mockito.anyString());
+        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(1)).delete(Mockito.any(Article.class));
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
     }
@@ -120,7 +121,7 @@ public class DumpProcessorTest {
         dumpProcessor.processArticle(dumpArticle);
 
         Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
-        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsAndExceptions(Mockito.anyString());
+        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
     }
 
@@ -136,7 +137,7 @@ public class DumpProcessorTest {
         dumpProcessor.processArticle(dumpArticle);
 
         Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
-        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsAndExceptions(Mockito.anyString());
+        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
     }
 
@@ -155,7 +156,7 @@ public class DumpProcessorTest {
         dumpProcessor.processArticle(dumpArticle);
 
         Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
-        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsAndExceptions(Mockito.anyString());
+        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
     }
 

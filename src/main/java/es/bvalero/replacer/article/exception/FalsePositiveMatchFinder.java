@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class FalsePositiveFinder implements ErrorExceptionFinder {
+public class FalsePositiveMatchFinder implements ExceptionMatchFinder {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinder.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveMatchFinder.class);
     private String regexFalsePositives;
 
-    public List<RegexMatch> findErrorExceptions(String text) {
+    public List<RegexMatch> findExceptionMatches(String text) {
         return RegExUtils.findMatches(text, getRegexFalsePositives());
     }
 

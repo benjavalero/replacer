@@ -14,8 +14,8 @@ public class CommentFinderTest {
         String comment = "<!-- Esto es un \n comentario -->";
         String text = "xxx " + comment + " zzz";
 
-        CommentFinder commentFinder = new CommentFinder();
-        List<RegexMatch> matches = commentFinder.findErrorExceptions(text);
+        CommentMatchFinder commentFinder = new CommentMatchFinder();
+        List<RegexMatch> matches = commentFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(comment, matches.get(0).getOriginalText());
@@ -26,8 +26,8 @@ public class CommentFinderTest {
         String comment = "<!-- Esto <span>es</span> un \n comentario -->";
         String text = "xxx " + comment + " zzz";
 
-        CommentFinder commentFinder = new CommentFinder();
-        List<RegexMatch> matches = commentFinder.findErrorExceptions(text);
+        CommentMatchFinder commentFinder = new CommentMatchFinder();
+        List<RegexMatch> matches = commentFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(comment, matches.get(0).getOriginalText());
@@ -38,8 +38,8 @@ public class CommentFinderTest {
         String comment = "<!-- Esto es un \n comentario -->";
         String text = "xxx " + comment + " zzz";
 
-        CommentFinder commentFinder = new CommentFinder();
-        List<RegexMatch> matches = commentFinder.findErrorExceptions(StringUtils.escapeText(text));
+        CommentMatchFinder commentFinder = new CommentMatchFinder();
+        List<RegexMatch> matches = commentFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(StringUtils.escapeText(comment), matches.get(0).getOriginalText());

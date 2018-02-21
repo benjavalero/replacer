@@ -32,8 +32,7 @@ public class PotentialErrorRepositoryTest {
         PotentialError error2 = new PotentialError(article2, PotentialErrorType.MISSPELLING, "aber");
         PotentialError error3 = new PotentialError(article2, PotentialErrorType.MISSPELLING, "madrid");
         PotentialError error4 = new PotentialError(article3, PotentialErrorType.MISSPELLING, "paris");
-        PotentialError error5 = new PotentialError(article3, PotentialErrorType.EXCEPTION, "sólo");
-        potentialErrorRepository.save(Arrays.asList(error1, error2, error3, error4, error5));
+        potentialErrorRepository.save(Arrays.asList(error1, error2, error3, error4));
 
         Assert.assertEquals(4, potentialErrorRepository.countNotReviewed().longValue());
 
@@ -54,8 +53,7 @@ public class PotentialErrorRepositoryTest {
         PotentialError error2 = new PotentialError(article2, PotentialErrorType.MISSPELLING, "aber");
         PotentialError error3 = new PotentialError(article2, PotentialErrorType.MISSPELLING, "madrid");
         PotentialError error4 = new PotentialError(article3, PotentialErrorType.MISSPELLING, "paris");
-        PotentialError error5 = new PotentialError(article3, PotentialErrorType.EXCEPTION, "sólo");
-        potentialErrorRepository.save(Arrays.asList(error1, error2, error3, error4, error5));
+        potentialErrorRepository.save(Arrays.asList(error1, error2, error3, error4));
 
         Assert.assertEquals(3, potentialErrorRepository.findMisspellingsGrouped().size());
 

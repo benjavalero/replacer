@@ -7,12 +7,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class TemplateNameFinder implements ErrorExceptionFinder {
+public class TemplateNameMatchFinder implements ExceptionMatchFinder {
 
     private static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}]+";
 
     @Override
-    public List<RegexMatch> findErrorExceptions(String text) {
+    public List<RegexMatch> findExceptionMatches(String text) {
         return RegExUtils.findMatches(text, REGEX_TEMPLATE_NAME);
     }
 

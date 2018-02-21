@@ -1,9 +1,8 @@
 package es.bvalero.replacer.article;
 
-import java.io.Serializable;
 import java.util.Map;
 
-public class ArticleData implements Serializable {
+public class ArticleData {
 
     private Integer id;
     private String title;
@@ -11,6 +10,13 @@ public class ArticleData implements Serializable {
     private Map<Integer, ArticleReplacement> fixes;
 
     ArticleData() {
+    }
+
+    ArticleData(Integer id, String title, String content, Map<Integer, ArticleReplacement> fixes) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.fixes = fixes;
     }
 
     public Integer getId() {
@@ -41,6 +47,7 @@ public class ArticleData implements Serializable {
         return fixes;
     }
 
+    @SuppressWarnings("unused")
     public void setFixes(Map<Integer, ArticleReplacement> fixes) {
         this.fixes = fixes;
     }

@@ -10,7 +10,7 @@ public class FalsePositiveFinderTest {
 
     @Test
     public void testLoadFalsePositives() {
-        FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
+        FalsePositiveMatchFinder falsePositiveFinder = new FalsePositiveMatchFinder();
         List<String> falsePositives = falsePositiveFinder.loadFalsePositives();
         Assert.assertFalse(falsePositives.isEmpty());
         Assert.assertTrue(falsePositives.contains("Index"));
@@ -21,8 +21,8 @@ public class FalsePositiveFinderTest {
     public void testRegexFalsePositives() {
         String text = "Un Link de Éstas en el Index Online de ésta Tropicos.org Aquél aquéllo Saint Martin.";
 
-        FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
-        List<RegexMatch> matches = falsePositiveFinder.findErrorExceptions(text);
+        FalsePositiveMatchFinder falsePositiveFinder = new FalsePositiveMatchFinder();
+        List<RegexMatch> matches = falsePositiveFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(9, matches.size());

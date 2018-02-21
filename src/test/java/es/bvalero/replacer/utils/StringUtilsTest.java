@@ -3,6 +3,8 @@ package es.bvalero.replacer.utils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.List;
+
 public class StringUtilsTest {
 
     @Test
@@ -95,4 +97,30 @@ public class StringUtilsTest {
         Assert.assertEquals(expected, StringUtils.trimLeftRight(text, threshold));
     }
 
+    @Test
+    public void testTrimText() {
+        int threshold = 3;
+        String match = "-";
+        String text = "En un-lugar de-la Mancha de-cuyo-nombre no quiero acordarme.";
+        String expected = "[...]  un-lug [...]  de-la  [...]  de-cuyo-nom [...]";
+        Assert.assertEquals(expected, StringUtils.trimText(text, threshold, match));
+    }
+
+    @Test
+    public void testRemoveParagraphsNotMatching() {
+        String text = "A\n\nB\n\nC id=\"miss-2\"\n\nD id=\"miss-3\"\n\nE\n\nF id=\"miss-14\"\n\nG\n\nH\n\n";
+
+        List<String> matchingParagraphs = StringUtils.removeParagraphsNotMatching(text, "id=\"miss-[0-9]+\"");
+
+        Assert.assertFalse(matchingParagraphs.isEmpty());
+        Assert.assertEquals(3, matchingParagraphs.size());
+        Assert.assertFalse(matchingParagraphs.contains("A"));
+        Assert.assertFalse(matchingParagraphs.contains("B"));
+        Assert.assertTrue(matchingParagraphs.contains("C id=\"miss-2\""));
+        Assert.assertTrue(matchingParagraphs.contains("D id=\"miss-3\""));
+        Assert.assertFalse(matchingParagraphs.contains("E"));
+        Assert.assertTrue(matchingParagraphs.contains("F id=\"miss-14\""));
+        Assert.assertFalse(matchingParagraphs.contains("G"));
+        Assert.assertFalse(matchingParagraphs.contains("H"));
+    }
 }

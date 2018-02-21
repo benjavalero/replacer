@@ -7,6 +7,7 @@ import java.io.Serializable;
 @Table(name = "potentialerror")
 public class PotentialError implements Serializable {
 
+    @SuppressWarnings("unused")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,6 +23,7 @@ public class PotentialError implements Serializable {
     @Column(name = "text", nullable = false, length = 30)
     private String text;
 
+    @SuppressWarnings("unused")
     public PotentialError() {
     }
 

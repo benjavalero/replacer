@@ -1,11 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.Article;
-import es.bvalero.replacer.article.ArticleRepository;
-import es.bvalero.replacer.article.ArticleService;
-import es.bvalero.replacer.article.PotentialError;
-import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.article.PotentialErrorType;
+import es.bvalero.replacer.article.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,8 +51,8 @@ class DumpProcessor {
 
         // Process the article. Find the potential errors ignoring the ones in exceptions.
 
-        List<RegexMatch> regexMatches = articleService.findPotentialErrorsAndExceptions(dumpArticle.getContent());
-        if (regexMatches.isEmpty()) {
+        List<ArticleReplacement> articleReplacements = articleService.findPotentialErrorsIgnoringExceptions(dumpArticle.getContent());
+        if (articleReplacements.isEmpty()) {
             LOGGER.debug("No errors found in article: {}", dumpArticle.getTitle());
             if (article != null) {
                 articleRepository.delete(article);
@@ -70,18 +65,16 @@ class DumpProcessor {
             }
 
             article.setAdditionDate(new Timestamp(new Date().getTime()));
-            addPotentialErrorsToArticle(article, regexMatches);
+            addPotentialErrorsToArticle(article, articleReplacements);
 
             articleRepository.save(article);
         }
     }
 
-    private void addPotentialErrorsToArticle(Article article, List<RegexMatch> regexMatches) {
-        for (RegexMatch regexMatch : regexMatches) {
-            if (!PotentialErrorType.EXCEPTION.equals(regexMatch.getType())) {
-                article.getPotentialErrors().add(
-                        new PotentialError(article, regexMatch.getType(), regexMatch.getOriginalText()));
-            }
+    private void addPotentialErrorsToArticle(Article article, List<ArticleReplacement> articleReplacements) {
+        for (ArticleReplacement articleReplacement : articleReplacements) {
+            article.getPotentialErrors().add(
+                    new PotentialError(article, articleReplacement.getType(), articleReplacement.getOriginalText()));
         }
     }
 

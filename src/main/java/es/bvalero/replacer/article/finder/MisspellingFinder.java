@@ -1,18 +1,16 @@
 package es.bvalero.replacer.article.finder;
 
 import es.bvalero.replacer.article.ArticleReplacement;
-import es.bvalero.replacer.article.PotentialErrorFinder;
+import es.bvalero.replacer.article.PotentialErrorType;
 import es.bvalero.replacer.misspelling.Misspelling;
 import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.article.PotentialErrorType;
 import es.bvalero.replacer.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,7 +27,6 @@ public class MisspellingFinder implements PotentialErrorFinder {
 
     /**
      * @return A list with the potential errors of type misspelling in a given text.
-     * The results are in descendant order by the position.
      */
     @NotNull
     @Override
@@ -62,8 +59,6 @@ public class MisspellingFinder implements PotentialErrorFinder {
                 articleReplacements.add(replacement);
             }
         }
-
-        Collections.sort(articleReplacements);
 
         return articleReplacements;
     }

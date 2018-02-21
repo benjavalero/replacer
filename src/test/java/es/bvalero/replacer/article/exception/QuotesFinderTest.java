@@ -12,8 +12,8 @@ public class QuotesFinderTest {
     @Test
     public void testRegexQuotes() {
         String text = "xxx '''I'm Muzzy''' \"zzz\" ''''ttt'' ''uuu\" vvv";
-        QuotesFinder quotesFinder = new QuotesFinder();
-        List<RegexMatch> matches = quotesFinder.findErrorExceptions(text);
+        QuotesMatchFinder quotesFinder = new QuotesMatchFinder();
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(3, matches.size());
@@ -25,8 +25,8 @@ public class QuotesFinderTest {
     @Test
     public void testRegexQuotesEscaped() {
         String text = "xxx '''I'm Muzzy''' \"zzz\" ''''ttt'' ''uuu\" vvv";
-        QuotesFinder quotesFinder = new QuotesFinder();
-        List<RegexMatch> matches = quotesFinder.findErrorExceptions(StringUtils.escapeText(text));
+        QuotesMatchFinder quotesFinder = new QuotesMatchFinder();
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(3, matches.size());
@@ -41,8 +41,8 @@ public class QuotesFinderTest {
         String quotes = "«yyy»";
         String text = "xxx " + quotes + " zzz";
 
-        QuotesFinder quotesFinder = new QuotesFinder();
-        List<RegexMatch> matches = quotesFinder.findErrorExceptions(StringUtils.escapeText(text));
+        QuotesMatchFinder quotesFinder = new QuotesMatchFinder();
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(quotes, matches.get(0).getOriginalText());
@@ -53,8 +53,8 @@ public class QuotesFinderTest {
         String quotes = "“yyy”";
         String text = "xxx " + quotes + " zzz";
 
-        QuotesFinder quotesFinder = new QuotesFinder();
-        List<RegexMatch> matches = quotesFinder.findErrorExceptions(StringUtils.escapeText(text));
+        QuotesMatchFinder quotesFinder = new QuotesMatchFinder();
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(quotes, matches.get(0).getOriginalText());

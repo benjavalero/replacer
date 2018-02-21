@@ -1,7 +1,8 @@
 package es.bvalero.replacer.article;
 
-import es.bvalero.replacer.article.exception.ErrorExceptionFinder;
-import es.bvalero.replacer.article.finder.MisspellingFinder;
+import es.bvalero.replacer.article.exception.ExceptionMatchFinder;
+import es.bvalero.replacer.article.finder.PotentialErrorFinder;
+import es.bvalero.replacer.utils.RegexMatch;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.junit.Assert;
@@ -11,8 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.PageRequest;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,13 +25,13 @@ public class ArticleServiceTest {
     private ArticleRepository articleRepository;
 
     @Mock
+    private PotentialErrorRepository potentialErrorRepository;
+
+    @Mock
     private IWikipediaFacade wikipediaService;
 
     @Mock
-    private List<ErrorExceptionFinder> errorExceptionFinders;
-
-    @Mock
-    private MisspellingFinder misspellingFinder;
+    private List<ExceptionMatchFinder> exceptionMatchFinders;
 
     @Mock
     private List<PotentialErrorFinder> potentialErrorFinders;
@@ -46,69 +49,95 @@ public class ArticleServiceTest {
     public void findRandomArticleWithPotentialErrors() throws WikipediaException {
         Mockito.when(articleRepository.findMaxIdNotReviewed()).thenReturn(10);
 
-        String articleTitle = "Un artículo aleatorio";
-        Article article = new Article(1, articleTitle);
+        Integer id = 1;
+        String title = "España";
+        String text = "Un hejemplo con muxos herrores y <XML>.";
+
+        Article randomArticle = new Article(id, title);
         Mockito.when(articleRepository.findFirstByIdGreaterThanAndReviewDateNull(Mockito.anyInt()))
-                .thenReturn(article);
+                .thenReturn(randomArticle);
 
-        String articleContent = "Contenido de Hejemplo con errores.";
-        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString()))
-                .thenReturn(articleContent);
+        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenReturn(text);
 
-        ArticleReplacement replacement = new ArticleReplacement();
-        replacement.setPosition(13);
-        replacement.setOriginalText("Hejemplo");
-        replacement.setComment("Sin hache");
-        replacement.setType(PotentialErrorType.MISSPELLING);
-        replacement.setProposedFixes(Collections.singletonList("Hejemplo"));
+        // Exception matches
+        ExceptionMatchFinder exceptionMatchFinder = Mockito.mock(ExceptionMatchFinder.class);
+        RegexMatch exceptionMatch = new RegexMatch(16, "muxos");
+        Mockito.when(exceptionMatchFinder.findExceptionMatches(Mockito.anyString())).thenReturn(Collections.singletonList(exceptionMatch));
+        Mockito.when(exceptionMatchFinders.iterator()).thenReturn(Arrays.asList(new ExceptionMatchFinder[]{exceptionMatchFinder}).iterator());
 
-        // No exceptions found
-        Mockito.when(errorExceptionFinders.iterator()).thenReturn(new ArrayList<ErrorExceptionFinder>().iterator());
+        // Potential error matches
+        PotentialErrorFinder potentialErrorFinder = Mockito.mock(PotentialErrorFinder.class);
+        ArticleReplacement replacement1 = new ArticleReplacement(3, "hejemplo");
+        replacement1.setType(PotentialErrorType.MISSPELLING);
+        replacement1.setComment("ejemplo");
+        ArticleReplacement replacement2 = new ArticleReplacement(16, "muxos");
+        ArticleReplacement replacement3 = new ArticleReplacement(22, "herrores");
+        replacement3.setType(PotentialErrorType.MISSPELLING);
+        replacement3.setComment("errores");
+        Mockito.when(potentialErrorFinder.findPotentialErrors(Mockito.anyString())).thenReturn(Arrays.asList(replacement1, replacement2, replacement3));
+        Mockito.when(potentialErrorFinders.iterator()).thenReturn(Arrays.asList(new PotentialErrorFinder[]{potentialErrorFinder}).iterator());
 
-        Mockito.when(misspellingFinder.findPotentialErrors(articleContent))
-                .thenReturn(Collections.singletonList(replacement));
-        List<PotentialErrorFinder> finderList = Collections.singletonList((PotentialErrorFinder) misspellingFinder);
-        Mockito.when(potentialErrorFinders.iterator()).thenReturn(finderList.iterator());
+        articleService.setHighlightExceptions(true);
 
         ArticleData articleData = articleService.findRandomArticleWithPotentialErrors();
-        Assert.assertEquals(articleTitle, articleData.getTitle());
-        String replacedContent = articleContent.replace("Hejemplo",
-                articleService.getReplacementButtonText(replacement));
+
+        Assert.assertNotNull(articleData);
+        Assert.assertEquals(id, articleData.getId());
+        Assert.assertEquals(title, articleData.getTitle());
+
+        String replacedContent = "Un " +
+                "<button id=\"miss-3\" title=\"ejemplo\" type=\"button\" class=\"miss btn btn-danger\" data-toggle=\"tooltip\" data-placement=\"top\">hejemplo</button>" +
+                " con <span class=\"syntax exception\">muxos</span> " +
+                "<button id=\"miss-22\" title=\"errores\" type=\"button\" class=\"miss btn btn-danger\" data-toggle=\"tooltip\" data-placement=\"top\">herrores</button>" +
+                " y &lt;XML&gt;.";
         Assert.assertEquals(replacedContent, articleData.getContent());
-        Assert.assertFalse(articleData.getFixes().isEmpty());
-        Assert.assertEquals("Hejemplo", articleData.getFixes().get(13).getOriginalText());
+
+        Collection<ArticleReplacement> potentialErrors = articleData.getFixes().values();
+        Assert.assertEquals(2, potentialErrors.size());
+        Assert.assertTrue(potentialErrors.contains(replacement1));
+        Assert.assertFalse(potentialErrors.contains(replacement2));
+        Assert.assertTrue(potentialErrors.contains(replacement3));
     }
 
     @Test
-    public void testArticleReplacementSorting() {
-        List<ArticleReplacement> repList = new ArrayList<>();
-        repList.add(new ArticleReplacement(1, null));
-        repList.add(new ArticleReplacement(2, null));
-        repList.add(new ArticleReplacement(2, null));
-        repList.add(new ArticleReplacement(3, null));
+    public void findRandomArticleByWordHidingParagraphs() throws WikipediaException {
+        Mockito.when(potentialErrorRepository.findMaxArticleIdByWordAndNotReviewed(Mockito.anyString())).thenReturn(10);
 
-        Collections.sort(repList);
-        Assert.assertEquals(4, repList.size());
-        Assert.assertEquals(3, repList.get(0).getPosition());
-        Assert.assertEquals(2, repList.get(1).getPosition());
-        Assert.assertEquals(2, repList.get(2).getPosition());
-        Assert.assertEquals(1, repList.get(3).getPosition());
-    }
+        Integer id = 1;
+        String title = "España";
+        String text = "Un hejemplo\n\nX\n\nOtro hejemplo.";
 
-    @Test
-    public void testRemoveParagraphsWithoutReplacements() {
-        String text = "A\n\nB\n\nC id=\"miss-2\"\n\nD id=\"miss-3\"\n\nE\n\nF id=\"miss-4\"\n\nG\n\nH\n\n";
-        String expected = "C id=\"miss-2\"\n<hr>\nD id=\"miss-3\"\n<hr>\nF id=\"miss-4\"";
-        ArticleService articleService = new ArticleService();
-        Assert.assertEquals(expected, articleService.removeParagraphsWithoutReplacements(text));
-    }
+        Article randomArticle = new Article(id, title);
+        Mockito.when(potentialErrorRepository
+                .findByWordAndIdGreaterThanAndReviewDateNull(Mockito.anyInt(), Mockito.anyString(), Mockito.any(PageRequest.class)))
+                .thenReturn(Collections.singletonList(randomArticle));
 
-    @Test
-    public void testTrimText() {
-        String text = "Es una casa muy bonita <button>xxx</button> con vistas al mar, solárium en la terraza <button>zzz</button> y minibar en el sótano.";
-        String expected = "[...] uy bonita <button>xxx</button> con vista [...] a terraza <button>zzz</button> y minibar [...]";
-        ArticleService articleService = new ArticleService();
-        Assert.assertEquals(expected, articleService.trimText(text, 10));
+        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenReturn(text);
+
+        // Exception matches
+        ExceptionMatchFinder exceptionMatchFinder = Mockito.mock(ExceptionMatchFinder.class);
+        Mockito.when(exceptionMatchFinder.findExceptionMatches(Mockito.anyString())).thenReturn(Arrays.asList(new RegexMatch[]{}));
+        Mockito.when(exceptionMatchFinders.iterator()).thenReturn(Arrays.asList(new ExceptionMatchFinder[]{exceptionMatchFinder}).iterator());
+
+        // Potential error matches
+        PotentialErrorFinder potentialErrorFinder = Mockito.mock(PotentialErrorFinder.class);
+        ArticleReplacement replacement1 = new ArticleReplacement(3, "hejemplo");
+        ArticleReplacement replacement2 = new ArticleReplacement(21, "hejemplo");
+        replacement1.setComment("ejemplo");
+        replacement1.setType(PotentialErrorType.MISSPELLING);
+        replacement2.setComment("ejemplo");
+        replacement2.setType(PotentialErrorType.MISSPELLING);
+        Mockito.when(potentialErrorFinder.findPotentialErrors(Mockito.anyString())).thenReturn(Arrays.asList(replacement1, replacement2));
+        Mockito.when(potentialErrorFinders.iterator()).thenReturn(Arrays.asList(new PotentialErrorFinder[]{potentialErrorFinder}).iterator());
+
+        articleService.setHideEmptyParagraphs(true);
+        ArticleData articleData = articleService.findRandomArticleWithPotentialErrors("xxx");
+
+        String replacedContent = "Un <button id=\"miss-3\" title=\"ejemplo\" type=\"button\" class=\"miss btn btn-danger\" data-toggle=\"tooltip\" data-placement=\"top\">hejemplo</button>"
+                + "\n<hr>\n"
+                + "Otro <button id=\"miss-21\" title=\"ejemplo\" type=\"button\" class=\"miss btn btn-danger\" data-toggle=\"tooltip\" data-placement=\"top\">hejemplo</button>.";
+        Assert.assertNotNull(articleData);
+        Assert.assertEquals(replacedContent, articleData.getContent());
     }
 
 }
