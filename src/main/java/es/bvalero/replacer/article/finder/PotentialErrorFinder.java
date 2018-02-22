@@ -4,6 +4,9 @@ import es.bvalero.replacer.article.ArticleReplacement;
 
 import java.util.List;
 
+/**
+ * Classes implementing this interface will provide methods to find potential errors of different types.
+ */
 public interface PotentialErrorFinder {
 
     /**

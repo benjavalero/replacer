@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/**
+ * Provides methods to find articles with potential errors.
+ */
 @Service
 public class ArticleService {
 

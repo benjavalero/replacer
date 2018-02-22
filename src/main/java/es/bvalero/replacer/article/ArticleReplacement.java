@@ -5,6 +5,9 @@ import es.bvalero.replacer.utils.RegexMatch;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Domain class of a potential replacement in an article to be used in the front-end.
+ */
 public class ArticleReplacement extends RegexMatch {
 
     private PotentialErrorType type;

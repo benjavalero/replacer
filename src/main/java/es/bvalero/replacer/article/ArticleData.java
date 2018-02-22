@@ -2,6 +2,9 @@ package es.bvalero.replacer.article;
 
 import java.util.Map;
 
+/**
+ * Domain class of an article to be used in the front-end.
+ */
 public class ArticleData {
 
     private Integer id;

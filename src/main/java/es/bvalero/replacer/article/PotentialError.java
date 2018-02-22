@@ -3,6 +3,9 @@ package es.bvalero.replacer.article;
 import javax.persistence.*;
 import java.io.Serializable;
 
+/**
+ * A potential error in the database related to an article.
+ */
 @Entity
 @Table(name = "potentialerror")
 public class PotentialError implements Serializable {
