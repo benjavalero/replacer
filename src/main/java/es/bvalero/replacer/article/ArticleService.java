@@ -36,7 +36,7 @@ public class ArticleService {
     private PotentialErrorRepository potentialErrorRepository;
 
     @Autowired
-    private IWikipediaFacade wikipediaService;
+    private IWikipediaFacade wikipediaFacade;
 
     @Autowired
     private List<ExceptionMatchFinder> exceptionMatchFinders;
@@ -94,7 +94,7 @@ public class ArticleService {
         // Get the content of the article from Wikipedia
         String articleContent;
         try {
-            articleContent = wikipediaService.getArticleContent(randomArticle.getTitle());
+            articleContent = wikipediaFacade.getArticleContent(randomArticle.getTitle());
         } catch (WikipediaException e) {
             LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle(), e);
             articleRepository.delete(randomArticle.getId());
@@ -257,6 +257,76 @@ public class ArticleService {
             reducedContent.append(StringUtils.trimText(paragraph, TRIM_THRESHOLD, REGEX_BUTTON_TAG));
         }
         return reducedContent.toString();
+    }
+
+    /**
+     * Saves in Wikipedia the changes on an article validated in the front-end.
+     */
+    public boolean saveArticleChanges(@NotNull ArticleData article) {
+        LOGGER.info("Saving changes in: {}", article.getTitle());
+
+        // Find the fixes verified by the user
+        List<ArticleReplacement> fixedReplacements = new ArrayList<>();
+        for (ArticleReplacement replacement : article.getFixes().values()) {
+            if (replacement.isFixed()) {
+                fixedReplacements.add(replacement);
+            }
+        }
+
+        if (fixedReplacements.isEmpty()) {
+            LOGGER.info("Nothing to fix in article: {}", article.getTitle());
+            markArticleAsReviewed(article);
+            return true;
+        }
+
+        // Apply the fixes
+
+        String currentContent;
+        try {
+            currentContent = wikipediaFacade.getArticleContent(article.getTitle());
+        } catch (WikipediaException e) {
+            LOGGER.error("Error getting the current content of the article: " + article.getTitle(), e);
+            return false;
+        }
+
+        // Escape the content just in case it contains XML tags, as done when finding the replacements.
+        String replacedContent = StringUtils.escapeText(currentContent);
+
+        Collections.sort(fixedReplacements);
+        for (ArticleReplacement fix : fixedReplacements) {
+            LOGGER.debug("Fixing article {}: {} -> {}", article.getTitle(), fix.getOriginalText(), fix.getFixedText());
+            replacedContent = StringUtils.replaceAt(replacedContent, fix.getPosition(), fix.getOriginalText(), fix.getFixedText());
+            if (replacedContent == null) {
+                LOGGER.error("Error replacing the validated fixes");
+                return false;
+            }
+        }
+        String contentToUpload = StringUtils.unEscapeText(replacedContent);
+
+        // Upload the new content to Wikipedia
+        // It may happen there has been changes during the edition, but in this point the fixes can be applied anyway.
+        // Check just before uploading there are no changes during the edition
+        if (contentToUpload.equals(currentContent)) {
+            LOGGER.warn("The content to upload matches with the current content");
+            markArticleAsReviewed(article);
+            return true;
+        }
+
+        try {
+            wikipediaFacade.editArticleContent(article.getTitle(), contentToUpload, "Correcciones ortográficas");
+        } catch (WikipediaException e) {
+            LOGGER.error("Error committing fixes to Wikipedia", e);
+            return false;
+        }
+
+        // Mark the article as reviewed in the database
+        markArticleAsReviewed(article);
+
+        return true;
+    }
+
+    private void markArticleAsReviewed(@NotNull ArticleData article) {
+        articleRepository.setArticleAsReviewed(article.getId());
     }
 
 }

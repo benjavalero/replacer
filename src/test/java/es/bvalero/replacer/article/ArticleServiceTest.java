@@ -14,10 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class ArticleServiceTest {
 
@@ -28,7 +25,7 @@ public class ArticleServiceTest {
     private PotentialErrorRepository potentialErrorRepository;
 
     @Mock
-    private IWikipediaFacade wikipediaService;
+    private IWikipediaFacade wikipediaFacade;
 
     @Mock
     private List<ExceptionMatchFinder> exceptionMatchFinders;
@@ -57,7 +54,7 @@ public class ArticleServiceTest {
         Mockito.when(articleRepository.findFirstByIdGreaterThanAndReviewDateNull(Mockito.anyInt()))
                 .thenReturn(randomArticle);
 
-        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenReturn(text);
+        Mockito.when(wikipediaFacade.getArticleContent(Mockito.anyString())).thenReturn(text);
 
         // Exception matches
         ExceptionMatchFinder exceptionMatchFinder = Mockito.mock(ExceptionMatchFinder.class);
@@ -112,7 +109,7 @@ public class ArticleServiceTest {
                 .findByWordAndIdGreaterThanAndReviewDateNull(Mockito.anyInt(), Mockito.anyString(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(randomArticle));
 
-        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenReturn(text);
+        Mockito.when(wikipediaFacade.getArticleContent(Mockito.anyString())).thenReturn(text);
 
         // Exception matches
         ExceptionMatchFinder exceptionMatchFinder = Mockito.mock(ExceptionMatchFinder.class);
@@ -138,6 +135,44 @@ public class ArticleServiceTest {
                 + "Otro <button id=\"miss-21\" title=\"ejemplo\" type=\"button\" class=\"miss btn btn-danger\" data-toggle=\"tooltip\" data-placement=\"top\">hejemplo</button>.";
         Assert.assertNotNull(articleData);
         Assert.assertEquals(replacedContent, articleData.getContent());
+    }
+
+    @Test
+    public void testSaveArticleWithoutFixes() throws WikipediaException {
+        Map<Integer, ArticleReplacement> articleFixes = new HashMap<>();
+        ArticleData article = new ArticleData(1, "", "", articleFixes);
+
+        articleService.saveArticleChanges(article);
+
+        Mockito.verify(articleRepository).setArticleAsReviewed(Mockito.anyInt());
+        Mockito.verify(wikipediaFacade, Mockito.times(0)).getArticleContent(Mockito.anyString());
+    }
+
+    @Test
+    public void testSaveArticle() throws WikipediaException {
+        Integer id = 1;
+        String title = "España";
+        String text = "Un hejemplo\n\nX\n\nOtro hejemplo.";
+
+        Map<Integer, ArticleReplacement> articleFixes = new HashMap<>();
+        ArticleReplacement replacement1 = new ArticleReplacement(3, "hejemplo");
+        replacement1.setFixed(true);
+        replacement1.setFixedText("ejemplo");
+        ArticleReplacement replacement2 = new ArticleReplacement(21, "hejemplo");
+        replacement2.setFixed(false);
+        articleFixes.put(replacement1.getPosition(), replacement1);
+        articleFixes.put(replacement2.getPosition(), replacement2);
+
+        ArticleData article = new ArticleData(id, title, text, articleFixes);
+
+        Mockito.when(wikipediaFacade.getArticleContent(title)).thenReturn(text);
+
+        articleService.saveArticleChanges(article);
+
+        String fixedText = "Un ejemplo\n\nX\n\nOtro hejemplo.";
+        Mockito.verify(wikipediaFacade).getArticleContent(title);
+        Mockito.verify(wikipediaFacade).editArticleContent(title, fixedText, "Correcciones ortográficas");
+        Mockito.verify(articleRepository).setArticleAsReviewed(id);
     }
 
 }
