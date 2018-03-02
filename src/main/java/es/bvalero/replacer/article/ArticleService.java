@@ -127,7 +127,6 @@ public class ArticleService {
         List<ArticleReplacement> articleReplacements = findPotentialErrorsIgnoringExceptions(escapedContent, exceptionMatches);
         if (articleReplacements.isEmpty()) {
             LOGGER.info("Article found has no potential errors to review: {}", article.getTitle());
-            articleRepository.delete(article.getId());
             return null;
         }
 
