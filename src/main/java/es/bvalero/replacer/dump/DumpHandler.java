@@ -15,7 +15,7 @@ import java.util.Date;
  * Handler to parse the Wikipedia XML dump.
  */
 @Component
-public class DumpHandler extends DefaultHandler {
+class DumpHandler extends DefaultHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpHandler.class);
 

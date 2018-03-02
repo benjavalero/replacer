@@ -4,7 +4,6 @@ import es.bvalero.replacer.article.Article;
 import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.article.ArticleRepository;
 import es.bvalero.replacer.article.ArticleService;
-import es.bvalero.replacer.utils.RegexMatch;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import org.junit.Before;
 import org.junit.Test;
