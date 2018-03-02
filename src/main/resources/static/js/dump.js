@@ -17,7 +17,10 @@ function runIndexation() {
     }).done(function(response) {
         // Do nothing
     }).fail(function(response) {
-        alert('Error lanzando la indexación: ' + JSON.stringify(response));
+        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
+            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
+            + 'Error lanzando la indexación: ' + JSON.stringify(response)
+            + '</div>');
     });
 
     $('#button-index').addClass("disabled");
@@ -52,6 +55,9 @@ function findDumpStatus() {
 
         $('#status-index').html(message);
     }).fail(function(response) {
-        alert('Error buscando el estado de la indexación: ' + JSON.stringify(response));
+        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
+            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
+            + 'Error buscando el estado de la indexación: ' + JSON.stringify(response)
+            + '</div>');
     });
 }
