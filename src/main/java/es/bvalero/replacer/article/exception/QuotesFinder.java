@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class QuotesMatchFinder implements ExceptionMatchFinder {
+public class QuotesFinder implements ExceptionMatchFinder {
 
     // We trust the quotes are well formed with matching leading and trailing quotes
     private static final String REGEX_QUOTES = "'{2,5}.+?'{2,5}";

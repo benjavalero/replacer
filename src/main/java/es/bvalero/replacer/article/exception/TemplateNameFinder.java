@@ -7,13 +7,13 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class TemplateParamMatchFinder implements ExceptionMatchFinder {
+public class TemplateNameFinder implements ExceptionMatchFinder {
 
-    private static final String REGEX_TEMPLATE_PARAM = "\\|[\\wÁáÉéÍíÓóÚúÜüÑñ\\-\\s]+=";
+    private static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}]+";
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text) {
-        return RegExUtils.findMatches(text, REGEX_TEMPLATE_PARAM);
+        return RegExUtils.findMatches(text, REGEX_TEMPLATE_NAME);
     }
 
 }

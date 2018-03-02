@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class FalsePositiveMatchFinder implements ExceptionMatchFinder {
+public class FalsePositiveFinder implements ExceptionMatchFinder {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveMatchFinder.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinder.class);
     private String regexFalsePositives;
 
     public List<RegexMatch> findExceptionMatches(String text) {

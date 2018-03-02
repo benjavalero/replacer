@@ -218,7 +218,6 @@ public class ArticleService {
     @NotNull
     private List<RegexMatch> findExceptionMatches(@NotNull String text) {
         List<RegexMatch> allErrorExceptions = new ArrayList<>();
-        // TODO Reduce the amount of errorExceptionFinders by merging
         for (ExceptionMatchFinder exceptionMatchFinder : exceptionMatchFinders) {
             allErrorExceptions.addAll(exceptionMatchFinder.findExceptionMatches(text));
         }

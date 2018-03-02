@@ -14,7 +14,7 @@ public class XmlTagFinderTest {
         String ref = "<ref  name= España >";
         String text = "xxx " + ref + " zzz";
 
-        XmlTagMatchFinder xmlTagFinder = new XmlTagMatchFinder();
+        XmlTagFinder xmlTagFinder = new XmlTagFinder();
         List<RegexMatch> matches = xmlTagFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
@@ -26,7 +26,7 @@ public class XmlTagFinderTest {
         String ref = "<ref  name  =España />";
         String text = "xxx " + ref + " zzz";
 
-        XmlTagMatchFinder xmlTagFinder = new XmlTagMatchFinder();
+        XmlTagFinder xmlTagFinder = new XmlTagFinder();
         List<RegexMatch> matches = xmlTagFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertFalse(matches.isEmpty());
@@ -38,7 +38,7 @@ public class XmlTagFinderTest {
         String comment = "<!-- Esto es un \n comentario -->";
         String text = "xxx " + comment + " zzz";
 
-        XmlTagMatchFinder xmlTagFinder = new XmlTagMatchFinder();
+        XmlTagFinder xmlTagFinder = new XmlTagFinder();
         List<RegexMatch> matches = xmlTagFinder.findExceptionMatches(text);
 
         Assert.assertTrue(matches.isEmpty());
@@ -49,7 +49,7 @@ public class XmlTagFinderTest {
         String comment = "<!-- Esto es un \n comentario -->";
         String text = "xxx " + comment + " zzz";
 
-        XmlTagMatchFinder xmlTagFinder = new XmlTagMatchFinder();
+        XmlTagFinder xmlTagFinder = new XmlTagFinder();
         List<RegexMatch> matches = xmlTagFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertTrue(matches.isEmpty());

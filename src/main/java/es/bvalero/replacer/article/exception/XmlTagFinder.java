@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class XmlTagMatchFinder implements ExceptionMatchFinder {
+public class XmlTagFinder implements ExceptionMatchFinder {
 
     // We want to avoid the XML comments to be captured by this
     private static final String REGEX_XML_TAG = "<[\\wÁáÉéÍíÓóÚúÜüÑñ\\-\\s=\"/]+>";

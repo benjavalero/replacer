@@ -13,7 +13,7 @@ public class UnreplaceableTemplateFinderTest {
         String template = "{{Cita| yyyy \n zzz }}";
         String text = "xxx " + template + " zzz";
 
-        UnreplaceableTemplateMatchFinder unreplaceableTemplateFinder = new UnreplaceableTemplateMatchFinder();
+        UnreplaceableTemplateFinder unreplaceableTemplateFinder = new UnreplaceableTemplateFinder();
         List<RegexMatch> matches = unreplaceableTemplateFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
@@ -25,7 +25,7 @@ public class UnreplaceableTemplateFinderTest {
         String category = "[[Categoría:Lluvia]]";
         String text = "xxx " + category + " zzz";
 
-        UnreplaceableTemplateMatchFinder unreplaceableTemplateFinder = new UnreplaceableTemplateMatchFinder();
+        UnreplaceableTemplateFinder unreplaceableTemplateFinder = new UnreplaceableTemplateFinder();
         List<RegexMatch> matches = unreplaceableTemplateFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());

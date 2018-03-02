@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @Component
-public class SourceCodeMatchFinder implements ExceptionMatchFinder {
+public class SourceCodeFinder implements ExceptionMatchFinder {
 
     private static final String REGEX_TAG = "<(math|source|syntaxhighlight )[^>]*>.*?</\\1>";
     private static final String REGEX_TAG_ESCAPED = "&lt;(math|source|syntaxhighlight )[^&]*&gt;.*?&lt;/\\1&gt;";

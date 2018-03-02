@@ -14,7 +14,7 @@ public class SourceCodeFinderTest {
         String source = "<math>Un <i>ejemplo</i>\n en LaTeX</math>";
         String text = "xxx " + source + " zzz";
 
-        SourceCodeMatchFinder sourceCodeFinder = new SourceCodeMatchFinder();
+        SourceCodeFinder sourceCodeFinder = new SourceCodeFinder();
         List<RegexMatch> matches = sourceCodeFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
@@ -26,7 +26,7 @@ public class SourceCodeFinderTest {
         String source = "<math>Un <i>ejemplo</i>\n en LaTeX</math>";
         String text = "xxx " + source + " zzz";
 
-        SourceCodeMatchFinder sourceCodeFinder = new SourceCodeMatchFinder();
+        SourceCodeFinder sourceCodeFinder = new SourceCodeFinder();
         List<RegexMatch> matches = sourceCodeFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertFalse(matches.isEmpty());
@@ -38,7 +38,7 @@ public class SourceCodeFinderTest {
         String source = "<source>Un <i>ejemplo</i>\n en LaTeX</source>";
         String text = "xxx " + source + " zzz";
 
-        SourceCodeMatchFinder sourceCodeFinder = new SourceCodeMatchFinder();
+        SourceCodeFinder sourceCodeFinder = new SourceCodeFinder();
         List<RegexMatch> matches = sourceCodeFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
@@ -50,7 +50,7 @@ public class SourceCodeFinderTest {
         String source = "<source lang=\"python\">Un <i>ejemplo</i>\n en LaTeX</source>";
         String text = "xxx " + source + " zzz";
 
-        SourceCodeMatchFinder sourceCodeFinder = new SourceCodeMatchFinder();
+        SourceCodeFinder sourceCodeFinder = new SourceCodeFinder();
         List<RegexMatch> matches = sourceCodeFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());

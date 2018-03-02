@@ -13,7 +13,7 @@ public class UrlFinderTest {
         String url = "https://google.es?u=t&ja2+rl=http://www.marca.com#!page~2,3";
         String text = "xxx " + url + " zzz";
 
-        UrlMatchFinder urlFinder = new UrlMatchFinder();
+        UrlFinder urlFinder = new UrlFinder();
         List<RegexMatch> matches = urlFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
@@ -25,7 +25,7 @@ public class UrlFinderTest {
         String url = "google.com";
         String text = "xxx " + url + " zzz";
 
-        UrlMatchFinder urlFinder = new UrlMatchFinder();
+        UrlFinder urlFinder = new UrlFinder();
         List<RegexMatch> matches = urlFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UrlMatchFinder implements ExceptionMatchFinder {
+public class UrlFinder implements ExceptionMatchFinder {
 
     private static final String REGEX_URL = "https?://[\\w./\\-+?&%=:#;,~!]+";
     private static final String REGEX_DOMAIN = "[a-z]+\\.(?:com|org|net|info|es)";

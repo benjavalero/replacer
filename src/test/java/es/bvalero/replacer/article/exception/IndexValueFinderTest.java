@@ -12,7 +12,7 @@ public class IndexValueFinderTest {
     public void testRegexIndexValue() {
         String text = "xxx | índice = yyyy \n zzz|param=value|title  = Hola\n Adiós }} ttt";
 
-        IndexValueMatchFinder indexValueFinder = new IndexValueMatchFinder();
+        IndexValueFinder indexValueFinder = new IndexValueFinder();
         List<RegexMatch> matches = indexValueFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());

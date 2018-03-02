@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @Component
-public class CommentMatchFinder implements ExceptionMatchFinder {
+public class CommentFinder implements ExceptionMatchFinder {
 
     private static final String REGEX_COMMENT_TAG = "<!--.+?-->";
     private static final String REGEX_COMMENT_TAG_ESCAPED = "&lt;!--.+?--&gt;";

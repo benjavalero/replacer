@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UnreplaceableTemplateMatchFinder implements ExceptionMatchFinder {
+public class UnreplaceableTemplateFinder implements ExceptionMatchFinder {
 
     private static final String REGEX_UNREPLACEBLE_TEMPLATE =
             "\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||[Cc]oord\\||[Cc]ommonscat\\|)[^}]+}}";
