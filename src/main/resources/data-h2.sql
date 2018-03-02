@@ -6,4 +6,3 @@ INSERT INTO potentialerror (articleid, type, text) VALUES (1, 'MISSPELLING', 'ab
 INSERT INTO potentialerror (articleid, type, text) VALUES (2, 'MISSPELLING', 'aber');
 INSERT INTO potentialerror (articleid, type, text) VALUES (2, 'MISSPELLING', 'madrid');
 INSERT INTO potentialerror (articleid, type, text) VALUES (2, 'MISSPELLING', 'paris');
-INSERT INTO potentialerror (articleid, type, text) VALUES (3, 'EXCEPTION', 'sólo');
