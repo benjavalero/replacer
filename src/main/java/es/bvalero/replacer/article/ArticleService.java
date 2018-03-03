@@ -125,8 +125,8 @@ public class ArticleService {
         // Find the possible exceptions and errors in the article content
         List<RegexMatch> exceptionMatches = findExceptionMatches(escapedContent);
         List<ArticleReplacement> articleReplacements = findPotentialErrorsIgnoringExceptions(escapedContent, exceptionMatches);
+        LOGGER.info("Article found has {} potential errors to review: {}", articleReplacements.size(), article.getTitle());
         if (articleReplacements.isEmpty()) {
-            LOGGER.info("Article found has no potential errors to review: {}", article.getTitle());
             return null;
         }
 
@@ -261,8 +261,6 @@ public class ArticleService {
      * Saves in Wikipedia the changes on an article validated in the front-end.
      */
     public boolean saveArticleChanges(@NotNull ArticleData article) {
-        LOGGER.info("Saving changes in: {}", article.getTitle());
-
         // Find the fixes verified by the user
         List<ArticleReplacement> fixedReplacements = new ArrayList<>();
         for (ArticleReplacement replacement : article.getFixes().values()) {
