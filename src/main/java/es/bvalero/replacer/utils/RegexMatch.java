@@ -76,7 +76,11 @@ public class RegexMatch implements Comparable<RegexMatch> {
 
     @Override
     public int compareTo(@NotNull RegexMatch match) {
-        return match.getPosition() - this.getPosition();
+        if (match.getPosition() != this.getPosition()) {
+            return match.getPosition() - this.getPosition();
+        } else {
+            return this.getEnd() - match.getEnd();
+        }
     }
 
     public int getEnd() {

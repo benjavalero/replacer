@@ -40,6 +40,8 @@ public class RegexMatchTest {
         Assert.assertFalse(new RegexMatch(0, "Una casa muy bonita").isContainedIn(match)); // Containing
         Assert.assertTrue(new RegexMatch(5, "Casos").isContainedIn(match)); // Same interval
         Assert.assertTrue(new RegexMatch(6, "Red").isContainedIn(match)); // Contained
+        Assert.assertTrue(new RegexMatch(5, "Red").isContainedIn(match)); // Same start
+        Assert.assertTrue(new RegexMatch(7, "Red").isContainedIn(match)); // Same end
         Assert.assertFalse(new RegexMatch(9, "Casos").isContainedIn(match)); // Right-Intersecting
         Assert.assertFalse(new RegexMatch(10, "Casos").isContainedIn(match)); // Right-Out
 
@@ -54,8 +56,9 @@ public class RegexMatchTest {
         RegexMatch match3 = new RegexMatch(10, "casa"); // 10-14 contained in match2
         RegexMatch match4 = new RegexMatch(20, "Hola"); // 20-24
         RegexMatch match5 = new RegexMatch(22, "lado"); // 22-26 intersects match4
+        RegexMatch match6 = new RegexMatch(1, "Ho"); // 1-2 contained in match1
 
-        List<RegexMatch> matches = Arrays.asList(match2, match5, match4, match1, match3, match4);
+        List<RegexMatch> matches = Arrays.asList(match2, match5, match4, match1, match3, match4, match6);
         List<RegexMatch> resultMatches = RegexMatch.removedNestedMatches(matches);
 
         Assert.assertEquals(4, resultMatches.size());
