@@ -7,6 +7,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Repository for articles in database.
+ */
 @Repository
 @Transactional
 public interface ArticleRepository extends JpaRepository<Article, Integer> {

@@ -14,7 +14,7 @@ public class UrlFinderTest {
         String text = "xxx " + url + " zzz";
 
         UrlFinder urlFinder = new UrlFinder();
-        List<RegexMatch> matches = urlFinder.findErrorExceptions(text);
+        List<RegexMatch> matches = urlFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(url, matches.get(0).getOriginalText());
@@ -26,7 +26,7 @@ public class UrlFinderTest {
         String text = "xxx " + url + " zzz";
 
         UrlFinder urlFinder = new UrlFinder();
-        List<RegexMatch> matches = urlFinder.findErrorExceptions(text);
+        List<RegexMatch> matches = urlFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(url, matches.get(0).getOriginalText());

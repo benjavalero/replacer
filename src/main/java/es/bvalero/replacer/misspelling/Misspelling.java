@@ -1,62 +1,61 @@
 package es.bvalero.replacer.misspelling;
 
-import java.io.Serializable;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
-class Misspelling implements Serializable {
+/**
+ * Domain class corresponding to the lines in the Wikipedia article containing potential misspellings.
+ */
+public class Misspelling {
 
     private String word;
     private boolean caseSensitive;
     private String comment;
+
+    // Derived from the comment. In order not to calculate them every time.
     private List<String> suggestions;
 
-    Misspelling(String word, boolean caseSensitive, String comment, List<String> suggestions) {
+    public Misspelling(String word, boolean caseSensitive, String comment) {
         this.word = word;
         this.caseSensitive = caseSensitive;
         this.comment = comment;
-        this.suggestions = suggestions;
     }
 
-    String getWord() {
+    public String getWord() {
         return word;
     }
 
-    void setWord(String word) {
-        this.word = word;
-    }
-
-    boolean isCaseSensitive() {
+    public boolean isCaseSensitive() {
         return caseSensitive;
     }
 
-    void setCaseSensitive(boolean caseSensitive) {
-        this.caseSensitive = caseSensitive;
-    }
-
-    String getComment() {
+    public String getComment() {
         return comment;
     }
 
-    void setComment(String comment) {
-        this.comment = comment;
+    public List<String> getSuggestions() {
+        if (this.suggestions == null) {
+            this.suggestions = parseSuggestionsFromComment();
+        }
+        return this.suggestions;
     }
 
-    List<String> getSuggestions() {
-        return suggestions;
-    }
+    private List<String> parseSuggestionsFromComment() {
+        List<String> commentSuggestions = new ArrayList<>();
 
-    void setSuggestions(List<String> suggestions) {
-        this.suggestions = suggestions;
-    }
+        String suggestionWithoutBrackets = getComment().replaceAll("\\(.+?\\)", "");
+        for (String suggestion : suggestionWithoutBrackets.split(",")) {
+            String suggestionWord = suggestion.trim();
 
-    @Override
-    public String toString() {
-        return "Misspelling{" +
-                "word='" + word + '\'' +
-                ", caseSensitive=" + caseSensitive +
-                ", comment='" + comment + '\'' +
-                ", suggestions=" + suggestions +
-                '}';
+            // Don't suggest the misspelling main word
+            if (StringUtils.isNotBlank(suggestionWord) && !suggestionWord.equals(getWord())) {
+                commentSuggestions.add(suggestionWord);
+            }
+        }
+
+        return commentSuggestions;
     }
 
 }

@@ -14,21 +14,26 @@ import java.nio.file.Paths;
 class WikipediaFacadeMock implements IWikipediaFacade {
 
     @Override
-    public String getArticleContent(String articleTitle) throws Exception {
-        switch (articleTitle) {
-            case MISSPELLING_LIST_ARTICLE:
-                return loadArticleContent("/misspelling-list.txt");
-            default:
-                return loadArticleContent("/monkey-island.txt");
+    public String getArticleContent(String articleTitle) throws WikipediaException {
+        if (WikipediaFacade.MISSPELLING_LIST_ARTICLE.equals(articleTitle)) {
+            return loadArticleContent("/misspelling-list.txt");
+        } else {
+            return loadArticleContent("/monkey-island.txt");
         }
     }
 
+    @Override
     public void editArticleContent(String articleTitle, String articleContent, String editSummary) {
+        // Do nothing
     }
 
-    private String loadArticleContent(String fileName) throws URISyntaxException, IOException {
-        return new String(Files.readAllBytes(Paths.get(getClass().getResource(fileName).toURI())),
-                StandardCharsets.UTF_8);
+    private String loadArticleContent(String fileName) throws WikipediaException {
+        try {
+            return new String(Files.readAllBytes(Paths.get(getClass().getResource(fileName).toURI())),
+                    StandardCharsets.UTF_8);
+        } catch (IOException | URISyntaxException e) {
+            throw new WikipediaException(e);
+        }
     }
 
 }

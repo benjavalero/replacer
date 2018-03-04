@@ -14,7 +14,7 @@ public class UnreplaceableTemplateFinderTest {
         String text = "xxx " + template + " zzz";
 
         UnreplaceableTemplateFinder unreplaceableTemplateFinder = new UnreplaceableTemplateFinder();
-        List<RegexMatch> matches = unreplaceableTemplateFinder.findErrorExceptions(text);
+        List<RegexMatch> matches = unreplaceableTemplateFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(template, matches.get(0).getOriginalText());
@@ -26,7 +26,7 @@ public class UnreplaceableTemplateFinderTest {
         String text = "xxx " + category + " zzz";
 
         UnreplaceableTemplateFinder unreplaceableTemplateFinder = new UnreplaceableTemplateFinder();
-        List<RegexMatch> matches = unreplaceableTemplateFinder.findErrorExceptions(text);
+        List<RegexMatch> matches = unreplaceableTemplateFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(category, matches.get(0).getOriginalText());

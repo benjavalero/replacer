@@ -1,9 +1,10 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.Article;
+import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.article.ArticleRepository;
 import es.bvalero.replacer.article.ArticleService;
-import es.bvalero.replacer.utils.RegexMatch;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -13,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.sql.Timestamp;
 import java.util.Collections;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class DumpProcessorTest {
@@ -34,64 +36,126 @@ public class DumpProcessorTest {
 
     @Test
     public void testProcess() {
-        Mockito.when(articleService.findPotentialErrorsAndExceptions(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(new RegexMatch()));
-        dumpProcessor.processArticle(null, "", 0, null, null);
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, null, "");
 
-        Mockito.verify(articleRepository).save(Mockito.any(Article.class));
+        Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
+                .thenReturn(Collections.singletonList(new ArticleReplacement()));
+
+        dumpProcessor.processArticle(dumpArticle);
+
+        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
+        Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.any(Article.class));
+        Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.any(Article.class));
+    }
+
+    @Test
+    public void testProcessExistingArticle() {
+        Timestamp today = new Timestamp(new Date().getTime());
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, today, "");
+
+        Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
+                .thenReturn(Collections.singletonList(new ArticleReplacement()));
+
+        Article articleDb = new Article(1, "");
+        articleDb.setAdditionDate(new Timestamp(new Date().getTime()));
+        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
+
+        dumpProcessor.processArticle(dumpArticle);
+
+        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
+        Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.any(Article.class));
+        Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.any(Article.class));
+    }
+
+    @Test
+    public void testProcessArticleWithoutPotentialErrors() {
+        Timestamp today = new Timestamp(new Date().getTime());
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, today, "");
+
+        Article articleDb = new Article(1, "");
+        articleDb.setAdditionDate(new Timestamp(new Date().getTime()));
+        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
+
+        dumpProcessor.processArticle(dumpArticle);
+
+        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
+        Mockito.verify(articleRepository, Mockito.times(1)).delete(Mockito.any(Article.class));
+        Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
     }
 
     @Test
     public void testProcessOnlyArticlesAndAnnexes() {
-        dumpProcessor.processArticle(null, "", 1, null, null);
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.USER, null, "");
+
+        dumpProcessor.processArticle(dumpArticle);
+
         Mockito.verify(articleRepository, Mockito.times(0)).findOne(Mockito.anyInt());
-        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsAndExceptions(Mockito.anyString());
-        Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
     }
 
     @Test
-    public void testNotProcessArticlesReviewedAfter() {
+    public void testNotProcessRedirects() {
+        String redirectContent = "#REDIRECT xxx";
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, null, redirectContent);
+
+        dumpProcessor.processArticle(dumpArticle);
+
+        Mockito.verify(articleRepository, Mockito.times(0)).findOne(Mockito.anyInt());
+    }
+
+    @Test
+    public void testSkipArticleReviewedAfterDumpTimestamp() {
         GregorianCalendar today = new GregorianCalendar();
         GregorianCalendar yesterday = new GregorianCalendar();
         yesterday.add(GregorianCalendar.DATE, -1);
+        Timestamp timestampYesterday = new Timestamp(yesterday.getTimeInMillis());
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, timestampYesterday, "");
 
         Article articleDb = new Article(1, "");
         articleDb.setReviewDate(new Timestamp(today.getTimeInMillis()));
         Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
 
-        dumpProcessor.processArticle(1, "", 0, null, new Timestamp(yesterday.getTimeInMillis()));
-        Mockito.verify(articleRepository).findOne(Mockito.anyInt());
-        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsAndExceptions(Mockito.anyString());
+        dumpProcessor.processArticle(dumpArticle);
+
+        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
     }
 
     @Test
-    public void testNotProcessArticlesReviewedEquals() {
-        GregorianCalendar today = new GregorianCalendar();
+    public void testSkipArticleReviewedWhenDumpTimestamp() {
+        Timestamp today = new Timestamp(new Date().getTime());
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, today, "");
 
         Article articleDb = new Article(1, "");
-        articleDb.setReviewDate(new Timestamp(today.getTimeInMillis()));
+        articleDb.setReviewDate(today);
         Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
 
-        dumpProcessor.processArticle(1, "", 0, null, new Timestamp(today.getTimeInMillis()));
-        Mockito.verify(articleRepository).findOne(Mockito.anyInt());
-        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsAndExceptions(Mockito.anyString());
+        dumpProcessor.processArticle(dumpArticle);
+
+        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
     }
 
     @Test
-    public void testNotProcessArticlesAddedAfter() {
+    public void testSkipArticleAddedAfter() {
         GregorianCalendar today = new GregorianCalendar();
         GregorianCalendar yesterday = new GregorianCalendar();
         yesterday.add(GregorianCalendar.DATE, -1);
+        Timestamp timestampYesterday = new Timestamp(yesterday.getTimeInMillis());
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, timestampYesterday, "");
 
         Article articleDb = new Article(1, "");
         articleDb.setAdditionDate(new Timestamp(today.getTimeInMillis()));
         Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
 
-        dumpProcessor.processArticle(1, "", 0, null, new Timestamp(yesterday.getTimeInMillis()));
-        Mockito.verify(articleRepository).findOne(Mockito.anyInt());
-        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsAndExceptions(Mockito.anyString());
+        dumpProcessor.processArticle(dumpArticle);
+
+        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
     }
 

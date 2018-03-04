@@ -1,6 +1,5 @@
 package es.bvalero.replacer.article;
 
-import es.bvalero.replacer.utils.RegexMatchType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,9 +22,9 @@ public class ArticleRepositoryTest {
     public void testSaveAndFind() {
         Article newArticle = new Article(1, "Andorra");
         newArticle.getPotentialErrors().add(
-                new PotentialError(newArticle, RegexMatchType.MISSPELLING, "A"));
+                new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A"));
         newArticle.getPotentialErrors().add(
-                new PotentialError(newArticle, RegexMatchType.MISSPELLING, "B"));
+                new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "B"));
         articleRepository.save(newArticle);
 
         Assert.assertNull(articleRepository.findOne(0));

@@ -15,7 +15,7 @@ public class XmlTagFinderTest {
         String text = "xxx " + ref + " zzz";
 
         XmlTagFinder xmlTagFinder = new XmlTagFinder();
-        List<RegexMatch> matches = xmlTagFinder.findErrorExceptions(text);
+        List<RegexMatch> matches = xmlTagFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(ref, matches.get(0).getOriginalText());
@@ -27,7 +27,7 @@ public class XmlTagFinderTest {
         String text = "xxx " + ref + " zzz";
 
         XmlTagFinder xmlTagFinder = new XmlTagFinder();
-        List<RegexMatch> matches = xmlTagFinder.findErrorExceptions(StringUtils.escapeText(text));
+        List<RegexMatch> matches = xmlTagFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(StringUtils.escapeText(ref), matches.get(0).getOriginalText());
@@ -39,7 +39,7 @@ public class XmlTagFinderTest {
         String text = "xxx " + comment + " zzz";
 
         XmlTagFinder xmlTagFinder = new XmlTagFinder();
-        List<RegexMatch> matches = xmlTagFinder.findErrorExceptions(text);
+        List<RegexMatch> matches = xmlTagFinder.findExceptionMatches(text);
 
         Assert.assertTrue(matches.isEmpty());
     }
@@ -50,7 +50,7 @@ public class XmlTagFinderTest {
         String text = "xxx " + comment + " zzz";
 
         XmlTagFinder xmlTagFinder = new XmlTagFinder();
-        List<RegexMatch> matches = xmlTagFinder.findErrorExceptions(StringUtils.escapeText(text));
+        List<RegexMatch> matches = xmlTagFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertTrue(matches.isEmpty());
     }
