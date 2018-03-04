@@ -1,11 +1,7 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.Article;
-import es.bvalero.replacer.article.ArticleRepository;
-import es.bvalero.replacer.article.ArticleService;
-import es.bvalero.replacer.article.PotentialError;
-import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.RegexMatchType;
+import es.bvalero.replacer.article.*;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +15,6 @@ import java.util.List;
 class DumpProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpProcessor.class);
-    private static final Integer NAMESPACE_ARTICLE = 0;
-    private static final Integer NAMESPACE_ANNEX = 104;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -29,55 +23,58 @@ class DumpProcessor {
     private ArticleService articleService;
 
     // Having this variable outside the method we try to improve the garbage collector
+    @SuppressWarnings("FieldCanBeLocal")
     private Article article;
 
-    void processArticle(Integer articleId, String articleContent, Integer articleNamespace, String articleTitle, Date articleTimestamp) {
-        LOGGER.debug("Indexing article: {}...", articleTitle);
+    /**
+     * Process a dump article: find the potential errors and add them to the database.
+     */
+    void processArticle(@NotNull DumpArticle dumpArticle) {
+        LOGGER.debug("Indexing article: {}...", dumpArticle.getTitle());
 
-        if (!NAMESPACE_ARTICLE.equals(articleNamespace) && !NAMESPACE_ANNEX.equals(articleNamespace)) {
-            LOGGER.debug("Only articles and annexes are processed. Skipping namespace: {}", articleNamespace);
-            return;
-        } else if (articleService.isRedirectionArticle(articleContent)) {
-            LOGGER.debug("Redirection article. Skipping.");
+        // Check if it is really needed to process the article
+        if (!dumpArticle.isProcessable()) {
             return;
         }
 
-        article = articleRepository.findOne(articleId);
+        article = articleRepository.findOne(dumpArticle.getId());
 
         if (article != null) {
-            if (article.getReviewDate() != null && !articleTimestamp.after(article.getReviewDate())) {
+            if (article.getReviewDate() != null && !dumpArticle.getTimestamp().after(article.getReviewDate())) {
                 LOGGER.debug("Article reviewed after dump timestamp. Skipping.");
                 return;
-            } else if (articleTimestamp.before(article.getAdditionDate())) {
+            } else if (dumpArticle.getTimestamp().before(article.getAdditionDate())) {
                 LOGGER.debug("Article added after dump timestamp. Skipping.");
-                // With this we avoid processing old articles but we will miss new checks
-                // TODO Add a flag to re-process again old articles
                 return;
             }
         }
 
-        List<RegexMatch> regexMatches = articleService.findPotentialErrorsAndExceptions(articleContent);
-        if (regexMatches.isEmpty()) {
-            LOGGER.debug("No errors found in article: {}", articleTitle);
+        // Process the article. Find the potential errors ignoring the ones in exceptions.
+
+        List<ArticleReplacement> articleReplacements = articleService.findPotentialErrorsIgnoringExceptions(dumpArticle.getContent());
+        if (articleReplacements.isEmpty()) {
+            LOGGER.debug("No errors found in article: {}", dumpArticle.getTitle());
             if (article != null) {
                 articleRepository.delete(article);
             }
         } else {
             if (article == null) {
-                article = new Article(articleId, articleTitle);
+                article = new Article(dumpArticle.getId(), dumpArticle.getTitle());
             } else {
                 article.getPotentialErrors().clear();
             }
 
             article.setAdditionDate(new Timestamp(new Date().getTime()));
-            for (RegexMatch regexMatch : regexMatches) {
-                if (!RegexMatchType.EXCEPTION.equals(regexMatch.getType())) {
-                    article.getPotentialErrors().add(
-                            new PotentialError(article, regexMatch.getType(), regexMatch.getOriginalText()));
-                }
-            }
+            addPotentialErrorsToArticle(article, articleReplacements);
 
             articleRepository.save(article);
+        }
+    }
+
+    private void addPotentialErrorsToArticle(Article article, List<ArticleReplacement> articleReplacements) {
+        for (ArticleReplacement articleReplacement : articleReplacements) {
+            article.getPotentialErrors().add(
+                    new PotentialError(article, articleReplacement.getType(), articleReplacement.getOriginalText()));
         }
     }
 

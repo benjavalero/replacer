@@ -17,7 +17,10 @@ function runIndexation() {
     }).done(function(response) {
         // Do nothing
     }).fail(function(response) {
-        alert('Error lanzando la indexación: ' + JSON.stringify(response));
+        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
+            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
+            + 'Error lanzando la indexación: ' + JSON.stringify(response)
+            + '</div>');
     });
 
     $('#button-index').addClass("disabled");
@@ -29,12 +32,32 @@ function findDumpStatus() {
         url : 'dump/status',
         dataType : 'json'
     }).done(function(response) {
-        if (!response.running) {
+        var message;
+
+        if (response.running) {
+            message = 'La indexación se está ejecutando.';
+            message += '<ul>';
+            message += '<li>Inicio: ' + response.startDate + '</li>';
+            message += '<li>Núm. artículos procesados: ' + response.numProcessedItems + ' (' + response.percentProgress + '&nbsp;%)</li>';
+            message += '<li>Finalización estimada: ' + response.estimatedFinishTime + '</li>';
+            message += '</ul>';
+        } else {
             $('#button-index').removeClass("disabled");
+
+            message = 'La indexación no se está ejecutando.';
+            if (response.endDate) {
+                message += '<ul>';
+                message += '<li>Última ejecución: ' + response.endDate + '</li>';
+                message += '<li>Núm. artículos procesados: ' + response.numProcessedItems + '</li>';
+                message += '</ul>';
+            }
         }
 
-        $('#status-index').html(response.message);
+        $('#status-index').html(message);
     }).fail(function(response) {
-        alert('Error buscando el estado de la indexación: ' + JSON.stringify(response));
+        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
+            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
+            + 'Error buscando el estado de la indexación: ' + JSON.stringify(response)
+            + '</div>');
     });
 }

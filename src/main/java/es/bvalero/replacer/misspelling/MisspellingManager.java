@@ -1,7 +1,10 @@
 package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
-import org.apache.commons.lang3.StringUtils;
+import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaFacade;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,88 +15,87 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * Manages the cache for the misspelling list in order to reduce the calls to Wikipedia.
+ */
 @Service
-class MisspellingManager {
+public class MisspellingManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingManager.class);
 
     @Autowired
-    private IWikipediaFacade wikipediaService;
+    private IWikipediaFacade wikipediaFacade;
 
-    private Map<String, Misspelling> misspellingMap = null;
-    private Set<String> uppercaseMisspellings = new HashSet<>();
+    // Derived from the misspelling list to access faster by word
+    private Map<String, Misspelling> misspellingMap = new HashMap<>();
 
+    @NotNull
     private Map<String, Misspelling> getMisspellingMap() {
-        if (this.misspellingMap == null) {
-            this.misspellingMap = findMisspellingsFromWikipedia();
+        if (this.misspellingMap.isEmpty()) { // For the first time
+            updateMisspellings();
         }
         return this.misspellingMap;
     }
 
-    private Set<String> getUppercaseMisspellings() {
-        if (this.uppercaseMisspellings == null) {
-            updateMisspellings();
-        }
-        return this.uppercaseMisspellings;
-    }
-
-    // Reload daily the misspellings from Wikipedia
+    /**
+     * Update daily the list of misspellings from Wikipedia.
+     */
+    @SuppressWarnings("WeakerAccess")
     @Scheduled(fixedDelay = 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
     void updateMisspellings() {
-        this.misspellingMap = findMisspellingsFromWikipedia();
+        List<Misspelling> newMisspellingList = findWikipediaMisspellings();
+        if (!newMisspellingList.isEmpty()) {
+            // Build a map to quick access the misspellings by word
+            misspellingMap.clear();
+            for (Misspelling misspelling : newMisspellingList) {
+                misspellingMap.put(misspelling.getWord(), misspelling);
+            }
+        }
     }
 
-    /* Load the article in Spanish Wikipedia containing the most common misspellings */
-    private Map<String, Misspelling> findMisspellingsFromWikipedia() {
-        Map<String, Misspelling> misspellings = new TreeMap<>();
-        this.uppercaseMisspellings.clear();
+    private List<Misspelling> findWikipediaMisspellings() {
+        List<Misspelling> misspellings = new ArrayList<>();
 
-        LOGGER.info("Loading misspelling list from Wikipedia...");
         try {
-            String misspellingListText = wikipediaService.getArticleContent(IWikipediaFacade.MISSPELLING_LIST_ARTICLE);
-            List<Misspelling> misspellingList = parseMisspellingList(misspellingListText);
-            for (Misspelling misspelling : misspellingList) {
-                misspellings.put(misspelling.getWord(), misspelling);
+            LOGGER.info("Start loading misspelling list from Wikipedia...");
 
-                if (StringUtils.isAllUpperCase(misspelling.getWord())) {
-                    this.uppercaseMisspellings.add(misspelling.getWord());
-                }
-            }
+            String misspellingListText = wikipediaFacade.getArticleContent(
+                    WikipediaFacade.MISSPELLING_LIST_ARTICLE);
+            misspellings.addAll(parseMisspellingListText(misspellingListText));
 
-            LOGGER.info("Completed misspelling load: {} items", misspellings.size());
-        } catch (Exception e) {
-            LOGGER.error("Error loading misspellings from Wikipedia", e);
+            LOGGER.info("End loading misspelling list from Wikipedia: {} items", misspellings.size());
+        } catch (WikipediaException e) {
+            LOGGER.error("Error loading misspellings list from Wikipedia", e);
         }
 
         return misspellings;
     }
 
-    List<Misspelling> parseMisspellingList(String misspellingListText) {
-        List<Misspelling> misspellingList = new ArrayList<>();
+    private List<Misspelling> parseMisspellingListText(String misspellingListText) {
+        List<Misspelling> misspellings = new ArrayList<>();
 
         try (InputStream stream = new ByteArrayInputStream(misspellingListText.getBytes(StandardCharsets.UTF_8));
              BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
+            Set<String> usedWords = new HashSet<>();
+
             // Read file line by line
-            Map<String, Misspelling> usedWordsMap = new TreeMap<>();
             String strLine;
             while ((strLine = br.readLine()) != null) {
-                Misspelling lineMisspellings = parseMisspellingLine(strLine);
-                if (lineMisspellings != null) {
-                    String word = lineMisspellings.getWord();
-                    if (usedWordsMap.containsKey(word)) {
-                        LOGGER.warn("Duplicated misspelling term: {}", word);
+                Misspelling misspelling = parseMisspellingLine(strLine);
+                if (misspelling != null) {
+                    String misspellingWord = misspelling.getWord();
+                    if (usedWords.add(misspellingWord)) {
+                        misspellings.add(misspelling);
                     } else {
-                        usedWordsMap.put(word, lineMisspellings);
+                        LOGGER.warn("Duplicated misspelling term: {}", misspellingWord);
                     }
                 }
             }
-
-            misspellingList.addAll(usedWordsMap.values());
         } catch (IOException e) {
             LOGGER.error("Error parsing misspelling list", e);
         }
 
-        return misspellingList;
+        return misspellings;
     }
 
     private Misspelling parseMisspellingLine(String misspellingLine) {
@@ -103,14 +105,12 @@ class MisspellingManager {
         // Ignore the lines not corresponding to misspelling lines
         if (!misspellingLine.isEmpty() && misspellingLine.startsWith(" ")) {
             if (tokens.length == 3) {
-                String wordToken = tokens[0].trim();
-                boolean isCaseSensitive = "cs".equalsIgnoreCase(tokens[1].trim());
-                String comment = tokens[2].trim();
+                boolean isCaseSensitive = ("cs".equalsIgnoreCase(tokens[1].trim()));
                 String word = isCaseSensitive
-                        ? wordToken
-                        : wordToken.toLowerCase(Locale.forLanguageTag("es"));
-                List<String> suggestions = parseSuggestions(comment, word);
-                misspelling = new Misspelling(word, isCaseSensitive, comment, suggestions);
+                        ? tokens[0].trim()
+                        : tokens[0].trim().toLowerCase();
+                String comment = tokens[2].trim();
+                misspelling = new Misspelling(word, isCaseSensitive, comment);
             } else {
                 LOGGER.warn("Bad formatted misspelling line: {}", misspellingLine);
             }
@@ -119,29 +119,11 @@ class MisspellingManager {
         return misspelling;
     }
 
-    List<String> parseSuggestions(String suggestionLine, String mainWord) {
-        List<String> suggestions = new ArrayList<>();
-
-        String suggestionWithoutBrackets = suggestionLine.replaceAll("\\(.+?\\)", "");
-        for (String suggestion : suggestionWithoutBrackets.split(",")) {
-            String word = suggestion.trim();
-
-            // Don't suggest the misspelling main word
-            if (StringUtils.isNotBlank(word) && !word.equals(mainWord)) {
-                suggestions.add(word);
-            }
-        }
-
-        return suggestions;
-    }
-
     /**
-     * Find the misspelling related to a given word.
-     *
-     * @param word The word which may be a misspellings.
-     * @return The related misspelling or null.
+     * @return The misspelling related to the given word, or null if there is no such misspelling.
      */
-    Misspelling findMisspellingByWord(String word) {
+    @Nullable
+    public Misspelling findMisspellingByWord(@NotNull String word) {
         Misspelling wordMisspelling = null;
         if (getMisspellingMap().containsKey(word)) {
             wordMisspelling = getMisspellingMap().get(word);
@@ -153,10 +135,6 @@ class MisspellingManager {
             }
         }
         return wordMisspelling;
-    }
-
-    boolean isUppercaseMisspelling(String word) {
-        return this.getUppercaseMisspellings().contains(word);
     }
 
 }

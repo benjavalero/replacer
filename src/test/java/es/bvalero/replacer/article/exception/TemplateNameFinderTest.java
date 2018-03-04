@@ -13,7 +13,7 @@ public class TemplateNameFinderTest {
         String text = "xxx {{Plantilla| yyy }} zzz";
 
         TemplateNameFinder templateNameFinder = new TemplateNameFinder();
-        List<RegexMatch> matches = templateNameFinder.findErrorExceptions(text);
+        List<RegexMatch> matches = templateNameFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(1, matches.size());

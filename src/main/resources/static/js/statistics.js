@@ -6,7 +6,10 @@ $(document).ready(function() {
     }).done(function(response) {
         $('#count-potential-errors').text(response);
     }).fail(function(response) {
-        alert('Error en estadísticas: ' + JSON.stringify(response));
+        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
+            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
+            + 'Error en estadísticas: ' + JSON.stringify(response)
+            + '</div>');
     });
 
     $.ajax({
@@ -15,7 +18,10 @@ $(document).ready(function() {
     }).done(function(response) {
         $('#count-articles').text(response);
     }).fail(function(response) {
-        alert('Error en estadísticas: ' + JSON.stringify(response));
+        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
+            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
+            + 'Error en estadísticas: ' + JSON.stringify(response)
+            + '</div>');
     });
 
     $.ajax({
@@ -24,7 +30,10 @@ $(document).ready(function() {
     }).done(function(response) {
         $('#count-articles-reviewed').text(response);
     }).fail(function(response) {
-        alert('Error en estadísticas: ' + JSON.stringify(response));
+        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
+            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
+            + 'Error en estadísticas: ' + JSON.stringify(response)
+            + '</div>');
     });
 
     $.ajax({
@@ -45,7 +54,10 @@ $(document).ready(function() {
             pagingDivSelector: "#paging-list-misspellings"
         });
     }).fail(function(response) {
-        alert('Error en estadísticas: ' + JSON.stringify(response));
+        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
+            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
+            + 'Error en estadísticas: ' + JSON.stringify(response)
+            + '</div>');
     });
 
 });

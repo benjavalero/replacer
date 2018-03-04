@@ -1,7 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +17,24 @@ public class WikipediaFacadeIT {
     private WikipediaFacade wikipediaFacade;
 
     @Test
-    public void testGetArticleContent() throws Exception {
+    public void testGetArticleContent() throws WikipediaException {
         String articleContent = wikipediaFacade.getArticleContent("Ñu (desambiguación)");
+
         Assert.assertFalse(StringUtils.isEmpty(articleContent));
         Assert.assertTrue(articleContent.contains("África"));
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testGetNonExistingArticleContent() throws Exception {
+    @Test(expected = WikipediaException.class)
+    public void testGetNonExistingArticleContent() throws WikipediaException {
         wikipediaFacade.getArticleContent("jander");
     }
 
-    @Test(expected = NullPointerException.class)
-    public void testDeletedArticleContent() throws Exception {
+    @Test(expected = WikipediaException.class)
+    public void testDeletedArticleContent() throws WikipediaException {
         wikipediaFacade.getArticleContent("Gigia Talarico");
     }
 
-    @Test
-    @Ignore
-    public void testEditContent() throws Exception {
+    public void testEditContent() throws WikipediaException {
         String title = "Usuario:Benjavalero/Taller";
         String content = wikipediaFacade.getArticleContent(title);
         Assert.assertFalse(StringUtils.isEmpty(content));

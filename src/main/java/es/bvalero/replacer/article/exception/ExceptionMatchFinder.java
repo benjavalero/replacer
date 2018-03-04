@@ -4,8 +4,8 @@ import es.bvalero.replacer.utils.RegexMatch;
 
 import java.util.List;
 
-public interface ErrorExceptionFinder {
+public interface ExceptionMatchFinder {
 
-    List<RegexMatch> findErrorExceptions(String text);
+    List<RegexMatch> findExceptionMatches(String text);
 
 }

@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Repository for potential errors in database.
+ */
 @Repository
 @Transactional
 public interface PotentialErrorRepository extends JpaRepository<PotentialError, Long> {

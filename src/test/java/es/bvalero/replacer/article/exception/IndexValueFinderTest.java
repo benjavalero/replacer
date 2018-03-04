@@ -13,7 +13,7 @@ public class IndexValueFinderTest {
         String text = "xxx | índice = yyyy \n zzz|param=value|title  = Hola\n Adiós }} ttt";
 
         IndexValueFinder indexValueFinder = new IndexValueFinder();
-        List<RegexMatch> matches = indexValueFinder.findErrorExceptions(text);
+        List<RegexMatch> matches = indexValueFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertTrue(matches.contains(new RegexMatch(4, "| índice = yyyy \n zzz")));

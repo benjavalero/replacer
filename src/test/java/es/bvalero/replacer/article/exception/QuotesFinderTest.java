@@ -13,7 +13,7 @@ public class QuotesFinderTest {
     public void testRegexQuotes() {
         String text = "xxx '''I'm Muzzy''' \"zzz\" ''''ttt'' ''uuu\" vvv";
         QuotesFinder quotesFinder = new QuotesFinder();
-        List<RegexMatch> matches = quotesFinder.findErrorExceptions(text);
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(3, matches.size());
@@ -26,7 +26,7 @@ public class QuotesFinderTest {
     public void testRegexQuotesEscaped() {
         String text = "xxx '''I'm Muzzy''' \"zzz\" ''''ttt'' ''uuu\" vvv";
         QuotesFinder quotesFinder = new QuotesFinder();
-        List<RegexMatch> matches = quotesFinder.findErrorExceptions(StringUtils.escapeText(text));
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(3, matches.size());
@@ -42,7 +42,7 @@ public class QuotesFinderTest {
         String text = "xxx " + quotes + " zzz";
 
         QuotesFinder quotesFinder = new QuotesFinder();
-        List<RegexMatch> matches = quotesFinder.findErrorExceptions(StringUtils.escapeText(text));
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(quotes, matches.get(0).getOriginalText());
@@ -54,7 +54,7 @@ public class QuotesFinderTest {
         String text = "xxx " + quotes + " zzz";
 
         QuotesFinder quotesFinder = new QuotesFinder();
-        List<RegexMatch> matches = quotesFinder.findErrorExceptions(StringUtils.escapeText(text));
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(quotes, matches.get(0).getOriginalText());

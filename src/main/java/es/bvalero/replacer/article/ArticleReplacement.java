@@ -1,13 +1,17 @@
 package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.RegexMatchType;
 
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Domain class of a potential replacement in an article to be used in the front-end.
+ */
 public class ArticleReplacement extends RegexMatch {
 
-    private List<String> proposedFixes;
+    private PotentialErrorType type;
+    private List<String> proposedFixes = new ArrayList<>();
     private String comment;
     private String fixedText;
     private boolean fixed = false;
@@ -20,10 +24,23 @@ public class ArticleReplacement extends RegexMatch {
         super(position, originalText);
     }
 
+    ArticleReplacement(RegexMatch regexMatch) {
+        super(regexMatch.getPosition(), regexMatch.getOriginalText());
+    }
+
+    public PotentialErrorType getType() {
+        return type;
+    }
+
+    public void setType(PotentialErrorType type) {
+        this.type = type;
+    }
+
     public List<String> getProposedFixes() {
         return proposedFixes;
     }
 
+    @SuppressWarnings("unused")
     public void setProposedFixes(List<String> proposedFixes) {
         this.proposedFixes = proposedFixes;
     }
@@ -40,6 +57,7 @@ public class ArticleReplacement extends RegexMatch {
         return fixedText;
     }
 
+    @SuppressWarnings("unused")
     public void setFixedText(String fixedText) {
         this.fixedText = fixedText;
     }
@@ -48,8 +66,26 @@ public class ArticleReplacement extends RegexMatch {
         return fixed;
     }
 
+    @SuppressWarnings("unused")
     public void setFixed(boolean fixed) {
         this.fixed = fixed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ArticleReplacement that = (ArticleReplacement) o;
+
+        return getPosition() == that.getPosition() && getOriginalText().equals(that.getOriginalText());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getPosition();
+        result = 31 * result + getOriginalText().hashCode();
+        return result;
     }
 
 }

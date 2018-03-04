@@ -15,7 +15,7 @@ public class SourceCodeFinderTest {
         String text = "xxx " + source + " zzz";
 
         SourceCodeFinder sourceCodeFinder = new SourceCodeFinder();
-        List<RegexMatch> matches = sourceCodeFinder.findErrorExceptions(text);
+        List<RegexMatch> matches = sourceCodeFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(source, matches.get(0).getOriginalText());
@@ -27,7 +27,7 @@ public class SourceCodeFinderTest {
         String text = "xxx " + source + " zzz";
 
         SourceCodeFinder sourceCodeFinder = new SourceCodeFinder();
-        List<RegexMatch> matches = sourceCodeFinder.findErrorExceptions(StringUtils.escapeText(text));
+        List<RegexMatch> matches = sourceCodeFinder.findExceptionMatches(StringUtils.escapeText(text));
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(StringUtils.escapeText(source), matches.get(0).getOriginalText());
@@ -39,7 +39,7 @@ public class SourceCodeFinderTest {
         String text = "xxx " + source + " zzz";
 
         SourceCodeFinder sourceCodeFinder = new SourceCodeFinder();
-        List<RegexMatch> matches = sourceCodeFinder.findErrorExceptions(text);
+        List<RegexMatch> matches = sourceCodeFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(source, matches.get(0).getOriginalText());
@@ -51,7 +51,7 @@ public class SourceCodeFinderTest {
         String text = "xxx " + source + " zzz";
 
         SourceCodeFinder sourceCodeFinder = new SourceCodeFinder();
-        List<RegexMatch> matches = sourceCodeFinder.findErrorExceptions(text);
+        List<RegexMatch> matches = sourceCodeFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(source, matches.get(0).getOriginalText());

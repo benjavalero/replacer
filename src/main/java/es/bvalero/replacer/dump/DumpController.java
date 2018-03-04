@@ -12,7 +12,7 @@ public class DumpController {
 
     @RequestMapping(value = "/dump/status")
     DumpStatus getDumpStatus() {
-        return dumpManager.getDumpStatus();
+        return dumpManager.getStatus();
     }
 
     @RequestMapping(value = "/dump/run")

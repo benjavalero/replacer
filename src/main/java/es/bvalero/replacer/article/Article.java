@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * An article in the database containing potential errors.
+ */
 @Entity
 @Table(name = "article")
 public class Article implements Serializable {
@@ -15,7 +18,7 @@ public class Article implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "title", nullable = false, length = 255)
+    @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "dtadd", nullable = false, columnDefinition = "TIMESTAMP")
@@ -73,18 +76,9 @@ public class Article implements Serializable {
         return potentialErrors;
     }
 
+    @SuppressWarnings("unused")
     void setPotentialErrors(List<PotentialError> potentialErrors) {
         this.potentialErrors = potentialErrors;
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", additionDate=" + additionDate +
-                ", reviewDate=" + reviewDate +
-                '}';
     }
 
 }

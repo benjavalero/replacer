@@ -1,6 +1,8 @@
 spring:
   main:
     banner-mode: 'off'
+  jackson:
+    date-format: dd-MM-yyyy HH:mm:ss
 
 logging:
   level:
@@ -11,9 +13,10 @@ logging:
 replacer:
   # Path where the XML dumps are located for the Spanish Wikipedia
   dump.folder.path: /public/dumps/public/eswiki
+  # Highlight the exception matches
   highlight.exceptions: false
+  # Hide paragraphs not containing potential replacements and trim the ones matching
   hide.empty.paragraphs: true
-  trim.paragraphs: true
 
 wikipedia:
   username: BenjaBot
@@ -33,8 +36,9 @@ logging:
     org.hibernate.SQL: DEBUG
 
 replacer:
-  # Path where the XML dumps are located for the Spanish Wikipedia
   dump.folder.path: C:\Users\Benja\Desarrollo\pywikibot
+  highlight.exceptions: true
+  hide.empty.paragraphs: false
 
 ---
 

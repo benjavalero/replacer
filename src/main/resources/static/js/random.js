@@ -24,7 +24,10 @@ function findRandomArticle() {
     }).done(function(response) {
         loadArticle(response);
     }).fail(function(response) {
-        alert('Error cargando artículo con errores ortográfico. Recargue la página.');
+        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
+            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
+            + 'Error cargando artículo con errores ortográfico. Recargue la página.'
+            + '</div>');
     });
 }
 
@@ -87,6 +90,9 @@ function saveChanges() {
     }).done(function(response) {
         findRandomArticle();
     }).fail(function(response) {
-        alert('Error guardando los cambios en ' + pageTitle + ': ' + JSON.stringify(response));
+        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
+            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
+            + 'Error guardando los cambios en ' + pageTitle + ': ' + JSON.stringify(response)
+            + '</div>');
     });
 }
