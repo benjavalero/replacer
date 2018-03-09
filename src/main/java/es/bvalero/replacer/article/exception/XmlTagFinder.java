@@ -11,8 +11,8 @@ import java.util.List;
 public class XmlTagFinder implements ExceptionMatchFinder {
 
     // We want to avoid the XML comments to be captured by this
-    private static final String REGEX_XML_TAG = "<[\\wÁáÉéÍíÓóÚúÜüÑñ\\-\\s=\"/]+>";
-    private static final String REGEX_XML_TAG_ESCAPED = "&lt;[\\wÁáÉéÍíÓóÚúÜüÑñ\\-\\s=\"/]+&gt;";
+    private static final String REGEX_XML_TAG = "<[\\w/][^>]*+>";
+    private static final String REGEX_XML_TAG_ESCAPED = "&lt;[\\w/].*?&gt;";
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text) {

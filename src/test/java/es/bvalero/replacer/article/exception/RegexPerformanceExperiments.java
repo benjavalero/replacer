@@ -11,7 +11,8 @@ class RegexPerformanceExperiments {
         // angularQuotesExperiment();
         // doubleQuotesExperiment();
         // singleQuotesExperiment();
-        templateNameExperiment();
+        // templateNameExperiment();
+        xmlTagExperiment();
     }
 
     private static void angularQuotesExperiment() {
@@ -185,22 +186,48 @@ class RegexPerformanceExperiments {
         write("**************END EXPERIMENT*****************\n\n");
     }
 
-    private static void runExperiment(String regex, String regexDescription, String input, boolean printOutput) {
-        runExperiment(regex, regexDescription, input, printOutput, true);
+    private static void xmlTagExperiment() {
+        write("**************BEGIN XML TAG EXPERIMENT *****************");
+        String negativeRegex = "<\\w[^>]++>";
+        String lookAheadRegex = "<(?!!)[^>]++>";
+        String classRegex = "<[\\wÁáÉéÍíÓóÚúÜüÑñ\\-\\s=\"/]++>";
+
+        String matchingInput = "Ref: <ref name=\"Hola\" />.";
+        String nonMatchingInput = "Ref: ref name=\"Hola\".";
+        String almostMatchingInput = "Ref: <ref name=\"Hola\" /.";
+
+        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
+            runExperiment(negativeRegex, "NEGATIVE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookAheadRegex, "LOOK-AHEAD REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(classRegex, "CLASS REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperiment(negativeRegex, "NEGATIVE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookAheadRegex, "LOOK-AHEAD REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(classRegex, "CLASS REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperiment(negativeRegex, "NEGATIVE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookAheadRegex, "LOOK-AHEAD REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(classRegex, "CLASS REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+        }
+        write("**************END EXPERIMENT*****************\n\n");
     }
 
-    private static void runExperiment(String regex, String regexDescription, String input, boolean printOutput, boolean find) {
+    private static void runExperiment(String regex, String regexDescription, String input, boolean printOutput) {
         Pattern p = Pattern.compile(regex);
 
         boolean matches = false;
         Long start = System.currentTimeMillis();
         for (int i = 0; i < NUM_RUNS; i++) {
             Matcher m = p.matcher(input);
-            if (find) {
-                matches |= m.find();
-            } else {
-                matches |= m.matches();
-            }
+            matches |= m.find();
         }
         Long timeElapsed = System.currentTimeMillis() - start;
 
