@@ -9,7 +9,8 @@ import java.util.List;
 @Component
 public class TemplateNameFinder implements ExceptionMatchFinder {
 
-    private static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}]+";
+    // The regex with look-behind takes the double of time: (?<=\\{\\{)[^|}]++
+    private static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}]++";
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text) {

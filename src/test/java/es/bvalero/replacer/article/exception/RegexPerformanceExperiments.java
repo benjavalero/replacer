@@ -10,7 +10,8 @@ class RegexPerformanceExperiments {
     public static void main(String[] args) {
         // angularQuotesExperiment();
         // doubleQuotesExperiment();
-        singleQuotesExperiment();
+        // singleQuotesExperiment();
+        templateNameExperiment();
     }
 
     private static void angularQuotesExperiment() {
@@ -138,6 +139,48 @@ class RegexPerformanceExperiments {
             runExperiment(lookAheadBehindRegex, "LOOK AHEAD BEHIND REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(lookStarRegex, "LOOK STAR REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(possessiveRegex, "POSSESSIVE REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+        }
+        write("**************END EXPERIMENT*****************\n\n");
+    }
+
+    private static void templateNameExperiment() {
+        write("**************BEGIN TEMPLATE NAME EXPERIMENT *****************");
+        String greedyRegex = "\\{\\{[^|}]+";
+        String lazyRegex = "\\{\\{[^|}]+?[|}]"; // We need to match the end
+        String lazyRegex2 = "\\{\\{[^|}]+?(?=[|}])"; // We need to match the end
+        String possessiveRegex = "\\{\\{[^|}]++";
+        String lookBehindRegex = "(?<=\\{\\{)[^|}]+";
+
+        String matchingInput = "Template: {{ Template | Content }}.";
+        String nonMatchingInput = "Template: { Template | Content }.";
+        String almostMatchingInput = "Template: {{ Template - Content .";
+
+        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
+            runExperiment(greedyRegex, "GREEDY REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyRegex, "LAZY REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyRegex2, "LAZY REGEX 2", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(possessiveRegex, "POSSESSIVE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperiment(greedyRegex, "GREEDY REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyRegex, "LAZY REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyRegex2, "LAZY REGEX 2", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(possessiveRegex, "POSSESSIVE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperiment(greedyRegex, "GREEDY REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyRegex, "LAZY REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyRegex2, "LAZY REGEX 2", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(possessiveRegex, "POSSESSIVE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
         }
         write("**************END EXPERIMENT*****************\n\n");
     }
