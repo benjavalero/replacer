@@ -6,15 +6,15 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class UnreplaceableTemplateFinderTest {
+public class CompleteTemplateFinderTest {
 
     @Test
     public void testRegexUnreplacableTemplate() {
         String template = "{{Cita| yyyy \n zzz }}";
         String text = "xxx " + template + " zzz";
 
-        UnreplaceableTemplateFinder unreplaceableTemplateFinder = new UnreplaceableTemplateFinder();
-        List<RegexMatch> matches = unreplaceableTemplateFinder.findExceptionMatches(text);
+        CompleteTemplateFinder completeTemplateFinder = new CompleteTemplateFinder();
+        List<RegexMatch> matches = completeTemplateFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(template, matches.get(0).getOriginalText());
@@ -25,8 +25,8 @@ public class UnreplaceableTemplateFinderTest {
         String category = "[[Categoría:Lluvia]]";
         String text = "xxx " + category + " zzz";
 
-        UnreplaceableTemplateFinder unreplaceableTemplateFinder = new UnreplaceableTemplateFinder();
-        List<RegexMatch> matches = unreplaceableTemplateFinder.findExceptionMatches(text);
+        CompleteTemplateFinder completeTemplateFinder = new CompleteTemplateFinder();
+        List<RegexMatch> matches = completeTemplateFinder.findExceptionMatches(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(category, matches.get(0).getOriginalText());

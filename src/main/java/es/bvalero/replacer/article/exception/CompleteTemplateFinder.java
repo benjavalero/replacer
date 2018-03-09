@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UnreplaceableTemplateFinder implements ExceptionMatchFinder {
+public class CompleteTemplateFinder implements ExceptionMatchFinder {
 
     private static final String REGEX_UNREPLACEBLE_TEMPLATE =
             "\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||[Cc]oord\\||[Cc]ommonscat\\|)[^}]+}}";
-    private static final String REGEX_CATEGORY = "\\[\\[Categoría:[^]]+]]";
+    private static final String REGEX_CATEGORY = "\\[\\[Categoría:[^]]++]]";
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text) {
