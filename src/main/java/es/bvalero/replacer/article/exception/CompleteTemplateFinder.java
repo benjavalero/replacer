@@ -10,15 +10,17 @@ import java.util.List;
 @Component
 public class CompleteTemplateFinder implements ExceptionMatchFinder {
 
-    private static final String REGEX_UNREPLACEBLE_TEMPLATE =
-            "\\{\\{(?:ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||[Cc]oord\\||[Cc]ommonscat\\|)[^}]+}}";
+    // The nested regex takes twice more but it is worth as it captures completely the templates with inner templates
+    private static final String REGEX_TEMPLATE = "\\{\\{[^}]++}}";
+    private static final String REGEX_TEMPLATE_NAMES = "(?:ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||[Cc]oord\\||[Cc]ommonscat\\|)";
+    private static final String REGEX_COMPLETE_TEMPLATE = "\\{\\{" + REGEX_TEMPLATE_NAMES + "(" + REGEX_TEMPLATE + "|[^}])++}}";
+
     private static final String REGEX_CATEGORY = "\\[\\[Categoría:[^]]++]]";
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text) {
         List<RegexMatch> matches = new ArrayList<>();
-        matches.addAll(RegExUtils.findMatches(text, REGEX_UNREPLACEBLE_TEMPLATE));
-        // TODO Expand the match in case the template contains another template
+        matches.addAll(RegExUtils.findMatches(text, REGEX_COMPLETE_TEMPLATE));
         matches.addAll(RegExUtils.findMatches(text, REGEX_CATEGORY));
         return matches;
     }

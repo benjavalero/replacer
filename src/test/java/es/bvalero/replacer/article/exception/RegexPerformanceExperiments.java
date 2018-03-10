@@ -12,7 +12,8 @@ class RegexPerformanceExperiments {
         // doubleQuotesExperiment();
         // singleQuotesExperiment();
         // templateNameExperiment();
-        xmlTagExperiment();
+        // xmlTagExperiment();
+        completeTemplateExperiment();
     }
 
     private static void angularQuotesExperiment() {
@@ -21,6 +22,7 @@ class RegexPerformanceExperiments {
         String greedyClassRegex = "«[^»]+»";
         String lazyClassRegex = "«[^»]+?»";
         String possessiveClassRegex = "«[^»]++»"; // Wins in all the cases
+        String conditionalRegex = "(?:(«)|“).++(?(1)»|”)";
 
         String matchingInput = "Quote: «What a Wonderful World».";
         String nonMatchingInput = "Quote: What a Wonderful World.";
@@ -31,6 +33,7 @@ class RegexPerformanceExperiments {
             runExperiment(greedyClassRegex, "GREEDY WITH CLASS REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(lazyClassRegex, "LAZY WITH CLASS REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(conditionalRegex, "CONDITIONAL REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
 
             if (i == NUM_WARM_UP_RUNS - 1) {
                 System.out.println();
@@ -40,6 +43,7 @@ class RegexPerformanceExperiments {
             runExperiment(greedyClassRegex, "GREEDY WITH CLASS REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(lazyClassRegex, "LAZY WITH CLASS REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(conditionalRegex, "CONDITIONAL REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
 
             if (i == NUM_WARM_UP_RUNS - 1) {
                 System.out.println();
@@ -49,6 +53,7 @@ class RegexPerformanceExperiments {
             runExperiment(greedyClassRegex, "GREEDY WITH CLASS REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(lazyClassRegex, "LAZY WITH CLASS REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(conditionalRegex, "CONDITIONAL REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
         }
         write("**************END EXPERIMENT*****************\n\n");
     }
@@ -216,6 +221,37 @@ class RegexPerformanceExperiments {
             runExperiment(negativeRegex, "NEGATIVE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(lookAheadRegex, "LOOK-AHEAD REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(classRegex, "CLASS REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+        }
+        write("**************END EXPERIMENT*****************\n\n");
+    }
+
+    private static void completeTemplateExperiment() {
+        write("**************BEGIN COMPLETE TEMPLATE EXPERIMENT *****************");
+        String templateRegex = "\\{\\{[^}]++}}";
+        String simpleRegex = "\\{\\{Quote\\|[^}]++}}";
+        String nestedRegex = "\\{\\{Quote\\|(" + templateRegex + "|[^}])++}}";
+
+        String matchingInput = "Quote: {{Quote|What a Wonderful World}}.";
+        String nonMatchingInput = "Quote: What a Wonderful World.";
+        String almostMatchingInput = "Quote: {{Quote|What a Wonderful World.";
+
+        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
+            runExperiment(simpleRegex, "SIMPLE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(nestedRegex, "NESTED REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperiment(simpleRegex, "SIMPLE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(nestedRegex, "NESTED REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperiment(simpleRegex, "SIMPLE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(nestedRegex, "NESTED REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
         }
         write("**************END EXPERIMENT*****************\n\n");
     }

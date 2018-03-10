@@ -14,7 +14,7 @@ public class QuotesFinder implements ExceptionMatchFinder {
     private static final String REGEX_SINGLE_QUOTES = "('{2,5}+).+?[^']\\1(?!')";
     private static final String REGEX_SINGLE_QUOTES_ESCAPED = "((&apos;){2,5}+).+?(?<!&apos;)\\1(?!&apos;)";
 
-    // I don't know how to combine these two. In Java there are no conditional regex.
+    // The conditional regex to combine both below takes 4 times more: (?:(«)|“).+?(?(1)»|”)
     private static final String REGEX_ANGULAR_QUOTES = "«[^»]++»";
     private static final String REGEX_TYPOGRAPHIC_QUOTES = "“[^”]++”";
 

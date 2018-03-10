@@ -10,6 +10,7 @@ import java.util.List;
 public class TemplateNameFinder implements ExceptionMatchFinder {
 
     // The regex with look-behind takes the double of time: (?<=\\{\\{)[^|}]++
+    // We assume there will always be two curly braces to close the template
     private static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}]++";
 
     @Override

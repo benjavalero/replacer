@@ -10,14 +10,16 @@ public class CompleteTemplateFinderTest {
 
     @Test
     public void testRegexUnreplacableTemplate() {
-        String template = "{{Cita| yyyy \n zzz }}";
-        String text = "xxx " + template + " zzz";
+        String template1 = "{{Cita|xxx {{Fecha|zzz}} yyy}}";
+        String template2 = "{{quote|bbb}}";
+        String text = "xxx " + template1 + " / " + template2 + " zzz";
 
         CompleteTemplateFinder completeTemplateFinder = new CompleteTemplateFinder();
         List<RegexMatch> matches = completeTemplateFinder.findExceptionMatches(text);
 
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(template, matches.get(0).getOriginalText());
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(template1, matches.get(0).getOriginalText());
+        Assert.assertEquals(template2, matches.get(1).getOriginalText());
     }
 
     @Test
