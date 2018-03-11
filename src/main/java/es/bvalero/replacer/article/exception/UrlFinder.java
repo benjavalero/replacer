@@ -10,8 +10,11 @@ import java.util.List;
 @Component
 public class UrlFinder implements ExceptionMatchFinder {
 
-    // TODO An URL may contain an ampersand which would be escaped
-    private static final String REGEX_URL = "https?://[\\w./\\-+?%=:#;,~!]+";
+    // Copied from pywikibot
+    private static final String AT_END = "[^]\\s.:;,<>\"|)]";
+    private static final String INSIDE = "[^]\\s<>\"]";
+    private static final String REGEX_URL = "http[s]?://" + INSIDE + "*" + AT_END;
+
     private static final String REGEX_DOMAIN = "[a-z]+\\.(?:com|org|net|info|es)";
 
     @Override
