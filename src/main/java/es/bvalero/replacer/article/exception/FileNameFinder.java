@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class FileNameFinder implements ExceptionMatchFinder {
 
-    private static final String REGEX_FILE_NAME = "(?<=[=|:])[^=|:]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|ogg|pdf)";
+    private static final String REGEX_FILE_NAME = "(?:File:|=|\\|)[^]}|=]+?\\.\\w{3,4}";
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {

@@ -11,21 +11,24 @@ public class FileNameFinderTest {
 
     @Test
     public void testRegexFileName() {
-        String text = "[[File: de_españa.png | España]] {{ X | co-co.svg | a = pepe.pdf }}";
+        String file1 = "File: de_españa.png";
+        String file2 = "| co-co.jpeg";
+        String file3 = "= pepe.PDF";
+        String text = "[[" + file1 + "]] {{ X" + file2 + "| a " + file3 + "}}";
 
         FileNameFinder fileNameFinder = new FileNameFinder();
 
         List<RegexMatch> matches = fileNameFinder.findExceptionMatches(text, false);
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertTrue(matches.contains(new RegexMatch(7, " de_españa.png")));
-        Assert.assertTrue(matches.contains(new RegexMatch(39, " co-co.svg")));
-        Assert.assertTrue(matches.contains(new RegexMatch(55, " pepe.pdf")));
+        Assert.assertEquals(3, matches.size());
+        Assert.assertEquals(file1, matches.get(0).getOriginalText());
+        Assert.assertEquals(file2, matches.get(1).getOriginalText());
+        Assert.assertEquals(file3, matches.get(2).getOriginalText());
 
         matches = fileNameFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertTrue(matches.contains(new RegexMatch(7, " de_españa.png")));
-        Assert.assertTrue(matches.contains(new RegexMatch(39, " co-co.svg")));
-        Assert.assertTrue(matches.contains(new RegexMatch(55, " pepe.pdf")));
+        Assert.assertEquals(3, matches.size());
+        Assert.assertEquals(file1, matches.get(0).getOriginalText());
+        Assert.assertEquals(file2, matches.get(1).getOriginalText());
+        Assert.assertEquals(file3, matches.get(2).getOriginalText());
     }
 
 }
