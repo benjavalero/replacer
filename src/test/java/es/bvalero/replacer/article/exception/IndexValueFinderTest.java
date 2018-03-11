@@ -11,17 +11,21 @@ public class IndexValueFinderTest {
 
     @Test
     public void testRegexIndexValue() {
-        String text = "xxx | índice = yyyy \n zzz|param=value|title  = Hola\n Adiós }} ttt";
+        String value1 = "| índice = yyyy \\n zzz";
+        String value2 = "| índice= xxx";
+        String text = "{{Plantilla " + value1 + value2 + "}}";
 
         IndexValueFinder indexValueFinder = new IndexValueFinder();
 
         List<RegexMatch> matches = indexValueFinder.findExceptionMatches(text, false);
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertTrue(matches.contains(new RegexMatch(4, "| índice = yyyy \n zzz")));
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(value1, matches.get(0).getOriginalText());
+        Assert.assertEquals(value2, matches.get(1).getOriginalText());
 
         matches = indexValueFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertTrue(matches.contains(new RegexMatch(4, "| índice = yyyy \n zzz")));
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(value1, matches.get(0).getOriginalText());
+        Assert.assertEquals(value2, matches.get(1).getOriginalText());
     }
 
 }

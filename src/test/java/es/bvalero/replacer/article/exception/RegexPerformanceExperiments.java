@@ -13,7 +13,8 @@ class RegexPerformanceExperiments {
         // singleQuotesExperiment();
         // templateNameExperiment();
         // xmlTagExperiment();
-        completeTemplateExperiment();
+        // completeTemplateExperiment();
+        indexValueExperiment();
     }
 
     private static void angularQuotesExperiment() {
@@ -252,6 +253,44 @@ class RegexPerformanceExperiments {
 
             runExperiment(simpleRegex, "SIMPLE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(nestedRegex, "NESTED REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+        }
+        write("**************END EXPERIMENT*****************\n\n");
+    }
+
+    private static void indexValueExperiment() {
+        write("************** BEGIN INDEX VALUE EXPERIMENT *****************");
+        String simpleRegex = "\\|\\s*índice\\s*=[^}|]*";
+        String possessiveRegex = "\\|\\s*índice\\s*=[^}|]*+";
+        String lookBehindRegex = "\\|\\s*índice\\s*=.+?(?=[}|])";
+        String lookAheadRegex = "(?<=\\|)\\s*índice\\s*=[^}|]*+";
+
+        String matchingInput = "Quote: {{Quote| índice = What a Wonderful World}}.";
+        String nonMatchingInput = "Quote: {{Quote índice = What a Wonderful World}}.";
+        String almostMatchingInput = "Quote: {{Quote| índice = What a Wonderful World.";
+
+        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
+            runExperiment(simpleRegex, "SIMPLE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(possessiveRegex, "POSSESSIVE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookAheadRegex, "LOOK AHEAD REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperiment(simpleRegex, "SIMPLE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(possessiveRegex, "POSSESSIVE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookAheadRegex, "LOOK AHEAD REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperiment(simpleRegex, "SIMPLE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(possessiveRegex, "POSSESSIVE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookAheadRegex, "LOOK AHEAD REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
         }
         write("**************END EXPERIMENT*****************\n\n");
     }

@@ -9,7 +9,8 @@ import java.util.List;
 @Component
 public class IndexValueFinder implements ExceptionMatchFinder {
 
-    private static final String REGEX_INDEX_VALUE = "\\|\\s*(?:índice)\\s*=[^}|]*";
+    // Look-ahead as takes more time
+    private static final String REGEX_INDEX_VALUE = "\\|\\s*índice\\s*=[^}|]*";
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
