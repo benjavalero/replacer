@@ -18,7 +18,7 @@ public class FalsePositiveFinder implements ExceptionMatchFinder {
     private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinder.class);
     private String regexFalsePositives;
 
-    public List<RegexMatch> findExceptionMatches(String text) {
+    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
         return RegExUtils.findMatches(text, getRegexFalsePositives());
     }
 

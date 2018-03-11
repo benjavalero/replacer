@@ -18,14 +18,14 @@ public class QuotesFinderTest {
 
         QuotesFinder quotesFinder = new QuotesFinder();
 
-        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text);
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
 
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
         Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
         Assert.assertEquals(quotes3, matches.get(2).getOriginalText());
 
-        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
+        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
         Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());
@@ -40,12 +40,12 @@ public class QuotesFinderTest {
 
         QuotesFinder quotesFinder = new QuotesFinder();
 
-        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text);
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
         Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
 
-        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
+        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
         Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());
@@ -59,12 +59,12 @@ public class QuotesFinderTest {
 
         QuotesFinder quotesFinder = new QuotesFinder();
 
-        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text);
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
         Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
 
-        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
+        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
         Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());
@@ -78,12 +78,12 @@ public class QuotesFinderTest {
 
         QuotesFinder quotesFinder = new QuotesFinder();
 
-        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text);
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
         Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
 
-        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
+        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
         Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());

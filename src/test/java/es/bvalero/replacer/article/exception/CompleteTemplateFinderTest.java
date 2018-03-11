@@ -1,6 +1,7 @@
 package es.bvalero.replacer.article.exception;
 
 import es.bvalero.replacer.utils.RegexMatch;
+import es.bvalero.replacer.utils.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,8 +16,13 @@ public class CompleteTemplateFinderTest {
         String text = "xxx " + template1 + " / " + template2 + " zzz";
 
         CompleteTemplateFinder completeTemplateFinder = new CompleteTemplateFinder();
-        List<RegexMatch> matches = completeTemplateFinder.findExceptionMatches(text);
 
+        List<RegexMatch> matches = completeTemplateFinder.findExceptionMatches(text, false);
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(template1, matches.get(0).getOriginalText());
+        Assert.assertEquals(template2, matches.get(1).getOriginalText());
+
+        matches = completeTemplateFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(template1, matches.get(0).getOriginalText());
         Assert.assertEquals(template2, matches.get(1).getOriginalText());
@@ -28,8 +34,12 @@ public class CompleteTemplateFinderTest {
         String text = "xxx " + category + " zzz";
 
         CompleteTemplateFinder completeTemplateFinder = new CompleteTemplateFinder();
-        List<RegexMatch> matches = completeTemplateFinder.findExceptionMatches(text);
 
+        List<RegexMatch> matches = completeTemplateFinder.findExceptionMatches(text, false);
+        Assert.assertFalse(matches.isEmpty());
+        Assert.assertEquals(category, matches.get(0).getOriginalText());
+
+        matches = completeTemplateFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(category, matches.get(0).getOriginalText());
     }

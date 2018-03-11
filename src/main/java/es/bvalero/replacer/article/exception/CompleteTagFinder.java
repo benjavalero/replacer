@@ -15,10 +15,9 @@ public class CompleteTagFinder implements ExceptionMatchFinder {
     private static final String REGEX_COMPLETE_TAG_ESCAPED = "&lt;(math|source|syntaxhighlight).+?&lt;/\\1&gt;";
 
     @Override
-    public List<RegexMatch> findExceptionMatches(String text) {
+    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
         List<RegexMatch> matches = new ArrayList<>();
-        matches.addAll(RegExUtils.findMatches(text, REGEX_COMPLETE_TAG, Pattern.DOTALL));
-        matches.addAll(RegExUtils.findMatches(text, REGEX_COMPLETE_TAG_ESCAPED, Pattern.DOTALL));
+        matches.addAll(RegExUtils.findMatches(text, isTextEscaped ? REGEX_COMPLETE_TAG_ESCAPED : REGEX_COMPLETE_TAG, Pattern.DOTALL));
         return matches;
     }
 

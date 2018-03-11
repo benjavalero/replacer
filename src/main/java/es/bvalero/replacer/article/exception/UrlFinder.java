@@ -10,11 +10,12 @@ import java.util.List;
 @Component
 public class UrlFinder implements ExceptionMatchFinder {
 
-    private static final String REGEX_URL = "https?://[\\w./\\-+?&%=:#;,~!]+";
+    // TODO An URL may contain an ampersand which would be escaped
+    private static final String REGEX_URL = "https?://[\\w./\\-+?%=:#;,~!]+";
     private static final String REGEX_DOMAIN = "[a-z]+\\.(?:com|org|net|info|es)";
 
     @Override
-    public List<RegexMatch> findExceptionMatches(String text) {
+    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
         List<RegexMatch> matches = new ArrayList<>();
         matches.addAll(RegExUtils.findMatches(text, REGEX_URL));
         matches.addAll(RegExUtils.findMatches(text, REGEX_DOMAIN));

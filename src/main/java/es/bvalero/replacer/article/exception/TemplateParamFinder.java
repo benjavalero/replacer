@@ -12,7 +12,7 @@ public class TemplateParamFinder implements ExceptionMatchFinder {
     private static final String REGEX_TEMPLATE_PARAM = "\\|[\\wÁáÉéÍíÓóÚúÜüÑñ\\-\\s]+=";
 
     @Override
-    public List<RegexMatch> findExceptionMatches(String text) {
+    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
         return RegExUtils.findMatches(text, REGEX_TEMPLATE_PARAM);
     }
 

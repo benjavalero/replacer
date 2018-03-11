@@ -15,10 +15,9 @@ public class XmlTagFinder implements ExceptionMatchFinder {
     private static final String REGEX_XML_TAG_ESCAPED = "&lt;[\\w/].*?&gt;";
 
     @Override
-    public List<RegexMatch> findExceptionMatches(String text) {
+    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
         List<RegexMatch> matches = new ArrayList<>();
-        matches.addAll(RegExUtils.findMatches(text, REGEX_XML_TAG));
-        matches.addAll(RegExUtils.findMatches(text, REGEX_XML_TAG_ESCAPED));
+        matches.addAll(RegExUtils.findMatches(text, isTextEscaped ? REGEX_XML_TAG_ESCAPED : REGEX_XML_TAG));
         return matches;
     }
 

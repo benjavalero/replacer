@@ -15,10 +15,9 @@ public class CommentFinder implements ExceptionMatchFinder {
     private static final String REGEX_COMMENT_TAG_ESCAPED = "&lt;!--.+?--&gt;";
 
     @Override
-    public List<RegexMatch> findExceptionMatches(String text) {
+    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
         List<RegexMatch> matches = new ArrayList<>();
-        matches.addAll(RegExUtils.findMatches(text, REGEX_COMMENT_TAG, Pattern.DOTALL));
-        matches.addAll(RegExUtils.findMatches(text, REGEX_COMMENT_TAG_ESCAPED, Pattern.DOTALL));
+        matches.addAll(RegExUtils.findMatches(text, isTextEscaped ? REGEX_COMMENT_TAG_ESCAPED : REGEX_COMMENT_TAG, Pattern.DOTALL));
         return matches;
     }
 

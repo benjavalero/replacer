@@ -15,7 +15,7 @@ public class CommentFinderTest {
         String text = "xxx " + comment + " zzz";
 
         CommentFinder commentFinder = new CommentFinder();
-        List<RegexMatch> matches = commentFinder.findExceptionMatches(text);
+        List<RegexMatch> matches = commentFinder.findExceptionMatches(text, false);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(comment, matches.get(0).getOriginalText());
@@ -27,7 +27,7 @@ public class CommentFinderTest {
         String text = "xxx " + comment + " zzz";
 
         CommentFinder commentFinder = new CommentFinder();
-        List<RegexMatch> matches = commentFinder.findExceptionMatches(text);
+        List<RegexMatch> matches = commentFinder.findExceptionMatches(text, false);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(comment, matches.get(0).getOriginalText());
@@ -39,7 +39,7 @@ public class CommentFinderTest {
         String text = "xxx " + comment + " zzz";
 
         CommentFinder commentFinder = new CommentFinder();
-        List<RegexMatch> matches = commentFinder.findExceptionMatches(StringUtils.escapeText(text));
+        List<RegexMatch> matches = commentFinder.findExceptionMatches(StringUtils.escapeText(text), true);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(StringUtils.escapeText(comment), matches.get(0).getOriginalText());

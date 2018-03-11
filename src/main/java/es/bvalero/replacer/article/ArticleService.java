@@ -123,7 +123,7 @@ public class ArticleService {
         String escapedContent = StringUtils.escapeText(articleContent);
 
         // Find the possible exceptions and errors in the article content
-        List<RegexMatch> exceptionMatches = findExceptionMatches(escapedContent);
+        List<RegexMatch> exceptionMatches = findExceptionMatches(escapedContent, true);
         List<ArticleReplacement> articleReplacements = findPotentialErrorsIgnoringExceptions(escapedContent, exceptionMatches);
         LOGGER.info("Article found has {} potential errors to review: {}", articleReplacements.size(), article.getTitle());
         if (articleReplacements.isEmpty()) {
@@ -176,7 +176,7 @@ public class ArticleService {
      */
     @NotNull
     public List<ArticleReplacement> findPotentialErrorsIgnoringExceptions(@NotNull String text) {
-        return findPotentialErrorsIgnoringExceptions(text, findExceptionMatches(text));
+        return findPotentialErrorsIgnoringExceptions(text, findExceptionMatches(text, false));
     }
 
     @NotNull
@@ -215,10 +215,10 @@ public class ArticleService {
      * If there are no exception matches, the list will be empty.
      */
     @NotNull
-    private List<RegexMatch> findExceptionMatches(@NotNull String text) {
+    private List<RegexMatch> findExceptionMatches(@NotNull String text, boolean isTextEscaped) {
         List<RegexMatch> allErrorExceptions = new ArrayList<>();
         for (ExceptionMatchFinder exceptionMatchFinder : exceptionMatchFinders) {
-            allErrorExceptions.addAll(exceptionMatchFinder.findExceptionMatches(text));
+            allErrorExceptions.addAll(exceptionMatchFinder.findExceptionMatches(text, isTextEscaped));
         }
 
         return RegexMatch.removedNestedMatches(allErrorExceptions);

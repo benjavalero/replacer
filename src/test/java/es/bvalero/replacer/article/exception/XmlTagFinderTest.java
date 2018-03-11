@@ -18,13 +18,13 @@ public class XmlTagFinderTest {
 
         XmlTagFinder xmlTagFinder = new XmlTagFinder();
 
-        List<RegexMatch> matches = xmlTagFinder.findExceptionMatches(text);
+        List<RegexMatch> matches = xmlTagFinder.findExceptionMatches(text, false);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(ref1, matches.get(0).getOriginalText());
         Assert.assertEquals(ref2, matches.get(1).getOriginalText());
         Assert.assertEquals(ref3, matches.get(2).getOriginalText());
 
-        matches = xmlTagFinder.findExceptionMatches(StringUtils.escapeText(text));
+        matches = xmlTagFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(StringUtils.escapeText(ref1), matches.get(0).getOriginalText());
         Assert.assertEquals(StringUtils.escapeText(ref2), matches.get(1).getOriginalText());
@@ -38,10 +38,10 @@ public class XmlTagFinderTest {
 
         XmlTagFinder xmlTagFinder = new XmlTagFinder();
 
-        List<RegexMatch> matches = xmlTagFinder.findExceptionMatches(text);
+        List<RegexMatch> matches = xmlTagFinder.findExceptionMatches(text, false);
         Assert.assertTrue(matches.isEmpty());
 
-        matches = xmlTagFinder.findExceptionMatches(StringUtils.escapeText(text));
+        matches = xmlTagFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertTrue(matches.isEmpty());
     }
 

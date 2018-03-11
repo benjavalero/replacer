@@ -17,12 +17,12 @@ public class CompleteTagFinderTest {
 
         CompleteTagFinder completeTagFinder = new CompleteTagFinder();
 
-        List<RegexMatch> matches = completeTagFinder.findExceptionMatches(text);
+        List<RegexMatch> matches = completeTagFinder.findExceptionMatches(text, false);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(tag1, matches.get(0).getOriginalText());
         Assert.assertEquals(tag2, matches.get(1).getOriginalText());
 
-        matches = completeTagFinder.findExceptionMatches(StringUtils.escapeText(text));
+        matches = completeTagFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(StringUtils.escapeText(tag1), matches.get(0).getOriginalText());
         Assert.assertEquals(StringUtils.escapeText(tag2), matches.get(1).getOriginalText());

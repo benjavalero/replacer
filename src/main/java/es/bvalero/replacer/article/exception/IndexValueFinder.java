@@ -12,7 +12,7 @@ public class IndexValueFinder implements ExceptionMatchFinder {
     private static final String REGEX_INDEX_VALUE = "\\|\\s*(?:índice)\\s*=[^}|]*";
 
     @Override
-    public List<RegexMatch> findExceptionMatches(String text) {
+    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
         return RegExUtils.findMatches(text, REGEX_INDEX_VALUE);
     }
 
