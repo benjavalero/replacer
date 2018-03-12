@@ -15,7 +15,7 @@ public class UrlFinder implements ExceptionMatchFinder {
     private static final String INSIDE = "[^]\\s<>\"]";
     private static final String REGEX_URL = "http[s]?://" + INSIDE + "*" + AT_END;
 
-    private static final String REGEX_DOMAIN = "[a-z]+\\.(?:com|org|net|info|es)";
+    private static final String REGEX_DOMAIN = "\\b\\w+\\.(?:com?|org|net|info|es)\\b";
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {

@@ -27,18 +27,21 @@ public class UrlFinderTest {
 
     @Test
     public void testRegexDomain() {
-        String url = "google.com";
-        String text = "xxx " + url + " zzz";
+        String domain1 = "google.es";
+        String domain2 = "IMDb.org";
+        String text = "xxx " + domain1 + " / " + domain2 + " zzz";
 
         UrlFinder urlFinder = new UrlFinder();
 
         List<RegexMatch> matches = urlFinder.findExceptionMatches(text, false);
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(url, matches.get(0).getOriginalText());
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(domain1, matches.get(0).getOriginalText());
+        Assert.assertEquals(domain2, matches.get(1).getOriginalText());
 
         matches = urlFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(url, matches.get(0).getOriginalText());
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(domain1, matches.get(0).getOriginalText());
+        Assert.assertEquals(domain2, matches.get(1).getOriginalText());
     }
 
 }
