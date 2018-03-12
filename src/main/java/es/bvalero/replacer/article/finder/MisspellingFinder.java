@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class MisspellingFinder implements PotentialErrorFinder {
 
-    private static final String REGEX_WORD = "\\b[\\wÁáÉéÍíÓóÚúÜüÑñ]+\\b";
+    private static final String REGEX_WORD = "\\b\\p{L}++\\p{N}?\\b";
 
     @Autowired
     private MisspellingManager misspellingManager;

@@ -14,7 +14,8 @@ class RegexPerformanceExperiments {
         // templateNameExperiment();
         // xmlTagExperiment();
         // completeTemplateExperiment();
-        indexValueExperiment();
+        // indexValueExperiment();
+        wordExperiment();
     }
 
     private static void angularQuotesExperiment() {
@@ -291,6 +292,53 @@ class RegexPerformanceExperiments {
             runExperiment(possessiveRegex, "POSSESSIVE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
             runExperiment(lookAheadRegex, "LOOK AHEAD REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+        }
+        write("**************END EXPERIMENT*****************\n\n");
+    }
+
+    private static void wordExperiment() {
+        write("************** BEGIN WORD EXPERIMENT *****************");
+        String letter = "A-Za-zÁÉÍÓÚÜáéíóúüÑñ";
+        String simpleRegex = "\\b[" + letter + "][" + letter + "\\d]*\\b";
+        String lazyRegex = "\\b[" + letter + "][" + letter + "\\d]*?\\b";
+        String possessiveRegex = "\\b[" + letter + "][" + letter + "\\d]*+\\b";
+        String endDigitRegex = "\\b[" + letter + "]++\\d?\\b";
+        String unicodeRegex = "\\b\\p{L}++\\d?\\b";
+        String fullUnicodeRegex = "\\b\\p{L}++\\p{N}?\\b";
+
+        String matchingInput = ".....Águila2.....";
+        String nonMatchingInput = ".....      .....";
+        String almostMatchingInput = ".....1guila2.....";
+
+        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
+            runExperiment(simpleRegex, "SIMPLE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyRegex, "LAZY REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(possessiveRegex, "POSSESSIVE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(endDigitRegex, "END DIGIT REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(unicodeRegex, "UNICODE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fullUnicodeRegex, "FULL UNICODE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperiment(simpleRegex, "SIMPLE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyRegex, "LAZY REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(possessiveRegex, "POSSESSIVE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(endDigitRegex, "END DIGIT REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(unicodeRegex, "UNICODE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fullUnicodeRegex, "FULL UNICODE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperiment(simpleRegex, "SIMPLE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyRegex, "LAZY REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(possessiveRegex, "POSSESSIVE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(endDigitRegex, "END DIGIT REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(unicodeRegex, "UNICODE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fullUnicodeRegex, "FULL UNICODE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
         }
         write("**************END EXPERIMENT*****************\n\n");
     }
