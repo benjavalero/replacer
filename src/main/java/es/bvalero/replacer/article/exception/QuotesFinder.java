@@ -15,10 +15,10 @@ public class QuotesFinder implements ExceptionMatchFinder {
     private static final String REGEX_SINGLE_QUOTES_ESCAPED = "((&apos;){2,5}+).+?(?<!&apos;)\\1(?!&apos;)";
 
     // The conditional regex to combine both below takes 4 times more: (?:(«)|“).+?(?(1)»|”)
-    private static final String REGEX_ANGULAR_QUOTES = "«[^»]++»";
-    private static final String REGEX_TYPOGRAPHIC_QUOTES = "“[^”]++”";
+    private static final String REGEX_ANGULAR_QUOTES = "«[^»\n]++»";
+    private static final String REGEX_TYPOGRAPHIC_QUOTES = "“[^”\n]++”";
 
-    private static final String REGEX_DOUBLE_QUOTES = "\"[^\"]++\"";
+    private static final String REGEX_DOUBLE_QUOTES = "\"[^\"\n]++\"";
     private static final String REGEX_DOUBLE_QUOTES_ESCAPED = "&quot;.+?&quot;";
 
     @Override
@@ -27,7 +27,7 @@ public class QuotesFinder implements ExceptionMatchFinder {
         if (isTextEscaped) {
             // There are lots of lines with single quotes not closed
             matches.addAll(RegExUtils.findMatches(text, REGEX_SINGLE_QUOTES_ESCAPED));
-            matches.addAll(RegExUtils.findMatches(text, REGEX_DOUBLE_QUOTES_ESCAPED, Pattern.DOTALL));
+            matches.addAll(RegExUtils.findMatches(text, REGEX_DOUBLE_QUOTES_ESCAPED));
         } else {
             matches.addAll(RegExUtils.findMatches(text, REGEX_SINGLE_QUOTES));
             matches.addAll(RegExUtils.findMatches(text, REGEX_DOUBLE_QUOTES));

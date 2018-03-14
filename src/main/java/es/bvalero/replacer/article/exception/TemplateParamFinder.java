@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class TemplateParamFinder implements ExceptionMatchFinder {
 
-    private static final String REGEX_TEMPLATE_PARAM = "\\|[^=]++";
+    private static final String REGEX_TEMPLATE_PARAM = "\\|[\\p{L}\\p{N}\\s-]++(?==)";
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {

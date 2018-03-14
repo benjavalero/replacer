@@ -14,7 +14,9 @@ public class QuotesFinderTest {
         String quotes1 = "''y '''á''' y''";
         String quotes2 = "'''zzz'''";
         String quotes3 = "''tt''";
-        String text = "xxx " + quotes1 + " / " + quotes2 + " / " + quotes3 + ".";
+        String quotes4 = "''z\nz''";
+
+        String text = "xxx " + quotes1 + " / " + quotes2 + " / " + quotes3 + " / " + quotes4 + ".";
 
         QuotesFinder quotesFinder = new QuotesFinder();
 
@@ -36,7 +38,8 @@ public class QuotesFinderTest {
     public void testRegexQuotesAngular() {
         String quotes1 = "«yáy»";
         String quotes2 = "«zzz»";
-        String text = "xxx " + quotes1 + " / " + quotes2 + ".";
+        String quotes3 = "«z\nz»";
+        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + ".";
 
         QuotesFinder quotesFinder = new QuotesFinder();
 
@@ -55,7 +58,8 @@ public class QuotesFinderTest {
     public void testRegexQuotesTypographic() {
         String quotes1 = "“yáy”";
         String quotes2 = "“zzz”";
-        String text = "xxx " + quotes1 + " / " + quotes2 + ".";
+        String quotes3 = "“z\nz”";
+        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + ".";
 
         QuotesFinder quotesFinder = new QuotesFinder();
 
@@ -74,7 +78,8 @@ public class QuotesFinderTest {
     public void testRegexDoubleQuotes() {
         String quotes1 = "\"yáy\"";
         String quotes2 = "\"zzz\"";
-        String text = "xxx " + quotes1 + " / " + quotes2 + ".";
+        String quotes3 = "\"z\nz\"";
+        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + ".";
 
         QuotesFinder quotesFinder = new QuotesFinder();
 

@@ -124,6 +124,10 @@ public class ArticleService {
 
         // Find the possible exceptions and errors in the article content
         List<RegexMatch> exceptionMatches = findExceptionMatches(escapedContent, true);
+        for (RegexMatch match : exceptionMatches) {
+            LOGGER.debug("Exception match: {} ({}-{})", match.getOriginalText(), match.getPosition(), match.getEnd());
+        }
+
         List<ArticleReplacement> articleReplacements = findPotentialErrorsIgnoringExceptions(escapedContent, exceptionMatches);
         LOGGER.info("Article found has {} potential errors to review: {}", articleReplacements.size(), article.getTitle());
         if (articleReplacements.isEmpty()) {

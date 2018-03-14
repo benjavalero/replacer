@@ -11,7 +11,7 @@ Comics
 Comic[\-\s]Con
 [Ss]e (publica|especifica|practica)
 Tropicos\.org
-(Domingo|Julio) [A-ZÁÉÍÓÚÑ]
+(Domingo|Julio) \p{Lu}\p{Ll}+
 Magazine
 Records
 Jet Propulsion Laboratory
