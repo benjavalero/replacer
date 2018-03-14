@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class StringUtilsTest {
 
@@ -100,7 +101,7 @@ public class StringUtilsTest {
     @Test
     public void testTrimText() {
         int threshold = 3;
-        String match = "-";
+        Pattern match = Pattern.compile("-");
         String text = "En un-lugar de-la Mancha de-cuyo-nombre no quiero acordarme.";
         String expected = "[...]  un-lug [...]  de-la  [...]  de-cuyo-nom [...]";
         Assert.assertEquals(expected, StringUtils.trimText(text, threshold, match));
@@ -110,7 +111,8 @@ public class StringUtilsTest {
     public void testRemoveParagraphsNotMatching() {
         String text = "A\n\nB\n\nC id=\"miss-2\"\n\nD id=\"miss-3\"\n\nE\n\nF id=\"miss-14\"\n\nG\n\nH\n\n";
 
-        List<String> matchingParagraphs = StringUtils.removeParagraphsNotMatching(text, "id=\"miss-[0-9]+\"");
+        Pattern patterMatch = Pattern.compile("id=\"miss-[0-9]+\"");
+        List<String> matchingParagraphs = StringUtils.removeParagraphsNotMatching(text, patterMatch);
 
         Assert.assertFalse(matchingParagraphs.isEmpty());
         Assert.assertEquals(3, matchingParagraphs.size());

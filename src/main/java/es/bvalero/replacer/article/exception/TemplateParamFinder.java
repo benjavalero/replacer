@@ -5,11 +5,12 @@ import es.bvalero.replacer.utils.RegexMatch;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Component
 public class TemplateParamFinder implements ExceptionMatchFinder {
 
-    private static final String REGEX_TEMPLATE_PARAM = "\\|[\\p{L}\\p{N}\\s-]++(?==)";
+    private static final Pattern REGEX_TEMPLATE_PARAM = Pattern.compile("\\|[\\p{L}\\p{N}\\s-_]++(?==)");
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {

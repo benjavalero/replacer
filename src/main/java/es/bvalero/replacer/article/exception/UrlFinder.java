@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Component
 public class UrlFinder implements ExceptionMatchFinder {
@@ -14,10 +15,12 @@ public class UrlFinder implements ExceptionMatchFinder {
     private static final String AT_END = "[^]\\s.:;,<>\"|)]";
     private static final String INSIDE = "[^]\\s<>\"|]";
     private static final String INSIDE_ESCAPED = "(" + INSIDE + "(?!&lt;))";
-    private static final String REGEX_URL = "http[s]?://" + INSIDE + "*" + AT_END;
-    private static final String REGEX_URL_ESCAPED = "http[s]?://" + INSIDE_ESCAPED + "*" + AT_END;
+    private static final Pattern REGEX_URL = Pattern.compile("http[s]?://" + INSIDE + "*" + AT_END);
+    private static final Pattern REGEX_URL_ESCAPED =
+            Pattern.compile("http[s]?://" + INSIDE_ESCAPED + "*" + AT_END);
 
-    private static final String REGEX_DOMAIN = "\\b(?:\\w+\\.)+(?:com?|org|net|info|es)\\b";
+    private static final Pattern REGEX_DOMAIN =
+            Pattern.compile("\\b(?:\\w+\\.)+(?:com?|org|net|info|es)\\b");
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {

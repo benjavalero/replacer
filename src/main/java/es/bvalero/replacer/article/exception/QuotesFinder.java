@@ -11,15 +11,16 @@ import java.util.regex.Pattern;
 @Component
 public class QuotesFinder implements ExceptionMatchFinder {
 
-    private static final String REGEX_SINGLE_QUOTES = "('{2,5}+).+?[^']\\1(?!')";
-    private static final String REGEX_SINGLE_QUOTES_ESCAPED = "((&apos;){2,5}+).+?(?<!&apos;)\\1(?!&apos;)";
+    private static final Pattern REGEX_SINGLE_QUOTES = Pattern.compile("('{2,5}+).+?[^']\\1(?!')");
+    private static final Pattern REGEX_SINGLE_QUOTES_ESCAPED =
+            Pattern.compile("((&apos;){2,5}+).+?(?<!&apos;)\\1(?!&apos;)");
 
     // The conditional regex to combine both below takes 4 times more: (?:(«)|“).+?(?(1)»|”)
-    private static final String REGEX_ANGULAR_QUOTES = "«[^»\n]++»";
-    private static final String REGEX_TYPOGRAPHIC_QUOTES = "“[^”\n]++”";
+    private static final Pattern REGEX_ANGULAR_QUOTES = Pattern.compile("«[^»\n]++»");
+    private static final Pattern REGEX_TYPOGRAPHIC_QUOTES = Pattern.compile("“[^”\n]++”");
 
-    private static final String REGEX_DOUBLE_QUOTES = "\"[^\"\n]++\"";
-    private static final String REGEX_DOUBLE_QUOTES_ESCAPED = "&quot;.+?&quot;";
+    private static final Pattern REGEX_DOUBLE_QUOTES = Pattern.compile("\"[^\"\n]++\"");
+    private static final Pattern REGEX_DOUBLE_QUOTES_ESCAPED = Pattern.compile("&quot;.+?&quot;");
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {

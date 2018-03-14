@@ -16,7 +16,7 @@ public class FileNameFinderTest {
         String file3 = "File: un fichero.PDF";
         String file4 = "File: otro-fichero.gif";
         String gallery = "<gallery>\n" + file3 + "| DESC \n " + file4 + "\n</gallery>";
-        String file5 = "| imagen = Otra imagen.tiff";
+        String file5 = "| imagen = Otra imagen.svg";
         String template = "{{Plantilla " + file5 + "}}";
 
         String text = "xxx [[" + file1 + "]] / [[" + file2 + "| Águila]] / " + gallery + " / " + template + " zzz";

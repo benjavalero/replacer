@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Finds potential errors of type misspelling in a given text.
@@ -20,7 +21,7 @@ import java.util.List;
 @Component
 public class MisspellingFinder implements PotentialErrorFinder {
 
-    private static final String REGEX_WORD = "\\b\\p{L}++\\p{N}?\\b";
+    private static final Pattern REGEX_WORD = Pattern.compile("\\b\\p{L}++\\p{N}?\\b");
 
     @Autowired
     private MisspellingManager misspellingManager;

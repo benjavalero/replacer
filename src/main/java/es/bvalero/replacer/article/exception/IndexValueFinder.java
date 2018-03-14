@@ -5,12 +5,13 @@ import es.bvalero.replacer.utils.RegexMatch;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Component
 public class IndexValueFinder implements ExceptionMatchFinder {
 
     // Look-ahead as takes more time
-    private static final String REGEX_INDEX_VALUE = "\\|\\s*índice\\s*=[^}|]*";
+    private static final Pattern REGEX_INDEX_VALUE = Pattern.compile("\\|\\s*índice\\s*=[^}|]*");
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {

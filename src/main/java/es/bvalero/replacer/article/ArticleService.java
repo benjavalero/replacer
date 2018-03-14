@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Provides methods to find articles with potential errors.
@@ -26,7 +27,8 @@ public class ArticleService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
 
-    private static final String REGEX_BUTTON_TAG = "<button.+?</button>";
+    private static final Pattern REGEX_BUTTON_TAG =
+            Pattern.compile("<button.+?</button>", Pattern.DOTALL);
     private static final int TRIM_THRESHOLD = 200;
 
     @Autowired
