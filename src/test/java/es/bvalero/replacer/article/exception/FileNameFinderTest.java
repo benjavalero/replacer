@@ -12,8 +12,8 @@ public class FileNameFinderTest {
     @Test
     public void testRegexFileName() {
         String file1 = "File:España.png";
-        String file2 = "File:Águila.jpeg";
-        String file3 = "File: un fichero.PDF";
+        String file2 = "Archivo:Águila.jpeg";
+        String file3 = "Imagen: un fichero.PDF";
         String file4 = "File: otro-fichero.gif";
         String gallery = "<gallery>\n" + file3 + "| DESC \n " + file4 + "\n</gallery>";
         String file5 = "| imagen = Otra imagen.svg";

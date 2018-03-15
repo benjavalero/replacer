@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class FileNameFinder implements ExceptionMatchFinder {
 
     private static final Pattern REGEX_FILE =
-            Pattern.compile("File:[^]|]+?(?=]|\\||$)", Pattern.MULTILINE);
+            Pattern.compile("(?:File|Archivo|Imagen):[^]|]+?(?=]|\\||$)", Pattern.MULTILINE);
     private static final Pattern REGEX_FILE_VALUE =
             Pattern.compile("\\|[\\p{L}\\p{N}\\s-]+=[^}|]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|ogg|pdf)\\b");
 
