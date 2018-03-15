@@ -1,6 +1,7 @@
 package es.bvalero.replacer.article.exception;
 
 import es.bvalero.replacer.utils.RegexMatch;
+import es.bvalero.replacer.utils.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,15 +11,33 @@ public class FileNameFinderTest {
 
     @Test
     public void testRegexFileName() {
-        String text = "[[File: de_españa.png | España]] {{ X | co-co.svg | a = pepe.pdf }}";
+        String file1 = "File:España.png";
+        String file2 = "Archivo:Águila.jpeg";
+        String file3 = "Imagen: un fichero.PDF";
+        String file4 = "File: otro-fichero.gif";
+        String gallery = "<gallery>\n" + file3 + "| DESC \n " + file4 + "\n</gallery>";
+        String file5 = "| imagen = Otra imagen.svg";
+        String template = "{{Plantilla " + file5 + "}}";
+
+        String text = "xxx [[" + file1 + "]] / [[" + file2 + "| Águila]] / " + gallery + " / " + template + " zzz";
 
         FileNameFinder fileNameFinder = new FileNameFinder();
-        List<RegexMatch> matches = fileNameFinder.findExceptionMatches(text);
 
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertTrue(matches.contains(new RegexMatch(7, " de_españa.png")));
-        Assert.assertTrue(matches.contains(new RegexMatch(39, " co-co.svg")));
-        Assert.assertTrue(matches.contains(new RegexMatch(55, " pepe.pdf")));
+        List<RegexMatch> matches = fileNameFinder.findExceptionMatches(text, false);
+        Assert.assertEquals(5, matches.size());
+        Assert.assertEquals(file1, matches.get(0).getOriginalText());
+        Assert.assertEquals(file2, matches.get(1).getOriginalText());
+        Assert.assertEquals(file3, matches.get(2).getOriginalText());
+        Assert.assertEquals(file4, matches.get(3).getOriginalText());
+        Assert.assertEquals(file5, matches.get(4).getOriginalText());
+
+        matches = fileNameFinder.findExceptionMatches(StringUtils.escapeText(text), true);
+        Assert.assertEquals(5, matches.size());
+        Assert.assertEquals(file1, matches.get(0).getOriginalText());
+        Assert.assertEquals(file2, matches.get(1).getOriginalText());
+        Assert.assertEquals(file3, matches.get(2).getOriginalText());
+        Assert.assertEquals(file4, matches.get(3).getOriginalText());
+        Assert.assertEquals(file5, matches.get(4).getOriginalText());
     }
 
 }

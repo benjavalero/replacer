@@ -4,18 +4,22 @@ import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 @Component
-public class IndexValueFinder implements ExceptionMatchFinder {
+public class XmlEntityFinder implements ExceptionMatchFinder {
 
-    // Look-ahead as takes more time
-    private static final Pattern REGEX_INDEX_VALUE = Pattern.compile("\\|\\s*índice\\s*=[^}|]*");
+    private static final Pattern REGEX_XML_ENTITY = Pattern.compile("&[a-z]++;");
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        return RegExUtils.findMatches(text, REGEX_INDEX_VALUE);
+        List<RegexMatch> matches = new ArrayList<>();
+        if (isTextEscaped) {
+            matches.addAll(RegExUtils.findMatches(text, REGEX_XML_ENTITY));
+        }
+        return matches;
     }
 
 }

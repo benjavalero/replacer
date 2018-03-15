@@ -11,38 +11,21 @@ public class CommentFinderTest {
 
     @Test
     public void testRegexComment() {
-        String comment = "<!-- Esto es un \n comentario -->";
-        String text = "xxx " + comment + " zzz";
+        String comment1 = "<!-- Esto <span>es</span> un \n comentario -->";
+        String comment2 = "<!-- Otro comentario -->";
+        String text = "xxx " + comment1 + " / " + comment2 + " zzz";
 
         CommentFinder commentFinder = new CommentFinder();
-        List<RegexMatch> matches = commentFinder.findExceptionMatches(text);
 
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(comment, matches.get(0).getOriginalText());
-    }
+        List<RegexMatch> matches = commentFinder.findExceptionMatches(text, false);
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(comment1, matches.get(0).getOriginalText());
+        Assert.assertEquals(comment2, matches.get(1).getOriginalText());
 
-    @Test
-    public void testRegexCommentWithTagsInside() {
-        String comment = "<!-- Esto <span>es</span> un \n comentario -->";
-        String text = "xxx " + comment + " zzz";
-
-        CommentFinder commentFinder = new CommentFinder();
-        List<RegexMatch> matches = commentFinder.findExceptionMatches(text);
-
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(comment, matches.get(0).getOriginalText());
-    }
-
-    @Test
-    public void testRegexCommentEscaped() {
-        String comment = "<!-- Esto es un \n comentario -->";
-        String text = "xxx " + comment + " zzz";
-
-        CommentFinder commentFinder = new CommentFinder();
-        List<RegexMatch> matches = commentFinder.findExceptionMatches(StringUtils.escapeText(text));
-
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(StringUtils.escapeText(comment), matches.get(0).getOriginalText());
+        matches = commentFinder.findExceptionMatches(StringUtils.escapeText(text), true);
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(StringUtils.escapeText(comment1), matches.get(0).getOriginalText());
+        Assert.assertEquals(StringUtils.escapeText(comment2), matches.get(1).getOriginalText());
     }
 
 }

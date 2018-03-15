@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Provides methods to find articles with potential errors.
@@ -26,7 +27,8 @@ public class ArticleService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
 
-    private static final String REGEX_BUTTON_TAG = "<button.+?</button>";
+    private static final Pattern REGEX_BUTTON_TAG =
+            Pattern.compile("<button.+?</button>", Pattern.DOTALL);
     private static final int TRIM_THRESHOLD = 200;
 
     @Autowired
@@ -123,7 +125,11 @@ public class ArticleService {
         String escapedContent = StringUtils.escapeText(articleContent);
 
         // Find the possible exceptions and errors in the article content
-        List<RegexMatch> exceptionMatches = findExceptionMatches(escapedContent);
+        List<RegexMatch> exceptionMatches = findExceptionMatches(escapedContent, true);
+        for (RegexMatch match : exceptionMatches) {
+            LOGGER.debug("Exception match: {} ({}-{})", match.getOriginalText(), match.getPosition(), match.getEnd());
+        }
+
         List<ArticleReplacement> articleReplacements = findPotentialErrorsIgnoringExceptions(escapedContent, exceptionMatches);
         LOGGER.info("Article found has {} potential errors to review: {}", articleReplacements.size(), article.getTitle());
         if (articleReplacements.isEmpty()) {
@@ -176,7 +182,7 @@ public class ArticleService {
      */
     @NotNull
     public List<ArticleReplacement> findPotentialErrorsIgnoringExceptions(@NotNull String text) {
-        return findPotentialErrorsIgnoringExceptions(text, findExceptionMatches(text));
+        return findPotentialErrorsIgnoringExceptions(text, findExceptionMatches(text, false));
     }
 
     @NotNull
@@ -215,10 +221,10 @@ public class ArticleService {
      * If there are no exception matches, the list will be empty.
      */
     @NotNull
-    private List<RegexMatch> findExceptionMatches(@NotNull String text) {
+    private List<RegexMatch> findExceptionMatches(@NotNull String text, boolean isTextEscaped) {
         List<RegexMatch> allErrorExceptions = new ArrayList<>();
         for (ExceptionMatchFinder exceptionMatchFinder : exceptionMatchFinders) {
-            allErrorExceptions.addAll(exceptionMatchFinder.findExceptionMatches(text));
+            allErrorExceptions.addAll(exceptionMatchFinder.findExceptionMatches(text, isTextEscaped));
         }
 
         return RegexMatch.removedNestedMatches(allErrorExceptions);

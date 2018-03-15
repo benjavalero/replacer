@@ -5,14 +5,13 @@ Online
 [Aa]un así
 [Mm]ás aún
 [Aa]ún más
-&lt;
 Lt
 [Ff]ans
 Comics
 Comic[\-\s]Con
 [Ss]e (publica|especifica|practica)
 Tropicos\.org
-(Domingo|Julio) [A-ZÁÉÍÓÚÑ]
+(Domingo|Julio) (?=\p{Lu})
 Magazine
 Records
 Jet Propulsion Laboratory
