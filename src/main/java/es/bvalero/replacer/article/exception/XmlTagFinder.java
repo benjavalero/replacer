@@ -4,22 +4,19 @@ import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Component
 public class XmlTagFinder implements ExceptionMatchFinder {
 
     // We want to avoid the XML comments to be captured by this
-    private static final String REGEX_XML_TAG = "<[\\wÁáÉéÍíÓóÚúÜüÑñ\\-\\s=\"/]+>";
-    private static final String REGEX_XML_TAG_ESCAPED = "&lt;[\\wÁáÉéÍíÓóÚúÜüÑñ\\-\\s=\"/]+&gt;";
+    private static final Pattern REGEX_XML_TAG = Pattern.compile("<[\\w/][^>]*+>");
+    private static final Pattern REGEX_XML_TAG_ESCAPED = Pattern.compile("&lt;[\\w/].*?&gt;");
 
     @Override
-    public List<RegexMatch> findExceptionMatches(String text) {
-        List<RegexMatch> matches = new ArrayList<>();
-        matches.addAll(RegExUtils.findMatches(text, REGEX_XML_TAG));
-        matches.addAll(RegExUtils.findMatches(text, REGEX_XML_TAG_ESCAPED));
-        return matches;
+    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
+        return RegExUtils.findMatches(text, isTextEscaped ? REGEX_XML_TAG_ESCAPED : REGEX_XML_TAG);
     }
 
 }

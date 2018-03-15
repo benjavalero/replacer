@@ -10,54 +10,88 @@ import java.util.List;
 public class QuotesFinderTest {
 
     @Test
-    public void testRegexQuotes() {
-        String text = "xxx '''I'm Muzzy''' \"zzz\" ''''ttt'' ''uuu\" vvv";
+    public void testRegexSingleQuotes() {
+        String quotes1 = "''y '''á''' y''";
+        String quotes2 = "'''zzz'''";
+        String quotes3 = "''tt''";
+        String quotes4 = "''z\nz''";
+
+        String text = "xxx " + quotes1 + " / " + quotes2 + " / " + quotes3 + " / " + quotes4 + ".";
+
         QuotesFinder quotesFinder = new QuotesFinder();
-        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text);
 
-        Assert.assertFalse(matches.isEmpty());
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
+
         Assert.assertEquals(3, matches.size());
-        Assert.assertTrue(matches.contains(new RegexMatch(4, "'''I'm Muzzy'''")));
-        Assert.assertTrue(matches.contains(new RegexMatch(20, "\"zzz\"")));
-        Assert.assertTrue(matches.contains(new RegexMatch(26, "''''ttt''")));
-    }
+        Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
+        Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
+        Assert.assertEquals(quotes3, matches.get(2).getOriginalText());
 
-    @Test
-    public void testRegexQuotesEscaped() {
-        String text = "xxx '''I'm Muzzy''' \"zzz\" ''''ttt'' ''uuu\" vvv";
-        QuotesFinder quotesFinder = new QuotesFinder();
-        List<RegexMatch> matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
-
-        Assert.assertFalse(matches.isEmpty());
+        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertEquals(3, matches.size());
-        Assert.assertTrue(matches.contains(new RegexMatch(4, StringUtils.escapeText("'''I'm Muzzy'''"))));
-        Assert.assertTrue(matches.contains(new RegexMatch(55, StringUtils.escapeText("\"zzz\""))));
-        Assert.assertTrue(matches.contains(new RegexMatch(71, StringUtils.escapeText("''''ttt''"))));
+        Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
+        Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());
+        Assert.assertEquals(StringUtils.escapeText(quotes3), matches.get(2).getOriginalText());
     }
-
 
     @Test
     public void testRegexQuotesAngular() {
-        String quotes = "«yyy»";
-        String text = "xxx " + quotes + " zzz";
+        String quotes1 = "«yáy»";
+        String quotes2 = "«zzz»";
+        String quotes3 = "«z\nz»";
+        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + ".";
 
         QuotesFinder quotesFinder = new QuotesFinder();
-        List<RegexMatch> matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
 
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(quotes, matches.get(0).getOriginalText());
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
+        Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
+
+        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
+        Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());
     }
 
     @Test
     public void testRegexQuotesTypographic() {
-        String quotes = "“yyy”";
-        String text = "xxx " + quotes + " zzz";
+        String quotes1 = "“yáy”";
+        String quotes2 = "“zzz”";
+        String quotes3 = "“z\nz”";
+        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + ".";
 
         QuotesFinder quotesFinder = new QuotesFinder();
-        List<RegexMatch> matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text));
 
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(quotes, matches.get(0).getOriginalText());
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
+        Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
+
+        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
+        Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());
+    }
+
+    @Test
+    public void testRegexDoubleQuotes() {
+        String quotes1 = "\"yáy\"";
+        String quotes2 = "\"zzz\"";
+        String quotes3 = "\"z\nz\"";
+        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + ".";
+
+        QuotesFinder quotesFinder = new QuotesFinder();
+
+        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
+        Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
+
+        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
+        Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());
     }
 
 }

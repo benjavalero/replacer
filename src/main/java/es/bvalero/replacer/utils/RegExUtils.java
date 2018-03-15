@@ -13,16 +13,8 @@ public class RegExUtils {
     /**
      * Finds the matches for a regular expression in a given text.
      */
-    public static List<RegexMatch> findMatches(String text, String regex) {
-        return findMatches(text, regex, 0);
-    }
-
-    /**
-     * Finds the matches for a regular expression in a given text.
-     */
-    public static List<RegexMatch> findMatches(String text, String regex, int flags) {
+    public static List<RegexMatch> findMatches(String text, Pattern pattern) {
         List<RegexMatch> matches = new ArrayList<>();
-        Pattern pattern = Pattern.compile(regex, flags);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
             matches.add(new RegexMatch(matcher.start(), matcher.group(0)));

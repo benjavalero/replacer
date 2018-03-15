@@ -59,7 +59,7 @@ public class ArticleServiceTest {
         // Exception matches
         ExceptionMatchFinder exceptionMatchFinder = Mockito.mock(ExceptionMatchFinder.class);
         RegexMatch exceptionMatch = new RegexMatch(16, "muxos");
-        Mockito.when(exceptionMatchFinder.findExceptionMatches(Mockito.anyString())).thenReturn(Collections.singletonList(exceptionMatch));
+        Mockito.when(exceptionMatchFinder.findExceptionMatches(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(Collections.singletonList(exceptionMatch));
         Mockito.when(exceptionMatchFinders.iterator()).thenReturn(Arrays.asList(new ExceptionMatchFinder[]{exceptionMatchFinder}).iterator());
 
         // Potential error matches
@@ -113,7 +113,7 @@ public class ArticleServiceTest {
 
         // Exception matches
         ExceptionMatchFinder exceptionMatchFinder = Mockito.mock(ExceptionMatchFinder.class);
-        Mockito.when(exceptionMatchFinder.findExceptionMatches(Mockito.anyString())).thenReturn(Arrays.asList(new RegexMatch[]{}));
+        Mockito.when(exceptionMatchFinder.findExceptionMatches(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(Arrays.asList(new RegexMatch[]{}));
         Mockito.when(exceptionMatchFinders.iterator()).thenReturn(Arrays.asList(new ExceptionMatchFinder[]{exceptionMatchFinder}).iterator());
 
         // Potential error matches

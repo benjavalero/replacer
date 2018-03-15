@@ -11,23 +11,25 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Component
 public class FalsePositiveFinder implements ExceptionMatchFinder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinder.class);
-    private String regexFalsePositives;
+    private Pattern regexFalsePositives;
 
-    public List<RegexMatch> findExceptionMatches(String text) {
-        return RegExUtils.findMatches(text, getRegexFalsePositives());
+    private Pattern getRegexFalsePositives() {
+        if (regexFalsePositives == null) {
+            List<String> falsePositivesList = loadFalsePositives();
+            String alternations = StringUtils.collectionToDelimitedString(falsePositivesList, "|");
+            regexFalsePositives = Pattern.compile("\\b(?:" + alternations + ")\\b");
+        }
+        return regexFalsePositives;
     }
 
-    private String getRegexFalsePositives() {
-        if (this.regexFalsePositives == null) {
-            List<String> falsePositivesList = loadFalsePositives();
-            this.regexFalsePositives = StringUtils.collectionToDelimitedString(falsePositivesList, "|");
-        }
-        return this.regexFalsePositives;
+    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
+        return RegExUtils.findMatches(text, getRegexFalsePositives());
     }
 
     List<String> loadFalsePositives() {

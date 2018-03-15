@@ -127,8 +127,8 @@ public class StringUtils {
      * Trims the text between matches, and also on the left and right sides.
      */
     @NotNull
-    public static String trimText(@NotNull String text, int threshold, @NotNull String match) {
-        List<RegexMatch> matches = RegExUtils.findMatches(text, match, Pattern.DOTALL);
+    public static String trimText(@NotNull String text, int threshold, @NotNull Pattern matchPattern) {
+        List<RegexMatch> matches = RegExUtils.findMatches(text, matchPattern);
 
         StringBuilder reducedContent = new StringBuilder();
         int lastMatchEnd = 0;
@@ -154,9 +154,8 @@ public class StringUtils {
      * @return The text blocks (paragraphs) not containing the match.
      */
     @NotNull
-    public static List<String> removeParagraphsNotMatching(@NotNull String text, @NotNull String match) {
+    public static List<String> removeParagraphsNotMatching(@NotNull String text, @NotNull Pattern patternMatch) {
         Pattern patternParagraph = Pattern.compile(REGEX_PARAGRAPH, Pattern.DOTALL);
-        Pattern patternMatch = Pattern.compile(match);
 
         List<String> matchingParagraphs = new ArrayList<>();
 

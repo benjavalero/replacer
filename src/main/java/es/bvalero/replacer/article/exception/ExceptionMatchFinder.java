@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ExceptionMatchFinder {
 
-    List<RegexMatch> findExceptionMatches(String text);
+    List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped);
 
 }

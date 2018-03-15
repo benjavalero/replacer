@@ -5,6 +5,7 @@ import es.bvalero.replacer.misspelling.Misspelling;
 import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.utils.RegexMatch;
 import es.bvalero.replacer.article.PotentialErrorType;
+import es.bvalero.replacer.utils.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -64,20 +65,35 @@ public class MisspellingFinderTest {
 
     @Test
     public void testWordRegEx() {
-        String text = "#hola-adiós. <!-- Comentario --> [[España, Francia]]. Hola, adiós :Españísima|";
+        String word1 = "hola";
+        String word2 = "km2";
+        String word3 = "1km";
+        String word4 = "España";
+        String word5 = "Águila";
+        String word6 = "cantó";
+        String text = "#" + word1 + "-" + word2 + ". <!--" + word3 + "--> [[" + word4 + ", " + word5 + "]] :" + word6 + "|";
 
         MisspellingFinder misspellingFinder = new MisspellingFinder();
-        List<RegexMatch> words = misspellingFinder.findTextWords(text);
 
-        Assert.assertEquals(8, words.size());
-        Assert.assertTrue(words.contains(new RegexMatch(1, "hola")));
-        Assert.assertTrue(words.contains(new RegexMatch(6, "adiós")));
-        Assert.assertTrue(words.contains(new RegexMatch(60, "adiós")));
-        Assert.assertTrue(words.contains(new RegexMatch(18, "Comentario")));
-        Assert.assertTrue(words.contains(new RegexMatch(35, "España")));
-        Assert.assertTrue(words.contains(new RegexMatch(43, "Francia")));
-        Assert.assertTrue(words.contains(new RegexMatch(54, "Hola")));
-        Assert.assertTrue(words.contains(new RegexMatch(67, "Españísima")));
+        List<RegexMatch> matches = misspellingFinder.findTextWords(text);
+        Assert.assertEquals(5, matches.size());
+        Assert.assertEquals(word1, matches.get(0).getOriginalText());
+        Assert.assertEquals(word2, matches.get(1).getOriginalText());
+        Assert.assertEquals(word4, matches.get(2).getOriginalText());
+        Assert.assertEquals(word5, matches.get(3).getOriginalText());
+        Assert.assertEquals(word6, matches.get(4).getOriginalText());
+
+        // XML entities may appear when text is escaped
+        matches = misspellingFinder.findTextWords(StringUtils.escapeText(text));
+
+        Assert.assertEquals(7, matches.size());
+        Assert.assertEquals(word1, matches.get(0).getOriginalText());
+        Assert.assertEquals(word2, matches.get(1).getOriginalText());
+        Assert.assertEquals("lt", matches.get(2).getOriginalText());
+        Assert.assertEquals("gt", matches.get(3).getOriginalText());
+        Assert.assertEquals(word4, matches.get(4).getOriginalText());
+        Assert.assertEquals(word5, matches.get(5).getOriginalText());
+        Assert.assertEquals(word6, matches.get(6).getOriginalText());
     }
 
     @Test

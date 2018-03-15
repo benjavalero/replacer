@@ -22,7 +22,7 @@ public class FalsePositiveFinderTest {
         String text = "Un Link de Éstas en el Index Online de ésta Tropicos.org Aquél aquéllo Saint Martin.";
 
         FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
-        List<RegexMatch> matches = falsePositiveFinder.findExceptionMatches(text);
+        List<RegexMatch> matches = falsePositiveFinder.findExceptionMatches(text, false);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(9, matches.size());
