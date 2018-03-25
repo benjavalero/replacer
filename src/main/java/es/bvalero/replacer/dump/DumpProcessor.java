@@ -74,7 +74,7 @@ class DumpProcessor {
     private void addPotentialErrorsToArticle(Article article, List<ArticleReplacement> articleReplacements) {
         for (ArticleReplacement articleReplacement : articleReplacements) {
             article.getPotentialErrors().add(
-                    new PotentialError(article, articleReplacement.getType(), articleReplacement.getOriginalText()));
+                    new PotentialError(article, articleReplacement.getType(), articleReplacement.getSubtype()));
         }
     }
 

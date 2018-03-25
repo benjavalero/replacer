@@ -11,6 +11,7 @@ import java.util.List;
 public class ArticleReplacement extends RegexMatch {
 
     private PotentialErrorType type;
+    private String subtype;
     private List<String> proposedFixes = new ArrayList<>();
     private String comment;
     private String fixedText;
@@ -34,6 +35,14 @@ public class ArticleReplacement extends RegexMatch {
 
     public void setType(PotentialErrorType type) {
         this.type = type;
+    }
+
+    public String getSubtype() {
+        return subtype;
+    }
+
+    public void setSubtype(String subtype) {
+        this.subtype = subtype;
     }
 
     public List<String> getProposedFixes() {

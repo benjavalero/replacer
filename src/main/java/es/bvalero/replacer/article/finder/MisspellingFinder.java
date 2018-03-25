@@ -50,6 +50,7 @@ public class MisspellingFinder implements PotentialErrorFinder {
                 replacement.setPosition(textWord.getPosition());
                 replacement.setOriginalText(originalText);
                 replacement.setType(PotentialErrorType.MISSPELLING);
+                replacement.setSubtype(wordMisspelling.getWord());
                 replacement.setComment(wordMisspelling.getComment());
 
                 for (String suggestion : wordMisspelling.getSuggestions()) {

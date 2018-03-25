@@ -14,7 +14,7 @@ CREATE TABLE potentialerror (
     id INT NOT NULL AUTO_INCREMENT,
     articleid INT NOT NULL,
     type VARCHAR(25) NOT NULL,
-    text VARCHAR(30) NOT NULL,
+    text VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
     PRIMARY KEY (id),
     INDEX (articleid, type, text),
     FOREIGN KEY (articleid) REFERENCES article(id)
