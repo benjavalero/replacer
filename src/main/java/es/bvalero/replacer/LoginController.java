@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
  * With this trick, these accesses are redirected to the expected index.html.
  */
 @Controller
-public class RedirectController {
+public class LoginController {
 
     @RequestMapping("/")
     public ModelAndView redirectToIndex(ModelMap model) {
