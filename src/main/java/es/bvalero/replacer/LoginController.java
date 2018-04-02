@@ -16,6 +16,10 @@ import java.util.concurrent.ExecutionException;
 @RestController
 public class LoginController {
 
+    private static final String TOKEN_REQUEST = "requestToken";
+    private static final String TOKEN_ACCESS = "accessToken";
+    private static final String TOKEN_VERIFIER = "oauth_verifier";
+
     @Autowired
     private IWikipediaFacade wikipediaFacade;
 
@@ -23,34 +27,33 @@ public class LoginController {
     public boolean isAuthenticated(HttpSession session) {
         // Load the OAuth service especially for offline testing
         wikipediaFacade.getOAuthService();
-        return session.getAttribute("accessToken") != null;
+        return session.getAttribute(TOKEN_ACCESS) != null;
     }
 
     @RequestMapping("/login")
     public ModelAndView login(HttpSession session) throws InterruptedException, ExecutionException, IOException {
-        // TODO Controlar excepciones por ejemplo que no haya acceso a Internet
         // Obtain the Request Token
         OAuth1RequestToken requestToken = wikipediaFacade.getOAuthService().getRequestToken();
 
         // Go to authorization page
         // Add the request token to the session to use it when getting back
-        session.setAttribute("requestToken", requestToken);
+        session.setAttribute(TOKEN_REQUEST, requestToken);
         return new ModelAndView("redirect:" + wikipediaFacade.getOAuthService().getAuthorizationUrl(requestToken));
     }
 
     @RequestMapping("/")
     public ModelAndView checkLogin(HttpServletRequest request) throws InterruptedException, ExecutionException, IOException {
         // Check if we come from the authorization page
-        String oauthVerifier = request.getParameter("oauth_verifier");
-        Object requestToken = request.getSession().getAttribute("requestToken");
+        String oauthVerifier = request.getParameter(TOKEN_VERIFIER);
+        Object requestToken = request.getSession().getAttribute(TOKEN_REQUEST);
 
         if (oauthVerifier != null && requestToken != null) {
             // Trade the Request Token and Verify for the Access Token
             OAuth1AccessToken accessToken = wikipediaFacade.getOAuthService()
                     .getAccessToken((OAuth1RequestToken) requestToken, oauthVerifier);
 
-            request.getSession().setAttribute("accessToken", accessToken);
-            request.getSession().removeAttribute("requestToken");
+            request.getSession().setAttribute(TOKEN_ACCESS, accessToken);
+            request.getSession().removeAttribute(TOKEN_REQUEST);
         }
 
         return new ModelAndView("redirect:/index.html");
