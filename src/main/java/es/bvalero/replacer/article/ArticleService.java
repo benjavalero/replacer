@@ -266,7 +266,7 @@ public class ArticleService {
     /**
      * Saves in Wikipedia the changes on an article validated in the front-end.
      */
-    public boolean saveArticleChanges(@NotNull ArticleData article) {
+    boolean saveArticleChanges(@NotNull ArticleData article) {
         // Find the fixes verified by the user
         List<ArticleReplacement> fixedReplacements = new ArrayList<>();
         for (ArticleReplacement replacement : article.getFixes().values()) {

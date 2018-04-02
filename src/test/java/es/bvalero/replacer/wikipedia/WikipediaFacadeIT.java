@@ -34,20 +34,4 @@ public class WikipediaFacadeIT {
         wikipediaFacade.getArticleContent("Gigia Talarico");
     }
 
-    public void testEditContent() throws WikipediaException {
-        String title = "Usuario:Benjavalero/Taller";
-        String content = wikipediaFacade.getArticleContent(title);
-        Assert.assertFalse(StringUtils.isEmpty(content));
-
-        String edited = content + "xxxxx";
-        wikipediaFacade.editArticleContent(title, edited, "Test edit");
-
-        String contentEdited = wikipediaFacade.getArticleContent(title);
-        Assert.assertTrue(contentEdited.endsWith("xxxxx"));
-
-        wikipediaFacade.editArticleContent(title, content, "Revert test edit");
-        String contentReverted = wikipediaFacade.getArticleContent(title);
-        Assert.assertEquals(content, contentReverted);
-    }
-
 }

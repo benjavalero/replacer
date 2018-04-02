@@ -19,9 +19,10 @@ replacer:
   hide.empty.paragraphs: true
 
 wikipedia:
-  username: BenjaBot
-  # Externalized
-  password: xxxxxx
+  # TODO Externalize
+  api:
+    key: 88a04ea6ad93434f0fff31ac434960b3
+    secret: 2e2bfb55301e030aa6bf8c2504624abdd12f2d04
 
 ---
 
