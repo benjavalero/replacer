@@ -92,15 +92,15 @@ public class WikipediaFacade implements IWikipediaFacade {
 
             OAuth1AccessToken accessToken = (OAuth1AccessToken) session.getAttribute("accessToken");
             getOAuthService().signRequest(accessToken, request);
-            getOAuthService().execute(request);
-            // TODO Check if there is some error in the response
+            Response response = getOAuthService().execute(request);
+            handleError(response);
         } catch (Exception e) {
             LOGGER.error("Error saving content for article: " + articleTitle, e);
             throw new WikipediaException(e);
         }
     }
 
-    private String getEditToken() throws InterruptedException, ExecutionException, IOException {
+    private String getEditToken() throws InterruptedException, ExecutionException, IOException, WikipediaException {
         final OAuthRequest request = new OAuthRequest(Verb.GET, WIKIPEDIA_API_URL);
         request.addParameter("format", "json");
         request.addParameter("action", "query");
@@ -109,11 +109,20 @@ public class WikipediaFacade implements IWikipediaFacade {
         OAuth1AccessToken accessToken = (OAuth1AccessToken) session.getAttribute("accessToken");
         getOAuthService().signRequest(accessToken, request);
         Response response = getOAuthService().execute(request);
+        handleError(response);
 
         ObjectMapper mapper = new ObjectMapper();
         JsonNode json = mapper.readTree(response.getBody());
         return json.get("query").get("tokens").get("csrftoken").asText();
     }
 
+    private void handleError(Response response) throws WikipediaException, IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode jsonError = mapper.readTree(response.getBody()).get("error");
+        if (jsonError != null) {
+            String errMsg = "[error: " + jsonError.get("code") + ", info: " + jsonError.get("info") + "]";
+            throw new WikipediaException(errMsg);
+        }
+    }
 
 }
