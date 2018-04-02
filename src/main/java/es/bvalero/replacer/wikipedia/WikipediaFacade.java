@@ -1,6 +1,8 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.bitplan.mediawiki.japi.Mediawiki;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
@@ -15,6 +17,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 @Service
 @Profile("default")
@@ -78,21 +82,38 @@ public class WikipediaFacade implements IWikipediaFacade {
             throws WikipediaException {
         try {
             final OAuthRequest request = new OAuthRequest(Verb.POST, WIKIPEDIA_API_URL);
+            request.addParameter("format", "json");
             request.addParameter("action", "edit");
             request.addParameter("title", articleTitle);
             request.addParameter("text", articleContent);
             request.addParameter("summary", editSummary);
             request.addParameter("minor", "true");
-            // TODO ¿Hace falta un token de edición?
+            request.addParameter("token", getEditToken());
 
             OAuth1AccessToken accessToken = (OAuth1AccessToken) session.getAttribute("accessToken");
             getOAuthService().signRequest(accessToken, request);
-            Response response = getOAuthService().execute(request);
-            LOGGER.debug("Edit response: {}", response);
+            getOAuthService().execute(request);
+            // TODO Check if there is some error in the response
         } catch (Exception e) {
             LOGGER.error("Error saving content for article: " + articleTitle, e);
             throw new WikipediaException(e);
         }
     }
+
+    private String getEditToken() throws InterruptedException, ExecutionException, IOException {
+        final OAuthRequest request = new OAuthRequest(Verb.GET, WIKIPEDIA_API_URL);
+        request.addParameter("format", "json");
+        request.addParameter("action", "query");
+        request.addParameter("meta", "tokens");
+
+        OAuth1AccessToken accessToken = (OAuth1AccessToken) session.getAttribute("accessToken");
+        getOAuthService().signRequest(accessToken, request);
+        Response response = getOAuthService().execute(request);
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode json = mapper.readTree(response.getBody());
+        return json.get("query").get("tokens").get("csrftoken").asText();
+    }
+
 
 }
