@@ -4,6 +4,13 @@ var pageFixes;
 var word;
 
 $(document).ready(function() {
+    // Check authentication
+    $.get("/isAuthenticated", function(data) {
+        if (!data) {
+          window.location.href = 'index.html';
+        }
+    });
+
     word = $.url('?word');
 
     // Enable the collapse effects
