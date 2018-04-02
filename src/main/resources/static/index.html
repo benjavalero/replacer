@@ -8,9 +8,9 @@
     <title>Replacer - WikiReemplazador</title>
 
     <link rel="shortcut icon" href="https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico"/>
-    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
-    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="webjars/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -20,7 +20,7 @@
 
     <div class="container unauthenticated" style="display:none">
         <p>
-            No está autenticado en MediaWiki. Haga <a href="/login">clic aquí</a> para iniciar sesión.
+            No está autenticado en MediaWiki. Haga <a href="login">clic aquí</a> para iniciar sesión.
         </p>
     </div>
 
@@ -52,7 +52,7 @@
 </div>
 
 <script type="text/javascript">
-    $.get("/isAuthenticated", function(data) {
+    $.get("isAuthenticated", function(data) {
         if (data) {
           $(".authenticated").show();
         } else {

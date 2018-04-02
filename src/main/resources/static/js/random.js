@@ -5,7 +5,7 @@ var word;
 
 $(document).ready(function() {
     // Check authentication
-    $.get("/isAuthenticated", function(data) {
+    $.get("isAuthenticated", function(data) {
         if (!data) {
           window.location.href = 'index.html';
         }
