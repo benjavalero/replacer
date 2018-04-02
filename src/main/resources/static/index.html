@@ -18,30 +18,49 @@
 
     <h1>Replacer - WikiReemplazador</h1>
 
-    <p>
-        Esta es una herramienta aún en fase <strong>beta</strong> para
-        corregir los errores ortográficos y de estilo más comunes en la Wikipedia en
-        español.
-    </p>
+    <div class="container unauthenticated" style="display:none">
+        <p>
+            No está autenticado en MediaWiki. Haga <a href="/login">clic aquí</a> para iniciar sesión.
+        </p>
+    </div>
 
-    <p>
-        A continuación se listan algunas de las herramientas disponibles:
-    </p>
-    <ul>
-        <li><a href="random.html"><strong>Errores ortográficos</strong></a>
-            Pulse en las palabras resaltadas para sustituirlas por su
-            corrección (si procede). Finalmente pulse en el botón «Guardar
-            cambios» para aplicar las correcciones.
-        </li>
-        <li><a href="statistics.html"><strong>Estadísticas</strong></a>
-            Muestra diversas estadísticas de la herramienta.
-        </li>
-        <li><a href="dump.html"><strong>Indexación</strong></a>
-            Muestra el estado actual de la indexación.
-        </li>
-    </ul>
+    <div class="container authenticated" style="display:none">
+        <p>
+            Esta es una herramienta aún en fase <strong>beta</strong> para corregir los errores ortográficos y de estilo
+            más comunes en la Wikipedia en español.
+        </p>
+        <p>
+            A continuación se listan algunas de las herramientas disponibles:
+        </p>
+        <ul>
+            <li>
+                <a href="random.html"><strong>Errores ortográficos</strong></a> Pulse en las palabras resaltadas para
+                sustituirlas por su corrección (si procede). Finalmente pulse en el botón «Guardar cambios» para aplicar
+                las correcciones.
+            </li>
+            <li>
+                <a href="statistics.html"><strong>Estadísticas</strong></a> Muestra diversas estadísticas de la
+                herramienta.
+            </li>
+            <li>
+                <a href="dump.html"><strong>Indexación</strong></a> Muestra el estado actual de la indexación.
+            </li>
+        </ul>
+
+    </div>
 
 </div>
+
+<script type="text/javascript">
+    $.get("/isAuthenticated", function(data) {
+        if (data) {
+          $(".authenticated").show();
+        } else {
+          $(".unauthenticated").show();
+        }
+    });
+
+</script>
 
 </body>
 </html>
