@@ -22,7 +22,7 @@ public class DumpFinderTest {
         DumpFinder dumpFinder = new DumpFinder();
         DumpFile dumpFile = dumpFinder.findLatestDumpFile(dumpFolder);
 
-        Assert.assertEquals("20170201\\eswiki-20170201-pages-articles.xml.bz2",
+        Assert.assertEquals("20170201" + File.separator + "eswiki-20170201-pages-articles.xml.bz2",
                 dumpFile.getFile().getPath());
 
         GregorianCalendar cal = new GregorianCalendar(2017, 1, 1);
