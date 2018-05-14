@@ -41,7 +41,9 @@ public class FalsePositiveFinder implements ExceptionMatchFinder {
             // Read File Line By Line
             String strLine;
             while ((strLine = br.readLine()) != null) {
-                if (!org.springframework.util.StringUtils.isEmpty(strLine)) {
+                strLine = strLine.trim();
+                // Skip empty and commented lines
+                if (!org.springframework.util.StringUtils.isEmpty(strLine) && !strLine.startsWith("#")) {
                     falsePositivesList.add(strLine);
                 }
             }
