@@ -15,6 +15,7 @@ public class FalsePositiveFinderTest {
         Assert.assertFalse(falsePositives.isEmpty());
         Assert.assertTrue(falsePositives.contains("Index"));
         Assert.assertTrue(falsePositives.contains("Magazine"));
+        Assert.assertFalse(falsePositives.contains("# LIST OF FALSE POSITIVES"));
     }
 
     @Test
