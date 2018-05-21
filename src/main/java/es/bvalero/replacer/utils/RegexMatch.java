@@ -2,8 +2,9 @@ package es.bvalero.replacer.utils;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class RegexMatch implements Comparable<RegexMatch> {
@@ -19,26 +20,32 @@ public class RegexMatch implements Comparable<RegexMatch> {
         this.originalText = originalText;
     }
 
+    // It doesn't merge intersecting matches!
     public static List<RegexMatch> removedNestedMatches(List<RegexMatch> matches) {
-        Collections.sort(matches);
-
-        boolean[] toDelete = new boolean[matches.size()];
-        for (int i = 0; i < matches.size(); i++) {
-            for (int j = i + 1; j < matches.size(); j++) {
-                if (matches.get(i).isContainedIn(matches.get(j))) {
-                    toDelete[i] = true;
-                }
+        // To remove from Iterator we use a LinkedList
+        List<RegexMatch> sortedMatches = new LinkedList<>(matches);
+        if (sortedMatches.isEmpty()) {
+            return sortedMatches;
+        }
+        Collections.sort(sortedMatches, Collections.<RegexMatch>reverseOrder());
+        Iterator<RegexMatch> it = sortedMatches.iterator();
+        RegexMatch previous = it.next();
+        while (it.hasNext()) {
+            RegexMatch current = it.next();
+            if (current.isContainedIn(previous)) {
+                it.remove();
+            } else if (current.intersects(previous)) {
+                // Merge previous and current
+                previous.setOriginalText(previous.getOriginalText().substring(0, current.getEnd() - previous.getEnd())
+                        + current.getOriginalText());
+                it.remove();
+            } else {
+                previous = current;
             }
         }
 
-        List<RegexMatch> resultMatches = new ArrayList<>();
-        for (int i = 0; i < matches.size(); i++) {
-            if (!toDelete[i]) {
-                resultMatches.add(matches.get(i));
-            }
-        }
-
-        return resultMatches;
+        Collections.sort(sortedMatches);
+        return sortedMatches;
     }
 
     public int getPosition() {
@@ -98,8 +105,12 @@ public class RegexMatch implements Comparable<RegexMatch> {
         return isContained;
     }
 
-    public boolean isContainedIn(RegexMatch interval2) {
+    private boolean isContainedIn(RegexMatch interval2) {
         return this.getPosition() >= interval2.getPosition() && this.getEnd() <= interval2.getEnd();
+    }
+
+    private boolean intersects(RegexMatch interval2) {
+        return this.getPosition() > interval2.getPosition() && this.getPosition() < interval2.getEnd() && this.getEnd() > interval2.getEnd();
     }
 
 }
