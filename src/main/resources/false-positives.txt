@@ -1,43 +1,98 @@
-# LIST OF FALSE POSITIVES
+# LISTA DE FALSOS POSITIVOS
+# Si es posible intentamos que no se solapen con otras excepciones
 
+(Central|East|North|[Ss]outhern|South|Tropical|UCI|West) Africa
+Africa (Cup|Sports|Tour)
+
+(Captain|Central|Latin|Morning|North|Skate|South|UCI) America
+All\-America
+America's
+America (Editorial|Tour)
+
+Los Angeles (Angels|Clippers|County|Dodgers|Galaxy|Lakers|Memorial|Rams|Sparks|Times)
+
+[Nn]i aun
+# aun + gerundio
+[Aa]un (así|sin|\w+?ndo)
+
+([Aa]unque|[Cc]uando|donde|era|están?|estaba|es|fue|[Mm]ás|mejor|menos|peor|[Pp]ero|porque|que|ser|sido|[Ss]iendo|[Ss]i|son|[Yy]) aún
+[Aa]ún (conservan?|continúan?|eran?|están?|estaban?|es|existen?|hay|hoy|más|mayores|mayor|mejor|perduran?|permanecen?|persisten?|pueden?|quedan?|quedaban?|no|seguían?|se|siguen?|son|viven?|vivían?)
+
+Diego Comic
+[Cc]omic[\s\-]([Bb]ooks?|[Cc]on|Sans)
+(Action|Adventure|DC|Detective|Horse|Image|Marvel|Panini) Comics
+
+(José|Juan|Plácido|Santo) Domingo
+Lista de [Ee]spécies Flora
+Brasileiro de Geografia
+(Blind|The) Guardian
+
+# index: casi todos son parte de URL
+# Index: casi todos son en inglés o latín
 Index
-Link
-Online
-[Rr]eferences?
-[Aa]un así
-[Mm]ás aún
-[Aa]ún más
-Lt
-[Ff]ans
-Comics
-Comic[\-\s]Con
-[Ss]e (publica|especifica|practica)
-Tropicos\.org
-(Domingo|Julio) (?=\p{Lu})
-Magazine
-Records
-Jet Propulsion Laboratory
-Sky
-The Guardian
-Missouri Botanical Garden
-([Dd]e|[Ss]u|[Ee]l) (regreso|retiro|desempeño)
-Victor Hugo
-Carlos Menem
-Los Angeles (Lakers|Times)
-Instituto Brasileiro de Geografia e Estatística
-Juegos Olímpicos de (Verano|Invierno)
-(North|South|Central|Latin) America
-Manchester (City|United)
-Saint[\-\s]Martin
-Lista de espécies Flora do Brasil
-Superman
-Sandwich
-\[\[uruguay\]\][ao]s?
-\[\[italia\]\]n[ao]s?
-\[\[brasil\]\]eñ[ao]s?
-setiembre
 
-[Éé]st?[oa]s
-[Éé]st?[ea]
+Torneo Invierno
+(Campeonato|Guerra|Olímpicos|Paralímpicos|Torneo) de Verano
+
+(Carlos|Cayo|Estadio|Lucio|Nacional|Sexto) Julio
+
+Magazine
+Manchester (City|Evening|United|University)
+
+(Andrej|Aston|Billy|Chris|Daniel|David|Dean|Fabrice|George|John|Lockheed|Paul|Ricky|Saint|Steve|St|Todd|Tony) Martin
+Saint\-Martin
+Martin (Brundle|Damm|Emmrich|Fischer|Freeman|Garrix|Gore|Heidegger|Kližan|Luther|Racing|Scorsese|Sheen|Solveig|Vantage|Van)
+Martin's
+Martin\-d[eu]
+
+(Carlos|Saúl) Menem
+Missouri (Botanical|Valley)
+
+# online: no acaba de convencerme la sustitución por «en línea»
+[Oo]nline
+
+Jet Propulsion
+
+# reference(s): prácticamente todos los casos son en inglés
+[Rr]eferences?
+
+Records
+records of
+
+([Ii]slas|South|Sur y) Sandwich
+Sandwich del Sur
+
+the sky
+Sky
+
+Superman
+# [Tt]ropicos\.org Ya no hace falta porque la captura una excepción genérica
+
+Torneo Verano
+(Campeonato|Olímpicos|Paralímpicos|Teatro|Torneo) de Verano
+
+(RCA|Saint)[\s\-]Victor
+Victor Hugo
+
+# Nombres propios
+(Domingo|Julio) (?=\p{Lu})
+
+# Topónimos
+(in|of|[Tt]he) (Africa|America|Los Angeles|Manchester|Missouri)
+
+# Días señalados
+(Lunes|Martes|Miércoles|Jueves|Viernes|Sábado|Domingo) de
+
+# Verbos en tercera persona
+(que|[Ss]e) (especifica|fabrica|practica|publica)
+(publica|especifica|practica) (el|en|las?|los|sus?|un[ao]s?|un)
+
+# Sustantivos que parecen verbos
+([Aa]l|[Dd]el?|[Ee]l|[Ss]u|[Uu]n) (desempeño|disparo|logro|regreso|retiro)
+
+# Verdaderos positivos que de momento no quiero corregir
 [Aa]quél(l[ao]s?)?
+[Éé]st?[aeo]s?
+[Ff]ans
+setiembre
 [Ss]ólo
