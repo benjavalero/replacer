@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     $('#button-index').click(function() {
-        runIndexation();
+        runIndexation($('#force-check').prop('checked'));
     });
 
     findDumpStatus();
@@ -10,10 +10,13 @@ $(document).ready(function() {
     setTimeout("location.reload(true);", 15000);
 });
 
-function runIndexation() {
+function runIndexation(forceIndexation) {
     $.ajax({
         url : 'dump/run',
-        dataType : 'json'
+        dataType : 'json',
+        data : {
+            force : forceIndexation
+        }
     }).done(function(response) {
         // Do nothing
     }).fail(function(response) {

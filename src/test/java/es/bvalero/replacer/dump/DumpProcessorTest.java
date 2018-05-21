@@ -41,7 +41,7 @@ public class DumpProcessorTest {
         Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
                 .thenReturn(Collections.singletonList(new ArticleReplacement()));
 
-        dumpProcessor.processArticle(dumpArticle);
+        dumpProcessor.processArticle(dumpArticle, false);
 
         Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
@@ -61,7 +61,7 @@ public class DumpProcessorTest {
         articleDb.setAdditionDate(new Timestamp(new Date().getTime()));
         Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
 
-        dumpProcessor.processArticle(dumpArticle);
+        dumpProcessor.processArticle(dumpArticle, false);
 
         Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
@@ -78,7 +78,7 @@ public class DumpProcessorTest {
         articleDb.setAdditionDate(new Timestamp(new Date().getTime()));
         Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
 
-        dumpProcessor.processArticle(dumpArticle);
+        dumpProcessor.processArticle(dumpArticle, false);
 
         Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
@@ -90,7 +90,7 @@ public class DumpProcessorTest {
     public void testProcessOnlyArticlesAndAnnexes() {
         DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.USER, null, "");
 
-        dumpProcessor.processArticle(dumpArticle);
+        dumpProcessor.processArticle(dumpArticle, false);
 
         Mockito.verify(articleRepository, Mockito.times(0)).findOne(Mockito.anyInt());
     }
@@ -100,7 +100,7 @@ public class DumpProcessorTest {
         String redirectContent = "#REDIRECT xxx";
         DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, null, redirectContent);
 
-        dumpProcessor.processArticle(dumpArticle);
+        dumpProcessor.processArticle(dumpArticle, false);
 
         Mockito.verify(articleRepository, Mockito.times(0)).findOne(Mockito.anyInt());
     }
@@ -117,7 +117,7 @@ public class DumpProcessorTest {
         articleDb.setReviewDate(new Timestamp(today.getTimeInMillis()));
         Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
 
-        dumpProcessor.processArticle(dumpArticle);
+        dumpProcessor.processArticle(dumpArticle, false);
 
         Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
@@ -133,7 +133,7 @@ public class DumpProcessorTest {
         articleDb.setReviewDate(today);
         Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
 
-        dumpProcessor.processArticle(dumpArticle);
+        dumpProcessor.processArticle(dumpArticle, false);
 
         Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
@@ -152,11 +152,34 @@ public class DumpProcessorTest {
         articleDb.setAdditionDate(new Timestamp(today.getTimeInMillis()));
         Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
 
-        dumpProcessor.processArticle(dumpArticle);
+        dumpProcessor.processArticle(dumpArticle, false);
 
         Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
+    }
+
+    @Test
+    public void testForceArticleAddedAfter() {
+        GregorianCalendar today = new GregorianCalendar();
+        GregorianCalendar yesterday = new GregorianCalendar();
+        yesterday.add(GregorianCalendar.DATE, -1);
+        Timestamp timestampYesterday = new Timestamp(yesterday.getTimeInMillis());
+        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, timestampYesterday, "");
+
+        Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
+                .thenReturn(Collections.singletonList(new ArticleReplacement()));
+
+        Article articleDb = new Article(1, "");
+        articleDb.setAdditionDate(new Timestamp(today.getTimeInMillis()));
+        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
+
+        dumpProcessor.processArticle(dumpArticle, true);
+
+        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
+        Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.any(Article.class));
+        Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.any(Article.class));
     }
 
 }

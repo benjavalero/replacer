@@ -63,6 +63,10 @@ class DumpManager {
     @Scheduled(fixedDelay = 7 * 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
     @Async
     void runIndexation() {
+        runIndexation(false);
+    }
+
+    void runIndexation(boolean force) {
         // Start the task
         if (getStatus().isRunning()) {
             return;
@@ -81,7 +85,7 @@ class DumpManager {
                 return;
             }
 
-            parseDumpFile(latestDumpFile.getFile());
+            parseDumpFile(latestDumpFile.getFile(), force);
 
             LOGGER.info("Total number of articles processed: {}", getStatus().getNumProcessedItems());
         } catch (FileNotFoundException e) {
@@ -94,7 +98,7 @@ class DumpManager {
         }
     }
 
-    private void parseDumpFile(File dumpFile)
+    private void parseDumpFile(File dumpFile, boolean forceIndexation)
             throws ParserConfigurationException, SAXException, IOException {
         LOGGER.info("Start parsing dump file: {}...", dumpFile);
 
@@ -103,6 +107,7 @@ class DumpManager {
         SAXParser saxParser = factory.newSAXParser();
         InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile));
 
+        dumpHandler.setForceProcessing(forceIndexation);
         saxParser.parse(xmlInput, dumpHandler);
         xmlInput.close();
 
