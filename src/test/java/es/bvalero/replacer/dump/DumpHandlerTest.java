@@ -54,7 +54,7 @@ public class DumpHandlerTest {
         cal.setTimeZone(WikipediaUtils.TIME_ZONE);
         Assert.assertEquals(cal.getTime(), dumpHandler.getCurrentArticle().getTimestamp());
 
-        Mockito.verify(dumpProcessor, Mockito.times(2)).processArticle(Mockito.any(DumpArticle.class));
+        Mockito.verify(dumpProcessor, Mockito.times(2)).processArticle(Mockito.any(DumpArticle.class), Mockito.anyBoolean());
 
         xmlInput.close();
     }
@@ -65,13 +65,13 @@ public class DumpHandlerTest {
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
         SAXParser saxParser = factory.newSAXParser();
 
-        Mockito.doThrow(Exception.class).when(dumpProcessor).processArticle(Mockito.any(DumpArticle.class));
+        Mockito.doThrow(Exception.class).when(dumpProcessor).processArticle(Mockito.any(DumpArticle.class), Mockito.anyBoolean());
 
         String dumpFilePath = getClass().getResource("/pages-articles.xml").getFile();
         InputStream xmlInput = new FileInputStream(dumpFilePath);
         saxParser.parse(xmlInput, dumpHandler);
 
-        Mockito.verify(dumpProcessor, Mockito.times(2)).processArticle(Mockito.any(DumpArticle.class));
+        Mockito.verify(dumpProcessor, Mockito.times(2)).processArticle(Mockito.any(DumpArticle.class), Mockito.anyBoolean());
         Assert.assertEquals(0, dumpHandler.getNumProcessedItems());
 
         xmlInput.close();
