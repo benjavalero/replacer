@@ -1,6 +1,8 @@
 package es.bvalero.replacer.utils;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -8,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class RegexMatch implements Comparable<RegexMatch> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RegexMatch.class);
 
     private int position;
     private String originalText;
@@ -36,8 +40,11 @@ public class RegexMatch implements Comparable<RegexMatch> {
                 it.remove();
             } else if (current.intersects(previous)) {
                 // Merge previous and current
-                previous.setOriginalText(previous.getOriginalText().substring(0, current.getEnd() - previous.getEnd())
+                LOGGER.debug("Previous match: {} - {}", previous.getPosition(), previous.getOriginalText());
+                LOGGER.debug("Current match: {} - {}", current.getPosition(), current.getOriginalText());
+                previous.setOriginalText(previous.getOriginalText().substring(0, current.getPosition() - previous.getPosition())
                         + current.getOriginalText());
+                LOGGER.debug("Merged match: {} - {}", previous.getPosition(), previous.getOriginalText());
                 it.remove();
             } else {
                 previous = current;
