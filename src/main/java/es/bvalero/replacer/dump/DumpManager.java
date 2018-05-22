@@ -63,12 +63,15 @@ class DumpManager {
     @Scheduled(fixedDelay = 7 * 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
     @Async
     void runIndexation() {
-        runIndexation(false);
+        runIndexation(true, false);
     }
 
-    void runIndexation(boolean force) {
+    void runIndexation(boolean scheduledExecution, boolean processOldArticles) {
+        LOGGER.info("Start indexation. Scheduled execution: {}. Force processing of old articles: {}", scheduledExecution, processOldArticles);
+
         // Start the task
         if (getStatus().isRunning()) {
+            LOGGER.info("Indexation is already running. Do nothing.");
             return;
         } else {
             getStatus().setRunning(true);
@@ -79,13 +82,16 @@ class DumpManager {
             File dumpFolderFile = new File(getDumpFolderPath());
 
             // Find the latest dump and check if we should parse again
+            // If the execution is manual we parse again
             // In case of re-deployment of the application we will always parse
             DumpFile latestDumpFile = dumpFinder.findLatestDumpFile(dumpFolderFile);
-            if (getStatus().getEndDate() != null && !getStatus().getEndDate().before(latestDumpFile.getDate())) {
+            LOGGER.info("Latest Dump File: {}", latestDumpFile.getFile());
+            if (scheduledExecution && getStatus().getEndDate() != null && !getStatus().getEndDate().before(latestDumpFile.getDate())) {
+                LOGGER.info("Latest Dump File already indexed. Do nothing.");
                 return;
             }
 
-            parseDumpFile(latestDumpFile.getFile(), force);
+            parseDumpFile(latestDumpFile.getFile(), processOldArticles);
 
             LOGGER.info("Total number of articles processed: {}", getStatus().getNumProcessedItems());
         } catch (FileNotFoundException e) {
@@ -98,7 +104,7 @@ class DumpManager {
         }
     }
 
-    private void parseDumpFile(File dumpFile, boolean forceIndexation)
+    private void parseDumpFile(File dumpFile, boolean processOldArticles)
             throws ParserConfigurationException, SAXException, IOException {
         LOGGER.info("Start parsing dump file: {}...", dumpFile);
 
@@ -107,7 +113,7 @@ class DumpManager {
         SAXParser saxParser = factory.newSAXParser();
         InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile));
 
-        dumpHandler.setForceProcessing(forceIndexation);
+        dumpHandler.setProcessOldArticles(processOldArticles);
         saxParser.parse(xmlInput, dumpHandler);
         xmlInput.close();
 

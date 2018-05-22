@@ -29,7 +29,7 @@ class DumpHandler extends DefaultHandler {
 
     private DumpArticle currentArticle;
     private int numProcessedItems;
-    private boolean forceProcessing;
+    private boolean processOldArticles;
 
     @Autowired
     private DumpProcessor dumpProcessor;
@@ -90,13 +90,13 @@ class DumpHandler extends DefaultHandler {
         return numProcessedItems;
     }
 
-    void setForceProcessing(boolean forceProcessing) {
-        this.forceProcessing = forceProcessing;
+    void setProcessOldArticles(boolean processOldArticles) {
+        this.processOldArticles = processOldArticles;
     }
 
     private void processArticle() {
         try {
-            dumpProcessor.processArticle(getCurrentArticle(), this.forceProcessing);
+            dumpProcessor.processArticle(getCurrentArticle(), this.processOldArticles);
             this.numProcessedItems++;
         } catch (Exception e) {
             LOGGER.error("Error processing article: " + currentTitle, e);

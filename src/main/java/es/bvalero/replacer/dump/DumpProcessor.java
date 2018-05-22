@@ -29,7 +29,7 @@ class DumpProcessor {
     /**
      * Process a dump article: find the potential errors and add them to the database.
      */
-    void processArticle(@NotNull DumpArticle dumpArticle, boolean force) {
+    void processArticle(@NotNull DumpArticle dumpArticle, boolean processOldArticles) {
         LOGGER.debug("Indexing article: {}...", dumpArticle.getTitle());
 
         // Check if it is really needed to process the article
@@ -44,7 +44,7 @@ class DumpProcessor {
             if (article.getReviewDate() != null && !dumpArticle.getTimestamp().after(article.getReviewDate())) {
                 LOGGER.debug("Article reviewed after dump timestamp. Skipping.");
                 return;
-            } else if (dumpArticle.getTimestamp().before(article.getAdditionDate()) && !force) {
+            } else if (dumpArticle.getTimestamp().before(article.getAdditionDate()) && !processOldArticles) {
                 LOGGER.debug("Article added after dump timestamp. Skipping.");
                 return;
             }

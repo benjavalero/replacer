@@ -17,8 +17,8 @@ public class DumpController {
     }
 
     @RequestMapping(value = "/dump/run")
-    boolean runIndexation(@RequestParam("force") boolean force) {
-        dumpManager.runIndexation(force);
+    boolean runIndexation(@RequestParam("force") boolean processOldArticles) {
+        dumpManager.runIndexation(false, processOldArticles);
         return true;
     }
 
