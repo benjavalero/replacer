@@ -10,8 +10,7 @@ public class FalsePositiveFinderTest {
 
     @Test
     public void testLoadFalsePositives() {
-        FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
-        List<String> falsePositives = falsePositiveFinder.loadFalsePositives();
+        List<String> falsePositives = FalsePositiveFinder.loadFalsePositives();
         Assert.assertFalse(falsePositives.isEmpty());
         Assert.assertTrue(falsePositives.contains("Index"));
         Assert.assertTrue(falsePositives.contains("Magazine"));

@@ -74,9 +74,6 @@ Torneo Verano
 (RCA|Saint)[\s\-]Victor
 Victor Hugo
 
-# Nombres propios
-(Domingo|Julio) (?=\p{Lu})
-
 # Topónimos
 (in|of|[Tt]he) (Africa|America|Los Angeles|Manchester|Missouri)
 

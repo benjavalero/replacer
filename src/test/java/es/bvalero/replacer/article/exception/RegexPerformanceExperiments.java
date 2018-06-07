@@ -1,13 +1,26 @@
 package es.bvalero.replacer.article.exception;
 
+import dk.brics.automaton.Automaton;
+import dk.brics.automaton.AutomatonMatcher;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
+import org.springframework.util.StringUtils;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class RegexPerformanceExperiments {
-    private static final int NUM_RUNS = 1000000;
+    private static final int NUM_RUNS = 50;
     private static final int NUM_WARM_UP_RUNS = 4;
 
     public static void main(String[] args) {
+        falsePositivesExperiment();
         // angularQuotesExperiment();
         // doubleQuotesExperiment();
         // singleQuotesExperiment();
@@ -15,7 +28,47 @@ class RegexPerformanceExperiments {
         // xmlTagExperiment();
         // completeTemplateExperiment();
         // indexValueExperiment();
-        wordExperiment();
+        // wordExperiment();
+    }
+
+    private static void falsePositivesExperiment() {
+        write("************** BEGIN FALSE POSITIVES EXPERIMENT *****************");
+
+        // Load text
+        String articleText;
+        try {
+            articleText = new String(Files.readAllBytes(Paths.get(RegexPerformanceExperiments.class.getResource("/monkey-island.txt").toURI())),
+                    StandardCharsets.UTF_8);
+        } catch (IOException | URISyntaxException e) {
+            return;
+        }
+
+        // Load exceptions
+        List<String> falsePositivesList = FalsePositiveFinder.loadFalsePositives();
+        String alternationsRegex = StringUtils.collectionToDelimitedString(falsePositivesList, "|");
+        String alternationsBracketRegex = StringUtils.collectionToDelimitedString(falsePositivesList, "|");
+        String alternationsIgnoredRegex = "(?:" + alternationsRegex + ")";
+        String alternationsBoundIgnoredRegex = "\\b" + alternationsIgnoredRegex + "\\b";
+        String alternationsBoundRegex = "\\b(" + alternationsRegex + ")\\b";
+
+        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
+            runExperiment(alternationsRegex, "ALTERNATIONS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(alternationsIgnoredRegex, "IGNORED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(alternationsBracketRegex, "BRACKET REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(alternationsBoundIgnoredRegex, "BOUND IGNORED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(alternationsBoundRegex, "BOUND REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperimentAutomaton(alternationsRegex, "ALTERNATIONS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(alternationsIgnoredRegex, "IGNORED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(alternationsBracketRegex, "BRACKET REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(alternationsBoundIgnoredRegex, "BOUND IGNORED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(alternationsBoundRegex, "BOUND REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+        }
+        write("**************END EXPERIMENT*****************\n\n");
     }
 
     private static void angularQuotesExperiment() {
@@ -349,15 +402,40 @@ class RegexPerformanceExperiments {
         boolean matches = false;
         Long start = System.currentTimeMillis();
         for (int i = 0; i < NUM_RUNS; i++) {
-            Matcher m = p.matcher(input);
-            matches |= m.find();
+            Matcher matcher = p.matcher(input);
+            while (matcher.find()) {
+                matches = true;
+            }
         }
         Long timeElapsed = System.currentTimeMillis() - start;
 
         if (printOutput) {
             String result = String.format(
                     "Took %d ms to match the %s regex with %s input",
-                    timeElapsed, regexDescription, matches ? "matching" : "non matching");
+                    timeElapsed, regexDescription, matches ? "matching" : "NON matching");
+            write(result);
+        }
+    }
+
+    private static void runExperimentAutomaton(String regex, String regexDescription, String input, boolean printOutput) {
+        RegExp r = new RegExp(regex);
+        Automaton a = r.toAutomaton();
+        RunAutomaton ra = new RunAutomaton(a);
+
+        boolean matches = false;
+        Long start = System.currentTimeMillis();
+        for (int i = 0; i < NUM_RUNS; i++) {
+            AutomatonMatcher matcher = ra.newMatcher(input);
+            while (matcher.find()) {
+                matches = true;
+            }
+        }
+        Long timeElapsed = System.currentTimeMillis() - start;
+
+        if (printOutput) {
+            String result = String.format(
+                    "Took %d ms to match the %s regex with %s input",
+                    timeElapsed, regexDescription, matches ? "matching" : "NON matching");
             write(result);
         }
     }
