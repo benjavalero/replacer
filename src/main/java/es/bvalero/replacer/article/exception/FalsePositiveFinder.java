@@ -1,5 +1,7 @@
 package es.bvalero.replacer.article.exception;
 
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import org.slf4j.Logger;
@@ -11,28 +13,22 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Component
 public class FalsePositiveFinder implements ExceptionMatchFinder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinder.class);
-    private Pattern regexFalsePositives;
 
-    private Pattern getRegexFalsePositives() {
-        if (regexFalsePositives == null) {
-            List<String> falsePositivesList = loadFalsePositives();
-            String alternations = StringUtils.collectionToDelimitedString(falsePositivesList, "|");
-            regexFalsePositives = Pattern.compile("\\b(?:" + alternations + ")\\b");
-        }
-        return regexFalsePositives;
+    private static final RunAutomaton regexFalsePositives;
+
+    static {
+        List<String> falsePositivesList = loadFalsePositives();
+        String alternations = StringUtils.collectionToDelimitedString(falsePositivesList, "|");
+        RegExp r = new RegExp(alternations);
+        regexFalsePositives = new RunAutomaton(r.toAutomaton());
     }
 
-    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        return RegExUtils.findMatches(text, getRegexFalsePositives());
-    }
-
-    List<String> loadFalsePositives() {
+    static List<String> loadFalsePositives() {
         List<String> falsePositivesList = new ArrayList<>();
         String falsePositivesPath = RegExUtils.class.getResource("/false-positives.txt").getFile();
 
@@ -52,6 +48,11 @@ public class FalsePositiveFinder implements ExceptionMatchFinder {
         }
 
         return falsePositivesList;
+    }
+
+    @Override
+    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
+        return RegExUtils.findMatchesAutomaton(text, regexFalsePositives);
     }
 
 }

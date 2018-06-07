@@ -65,6 +65,7 @@ class DumpProcessor {
                 article.getPotentialErrors().clear();
             }
 
+            article.setTitle(dumpArticle.getTitle());
             article.setAdditionDate(new Timestamp(new Date().getTime()));
             addPotentialErrorsToArticle(article, articleReplacements);
 
