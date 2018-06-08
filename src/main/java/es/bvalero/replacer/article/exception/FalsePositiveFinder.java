@@ -19,13 +19,13 @@ public class FalsePositiveFinder implements ExceptionMatchFinder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinder.class);
 
-    private static final RunAutomaton regexFalsePositives;
+    private static final RunAutomaton AUTOMATON_FALSE_POSITIVES;
 
     static {
         List<String> falsePositivesList = loadFalsePositives();
         String alternations = StringUtils.collectionToDelimitedString(falsePositivesList, "|");
         RegExp r = new RegExp(alternations);
-        regexFalsePositives = new RunAutomaton(r.toAutomaton());
+        AUTOMATON_FALSE_POSITIVES = new RunAutomaton(r.toAutomaton());
     }
 
     static List<String> loadFalsePositives() {
@@ -52,7 +52,7 @@ public class FalsePositiveFinder implements ExceptionMatchFinder {
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        return RegExUtils.findMatchesAutomaton(text, regexFalsePositives);
+        return RegExUtils.findMatchesAutomaton(text, AUTOMATON_FALSE_POSITIVES);
     }
 
 }
