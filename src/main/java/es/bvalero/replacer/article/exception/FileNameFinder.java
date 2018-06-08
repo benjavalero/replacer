@@ -1,27 +1,24 @@
 package es.bvalero.replacer.article.exception;
 
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Component
 public class FileNameFinder implements ExceptionMatchFinder {
 
-    private static final Pattern REGEX_FILE =
-            Pattern.compile("(?:File|Archivo|Imagen):[^]|]+?(?=]|\\||$)", Pattern.MULTILINE);
-    private static final Pattern REGEX_FILE_VALUE =
-            Pattern.compile("\\|[\\p{L}\\p{N}\\s-]+=[^}|]+\\.(?:svg|jpe?g|JPG|png|PNG|gif|ogg|pdf)\\b");
+    @org.intellij.lang.annotations.RegExp
+    private static final String REGEX_FILE_NAME =
+            "[|=:][^}|=:\n]+\\.(gif|jpe?g|JPG|mp3|mpg|ogg|ogv|pdf|PDF|png|PNG|svg|tif|webm)";
+    private static final RunAutomaton AUTOMATON_FILE_NAME = new RunAutomaton(new RegExp(REGEX_FILE_NAME).toAutomaton());
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        List<RegexMatch> matches = new ArrayList<>();
-        matches.addAll(RegExUtils.findMatches(text, REGEX_FILE));
-        matches.addAll(RegExUtils.findMatches(text, REGEX_FILE_VALUE));
-        return matches;
+        return RegExUtils.findMatchesAutomaton(text, AUTOMATON_FILE_NAME);
     }
 
 }

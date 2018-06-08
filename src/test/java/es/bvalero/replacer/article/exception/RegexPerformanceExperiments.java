@@ -16,11 +16,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class RegexPerformanceExperiments {
-    private static final int NUM_RUNS = 50;
+    private static final int NUM_RUNS = 2500;
     private static final int NUM_WARM_UP_RUNS = 4;
+    private static String articleText = null;
+
+    static {
+        try {
+            articleText = new String(Files.readAllBytes(Paths.get(RegexPerformanceExperiments.class.getResource("/monkey-island.txt").toURI())),
+                    StandardCharsets.UTF_8);
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) {
-        falsePositivesExperiment();
+        // falsePositivesExperiment();
         // angularQuotesExperiment();
         // doubleQuotesExperiment();
         // singleQuotesExperiment();
@@ -29,19 +39,11 @@ class RegexPerformanceExperiments {
         // completeTemplateExperiment();
         // indexValueExperiment();
         // wordExperiment();
+        fileNameExperiment();
     }
 
     private static void falsePositivesExperiment() {
         write("************** BEGIN FALSE POSITIVES EXPERIMENT *****************");
-
-        // Load text
-        String articleText;
-        try {
-            articleText = new String(Files.readAllBytes(Paths.get(RegexPerformanceExperiments.class.getResource("/monkey-island.txt").toURI())),
-                    StandardCharsets.UTF_8);
-        } catch (IOException | URISyntaxException e) {
-            return;
-        }
 
         // Load exceptions
         List<String> falsePositivesList = FalsePositiveFinder.loadFalsePositives();
@@ -394,6 +396,38 @@ class RegexPerformanceExperiments {
             runExperiment(fullUnicodeRegex, "FULL UNICODE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
         }
         write("**************END EXPERIMENT*****************\n\n");
+    }
+
+    private static void fileNameExperiment() {
+        write("************** BEGIN FILE NAME EXPERIMENT *****************");
+
+        String fileBrackets = "\\[\\[(File|Archivo|Imagen):[^]|]+]]";
+        String fileDescBrackets = "\\[\\[(File|Archivo|Imagen):[^]|]+[]|]";
+        String fileDescNoBrackets = "(File|Archivo|Imagen):[^]|]+[]|]";
+        String fileDescNoBracketsLine = "(File|Archivo|Imagen):[^]|\n]+";
+        String fileAlone = "[|=][^}|=\n]+\\.(gif|jpe?g|JPG|mp3|mpg|ogg|ogv|pdf|PDF|png|PNG|svg|tif|webm)";
+        String fileAll = "[|=:][^}|=:\n]+\\.(gif|jpe?g|JPG|mp3|mpg|ogg|ogv|pdf|PDF|png|PNG|svg|tif|webm)";
+
+        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
+            runExperiment(fileBrackets, "BRACKETS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fileDescBrackets, "DESC REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fileDescNoBrackets, "DESC NO BRACKETS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fileDescNoBracketsLine, "DESC NO BRACKETS LINE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fileAlone, "ALONE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fileAll, "ALL REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperimentAutomaton(fileBrackets, "BRACKETS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(fileDescBrackets, "DESC REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(fileDescNoBrackets, "DESC NO BRACKETS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(fileDescNoBracketsLine, "DESC NO BRACKETS LINE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(fileAlone, "ALONE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(fileAll, "ALL REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+        }
+        write("************** END EXPERIMENT *****************\n\n");
     }
 
     private static void runExperiment(String regex, String regexDescription, String input, boolean printOutput) {
