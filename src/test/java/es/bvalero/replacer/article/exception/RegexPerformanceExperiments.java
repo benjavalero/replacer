@@ -33,13 +33,13 @@ class RegexPerformanceExperiments {
         // falsePositivesExperiment();
         // angularQuotesExperiment();
         // doubleQuotesExperiment();
-        // singleQuotesExperiment();
+        singleQuotesExperiment();
         // templateNameExperiment();
         // xmlTagExperiment();
         // completeTemplateExperiment();
         // indexValueExperiment();
         // wordExperiment();
-        fileNameExperiment();
+        // fileNameExperiment();
     }
 
     private static void falsePositivesExperiment() {
@@ -75,85 +75,71 @@ class RegexPerformanceExperiments {
 
     private static void angularQuotesExperiment() {
         write("**************BEGIN ANGULAR QUOTES EXPERIMENT *****************");
-        String lazyRegex = "(?s)«.+?»";
-        String greedyClassRegex = "«[^»]+»";
-        String lazyClassRegex = "«[^»]+?»";
-        String possessiveClassRegex = "«[^»]++»"; // Wins in all the cases
-        String conditionalRegex = "(?:(«)|“).++(?(1)»|”)";
-
-        String matchingInput = "Quote: «What a Wonderful World».";
-        String nonMatchingInput = "Quote: What a Wonderful World.";
-        String almostMatchingInput = "Quote: «What a Wonderful World.";
+        String lazyRegex = "«.+?»";
+        String greedyClassRegex = "«[^»\n]+»";
+        String lazyClassRegex = "«[^»\n]+?»";
+        String possessiveClassRegex = "«[^»\n]++»";
+        String limitedPossessiveClassRegex = "\\b«[^»\n]++»\\b";
+        // String conditionalRegex = "(?:(«)|“).++(?(1)»|”)";
 
         for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(lazyRegex, "LAZY REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(greedyClassRegex, "GREEDY WITH CLASS REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lazyClassRegex, "LAZY WITH CLASS REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(conditionalRegex, "CONDITIONAL REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyRegex, "LAZY REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(greedyClassRegex, "GREEDY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyClassRegex, "LAZY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(limitedPossessiveClassRegex, "LIMITED POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
 
             if (i == NUM_WARM_UP_RUNS - 1) {
                 System.out.println();
             }
 
-            runExperiment(lazyRegex, "LAZY REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(greedyClassRegex, "GREEDY WITH CLASS REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lazyClassRegex, "LAZY WITH CLASS REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(conditionalRegex, "CONDITIONAL REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
-
-            runExperiment(lazyRegex, "LAZY REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(greedyClassRegex, "GREEDY WITH CLASS REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lazyClassRegex, "LAZY WITH CLASS REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(conditionalRegex, "CONDITIONAL REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(lazyRegex, "LAZY REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(greedyClassRegex, "GREEDY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(lazyClassRegex, "LAZY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(limitedPossessiveClassRegex, "LIMITED POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
         }
         write("**************END EXPERIMENT*****************\n\n");
     }
 
     private static void doubleQuotesExperiment() {
         write("**************BEGIN DOUBLE QUOTES EXPERIMENT *****************");
-        String lazyRegex = "(?s)\".+?\"";
-        // Discard the rest of cases according to the angular quotes experiment
+        String lazyRegex = "\".+?\"";
+        String greedyClassRegex = "\"[^\"\n]+\"";
+        String lazyClassRegex = "\"[^\"\n]+?\"";
         String possessiveClassRegex = "\"[^\"]++\"";
+        String limitedPossessiveClassRegex = "\\b\"[^\"]++\"\\b";
         String backReferenceRegex = "(?s)(\"|&quot;).+?\\1"; // It takes a little more but it is actually two (or more) regex in one
-
-        String matchingInput = "Quote: \"What a Wonderful World\".";
-        String nonMatchingInput = "Quote: What a Wonderful World.";
-        String almostMatchingInput = "Quote: \"What a Wonderful World.";
+        String greedyClassRegexAutomaton = "\\\"[^\\\"\n]+\\\"";
+        String lazyClassRegexAutomaton = "\\\"[^\"\\\n]+?\\\"";
+        String possessiveClassRegexAutomaton = "\\\"[^\\\"]++\\\"";
 
         for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(lazyRegex, "LAZY REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(backReferenceRegex, "BACK-REFERENCE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyRegex, "LAZY REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(greedyClassRegex, "GREEDY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyClassRegex, "LAZY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(limitedPossessiveClassRegex, "LIMITED POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(backReferenceRegex, "BACK-REFERENCE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
 
             if (i == NUM_WARM_UP_RUNS - 1) {
                 System.out.println();
             }
 
-            runExperiment(lazyRegex, "LAZY REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(backReferenceRegex, "BACK-REFERENCE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
-
-            runExperiment(lazyRegex, "LAZY REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(backReferenceRegex, "BACK-REFERENCE REGEX (almost matching)", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(lazyRegex, "LAZY REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(greedyClassRegexAutomaton, "GREEDY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(lazyClassRegexAutomaton, "LAZY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(possessiveClassRegexAutomaton, "POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(limitedPossessiveClassRegex, "LIMITED POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(backReferenceRegex, "BACK-REFERENCE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
         }
         write("**************END EXPERIMENT*****************\n\n");
     }
 
     private static void singleQuotesExperiment() {
         write("**************BEGIN SINGLE QUOTES EXPERIMENT *****************");
-        String simpleRegex = "(('|&apos;){2,5}+|\"|&quot;).+?\\1";
-        String simpleRegex2 = "('{2,5}+|&apos;{2,5}+|\"|&quot;).+?\\1";
+        // String simpleRegex = "'{2,5}.+?'{2,5}+";
+        // String simpleRegex2 = "('{2,5}).+?\\1";
 
         // More complex regex to find nested quotes
         String greedyRegex = "('{2,5}).+?[^']\\1[^']";
@@ -161,47 +147,27 @@ class RegexPerformanceExperiments {
         String lookBehindRegex = "('{2,5}).+?(?<!')\\1[^']";
         String lookAheadBehindRegex = "('{2,5}).+?(?<!')\\1(?!')";
         String lookStarRegex = "('{2,5}).*?(?<!')\\1(?!')";
-        String possessiveRegex = "('{2,5}+).+?[^']\\1(?!')"; // Based in the look-ahead regex, which seems the best.
-
-        String matchingInput = "Quote: '''What a Wonderful World'''.";
-        String nonMatchingInput = "Quote: What a Wonderful World.";
-        String almostMatchingInput = "Quote: '''What a Wonderful World.";
 
         for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(simpleRegex, "SIMPLE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(simpleRegex2, "SIMPLE REGEX 2", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(greedyRegex, "GREEDY REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadRegex, "LOOK AHEAD REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadBehindRegex, "LOOK AHEAD BEHIND REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookStarRegex, "LOOK STAR REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveRegex, "POSSESSIVE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+            // runExperiment(simpleRegex, "SIMPLE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperiment(simpleRegex2, "SIMPLE REGEX 2", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(greedyRegex, "GREEDY REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookAheadRegex, "LOOK AHEAD REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookAheadBehindRegex, "LOOK AHEAD BEHIND REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookStarRegex, "LOOK STAR REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
 
             if (i == NUM_WARM_UP_RUNS - 1) {
                 System.out.println();
             }
 
-            runExperiment(simpleRegex, "SIMPLE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(simpleRegex2, "SIMPLE REGEX 2", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(greedyRegex, "GREEDY REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadRegex, "LOOK AHEAD REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadBehindRegex, "LOOK AHEAD BEHIND REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookStarRegex, "LOOK STAR REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveRegex, "POSSESSIVE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
-
-            runExperiment(simpleRegex, "SIMPLE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(simpleRegex2, "SIMPLE REGEX 2", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(greedyRegex, "GREEDY REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadRegex, "LOOK AHEAD REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadBehindRegex, "LOOK AHEAD BEHIND REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookStarRegex, "LOOK STAR REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveRegex, "POSSESSIVE REGEX (almost matching)", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(simpleRegex, "SIMPLE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(simpleRegex2, "SIMPLE REGEX 2", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(greedyRegex, "GREEDY REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(lookAheadRegex, "LOOK AHEAD REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(lookBehindRegex, "LOOK BEHIND REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(lookAheadBehindRegex, "LOOK AHEAD BEHIND REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(lookStarRegex, "LOOK STAR REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
         }
         write("**************END EXPERIMENT*****************\n\n");
     }

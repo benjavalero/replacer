@@ -1,5 +1,7 @@
 package es.bvalero.replacer.article.exception;
 
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import org.springframework.stereotype.Component;
@@ -11,15 +13,19 @@ import java.util.regex.Pattern;
 @Component
 public class QuotesFinder implements ExceptionMatchFinder {
 
-    private static final Pattern REGEX_SINGLE_QUOTES = Pattern.compile("('{2,5}+).+?[^']\\1(?!')");
+    private static final Pattern REGEX_SINGLE_QUOTES = Pattern.compile("('{2,5}).+?[^']\\1(?!')");
     private static final Pattern REGEX_SINGLE_QUOTES_ESCAPED =
-            Pattern.compile("((&apos;){2,5}+).+?(?<!&apos;)\\1(?!&apos;)");
+            Pattern.compile("((&apos;){2,5}).+?(?<!&apos;)\\1(?!&apos;)");
 
-    // The conditional regex to combine both below takes 4 times more: (?:(«)|“).+?(?(1)»|”)
-    private static final Pattern REGEX_ANGULAR_QUOTES = Pattern.compile("«[^»\n]++»");
-    private static final Pattern REGEX_TYPOGRAPHIC_QUOTES = Pattern.compile("“[^”\n]++”");
+    private static final RunAutomaton AUTOMATON_ANGULAR_QUOTES =
+            new RunAutomaton(new RegExp("«[^»\n]+»").toAutomaton());
 
-    private static final Pattern REGEX_DOUBLE_QUOTES = Pattern.compile("\"[^\"\n]++\"");
+    private static final RunAutomaton AUTOMATON_TYPOGRAPHIC_QUOTES =
+            new RunAutomaton(new RegExp("“[^”\n]+”").toAutomaton());
+
+    // For the automaton the quote needs an extra backslash
+    private static final RunAutomaton AUTOMATON_DOUBLE_QUOTES =
+            new RunAutomaton(new RegExp("\\\"[^\\\"\n]+\\\"").toAutomaton());
     private static final Pattern REGEX_DOUBLE_QUOTES_ESCAPED = Pattern.compile("&quot;.+?&quot;");
 
     @Override
@@ -31,10 +37,10 @@ public class QuotesFinder implements ExceptionMatchFinder {
             matches.addAll(RegExUtils.findMatches(text, REGEX_DOUBLE_QUOTES_ESCAPED));
         } else {
             matches.addAll(RegExUtils.findMatches(text, REGEX_SINGLE_QUOTES));
-            matches.addAll(RegExUtils.findMatches(text, REGEX_DOUBLE_QUOTES));
+            matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_DOUBLE_QUOTES));
         }
-        matches.addAll(RegExUtils.findMatches(text, REGEX_ANGULAR_QUOTES));
-        matches.addAll(RegExUtils.findMatches(text, REGEX_TYPOGRAPHIC_QUOTES));
+        matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_ANGULAR_QUOTES));
+        matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_TYPOGRAPHIC_QUOTES));
         return matches;
     }
 
