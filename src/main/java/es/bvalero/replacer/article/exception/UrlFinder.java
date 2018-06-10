@@ -1,5 +1,8 @@
 package es.bvalero.replacer.article.exception;
 
+import dk.brics.automaton.DatatypesAutomatonProvider;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import org.springframework.stereotype.Component;
@@ -15,18 +18,18 @@ public class UrlFinder implements ExceptionMatchFinder {
     private static final String AT_END = "[^]\\s.:;,<>\"|)]";
     private static final String INSIDE = "[^]\\s<>\"|]";
     private static final String INSIDE_ESCAPED = "(" + INSIDE + "(?!&lt;))";
-    private static final Pattern REGEX_URL = Pattern.compile("http[s]?://" + INSIDE + "*" + AT_END);
+    private static final Pattern REGEX_URL = Pattern.compile("https?://" + INSIDE + "*" + AT_END);
     private static final Pattern REGEX_URL_ESCAPED =
-            Pattern.compile("http[s]?://" + INSIDE_ESCAPED + "*" + AT_END);
+            Pattern.compile("https?://" + INSIDE_ESCAPED + "*" + AT_END);
 
-    private static final Pattern REGEX_DOMAIN =
-            Pattern.compile("\\b(?:\\w+\\.)+(?:com?|org|net|info|es)\\b");
+    private static final String REGEX_DOMAIN = "<L>+\\.(com|org|es|net|gov|edu|gob|info)";
+    private static final RunAutomaton AUTOMATON_DOMAIN = new RunAutomaton(new RegExp(REGEX_DOMAIN).toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
         List<RegexMatch> matches = new ArrayList<>();
         matches.addAll(RegExUtils.findMatches(text, isTextEscaped ? REGEX_URL_ESCAPED : REGEX_URL));
-        matches.addAll(RegExUtils.findMatches(text, REGEX_DOMAIN));
+        matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_DOMAIN));
         return matches;
     }
 

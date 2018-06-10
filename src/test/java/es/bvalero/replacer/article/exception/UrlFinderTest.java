@@ -6,8 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class UrlFinderTest {
 
@@ -31,7 +29,8 @@ public class UrlFinderTest {
     public void testRegexDomain() {
         String domain1 = "google.es";
         String domain2 = "IMDb.org";
-        String text = "xxx " + domain1 + " / " + domain2 + " zzz";
+        String domain3 = "BBC.co.uk";
+        String text = "xxx " + domain1 + " / " + domain2 + " / " + domain3 + " zzz";
 
         UrlFinder urlFinder = new UrlFinder();
 
