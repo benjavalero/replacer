@@ -1,9 +1,6 @@
 package es.bvalero.replacer.article.exception;
 
-import dk.brics.automaton.Automaton;
-import dk.brics.automaton.AutomatonMatcher;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
+import dk.brics.automaton.*;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -33,13 +30,14 @@ class RegexPerformanceExperiments {
         // falsePositivesExperiment();
         // angularQuotesExperiment();
         // doubleQuotesExperiment();
-        singleQuotesExperiment();
+        // singleQuotesExperiment();
         // templateNameExperiment();
         // xmlTagExperiment();
         // completeTemplateExperiment();
         // indexValueExperiment();
         // wordExperiment();
         // fileNameExperiment();
+        urlExperiment();
     }
 
     private static void falsePositivesExperiment() {
@@ -396,6 +394,38 @@ class RegexPerformanceExperiments {
         write("************** END EXPERIMENT *****************\n\n");
     }
 
+    private static void urlExperiment() {
+        write("************** BEGIN URL EXPERIMENT *****************");
+
+        String atEnd = "[^]\\s.:;,<>\"|)]";
+        String inside = "[^]\\s<>\"|]";
+        String regexUrl = "http[s]?://" + inside + "*" + atEnd;
+
+        String domain = "\\w+\\.(com|org|es|net|gov|edu|gob|info)";
+        String domainIgnored = "\\w+\\.(?:com|org|es|net|gov|edu|gob|info)";
+        String domainLimited = "\\b\\w+\\.(?:com|org|es|net|gov|edu|gob|info)\\b";
+        String domainLimited2 = "\\w+\\.(com|org|es|net|gov|edu|gob|info)[^\\.]";
+        String domainAutomaton = "<L>+\\.(com|org|es|net|gov|edu|gob|info)";
+        String domainLimitedAutomaton = "[^<L>]<L>+\\.(com|org|es|net|gov|edu|gob|info)[^\\.]";
+
+        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
+            runExperiment(regexUrl, "REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(domain, "DOMAIN REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(domainIgnored, "DOMAIN IGNORED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(domainLimited, "DOMAIN LIMITED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(domainLimited2, "DOMAIN LIMITED2 REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+
+            if (i == NUM_WARM_UP_RUNS - 1) {
+                System.out.println();
+            }
+
+            runExperimentAutomaton(regexUrl, "REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(domainAutomaton, "DOMAIN REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(domainLimitedAutomaton, "DOMAIN LIMITED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+        }
+        write("************** END EXPERIMENT *****************\n\n");
+    }
+
     private static void runExperiment(String regex, String regexDescription, String input, boolean printOutput) {
         Pattern p = Pattern.compile(regex);
 
@@ -419,7 +449,7 @@ class RegexPerformanceExperiments {
 
     private static void runExperimentAutomaton(String regex, String regexDescription, String input, boolean printOutput) {
         RegExp r = new RegExp(regex);
-        Automaton a = r.toAutomaton();
+        Automaton a = r.toAutomaton(new DatatypesAutomatonProvider());
         RunAutomaton ra = new RunAutomaton(a);
 
         boolean matches = false;
