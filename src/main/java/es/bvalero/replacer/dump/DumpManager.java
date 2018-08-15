@@ -30,7 +30,6 @@ class DumpManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpManager.class);
 
-    @Autowired
     private DumpHandler dumpHandler;
 
     @Autowired
@@ -38,6 +37,9 @@ class DumpManager {
 
     @Value("${replacer.dump.folder.path:}")
     private String dumpFolderPath;
+
+    @Autowired
+    private DumpProcessor dumpProcessor;
 
     private DumpStatus status = new DumpStatus();
 
@@ -51,7 +53,9 @@ class DumpManager {
 
     @NotNull
     DumpStatus getStatus() {
-        this.status.setNumProcessedItems(dumpHandler.getNumProcessedItems());
+        if (dumpHandler != null) {
+            status.setNumProcessedItems(dumpHandler.getNumProcessedItems());
+        }
         return status;
     }
 
@@ -104,7 +108,7 @@ class DumpManager {
         }
     }
 
-    private void parseDumpFile(File dumpFile, boolean processOldArticles)
+    private void parseDumpFile(File dumpFile, final boolean processOldArticles)
             throws ParserConfigurationException, SAXException, IOException {
         LOGGER.info("Start parsing dump file: {}...", dumpFile);
 
@@ -113,7 +117,13 @@ class DumpManager {
         SAXParser saxParser = factory.newSAXParser();
         InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile));
 
-        dumpHandler.setProcessOldArticles(processOldArticles);
+        dumpHandler = new DumpHandler() {
+            @Override
+            void processArticle(DumpArticle article) {
+                dumpProcessor.processArticle(getCurrentArticle(), processOldArticles);
+            }
+        };
+
         saxParser.parse(xmlInput, dumpHandler);
         xmlInput.close();
 

@@ -18,7 +18,7 @@ public class DumpManagerTest {
     private DumpFinder dumpFinder;
 
     @Mock
-    private DumpHandler dumpHandler;
+    private DumpProcessor dumpProcessor;
 
     @InjectMocks
     private DumpManager dumpManager;
@@ -43,23 +43,20 @@ public class DumpManagerTest {
         Assert.assertNull(dumpManager.getStatus().getStartDate());
         Assert.assertNull(dumpManager.getStatus().getEndDate());
 
-        int numArticles = 13;
         String bz2Path = getClass().getResource("/pages-articles.xml.bz2").getFile();
         DumpFile dumpFile = new DumpFile();
         dumpFile.setFile(new File(bz2Path));
         Mockito.when(dumpFinder.findLatestDumpFile(Mockito.any(File.class))).thenReturn(dumpFile);
-        Mockito.when(dumpHandler.getNumProcessedItems()).thenReturn(numArticles);
         dumpManager.setDumpFolderPath("");
 
         dumpManager.runIndexation();
 
         Mockito.verify(dumpFinder, Mockito.times(1)).findLatestDumpFile(Mockito.any(File.class));
-        Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
 
         Assert.assertNotNull(dumpManager.getStatus().getStartDate());
         Assert.assertNotNull(dumpManager.getStatus().getEndDate());
         Assert.assertFalse(dumpManager.getStatus().getStartDate().after(dumpManager.getStatus().getEndDate()));
-        Assert.assertEquals(numArticles, dumpManager.getStatus().getNumProcessedItems());
+        Assert.assertEquals(2, dumpManager.getStatus().getNumProcessedItems());
     }
 
     @Test
