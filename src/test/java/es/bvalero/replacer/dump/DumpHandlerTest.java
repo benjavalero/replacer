@@ -5,10 +5,6 @@ import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -22,16 +18,16 @@ import java.util.GregorianCalendar;
 
 public class DumpHandlerTest {
 
-    @Mock
-    private DumpProcessor dumpProcessor;
-
-    @InjectMocks
     private DumpHandler dumpHandler;
 
     @Before
     public void setUp() {
-        dumpHandler = new DumpHandler();
-        MockitoAnnotations.initMocks(this);
+        dumpHandler = new DumpHandler() {
+            @Override
+            void processArticle(DumpArticle article) {
+                // Do nothing
+            }
+        };
     }
 
     @Test
@@ -44,7 +40,10 @@ public class DumpHandlerTest {
         InputStream xmlInput = new FileInputStream(dumpFilePath);
         saxParser.parse(xmlInput, dumpHandler);
 
+        // Test that all articles are processed and the namespaces are taken into account
         Assert.assertEquals(2, dumpHandler.getNumProcessedItems());
+
+        // Test values of the last processed article
         Assert.assertEquals(Integer.valueOf(7), dumpHandler.getCurrentArticle().getId());
         Assert.assertEquals("Andorra", dumpHandler.getCurrentArticle().getTitle());
         Assert.assertEquals(WikipediaNamespace.ARTICLE, dumpHandler.getCurrentArticle().getNamespace());
@@ -54,27 +53,40 @@ public class DumpHandlerTest {
         cal.setTimeZone(WikipediaUtils.TIME_ZONE);
         Assert.assertEquals(cal.getTime(), dumpHandler.getCurrentArticle().getTimestamp());
 
-        Mockito.verify(dumpProcessor, Mockito.times(2)).processArticle(Mockito.any(DumpArticle.class), Mockito.anyBoolean());
-
         xmlInput.close();
     }
 
     @Test
     public void testProcessingError() throws SAXException, ParserConfigurationException, IOException {
+        dumpHandler = new DumpHandler() {
+            @Override
+            void processArticle(DumpArticle article) {
+                // Force exception
+                new StringBuilder().insert(1, "");
+            }
+        };
+
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
         SAXParser saxParser = factory.newSAXParser();
-
-        Mockito.doThrow(Exception.class).when(dumpProcessor).processArticle(Mockito.any(DumpArticle.class), Mockito.anyBoolean());
 
         String dumpFilePath = getClass().getResource("/pages-articles.xml").getFile();
         InputStream xmlInput = new FileInputStream(dumpFilePath);
         saxParser.parse(xmlInput, dumpHandler);
 
-        Mockito.verify(dumpProcessor, Mockito.times(2)).processArticle(Mockito.any(DumpArticle.class), Mockito.anyBoolean());
         Assert.assertEquals(0, dumpHandler.getNumProcessedItems());
 
         xmlInput.close();
+    }
+
+
+    @Test
+    public void testProcessableArticles() {
+        Assert.assertTrue(new DumpArticle(1, "", WikipediaNamespace.ARTICLE, null, "").isProcessable());
+        Assert.assertFalse(new DumpArticle(2, "", WikipediaNamespace.USER, null, "").isProcessable());
+        Assert.assertTrue(new DumpArticle(3, "", WikipediaNamespace.ANNEX, null, "").isProcessable());
+        Assert.assertFalse(new DumpArticle(4, "", WikipediaNamespace.ARTICLE, null, "#REDIRECT xxx")
+                .isProcessable());
     }
 
 }

@@ -87,25 +87,6 @@ public class DumpProcessorTest {
     }
 
     @Test
-    public void testProcessOnlyArticlesAndAnnexes() {
-        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.USER, null, "");
-
-        dumpProcessor.processArticle(dumpArticle, false);
-
-        Mockito.verify(articleRepository, Mockito.times(0)).findOne(Mockito.anyInt());
-    }
-
-    @Test
-    public void testNotProcessRedirects() {
-        String redirectContent = "#REDIRECT xxx";
-        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, null, redirectContent);
-
-        dumpProcessor.processArticle(dumpArticle, false);
-
-        Mockito.verify(articleRepository, Mockito.times(0)).findOne(Mockito.anyInt());
-    }
-
-    @Test
     public void testSkipArticleReviewedAfterDumpTimestamp() {
         GregorianCalendar today = new GregorianCalendar();
         GregorianCalendar yesterday = new GregorianCalendar();

@@ -32,12 +32,6 @@ class DumpProcessor {
     void processArticle(@NotNull DumpArticle dumpArticle, boolean processOldArticles) {
         LOGGER.debug("Indexing article: {}...", dumpArticle.getTitle());
 
-        // Check if it is really needed to process the article
-        // in case it is not an article/annex or it is a redirection
-        if (!dumpArticle.isProcessable()) {
-            return;
-        }
-
         article = articleRepository.findOne(dumpArticle.getId());
 
         if (article != null) {
