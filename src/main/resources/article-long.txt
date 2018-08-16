@@ -1,0 +1,634 @@
+{{Ficha de territorio
+|Mapa = North America (orthographic projection).svg
+|Superficie = 23,633,760
+|Población = 572 000 000
+|Densidad = 20,5
+|Gentilicio =norteamericano, -na<ref>{{Cita DLE|norteamericano}}</ref>
+|Países = {{CAN}}<br />{{EEUU}}<br />{{MEX}}
+|Dependencias = {{BER}}<br />{{bandera|Francia}} [[Isla Clipperton]]<br />{{Bandera2|San Pedro y Miquelón|local}}
+|Idiomas = [[Idioma español|Español]], [[idioma inglés|inglés]], [[Idioma francés|francés]], [[idioma groenlandés|groenlandés]]
+|IDH 0,895
+|Zona horaria = {{bandera|Groenlandia}} UTC -0 a -4 <br /> [[Archivo:Flag of Saint-Pierre and Miquelon.svg|20px|border]] UTC -3<ref>El huso horario en verano es de UTC -2</ref> <br /> {{bandera|Canadá}} UTC -3:30 a -8<ref>El huso horario en verano es de UTC -2:30 a -7</ref><br /> {{bandera|Bermudas}} UTC -4<br /> {{bandera|Estados Unidos}} UTC -5 a -10<ref>El huso horario en verano es de UTC -4 a -10</ref> <br /> {{bandera|México}} UTC -5 a -8<ref>El huso horario en verano es de UTC -5 a -7</ref>
+|Ciudades más pobladas = 1. {{bandera|México}} [[Ciudad de México]]<br />2. {{bandera|Estados Unidos}} [[Nueva York]]<br />3. {{bandera|Estados Unidos}} [[Los Ángeles]]<br />4. {{bandera|Estados Unidos}} [[Chicago]]<br />5. {{bandera|Canadá}} [[Toronto]]<br />6. {{bandera|Mexico}} [[Guadalajara (México)|Guadalajara]]<br />7. {{bandera|Estados Unidos}} [[Houston]]<br />8. {{bandera|Estados Unidos}} [[Filadelfia]]<br />9. {{bandera|Mexico}} [[Monterrey]]<br />10. {{Bandera|Canadá}} [[Montreal]]<ref>[[:en:Table of United States primary census statistical areas]]</ref>
+|Organizaciones regionales = [[Tratado de Libre Comercio de América del Norte|TLCAN]]
+}}
+'''América del Norte''' o '''Norteamérica''' (también llamada  '''América Septentrional''' o '''América Boreal''') es un [[subcontinente]] del [[América|continente americano]]<ref>{{cita web |url=http://www.cprm.gov.br/33IGC/1313044.html|título=http://www.cprm.gov.br/33IGC/1313044.html}}</ref> y considerado por muchos, por la diferencia cultural y geológica ([[Cratón|cratones]]) un continente del [[supercontinente]] de América.<ref name="britannica-northamerica">{{cita web|url=http://www.britannica.com/EBchecked/topic/418612/North-America|título = North America|editorial = [[Encyclopædia Britannica]]|fechaacceso = 3 de febrero de 2014}}</ref> Yace en el [[hemisferio norte]] y casi por completo en el [[hemisferio occidental]] y limita al norte con el [[océano Ártico]], al este con el [[océano Atlántico]], al sureste con el [[mar Caribe]] y al suroeste con el [[océano Pacífico]]. Está conectado con [[América del Sur]] por el estrecho puente territorial que representa [[América Central]]. Cubre un área aproximadamente de 24&nbsp;323&nbsp;000&nbsp;[[km²]], lo que representa alrededor de un 4,8 % de la superficie total del planeta y un 16,5 % de las tierras emergidas.
+
+En 2014 su [[población estadística|población estimada]] fue de más de 572 millones de habitantes. En 2014 el [[Índice de desarrollo humano|IDH]] promedio de todos los países del subcontinente norteamericano fue de 0,895. Se hablan numerosas lenguas originarias y de inmigrantes, pero las oficiales (legalmente o de facto) y ampliamente predominantes son el [[Idioma inglés|inglés]], [[Idioma español|español]] y [[francés]].
+
+== Toponimia ==
+[[Archivo:North America.png|thumb|left|300px|Mapa político de América del Norte (en idioma inglés).]]
+Se acepta ampliamente que el nombre “América” procede del navegante y explorador [[Américo Vespucio]], y que fue el cartógrafo alemán [[Martin Waldseemüller]] quien le puso ese nombre. Vespucio fue el primer europeo en sugerir que América no era las [[Indias Orientales]], sino un nuevo mundo desconocido por los [[europeos]]. Los nombres América del Norte y [[América del Sur]] surgen al estar conformado el continente por dos grandes masas de tierra, una en el norte y otra en el sur.
+
+La segunda teoría, con menor aceptación, es que este nombre proviene de un comerciante inglés llamado [[Richard Amerike]], de [[Bristol]], que se cree financió el viaje de [[John Cabot]] de [[Inglaterra]] a [[Isla de Terranova|Terranova]] en 1497. Otra teoría es que el nombre proviene de una [[Lenguas amerindias|lengua amerindia]].<ref>[http://www.uhmc.sunysb.edu/surgery/america.html The Naming of America<!-- Título generado por un bot -->]</ref>
+
+== Delimitación ==
+[[Archivo:Mapa de América del Norte.png|thumb|Mapa indicando a Norteamérica como un continente (los 3 tonos de verde), un subcontinente (hasta México) o una subregión (en verde claro).]]
+No hay un solo criterio para definir este término. En los países hispanohablantes, el uso normalmente define a Norteamérica como el [[subcontinente]] conformado por [[Canadá]], [[Estados Unidos]] (incluyendo [[Alaska]]), [[México]], el [[Itsmo de Tehuantepec]], [[Groenlandia]] e islas adyacentes.<ref>[http://lema.rae.es/dpd/srv/search?id=vVT1iuhvpD60g6zeA0 Norteamérica] RAE 2005</ref> En cambio en los países angloparlantes y otros, se suele considerar a Norteamérica como un [[continente]] que está conformado por lo antes mencionado además de [[Centroamérica]] y las [[Antillas]], presentando un límite natural con Sudamérica más o menos a la frontera actual de Panamá/Colombia.<ref>[http://www.thefreedictionary.com/North+America North America] The Free Dictionary 2015</ref> Por otro lado, el [[geoesquema de la ONU]] usa “América del Norte” como descripción cultural angloamericano, indicando una [[subregión]] conformada por Estados Unidos y Canadá (excluyendo a México).<ref>[http://millenniumindicators.un.org/unsd/methods/m49/m49regin.htm Composition of macro geographical (continental) regions, geographical sub-regions, and selected economic and other groupings] United Nations, 2014</ref>
+
+== Historia ==
+[[Archivo:Igloos.jpg|thumb|250px|Aldea inuit de [[iglú]]s en la isla de [[Baffin]], ilustración de [[Charles Francis Hall]], 1865.]]
+{{AP|Historia de América del Norte}}
+A la llegada de los europeos, América del Norte estaba poblada por [[etnia]]s [[indígena]]s provenientes de inmigraciones asiáticas a través del [[estrecho de Bering]].
+
+La [[Colonización europea de América|colonización europea]] del Norte (por orden cronológico: [[España|española]], [[Francia|francesa]] e [[Inglaterra|inglesa]]) consistió básicamente en el avance progresivo desde la costa oriental hacia el oeste. En líneas generales, la colonización anglosajona supuso la marginación e incluso el exterminio de las poblaciones indígenas, hasta confinar a los supervivientes en reservas situadas en las zonas más improductivas y estériles del territorio. Sin embargo, las colonizaciones francesa y española supusieron la mezcla de razas y el mestizaje.
+
+=== Era precolombina ===
+[[Archivo:Nordamerikanische Kulturareale en.png|300px|thumb|Áreas culturales de Norteamérica en el tiempo del contacto con los europeos, según la división propuesta por Kroeber.]]
+Los antropólogos tienen diversas teorías acerca las primeras [[poblamiento de América|poblaciones que se establecieron en América del Norte]]. Las evidencias genéticas y arqueológicas indican los primeros americanos llegaron desde Asia en torno a la última gran glaciación, cuando el hielo cubría el [[estrecho de Bering]] creando un [[Puente de Beringia|puente terrestre llamado Beringia]].
+
+Antes del contacto con los europeos, los [[amerindios|pueblos indígenas de América del Norte]] se dividían en múltiples entidades políticas, desde pequeños grupos de unas pocas familias a jefaturas y reinos. Vivían en varias áreas culturales que correspondían a grandes rasgos con las distintas zonas geobiológicas que ocupaban y que dan una buena idea de los distintos sus usos y costumbres. Por ejemplo, de los cazadores de [[bisonte]]s de las [[Grandes Llanuras]], o los agricultores de [[Mesoamérica]]. A estos [[indígenas|grupos indígenas]] también se les puede [[Familia de lenguas|clasificar lingüísticamente]] (por ejemplo, las familias [[Lenguas atapascas|atapasca]], [[lenguas álgicas|álgica]] y [[utoazteca]] son tres de las más extendidas en Norteamérica), aunque es importante tener en cuenta que los pueblos con lenguas relacionadas no siempre compartían la misma cultura material, ni siquiera fueron siempre aliados.
+
+El [[Periodo arcaico de América|período arcaico en América]] vio a un entorno cambiante que ofreció un clima cálido más árido y la desaparición de la [[megafauna]]. La mayoría de los grupos de población en ese momento todavía eran cazadores-recolectores muy móviles, pero después comenzaron a surgir los grupos individuales, se centraban sobre los recursos disponibles para ellos a nivel local, por lo que con el paso del tiempo no había un patrón de creciente generalización regional como, el suroeste, el Ártico, la pobreza, Dalton y el Plano tradicional.
+
+[[Archivo:Spreading homo sapiens.svg|thumb|350px|Mapa de las primeras migraciones humanas basadas en la teoría Fuera de África.{{Leyenda|#ff0000|Homo sapiens}}
+{{Leyenda|#c2bf00|Neandertales}}
+{{Leyenda|#61c000| Los primeros homínidos}}|309x309px]]
+Estas adaptaciones regionales se convertirían en la norma con menos dependencia de [[Caza-recolección|la caza y la recolección]], con una economía más variada de caza menor, pescados, estacionalmente vegetales silvestres cosechadas y alimentos vegetales. Muchos grupos continuaron como cazadores de caza mayor, sin embargo sus tradiciones de caza se hicieron más variadas y sus métodos de adquisición de carne más sofisticados. La colocación de artefactos y materiales dentro de una necrópolis arcaica indicaban diferenciación social en base al estado de algunos grupos.
+
+Los grupos culturales más meridionales de América del Norte fueron responsables de la [[Síndrome de domesticación en plantas|domesticación de muchos cultivos]] que ahora se utilizan en todo el mundo, como los [[tomate]]s y las [[calabaza]]s. Tal vez lo más importante es que uno de los cultivos más importantes del mundo es el [[maíz]]. Como resultado del desarrollo de la agricultura en el sur, muchos de los avances culturales importantes se hicieron allí. Por ejemplo, la civilización maya elaboró un sistema de escritura, construyó enormes pirámides, tenían un complejo [[calendario]], y desarrollaron el concepto de cero 500 años antes que nadie en el [[Viejo Mundo]]. La [[cultura maya]] aún estaba presente cuando los europeos llegaron a Centroamérica, pero la dominación política en la zona se había desplazado hacia el [[Imperio azteca]].
+
+Más al norte de [[Mesoamérica]] los grupos humanos que desarrollaron sociedades y culturas más complejas son los pueblos de la [[cultura misisipiana]] y la [[confederación iroquesa]] en época histórica bien documentada. Además existen algunas culturas complejas conocidas sólo arqueológicamente como las de los [[anasazi]] o los [[Hohokam]].
+
+La llegada de los europeos a América supuso un cambio drástico, frecuentemente traumático o catastrófico para ellos y sus culturas. Desaparecieron pueblos enteros, incluso grupos lingüísticos completos y los que sobrevieron en general cambiaron muy rápidamente.
+
+=== Asentamientos vikingos en América ===
+[[L'Anse aux Meadows]] (una corrupción del nombre original [[Idioma francés|francés]] ''L'Anse-aux-Méduses'', “La ensenada de las [[Medusa (animal)|medusas]]”) es un paraje situado en la punta septentrional de la isla de [[Isla de Terranova|Terranova]], en la provincia de [[Terranova y Labrador]] ([[Canadá]]), donde el investigador noruego [[Helge Ingstad]] y su esposa, la [[Arqueología|arqueóloga]] [[Anne Stine]], encontraron en [[1960]] unas elevaciones cubiertas de hierba que resultaron ser los restos de una aldea [[Vikingo|vikinga]].
+
+En 2015 fue hallado un posible segundo asentamiento en otro punto de la isla de Terranova llamado [[:en:Point|Rosee Point Rosee]], 500 [[km]] más lejos hacia el sudeste de lo que inicialmente se sabía de los vikingos. El hallazgo fue detectado por la arqueóloga estadounidense [http://www.elmundo.es/papel/historias/2016/10/20/5804e9ea22601dc2368b4581.html Sarah Parcak] mediante tecnología de imágenes infrarrojas desde el espacio.
+
+=== Época colonial ===
+En 1663 la [[Imperio colonial francés|corona francesa]] había tomado el control de las empresas de comercio de pieles de la [[Nueva Francia]]. Esto marcó el comienzo de una nueva era del colonialismo más formal en América del Norte.
+
+La rivalidad entre las potencias europeas creó una serie de guerras en América del Norte que tuvieron un gran impacto en el desarrollo de las colonias. El territorio cambió de manos varias veces. La paz no se logró hasta que las fuerzas francesas en América del Norte fueron vencidas en la [[batalla de las Llanuras de Abraham]] (en [[Quebec]]) y Francia cedió la mayor parte de sus reivindicaciones fuera del [[Caribe (región)|Caribe]]. El fin de la presencia francesa en América del Norte fue un desastre para los países indígenas del este de América del Norte, que perdieron a su principal aliado en contra de la expansión angloamericana de exterminio. Durante la [[rebelión de Pontiac]] (1763-1766), una [[Confederación Iroquesa|confederación de Grandes Lagos]] y el área de las tribus se enfrentaron en una campaña poco exitosa para defender sus derechos sobre las tierras al oeste de los [[Apalaches|montes Apalaches]], lo que llevó a que fueran encerrados en [[reserva indígena|reservas]] en virtud de la [[proclamación real de 1763]].
+
+Entre 1535 a 1821, los territorios colonizados por el [[imperio español]] en el actual México se llamaban [[virreinato de Nueva España]].
+
+=== Independencias ===
+La llegada de la revolución americana tuvo un gran impacto en todo el continente. Lo más importante fue la creación de los Estados Unidos de América. Sin embargo, la guerra revolucionaria americana fue una guerra importante que tocó todos los rincones de la región. El vuelo de los United Empire Loyalist llevó a la creación de Canadá como una comunidad separada.
+
+Mientras tanto, el control de España sobre México se estaba debilitando. La independencia fue declarada en 1810 por Miguel Hidalgo, iniciando en ese momento la Guerra de Independencia de México. En 1813, José María Morelos y el Congreso de Anáhuac firmaron el Acta Solemne de la Declaración de la Independencia de América del Norte, el primer documento legal donde se establece la separación de la Nueva España con respecto a España. España finalmente reconoció la independencia de México en 1821.
+
+=== Expansión territorial ===
+[[Archivo:Mapa de la frontera México-Guatemala (1790).svg|thumb|200px|Frontera que muestra el territorio guatemalteco perdido y posteriormente anexado a mexico.]]
+[[Archivo:Non-Native American Nations Control over N America 1750-2008.gif|thumb|200px|Línea temporal de la división política en Canadá, EE.UU. y México.]]
+Desde el momento de la independencia de los [[Estados Unidos]], ese país se expandió rápidamente hacia el oeste, adquiriendo el vasto territorio de Luisiana en 1803. Entre 1810 y 1811 una confederación indígena luchó sin éxito para mantener a los estadounidenses fuera de los Grandes Lagos. Los seguidores de Tecumseh se fueron al norte en Canadá, donde ayudaron a los británicos para repeler un intento estadounidense de apoderarse de Canadá durante la guerra de 1812. Después de la guerra, el asentamiento británico e irlandés en Canadá aumentó de forma espectacular.
+La expansión de Estados Unidos se vio complicada por la división de los estados entre “libre” y “esclavo”, lo que llevó al Compromiso de Misuri de 1820.
+
+Asimismo, [[Canadá]] se enfrentó a una división entre comunidades francesas e inglesas que llevaron al estallido de la guerra civil en 1837.
+
+[[México]] se enfrentó a constantes tensiones políticas entre liberales y conservadores, tuvo un conflicto territorial con [[Guatemala]] en donde [[México]] consiguió la adquisición de [[Chiapas]] y el soconusco, así como también tuvo conflictos con Estados Unidos por Texas, quien se declaró independiente (por invasores estadounidenses) en 1836 y por los territorios de California.
+
+{{VT|Conflicto México-Guatemala de 1842 y 1882|Intervención estadounidense en México|}}
+
+=== Conflictos ===
+La secesión de los Estados Confederados y la guerra civil resultante sacudió a la sociedad norteamericana. Esto condujo a la abolición de la esclavitud en los Estados Unidos, la destrucción de la mayor parte del Sur, y perdida de vidas. Desde el conflicto, Estados Unidos surgió como una nación industrializada de gran alcance.
+
+En parte como respuesta a la amenaza del poder estadounidense, cuatro de las colonias canadienses acordaron federarse en 1867, creando el Dominio de Canadá. La nueva nación no era plenamente soberana, pero contaban con una considerable independencia de Gran Bretaña. Con la incorporación de la Columbia Británica Canadá se expandió hacia el Pacífico en 1871 y estableció un ferrocarril transcontinental, el [[Canadian Pacific Railway|Canadian Pacific]], en 1885.
+
+En [[México]], conflictos como la [[Guerra de Reforma]] debilitaron al estado mexicano, y lo abrieron a la influencia extranjera. Esto llevó al Segundo Imperio francés a invadir a México y el establecimiento de un efímero Segundo Imperio Mexicano.
+
+Además existió el conflicto con Guatemala en el que barcos pesqueros mexicanos fueron atacados por la Fuerza Aérea Guatemalteca (FAG) en aguas territoriales de Guatemala, el saldo fue de tres pescadores mexicanos muertos y catorce heridos. Diez de los sobrevivientes fueron sometidos a interrogación militar por parte de Guatemala. La situación causó una terminación temporal de las relaciones diplomáticas y comerciales entre México y Guatemala, un puente fronterizo fue destruido y ambos países activaron una alerta militar.
+
+{{VT|Guerra de Reforma|Conflicto México-Guatemala (1958-1959)|Primera Intervención francesa en México}}
+
+== Geografía ==
+{{AP|Geografía de América del Norte}}
+[[Archivo:North America satellite orthographic.jpg|thumbnail|Imagen de [[Satélite artificial|satélite]] de América del Norte.]]
+
+=== Clima y vegetación ===
+
+La vegetación y el clima en Norteamérica son muy variados: cuenta con la mayoría de los climas del mundo. En el norte se encuentran tundras árticas (p. ej. [[Groenlandia]], [[Yukón]]), pasando por una gran variedad de bosques ([[Montañas Rocosas]], [[Apalaches]] y las tres [[Sierra Madre (California)|Sierras Madre (en California y Wyoming)]]), bosques tropicales ([[Selva Lacandona]], [[Hawái]] y los [[Chimalapas]]), desiertos ([[Desierto de Sonora]], [[Zona del Silencio]]), llanuras ([[Grandes Llanuras de los Estados Unidos|Grandes Llanuras]], [[Comarca Lagunera]]), manglares (p. ej. [[Luisiana]], [[Tabasco]]), etc. Grosso modo, la vegetación asociada a ellos es la típica del [[imperio Holoártico]], en el norte, y del [[imperio Neotropical]], en el sur. La frontera entre ambos imperios se sitúa en torno a los 40°{{esd}}N.
+
+== Demografía ==
+=== Idiomas ===
+
+{{AP|Anexo:Lenguas indígenas de América#Norteamérica y Centroamérica}}
+Actualmente, los [[idioma]]s más extendidos en América del Norte son el [[idioma inglés|inglés]], el [[Idioma español|español]] y el [[idioma francés|francés]]. El término [[América Anglosajona|Angloamérica]] es usado algunas veces para referirse a los países anglófonos de todo el continente americano. El término [[América Latina]] se refiere a la zona de América en donde las lenguas romances (derivadas del [[latín]]) predominan. Ambos términos pueden ser empleados para el subcontinente norteamericano.
+
+* El [[idioma inglés]], aunque no es oficial, es la lengua común de [[Estados Unidos]]. Es el idioma mayoritario de los dos idiomas cooficiales en Canadá. También es el idioma oficial en las islas [[Bermudas]], que son una dependencia británica.
+
+* El [[idioma español]], aunque no es oficial, es la lengua nacional<ref name="autogenerated1">{{cita web|url=http://www.cddhcu.gob.mx/leyinfo/pdf/257.pdf|título=cddhcu|urlarchivo=https://web.archive.org/web/20060427204513/http://www.cddhcu.gob.mx/leyinfo/pdf/257.pdf|fechaarchivo=27 de abril de 2006}}</ref> de México según la Ley General de los Derechos Lingüísticos de ese país y es el segundo idioma más hablado en los Estados Unidos. México tiene la mayor población de hispanoparlantes en el mundo y Estados Unidos el segundo.<ref>{{cita web |url=http://www.census.gov/popest/states/asrh/tables/SC-EST2009-04.xls|título=census.gov}}</ref><ref>{{cita web |url=http://www.univision.com/content/content.jhtml;jsessionid=BOBEOJ4LEGONQCWIABQCFFIKZAAGMIWC?cid=1123070|título=Univisión}}</ref><ref>[http://www.census.gov/popest/states/asrh/tables/SC-EST2007-04.xls Table 4: Estimates of the Population by Race and Hispanic Origin for the United States and States: July 1, 2007] ''[[Oficina del Censo de los Estados Unidos]]''. Consultado el 01-05-2008. [http://www.cnnexpansion.com/economia/2008/05/01/el-mercado-hispano-en-eu-va-a-la-alza Noticia en CNN en español]</ref><ref>Percent of People 5 Years and Over Who Speak Spanish at Home: 2007 [http://factfinder.census.gov/servlet/GRTTable?_bm=y&-geo_id=01000US&-_box_head_nbr=R1602&-ds_name=ACS_2007_1YR_G00_&-_lang=en&-redoLog=true&-format=US-30&-mt_name=ACS_2005_EST_G00_R0504_US30&-CONTEXT=grt U.S. Census Bureau 2007 American Community Survey.] Consultado el 31 de diciembre de 2007.</ref><ref>Según el estudio de [http://www.ucm.es/info/icei/pdf/DT%2003-06.pdf Demografía de la lengua española] (en la página&nbsp;33), con datos de la Oficina de Censos de Estados Unidos, en el año 2005 había 42,71&nbsp;millones de «hispanos», de los que el 85{{esd}}% hablaban español como lengua materna (36,31&nbsp;millones). Si en 2007 la población hispana es de 45,50&nbsp;millones, el 85{{esd}}% son 38,68&nbsp;millones</ref><ref>[http://www.fundacionblu.org/noticias.htm I Acta Internacional de la Lengua Española], [http://www.elcastellano.org/noticia.php?id=685 elcastellano.org] (Teniendo en cuenta los hispanos ilegales en Estados Unidos, que, sumados a los legales, son casi 55&nbsp;millones):[http://webcache.googleusercontent.com/search?q=cache:ko9lbWfrIA0J:www.sm-ele.com/ver_noticia.aspx?id%3D9483+%22+cerca+de+55+millones+de+hispanohablantes+(entre+legales+e+indocumentados)+%22&hl=es&ct=clnk&cd=1&gl=es EFE].</ref>
+
+* El [[idioma francés]] históricamente ha desempeñado un papel importante en América del Norte y se mantiene presente en varias regiones. En [[Canadá]] es el idioma oficial y más hablado de la provincia de [[Quebec]], además de ser uno de los dos oficiales en la provincia de [[Nuevo Brunswick]]. Frente a la costa de [[Terranova y Labrador|Terranova]], las islas de [[San Pedro y Miquelón]] son dependencias francesas, y en el estado de [[Luisiana]] (al sur de [[Estados Unidos]]) quedan pequeñas comunidades bilingües (francés e inglés).
+
+* El [[idioma groenlandés]] desde [[junio]] de [[2009]] es la única lengua oficial de [[Groenlandia]], un país autónomo del [[Reino de Dinamarca]], además de ser el idioma más hablado de ese territorio. El [[idioma danés]], sin ser oficial, es usado en asuntos administrativos y por una minoría europea.
+
+Aunque se han perdido un gran número de lenguas indígenas desde la [[Conquista de América|conquista europea]], todavía se hablan más de 250 lenguas autóctonas (pertenecientes a más de 40 [[familia de lenguas|familias lingüísticas]] distintas), principalmente en México y Estados Unidos. En México, se reconocen unas 60 lenguas indígenas que están reconocidas como lenguas nacionales cooficiales. En Estados Unidos y Canadá, las lenguas indígenas no tienen reconocimiento oficial, y la gran mayoría de ellas son [[lengua muerta|lenguas amenazadas]]. En México las lenguas indígenas tienen reconocimiento oficial, y la secretaría de educación publica materiales escolares en algunas de estas lenguas.
+
+En cuanto a las lenguas alóctonas de América del Norte, el [[idioma inglés|inglés]], el [[idioma francés|francés]] y el [[idioma español|español]], tienen reconocimiento oficial. Además en Estados Unidos existe un gran número de comunidades inmigrantes que siguen usando sus lenguas originarias.
+
+=== Población ===
+[[Archivo:Polanco Skyline Mexico City_DF.jpg|thumb|250px|La [[Ciudad de México]] es la ciudad más poblada de México y América del Norte y la segunda zona metropolitana en el mundo.<ref name="worldatlas">{{cita web |url=http://www.worldatlas.com/citypops.htm|título="City Populations – World City Population, Biggest Largest Cities in the World". Worldatlas.com}}</ref>]]
+[[Archivo:NYC wideangle south from Top of the Rock.jpg|thumb|250px|[[Nueva York]] es la ciudad más poblada de los Estados Unidos y la segunda en América del Norte.]]
+[[Archivo:LosAngeles06.jpg|thumb|250px|[[Los Ángeles]].]]
+[[Archivo:2004-07-14 2600x1500 chicago lake skyline.jpg|thumb|250px|[[Chicago]].]]
+[[Archivo:Toronto.jpg|thumb|250px|[[Toronto]] es la ciudad más poblada de [[Canadá]] y la quinta más poblada de América del Norte.]]
+{{AP|Anexo:Ciudades de América del Norte por población}}
+Demográficamente, el subcontinente es racial y étnicamente diverso. Los tres principales grupos étnicos son los mestizos, los negros y los blancos. Existen importantes minorías de [[amerindios]] y de personas provenientes de [[Asia]]. El país más poblado de América del Norte es [[Estados Unidos]], con más de 325 millones de personas. El segundo país más poblado es [[México]], con una población de más de 130 millones de personas. [[Canadá]] ocupa el tercer puesto, con más de 40 millones de habitantes.{{actualizar|2015}}
+
+En la lista se muestran las ciudades de América del Norte que superan el millón de habitantes, en el 2010 según los censos oficiales de México y Estados unidos y 2011 para Canadá
+
+{| class="sortable wikitable center col1cen col5cen" style="width:500px; margin-top: 0.8em; margin-bottom: 1em;"
+|+ style="background:#E1AD21; color:white; padding:10px;" | <span style="font-size: 117%;">'''Ciudades más pobladas de América del Norte'''</span>
+|-
+! style="background:#F3E5AB; padding:5px" | N.º
+! style="background:#F3E5AB; padding:5px" | Ciudad
+! style="background:#F3E5AB; padding:50px" | País
+! style="background:#F3E5AB; padding:5px" | Población <br /> ([[2016]])
+! style="background:#F3E5AB; padding:5px" | Ref.
+|- style="vertical-align: top; text-align: left;"
+|1
+| [[Ciudad de México]]
+| {{MEX}}
+| align="right" |8.918.653
+|<ref name="MEX">{{cita web
+ | url          = http://cuentame.inegi.org.mx/monografias/informacion/df/poblacion/
+ | editor       = SEDESOL
+ | título       = Principales Ciudades de México
+ | año          = 2013
+ | fechaacceso  = 7 de julio de 2013
+
+ | formato      = XLS
+}}</ref>
+|- style="vertical-align: top; text-align: left;"
+|2
+| [[Nueva York]]
+| {{EEUU}}
+| align="right" |8.537.673
+|<ref name="EUA">{{cita web
+ | url          = http://factfinder2.census.gov/faces/tableservices/jsf/pages/productview.xhtml?pid=DEC_10_PL_GCTPL1.ST13&prodType=table#
+ | editor       = FACTFINDER
+ | título       = Principales Ciudades de Estados Unidos
+ | año          = 2013
+ | fechaacceso  = 7 de julio de 2013
+
+ | formato      = XLS
+}}</ref>
+|- style="vertical-align: top; text-align: left;"
+|3
+| [[Los Ángeles]]
+| {{EEUU}}
+| align=right|3.976.322
+|<ref name="EUA"/>
+|- style="vertical-align: top; text-align: left;"
+|4
+| [[Toronto]]
+| {{CAN}}
+| align=right|2,731,571
+|<ref name="CAN">{{cita web
+ | url          = http://www12.statcan.gc.ca/census-recensement/2006/dp-pd/hlt/97-550/Index.cfm?TPL=P1C&Page=RETR&LANG=Eng&T=801&S=1&O=A
+ | editor       = STATCAN
+ | título       = Principales Ciudades de Canadá
+ | año          = 2013
+ | fechaacceso  = 7 de julio de 2013
+ | formato      = XLS
+}}</ref>
+|- style="vertical-align: top; text-align: left;"
+|5
+| [[Chicago]]
+| {{EEUU}}
+| align=right|2.704.958
+|<ref name="EUA"/>
+|- style="vertical-align: top; text-align: left;"
+|6
+| [[Houston]]
+| {{EUA}}
+| align=right|2.303.482
+|<ref name="EUA"/>
+|- style="vertical-align: top; text-align: left;"
+|7
+| [[Ecatepec de Morelos|Ecatepec]]
+| {{MEX}}
+| align=right|1.655.015
+|<ref name="MEX"/>
+|- style="vertical-align: top; text-align: left;"
+|8
+| [[Montréal]]
+| {{CAN}}
+| align=right|1,649,519
+|<ref name="CAN"/>
+|- style="vertical-align: top; text-align: left;"
+|9
+| [[Filadelfia]]
+| {{EUA}}
+| align=right|1.526.006
+|<ref name="EUA"/>
+|- style="vertical-align: top; text-align: left;"
+|10
+| [[Guadalajara (Jalisco)|Guadalajara]]
+| {{MEX}}
+| align=right|1.495.182
+|<ref name="MEX"/>
+|- style="vertical-align: top; text-align: left;"
+|11
+| [[Phoenix]]
+| {{EUA}}
+| align=right|1.445.632
+|<ref name="EUA"/>
+|- style="vertical-align: top; text-align: left;"
+|12
+| [[Puebla de Zaragoza|Puebla]]
+| {{MEX}}
+| align=right|1.434.062
+|<ref name="MEX"/>
+|- style="vertical-align: top; text-align: left;"
+|13
+| [[San Antonio (Texas)|San Antonio]]
+| {{EUA}}
+| align=right|1.327.407
+|<ref name="EUA"/>
+|- style="vertical-align: top; text-align: left;"
+|14
+| [[Ciudad Juárez|Juárez]]
+| {{MEX}}
+| align=right|1.321.004
+|<ref name="MEX"/>
+|- style="vertical-align: top; text-align: left;"
+|15
+| [[San Diego (California)|San Diego]]
+| {{EUA}}
+| align=right|1.307.402
+|<ref name="EUA"/>
+|- style="vertical-align: top; text-align: left;"
+|16
+| [[Tijuana]]
+| {{MEX}}
+| align=right|1.300.983
+|<ref name="MEX"/>
+|- style="vertical-align: top; text-align: left;"
+|17
+| [[León (Guanajuato)|León]]
+| {{MEX}}
+| align=right|1.238.962
+|<ref name="MEX"/>
+|- style="vertical-align: top; text-align: left;"
+|18
+| [[Dallas]]
+| {{EUA}}
+| align=right|1.197.816
+|<ref name="EUA"/>
+|- style="vertical-align: top; text-align: left;"
+|19
+| [[Zapopan]]
+| {{MEX}}
+| align=right|1.142.483
+|<ref name="MEX"/>
+|- style="vertical-align: top; text-align: left;"
+|20
+| [[Monterrey]]
+| {{MEX}}
+| align=right|1.135.512
+|<ref name="MEX"/>
+|- style="vertical-align: top; text-align: left;"
+|21
+| [[Ciudad Nezahualcóyotl|Nezahualcóyotl]]
+| {{MEX}}
+| align=right|1.104.585
+|<ref name="MEX"/>
+|- style="vertical-align: top; text-align: left;"
+|22
+| [[Calgary]]
+| {{CAN}}
+| align=right|1.096.833
+|<ref name="CAN"/>
+|- style="vertical-align: top; text-align: left;"
+|23
+| [[San José (California)|San José]]
+| {{EUA}}
+| align=right|945.942
+|<ref name="EUA"/>
+|- style="vertical-align: top; text-align: left;"
+|24
+| [[Ottawa]]
+| {{CAN}}
+| align=right|883,391
+|<ref name="CAN"/>
+|- style="vertical-align: top; text-align: left;"
+|25
+| [[Jacksonville, Florida|Jacksonville]]
+| {{EUA}}
+| align=right|821.784
+|<ref name="EUA"/>
+|- style="vertical-align: top; text-align: left;"
+|26
+| [[Edmonton]]
+| {{CAN}}
+| align=right|821,201
+|<ref name="CAN"/>
+|- style="vertical-align: top; text-align: left;"
+|27
+| [[Indianápolis]]
+| {{EUA}}
+| align=right|829.718
+|<ref name="EUA"/>
+|- style="vertical-align: top; text-align: left;"
+|28
+| [[Chihuahua (Chihuahua)|Chihuahua]]
+| {{MEX}}
+| align=right|809.232
+|<ref name="MEX"/>
+|- style="vertical-align: top; text-align: left;"
+|29
+| [[San Francisco (California)|San Francisco]]
+| {{EUA}}
+| align=right|805.235
+|<ref name="EUA"/>
+|- style="vertical-align: top; text-align: left;"
+|30
+| [[Naucalpan]]
+| {{MEX}}
+| align=right|792.211
+|<ref name="MEX"/>
+|}
+
+=== Religión ===
+==== Cristianismo ====
+Aproximadamente entre el 75 y el 80 % de la población se considera cristiana. Dentro de ella, la mayoría están identificados como cristianos históricos o tradicionales desde la colonia ([[protestantismo]] y [[catolicismo]]). Dentro de los estudios en las últimas décadas existen otros tipos de cristianos recientes ([[mormones]], [[testigos de Jehová]], [[Iglesia morava]] y cristianos marginales).<ref>{{cita web|autor=Frank Cogliano|título=Historia del cristianismo en Norte America|url=http://www.churchhistory.org/blogs/blog/tag/north-american-history/|fechaacceso=27 de agosto de 2014|fecha=21 de abril de 2014|idioma=inglés}}</ref>
+
+* México: 92 %
+* Estados Unidos: 80 %
+* Canadá: 73 %
+
+===== Catolicismo =====
+* México: 53 %
+* Canadá: 41 %
+* Estados Unidos: 29 %
+
+===== Protestantismo =====
+* Estados Unidos: 47 %
+* Canadá: 30 %
+* México: 8 %
+
+===== Otros cristianos =====
+* Estados Unidos: 2 %
+* México: 2 %
+* Canadá: 1 %
+
+==== Otras religiones ====
+Debido a la inmigración asiática y mediterránea en el siglo XX, se incorporaron otras religiones en América del Norte, entre ellas, el [[judaísmo]], el [[bahaísmo]], el [[islamismo]] y el [[budismo]] como las más grandes, que abarcan entre el 1 y el 3 %. En cambio, el [[satanismo]], la [[hechicería]], la [[santería]] y el [[paganismo]] son las menos significativas, pues abarcan menos del 1 %. También existen religiones que abarcan la espiritualidad, como la [[nueva era]], el [[gnosticismo]] y el [[ocultismo]].<ref>{{cita web|autor=Corporación Arda|título=la mayoría de las naciones bahai|url=http://www.thearda.com/QL2010/QuickList_40c.asp|fechaacceso=27 de agosto de 2014|fecha=8 de junio de 2010|idioma=inglés}}</ref>
+
+* Estados Unidos: 2 %
+* México: 2 %
+* Canadá: 2 %
+
+==== Sin afiliación religiosa ====
+Entre ellas están el [[ateísmo]], el [[agnosticismo]], el [[humanismo secular]], el [[escepticismo religioso]] y los no religiosos. La irreligiosidad es un movimiento que gana cada vez más popularidad en la sociedad norteamericana. Mientras avanzan la modernización y la infraestructura, la sociedad se hace más transparente en la religión. La práctica religiosa es menor al 30 % en Canadá y Estados Unidos. En México la cifra parece ser de un 53 %. Según las estadísticas de GALLUP en el año 2010, un 65 % creen que existe un Dios, un 20 % cree en alguna fuerza epiritual y un 15 % no creen que haya un Dios o alguna fuerza espiritual.<ref>{{cita web|autor=Abby Ohlheiser|título=Una quinta parte de los estadounidenses ahora Religiosamente No Afiliado|url=http://www.slate.com/blogs/the_slatest/2012/10/09/non_religious_americans_now_one_fifth_of_the_population_according_to_pew_survey_.html|fechaacceso=27 de agosto de 2014|fecha=11 de enero de 2014|idioma=inglés}}</ref>
+
+* Canadá: 26 %
+* Estados Unidos: 18 %
+* México: 6 %
+
+== Países y territorios ==
+Sin la región [[América Central|centroaméricana]], Norteamérica se divide políticamente en 3 países soberanos e independientes: [[Canadá]], [[Estados Unidos]] y [[México]]. Además al subcontinente están ligados 3 dependencias insulares: [[Groenlandia]], [[Bermudas]] y [[San Pedro y Miquelón]], así como la [[Isla Clipperton]], no habitada.<ref>{{cita web |url=http://population-statistics.com/wg.php?x=&men=gpro&lng=es&des=wg&geo=-2&srt=p12n&col=abcdefghinoq&msz=1500&geo=0|título=http://population-statistics.com/wg.php?x=&men=gpro&lng=es&des=wg&geo=-2&srt=p12n&col=abcdefghinoq&msz=1500&geo=0}}</ref>
+
+{| class="references-small sortable wikitable" style="white-space:nowrap; font-size:100"
+! Bandera
+! Nombre/Nombre oficial
+! Establecido
+! [[Anexo:Países por superficie|Superficie]]<br />(km²)
+! [[Anexo:Países por población|Población]]
+! [[Ciudad capital|Capital]]
+! Idioma(s) oficial(es)
+! Jefe de Estado
+! Jefe de Gobierno
+|-
+| style="text-align:center;"| {{bandera|Canadá}}
+| style="text-align:center;"| [[Canadá]]
+| style="text-align:center;"| [[1931]]
+| style="text-align:right;"| {{formatnum|9,984,670}}
+| style="text-align:right;"| {{formatnum|35,362,905}}
+| [[Ottawa]]
+|[[Idioma inglés|en]]/[[Idioma francés|fr]]
+| [[Isabel II de Reino Unido|Isabel II]]
+| [[Justin Trudeau]]
+|-
+| style="text-align:center;"| {{bandera|Estados Unidos}}
+| style="text-align:center;"| [[Estados Unidos]] <br /><small>Estados Unidos de América</small>
+| style="text-align:center;"| [[1776]]
+| style="text-align:right;"| {{formatnum|9,371,174}}
+| style="text-align:right;"| {{formatnum|323,995,528}}
+| [[Washington D. C.]]
+|[[Idioma inglés|en]]<ref>Ninguno a nivel federativo, predominio del inglés</ref>
+|colspan=2|<div align=center>[[Donald Trump]]
+|-
+| style="text-align:center;"| {{bandera|México}}
+| style="text-align:center;"| [[México]] <br /><small>Estados Unidos Mexicanos</small>
+| style="text-align:center;"| [[1821]]
+| style="text-align:right;"| {{formatnum|1,964,375}}
+| style="text-align:right;"| {{formatnum|123,166,749}}
+| [[Ciudad de México]]
+||[[Idioma español|es]]/[[lenguas de México|n/d]]
+|colspan=2|<div align=center>[[Enrique Peña Nieto]]
+|-class="sortbottom" style="font-weight:bold;"
+| style="text-align:right;"|
+| style="text-align:right;"|
+| style="text-align:center;"| Total
+| style="text-align:right;"| {{formatnum|21320219}}
+| style="text-align:right;"| {{formatnum|428525182}}
+| colspan="4" |
+|}
+<blockquote>Datos de superficie y población consultados en [https://www.cia.gov/library/publications/the-world-factbook/%7CCIA The World factbook] para el año 2016.</blockquote>
+
+{| class="references-small sortable wikitable" style="white-space:nowrap; font-size:100"
+! Bandera
+! Nombre/Nombre oficial
+! Status
+! [[Anexo:Países por superficie|Superficie]]<br />(km²)
+! [[Anexo:Países por población|Población]]
+! [[Ciudad capital|Capital]]
+! Idioma(s) oficial(es)
+! Jefe de Estado
+! Jefe del Gobierno
+|-
+| style="text-align:center;"| {{bandera|Bermudas}}
+| style="text-align:center;"| [[Bermudas]]<br /><small>Territorio de ultramar británico</small>
+| style="text-align:center;"| [[2002]]
+| style="text-align:right;"| {{formatnum|54}}
+| style="text-align:right;"| {{formatnum|70,537}}
+| [[Hamilton (Bermudas)|Hamilton]]
+| [[Idioma inglés|en]]
+| [[Isabel II del Reino Unido|Isabel II]]
+| [[Ewart Brown]]<br /><small>Primer Ministro</small>
+|-
+| style="text-align:center;"|
+| style="text-align:center;"| [[Isla Clipperton]]<br /><small>Territorio de ultramar francés</small>
+| style="text-align:center;"| [[1931]]
+| style="text-align:right;"| {{formatnum|6}}
+| style="text-align:right;"| {{formatnum|0}}
+| -
+| -
+| {{Presidente de Francia actual}}
+| René Bidal<br /><small>Alto Comisario</small>
+|-
+| style="text-align:center;"| {{bandera|Groenlandia}}
+| style="text-align:center;"| [[Groenlandia]]<br /><small>Región autónoma de Dinamarca</small>
+| style="text-align:center;"| [[2009]]
+| style="text-align:right;"| {{formatnum|2,166,086}}
+| style="text-align:right;"| {{formatnum|61,100}}
+| [[Nuuk]]
+|[[Idioma groenlandés|kl]]
+| [[Margarita II de Dinamarca|Margarita II]]
+| [[Kim Kielsen]]<br /><small>Primer Ministro</small>
+|-
+| style="text-align:center;"| [[Archivo:Flag of Saint-Pierre and Miquelon.svg|20px|border]]
+| style="text-align:center;"| [[San Pedro y Miquelón]]<br /><small>Colectividad de ultramar francesa</small>
+| style="text-align:center;"| [[2003]]
+| style="text-align:right;"| {{formatnum|242}}
+| style="text-align:right;"| {{formatnum|6,069}}
+| [[San Pedro (San Pedro y Miquelón)|San Pedro]]
+| [[Idioma francés|fr]]
+| {{Presidente de Francia actual}}
+| Stéphane Artano<br /><small>Presidente del Consejo</small>
+|-class="sortbottom" style="font-weight:bold;"
+| style="text-align:right;"|
+| style="text-align:right;"|
+| style="text-align:center;"| Total
+| style="text-align:right;"| {{formatnum|2166388}}
+| style="text-align:right;"| {{formatnum|137706}}
+| colspan="4"|
+|}
+<blockquote>Datos de superficie y población consultados en [https://www.cia.gov/library/publications/the-world-factbook/%7CCIA The World factbook] para el año 2016.</blockquote>
+
+== Economía ==
+{| style = align="right" border="2" cellpadding="4" cellspacing="0" class="bonita" style="margin: 0.5em 0.5em 0.5em 1em; padding: 0.5em; background: #f9f9f9; border: 1px #aaa solid; border-collapse: collapse; font-size: 95%;"
+! colspan="2" | Economía
+|-
+! Región
+! [[PIB]] 2017
+|-
+| [[Archivo:North America (orthographic projection).svg|22px]] '''[[Tratado de Libre Comercio de América del Norte|América del Norte]]'''
+| '''USD 23,532,001 millones'''
+|-
+| '''{{EU}}'''
+| '''USD 19,669,743 millones'''
+|-
+| '''{{CHN}}'''
+| '''USD 14,092,514 millones'''
+|-
+| '''{{IND}}'''
+| '''USD &nbsp;&nbsp;9,446,789 millones '''
+|-
+| '''{{JPN}}'''
+| '''USD &nbsp;&nbsp;5,405,072 millones '''
+|}
+
+La economía de América del Norte es de las más grandes del mundo, sus tres países constituyentes ([[México]], [[Estados Unidos]] y [[Canadá]]), tienen un PIB PPA de 18&nbsp;000&nbsp;000&nbsp;millones de dólares (que supera a la Unión Europea), cuentan con un elevado desarrollo industrial y económico, que los ubican entre las 15&nbsp;mayores economías del mundo. [[Estados Unidos]] es el país más desarrollado del continente y del mundo, cuenta con una economía orientada en la producción industrial, cuyos principales socios son [[México]] y [[Canadá]] (con quienes conforma el [[TLCAN|NAFTA]]), así como [[República Popular China|China]], [[Japón]] y [[Alemania]].
+
+La segunda mayor economía en el subcontinente es la de [[México]],<ref>{{cita web |url=https://www.cia.gov/library/publications/the-world-factbook/rankorder/2001rank.html?countryName=Mexico&countryCode=mx&regionCode=na&rank=12#mx|título=Países ordenados por PIB PPA}}</ref><ref>{{cita web |url=http://www.imf.org/external/pubs/ft/weo/2010/01/weodata/weorept.aspx?sy=2008&ey=2015&scsm=1&ssd=1&sort=country&ds=.&br=0&c=512%2C941%2C914%2C446%2C612%2C666%2C614%2C668%2C311%2C672%2C213%2C946%2C911%2C137%2C193%2C962%2C122%2C674%2C912%2C676%2C313%2C548%2C419%2C556%2C513%2C678%2C316%2C181%2C913%2C682%2C124%2C684%2C339%2C273%2C638%2C921%2C514%2C948%2C218%2C943%2C963%2C686%2C616%2C688%2C223%2C518%2C516%2C728%2C918%2C558%2C748%2C138%2C618%2C196%2C522%2C278%2C622%2C692%2C156%2C694%2C624%2C142%2C626%2C449%2C628%2C564%2C228%2C283%2C924%2C853%2C233%2C288%2C632%2C293%2C636%2C566%2C634%2C964%2C238%2C182%2C662%2C453%2C960%2C968%2C423%2C922%2C935%2C714%2C128%2C862%2C611%2C716%2C321%2C456%2C243%2C722%2C248%2C942%2C469%2C718%2C253%2C724%2C642%2C576%2C643%2C936%2C939%2C961%2C644%2C813%2C819%2C199%2C172%2C184%2C132%2C524%2C646%2C361%2C648%2C362%2C915%2C364%2C134%2C732%2C652%2C366%2C174%2C734%2C328%2C144%2C258%2C146%2C656%2C463%2C654%2C528%2C336%2C923%2C263%2C738%2C268%2C578%2C532%2C537%2C944%2C742%2C176%2C866%2C534%2C369%2C536%2C744%2C429%2C186%2C433%2C925%2C178%2C746%2C436%2C926%2C136%2C466%2C343%2C112%2C158%2C111%2C439%2C298%2C916%2C927%2C664%2C846%2C826%2C299%2C542%2C582%2C967%2C474%2C443%2C754%2C917%2C698%2C544&s=PPPGDP%2CPPPSH&grp=0&a=&pr1.x=39&pr1.y=20|título=Países por PIB PPA según Fondo Monetario Internacional}}</ref><ref>{{cita web |url=http://www.oecd-ilibrary.org/docserver/download/fulltext/3010061ec009.pdf?expires=1284617580&id=0000&accname=freeContent&checksum=A043F42ADA34482DDAB49EED5C872B01|título=PIB según Organización para la Cooperación y el Desarrollo Económico}}</ref> es un [[país recientemente industrializado]] con acelerado desarrollo industrial. La economía mexicana se encuentra actualmente diversificada, aunque México continúa siendo uno de los mayores productores de [[petróleo]] en el mundo. Sus principales socios comerciales son los Estados Unidos y Canadá; sin embargo, la integración entre México y Canadá ha sido mucho más lenta de lo esperado.
+
+[[Canadá]] fue, hasta hace unos años, la primera economía de Norteamérica (el índice en términos de [[Anexo:Países por PIB (nominal)|PIB nominal]] de Canadá respecto a México continúa siendo superior),<ref>{{cita web|url=http://www.imf.org/external/pubs/ft/weo/2009/02/weodata/weorept.aspx?sy=2009&ey=2009&scsm=1&ssd=1&sort=country&ds=.&br=1&pr1.x=37&pr1.y=16&c=512,941,914,446,612,666,614,668,311,672,213,946,911,137,193,962,122,674,912,676,313,548,419,556,513,678,316,181,913,682,124,684,339,273,638,921,514,948,218,943,963,686,616,688,223,518,516,728,918,558,748,138,618,196,522,278,622,692,156,694,624,142,626,449,628,564,228,283,924,853,233,288,632,293,636,566,634,964,238,182,662,453,960,968,423,922,935,714,128,862,611,716,321,456,243,722,248,942,469,718,253,724,642,576,643,936,939,961,644,813,819,199,172,184,132,524,646,361,648,362,915,364,134,732,652,366,174,734,328,144,258,146,656,463,654,528,336,923,263,738,268,578,532,537,944,742,176,866,534,369,536,744,429,186,433,925,178,746,436,926,136,466,343,112,158,111,439,298,916,927,664,846,826,299,542,582,443,474,917,754,544,698&s=NGDPD&grp=0&a=|título=Nominal 2009 GDP for the world and the European Union.|fechaacceso=22 de enero de 2009|obra=World economic outlook database, October 2009|autor=International Monetary Fund}}</ref> cuenta con un sistema financiero orientado al mercado, patrones de producción y elevados estándares de vida, cuenta con grandes depósitos de [[gas natural]] sobre la costa este y en tres provincias del oeste, junto con una gran variedad de recursos naturales. Su principal socio comercial es [[Estados Unidos]], a donde destina más del 85 % de sus exportaciones.
+
+Entre las instituciones internacionales establecidas entre los países de Norteamérica, destaca el Banco Norteamericano de Desarrollo, gobernado bilateralmente por México y Estados Unidos, cuyo propósito es financiar proyectos certificados por la Comisión de Cooperación para el Entorno Fronterizo.
+
+Los territorios de América del Norte, [[Groenlandia]], [[Bermudas]], [[San Pedro y Miquelón]], cuentan con Índices de Desarrollo Humano elevados, así como economías sustentables. La economía de los tres territorios depende de la pesca y exportación del pescado, así como de la producción de [[Sello postal|sellos postales]]. En Groenlandia el marisco de mayor exportación es el camarón; mientras que, en San Pedro y Miquelón la mayor exportación es el bacalao; registrando altibajos económicos en los últimos años.
+
+Las monedas más fuertes utilizadas en Norteamérica son el [[dólar estadounidense]] (moneda oficial de los Estados Unidos y ampliamente utilizada en el intercambio comercial internacional), el [[dólar canadiense]] y el [[peso mexicano]] (moneda emergente más utilizada en el mundo). En menor medida, el [[dólar bermudeño]], el [[euro]] (oficial en San Pedro y Miquelón) y la [[corona danesa]] (en Groenlandia), dado que cada país y territorio, con excepción de San Pedro y Miquelón y Groenlandia, cuenta con su propia moneda nacional.
+
+'''El IVA'''<br />
+Los europeos cuando visitan Estados Unidos deben tener en cuenta que en el supermercado el precio marcado en los productos no es el precio final – el IVA se aplica en la caja. Cada uno de los estados federales en Estados Unidos puede decidir por sí mismo, cuánto se añade a los productos. Actualmente el IVA en ese país varía entre un 4 y un 8 %. En México la tasa vigente de IVA es del 16 % en todos los bienes y servicios, salvo contadas excepciones como los medicamentos y los alimentos no procesados.<ref>[http://www.rundreise-usa.net/tipps-usa-reise/weitere-tipps-usa-reise ''(alemán) Sup4u''].Weitere Tipps USA Reise » Rundreisen in den USA. 22 de octubre de 2010.</ref>
+
+<center>
+{|class="wikitable" border="1" align="center "
+|-
+!width="265"|'''[[Anexo:Países por PIB (PPA)|Países por PIB PPA]]'''<br />'''[[2017]]'''
+
+!width="265"|'''[[Anexo:Países por PIB (nominal)|Países por PIB nominal]]'''<br />'''[[2017]]'''
+
+!width="265"|'''[[Anexo:Países por PIB (PPA) per cápita|Países por PIB per cápita]]'''<br />'''2017'''
+|-
+|valign=top|
+{| border="0" style="background:#ffffff" align="top" class="wikitable"
+|-
+! Pos.
+! País
+! Millones de $US
+|-
+|1|| {{bandera2|Estados Unidos}} || align="right" |19 362 129
+|-
+|2|| {{bandera2|México}} || align="right" |2 406 087
+|-
+|3|| {{bandera2|Canadá}} || align="right" |1 763 785
+|}
+|valign=top|
+{| border="0" style="background:#ffffff" align="top" class="wikitable"
+|-
+! Pos.
+! País
+! Millones de $US
+|-
+|1|| {{bandera2|Estados Unidos}} || align="right" |19 362 129
+|-
+|2|| {{bandera2|Canadá}} || align="right" |1 640 385
+|-
+|3|| {{bandera2|México}} || align="right" |1 162 891
+|}
+|valign=top|
+{| border="0" style="background:#ffffff" align="top" class="wikitable"
+|-
+! Pos.
+! País
+! Millones de $US
+|-
+|1|| {{bandera2|Estados Unidos}} || align="right" |59 495
+|-
+|2|| {{bandera2|Canadá}} || align="right" |48 141
+|-
+|3|| {{bandera2|México}} || align="right" |19 500
+|}
+|}
+</center>
+
+{{VT|Anexo:Países por PIB (PPA)}}
+
+=== TLCAN ===
+[[Archivo:NAFTA logo.png|thumb|Logotipo del TLCAN.]]
+{{AP|Tratado de Libre Comercio de América del Norte}}
+Es un importante bloque comercial entre [[México]], [[Estados Unidos]] y [[Canadá]] (conocido también como '''[[NAFTA]]''', por sus siglas en inglés North American Free Trade Agreement: ‘acuerdo de libre comercio norteamericano’). Es uno de los bloques comerciales más importantes del mundo y se encuentra apoyado por dos suplementos trilaterales: el Acuerdo de Cooperación Ambiental de América del Norte, cuyo objetivo es la conservación y protección del medio ambiente en Norteamérica, y el Acuerdo Norteamericano de Cooperación Laboral, que engloba los aspectos comerciales del convenio.
+
+A consecuencia de este tratado y su ampliación, desde el año 2005, se realiza anualmente la denominada Cumbre de Líderes de América del Norte, la última sede fue la ciudad de [[Guadalajara (México)|Guadalajara]] en el año 2009, siendo esta la reunión más importante en la región, donde se tratan temas de suma relevancia para la zona y se promueve la integración regional.
+
+== Uso del término ==
+* Debido a que en los países angloparlantes utilizan indiscriminadamente el nombre "América del Norte " para referirse únicamente a Estados Unidos y Canadá, se suele dividir al subcontinente (México y Centroamérica). Centroamérica incluye los siguientes países: Guatemala, Belice (país angloparlante y relacionado con el Caribe), Honduras, El Salvador, Nicaragua, Costa Rica y Panamá (país relacionado con el Caribe y asociado históricamente con Sudamérica).
+
+* Usualmente los términos ''América del Norte'' y ''Norteamérica'' son sinónimos, pero en algunas ocasiones se hace una distinción entre ambos términos, haciendo referencia el primero (América del Norte) a un concepto puramente geográfico que incluye a [[Belice]], [[Costa Rica]], [[El Salvador]], [[Guatemala]], [[Honduras]], [[México]], [[Nicaragua]] y [[Panamá]], y haciendo referencia el segundo (Norteamérica) a un concepto político (que no incluye a México y Centroamérica) o a un concepto cultural e histórico (que no incluye a Centroamérica).
+
+== Véase también ==
+{{Portal|América}}
+* [[Costa noroccidental de América del Norte]]
+* [[Historia de América del Norte]]
+* [[América Central]]
+* [[América del Sur]]
+* [[Antillas]]
+* [[Caribe (región)]]
+* [[Anexo:Ciudades de América del Norte por PIB]]
+* [[Anexo:Ciudades de América del Norte por población]]
+
+== Referencias ==
+{{listaref|2}}
+
+== Fuentes ==
+<div class="references-small">
+* [http://www.bartleby.com/65/na/NAmer.html "North America"]/[http://www.bartleby.com/65/ce/CentrAm.html "Central America".] ''[http://www.bartleby.com/65/ The Columbia Encyclopedia]'', 6.ª ed. 2001-6. Nueva: [[Columbia University Press]].
+* [http://www.britannica.com/eb/article?tocId=9373623 "North America"]/[http://www.britannica.com/ebc/article-9360160 "Central America"]. ''[[Encyclopædia Britannica]]''. 2006. Chicago: Encyclopædia Britannica, Inc.
+* [http://unstats.un.org/unsd/methods/m49/m49regin.htm ''UN Statistics Division''.]
+* [http://www.xist.org/earth/pop_region.aspx GeoHive: Población de continentes, regiones y países.]
+* [https://web.archive.org/web/20090129035625/http://es.encarta.msn.com/encyclopedia_761562468/Norteam%C3%A9rica.html “Norteamérica”]/ [https://web.archive.org/web/20070210185831/http://es.encarta.msn.com/encyclopedia_761574502/Centroam?%3Frica.html “Centroamérica”]. ''[[Encarta|MSN Encarta]].''
+* [http://www.bartleby.com/61/64/N0156400.html ''American Heritage Dictionaries, North America''] y [https://web.archive.org/web/20070314083919/http://www.bartleby.com/61/8/C0200800.html ''Central America''.]
+* [http://www.answers.com/topic/north-america Houghton Mifflin Company, "North America".]
+* [http://wordnet.princeton.edu/perl/webwn?s=central+america WordNet Princeton University: "Central America".]
+* [http://www.reference.com/browse/crystal/23124 Crystal Reference Encyclopedia, "North America".]
+</div>
+
+== Enlaces externos ==
+{{Commonscat|North America}}
+{{Wikinoticias|Categoría:Norteamérica}}
+{{Wikiviajes|Norteamérica|América del Norte}}
+* [http://mapas.owje.com/3/america-del-norte.html Mapas de América del Norte.]
+* [http://www.norteamerica.info/ Norteamérica.info.]
+* [http://www.norteamerica.info/videos Videos de Norteamérica.]
+* [http://www.norteamerica.info/fotos Fotos Flash de Norteamérica.]
+
+{{Control de autoridades}}
+
+[[Categoría:América del Norte| ]]

@@ -30,7 +30,7 @@ class WikipediaFacadeMock implements IWikipediaFacade {
         if (WikipediaFacade.MISSPELLING_LIST_ARTICLE.equals(articleTitle)) {
             return loadArticleContent("/misspelling-list.txt");
         } else {
-            return loadArticleContent("/monkey-island.txt");
+            return loadArticleContent("/article-long.txt");
         }
     }
 
