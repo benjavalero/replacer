@@ -1,0 +1,54 @@
+{{Ficha de taxón
+| name = Aquifoliáceas
+| image = Illustration Ilex aquifolium0.jpg
+| image_caption = ''[[Ilex aquifolium]]''
+| image_width =
+| regnum = [[Plantae]]
+| divisio  = [[Magnoliophyta]]
+| classis  = [[Magnoliopsida]]
+| ordo = [[Aquifoliales]]
+| familia = '''Aquifoliaceae'''
+| familia_authority = [[Bercht.]] & [[J.Presl]]
+| subdivision_ranks = Géneros
+| subdivision = Ver texto
+| synonyms =
+*'''Ilicaceae''' [[Dum.]]<ref>[http://www.mobot.org/mobot/research/apweb/ APGWeb (requiere búsqueda)]</ref>
+}}
+'''Aquifoliaceae''', las '''aquifoliáceas''', son una [[familia (biología)|familia]] perteneciente al [[Orden (biología)|orden]] [[Aquifoliales]]. Contiene sólo dos géneros de [[árbol]]es y [[arbusto]]s [[perennifolio]]s o [[caducifolio]]s, ordinariamente [[dioico]]s.
+==Descripción==
+El género más conocido y numeroso, ''[[Ilex]]'', popularmente llamados acebos, consta de alrededor de 600 especies, de las cuales unas 300 son propias de países templados y tropicales, sobre todo de América. Se caracterizan por tener [[hoja]]s simples y alternas con [[flor]]es generalmente unisexuales, [[actinomorfo|actinomorfas]], inconspicuas, a menudo tetrámeras, de ovario [[súpero]] y dispuestas frecuentemente en cimas. Los frutos son [[drupa]]s.
+
+El otro género, ''[[Nemopanthus]]'', únicamente contiene una especie,'' Nemopanthus mucronatus'', que difiere de las de ''Ilex'' en sus flores con un [[cáliz]] más reducido y [[pétalo]]s estrechos, además de ser [[Poliploidía|tetraploides]], en lugar de [[diploide]]s.
+== Taxonomía ==
+La familia fue descrita por [[Bercht.]] & [[J.Presl]] y publicado en ''[[O Přirozenosti rostlin, aneb rostlinar]]'' 2(110): 440, 438. 1825.<ref name = Trop>{{cita web |url=http://www.tropicos.org/Name/42000227 |título= ''Aquifoliaceae''|fechaacceso=1 de abril de 2015 |formato= |obra=  Tropicos.org. [[Jardín Botánico de Misuri]]}}</ref>
+==Géneros==
+
+* ''[[Ilex]]''
+* ''[[Nemopanthus]]''
+* ''[[Prinos]]''
+;Géneros pendientes de ser aceptados:
+* ''[[Ageria]]''
+* ''[[Arinemia]]''
+* ''[[Ennepta]]''
+* ''[[Hexotria]]''
+* ''[[Nemopanthes]]''
+* ''[[Pseudehretia]]''
+* ''[[Synstima]]''
+== Referencias ==
+{{listaref}}
+==Bibliografía==
+#  Berendsohn, W.G., A. K. Gruber y J. A. Monterrosa Salomón. 2009. Nova silva cuscatlanica. Árboles nativos e introducidos de El Salvador. Parte 1: Angiospermae - Familias A a L. Englera 29(1): 1–438.
+#  Hahn. 2001. Aquifoliaceae. En: W.D. Stevens, C. Ulloa Ulloa, A. Pool y O.M. Montiel (eds.). Fl. Nicaragua. Monogr. Syst. Bot. Missouri Bot. Gard. 85(1): 133–136.
+#  Idárraga-Piedrahita, A., R. D. C. Ortiz, R. Callejas Posada y M. Merello. (eds.) 2011. Fl. Antioquia: Cat. 2: 9–939. Universidad de Antioquia, Medellín.
+#  Jørgensen, P. M., M. H. Nee y S. G. Beck. (eds.) 2014. Cat. Pl. Vasc. Bolivia, Monogr. Syst. Bot. Missouri Bot. Gard. 127(1–2): i–viii, 1–1744. Missouri Botanical Garden Press, S. Luis.
+#  Jørgensen, P. M., M. H. Nee y S. G. Beck. (eds.) 2015 en adelante. Catálogo de las plantas vasculares de Bolivia (adiciones).
+#  Linares, J. L. 2003 [2005]. Listado comentado de los árboles nativos y cultivados en la república de El Salvador. Ceiba 44(2): 105–268.
+#  Nasir, E. y S. I. Ali (eds). 1980-2005. Fl. Pakistan. Univ. de Karachi, Karachi.
+#  Nelson, C. H. 2008. Cat. Pl. Vasc. Honduras 1–1576. Secretaria de Recursos Naturales y Ambiente, Tegucigalpa.
+#  Standley, P. C. y J. A. Steyermark. 1949. Aquifoliaceae. In Standley, P.C. y Steyermark, J.A. (Eds), Flora of Guatemala - Part VI. Fieldiana, Bot. 24(6): 196–201.  View in Biodiversity Heritage Library
+#  Stevens, W. D., C. Ulloa Ulloa, A. Pool y O. M. Montiel. 2001. Flora de Nicaragua. Monogr. Syst. Bot. Missouri Bot. Gard. 85: i–xlii,.
+== Enlaces externos ==
+{{wikispecies|Aquifoliaceae|''Aquifoliaceae''}}
+{{commonscat|Aquifoliaceae|''Aquifoliaceae''}}
+
+[[Categoría:Aquifoliaceae| ]]

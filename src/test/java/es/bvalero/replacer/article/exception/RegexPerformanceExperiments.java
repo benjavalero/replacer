@@ -15,11 +15,17 @@ import java.util.regex.Pattern;
 class RegexPerformanceExperiments {
     private static final int NUM_RUNS = 2500;
     private static final int NUM_WARM_UP_RUNS = 4;
-    private static String articleText = null;
+    private static String mediumText = null;
+    private static String longText = null;
+    private static String longestText = null;
 
     static {
         try {
-            articleText = new String(Files.readAllBytes(Paths.get(RegexPerformanceExperiments.class.getResource("/monkey-island.txt").toURI())),
+            mediumText = new String(Files.readAllBytes(Paths.get(RegexPerformanceExperiments.class.getResource("/article-medium.txt").toURI())),
+                    StandardCharsets.UTF_8);
+            longText = new String(Files.readAllBytes(Paths.get(RegexPerformanceExperiments.class.getResource("/article-long.txt").toURI())),
+                    StandardCharsets.UTF_8);
+            longestText = new String(Files.readAllBytes(Paths.get(RegexPerformanceExperiments.class.getResource("/article-longest.txt").toURI())),
                     StandardCharsets.UTF_8);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
@@ -28,7 +34,7 @@ class RegexPerformanceExperiments {
 
     public static void main(String[] args) {
         // falsePositivesExperiment();
-        // angularQuotesExperiment();
+        angularQuotesExperiment();
         // doubleQuotesExperiment();
         // singleQuotesExperiment();
         // templateNameExperiment();
@@ -37,7 +43,7 @@ class RegexPerformanceExperiments {
         // indexValueExperiment();
         // wordExperiment();
         // fileNameExperiment();
-        urlExperiment();
+        // urlExperiment();
     }
 
     private static void falsePositivesExperiment() {
@@ -52,52 +58,46 @@ class RegexPerformanceExperiments {
         String alternationsBoundRegex = "\\b(" + alternationsRegex + ")\\b";
 
         for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(alternationsRegex, "ALTERNATIONS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(alternationsIgnoredRegex, "IGNORED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(alternationsBracketRegex, "BRACKET REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(alternationsBoundIgnoredRegex, "BOUND IGNORED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(alternationsBoundRegex, "BOUND REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(alternationsRegex, "ALTERNATIONS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(alternationsIgnoredRegex, "IGNORED REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(alternationsBracketRegex, "BRACKET REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(alternationsBoundIgnoredRegex, "BOUND IGNORED REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(alternationsBoundRegex, "BOUND REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
 
             if (i == NUM_WARM_UP_RUNS - 1) {
                 System.out.println();
             }
 
-            runExperimentAutomaton(alternationsRegex, "ALTERNATIONS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(alternationsIgnoredRegex, "IGNORED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(alternationsBracketRegex, "BRACKET REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(alternationsBoundIgnoredRegex, "BOUND IGNORED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(alternationsBoundRegex, "BOUND REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(alternationsRegex, "ALTERNATIONS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(alternationsIgnoredRegex, "IGNORED REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(alternationsBracketRegex, "BRACKET REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(alternationsBoundIgnoredRegex, "BOUND IGNORED REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(alternationsBoundRegex, "BOUND REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
         }
         write("**************END EXPERIMENT*****************\n\n");
     }
 
     private static void angularQuotesExperiment() {
-        write("**************BEGIN ANGULAR QUOTES EXPERIMENT *****************");
-        String lazyRegex = "«.+?»";
-        String greedyClassRegex = "«[^»\n]+»";
-        String lazyClassRegex = "«[^»\n]+?»";
-        String possessiveClassRegex = "«[^»\n]++»";
-        String limitedPossessiveClassRegex = "\\b«[^»\n]++»\\b";
-        // String conditionalRegex = "(?:(«)|“).++(?(1)»|”)";
+        System.out.println("BEGIN ANGULAR QUOTES EXPERIMENT...");
 
-        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(lazyRegex, "LAZY REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(greedyClassRegex, "GREEDY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lazyClassRegex, "LAZY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(limitedPossessiveClassRegex, "LIMITED POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+        //String regex1 = "(?s)«.+»";
+        String regex2 = "(?s)«.+?»";
+        //String regex3 = "(?s)«.++»";
+        String regex4 = "«[^»]+»";
+        String regex5 = "«[^»]+?»";
+        String regex6 = "«[^»]++»";
 
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
+        for (int i = 1; i <= NUM_WARM_UP_RUNS; i++) {
+            boolean isRealRun = (i == NUM_WARM_UP_RUNS);
 
-            // runExperimentAutomaton(lazyRegex, "LAZY REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(greedyClassRegex, "GREEDY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(lazyClassRegex, "LAZY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            // runExperimentAutomaton(limitedPossessiveClassRegex, "LIMITED POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(regex2, "2", isRealRun, false);
+            runExperiment(regex4, "4", isRealRun, false);
+            runExperiment(regex4, "4", isRealRun, true);
+            runExperiment(regex5, "5", isRealRun, false);
+            runExperiment(regex5, "5", isRealRun, true);
+            runExperiment(regex6, "6", isRealRun, false); // Winner
+            runExperiment(regex6, "6", isRealRun, true);
         }
-        write("**************END EXPERIMENT*****************\n\n");
     }
 
     private static void doubleQuotesExperiment() {
@@ -113,23 +113,23 @@ class RegexPerformanceExperiments {
         String possessiveClassRegexAutomaton = "\\\"[^\\\"]++\\\"";
 
         for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(lazyRegex, "LAZY REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(greedyClassRegex, "GREEDY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lazyClassRegex, "LAZY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(limitedPossessiveClassRegex, "LIMITED POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(backReferenceRegex, "BACK-REFERENCE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyRegex, "LAZY REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(greedyClassRegex, "GREEDY WITH CLASS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lazyClassRegex, "LAZY WITH CLASS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(possessiveClassRegex, "POSSESSIVE WITH CLASS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(limitedPossessiveClassRegex, "LIMITED POSSESSIVE WITH CLASS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(backReferenceRegex, "BACK-REFERENCE REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
 
             if (i == NUM_WARM_UP_RUNS - 1) {
                 System.out.println();
             }
 
-            // runExperimentAutomaton(lazyRegex, "LAZY REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(greedyClassRegexAutomaton, "GREEDY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(lazyClassRegexAutomaton, "LAZY WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(possessiveClassRegexAutomaton, "POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            // runExperimentAutomaton(limitedPossessiveClassRegex, "LIMITED POSSESSIVE WITH CLASS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            // runExperimentAutomaton(backReferenceRegex, "BACK-REFERENCE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(lazyRegex, "LAZY REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(greedyClassRegexAutomaton, "GREEDY WITH CLASS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(lazyClassRegexAutomaton, "LAZY WITH CLASS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(possessiveClassRegexAutomaton, "POSSESSIVE WITH CLASS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(limitedPossessiveClassRegex, "LIMITED POSSESSIVE WITH CLASS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(backReferenceRegex, "BACK-REFERENCE REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
         }
         write("**************END EXPERIMENT*****************\n\n");
     }
@@ -147,25 +147,25 @@ class RegexPerformanceExperiments {
         String lookStarRegex = "('{2,5}).*?(?<!')\\1(?!')";
 
         for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            // runExperiment(simpleRegex, "SIMPLE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            // runExperiment(simpleRegex2, "SIMPLE REGEX 2", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(greedyRegex, "GREEDY REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadRegex, "LOOK AHEAD REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadBehindRegex, "LOOK AHEAD BEHIND REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookStarRegex, "LOOK STAR REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperiment(simpleRegex, "SIMPLE REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperiment(simpleRegex2, "SIMPLE REGEX 2", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(greedyRegex, "GREEDY REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookAheadRegex, "LOOK AHEAD REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookAheadBehindRegex, "LOOK AHEAD BEHIND REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(lookStarRegex, "LOOK STAR REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
 
             if (i == NUM_WARM_UP_RUNS - 1) {
                 System.out.println();
             }
 
-            // runExperimentAutomaton(simpleRegex, "SIMPLE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            // runExperimentAutomaton(simpleRegex2, "SIMPLE REGEX 2", articleText, i == NUM_WARM_UP_RUNS - 1);
-            // runExperimentAutomaton(greedyRegex, "GREEDY REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            // runExperimentAutomaton(lookAheadRegex, "LOOK AHEAD REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            // runExperimentAutomaton(lookBehindRegex, "LOOK BEHIND REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            // runExperimentAutomaton(lookAheadBehindRegex, "LOOK AHEAD BEHIND REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            // runExperimentAutomaton(lookStarRegex, "LOOK STAR REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(simpleRegex, "SIMPLE REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(simpleRegex2, "SIMPLE REGEX 2", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(greedyRegex, "GREEDY REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(lookAheadRegex, "LOOK AHEAD REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(lookBehindRegex, "LOOK BEHIND REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(lookAheadBehindRegex, "LOOK AHEAD BEHIND REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            // runExperimentAutomaton(lookStarRegex, "LOOK STAR REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
         }
         write("**************END EXPERIMENT*****************\n\n");
     }
@@ -373,23 +373,23 @@ class RegexPerformanceExperiments {
         String fileAll = "[|=:][^}|=:\n]+\\.(gif|jpe?g|JPG|mp3|mpg|ogg|ogv|pdf|PDF|png|PNG|svg|tif|webm)";
 
         for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(fileBrackets, "BRACKETS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(fileDescBrackets, "DESC REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(fileDescNoBrackets, "DESC NO BRACKETS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(fileDescNoBracketsLine, "DESC NO BRACKETS LINE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(fileAlone, "ALONE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(fileAll, "ALL REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fileBrackets, "BRACKETS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fileDescBrackets, "DESC REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fileDescNoBrackets, "DESC NO BRACKETS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fileDescNoBracketsLine, "DESC NO BRACKETS LINE REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fileAlone, "ALONE REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(fileAll, "ALL REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
 
             if (i == NUM_WARM_UP_RUNS - 1) {
                 System.out.println();
             }
 
-            runExperimentAutomaton(fileBrackets, "BRACKETS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(fileDescBrackets, "DESC REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(fileDescNoBrackets, "DESC NO BRACKETS REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(fileDescNoBracketsLine, "DESC NO BRACKETS LINE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(fileAlone, "ALONE REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(fileAll, "ALL REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(fileBrackets, "BRACKETS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(fileDescBrackets, "DESC REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(fileDescNoBrackets, "DESC NO BRACKETS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(fileDescNoBracketsLine, "DESC NO BRACKETS LINE REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(fileAlone, "ALONE REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(fileAll, "ALL REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
         }
         write("************** END EXPERIMENT *****************\n\n");
     }
@@ -409,19 +409,19 @@ class RegexPerformanceExperiments {
         String domainLimitedAutomaton = "[^<L>]<L>+\\.(com|org|es|net|gov|edu|gob|info)[^\\.]";
 
         for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(regexUrl, "REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(domain, "DOMAIN REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(domainIgnored, "DOMAIN IGNORED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(domainLimited, "DOMAIN LIMITED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(domainLimited2, "DOMAIN LIMITED2 REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(regexUrl, "REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(domain, "DOMAIN REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(domainIgnored, "DOMAIN IGNORED REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(domainLimited, "DOMAIN LIMITED REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(domainLimited2, "DOMAIN LIMITED2 REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
 
             if (i == NUM_WARM_UP_RUNS - 1) {
                 System.out.println();
             }
 
-            runExperimentAutomaton(regexUrl, "REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(domainAutomaton, "DOMAIN REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(domainLimitedAutomaton, "DOMAIN LIMITED REGEX", articleText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(regexUrl, "REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(domainAutomaton, "DOMAIN REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
+            runExperimentAutomaton(domainLimitedAutomaton, "DOMAIN LIMITED REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
         }
         write("************** END EXPERIMENT *****************\n\n");
     }
@@ -473,4 +473,43 @@ class RegexPerformanceExperiments {
     private static void write(String s) {
         System.out.println(s);
     }
+
+    private static void runExperiment(String regex, String regexId, boolean isRealRun, boolean isTextDirected) {
+        runExperiment(regex, mediumText, "medium", regexId, isRealRun, isTextDirected);
+        runExperiment(regex, longText, "long", regexId, isRealRun, isTextDirected);
+        runExperiment(regex, longestText, "longest", regexId, isRealRun, isTextDirected);
+        if (isRealRun) {
+            System.out.println();
+        }
+    }
+
+    private static void runExperiment(String regex, String text, String textType, String regexId, boolean isRealRun,
+                                      boolean isTextDirected) {
+        // Regex-directed
+        Pattern pattern = Pattern.compile(regex);
+        // Text-directed
+        RegExp r = new RegExp(regex);
+        Automaton a = r.toAutomaton(new DatatypesAutomatonProvider());
+        RunAutomaton ra = new RunAutomaton(a);
+
+        long start = System.currentTimeMillis();
+        for (int j = 1; j <= 2000; j++) {
+            if (isTextDirected) {
+                AutomatonMatcher matcher = ra.newMatcher(text);
+                while (matcher.find()) {
+                    // Do nothing
+                }
+            } else { // Regex directed
+                Matcher matcher = pattern.matcher(text);
+                while (matcher.find()) {
+                    // Do nothing
+                }
+            }
+        }
+        long timeElapsed = System.currentTimeMillis() - start;
+        if (isRealRun) {
+            System.out.println("Regex " + regexId + ": " + timeElapsed + " ms with " + textType + " text " + (isTextDirected ? "(text-directed)" : ""));
+        }
+    }
+
 }
