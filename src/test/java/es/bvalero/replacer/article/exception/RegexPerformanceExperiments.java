@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class RegexPerformanceExperiments {
-    private static final int NUM_RUNS = 2500;
+    private static final int NUM_RUNS = 1000;
     private static final int NUM_WARM_UP_RUNS = 4;
     private static String mediumText = null;
     private static String longText = null;
@@ -34,16 +34,17 @@ class RegexPerformanceExperiments {
 
     public static void main(String[] args) {
         // falsePositivesExperiment();
-        angularQuotesExperiment();
+        // angularQuotesExperiment();
         // doubleQuotesExperiment();
         // singleQuotesExperiment();
-        // templateNameExperiment();
+        templateNameExperiment();
         // xmlTagExperiment();
         // completeTemplateExperiment();
         // indexValueExperiment();
         // wordExperiment();
         // fileNameExperiment();
         // urlExperiment();
+        // completeTagExperiment();
     }
 
     private static void falsePositivesExperiment() {
@@ -80,6 +81,7 @@ class RegexPerformanceExperiments {
     private static void angularQuotesExperiment() {
         System.out.println("BEGIN ANGULAR QUOTES EXPERIMENT...");
 
+        // With the Automaton, the dot is really greedy, and it matches even the », so it fails with several matches.
         //String regex1 = "(?s)«.+»";
         String regex2 = "(?s)«.+?»";
         //String regex3 = "(?s)«.++»";
@@ -90,14 +92,20 @@ class RegexPerformanceExperiments {
         for (int i = 1; i <= NUM_WARM_UP_RUNS; i++) {
             boolean isRealRun = (i == NUM_WARM_UP_RUNS);
 
-            runExperiment(regex2, "2", isRealRun, false);
-            runExperiment(regex4, "4", isRealRun, false);
+            // The text-directed ones are really fast so we test only them
+            // runExperiment(regex2, "2", isRealRun, false);
+            // runExperiment(regex4, "4", isRealRun, false);
             runExperiment(regex4, "4", isRealRun, true);
-            runExperiment(regex5, "5", isRealRun, false);
+            // runExperiment(regex5, "5", isRealRun, false);
             runExperiment(regex5, "5", isRealRun, true);
-            runExperiment(regex6, "6", isRealRun, false); // Winner
+            // runExperiment(regex6, "6", isRealRun, false);
             runExperiment(regex6, "6", isRealRun, true);
         }
+
+        // Medium-text : regex6 is 10% slower than regex5
+        // Long-text : regex6 is 40% faster than regex5
+        // Longest-text : regex6 is 50% faster than regex5
+        // Thus we prefer a little penalty for medium-texts and choose the regex6
     }
 
     private static void doubleQuotesExperiment() {
@@ -171,45 +179,29 @@ class RegexPerformanceExperiments {
     }
 
     private static void templateNameExperiment() {
-        write("**************BEGIN TEMPLATE NAME EXPERIMENT *****************");
-        String greedyRegex = "\\{\\{[^|}]+";
-        String lazyRegex = "\\{\\{[^|}]+?[|}]"; // We need to match the end
-        String lazyRegex2 = "\\{\\{[^|}]+?(?=[|}])"; // We need to match the end
-        String possessiveRegex = "\\{\\{[^|}]++";
-        String lookBehindRegex = "(?<=\\{\\{)[^|}]+";
+        System.out.println("BEGIN TEMPLATE EXPERIMENT...");
 
-        String matchingInput = "Template: {{ Template | Content }}.";
-        String nonMatchingInput = "Template: { Template | Content }.";
-        String almostMatchingInput = "Template: {{ Template - Content .";
+        String regex1 = "\\{\\{[^|}]+";
+        String regex2 = "\\{\\{[^|}]+?"; // Only works with Automaton
+        String regex2B = "\\{\\{[^|}]+?[|}]";
+        String regex2C = "\\{\\{[^|}]+?(?=[|}])"; // Only works with standard regex
+        String regex3 = "\\{\\{[^|}]++";
 
-        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(greedyRegex, "GREEDY REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lazyRegex, "LAZY REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lazyRegex2, "LAZY REGEX 2", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveRegex, "POSSESSIVE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+        for (int i = 1; i <= NUM_WARM_UP_RUNS; i++) {
+            boolean isRealRun = (i == NUM_WARM_UP_RUNS);
 
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
-
-            runExperiment(greedyRegex, "GREEDY REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lazyRegex, "LAZY REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lazyRegex2, "LAZY REGEX 2", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveRegex, "POSSESSIVE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
-
-            runExperiment(greedyRegex, "GREEDY REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lazyRegex, "LAZY REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lazyRegex2, "LAZY REGEX 2", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveRegex, "POSSESSIVE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            // The text-directed ones are quite faster. We test only them.
+            //runExperiment(regex1, "1", isRealRun, false);
+            runExperiment(regex1, "1", isRealRun, true);
+            runExperiment(regex2, "2", isRealRun, true);
+            //runExperiment(regex2B, "2B", isRealRun, false);
+            runExperiment(regex2B, "2B", isRealRun, true);
+            //runExperiment(regex2C, "2C", isRealRun, false);
+            //runExperiment(regex3, "3", isRealRun, false);
+            runExperiment(regex3, "3", isRealRun, true);
         }
-        write("**************END EXPERIMENT*****************\n\n");
+
+        // The best ones are the regex2 variants. We choose regex2 as it is simpler.
     }
 
     private static void xmlTagExperiment() {
@@ -426,6 +418,37 @@ class RegexPerformanceExperiments {
         write("************** END EXPERIMENT *****************\n\n");
     }
 
+    private static void completeTagExperiment() {
+        System.out.println("BEGIN COMPLETE TAG EXPERIMENT...");
+
+        // As the dot in Automaton is really greedy we cannot use it if we want to catch nested tags
+        //String regex1 = "(?s)<math[^>]*>.+</math>";
+        String regex2 = "(?s)<math[^>]*?>.+?</math>";
+        //String regex3 = "(?s)<math[^>]*?>.++</math>";
+        String regex4 = "(?s)<math[^>]*+>.+?</math>";
+        //String regex5 = "(?s)<math[^>]*+>.++</math>";
+        //String regex6 = "(?s)<math.+</math>";
+        String regex7 = "(?s)<math.+?</math>";
+        //String regex8 = "(?s)<math.++</math>";
+
+        // Based in the winner we try with a back-reference
+        String regex9 = "(?s)<(math)[^>]*+>.+?</\\1>";
+
+        for (int i = 1; i <= NUM_WARM_UP_RUNS; i++) {
+            boolean isRealRun = (i == NUM_WARM_UP_RUNS);
+
+            runExperiment(regex2, "2", isRealRun, false);
+            runExperiment(regex4, "4", isRealRun, false);
+            runExperiment(regex7, "7", isRealRun, false);
+
+            runExperiment(regex9, "9", isRealRun, false);
+        }
+
+        // The three regex are similar. The regex4 is a little better for medium and long text and regex7 for longest text.
+        // We choose regex4 for the general case, and regex7 for the escaped one.
+        // The back-reference regex9 is 50% slower than regex4 => Winner for more than one tag name
+    }
+
     private static void runExperiment(String regex, String regexDescription, String input, boolean printOutput) {
         Pattern p = Pattern.compile(regex);
 
@@ -485,22 +508,28 @@ class RegexPerformanceExperiments {
 
     private static void runExperiment(String regex, String text, String textType, String regexId, boolean isRealRun,
                                       boolean isTextDirected) {
-        // Regex-directed
-        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = null;
+        AutomatonMatcher automatonMatcher = null;
+
         // Text-directed
-        RegExp r = new RegExp(regex);
-        Automaton a = r.toAutomaton(new DatatypesAutomatonProvider());
-        RunAutomaton ra = new RunAutomaton(a);
+        if (isTextDirected) {
+            RegExp r = new RegExp(regex);
+            Automaton a = r.toAutomaton(new DatatypesAutomatonProvider());
+            RunAutomaton ra = new RunAutomaton(a);
+            automatonMatcher = ra.newMatcher(text);
+        } else {
+            // Regex-directed
+            Pattern pattern = Pattern.compile(regex);
+            matcher = pattern.matcher(text);
+        }
 
         long start = System.currentTimeMillis();
-        for (int j = 1; j <= 2000; j++) {
+        for (int j = 1; j <= NUM_RUNS; j++) {
             if (isTextDirected) {
-                AutomatonMatcher matcher = ra.newMatcher(text);
-                while (matcher.find()) {
+                while (automatonMatcher.find()) {
                     // Do nothing
                 }
             } else { // Regex directed
-                Matcher matcher = pattern.matcher(text);
                 while (matcher.find()) {
                     // Do nothing
                 }
