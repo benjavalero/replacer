@@ -17,8 +17,11 @@ public class QuotesFinder implements ExceptionMatchFinder {
     private static final Pattern REGEX_SINGLE_QUOTES_ESCAPED =
             Pattern.compile("((&apos;){2,5}).+?(?<!&apos;)\\1(?!&apos;)");
 
-    private static final Pattern REGEX_ANGULAR_QUOTES = Pattern.compile("«[^»]++»");
-    private static final Pattern REGEX_TYPOGRAPHIC_QUOTES = Pattern.compile("“[^”]++”");
+    private static final RunAutomaton AUTOMATON_ANGULAR_QUOTES =
+            new RunAutomaton(new RegExp("«[^»]++»").toAutomaton());
+
+    private static final RunAutomaton AUTOMATON_TYPOGRAPHIC_QUOTES =
+            new RunAutomaton(new RegExp("“[^”]++”").toAutomaton());
 
     // For the automaton the quote needs an extra backslash
     private static final RunAutomaton AUTOMATON_DOUBLE_QUOTES =
@@ -36,8 +39,8 @@ public class QuotesFinder implements ExceptionMatchFinder {
             matches.addAll(RegExUtils.findMatches(text, REGEX_SINGLE_QUOTES));
             matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_DOUBLE_QUOTES));
         }
-        matches.addAll(RegExUtils.findMatches(text, REGEX_ANGULAR_QUOTES));
-        matches.addAll(RegExUtils.findMatches(text, REGEX_TYPOGRAPHIC_QUOTES));
+        matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_ANGULAR_QUOTES));
+        matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_TYPOGRAPHIC_QUOTES));
         return matches;
     }
 

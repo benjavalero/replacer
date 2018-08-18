@@ -37,7 +37,7 @@ public class QuotesFinderTest {
     @Test
     public void testRegexQuotesAngular() {
         String quotes1 = "«yáy»";
-        String quotes2 = "«zzz»";
+        String quotes2 = "«z, zz»";
         String quotes3 = "«z\nz»";
         String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + ".";
 
@@ -59,7 +59,7 @@ public class QuotesFinderTest {
     @Test
     public void testRegexQuotesTypographic() {
         String quotes1 = "“yáy”";
-        String quotes2 = "“zzz”";
+        String quotes2 = "“z, zz”";
         String quotes3 = "“z\nz”";
         String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + ".";
 
