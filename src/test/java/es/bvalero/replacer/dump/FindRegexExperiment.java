@@ -1,9 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import dk.brics.automaton.Automaton;
-import dk.brics.automaton.DatatypesAutomatonProvider;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
+import dk.brics.automaton.*;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.xml.sax.SAXException;
 
@@ -22,7 +19,7 @@ public class FindRegexExperiment {
     public static void main(String[] args) {
         String dumpFile = "/Users/benja/Developer/pywikibot/20180801/eswiki-20180801-pages-meta-current.xml.bz2";
 
-        String regex = "«[^»]++»";
+        String regex = "\\|\\s*(<L>|<N>|[ _-])+?\\s*=";
         System.out.println("REGEX: " + regex);
 
         System.out.println("Start parsing dump file: " + dumpFile);
@@ -34,7 +31,7 @@ public class FindRegexExperiment {
             InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile));
 
             // Regex-directed
-            final Pattern pattern = Pattern.compile(regex);
+            final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
             // Text-directed
             final RegExp r = new RegExp(regex);
             final Automaton a = r.toAutomaton(new DatatypesAutomatonProvider());
@@ -45,8 +42,8 @@ public class FindRegexExperiment {
                 void processArticle(DumpArticle article) {
                     String text = this.getCurrentArticle().getContent();
 
-                    //AutomatonMatcher matcher = ra.newMatcher(text);
-                    Matcher matcher = pattern.matcher(text);
+                    AutomatonMatcher matcher = ra.newMatcher(text);
+                    //Matcher matcher = pattern.matcher(text);
                     while (matcher.find()) {
                         System.out.println("MATCH: " + matcher.group(0));
                     }

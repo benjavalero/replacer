@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class RegexPerformanceExperiments {
-    private static final int NUM_RUNS = 1000;
+    private static final int NUM_RUNS = 10000000;
     private static final int NUM_WARM_UP_RUNS = 4;
     private static String mediumText = null;
     private static String longText = null;
@@ -37,7 +37,7 @@ class RegexPerformanceExperiments {
         // angularQuotesExperiment();
         // doubleQuotesExperiment();
         // singleQuotesExperiment();
-        templateNameExperiment();
+        // templateNameExperiment();
         // xmlTagExperiment();
         // completeTemplateExperiment();
         // indexValueExperiment();
@@ -45,6 +45,7 @@ class RegexPerformanceExperiments {
         // fileNameExperiment();
         // urlExperiment();
         // completeTagExperiment();
+        templateParamExperiment();
     }
 
     private static void falsePositivesExperiment() {
@@ -181,11 +182,11 @@ class RegexPerformanceExperiments {
     private static void templateNameExperiment() {
         System.out.println("BEGIN TEMPLATE EXPERIMENT...");
 
-        String regex1 = "\\{\\{[^|}]+";
-        String regex2 = "\\{\\{[^|}]+?"; // Only works with Automaton
-        String regex2B = "\\{\\{[^|}]+?[|}]";
-        String regex2C = "\\{\\{[^|}]+?(?=[|}])"; // Only works with standard regex
-        String regex3 = "\\{\\{[^|}]++";
+        String regex1 = "\\{\\{[^|}:]+";
+        String regex2 = "\\{\\{[^|}:]+?"; // Only works with Automaton
+        String regex2B = "\\{\\{[^|}:]+?[|}:]";
+        String regex2C = "\\{\\{[^|}:]+?(?=[|}:])"; // Only works with standard regex
+        String regex3 = "\\{\\{[^|}:]++";
 
         for (int i = 1; i <= NUM_WARM_UP_RUNS; i++) {
             boolean isRealRun = (i == NUM_WARM_UP_RUNS);
@@ -447,6 +448,52 @@ class RegexPerformanceExperiments {
         // The three regex are similar. The regex4 is a little better for medium and long text and regex7 for longest text.
         // We choose regex4 for the general case, and regex7 for the escaped one.
         // The back-reference regex9 is 50% slower than regex4 => Winner for more than one tag name
+    }
+
+    private static void templateParamExperiment() {
+        System.out.println("BEGIN TEMPLATE PARAMETER EXPERIMENT...");
+
+        String regex1 = "\\|\\s*[\\p{L}\\p{N} _-]+\\s*=";
+        String regex1A = "\\|\\s*(<L>|<N>|[ _-])+\\s*=";
+        String regex2 = "\\|[\\p{L}\\p{N}\\s_-]+=";
+        String regex2A = "\\|(<L>|<N>|<Z>|[_-])+=";
+
+        String regex3 = "\\|\\s*[\\p{L}\\p{N} _-]+?\\s*=";
+        String regex3A = "\\|\\s*(<L>|<N>|[ _-])+?\\s*=";
+        String regex4 = "\\|[\\p{L}\\p{N}\\s_-]+?=";
+        String regex4A = "\\|(<L>|<N>|<Z>|[_-])+?=";
+
+        String regex5 = "\\|\\s*[\\p{L}\\p{N} _-]++\\s*=";
+        String regex5A = "\\|\\s*(<L>|<N>|[ _-])++\\s*=";
+        String regex6 = "\\|[\\p{L}\\p{N}\\s_-]++=";
+        String regex6A = "\\|(<L>|<N>|<Z>|[_-])++=";
+
+        // Based on the best: regex3
+        String regex7 = "\\|\\s*[\\p{L}\\p{N} _-]+?\\s*(?==)";
+
+        for (int i = 1; i <= NUM_WARM_UP_RUNS; i++) {
+            boolean isRealRun = (i == NUM_WARM_UP_RUNS);
+
+            runExperiment(regex1, "1", isRealRun, false);
+            runExperiment(regex1A, "1", isRealRun, true);
+            runExperiment(regex2, "2", isRealRun, false);
+            runExperiment(regex2A, "2", isRealRun, true);
+
+            runExperiment(regex3, "3", isRealRun, false);
+            runExperiment(regex3A, "3", isRealRun, true);
+            runExperiment(regex4, "4", isRealRun, false);
+            runExperiment(regex4A, "4", isRealRun, true);
+
+            runExperiment(regex5, "5", isRealRun, false);
+            runExperiment(regex5A, "5", isRealRun, true);
+            runExperiment(regex6, "6", isRealRun, false);
+            runExperiment(regex6A, "6", isRealRun, true);
+
+            runExperiment(regex7, "7", isRealRun, false);
+        }
+
+        // All times are quite similar. The regex3 is a little faster.
+        // It is not worth to use the look-ahead (regex7) not to capture the =
     }
 
     private static void runExperiment(String regex, String regexDescription, String input, boolean printOutput) {
