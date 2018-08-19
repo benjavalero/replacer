@@ -10,10 +10,11 @@ import java.util.regex.Pattern;
 @Component
 public class CompleteTagFinder implements ExceptionMatchFinder {
 
+    private static final String TAG_NAMES = "(math|source|syntaxhighlight|blockquote)";
     private static final Pattern REGEX_COMPLETE_TAG =
-            Pattern.compile("<(math|source|syntaxhighlight)[^>]*+>.+?</\\1>", Pattern.DOTALL);
+            Pattern.compile("<" + TAG_NAMES + "[^>]*+>.+?</\\1>", Pattern.DOTALL);
     private static final Pattern REGEX_COMPLETE_TAG_ESCAPED =
-            Pattern.compile("&lt;(math|source|syntaxhighlight).+?&lt;/\\1&gt;", Pattern.DOTALL);
+            Pattern.compile("&lt;" + TAG_NAMES + ".+?&lt;/\\1&gt;", Pattern.DOTALL);
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
