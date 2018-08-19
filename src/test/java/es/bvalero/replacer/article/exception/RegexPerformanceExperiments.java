@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class RegexPerformanceExperiments {
-    private static final int NUM_RUNS = 10000000;
+    private static final int NUM_RUNS = 100000000;
     private static final int NUM_WARM_UP_RUNS = 4;
     private static String mediumText = null;
     private static String longText = null;
@@ -39,13 +39,13 @@ class RegexPerformanceExperiments {
         // singleQuotesExperiment();
         // templateNameExperiment();
         // xmlTagExperiment();
-        // completeTemplateExperiment();
+        completeTemplateExperiment();
         // indexValueExperiment();
         // wordExperiment();
         // fileNameExperiment();
         // urlExperiment();
         // completeTagExperiment();
-        templateParamExperiment();
+        // templateParamExperiment();
     }
 
     private static void falsePositivesExperiment() {
@@ -240,72 +240,66 @@ class RegexPerformanceExperiments {
     }
 
     private static void completeTemplateExperiment() {
-        write("**************BEGIN COMPLETE TEMPLATE EXPERIMENT *****************");
-        String templateRegex = "\\{\\{[^}]++}}";
-        String simpleRegex = "\\{\\{Quote\\|[^}]++}}";
-        String nestedRegex = "\\{\\{Quote\\|(" + templateRegex + "|[^}])++}}";
+        System.out.println("BEGIN COMPLETE TEMPLATE EXPERIMENT...");
 
-        String matchingInput = "Quote: {{Quote|What a Wonderful World}}.";
-        String nonMatchingInput = "Quote: What a Wonderful World.";
-        String almostMatchingInput = "Quote: {{Quote|What a Wonderful World.";
+        String regex1 = "\\{\\{Cita\\|[^}]+";
+        String regex2 = "\\{\\{Cita\\|[^}]+?"; // Don't work with standard regex
+        String regex3 = "\\{\\{Cita\\|[^}]++";
 
-        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(simpleRegex, "SIMPLE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(nestedRegex, "NESTED REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+        // Several template names: almost no difference, so we use this one.
+        String regex4 = "\\{\\{(ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||[Cc]oord\\||[Cc]ommonscat\\|)[^}]+?";
 
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
+        // We try to capture nested templates, based on the best one (regex2) : 5% slower, it's worth !
+        String regexTemplate = "\\{\\{[^}]+?}}";
+        String regex5 = "\\{\\{(ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||[Cc]oord\\||[Cc]ommonscat\\|)(" + regexTemplate + "|[^}])+?";
+        // We try to close the template: no difference
+        String regex6 = "\\{\\{(ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||[Cc]oord\\||[Cc]ommonscat\\|)(" + regexTemplate + "|[^}])+?}}";
 
-            runExperiment(simpleRegex, "SIMPLE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(nestedRegex, "NESTED REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+        for (int i = 1; i <= NUM_WARM_UP_RUNS; i++) {
+            boolean isRealRun = (i == NUM_WARM_UP_RUNS);
 
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
+            // The automaton is always the faster option, we test only these options.
+            //runExperiment(regex1, "1", isRealRun, false);
+            runExperiment(regex1, "1", isRealRun, true);
+            runExperiment(regex2, "2", isRealRun, true);
+            //runExperiment(regex3, "3", isRealRun, false);
+            runExperiment(regex3, "3", isRealRun, true);
 
-            runExperiment(simpleRegex, "SIMPLE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(nestedRegex, "NESTED REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(regex4, "4", isRealRun, true);
+
+            runExperiment(regex5, "5", isRealRun, true);
+            runExperiment(regex6, "6", isRealRun, true);
         }
-        write("**************END EXPERIMENT*****************\n\n");
     }
 
     private static void indexValueExperiment() {
-        write("************** BEGIN INDEX VALUE EXPERIMENT *****************");
-        String simpleRegex = "\\|\\s*índice\\s*=[^}|]*";
-        String possessiveRegex = "\\|\\s*índice\\s*=[^}|]*+";
-        String lookBehindRegex = "\\|\\s*índice\\s*=.+?(?=[}|])";
-        String lookAheadRegex = "(?<=\\|)\\s*índice\\s*=[^}|]*+";
+        System.out.println("BEGIN INDEX VALUE EXPERIMENT...");
 
-        String matchingInput = "Quote: {{Quote| índice = What a Wonderful World}}.";
-        String nonMatchingInput = "Quote: {{Quote índice = What a Wonderful World}}.";
-        String almostMatchingInput = "Quote: {{Quote| índice = What a Wonderful World.";
+        String regex1 = "\\|\\s*índice\\s*=[^}|]+";
+        String regex1A = "\\|<Z>*índice<Z>*=[^}|]+";
+        //String regex2 = "\\|\\s*índice\\s*=[^}|]+?";
+        String regex2A = "\\|<Z>*índice<Z>*=[^}|]+?";
+        String regex3 = "\\|\\s*índice\\s*=[^}|]++";
+        String regex3A = "\\|<Z>*índice<Z>*=[^}|]++";
 
-        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(simpleRegex, "SIMPLE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveRegex, "POSSESSIVE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadRegex, "LOOK AHEAD REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+        // The look-behind to skip the parameter name only works in standard regex so we skip it
+        // Based on the best (regex2) we try another regex with several parameter names
+        String regex4A = "\\|<Z>*(índice|index)<Z>*=[^}|]+?";
+        //String regex5A = "\\|<Z>*(?:índice|index)<Z>*=[^}|]+?";
+        // There is almost no difference so we use regex4
 
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
+        for (int i = 1; i <= NUM_WARM_UP_RUNS; i++) {
+            boolean isRealRun = (i == NUM_WARM_UP_RUNS);
 
-            runExperiment(simpleRegex, "SIMPLE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveRegex, "POSSESSIVE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadRegex, "LOOK AHEAD REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            // The automaton is always the faster option, we test only these options.
+            // runExperiment(regex1, "1", isRealRun, false);
+            runExperiment(regex1A, "1", isRealRun, true);
+            runExperiment(regex2A, "2", isRealRun, true);
+            // runExperiment(regex3, "3", isRealRun, false);
+            runExperiment(regex3A, "3", isRealRun, true);
 
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
-
-            runExperiment(simpleRegex, "SIMPLE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(possessiveRegex, "POSSESSIVE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookBehindRegex, "LOOK BEHIND REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadRegex, "LOOK AHEAD REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            runExperiment(regex4A, "4", isRealRun, true);
         }
-        write("**************END EXPERIMENT*****************\n\n");
     }
 
     private static void wordExperiment() {

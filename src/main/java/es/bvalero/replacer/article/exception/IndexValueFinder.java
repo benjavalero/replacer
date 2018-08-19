@@ -1,21 +1,24 @@
 package es.bvalero.replacer.article.exception;
 
+import dk.brics.automaton.DatatypesAutomatonProvider;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Component
 public class IndexValueFinder implements ExceptionMatchFinder {
 
     // Look-ahead as takes more time
-    private static final Pattern REGEX_INDEX_VALUE = Pattern.compile("\\|\\s*índice\\s*=[^}|]*");
+    private static final RunAutomaton AUTOMATON_INDEX_VALUE =
+            new RunAutomaton(new RegExp("\\|<Z>*(índice|index|cita)<Z>*=[^}|]+?").toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        return RegExUtils.findMatches(text, REGEX_INDEX_VALUE);
+        return RegExUtils.findMatchesAutomaton(text, AUTOMATON_INDEX_VALUE);
     }
 
 }
