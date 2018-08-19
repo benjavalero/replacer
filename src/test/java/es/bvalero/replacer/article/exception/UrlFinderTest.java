@@ -27,7 +27,7 @@ public class UrlFinderTest {
 
     @Test
     public void testRegexDomain() {
-        String domain1 = "google.es";
+        String domain1 = "www.google.es";
         String domain2 = "IMDb.org";
         String domain3 = "BBC.co.uk";
         String text = "xxx " + domain1 + " / " + domain2 + " / " + domain3 + " zzz";
@@ -41,8 +41,8 @@ public class UrlFinderTest {
 
         matches = urlFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertEquals(2, matches.size());
-        Assert.assertEquals(domain1, matches.get(0).getOriginalText());
-        Assert.assertEquals(domain2, matches.get(1).getOriginalText());
+        Assert.assertEquals(StringUtils.escapeText(domain1), matches.get(0).getOriginalText());
+        Assert.assertEquals(StringUtils.escapeText(domain2), matches.get(1).getOriginalText());
     }
 
 }
