@@ -12,7 +12,8 @@ public class CompleteTagFinder implements ExceptionMatchFinder {
 
     private static final String TAG_NAMES = "(math|source|syntaxhighlight|blockquote)";
     private static final Pattern REGEX_COMPLETE_TAG =
-            Pattern.compile("<" + TAG_NAMES + "[^>]*+>.+?</\\1>", Pattern.DOTALL);
+            Pattern.compile("<" + TAG_NAMES + "(<[^>]+>|[^<])+?</\\1>");
+
     private static final Pattern REGEX_COMPLETE_TAG_ESCAPED =
             Pattern.compile("&lt;" + TAG_NAMES + ".+?&lt;/\\1&gt;", Pattern.DOTALL);
 

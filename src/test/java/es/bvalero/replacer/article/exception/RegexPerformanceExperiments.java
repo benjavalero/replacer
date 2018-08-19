@@ -39,7 +39,8 @@ class RegexPerformanceExperiments {
         // singleQuotesExperiment();
         // templateNameExperiment();
         // xmlTagExperiment();
-        completeTemplateExperiment();
+        xmlEntityExperiment();
+        // completeTemplateExperiment();
         // indexValueExperiment();
         // wordExperiment();
         // fileNameExperiment();
@@ -206,37 +207,51 @@ class RegexPerformanceExperiments {
     }
 
     private static void xmlTagExperiment() {
-        write("**************BEGIN XML TAG EXPERIMENT *****************");
-        String negativeRegex = "<\\w[^>]++>";
-        String lookAheadRegex = "<(?!!)[^>]++>";
-        String classRegex = "<[\\wÁáÉéÍíÓóÚúÜüÑñ\\-\\s=\"/]++>";
+        System.out.println("BEGIN XML TAG EXPERIMENT...");
 
-        String matchingInput = "Ref: <ref name=\"Hola\" />.";
-        String nonMatchingInput = "Ref: ref name=\"Hola\".";
-        String almostMatchingInput = "Ref: <ref name=\"Hola\" /.";
+        String regex1 = "</?[A-z][\\p{L}\\p{N} =\"_-]+/?>";
+        String regex1A = "\\</?[A-z](<L>|<N>|[ =\"_-])+/?\\>";
+        String regex2 = "</?[A-z][\\p{L}\\p{N} =\"_-]+?/?>";
+        String regex2A = "\\</?[A-z](<L>|<N>|[ =\"_-])+?/?\\>";
+        String regex3 = "</?[A-z][\\p{L}\\p{N} =\"_-]+¡/?>";
+        String regex3A = "\\</?[A-z](<L>|<N>|[ =\"_-])++/?\\>";
 
-        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(negativeRegex, "NEGATIVE REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadRegex, "LOOK-AHEAD REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(classRegex, "CLASS REGEX", matchingInput, i == NUM_WARM_UP_RUNS - 1);
+        for (int i = 1; i <= NUM_WARM_UP_RUNS; i++) {
+            boolean isRealRun = (i == NUM_WARM_UP_RUNS);
 
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
-
-            runExperiment(negativeRegex, "NEGATIVE REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadRegex, "LOOK-AHEAD REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(classRegex, "CLASS REGEX", nonMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
-
-            runExperiment(negativeRegex, "NEGATIVE REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(lookAheadRegex, "LOOK-AHEAD REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(classRegex, "CLASS REGEX", almostMatchingInput, i == NUM_WARM_UP_RUNS - 1);
+            // The text-directed ones are quite faster. We test only them.
+            //runExperiment(regex1, "1", isRealRun, false);
+            runExperiment(regex1A, "1", isRealRun, true);
+            //runExperiment(regex2, "2", isRealRun, false);
+            runExperiment(regex2A, "2", isRealRun, true);
+            //runExperiment(regex3, "3", isRealRun, false);
+            runExperiment(regex3A, "3", isRealRun, true);
         }
-        write("**************END EXPERIMENT*****************\n\n");
+
+        // For the standard regex there are no difference. We use regex2 for the escaped case.
+        // For the automaton, all results are similar but the regex1 for long text. We take regex2A as the best average result.
+    }
+
+    private static void xmlEntityExperiment() {
+        System.out.println("BEGIN XML ENTITY EXPERIMENT...");
+
+        String regex1 = "&[a-z]+;";
+        String regex2 = "&[a-z]+?;";
+        String regex3 = "&[a-z]++;";
+
+        for (int i = 1; i <= NUM_WARM_UP_RUNS; i++) {
+            boolean isRealRun = (i == NUM_WARM_UP_RUNS);
+
+            // The text-directed ones are quite faster. We test only them.
+            //runExperiment(regex1, "1", isRealRun, false);
+            runExperiment(regex1, "1", isRealRun, true);
+            //runExperiment(regex2, "2", isRealRun, false);
+            runExperiment(regex2, "2", isRealRun, true);
+            //runExperiment(regex3, "3", isRealRun, false);
+            runExperiment(regex3, "3", isRealRun, true);
+        }
+
+        // For the automaton, all results are similar but the regex1 for long text. We take regex2A as the best average result.
     }
 
     private static void completeTemplateExperiment() {
@@ -417,6 +432,7 @@ class RegexPerformanceExperiments {
         System.out.println("BEGIN COMPLETE TAG EXPERIMENT...");
 
         // As the dot in Automaton is really greedy we cannot use it if we want to catch nested tags
+        // I cannot find a different way to do it with the Automaton. The regex10 does not work.
         //String regex1 = "(?s)<math[^>]*>.+</math>";
         String regex2 = "(?s)<math[^>]*?>.+?</math>";
         //String regex3 = "(?s)<math[^>]*?>.++</math>";
@@ -429,6 +445,9 @@ class RegexPerformanceExperiments {
         // Based in the winner we try with a back-reference
         String regex9 = "(?s)<(math)[^>]*+>.+?</\\1>";
 
+        // We try another approach to the nested tags
+        String regex10 = "<(math)(<[^>]+>|[^<])+?</\\1>";
+
         for (int i = 1; i <= NUM_WARM_UP_RUNS; i++) {
             boolean isRealRun = (i == NUM_WARM_UP_RUNS);
 
@@ -437,6 +456,7 @@ class RegexPerformanceExperiments {
             runExperiment(regex7, "7", isRealRun, false);
 
             runExperiment(regex9, "9", isRealRun, false);
+            runExperiment(regex10, "10", isRealRun, false);
         }
 
         // The three regex are similar. The regex4 is a little better for medium and long text and regex7 for longest text.
