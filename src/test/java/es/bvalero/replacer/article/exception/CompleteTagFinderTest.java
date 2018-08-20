@@ -12,8 +12,8 @@ public class CompleteTagFinderTest {
     @Test
     public void testRegexCompleteTag() {
         String tag1 = "<math class=\"latex\">Un <i>ejemplo</i>\n en LaTeX</math>";
-        String tag2 = "<source>Otro ejemplo</source>";
-        String tag3 = "<math>Otro ejemplo</math>";
+        String tag2 = "<math>Otro ejemplo</math>";
+        String tag3 = "<source>Otro ejemplo</source>";
         String text = "xxx " + tag1 + " / " + tag2 + " / " + tag3 + " zzz";
 
         CompleteTagFinder completeTagFinder = new CompleteTagFinder();

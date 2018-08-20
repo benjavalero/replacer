@@ -11,7 +11,7 @@ public class CommentFinderTest {
 
     @Test
     public void testRegexComment() {
-        String comment1 = "<!-- Esto <span>es</span> un \n comentario -->";
+        String comment1 = "<!-- Esto <span>es</span> un- \n comentario -->";
         String comment2 = "<!-- Otro comentario -->";
         String text = "xxx " + comment1 + " / " + comment2 + " zzz";
 
