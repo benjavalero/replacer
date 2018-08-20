@@ -14,12 +14,12 @@ import java.util.regex.Pattern;
 public class CompleteTemplateFinder implements ExceptionMatchFinder {
 
     // The nested regex takes twice more but it is worth as it captures completely the templates with inner templates
-    private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
+    private static final String REGEX_TEMPLATE = "\\{\\{[^}]+}}";
     // The template NF usually involves ORDENAR so it is normal that the names and surnames have no diacritics
     private static final String REGEX_TEMPLATE_NAMES =
             "(ORDENAR:|DEFAULTSORT:|NF\\||[Cc]ita\\||c?[Qq]uote\\||[Cc]oord\\||[Cc]ommonscat\\|)";
     private static final RunAutomaton AUTOMATON_COMPLETE_TEMPLATE =
-            new RunAutomaton(new RegExp("\\{\\{" + REGEX_TEMPLATE_NAMES + "(" + REGEX_TEMPLATE + "|[^}])+?}}").toAutomaton());
+            new RunAutomaton(new RegExp("\\{\\{" + REGEX_TEMPLATE_NAMES + "(" + REGEX_TEMPLATE + "|[^}])+}}").toAutomaton());
 
     private static final RunAutomaton AUTOMATON_CATEGORY =
             new RunAutomaton(new RegExp("\\[\\[Categoría:[^]]+?]]").toAutomaton());
