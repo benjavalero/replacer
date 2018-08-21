@@ -1,21 +1,31 @@
 package es.bvalero.replacer.article.exception;
 
+import dk.brics.automaton.DatatypesAutomatonProvider;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Component
 public class ProperNounFinder implements ExceptionMatchFinder {
 
-    private static final Pattern REGEX_PROPER_NOUN =
-            Pattern.compile("\\b(Domingo|Julio) (?=\\p{Lu})");
+    private static final RunAutomaton AUTOMATON_PROPER_NOUN =
+            new RunAutomaton(new RegExp("(Domingo|Julio) <Lu>").toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        return RegExUtils.findMatches(text, REGEX_PROPER_NOUN);
+        // If we use the automaton, we don't need the extra letter captured for the surname
+        List<RegexMatch> nounMatches = RegExUtils.findMatchesAutomaton(text, AUTOMATON_PROPER_NOUN);
+        List<RegexMatch> matches = new ArrayList<>();
+        for (RegexMatch match : nounMatches) {
+            match.setOriginalText(match.getOriginalText().substring(0, match.getOriginalText().length() - 2));
+            matches.add(match);
+        }
+        return matches;
     }
 
 }

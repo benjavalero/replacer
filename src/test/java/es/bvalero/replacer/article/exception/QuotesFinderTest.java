@@ -11,27 +11,34 @@ public class QuotesFinderTest {
 
     @Test
     public void testRegexSingleQuotes() {
-        String quotes1 = "''y '''á''' y''";
-        String quotes2 = "'''zzz'''";
-        String quotes3 = "''tt''";
-        String quotes4 = "''z\nz''";
+        String quotes1 = "''tt''";
+        String quotes2 = "''y '''á''' y''";
+        String quotes3 = "''zz\n";
+        String quotes4 = "'''zzz'''";
+        String quotes5 = "'''ccc ''dd'' ee'''";
+        String quotes6 = "'''''bbb'''''";
 
-        String text = "xxx " + quotes1 + " / " + quotes2 + " / " + quotes3 + " / " + quotes4 + ".";
+        String text = "xxx " + quotes1 + " / " + quotes2 + " / " + quotes3 + " / " + quotes4 + " / " + quotes5 + " / " + quotes6 + ".";
 
         QuotesFinder quotesFinder = new QuotesFinder();
 
         List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
 
-        Assert.assertEquals(3, matches.size());
+        Assert.assertEquals(6, matches.size());
         Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
         Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
-        Assert.assertEquals(quotes3, matches.get(2).getOriginalText());
+        Assert.assertEquals("''dd''", matches.get(2).getOriginalText());
+        Assert.assertEquals(quotes4, matches.get(3).getOriginalText());
+        Assert.assertEquals(quotes5, matches.get(4).getOriginalText());
+        Assert.assertEquals(quotes6, matches.get(5).getOriginalText());
 
         matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertEquals(3, matches.size());
+        Assert.assertEquals(5, matches.size());
         Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
         Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(quotes3), matches.get(2).getOriginalText());
+        Assert.assertEquals(StringUtils.escapeText(quotes4), matches.get(2).getOriginalText());
+        Assert.assertEquals(StringUtils.escapeText(quotes5), matches.get(3).getOriginalText());
+        Assert.assertEquals(StringUtils.escapeText(quotes6), matches.get(4).getOriginalText());
     }
 
     @Test
