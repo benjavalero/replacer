@@ -11,18 +11,18 @@ public class LinkSuffixedFinderTest {
 
     @Test
     public void testRegexUrl() {
-        String url = "[[brasil]]eño";
-        String text = "xxx " + url + " zzz";
+        String suffixed = "[[brasil]]eño";
+        String text = "xxx " + suffixed + " zzz";
 
         LinkSuffixedFinder linkSuffixedFinder = new LinkSuffixedFinder();
 
         List<RegexMatch> matches = linkSuffixedFinder.findExceptionMatches(text, false);
         Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(url, matches.get(0).getOriginalText());
+        Assert.assertEquals(suffixed, matches.get(0).getOriginalText());
 
         matches = linkSuffixedFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(StringUtils.escapeText(url), matches.get(0).getOriginalText());
+        Assert.assertEquals(StringUtils.escapeText(suffixed), matches.get(0).getOriginalText());
     }
 
 }
