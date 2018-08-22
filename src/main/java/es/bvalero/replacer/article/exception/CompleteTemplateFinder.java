@@ -22,7 +22,7 @@ public class CompleteTemplateFinder implements ExceptionMatchFinder {
             new RunAutomaton(new RegExp("\\{\\{" + REGEX_TEMPLATE_NAMES + "(" + REGEX_TEMPLATE + "|[^}])+}}").toAutomaton());
 
     private static final RunAutomaton AUTOMATON_CATEGORY =
-            new RunAutomaton(new RegExp("\\[\\[Categoría:[^]]+?]]").toAutomaton());
+            new RunAutomaton(new RegExp("\\[\\[Categoría:[^]]+]]").toAutomaton());
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {

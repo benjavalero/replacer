@@ -14,7 +14,7 @@ public class IndexValueFinder implements ExceptionMatchFinder {
 
     // Look-ahead as takes more time
     private static final RunAutomaton AUTOMATON_INDEX_VALUE =
-            new RunAutomaton(new RegExp("\\|<Z>*(índice|index|cita)<Z>*=[^}|]+?").toAutomaton(new DatatypesAutomatonProvider()));
+            new RunAutomaton(new RegExp("\\|<Z>*(índice|index|cita)<Z>*=[^}|]+").toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {

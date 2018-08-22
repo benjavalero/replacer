@@ -1,10 +1,10 @@
 package es.bvalero.replacer.article.finder;
 
 import es.bvalero.replacer.article.ArticleReplacement;
+import es.bvalero.replacer.article.PotentialErrorType;
 import es.bvalero.replacer.misspelling.Misspelling;
 import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.article.PotentialErrorType;
 import es.bvalero.replacer.utils.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -76,24 +76,26 @@ public class MisspellingFinderTest {
         MisspellingFinder misspellingFinder = new MisspellingFinder();
 
         List<RegexMatch> matches = misspellingFinder.findTextWords(text);
-        Assert.assertEquals(5, matches.size());
+        Assert.assertEquals(6, matches.size());
         Assert.assertEquals(word1, matches.get(0).getOriginalText());
         Assert.assertEquals(word2, matches.get(1).getOriginalText());
-        Assert.assertEquals(word4, matches.get(2).getOriginalText());
-        Assert.assertEquals(word5, matches.get(3).getOriginalText());
-        Assert.assertEquals(word6, matches.get(4).getOriginalText());
+        Assert.assertEquals(word3, matches.get(2).getOriginalText());
+        Assert.assertEquals(word4, matches.get(3).getOriginalText());
+        Assert.assertEquals(word5, matches.get(4).getOriginalText());
+        Assert.assertEquals(word6, matches.get(5).getOriginalText());
 
         // XML entities may appear when text is escaped
         matches = misspellingFinder.findTextWords(StringUtils.escapeText(text));
 
-        Assert.assertEquals(7, matches.size());
+        Assert.assertEquals(8, matches.size());
         Assert.assertEquals(word1, matches.get(0).getOriginalText());
         Assert.assertEquals(word2, matches.get(1).getOriginalText());
         Assert.assertEquals("lt", matches.get(2).getOriginalText());
-        Assert.assertEquals("gt", matches.get(3).getOriginalText());
-        Assert.assertEquals(word4, matches.get(4).getOriginalText());
-        Assert.assertEquals(word5, matches.get(5).getOriginalText());
-        Assert.assertEquals(word6, matches.get(6).getOriginalText());
+        Assert.assertEquals(word3, matches.get(3).getOriginalText());
+        Assert.assertEquals("gt", matches.get(4).getOriginalText());
+        Assert.assertEquals(word4, matches.get(5).getOriginalText());
+        Assert.assertEquals(word5, matches.get(6).getOriginalText());
+        Assert.assertEquals(word6, matches.get(7).getOriginalText());
     }
 
     @Test

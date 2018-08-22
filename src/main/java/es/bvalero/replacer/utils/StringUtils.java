@@ -83,7 +83,7 @@ public class StringUtils {
      */
     @NotNull
     public static String setFirstUpperCase(@NotNull String word) {
-        return word.substring(0, 1).toUpperCase() + word.substring(1);
+        return word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")) + word.substring(1);
     }
 
     /**

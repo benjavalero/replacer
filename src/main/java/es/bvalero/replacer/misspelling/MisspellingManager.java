@@ -53,7 +53,7 @@ public class MisspellingManager {
         }
     }
 
-    private List<Misspelling> findWikipediaMisspellings() {
+    List<Misspelling> findWikipediaMisspellings() {
         List<Misspelling> misspellings = new ArrayList<>();
 
         try {
@@ -108,7 +108,7 @@ public class MisspellingManager {
                 boolean isCaseSensitive = ("cs".equalsIgnoreCase(tokens[1].trim()));
                 String word = isCaseSensitive
                         ? tokens[0].trim()
-                        : tokens[0].trim().toLowerCase();
+                        : tokens[0].trim().toLowerCase(Locale.forLanguageTag("es"));
                 String comment = tokens[2].trim();
                 misspelling = new Misspelling(word, isCaseSensitive, comment);
             } else {

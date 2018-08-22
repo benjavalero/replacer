@@ -23,10 +23,10 @@ public class QuotesFinder implements ExceptionMatchFinder {
             Pattern.compile("((&apos;){2,5}).+?(?<!&apos;)\\1(?!&apos;)");
 
     private static final RunAutomaton AUTOMATON_ANGULAR_QUOTES =
-            new RunAutomaton(new RegExp("«[^»]++»").toAutomaton());
+            new RunAutomaton(new RegExp("«[^»]+»").toAutomaton());
 
     private static final RunAutomaton AUTOMATON_TYPOGRAPHIC_QUOTES =
-            new RunAutomaton(new RegExp("“[^”]++”").toAutomaton());
+            new RunAutomaton(new RegExp("“[^”]+”").toAutomaton());
 
     // For the automaton the quote needs an extra backslash
     private static final RunAutomaton AUTOMATON_DOUBLE_QUOTES =
