@@ -1,5 +1,11 @@
 package es.bvalero.replacer.misspelling;
 
+import dk.brics.automaton.AutomatonMatcher;
+import dk.brics.automaton.DatatypesAutomatonProvider;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.utils.RegExUtils;
+import es.bvalero.replacer.utils.RegexMatch;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.junit.Assert;
@@ -10,6 +16,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class MisspellingManagerTest {
@@ -113,6 +127,80 @@ public class MisspellingManagerTest {
                 Objects.requireNonNull(misspellingManager.findMisspellingByWord("álvaro")).getWord());
         Assert.assertNull(misspellingManager.findMisspellingByWord("Madrid"));
         Assert.assertNull(misspellingManager.findMisspellingByWord("Álvaro"));
+    }
+
+    public void findPotentialErrorsExperiment() throws WikipediaException {
+        System.out.println("BEGIN FIND POTENTIAL ERRORS EXPERIMENT");
+
+        String longestText = null;
+        String misspellingText = null;
+        try {
+            longestText = new String(Files.readAllBytes(Paths.get(MisspellingManagerTest.class.getResource("/article-longest.txt").toURI())),
+                    StandardCharsets.UTF_8);
+            misspellingText = new String(Files.readAllBytes(Paths.get(MisspellingManagerTest.class.getResource("/misspelling-list.txt").toURI())),
+                    StandardCharsets.UTF_8);
+        } catch (IOException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenReturn(misspellingText);
+
+        // Test 1 : Find all the words and check if they are potential errors
+        // Copied from the class MisspellingFinder
+
+        // Find all the words in the text
+        RunAutomaton automatonWord = new RunAutomaton(new RegExp("(<L>|<N>)+").toAutomaton(new DatatypesAutomatonProvider()));
+
+        long start = System.currentTimeMillis();
+        List<RegexMatch> textWords = RegExUtils.findMatchesAutomaton(longestText, automatonWord);
+        // For each word, check if it is a known potential misspelling.
+        // If so, add it as a replacement for the text.
+        int count1 = 0;
+        for (RegexMatch textWord : textWords) {
+            String originalText = textWord.getOriginalText();
+            Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
+
+            if (wordMisspelling != null && !es.bvalero.replacer.utils.StringUtils.isAllUppercase(originalText)) {
+                System.out.println("MATCH: " + originalText);
+                count1++;
+            }
+        }
+        long timeElapsed = System.currentTimeMillis() - start;
+        System.out.println("TEST 1: " + timeElapsed + " ms / " + count1 + " results");
+        System.out.println("Words: " + textWords.size());
+        System.out.println();
+
+        // Test 2 : Build a long long regex with all the potential errors and match the text
+        List<Misspelling> misspellingList = misspellingManager.findWikipediaMisspellings();
+        List<String> alternations = new ArrayList<>(misspellingList.size());
+        for (Misspelling misspelling : misspellingList) {
+            if (misspelling.isCaseSensitive()) {
+                alternations.add(misspelling.getWord());
+            } else {
+                String word = misspelling.getWord();
+                String firstLetter = word.substring(0, 1);
+                String newWord = "[" + firstLetter + firstLetter.toUpperCase(Locale.forLanguageTag("es")) + "]" + word.substring(1);
+                alternations.add(newWord);
+            }
+        }
+
+        String regexAlternations = " (" + org.apache.commons.lang3.StringUtils.join(alternations, "|") + ") ";
+        // IMPORTANT : WE NEED AT LEAST 2 MB OF STACK SIZE -Xss2m !!!
+        RunAutomaton automatonMisspellings = new RunAutomaton(new RegExp(regexAlternations).toAutomaton(new DatatypesAutomatonProvider()));
+
+        start = System.currentTimeMillis();
+
+        // Replace any character non-alphanumeric with two spaces
+        longestText = longestText.replaceAll("[^\\p{L}\\p{N}]", "  ");
+
+        AutomatonMatcher automatonMatcher = automatonMisspellings.newMatcher(longestText);
+        int count2 = 0;
+        while (automatonMatcher.find()) {
+            System.out.println("MATCH: " + automatonMatcher.group(0));
+            count2++;
+        }
+        timeElapsed = System.currentTimeMillis() - start;
+        System.out.println("TEST 2: " + timeElapsed + " ms / " + count2 + " results");
+        System.out.println();
     }
 
 }

@@ -15,7 +15,7 @@ public class XmlTagFinder implements ExceptionMatchFinder {
 
     // We want to avoid the XML comments to be captured by this
     private static final RunAutomaton AUTOMATON_XML_TAG =
-            new RunAutomaton(new RegExp("\\</?[A-z](<L>|<N>|[ =\"_-])+?/?\\>").toAutomaton(new DatatypesAutomatonProvider()));
+            new RunAutomaton(new RegExp("\\</?[A-Za-z](<L>|<N>|[ =\"_-])+/?\\>").toAutomaton(new DatatypesAutomatonProvider()));
 
     private static final Pattern REGEX_XML_TAG_ESCAPED = Pattern.compile("&lt;/?[A-z][\\p{L}\\p{N} =&;_-]+?/?&gt;");
 

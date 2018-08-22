@@ -13,7 +13,7 @@ import java.util.List;
 public class TemplateParamFinder implements ExceptionMatchFinder {
 
     private static final RunAutomaton AUTOMATON_TEMPLATE_PARAM =
-            new RunAutomaton(new RegExp("\\|\\s*(<L>|<N>|[ _-])+?\\s*=").toAutomaton(new DatatypesAutomatonProvider()));
+            new RunAutomaton(new RegExp("\\|<Z>*(<L>|<N>|[ _-])+<Z>*=").toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {

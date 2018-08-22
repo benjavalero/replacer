@@ -1,5 +1,8 @@
 package es.bvalero.replacer.article.finder;
 
+import dk.brics.automaton.DatatypesAutomatonProvider;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.article.PotentialErrorType;
 import es.bvalero.replacer.misspelling.Misspelling;
@@ -13,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Finds potential errors of type misspelling in a given text.
@@ -21,7 +23,8 @@ import java.util.regex.Pattern;
 @Component
 public class MisspellingFinder implements PotentialErrorFinder {
 
-    private static final Pattern REGEX_WORD = Pattern.compile("\\b\\p{L}++\\p{N}?\\b");
+    private static final RunAutomaton AUTOMATON_WORD
+            = new RunAutomaton(new RegExp("(<L>|<N>)+").toAutomaton(new DatatypesAutomatonProvider()));
 
     @Autowired
     private MisspellingManager misspellingManager;
@@ -67,7 +70,7 @@ public class MisspellingFinder implements PotentialErrorFinder {
 
     @NotNull
     List<RegexMatch> findTextWords(@NotNull String text) {
-        return RegExUtils.findMatches(text, REGEX_WORD);
+        return RegExUtils.findMatchesAutomaton(text, AUTOMATON_WORD);
     }
 
     @NotNull

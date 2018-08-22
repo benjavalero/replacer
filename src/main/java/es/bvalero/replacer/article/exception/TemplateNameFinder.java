@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class TemplateNameFinder implements ExceptionMatchFinder {
 
     private static final RunAutomaton AUTOMATON_TEMPLATE_NAME =
-            new RunAutomaton(new RegExp("\\{\\{[^|}:]+?").toAutomaton());
+            new RunAutomaton(new RegExp("\\{\\{[^|}:]+").toAutomaton());
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {

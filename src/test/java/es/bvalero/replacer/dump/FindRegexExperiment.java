@@ -19,7 +19,7 @@ public class FindRegexExperiment {
     public static void main(String[] args) {
         String dumpFile = "/Users/benja/Developer/pywikibot/20180801/eswiki-20180801-pages-meta-current.xml.bz2";
 
-        String regex = "\\|\\s*(<L>|<N>|[ _-])+?\\s*=";
+        String regex = "[|=:][^}|=:\n]+\\.(gif|jpe?g|JPG|mp3|mpg|ogg|ogv|pdf|PDF|png|PNG|svg|tif|webm)";
         System.out.println("REGEX: " + regex);
 
         System.out.println("Start parsing dump file: " + dumpFile);

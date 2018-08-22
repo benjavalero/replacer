@@ -13,7 +13,7 @@ import java.util.List;
 public class XmlEntityFinder implements ExceptionMatchFinder {
 
     private static final RunAutomaton AUTOMATON_XML_ENTITY =
-            new RunAutomaton(new RegExp("&[a-z]+?;").toAutomaton());
+            new RunAutomaton(new RegExp("&[a-z]+;").toAutomaton());
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {

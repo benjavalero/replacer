@@ -14,7 +14,7 @@ import java.util.List;
 public class ProperNounFinder implements ExceptionMatchFinder {
 
     private static final RunAutomaton AUTOMATON_PROPER_NOUN =
-            new RunAutomaton(new RegExp("(Domingo|Julio) <Lu>").toAutomaton(new DatatypesAutomatonProvider()));
+            new RunAutomaton(new RegExp("(Domingo|Julio)<Z><Lu>").toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
