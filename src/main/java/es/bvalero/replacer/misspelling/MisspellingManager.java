@@ -1,8 +1,11 @@
 package es.bvalero.replacer.misspelling;
 
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaFacade;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -29,12 +32,24 @@ public class MisspellingManager {
     // Derived from the misspelling list to access faster by word
     private Map<String, Misspelling> misspellingMap = new HashMap<>();
 
+    // Regex with the alternations of all the misspellings
+    // IMPORTANT : WE NEED AT LEAST 2 MB OF STACK SIZE -Xss2m !!!
+    private RunAutomaton misspellingAutomaton = null;
+
     @NotNull
-    private Map<String, Misspelling> getMisspellingMap() {
+    Map<String, Misspelling> getMisspellingMap() {
         if (this.misspellingMap.isEmpty()) { // For the first time
             updateMisspellings();
         }
         return this.misspellingMap;
+    }
+
+    @NotNull
+    public RunAutomaton getMisspellingAutomaton() {
+        if (this.misspellingAutomaton == null) { // For the first time
+            updateMisspellings();
+        }
+        return this.misspellingAutomaton;
     }
 
     /**
@@ -48,12 +63,32 @@ public class MisspellingManager {
             // Build a map to quick access the misspellings by word
             misspellingMap.clear();
             for (Misspelling misspelling : newMisspellingList) {
-                misspellingMap.put(misspelling.getWord(), misspelling);
+                if (misspelling.isCaseSensitive()) {
+                    misspellingMap.put(misspelling.getWord(), misspelling);
+                } else {
+                    misspellingMap.put(misspelling.getWord(), misspelling);
+                    misspellingMap.put(es.bvalero.replacer.utils.StringUtils.setFirstUpperCase(misspelling.getWord()), misspelling);
+                }
             }
+
+            // Build a long long regex with all the misspellings
+            List<String> alternations = new ArrayList<>(newMisspellingList.size());
+            for (Misspelling misspelling : newMisspellingList) {
+                if (misspelling.isCaseSensitive()) {
+                    alternations.add(misspelling.getWord());
+                } else {
+                    String word = misspelling.getWord();
+                    String firstLetter = word.substring(0, 1);
+                    String newWord = "[" + firstLetter + firstLetter.toUpperCase(Locale.forLanguageTag("es")) + "]" + word.substring(1);
+                    alternations.add(newWord);
+                }
+            }
+            String regexAlternations = "(" + StringUtils.join(alternations, "|") + ")";
+            misspellingAutomaton = new RunAutomaton(new RegExp(regexAlternations).toAutomaton());
         }
     }
 
-    List<Misspelling> findWikipediaMisspellings() {
+    private List<Misspelling> findWikipediaMisspellings() {
         List<Misspelling> misspellings = new ArrayList<>();
 
         try {
@@ -124,17 +159,7 @@ public class MisspellingManager {
      */
     @Nullable
     public Misspelling findMisspellingByWord(@NotNull String word) {
-        Misspelling wordMisspelling = null;
-        if (getMisspellingMap().containsKey(word)) {
-            wordMisspelling = getMisspellingMap().get(word);
-        } else {
-            String lowerWord = word.toLowerCase(Locale.forLanguageTag("es"));
-            if (getMisspellingMap().containsKey(lowerWord)
-                    && !getMisspellingMap().get(lowerWord).isCaseSensitive()) {
-                wordMisspelling = getMisspellingMap().get(lowerWord);
-            }
-        }
-        return wordMisspelling;
+        return getMisspellingMap().get(word);
     }
 
 }
