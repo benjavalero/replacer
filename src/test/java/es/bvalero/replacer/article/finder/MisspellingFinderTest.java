@@ -1,11 +1,11 @@
 package es.bvalero.replacer.article.finder;
 
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.article.PotentialErrorType;
 import es.bvalero.replacer.misspelling.Misspelling;
 import es.bvalero.replacer.misspelling.MisspellingManager;
-import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,16 +32,20 @@ public class MisspellingFinderTest {
 
     @Test
     public void testFindPotentialErrors() {
-        String articleContent = "M2 vonito Exemplo";
+        String articleContent = "UM vonito Exemplo";
 
-        Misspelling misspelling1 = new Misspelling("m2", false, "m²");
-        Mockito.when(misspellingManager.findMisspellingByWord("M2")).thenReturn(misspelling1);
+        Misspelling misspelling1 = new Misspelling("um", false, "un");
+        Mockito.when(misspellingManager.findMisspellingByWord("un")).thenReturn(misspelling1);
 
         Misspelling misspelling2 = new Misspelling("vonito", false, "bonito");
         Mockito.when(misspellingManager.findMisspellingByWord("vonito")).thenReturn(misspelling2);
 
         Misspelling misspelling3 = new Misspelling("exemplo", false, "ejemplo");
         Mockito.when(misspellingManager.findMisspellingByWord("Exemplo")).thenReturn(misspelling3);
+
+        String misspellingRegex = "([Uu]n|[Vv]onito|[Ee]xemplo)";
+        RunAutomaton misspellingAutomaton = new RunAutomaton(new RegExp(misspellingRegex).toAutomaton());
+        Mockito.when(misspellingManager.getMisspellingAutomaton()).thenReturn(misspellingAutomaton);
 
         List<ArticleReplacement> result = misspellingFinder.findPotentialErrors(articleContent);
 
@@ -61,41 +65,6 @@ public class MisspellingFinderTest {
         Assert.assertEquals("Exemplo", result2.getOriginalText());
         Assert.assertEquals(10, result2.getPosition());
         Assert.assertEquals("Ejemplo", result2.getProposedFixes().get(0));
-    }
-
-    @Test
-    public void testWordRegEx() {
-        String word1 = "hola";
-        String word2 = "km2";
-        String word3 = "1km";
-        String word4 = "España";
-        String word5 = "Águila";
-        String word6 = "cantó";
-        String text = "#" + word1 + "-" + word2 + ". <!--" + word3 + "--> [[" + word4 + ", " + word5 + "]] :" + word6 + "|";
-
-        MisspellingFinder misspellingFinder = new MisspellingFinder();
-
-        List<RegexMatch> matches = misspellingFinder.findTextWords(text);
-        Assert.assertEquals(6, matches.size());
-        Assert.assertEquals(word1, matches.get(0).getOriginalText());
-        Assert.assertEquals(word2, matches.get(1).getOriginalText());
-        Assert.assertEquals(word3, matches.get(2).getOriginalText());
-        Assert.assertEquals(word4, matches.get(3).getOriginalText());
-        Assert.assertEquals(word5, matches.get(4).getOriginalText());
-        Assert.assertEquals(word6, matches.get(5).getOriginalText());
-
-        // XML entities may appear when text is escaped
-        matches = misspellingFinder.findTextWords(StringUtils.escapeText(text));
-
-        Assert.assertEquals(8, matches.size());
-        Assert.assertEquals(word1, matches.get(0).getOriginalText());
-        Assert.assertEquals(word2, matches.get(1).getOriginalText());
-        Assert.assertEquals("lt", matches.get(2).getOriginalText());
-        Assert.assertEquals(word3, matches.get(3).getOriginalText());
-        Assert.assertEquals("gt", matches.get(4).getOriginalText());
-        Assert.assertEquals(word4, matches.get(5).getOriginalText());
-        Assert.assertEquals(word5, matches.get(6).getOriginalText());
-        Assert.assertEquals(word6, matches.get(7).getOriginalText());
     }
 
     @Test

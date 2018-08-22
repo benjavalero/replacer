@@ -21,10 +21,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 public class MisspellingManagerTest {
 
@@ -129,13 +126,13 @@ public class MisspellingManagerTest {
         Assert.assertNull(misspellingManager.findMisspellingByWord("Álvaro"));
     }
 
-    public void findPotentialErrorsExperiment() throws WikipediaException {
+    public void findPotentialErrorsExperiment() throws WikipediaException, InterruptedException {
         System.out.println("BEGIN FIND POTENTIAL ERRORS EXPERIMENT");
 
-        String longestText = null;
+        String text = null;
         String misspellingText = null;
         try {
-            longestText = new String(Files.readAllBytes(Paths.get(MisspellingManagerTest.class.getResource("/article-longest.txt").toURI())),
+            text = new String(Files.readAllBytes(Paths.get(MisspellingManagerTest.class.getResource("/article-longest.txt").toURI())),
                     StandardCharsets.UTF_8);
             misspellingText = new String(Files.readAllBytes(Paths.get(MisspellingManagerTest.class.getResource("/misspelling-list.txt").toURI())),
                     StandardCharsets.UTF_8);
@@ -143,23 +140,24 @@ public class MisspellingManagerTest {
             e.printStackTrace();
         }
         Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenReturn(misspellingText);
+        // Pre-load the misspellings map
+        System.out.println("Loading misspellings...");
+        misspellingManager.updateMisspellings();
+        System.out.println();
 
         // Test 1 : Find all the words and check if they are potential errors
-        // Copied from the class MisspellingFinder
-
-        // Find all the words in the text
+        System.out.println("Building automaton...");
         RunAutomaton automatonWord = new RunAutomaton(new RegExp("(<L>|<N>)+").toAutomaton(new DatatypesAutomatonProvider()));
 
+        System.out.println("BEGIN TEST #1");
         long start = System.currentTimeMillis();
-        List<RegexMatch> textWords = RegExUtils.findMatchesAutomaton(longestText, automatonWord);
+        List<RegexMatch> textWords = RegExUtils.findMatchesAutomaton(text, automatonWord);
         // For each word, check if it is a known potential misspelling.
-        // If so, add it as a replacement for the text.
         int count1 = 0;
         for (RegexMatch textWord : textWords) {
             String originalText = textWord.getOriginalText();
             Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
-
-            if (wordMisspelling != null && !es.bvalero.replacer.utils.StringUtils.isAllUppercase(originalText)) {
+            if (wordMisspelling != null) {
                 System.out.println("MATCH: " + originalText);
                 count1++;
             }
@@ -169,8 +167,13 @@ public class MisspellingManagerTest {
         System.out.println("Words: " + textWords.size());
         System.out.println();
 
+        System.out.println("Cleaning garbage...");
+        System.gc();
+        Thread.sleep(10000); // to allow GC do its job
+
         // Test 2 : Build a long long regex with all the potential errors and match the text
-        List<Misspelling> misspellingList = misspellingManager.findWikipediaMisspellings();
+        System.out.println("Building alternations...");
+        Set<Misspelling> misspellingList = new HashSet<>(misspellingManager.getMisspellingMap().values());
         List<String> alternations = new ArrayList<>(misspellingList.size());
         for (Misspelling misspelling : misspellingList) {
             if (misspelling.isCaseSensitive()) {
@@ -183,24 +186,136 @@ public class MisspellingManagerTest {
             }
         }
 
+        System.out.println("Building automaton...");
         String regexAlternations = " (" + org.apache.commons.lang3.StringUtils.join(alternations, "|") + ") ";
         // IMPORTANT : WE NEED AT LEAST 2 MB OF STACK SIZE -Xss2m !!!
-        RunAutomaton automatonMisspellings = new RunAutomaton(new RegExp(regexAlternations).toAutomaton(new DatatypesAutomatonProvider()));
+        RunAutomaton automatonMisspellings = new RunAutomaton(new RegExp(regexAlternations).toAutomaton());
 
+        System.out.println("BEGIN TEST #2");
         start = System.currentTimeMillis();
 
-        // Replace any character non-alphanumeric with two spaces
-        longestText = longestText.replaceAll("[^\\p{L}\\p{N}]", "  ");
+        // Replace any character non-alphanumeric with a whitespace
+        String cleanText = text.replaceAll("[^\\p{L}\\p{N}]", " ");
 
-        AutomatonMatcher automatonMatcher = automatonMisspellings.newMatcher(longestText);
+        AutomatonMatcher automatonMatcher = automatonMisspellings.newMatcher(cleanText);
         int count2 = 0;
         while (automatonMatcher.find()) {
-            System.out.println("MATCH: " + automatonMatcher.group(0));
-            count2++;
+            String originalText = automatonMatcher.group(0).trim();
+            Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
+            if (wordMisspelling != null) {
+                System.out.println("MATCH: " + originalText);
+                count2++;
+            }
         }
         timeElapsed = System.currentTimeMillis() - start;
         System.out.println("TEST 2: " + timeElapsed + " ms / " + count2 + " results");
+        System.out.println("Misspellings: " + misspellingList.size());
         System.out.println();
+
+        System.out.println("Cleaning garbage...");
+        System.gc();
+        Thread.sleep(10000); // to allow GC do its job
+
+
+        // Test 2B : Change the way we build the long regex with the alternations (no leading space)
+        System.out.println("Building automaton...");
+        regexAlternations = "(" + org.apache.commons.lang3.StringUtils.join(alternations, "|") + ") ";
+        // IMPORTANT : WE NEED AT LEAST 2 MB OF STACK SIZE -Xss2m !!!
+        automatonMisspellings = new RunAutomaton(new RegExp(regexAlternations).toAutomaton());
+
+        System.out.println("BEGIN TEST #2B");
+        start = System.currentTimeMillis();
+
+        // Replace any character non-alphanumeric with a whitespace
+        cleanText = text.replaceAll("[^\\p{L}\\p{N}]", " ");
+
+        automatonMatcher = automatonMisspellings.newMatcher(cleanText);
+        int count2B = 0;
+        while (automatonMatcher.find()) {
+            // Check if the found word is complete, i. e. check the character before the match
+            if (cleanText.substring(automatonMatcher.start() - 1, automatonMatcher.start()).equals(" ")) {
+                String originalText = automatonMatcher.group(0).trim();
+                Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
+                if (wordMisspelling != null) {
+                    System.out.println("MATCH: " + originalText);
+                    count2B++;
+                }
+            }
+        }
+        timeElapsed = System.currentTimeMillis() - start;
+        System.out.println("TEST 2B: " + timeElapsed + " ms / " + count2B + " results");
+        System.out.println();
+
+        System.out.println("Cleaning garbage...");
+        System.gc();
+        Thread.sleep(10000); // to allow GC do its job
+
+
+        // Test 2C : Change the way we build the long regex with the alternations (no leading or trailing space)
+        System.out.println("Building automaton...");
+        regexAlternations = "(" + org.apache.commons.lang3.StringUtils.join(alternations, "|") + ")";
+        // IMPORTANT : WE NEED AT LEAST 2 MB OF STACK SIZE -Xss2m !!!
+        automatonMisspellings = new RunAutomaton(new RegExp(regexAlternations).toAutomaton());
+
+        System.out.println("BEGIN TEST #2C");
+        start = System.currentTimeMillis();
+
+        // Replace any character non-alphanumeric with a whitespace
+        cleanText = text.replaceAll("[^\\p{L}\\p{N}]", " ");
+
+        automatonMatcher = automatonMisspellings.newMatcher(cleanText);
+        int count2C = 0;
+        while (automatonMatcher.find()) {
+            // Check if the found word is complete, i. e. check the character before the match
+            if (cleanText.substring(automatonMatcher.start() - 1, automatonMatcher.start()).equals(" ")
+                    && cleanText.substring(automatonMatcher.end(), automatonMatcher.end() + 1).equals(" ")) {
+                String originalText = automatonMatcher.group(0).trim();
+                Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
+                if (wordMisspelling != null) {
+                    System.out.println("MATCH: " + originalText);
+                    count2C++;
+                }
+            }
+        }
+        timeElapsed = System.currentTimeMillis() - start;
+        System.out.println("TEST 2C: " + timeElapsed + " ms / " + count2C + " results");
+        System.out.println();
+
+        System.out.println("Cleaning garbage...");
+        System.gc();
+        Thread.sleep(10000); // to allow GC do its job
+
+/*
+        // Test 3 : Create one regex for each misspelling and try to match the text
+        // Heap Size Exception
+
+        List<RunAutomaton> misspellingAutomatonList = new ArrayList<>(alternations.size());
+        for (String alternation : alternations) {
+            misspellingAutomatonList.add(new RunAutomaton(new RegExp(" " + alternation + " ").toAutomaton()));
+        }
+
+        System.out.println("BEGIN TEST #3");
+        start = System.currentTimeMillis();
+
+        // Replace any character non-alphanumeric with a whitespace
+        cleanText = text.replaceAll("[^\\p{L}\\p{N}]", " ");
+
+        int count3 = 0;
+        for (RunAutomaton misspellingAutomaton : misspellingAutomatonList) {
+            automatonMatcher = misspellingAutomaton.newMatcher(cleanText);
+            while (automatonMatcher.find()) {
+                String originalText = automatonMatcher.group(0);
+                Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
+                if (wordMisspelling != null) {
+                    System.out.println("MATCH: " + originalText);
+                    count3++;
+                }
+            }
+        }
+        timeElapsed = System.currentTimeMillis() - start;
+        System.out.println("TEST 3: " + timeElapsed + " ms / " + count3 + " results");
+        System.out.println();
+*/
     }
 
 }

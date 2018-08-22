@@ -1,8 +1,5 @@
 package es.bvalero.replacer.article.finder;
 
-import dk.brics.automaton.DatatypesAutomatonProvider;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.article.PotentialErrorType;
 import es.bvalero.replacer.misspelling.Misspelling;
@@ -23,9 +20,6 @@ import java.util.List;
 @Component
 public class MisspellingFinder implements PotentialErrorFinder {
 
-    private static final RunAutomaton AUTOMATON_WORD
-            = new RunAutomaton(new RegExp("(<L>|<N>)+").toAutomaton(new DatatypesAutomatonProvider()));
-
     @Autowired
     private MisspellingManager misspellingManager;
 
@@ -37,40 +31,38 @@ public class MisspellingFinder implements PotentialErrorFinder {
     public List<ArticleReplacement> findPotentialErrors(@NotNull String text) {
         List<ArticleReplacement> articleReplacements = new LinkedList<>();
 
-        // Find all the words in the text
-        List<RegexMatch> textWords = findTextWords(text);
+        // Replace any character non-alphanumeric with two spaces
+        String cleanText = text.replaceAll("[^\\p{L}\\p{N}]", " ");
+        List<RegexMatch> misspellingMatches = RegExUtils.findMatchesAutomaton(cleanText, misspellingManager.getMisspellingAutomaton());
 
         // For each word, check if it is a known potential misspelling.
         // If so, add it as a replacement for the text.
-        for (RegexMatch textWord : textWords) {
-            String originalText = textWord.getOriginalText();
-            Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
+        for (RegexMatch misspellingMatch : misspellingMatches) {
+            // Check if the found word is complete, i. e. check the character before the match
+            if (misspellingMatch.getPosition() == 0 || misspellingMatch.getEnd() == cleanText.length()
+                    || (cleanText.charAt(misspellingMatch.getPosition() - 1) == ' ' && cleanText.charAt(misspellingMatch.getEnd()) == ' ')) {
+                String originalText = misspellingMatch.getOriginalText();
+                Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
 
-            if (wordMisspelling != null && !StringUtils.isAllUppercase(originalText)) {
-                // Ignore words all in uppercase except the ones in the misspelling list
-                ArticleReplacement replacement = new ArticleReplacement();
+                if (wordMisspelling != null) {
+                    ArticleReplacement replacement = new ArticleReplacement();
+                    replacement.setPosition(misspellingMatch.getPosition());
+                    replacement.setOriginalText(originalText);
+                    replacement.setType(PotentialErrorType.MISSPELLING);
+                    replacement.setSubtype(wordMisspelling.getWord());
+                    replacement.setComment(wordMisspelling.getComment());
 
-                replacement.setPosition(textWord.getPosition());
-                replacement.setOriginalText(originalText);
-                replacement.setType(PotentialErrorType.MISSPELLING);
-                replacement.setSubtype(wordMisspelling.getWord());
-                replacement.setComment(wordMisspelling.getComment());
+                    for (String suggestion : wordMisspelling.getSuggestions()) {
+                        replacement.getProposedFixes().add(getReplacementFromSuggestion(
+                                originalText, suggestion, wordMisspelling.isCaseSensitive()));
+                    }
 
-                for (String suggestion : wordMisspelling.getSuggestions()) {
-                    replacement.getProposedFixes().add(getReplacementFromSuggestion(
-                            originalText, suggestion, wordMisspelling.isCaseSensitive()));
+                    articleReplacements.add(replacement);
                 }
-
-                articleReplacements.add(replacement);
             }
         }
 
         return articleReplacements;
-    }
-
-    @NotNull
-    List<RegexMatch> findTextWords(@NotNull String text) {
-        return RegExUtils.findMatchesAutomaton(text, AUTOMATON_WORD);
     }
 
     @NotNull
