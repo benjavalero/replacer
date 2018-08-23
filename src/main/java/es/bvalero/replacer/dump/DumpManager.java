@@ -115,17 +115,17 @@ class DumpManager {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
         SAXParser saxParser = factory.newSAXParser();
-        InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile));
 
-        dumpHandler = new DumpHandler() {
-            @Override
-            void processArticle(DumpArticle article) {
-                dumpProcessor.processArticle(getCurrentArticle(), processOldArticles);
-            }
-        };
+        try (InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile))) {
+            dumpHandler = new DumpHandler() {
+                @Override
+                void processArticle(DumpArticle article) {
+                    dumpProcessor.processArticle(getCurrentArticle(), processOldArticles);
+                }
+            };
 
-        saxParser.parse(xmlInput, dumpHandler);
-        xmlInput.close();
+            saxParser.parse(xmlInput, dumpHandler);
+        }
 
         LOGGER.info("Finished parsing dump file: {}", dumpFile);
     }

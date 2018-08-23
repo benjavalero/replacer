@@ -80,21 +80,4 @@ public class ArticleReplacement extends RegexMatch {
         this.fixed = fixed;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ArticleReplacement that = (ArticleReplacement) o;
-
-        return getPosition() == that.getPosition() && getOriginalText().equals(that.getOriginalText());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = getPosition();
-        result = 31 * result + getOriginalText().hashCode();
-        return result;
-    }
-
 }
