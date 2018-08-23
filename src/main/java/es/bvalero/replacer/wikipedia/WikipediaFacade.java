@@ -95,7 +95,7 @@ public class WikipediaFacade implements IWikipediaFacade {
             Response response = getOAuthService().execute(request);
             handleError(response);
         } catch (Exception e) {
-            LOGGER.error("Error saving content for article: " + articleTitle, e);
+            LOGGER.error("Error saving content for article: {}", articleTitle, e);
             throw new WikipediaException(e);
         }
     }
