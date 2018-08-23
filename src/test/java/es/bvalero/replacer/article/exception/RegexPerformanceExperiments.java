@@ -1,14 +1,12 @@
 package es.bvalero.replacer.article.exception;
 
 import dk.brics.automaton.*;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +31,6 @@ class RegexPerformanceExperiments {
     }
 
     public static void main(String[] args) {
-        // falsePositivesExperiment();
         // angularQuotesExperiment();
         // templateNameExperiment();
         // xmlTagExperiment();
@@ -44,37 +41,6 @@ class RegexPerformanceExperiments {
         // fileNameExperiment();
         // completeTagExperiment();
         // templateParamExperiment();
-    }
-
-    private static void falsePositivesExperiment() {
-        write("************** BEGIN FALSE POSITIVES EXPERIMENT *****************");
-
-        // Load exceptions
-        List<String> falsePositivesList = FalsePositiveFinder.loadFalsePositives();
-        String alternationsRegex = StringUtils.collectionToDelimitedString(falsePositivesList, "|");
-        String alternationsBracketRegex = StringUtils.collectionToDelimitedString(falsePositivesList, "|");
-        String alternationsIgnoredRegex = "(?:" + alternationsRegex + ")";
-        String alternationsBoundIgnoredRegex = "\\b" + alternationsIgnoredRegex + "\\b";
-        String alternationsBoundRegex = "\\b(" + alternationsRegex + ")\\b";
-
-        for (int i = 0; i < NUM_WARM_UP_RUNS; i++) {
-            runExperiment(alternationsRegex, "ALTERNATIONS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(alternationsIgnoredRegex, "IGNORED REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(alternationsBracketRegex, "BRACKET REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(alternationsBoundIgnoredRegex, "BOUND IGNORED REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
-            runExperiment(alternationsBoundRegex, "BOUND REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
-
-            if (i == NUM_WARM_UP_RUNS - 1) {
-                System.out.println();
-            }
-
-            runExperimentAutomaton(alternationsRegex, "ALTERNATIONS REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(alternationsIgnoredRegex, "IGNORED REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(alternationsBracketRegex, "BRACKET REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(alternationsBoundIgnoredRegex, "BOUND IGNORED REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
-            runExperimentAutomaton(alternationsBoundRegex, "BOUND REGEX", mediumText, i == NUM_WARM_UP_RUNS - 1);
-        }
-        write("**************END EXPERIMENT*****************\n\n");
     }
 
     private static void angularQuotesExperiment() {
