@@ -30,7 +30,7 @@ public class MisspellingManager {
     private IWikipediaFacade wikipediaFacade;
 
     // Derived from the misspelling list to access faster by word
-    private Map<String, Misspelling> misspellingMap = new HashMap<>();
+    private final Map<String, Misspelling> misspellingMap = new HashMap<>();
 
     // Regex with the alternations of all the misspellings
     // IMPORTANT : WE NEED AT LEAST 2 MB OF STACK SIZE -Xss2m !!!

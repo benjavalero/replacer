@@ -126,7 +126,7 @@ public class MisspellingManagerTest {
         Assert.assertNull(misspellingManager.findMisspellingByWord("Álvaro"));
     }
 
-    public void findPotentialErrorsExperiment() throws WikipediaException, InterruptedException {
+    public void findPotentialErrorsExperiment() throws WikipediaException {
         System.out.println("BEGIN FIND POTENTIAL ERRORS EXPERIMENT");
 
         String text = null;
@@ -167,9 +167,6 @@ public class MisspellingManagerTest {
         System.out.println("Words: " + textWords.size());
         System.out.println();
 
-        System.out.println("Cleaning garbage...");
-        System.gc();
-        Thread.sleep(10000); // to allow GC do its job
 
         // Test 2 : Build a long long regex with all the potential errors and match the text
         System.out.println("Building alternations...");
@@ -212,10 +209,6 @@ public class MisspellingManagerTest {
         System.out.println("Misspellings: " + misspellingList.size());
         System.out.println();
 
-        System.out.println("Cleaning garbage...");
-        System.gc();
-        Thread.sleep(10000); // to allow GC do its job
-
 
         // Test 2B : Change the way we build the long regex with the alternations (no leading space)
         System.out.println("Building automaton...");
@@ -245,10 +238,6 @@ public class MisspellingManagerTest {
         timeElapsed = System.currentTimeMillis() - start;
         System.out.println("TEST 2B: " + timeElapsed + " ms / " + count2B + " results");
         System.out.println();
-
-        System.out.println("Cleaning garbage...");
-        System.gc();
-        Thread.sleep(10000); // to allow GC do its job
 
 
         // Test 2C : Change the way we build the long regex with the alternations (no leading or trailing space)
@@ -280,10 +269,6 @@ public class MisspellingManagerTest {
         timeElapsed = System.currentTimeMillis() - start;
         System.out.println("TEST 2C: " + timeElapsed + " ms / " + count2C + " results");
         System.out.println();
-
-        System.out.println("Cleaning garbage...");
-        System.gc();
-        Thread.sleep(10000); // to allow GC do its job
 
 /*
         // Test 3 : Create one regex for each misspelling and try to match the text

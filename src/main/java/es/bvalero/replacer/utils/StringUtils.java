@@ -94,7 +94,7 @@ public class StringUtils {
         if (text.length() <= threshold) {
             return text;
         } else {
-            return ELLIPSIS + ' ' + text.substring(text.length() - threshold, text.length());
+            return ELLIPSIS + ' ' + text.substring(text.length() - threshold);
         }
     }
 
@@ -107,7 +107,7 @@ public class StringUtils {
             return text;
         } else {
             return text.substring(0, threshold) + ' ' + ELLIPSIS + ' '
-                    + text.substring(text.length() - threshold, text.length());
+                    + text.substring(text.length() - threshold);
         }
     }
 

@@ -19,7 +19,7 @@ public enum WikipediaNamespace {
     ANNEX(104),
     MODULE(828);
 
-    private static Map<Integer, WikipediaNamespace> map = new HashMap<>();
+    private final static Map<Integer, WikipediaNamespace> map = new HashMap<>();
 
     static {
         for (WikipediaNamespace wikipediaNamespace : WikipediaNamespace.values()) {

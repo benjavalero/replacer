@@ -10,11 +10,11 @@ import java.util.Date;
  */
 class DumpArticle {
 
-    private Integer id;
-    private String title;
-    private WikipediaNamespace namespace;
-    private Date timestamp;
-    private String content;
+    private final Integer id;
+    private final String title;
+    private final WikipediaNamespace namespace;
+    private final Date timestamp;
+    private final String content;
 
     DumpArticle(Integer id, String title, WikipediaNamespace namespace, Date timestamp, String content) {
         this.id = id;

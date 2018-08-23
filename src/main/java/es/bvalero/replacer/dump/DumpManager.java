@@ -41,7 +41,7 @@ class DumpManager {
     @Autowired
     private DumpProcessor dumpProcessor;
 
-    private DumpStatus status = new DumpStatus();
+    private final DumpStatus status = new DumpStatus();
 
     private String getDumpFolderPath() {
         return dumpFolderPath;
