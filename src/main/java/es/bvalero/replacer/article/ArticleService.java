@@ -287,7 +287,7 @@ public class ArticleService {
         try {
             currentContent = wikipediaFacade.getArticleContent(article.getTitle());
         } catch (WikipediaException e) {
-            LOGGER.error("Error getting the current content of the article: " + article.getTitle(), e);
+            LOGGER.error("Error getting the current content of the article: {}", article.getTitle(), e);
             return false;
         }
 

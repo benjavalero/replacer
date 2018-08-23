@@ -93,7 +93,7 @@ abstract class DumpHandler extends DefaultHandler {
                 numProcessedItems++;
             }
         } catch (Exception e) {
-            LOGGER.error("Error processing article: " + currentTitle, e);
+            LOGGER.error("Error processing article: {}", currentTitle, e);
         }
     }
 
