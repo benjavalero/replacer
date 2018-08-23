@@ -7,7 +7,6 @@ import es.bvalero.replacer.utils.RegexMatch;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Component
 public class TemplateNameFinder implements ExceptionMatchFinder {

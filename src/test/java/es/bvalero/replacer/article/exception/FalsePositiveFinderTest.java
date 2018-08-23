@@ -48,7 +48,7 @@ public class FalsePositiveFinderTest {
         Assert.assertTrue(matches.contains(new RegexMatch(71, "Saint-Martin")));
     }
 
-    public void testFalsePositivesAutomatons() throws InterruptedException {
+    public void testFalsePositivesAutomatons() {
         String text = null;
         try {
             text = new String(Files.readAllBytes(Paths.get(MisspellingManagerTest.class.getResource("/article-longest.txt").toURI())),
@@ -74,10 +74,6 @@ public class FalsePositiveFinderTest {
         long timeElapsed = System.currentTimeMillis() - start;
         System.out.println("TEST 1: " + timeElapsed + " ms / " + count1 + " results");
         System.out.println();
-
-        System.out.println("Cleaning garbage...");
-        System.gc();
-        Thread.sleep(10000); // to allow GC do its job
 
         // Test 2 : One automaton per false positive line
         List<RunAutomaton> automatons = new ArrayList<>(falsePositives.size());

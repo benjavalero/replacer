@@ -10,9 +10,9 @@ import java.util.List;
  */
 public class Misspelling {
 
-    private String word;
-    private boolean caseSensitive;
-    private String comment;
+    private final String word;
+    private final boolean caseSensitive;
+    private final String comment;
 
     // Derived from the comment. In order not to calculate them every time.
     private List<String> suggestions;

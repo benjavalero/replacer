@@ -60,7 +60,7 @@ public class ArticleServiceTest {
         ExceptionMatchFinder exceptionMatchFinder = Mockito.mock(ExceptionMatchFinder.class);
         RegexMatch exceptionMatch = new RegexMatch(16, "muxos");
         Mockito.when(exceptionMatchFinder.findExceptionMatches(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(Collections.singletonList(exceptionMatch));
-        Mockito.when(exceptionMatchFinders.iterator()).thenReturn(Arrays.asList(new ExceptionMatchFinder[]{exceptionMatchFinder}).iterator());
+        Mockito.when(exceptionMatchFinders.iterator()).thenReturn(Arrays.asList(exceptionMatchFinder).iterator());
 
         // Potential error matches
         PotentialErrorFinder potentialErrorFinder = Mockito.mock(PotentialErrorFinder.class);
@@ -72,7 +72,7 @@ public class ArticleServiceTest {
         replacement3.setType(PotentialErrorType.MISSPELLING);
         replacement3.setComment("errores");
         Mockito.when(potentialErrorFinder.findPotentialErrors(Mockito.anyString())).thenReturn(Arrays.asList(replacement1, replacement2, replacement3));
-        Mockito.when(potentialErrorFinders.iterator()).thenReturn(Arrays.asList(new PotentialErrorFinder[]{potentialErrorFinder}).iterator());
+        Mockito.when(potentialErrorFinders.iterator()).thenReturn(Arrays.asList(potentialErrorFinder).iterator());
 
         articleService.setHighlightExceptions(true);
 
@@ -114,7 +114,7 @@ public class ArticleServiceTest {
         // Exception matches
         ExceptionMatchFinder exceptionMatchFinder = Mockito.mock(ExceptionMatchFinder.class);
         Mockito.when(exceptionMatchFinder.findExceptionMatches(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(Arrays.asList(new RegexMatch[]{}));
-        Mockito.when(exceptionMatchFinders.iterator()).thenReturn(Arrays.asList(new ExceptionMatchFinder[]{exceptionMatchFinder}).iterator());
+        Mockito.when(exceptionMatchFinders.iterator()).thenReturn(Arrays.asList(exceptionMatchFinder).iterator());
 
         // Potential error matches
         PotentialErrorFinder potentialErrorFinder = Mockito.mock(PotentialErrorFinder.class);
@@ -125,7 +125,7 @@ public class ArticleServiceTest {
         replacement2.setComment("ejemplo");
         replacement2.setType(PotentialErrorType.MISSPELLING);
         Mockito.when(potentialErrorFinder.findPotentialErrors(Mockito.anyString())).thenReturn(Arrays.asList(replacement1, replacement2));
-        Mockito.when(potentialErrorFinders.iterator()).thenReturn(Arrays.asList(new PotentialErrorFinder[]{potentialErrorFinder}).iterator());
+        Mockito.when(potentialErrorFinders.iterator()).thenReturn(Arrays.asList(potentialErrorFinder).iterator());
 
         articleService.setHideEmptyParagraphs(true);
         ArticleData articleData = articleService.findRandomArticleWithPotentialErrors("xxx");
