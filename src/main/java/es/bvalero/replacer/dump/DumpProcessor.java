@@ -22,17 +22,13 @@ class DumpProcessor {
     @Autowired
     private ArticleService articleService;
 
-    // Having this variable outside the method we try to improve the garbage collector
-    @SuppressWarnings("FieldCanBeLocal")
-    private Article article;
-
     /**
      * Process a dump article: find the potential errors and add them to the database.
      */
     void processArticle(@NotNull DumpArticle dumpArticle, boolean processOldArticles) {
         LOGGER.debug("Indexing article: {}...", dumpArticle.getTitle());
 
-        article = articleRepository.findOne(dumpArticle.getId());
+        Article article = articleRepository.findOne(dumpArticle.getId());
 
         if (article != null) {
             if (article.getReviewDate() != null && !dumpArticle.getTimestamp().after(article.getReviewDate())) {
@@ -56,6 +52,7 @@ class DumpProcessor {
             if (article == null) {
                 article = new Article(dumpArticle.getId(), dumpArticle.getTitle());
             } else {
+                article.setTitle(dumpArticle.getTitle()); // In case the title of the article has changed
                 article.getPotentialErrors().clear();
             }
 

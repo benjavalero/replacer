@@ -37,7 +37,7 @@ logging:
     org.hibernate.SQL: DEBUG
 
 replacer:
-  dump.folder.path: C:\Users\Benja\Desarrollo\pywikibot
+  dump.folder.path: /Users/benja/Developer/pywikibot
   highlight.exceptions: true
   hide.empty.paragraphs: false
 

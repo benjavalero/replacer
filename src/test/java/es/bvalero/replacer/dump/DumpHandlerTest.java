@@ -41,7 +41,7 @@ public class DumpHandlerTest {
         saxParser.parse(xmlInput, dumpHandler);
 
         // Test that all articles are processed and the namespaces are taken into account
-        Assert.assertEquals(2, dumpHandler.getNumProcessedItems());
+        Assert.assertEquals(2, dumpHandler.getDumpStatus().getNumProcessedItems());
 
         // Test values of the last processed article
         Assert.assertEquals(Integer.valueOf(7), dumpHandler.getCurrentArticle().getId());
@@ -74,7 +74,7 @@ public class DumpHandlerTest {
         InputStream xmlInput = new FileInputStream(dumpFilePath);
         saxParser.parse(xmlInput, dumpHandler);
 
-        Assert.assertEquals(0, dumpHandler.getNumProcessedItems());
+        Assert.assertEquals(0, dumpHandler.getDumpStatus().getNumProcessedItems());
 
         xmlInput.close();
     }

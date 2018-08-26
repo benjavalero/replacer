@@ -80,4 +80,6 @@ public class ArticleReplacement extends RegexMatch {
         this.fixed = fixed;
     }
 
+    // No real need to override the "equals" method as the one in the base class is still valid
+
 }
