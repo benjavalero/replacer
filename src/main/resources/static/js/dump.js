@@ -7,7 +7,7 @@ $(document).ready(function() {
     findDumpStatus();
 
     // Refresh every 15 seconds
-    setTimeout("location.reload(true);", 15000);
+    setInterval(findDumpStatus, 10000);
 });
 
 function runIndexation(forceIndexation) {
@@ -40,18 +40,20 @@ function findDumpStatus() {
         if (response.running) {
             message = 'La indexación se está ejecutando.';
             message += '<ul>';
-            message += '<li>Inicio: ' + response.startDate + '</li>';
-            message += '<li>Núm. artículos procesados: ' + response.numProcessedItems + ' (' + response.percentProgress + '&nbsp;%)</li>';
-            message += '<li>Finalización estimada: ' + response.estimatedFinishTime + '</li>';
+            message += '<li>Progreso: ' + response.progress + '&nbsp;%</li>';
+            message += '<li>Núm. artículos procesados: ' + response.numProcessedItems + '</li>';<
+            message += '<li>Finalización estimada: ' + parseMillisecondsIntoReadableTime(response.eta) + '&nbsp;s</li>';
+            message += '<li>Tiempo medio por artículo: ' + response.average + ' ms</li>';
             message += '</ul>';
         } else {
             $('#button-index').removeClass("disabled");
 
             message = 'La indexación no se está ejecutando.';
-            if (response.endDate) {
+            if (response.lastRun) {
                 message += '<ul>';
-                message += '<li>Última ejecución: ' + response.endDate + '</li>';
-                message += '<li>Núm. artículos procesados: ' + response.numProcessedItems + '</li>';
+                message += '<li>Última ejecución: ' + new Date(response.lastRun) + '</li>';
+                message += '<li>Núm. artículos procesados: ' + response.average + '</li>';
+                message += '<li>Tiempo medio por artículo: ' + response.numProcessedItems + ' ms</li>';
                 message += '</ul>';
             }
         }
@@ -63,4 +65,23 @@ function findDumpStatus() {
             + 'Error buscando el estado de la indexación: ' + JSON.stringify(response)
             + '</div>');
     });
+}
+
+function parseMillisecondsIntoReadableTime(milliseconds) {
+    //Get hours from milliseconds
+    var hours = milliseconds / (1000*60*60);
+    var absoluteHours = Math.floor(hours);
+    var h = absoluteHours > 9 ? absoluteHours : '0' + absoluteHours;
+
+    //Get remainder from hours and convert to minutes
+    var minutes = (hours - absoluteHours) * 60;
+    var absoluteMinutes = Math.floor(minutes);
+    var m = absoluteMinutes > 9 ? absoluteMinutes : '0' +  absoluteMinutes;
+
+    //Get remainder from minutes and convert to seconds
+    var seconds = (minutes - absoluteMinutes) * 60;
+    var absoluteSeconds = Math.floor(seconds);
+    var s = absoluteSeconds > 9 ? absoluteSeconds : '0' + absoluteSeconds;
+
+    return h + ':' + m + ':' + s;
 }

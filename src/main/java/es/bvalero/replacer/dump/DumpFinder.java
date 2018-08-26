@@ -56,7 +56,7 @@ class DumpFinder {
      * @return The path of the latest dump folder, e. g. /public/dumps/public/eswiki/20170820
      * @throws FileNotFoundException if the path contains no valid sub-folders
      */
-    private File findLatestDumpFolder(File dumpFolder) throws FileNotFoundException {
+    private File findLatestDumpFolder(@NotNull File dumpFolder) throws FileNotFoundException {
         File[] dumpSubFolders = dumpFolder.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {

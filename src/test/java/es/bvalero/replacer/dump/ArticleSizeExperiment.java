@@ -43,9 +43,9 @@ public class ArticleSizeExperiment {
                         maxSizes[0] = currentSize;
                         maxArticles[0] = this.getCurrentArticle().getTitle();
                     }
-                    if (this.getNumProcessedItems() % 1000 == 0) {
+                    if (this.getDumpStatus().getNumProcessedItems() % 1000 == 0) {
                         long elapsedTime = (new Date().getTime() - startTime) / 1000;
-                        System.out.println(this.getNumProcessedItems() + "\t" + elapsedTime + " s");
+                        System.out.println(this.getDumpStatus().getNumProcessedItems() + "\t" + elapsedTime + " s");
                     }
                 }
             };

@@ -17,18 +17,26 @@ abstract class DumpHandler extends DefaultHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpHandler.class);
 
     private final StringBuilder currentChars = new StringBuilder();
-
+    private final DumpArticle currentArticle = new DumpArticle();
+    private final DumpStatus dumpStatus = new DumpStatus();
     private Integer currentId;
     private String currentTitle;
     private WikipediaNamespace currentNamespace;
     private Date currentTimestamp;
     private String currentContent;
 
-    private DumpArticle currentArticle;
-    private int numProcessedItems;
+    DumpStatus getDumpStatus() {
+        return dumpStatus;
+    }
 
+    @Override
     public void startDocument() {
-        numProcessedItems = 0;
+        this.dumpStatus.start();
+    }
+
+    @Override
+    public void endDocument() {
+        this.dumpStatus.finish();
     }
 
     @Override
@@ -58,8 +66,12 @@ abstract class DumpHandler extends DefaultHandler {
                 currentContent = currentChars.toString();
                 break;
             case "page":
-                currentArticle = new DumpArticle(
-                        currentId, currentTitle, currentNamespace, currentTimestamp, currentContent);
+                currentArticle.setId(currentId);
+                currentArticle.setTitle(currentTitle);
+                currentArticle.setNamespace(currentNamespace);
+                currentArticle.setTimestamp(currentTimestamp);
+                currentArticle.setContent(currentContent);
+
                 process();
                 // Reset current ID to avoid duplicates
                 currentId = null;
@@ -78,10 +90,6 @@ abstract class DumpHandler extends DefaultHandler {
         return currentArticle;
     }
 
-    int getNumProcessedItems() {
-        return numProcessedItems;
-    }
-
     abstract void processArticle(DumpArticle article);
 
     private void process() {
@@ -90,7 +98,7 @@ abstract class DumpHandler extends DefaultHandler {
             // in case it is not an article/annex or it is a redirection
             if (currentArticle.isProcessable()) {
                 processArticle(currentArticle);
-                numProcessedItems++;
+                dumpStatus.increase();
             }
         } catch (Exception e) {
             LOGGER.error("Error processing article: {}", currentTitle, e);

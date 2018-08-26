@@ -31,7 +31,7 @@ public class DumpManagerTest {
 
     @Test
     public void testRunIndexationAlreadyRunning() throws FileNotFoundException {
-        dumpManager.getStatus().setRunning(true);
+        dumpManager.getDumpHandler().startDocument();
 
         dumpManager.runIndexation();
 
@@ -40,8 +40,10 @@ public class DumpManagerTest {
 
     @Test
     public void testRunIndexationWithBz2Dump() throws FileNotFoundException {
-        Assert.assertNull(dumpManager.getStatus().getStartDate());
-        Assert.assertNull(dumpManager.getStatus().getEndDate());
+        Assert.assertFalse(dumpManager.getStatus().isRunning());
+        Assert.assertEquals(0.00, dumpManager.getStatus().getProgress(), 0.01);
+        Assert.assertEquals(0, dumpManager.getStatus().getNumProcessedItems());
+        Assert.assertNull(dumpManager.getStatus().getLastRun());
 
         String bz2Path = getClass().getResource("/pages-articles.xml.bz2").getFile();
         DumpFile dumpFile = new DumpFile();
@@ -53,10 +55,10 @@ public class DumpManagerTest {
 
         Mockito.verify(dumpFinder, Mockito.times(1)).findLatestDumpFile(Mockito.any(File.class));
 
-        Assert.assertNotNull(dumpManager.getStatus().getStartDate());
-        Assert.assertNotNull(dumpManager.getStatus().getEndDate());
-        Assert.assertFalse(dumpManager.getStatus().getStartDate().after(dumpManager.getStatus().getEndDate()));
+        Assert.assertFalse(dumpManager.getStatus().isRunning());
         Assert.assertEquals(2, dumpManager.getStatus().getNumProcessedItems());
+        Assert.assertTrue(dumpManager.getStatus().getAverage() > 0);
+        Assert.assertNotNull(dumpManager.getStatus().getLastRun());
     }
 
     @Test
@@ -73,7 +75,6 @@ public class DumpManagerTest {
 
     @Test
     public void testRunWithLastExecutionAfterDumpDate() throws FileNotFoundException {
-        GregorianCalendar today = new GregorianCalendar();
         GregorianCalendar yesterday = new GregorianCalendar();
         yesterday.add(GregorianCalendar.DATE, -1);
 
@@ -81,7 +82,7 @@ public class DumpManagerTest {
         dumpFile.setDate(yesterday.getTime());
         Mockito.when(dumpFinder.findLatestDumpFile(Mockito.any(File.class))).thenReturn(dumpFile);
 
-        dumpManager.getStatus().setEndDate(today.getTime());
+        dumpManager.getDumpHandler().endDocument();
         dumpManager.setDumpFolderPath("");
 
         dumpManager.runIndexation();
