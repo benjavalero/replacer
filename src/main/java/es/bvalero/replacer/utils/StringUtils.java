@@ -62,7 +62,7 @@ public class StringUtils {
     /**
      * @return If all the characters in the given word are uppercase. Non-alphabetic characters are ignored.
      */
-    public static boolean isAllUppercase(@NotNull String word) {
+    static boolean isAllUppercase(@NotNull String word) {
         if (org.apache.commons.lang3.StringUtils.isBlank(word)) {
             return false;
         } else {

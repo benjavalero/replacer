@@ -22,7 +22,7 @@ public class UrlFinder implements ExceptionMatchFinder {
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        List<RegexMatch> matches = new ArrayList<>();
+        List<RegexMatch> matches = new ArrayList<>(100);
         matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_URL));
         matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_DOMAIN));
         return matches;

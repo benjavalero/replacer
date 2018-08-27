@@ -29,7 +29,7 @@ public class FalsePositiveFinder implements ExceptionMatchFinder {
     }
 
     static List<String> loadFalsePositives() {
-        List<String> falsePositivesList = new ArrayList<>();
+        List<String> falsePositivesList = new ArrayList<>(150);
         String falsePositivesPath = RegExUtils.class.getResource("/false-positives.txt").getFile();
 
         try (InputStream stream = new FileInputStream(falsePositivesPath);

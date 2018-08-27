@@ -1,7 +1,6 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.*;
-import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,29 +55,42 @@ class DumpProcessor {
             }
 
             article.setAdditionDate(new Timestamp(new Date().getTime()));
-            addPotentialErrorsToArticle(article, articleReplacements);
-
-            articleRepository.save(article);
+            if (addPotentialErrorsToArticle(article, articleReplacements)) {
+                // Only save if there are modifications in the potential errors found for the article
+                articleRepository.save(article);
+            }
         }
     }
 
-    private void addPotentialErrorsToArticle(Article article, List<ArticleReplacement> articleReplacements) {
-        Set<PotentialError> potentialErrorSet = new HashSet<>();
+    /* Add the new errors found to the article and also remove the obsolete ones */
+    private boolean addPotentialErrorsToArticle(Article article, List<ArticleReplacement> articleReplacements) {
+        Set<PotentialError> newPotentialErrors = new HashSet<>(articleReplacements.size());
         for (ArticleReplacement articleReplacement : articleReplacements) {
             PotentialError potentialError = new PotentialError(articleReplacement.getType(), articleReplacement.getSubtype());
-            potentialErrorSet.add(potentialError);
+            newPotentialErrors.add(potentialError);
         }
 
-        Collection<PotentialError> toRemove = CollectionUtils.subtract(article.getPotentialErrors(), potentialErrorSet);
-        Collection<PotentialError> toAdd = CollectionUtils.subtract(potentialErrorSet, article.getPotentialErrors());
+        boolean isModified = false;
 
-        for (PotentialError potentialError : toRemove) {
-            article.removePotentialError(potentialError);
+        // Remove the obsolete potential errors from the article
+        Iterator<PotentialError> it = article.getPotentialErrors().iterator();
+        while (it.hasNext()) {
+            PotentialError oldPotentialError = it.next();
+            if (!newPotentialErrors.contains(oldPotentialError)) {
+                it.remove();
+                isModified = true;
+            }
         }
 
-        for (PotentialError potentialError : toAdd) {
-            article.addPotentialError(potentialError);
+        // Add the new potential errors to the article
+        for (PotentialError newPotentialError : newPotentialErrors) {
+            if (!article.getPotentialErrors().contains(newPotentialError)) {
+                article.addPotentialError(newPotentialError);
+                isModified = true;
+            }
         }
+
+        return isModified;
     }
 
 }

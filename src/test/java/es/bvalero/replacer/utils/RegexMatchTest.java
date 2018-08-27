@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class RegexMatchTest {
@@ -43,7 +44,7 @@ public class RegexMatchTest {
         RegexMatch match6 = new RegexMatch(4, "ET"); // 4-5
         RegexMatch match7 = new RegexMatch(7, "CAM"); // 7-9
 
-        List<RegexMatch> matches = Arrays.asList(match2, match5, match4, match1, match3, match4, match6, match7);
+        List<RegexMatch> matches = new LinkedList<>(Arrays.asList(match2, match5, match4, match1, match3, match4, match6, match7));
         List<RegexMatch> resultMatches = RegexMatch.removedNestedMatches(matches);
 
         Assert.assertEquals(3, resultMatches.size());

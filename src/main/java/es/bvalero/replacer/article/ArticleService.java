@@ -182,7 +182,32 @@ public class ArticleService {
      */
     @NotNull
     public List<ArticleReplacement> findPotentialErrorsIgnoringExceptions(@NotNull String text) {
-        return findPotentialErrorsIgnoringExceptions(text, findExceptionMatches(text, false));
+        // Find the potential errors in the article content
+        List<ArticleReplacement> articleReplacements = findPotentialErrors(text);
+
+        // No need to find the exceptions if there are no replacements found
+        if (articleReplacements.isEmpty()) {
+            return articleReplacements;
+        }
+
+        // Ignore the potential errors included in exceptions
+        for (ExceptionMatchFinder exceptionMatchFinder : exceptionMatchFinders) {
+            List<RegexMatch> exceptionMatches = exceptionMatchFinder.findExceptionMatches(text, false);
+
+            Iterator<ArticleReplacement> it = articleReplacements.iterator();
+            while (it.hasNext()) {
+                ArticleReplacement articleReplacement = it.next();
+                if (articleReplacement.isContainedIn(exceptionMatches)) {
+                    it.remove();
+                }
+            }
+
+            if (articleReplacements.isEmpty()) {
+                return articleReplacements;
+            }
+        }
+
+        return articleReplacements;
     }
 
     @NotNull
@@ -192,15 +217,15 @@ public class ArticleService {
         List<ArticleReplacement> articleReplacements = findPotentialErrors(text);
 
         // Ignore the potential errors included in exceptions
-        List<ArticleReplacement> filteredArticleReplacements = new ArrayList<>();
-
-        for (ArticleReplacement articleReplacement : articleReplacements) {
-            if (!articleReplacement.isContainedIn(exceptionMatches)) {
-                filteredArticleReplacements.add(articleReplacement);
+        Iterator<ArticleReplacement> it = articleReplacements.iterator();
+        while (it.hasNext()) {
+            ArticleReplacement articleReplacement = it.next();
+            if (articleReplacement.isContainedIn(exceptionMatches)) {
+                it.remove();
             }
         }
 
-        return filteredArticleReplacements;
+        return articleReplacements;
     }
 
     /**
@@ -209,7 +234,8 @@ public class ArticleService {
      */
     @NotNull
     private List<ArticleReplacement> findPotentialErrors(@NotNull String text) {
-        List<ArticleReplacement> articleReplacements = new ArrayList<>();
+        // LinkedList is better to run iterators and remove items from it
+        List<ArticleReplacement> articleReplacements = new LinkedList<>();
         for (PotentialErrorFinder potentialErrorFinder : potentialErrorFinders) {
             articleReplacements.addAll(potentialErrorFinder.findPotentialErrors(text));
         }
@@ -217,12 +243,13 @@ public class ArticleService {
     }
 
     /**
-     * @return A list with all the occurrences of text exceptions.
+     * @return A list with all the occurrences of text exceptions with no overlapping.
      * If there are no exception matches, the list will be empty.
      */
     @NotNull
     private List<RegexMatch> findExceptionMatches(@NotNull String text, boolean isTextEscaped) {
-        List<RegexMatch> allErrorExceptions = new ArrayList<>();
+        // LinkedList is better to run iterators and remove items from it
+        List<RegexMatch> allErrorExceptions = new LinkedList<>();
         for (ExceptionMatchFinder exceptionMatchFinder : exceptionMatchFinders) {
             allErrorExceptions.addAll(exceptionMatchFinder.findExceptionMatches(text, isTextEscaped));
         }

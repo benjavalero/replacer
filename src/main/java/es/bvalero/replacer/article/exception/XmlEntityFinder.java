@@ -17,11 +17,9 @@ public class XmlEntityFinder implements ExceptionMatchFinder {
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        List<RegexMatch> matches = new ArrayList<>();
-        if (isTextEscaped) {
-            matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_XML_ENTITY));
-        }
-        return matches;
+        return isTextEscaped
+                ? RegExUtils.findMatchesAutomaton(text, AUTOMATON_XML_ENTITY)
+                : new ArrayList<RegexMatch>();
     }
 
 }

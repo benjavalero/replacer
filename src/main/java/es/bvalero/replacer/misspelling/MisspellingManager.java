@@ -25,13 +25,10 @@ import java.util.*;
 public class MisspellingManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingManager.class);
-
+    // Derived from the misspelling list to access faster by word
+    private final Map<String, Misspelling> misspellingMap = new HashMap<>(20000);
     @Autowired
     private IWikipediaFacade wikipediaFacade;
-
-    // Derived from the misspelling list to access faster by word
-    private final Map<String, Misspelling> misspellingMap = new HashMap<>();
-
     // Regex with the alternations of all the misspellings
     // IMPORTANT : WE NEED AT LEAST 2 MB OF STACK SIZE -Xss2m !!!
     private RunAutomaton misspellingAutomaton = null;
@@ -89,29 +86,23 @@ public class MisspellingManager {
     }
 
     private List<Misspelling> findWikipediaMisspellings() {
-        List<Misspelling> misspellings = new ArrayList<>();
-
         try {
             LOGGER.info("Start loading misspelling list from Wikipedia...");
 
-            String misspellingListText = wikipediaFacade.getArticleContent(
-                    WikipediaFacade.MISSPELLING_LIST_ARTICLE);
-            misspellings.addAll(parseMisspellingListText(misspellingListText));
-
-            LOGGER.info("End loading misspelling list from Wikipedia: {} items", misspellings.size());
+            String misspellingListText = wikipediaFacade.getArticleContent(WikipediaFacade.MISSPELLING_LIST_ARTICLE);
+            return parseMisspellingListText(misspellingListText);
         } catch (WikipediaException e) {
             LOGGER.error("Error loading misspellings list from Wikipedia", e);
+            return new ArrayList<>();
         }
-
-        return misspellings;
     }
 
     private List<Misspelling> parseMisspellingListText(String misspellingListText) {
-        List<Misspelling> misspellings = new ArrayList<>();
+        List<Misspelling> misspellings = new ArrayList<>(20000);
 
         try (InputStream stream = new ByteArrayInputStream(misspellingListText.getBytes(StandardCharsets.UTF_8));
              BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
-            Set<String> usedWords = new HashSet<>();
+            Set<String> usedWords = new HashSet<>(20000);
 
             // Read file line by line
             String strLine;
@@ -130,6 +121,7 @@ public class MisspellingManager {
             LOGGER.error("Error parsing misspelling list", e);
         }
 
+        LOGGER.info("End parsing misspelling list from Wikipedia: {} items", misspellings.size());
         return misspellings;
     }
 
