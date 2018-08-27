@@ -43,6 +43,8 @@ nombres de ficheros, citas, etc.
 
 ## Optimizaciones
 
+### Búsqueda de reemplazos
+
 Hay expresiones regulares que pueden llegar a consumir mucho tiempo o recursos
 para textos muy largos. Esto no es muy importante al analizar un artículo en
 concreto pero sí cuando se analiza toda la Wikipedia.
@@ -78,3 +80,23 @@ he optado por usar la versión _text-directed_. Aquí el único cuantificador
 válido es «+». Para el resto de casos he usado la versión estándar,
 usando el cuantificador «+?» en la mayoría de ocasiones por ser el más
 eficiente en los experimentos.
+
+### Indexación
+
+El proceso de indexación tiene dos partes principales: la lectura de cada uno
+de los artículos y el procesado de los artículos (si procede).
+
+En cuanto a la lectura de los artículos del _dump_ no hay optimización posible.
+La lectura de un XML es mucho más rápida que de un XML comprimido (estimo que
+unas 10 veces) pero en la máquina de Wikipedia solo tenemos la opción de usar
+la versión comprimida.
+
+En cuanto al procesado de los artículos, también tenemos 3 partes claras:
+1. Consultar la BD para ver si el artículo ya existe y cuál es su estado
+2. Buscar los errores potenciales y descartar los contenidos en excepciones
+3. Guardar en BD los reemplazos detectados en el artículo
+ 
+
+ 
+
+

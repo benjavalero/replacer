@@ -28,10 +28,14 @@ public class PotentialErrorRepositoryTest {
         Article article3 = new Article(3, "");
         articleRepository.save(Arrays.asList(article1, article2, article3));
 
-        PotentialError error1 = new PotentialError(article1, PotentialErrorType.MISSPELLING, "aber");
-        PotentialError error2 = new PotentialError(article2, PotentialErrorType.MISSPELLING, "aber");
-        PotentialError error3 = new PotentialError(article2, PotentialErrorType.MISSPELLING, "madrid");
-        PotentialError error4 = new PotentialError(article3, PotentialErrorType.MISSPELLING, "paris");
+        PotentialError error1 = new PotentialError(PotentialErrorType.MISSPELLING, "aber");
+        PotentialError error2 = new PotentialError(PotentialErrorType.MISSPELLING, "aber");
+        PotentialError error3 = new PotentialError(PotentialErrorType.MISSPELLING, "madrid");
+        PotentialError error4 = new PotentialError(PotentialErrorType.MISSPELLING, "paris");
+        article1.addPotentialError(error1);
+        article2.addPotentialError(error2);
+        article2.addPotentialError(error3);
+        article3.addPotentialError(error4);
         potentialErrorRepository.save(Arrays.asList(error1, error2, error3, error4));
 
         Assert.assertEquals(4, potentialErrorRepository.countNotReviewed().longValue());
@@ -49,10 +53,14 @@ public class PotentialErrorRepositoryTest {
         Article article3 = new Article(3, "");
         articleRepository.save(Arrays.asList(article1, article2, article3));
 
-        PotentialError error1 = new PotentialError(article1, PotentialErrorType.MISSPELLING, "aber");
-        PotentialError error2 = new PotentialError(article2, PotentialErrorType.MISSPELLING, "aber");
-        PotentialError error3 = new PotentialError(article2, PotentialErrorType.MISSPELLING, "madrid");
-        PotentialError error4 = new PotentialError(article3, PotentialErrorType.MISSPELLING, "paris");
+        PotentialError error1 = new PotentialError(PotentialErrorType.MISSPELLING, "aber");
+        PotentialError error2 = new PotentialError(PotentialErrorType.MISSPELLING, "aber");
+        PotentialError error3 = new PotentialError(PotentialErrorType.MISSPELLING, "madrid");
+        PotentialError error4 = new PotentialError(PotentialErrorType.MISSPELLING, "paris");
+        article1.addPotentialError(error1);
+        article2.addPotentialError(error2);
+        article2.addPotentialError(error3);
+        article3.addPotentialError(error4);
         potentialErrorRepository.save(Arrays.asList(error1, error2, error3, error4));
 
         Assert.assertEquals(3, potentialErrorRepository.findMisspellingsGrouped().size());

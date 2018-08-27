@@ -20,11 +20,11 @@ public class ArticleRepositoryTest {
 
     @Test
     public void testSaveAndFind() {
+        PotentialError error1 = new PotentialError(PotentialErrorType.MISSPELLING, "A");
+        PotentialError error2 = new PotentialError(PotentialErrorType.MISSPELLING, "B");
         Article newArticle = new Article(1, "Andorra");
-        newArticle.getPotentialErrors().add(
-                new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A"));
-        newArticle.getPotentialErrors().add(
-                new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "B"));
+        newArticle.addPotentialError(error1);
+        newArticle.addPotentialError(error2);
         articleRepository.save(newArticle);
 
         Assert.assertNull(articleRepository.findOne(0));

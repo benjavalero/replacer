@@ -27,7 +27,7 @@ public class Article implements Serializable {
     @Column(name = "dtreview", columnDefinition = "TIMESTAMP")
     private Timestamp reviewDate;
 
-    @OneToMany(mappedBy = "article", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "article", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<PotentialError> potentialErrors = new ArrayList<>();
 
     public Article() {
@@ -79,6 +79,15 @@ public class Article implements Serializable {
     @SuppressWarnings("unused")
     void setPotentialErrors(List<PotentialError> potentialErrors) {
         this.potentialErrors = potentialErrors;
+    }
+
+    public void addPotentialError(PotentialError potentialError) {
+        this.potentialErrors.add(potentialError);
+        potentialError.setArticle(this);
+    }
+
+    public void removePotentialError(PotentialError potentialError) {
+        this.potentialErrors.remove(potentialError);
     }
 
 }
