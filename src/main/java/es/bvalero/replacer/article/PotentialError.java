@@ -2,6 +2,7 @@ package es.bvalero.replacer.article;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A potential error in the database related to an article.
@@ -15,7 +16,7 @@ public class PotentialError implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "articleid")
     private Article article;
 
@@ -30,8 +31,7 @@ public class PotentialError implements Serializable {
     public PotentialError() {
     }
 
-    public PotentialError(Article article, PotentialErrorType type, String text) {
-        this.article = article;
+    public PotentialError(PotentialErrorType type, String text) {
         this.type = type;
         this.text = text;
     }
@@ -58,6 +58,27 @@ public class PotentialError implements Serializable {
 
     void setText(String text) {
         this.text = text;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PotentialError that = (PotentialError) o;
+        return type == that.type && Objects.equals(text, that.text);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, text);
+    }
+
+    @Override
+    public String toString() {
+        return "PotentialError{" +
+                "type=" + type +
+                ", text='" + text + '\'' +
+                '}';
     }
 
 }

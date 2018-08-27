@@ -6,7 +6,7 @@ $(document).ready(function() {
 
     findDumpStatus();
 
-    // Refresh every 15 seconds
+    // Refresh every 10 seconds
     setInterval(findDumpStatus, 10000);
 });
 
@@ -41,7 +41,7 @@ function findDumpStatus() {
             message = 'La indexación se está ejecutando.';
             message += '<ul>';
             message += '<li>Progreso: ' + response.progress + '&nbsp;%</li>';
-            message += '<li>Núm. artículos procesados: ' + response.numProcessedItems + '</li>';<
+            message += '<li>Núm. artículos procesados: ' + response.numProcessedItems + '</li>';
             message += '<li>Finalización estimada: ' + parseMillisecondsIntoReadableTime(response.eta) + '&nbsp;s</li>';
             message += '<li>Tiempo medio por artículo: ' + response.average + ' ms</li>';
             message += '</ul>';

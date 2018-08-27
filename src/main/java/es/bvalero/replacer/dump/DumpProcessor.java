@@ -1,6 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.*;
+import org.apache.commons.collections4.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 class DumpProcessor {
@@ -53,10 +53,8 @@ class DumpProcessor {
                 article = new Article(dumpArticle.getId(), dumpArticle.getTitle());
             } else {
                 article.setTitle(dumpArticle.getTitle()); // In case the title of the article has changed
-                article.getPotentialErrors().clear();
             }
 
-            article.setTitle(dumpArticle.getTitle());
             article.setAdditionDate(new Timestamp(new Date().getTime()));
             addPotentialErrorsToArticle(article, articleReplacements);
 
@@ -65,9 +63,21 @@ class DumpProcessor {
     }
 
     private void addPotentialErrorsToArticle(Article article, List<ArticleReplacement> articleReplacements) {
+        Set<PotentialError> potentialErrorSet = new HashSet<>();
         for (ArticleReplacement articleReplacement : articleReplacements) {
-            article.getPotentialErrors().add(
-                    new PotentialError(article, articleReplacement.getType(), articleReplacement.getSubtype()));
+            PotentialError potentialError = new PotentialError(articleReplacement.getType(), articleReplacement.getSubtype());
+            potentialErrorSet.add(potentialError);
+        }
+
+        Collection<PotentialError> toRemove = CollectionUtils.subtract(article.getPotentialErrors(), potentialErrorSet);
+        Collection<PotentialError> toAdd = CollectionUtils.subtract(potentialErrorSet, article.getPotentialErrors());
+
+        for (PotentialError potentialError : toRemove) {
+            article.removePotentialError(potentialError);
+        }
+
+        for (PotentialError potentialError : toAdd) {
+            article.addPotentialError(potentialError);
         }
     }
 
