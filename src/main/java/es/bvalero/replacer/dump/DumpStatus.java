@@ -9,24 +9,24 @@ import java.util.Date;
  */
 public class DumpStatus {
 
-    // Rough amount of articles to be checked
+    // Rough amount of pages to be checked
     // Type double to make easier calculations with decimals
-    private static final double NUM_ARTICLES = 3211262;
+    private static final double NUM_TOTAL_PAGES = 3666708;
 
     private boolean running;
     private Long startDate;
     private Long endDate;
-    private int numProcessedItems;
+    private int pagesCount;
 
     void start() {
         this.running = true;
         this.startDate = System.currentTimeMillis();
         this.endDate = null;
-        this.numProcessedItems = 0;
+        this.pagesCount = 0;
     }
 
     void increase() {
-        this.numProcessedItems++;
+        this.pagesCount++;
     }
 
     void finish() {
@@ -41,13 +41,13 @@ public class DumpStatus {
     }
 
     public double getProgress() {
-        double percentProgress = numProcessedItems / NUM_ARTICLES * 100;
+        double percentProgress = pagesCount / NUM_TOTAL_PAGES * 100;
         // Format with two decimals
         return Math.round(percentProgress * 100) / 100.0;
     }
 
-    public int getNumProcessedItems() {
-        return this.numProcessedItems;
+    public int getPagesCount() {
+        return this.pagesCount;
     }
 
     @Nullable
@@ -56,21 +56,21 @@ public class DumpStatus {
         if (average == null) {
             return null;
         } else {
-            long numToProcess = Math.round(NUM_ARTICLES - numProcessedItems);
+            long numToProcess = Math.round(NUM_TOTAL_PAGES - pagesCount);
             return numToProcess * average;
         }
     }
 
     @Nullable
     public Long getAverage() {
-        if (numProcessedItems == 0) {
+        if (pagesCount == 0) {
             return null;
         } else if (isRunning()) {
-            return (System.currentTimeMillis() - startDate) / numProcessedItems;
+            return (System.currentTimeMillis() - startDate) / pagesCount;
         } else if (endDate == null) {
             return null;
         } else {
-            return (endDate - startDate) / numProcessedItems;
+            return (endDate - startDate) / pagesCount;
         }
     }
 
@@ -84,12 +84,12 @@ public class DumpStatus {
         if (isRunning()) {
             sb.append("Indexation is running\n")
                     .append("Progress: ").append(getProgress()).append("\n")
-                    .append("Articles processed: ").append(numProcessedItems).append("\n")
+                    .append("Pages processed: ").append(pagesCount).append("\n")
                     .append("ETA: ").append(getEta()).append("\n")
                     .append("Average Time: ").append(getAverage()).append("\n");
         } else {
             sb.append("Indexation is not running\n")
-                    .append("Articles processed: ").append(numProcessedItems).append("\n")
+                    .append("Pages processed: ").append(pagesCount).append("\n")
                     .append("Average Time: ").append(getAverage()).append("\n")
                     .append("Last Run: ").append(new Date(endDate));
         }

@@ -42,7 +42,7 @@ public class DumpManagerTest {
     public void testRunIndexationWithBz2Dump() throws FileNotFoundException {
         Assert.assertFalse(dumpManager.getStatus().isRunning());
         Assert.assertEquals(0.00, dumpManager.getStatus().getProgress(), 0.01);
-        Assert.assertEquals(0, dumpManager.getStatus().getNumProcessedItems());
+        Assert.assertEquals(0, dumpManager.getStatus().getPagesCount());
         Assert.assertNull(dumpManager.getStatus().getLastRun());
 
         String bz2Path = getClass().getResource("/pages-articles.xml.bz2").getFile();
@@ -56,7 +56,7 @@ public class DumpManagerTest {
         Mockito.verify(dumpFinder, Mockito.times(1)).findLatestDumpFile(Mockito.any(File.class));
 
         Assert.assertFalse(dumpManager.getStatus().isRunning());
-        Assert.assertEquals(2, dumpManager.getStatus().getNumProcessedItems());
+        Assert.assertEquals(2, dumpManager.getStatus().getPagesCount());
         Assert.assertTrue(dumpManager.getStatus().getAverage() > 0);
         Assert.assertNotNull(dumpManager.getStatus().getLastRun());
     }

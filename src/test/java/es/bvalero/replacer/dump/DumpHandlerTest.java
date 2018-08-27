@@ -32,16 +32,20 @@ public class DumpHandlerTest {
 
     @Test
     public void testParseDumpXmlFile() throws SAXException, ParserConfigurationException, IOException {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
-        SAXParser saxParser = factory.newSAXParser();
-
         String dumpFilePath = getClass().getResource("/pages-articles.xml").getFile();
-        InputStream xmlInput = new FileInputStream(dumpFilePath);
-        saxParser.parse(xmlInput, dumpHandler);
 
-        // Test that all articles are processed and the namespaces are taken into account
-        Assert.assertEquals(2, dumpHandler.getDumpStatus().getNumProcessedItems());
+        try (InputStream xmlInput = new FileInputStream(dumpFilePath)) {
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
+            SAXParser saxParser = factory.newSAXParser();
+
+            saxParser.parse(xmlInput, dumpHandler);
+        } finally {
+            dumpHandler.getDumpStatus().finish();
+        }
+
+        // Test that all articles are processed
+        Assert.assertEquals(3, dumpHandler.getDumpStatus().getPagesCount());
 
         // Test values of the last processed article
         Assert.assertEquals(Integer.valueOf(7), dumpHandler.getCurrentArticle().getId());
@@ -52,33 +56,7 @@ public class DumpHandlerTest {
         GregorianCalendar cal = new GregorianCalendar(2016, 3, 17, 8, 55, 54);
         cal.setTimeZone(WikipediaUtils.TIME_ZONE);
         Assert.assertEquals(cal.getTime(), dumpHandler.getCurrentArticle().getTimestamp());
-
-        xmlInput.close();
     }
-
-    @Test
-    public void testProcessingError() throws SAXException, ParserConfigurationException, IOException {
-        dumpHandler = new DumpHandler() {
-            @Override
-            void processArticle(DumpArticle article) {
-                // Force exception
-                new StringBuilder().insert(1, "");
-            }
-        };
-
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
-        SAXParser saxParser = factory.newSAXParser();
-
-        String dumpFilePath = getClass().getResource("/pages-articles.xml").getFile();
-        InputStream xmlInput = new FileInputStream(dumpFilePath);
-        saxParser.parse(xmlInput, dumpHandler);
-
-        Assert.assertEquals(0, dumpHandler.getDumpStatus().getNumProcessedItems());
-
-        xmlInput.close();
-    }
-
 
     @Test
     public void testProcessableArticles() {
