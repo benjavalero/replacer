@@ -43,7 +43,7 @@ public class DumpProcessorTest {
 
         dumpProcessor.processArticle(dumpArticle, false);
 
-        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleRepository, Mockito.times(1)).findFirst1000ByIdGreaterThanOrderById(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.any(Article.class));
         Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.any(Article.class));
@@ -63,7 +63,7 @@ public class DumpProcessorTest {
 
         dumpProcessor.processArticle(dumpArticle, false);
 
-        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleRepository, Mockito.times(1)).findFirst1000ByIdGreaterThanOrderById(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.any(Article.class));
         Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.any(Article.class));
@@ -76,11 +76,12 @@ public class DumpProcessorTest {
 
         Article articleDb = new Article(1, "");
         articleDb.setAdditionDate(new Timestamp(new Date().getTime()));
-        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
+        Mockito.when(articleRepository.findFirst1000ByIdGreaterThanOrderById(Mockito.anyInt()))
+                .thenReturn(Collections.singletonList(articleDb));
 
         dumpProcessor.processArticle(dumpArticle, false);
 
-        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleRepository, Mockito.times(1)).findFirst1000ByIdGreaterThanOrderById(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(1)).delete(Mockito.any(Article.class));
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
@@ -96,11 +97,12 @@ public class DumpProcessorTest {
 
         Article articleDb = new Article(1, "");
         articleDb.setReviewDate(new Timestamp(today.getTimeInMillis()));
-        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
+        Mockito.when(articleRepository.findFirst1000ByIdGreaterThanOrderById(Mockito.anyInt()))
+                .thenReturn(Collections.singletonList(articleDb));
 
         dumpProcessor.processArticle(dumpArticle, false);
 
-        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleRepository, Mockito.times(1)).findFirst1000ByIdGreaterThanOrderById(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
     }
@@ -112,11 +114,12 @@ public class DumpProcessorTest {
 
         Article articleDb = new Article(1, "");
         articleDb.setReviewDate(today);
-        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
+        Mockito.when(articleRepository.findFirst1000ByIdGreaterThanOrderById(Mockito.anyInt()))
+                .thenReturn(Collections.singletonList(articleDb));
 
         dumpProcessor.processArticle(dumpArticle, false);
 
-        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleRepository, Mockito.times(1)).findFirst1000ByIdGreaterThanOrderById(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
     }
@@ -131,11 +134,12 @@ public class DumpProcessorTest {
 
         Article articleDb = new Article(1, "");
         articleDb.setAdditionDate(new Timestamp(today.getTimeInMillis()));
-        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
+        Mockito.when(articleRepository.findFirst1000ByIdGreaterThanOrderById(Mockito.anyInt()))
+                .thenReturn(Collections.singletonList(articleDb));
 
         dumpProcessor.processArticle(dumpArticle, false);
 
-        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleRepository, Mockito.times(1)).findFirst1000ByIdGreaterThanOrderById(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
     }
@@ -157,7 +161,7 @@ public class DumpProcessorTest {
 
         dumpProcessor.processArticle(dumpArticle, true);
 
-        Mockito.verify(articleRepository, Mockito.times(1)).findOne(Mockito.anyInt());
+        Mockito.verify(articleRepository, Mockito.times(1)).findFirst1000ByIdGreaterThanOrderById(Mockito.anyInt());
         Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
         Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.any(Article.class));
         Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.any(Article.class));

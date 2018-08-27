@@ -3,10 +3,10 @@ package es.bvalero.replacer.article;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An article in the database containing potential errors.
@@ -80,6 +80,19 @@ public class Article implements Serializable {
     @SuppressWarnings("unused")
     void setPotentialErrors(List<PotentialError> potentialErrors) {
         this.potentialErrors = potentialErrors;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Article article = (Article) o;
+        return Objects.equals(id, article.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public void addPotentialError(PotentialError potentialError) {

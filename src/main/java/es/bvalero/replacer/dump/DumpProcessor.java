@@ -21,13 +21,25 @@ class DumpProcessor {
     @Autowired
     private ArticleService articleService;
 
+    private Map<Integer, Article> articlesDb = new HashMap<>(1000);
+    private int maxIdDb = 0;
+
     /**
      * Process a dump article: find the potential errors and add them to the database.
      */
     void processArticle(@NotNull DumpArticle dumpArticle, boolean processOldArticles) {
         LOGGER.debug("Indexing article: {}...", dumpArticle.getTitle());
 
-        Article article = articleRepository.findOne(dumpArticle.getId());
+        Article article = articlesDb.get(dumpArticle.getId());
+        if (article == null && dumpArticle.getId() > maxIdDb) {
+            // The list of DB articles to cache is ordered by ID
+            articlesDb.clear();
+            for (Article articleDb : articleRepository.findFirst1000ByIdGreaterThanOrderById(dumpArticle.getId() - 1)) {
+                articlesDb.put(articleDb.getId(), articleDb);
+                maxIdDb = articleDb.getId();
+            }
+            article = articlesDb.get(dumpArticle.getId());
+        }
 
         if (article != null) {
             if (article.getReviewDate() != null && !dumpArticle.getTimestamp().after(article.getReviewDate())) {
