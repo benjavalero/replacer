@@ -35,22 +35,22 @@ public class QuotesFinder implements ExceptionMatchFinder {
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        List<RegexMatch> matches = new ArrayList<>();
+        List<RegexMatch> matches = new ArrayList<>(100);
         if (isTextEscaped) {
             // There are lots of lines with single quotes not closed
             matches.addAll(RegExUtils.findMatches(text, REGEX_SINGLE_QUOTES_ESCAPED));
             matches.addAll(RegExUtils.findMatches(text, REGEX_DOUBLE_QUOTES_ESCAPED));
         } else {
             // For the single-quotes regex, we have to remove the first and last positions found
-            List<RegexMatch> singleQuotesMatches = new ArrayList<>();
+            List<RegexMatch> singleQuotesMatches = new ArrayList<>(100);
             singleQuotesMatches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_SINGLE_QUOTES_CURSIVE));
             singleQuotesMatches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_SINGLE_QUOTES_BOLD));
             for (RegexMatch match : singleQuotesMatches) {
                 match.setPosition(match.getPosition() + 1);
                 match.setOriginalText(match.getOriginalText().substring(1, match.getOriginalText().length() - 1));
-                matches.add(match);
             }
 
+            matches.addAll(singleQuotesMatches);
             matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_SINGLE_QUOTES_CURSIVE_BOLD));
             matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_DOUBLE_QUOTES));
         }

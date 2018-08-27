@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -27,8 +28,9 @@ public class Article implements Serializable {
     @Column(name = "dtreview", columnDefinition = "TIMESTAMP")
     private Timestamp reviewDate;
 
+    // LinkedList is better to run iterators and remove items from it
     @OneToMany(mappedBy = "article", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<PotentialError> potentialErrors = new ArrayList<>();
+    private List<PotentialError> potentialErrors = new LinkedList<>();
 
     public Article() {
     }
@@ -37,7 +39,6 @@ public class Article implements Serializable {
         this.id = id;
         this.title = title;
         this.additionDate = new Timestamp(new Date().getTime());
-        this.potentialErrors = new ArrayList<>();
     }
 
     public Integer getId() {
@@ -84,10 +85,6 @@ public class Article implements Serializable {
     public void addPotentialError(PotentialError potentialError) {
         this.potentialErrors.add(potentialError);
         potentialError.setArticle(this);
-    }
-
-    public void removePotentialError(PotentialError potentialError) {
-        this.potentialErrors.remove(potentialError);
     }
 
 }

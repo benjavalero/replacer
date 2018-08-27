@@ -25,7 +25,7 @@ public class CompleteTemplateFinder implements ExceptionMatchFinder {
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        List<RegexMatch> matches = new ArrayList<>();
+        List<RegexMatch> matches = new ArrayList<>(100);
         matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_COMPLETE_TEMPLATE));
         matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_CATEGORY));
         return matches;

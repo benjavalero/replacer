@@ -17,7 +17,7 @@ public class RegExUtils {
      * Finds the matches for a regular expression in a given text.
      */
     public static List<RegexMatch> findMatches(String text, Pattern pattern) {
-        List<RegexMatch> matches = new ArrayList<>();
+        List<RegexMatch> matches = new ArrayList<>(100);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
             matches.add(new RegexMatch(matcher.start(), matcher.group(0)));
@@ -26,7 +26,7 @@ public class RegExUtils {
     }
 
     public static List<RegexMatch> findMatchesAutomaton(String text, RunAutomaton automaton) {
-        List<RegexMatch> matches = new ArrayList<>();
+        List<RegexMatch> matches = new ArrayList<>(100);
         AutomatonMatcher matcher = automaton.newMatcher(text);
         while (matcher.find()) {
             matches.add(new RegexMatch(matcher.start(), matcher.group(0)));

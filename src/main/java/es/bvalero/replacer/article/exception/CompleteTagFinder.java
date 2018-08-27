@@ -39,15 +39,15 @@ public class CompleteTagFinder implements ExceptionMatchFinder {
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        List<RegexMatch> matches = new ArrayList<>();
         if (isTextEscaped) {
-            matches.addAll(RegExUtils.findMatches(text, REGEX_COMPLETE_TAG_ESCAPED));
+            return RegExUtils.findMatches(text, REGEX_COMPLETE_TAG_ESCAPED);
         } else {
+            List<RegexMatch> matches = new ArrayList<>(100);
             for (RunAutomaton automaton : AUTOMATON_COMPLETE_TAGS) {
                 matches.addAll(RegExUtils.findMatchesAutomaton(text, automaton));
             }
+            return matches;
         }
-        return matches;
     }
 
 }

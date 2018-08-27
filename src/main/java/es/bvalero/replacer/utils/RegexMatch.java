@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 public class RegexMatch implements Comparable<RegexMatch> {
@@ -24,10 +23,8 @@ public class RegexMatch implements Comparable<RegexMatch> {
         this.originalText = originalText;
     }
 
-    // It doesn't merge intersecting matches!
-    public static List<RegexMatch> removedNestedMatches(List<RegexMatch> matches) {
-        // To remove from Iterator we use a LinkedList
-        List<RegexMatch> sortedMatches = new LinkedList<>(matches);
+    public static List<RegexMatch> removedNestedMatches(List<RegexMatch> sortedMatches) {
+        // The list of matches must be of type LinkedList
         if (sortedMatches.isEmpty()) {
             return sortedMatches;
         }

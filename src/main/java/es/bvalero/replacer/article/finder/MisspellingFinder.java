@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +29,7 @@ public class MisspellingFinder implements PotentialErrorFinder {
     @NotNull
     @Override
     public List<ArticleReplacement> findPotentialErrors(@NotNull String text) {
-        List<ArticleReplacement> articleReplacements = new LinkedList<>();
+        List<ArticleReplacement> articleReplacements = new ArrayList<>(100);
 
         // Replace any character non-alphanumeric with two spaces
         String cleanText = text.replaceAll("[^\\p{L}\\p{N}]", " ");
