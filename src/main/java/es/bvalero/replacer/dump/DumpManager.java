@@ -118,7 +118,6 @@ class DumpManager {
             LOGGER.error("Latest dump file not found or valid", e);
         } catch (ParserConfigurationException | SAXException e) {
             LOGGER.error("Error parsing dump file", e);
-            e.printStackTrace();
         } finally {
             dumpHandler.getDumpStatus().finish();
         }

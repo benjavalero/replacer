@@ -23,11 +23,10 @@ public class ArticleSizeExperiment {
         String dumpFile = "/Users/benja/Developer/pywikibot/20180801/eswiki-20180801-pages-meta-current.xml";
         System.out.println("Start parsing dump file: " + dumpFile);
 
-        try {
+        try (InputStream xmlInput = new FileInputStream(dumpFile)) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
             SAXParser saxParser = factory.newSAXParser();
-            InputStream xmlInput = new FileInputStream(dumpFile);
 
             final List<Integer> sizes = new ArrayList<>(1500000);
             // We use arrays as a trick to define final variables
@@ -43,9 +42,9 @@ public class ArticleSizeExperiment {
                         maxSizes[0] = currentSize;
                         maxArticles[0] = this.getCurrentArticle().getTitle();
                     }
-                    if (this.getDumpStatus().getNumProcessedItems() % 1000 == 0) {
+                    if (this.getDumpStatus().getPagesCount() % 1000 == 0) {
                         long elapsedTime = (new Date().getTime() - startTime) / 1000;
-                        System.out.println(this.getDumpStatus().getNumProcessedItems() + "\t" + elapsedTime + " s");
+                        System.out.println(this.getDumpStatus().getPagesCount() + "\t" + elapsedTime + " s");
                     }
                 }
             };
@@ -56,8 +55,6 @@ public class ArticleSizeExperiment {
             Files.write(Paths.get("./sizes.txt"), sizesStr.getBytes());
 
             System.out.println("Longest article: " + maxArticles[0]);
-
-            xmlInput.close();
         } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }

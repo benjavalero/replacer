@@ -73,6 +73,8 @@ abstract class DumpHandler extends DefaultHandler {
                 currentArticle.setContent(currentContent);
 
                 process();
+                dumpStatus.increase();
+
                 // Reset current ID to avoid duplicates
                 currentId = null;
                 break;
@@ -98,7 +100,6 @@ abstract class DumpHandler extends DefaultHandler {
             // in case it is not an article/annex or it is a redirection
             if (currentArticle.isProcessable()) {
                 processArticle(currentArticle);
-                dumpStatus.increase();
             }
         } catch (Exception e) {
             LOGGER.error("Error processing article: {}", currentTitle, e);

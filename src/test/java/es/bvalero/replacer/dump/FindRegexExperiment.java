@@ -1,7 +1,6 @@
 package es.bvalero.replacer.dump;
 
 import dk.brics.automaton.*;
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -11,7 +10,6 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FindRegexExperiment {
@@ -24,11 +22,10 @@ public class FindRegexExperiment {
 
         System.out.println("Start parsing dump file: " + dumpFile);
 
-        try {
+        try (InputStream xmlInput = new FileInputStream(dumpFile)) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
             SAXParser saxParser = factory.newSAXParser();
-            InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile));
 
             // Regex-directed
             final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL);
@@ -51,8 +48,6 @@ public class FindRegexExperiment {
             };
 
             saxParser.parse(xmlInput, dumpHandler);
-
-            xmlInput.close();
         } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }

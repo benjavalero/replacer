@@ -41,9 +41,9 @@ function findDumpStatus() {
             message = 'La indexación se está ejecutando.';
             message += '<ul>';
             message += '<li>Progreso: ' + response.progress + '&nbsp;%</li>';
-            message += '<li>Núm. artículos procesados: ' + response.numProcessedItems + '</li>';
+            message += '<li>Núm. páginas procesadas: ' + response.numProcessedItems + '</li>';
             message += '<li>Finalización estimada: ' + parseMillisecondsIntoReadableTime(response.eta) + '&nbsp;s</li>';
-            message += '<li>Tiempo medio por artículo: ' + response.average + ' ms</li>';
+            message += '<li>Tiempo medio por página: ' + response.average + ' ms</li>';
             message += '</ul>';
         } else {
             $('#button-index').removeClass("disabled");
@@ -52,8 +52,8 @@ function findDumpStatus() {
             if (response.lastRun) {
                 message += '<ul>';
                 message += '<li>Última ejecución: ' + new Date(response.lastRun) + '</li>';
-                message += '<li>Núm. artículos procesados: ' + response.average + '</li>';
-                message += '<li>Tiempo medio por artículo: ' + response.numProcessedItems + ' ms</li>';
+                message += '<li>Núm. páginas procesadas: ' + response.average + '</li>';
+                message += '<li>Tiempo medio por página: ' + response.numProcessedItems + ' ms</li>';
                 message += '</ul>';
             }
         }
