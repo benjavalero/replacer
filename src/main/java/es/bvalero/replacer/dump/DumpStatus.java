@@ -18,16 +18,34 @@ public class DumpStatus {
     private Long endDate;
     private int pagesCount;
     private boolean processOldArticles;
+    private int articleCount;
+    private Long readDbTime;
+    private Long regexTime;
+    private Long writeDbTime;
 
     void start() {
         this.running = true;
         this.startDate = System.currentTimeMillis();
         this.endDate = null;
         this.pagesCount = 0;
+        this.articleCount = 0;
+        this.readDbTime = 0L;
+        this.regexTime = 0L;
+        this.writeDbTime = 0L;
     }
 
-    void increase() {
+    void increasePages() {
         this.pagesCount++;
+    }
+
+    void increaseArticles() {
+        this.articleCount++;
+    }
+
+    void increaseArticleTime(long readDbTime, long regexTime, long writeDbTime) {
+        this.readDbTime += readDbTime;
+        this.regexTime += regexTime;
+        this.writeDbTime += writeDbTime;
     }
 
     void finish() {
@@ -49,6 +67,10 @@ public class DumpStatus {
 
     public int getPagesCount() {
         return this.pagesCount;
+    }
+
+    public int getArticleCount() {
+        return this.articleCount;
     }
 
     @Nullable
@@ -103,6 +125,30 @@ public class DumpStatus {
 
     void setProcessOldArticles(boolean processOldArticles) {
         this.processOldArticles = processOldArticles;
+    }
+
+    public Long getReadDbTime() {
+        if (articleCount == 0) {
+            return null;
+        } else {
+            return readDbTime / articleCount;
+        }
+    }
+
+    public Long getRegexTime() {
+        if (articleCount == 0) {
+            return null;
+        } else {
+            return regexTime / articleCount;
+        }
+    }
+
+    public Long getWriteDbTime() {
+        if (articleCount == 0) {
+            return null;
+        } else {
+            return writeDbTime / articleCount;
+        }
     }
 
 }

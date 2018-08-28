@@ -28,6 +28,6 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
     Long countByReviewDateNotNull();
 
-    List<Article> findFirst1000ByIdGreaterThanOrderById(Integer minId);
+    List<Article> findByIdGreaterThanOrderById(Integer minId, Pageable pageable);
 
 }
