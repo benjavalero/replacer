@@ -71,7 +71,7 @@ public class ArticleService {
 
     ArticleData findRandomArticleWithPotentialErrors() throws UnfoundArticleException, InvalidArticleException {
         // Find random article in Replacer database (the result can be empty)
-        List<Article> randomArticles = articleRepository.findRandomByReviewDateNull(new PageRequest(0, 1));
+        List<Article> randomArticles = articleRepository.findRandomArticleNotReviewed(new PageRequest(0, 1));
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
             throw new UnfoundArticleException();
