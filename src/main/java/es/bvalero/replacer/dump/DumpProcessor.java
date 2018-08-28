@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -14,6 +15,7 @@ import java.util.*;
 class DumpProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpProcessor.class);
+    private static final int CACHE_SIZE = 10000;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -21,43 +23,54 @@ class DumpProcessor {
     @Autowired
     private ArticleService articleService;
 
-    private Map<Integer, Article> articlesDb = new HashMap<>(1000);
+    // Load a bunch of articles from DB to improve performance
+    private Map<Integer, Article> articlesDb = new HashMap<>(CACHE_SIZE);
     private int maxIdDb = 0;
+
+    // Save articles in batches to improve performance
+    private List<Article> articlesToDelete = new ArrayList<>();
+    private List<Article> articlesToSave = new ArrayList<>();
 
     /**
      * Process a dump article: find the potential errors and add them to the database.
      */
-    void processArticle(@NotNull DumpArticle dumpArticle, boolean processOldArticles) {
+    void processArticle(@NotNull DumpArticle dumpArticle, DumpStatus dumpStatus) {
         LOGGER.debug("Indexing article: {}...", dumpArticle.getTitle());
 
+        long startReadDbTime = System.currentTimeMillis();
         Article article = articlesDb.get(dumpArticle.getId());
         if (article == null && dumpArticle.getId() > maxIdDb) {
             // The list of DB articles to cache is ordered by ID
             articlesDb.clear();
-            for (Article articleDb : articleRepository.findFirst1000ByIdGreaterThanOrderById(dumpArticle.getId() - 1)) {
+            for (Article articleDb : articleRepository
+                    .findByIdGreaterThanOrderById(dumpArticle.getId() - 1, new PageRequest(0, CACHE_SIZE))) {
                 articlesDb.put(articleDb.getId(), articleDb);
                 maxIdDb = articleDb.getId();
             }
             article = articlesDb.get(dumpArticle.getId());
         }
+        long readDbTime = System.currentTimeMillis() - startReadDbTime;
 
         if (article != null) {
             if (article.getReviewDate() != null && !dumpArticle.getTimestamp().after(article.getReviewDate())) {
                 LOGGER.debug("Article reviewed after dump timestamp. Skipping.");
                 return;
-            } else if (dumpArticle.getTimestamp().before(article.getAdditionDate()) && !processOldArticles) {
+            } else if (dumpArticle.getTimestamp().before(article.getAdditionDate()) && !dumpStatus.isProcessOldArticles()) {
                 LOGGER.debug("Article added after dump timestamp. Skipping.");
                 return;
             }
         }
 
         // Process the article. Find the potential errors ignoring the ones in exceptions.
-
+        long startRegexTime = System.currentTimeMillis();
         List<ArticleReplacement> articleReplacements = articleService.findPotentialErrorsIgnoringExceptions(dumpArticle.getContent());
+        long regexTime = System.currentTimeMillis() - startRegexTime;
+
+        long startWriteDbTime = System.currentTimeMillis();
         if (articleReplacements.isEmpty()) {
             LOGGER.debug("No errors found in article: {}", dumpArticle.getTitle());
             if (article != null) {
-                articleRepository.delete(article);
+                articlesToDelete.add(article);
             }
         } else {
             if (article == null) {
@@ -69,9 +82,19 @@ class DumpProcessor {
             article.setAdditionDate(new Timestamp(new Date().getTime()));
             if (addPotentialErrorsToArticle(article, articleReplacements)) {
                 // Only save if there are modifications in the potential errors found for the article
-                articleRepository.save(article);
+                articlesToSave.add(article);
             }
         }
+
+        if (dumpStatus.getArticleCount() % CACHE_SIZE == 0) {
+            articleRepository.delete(articlesToDelete);
+            articleRepository.save(articlesToSave);
+        }
+        long writeDbTime = System.currentTimeMillis() - startWriteDbTime;
+
+        // Update the status
+        dumpStatus.increaseArticles();
+        dumpStatus.increaseArticleTime(readDbTime, regexTime, writeDbTime);
     }
 
     /* Add the new errors found to the article and also remove the obsolete ones */

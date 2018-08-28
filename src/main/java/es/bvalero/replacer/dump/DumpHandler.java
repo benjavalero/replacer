@@ -73,7 +73,7 @@ abstract class DumpHandler extends DefaultHandler {
                 currentArticle.setContent(currentContent);
 
                 process();
-                dumpStatus.increase();
+                dumpStatus.increasePages();
 
                 // Reset current ID to avoid duplicates
                 currentId = null;

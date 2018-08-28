@@ -37,7 +37,7 @@ class DumpManager {
     private DumpHandler dumpHandler = new DumpHandler() {
         @Override
         void processArticle(DumpArticle article) {
-            dumpProcessor.processArticle(getCurrentArticle(), this.getDumpStatus().isProcessOldArticles());
+            dumpProcessor.processArticle(getCurrentArticle(), this.getDumpStatus());
         }
     };
 
