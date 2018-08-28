@@ -15,9 +15,9 @@ import java.util.regex.Pattern;
 public class FindRegexExperiment {
 
     public static void main(String[] args) {
-        String dumpFile = "/Users/benja/Developer/pywikibot/20180801/eswiki-20180801-pages-meta-current.xml.bz2";
+        String dumpFile = "/Users/benja/Developer/pywikibot/20180820/eswiki-20180820-pages-articles.xml";
 
-        String regex = "[|=:][^}|=:\n]+\\.(gif|jpe?g|JPG|mp3|mpg|ogg|ogv|pdf|PDF|png|PNG|svg|tif|webm)";
+        String regex = "(<P>|<Z>) Enero";
         System.out.println("REGEX: " + regex);
 
         System.out.println("Start parsing dump file: " + dumpFile);

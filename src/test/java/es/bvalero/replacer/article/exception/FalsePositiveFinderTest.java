@@ -2,7 +2,6 @@ package es.bvalero.replacer.article.exception;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.misspelling.MisspellingManagerTest;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import org.junit.Assert;
@@ -51,7 +50,7 @@ public class FalsePositiveFinderTest {
     public void testFalsePositivesAutomatons() {
         String text = null;
         try {
-            text = new String(Files.readAllBytes(Paths.get(MisspellingManagerTest.class.getResource("/article-longest.txt").toURI())),
+            text = new String(Files.readAllBytes(Paths.get(FalsePositiveFinderTest.class.getResource("/article-longest.txt").toURI())),
                     StandardCharsets.UTF_8);
         } catch (IOException | URISyntaxException e) {
             e.printStackTrace();

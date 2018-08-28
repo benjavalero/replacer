@@ -1,5 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
+import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
@@ -31,7 +32,8 @@ public class MisspellingManager {
     private IWikipediaFacade wikipediaFacade;
     // Regex with the alternations of all the misspellings
     // IMPORTANT : WE NEED AT LEAST 2 MB OF STACK SIZE -Xss2m !!!
-    private RunAutomaton misspellingAutomaton = null;
+    private RunAutomaton misspellingAlternationsAutomaton = null;
+    private RunAutomaton uppercaseMisspellingsAutomaton = null;
 
     @NotNull
     Map<String, Misspelling> getMisspellingMap() {
@@ -42,11 +44,19 @@ public class MisspellingManager {
     }
 
     @NotNull
-    public RunAutomaton getMisspellingAutomaton() {
-        if (this.misspellingAutomaton == null) { // For the first time
+    public RunAutomaton getMisspellingAlternationsAutomaton() {
+        if (this.misspellingAlternationsAutomaton == null) { // For the first time
             updateMisspellings();
         }
-        return this.misspellingAutomaton;
+        return this.misspellingAlternationsAutomaton;
+    }
+
+    @NotNull
+    public RunAutomaton getUppercaseMisspellingsAutomaton() {
+        if (this.uppercaseMisspellingsAutomaton == null) { // For the first time
+            updateMisspellings();
+        }
+        return this.uppercaseMisspellingsAutomaton;
     }
 
     /**
@@ -72,7 +82,7 @@ public class MisspellingManager {
             }
 
             // Build a long long regex with all the misspellings
-            LOGGER.info("Start building automaton for misspellings...");
+            LOGGER.info("Start building automaton for misspelling alternations...");
             List<String> alternations = new ArrayList<>(newMisspellingList.size());
             for (Misspelling misspelling : newMisspellingList) {
                 if (misspelling.isCaseSensitive()) {
@@ -85,8 +95,24 @@ public class MisspellingManager {
                 }
             }
             String regexAlternations = "(" + StringUtils.join(alternations, "|") + ")";
-            misspellingAutomaton = new RunAutomaton(new RegExp(regexAlternations).toAutomaton());
-            LOGGER.info("End building automaton for misspellings");
+            misspellingAlternationsAutomaton = new RunAutomaton(new RegExp(regexAlternations).toAutomaton());
+            LOGGER.info("End building automaton for misspelling alternations");
+
+            // Build an automaton with the misspellings starting with uppercase
+            LOGGER.info("Start building automaton for uppercase misspellings...");
+            List<String> uppercaseAlternations = new ArrayList<>(newMisspellingList.size());
+            for (Misspelling misspelling : newMisspellingList) {
+                if (misspelling.isCaseSensitive()
+                        && es.bvalero.replacer.utils.StringUtils.startsWithUpperCase(misspelling.getWord())) {
+                    uppercaseAlternations.add(misspelling.getWord());
+                }
+            }
+            String regexUppercaseAlternations = "[\\.!\\*#\\|=]<Z>?("
+                    + StringUtils.join(uppercaseAlternations, "|")
+                    + ")";
+            uppercaseMisspellingsAutomaton = new RunAutomaton(new RegExp(regexUppercaseAlternations)
+                    .toAutomaton(new DatatypesAutomatonProvider()));
+            LOGGER.info("End building automaton for uppercase misspellings");
         }
     }
 
