@@ -50,7 +50,7 @@ public class ArticleServiceTest {
         String text = "Un hejemplo con muxos herrores y <XML>.";
 
         Article randomArticle = new Article(id, title);
-        Mockito.when(articleRepository.findRandomByReviewDateNull(Mockito.any(PageRequest.class)))
+        Mockito.when(articleRepository.findRandomArticleNotReviewed(Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(randomArticle));
 
         Mockito.when(wikipediaFacade.getArticleContent(Mockito.anyString())).thenReturn(text);

@@ -5,14 +5,14 @@
 
     <groupId>es.bvalero</groupId>
     <artifactId>replacer</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.0</version>
     <packaging>${packaging.type}</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <!--Spring Boot 2.x is not compatible with Java 7-->
-        <version>1.5.10.RELEASE</version>
+        <version>1.5.15.RELEASE</version>
         <relativePath/>
     </parent>
 
@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>3.3.7</version>
+            <version>3.3.7-1</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
@@ -60,17 +60,18 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.16.1</version>
+            <version>1.18</version>
         </dependency>
         <dependency>
             <groupId>com.github.scribejava</groupId>
             <artifactId>scribejava-core</artifactId>
-            <version>5.3.0</version>
+            <version>5.5.0</version>
         </dependency>
         <dependency>
             <groupId>com.bitplan</groupId>
             <artifactId>mediawiki-japi</artifactId>
-            <version>0.0.20</version>
+            <!-- Last version compatible with Java 7 -->
+            <version>0.0.21</version>
         </dependency>
         <dependency>
             <groupId>dk.brics</groupId>

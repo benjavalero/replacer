@@ -17,8 +17,8 @@ import java.util.List;
 @Transactional
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
-    @Query(value = "SELECT id FROM Article WHERE reviewDate IS NULL ORDER BY RAND()")
-    List<Article> findRandomByReviewDateNull(Pageable pageable);
+    @Query(value = "FROM Article WHERE reviewDate IS NULL ORDER BY RAND()")
+    List<Article> findRandomArticleNotReviewed(Pageable pageable);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Article SET reviewDate = NOW() WHERE id = :id")

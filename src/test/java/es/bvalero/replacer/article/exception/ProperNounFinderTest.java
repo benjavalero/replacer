@@ -36,6 +36,9 @@ public class ProperNounFinderTest {
         String surname = "Verne";
         String text = "xxx " + noun + " " + surname + " zzz";
 
+        RunAutomaton uppercaseMisspellingsAutomaton = new RunAutomaton(new RegExp("").toAutomaton());
+        Mockito.when(misspellingManager.getUppercaseMisspellingsAutomaton()).thenReturn(uppercaseMisspellingsAutomaton);
+
         List<RegexMatch> matches = properNounFinder.findExceptionMatches(text, false);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(noun, matches.get(0).getOriginalText());
