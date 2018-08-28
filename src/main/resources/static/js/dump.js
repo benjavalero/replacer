@@ -41,7 +41,7 @@ function findDumpStatus() {
             message = 'La indexación se está ejecutando.';
             message += '<ul>';
             message += '<li>Progreso: ' + response.progress + '&nbsp;%</li>';
-            message += '<li>Núm. páginas procesadas: ' + response.numProcessedItems + '</li>';
+            message += '<li>Núm. páginas procesadas: ' + response.pagesCount + '</li>';
             message += '<li>Finalización estimada: ' + parseMillisecondsIntoReadableTime(response.eta) + '&nbsp;s</li>';
             message += '<li>Tiempo medio por página: ' + response.average + ' ms</li>';
             message += '</ul>';
@@ -53,12 +53,15 @@ function findDumpStatus() {
                 message += '<ul>';
                 message += '<li>Última ejecución: ' + new Date(response.lastRun) + '</li>';
                 message += '<li>Núm. páginas procesadas: ' + response.average + '</li>';
-                message += '<li>Tiempo medio por página: ' + response.numProcessedItems + ' ms</li>';
+                message += '<li>Tiempo medio por página: ' + response.pagesCount + ' ms</li>';
                 message += '</ul>';
             }
         }
 
         $('#status-index').html(message);
+
+        // Check-box force indexing
+        $('#force-check').prop('checked', response.processOldArticles);
     }).fail(function(response) {
         $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
             + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'

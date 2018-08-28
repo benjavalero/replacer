@@ -17,6 +17,7 @@ public class DumpStatus {
     private Long startDate;
     private Long endDate;
     private int pagesCount;
+    private boolean processOldArticles;
 
     void start() {
         this.running = true;
@@ -94,6 +95,14 @@ public class DumpStatus {
                     .append("Last Run: ").append(new Date(endDate));
         }
         return sb.toString();
+    }
+
+    public boolean isProcessOldArticles() {
+        return processOldArticles;
+    }
+
+    void setProcessOldArticles(boolean processOldArticles) {
+        this.processOldArticles = processOldArticles;
     }
 
 }

@@ -33,11 +33,11 @@ class DumpManager {
     private String dumpFolderPath;
     @Autowired
     private DumpProcessor dumpProcessor;
-    private boolean processOldArticles = false;
+
     private DumpHandler dumpHandler = new DumpHandler() {
         @Override
         void processArticle(DumpArticle article) {
-            dumpProcessor.processArticle(getCurrentArticle(), processOldArticles);
+            dumpProcessor.processArticle(getCurrentArticle(), this.getDumpStatus().isProcessOldArticles());
         }
     };
 
@@ -107,12 +107,11 @@ class DumpManager {
         LOGGER.info("Start parsing dump file: {}...", dumpFile);
 
         try (InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile))) {
-            this.processOldArticles = processOldArticles;
-
             SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
             SAXParser saxParser = factory.newSAXParser();
 
+            dumpHandler.getDumpStatus().setProcessOldArticles(processOldArticles);
             saxParser.parse(xmlInput, dumpHandler);
         } catch (IOException e) {
             LOGGER.error("Latest dump file not found or valid", e);
