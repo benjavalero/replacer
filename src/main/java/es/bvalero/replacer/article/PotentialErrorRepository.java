@@ -22,10 +22,7 @@ public interface PotentialErrorRepository extends JpaRepository<PotentialError, 
     @Query("SELECT text, COUNT(*) FROM PotentialError WHERE type = 'MISSPELLING' AND article.reviewDate IS NULL GROUP BY text")
     List<Object[]> findMisspellingsGrouped();
 
-    @Query("SELECT MAX(article.id) FROM PotentialError WHERE text = :word AND article.reviewDate IS NULL")
-    Integer findMaxArticleIdByWordAndNotReviewed(@Param("word") String word);
-
-    @Query("SELECT pe.article FROM PotentialError pe WHERE pe.text = :word AND pe.article.reviewDate IS NULL AND pe.article.id > :minId")
-    List<Article> findByWordAndIdGreaterThanAndReviewDateNull(@Param("minId") Integer minId, @Param("word") String word, Pageable pageable);
+    @Query(value = "SELECT pe.article FROM PotentialError pe WHERE pe.text = :word AND pe.article.reviewDate IS NULL ORDER BY RAND()")
+    List<Article> findRandomByWordAndReviewDateNull(@Param("word") String word, Pageable pageable);
 
 }

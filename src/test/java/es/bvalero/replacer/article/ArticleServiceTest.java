@@ -43,16 +43,15 @@ public class ArticleServiceTest {
     }
 
     @Test
-    public void findRandomArticleWithPotentialErrors() throws WikipediaException {
-        Mockito.when(articleRepository.findMaxIdNotReviewed()).thenReturn(10);
-
+    public void findRandomArticleWithPotentialErrors()
+            throws WikipediaException, InvalidArticleException, UnfoundArticleException {
         Integer id = 1;
         String title = "España";
         String text = "Un hejemplo con muxos herrores y <XML>.";
 
         Article randomArticle = new Article(id, title);
-        Mockito.when(articleRepository.findFirstByIdGreaterThanAndReviewDateNull(Mockito.anyInt()))
-                .thenReturn(randomArticle);
+        Mockito.when(articleRepository.findRandomByReviewDateNull(Mockito.any(PageRequest.class)))
+                .thenReturn(Collections.singletonList(randomArticle));
 
         Mockito.when(wikipediaFacade.getArticleContent(Mockito.anyString())).thenReturn(text);
 
@@ -60,7 +59,7 @@ public class ArticleServiceTest {
         ExceptionMatchFinder exceptionMatchFinder = Mockito.mock(ExceptionMatchFinder.class);
         RegexMatch exceptionMatch = new RegexMatch(16, "muxos");
         Mockito.when(exceptionMatchFinder.findExceptionMatches(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(Collections.singletonList(exceptionMatch));
-        Mockito.when(exceptionMatchFinders.iterator()).thenReturn(Arrays.asList(exceptionMatchFinder).iterator());
+        Mockito.when(exceptionMatchFinders.iterator()).thenReturn(Collections.singletonList(exceptionMatchFinder).iterator());
 
         // Potential error matches
         PotentialErrorFinder potentialErrorFinder = Mockito.mock(PotentialErrorFinder.class);
@@ -72,7 +71,7 @@ public class ArticleServiceTest {
         replacement3.setType(PotentialErrorType.MISSPELLING);
         replacement3.setComment("errores");
         Mockito.when(potentialErrorFinder.findPotentialErrors(Mockito.anyString())).thenReturn(Arrays.asList(replacement1, replacement2, replacement3));
-        Mockito.when(potentialErrorFinders.iterator()).thenReturn(Arrays.asList(potentialErrorFinder).iterator());
+        Mockito.when(potentialErrorFinders.iterator()).thenReturn(Collections.singletonList(potentialErrorFinder).iterator());
 
         articleService.setHighlightExceptions(true);
 
@@ -97,16 +96,15 @@ public class ArticleServiceTest {
     }
 
     @Test
-    public void findRandomArticleByWordHidingParagraphs() throws WikipediaException {
-        Mockito.when(potentialErrorRepository.findMaxArticleIdByWordAndNotReviewed(Mockito.anyString())).thenReturn(10);
-
+    public void findRandomArticleByWordHidingParagraphs()
+            throws WikipediaException, InvalidArticleException, UnfoundArticleException {
         Integer id = 1;
         String title = "España";
         String text = "Un hejemplo\n\nX\n\nOtro hejemplo.";
 
         Article randomArticle = new Article(id, title);
         Mockito.when(potentialErrorRepository
-                .findByWordAndIdGreaterThanAndReviewDateNull(Mockito.anyInt(), Mockito.anyString(), Mockito.any(PageRequest.class)))
+                .findRandomByWordAndReviewDateNull(Mockito.anyString(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(randomArticle));
 
         Mockito.when(wikipediaFacade.getArticleContent(Mockito.anyString())).thenReturn(text);
@@ -114,7 +112,7 @@ public class ArticleServiceTest {
         // Exception matches
         ExceptionMatchFinder exceptionMatchFinder = Mockito.mock(ExceptionMatchFinder.class);
         Mockito.when(exceptionMatchFinder.findExceptionMatches(Mockito.anyString(), Mockito.anyBoolean())).thenReturn(Arrays.asList(new RegexMatch[]{}));
-        Mockito.when(exceptionMatchFinders.iterator()).thenReturn(Arrays.asList(exceptionMatchFinder).iterator());
+        Mockito.when(exceptionMatchFinders.iterator()).thenReturn(Collections.singletonList(exceptionMatchFinder).iterator());
 
         // Potential error matches
         PotentialErrorFinder potentialErrorFinder = Mockito.mock(PotentialErrorFinder.class);
@@ -125,10 +123,10 @@ public class ArticleServiceTest {
         replacement2.setComment("ejemplo");
         replacement2.setType(PotentialErrorType.MISSPELLING);
         Mockito.when(potentialErrorFinder.findPotentialErrors(Mockito.anyString())).thenReturn(Arrays.asList(replacement1, replacement2));
-        Mockito.when(potentialErrorFinders.iterator()).thenReturn(Arrays.asList(potentialErrorFinder).iterator());
+        Mockito.when(potentialErrorFinders.iterator()).thenReturn(Collections.singletonList(potentialErrorFinder).iterator());
 
         articleService.setHideEmptyParagraphs(true);
-        ArticleData articleData = articleService.findRandomArticleWithPotentialErrors("xxx");
+        ArticleData articleData = articleService.findRandomArticleWithPotentialErrors("hejemplo");
 
         String replacedContent = "Un <button id=\"miss-3\" title=\"ejemplo\" type=\"button\" class=\"miss btn btn-danger\" data-toggle=\"tooltip\" data-placement=\"top\">hejemplo</button>"
                 + "\n<hr>\n"

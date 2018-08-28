@@ -1,5 +1,6 @@
 package es.bvalero.replacer.article;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,10 +17,8 @@ import java.util.List;
 @Transactional
 public interface ArticleRepository extends JpaRepository<Article, Integer> {
 
-    @Query("SELECT MAX(id) FROM Article WHERE reviewDate IS NULL")
-    Integer findMaxIdNotReviewed();
-
-    Article findFirstByIdGreaterThanAndReviewDateNull(Integer minId);
+    @Query(value = "SELECT id FROM Article WHERE reviewDate IS NULL ORDER BY RAND()")
+    List<Article> findRandomByReviewDateNull(Pageable pageable);
 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE Article SET reviewDate = NOW() WHERE id = :id")

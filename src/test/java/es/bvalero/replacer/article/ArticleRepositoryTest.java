@@ -5,11 +5,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -36,24 +38,16 @@ public class ArticleRepositoryTest {
     }
 
     @Test
-    public void testFindMaxId() {
-        Article newArticle = new Article(3, "");
-        articleRepository.save(newArticle);
-
-        Assert.assertEquals(Integer.valueOf(3), articleRepository.findMaxIdNotReviewed());
-    }
-
-    @Test
-    public void testFindByIdGreaterThanAndLastReviewedNull() {
+    public void testFindNotReviewed() {
         Article article1 = new Article(1, "");
         Article article2 = new Article(2, "");
         article2.setReviewDate(new Timestamp(new Date().getTime()));
         Article article3 = new Article(3, "");
         articleRepository.save(Arrays.asList(article1, article2, article3));
 
-        Article articleGreater = articleRepository.findFirstByIdGreaterThanAndReviewDateNull(1);
-        Assert.assertNotNull(articleGreater);
-        Assert.assertEquals(Integer.valueOf(3), articleGreater.getId());
+        List<Article> notReviewedArticles = articleRepository.findRandomByReviewDateNull(new PageRequest(0, 3));
+        Assert.assertNotNull(notReviewedArticles);
+        Assert.assertEquals(2, notReviewedArticles.size());
     }
 
     @Test

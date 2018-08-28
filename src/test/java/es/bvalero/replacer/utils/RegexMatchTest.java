@@ -45,13 +45,13 @@ public class RegexMatchTest {
         RegexMatch match7 = new RegexMatch(7, "CAM"); // 7-9
 
         List<RegexMatch> matches = new LinkedList<>(Arrays.asList(match2, match5, match4, match1, match3, match4, match6, match7));
-        List<RegexMatch> resultMatches = RegexMatch.removedNestedMatches(matches);
+        RegexMatch.removedNestedMatches(matches);
 
-        Assert.assertEquals(3, resultMatches.size());
-        Assert.assertEquals(match4, resultMatches.get(0));
-        Assert.assertEquals(match2, resultMatches.get(1));
-        Assert.assertEquals("ÉTICAMEN", resultMatches.get(1).getOriginalText());
-        Assert.assertEquals(match1, resultMatches.get(2));
+        Assert.assertEquals(3, matches.size());
+        Assert.assertEquals(match4, matches.get(0));
+        Assert.assertEquals(match2, matches.get(1));
+        Assert.assertEquals("ÉTICAMEN", matches.get(1).getOriginalText());
+        Assert.assertEquals(match1, matches.get(2));
     }
 
 }

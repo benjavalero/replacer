@@ -8,7 +8,6 @@ import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,70 +69,115 @@ public class ArticleService {
         this.hideEmptyParagraphs = hideEmptyParagraphs;
     }
 
-    ArticleData findRandomArticleWithPotentialErrors() {
-        return findRandomArticleWithPotentialErrors(null);
-    }
-
-    @NotNull
-    ArticleData findRandomArticleWithPotentialErrors(@Nullable String word) {
-        // Find random article in Replacer database. It should never be null.
-        Integer maxRowIdNotReviewed = (word == null
-                ? articleRepository.findMaxIdNotReviewed()
-                : potentialErrorRepository.findMaxArticleIdByWordAndNotReviewed(word));
-        if (maxRowIdNotReviewed == null) {
-            LOGGER.info("No unreviewed article found for word: {}", word);
-            ArticleData articleData = new ArticleData();
-            articleData.setTitle("No hay artículos por revisar");
-            return articleData;
+    ArticleData findRandomArticleWithPotentialErrors() throws UnfoundArticleException, InvalidArticleException {
+        // Find random article in Replacer database (the result can be empty)
+        List<Article> randomArticles = articleRepository.findRandomByReviewDateNull(new PageRequest(0, 1));
+        if (randomArticles.isEmpty()) {
+            LOGGER.warn("No random article found to review");
+            throw new UnfoundArticleException();
         }
 
-        Random randomGenerator = new Random();
-        Integer startRow = randomGenerator.nextInt(maxRowIdNotReviewed);
-        Article randomArticle = (word == null
-                ? articleRepository.findFirstByIdGreaterThanAndReviewDateNull(startRow)
-                : potentialErrorRepository.findByWordAndIdGreaterThanAndReviewDateNull(startRow, word, new PageRequest(0, 1)).get(0));
+        Article randomArticle = randomArticles.get(0);
 
         // Get the content of the article from Wikipedia
-        String articleContent;
         try {
-            articleContent = wikipediaFacade.getArticleContent(randomArticle.getTitle());
+            String articleContent = wikipediaFacade.getArticleContent(randomArticle.getTitle());
+
+            // Check if the article is processable
+            if (WikipediaUtils.isRedirectionArticle(articleContent)) {
+                LOGGER.warn("Found article is a redirection page: {}", randomArticle.getTitle());
+                articleRepository.delete(randomArticle.getId());
+                throw new InvalidArticleException();
+            }
+
+            return getArticleDataWithReplacements(randomArticle, articleContent);
         } catch (WikipediaException e) {
             LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle(), e);
             articleRepository.delete(randomArticle.getId());
-            return findRandomArticleWithPotentialErrors(word);
-        }
-
-        if (WikipediaUtils.isRedirectionArticle(articleContent)) {
-            LOGGER.warn("Found article is a redirection page: {}", randomArticle.getTitle());
+            throw new InvalidArticleException();
+        } catch (InvalidArticleException e) {
             articleRepository.delete(randomArticle.getId());
-            return findRandomArticleWithPotentialErrors(word);
-        }
-
-        ArticleData articleData = getArticleDataWithReplacements(randomArticle, articleContent);
-        if (articleData == null) {
-            LOGGER.warn("Issues when finding replacements for article: {}", randomArticle.getTitle());
-            articleRepository.delete(randomArticle.getId());
-            return findRandomArticleWithPotentialErrors(word);
-        } else {
-            return articleData;
+            throw new InvalidArticleException();
         }
     }
 
-    @Nullable
-    private ArticleData getArticleDataWithReplacements(@NotNull Article article, @NotNull String articleContent) {
+    @NotNull
+    ArticleData findRandomArticleWithPotentialErrors(@NotNull String word)
+            throws UnfoundArticleException, InvalidArticleException {
+        // Find random article in Replacer database (the result can be empty)
+        List<Article> randomArticles = potentialErrorRepository
+                .findRandomByWordAndReviewDateNull(word, new PageRequest(0, 1));
+        if (randomArticles.isEmpty()) {
+            LOGGER.warn("No random article found to review");
+            throw new UnfoundArticleException();
+        }
+
+        Article randomArticle = randomArticles.get(0);
+
+        // Get the content of the article from Wikipedia
+        try {
+            String articleContent = wikipediaFacade.getArticleContent(randomArticle.getTitle());
+
+            // Check if the article is processable
+            if (WikipediaUtils.isRedirectionArticle(articleContent)) {
+                LOGGER.warn("Found article is a redirection page: {}", randomArticle.getTitle());
+                articleRepository.delete(randomArticle.getId());
+                throw new InvalidArticleException();
+            }
+
+            ArticleData articleData = getArticleDataWithReplacements(randomArticle, articleContent);
+
+            // Check if the requested word is found in the potential fixes
+            boolean wordFound = false;
+            for (ArticleReplacement replacement : articleData.getFixes().values()) {
+                if (word.equals(replacement.getOriginalText())) {
+                    wordFound = true;
+                }
+            }
+            // If not we delete the potential error from the article but let the article
+            if (!wordFound) {
+                LOGGER.warn("Word {} not found as a potential error for article: {}", word, randomArticle.getTitle());
+                Iterator<PotentialError> it = randomArticle.getPotentialErrors().iterator();
+                while (it.hasNext()) {
+                    PotentialError potentialError = it.next();
+                    if (potentialError.getText().equals(word)) {
+                        it.remove();
+                    }
+                }
+                articleRepository.save(randomArticle);
+
+                throw new InvalidArticleException();
+            }
+
+            return articleData;
+        } catch (WikipediaException e) {
+            LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle(), e);
+            articleRepository.delete(randomArticle.getId());
+            throw new InvalidArticleException();
+        }
+    }
+
+    @NotNull
+    private ArticleData getArticleDataWithReplacements(@NotNull Article article, @NotNull String articleContent)
+            throws InvalidArticleException {
         // Escape the content just in case it contains XML tags
         String escapedContent = StringUtils.escapeText(articleContent);
 
-        // Find the possible exceptions and errors in the article content
-        List<RegexMatch> exceptionMatches = findExceptionMatches(escapedContent, true);
-        for (RegexMatch match : exceptionMatches) {
-            LOGGER.debug("Exception match: {} ({}-{})", match.getOriginalText(), match.getPosition(), match.getEnd());
+        // This method is called when processing only one article from the web interface
+        // so the performance is not so important. We retrieve all exception matches and remove the nested ones.
+        List<RegexMatch> exceptionMatches = new LinkedList<>();
+        for (ExceptionMatchFinder exceptionMatchFinder : exceptionMatchFinders) {
+            exceptionMatches.addAll(exceptionMatchFinder.findExceptionMatches(escapedContent, true));
         }
+        // LinkedList is better to run iterators and remove items from it
+        RegexMatch.removedNestedMatches(exceptionMatches);
 
-        List<ArticleReplacement> articleReplacements = findPotentialErrorsIgnoringExceptions(escapedContent, exceptionMatches);
-        LOGGER.info("Article found has {} potential errors to review: {}", articleReplacements.size(), article.getTitle());
+        // Find the potential errors
+        List<ArticleReplacement> articleReplacements =
+                findPotentialErrorsIgnoringExceptions(escapedContent, exceptionMatches);
+        LOGGER.info("Article has {} potential errors to review: {}", articleReplacements.size(), article.getTitle());
         if (articleReplacements.isEmpty()) {
-            return null;
+            throw new InvalidArticleException();
         }
 
         // Replace the proposed replacements with buttons to interact with them
@@ -163,7 +207,7 @@ public class ArticleService {
             replacedContent = StringUtils.replaceAt(replacedContent, replacement.getPosition(),
                     replacement.getOriginalText(), newText);
             if (replacedContent == null) {
-                return null;
+                throw new InvalidArticleException();
             }
         }
 
@@ -240,21 +284,6 @@ public class ArticleService {
             articleReplacements.addAll(potentialErrorFinder.findPotentialErrors(text));
         }
         return articleReplacements;
-    }
-
-    /**
-     * @return A list with all the occurrences of text exceptions with no overlapping.
-     * If there are no exception matches, the list will be empty.
-     */
-    @NotNull
-    private List<RegexMatch> findExceptionMatches(@NotNull String text, boolean isTextEscaped) {
-        // LinkedList is better to run iterators and remove items from it
-        List<RegexMatch> allErrorExceptions = new LinkedList<>();
-        for (ExceptionMatchFinder exceptionMatchFinder : exceptionMatchFinders) {
-            allErrorExceptions.addAll(exceptionMatchFinder.findExceptionMatches(text, isTextEscaped));
-        }
-
-        return RegexMatch.removedNestedMatches(allErrorExceptions);
     }
 
     @NotNull
