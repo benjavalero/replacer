@@ -45,7 +45,7 @@ public class MisspellingFinderTest {
 
         String misspellingRegex = "([Uu]n|[Vv]onito|[Ee]xemplo)";
         RunAutomaton misspellingAutomaton = new RunAutomaton(new RegExp(misspellingRegex).toAutomaton());
-        Mockito.when(misspellingManager.getMisspellingAutomaton()).thenReturn(misspellingAutomaton);
+        Mockito.when(misspellingManager.getMisspellingAlternationsAutomaton()).thenReturn(misspellingAutomaton);
 
         List<ArticleReplacement> result = misspellingFinder.findPotentialErrors(articleContent);
 

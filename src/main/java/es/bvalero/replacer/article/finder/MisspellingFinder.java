@@ -33,7 +33,8 @@ public class MisspellingFinder implements PotentialErrorFinder {
 
         // Replace any character non-alphanumeric with two spaces
         String cleanText = text.replaceAll("[^\\p{L}\\p{N}]", " ");
-        List<RegexMatch> misspellingMatches = RegExUtils.findMatchesAutomaton(cleanText, misspellingManager.getMisspellingAutomaton());
+        List<RegexMatch> misspellingMatches = RegExUtils.findMatchesAutomaton(
+                cleanText, misspellingManager.getMisspellingAlternationsAutomaton());
 
         // For each word, check if it is a known potential misspelling.
         // If so, add it as a replacement for the text.
