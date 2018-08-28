@@ -23,10 +23,10 @@ public class RegexMatch implements Comparable<RegexMatch> {
         this.originalText = originalText;
     }
 
-    public static List<RegexMatch> removedNestedMatches(List<RegexMatch> sortedMatches) {
+    public static void removedNestedMatches(List<RegexMatch> sortedMatches) {
         // The list of matches must be of type LinkedList
         if (sortedMatches.isEmpty()) {
-            return sortedMatches;
+            return;
         }
         Collections.sort(sortedMatches, Collections.<RegexMatch>reverseOrder());
         Iterator<RegexMatch> it = sortedMatches.iterator();
@@ -49,7 +49,6 @@ public class RegexMatch implements Comparable<RegexMatch> {
         }
 
         Collections.sort(sortedMatches);
-        return sortedMatches;
     }
 
     public int getPosition() {

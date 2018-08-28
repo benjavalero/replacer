@@ -55,7 +55,10 @@ public class MisspellingManager {
     @SuppressWarnings("WeakerAccess")
     @Scheduled(fixedDelay = 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
     void updateMisspellings() {
+        LOGGER.info("Start loading misspelling list from Wikipedia...");
         List<Misspelling> newMisspellingList = findWikipediaMisspellings();
+        LOGGER.info("End parsing misspelling list from Wikipedia: {} items", newMisspellingList.size());
+
         if (!newMisspellingList.isEmpty()) {
             // Build a map to quick access the misspellings by word
             misspellingMap.clear();
@@ -69,6 +72,7 @@ public class MisspellingManager {
             }
 
             // Build a long long regex with all the misspellings
+            LOGGER.info("Start building automaton for misspellings...");
             List<String> alternations = new ArrayList<>(newMisspellingList.size());
             for (Misspelling misspelling : newMisspellingList) {
                 if (misspelling.isCaseSensitive()) {
@@ -82,13 +86,12 @@ public class MisspellingManager {
             }
             String regexAlternations = "(" + StringUtils.join(alternations, "|") + ")";
             misspellingAutomaton = new RunAutomaton(new RegExp(regexAlternations).toAutomaton());
+            LOGGER.info("End building automaton for misspellings");
         }
     }
 
     private List<Misspelling> findWikipediaMisspellings() {
         try {
-            LOGGER.info("Start loading misspelling list from Wikipedia...");
-
             String misspellingListText = wikipediaFacade.getArticleContent(WikipediaFacade.MISSPELLING_LIST_ARTICLE);
             return parseMisspellingListText(misspellingListText);
         } catch (WikipediaException e) {
@@ -121,7 +124,6 @@ public class MisspellingManager {
             LOGGER.error("Error parsing misspelling list", e);
         }
 
-        LOGGER.info("End parsing misspelling list from Wikipedia: {} items", misspellings.size());
         return misspellings;
     }
 

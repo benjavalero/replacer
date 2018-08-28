@@ -92,9 +92,14 @@ unas 10 veces) pero en la máquina de Wikipedia solo tenemos la opción de usar
 la versión comprimida.
 
 En cuanto al procesado de los artículos, también tenemos 3 partes claras:
-1. Consultar la BD para ver si el artículo ya existe y cuál es su estado
-2. Buscar los errores potenciales y descartar los contenidos en excepciones
-3. Guardar en BD los reemplazos detectados en el artículo
+1. Consultar la BD para ver si el artículo ya existe y cuál es su estado.
+El sistema busca varios (1000) artículos a la vez para reducir el número
+de llamadas a BD.
+2. Buscar los errores potenciales y descartar los contenidos en excepciones.
+El sistema intenta terminar lo antes posible en el caso de no encontrar
+errores potenciales.
+3. Guardar en BD los reemplazos detectados en el artículo. El sistema
+intenta realizar solo las inserciones, borrados y actualizaciones necesarias.
  
 
  

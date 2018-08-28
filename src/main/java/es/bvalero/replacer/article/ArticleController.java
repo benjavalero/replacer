@@ -22,7 +22,20 @@ public class ArticleController {
     @RequestMapping(value = "/article/random")
     public ArticleData random() {
         LOGGER.info("Finding random article with potential errors...");
-        return articleService.findRandomArticleWithPotentialErrors();
+
+        ArticleData articleData = null;
+        do {
+            try {
+                articleData = articleService.findRandomArticleWithPotentialErrors();
+            } catch (UnfoundArticleException e) {
+                articleData = new ArticleData();
+                articleData.setTitle("No hay artículos por revisar");
+            } catch (InvalidArticleException e) {
+                // Retry
+            }
+        } while (articleData == null);
+
+        return articleData;
     }
 
     /**
@@ -31,7 +44,20 @@ public class ArticleController {
     @RequestMapping(value = "/article/random/word/{word}")
     public ArticleData randomByWord(@PathVariable("word") String word) {
         LOGGER.info("Finding random article containing error: {}", word);
-        return articleService.findRandomArticleWithPotentialErrors(word);
+
+        ArticleData articleData = null;
+        do {
+            try {
+                articleData = articleService.findRandomArticleWithPotentialErrors(word);
+            } catch (UnfoundArticleException e) {
+                articleData = new ArticleData();
+                articleData.setTitle("No hay artículos por revisar");
+            } catch (InvalidArticleException e) {
+                // Retry
+            }
+        } while (articleData == null);
+
+        return articleData;
     }
 
     @RequestMapping(value = "/article/save")
