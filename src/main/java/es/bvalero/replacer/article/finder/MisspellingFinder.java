@@ -31,17 +31,16 @@ public class MisspellingFinder implements PotentialErrorFinder {
     public List<ArticleReplacement> findPotentialErrors(@NotNull String text) {
         List<ArticleReplacement> articleReplacements = new ArrayList<>(100);
 
-        // Replace any character non-alphanumeric with two spaces
-        String cleanText = text.replaceAll("[^\\p{L}\\p{N}]", " ");
         List<RegexMatch> misspellingMatches = RegExUtils.findMatchesAutomaton(
-                cleanText, misspellingManager.getMisspellingAlternationsAutomaton());
+                text, misspellingManager.getMisspellingAlternationsAutomaton());
 
         // For each word, check if it is a known potential misspelling.
         // If so, add it as a replacement for the text.
         for (RegexMatch misspellingMatch : misspellingMatches) {
             // Check if the found word is complete, i. e. check the character before the match
-            if (misspellingMatch.getPosition() == 0 || misspellingMatch.getEnd() == cleanText.length()
-                    || (cleanText.charAt(misspellingMatch.getPosition() - 1) == ' ' && cleanText.charAt(misspellingMatch.getEnd()) == ' ')) {
+            if (misspellingMatch.getPosition() == 0 || misspellingMatch.getEnd() == text.length() ||
+                    (!Character.isLetterOrDigit(text.charAt(misspellingMatch.getPosition() - 1))
+                            && !Character.isLetterOrDigit(text.charAt(misspellingMatch.getEnd())))) {
                 String originalText = misspellingMatch.getOriginalText();
                 Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
 
