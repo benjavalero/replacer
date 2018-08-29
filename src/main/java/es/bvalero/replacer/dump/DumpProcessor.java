@@ -88,7 +88,10 @@ class DumpProcessor {
 
         if (dumpStatus.getArticleCount() % CACHE_SIZE == 0) {
             articleRepository.delete(articlesToDelete);
+            articlesToDelete.clear();
+
             articleRepository.save(articlesToSave);
+            articlesToSave.clear();
         }
         long writeDbTime = System.currentTimeMillis() - startWriteDbTime;
 

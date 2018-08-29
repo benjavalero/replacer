@@ -11,7 +11,7 @@ public class DumpStatus {
 
     // Rough amount of pages to be checked
     // Type double to make easier calculations with decimals
-    private static final double NUM_TOTAL_PAGES = 3666708;
+    private static double pageCountEstimation = 3666708;
 
     private boolean running;
     private Long startDate;
@@ -36,6 +36,11 @@ public class DumpStatus {
 
     void increasePages() {
         this.pagesCount++;
+
+        // In case the dump contains more articles than estimated
+        if (this.pagesCount >= pageCountEstimation) {
+            pageCountEstimation += 1000;
+        }
     }
 
     void increaseArticles() {
@@ -60,7 +65,7 @@ public class DumpStatus {
     }
 
     public double getProgress() {
-        double percentProgress = pagesCount / NUM_TOTAL_PAGES * 100;
+        double percentProgress = pagesCount / pageCountEstimation * 100;
         // Format with two decimals
         return Math.round(percentProgress * 100) / 100.0;
     }
@@ -79,7 +84,7 @@ public class DumpStatus {
         if (average == null) {
             return null;
         } else {
-            long numToProcess = Math.round(NUM_TOTAL_PAGES - pagesCount);
+            long numToProcess = Math.round(pageCountEstimation - pagesCount);
             return numToProcess * average;
         }
     }
