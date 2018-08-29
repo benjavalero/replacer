@@ -27,6 +27,7 @@ function runIndexation(forceIndexation) {
     });
 
     $('#button-index').addClass("disabled");
+    $('#force-check').attr("disabled", "disabled");
     $('#status-index').html("Comenzando indexación...");
 }
 
@@ -51,6 +52,7 @@ function findDumpStatus() {
             message += '</ul>';
         } else {
             $('#button-index').removeClass("disabled");
+            $('#force-check').removeAttr("disabled");
 
             message = 'La indexación no se está ejecutando.';
             if (response.lastRun) {
