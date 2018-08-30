@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public interface ArticleRepository extends JpaRepository<Article, Integer> {
+public interface ArticleRepository extends JpaRepository<Article, Integer>,  ArticleRepositoryCustom {
 
     @Query(value = "FROM Article WHERE reviewDate IS NULL ORDER BY RAND()")
     List<Article> findRandomArticleNotReviewed(Pageable pageable);

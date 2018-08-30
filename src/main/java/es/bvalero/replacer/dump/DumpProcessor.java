@@ -15,7 +15,7 @@ import java.util.*;
 class DumpProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpProcessor.class);
-    private static final int CACHE_SIZE = 10000;
+    private static final int CACHE_SIZE = 1000;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -40,8 +40,20 @@ class DumpProcessor {
         long startReadDbTime = System.currentTimeMillis();
         Article article = articlesDb.get(dumpArticle.getId());
         if (article == null && dumpArticle.getId() > maxIdDb) {
+            // Save all modifications
+            articleRepository.delete(articlesToDelete);
+            articlesToDelete.clear();
+
+            articleRepository.save(articlesToSave);
+            articlesToSave.clear();
+
+            // Flush and clear to avoid memory leaks (we are performing millions of updates)
+            articleRepository.flush();
+            articleRepository.clear();
+
             // The list of DB articles to cache is ordered by ID
             articlesDb.clear();
+
             for (Article articleDb : articleRepository
                     .findByIdGreaterThanOrderById(dumpArticle.getId() - 1, new PageRequest(0, CACHE_SIZE))) {
                 articlesDb.put(articleDb.getId(), articleDb);
@@ -84,14 +96,6 @@ class DumpProcessor {
                 // Only save if there are modifications in the potential errors found for the article
                 articlesToSave.add(article);
             }
-        }
-
-        if (dumpStatus.getArticleCount() % CACHE_SIZE == 0) {
-            articleRepository.delete(articlesToDelete);
-            articlesToDelete.clear();
-
-            articleRepository.save(articlesToSave);
-            articlesToSave.clear();
         }
         long writeDbTime = System.currentTimeMillis() - startWriteDbTime;
 
