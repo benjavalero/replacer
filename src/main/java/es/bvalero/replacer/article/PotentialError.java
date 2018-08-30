@@ -40,7 +40,7 @@ public class PotentialError implements Serializable {
         return article;
     }
 
-    void setArticle(Article article) {
+    public void setArticle(Article article) {
         this.article = article;
     }
 
