@@ -58,8 +58,8 @@ function findDumpStatus() {
             if (response.lastRun) {
                 message += '<ul>';
                 message += '<li>Última ejecución: ' + new Date(response.lastRun) + '</li>';
-                message += '<li>Núm. páginas leídas: ' + response.average + '</li>';
-                message += '<li>Tiempo medio por página: ' + response.pagesCount + ' ms</li>';
+                message += '<li>Núm. páginas leídas: ' + response.pagesCount + '</li>';
+                message += '<li>Tiempo medio por página: ' + response.average + ' ms</li>';
                 message += '<li>Núm. artículos procesados: ' + response.articleCount + '</li>';
                 message += '<li>Tiempo medio por artículo (leer/regex/escribir): '
                     + response.readDbTime + ' / ' + response.regexTime + ' / ' + response.writeDbTime
