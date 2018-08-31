@@ -16,13 +16,10 @@ import java.util.List;
 @Transactional
 public interface PotentialErrorRepository extends JpaRepository<PotentialError, Long> {
 
-    @Query("SELECT COUNT(*) FROM PotentialError WHERE type = 'MISSPELLING' AND article.reviewDate IS NULL")
-    Long countNotReviewed();
-
-    @Query("SELECT text, COUNT(*) FROM PotentialError WHERE type = 'MISSPELLING' AND article.reviewDate IS NULL GROUP BY text")
+    @Query("SELECT text, COUNT(*) FROM PotentialError WHERE type = 'MISSPELLING' GROUP BY text")
     List<Object[]> findMisspellingsGrouped();
 
-    @Query(value = "SELECT pe.article FROM PotentialError pe WHERE pe.text = :word AND pe.article.reviewDate IS NULL ORDER BY RAND()")
-    List<Article> findRandomByWordAndReviewDateNull(@Param("word") String word, Pageable pageable);
+    @Query(value = "SELECT pe.article FROM PotentialError pe WHERE pe.text = :word ORDER BY RAND()")
+    List<Article> findRandomByWord(@Param("word") String word, Pageable pageable);
 
 }

@@ -24,7 +24,7 @@ public class StatisticsController {
     @RequestMapping(value = "/statistics/count/potentialErrors")
     Long countPotentialErrors() {
         LOGGER.info("Count potential errors...");
-        Long count = potentialErrorRepository.countNotReviewed();
+        Long count = potentialErrorRepository.count();
         LOGGER.info("Potential errors found: {}", count);
         return count;
     }

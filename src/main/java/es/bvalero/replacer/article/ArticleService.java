@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -106,7 +107,7 @@ public class ArticleService {
             throws UnfoundArticleException, InvalidArticleException {
         // Find random article in Replacer database (the result can be empty)
         List<Article> randomArticles = potentialErrorRepository
-                .findRandomByWordAndReviewDateNull(word, new PageRequest(0, 1));
+                .findRandomByWord(word, new PageRequest(0, 1));
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
             throw new UnfoundArticleException();
@@ -387,7 +388,10 @@ public class ArticleService {
     }
 
     private void markArticleAsReviewed(@NotNull ArticleData article) {
-        articleRepository.setArticleAsReviewed(article.getId());
+        Article articleDb = articleRepository.findOne(article.getId());
+        articleDb.setReviewDate(new Timestamp(System.currentTimeMillis()));
+        articleDb.getPotentialErrors().clear();
+        articleRepository.save(articleDb);
     }
 
 }
