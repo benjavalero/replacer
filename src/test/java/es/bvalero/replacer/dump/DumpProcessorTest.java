@@ -45,11 +45,12 @@ public class DumpProcessorTest {
         DumpStatus dumpStatus = new DumpStatus();
         dumpStatus.start();
         dumpProcessor.processArticle(dumpArticle, dumpStatus);
+        dumpProcessor.finish();
 
         Mockito.verify(articleRepository, Mockito.times(1)).findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class));
         Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
-        // Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.any(Article.class));
-        // Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.any(Article.class));
+        Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.anyListOf(Article.class));
+        Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.anyListOf(Article.class));
     }
 
     @Test
@@ -67,11 +68,12 @@ public class DumpProcessorTest {
         DumpStatus dumpStatus = new DumpStatus();
         dumpStatus.start();
         dumpProcessor.processArticle(dumpArticle, dumpStatus);
+        dumpProcessor.finish();
 
         Mockito.verify(articleRepository, Mockito.times(1)).findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class));
         Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
-        // Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.any(Article.class));
-        // Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.any(Article.class));
+        Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.anyListOf(Article.class));
+        Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.anyListOf(Article.class));
     }
 
     @Test
@@ -87,11 +89,12 @@ public class DumpProcessorTest {
         DumpStatus dumpStatus = new DumpStatus();
         dumpStatus.start();
         dumpProcessor.processArticle(dumpArticle, dumpStatus);
+        dumpProcessor.finish();
 
         Mockito.verify(articleRepository, Mockito.times(1)).findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class));
         Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
-        // Mockito.verify(articleRepository, Mockito.times(1)).delete(Mockito.any(Article.class));
-        // Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
+        Mockito.verify(articleRepository, Mockito.times(1)).delete(Mockito.anyListOf(Article.class));
+        Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.anyListOf(Article.class));
     }
 
     @Test
@@ -175,11 +178,12 @@ public class DumpProcessorTest {
         DumpStatus dumpStatus = new DumpStatus();
         dumpStatus.start();
         dumpProcessor.processArticle(dumpArticle, dumpStatus);
+        dumpProcessor.finish();
 
         Mockito.verify(articleRepository, Mockito.times(1)).findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class));
         Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
-        // Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.any(Article.class));
-        // Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.any(Article.class));
+        Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.anyListOf(Article.class));
+        Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.anyListOf(Article.class));
     }
 
 }

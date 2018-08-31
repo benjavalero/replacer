@@ -54,10 +54,11 @@ public class DumpManagerTest {
         dumpManager.runIndexation();
 
         Mockito.verify(dumpFinder, Mockito.times(1)).findLatestDumpFile(Mockito.any(File.class));
+        Mockito.verify(dumpProcessor, Mockito.times(1)).finish();
 
         Assert.assertFalse(dumpManager.getStatus().isRunning());
         Assert.assertEquals(2, dumpManager.getStatus().getPagesCount());
-        Assert.assertTrue(dumpManager.getStatus().getAverage() > 0);
+        Assert.assertNotNull(dumpManager.getStatus().getAverage());
         Assert.assertNotNull(dumpManager.getStatus().getLastRun());
     }
 

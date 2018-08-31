@@ -40,16 +40,7 @@ class DumpProcessor {
         long startReadDbTime = System.currentTimeMillis();
         Article article = articlesDb.get(dumpArticle.getId());
         if (article == null && dumpArticle.getId() > maxIdDb) {
-            // Save all modifications
-            articleRepository.delete(articlesToDelete);
-            articlesToDelete.clear();
-
-            articleRepository.save(articlesToSave);
-            articlesToSave.clear();
-
-            // Flush and clear to avoid memory leaks (we are performing millions of updates)
-            articleRepository.flush();
-            articleRepository.clear();
+            flushModifications();
 
             // The list of DB articles to cache is ordered by ID
             articlesDb.clear();
@@ -133,6 +124,27 @@ class DumpProcessor {
         }
 
         return isModified;
+    }
+
+    private void flushModifications() {
+        // Save all modifications
+        if (!articlesToDelete.isEmpty()) {
+            articleRepository.delete(articlesToDelete);
+            articlesToDelete.clear();
+        }
+
+        if (!articlesToSave.isEmpty()) {
+            articleRepository.save(articlesToSave);
+            articlesToSave.clear();
+        }
+
+        // Flush and clear to avoid memory leaks (we are performing millions of updates)
+        articleRepository.flush();
+        articleRepository.clear();
+    }
+
+    void finish() {
+        flushModifications();
     }
 
 }
