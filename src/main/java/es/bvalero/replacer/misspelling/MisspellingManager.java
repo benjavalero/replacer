@@ -36,7 +36,7 @@ public class MisspellingManager {
     private RunAutomaton uppercaseMisspellingsAutomaton = null;
 
     @NotNull
-    Map<String, Misspelling> getMisspellingMap() {
+    synchronized Map<String, Misspelling> getMisspellingMap() {
         if (this.misspellingMap.isEmpty()) { // For the first time
             updateMisspellings();
         }
@@ -44,7 +44,7 @@ public class MisspellingManager {
     }
 
     @NotNull
-    public RunAutomaton getMisspellingAlternationsAutomaton() {
+    public synchronized RunAutomaton getMisspellingAlternationsAutomaton() {
         if (this.misspellingAlternationsAutomaton == null) { // For the first time
             updateMisspellings();
         }
@@ -52,7 +52,7 @@ public class MisspellingManager {
     }
 
     @NotNull
-    public RunAutomaton getUppercaseMisspellingsAutomaton() {
+    public synchronized RunAutomaton getUppercaseMisspellingsAutomaton() {
         if (this.uppercaseMisspellingsAutomaton == null) { // For the first time
             updateMisspellings();
         }
