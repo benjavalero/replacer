@@ -119,6 +119,7 @@ class DumpManager {
             LOGGER.error("Error parsing dump file", e);
         } finally {
             dumpHandler.getDumpStatus().finish();
+            dumpProcessor.finish();
         }
 
         LOGGER.info("Finished parsing dump file: {}\n{}", dumpFile, dumpHandler.getDumpStatus());
