@@ -82,7 +82,8 @@ class DumpProcessor {
                 article.setTitle(dumpArticle.getTitle()); // In case the title of the article has changed
             }
 
-            article.setAdditionDate(new Timestamp(new Date().getTime()));
+            article.setAdditionDate(new Timestamp(System.currentTimeMillis()));
+            article.setReviewDate(null);
             if (addPotentialErrorsToArticle(article, articleReplacements)) {
                 // Only save if there are modifications in the potential errors found for the article
                 articlesToSave.add(article);

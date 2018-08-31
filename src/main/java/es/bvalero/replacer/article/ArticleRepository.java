@@ -20,10 +20,6 @@ public interface ArticleRepository extends JpaRepository<Article, Integer>,  Art
     @Query(value = "FROM Article WHERE reviewDate IS NULL ORDER BY RAND()")
     List<Article> findRandomArticleNotReviewed(Pageable pageable);
 
-    @Modifying(clearAutomatically = true)
-    @Query("UPDATE Article SET reviewDate = NOW() WHERE id = :id")
-    void setArticleAsReviewed(@Param("id") Integer id);
-
     Long countByReviewDateNull();
 
     Long countByReviewDateNotNull();

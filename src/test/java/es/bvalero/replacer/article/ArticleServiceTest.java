@@ -104,7 +104,7 @@ public class ArticleServiceTest {
 
         Article randomArticle = new Article(id, title);
         Mockito.when(potentialErrorRepository
-                .findRandomByWordAndReviewDateNull(Mockito.anyString(), Mockito.any(PageRequest.class)))
+                .findRandomByWord(Mockito.anyString(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(randomArticle));
 
         Mockito.when(wikipediaFacade.getArticleContent(Mockito.anyString())).thenReturn(text);
@@ -139,18 +139,23 @@ public class ArticleServiceTest {
     public void testSaveArticleWithoutFixes() throws WikipediaException {
         Map<Integer, ArticleReplacement> articleFixes = new HashMap<>();
         ArticleData article = new ArticleData(1, "", "", articleFixes);
+        Article articleDb = new Article(1, "");
+        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
 
         articleService.saveArticleChanges(article);
 
-        Mockito.verify(articleRepository).setArticleAsReviewed(Mockito.anyInt());
+        Mockito.verify(articleRepository).save(Mockito.any(Article.class));
         Mockito.verify(wikipediaFacade, Mockito.times(0)).getArticleContent(Mockito.anyString());
     }
 
     @Test
     public void testSaveArticle() throws WikipediaException {
-        Integer id = 1;
+        int id = 1;
         String title = "España";
         String text = "Un hejemplo\n\nX\n\nOtro hejemplo.";
+
+        Article articleDb = new Article(id, title);
+        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
 
         Map<Integer, ArticleReplacement> articleFixes = new HashMap<>();
         ArticleReplacement replacement1 = new ArticleReplacement(3, "hejemplo");
@@ -170,7 +175,7 @@ public class ArticleServiceTest {
         String fixedText = "Un ejemplo\n\nX\n\nOtro hejemplo.";
         Mockito.verify(wikipediaFacade).getArticleContent(title);
         Mockito.verify(wikipediaFacade).editArticleContent(title, fixedText, "Correcciones ortográficas");
-        Mockito.verify(articleRepository).setArticleAsReviewed(id);
+        Mockito.verify(articleRepository).save(Mockito.any(Article.class));
     }
 
 }

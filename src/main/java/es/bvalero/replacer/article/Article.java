@@ -3,7 +3,6 @@ package es.bvalero.replacer.article;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -38,7 +37,7 @@ public class Article implements Serializable {
     public Article(Integer id, String title) {
         this.id = id;
         this.title = title;
-        this.additionDate = new Timestamp(new Date().getTime());
+        this.additionDate = new Timestamp(System.currentTimeMillis());
     }
 
     public Integer getId() {

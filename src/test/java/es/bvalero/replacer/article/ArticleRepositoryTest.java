@@ -51,17 +51,6 @@ public class ArticleRepositoryTest {
     }
 
     @Test
-    public void testSetArticleAsReviewed() {
-        Article newArticle = new Article(1, "");
-        articleRepository.save(newArticle);
-        Assert.assertNull(articleRepository.findOne(1).getReviewDate());
-
-        articleRepository.setArticleAsReviewed(1);
-        Assert.assertNotNull(articleRepository.findOne(1).getReviewDate());
-        Assert.assertFalse(articleRepository.findOne(1).getReviewDate().after(new Date()));
-    }
-
-    @Test
     public void testDelete() {
         Article newArticle = new Article(1, "");
         articleRepository.save(newArticle);
