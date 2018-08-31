@@ -97,7 +97,7 @@ public class ArticleService {
             throw new InvalidArticleException();
         } catch (InvalidArticleException e) {
             articleRepository.delete(randomArticle.getId());
-            throw new InvalidArticleException();
+            throw e;
         }
     }
 
@@ -154,6 +154,9 @@ public class ArticleService {
             LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle(), e);
             articleRepository.delete(randomArticle.getId());
             throw new InvalidArticleException();
+        } catch (InvalidArticleException e) {
+            articleRepository.delete(randomArticle.getId());
+            throw e;
         }
     }
 
