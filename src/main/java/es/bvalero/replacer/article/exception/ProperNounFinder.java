@@ -40,7 +40,7 @@ public class ProperNounFinder implements ExceptionMatchFinder {
             // Find the letter position
             Matcher m = REGEX_UPPERCASE.matcher(match.getOriginalText());
             if (m.find()) {
-                match.setPosition(match.getPosition() - m.start());
+                match.setPosition(match.getPosition() + m.start());
                 match.setOriginalText(match.getOriginalText().substring(m.start()));
                 matches.add(match);
             }

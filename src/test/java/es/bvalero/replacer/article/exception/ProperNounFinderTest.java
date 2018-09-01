@@ -62,7 +62,9 @@ public class ProperNounFinderTest {
         List<RegexMatch> matches = properNounFinder.findExceptionMatches(text, false);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(noun1, matches.get(0).getOriginalText());
+        Assert.assertEquals(9, matches.get(0).getPosition());
         Assert.assertEquals(noun2, matches.get(1).getOriginalText());
+        Assert.assertEquals(17, matches.get(1).getPosition());
 
         matches = properNounFinder.findExceptionMatches(StringUtils.escapeText(text), true);
         Assert.assertFalse(matches.isEmpty());
