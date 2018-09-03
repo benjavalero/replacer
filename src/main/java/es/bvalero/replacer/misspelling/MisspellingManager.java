@@ -121,7 +121,7 @@ public class MisspellingManager {
             String misspellingListText = wikipediaFacade.getArticleContent(WikipediaFacade.MISSPELLING_LIST_ARTICLE);
             return parseMisspellingListText(misspellingListText);
         } catch (WikipediaException e) {
-            LOGGER.error("Error loading misspellings list from Wikipedia", e);
+            LOGGER.error("Error loading misspellings list from Wikipedia");
             return new ArrayList<>();
         }
     }

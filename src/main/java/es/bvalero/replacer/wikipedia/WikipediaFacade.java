@@ -58,6 +58,7 @@ public class WikipediaFacade implements IWikipediaFacade {
         try {
             String articleContent = getWiki().getPageContent(articleTitle);
             if (articleContent == null) {
+                LOGGER.info("Article not available: {}", articleTitle);
                 throw new WikipediaException("Article not available");
             }
             return articleContent;
@@ -71,6 +72,7 @@ public class WikipediaFacade implements IWikipediaFacade {
             try {
                 this.wiki = new Mediawiki(WIKIPEDIA_URL);
             } catch (Exception e) {
+                LOGGER.error("Error accessing the Spanish Wikipedia", e);
                 throw new WikipediaException(e);
             }
         }
@@ -121,6 +123,7 @@ public class WikipediaFacade implements IWikipediaFacade {
         JsonNode jsonError = mapper.readTree(response.getBody()).get("error");
         if (jsonError != null) {
             String errMsg = "[error: " + jsonError.get("code") + ", info: " + jsonError.get("info") + "]";
+            LOGGER.error("Error accessing the Spanish Wikipedia: {}", errMsg);
             throw new WikipediaException(errMsg);
         }
     }
