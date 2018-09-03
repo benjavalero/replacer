@@ -40,6 +40,9 @@ class DumpProcessor {
         long startReadDbTime = System.currentTimeMillis();
         Article article = articlesDb.get(dumpArticle.getId());
         if (article == null && dumpArticle.getId() > maxIdDb) {
+            // The remaining cached articles are not in the dump so we remove them
+            articlesToDelete.addAll(articlesDb.values());
+
             flushModifications();
 
             // The list of DB articles to cache is ordered by ID
@@ -55,6 +58,9 @@ class DumpProcessor {
         long readDbTime = System.currentTimeMillis() - startReadDbTime;
 
         if (article != null) {
+            // The article in dump exists also already in the database
+            articlesDb.remove(article.getId());
+
             if (article.getReviewDate() != null && !dumpArticle.getTimestamp().after(article.getReviewDate())) {
                 LOGGER.debug("Article reviewed after dump timestamp. Skipping.");
                 return;
