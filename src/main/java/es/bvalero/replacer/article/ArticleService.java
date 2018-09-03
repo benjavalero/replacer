@@ -87,18 +87,17 @@ public class ArticleService {
             // Check if the article is processable
             if (WikipediaUtils.isRedirectionArticle(articleContent)) {
                 LOGGER.warn("Found article is a redirection page: {}", randomArticle.getTitle());
-                articleRepository.delete(randomArticle.getId());
                 throw new InvalidArticleException();
             }
 
             return getArticleDataWithReplacements(randomArticle, articleContent);
-        } catch (WikipediaException e) {
-            LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle(), e);
-            articleRepository.delete(randomArticle.getId());
-            throw new InvalidArticleException();
         } catch (InvalidArticleException e) {
             articleRepository.delete(randomArticle.getId());
             throw e;
+        } catch (WikipediaException e) {
+            LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle());
+            articleRepository.delete(randomArticle.getId());
+            throw new InvalidArticleException();
         }
     }
 
@@ -116,49 +115,49 @@ public class ArticleService {
         Article randomArticle = randomArticles.get(0);
 
         // Get the content of the article from Wikipedia
+        ArticleData articleData;
         try {
             String articleContent = wikipediaFacade.getArticleContent(randomArticle.getTitle());
 
             // Check if the article is processable
             if (WikipediaUtils.isRedirectionArticle(articleContent)) {
                 LOGGER.warn("Found article is a redirection page: {}", randomArticle.getTitle());
-                articleRepository.delete(randomArticle.getId());
                 throw new InvalidArticleException();
             }
 
-            ArticleData articleData = getArticleDataWithReplacements(randomArticle, articleContent);
-
-            // Check if the requested word is found in the potential fixes
-            boolean wordFound = false;
-            for (ArticleReplacement replacement : articleData.getFixes().values()) {
-                if (word.equals(replacement.getOriginalText())) {
-                    wordFound = true;
-                }
-            }
-            // If not we delete the potential error from the article but let the article
-            if (!wordFound) {
-                LOGGER.warn("Word {} not found as a potential error for article: {}", word, randomArticle.getTitle());
-                Iterator<PotentialError> it = randomArticle.getPotentialErrors().iterator();
-                while (it.hasNext()) {
-                    PotentialError potentialError = it.next();
-                    if (potentialError.getText().equals(word)) {
-                        it.remove();
-                    }
-                }
-                articleRepository.save(randomArticle);
-
-                throw new InvalidArticleException();
-            }
-
-            return articleData;
-        } catch (WikipediaException e) {
-            LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle(), e);
-            articleRepository.delete(randomArticle.getId());
-            throw new InvalidArticleException();
+            articleData = getArticleDataWithReplacements(randomArticle, articleContent);
         } catch (InvalidArticleException e) {
             articleRepository.delete(randomArticle.getId());
             throw e;
+        } catch (WikipediaException e) {
+            LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle());
+            articleRepository.delete(randomArticle.getId());
+            throw new InvalidArticleException();
         }
+
+        // Check if the requested word is found in the potential fixes
+        boolean wordFound = false;
+        for (ArticleReplacement replacement : articleData.getFixes().values()) {
+            if (word.equals(replacement.getOriginalText())) {
+                wordFound = true;
+            }
+        }
+        // If not we delete the potential error from the article but let the article
+        if (!wordFound) {
+            LOGGER.warn("Word {} not found as a potential error for article: {}", word, randomArticle.getTitle());
+            Iterator<PotentialError> it = randomArticle.getPotentialErrors().iterator();
+            while (it.hasNext()) {
+                PotentialError potentialError = it.next();
+                if (potentialError.getText().equals(word)) {
+                    it.remove();
+                }
+            }
+            articleRepository.save(randomArticle);
+
+            throw new InvalidArticleException();
+        }
+
+        return articleData;
     }
 
     @NotNull
@@ -343,48 +342,46 @@ public class ArticleService {
 
         // Apply the fixes
 
-        String currentContent;
         try {
-            currentContent = wikipediaFacade.getArticleContent(article.getTitle());
-        } catch (WikipediaException e) {
-            LOGGER.error("Error getting the current content of the article: {}", article.getTitle(), e);
-            return false;
-        }
+            String currentContent = wikipediaFacade.getArticleContent(article.getTitle());
 
-        // Escape the content just in case it contains XML tags, as done when finding the replacements.
-        String replacedContent = StringUtils.escapeText(currentContent);
+            // Escape the content just in case it contains XML tags, as done when finding the replacements.
+            String replacedContent = StringUtils.escapeText(currentContent);
 
-        Collections.sort(fixedReplacements);
-        for (ArticleReplacement fix : fixedReplacements) {
-            LOGGER.debug("Fixing article {}: {} -> {}", article.getTitle(), fix.getOriginalText(), fix.getFixedText());
-            replacedContent = StringUtils.replaceAt(replacedContent, fix.getPosition(), fix.getOriginalText(), fix.getFixedText());
-            if (replacedContent == null) {
-                LOGGER.error("Error replacing the validated fixes");
-                return false;
+            Collections.sort(fixedReplacements);
+            for (ArticleReplacement fix : fixedReplacements) {
+                LOGGER.debug("Fixing article {}: {} -> {}", article.getTitle(), fix.getOriginalText(), fix.getFixedText());
+                replacedContent = StringUtils.replaceAt(replacedContent, fix.getPosition(), fix.getOriginalText(), fix.getFixedText());
+                if (replacedContent == null) {
+                    LOGGER.error("Error replacing the validated fixes");
+                    throw new InvalidArticleException();
+                }
             }
-        }
-        String contentToUpload = StringUtils.unEscapeText(replacedContent);
+            String contentToUpload = StringUtils.unEscapeText(replacedContent);
 
-        // Upload the new content to Wikipedia
-        // It may happen there has been changes during the edition, but in this point the fixes can be applied anyway.
-        // Check just before uploading there are no changes during the edition
-        if (contentToUpload.equals(currentContent)) {
-            LOGGER.warn("The content to upload matches with the current content");
-            markArticleAsReviewed(article);
-            return true;
-        }
+            // Upload the new content to Wikipedia
+            // It may happen there has been changes during the edition, but in this point the fixes can be applied anyway.
+            // Check just before uploading there are no changes during the edition
+            if (contentToUpload.equals(currentContent)) {
+                LOGGER.warn("The content to upload matches with the current content");
+                markArticleAsReviewed(article);
+                return true;
+            }
 
-        try {
             wikipediaFacade.editArticleContent(article.getTitle(), contentToUpload, "Correcciones ortográficas");
+
+            // Mark the article as reviewed in the database
+            markArticleAsReviewed(article);
+
+            return true;
+        } catch (InvalidArticleException e) {
+            articleRepository.delete(article.getId());
+            return false;
         } catch (WikipediaException e) {
-            LOGGER.error("Error committing fixes to Wikipedia", e);
+            LOGGER.error("Error saving or retrieving the content of the article: {}", article.getTitle());
+            articleRepository.delete(article.getId());
             return false;
         }
-
-        // Mark the article as reviewed in the database
-        markArticleAsReviewed(article);
-
-        return true;
     }
 
     private void markArticleAsReviewed(@NotNull ArticleData article) {
