@@ -140,7 +140,7 @@ public class ArticleServiceTest {
         Map<Integer, ArticleReplacement> articleFixes = new HashMap<>();
         ArticleData article = new ArticleData(1, "", "", articleFixes);
         Article articleDb = new Article(1, "");
-        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
+        Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(articleDb));
 
         articleService.saveArticleChanges(article);
 
@@ -155,7 +155,7 @@ public class ArticleServiceTest {
         String text = "Un hejemplo\n\nX\n\nOtro hejemplo.";
 
         Article articleDb = new Article(id, title);
-        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
+        Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(articleDb));
 
         Map<Integer, ArticleReplacement> articleFixes = new HashMap<>();
         ArticleReplacement replacement1 = new ArticleReplacement(3, "hejemplo");

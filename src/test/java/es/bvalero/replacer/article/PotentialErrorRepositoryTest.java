@@ -25,7 +25,7 @@ public class PotentialErrorRepositoryTest {
         Article article1 = new Article(1, "");
         Article article2 = new Article(2, "");
         Article article3 = new Article(3, "");
-        articleRepository.save(Arrays.asList(article1, article2, article3));
+        articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
         PotentialError error1 = new PotentialError(PotentialErrorType.MISSPELLING, "aber");
         PotentialError error2 = new PotentialError(PotentialErrorType.MISSPELLING, "aber");
@@ -35,7 +35,7 @@ public class PotentialErrorRepositoryTest {
         article2.addPotentialError(error2);
         article2.addPotentialError(error3);
         article3.addPotentialError(error4);
-        potentialErrorRepository.save(Arrays.asList(error1, error2, error3, error4));
+        potentialErrorRepository.saveAll(Arrays.asList(error1, error2, error3, error4));
 
         Assert.assertEquals(3, potentialErrorRepository.findMisspellingsGrouped().size());
     }
@@ -45,7 +45,7 @@ public class PotentialErrorRepositoryTest {
         Article article1 = new Article(1, "");
         Article article2 = new Article(2, "");
         Article article3 = new Article(3, "");
-        articleRepository.save(Arrays.asList(article1, article2, article3));
+        articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
         PotentialError error1 = new PotentialError(PotentialErrorType.MISSPELLING, "aber");
         PotentialError error2 = new PotentialError(PotentialErrorType.MISSPELLING, "aber");
@@ -53,7 +53,7 @@ public class PotentialErrorRepositoryTest {
         article1.addPotentialError(error1);
         article2.addPotentialError(error2);
         article3.addPotentialError(error3);
-        potentialErrorRepository.save(Arrays.asList(error1, error2, error3));
+        potentialErrorRepository.saveAll(Arrays.asList(error1, error2, error3));
 
         Assert.assertTrue(potentialErrorRepository
                 .findRandomByWord("xxx", new PageRequest(0, 1))

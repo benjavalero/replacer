@@ -92,11 +92,11 @@ public class ArticleService {
 
             return getArticleDataWithReplacements(randomArticle, articleContent);
         } catch (InvalidArticleException e) {
-            articleRepository.delete(randomArticle.getId());
+            articleRepository.deleteById(randomArticle.getId());
             throw e;
         } catch (WikipediaException e) {
             LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle());
-            articleRepository.delete(randomArticle.getId());
+            articleRepository.deleteById(randomArticle.getId());
             throw new InvalidArticleException();
         }
     }
@@ -127,11 +127,11 @@ public class ArticleService {
 
             articleData = getArticleDataWithReplacements(randomArticle, articleContent);
         } catch (InvalidArticleException e) {
-            articleRepository.delete(randomArticle.getId());
+            articleRepository.deleteById(randomArticle.getId());
             throw e;
         } catch (WikipediaException e) {
             LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle());
-            articleRepository.delete(randomArticle.getId());
+            articleRepository.deleteById(randomArticle.getId());
             throw new InvalidArticleException();
         }
 
@@ -375,17 +375,17 @@ public class ArticleService {
 
             return true;
         } catch (InvalidArticleException e) {
-            articleRepository.delete(article.getId());
+            articleRepository.deleteById(article.getId());
             return false;
         } catch (WikipediaException e) {
             LOGGER.error("Error saving or retrieving the content of the article: {}", article.getTitle());
-            articleRepository.delete(article.getId());
+            articleRepository.deleteById(article.getId());
             return false;
         }
     }
 
     private void markArticleAsReviewed(@NotNull ArticleData article) {
-        Article articleDb = articleRepository.findOne(article.getId());
+        Article articleDb = articleRepository.findById(article.getId()).get();
         articleDb.setReviewDate(new Timestamp(System.currentTimeMillis()));
         articleDb.getPotentialErrors().clear();
         articleRepository.save(articleDb);
