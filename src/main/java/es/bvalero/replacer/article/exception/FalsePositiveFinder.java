@@ -4,12 +4,18 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,20 +25,26 @@ public class FalsePositiveFinder implements ExceptionMatchFinder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinder.class);
 
-    private static final RunAutomaton AUTOMATON_FALSE_POSITIVES;
+    @Autowired
+    private ResourceLoader resourceLoader;
 
-    static {
-        List<String> falsePositivesList = loadFalsePositives();
-        String alternations = StringUtils.collectionToDelimitedString(falsePositivesList, "|");
-        RegExp r = new RegExp(alternations);
-        AUTOMATON_FALSE_POSITIVES = new RunAutomaton(r.toAutomaton());
+    private RunAutomaton falsePositivesAutomaton = null;
+
+    @NotNull
+    private synchronized RunAutomaton getFalsePositivesAutomaton() {
+        if (this.falsePositivesAutomaton == null) { // For the first time
+            List<String> falsePositivesList = loadFalsePositives();
+            String alternations = StringUtils.collectionToDelimitedString(falsePositivesList, "|");
+            RegExp r = new RegExp(alternations);
+            this.falsePositivesAutomaton = new RunAutomaton(r.toAutomaton());
+        }
+        return this.falsePositivesAutomaton;
     }
 
-    static List<String> loadFalsePositives() {
+    List<String> loadFalsePositives() {
         List<String> falsePositivesList = new ArrayList<>(150);
-        String falsePositivesPath = RegExUtils.class.getResource("/false-positives.txt").getFile();
 
-        try (InputStream stream = new FileInputStream(falsePositivesPath);
+        try (InputStream stream = resourceLoader.getResource("classpath:false-positives.txt").getInputStream();
              BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             // Read File Line By Line
             String strLine;
@@ -52,7 +64,7 @@ public class FalsePositiveFinder implements ExceptionMatchFinder {
 
     @Override
     public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        return RegExUtils.findMatchesAutomaton(text, AUTOMATON_FALSE_POSITIVES);
+        return RegExUtils.findMatchesAutomaton(text, getFalsePositivesAutomaton());
     }
 
 }
