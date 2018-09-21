@@ -64,15 +64,20 @@
             <version>1.18</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.scribejava</groupId>
             <artifactId>scribejava-core</artifactId>
-            <version>5.5.0</version>
+            <version>5.6.0</version>
         </dependency>
         <dependency>
             <groupId>com.bitplan</groupId>
             <artifactId>mediawiki-japi</artifactId>
-            <!-- Last version compatible with Java 7 -->
-            <version>0.0.21</version>
+            <!-- Last version compatible with Java 7 : 0.0.21 -->
+            <version>0.1.02</version>
         </dependency>
         <dependency>
             <groupId>dk.brics</groupId>
@@ -155,22 +160,5 @@
             </build>
         </profile>
     </profiles>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

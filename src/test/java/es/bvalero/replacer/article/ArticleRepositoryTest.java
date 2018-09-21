@@ -45,7 +45,7 @@ public class ArticleRepositoryTest {
         Article article3 = new Article(3, "");
         articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
-        List<Article> notReviewedArticles = articleRepository.findRandomArticleNotReviewed(new PageRequest(0, 3));
+        List<Article> notReviewedArticles = articleRepository.findRandomArticleNotReviewed(PageRequest.of(0, 3));
         Assert.assertNotNull(notReviewedArticles);
         Assert.assertEquals(2, notReviewedArticles.size());
     }
