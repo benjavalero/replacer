@@ -29,9 +29,9 @@ public class ArticleRepositoryTest {
         newArticle.addPotentialError(error2);
         articleRepository.save(newArticle);
 
-        Assert.assertNull(articleRepository.findOne(0));
+        Assert.assertNull(articleRepository.findById(0));
 
-        Article article = articleRepository.findOne(1);
+        Article article = articleRepository.findById(1).get();
         Assert.assertNotNull(article);
         Assert.assertEquals("Andorra", article.getTitle());
         Assert.assertEquals(2, article.getPotentialErrors().size());
@@ -43,7 +43,7 @@ public class ArticleRepositoryTest {
         Article article2 = new Article(2, "");
         article2.setReviewDate(new Timestamp(new Date().getTime()));
         Article article3 = new Article(3, "");
-        articleRepository.save(Arrays.asList(article1, article2, article3));
+        articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
         List<Article> notReviewedArticles = articleRepository.findRandomArticleNotReviewed(new PageRequest(0, 3));
         Assert.assertNotNull(notReviewedArticles);
@@ -54,10 +54,10 @@ public class ArticleRepositoryTest {
     public void testDelete() {
         Article newArticle = new Article(1, "");
         articleRepository.save(newArticle);
-        Assert.assertNull(articleRepository.findOne(1).getReviewDate());
+        Assert.assertNull(articleRepository.findById(1).get().getReviewDate());
 
-        articleRepository.delete(1);
-        Assert.assertNull(articleRepository.findOne(1));
+        articleRepository.deleteById(1);
+        Assert.assertNull(articleRepository.findById(1));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class ArticleRepositoryTest {
         Article article2 = new Article(2, "");
         article2.setReviewDate(new Timestamp(new Date().getTime()));
         Article article3 = new Article(3, "");
-        articleRepository.save(Arrays.asList(article1, article2, article3));
+        articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
         Assert.assertEquals(1, articleRepository.countByReviewDateNotNull().longValue());
         Assert.assertEquals(2, articleRepository.countByReviewDateNull().longValue());

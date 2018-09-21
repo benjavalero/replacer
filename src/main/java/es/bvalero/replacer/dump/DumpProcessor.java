@@ -136,12 +136,12 @@ class DumpProcessor {
     private void flushModifications() {
         // Save all modifications
         if (!articlesToDelete.isEmpty()) {
-            articleRepository.delete(articlesToDelete);
+            articleRepository.deleteAll(articlesToDelete);
             articlesToDelete.clear();
         }
 
         if (!articlesToSave.isEmpty()) {
-            articleRepository.save(articlesToSave);
+            articleRepository.saveAll(articlesToSave);
             articlesToSave.clear();
         }
 
