@@ -20,7 +20,8 @@ public class FalsePositiveFinderTest {
 
     @Test
     public void testLoadFalsePositives() {
-        List<String> falsePositives = FalsePositiveFinder.loadFalsePositives();
+        FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
+        List<String> falsePositives = falsePositiveFinder.loadFalsePositives();
         Assert.assertFalse(falsePositives.isEmpty());
         Assert.assertTrue(falsePositives.contains("Index"));
         Assert.assertTrue(falsePositives.contains("Magazine"));
@@ -56,7 +57,8 @@ public class FalsePositiveFinderTest {
             e.printStackTrace();
         }
 
-        List<String> falsePositives = FalsePositiveFinder.loadFalsePositives();
+        FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
+        List<String> falsePositives = falsePositiveFinder.loadFalsePositives();
 
         // Test 1 : One single automaton with all the alternations
         String alternations = StringUtils.collectionToDelimitedString(falsePositives, "|");

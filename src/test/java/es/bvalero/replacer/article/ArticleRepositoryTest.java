@@ -29,7 +29,7 @@ public class ArticleRepositoryTest {
         newArticle.addPotentialError(error2);
         articleRepository.save(newArticle);
 
-        Assert.assertNull(articleRepository.findById(0));
+        Assert.assertFalse(articleRepository.findById(0).isPresent());
 
         Article article = articleRepository.findById(1).get();
         Assert.assertNotNull(article);
@@ -57,7 +57,7 @@ public class ArticleRepositoryTest {
         Assert.assertNull(articleRepository.findById(1).get().getReviewDate());
 
         articleRepository.deleteById(1);
-        Assert.assertNull(articleRepository.findById(1));
+        Assert.assertFalse(articleRepository.findById(1).isPresent());
     }
 
     @Test
