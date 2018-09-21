@@ -49,7 +49,7 @@ class DumpProcessor {
             articlesDb.clear();
 
             for (Article articleDb : articleRepository
-                    .findByIdGreaterThanOrderById(dumpArticle.getId() - 1, new PageRequest(0, CACHE_SIZE))) {
+                    .findByIdGreaterThanOrderById(dumpArticle.getId() - 1, PageRequest.of(0, CACHE_SIZE))) {
                 articlesDb.put(articleDb.getId(), articleDb);
                 maxIdDb = articleDb.getId();
             }

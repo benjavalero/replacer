@@ -72,7 +72,7 @@ public class ArticleService {
 
     ArticleData findRandomArticleWithPotentialErrors() throws UnfoundArticleException, InvalidArticleException {
         // Find random article in Replacer database (the result can be empty)
-        List<Article> randomArticles = articleRepository.findRandomArticleNotReviewed(new PageRequest(0, 1));
+        List<Article> randomArticles = articleRepository.findRandomArticleNotReviewed(PageRequest.of(0, 1));
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
             throw new UnfoundArticleException();
@@ -106,7 +106,7 @@ public class ArticleService {
             throws UnfoundArticleException, InvalidArticleException {
         // Find random article in Replacer database (the result can be empty)
         List<Article> randomArticles = potentialErrorRepository
-                .findRandomByWord(word, new PageRequest(0, 1));
+                .findRandomByWord(word, PageRequest.of(0, 1));
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
             throw new UnfoundArticleException();

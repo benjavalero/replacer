@@ -56,11 +56,11 @@ public class PotentialErrorRepositoryTest {
         potentialErrorRepository.saveAll(Arrays.asList(error1, error2, error3));
 
         Assert.assertTrue(potentialErrorRepository
-                .findRandomByWord("xxx", new PageRequest(0, 1))
+                .findRandomByWord("xxx", PageRequest.of(0, 1))
                 .isEmpty());
 
         Assert.assertEquals(3, potentialErrorRepository
-                .findRandomByWord("aber", new PageRequest(0, 3))
+                .findRandomByWord("aber", PageRequest.of(0, 3))
                 .size());
     }
 
