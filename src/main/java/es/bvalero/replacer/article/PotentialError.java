@@ -8,7 +8,7 @@ import java.util.Objects;
  * A potential error in the database related to an article.
  */
 @Entity
-@Table(name = "potentialerror")
+@Table(name = "potentialerror", uniqueConstraints = @UniqueConstraint(columnNames = {"articleid", "text"}))
 public class PotentialError implements Serializable {
 
     @SuppressWarnings("unused")
@@ -24,6 +24,7 @@ public class PotentialError implements Serializable {
     @Enumerated(EnumType.STRING)
     private PotentialErrorType type;
 
+    // TODO Add the unique constraint to the MariaDB database
     @Column(name = "text", nullable = false, length = 30)
     private String text;
 
