@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
@@ -136,6 +137,16 @@ public class ArticleRepositoryTest {
             Assert.assertEquals("D", article.getPotentialErrors().get(1).getText());
         });
         Assert.assertEquals(2, potentialErrorRepository.count());
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testInsertDuplicatedReplacement() {
+        Assert.assertEquals(0, articleRepository.count());
+
+        Article newArticle = new Article(1, "Andorra");
+        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "A"));
+        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "A"));
+        articleRepository.save(newArticle);
     }
 
 }
