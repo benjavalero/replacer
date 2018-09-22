@@ -5,13 +5,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -20,56 +18,124 @@ public class ArticleRepositoryTest {
     @Autowired
     private ArticleRepository articleRepository;
 
+    @Autowired
+    private PotentialErrorRepository potentialErrorRepository;
+
     @Test
-    public void testSaveAndFind() {
-        PotentialError error1 = new PotentialError(PotentialErrorType.MISSPELLING, "A");
-        PotentialError error2 = new PotentialError(PotentialErrorType.MISSPELLING, "B");
+    public void testInsert() {
+        Assert.assertEquals(0, articleRepository.count());
+
         Article newArticle = new Article(1, "Andorra");
-        newArticle.addPotentialError(error1);
-        newArticle.addPotentialError(error2);
         articleRepository.save(newArticle);
 
-        Assert.assertFalse(articleRepository.findById(0).isPresent());
+        Assert.assertEquals(1, articleRepository.count());
+        Optional<Article> dbArticle = articleRepository.findById(1);
+        Assert.assertTrue(dbArticle.isPresent());
+        dbArticle.ifPresent(article -> Assert.assertEquals(newArticle, article));
 
-        Article article = articleRepository.findById(1).get();
-        Assert.assertNotNull(article);
-        Assert.assertEquals("Andorra", article.getTitle());
-        Assert.assertEquals(2, article.getPotentialErrors().size());
+        // By default Addition Date is the current one
+        dbArticle.ifPresent(article -> Assert.assertNotNull(article.getAdditionDate()));
     }
 
     @Test
-    public void testFindNotReviewed() {
-        Article article1 = new Article(1, "");
-        Article article2 = new Article(2, "");
-        article2.setReviewDate(new Timestamp(new Date().getTime()));
-        Article article3 = new Article(3, "");
-        articleRepository.saveAll(Arrays.asList(article1, article2, article3));
+    public void testInsertDuplicated() {
+        Assert.assertEquals(0, articleRepository.count());
 
-        List<Article> notReviewedArticles = articleRepository.findRandomArticleNotReviewed(PageRequest.of(0, 3));
-        Assert.assertNotNull(notReviewedArticles);
-        Assert.assertEquals(2, notReviewedArticles.size());
-    }
-
-    @Test
-    public void testDelete() {
-        Article newArticle = new Article(1, "");
+        Article newArticle = new Article(1, "Andorra");
         articleRepository.save(newArticle);
-        Assert.assertNull(articleRepository.findById(1).get().getReviewDate());
 
-        articleRepository.deleteById(1);
-        Assert.assertFalse(articleRepository.findById(1).isPresent());
+        String title = "España";
+        Article duplicated = new Article(1, title);
+        articleRepository.save(duplicated);
+
+        // The second insert updates the first
+        Assert.assertEquals(1, articleRepository.count());
+        Optional<Article> dbArticle = articleRepository.findById(1);
+        Assert.assertTrue(dbArticle.isPresent());
+        dbArticle.ifPresent(article -> Assert.assertEquals(title, article.getTitle()));
     }
 
     @Test
-    public void testCountByReviewDate() {
-        Article article1 = new Article(1, "");
-        Article article2 = new Article(2, "");
-        article2.setReviewDate(new Timestamp(new Date().getTime()));
-        Article article3 = new Article(3, "");
-        articleRepository.saveAll(Arrays.asList(article1, article2, article3));
+    public void testInsertWithReplacements() {
+        Assert.assertEquals(0, articleRepository.count());
 
-        Assert.assertEquals(1, articleRepository.countByReviewDateNotNull().longValue());
-        Assert.assertEquals(2, articleRepository.countByReviewDateNull().longValue());
+        Article newArticle = new Article(1, "Andorra");
+        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "A"));
+        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "B"));
+        articleRepository.save(newArticle);
+
+        Assert.assertEquals(1, articleRepository.count());
+        Optional<Article> dbArticle = articleRepository.findById(1);
+        Assert.assertTrue(dbArticle.isPresent());
+        dbArticle.ifPresent(article -> Assert.assertEquals(2, article.getPotentialErrors().size()));
+        Assert.assertEquals(2, potentialErrorRepository.count());
+    }
+
+    @Test
+    public void testModifyArticle() {
+        Assert.assertEquals(0, articleRepository.count());
+
+        Article newArticle = new Article(1, "Andorra");
+        articleRepository.save(newArticle);
+
+        articleRepository.findById(1).ifPresent(
+                article -> Assert.assertNull(article.getReviewDate()));
+
+        // Modify attributes
+        String newTitle = "España";
+        Timestamp newAdditionDate = new Timestamp(System.currentTimeMillis());
+        Timestamp newReviewDate = new Timestamp(System.currentTimeMillis());
+        newArticle.setTitle(newTitle);
+        newArticle.setAdditionDate(newAdditionDate);
+        newArticle.setReviewDate(newReviewDate);
+        articleRepository.save(newArticle);
+
+        Assert.assertEquals(1, articleRepository.count());
+        articleRepository.findById(1).ifPresent(article -> {
+            Assert.assertEquals(newTitle, article.getTitle());
+            Assert.assertEquals(newAdditionDate, article.getAdditionDate());
+            Assert.assertEquals(newReviewDate, article.getReviewDate());
+        });
+    }
+
+    @Test
+    public void testModifyReplacementList() {
+        Assert.assertEquals(0, articleRepository.count());
+
+        Article newArticle = new Article(1, "Andorra");
+        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "A"));
+        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "B"));
+        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "C"));
+        articleRepository.save(newArticle);
+
+        Assert.assertEquals(1, articleRepository.count());
+        articleRepository.findById(1).ifPresent(article ->
+                Assert.assertEquals(3, article.getPotentialErrors().size()));
+        Assert.assertEquals(3, potentialErrorRepository.count());
+
+        // Delete replacements
+        newArticle.getPotentialErrors().remove(2);
+        newArticle.getPotentialErrors().remove(0);
+        articleRepository.save(newArticle);
+        // TODO This method deletes all the replacements and then adds one again
+
+        articleRepository.findById(1).ifPresent(article -> {
+            Assert.assertEquals(1, article.getPotentialErrors().size());
+            Assert.assertEquals("B", article.getPotentialErrors().get(0).getText());
+        });
+        Assert.assertEquals(1, potentialErrorRepository.count());
+
+        // Add replacements
+        newArticle.getPotentialErrors().add(new PotentialError(PotentialErrorType.MISSPELLING, "D"));
+        articleRepository.save(newArticle);
+        // TODO This method also deletes all the replacements and then adds one again
+
+        articleRepository.findById(1).ifPresent(article -> {
+            Assert.assertEquals(2, article.getPotentialErrors().size());
+            Assert.assertEquals("B", article.getPotentialErrors().get(0).getText());
+            Assert.assertEquals("D", article.getPotentialErrors().get(1).getText());
+        });
+        Assert.assertEquals(2, potentialErrorRepository.count());
     }
 
 }

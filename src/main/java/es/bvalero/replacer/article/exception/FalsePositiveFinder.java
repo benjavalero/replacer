@@ -5,10 +5,11 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -25,10 +26,14 @@ public class FalsePositiveFinder implements ExceptionMatchFinder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinder.class);
 
-    @Autowired
-    private ResourceLoader resourceLoader;
-
+    @Value("classpath:false-positives.txt")
+    private Resource resource;
     private RunAutomaton falsePositivesAutomaton = null;
+
+    @TestOnly
+    void setResource(Resource resource) {
+        this.resource = resource;
+    }
 
     @NotNull
     private synchronized RunAutomaton getFalsePositivesAutomaton() {
@@ -44,7 +49,7 @@ public class FalsePositiveFinder implements ExceptionMatchFinder {
     List<String> loadFalsePositives() {
         List<String> falsePositivesList = new ArrayList<>(150);
 
-        try (InputStream stream = resourceLoader.getResource("classpath:false-positives.txt").getInputStream();
+        try (InputStream stream = resource.getInputStream();
              BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             // Read File Line By Line
             String strLine;
