@@ -145,14 +145,11 @@ public class ArticleService {
         // If not we delete the potential error from the article but let the article
         if (!wordFound) {
             LOGGER.warn("Word {} not found as a potential error for article: {}", word, randomArticle.getTitle());
-            Iterator<PotentialError> it = randomArticle.getPotentialErrors().iterator();
-            while (it.hasNext()) {
-                PotentialError potentialError = it.next();
+            for (PotentialError potentialError : potentialErrorRepository.findByArticleId(randomArticle.getId())) {
                 if (potentialError.getText().equals(word)) {
-                    it.remove();
+                    potentialErrorRepository.delete(potentialError);
                 }
             }
-            articleRepository.save(randomArticle);
 
             throw new InvalidArticleException();
         }
@@ -385,10 +382,11 @@ public class ArticleService {
     }
 
     private void markArticleAsReviewed(@NotNull ArticleData article) {
-        Article articleDb = articleRepository.findById(article.getId()).get();
-        articleDb.setReviewDate(new Timestamp(System.currentTimeMillis()));
-        articleDb.getPotentialErrors().clear();
-        articleRepository.save(articleDb);
+        articleRepository.findById(article.getId()).ifPresent(dbArticle -> {
+            dbArticle.setReviewDate(new Timestamp(System.currentTimeMillis()));
+            potentialErrorRepository.deleteInBatch(potentialErrorRepository.findByArticleId(article.getId()));
+            articleRepository.save(dbArticle);
+        });
     }
 
 }

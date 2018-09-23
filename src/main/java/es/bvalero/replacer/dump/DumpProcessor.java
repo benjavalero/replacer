@@ -21,6 +21,9 @@ class DumpProcessor {
     private ArticleRepository articleRepository;
 
     @Autowired
+    private PotentialErrorRepository potentialErrorRepository;
+
+    @Autowired
     private ArticleService articleService;
 
     // Load a bunch of articles from DB to improve performance
@@ -28,8 +31,10 @@ class DumpProcessor {
     private int maxIdDb = 0;
 
     // Save articles in batches to improve performance
-    private List<Article> articlesToDelete = new ArrayList<>();
-    private List<Article> articlesToSave = new ArrayList<>();
+    private List<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
+    private List<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
+    private List<PotentialError> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
+    private List<PotentialError> replacementsToAdd = new ArrayList<>(CACHE_SIZE);
 
     /**
      * Process a dump article: find the potential errors and add them to the database.
@@ -106,26 +111,24 @@ class DumpProcessor {
     private boolean addPotentialErrorsToArticle(Article article, List<ArticleReplacement> articleReplacements) {
         Set<PotentialError> newPotentialErrors = new HashSet<>(articleReplacements.size());
         for (ArticleReplacement articleReplacement : articleReplacements) {
-            PotentialError potentialError = new PotentialError(articleReplacement.getType(), articleReplacement.getSubtype());
+            PotentialError potentialError = new PotentialError(article, articleReplacement.getType(), articleReplacement.getSubtype());
             newPotentialErrors.add(potentialError);
         }
 
         boolean isModified = false;
 
-        // Remove the obsolete potential errors from the article
-        Iterator<PotentialError> it = article.getPotentialErrors().iterator();
-        while (it.hasNext()) {
-            PotentialError oldPotentialError = it.next();
+        List<PotentialError> oldPotentialErrors = potentialErrorRepository.findByArticleId(article.getId());
+        for (PotentialError oldPotentialError : oldPotentialErrors) {
             if (!newPotentialErrors.contains(oldPotentialError)) {
-                it.remove();
+                replacementsToDelete.add(oldPotentialError);
                 isModified = true;
             }
         }
 
         // Add the new potential errors to the article
         for (PotentialError newPotentialError : newPotentialErrors) {
-            if (!article.getPotentialErrors().contains(newPotentialError)) {
-                article.addPotentialError(newPotentialError);
+            if (!oldPotentialErrors.contains(newPotentialError)) {
+                replacementsToAdd.add(newPotentialError);
                 isModified = true;
             }
         }
@@ -134,9 +137,14 @@ class DumpProcessor {
     }
 
     private void flushModifications() {
-        // Save all modifications
+        // There is a FK Replacement-Article, we need to remove the replacements first.
+        if (!replacementsToDelete.isEmpty()) {
+            potentialErrorRepository.deleteInBatch(replacementsToDelete);
+            replacementsToDelete.clear();
+        }
+
         if (!articlesToDelete.isEmpty()) {
-            articleRepository.deleteAll(articlesToDelete);
+            articleRepository.deleteInBatch(articlesToDelete);
             articlesToDelete.clear();
         }
 
@@ -145,9 +153,15 @@ class DumpProcessor {
             articlesToSave.clear();
         }
 
+        if (!replacementsToAdd.isEmpty()) {
+            potentialErrorRepository.saveAll(replacementsToAdd);
+            replacementsToAdd.clear();
+        }
+
         // Flush and clear to avoid memory leaks (we are performing millions of updates)
         articleRepository.flush();
-        articleRepository.clear();
+        potentialErrorRepository.flush();
+        articleRepository.clear(); // This clears all the EntityManager
     }
 
     void finish() {

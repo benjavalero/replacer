@@ -22,4 +22,5 @@ public interface PotentialErrorRepository extends JpaRepository<PotentialError, 
     @Query(value = "SELECT pe.article FROM PotentialError pe WHERE pe.text = :word ORDER BY RAND()")
     List<Article> findRandomByWord(@Param("word") String word, Pageable pageable);
 
+    List<PotentialError> findByArticleId(Integer articleId);
 }

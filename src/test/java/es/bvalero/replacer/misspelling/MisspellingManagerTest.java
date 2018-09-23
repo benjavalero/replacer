@@ -10,6 +10,7 @@ import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -126,7 +127,9 @@ public class MisspellingManagerTest {
         Assert.assertNull(misspellingManager.findMisspellingByWord("Álvaro"));
     }
 
-    public void findPotentialErrorsExperiment() throws WikipediaException {
+    @Test
+    @Ignore
+    public void testFindMisspellingsPerformance() throws WikipediaException {
         System.out.println("BEGIN FIND POTENTIAL ERRORS EXPERIMENT");
 
         String text = null;

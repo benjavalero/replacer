@@ -1,5 +1,7 @@
 package es.bvalero.replacer.article;
 
+import org.hibernate.annotations.Immutable;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -8,10 +10,10 @@ import java.util.Objects;
  * A potential error in the database related to an article.
  */
 @Entity
-@Table(name = "potentialerror", uniqueConstraints = @UniqueConstraint(columnNames = {"articleid", "text"}))
+@Immutable
+@Table(name = "potentialerror", uniqueConstraints = @UniqueConstraint(columnNames = {"articleid", "type", "text"}))
 public class PotentialError implements Serializable {
 
-    @SuppressWarnings("unused")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,37 +30,18 @@ public class PotentialError implements Serializable {
     @Column(name = "text", nullable = false, length = 30)
     private String text;
 
-    @SuppressWarnings("unused")
     public PotentialError() {
+        // Needed by JPA
     }
 
-    public PotentialError(PotentialErrorType type, String text) {
-        this.type = type;
-        this.text = text;
-    }
-
-    public Article getArticle() {
-        return article;
-    }
-
-    public void setArticle(Article article) {
+    public PotentialError(Article article, PotentialErrorType type, String text) {
         this.article = article;
-    }
-
-    PotentialErrorType getType() {
-        return type;
-    }
-
-    void setType(PotentialErrorType type) {
         this.type = type;
-    }
-
-    String getText() {
-        return text;
-    }
-
-    void setText(String text) {
         this.text = text;
+    }
+
+    public String getText() {
+        return text;
     }
 
     @Override
@@ -66,18 +49,21 @@ public class PotentialError implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PotentialError that = (PotentialError) o;
-        return type == that.type && Objects.equals(text, that.text);
+        return Objects.equals(article, that.article) &&
+                type == that.type &&
+                Objects.equals(text, that.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, text);
+        return Objects.hash(article, type, text);
     }
 
     @Override
     public String toString() {
         return "PotentialError{" +
-                "type=" + type +
+                "article=" + article +
+                ", type=" + type +
                 ", text='" + text + '\'' +
                 '}';
     }

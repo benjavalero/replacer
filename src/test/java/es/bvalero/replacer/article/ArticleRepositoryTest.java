@@ -1,6 +1,7 @@
 package es.bvalero.replacer.article;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -61,15 +64,14 @@ public class ArticleRepositoryTest {
         Assert.assertEquals(0, articleRepository.count());
 
         Article newArticle = new Article(1, "Andorra");
-        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "A"));
-        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "B"));
         articleRepository.save(newArticle);
+        PotentialError replacement1 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A");
+        PotentialError replacement2 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "B");
+        potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2));
 
         Assert.assertEquals(1, articleRepository.count());
-        Optional<Article> dbArticle = articleRepository.findById(1);
-        Assert.assertTrue(dbArticle.isPresent());
-        dbArticle.ifPresent(article -> Assert.assertEquals(2, article.getPotentialErrors().size()));
         Assert.assertEquals(2, potentialErrorRepository.count());
+        Assert.assertEquals(2, potentialErrorRepository.findByArticleId(1).size());
     }
 
     @Test
@@ -104,39 +106,31 @@ public class ArticleRepositoryTest {
         Assert.assertEquals(0, articleRepository.count());
 
         Article newArticle = new Article(1, "Andorra");
-        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "A"));
-        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "B"));
-        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "C"));
         articleRepository.save(newArticle);
+        PotentialError replacement1 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A");
+        PotentialError replacement2 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "B");
+        PotentialError replacement3 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "C");
+        potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2, replacement3));
 
         Assert.assertEquals(1, articleRepository.count());
-        articleRepository.findById(1).ifPresent(article ->
-                Assert.assertEquals(3, article.getPotentialErrors().size()));
         Assert.assertEquals(3, potentialErrorRepository.count());
+        Assert.assertEquals(3, potentialErrorRepository.findByArticleId(1).size());
 
         // Delete replacements
-        newArticle.getPotentialErrors().remove(2);
-        newArticle.getPotentialErrors().remove(0);
-        articleRepository.save(newArticle);
-        // TODO This method deletes all the replacements and then adds one again
+        potentialErrorRepository.deleteInBatch(Arrays.asList(replacement1, replacement3));
 
-        articleRepository.findById(1).ifPresent(article -> {
-            Assert.assertEquals(1, article.getPotentialErrors().size());
-            Assert.assertEquals("B", article.getPotentialErrors().get(0).getText());
-        });
+        Assert.assertEquals(1, articleRepository.count());
         Assert.assertEquals(1, potentialErrorRepository.count());
+        Assert.assertEquals(1, potentialErrorRepository.findByArticleId(1).size());
+        Assert.assertEquals("B", potentialErrorRepository.findByArticleId(1).get(0).getText());
 
         // Add replacements
-        newArticle.getPotentialErrors().add(new PotentialError(PotentialErrorType.MISSPELLING, "D"));
-        articleRepository.save(newArticle);
-        // TODO This method also deletes all the replacements and then adds one again
+        PotentialError replacement4 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "D");
+        potentialErrorRepository.save(replacement4);
 
-        articleRepository.findById(1).ifPresent(article -> {
-            Assert.assertEquals(2, article.getPotentialErrors().size());
-            Assert.assertEquals("B", article.getPotentialErrors().get(0).getText());
-            Assert.assertEquals("D", article.getPotentialErrors().get(1).getText());
-        });
+        Assert.assertEquals(1, articleRepository.count());
         Assert.assertEquals(2, potentialErrorRepository.count());
+        Assert.assertEquals(2, potentialErrorRepository.findByArticleId(1).size());
     }
 
     @Test(expected = DataIntegrityViolationException.class)
@@ -144,9 +138,54 @@ public class ArticleRepositoryTest {
         Assert.assertEquals(0, articleRepository.count());
 
         Article newArticle = new Article(1, "Andorra");
-        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "A"));
-        newArticle.addPotentialError(new PotentialError(PotentialErrorType.MISSPELLING, "A"));
         articleRepository.save(newArticle);
+        PotentialError replacement1 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A");
+        PotentialError replacement2 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A");
+        potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2));
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void testDeleteArticleWithReplacements() {
+        Assert.assertEquals(0, articleRepository.count());
+
+        Article newArticle = new Article(1, "Andorra");
+        articleRepository.save(newArticle);
+        PotentialError replacement1 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A");
+        PotentialError replacement2 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "B");
+        potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2));
+
+        Assert.assertEquals(1, articleRepository.count());
+        Assert.assertEquals(2, potentialErrorRepository.count());
+
+        // This will fail
+        // We have removed partially the relation between the entities but we keep the FK in Replacement
+        articleRepository.delete(newArticle);
+        Assert.assertEquals(0, articleRepository.count());
+    }
+
+    @Test
+    @Ignore
+    public void testPerformance() {
+        List<Article> articles = new ArrayList<>(50);
+        List<PotentialError> replacements = new ArrayList<>(500);
+        for (int i = 0; i < 1000000; i++) {
+            Article newArticle = new Article(i, "Title" + String.valueOf(i));
+            for (int j = 0; j < 10; j++) {
+                PotentialError replacement = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "Text" + String.valueOf(j));
+                replacements.add(replacement);
+            }
+            articles.add(newArticle);
+            if (articles.size() == 50) {
+                articleRepository.saveAll(articles);
+                articles.clear();
+                potentialErrorRepository.saveAll(replacements);
+                replacements.clear();
+
+                articleRepository.flush();
+                potentialErrorRepository.flush();
+                articleRepository.clear();
+            }
+        }
     }
 
 }

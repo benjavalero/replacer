@@ -1,16 +1,20 @@
 package es.bvalero.replacer.article;
 
-import javax.persistence.*;
+import org.hibernate.annotations.Immutable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 
 /**
  * An article in the database containing potential errors.
  */
 @Entity
+@Immutable
 @Table(name = "article")
 public class Article implements Serializable {
 
@@ -27,11 +31,12 @@ public class Article implements Serializable {
     @Column(name = "dtreview", columnDefinition = "TIMESTAMP")
     private Timestamp reviewDate;
 
-    // LinkedList is better to run iterators and remove items from it
-    @OneToMany(mappedBy = "article", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<PotentialError> potentialErrors = new LinkedList<>();
+    // Removed relationship to improve performance on bulk indexing
+    // @OneToMany(mappedBy = "article", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    // private List<PotentialError> potentialErrors = new ArrayList<>();
 
     public Article() {
+        // Needed by JPA
     }
 
     public Article(Integer id, String title) {
@@ -44,11 +49,7 @@ public class Article implements Serializable {
         return id;
     }
 
-    void setId(Integer id) {
-        this.id = id;
-    }
-
-    String getTitle() {
+    public String getTitle() {
         return title;
     }
 
@@ -72,15 +73,6 @@ public class Article implements Serializable {
         this.reviewDate = reviewDate;
     }
 
-    public List<PotentialError> getPotentialErrors() {
-        return potentialErrors;
-    }
-
-    @SuppressWarnings("unused")
-    void setPotentialErrors(List<PotentialError> potentialErrors) {
-        this.potentialErrors = potentialErrors;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -94,9 +86,14 @@ public class Article implements Serializable {
         return Objects.hash(id);
     }
 
-    public void addPotentialError(PotentialError potentialError) {
-        this.potentialErrors.add(potentialError);
-        potentialError.setArticle(this);
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", additionDate=" + additionDate +
+                ", reviewDate=" + reviewDate +
+                '}';
     }
 
 }
