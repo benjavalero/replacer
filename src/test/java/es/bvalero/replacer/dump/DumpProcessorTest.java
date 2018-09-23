@@ -1,9 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.Article;
-import es.bvalero.replacer.article.ArticleReplacement;
-import es.bvalero.replacer.article.ArticleRepository;
-import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.article.*;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +20,9 @@ public class DumpProcessorTest {
 
     @Mock
     private ArticleRepository articleRepository;
+
+    @Mock
+    private PotentialErrorRepository potentialErrorRepository;
 
     @Mock
     private ArticleService articleService;
@@ -94,8 +94,10 @@ public class DumpProcessorTest {
 
         Mockito.verify(articleRepository, Mockito.times(1)).findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class));
         Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
-        Mockito.verify(articleRepository, Mockito.times(1)).deleteAll(Mockito.anyList());
+        Mockito.verify(potentialErrorRepository, Mockito.times(0)).deleteInBatch(Mockito.anyList());
+        Mockito.verify(articleRepository, Mockito.times(1)).deleteInBatch(Mockito.anyList());
         Mockito.verify(articleRepository, Mockito.times(0)).saveAll(Mockito.anyList());
+        Mockito.verify(potentialErrorRepository, Mockito.times(0)).saveAll(Mockito.anyList());
     }
 
     @Test
