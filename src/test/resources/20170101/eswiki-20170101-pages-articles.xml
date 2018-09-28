@@ -1,0 +1,288 @@
+<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.10/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.10/ http://www.mediawiki.org/xml/export-0.10.xsd" version="0.10" xml:lang="es">
+  <siteinfo>
+    <sitename>Wikipedia</sitename>
+    <dbname>eswiki</dbname>
+    <base>https://es.wikipedia.org/wiki/Wikipedia:Portada</base>
+    <generator>MediaWiki 1.32.0-wmf.19</generator>
+    <case>first-letter</case>
+    <namespaces>
+      <namespace key="-2" case="first-letter">Medio</namespace>
+      <namespace key="-1" case="first-letter">Especial</namespace>
+      <namespace key="0" case="first-letter" />
+      <namespace key="1" case="first-letter">Discusión</namespace>
+      <namespace key="2" case="first-letter">Usuario</namespace>
+      <namespace key="3" case="first-letter">Usuario discusión</namespace>
+      <namespace key="4" case="first-letter">Wikipedia</namespace>
+      <namespace key="5" case="first-letter">Wikipedia discusión</namespace>
+      <namespace key="6" case="first-letter">Archivo</namespace>
+      <namespace key="7" case="first-letter">Archivo discusión</namespace>
+      <namespace key="8" case="first-letter">MediaWiki</namespace>
+      <namespace key="9" case="first-letter">MediaWiki discusión</namespace>
+      <namespace key="10" case="first-letter">Plantilla</namespace>
+      <namespace key="11" case="first-letter">Plantilla discusión</namespace>
+      <namespace key="12" case="first-letter">Ayuda</namespace>
+      <namespace key="13" case="first-letter">Ayuda discusión</namespace>
+      <namespace key="14" case="first-letter">Categoría</namespace>
+      <namespace key="15" case="first-letter">Categoría discusión</namespace>
+      <namespace key="100" case="first-letter">Portal</namespace>
+      <namespace key="101" case="first-letter">Portal Discusión</namespace>
+      <namespace key="102" case="first-letter">Wikiproyecto</namespace>
+      <namespace key="103" case="first-letter">Wikiproyecto Discusión</namespace>
+      <namespace key="104" case="first-letter">Anexo</namespace>
+      <namespace key="105" case="first-letter">Anexo Discusión</namespace>
+      <namespace key="446" case="first-letter">Programa educativo</namespace>
+      <namespace key="447" case="first-letter">Programa educativo discusión</namespace>
+      <namespace key="828" case="first-letter">Módulo</namespace>
+      <namespace key="829" case="first-letter">Módulo discusión</namespace>
+      <namespace key="2300" case="first-letter">Accesorio</namespace>
+      <namespace key="2301" case="first-letter">Accesorio discusión</namespace>
+      <namespace key="2302" case="case-sensitive">Accesorio definición</namespace>
+      <namespace key="2303" case="case-sensitive">Accesorio definición discusión</namespace>
+    </namespaces>
+  </siteinfo>
+  <page>
+    <title>Andorra</title>
+    <ns>0</ns>
+    <id>7</id>
+    <revision>
+      <id>110316105</id>
+      <parentid>110316104</parentid>
+      <timestamp>2018-08-31T05:17:28Z</timestamp>
+      <contributor>
+        <username>SeroBOT</username>
+        <id>4980693</id>
+      </contributor>
+      <minor />
+      <comment>Revertidos los cambios de [[Special:Contributions/179.6.196.175|179.6.196.175]] ([[User talk:179.6.196.175|disc.]]) a la última edición de SeroBOT</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve">{{otros usos}}
+{{Ficha de país
+| nombre_oficial             = Principado de Andorra&lt;br /&gt;{{small|{{lang|ca|''Principat d'Andorra''}}}}
+| imagen_bandera             = Flag of Andorra.svg
+| imagen_escudo              = Coat of arms of Andorra.svg
+| imagen_mapa                = Andorra in Europe (zoomed).svg
+| lema_nacional              = ''Virtus Unita Fortior''&lt;br /&gt; (en [[idioma latín|latín]]: «La virtud es más fuerte unida»)
+| himno_nacional             = ''[[El Gran Carlemany]]''&lt;br /&gt;(en [[idioma catalán|catalán]]: 'El Gran Carlomagno')
+| archivo_himno_nacional     = El Gran Carlemany.ogg
+| capital                    = [[Andorra la Vieja]]
+| capital_población          = 22.398 hab ([[2012]])
+| capital_coor               = 42_30_N_1_31_E_ 42°30′ N 1°31′ E
+| ciudad_más_poblada         = [[Andorra la Vieja]]
+| idioma_oficial             = [[Idioma catalán|Catalán]]{{ref de ficha|1}} 
+| idiomas_hablados = [[Idioma castellano|castellano]], [[Idioma francés|francés]], [[Idioma portugués|portugués]]
+| gobierno       = [[Monarquía parlamentaria|Coprincipado&amp;nbsp;parlamentario]]
+| título_líder1              = [[Copríncipes de Andorra|Copríncipes]]
+| nombre_líder1              = [[Joan-Enric Vives]]&lt;br /&gt;{{Presidente de Francia actual}}
+| título_líder2              = [[Jefe del Gobierno de Andorra|Presidente&amp;nbsp;del&amp;nbsp;Gobierno]]
+| nombre_líder2              = [[Antoni Martí]]
+| fundación                  = [[Condominio]]
+| fundación_hitos            = &lt;br /&gt;&amp;nbsp;• Reconocido
+| fundación_fechas           = del [[obispado de Urgel]]&lt;br /&gt;y el [[condado de Foix]]&lt;br /&gt;[[1278]]
+| superficie                 = 468
+| superficie_notas           = &lt;ref name=superficie&gt;{{Cita web |url=http://www.oratlas.com/libro-mundial/andorra/geografia |título=Andorra - Geografía - Libro Mundial de Hechos |autor=CIA |fechaacceso=26 de febrero de 2017}}&lt;/ref&gt;
+| superficie_puesto          = 195
+| fronteras                  = 118 [[kilómetro|km]]&lt;ref name=superficie /&gt;
+| costas                     = 0 km&lt;ref name=superficie /&gt;
+| población                  = 72.490
+| población_año              = 2018
+| población_puesto           = 185
+| PIB_nominal                =
+| PIB_nominal_año            =
+| PIB_nominal_puesto         =
+| PIB_nominal_per_cápita     =
+| PIB                        = [[US$]] 3&amp;nbsp;822 mill.&lt;ref&gt;http://www.estadistica.ad/ Departament d'estadística d'Andorra&lt;/ref&gt;
+| PIB_año                    = 2010
+| PIB_puesto                 = 177
+| PIB_per_cápita             = US$ 44&amp;nbsp;959
+| IDH                        = {{estable}} 0,858&lt;ref name=&quot;IDH&quot;&gt;{{Cita web |autor=PNUD |url=http://hdr.undp.org/sites/default/files/2016_human_development_report.pdf |título=Human Development Report 2016 Data |editor= pnud |ubicación= [[Estocolmo]], [[Suecia]] |año= 27 de marzo de 2017 |idioma=inglés |fechaacceso=11 de abril de 17 |formato=xls}}&lt;/ref&gt;
+| IDH_año                    = 2015
+| IDH_puesto                 = 32
+| IDH_categoría              = &lt;span style=&quot;color:#009900&quot;&gt;'''Muy alto'''&lt;/span&gt;
+| moneda                     = [[Euro]] (€, &lt;code&gt;[[ISO 4217|EUR]]&lt;/code&gt;){{ref de ficha|4}}
+| gentilicio                 = andorrano, -na
+| horario                    = [[CET]] ([[Tiempo Coordinado Universal|UTC]] + 1)
+| horario_verano             = [[CEST]] ([[Tiempo Coordinado Universal|UTC]] + 2)
+| cctld                      = [[.ad]]
+| código_telefónico          = 376
+| prefijo_radiofónico        = C3E-C2N
+| matrícula_coche            = AND
+| matrícula_avión            = C3
+| código_ISO                 = 020 / AND / AD
+| miembro_de                 = [[Organización de las Naciones Unidas|ONU]], [[Unesco]], [[Organización Mundial de la Salud|OMS]], [[Organización para la Seguridad y la Cooperación en Europa|OSCE]], [[OEI]], [[Consejo de Europa|COE]], [[Unión Internacional de Telecomunicaciones|UIT]], [[OMT]], [[Unión Latina|UL]]
+| nota1                      = Aunque el único idioma oficial es el [[idioma catalán|catalán]], también son usados de forma habitual el [[idioma español|español]], el [[idioma francés|francés]] y una minoría de [[Idioma portugués|portugués]].
+| nota2                      = [[Diócesis de Urgel|Obispo de La Seo de Urgel]] (diócesis hispanoandorrana).
+| nota3                      = [[Presidente de la República Francesa]].
+| nota4                      = Antes de [[2002]], la [[peseta española]] (₧, &lt;code&gt;ESP&lt;/code&gt;) y el [[franco francés]] (₣, &lt;code&gt;FRF&lt;/code&gt;). Después de [[1982]] emitió a veces su propia moneda, el [[dinero (moneda)|diner]]. Véase ''[[Moneda andorrana]]''.
+|Límites:=(S y E) España, (N) Francia.}}
+
+[[Categoría:Argentina]]</text>
+      <sha1>jnvgxm3hmfks9k3j5rniaco0rdldf1n</sha1>
+    </revision>
+  </page>
+  <page>
+    <title>Anexo:Calendario de aniversarios</title>
+    <ns>104</ns>
+    <id>523</id>
+    <revision>
+      <id>110172525</id>
+      <parentid>108602362</parentid>
+      <timestamp>2018-08-25T01:49:37Z</timestamp>
+      <contributor>
+        <ip>189.141.199.64</ip>
+      </contributor>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve">&lt;center&gt;
+{| align=&quot;center&quot; width=&quot;90%&quot; style=&quot;padding: 2px; margin: 2px; border: 1px solid #999; background: #ffff;&quot;
+|- valign=&quot;top&quot; 
+| colspan=&quot;7&quot; style=&quot;background: #ccccff; text-align:center; border: 1px solid #999;&quot; | [[Enero]]
+| style=&quot;border-center: 1px solid #999;&quot; | &amp;nbsp;
+| colspan=&quot;7&quot; style=&quot;background: #ccccff; text-align:center; border: 1px solid #999;&quot; | [[Febrero]]
+| &amp;nbsp;
+| colspan=&quot;7&quot; style=&quot;background: #ccccff; text-align:center; border: 1px solid #999;&quot; | [[Marzo]]
+|- valign=&quot;top&quot; style=&quot;text-align: right;&quot;
+| [[1 de enero|1]] || [[2 de enero|2]]
+| [[3 de enero|3]]
+| [[4 de enero|4]] || [[5 de enero|5]]
+| [[6 de enero|6]] || [[7 de enero|7]] ||
+| [[1 de febrero|1]]
+| [[2 de febrero|2]] || [[3 de febrero|3]]
+| [[4 de febrero|4]]
+| [[5 de febrero|5]] || [[6 de febrero|6]]
+| [[7 de febrero|7]]
+|
+| [[1 de marzo|1]]
+| [[2 de marzo|2]]
+| [[3 de marzo|3]] || [[4 de marzo|4]]
+| [[5 de marzo|5]] || [[6 de marzo|6]]
+| [[7 de marzo|7]]
+|
+|- valign=&quot;top&quot; style=&quot;text-align: right;&quot;
+| [[8 de enero|8]] || [[9 de enero|9]]
+| [[10 de enero|10]]
+| [[11 de enero|11]] || [[12 de enero|12]]
+| [[13 de enero|13]]
+| [[14 de enero|14]] ||
+| [[8 de febrero|8]] || [[9 de febrero|9]]
+| [[10 de febrero|10]]
+| [[11 de febrero|11]]
+| [[12 de febrero|12]]
+| [[13 de febrero|13]]
+| [[14 de febrero|14]]
+|
+| [[8 de marzo|8]]
+| [[9 de marzo|9]]
+| [[10 de marzo|10]] || [[11 de marzo|11]]
+| [[12 de marzo|12]]
+| [[13 de marzo|13]] || [[14 de marzo|14]]
+|
+|- valign=&quot;top&quot; style=&quot;text-align: right;&quot;
+| [[15 de enero|15]] || [[16 de enero|16]]
+| [[17 de enero|17]]
+| [[18 de enero|18]] || [[19 de enero|19]]
+| [[20 de enero|20]]
+| [[21 de enero|21]] ||
+| [[15 de febrero|15]]
+| [[16 de febrero|16]]
+| [[17 de febrero|17]]
+| [[18 de febrero|18]]
+| [[19 de febrero|19]]
+| [[20 de febrero|20]]
+| [[21 de febrero|21]]
+|
+| [[15 de marzo|15]]
+| [[16 de marzo|16]]
+| [[17 de marzo|17]] || [[18 de marzo|18]]
+| [[19 de marzo|19]]
+| [[20 de marzo|20]] || [[21 de marzo|21]]
+|
+|- valign=&quot;top&quot; style=&quot;text-align: right;&quot;
+| [[22 de enero|22]] || [[23 de enero|23]]
+| [[24 de enero|24]]
+| [[25 de enero|25]] || [[26 de enero|26]]
+| [[27 de enero|27]]
+| [[28 de enero|28]] ||
+| [[22 de febrero|22]]
+| [[23 de febrero|23]]
+| [[24 de febrero|24]]
+| [[25 de febrero|25]]
+| [[26 de febrero|26]]
+| [[27 de febrero|27]]
+| [[28 de febrero|28]]
+|
+| [[22 de marzo|22]]
+| [[23 de marzo|23]]
+| [[24 de marzo|24]] || [[25 de marzo|25]]
+| [[26 de marzo|26]]
+| [[27 de marzo|27]] || [[28 de marzo|28]]
+|
+|- valign=&quot;top&quot; style=&quot;text-align: right;&quot;
+| [[29 de enero|29]]
+| [[30 de enero|30]]
+| [[31 de enero|31]]
+|
+ ||  || ||  ||
+--
+--
+
+[[Categoría:Danzas de Perú]]
+[[Categoría:Música afroperuana]]
+[[Categoría:Música folclórica de Perú]]
+[[Categoría:Cultura afroamericana]]</text>
+      <sha1>lg9o3kcbf04qj3plb7mp451sb2a2pvv</sha1>
+    </revision>
+  </page>
+  <page>
+    <title>Araliales</title>
+    <ns>0</ns>
+    <id>54</id>
+    <redirect title="Apiales" />
+    <revision>
+      <id>98700598</id>
+      <parentid>61781362</parentid>
+      <timestamp>2017-04-28T05:12:04Z</timestamp>
+      <contributor>
+        <username>MomijiRoBot</username>
+        <id>4398102</id>
+      </contributor>
+      <minor />
+      <comment>Bot: [​[categoría:Apiales]​] → [​[Categoría:Apiales]​] ∵Corregido la primera letra de la Categoría a letra mayúscula [[PR:CW]]#18</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve">#REDIRECCIÓN [[Apiales]]
+[[Categoría:Apiales]]</text>
+      <sha1>2usr65b24cfgd14zjnudi99uamco9wc</sha1>
+    </revision>
+  </page>
+  <page>
+    <title>Categoría:Mitología</title>
+    <ns>14</ns>
+    <id>49204</id>
+    <revision>
+      <id>78178219</id>
+      <parentid>78169517</parentid>
+      <timestamp>2014-11-16T15:43:43Z</timestamp>
+      <contributor>
+        <username>Fremen</username>
+        <id>280849</id>
+      </contributor>
+      <comment>Toda religión tiene un conjunto de mitos y toda mitología ha tenido o tiene asociada una práctica religiosa. No es solo una cuestión de antropología.</comment>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+      <text xml:space="preserve">{{Categoría contenedor}}
+{{AP}}
+{{Portal}}
+{{Wikiquote}}
+{{Wikcionario}}
+{{Commonscat|Mythology}}
+
+[[Categoría:Formas de cultura]]
+[[Categoría:Religión]]
+[[Categoría:Antropología cultural]]
+[[Categoría:Espiritualidad]]
+[[Categoría:Tradiciones]]</text>
+      <sha1>72dchoxi755yi966dpam4r2u0zahmxw</sha1>
+    </revision>
+  </page>
+</mediawiki>

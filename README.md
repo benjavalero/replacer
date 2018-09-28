@@ -12,14 +12,14 @@ reemplazos, y cuáles han sido ya revisados.
 
 ## Indexación
 
-Wikipedia vuelca mensualmente toda la información en _dumps_, en particular
-en un XML enorme con todo el contenido. Semanalmente el sistema comprueba
-comprobaremos si hay un nuevo _dump_ disponible y lo indexa:
-- Solo se tienen en cuenta los contenidos de tipo «Artículo» o «Anexo»
+Wikipedia vuelca mensualmente toda la información en _dumps_, ficheros XML
+enormes (~13 GB, ~3 GB comprimidos) con todo el contenido. Semanalmente,
+la herramienta comprueba si hay un nuevo _dump_ disponible y lo indexa:
+- Solo se tienen en cuenta los contenidos de tipo «Artículo» o «Anexo».
 - Se reindexan los artículos modificados posteriormente a su inserción en
-la base de datos o a su revisión
+la base de datos o a su revisión.
 - Hay una opción para reindexarlo todo para tener en cuenta nuevas
-excepciones o potenciales reemplazos
+excepciones o potenciales reemplazos.
 
 El sistema además ofrece una sección para comprobar el estado de la
 indexación en tiempo real.
@@ -100,8 +100,10 @@ El sistema intenta terminar lo antes posible en el caso de no encontrar
 errores potenciales.
 3. Guardar en BD los reemplazos detectados en el artículo. El sistema
 intenta realizar solo las inserciones, borrados y actualizaciones necesarias.
- 
 
- 
-
-
+La herramienta puede llegar a procesar más de un millón de artículos, con
+lo cual el uso de memoria por parte de JPA no para de crecer. Para evitarlo
+se ha eliminado la relación _one-to-many_ entre artículos y reemplazos
+(aunque se mantiene la clave ajena en la BD), y cada cierto número de
+artículos procesados se limpia el gestor JPA (_flush-clear_). Con esto
+conseguimos mantener a raya el _heap_ de la JVM.

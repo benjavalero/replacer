@@ -13,6 +13,7 @@ import java.util.Objects;
 @Immutable
 @Table(name = "potentialerror", uniqueConstraints = @UniqueConstraint(columnNames = {"articleid", "type", "text"}))
 public class PotentialError implements Serializable {
+    // TODO Rename table
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +27,7 @@ public class PotentialError implements Serializable {
     @Enumerated(EnumType.STRING)
     private PotentialErrorType type;
 
-    // TODO Add the unique constraint to the MariaDB database
+    // TODO Add the unique constraint to the MariaDB database and redo the indexes
     @Column(name = "text", nullable = false, length = 30)
     private String text;
 

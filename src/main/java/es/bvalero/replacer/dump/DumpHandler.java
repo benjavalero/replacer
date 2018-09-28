@@ -10,33 +10,67 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.util.Date;
 
 /**
- * Abstract handler to parse a Wikipedia XML dump. It keeps track of the number of articles processed.
+ * Handler to parse a Wikipedia XML dump.
  */
-abstract class DumpHandler extends DefaultHandler {
+class DumpHandler extends DefaultHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpHandler.class);
 
-    private final StringBuilder currentChars = new StringBuilder();
-    private final DumpArticle currentArticle = new DumpArticle();
-    private final DumpStatus dumpStatus = new DumpStatus();
+    private StringBuilder currentChars = new StringBuilder();
     private Integer currentId;
     private String currentTitle;
     private WikipediaNamespace currentNamespace;
     private Date currentTimestamp;
     private String currentContent;
 
-    DumpStatus getDumpStatus() {
-        return dumpStatus;
+    // Options
+    private DumpProcessor dumpProcessor;
+    private boolean forceProcess;
+
+    // Statistics
+    private long numArticlesRead;
+    private long numArticlesProcessed;
+    private long startTime;
+    private long endTime;
+
+    DumpHandler(DumpProcessor processor) {
+        this(processor, false);
+    }
+
+    DumpHandler(DumpProcessor processor, boolean forceProcess) {
+        this.dumpProcessor = processor;
+
+        this.forceProcess = forceProcess;
+        this.numArticlesRead = 0L;
+        this.numArticlesProcessed = 0L;
+        this.startTime = System.currentTimeMillis();
+        this.endTime = 0L;
+    }
+
+    long getNumArticlesRead() {
+        return numArticlesRead;
+    }
+
+    long getNumArticlesProcessed() {
+        return numArticlesProcessed;
+    }
+
+    long getStartTime() {
+        return startTime;
+    }
+
+    long getEndTime() {
+        return endTime;
     }
 
     @Override
     public void startDocument() {
-        this.dumpStatus.start();
     }
 
     @Override
     public void endDocument() {
-        this.dumpStatus.finish();
+        dumpProcessor.finish();
+        this.endTime = System.currentTimeMillis();
     }
 
     @Override
@@ -66,14 +100,17 @@ abstract class DumpHandler extends DefaultHandler {
                 currentContent = currentChars.toString();
                 break;
             case "page":
-                currentArticle.setId(currentId);
-                currentArticle.setTitle(currentTitle);
-                currentArticle.setNamespace(currentNamespace);
-                currentArticle.setTimestamp(currentTimestamp);
-                currentArticle.setContent(currentContent);
+                numArticlesRead++;
+                DumpArticle dumpArticle = new DumpArticle(currentId, currentTitle, currentNamespace, currentTimestamp, currentContent);
 
-                process();
-                dumpStatus.increasePages();
+                try {
+                    boolean articleProcessed = processArticle(dumpArticle);
+                    if (articleProcessed) {
+                        numArticlesProcessed++;
+                    }
+                } catch (Exception e) {
+                    LOGGER.error("Error processing article: {}", currentTitle, e);
+                }
 
                 // Reset current ID to avoid duplicates
                 currentId = null;
@@ -88,22 +125,8 @@ abstract class DumpHandler extends DefaultHandler {
         currentChars.append(ch, start, length);
     }
 
-    DumpArticle getCurrentArticle() {
-        return currentArticle;
-    }
-
-    abstract void processArticle(DumpArticle article);
-
-    private void process() {
-        try {
-            // Check if it is really needed to process the article
-            // in case it is not an article/annex or it is a redirection
-            if (currentArticle.isProcessable()) {
-                processArticle(currentArticle);
-            }
-        } catch (Exception e) {
-            LOGGER.error("Error processing article: {}", currentTitle, e);
-        }
+    boolean processArticle(DumpArticle dumpArticle) {
+        return dumpProcessor.processArticle(dumpArticle, forceProcess);
     }
 
 }

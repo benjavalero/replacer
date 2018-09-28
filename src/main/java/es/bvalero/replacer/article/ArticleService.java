@@ -145,7 +145,7 @@ public class ArticleService {
         // If not we delete the potential error from the article but let the article
         if (!wordFound) {
             LOGGER.warn("Word {} not found as a potential error for article: {}", word, randomArticle.getTitle());
-            for (PotentialError potentialError : potentialErrorRepository.findByArticleId(randomArticle.getId())) {
+            for (PotentialError potentialError : potentialErrorRepository.findByArticle(randomArticle)) {
                 if (potentialError.getText().equals(word)) {
                     potentialErrorRepository.delete(potentialError);
                 }
@@ -238,13 +238,7 @@ public class ArticleService {
         for (ExceptionMatchFinder exceptionMatchFinder : exceptionMatchFinders) {
             List<RegexMatch> exceptionMatches = exceptionMatchFinder.findExceptionMatches(text, false);
 
-            Iterator<ArticleReplacement> it = articleReplacements.iterator();
-            while (it.hasNext()) {
-                ArticleReplacement articleReplacement = it.next();
-                if (articleReplacement.isContainedIn(exceptionMatches)) {
-                    it.remove();
-                }
-            }
+            articleReplacements.removeIf(articleReplacement -> articleReplacement.isContainedIn(exceptionMatches));
 
             if (articleReplacements.isEmpty()) {
                 return articleReplacements;
@@ -261,13 +255,7 @@ public class ArticleService {
         List<ArticleReplacement> articleReplacements = findPotentialErrors(text);
 
         // Ignore the potential errors included in exceptions
-        Iterator<ArticleReplacement> it = articleReplacements.iterator();
-        while (it.hasNext()) {
-            ArticleReplacement articleReplacement = it.next();
-            if (articleReplacement.isContainedIn(exceptionMatches)) {
-                it.remove();
-            }
-        }
+        articleReplacements.removeIf(articleReplacement -> articleReplacement.isContainedIn(exceptionMatches));
 
         return articleReplacements;
     }
@@ -384,7 +372,7 @@ public class ArticleService {
     private void markArticleAsReviewed(@NotNull ArticleData article) {
         articleRepository.findById(article.getId()).ifPresent(dbArticle -> {
             dbArticle.setReviewDate(new Timestamp(System.currentTimeMillis()));
-            potentialErrorRepository.deleteInBatch(potentialErrorRepository.findByArticleId(article.getId()));
+            potentialErrorRepository.deleteInBatch(potentialErrorRepository.findByArticle(dbArticle));
             articleRepository.save(dbArticle);
         });
     }
