@@ -6,13 +6,13 @@
     <groupId>es.bvalero</groupId>
     <artifactId>replacer</artifactId>
     <version>1.5.0</version>
-    <packaging>${packaging.type}</packaging>
+    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <!--Spring Boot 2.x is not compatible with Java 7-->
-        <version>1.5.15.RELEASE</version>
+        <version>2.0.5.RELEASE</version>
         <relativePath/>
     </parent>
 
@@ -20,9 +20,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!--JDK in Wikipedia Tools servers is 7-->
-        <java.version>1.7</java.version>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <java.version>1.8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
         <sonar.exclusions>**/*.sql, **/*.txt</sonar.exclusions>
     </properties>
@@ -55,6 +55,7 @@
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>webjars-locator</artifactId>
+            <version>0.34</version>
         </dependency>
 
         <dependency>
@@ -63,15 +64,20 @@
             <version>1.18</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.scribejava</groupId>
             <artifactId>scribejava-core</artifactId>
-            <version>5.5.0</version>
+            <version>5.6.0</version>
         </dependency>
         <dependency>
             <groupId>com.bitplan</groupId>
             <artifactId>mediawiki-japi</artifactId>
-            <!-- Last version compatible with Java 7 -->
-            <version>0.0.21</version>
+            <!-- Last version compatible with Java 7 : 0.0.21 -->
+            <version>0.1.02</version>
         </dependency>
         <dependency>
             <groupId>dk.brics</groupId>
@@ -87,37 +93,24 @@
 
         <dependency>
             <groupId>org.jetbrains</groupId>
-            <artifactId>annotations-java5</artifactId>
-            <version>RELEASE</version>
+            <artifactId>annotations</artifactId>
+            <version>16.0.3</version>
             <scope>compile</scope>
         </dependency>
 
     </dependencies>
 
     <profiles>
-        <!-- Default profile to package a WAR to be deployed in an external Tomcat -->
         <profile>
             <id>default</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
-            <properties>
-                <packaging.type>war</packaging.type>
-            </properties>
             <dependencies>
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.tomcat.embed</groupId>
-                    <artifactId>tomcat-embed-jasper</artifactId>
-                    <scope>provided</scope>
-                </dependency>
                 <dependency>
                     <groupId>org.mariadb.jdbc</groupId>
                     <artifactId>mariadb-java-client</artifactId>
+                    <scope>runtime</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.hsqldb</groupId>
@@ -167,22 +160,5 @@
             </build>
         </profile>
     </profiles>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

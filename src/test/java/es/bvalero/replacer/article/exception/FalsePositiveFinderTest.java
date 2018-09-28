@@ -6,6 +6,10 @@ import es.bvalero.replacer.utils.RegExUtils;
 import es.bvalero.replacer.utils.RegexMatch;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -16,11 +20,17 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+@RunWith(SpringRunner.class)
 public class FalsePositiveFinderTest {
+
+    @Value("classpath:false-positives.txt")
+    private Resource resource;
 
     @Test
     public void testLoadFalsePositives() {
-        List<String> falsePositives = FalsePositiveFinder.loadFalsePositives();
+        FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
+        falsePositiveFinder.setResource(resource);
+        List<String> falsePositives = falsePositiveFinder.loadFalsePositives();
         Assert.assertFalse(falsePositives.isEmpty());
         Assert.assertTrue(falsePositives.contains("Index"));
         Assert.assertTrue(falsePositives.contains("Magazine"));
@@ -32,6 +42,7 @@ public class FalsePositiveFinderTest {
         String text = "Un sólo de Éstos en el Index Online de ésta Tropicos.org Aquél aquéllo Saint-Martin.";
 
         FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
+        falsePositiveFinder.setResource(resource);
         List<RegexMatch> matches = falsePositiveFinder.findExceptionMatches(text, false);
 
         Assert.assertFalse(matches.isEmpty());
@@ -56,7 +67,8 @@ public class FalsePositiveFinderTest {
             e.printStackTrace();
         }
 
-        List<String> falsePositives = FalsePositiveFinder.loadFalsePositives();
+        FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
+        List<String> falsePositives = falsePositiveFinder.loadFalsePositives();
 
         // Test 1 : One single automaton with all the alternations
         String alternations = StringUtils.collectionToDelimitedString(falsePositives, "|");

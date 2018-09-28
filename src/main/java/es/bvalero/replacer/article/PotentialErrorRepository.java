@@ -16,6 +16,10 @@ import java.util.List;
 @Transactional
 public interface PotentialErrorRepository extends JpaRepository<PotentialError, Long> {
 
+    List<PotentialError> findByArticle(Article article);
+
+    void deleteByArticle(Article article);
+
     @Query("SELECT text, COUNT(*) FROM PotentialError WHERE type = 'MISSPELLING' GROUP BY text")
     List<Object[]> findMisspellingsGrouped();
 

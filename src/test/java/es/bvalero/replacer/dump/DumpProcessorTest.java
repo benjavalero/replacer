@@ -1,27 +1,26 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.Article;
-import es.bvalero.replacer.article.ArticleReplacement;
-import es.bvalero.replacer.article.ArticleRepository;
-import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.article.*;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 public class DumpProcessorTest {
 
     @Mock
     private ArticleRepository articleRepository;
+
+    @Mock
+    private PotentialErrorRepository potentialErrorRepository;
 
     @Mock
     private ArticleService articleService;
@@ -36,154 +35,292 @@ public class DumpProcessorTest {
     }
 
     @Test
-    public void testProcess() {
-        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, null, "");
-
-        Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(new ArticleReplacement()));
-
-        DumpStatus dumpStatus = new DumpStatus();
-        dumpStatus.start();
-        dumpProcessor.processArticle(dumpArticle, dumpStatus);
-        dumpProcessor.finish();
-
-        Mockito.verify(articleRepository, Mockito.times(1)).findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class));
-        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
-        Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.anyListOf(Article.class));
-        Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.anyListOf(Article.class));
+    public void testProcessSimple() {
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
     }
 
     @Test
-    public void testProcessExistingArticle() {
-        Timestamp today = new Timestamp(new Date().getTime());
-        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, today, "");
+    public void testCheckNamespaces() {
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
 
-        Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(new ArticleReplacement()));
+        DumpArticle dumpAnnex = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpAnnex.getNamespace()).thenReturn(WikipediaNamespace.ANNEX);
+        Mockito.when(dumpAnnex.getContent()).thenReturn("");
 
-        Article articleDb = new Article(1, "");
-        articleDb.setAdditionDate(new Timestamp(new Date().getTime()));
-        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
+        DumpArticle dumpCategory = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpCategory.getNamespace()).thenReturn(WikipediaNamespace.CATEGORY);
 
-        DumpStatus dumpStatus = new DumpStatus();
-        dumpStatus.start();
-        dumpProcessor.processArticle(dumpArticle, dumpStatus);
-        dumpProcessor.finish();
-
-        Mockito.verify(articleRepository, Mockito.times(1)).findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class));
-        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
-        Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.anyListOf(Article.class));
-        Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.anyListOf(Article.class));
+        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
+        Assert.assertTrue(dumpProcessor.processArticle(dumpAnnex));
+        Assert.assertFalse(dumpProcessor.processArticle(dumpCategory));
     }
 
     @Test
-    public void testProcessArticleWithoutPotentialErrors() {
-        Timestamp today = new Timestamp(new Date().getTime());
-        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, today, "");
-
-        Article articleDb = new Article(1, "");
-        articleDb.setAdditionDate(new Timestamp(new Date().getTime()));
-        Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class)))
-                .thenReturn(Collections.singletonList(articleDb));
-
-        DumpStatus dumpStatus = new DumpStatus();
-        dumpStatus.start();
-        dumpProcessor.processArticle(dumpArticle, dumpStatus);
-        dumpProcessor.finish();
-
-        Mockito.verify(articleRepository, Mockito.times(1)).findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class));
-        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
-        Mockito.verify(articleRepository, Mockito.times(1)).delete(Mockito.anyListOf(Article.class));
-        Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.anyListOf(Article.class));
+    public void testProcessRedirection() {
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("#REDIRECT xxx");
+        Assert.assertFalse(dumpProcessor.processArticle(dumpArticle));
     }
 
     @Test
-    public void testSkipArticleReviewedAfterDumpTimestamp() {
+    public void testProcessReviewedAfterTimestamp() {
         GregorianCalendar today = new GregorianCalendar();
         GregorianCalendar yesterday = new GregorianCalendar();
         yesterday.add(GregorianCalendar.DATE, -1);
-        Timestamp timestampYesterday = new Timestamp(yesterday.getTimeInMillis());
-        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, timestampYesterday, "");
 
-        Article articleDb = new Article(1, "");
-        articleDb.setReviewDate(new Timestamp(today.getTimeInMillis()));
-        Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class)))
-                .thenReturn(Collections.singletonList(articleDb));
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(yesterday.getTimeInMillis()));
 
-        DumpStatus dumpStatus = new DumpStatus();
-        dumpStatus.start();
-        dumpProcessor.processArticle(dumpArticle, dumpStatus);
+        Article dbArticle = Mockito.mock(Article.class);
+        Mockito.when(dbArticle.getReviewDate()).thenReturn(new Timestamp(today.getTimeInMillis()));
+        Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
+                .thenReturn(Collections.singletonList(dbArticle));
 
-        Mockito.verify(articleRepository, Mockito.times(1)).findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class));
-        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
-        Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
+        Assert.assertFalse(dumpProcessor.processArticle(dumpArticle));
     }
 
     @Test
-    public void testSkipArticleReviewedWhenDumpTimestamp() {
-        Timestamp today = new Timestamp(new Date().getTime());
-        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, today, "");
-
-        Article articleDb = new Article(1, "");
-        articleDb.setReviewDate(today);
-        Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class)))
-                .thenReturn(Collections.singletonList(articleDb));
-
-        DumpStatus dumpStatus = new DumpStatus();
-        dumpStatus.start();
-        dumpProcessor.processArticle(dumpArticle, dumpStatus);
-
-        Mockito.verify(articleRepository, Mockito.times(1)).findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class));
-        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
-        Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
-    }
-
-    @Test
-    public void testSkipArticleAddedAfter() {
+    public void testProcessReviewedAfterTimestampForced() {
         GregorianCalendar today = new GregorianCalendar();
         GregorianCalendar yesterday = new GregorianCalendar();
         yesterday.add(GregorianCalendar.DATE, -1);
-        Timestamp timestampYesterday = new Timestamp(yesterday.getTimeInMillis());
-        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, timestampYesterday, "");
 
-        Article articleDb = new Article(1, "");
-        articleDb.setAdditionDate(new Timestamp(today.getTimeInMillis()));
-        Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class)))
-                .thenReturn(Collections.singletonList(articleDb));
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(yesterday.getTimeInMillis()));
 
-        DumpStatus dumpStatus = new DumpStatus();
-        dumpStatus.start();
-        dumpProcessor.processArticle(dumpArticle, dumpStatus);
+        Article dbArticle = Mockito.mock(Article.class);
+        Mockito.when(dbArticle.getReviewDate()).thenReturn(new Timestamp(today.getTimeInMillis()));
+        Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
-        Mockito.verify(articleRepository, Mockito.times(1)).findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class));
-        Mockito.verify(articleService, Mockito.times(0)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
-        Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
+        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle, true));
     }
 
     @Test
-    public void testForceArticleAddedAfter() {
+    public void testProcessReviewedWhenTimestamp() {
+        GregorianCalendar today = new GregorianCalendar();
+
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(today.getTimeInMillis()));
+
+        Article dbArticle = Mockito.mock(Article.class);
+        Mockito.when(dbArticle.getReviewDate()).thenReturn(new Timestamp(today.getTimeInMillis()));
+        Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
+                .thenReturn(Collections.singletonList(dbArticle));
+
+        Assert.assertFalse(dumpProcessor.processArticle(dumpArticle));
+    }
+
+    @Test
+    public void testProcessReviewedBeforeTimestamp() {
         GregorianCalendar today = new GregorianCalendar();
         GregorianCalendar yesterday = new GregorianCalendar();
         yesterday.add(GregorianCalendar.DATE, -1);
-        Timestamp timestampYesterday = new Timestamp(yesterday.getTimeInMillis());
-        DumpArticle dumpArticle = new DumpArticle(1, "", WikipediaNamespace.ARTICLE, timestampYesterday, "");
 
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(today.getTimeInMillis()));
+
+        Article dbArticle = Mockito.mock(Article.class);
+        Mockito.when(dbArticle.getReviewDate()).thenReturn(new Timestamp(yesterday.getTimeInMillis()));
+        Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
+
+        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
+    }
+
+    @Test
+    public void testProcessAddedAfterTimestamp() {
+        GregorianCalendar today = new GregorianCalendar();
+        GregorianCalendar yesterday = new GregorianCalendar();
+        yesterday.add(GregorianCalendar.DATE, -1);
+
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(yesterday.getTimeInMillis()));
+
+        Article dbArticle = Mockito.mock(Article.class);
+        Mockito.when(dbArticle.getAdditionDate()).thenReturn(new Timestamp(today.getTimeInMillis()));
+        Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
+                .thenReturn(Collections.singletonList(dbArticle));
+
+        Assert.assertFalse(dumpProcessor.processArticle(dumpArticle));
+    }
+
+    @Test
+    public void testProcessAddedAfterTimestampForced() {
+        GregorianCalendar today = new GregorianCalendar();
+        GregorianCalendar yesterday = new GregorianCalendar();
+        yesterday.add(GregorianCalendar.DATE, -1);
+
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(yesterday.getTimeInMillis()));
+
+        Article dbArticle = Mockito.mock(Article.class);
+        Mockito.when(dbArticle.getAdditionDate()).thenReturn(new Timestamp(today.getTimeInMillis()));
+        Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
+
+        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle, true));
+    }
+
+    @Test
+    public void testProcessAddedBeforeTimestamp() {
+        GregorianCalendar today = new GregorianCalendar();
+        GregorianCalendar yesterday = new GregorianCalendar();
+        yesterday.add(GregorianCalendar.DATE, -1);
+
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(today.getTimeInMillis()));
+
+        Article dbArticle = Mockito.mock(Article.class);
+        Mockito.when(dbArticle.getAdditionDate()).thenReturn(new Timestamp(yesterday.getTimeInMillis()));
+        Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
+
+        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
+    }
+
+    /* DATABASE TESTS */
+
+    @Test
+    public void testProcessNewArticle() {
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getId()).thenReturn(1);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+
+        ArticleReplacement articleReplacement = Mockito.mock(ArticleReplacement.class);
         Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(new ArticleReplacement()));
+                .thenReturn(Collections.singletonList(articleReplacement));
 
-        Article articleDb = new Article(1, "");
-        articleDb.setAdditionDate(new Timestamp(today.getTimeInMillis()));
-        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(articleDb);
-
-        DumpStatus dumpStatus = new DumpStatus();
-        dumpStatus.start();
-        dumpProcessor.processArticle(dumpArticle, dumpStatus);
+        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
         dumpProcessor.finish();
 
-        Mockito.verify(articleRepository, Mockito.times(1)).findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(Pageable.class));
-        Mockito.verify(articleService, Mockito.times(1)).findPotentialErrorsIgnoringExceptions(Mockito.anyString());
-        Mockito.verify(articleRepository, Mockito.times(0)).delete(Mockito.anyListOf(Article.class));
-        Mockito.verify(articleRepository, Mockito.times(1)).save(Mockito.anyListOf(Article.class));
+        Mockito.verify(articleRepository).saveAll(Mockito.anyList());
+        Mockito.verify(potentialErrorRepository).saveAll(Mockito.anyList());
+    }
+
+    @Test
+    public void testProcessExistingArticleWithReplacementChanges() {
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+
+        // Let's suppose the article exists in DB
+        Article dbArticle = Mockito.mock(Article.class);
+        Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
+                .thenReturn(Collections.singletonList(dbArticle));
+        // And it has replacements 1 and 2
+        PotentialError replacement1 = new PotentialError(dbArticle, PotentialErrorType.MISSPELLING, "1");
+        PotentialError replacement2 = new PotentialError(dbArticle, PotentialErrorType.MISSPELLING, "2");
+        Mockito.when(potentialErrorRepository.findByArticle(dbArticle)).thenReturn(Arrays.asList(replacement1, replacement2));
+        // And the new ones are 2 and 3
+        ArticleReplacement articleReplacement2 = Mockito.mock(ArticleReplacement.class);
+        Mockito.when(articleReplacement2.getType()).thenReturn(PotentialErrorType.MISSPELLING);
+        Mockito.when(articleReplacement2.getSubtype()).thenReturn("2");
+        ArticleReplacement articleReplacement3 = Mockito.mock(ArticleReplacement.class);
+        Mockito.when(articleReplacement3.getType()).thenReturn(PotentialErrorType.MISSPELLING);
+        Mockito.when(articleReplacement3.getSubtype()).thenReturn("3");
+        Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
+                .thenReturn(Arrays.asList(articleReplacement2, articleReplacement3));
+
+        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
+        dumpProcessor.finish();
+
+        Mockito.verify(potentialErrorRepository).deleteInBatch(Mockito.anyList());
+        Mockito.verify(articleRepository).saveAll(Mockito.anyList());
+        Mockito.verify(potentialErrorRepository).saveAll(Mockito.anyList());
+    }
+
+    @Test
+    public void testProcessExistingArticleWithNoReplacementChanges() {
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+
+        // Let's suppose the article exists in DB
+        Article dbArticle = Mockito.mock(Article.class);
+        Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
+        // And it has replacement 1
+        PotentialError replacement1 = new PotentialError(dbArticle, PotentialErrorType.MISSPELLING, "1");
+        Mockito.when(potentialErrorRepository.findByArticle(dbArticle)).thenReturn(Collections.singletonList(replacement1));
+        // And the new one is 1
+        ArticleReplacement articleReplacement1 = Mockito.mock(ArticleReplacement.class);
+        Mockito.when(articleReplacement1.getType()).thenReturn(PotentialErrorType.MISSPELLING);
+        Mockito.when(articleReplacement1.getSubtype()).thenReturn("1");
+        Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
+                .thenReturn(Collections.singletonList(articleReplacement1));
+
+        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
+
+        Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
+        Mockito.verify(potentialErrorRepository, Mockito.times(0)).delete(Mockito.any(PotentialError.class));
+        Mockito.verify(potentialErrorRepository, Mockito.times(0)).save(Mockito.any(PotentialError.class));
+    }
+
+    @Test
+    public void testProcessExistingArticleWithNoReplacementsFound() {
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+
+        // Let's suppose the article exists in DB
+        Article dbArticle = Mockito.mock(Article.class);
+        Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
+                .thenReturn(Collections.singletonList(dbArticle));
+        // And it has replacements 1 and 2
+        PotentialError replacement1 = new PotentialError(dbArticle, PotentialErrorType.MISSPELLING, "1");
+        PotentialError replacement2 = new PotentialError(dbArticle, PotentialErrorType.MISSPELLING, "2");
+        Mockito.when(potentialErrorRepository.findByArticle(dbArticle)).thenReturn(Arrays.asList(replacement1, replacement2));
+        // And there are no replacements found
+        Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString())).thenReturn(Collections.emptyList());
+
+        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
+        dumpProcessor.finish();
+
+        Mockito.verify(potentialErrorRepository).deleteByArticle(dbArticle);
+        Mockito.verify(articleRepository).deleteInBatch(Mockito.anyList());
+    }
+
+    @Test
+    public void testProcessNewArticleAndDeleteObsolete() {
+        // New article
+        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
+        Mockito.when(dumpArticle.getId()).thenReturn(2);
+        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
+        Mockito.when(dumpArticle.getContent()).thenReturn("");
+
+        // Obsolete article in DB
+        Article dbArticle = Mockito.mock(Article.class);
+        Mockito.when(dbArticle.getId()).thenReturn(1);
+        Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
+                .thenReturn(Collections.singletonList(dbArticle));
+
+        ArticleReplacement articleReplacement = Mockito.mock(ArticleReplacement.class);
+        Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
+                .thenReturn(Collections.singletonList(articleReplacement));
+
+        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
+        dumpProcessor.finish();
+
+        Mockito.verify(articleRepository).deleteInBatch(Mockito.anyList());
+        Mockito.verify(articleRepository).saveAll(Mockito.anyList());
+        Mockito.verify(potentialErrorRepository).saveAll(Mockito.anyList());
     }
 
 }

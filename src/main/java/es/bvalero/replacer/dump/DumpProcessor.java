@@ -1,7 +1,9 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.*;
-import org.jetbrains.annotations.NotNull;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,146 +13,192 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 import java.util.*;
 
+/**
+ * Process an article found in a Wikipedia dump.
+ */
 @Component
 class DumpProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpProcessor.class);
+
+    private static final Set<WikipediaNamespace> PROCESSABLE_NAMESPACES =
+            new HashSet<>(Arrays.asList(WikipediaNamespace.ARTICLE, WikipediaNamespace.ANNEX));
+
     private static final int CACHE_SIZE = 1000;
 
     @Autowired
     private ArticleRepository articleRepository;
 
     @Autowired
+    private PotentialErrorRepository potentialErrorRepository;
+
+    @Autowired
     private ArticleService articleService;
 
     // Load a bunch of articles from DB to improve performance
     private Map<Integer, Article> articlesDb = new HashMap<>(CACHE_SIZE);
-    private int maxIdDb = 0;
+    private int maxCachedId = 0;
 
     // Save articles in batches to improve performance
-    private List<Article> articlesToDelete = new ArrayList<>();
-    private List<Article> articlesToSave = new ArrayList<>();
+    private List<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
+    private List<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
+    private List<PotentialError> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
+    private List<PotentialError> replacementsToAdd = new ArrayList<>(CACHE_SIZE);
 
     /**
      * Process a dump article: find the potential errors and add them to the database.
      */
-    void processArticle(@NotNull DumpArticle dumpArticle, DumpStatus dumpStatus) {
-        LOGGER.debug("Indexing article: {}...", dumpArticle.getTitle());
-
-        long startReadDbTime = System.currentTimeMillis();
-        Article article = articlesDb.get(dumpArticle.getId());
-        if (article == null && dumpArticle.getId() > maxIdDb) {
-            // The remaining cached articles are not in the dump so we remove them
-            articlesToDelete.addAll(articlesDb.values());
-
-            flushModifications();
-
-            // The list of DB articles to cache is ordered by ID
-            articlesDb.clear();
-
-            for (Article articleDb : articleRepository
-                    .findByIdGreaterThanOrderById(dumpArticle.getId() - 1, new PageRequest(0, CACHE_SIZE))) {
-                articlesDb.put(articleDb.getId(), articleDb);
-                maxIdDb = articleDb.getId();
-            }
-            article = articlesDb.get(dumpArticle.getId());
-        }
-        long readDbTime = System.currentTimeMillis() - startReadDbTime;
-
-        if (article != null) {
-            // The article in dump exists also already in the database
-            articlesDb.remove(article.getId());
-
-            if (article.getReviewDate() != null && !dumpArticle.getTimestamp().after(article.getReviewDate())) {
-                LOGGER.debug("Article reviewed after dump timestamp. Skipping.");
-                return;
-            } else if (dumpArticle.getTimestamp().before(article.getAdditionDate()) && !dumpStatus.isProcessOldArticles()) {
-                LOGGER.debug("Article added after dump timestamp. Skipping.");
-                return;
-            }
-        }
-
-        // Process the article. Find the potential errors ignoring the ones in exceptions.
-        long startRegexTime = System.currentTimeMillis();
-        List<ArticleReplacement> articleReplacements = articleService.findPotentialErrorsIgnoringExceptions(dumpArticle.getContent());
-        long regexTime = System.currentTimeMillis() - startRegexTime;
-
-        long startWriteDbTime = System.currentTimeMillis();
-        if (articleReplacements.isEmpty()) {
-            LOGGER.debug("No errors found in article: {}", dumpArticle.getTitle());
-            if (article != null) {
-                articlesToDelete.add(article);
-            }
-        } else {
-            if (article == null) {
-                article = new Article(dumpArticle.getId(), dumpArticle.getTitle());
-            } else {
-                article.setTitle(dumpArticle.getTitle()); // In case the title of the article has changed
-            }
-
-            article.setAdditionDate(new Timestamp(System.currentTimeMillis()));
-            article.setReviewDate(null);
-            if (addPotentialErrorsToArticle(article, articleReplacements)) {
-                // Only save if there are modifications in the potential errors found for the article
-                articlesToSave.add(article);
-            }
-        }
-        long writeDbTime = System.currentTimeMillis() - startWriteDbTime;
-
-        // Update the status
-        dumpStatus.increaseArticles();
-        dumpStatus.increaseArticleTime(readDbTime, regexTime, writeDbTime);
+    @TestOnly
+    boolean processArticle(DumpArticle dumpArticle) {
+        return processArticle(dumpArticle, false);
     }
 
-    /* Add the new errors found to the article and also remove the obsolete ones */
-    private boolean addPotentialErrorsToArticle(Article article, List<ArticleReplacement> articleReplacements) {
-        Set<PotentialError> newPotentialErrors = new HashSet<>(articleReplacements.size());
-        for (ArticleReplacement articleReplacement : articleReplacements) {
-            PotentialError potentialError = new PotentialError(articleReplacement.getType(), articleReplacement.getSubtype());
-            newPotentialErrors.add(potentialError);
+    /**
+     * Process a dump article: find the potential errors and add them to the database.
+     */
+    boolean processArticle(DumpArticle dumpArticle, boolean forceProcess) {
+        LOGGER.debug("Processing article: {}...", dumpArticle.getTitle());
+
+        // Check namespace
+        if (!PROCESSABLE_NAMESPACES.contains(dumpArticle.getNamespace())) {
+            return false;
         }
 
-        boolean isModified = false;
+        // Check redirection articles
+        if (WikipediaUtils.isRedirectionArticle(dumpArticle.getContent())) {
+            return false;
+        }
 
-        // Remove the obsolete potential errors from the article
-        Iterator<PotentialError> it = article.getPotentialErrors().iterator();
-        while (it.hasNext()) {
-            PotentialError oldPotentialError = it.next();
-            if (!newPotentialErrors.contains(oldPotentialError)) {
-                it.remove();
-                isModified = true;
+        // Load the cache of database articles
+        if (articlesDb.isEmpty()) {
+            for (Article article : articleRepository.findByIdGreaterThanOrderById(dumpArticle.getId() - 1, PageRequest.of(0, CACHE_SIZE))) {
+                articlesDb.put(article.getId(), article);
+                maxCachedId = article.getId();
             }
         }
 
-        // Add the new potential errors to the article
-        for (PotentialError newPotentialError : newPotentialErrors) {
-            if (!article.getPotentialErrors().contains(newPotentialError)) {
-                article.addPotentialError(newPotentialError);
-                isModified = true;
+        // Find the article in the cache
+        Optional<Article> dbArticle = Optional.ofNullable(articlesDb.get(dumpArticle.getId()));
+
+        // If the article is in the cache we can remove it from the cache
+        dbArticle.ifPresent(article -> articlesDb.remove(article.getId()));
+
+        // Clear the cache if obsolete (we assume the dump articles are in order)
+        if (dumpArticle.getId() >= maxCachedId) {
+            // The remaining cached articles are not in the dump so we remove them from DB
+            articlesToDelete.addAll(articlesDb.values());
+            articlesDb.clear();
+        }
+
+        if (dbArticle.isPresent() && !forceProcess) {
+            // Check if reviewed after dump article timestamp
+            // We compare with seconds because the DB timestamps is milliseconds-level but the Dump date is not
+            // and it is possible that the review date and the timestamp is exactly the same
+            if (dbArticle.get().getReviewDate() != null
+                    && dbArticle.get().getReviewDate().getTime() / 1000 >= dumpArticle.getTimestamp().getTime() / 1000) {
+                LOGGER.debug("Article reviewed after dump timestamp. Skipping.");
+                return false;
+            }
+
+            // Check if added after dump article timestamp
+            if (dbArticle.get().getAdditionDate() != null
+                    && dbArticle.get().getAdditionDate().after(dumpArticle.getTimestamp())) {
+                LOGGER.debug("Article added after dump timestamp. Skipping.");
+                return false;
             }
         }
 
-        return isModified;
+        // TODO Create interface for this
+        List<ArticleReplacement> articleReplacements = articleService.findPotentialErrorsIgnoringExceptions(dumpArticle.getContent());
+
+        if (articleReplacements.isEmpty()) {
+            LOGGER.debug("No errors found in article: {}", dumpArticle.getTitle());
+            dbArticle.ifPresent(article -> {
+                potentialErrorRepository.deleteByArticle(article); // No need to delete in batch
+                articlesToDelete.add(article);
+            });
+        } else if (dbArticle.isPresent()) {
+            // Compare the new replacements with the existing ones
+            Set<PotentialError> newPotentialErrors = new HashSet<>(articleReplacements.size());
+            for (ArticleReplacement articleReplacement : articleReplacements) {
+                PotentialError potentialError = new PotentialError(dbArticle.get(), articleReplacement.getType(), articleReplacement.getSubtype());
+                newPotentialErrors.add(potentialError);
+            }
+
+            // To know if any real has been changed in the replacements in DB
+            boolean modified = false;
+
+            // Replacements to remove from DB
+            List<PotentialError> oldPotentialErrors = potentialErrorRepository.findByArticle(dbArticle.get());
+
+            for (PotentialError oldPotentialError : oldPotentialErrors) {
+                if (!newPotentialErrors.contains(oldPotentialError)) {
+                    replacementsToDelete.add(oldPotentialError);
+                    modified = true;
+                }
+            }
+
+            // Replacements to add to DB
+            for (PotentialError newPotentialError : newPotentialErrors) {
+                if (!oldPotentialErrors.contains(newPotentialError)) {
+                    replacementsToAdd.add(newPotentialError);
+                    modified = true;
+                }
+            }
+
+            if (modified) {
+                dbArticle.get().setTitle(dumpArticle.getTitle()); // In case the title of the article has changed
+                dbArticle.get().setAdditionDate(new Timestamp(System.currentTimeMillis()));
+                dbArticle.get().setReviewDate(null);
+                articlesToSave.add(dbArticle.get());
+            }
+        } else {
+            // New article to insert in DB
+            Article newArticle = new Article(dumpArticle.getId(), dumpArticle.getTitle());
+            articlesToSave.add(newArticle);
+
+            // Add replacements in DB
+            for (ArticleReplacement articleReplacement : articleReplacements) {
+                PotentialError newPotentialError = new PotentialError(newArticle, articleReplacement.getType(), articleReplacement.getSubtype());
+                replacementsToAdd.add(newPotentialError);
+            }
+        }
+
+        return true;
     }
 
     private void flushModifications() {
-        // Save all modifications
+        // There is a FK Replacement-Article, we need to remove the replacements first.
+        if (!replacementsToDelete.isEmpty()) {
+            potentialErrorRepository.deleteInBatch(replacementsToDelete);
+            replacementsToDelete.clear();
+        }
+
         if (!articlesToDelete.isEmpty()) {
-            articleRepository.delete(articlesToDelete);
+            articleRepository.deleteInBatch(articlesToDelete);
             articlesToDelete.clear();
         }
 
         if (!articlesToSave.isEmpty()) {
-            articleRepository.save(articlesToSave);
+            articleRepository.saveAll(articlesToSave);
             articlesToSave.clear();
+        }
+
+        if (!replacementsToAdd.isEmpty()) {
+            potentialErrorRepository.saveAll(replacementsToAdd);
+            replacementsToAdd.clear();
         }
 
         // Flush and clear to avoid memory leaks (we are performing millions of updates)
         articleRepository.flush();
-        articleRepository.clear();
+        potentialErrorRepository.flush();
+        articleRepository.clear(); // This clears all the EntityManager
     }
 
     void finish() {
+        // The remaining cached articles are not in the dump so we remove them from DB
+        articlesToDelete.addAll(articlesDb.values());
+
         flushModifications();
     }
 

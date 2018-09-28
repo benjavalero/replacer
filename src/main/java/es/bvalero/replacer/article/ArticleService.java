@@ -72,7 +72,7 @@ public class ArticleService {
 
     ArticleData findRandomArticleWithPotentialErrors() throws UnfoundArticleException, InvalidArticleException {
         // Find random article in Replacer database (the result can be empty)
-        List<Article> randomArticles = articleRepository.findRandomArticleNotReviewed(new PageRequest(0, 1));
+        List<Article> randomArticles = articleRepository.findRandomArticleNotReviewed(PageRequest.of(0, 1));
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
             throw new UnfoundArticleException();
@@ -92,11 +92,11 @@ public class ArticleService {
 
             return getArticleDataWithReplacements(randomArticle, articleContent);
         } catch (InvalidArticleException e) {
-            articleRepository.delete(randomArticle.getId());
+            articleRepository.deleteById(randomArticle.getId());
             throw e;
         } catch (WikipediaException e) {
             LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle());
-            articleRepository.delete(randomArticle.getId());
+            articleRepository.deleteById(randomArticle.getId());
             throw new InvalidArticleException();
         }
     }
@@ -106,7 +106,7 @@ public class ArticleService {
             throws UnfoundArticleException, InvalidArticleException {
         // Find random article in Replacer database (the result can be empty)
         List<Article> randomArticles = potentialErrorRepository
-                .findRandomByWord(word, new PageRequest(0, 1));
+                .findRandomByWord(word, PageRequest.of(0, 1));
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
             throw new UnfoundArticleException();
@@ -127,11 +127,11 @@ public class ArticleService {
 
             articleData = getArticleDataWithReplacements(randomArticle, articleContent);
         } catch (InvalidArticleException e) {
-            articleRepository.delete(randomArticle.getId());
+            articleRepository.deleteById(randomArticle.getId());
             throw e;
         } catch (WikipediaException e) {
             LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle());
-            articleRepository.delete(randomArticle.getId());
+            articleRepository.deleteById(randomArticle.getId());
             throw new InvalidArticleException();
         }
 
@@ -145,14 +145,11 @@ public class ArticleService {
         // If not we delete the potential error from the article but let the article
         if (!wordFound) {
             LOGGER.warn("Word {} not found as a potential error for article: {}", word, randomArticle.getTitle());
-            Iterator<PotentialError> it = randomArticle.getPotentialErrors().iterator();
-            while (it.hasNext()) {
-                PotentialError potentialError = it.next();
+            for (PotentialError potentialError : potentialErrorRepository.findByArticle(randomArticle)) {
                 if (potentialError.getText().equals(word)) {
-                    it.remove();
+                    potentialErrorRepository.delete(potentialError);
                 }
             }
-            articleRepository.save(randomArticle);
 
             throw new InvalidArticleException();
         }
@@ -241,13 +238,7 @@ public class ArticleService {
         for (ExceptionMatchFinder exceptionMatchFinder : exceptionMatchFinders) {
             List<RegexMatch> exceptionMatches = exceptionMatchFinder.findExceptionMatches(text, false);
 
-            Iterator<ArticleReplacement> it = articleReplacements.iterator();
-            while (it.hasNext()) {
-                ArticleReplacement articleReplacement = it.next();
-                if (articleReplacement.isContainedIn(exceptionMatches)) {
-                    it.remove();
-                }
-            }
+            articleReplacements.removeIf(articleReplacement -> articleReplacement.isContainedIn(exceptionMatches));
 
             if (articleReplacements.isEmpty()) {
                 return articleReplacements;
@@ -264,13 +255,7 @@ public class ArticleService {
         List<ArticleReplacement> articleReplacements = findPotentialErrors(text);
 
         // Ignore the potential errors included in exceptions
-        Iterator<ArticleReplacement> it = articleReplacements.iterator();
-        while (it.hasNext()) {
-            ArticleReplacement articleReplacement = it.next();
-            if (articleReplacement.isContainedIn(exceptionMatches)) {
-                it.remove();
-            }
-        }
+        articleReplacements.removeIf(articleReplacement -> articleReplacement.isContainedIn(exceptionMatches));
 
         return articleReplacements;
     }
@@ -375,20 +360,21 @@ public class ArticleService {
 
             return true;
         } catch (InvalidArticleException e) {
-            articleRepository.delete(article.getId());
+            articleRepository.deleteById(article.getId());
             return false;
         } catch (WikipediaException e) {
             LOGGER.error("Error saving or retrieving the content of the article: {}", article.getTitle());
-            articleRepository.delete(article.getId());
+            articleRepository.deleteById(article.getId());
             return false;
         }
     }
 
     private void markArticleAsReviewed(@NotNull ArticleData article) {
-        Article articleDb = articleRepository.findOne(article.getId());
-        articleDb.setReviewDate(new Timestamp(System.currentTimeMillis()));
-        articleDb.getPotentialErrors().clear();
-        articleRepository.save(articleDb);
+        articleRepository.findById(article.getId()).ifPresent(dbArticle -> {
+            dbArticle.setReviewDate(new Timestamp(System.currentTimeMillis()));
+            potentialErrorRepository.deleteInBatch(potentialErrorRepository.findByArticle(dbArticle));
+            articleRepository.save(dbArticle);
+        });
     }
 
 }
