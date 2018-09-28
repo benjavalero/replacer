@@ -34,16 +34,18 @@ public class FindRegexExperiment {
             final Automaton a = r.toAutomaton(new DatatypesAutomatonProvider());
             final RunAutomaton ra = new RunAutomaton(a);
 
-            DumpHandler dumpHandler = new DumpHandler() {
+            DumpHandler dumpHandler = new DumpHandler(new DumpProcessor()) {
                 @Override
-                void processArticle(DumpArticle article) {
-                    String text = this.getCurrentArticle().getContent();
+                boolean processArticle(DumpArticle dumpArticle) {
+                    String text = dumpArticle.getContent();
 
                     AutomatonMatcher matcher = ra.newMatcher(text);
                     //Matcher matcher = pattern.matcher(text);
                     while (matcher.find()) {
                         System.out.println("MATCH: " + matcher.group(0));
                     }
+
+                    return true;
                 }
             };
 

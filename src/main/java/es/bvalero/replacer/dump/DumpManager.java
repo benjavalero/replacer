@@ -1,6 +1,9 @@
 package es.bvalero.replacer.dump;
 
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.intellij.lang.annotations.RegExp;
+import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,115 +17,206 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Class in charge of indexing the latest dump.
- * The most important method performs different actions for each article found in the dump,
- * like finding the misspellings and storing them in the database.
- * This indexation will be done weekly or manually from @{@link DumpController}.
- * The status of the indexation will be stored in a @{@link DumpStatus}.
+ * Find the Wikipedia dumps in the filesystem where the application runs.
+ * This indexation will be done weekly, or manually from @{@link DumpController}.
+ * The dumps are parsed with @{@link DumpHandler}.
+ * Each article found in the dump is processed in @{@link DumpProcessor}.
  */
 @Component
 class DumpManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpManager.class);
-    @Autowired
-    private DumpFinder dumpFinder;
+
     @Value("${replacer.dump.folder.path:}")
     private String dumpFolderPath;
+
     @Autowired
     private DumpProcessor dumpProcessor;
 
-    private DumpHandler dumpHandler = new DumpHandler() {
-        @Override
-        void processArticle(DumpArticle article) {
-            dumpProcessor.processArticle(getCurrentArticle(), this.getDumpStatus());
-        }
-    };
+    private DumpHandler dumpHandler = new DumpHandler(dumpProcessor);
 
-    // For tests
+    // Statistics
+    private String latestDumpFile = "-";
+    private boolean running = false;
+    private long numArticlesEstimation = 3666708; // Rough amount of articles to be read
+
+    @TestOnly
     void setDumpFolderPath(String dumpFolderPath) {
         this.dumpFolderPath = dumpFolderPath;
     }
 
-    DumpStatus getStatus() {
-        return dumpHandler.getDumpStatus();
+    @TestOnly
+    String getLatestDumpFile() {
+        return latestDumpFile;
     }
 
-    // For tests
-    DumpHandler getDumpHandler() {
-        return this.dumpHandler;
+    @TestOnly
+    void setLatestDumpFile(String latestDumpFile) {
+        this.latestDumpFile = latestDumpFile;
     }
+
+    @TestOnly
+    void setRunning() {
+        this.running = true;
+    }
+
+    /* FIND DUMP FILE */
 
     /**
-     * Check weekly if there is a new dump to index (with a one-day delay).
-     * The dump will be ignored if it is previous to the last index date.
-     * If the system is redeployed, the last index date is lost, so any dump is considered as new.
+     * @return The path of latest available dump file from Wikipedia.
      */
-    @Scheduled(fixedDelay = 7 * 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
-    @Async
-    void runIndexation() {
-        runIndexation(true, false);
+    File findLatestDumpFile() throws DumpException {
+        // Find the file in the latest folder
+        // It may be possible that a folder does not contain the file because it is not processed yet
+        File dumpFolderFile = new File(dumpFolderPath);
+        File[] dumpSubFolders = dumpFolderFile.listFiles((dir, name) -> {
+            // The sub-folders names are all numbers, e. g. 20170820
+            @RegExp String subFolderRegex = "\\d+";
+            return name.matches(subFolderRegex);
+        });
+
+        if (dumpSubFolders == null || dumpSubFolders.length == 0) {
+            throw new DumpException("Sub-folders not found in dump path: " + dumpFolderPath);
+        }
+
+        Arrays.sort(dumpSubFolders, Collections.reverseOrder());
+        // Try with all the folders starting for the latest
+        for (File dumpSubFolder : dumpSubFolders) {
+            String dumpFileName = "eswiki-" + dumpSubFolder.getName() + "-pages-articles.xml.bz2";
+            File dumpFile = new File(dumpSubFolder, dumpFileName);
+            if (dumpFile.exists()) {
+                return dumpFile;
+            }
+        }
+
+        // If we get here no dump file has been found
+        throw new DumpException("No dump file has been found in dump path: " + dumpFolderPath);
     }
 
-    /**
-     * Index the latest dump of Wikipedia articles.
-     *
-     * @param scheduledExecution True if the indexing is triggered by the scheduled task, false if triggered manually.
-     * @param processOldArticles If true we reprocess all articles even if they have not been modified since last indexing.
-     */
-    void runIndexation(boolean scheduledExecution, boolean processOldArticles) {
-        LOGGER.info("Start indexation. Scheduled execution: {}. Force processing of old articles: {}",
-                scheduledExecution, processOldArticles);
+    /* PARSE DUMP FILE */
 
-        // Start the task
-        if (getStatus().isRunning()) {
-            LOGGER.info("Indexation is already running. Do nothing.");
+    @TestOnly
+    void parseDumpFile(File dumpFile) throws DumpException {
+        parseDumpFile(dumpFile, false);
+    }
+
+    private void parseDumpFile(File dumpFile, boolean forceProcess) throws DumpException {
+        LOGGER.info("Start parsing dump file: {}...", dumpFile);
+
+        // Check just in case that the handler is not running
+        if (running) {
+            LOGGER.info("Dump indexation is already running");
             return;
         }
-
-        try {
-            File dumpFolderFile = new File(dumpFolderPath);
-
-            // Find the latest dump and check if we should parse again
-            // If the execution is manual we parse again
-            // In case of re-deployment of the application we will always parse
-            DumpFile latestDumpFile = dumpFinder.findLatestDumpFile(dumpFolderFile);
-            LOGGER.info("Latest Dump File: {}", latestDumpFile.getFile());
-            // The date of the dump file is a pure date with no time
-            if (scheduledExecution && getStatus().getLastRun() != null
-                    && getStatus().getLastRun() >= (latestDumpFile.getDate().getTime())) {
-                LOGGER.info("Latest Dump File already indexed. Do nothing.");
-                return;
-            }
-
-            parseDumpFile(latestDumpFile.getFile(), processOldArticles);
-        } catch (FileNotFoundException e) {
-            LOGGER.error("Latest dump file not found", e);
-        }
-    }
-
-    private void parseDumpFile(File dumpFile, final boolean processOldArticles) {
-        LOGGER.info("Start parsing dump file: {}...", dumpFile);
 
         try (InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile))) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
             SAXParser saxParser = factory.newSAXParser();
 
-            dumpHandler.getDumpStatus().setProcessOldArticles(processOldArticles);
+            // Start statistics
+            running = true;
+            this.latestDumpFile = dumpFile.getPath();
+
+            // Parse with the Dump Handler
+            dumpHandler = createDumpHandler(forceProcess);
             saxParser.parse(xmlInput, dumpHandler);
         } catch (IOException e) {
-            LOGGER.error("Latest dump file not found or valid", e);
+            throw new DumpException("Dump file not valid: " + dumpFile, e);
         } catch (ParserConfigurationException | SAXException e) {
-            LOGGER.error("Error parsing dump file", e);
-        } finally {
-            dumpHandler.getDumpStatus().finish();
-            dumpProcessor.finish();
+            throw new DumpException("SAX Error parsing dump file: " + dumpFile, e);
         }
 
-        LOGGER.info("Finished parsing dump file: {}\n{}", dumpFile, dumpHandler.getDumpStatus());
+        LOGGER.info("Finish parsing dump file: {}", dumpFile);
+    }
+
+    // Just for make easier the mock of the handler for testing
+    DumpHandler createDumpHandler(boolean forceProcess) {
+        return new DumpHandler(dumpProcessor, forceProcess);
+    }
+
+    /* PROCESS DUMP FILE */
+
+    /**
+     * Check weekly if there is a new dump to process (with a one-day delay)
+     */
+    @Scheduled(fixedDelay = 7 * 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
+    @Async
+    void processLatestDumpFile() throws DumpException {
+        processLatestDumpFile(true, false);
+    }
+
+    /**
+     * Find the latest dump file and process it.
+     *
+     * @param forceProcessDump         When triggered manually we always process the latest dump although it has been already processed.
+     * @param forceProcessDumpArticles Force processing all dump articles event if they have not been modified since last processing.
+     * @throws DumpException When the dump file is not found or there are problems parsing the dump file.
+     */
+    void processLatestDumpFile(boolean forceProcessDump, boolean forceProcessDumpArticles) throws DumpException {
+        LOGGER.info("Start process latest dump file. Force dump process: {}. Force article process: {}",
+                forceProcessDump, forceProcessDumpArticles);
+
+        // Find the latest dump file
+        File latestDumpFile = findLatestDumpFile();
+
+        // We check against the latest dump file processed
+        if (!latestDumpFile.getPath().equals(this.latestDumpFile) || forceProcessDump) {
+            // Start process
+            parseDumpFile(findLatestDumpFile(), forceProcessDumpArticles);
+
+            // Once finished we mark the file as processed
+            this.running = false;
+            this.numArticlesEstimation = dumpHandler.getNumArticlesRead();
+        } else {
+            LOGGER.info("Latest dump file found already indexed");
+        }
+    }
+
+    Map<String, Object> getProcessStatus() {
+        // In case the dump contains more articles than estimated
+        if (dumpHandler.getNumArticlesRead() >= numArticlesEstimation) {
+            numArticlesEstimation += 1000;
+        }
+
+        Map<String, Object> status = new HashMap<>();
+        status.put("running", running);
+        status.put("numArticlesRead", dumpHandler.getNumArticlesRead());
+        status.put("numArticlesProcessed", dumpHandler.getNumArticlesProcessed());
+        status.put("dumpFileName", new File(latestDumpFile).getName());
+        status.put("average", getAverageTimePerArticle());
+        status.put("time", getTime());
+        status.put("progress", String.format("%.2f", dumpHandler.getNumArticlesRead() * 100.0 / numArticlesEstimation));
+        return status;
+    }
+
+    private long getAverageTimePerArticle() {
+        // The process may not be running
+        if (dumpHandler.getNumArticlesRead() == 0L) {
+            return 0L;
+        } else if (running) {
+            return (System.currentTimeMillis() - dumpHandler.getStartTime()) / dumpHandler.getNumArticlesRead();
+        } else {
+            return dumpHandler.getEndTime() == 0L ? 0L : (dumpHandler.getEndTime() - dumpHandler.getStartTime()) / dumpHandler.getNumArticlesRead();
+        }
+    }
+
+    private String getTime() {
+        // The final process time if it is not running, and the current process time if it is still running.
+        return DurationFormatUtils.formatDuration(running
+                        ? (numArticlesEstimation - dumpHandler.getNumArticlesRead()) * getAverageTimePerArticle() // ETA
+                        : (dumpHandler.getEndTime() == 0 ? 0L : dumpHandler.getEndTime() - dumpHandler.getStartTime()), // Total time
+                "d:HH:mm:ss", true);
     }
 
 }

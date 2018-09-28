@@ -71,7 +71,7 @@ public class ArticleRepositoryTest {
 
         Assert.assertEquals(1, articleRepository.count());
         Assert.assertEquals(2, potentialErrorRepository.count());
-        Assert.assertEquals(2, potentialErrorRepository.findByArticleId(1).size());
+        Assert.assertEquals(2, potentialErrorRepository.findByArticle(newArticle).size());
     }
 
     @Test
@@ -114,15 +114,15 @@ public class ArticleRepositoryTest {
 
         Assert.assertEquals(1, articleRepository.count());
         Assert.assertEquals(3, potentialErrorRepository.count());
-        Assert.assertEquals(3, potentialErrorRepository.findByArticleId(1).size());
+        Assert.assertEquals(3, potentialErrorRepository.findByArticle(newArticle).size());
 
         // Delete replacements
         potentialErrorRepository.deleteInBatch(Arrays.asList(replacement1, replacement3));
 
         Assert.assertEquals(1, articleRepository.count());
         Assert.assertEquals(1, potentialErrorRepository.count());
-        Assert.assertEquals(1, potentialErrorRepository.findByArticleId(1).size());
-        Assert.assertEquals("B", potentialErrorRepository.findByArticleId(1).get(0).getText());
+        Assert.assertEquals(1, potentialErrorRepository.findByArticle(newArticle).size());
+        Assert.assertEquals("B", potentialErrorRepository.findByArticle(newArticle).get(0).getText());
 
         // Add replacements
         PotentialError replacement4 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "D");
@@ -130,7 +130,7 @@ public class ArticleRepositoryTest {
 
         Assert.assertEquals(1, articleRepository.count());
         Assert.assertEquals(2, potentialErrorRepository.count());
-        Assert.assertEquals(2, potentialErrorRepository.findByArticleId(1).size());
+        Assert.assertEquals(2, potentialErrorRepository.findByArticle(newArticle).size());
     }
 
     @Test(expected = DataIntegrityViolationException.class)
@@ -161,6 +161,25 @@ public class ArticleRepositoryTest {
         // We have removed partially the relation between the entities but we keep the FK in Replacement
         articleRepository.delete(newArticle);
         Assert.assertEquals(0, articleRepository.count());
+    }
+
+    @Test
+    public void testDeleteArticleInCascade() {
+        Assert.assertEquals(0, articleRepository.count());
+
+        Article newArticle = new Article(1, "Andorra");
+        articleRepository.save(newArticle);
+        PotentialError replacement1 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A");
+        PotentialError replacement2 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "B");
+        potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2));
+
+        Assert.assertEquals(1, articleRepository.count());
+        Assert.assertEquals(2, potentialErrorRepository.count());
+
+        potentialErrorRepository.deleteByArticle(newArticle);
+        articleRepository.delete(newArticle);
+        Assert.assertEquals(0, articleRepository.count());
+        Assert.assertEquals(0, potentialErrorRepository.count());
     }
 
     @Test

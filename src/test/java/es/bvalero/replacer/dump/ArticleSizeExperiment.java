@@ -33,19 +33,20 @@ public class ArticleSizeExperiment {
             final int[] maxSizes = {0};
             final String[] maxArticles = {""};
             final long startTime = new Date().getTime();
-            DumpHandler dumpHandler = new DumpHandler() {
+            DumpHandler dumpHandler = new DumpHandler(new DumpProcessor()) {
                 @Override
-                void processArticle(DumpArticle article) {
-                    int currentSize = this.getCurrentArticle().getContent().length() / 1024;
+                boolean processArticle(DumpArticle dumpArticle) {
+                    int currentSize = dumpArticle.getContent().length() / 1024;
                     sizes.add(currentSize);
                     if (currentSize > maxSizes[0]) {
                         maxSizes[0] = currentSize;
-                        maxArticles[0] = this.getCurrentArticle().getTitle();
+                        maxArticles[0] = dumpArticle.getTitle();
                     }
-                    if (this.getDumpStatus().getPagesCount() % 1000 == 0) {
+                    if (this.getNumArticlesRead() % 1000 == 0) {
                         long elapsedTime = (new Date().getTime() - startTime) / 1000;
-                        System.out.println(this.getDumpStatus().getPagesCount() + "\t" + elapsedTime + " s");
+                        System.out.println(this.getNumArticlesRead() + "\t" + elapsedTime + " s");
                     }
+                    return true;
                 }
             };
 
