@@ -39,10 +39,11 @@ public class Article implements Serializable {
         // Needed by JPA
     }
 
-    public Article(Integer id, String title) {
+    private Article(Integer id, String title, Timestamp additionDate, Timestamp reviewDate) {
         this.id = id;
         this.title = title;
-        this.additionDate = new Timestamp(System.currentTimeMillis());
+        this.additionDate = additionDate;
+        this.reviewDate = reviewDate;
     }
 
     public Integer getId() {
@@ -53,24 +54,12 @@ public class Article implements Serializable {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public Timestamp getAdditionDate() {
         return additionDate;
     }
 
-    public void setAdditionDate(Timestamp additionDate) {
-        this.additionDate = additionDate;
-    }
-
     public Timestamp getReviewDate() {
         return reviewDate;
-    }
-
-    public void setReviewDate(Timestamp reviewDate) {
-        this.reviewDate = reviewDate;
     }
 
     @Override
@@ -94,6 +83,49 @@ public class Article implements Serializable {
                 ", additionDate=" + additionDate +
                 ", reviewDate=" + reviewDate +
                 '}';
+    }
+
+    public static class ArticleBuilder {
+        private Integer id;
+        private String title;
+        private Timestamp additionDate;
+        private Timestamp reviewDate;
+
+        public ArticleBuilder() {
+            this.additionDate = new Timestamp(System.currentTimeMillis());
+        }
+
+        public ArticleBuilder(Article article) {
+            this.id = article.id;
+            this.title = article.title;
+            this.additionDate = article.additionDate;
+            this.reviewDate = article.reviewDate;
+        }
+
+        public ArticleBuilder setId(Integer id) {
+            this.id = id;
+            return this;
+        }
+
+        public ArticleBuilder setTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public ArticleBuilder setAdditionDate(Timestamp additionDate) {
+            this.additionDate = additionDate;
+            return this;
+        }
+
+        public ArticleBuilder setReviewDate(Timestamp reviewDate) {
+            this.reviewDate = reviewDate;
+            return this;
+        }
+
+        public Article createArticle() {
+            return new Article(id, title, additionDate, reviewDate);
+        }
+
     }
 
 }

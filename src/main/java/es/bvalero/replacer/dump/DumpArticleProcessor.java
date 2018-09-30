@@ -121,7 +121,11 @@ class DumpArticleProcessor {
             // Compare the new replacements with the existing ones
             Set<PotentialError> newPotentialErrors = new HashSet<>(articleReplacements.size());
             for (ArticleReplacement articleReplacement : articleReplacements) {
-                PotentialError potentialError = new PotentialError(dbArticle.get(), articleReplacement.getType(), articleReplacement.getSubtype());
+                PotentialError potentialError = new PotentialError.PotentialErrorBuilder()
+                        .setArticle(dbArticle.get())
+                        .setType(articleReplacement.getType())
+                        .setText(articleReplacement.getSubtype())
+                        .createPotentialError();
                 newPotentialErrors.add(potentialError);
             }
 
@@ -147,19 +151,28 @@ class DumpArticleProcessor {
             }
 
             if (modified) {
-                dbArticle.get().setTitle(dumpArticle.getTitle()); // In case the title of the article has changed
-                dbArticle.get().setAdditionDate(new Timestamp(System.currentTimeMillis()));
-                dbArticle.get().setReviewDate(null);
-                articlesToSave.add(dbArticle.get());
+                Article articleToSave = new Article.ArticleBuilder(dbArticle.get())
+                        .setTitle(dumpArticle.getTitle()) // In case the title of the article has changed
+                        .setAdditionDate(new Timestamp(System.currentTimeMillis()))
+                        .setReviewDate(null)
+                        .createArticle();
+                articlesToSave.add(articleToSave);
             }
         } else {
             // New article to insert in DB
-            Article newArticle = new Article(dumpArticle.getId(), dumpArticle.getTitle());
+            Article newArticle = new Article.ArticleBuilder()
+                    .setId(dumpArticle.getId())
+                    .setTitle(dumpArticle.getTitle())
+                    .createArticle();
             articlesToSave.add(newArticle);
 
             // Add replacements in DB
             for (ArticleReplacement articleReplacement : articleReplacements) {
-                PotentialError newPotentialError = new PotentialError(newArticle, articleReplacement.getType(), articleReplacement.getSubtype());
+                PotentialError newPotentialError = new PotentialError.PotentialErrorBuilder()
+                        .setArticle(newArticle)
+                        .setType(articleReplacement.getType())
+                        .setText(articleReplacement.getSubtype())
+                        .createPotentialError();
                 replacementsToAdd.add(newPotentialError);
             }
         }

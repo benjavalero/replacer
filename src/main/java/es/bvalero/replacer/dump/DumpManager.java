@@ -197,16 +197,16 @@ class DumpManager {
             numArticlesEstimation += 1000;
         }
 
-        return new DumpProcessStatus(
-                running,
-                dumpHandler.isForceProcess(),
-                dumpHandler.getNumArticlesRead(),
-                dumpHandler.getNumArticlesProcessed(),
-                new File(latestDumpFile).getName(),
-                getAverageTimePerArticle(),
-                getTime(),
-                String.format("%.2f", dumpHandler.getNumArticlesRead() * 100.0 / numArticlesEstimation)
-        );
+        return new DumpProcessStatus.DumpProcessStatusBuilder()
+                .setRunning(running)
+                .setForceProcess(dumpHandler.isForceProcess())
+                .setNumArticlesRead(dumpHandler.getNumArticlesRead())
+                .setNumArticlesProcessed(dumpHandler.getNumArticlesProcessed())
+                .setDumpFileName(new File(latestDumpFile).getName())
+                .setAverage(getAverageTimePerArticle())
+                .setTime(getTime())
+                .setProgress(String.format("%.2f", dumpHandler.getNumArticlesRead() * 100.0 / numArticlesEstimation))
+                .createDumpProcessStatus();
     }
 
     private long getAverageTimePerArticle() {
