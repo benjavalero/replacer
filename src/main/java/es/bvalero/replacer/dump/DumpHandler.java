@@ -24,7 +24,7 @@ class DumpHandler extends DefaultHandler {
     private String currentContent;
 
     // Options
-    private DumpProcessor dumpProcessor;
+    private DumpArticleProcessor dumpArticleProcessor;
     private boolean forceProcess;
 
     // Statistics
@@ -33,12 +33,12 @@ class DumpHandler extends DefaultHandler {
     private long startTime;
     private long endTime;
 
-    DumpHandler(DumpProcessor processor) {
+    DumpHandler(DumpArticleProcessor processor) {
         this(processor, false);
     }
 
-    DumpHandler(DumpProcessor processor, boolean forceProcess) {
-        this.dumpProcessor = processor;
+    DumpHandler(DumpArticleProcessor processor, boolean forceProcess) {
+        this.dumpArticleProcessor = processor;
 
         this.forceProcess = forceProcess;
         this.numArticlesRead = 0L;
@@ -73,7 +73,7 @@ class DumpHandler extends DefaultHandler {
 
     @Override
     public void endDocument() {
-        dumpProcessor.finish();
+        dumpArticleProcessor.finish();
         this.endTime = System.currentTimeMillis();
     }
 
@@ -130,7 +130,7 @@ class DumpHandler extends DefaultHandler {
     }
 
     boolean processArticle(DumpArticle dumpArticle) {
-        return dumpProcessor.processArticle(dumpArticle, forceProcess);
+        return dumpArticleProcessor.processArticle(dumpArticle, forceProcess);
     }
 
 }

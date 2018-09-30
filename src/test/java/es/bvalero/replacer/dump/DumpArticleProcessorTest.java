@@ -14,7 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import java.sql.Timestamp;
 import java.util.*;
 
-public class DumpProcessorTest {
+public class DumpArticleProcessorTest {
 
     @Mock
     private ArticleRepository articleRepository;
@@ -26,11 +26,11 @@ public class DumpProcessorTest {
     private ArticleService articleService;
 
     @InjectMocks
-    private DumpProcessor dumpProcessor;
+    private DumpArticleProcessor dumpArticleProcessor;
 
     @Before
     public void setUp() {
-        dumpProcessor = new DumpProcessor();
+        dumpArticleProcessor = new DumpArticleProcessor();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -39,7 +39,7 @@ public class DumpProcessorTest {
         DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
         Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
         Mockito.when(dumpArticle.getContent()).thenReturn("");
-        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
@@ -55,9 +55,9 @@ public class DumpProcessorTest {
         DumpArticle dumpCategory = Mockito.mock(DumpArticle.class);
         Mockito.when(dumpCategory.getNamespace()).thenReturn(WikipediaNamespace.CATEGORY);
 
-        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
-        Assert.assertTrue(dumpProcessor.processArticle(dumpAnnex));
-        Assert.assertFalse(dumpProcessor.processArticle(dumpCategory));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpAnnex));
+        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpCategory));
     }
 
     @Test
@@ -65,7 +65,7 @@ public class DumpProcessorTest {
         DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
         Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
         Mockito.when(dumpArticle.getContent()).thenReturn("#REDIRECT xxx");
-        Assert.assertFalse(dumpProcessor.processArticle(dumpArticle));
+        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class DumpProcessorTest {
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
 
-        Assert.assertFalse(dumpProcessor.processArticle(dumpArticle));
+        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
@@ -102,7 +102,7 @@ public class DumpProcessorTest {
         Mockito.when(dbArticle.getReviewDate()).thenReturn(new Timestamp(today.getTimeInMillis()));
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
-        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle, true));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, true));
     }
 
     @Test
@@ -119,7 +119,7 @@ public class DumpProcessorTest {
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
 
-        Assert.assertFalse(dumpProcessor.processArticle(dumpArticle));
+        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
@@ -137,7 +137,7 @@ public class DumpProcessorTest {
         Mockito.when(dbArticle.getReviewDate()).thenReturn(new Timestamp(yesterday.getTimeInMillis()));
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
-        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
@@ -156,7 +156,7 @@ public class DumpProcessorTest {
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
 
-        Assert.assertFalse(dumpProcessor.processArticle(dumpArticle));
+        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
@@ -174,7 +174,7 @@ public class DumpProcessorTest {
         Mockito.when(dbArticle.getAdditionDate()).thenReturn(new Timestamp(today.getTimeInMillis()));
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
-        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle, true));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, true));
     }
 
     @Test
@@ -192,7 +192,7 @@ public class DumpProcessorTest {
         Mockito.when(dbArticle.getAdditionDate()).thenReturn(new Timestamp(yesterday.getTimeInMillis()));
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
-        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     /* DATABASE TESTS */
@@ -208,8 +208,8 @@ public class DumpProcessorTest {
         Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
                 .thenReturn(Collections.singletonList(articleReplacement));
 
-        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
-        dumpProcessor.finish();
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
+        dumpArticleProcessor.finish();
 
         Mockito.verify(articleRepository).saveAll(Mockito.anyList());
         Mockito.verify(potentialErrorRepository).saveAll(Mockito.anyList());
@@ -239,8 +239,8 @@ public class DumpProcessorTest {
         Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
                 .thenReturn(Arrays.asList(articleReplacement2, articleReplacement3));
 
-        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
-        dumpProcessor.finish();
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
+        dumpArticleProcessor.finish();
 
         Mockito.verify(potentialErrorRepository).deleteInBatch(Mockito.anyList());
         Mockito.verify(articleRepository).saveAll(Mockito.anyList());
@@ -266,7 +266,7 @@ public class DumpProcessorTest {
         Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
                 .thenReturn(Collections.singletonList(articleReplacement1));
 
-        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
 
         Mockito.verify(articleRepository, Mockito.times(0)).save(Mockito.any(Article.class));
         Mockito.verify(potentialErrorRepository, Mockito.times(0)).delete(Mockito.any(PotentialError.class));
@@ -290,8 +290,8 @@ public class DumpProcessorTest {
         // And there are no replacements found
         Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString())).thenReturn(Collections.emptyList());
 
-        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
-        dumpProcessor.finish();
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
+        dumpArticleProcessor.finish();
 
         Mockito.verify(potentialErrorRepository).deleteByArticle(dbArticle);
         Mockito.verify(articleRepository).deleteInBatch(Mockito.anyList());
@@ -315,8 +315,8 @@ public class DumpProcessorTest {
         Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
                 .thenReturn(Collections.singletonList(articleReplacement));
 
-        Assert.assertTrue(dumpProcessor.processArticle(dumpArticle));
-        dumpProcessor.finish();
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
+        dumpArticleProcessor.finish();
 
         Mockito.verify(articleRepository).deleteInBatch(Mockito.anyList());
         Mockito.verify(articleRepository).saveAll(Mockito.anyList());

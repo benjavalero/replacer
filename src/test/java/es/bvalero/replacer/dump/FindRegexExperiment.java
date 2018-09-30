@@ -34,7 +34,7 @@ public class FindRegexExperiment {
             final Automaton a = r.toAutomaton(new DatatypesAutomatonProvider());
             final RunAutomaton ra = new RunAutomaton(a);
 
-            DumpHandler dumpHandler = new DumpHandler(new DumpProcessor()) {
+            DumpHandler dumpHandler = new DumpHandler(new DumpArticleProcessor()) {
                 @Override
                 boolean processArticle(DumpArticle dumpArticle) {
                     String text = dumpArticle.getContent();

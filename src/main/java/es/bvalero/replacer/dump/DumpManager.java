@@ -28,7 +28,7 @@ import java.util.Collections;
  * Find the Wikipedia dumps in the filesystem where the application runs.
  * This indexation will be done weekly, or manually from @{@link DumpController}.
  * The dumps are parsed with @{@link DumpHandler}.
- * Each article found in the dump is processed in @{@link DumpProcessor}.
+ * Each article found in the dump is processed in @{@link DumpArticleProcessor}.
  */
 @Component
 class DumpManager {
@@ -39,9 +39,9 @@ class DumpManager {
     private String dumpFolderPath;
 
     @Autowired
-    private DumpProcessor dumpProcessor;
+    private DumpArticleProcessor dumpArticleProcessor;
 
-    private DumpHandler dumpHandler = new DumpHandler(dumpProcessor);
+    private DumpHandler dumpHandler = new DumpHandler(dumpArticleProcessor);
 
     // Statistics
     private String latestDumpFile = "-";
@@ -145,7 +145,7 @@ class DumpManager {
 
     // Just for make easier the mock of the handler for testing
     DumpHandler createDumpHandler(boolean forceProcess) {
-        return new DumpHandler(dumpProcessor, forceProcess);
+        return new DumpHandler(dumpArticleProcessor, forceProcess);
     }
 
     /* PROCESS DUMP FILE */
@@ -162,8 +162,10 @@ class DumpManager {
     /**
      * Find the latest dump file and process it.
      *
-     * @param forceProcessDump         When triggered manually we always process the latest dump although it has been already processed.
-     * @param forceProcessDumpArticles Force processing all dump articles event if they have not been modified since last processing.
+     * @param forceProcessDump         When triggered manually we always process the latest dump although it has been
+     *                                 already processed.
+     * @param forceProcessDumpArticles Force processing all dump articles event if they have not been modified since
+     *                                 last processing.
      */
     @Async
     void processLatestDumpFile(boolean forceProcessDump, boolean forceProcessDumpArticles) {
@@ -189,13 +191,13 @@ class DumpManager {
         }
     }
 
-    DumpStatus getProcessStatus() {
+    DumpProcessStatus getProcessStatus() {
         // In case the dump contains more articles than estimated
         if (dumpHandler.getNumArticlesRead() > numArticlesEstimation) {
             numArticlesEstimation += 1000;
         }
 
-        return new DumpStatus(
+        return new DumpProcessStatus(
                 running,
                 dumpHandler.isForceProcess(),
                 dumpHandler.getNumArticlesRead(),
@@ -214,7 +216,8 @@ class DumpManager {
         } else if (running) {
             return (System.currentTimeMillis() - dumpHandler.getStartTime()) / dumpHandler.getNumArticlesRead();
         } else {
-            return dumpHandler.getEndTime() == 0L ? 0L : (dumpHandler.getEndTime() - dumpHandler.getStartTime()) / dumpHandler.getNumArticlesRead();
+            return dumpHandler.getEndTime() == 0L ? 0L
+                    : (dumpHandler.getEndTime() - dumpHandler.getStartTime()) / dumpHandler.getNumArticlesRead();
         }
     }
 

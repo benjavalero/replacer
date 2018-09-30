@@ -165,8 +165,9 @@ public class DumpManagerTest {
     @Test
     public void testProcessDefaultStatistics() {
         // Default statistics
-        DumpStatus defaultStats = dumpManager.getProcessStatus();
+        DumpProcessStatus defaultStats = dumpManager.getProcessStatus();
         Assert.assertFalse(defaultStats.isRunning());
+        Assert.assertFalse(defaultStats.isForceProcess());
         Assert.assertEquals(0L, defaultStats.getNumArticlesRead());
         Assert.assertEquals(0L, defaultStats.getNumArticlesProcessed());
         Assert.assertEquals("-", defaultStats.getDumpFileName());
@@ -186,8 +187,9 @@ public class DumpManagerTest {
         dumpManager.processLatestDumpFile(false, false);
 
         // Statistics after processing
-        DumpStatus afterStats = dumpManager.getProcessStatus();
+        DumpProcessStatus afterStats = dumpManager.getProcessStatus();
         Assert.assertFalse(afterStats.isRunning());
+        Assert.assertFalse(afterStats.isForceProcess());
         Assert.assertEquals(4L, afterStats.getNumArticlesRead());
         Assert.assertEquals(3L, afterStats.getNumArticlesProcessed());
         Assert.assertEquals("eswiki-20170101-pages-articles.xml.bz2", afterStats.getDumpFileName());
@@ -201,12 +203,14 @@ public class DumpManagerTest {
         dumpManager.setNumArticlesEstimation(5);
         Mockito.when(dumpHandler.getNumArticlesRead()).thenReturn(4L);
         Mockito.when(dumpHandler.getNumArticlesProcessed()).thenReturn(3L);
+        Mockito.when(dumpHandler.isForceProcess()).thenReturn(true);
 
-        dumpManager.processLatestDumpFile(false, false);
+        dumpManager.processLatestDumpFile(false, true);
 
         // Statistics after processing
-        DumpStatus afterStats = dumpManager.getProcessStatus();
+        DumpProcessStatus afterStats = dumpManager.getProcessStatus();
         Assert.assertFalse(afterStats.isRunning());
+        Assert.assertTrue(afterStats.isForceProcess());
         Assert.assertEquals(4L, afterStats.getNumArticlesRead());
         Assert.assertEquals(3L, afterStats.getNumArticlesProcessed());
         Assert.assertEquals("eswiki-20170101-pages-articles.xml.bz2", afterStats.getDumpFileName());
