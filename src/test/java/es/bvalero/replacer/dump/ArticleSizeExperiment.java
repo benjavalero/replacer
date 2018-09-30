@@ -33,7 +33,7 @@ public class ArticleSizeExperiment {
             final int[] maxSizes = {0};
             final String[] maxArticles = {""};
             final long startTime = new Date().getTime();
-            DumpHandler dumpHandler = new DumpHandler(new DumpProcessor()) {
+            DumpHandler dumpHandler = new DumpHandler(new DumpArticleProcessor()) {
                 @Override
                 boolean processArticle(DumpArticle dumpArticle) {
                     int currentSize = dumpArticle.getContent().length() / 1024;

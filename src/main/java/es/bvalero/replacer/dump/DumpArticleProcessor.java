@@ -17,9 +17,9 @@ import java.util.*;
  * Process an article found in a Wikipedia dump.
  */
 @Component
-class DumpProcessor {
+class DumpArticleProcessor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DumpProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DumpArticleProcessor.class);
 
     private static final Set<WikipediaNamespace> PROCESSABLE_NAMESPACES =
             new HashSet<>(Arrays.asList(WikipediaNamespace.ARTICLE, WikipediaNamespace.ANNEX));

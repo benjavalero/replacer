@@ -1,6 +1,7 @@
 package es.bvalero.replacer.dump;
 
-public class DumpStatus {
+@SuppressWarnings("WeakerAccess")
+public class DumpProcessStatus {
 
     private boolean running;
     private boolean forceProcess;
@@ -11,8 +12,8 @@ public class DumpStatus {
     private String time;
     private String progress;
 
-    public DumpStatus(boolean running, boolean forceProcess, long numArticlesRead, long numArticlesProcessed,
-                      String dumpFileName, long average, String time, String progress) {
+    public DumpProcessStatus(boolean running, boolean forceProcess, long numArticlesRead, long numArticlesProcessed,
+                             String dumpFileName, long average, String time, String progress) {
         this.running = running;
         this.forceProcess = forceProcess;
         this.numArticlesRead = numArticlesRead;

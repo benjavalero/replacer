@@ -23,20 +23,21 @@ import java.nio.file.Paths;
 public class DumpHandlerTest {
 
     @Mock
-    private DumpProcessor dumpProcessor;
+    private DumpArticleProcessor dumpArticleProcessor;
 
     private DumpHandler dumpHandler;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        dumpHandler = new DumpHandler(dumpProcessor);
+        dumpHandler = new DumpHandler(dumpArticleProcessor);
     }
 
     @Test
     public void testHandleDumpFile() throws URISyntaxException, DumpException {
         File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
-        Mockito.when(dumpProcessor.processArticle(Mockito.any(DumpArticle.class), Mockito.anyBoolean())).thenReturn(Boolean.TRUE);
+        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(DumpArticle.class), Mockito.anyBoolean()))
+                .thenReturn(Boolean.TRUE);
 
         try (InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile))) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -59,7 +60,8 @@ public class DumpHandlerTest {
     @Test
     public void testHandDumpFileWithException() throws URISyntaxException, DumpException {
         File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
-        Mockito.when(dumpProcessor.processArticle(Mockito.any(DumpArticle.class))).thenThrow(Mockito.mock(NullPointerException.class));
+        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(DumpArticle.class)))
+                .thenThrow(Mockito.mock(NullPointerException.class));
 
         try (InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile))) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
