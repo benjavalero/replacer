@@ -29,7 +29,7 @@ public class ArticleRepositoryTest {
     public void testInsert() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article(1, "Andorra");
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
         articleRepository.save(newArticle);
 
         Assert.assertEquals(1, articleRepository.count());
@@ -45,11 +45,11 @@ public class ArticleRepositoryTest {
     public void testInsertDuplicated() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article(1, "Andorra");
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
         articleRepository.save(newArticle);
 
         String title = "España";
-        Article duplicated = new Article(1, title);
+        Article duplicated = new Article.ArticleBuilder().setId(1).setTitle(title).createArticle();
         articleRepository.save(duplicated);
 
         // The second insert updates the first
@@ -63,10 +63,17 @@ public class ArticleRepositoryTest {
     public void testInsertWithReplacements() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article(1, "Andorra");
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
         articleRepository.save(newArticle);
-        PotentialError replacement1 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A");
-        PotentialError replacement2 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "B");
+        PotentialError replacement1 = new PotentialError.PotentialErrorBuilder()
+                .setArticle(newArticle)
+                .setType(PotentialErrorType.MISSPELLING)
+                .setText("A").createPotentialError();
+        PotentialError replacement2 = new PotentialError.PotentialErrorBuilder()
+                .setArticle(newArticle)
+                .setType(PotentialErrorType.MISSPELLING)
+                .setText("B")
+                .createPotentialError();
         potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2));
 
         Assert.assertEquals(1, articleRepository.count());
@@ -78,7 +85,7 @@ public class ArticleRepositoryTest {
     public void testModifyArticle() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article(1, "Andorra");
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
         articleRepository.save(newArticle);
 
         articleRepository.findById(1).ifPresent(
@@ -88,10 +95,12 @@ public class ArticleRepositoryTest {
         String newTitle = "España";
         Timestamp newAdditionDate = new Timestamp(System.currentTimeMillis());
         Timestamp newReviewDate = new Timestamp(System.currentTimeMillis());
-        newArticle.setTitle(newTitle);
-        newArticle.setAdditionDate(newAdditionDate);
-        newArticle.setReviewDate(newReviewDate);
-        articleRepository.save(newArticle);
+        Article toSave = new Article.ArticleBuilder(newArticle)
+                .setTitle(newTitle)
+                .setAdditionDate(newAdditionDate)
+                .setReviewDate(newReviewDate)
+                .createArticle();
+        articleRepository.save(toSave);
 
         Assert.assertEquals(1, articleRepository.count());
         articleRepository.findById(1).ifPresent(article -> {
@@ -105,11 +114,23 @@ public class ArticleRepositoryTest {
     public void testModifyReplacementList() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article(1, "Andorra");
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
         articleRepository.save(newArticle);
-        PotentialError replacement1 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A");
-        PotentialError replacement2 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "B");
-        PotentialError replacement3 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "C");
+        PotentialError replacement1 = new PotentialError.PotentialErrorBuilder()
+                .setArticle(newArticle)
+                .setType(PotentialErrorType.MISSPELLING)
+                .setText("A")
+                .createPotentialError();
+        PotentialError replacement2 = new PotentialError.PotentialErrorBuilder()
+                .setArticle(newArticle)
+                .setType(PotentialErrorType.MISSPELLING)
+                .setText("B")
+                .createPotentialError();
+        PotentialError replacement3 = new PotentialError.PotentialErrorBuilder()
+                .setArticle(newArticle)
+                .setType(PotentialErrorType.MISSPELLING)
+                .setText("C")
+                .createPotentialError();
         potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2, replacement3));
 
         Assert.assertEquals(1, articleRepository.count());
@@ -125,7 +146,11 @@ public class ArticleRepositoryTest {
         Assert.assertEquals("B", potentialErrorRepository.findByArticle(newArticle).get(0).getText());
 
         // Add replacements
-        PotentialError replacement4 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "D");
+        PotentialError replacement4 = new PotentialError.PotentialErrorBuilder()
+                .setArticle(newArticle)
+                .setType(PotentialErrorType.MISSPELLING)
+                .setText("D")
+                .createPotentialError();
         potentialErrorRepository.save(replacement4);
 
         Assert.assertEquals(1, articleRepository.count());
@@ -137,10 +162,18 @@ public class ArticleRepositoryTest {
     public void testInsertDuplicatedReplacement() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article(1, "Andorra");
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
         articleRepository.save(newArticle);
-        PotentialError replacement1 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A");
-        PotentialError replacement2 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A");
+        PotentialError replacement1 = new PotentialError.PotentialErrorBuilder()
+                .setArticle(newArticle)
+                .setType(PotentialErrorType.MISSPELLING)
+                .setText("A")
+                .createPotentialError();
+        PotentialError replacement2 = new PotentialError.PotentialErrorBuilder()
+                .setArticle(newArticle)
+                .setType(PotentialErrorType.MISSPELLING)
+                .setText("A")
+                .createPotentialError();
         potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2));
     }
 
@@ -148,10 +181,18 @@ public class ArticleRepositoryTest {
     public void testDeleteArticleWithReplacements() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article(1, "Andorra");
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
         articleRepository.save(newArticle);
-        PotentialError replacement1 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A");
-        PotentialError replacement2 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "B");
+        PotentialError replacement1 = new PotentialError.PotentialErrorBuilder()
+                .setArticle(newArticle)
+                .setType(PotentialErrorType.MISSPELLING)
+                .setText("A")
+                .createPotentialError();
+        PotentialError replacement2 = new PotentialError.PotentialErrorBuilder()
+                .setArticle(newArticle)
+                .setType(PotentialErrorType.MISSPELLING)
+                .setText("B")
+                .createPotentialError();
         potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2));
 
         Assert.assertEquals(1, articleRepository.count());
@@ -167,10 +208,18 @@ public class ArticleRepositoryTest {
     public void testDeleteArticleInCascade() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article(1, "Andorra");
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
         articleRepository.save(newArticle);
-        PotentialError replacement1 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "A");
-        PotentialError replacement2 = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "B");
+        PotentialError replacement1 = new PotentialError.PotentialErrorBuilder()
+                .setArticle(newArticle)
+                .setType(PotentialErrorType.MISSPELLING)
+                .setText("A")
+                .createPotentialError();
+        PotentialError replacement2 = new PotentialError.PotentialErrorBuilder()
+                .setArticle(newArticle)
+                .setType(PotentialErrorType.MISSPELLING)
+                .setText("B")
+                .createPotentialError();
         potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2));
 
         Assert.assertEquals(1, articleRepository.count());
@@ -188,9 +237,13 @@ public class ArticleRepositoryTest {
         List<Article> articles = new ArrayList<>(50);
         List<PotentialError> replacements = new ArrayList<>(500);
         for (int i = 0; i < 1000000; i++) {
-            Article newArticle = new Article(i, "Title" + String.valueOf(i));
+            Article newArticle = new Article.ArticleBuilder().setId(i).setTitle("Title" + String.valueOf(i)).createArticle();
             for (int j = 0; j < 10; j++) {
-                PotentialError replacement = new PotentialError(newArticle, PotentialErrorType.MISSPELLING, "Text" + String.valueOf(j));
+                PotentialError replacement = new PotentialError.PotentialErrorBuilder()
+                        .setArticle(newArticle)
+                        .setType(PotentialErrorType.MISSPELLING)
+                        .setText("Text" + String.valueOf(j))
+                        .createPotentialError();
                 replacements.add(replacement);
             }
             articles.add(newArticle);

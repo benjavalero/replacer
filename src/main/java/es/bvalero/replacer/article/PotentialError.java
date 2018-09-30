@@ -31,11 +31,12 @@ public class PotentialError implements Serializable {
     @Column(name = "text", nullable = false, length = 30)
     private String text;
 
+    @SuppressWarnings("unused")
     public PotentialError() {
         // Needed by JPA
     }
 
-    public PotentialError(Article article, PotentialErrorType type, String text) {
+    private PotentialError(Article article, PotentialErrorType type, String text) {
         this.article = article;
         this.type = type;
         this.text = text;
@@ -67,6 +68,32 @@ public class PotentialError implements Serializable {
                 ", type=" + type +
                 ", text='" + text + '\'' +
                 '}';
+    }
+
+    public static class PotentialErrorBuilder {
+        private Article article;
+        private PotentialErrorType type;
+        private String text;
+
+        public PotentialErrorBuilder setArticle(Article article) {
+            this.article = article;
+            return this;
+        }
+
+        public PotentialErrorBuilder setType(PotentialErrorType type) {
+            this.type = type;
+            return this;
+        }
+
+        public PotentialErrorBuilder setText(String text) {
+            this.text = text;
+            return this;
+        }
+
+        public PotentialError createPotentialError() {
+            return new PotentialError(article, type, text);
+        }
+
     }
 
 }

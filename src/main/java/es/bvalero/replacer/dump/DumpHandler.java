@@ -105,7 +105,13 @@ class DumpHandler extends DefaultHandler {
                 break;
             case "page":
                 numArticlesRead++;
-                DumpArticle dumpArticle = new DumpArticle(currentId, currentTitle, currentNamespace, currentTimestamp, currentContent);
+                DumpArticle dumpArticle = new DumpArticle.DumpArticleBuilder()
+                        .setId(currentId)
+                        .setTitle(currentTitle)
+                        .setNamespace(currentNamespace)
+                        .setTimestamp(currentTimestamp)
+                        .setContent(currentContent)
+                        .createDumpArticle();
 
                 try {
                     boolean articleProcessed = processArticle(dumpArticle);

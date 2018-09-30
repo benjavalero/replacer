@@ -371,9 +371,11 @@ public class ArticleService {
 
     private void markArticleAsReviewed(@NotNull ArticleData article) {
         articleRepository.findById(article.getId()).ifPresent(dbArticle -> {
-            dbArticle.setReviewDate(new Timestamp(System.currentTimeMillis()));
-            potentialErrorRepository.deleteInBatch(potentialErrorRepository.findByArticle(dbArticle));
-            articleRepository.save(dbArticle);
+            Article articleToSave = new Article.ArticleBuilder(dbArticle)
+                    .setReviewDate(new Timestamp(System.currentTimeMillis()))
+                    .createArticle();
+            potentialErrorRepository.deleteInBatch(potentialErrorRepository.findByArticle(articleToSave));
+            articleRepository.save(articleToSave);
         });
     }
 
