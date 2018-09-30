@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Find the Wikipedia dumps in the filesystem where the application runs.
@@ -68,6 +66,11 @@ class DumpManager {
     @TestOnly
     void setRunning() {
         this.running = true;
+    }
+
+    @TestOnly
+    void setNumArticlesEstimation(long numArticlesEstimation) {
+        this.numArticlesEstimation = numArticlesEstimation;
     }
 
     /* FIND DUMP FILE */
@@ -152,7 +155,7 @@ class DumpManager {
      */
     @Scheduled(fixedDelay = 7 * 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
     @Async
-    void processLatestDumpFile() throws DumpException {
+    void processLatestDumpFile() {
         processLatestDumpFile(true, false);
     }
 
@@ -161,43 +164,47 @@ class DumpManager {
      *
      * @param forceProcessDump         When triggered manually we always process the latest dump although it has been already processed.
      * @param forceProcessDumpArticles Force processing all dump articles event if they have not been modified since last processing.
-     * @throws DumpException When the dump file is not found or there are problems parsing the dump file.
      */
-    void processLatestDumpFile(boolean forceProcessDump, boolean forceProcessDumpArticles) throws DumpException {
+    @Async
+    void processLatestDumpFile(boolean forceProcessDump, boolean forceProcessDumpArticles) {
         LOGGER.info("Start process latest dump file. Force dump process: {}. Force article process: {}",
                 forceProcessDump, forceProcessDumpArticles);
+        try {
+            // Find the latest dump file
+            File latestDumpFile = findLatestDumpFile();
 
-        // Find the latest dump file
-        File latestDumpFile = findLatestDumpFile();
+            // We check against the latest dump file processed
+            if (!latestDumpFile.getPath().equals(this.latestDumpFile) || forceProcessDump) {
+                // Start process
+                parseDumpFile(findLatestDumpFile(), forceProcessDumpArticles);
 
-        // We check against the latest dump file processed
-        if (!latestDumpFile.getPath().equals(this.latestDumpFile) || forceProcessDump) {
-            // Start process
-            parseDumpFile(findLatestDumpFile(), forceProcessDumpArticles);
-
-            // Once finished we mark the file as processed
-            this.running = false;
-            this.numArticlesEstimation = dumpHandler.getNumArticlesRead();
-        } else {
-            LOGGER.info("Latest dump file found already indexed");
+                // Once finished we mark the file as processed
+                this.running = false;
+                this.numArticlesEstimation = dumpHandler.getNumArticlesRead();
+            } else {
+                LOGGER.info("Latest dump file found already indexed");
+            }
+        } catch (DumpException e) {
+            LOGGER.error("Error processing last dump file", e);
         }
     }
 
-    Map<String, Object> getProcessStatus() {
+    DumpStatus getProcessStatus() {
         // In case the dump contains more articles than estimated
-        if (dumpHandler.getNumArticlesRead() >= numArticlesEstimation) {
+        if (dumpHandler.getNumArticlesRead() > numArticlesEstimation) {
             numArticlesEstimation += 1000;
         }
 
-        Map<String, Object> status = new HashMap<>();
-        status.put("running", running);
-        status.put("numArticlesRead", dumpHandler.getNumArticlesRead());
-        status.put("numArticlesProcessed", dumpHandler.getNumArticlesProcessed());
-        status.put("dumpFileName", new File(latestDumpFile).getName());
-        status.put("average", getAverageTimePerArticle());
-        status.put("time", getTime());
-        status.put("progress", String.format("%.2f", dumpHandler.getNumArticlesRead() * 100.0 / numArticlesEstimation));
-        return status;
+        return new DumpStatus(
+                running,
+                dumpHandler.isForceProcess(),
+                dumpHandler.getNumArticlesRead(),
+                dumpHandler.getNumArticlesProcessed(),
+                new File(latestDumpFile).getName(),
+                getAverageTimePerArticle(),
+                getTime(),
+                String.format("%.2f", dumpHandler.getNumArticlesRead() * 100.0 / numArticlesEstimation)
+        );
     }
 
     private long getAverageTimePerArticle() {

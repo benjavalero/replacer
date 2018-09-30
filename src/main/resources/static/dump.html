@@ -1,34 +1,60 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Replacer - Indexación</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="shortcut icon" href="https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico"/>
-    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/css/bootstrap.min.css"/>
-    <script type="text/javascript" src="webjars/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="webjars/bootstrap/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="js/dump.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/replacer.css">
+
+    <title>Replacer - Procesamiento de dumps</title>
 </head>
 <body>
 
-<div id="main-container" class="container">
+<div class="container">
+    <h1>Procesamiento de dumps</h1>
 
-    <h1>Indexación</h1>
-    <p id="status-index"></p>
+    <div id="running" class="hidden">
+        <p>El procesamiento se está ejecutando.</p>
+        <ul>
+            <li>Fichero en proceso: <strong><span class="dumpName"></span></strong></li>
+            <li>Tiempo estimado: <strong><span class="dumpTime"></span></strong> (dd:hh:mm:ss)</li>
+            <li>Artículos leídos: <strong><span class="numArticlesRead"></span></strong></li>
+            <li>Artículos procesados: <strong><span class="numArticlesProcessed"></span></strong></li>
+            <li>Progreso: <strong><span class="dumpProgress"></span></strong>&nbsp;%</li>
+            <li>Tiempo medio por artículo: <strong><span class="dumpAverage"></span></strong> ms</li>
+        </ul>
+    </div>
+    <div id="notRunning" class="hidden">
+        <p>El procesamiento no se está ejecutando.</p>
+        <ul id="notRunningStatus" class="hidden">
+            <li>Fichero procesado: <strong><span class="dumpName"></span></strong></li>
+            <li>Tiempo total: <strong><span class="dumpTime"></span></strong> (dd:hh:mm:ss)</li>
+            <li>Artículos leídos: <strong><span class="numArticlesRead"></span></strong></li>
+            <li>Artículos procesados: <strong><span class="numArticlesProcessed"></span></strong></li>
+            <li>Tiempo medio por artículo: <strong><span class="dumpAverage"></span></strong> ms</li>
+        </ul>
 
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="force-check" disabled="disabled">
-        <label class="form-check-label" for="force-check">Forzar indexación de artículos antiguos</label>
+        <form>
+            <div class="form-group form-check">
+                <input class="form-check-input" type="checkbox" value="" id="force-check">
+                <label class="form-check-label" for="force-check">Forzar procesamiento de artículos antiguos</label>
+            </div>
+
+            <button class="btn btn-primary" type="button" id="button-index">Comenzar procesamiento</button>
+        </form>
     </div>
 
-    <a id="button-index" href="#" class="btn btn-default disabled" role="button">Comenzar indexación</a>
-
 </div>
+
+<!-- Lightweight Ajax library -->
+<script src="webjars/reqwest/reqwest.min.js"></script>
+
+<script type="text/javascript" src="js/dump.js"></script>
 
 </body>
 </html>

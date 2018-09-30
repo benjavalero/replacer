@@ -1,7 +1,7 @@
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', function () {
 
-    $('#button-index').click(function() {
-        runIndexation($('#force-check').prop('checked'));
+    document.querySelector('#button-index').addEventListener('click', function () {
+        runIndexation(document.querySelector('#force-check').checked);
     });
 
     findDumpStatus();
@@ -11,56 +11,44 @@ $(document).ready(function() {
 });
 
 function runIndexation(forceIndexation) {
-    $.ajax({
-        url : 'dump/run',
-        dataType : 'json',
-        data : {
-            force : forceIndexation
-        }
-    }).done(function(response) {
-        // Do nothing
-    }).fail(function(response) {
-        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
-            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
-            + 'Error lanzando la indexación: ' + JSON.stringify(response.responseJSON.message)
-            + '</div>');
-    });
+    reqwest({
+        url: 'dump/run',
+        type: 'json',
+        data: { force: forceIndexation },
+        success: function(response) {
+            document.querySelector('#notRunning').classList.add('hidden');
+            document.querySelector('#running').classList.remove('hidden');
 
-    $('#button-index').addClass("disabled");
-    $('#force-check').attr("disabled", "disabled");
-    $('#status-index').html("Comenzando indexación...");
+            findDumpStatus();
+        }
+    });
 }
 
 function findDumpStatus() {
-    $.ajax({
-        url : 'dump/status',
-        dataType : 'json'
-    }).done(function(response) {
-        var message = 'La indexación ';
-        message += response.running ? '' : 'no ';
-        message += 'se está ejecutando.';
+    reqwest({
+        url: 'dump/status',
+        type: 'json',
+        success: function(response) {
+            if (response.running) {
+                document.querySelector('#notRunning').classList.add('hidden');
+                document.querySelector('#running').classList.remove('hidden');
+            } else {
+                document.querySelector('#running').classList.add('hidden');
+                document.querySelector('#notRunning').classList.remove('hidden');
+                if (response.numArticlesRead) {
+                    document.querySelector('#notRunningStatus').classList.remove('hidden');
+                }
+            }
 
-        message += '<ul>';
-        message += '<li>Fichero procesado: ' + response.dumpFileName + '</li>'
-        message += '<li>' + (response.running ? 'Tiempo estimado' : 'Tiempo total') + ': ' + response.time + ' s</li>';
-        message += '<li>Artículos leídos/procesados: ' + response.numArticlesRead + ' / ' + response.numArticlesProcessed + ' (' + response.progress + '&nbsp;%)</li>'
-        message += '<li>Tiempo medio por artículo: ' + response.average + ' ms</li>';
-        message += '</ul>';
-
-        if (!response.running) {
-            $('#button-index').removeClass("disabled");
-            $('#force-check').removeAttr("disabled");
+            document.querySelector('#force-check').checked = response.forceProcess;
+            document.querySelector('.dumpName').textContent = response.dumpFileName;
+            document.querySelector('.dumpTime').textContent = response.time;
+            document.querySelector('.numArticlesRead').textContent = response.numArticlesRead;
+            document.querySelector('.numArticlesProcessed').textContent = response.numArticlesProcessed;
+            document.querySelector('.dumpProgress').textContent = response.progress;
+            document.querySelector('.dumpAverage').textContent = response.average;
         }
-
-        $('#status-index').html(message);
-
-        // Check-box force indexing
-        $('#force-check').prop('checked', response.forceProcessArticles);
-    }).fail(function(response) {
-        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
-            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
-            + 'Error buscando el estado de la indexación: ' + JSON.stringify(response.responseJSON.message)
-            + '</div>');
     });
+
 }
 

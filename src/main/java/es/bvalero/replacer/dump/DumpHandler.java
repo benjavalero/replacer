@@ -47,6 +47,10 @@ class DumpHandler extends DefaultHandler {
         this.endTime = 0L;
     }
 
+    boolean isForceProcess() {
+        return forceProcess;
+    }
+
     long getNumArticlesRead() {
         return numArticlesRead;
     }

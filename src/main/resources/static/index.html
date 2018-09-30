@@ -1,64 +1,66 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Replacer - WikiReemplazador</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="shortcut icon" href="https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico"/>
-    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/css/bootstrap.min.css"/>
-    <script type="text/javascript" src="webjars/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="webjars/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/replacer.css">
+
+    <title>Replacer - Reemplazador de la Wikipedia en español</title>
 </head>
 <body>
 
 <div class="container">
+    <h1>Reemplazador de la Wikipedia en español</h1>
 
-    <h1>Replacer - WikiReemplazador</h1>
-
-    <div class="container unauthenticated" style="display:none">
+    <div id="notAuthenticated" class="hidden">
         <p>
             No está autenticado en MediaWiki. Haga <a href="login">clic aquí</a> para iniciar sesión.
         </p>
     </div>
-
-    <div class="container authenticated" style="display:none">
+    <div id="authenticated" class="hidden">
         <p>
-            Esta es una herramienta aún en fase <strong>beta</strong> para corregir los errores ortográficos y de estilo
-            más comunes en la Wikipedia en español.
-        </p>
-        <p>
-            A continuación se listan algunas de las herramientas disponibles:
+            El propósito de esta herramienta es corregir los errores ortográficos y de estilo más comunes en la
+            Wikipedia en español.
         </p>
         <ul>
             <li>
                 <a href="random.html"><strong>Errores ortográficos</strong></a> Pulse en las palabras resaltadas para
-                sustituirlas por su corrección (si procede). Finalmente pulse en el botón «Guardar cambios» para aplicar
-                las correcciones.
+                sustituirlas por su corrección sugerida (si procede). Finalmente pulse en el botón «Guardar cambios»
+                para aplicar las correcciones.
             </li>
             <li>
                 <a href="statistics.html"><strong>Estadísticas</strong></a> Muestra diversas estadísticas de la
                 herramienta.
             </li>
             <li>
-                <a href="dump.html"><strong>Indexación</strong></a> Muestra el estado actual de la indexación.
+                <a href="dump.html"><strong>Procesamiento de <em>dumps</em></strong></a> Muestra el estado actual del
+                procesamiento del último <em>dump</em>.
             </li>
         </ul>
-
     </div>
-
 </div>
 
+<!-- Lightweight Ajax library -->
+<script src="webjars/reqwest/reqwest.min.js"></script>
+
 <script type="text/javascript">
-    $.get("isAuthenticated", function(data) {
-        if (data) {
-          $(".authenticated").show();
+document.addEventListener('DOMContentLoaded', function () {
+
+    reqwest('isAuthenticated', function(authenticated) {
+        if (authenticated) {
+            document.querySelector('#authenticated').classList.toggle('hidden');
         } else {
-          $(".unauthenticated").show();
+            document.querySelector('#notAuthenticated').classList.toggle('hidden');
         }
     });
+
+});
 
 </script>
 
