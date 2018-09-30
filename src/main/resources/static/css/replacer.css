@@ -1,18 +1,3 @@
-/* FIXED FOOTER */
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 7ex;
-}
-
-.footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 6ex;
-  background-color: #ffffff;
+.hidden {
+    display: none;
 }

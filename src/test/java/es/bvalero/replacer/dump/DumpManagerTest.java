@@ -126,7 +126,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessNewDumpFile() throws URISyntaxException, DumpException {
+    public void testProcessNewDumpFile() throws URISyntaxException {
         File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
         dumpManager.setDumpFolderPath(dumpFile.getParentFile().getParentFile().getPath());
 
@@ -139,7 +139,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessDumpFileAlreadyProcessed() throws URISyntaxException, DumpException {
+    public void testProcessDumpFileAlreadyProcessed() throws URISyntaxException {
         File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
         dumpManager.setDumpFolderPath(dumpFile.getParentFile().getParentFile().getPath());
         dumpManager.setLatestDumpFile(dumpFile.getPath());
@@ -151,7 +151,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testForceProcessDumpFileAlreadyProcessed() throws URISyntaxException, DumpException {
+    public void testForceProcessDumpFileAlreadyProcessed() throws URISyntaxException {
         File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
         dumpManager.setDumpFolderPath(dumpFile.getParentFile().getParentFile().getPath());
         dumpManager.setLatestDumpFile(dumpFile.getPath());
@@ -160,6 +160,57 @@ public class DumpManagerTest {
 
         Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
         Assert.assertEquals(dumpFile.getPath(), dumpManager.getLatestDumpFile());
+    }
+
+    @Test
+    public void testProcessDefaultStatistics() {
+        // Default statistics
+        DumpStatus defaultStats = dumpManager.getProcessStatus();
+        Assert.assertFalse(defaultStats.isRunning());
+        Assert.assertEquals(0L, defaultStats.getNumArticlesRead());
+        Assert.assertEquals(0L, defaultStats.getNumArticlesProcessed());
+        Assert.assertEquals("-", defaultStats.getDumpFileName());
+        Assert.assertEquals(0L, defaultStats.getAverage());
+        Assert.assertEquals("0:00:00:00", defaultStats.getTime());
+        Assert.assertEquals("0,00", defaultStats.getProgress());
+    }
+
+    @Test
+    public void testProcessStatisticsWithMoreArticlesThanExpected() throws URISyntaxException {
+        File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
+        dumpManager.setDumpFolderPath(dumpFile.getParentFile().getParentFile().getPath());
+        dumpManager.setNumArticlesEstimation(3);
+        Mockito.when(dumpHandler.getNumArticlesRead()).thenReturn(4L);
+        Mockito.when(dumpHandler.getNumArticlesProcessed()).thenReturn(3L);
+
+        dumpManager.processLatestDumpFile(false, false);
+
+        // Statistics after processing
+        DumpStatus afterStats = dumpManager.getProcessStatus();
+        Assert.assertFalse(afterStats.isRunning());
+        Assert.assertEquals(4L, afterStats.getNumArticlesRead());
+        Assert.assertEquals(3L, afterStats.getNumArticlesProcessed());
+        Assert.assertEquals("eswiki-20170101-pages-articles.xml.bz2", afterStats.getDumpFileName());
+        Assert.assertEquals("100,00", afterStats.getProgress());
+    }
+
+    @Test
+    public void testProcessStatisticsWithLessArticlesThanExpected() throws URISyntaxException {
+        File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
+        dumpManager.setDumpFolderPath(dumpFile.getParentFile().getParentFile().getPath());
+        dumpManager.setNumArticlesEstimation(5);
+        Mockito.when(dumpHandler.getNumArticlesRead()).thenReturn(4L);
+        Mockito.when(dumpHandler.getNumArticlesProcessed()).thenReturn(3L);
+
+        dumpManager.processLatestDumpFile(false, false);
+
+        // Statistics after processing
+        DumpStatus afterStats = dumpManager.getProcessStatus();
+        Assert.assertFalse(afterStats.isRunning());
+        Assert.assertEquals(4L, afterStats.getNumArticlesRead());
+        Assert.assertEquals(3L, afterStats.getNumArticlesProcessed());
+        Assert.assertEquals("eswiki-20170101-pages-articles.xml.bz2", afterStats.getDumpFileName());
+        Assert.assertEquals("100,00", afterStats.getProgress());
     }
 
 }

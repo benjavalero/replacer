@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 public class DumpController {
 
@@ -14,12 +12,12 @@ public class DumpController {
     private DumpManager dumpManager;
 
     @RequestMapping(value = "/dump/status")
-    Map<String, Object> getDumpStatus() {
+    DumpStatus getDumpStatus() {
         return dumpManager.getProcessStatus();
     }
 
     @RequestMapping(value = "/dump/run")
-    boolean processLatestDumpFileManually(@RequestParam("force") boolean forceProcessArticles) throws DumpException {
+    boolean processLatestDumpFileManually(@RequestParam("force") boolean forceProcessArticles) {
         dumpManager.processLatestDumpFile(true, forceProcessArticles);
         return true;
     }
