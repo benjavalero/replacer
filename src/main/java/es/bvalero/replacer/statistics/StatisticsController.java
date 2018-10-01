@@ -1,6 +1,7 @@
 package es.bvalero.replacer.statistics;
 
 import es.bvalero.replacer.article.ArticleRepository;
+import es.bvalero.replacer.article.MisspellingCount;
 import es.bvalero.replacer.article.PotentialErrorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,9 +47,9 @@ public class StatisticsController {
     }
 
     @RequestMapping(value = "/statistics/count/misspellings")
-    List<Object[]> listMisspellings() {
+    List<MisspellingCount> listMisspellings() {
         LOGGER.info("Listing misspellings...");
-        List<Object[]> list = potentialErrorRepository.findMisspellingsGrouped();
+        List<MisspellingCount> list = potentialErrorRepository.findMisspellingsGrouped();
         LOGGER.info("Misspelling list found: {}", list.size());
         return list;
     }
