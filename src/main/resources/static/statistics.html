@@ -1,55 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Replacer - Estadísticas</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="shortcut icon" href="https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico"/>
-    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/css/bootstrap.min.css"/>
-    <script type="text/javascript" src="webjars/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="webjars/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/replacer.css">
 
     <!-- DataTable JS files: http://holt59.github.io/datatable/ -->
     <link rel="stylesheet" type="text/css" href="css/datatable-bootstrap.min.css" media="screen">
-    <script type="text/javascript" src="js/datatable.min.js"></script>
-    <script type="text/javascript" src="js/datatable.jquery.min.js"></script>
 
-    <script type="text/javascript" src="js/statistics.js"></script>
+    <title>Replacer - Estadísticas</title>
 </head>
 <body>
 
-<div id="main-container" class="container">
+<div class="container">
+    <h1>Estadísticas</h1>
 
-    <h1>Número de errores potenciales</h1>
-    <p><strong><span id="count-potential-errors">Calculando</span></strong> errores potenciales.</p>
+    <h2>Reemplazos por revisar</h2>
+    <p><strong><span id="count-potential-errors">Calculando número de</span></strong> reemplazos.</p>
 
-    <h1>Número de artículos con errores potenciales</h1>
+    <h2>Artículos con reemplazos por revisar</h2>
     <p><strong><span id="count-articles">Calculando número de</span></strong> artículos.</p>
 
-    <h1>Número de artículos revisados</h1>
+    <h2>Artículos revisados</h2>
     <p><strong><span id="count-articles-reviewed">Calculando número de</span></strong> artículos.</p>
 
-    <h1>Lista de errores ortográficos</h1>
-    <table id="list-misspellings" class="table table-bordered">
+    <h2>Reemplazos ortográficos por revisar</h2>
+    <div id="find-misspellings"><p>Calculando...</p></div>
+    <table id="table-misspellings" class="table table-bordered hidden">
         <thead>
         <tr>
-            <th>Término</th>
-            <th>#</th>
+            <th scope="col">Término</th>
+            <th scope="col">#</th>
         </tr>
         </thead>
-        <tr>
-            <td>Cargando...</td>
-            <td></td>
-        </tr>
-        <tbody>
+        <tbody id="tbody-misspellings">
         </tbody>
     </table>
-    <div id="paging-list-misspellings"></div>
+    <nav aria-label="Paginación de la tabla de reemplazos ortográficos por revisar" id="paging-list-misspellings"></nav>
 
 </div>
+
+<!-- Lightweight Ajax library -->
+<script src="webjars/reqwest/reqwest.min.js"></script>
+
+<!-- Library to add pagination to the table of misspellings -->
+<script type="text/javascript" src="js/datatable.min.js"></script>
+
+<script type="text/javascript" src="js/statistics.js"></script>
 
 </body>
 </html>

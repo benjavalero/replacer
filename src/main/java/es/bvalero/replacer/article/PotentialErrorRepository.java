@@ -20,8 +20,8 @@ public interface PotentialErrorRepository extends JpaRepository<PotentialError, 
 
     void deleteByArticle(Article article);
 
-    @Query("SELECT text, COUNT(*) FROM PotentialError WHERE type = 'MISSPELLING' GROUP BY text")
-    List<Object[]> findMisspellingsGrouped();
+    @Query("SELECT new es.bvalero.replacer.article.MisspellingCount(text, COUNT(*)) FROM PotentialError WHERE type = 'MISSPELLING' GROUP BY text")
+    List<MisspellingCount> findMisspellingsGrouped();
 
     @Query(value = "SELECT pe.article FROM PotentialError pe WHERE pe.text = :word ORDER BY RAND()")
     List<Article> findRandomByWord(@Param("word") String word, Pageable pageable);
