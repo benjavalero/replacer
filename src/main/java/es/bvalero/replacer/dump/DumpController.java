@@ -14,12 +14,12 @@ public class DumpController {
     @Autowired
     private DumpManager dumpManager;
 
-    @RequestMapping(value = "/dump/status")
+    @RequestMapping("/dump/status")
     public DumpProcessStatus getDumpStatus() {
         return dumpManager.getProcessStatus();
     }
 
-    @RequestMapping(value = "/dump/run")
+    @RequestMapping("/dump/run")
     public boolean processLatestDumpFileManually(@RequestParam("force") boolean forceProcessArticles) {
         dumpManager.processLatestDumpFile(true, forceProcessArticles);
         return true;

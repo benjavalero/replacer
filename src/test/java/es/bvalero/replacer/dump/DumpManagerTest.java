@@ -20,7 +20,7 @@ public class DumpManagerTest {
     public TemporaryFolder dumpFolder = new TemporaryFolder();
 
     @Mock
-    DumpHandler dumpHandler;
+    private DumpHandler dumpHandler;
 
     private DumpManager dumpManager;
 
