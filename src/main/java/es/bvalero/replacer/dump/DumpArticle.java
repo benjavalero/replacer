@@ -7,17 +7,13 @@ import java.util.Date;
 /**
  * Domain class corresponding to a Wikipedia article in the XML dump.
  */
-class DumpArticle {
+final class DumpArticle {
 
-    private Integer id;
-    private String title;
-    private WikipediaNamespace namespace;
-    private Date timestamp;
-    private String content;
-
-    @SuppressWarnings("unused")
-    private DumpArticle() {
-    }
+    private final Integer id;
+    private final String title;
+    private final WikipediaNamespace namespace;
+    private final Date timestamp;
+    private final String content;
 
     private DumpArticle(Integer id, String title, WikipediaNamespace namespace, Date timestamp, String content) {
         this.id = id;
@@ -25,6 +21,10 @@ class DumpArticle {
         this.namespace = namespace;
         this.timestamp = timestamp;
         this.content = content;
+    }
+
+    static DumpArticle.DumpArticleBuilder builder() {
+        return new DumpArticle.DumpArticleBuilder();
     }
 
     Integer getId() {
@@ -54,32 +54,32 @@ class DumpArticle {
         private Date timestamp;
         private String content;
 
-        DumpArticleBuilder setId(Integer id) {
+        DumpArticle.DumpArticleBuilder setId(Integer id) {
             this.id = id;
             return this;
         }
 
-        DumpArticleBuilder setTitle(String title) {
+        DumpArticle.DumpArticleBuilder setTitle(String title) {
             this.title = title;
             return this;
         }
 
-        DumpArticleBuilder setNamespace(WikipediaNamespace namespace) {
+        DumpArticle.DumpArticleBuilder setNamespace(WikipediaNamespace namespace) {
             this.namespace = namespace;
             return this;
         }
 
-        DumpArticleBuilder setTimestamp(Date timestamp) {
+        DumpArticle.DumpArticleBuilder setTimestamp(Date timestamp) {
             this.timestamp = timestamp;
             return this;
         }
 
-        DumpArticleBuilder setContent(String content) {
+        DumpArticle.DumpArticleBuilder setContent(String content) {
             this.content = content;
             return this;
         }
 
-        DumpArticle createDumpArticle() {
+        DumpArticle build() {
             return new DumpArticle(id, title, namespace, timestamp, content);
         }
     }

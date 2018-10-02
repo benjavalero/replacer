@@ -3,6 +3,7 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.article.*;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import java.util.*;
 @Component
 class DumpArticleProcessor {
 
+    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpArticleProcessor.class);
 
     private static final Set<WikipediaNamespace> PROCESSABLE_NAMESPACES =
@@ -36,14 +38,14 @@ class DumpArticleProcessor {
     private ArticleService articleService;
 
     // Load a bunch of articles from DB to improve performance
-    private Map<Integer, Article> articlesDb = new HashMap<>(CACHE_SIZE);
+    private final Map<Integer, Article> articlesDb = new HashMap<>(CACHE_SIZE);
     private int maxCachedId = 0;
 
     // Save articles in batches to improve performance
-    private List<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
-    private List<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
-    private List<PotentialError> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
-    private List<PotentialError> replacementsToAdd = new ArrayList<>(CACHE_SIZE);
+    private final List<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
+    private final List<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
+    private final List<PotentialError> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
+    private final List<PotentialError> replacementsToAdd = new ArrayList<>(CACHE_SIZE);
 
     /**
      * Process a dump article: find the potential errors and add them to the database.

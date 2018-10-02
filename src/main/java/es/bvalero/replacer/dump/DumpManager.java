@@ -3,6 +3,7 @@ package es.bvalero.replacer.dump;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.intellij.lang.annotations.RegExp;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ import java.util.Collections;
 @Component
 class DumpManager {
 
+    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpManager.class);
 
     @Value("${replacer.dump.folder.path:}")

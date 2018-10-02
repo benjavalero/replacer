@@ -2,6 +2,7 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
+import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -14,9 +15,10 @@ import java.util.Date;
  */
 class DumpHandler extends DefaultHandler {
 
+    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpHandler.class);
 
-    private StringBuilder currentChars = new StringBuilder();
+    private final StringBuilder currentChars = new StringBuilder(5000);
     private Integer currentId;
     private String currentTitle;
     private WikipediaNamespace currentNamespace;
@@ -24,13 +26,13 @@ class DumpHandler extends DefaultHandler {
     private String currentContent;
 
     // Options
-    private DumpArticleProcessor dumpArticleProcessor;
-    private boolean forceProcess;
+    private final DumpArticleProcessor dumpArticleProcessor;
+    private final boolean forceProcess;
 
     // Statistics
     private long numArticlesRead;
     private long numArticlesProcessed;
-    private long startTime;
+    private final long startTime = System.currentTimeMillis();
     private long endTime;
 
     DumpHandler(DumpArticleProcessor processor) {
@@ -38,13 +40,8 @@ class DumpHandler extends DefaultHandler {
     }
 
     DumpHandler(DumpArticleProcessor processor, boolean forceProcess) {
-        this.dumpArticleProcessor = processor;
-
+        dumpArticleProcessor = processor;
         this.forceProcess = forceProcess;
-        this.numArticlesRead = 0L;
-        this.numArticlesProcessed = 0L;
-        this.startTime = System.currentTimeMillis();
-        this.endTime = 0L;
     }
 
     boolean isForceProcess() {
@@ -74,7 +71,7 @@ class DumpHandler extends DefaultHandler {
     @Override
     public void endDocument() {
         dumpArticleProcessor.finish();
-        this.endTime = System.currentTimeMillis();
+        endTime = System.currentTimeMillis();
     }
 
     @Override
@@ -89,7 +86,7 @@ class DumpHandler extends DefaultHandler {
                 currentTitle = currentChars.toString();
                 break;
             case "ns":
-                currentNamespace = WikipediaNamespace.valueOf(Integer.valueOf(currentChars.toString()));
+                currentNamespace = WikipediaNamespace.valueOf(Integer.parseInt(currentChars.toString()));
                 break;
             case "id":
                 // ID appears several times (contributor, revision, etc). We care about the first one.
@@ -105,13 +102,13 @@ class DumpHandler extends DefaultHandler {
                 break;
             case "page":
                 numArticlesRead++;
-                DumpArticle dumpArticle = new DumpArticle.DumpArticleBuilder()
+                DumpArticle dumpArticle = DumpArticle.builder()
                         .setId(currentId)
                         .setTitle(currentTitle)
                         .setNamespace(currentNamespace)
                         .setTimestamp(currentTimestamp)
                         .setContent(currentContent)
-                        .createDumpArticle();
+                        .build();
 
                 try {
                     boolean articleProcessed = processArticle(dumpArticle);

@@ -1,20 +1,16 @@
 package es.bvalero.replacer.dump;
 
 @SuppressWarnings("WeakerAccess")
-public class DumpProcessStatus {
+public final class DumpProcessStatus {
 
-    private boolean running;
-    private boolean forceProcess;
-    private long numArticlesRead;
-    private long numArticlesProcessed;
-    private String dumpFileName;
-    private long average;
-    private String time;
-    private String progress;
-
-    @SuppressWarnings("unused")
-    private DumpProcessStatus() {
-    }
+    private final boolean running;
+    private final boolean forceProcess;
+    private final long numArticlesRead;
+    private final long numArticlesProcessed;
+    private final String dumpFileName;
+    private final long average;
+    private final String time;
+    private final String progress;
 
     private DumpProcessStatus(boolean running, boolean forceProcess, long numArticlesRead, long numArticlesProcessed,
                               String dumpFileName, long average, String time, String progress) {
@@ -70,42 +66,42 @@ public class DumpProcessStatus {
         private String time;
         private String progress;
 
-        DumpProcessStatusBuilder setRunning(boolean running) {
+        DumpProcessStatus.DumpProcessStatusBuilder setRunning(boolean running) {
             this.running = running;
             return this;
         }
 
-        DumpProcessStatusBuilder setForceProcess(boolean forceProcess) {
+        DumpProcessStatus.DumpProcessStatusBuilder setForceProcess(boolean forceProcess) {
             this.forceProcess = forceProcess;
             return this;
         }
 
-        DumpProcessStatusBuilder setNumArticlesRead(long numArticlesRead) {
+        DumpProcessStatus.DumpProcessStatusBuilder setNumArticlesRead(long numArticlesRead) {
             this.numArticlesRead = numArticlesRead;
             return this;
         }
 
-        DumpProcessStatusBuilder setNumArticlesProcessed(long numArticlesProcessed) {
+        DumpProcessStatus.DumpProcessStatusBuilder setNumArticlesProcessed(long numArticlesProcessed) {
             this.numArticlesProcessed = numArticlesProcessed;
             return this;
         }
 
-        DumpProcessStatusBuilder setDumpFileName(String dumpFileName) {
+        DumpProcessStatus.DumpProcessStatusBuilder setDumpFileName(String dumpFileName) {
             this.dumpFileName = dumpFileName;
             return this;
         }
 
-        DumpProcessStatusBuilder setAverage(long average) {
+        DumpProcessStatus.DumpProcessStatusBuilder setAverage(long average) {
             this.average = average;
             return this;
         }
 
-        DumpProcessStatusBuilder setTime(String time) {
+        DumpProcessStatus.DumpProcessStatusBuilder setTime(String time) {
             this.time = time;
             return this;
         }
 
-        DumpProcessStatusBuilder setProgress(String progress) {
+        DumpProcessStatus.DumpProcessStatusBuilder setProgress(String progress) {
             this.progress = progress;
             return this;
         }
