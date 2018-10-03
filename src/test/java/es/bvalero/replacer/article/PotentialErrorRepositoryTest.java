@@ -22,9 +22,9 @@ public class PotentialErrorRepositoryTest {
 
     @Test
     public void testFindMisspellingsGrouped() {
-        Article article1 = new Article.ArticleBuilder().setId(1).setTitle("").createArticle();
-        Article article2 = new Article.ArticleBuilder().setId(2).setTitle("").createArticle();
-        Article article3 = new Article.ArticleBuilder().setId(3).setTitle("").createArticle();
+        Article article1 = new Article.ArticleBuilder().setId(1).setTitle("").build();
+        Article article2 = new Article.ArticleBuilder().setId(2).setTitle("").build();
+        Article article3 = new Article.ArticleBuilder().setId(3).setTitle("").build();
         articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
         PotentialError error1 = new PotentialError.PotentialErrorBuilder()
@@ -54,9 +54,9 @@ public class PotentialErrorRepositoryTest {
 
     @Test
     public void testRandomArticleByWord() {
-        Article article1 = new Article.ArticleBuilder().setId(1).setTitle("").createArticle();
-        Article article2 = new Article.ArticleBuilder().setId(2).setTitle("").createArticle();
-        Article article3 = new Article.ArticleBuilder().setId(3).setTitle("").createArticle();
+        Article article1 = new Article.ArticleBuilder().setId(1).setTitle("").build();
+        Article article2 = new Article.ArticleBuilder().setId(2).setTitle("").build();
+        Article article3 = new Article.ArticleBuilder().setId(3).setTitle("").build();
         articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
         PotentialError error1 = new PotentialError.PotentialErrorBuilder()

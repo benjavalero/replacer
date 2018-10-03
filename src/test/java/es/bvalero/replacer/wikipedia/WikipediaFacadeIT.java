@@ -34,4 +34,6 @@ public class WikipediaFacadeIT {
         wikipediaFacade.getArticleContent("Gigia Talarico");
     }
 
+    // TODO : Test if the date is saved with time-zone
+
 }

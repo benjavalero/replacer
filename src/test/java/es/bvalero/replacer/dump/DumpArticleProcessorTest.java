@@ -11,8 +11,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 
-import java.sql.Timestamp;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
 
 public class DumpArticleProcessorTest {
 
@@ -36,24 +38,15 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessSimple() {
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        DumpArticle dumpArticle = DumpArticle.builder().setNamespace(WikipediaNamespace.ARTICLE).setContent("").build();
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
     public void testCheckNamespaces() {
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
-
-        DumpArticle dumpAnnex = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpAnnex.getNamespace()).thenReturn(WikipediaNamespace.ANNEX);
-        Mockito.when(dumpAnnex.getContent()).thenReturn("");
-
-        DumpArticle dumpCategory = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpCategory.getNamespace()).thenReturn(WikipediaNamespace.CATEGORY);
+        DumpArticle dumpArticle = DumpArticle.builder().setNamespace(WikipediaNamespace.ARTICLE).setContent("").build();
+        DumpArticle dumpAnnex = DumpArticle.builder().setNamespace(WikipediaNamespace.ANNEX).setContent("").build();
+        DumpArticle dumpCategory = DumpArticle.builder().setNamespace(WikipediaNamespace.CATEGORY).build();
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpAnnex));
@@ -62,25 +55,26 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessRedirection() {
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("#REDIRECT xxx");
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("#REDIRECT xxx")
+                .build();
         Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
     public void testProcessReviewedAfterTimestamp() {
-        GregorianCalendar today = new GregorianCalendar();
-        GregorianCalendar yesterday = new GregorianCalendar();
-        yesterday.add(GregorianCalendar.DATE, -1);
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime yesterday = today.minusDays(1L);
 
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
-        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(yesterday.getTimeInMillis()));
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("")
+                .setTimestamp(yesterday)
+                .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getReviewDate()).thenReturn(new Timestamp(today.getTimeInMillis()));
+        Mockito.when(dbArticle.getReviewDate()).thenReturn(today);
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
 
@@ -89,17 +83,17 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessReviewedAfterTimestampForced() {
-        GregorianCalendar today = new GregorianCalendar();
-        GregorianCalendar yesterday = new GregorianCalendar();
-        yesterday.add(GregorianCalendar.DATE, -1);
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime yesterday = today.minusDays(1L);
 
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
-        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(yesterday.getTimeInMillis()));
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("")
+                .setTimestamp(yesterday)
+                .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getReviewDate()).thenReturn(new Timestamp(today.getTimeInMillis()));
+        Mockito.when(dbArticle.getReviewDate()).thenReturn(today);
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, true));
@@ -107,15 +101,14 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessReviewedWhenTimestamp() {
-        GregorianCalendar today = new GregorianCalendar();
-
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
-        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(today.getTimeInMillis()));
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("")
+                .setTimestamp(LocalDateTime.now())
+                .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getReviewDate()).thenReturn(new Timestamp(today.getTimeInMillis()));
+        Mockito.when(dbArticle.getReviewDate()).thenReturn(LocalDateTime.now());
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
 
@@ -124,17 +117,15 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessReviewedBeforeTimestamp() {
-        GregorianCalendar today = new GregorianCalendar();
-        GregorianCalendar yesterday = new GregorianCalendar();
-        yesterday.add(GregorianCalendar.DATE, -1);
+        LocalDateTime yesterday = LocalDateTime.now().minusDays(1L);
 
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
-        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(today.getTimeInMillis()));
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("")
+                .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getReviewDate()).thenReturn(new Timestamp(yesterday.getTimeInMillis()));
+        Mockito.when(dbArticle.getReviewDate()).thenReturn(yesterday);
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
@@ -142,17 +133,17 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessAddedAfterTimestamp() {
-        GregorianCalendar today = new GregorianCalendar();
-        GregorianCalendar yesterday = new GregorianCalendar();
-        yesterday.add(GregorianCalendar.DATE, -1);
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime yesterday = today.minusDays(1L);
 
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
-        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(yesterday.getTimeInMillis()));
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("")
+                .setTimestamp(yesterday)
+                .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getAdditionDate()).thenReturn(new Timestamp(today.getTimeInMillis()));
+        Mockito.when(dbArticle.getAdditionDate()).thenReturn(today);
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
 
@@ -161,17 +152,17 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessAddedAfterTimestampForced() {
-        GregorianCalendar today = new GregorianCalendar();
-        GregorianCalendar yesterday = new GregorianCalendar();
-        yesterday.add(GregorianCalendar.DATE, -1);
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime yesterday = today.minusDays(1L);
 
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
-        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(yesterday.getTimeInMillis()));
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("")
+                .setTimestamp(yesterday)
+                .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getAdditionDate()).thenReturn(new Timestamp(today.getTimeInMillis()));
+        Mockito.when(dbArticle.getAdditionDate()).thenReturn(today);
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, true));
@@ -179,17 +170,16 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessAddedBeforeTimestamp() {
-        GregorianCalendar today = new GregorianCalendar();
-        GregorianCalendar yesterday = new GregorianCalendar();
-        yesterday.add(GregorianCalendar.DATE, -1);
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime yesterday = today.minusDays(1L);
 
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
-        Mockito.when(dumpArticle.getTimestamp()).thenReturn(new Date(today.getTimeInMillis()));
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("")
+                .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getAdditionDate()).thenReturn(new Timestamp(yesterday.getTimeInMillis()));
+        Mockito.when(dbArticle.getAdditionDate()).thenReturn(yesterday);
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
@@ -199,10 +189,11 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessNewArticle() {
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getId()).thenReturn(1);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setId(1)
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("")
+                .build();
 
         ArticleReplacement articleReplacement = Mockito.mock(ArticleReplacement.class);
         Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString()))
@@ -217,12 +208,14 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessExistingArticleWithReplacementChanges() {
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("")
+                .setTimestamp(LocalDateTime.now())
+                .build();
 
         // Let's suppose the article exists in DB
-        Article dbArticle = Mockito.mock(Article.class);
+        Article dbArticle = Article.builder().setTitle("").build();
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
         // And it has replacements 1 and 2
@@ -257,12 +250,13 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessExistingArticleWithNoReplacementChanges() {
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("")
+                .build();
 
         // Let's suppose the article exists in DB
-        Article dbArticle = Mockito.mock(Article.class);
+        Article dbArticle = Article.builder().build();
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
         // And it has replacement 1
         PotentialError replacement1 = new PotentialError.PotentialErrorBuilder()
@@ -287,12 +281,14 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessExistingArticleWithNoReplacementsFound() {
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("")
+                .setTimestamp(LocalDateTime.now())
+                .build();
 
         // Let's suppose the article exists in DB
-        Article dbArticle = Mockito.mock(Article.class);
+        Article dbArticle = Article.builder().build();
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
         // And it has replacements 1 and 2
@@ -320,10 +316,11 @@ public class DumpArticleProcessorTest {
     @Test
     public void testProcessNewArticleAndDeleteObsolete() {
         // New article
-        DumpArticle dumpArticle = Mockito.mock(DumpArticle.class);
-        Mockito.when(dumpArticle.getId()).thenReturn(2);
-        Mockito.when(dumpArticle.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        Mockito.when(dumpArticle.getContent()).thenReturn("");
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setId(2)
+                .setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("")
+                .build();
 
         // Obsolete article in DB
         Article dbArticle = Mockito.mock(Article.class);

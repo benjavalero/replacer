@@ -2,20 +2,20 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * Domain class corresponding to a Wikipedia article in the XML dump.
  */
 final class DumpArticle {
 
-    private final Integer id;
+    private final int id;
     private final String title;
     private final WikipediaNamespace namespace;
-    private final Date timestamp;
+    private final LocalDateTime timestamp;
     private final String content;
 
-    private DumpArticle(Integer id, String title, WikipediaNamespace namespace, Date timestamp, String content) {
+    private DumpArticle(int id, String title, WikipediaNamespace namespace, LocalDateTime timestamp, String content) {
         this.id = id;
         this.title = title;
         this.namespace = namespace;
@@ -27,7 +27,7 @@ final class DumpArticle {
         return new DumpArticle.DumpArticleBuilder();
     }
 
-    Integer getId() {
+    int getId() {
         return id;
     }
 
@@ -39,7 +39,7 @@ final class DumpArticle {
         return namespace;
     }
 
-    Date getTimestamp() {
+    LocalDateTime getTimestamp() {
         return timestamp;
     }
 
@@ -48,13 +48,13 @@ final class DumpArticle {
     }
 
     static class DumpArticleBuilder {
-        private Integer id;
+        private int id;
         private String title;
         private WikipediaNamespace namespace;
-        private Date timestamp;
+        private LocalDateTime timestamp;
         private String content;
 
-        DumpArticle.DumpArticleBuilder setId(Integer id) {
+        DumpArticle.DumpArticleBuilder setId(int id) {
             this.id = id;
             return this;
         }
@@ -69,7 +69,7 @@ final class DumpArticle {
             return this;
         }
 
-        DumpArticle.DumpArticleBuilder setTimestamp(Date timestamp) {
+        DumpArticle.DumpArticleBuilder setTimestamp(LocalDateTime timestamp) {
             this.timestamp = timestamp;
             return this;
         }

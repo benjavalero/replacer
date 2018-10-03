@@ -49,7 +49,7 @@ public class ArticleServiceTest {
         String title = "España";
         String text = "Un hejemplo con muxos herrores y <XML>.";
 
-        Article randomArticle = new Article.ArticleBuilder().setId(id).setTitle(title).createArticle();
+        Article randomArticle = new Article.ArticleBuilder().setId(id).setTitle(title).build();
         Mockito.when(articleRepository.findRandomArticleNotReviewed(Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(randomArticle));
 
@@ -102,7 +102,7 @@ public class ArticleServiceTest {
         String title = "España";
         String text = "Un hejemplo\n\nX\n\nOtro hejemplo.";
 
-        Article randomArticle = new Article.ArticleBuilder().setId(id).setTitle(title).createArticle();
+        Article randomArticle = new Article.ArticleBuilder().setId(id).setTitle(title).build();
         Mockito.when(potentialErrorRepository
                 .findRandomByWord(Mockito.anyString(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(randomArticle));
@@ -139,7 +139,7 @@ public class ArticleServiceTest {
     public void testSaveArticleWithoutFixes() throws WikipediaException {
         Map<Integer, ArticleReplacement> articleFixes = new HashMap<>();
         ArticleData article = new ArticleData(1, "", "", articleFixes);
-        Article articleDb = new Article.ArticleBuilder().setId(1).setTitle("").createArticle();
+        Article articleDb = new Article.ArticleBuilder().setId(1).setTitle("").build();
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(articleDb));
 
         articleService.saveArticleChanges(article);
@@ -154,7 +154,7 @@ public class ArticleServiceTest {
         String title = "España";
         String text = "Un hejemplo\n\nX\n\nOtro hejemplo.";
 
-        Article articleDb = new Article.ArticleBuilder().setId(id).setTitle(title).createArticle();
+        Article articleDb = new Article.ArticleBuilder().setId(id).setTitle(title).build();
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(articleDb));
 
         Map<Integer, ArticleReplacement> articleFixes = new HashMap<>();

@@ -24,6 +24,10 @@ public final class DumpProcessStatus {
         this.progress = progress;
     }
 
+    public static DumpProcessStatus.DumpProcessStatusBuilder builder() {
+        return new DumpProcessStatus.DumpProcessStatusBuilder();
+    }
+
     public boolean isRunning() {
         return running;
     }
@@ -106,7 +110,7 @@ public final class DumpProcessStatus {
             return this;
         }
 
-        DumpProcessStatus createDumpProcessStatus() {
+        DumpProcessStatus build() {
             return new DumpProcessStatus(running, forceProcess, numArticlesRead, numArticlesProcessed, dumpFileName,
                     average, time, progress);
         }

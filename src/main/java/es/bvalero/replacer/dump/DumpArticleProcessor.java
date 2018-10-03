@@ -3,7 +3,6 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.article.*;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 /**
@@ -20,13 +20,19 @@ import java.util.*;
 @Component
 class DumpArticleProcessor {
 
-    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpArticleProcessor.class);
 
     private static final Set<WikipediaNamespace> PROCESSABLE_NAMESPACES =
             new HashSet<>(Arrays.asList(WikipediaNamespace.ARTICLE, WikipediaNamespace.ANNEX));
 
     private static final int CACHE_SIZE = 1000;
+    // Load a bunch of articles from DB to improve performance
+    private final Map<Integer, Article> articlesDb = new HashMap<>(CACHE_SIZE);
+    // Save articles in batches to improve performance
+    private final List<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
+    private final List<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
+    private final List<PotentialError> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
+    private final List<PotentialError> replacementsToAdd = new ArrayList<>(CACHE_SIZE);
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -37,15 +43,7 @@ class DumpArticleProcessor {
     @Autowired
     private ArticleService articleService;
 
-    // Load a bunch of articles from DB to improve performance
-    private final Map<Integer, Article> articlesDb = new HashMap<>(CACHE_SIZE);
     private int maxCachedId = 0;
-
-    // Save articles in batches to improve performance
-    private final List<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
-    private final List<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
-    private final List<PotentialError> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
-    private final List<PotentialError> replacementsToAdd = new ArrayList<>(CACHE_SIZE);
 
     /**
      * Process a dump article: find the potential errors and add them to the database.
@@ -96,15 +94,16 @@ class DumpArticleProcessor {
             // Check if reviewed after dump article timestamp
             // We compare with seconds because the DB timestamps is milliseconds-level but the Dump date is not
             // and it is possible that the review date and the timestamp is exactly the same
-            if (dbArticle.get().getReviewDate() != null
-                    && dbArticle.get().getReviewDate().getTime() / 1000 >= dumpArticle.getTimestamp().getTime() / 1000) {
+            if (dbArticle.get().getReviewDate() != null &&
+                    !dbArticle.get().getReviewDate().truncatedTo(ChronoUnit.SECONDS)
+                            .isBefore(dumpArticle.getTimestamp().truncatedTo(ChronoUnit.SECONDS))) {
                 LOGGER.debug("Article reviewed after dump timestamp. Skipping.");
                 return false;
             }
 
             // Check if added after dump article timestamp
-            if (dbArticle.get().getAdditionDate() != null
-                    && dbArticle.get().getAdditionDate().after(dumpArticle.getTimestamp())) {
+            if (dbArticle.get().getAdditionDate().truncatedTo(ChronoUnit.SECONDS)
+                    .isAfter(dumpArticle.getTimestamp().truncatedTo(ChronoUnit.SECONDS))) {
                 LOGGER.debug("Article added after dump timestamp. Skipping.");
                 return false;
             }
@@ -153,19 +152,18 @@ class DumpArticleProcessor {
             }
 
             if (modified) {
-                Article articleToSave = new Article.ArticleBuilder(dbArticle.get())
-                        .setTitle(dumpArticle.getTitle()) // In case the title of the article has changed
-                        .setAdditionDate(new Timestamp(System.currentTimeMillis()))
-                        .setReviewDate(null)
-                        .createArticle();
+                Article articleToSave = dbArticle.get()
+                        .withTitle(dumpArticle.getTitle()) // In case the title of the article has changed
+                        .withAdditionDate(LocalDateTime.now())
+                        .withReviewDate(null);
                 articlesToSave.add(articleToSave);
             }
         } else {
             // New article to insert in DB
-            Article newArticle = new Article.ArticleBuilder()
+            Article newArticle = Article.builder()
                     .setId(dumpArticle.getId())
                     .setTitle(dumpArticle.getTitle())
-                    .createArticle();
+                    .build();
             articlesToSave.add(newArticle);
 
             // Add replacements in DB

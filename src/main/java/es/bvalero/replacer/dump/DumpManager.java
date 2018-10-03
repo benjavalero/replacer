@@ -145,7 +145,7 @@ class DumpManager {
         LOGGER.info("Finish parsing dump file: {}", dumpFile);
     }
 
-    // Just for make easier the mock of the handler for testing
+    // Just to make easier the mock of the handler for testing
     DumpHandler createDumpHandler(boolean forceProcess) {
         return new DumpHandler(dumpArticleProcessor, forceProcess);
     }
@@ -199,7 +199,7 @@ class DumpManager {
             numArticlesEstimation += 1000;
         }
 
-        return new DumpProcessStatus.DumpProcessStatusBuilder()
+        return DumpProcessStatus.builder()
                 .setRunning(running)
                 .setForceProcess(dumpHandler.isForceProcess())
                 .setNumArticlesRead(dumpHandler.getNumArticlesRead())
@@ -208,7 +208,7 @@ class DumpManager {
                 .setAverage(getAverageTimePerArticle())
                 .setTime(getTime())
                 .setProgress(String.format("%.2f", dumpHandler.getNumArticlesRead() * 100.0 / numArticlesEstimation))
-                .createDumpProcessStatus();
+                .build();
     }
 
     private long getAverageTimePerArticle() {
