@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -371,9 +371,7 @@ public class ArticleService {
 
     private void markArticleAsReviewed(@NotNull ArticleData article) {
         articleRepository.findById(article.getId()).ifPresent(dbArticle -> {
-            Article articleToSave = new Article.ArticleBuilder(dbArticle)
-                    .setReviewDate(new Timestamp(System.currentTimeMillis()))
-                    .createArticle();
+            Article articleToSave = dbArticle.withReviewDate(LocalDateTime.now());
             potentialErrorRepository.deleteInBatch(potentialErrorRepository.findByArticle(articleToSave));
             articleRepository.save(articleToSave);
         });

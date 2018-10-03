@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * Handler to parse a Wikipedia XML dump.
@@ -18,21 +18,20 @@ class DumpHandler extends DefaultHandler {
     @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpHandler.class);
 
+    private final DumpArticleProcessor dumpArticleProcessor;
+    private final boolean forceProcess;
+    private final long startTime = System.currentTimeMillis();
+
     private final StringBuilder currentChars = new StringBuilder(5000);
     private Integer currentId;
     private String currentTitle;
     private WikipediaNamespace currentNamespace;
-    private Date currentTimestamp;
+    private LocalDateTime currentTimestamp;
     private String currentContent;
-
-    // Options
-    private final DumpArticleProcessor dumpArticleProcessor;
-    private final boolean forceProcess;
 
     // Statistics
     private long numArticlesRead;
     private long numArticlesProcessed;
-    private final long startTime = System.currentTimeMillis();
     private long endTime;
 
     DumpHandler(DumpArticleProcessor processor) {

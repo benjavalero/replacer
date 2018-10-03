@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -20,16 +20,16 @@ public class Article implements Serializable {
 
     @Id
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private int id;
 
     @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "dtadd", nullable = false, columnDefinition = "TIMESTAMP")
-    private Timestamp additionDate;
+    private LocalDateTime additionDate;
 
     @Column(name = "dtreview", columnDefinition = "TIMESTAMP")
-    private Timestamp reviewDate;
+    private LocalDateTime reviewDate;
 
     // Removed relationship to improve performance on bulk indexing
     // @OneToMany(mappedBy = "article", cascade = {CascadeType.ALL}, orphanRemoval = true)
@@ -39,14 +39,18 @@ public class Article implements Serializable {
         // Needed by JPA
     }
 
-    private Article(Integer id, String title, Timestamp additionDate, Timestamp reviewDate) {
+    private Article(int id, String title, LocalDateTime additionDate, LocalDateTime reviewDate) {
         this.id = id;
         this.title = title;
         this.additionDate = additionDate;
         this.reviewDate = reviewDate;
     }
 
-    public Integer getId() {
+    public static Article.ArticleBuilder builder() {
+        return new Article.ArticleBuilder();
+    }
+
+    public int getId() {
         return id;
     }
 
@@ -54,20 +58,20 @@ public class Article implements Serializable {
         return title;
     }
 
-    public Timestamp getAdditionDate() {
+    public LocalDateTime getAdditionDate() {
         return additionDate;
     }
 
-    public Timestamp getReviewDate() {
+    public LocalDateTime getReviewDate() {
         return reviewDate;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Article article = (Article) o;
-        return Objects.equals(id, article.id);
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Article article = (Article) obj;
+        return id == article.id;
     }
 
     @Override
@@ -85,44 +89,52 @@ public class Article implements Serializable {
                 '}';
     }
 
+    public Article withTitle(String title) {
+        if (this.title.equals(title)) return this;
+        return new Article(id, title, additionDate, reviewDate);
+    }
+
+    public Article withAdditionDate(LocalDateTime additionDate) {
+        if (this.additionDate.equals(additionDate)) return this;
+        return new Article(id, title, additionDate, reviewDate);
+    }
+
+    public Article withReviewDate(LocalDateTime reviewDate) {
+        if (this.reviewDate == null ? reviewDate == null : this.reviewDate.equals(reviewDate)) return this;
+        return new Article(id, title, additionDate, reviewDate);
+    }
+
     public static class ArticleBuilder {
-        private Integer id;
+        private int id;
         private String title;
-        private Timestamp additionDate;
-        private Timestamp reviewDate;
+        private LocalDateTime additionDate;
+        private LocalDateTime reviewDate;
 
-        public ArticleBuilder() {
-            this.additionDate = new Timestamp(System.currentTimeMillis());
+        ArticleBuilder() {
+            additionDate = LocalDateTime.now();
         }
 
-        public ArticleBuilder(Article article) {
-            this.id = article.id;
-            this.title = article.title;
-            this.additionDate = article.additionDate;
-            this.reviewDate = article.reviewDate;
-        }
-
-        public ArticleBuilder setId(Integer id) {
+        public Article.ArticleBuilder setId(int id) {
             this.id = id;
             return this;
         }
 
-        public ArticleBuilder setTitle(String title) {
+        public Article.ArticleBuilder setTitle(String title) {
             this.title = title;
             return this;
         }
 
-        public ArticleBuilder setAdditionDate(Timestamp additionDate) {
+        public Article.ArticleBuilder setAdditionDate(LocalDateTime additionDate) {
             this.additionDate = additionDate;
             return this;
         }
 
-        public ArticleBuilder setReviewDate(Timestamp reviewDate) {
+        public Article.ArticleBuilder setReviewDate(LocalDateTime reviewDate) {
             this.reviewDate = reviewDate;
             return this;
         }
 
-        public Article createArticle() {
+        public Article build() {
             return new Article(id, title, additionDate, reviewDate);
         }
 

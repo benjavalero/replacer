@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +29,7 @@ public class ArticleRepositoryTest {
     public void testInsert() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
 
         Assert.assertEquals(1, articleRepository.count());
@@ -45,11 +45,11 @@ public class ArticleRepositoryTest {
     public void testInsertDuplicated() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
 
         String title = "España";
-        Article duplicated = new Article.ArticleBuilder().setId(1).setTitle(title).createArticle();
+        Article duplicated = new Article.ArticleBuilder().setId(1).setTitle(title).build();
         articleRepository.save(duplicated);
 
         // The second insert updates the first
@@ -63,7 +63,7 @@ public class ArticleRepositoryTest {
     public void testInsertWithReplacements() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
         PotentialError replacement1 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(newArticle)
@@ -85,7 +85,7 @@ public class ArticleRepositoryTest {
     public void testModifyArticle() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
 
         articleRepository.findById(1).ifPresent(
@@ -93,13 +93,12 @@ public class ArticleRepositoryTest {
 
         // Modify attributes
         String newTitle = "España";
-        Timestamp newAdditionDate = new Timestamp(System.currentTimeMillis());
-        Timestamp newReviewDate = new Timestamp(System.currentTimeMillis());
-        Article toSave = new Article.ArticleBuilder(newArticle)
-                .setTitle(newTitle)
-                .setAdditionDate(newAdditionDate)
-                .setReviewDate(newReviewDate)
-                .createArticle();
+        LocalDateTime newAdditionDate = LocalDateTime.now();
+        LocalDateTime newReviewDate = LocalDateTime.now();
+        Article toSave = newArticle
+                .withTitle(newTitle)
+                .withAdditionDate(newAdditionDate)
+                .withReviewDate(newReviewDate);
         articleRepository.save(toSave);
 
         Assert.assertEquals(1, articleRepository.count());
@@ -114,7 +113,7 @@ public class ArticleRepositoryTest {
     public void testModifyReplacementList() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
         PotentialError replacement1 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(newArticle)
@@ -162,7 +161,7 @@ public class ArticleRepositoryTest {
     public void testInsertDuplicatedReplacement() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
         PotentialError replacement1 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(newArticle)
@@ -181,7 +180,7 @@ public class ArticleRepositoryTest {
     public void testDeleteArticleWithReplacements() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
         PotentialError replacement1 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(newArticle)
@@ -208,7 +207,7 @@ public class ArticleRepositoryTest {
     public void testDeleteArticleInCascade() {
         Assert.assertEquals(0, articleRepository.count());
 
-        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").createArticle();
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
         PotentialError replacement1 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(newArticle)
@@ -237,7 +236,7 @@ public class ArticleRepositoryTest {
         List<Article> articles = new ArrayList<>(50);
         List<PotentialError> replacements = new ArrayList<>(500);
         for (int i = 0; i < 1000000; i++) {
-            Article newArticle = new Article.ArticleBuilder().setId(i).setTitle("Title" + String.valueOf(i)).createArticle();
+            Article newArticle = new Article.ArticleBuilder().setId(i).setTitle("Title" + String.valueOf(i)).build();
             for (int j = 0; j < 10; j++) {
                 PotentialError replacement = new PotentialError.PotentialErrorBuilder()
                         .setArticle(newArticle)

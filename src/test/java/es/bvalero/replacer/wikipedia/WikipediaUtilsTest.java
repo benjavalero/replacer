@@ -3,11 +3,21 @@ package es.bvalero.replacer.wikipedia;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeParseException;
+
 public class WikipediaUtilsTest {
 
     @Test
+    public void testParseWikipediaDate() {
+        LocalDateTime expected = LocalDateTime.of(2018, Month.AUGUST, 31, 5, 17, 28);
+        Assert.assertEquals(expected, WikipediaUtils.parseWikipediaDate("2018-08-31T05:17:28Z"));
+    }
+
+    @Test(expected = DateTimeParseException.class)
     public void testParseWikipediaDateBadFormat() {
-        Assert.assertNull(WikipediaUtils.parseWikipediaDate("xxx"));
+        WikipediaUtils.parseWikipediaDate("xxx");
     }
 
     @Test
