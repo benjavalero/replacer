@@ -17,13 +17,19 @@ class DumpHandler extends DefaultHandler {
 
     @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpHandler.class);
+    private static final String TITLE_TAG = "title";
+    private static final String NAMESPACE_TAG = "ns";
+    private static final String ID_TAG = "id";
+    private static final String TIMESTAMP_TAG = "timestamp";
+    private static final String TEXT_TAG = "text";
+    private static final String PAGE_TAG = "page";
 
     private final DumpArticleProcessor dumpArticleProcessor;
     private final boolean forceProcess;
     private final long startTime = System.currentTimeMillis();
 
     private final StringBuilder currentChars = new StringBuilder(5000);
-    private Integer currentId;
+    private int currentId;
     private String currentTitle;
     private WikipediaNamespace currentNamespace;
     private LocalDateTime currentTimestamp;
@@ -81,45 +87,29 @@ class DumpHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) {
         switch (qName) {
-            case "title":
+            case TITLE_TAG:
                 currentTitle = currentChars.toString();
                 break;
-            case "ns":
+            case NAMESPACE_TAG:
                 currentNamespace = WikipediaNamespace.valueOf(Integer.parseInt(currentChars.toString()));
                 break;
-            case "id":
+            case ID_TAG:
                 // ID appears several times (contributor, revision, etc). We care about the first one.
-                if (currentId == null) {
+                if (currentId == 0) {
                     currentId = Integer.parseInt(currentChars.toString());
                 }
                 break;
-            case "timestamp":
+            case TIMESTAMP_TAG:
                 currentTimestamp = WikipediaUtils.parseWikipediaDate(currentChars.toString());
                 break;
-            case "text":
+            case TEXT_TAG:
                 currentContent = currentChars.toString();
                 break;
-            case "page":
-                numArticlesRead++;
-                DumpArticle dumpArticle = DumpArticle.builder()
-                        .setId(currentId)
-                        .setTitle(currentTitle)
-                        .setNamespace(currentNamespace)
-                        .setTimestamp(currentTimestamp)
-                        .setContent(currentContent)
-                        .build();
-
-                try {
-                    boolean articleProcessed = processArticle(dumpArticle);
-                    if (articleProcessed) {
-                        numArticlesProcessed++;
-                    }
-                } catch (Exception e) {
-                    LOGGER.error("Error processing article: {}", currentTitle, e);
-                }
+            case PAGE_TAG:
+                processPage();
 
                 // Reset current ID to avoid duplicates
-                currentId = null;
+                currentId = 0;
                 break;
             default:
                 break;
@@ -129,6 +119,26 @@ class DumpHandler extends DefaultHandler {
     @Override
     public void characters(char[] ch, int start, int length) {
         currentChars.append(ch, start, length);
+    }
+
+    void processPage() {
+        numArticlesRead++;
+        DumpArticle dumpArticle = DumpArticle.builder()
+                .setId(currentId)
+                .setTitle(currentTitle)
+                .setNamespace(currentNamespace)
+                .setTimestamp(currentTimestamp)
+                .setContent(currentContent)
+                .build();
+
+        try {
+            boolean articleProcessed = processArticle(dumpArticle);
+            if (articleProcessed) {
+                numArticlesProcessed++;
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error processing article: {}", currentTitle, e);
+        }
     }
 
     boolean processArticle(DumpArticle dumpArticle) {

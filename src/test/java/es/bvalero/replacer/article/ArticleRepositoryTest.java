@@ -68,12 +68,12 @@ public class ArticleRepositoryTest {
         PotentialError replacement1 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(newArticle)
                 .setType(PotentialErrorType.MISSPELLING)
-                .setText("A").createPotentialError();
+                .setText("A").build();
         PotentialError replacement2 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(newArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("B")
-                .createPotentialError();
+                .build();
         potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2));
 
         Assert.assertEquals(1, articleRepository.count());
@@ -119,17 +119,17 @@ public class ArticleRepositoryTest {
                 .setArticle(newArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("A")
-                .createPotentialError();
+                .build();
         PotentialError replacement2 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(newArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("B")
-                .createPotentialError();
+                .build();
         PotentialError replacement3 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(newArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("C")
-                .createPotentialError();
+                .build();
         potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2, replacement3));
 
         Assert.assertEquals(1, articleRepository.count());
@@ -149,7 +149,7 @@ public class ArticleRepositoryTest {
                 .setArticle(newArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("D")
-                .createPotentialError();
+                .build();
         potentialErrorRepository.save(replacement4);
 
         Assert.assertEquals(1, articleRepository.count());
@@ -167,12 +167,12 @@ public class ArticleRepositoryTest {
                 .setArticle(newArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("A")
-                .createPotentialError();
+                .build();
         PotentialError replacement2 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(newArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("A")
-                .createPotentialError();
+                .build();
         potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2));
     }
 
@@ -186,12 +186,12 @@ public class ArticleRepositoryTest {
                 .setArticle(newArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("A")
-                .createPotentialError();
+                .build();
         PotentialError replacement2 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(newArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("B")
-                .createPotentialError();
+                .build();
         potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2));
 
         Assert.assertEquals(1, articleRepository.count());
@@ -213,12 +213,12 @@ public class ArticleRepositoryTest {
                 .setArticle(newArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("A")
-                .createPotentialError();
+                .build();
         PotentialError replacement2 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(newArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("B")
-                .createPotentialError();
+                .build();
         potentialErrorRepository.saveAll(Arrays.asList(replacement1, replacement2));
 
         Assert.assertEquals(1, articleRepository.count());
@@ -242,7 +242,7 @@ public class ArticleRepositoryTest {
                         .setArticle(newArticle)
                         .setType(PotentialErrorType.MISSPELLING)
                         .setText("Text" + String.valueOf(j))
-                        .createPotentialError();
+                        .build();
                 replacements.add(replacement);
             }
             articles.add(newArticle);

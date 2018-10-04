@@ -31,7 +31,6 @@ public class PotentialError implements Serializable {
     @Column(name = "text", nullable = false, length = 30)
     private String text;
 
-    @SuppressWarnings("unused")
     public PotentialError() {
         // Needed by JPA
     }
@@ -40,6 +39,10 @@ public class PotentialError implements Serializable {
         this.article = article;
         this.type = type;
         this.text = text;
+    }
+
+    public static PotentialError.PotentialErrorBuilder builder() {
+        return new PotentialError.PotentialErrorBuilder();
     }
 
     public String getText() {
@@ -75,22 +78,22 @@ public class PotentialError implements Serializable {
         private PotentialErrorType type;
         private String text;
 
-        public PotentialErrorBuilder setArticle(Article article) {
+        public PotentialError.PotentialErrorBuilder setArticle(Article article) {
             this.article = article;
             return this;
         }
 
-        public PotentialErrorBuilder setType(PotentialErrorType type) {
+        public PotentialError.PotentialErrorBuilder setType(PotentialErrorType type) {
             this.type = type;
             return this;
         }
 
-        public PotentialErrorBuilder setText(String text) {
+        public PotentialError.PotentialErrorBuilder setText(String text) {
             this.text = text;
             return this;
         }
 
-        public PotentialError createPotentialError() {
+        public PotentialError build() {
             return new PotentialError(article, type, text);
         }
 

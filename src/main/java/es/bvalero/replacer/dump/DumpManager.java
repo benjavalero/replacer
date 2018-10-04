@@ -212,6 +212,7 @@ class DumpManager {
             numArticlesEstimation++;
         }
 
+        //noinspection MagicNumber
         return DumpProcessStatus.builder()
                 .setRunning(running)
                 .setForceProcess(dumpHandler.isForceProcess())

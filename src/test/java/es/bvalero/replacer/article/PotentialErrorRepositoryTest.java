@@ -31,22 +31,22 @@ public class PotentialErrorRepositoryTest {
                 .setArticle(article1)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("aber")
-                .createPotentialError();
+                .build();
         PotentialError error2 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(article2)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("aber")
-                .createPotentialError();
+                .build();
         PotentialError error3 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(article2)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("madrid")
-                .createPotentialError();
+                .build();
         PotentialError error4 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(article3)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("paris")
-                .createPotentialError();
+                .build();
         potentialErrorRepository.saveAll(Arrays.asList(error1, error2, error3, error4));
 
         Assert.assertEquals(3, potentialErrorRepository.findMisspellingsGrouped().size());
@@ -63,17 +63,17 @@ public class PotentialErrorRepositoryTest {
                 .setArticle(article1)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("aber")
-                .createPotentialError();
+                .build();
         PotentialError error2 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(article2)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("aber")
-                .createPotentialError();
+                .build();
         PotentialError error3 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(article3)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("aber")
-                .createPotentialError();
+                .build();
         potentialErrorRepository.saveAll(Arrays.asList(error1, error2, error3));
 
         Assert.assertTrue(potentialErrorRepository
