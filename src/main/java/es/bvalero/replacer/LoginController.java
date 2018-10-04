@@ -16,10 +16,6 @@ import java.util.concurrent.ExecutionException;
 @RestController
 public class LoginController {
 
-    private static final String TOKEN_REQUEST = "requestToken";
-    private static final String TOKEN_ACCESS = "accessToken";
-    private static final String TOKEN_VERIFIER = "oauth_verifier";
-
     @Autowired
     private IWikipediaFacade wikipediaFacade;
 
@@ -27,7 +23,7 @@ public class LoginController {
     public boolean isAuthenticated(HttpSession session) {
         // Load the OAuth service especially for offline testing
         wikipediaFacade.getOAuthService();
-        return session.getAttribute(TOKEN_ACCESS) != null;
+        return session.getAttribute(IWikipediaFacade.TOKEN_ACCESS) != null;
     }
 
     @RequestMapping("/login")
@@ -37,23 +33,23 @@ public class LoginController {
 
         // Go to authorization page
         // Add the request token to the session to use it when getting back
-        session.setAttribute(TOKEN_REQUEST, requestToken);
+        session.setAttribute(IWikipediaFacade.TOKEN_ACCESS, requestToken);
         return new ModelAndView("redirect:" + wikipediaFacade.getOAuthService().getAuthorizationUrl(requestToken));
     }
 
     @RequestMapping("/")
     public ModelAndView checkLogin(HttpServletRequest request) throws InterruptedException, ExecutionException, IOException {
         // Check if we come from the authorization page
-        String oauthVerifier = request.getParameter(TOKEN_VERIFIER);
-        Object requestToken = request.getSession().getAttribute(TOKEN_REQUEST);
+        String oauthVerifier = request.getParameter(IWikipediaFacade.TOKEN_VERIFIER);
+        Object requestToken = request.getSession().getAttribute(IWikipediaFacade.TOKEN_REQUEST);
 
         if (oauthVerifier != null && requestToken != null) {
             // Trade the Request Token and Verify for the Access Token
             OAuth1AccessToken accessToken = wikipediaFacade.getOAuthService()
                     .getAccessToken((OAuth1RequestToken) requestToken, oauthVerifier);
 
-            request.getSession().setAttribute(TOKEN_ACCESS, accessToken);
-            request.getSession().removeAttribute(TOKEN_REQUEST);
+            request.getSession().setAttribute(IWikipediaFacade.TOKEN_ACCESS, accessToken);
+            request.getSession().removeAttribute(IWikipediaFacade.TOKEN_REQUEST);
         }
 
         return new ModelAndView("redirect:/index.html");

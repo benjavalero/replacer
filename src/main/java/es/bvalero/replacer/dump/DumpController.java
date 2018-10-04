@@ -2,7 +2,6 @@ package es.bvalero.replacer.dump;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -20,8 +19,14 @@ public class DumpController {
     }
 
     @RequestMapping("/dump/run")
-    public boolean processLatestDumpFileManually(@RequestParam("force") boolean forceProcessArticles) {
-        dumpManager.processLatestDumpFile(true, forceProcessArticles);
+    public boolean processLatestDumpFileManually() {
+        dumpManager.processLatestDumpFile(true, false);
+        return true;
+    }
+
+    @RequestMapping("/dump/run/force")
+    public boolean processLatestDumpFileManuallyForced() {
+        dumpManager.processLatestDumpFile(true, true);
         return true;
     }
 

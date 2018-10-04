@@ -21,7 +21,7 @@ class WikipediaFacadeMock implements IWikipediaFacade {
 
     @Override
     public OAuth10aService getOAuthService() {
-        session.setAttribute("accessToken", "");
+        session.setAttribute(IWikipediaFacade.TOKEN_ACCESS, "");
         return null;
     }
 

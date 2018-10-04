@@ -18,12 +18,15 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Find the Wikipedia dumps in the filesystem where the application runs.
@@ -34,8 +37,16 @@ import java.util.Collections;
 @Component
 class DumpManager {
 
+    static final String DUMP_NAME_FORMAT = "eswiki-%s-pages-articles.xml.bz2";
     @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpManager.class);
+    // Rough amount of articles to be read
+    private static final long NUM_ARTICLES = 3666708L;
+    @RegExp
+    private static final String REGEX_DUMP_FOLDER = "\\d+";
+    private static final Pattern PATTERN_DUMP_FOLDER = Pattern.compile(REGEX_DUMP_FOLDER);
+    private static final String PERCENTAGE_FORMAT = "%.2f";
+    private static final String DURATION_FORMAT = "d:HH:mm:ss";
 
     @Value("${replacer.dump.folder.path:}")
     private String dumpFolderPath;
@@ -46,9 +57,9 @@ class DumpManager {
     private DumpHandler dumpHandler = new DumpHandler(dumpArticleProcessor);
 
     // Statistics
-    private String latestDumpFile = "-";
-    private boolean running = false;
-    private long numArticlesEstimation = 3666708; // Rough amount of articles to be read
+    private Path latestDumpFile;
+    private boolean running;
+    private long numArticlesEstimation = NUM_ARTICLES;
 
     @TestOnly
     void setDumpFolderPath(String dumpFolderPath) {
@@ -56,18 +67,18 @@ class DumpManager {
     }
 
     @TestOnly
-    String getLatestDumpFile() {
+    Path getLatestDumpFile() {
         return latestDumpFile;
     }
 
     @TestOnly
-    void setLatestDumpFile(String latestDumpFile) {
+    void setLatestDumpFile(Path latestDumpFile) {
         this.latestDumpFile = latestDumpFile;
     }
 
     @TestOnly
     void setRunning() {
-        this.running = true;
+        running = true;
     }
 
     @TestOnly
@@ -80,42 +91,44 @@ class DumpManager {
     /**
      * @return The path of latest available dump file from Wikipedia.
      */
-    File findLatestDumpFile() throws DumpException {
+    Path findLatestDumpFile() throws DumpException {
         // Find the file in the latest folder
         // It may be possible that a folder does not contain the file because it is not processed yet
-        File dumpFolderFile = new File(dumpFolderPath);
-        File[] dumpSubFolders = dumpFolderFile.listFiles((dir, name) -> {
-            // The sub-folders names are all numbers, e. g. 20170820
-            @RegExp String subFolderRegex = "\\d+";
-            return name.matches(subFolderRegex);
-        });
+        Path dumpFolderFile = Paths.get(dumpFolderPath);
+        try {
+            List<Path> dumpSubFolders = Files.list(dumpFolderFile)
+                    .filter(folder -> PATTERN_DUMP_FOLDER.matcher(folder.getFileName().toString()).matches())
+                    .sorted(Collections.reverseOrder())
+                    .collect(Collectors.toList());
 
-        if (dumpSubFolders == null || dumpSubFolders.length == 0) {
-            throw new DumpException("Sub-folders not found in dump path: " + dumpFolderPath);
-        }
-
-        Arrays.sort(dumpSubFolders, Collections.reverseOrder());
-        // Try with all the folders starting for the latest
-        for (File dumpSubFolder : dumpSubFolders) {
-            String dumpFileName = "eswiki-" + dumpSubFolder.getName() + "-pages-articles.xml.bz2";
-            File dumpFile = new File(dumpSubFolder, dumpFileName);
-            if (dumpFile.exists()) {
-                return dumpFile;
+            if (dumpSubFolders.isEmpty()) {
+                throw new DumpException("Sub-folders not found in dump path");
             }
-        }
 
-        // If we get here no dump file has been found
-        throw new DumpException("No dump file has been found in dump path: " + dumpFolderPath);
+            // Try with all the folders starting for the latest
+            for (Path dumpSubFolder : dumpSubFolders) {
+                String dumpFileName = String.format(DUMP_NAME_FORMAT, dumpSubFolder.getFileName());
+                Path dumpFile = dumpSubFolder.resolve(dumpFileName);
+                if (Files.exists(dumpFile)) {
+                    return dumpFile;
+                }
+            }
+
+            // If we get here no dump file has been found
+            throw new DumpException("No dump file has been found in dump path");
+        } catch (IOException e) {
+            throw new DumpException("Error listing files in dump path", e);
+        }
     }
 
     /* PARSE DUMP FILE */
 
     @TestOnly
-    void parseDumpFile(File dumpFile) throws DumpException {
+    void parseDumpFile(Path dumpFile) throws DumpException {
         parseDumpFile(dumpFile, false);
     }
 
-    private void parseDumpFile(File dumpFile, boolean forceProcess) throws DumpException {
+    private void parseDumpFile(Path dumpFile, boolean forceProcess) throws DumpException {
         LOGGER.info("Start parsing dump file: {}...", dumpFile);
 
         // Check just in case that the handler is not running
@@ -124,22 +137,22 @@ class DumpManager {
             return;
         }
 
-        try (InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile))) {
+        try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile))) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
             SAXParser saxParser = factory.newSAXParser();
 
             // Start statistics
             running = true;
-            this.latestDumpFile = dumpFile.getPath();
+            latestDumpFile = dumpFile;
 
             // Parse with the Dump Handler
             dumpHandler = createDumpHandler(forceProcess);
             saxParser.parse(xmlInput, dumpHandler);
         } catch (IOException e) {
-            throw new DumpException("Dump file not valid: " + dumpFile, e);
+            throw new DumpException("Dump file not valid", e);
         } catch (ParserConfigurationException | SAXException e) {
-            throw new DumpException("SAX Error parsing dump file: " + dumpFile, e);
+            throw new DumpException("SAX Error parsing dump file", e);
         }
 
         LOGGER.info("Finish parsing dump file: {}", dumpFile);
@@ -175,16 +188,16 @@ class DumpManager {
                 forceProcessDump, forceProcessDumpArticles);
         try {
             // Find the latest dump file
-            File latestDumpFile = findLatestDumpFile();
+            Path latestDumpFileFound = findLatestDumpFile();
 
             // We check against the latest dump file processed
-            if (!latestDumpFile.getPath().equals(this.latestDumpFile) || forceProcessDump) {
+            if (!latestDumpFileFound.equals(latestDumpFile) || forceProcessDump) {
                 // Start process
-                parseDumpFile(findLatestDumpFile(), forceProcessDumpArticles);
+                parseDumpFile(latestDumpFileFound, forceProcessDumpArticles);
 
                 // Once finished we mark the file as processed
-                this.running = false;
-                this.numArticlesEstimation = dumpHandler.getNumArticlesRead();
+                running = false;
+                numArticlesEstimation = dumpHandler.getNumArticlesRead();
             } else {
                 LOGGER.info("Latest dump file found already indexed");
             }
@@ -196,7 +209,7 @@ class DumpManager {
     DumpProcessStatus getProcessStatus() {
         // In case the dump contains more articles than estimated
         if (dumpHandler.getNumArticlesRead() > numArticlesEstimation) {
-            numArticlesEstimation += 1000;
+            numArticlesEstimation++;
         }
 
         return DumpProcessStatus.builder()
@@ -204,10 +217,11 @@ class DumpManager {
                 .setForceProcess(dumpHandler.isForceProcess())
                 .setNumArticlesRead(dumpHandler.getNumArticlesRead())
                 .setNumArticlesProcessed(dumpHandler.getNumArticlesProcessed())
-                .setDumpFileName(new File(latestDumpFile).getName())
+                .setDumpFileName(latestDumpFile == null ? "-" : latestDumpFile.getFileName().toString())
                 .setAverage(getAverageTimePerArticle())
                 .setTime(getTime())
-                .setProgress(String.format("%.2f", dumpHandler.getNumArticlesRead() * 100.0 / numArticlesEstimation))
+                .setProgress(String.format(PERCENTAGE_FORMAT,
+                        (double) dumpHandler.getNumArticlesRead() * 100.0 / (double) numArticlesEstimation))
                 .build();
     }
 
@@ -227,8 +241,8 @@ class DumpManager {
         // The final process time if it is not running, and the current process time if it is still running.
         return DurationFormatUtils.formatDuration(running
                         ? (numArticlesEstimation - dumpHandler.getNumArticlesRead()) * getAverageTimePerArticle() // ETA
-                        : (dumpHandler.getEndTime() == 0 ? 0L : dumpHandler.getEndTime() - dumpHandler.getStartTime()), // Total time
-                "d:HH:mm:ss", true);
+                        : (dumpHandler.getEndTime() == 0L ? 0L : dumpHandler.getEndTime() - dumpHandler.getStartTime()), // Total time
+                DURATION_FORMAT, true);
     }
 
 }
