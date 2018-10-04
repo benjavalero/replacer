@@ -1,6 +1,7 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.persistence;
 
 import org.hibernate.annotations.Immutable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.util.Objects;
 @Entity
 @Immutable
 @Table(name = "potentialerror", uniqueConstraints = @UniqueConstraint(columnNames = {"articleid", "type", "text"}))
-public class PotentialError implements Serializable {
+public class Replacement implements Serializable {
     // TODO Rename table
 
     @Id
@@ -25,24 +26,25 @@ public class PotentialError implements Serializable {
 
     @Column(name = "type", nullable = false, length = 25)
     @Enumerated(EnumType.STRING)
-    private PotentialErrorType type;
+    private ReplacementType type;
 
     // TODO Add the unique constraint to the MariaDB database and redo the indexes
     @Column(name = "text", nullable = false, length = 30)
     private String text;
 
-    public PotentialError() {
+    @SuppressWarnings("unused")
+    public Replacement() {
         // Needed by JPA
     }
 
-    private PotentialError(Article article, PotentialErrorType type, String text) {
+    private Replacement(Article article, ReplacementType type, String text) {
         this.article = article;
         this.type = type;
         this.text = text;
     }
 
-    public static PotentialError.PotentialErrorBuilder builder() {
-        return new PotentialError.PotentialErrorBuilder();
+    public static Replacement.ReplacementBuilder builder() {
+        return new Replacement.ReplacementBuilder();
     }
 
     public String getText() {
@@ -50,10 +52,10 @@ public class PotentialError implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PotentialError that = (PotentialError) o;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Replacement that = (Replacement) obj;
         return Objects.equals(article, that.article) &&
                 type == that.type &&
                 Objects.equals(text, that.text);
@@ -64,37 +66,39 @@ public class PotentialError implements Serializable {
         return Objects.hash(article, type, text);
     }
 
+    @NonNls
     @Override
     public String toString() {
-        return "PotentialError{" +
-                "article=" + article +
+        return "Replacement{" +
+                "id=" + id +
+                ", article=" + article +
                 ", type=" + type +
                 ", text='" + text + '\'' +
                 '}';
     }
 
-    public static class PotentialErrorBuilder {
+    public static class ReplacementBuilder {
         private Article article;
-        private PotentialErrorType type;
+        private ReplacementType type;
         private String text;
 
-        public PotentialError.PotentialErrorBuilder setArticle(Article article) {
+        public Replacement.ReplacementBuilder setArticle(Article article) {
             this.article = article;
             return this;
         }
 
-        public PotentialError.PotentialErrorBuilder setType(PotentialErrorType type) {
+        public Replacement.ReplacementBuilder setType(ReplacementType type) {
             this.type = type;
             return this;
         }
 
-        public PotentialError.PotentialErrorBuilder setText(String text) {
+        public Replacement.ReplacementBuilder setText(String text) {
             this.text = text;
             return this;
         }
 
-        public PotentialError build() {
-            return new PotentialError(article, type, text);
+        public Replacement build() {
+            return new Replacement(article, type, text);
         }
 
     }

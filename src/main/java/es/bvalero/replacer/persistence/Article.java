@@ -1,6 +1,7 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.persistence;
 
 import org.hibernate.annotations.Immutable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +34,7 @@ public class Article implements Serializable {
 
     // Removed relationship to improve performance on bulk indexing
     // @OneToMany(mappedBy = "article", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    // private List<PotentialError> potentialErrors = new ArrayList<>();
+    // private List<Replacement> replacements = new ArrayList<>();
 
     public Article() {
         // Needed by JPA
@@ -79,6 +80,7 @@ public class Article implements Serializable {
         return Objects.hash(id);
     }
 
+    @NonNls
     @Override
     public String toString() {
         return "Article{" +

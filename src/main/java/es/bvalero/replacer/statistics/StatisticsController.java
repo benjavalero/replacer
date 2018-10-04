@@ -1,8 +1,9 @@
 package es.bvalero.replacer.statistics;
 
-import es.bvalero.replacer.article.ArticleRepository;
 import es.bvalero.replacer.article.MisspellingCount;
-import es.bvalero.replacer.article.PotentialErrorRepository;
+import es.bvalero.replacer.persistence.ArticleRepository;
+import es.bvalero.replacer.persistence.ReplacementRepository;
+import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,23 +15,24 @@ import java.util.List;
 @RestController
 public class StatisticsController {
 
+    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(StatisticsController.class);
 
     @Autowired
-    private PotentialErrorRepository potentialErrorRepository;
+    private ReplacementRepository replacementRepository;
 
     @Autowired
     private ArticleRepository articleRepository;
 
-    @RequestMapping(value = "/statistics/count/potentialErrors")
+    @RequestMapping("/statistics/count/replacements")
     Long countPotentialErrors() {
         LOGGER.info("Count potential errors...");
-        Long count = potentialErrorRepository.count();
+        Long count = replacementRepository.count();
         LOGGER.info("Potential errors found: {}", count);
         return count;
     }
 
-    @RequestMapping(value = "/statistics/count/articles")
+    @RequestMapping("/statistics/count/articles")
     Long countArticlesNotReviewed() {
         LOGGER.info("Count articles not reviewed...");
         Long count = articleRepository.countByReviewDateNull();
@@ -38,7 +40,7 @@ public class StatisticsController {
         return count;
     }
 
-    @RequestMapping(value = "/statistics/count/articles-reviewed")
+    @RequestMapping("/statistics/count/articles-reviewed")
     Long countArticlesReviewed() {
         LOGGER.info("Count articles reviewed...");
         Long count = articleRepository.countByReviewDateNotNull();
@@ -46,10 +48,10 @@ public class StatisticsController {
         return count;
     }
 
-    @RequestMapping(value = "/statistics/count/misspellings")
+    @RequestMapping("/statistics/count/misspellings")
     List<MisspellingCount> listMisspellings() {
         LOGGER.info("Listing misspellings...");
-        List<MisspellingCount> list = potentialErrorRepository.findMisspellingsGrouped();
+        List<MisspellingCount> list = replacementRepository.findMisspellingsGrouped();
         LOGGER.info("Misspelling list found: {}", list.size());
         return list;
     }

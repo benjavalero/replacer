@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.persistence;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,13 +12,13 @@ import java.util.Arrays;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class PotentialErrorRepositoryTest {
+public class ReplacementRepositoryTest {
 
     @Autowired
     private ArticleRepository articleRepository;
 
     @Autowired
-    private PotentialErrorRepository potentialErrorRepository;
+    private ReplacementRepository replacementRepository;
 
     @Test
     public void testFindMisspellingsGrouped() {
@@ -27,29 +27,29 @@ public class PotentialErrorRepositoryTest {
         Article article3 = new Article.ArticleBuilder().setId(3).setTitle("").build();
         articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
-        PotentialError error1 = new PotentialError.PotentialErrorBuilder()
+        Replacement error1 = new Replacement.ReplacementBuilder()
                 .setArticle(article1)
-                .setType(PotentialErrorType.MISSPELLING)
+                .setType(ReplacementType.MISSPELLING)
                 .setText("aber")
                 .build();
-        PotentialError error2 = new PotentialError.PotentialErrorBuilder()
+        Replacement error2 = new Replacement.ReplacementBuilder()
                 .setArticle(article2)
-                .setType(PotentialErrorType.MISSPELLING)
+                .setType(ReplacementType.MISSPELLING)
                 .setText("aber")
                 .build();
-        PotentialError error3 = new PotentialError.PotentialErrorBuilder()
+        Replacement error3 = new Replacement.ReplacementBuilder()
                 .setArticle(article2)
-                .setType(PotentialErrorType.MISSPELLING)
+                .setType(ReplacementType.MISSPELLING)
                 .setText("madrid")
                 .build();
-        PotentialError error4 = new PotentialError.PotentialErrorBuilder()
+        Replacement error4 = new Replacement.ReplacementBuilder()
                 .setArticle(article3)
-                .setType(PotentialErrorType.MISSPELLING)
+                .setType(ReplacementType.MISSPELLING)
                 .setText("paris")
                 .build();
-        potentialErrorRepository.saveAll(Arrays.asList(error1, error2, error3, error4));
+        replacementRepository.saveAll(Arrays.asList(error1, error2, error3, error4));
 
-        Assert.assertEquals(3, potentialErrorRepository.findMisspellingsGrouped().size());
+        Assert.assertEquals(3L, (long) replacementRepository.findMisspellingsGrouped().size());
     }
 
     @Test
@@ -59,28 +59,28 @@ public class PotentialErrorRepositoryTest {
         Article article3 = new Article.ArticleBuilder().setId(3).setTitle("").build();
         articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
-        PotentialError error1 = new PotentialError.PotentialErrorBuilder()
+        Replacement error1 = new Replacement.ReplacementBuilder()
                 .setArticle(article1)
-                .setType(PotentialErrorType.MISSPELLING)
+                .setType(ReplacementType.MISSPELLING)
                 .setText("aber")
                 .build();
-        PotentialError error2 = new PotentialError.PotentialErrorBuilder()
+        Replacement error2 = new Replacement.ReplacementBuilder()
                 .setArticle(article2)
-                .setType(PotentialErrorType.MISSPELLING)
+                .setType(ReplacementType.MISSPELLING)
                 .setText("aber")
                 .build();
-        PotentialError error3 = new PotentialError.PotentialErrorBuilder()
+        Replacement error3 = new Replacement.ReplacementBuilder()
                 .setArticle(article3)
-                .setType(PotentialErrorType.MISSPELLING)
+                .setType(ReplacementType.MISSPELLING)
                 .setText("aber")
                 .build();
-        potentialErrorRepository.saveAll(Arrays.asList(error1, error2, error3));
+        replacementRepository.saveAll(Arrays.asList(error1, error2, error3));
 
-        Assert.assertTrue(potentialErrorRepository
+        Assert.assertTrue(replacementRepository
                 .findRandomByWord("xxx", PageRequest.of(0, 1))
                 .isEmpty());
 
-        Assert.assertEquals(3, potentialErrorRepository
+        Assert.assertEquals(3L, (long) replacementRepository
                 .findRandomByWord("aber", PageRequest.of(0, 3))
                 .size());
     }

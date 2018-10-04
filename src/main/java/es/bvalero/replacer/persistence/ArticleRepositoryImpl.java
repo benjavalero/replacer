@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.persistence;
 
 import org.springframework.transaction.annotation.Transactional;
 

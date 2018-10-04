@@ -2,6 +2,10 @@ package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.article.exception.ExceptionMatchFinder;
 import es.bvalero.replacer.article.finder.PotentialErrorFinder;
+import es.bvalero.replacer.persistence.Article;
+import es.bvalero.replacer.persistence.ArticleRepository;
+import es.bvalero.replacer.persistence.Replacement;
+import es.bvalero.replacer.persistence.ReplacementRepository;
 import es.bvalero.replacer.utils.RegexMatch;
 import es.bvalero.replacer.utils.StringUtils;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
@@ -35,7 +39,7 @@ public class ArticleService {
     private ArticleRepository articleRepository;
 
     @Autowired
-    private PotentialErrorRepository potentialErrorRepository;
+    private ReplacementRepository replacementRepository;
 
     @Autowired
     private IWikipediaFacade wikipediaFacade;
@@ -105,7 +109,7 @@ public class ArticleService {
     ArticleData findRandomArticleWithPotentialErrors(@NotNull String word)
             throws UnfoundArticleException, InvalidArticleException {
         // Find random article in Replacer database (the result can be empty)
-        List<Article> randomArticles = potentialErrorRepository
+        List<Article> randomArticles = replacementRepository
                 .findRandomByWord(word, PageRequest.of(0, 1));
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
@@ -145,9 +149,9 @@ public class ArticleService {
         // If not we delete the potential error from the article but let the article
         if (!wordFound) {
             LOGGER.warn("Word {} not found as a potential error for article: {}", word, randomArticle.getTitle());
-            for (PotentialError potentialError : potentialErrorRepository.findByArticle(randomArticle)) {
-                if (potentialError.getText().equals(word)) {
-                    potentialErrorRepository.delete(potentialError);
+            for (Replacement replacement : replacementRepository.findByArticle(randomArticle)) {
+                if (replacement.getText().equals(word)) {
+                    replacementRepository.delete(replacement);
                 }
             }
 
@@ -372,7 +376,7 @@ public class ArticleService {
     private void markArticleAsReviewed(@NotNull ArticleData article) {
         articleRepository.findById(article.getId()).ifPresent(dbArticle -> {
             Article articleToSave = dbArticle.withReviewDate(LocalDateTime.now());
-            potentialErrorRepository.deleteInBatch(potentialErrorRepository.findByArticle(articleToSave));
+            replacementRepository.deleteInBatch(replacementRepository.findByArticle(articleToSave));
             articleRepository.save(articleToSave);
         });
     }

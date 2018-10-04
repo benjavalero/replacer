@@ -1,6 +1,11 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.*;
+import es.bvalero.replacer.article.ArticleReplacement;
+import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.persistence.Article;
+import es.bvalero.replacer.persistence.ArticleRepository;
+import es.bvalero.replacer.persistence.Replacement;
+import es.bvalero.replacer.persistence.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import org.jetbrains.annotations.NonNls;
@@ -33,14 +38,14 @@ class DumpArticleProcessor {
     // Save articles in batches to improve performance
     private final Collection<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
     private final Collection<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
-    private final Collection<PotentialError> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
-    private final Collection<PotentialError> replacementsToAdd = new ArrayList<>(CACHE_SIZE);
+    private final Collection<Replacement> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
+    private final Collection<Replacement> replacementsToAdd = new ArrayList<>(CACHE_SIZE);
 
     @Autowired
     private ArticleRepository articleRepository;
 
     @Autowired
-    private PotentialErrorRepository potentialErrorRepository;
+    private ReplacementRepository replacementRepository;
 
     @Autowired
     private ArticleService articleService;
@@ -118,13 +123,13 @@ class DumpArticleProcessor {
         if (articleReplacements.isEmpty()) {
             LOGGER.debug("No errors found in article: {}", dumpArticle.getTitle());
             dbArticle.ifPresent(article -> {
-                potentialErrorRepository.deleteByArticle(article); // No need to delete in batch
+                replacementRepository.deleteByArticle(article); // No need to delete in batch
                 articlesToDelete.add(article);
             });
         } else if (dbArticle.isPresent()) {
             // Compare the new replacements with the existing ones
-            Collection<PotentialError> newPotentialErrors = new HashSet<>(articleReplacements.size());
-            articleReplacements.forEach(replacement -> newPotentialErrors.add(PotentialError.builder()
+            Collection<Replacement> newReplacements = new HashSet<>(articleReplacements.size());
+            articleReplacements.forEach(replacement -> newReplacements.add(Replacement.builder()
                     .setArticle(dbArticle.get())
                     .setType(replacement.getType())
                     .setText(replacement.getSubtype())
@@ -134,19 +139,19 @@ class DumpArticleProcessor {
             boolean modified = false;
 
             // Replacements to remove from DB
-            List<PotentialError> oldPotentialErrors = potentialErrorRepository.findByArticle(dbArticle.get());
+            List<Replacement> oldReplacements = replacementRepository.findByArticle(dbArticle.get());
 
-            for (PotentialError oldPotentialError : oldPotentialErrors) {
-                if (!newPotentialErrors.contains(oldPotentialError)) {
-                    replacementsToDelete.add(oldPotentialError);
+            for (Replacement oldReplacement : oldReplacements) {
+                if (!newReplacements.contains(oldReplacement)) {
+                    replacementsToDelete.add(oldReplacement);
                     modified = true;
                 }
             }
 
             // Replacements to add to DB
-            for (PotentialError newPotentialError : newPotentialErrors) {
-                if (!oldPotentialErrors.contains(newPotentialError)) {
-                    replacementsToAdd.add(newPotentialError);
+            for (Replacement newReplacement : newReplacements) {
+                if (!oldReplacements.contains(newReplacement)) {
+                    replacementsToAdd.add(newReplacement);
                     modified = true;
                 }
             }
@@ -167,7 +172,7 @@ class DumpArticleProcessor {
             articlesToSave.add(newArticle);
 
             // Add replacements in DB
-            articleReplacements.forEach(replacement -> replacementsToAdd.add(PotentialError.builder()
+            articleReplacements.forEach(replacement -> replacementsToAdd.add(Replacement.builder()
                     .setArticle(newArticle)
                     .setType(replacement.getType())
                     .setText(replacement.getSubtype())
@@ -180,7 +185,7 @@ class DumpArticleProcessor {
     private void flushModifications() {
         // There is a FK Replacement-Article, we need to remove the replacements first.
         if (!replacementsToDelete.isEmpty()) {
-            potentialErrorRepository.deleteInBatch(replacementsToDelete);
+            replacementRepository.deleteInBatch(replacementsToDelete);
             replacementsToDelete.clear();
         }
 
@@ -195,13 +200,13 @@ class DumpArticleProcessor {
         }
 
         if (!replacementsToAdd.isEmpty()) {
-            potentialErrorRepository.saveAll(replacementsToAdd);
+            replacementRepository.saveAll(replacementsToAdd);
             replacementsToAdd.clear();
         }
 
         // Flush and clear to avoid memory leaks (we are performing millions of updates)
         articleRepository.flush();
-        potentialErrorRepository.flush();
+        replacementRepository.flush();
         articleRepository.clear(); // This clears all the EntityManager
     }
 

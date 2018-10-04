@@ -3,7 +3,7 @@ package es.bvalero.replacer.article.finder;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.article.ArticleReplacement;
-import es.bvalero.replacer.article.PotentialErrorType;
+import es.bvalero.replacer.persistence.ReplacementType;
 import es.bvalero.replacer.misspelling.Misspelling;
 import es.bvalero.replacer.misspelling.MisspellingManager;
 import org.junit.Assert;
@@ -59,21 +59,21 @@ public class MisspellingFinderTest {
         ArticleReplacement result1 = result.get(0);
         Assert.assertEquals("vonito", result1.getOriginalText());
         Assert.assertEquals(3, result1.getPosition());
-        Assert.assertEquals(PotentialErrorType.MISSPELLING, result1.getType());
+        Assert.assertEquals(ReplacementType.MISSPELLING, result1.getType());
         Assert.assertEquals("vonito", result1.getSubtype());
         Assert.assertEquals("bonito", result1.getProposedFixes().get(0));
 
         ArticleReplacement result2 = result.get(1);
         Assert.assertEquals("Exemplo", result2.getOriginalText());
         Assert.assertEquals(10, result2.getPosition());
-        Assert.assertEquals(PotentialErrorType.MISSPELLING, result2.getType());
+        Assert.assertEquals(ReplacementType.MISSPELLING, result2.getType());
         Assert.assertEquals("exemplo", result2.getSubtype());
         Assert.assertEquals("Ejemplo", result2.getProposedFixes().get(0));
 
         ArticleReplacement result3 = result.get(2);
         Assert.assertEquals("exemplo", result3.getOriginalText());
         Assert.assertEquals(18, result3.getPosition());
-        Assert.assertEquals(PotentialErrorType.MISSPELLING, result3.getType());
+        Assert.assertEquals(ReplacementType.MISSPELLING, result3.getType());
         Assert.assertEquals("exemplo", result3.getSubtype());
         Assert.assertEquals("ejemplo", result3.getProposedFixes().get(0));
     }

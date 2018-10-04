@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     reqwest({
-        url: 'statistics/count/potentialErrors',
+        url: 'statistics/count/replacements',
         type: 'json',
         success: function(response) {
-            document.querySelector('#count-potential-errors').textContent = response;
+            document.querySelector('#count-replacements').textContent = response;
         }
     });
 

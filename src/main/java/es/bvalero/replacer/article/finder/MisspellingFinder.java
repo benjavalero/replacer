@@ -1,7 +1,7 @@
 package es.bvalero.replacer.article.finder;
 
 import es.bvalero.replacer.article.ArticleReplacement;
-import es.bvalero.replacer.article.PotentialErrorType;
+import es.bvalero.replacer.persistence.ReplacementType;
 import es.bvalero.replacer.misspelling.Misspelling;
 import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.utils.RegExUtils;
@@ -48,7 +48,7 @@ public class MisspellingFinder implements PotentialErrorFinder {
                     ArticleReplacement replacement = new ArticleReplacement();
                     replacement.setPosition(misspellingMatch.getPosition());
                     replacement.setOriginalText(originalText);
-                    replacement.setType(PotentialErrorType.MISSPELLING);
+                    replacement.setType(ReplacementType.MISSPELLING);
                     replacement.setSubtype(wordMisspelling.getWord());
                     replacement.setComment(wordMisspelling.getComment());
 
