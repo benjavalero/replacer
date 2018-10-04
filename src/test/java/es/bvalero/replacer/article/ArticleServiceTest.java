@@ -2,6 +2,10 @@ package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.article.exception.ExceptionMatchFinder;
 import es.bvalero.replacer.article.finder.PotentialErrorFinder;
+import es.bvalero.replacer.persistence.Article;
+import es.bvalero.replacer.persistence.ArticleRepository;
+import es.bvalero.replacer.persistence.ReplacementRepository;
+import es.bvalero.replacer.persistence.ReplacementType;
 import es.bvalero.replacer.utils.RegexMatch;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -22,7 +26,7 @@ public class ArticleServiceTest {
     private ArticleRepository articleRepository;
 
     @Mock
-    private PotentialErrorRepository potentialErrorRepository;
+    private ReplacementRepository replacementRepository;
 
     @Mock
     private IWikipediaFacade wikipediaFacade;
@@ -49,7 +53,7 @@ public class ArticleServiceTest {
         String title = "España";
         String text = "Un hejemplo con muxos herrores y <XML>.";
 
-        Article randomArticle = new Article.ArticleBuilder().setId(id).setTitle(title).build();
+        Article randomArticle = Article.builder().setId(id).setTitle(title).build();
         Mockito.when(articleRepository.findRandomArticleNotReviewed(Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(randomArticle));
 
@@ -64,11 +68,11 @@ public class ArticleServiceTest {
         // Potential error matches
         PotentialErrorFinder potentialErrorFinder = Mockito.mock(PotentialErrorFinder.class);
         ArticleReplacement replacement1 = new ArticleReplacement(3, "hejemplo");
-        replacement1.setType(PotentialErrorType.MISSPELLING);
+        replacement1.setType(ReplacementType.MISSPELLING);
         replacement1.setComment("ejemplo");
         ArticleReplacement replacement2 = new ArticleReplacement(16, "muxos");
         ArticleReplacement replacement3 = new ArticleReplacement(22, "herrores");
-        replacement3.setType(PotentialErrorType.MISSPELLING);
+        replacement3.setType(ReplacementType.MISSPELLING);
         replacement3.setComment("errores");
         Mockito.when(potentialErrorFinder.findPotentialErrors(Mockito.anyString())).thenReturn(Arrays.asList(replacement1, replacement2, replacement3));
         Mockito.when(potentialErrorFinders.iterator()).thenReturn(Collections.singletonList(potentialErrorFinder).iterator());
@@ -102,8 +106,8 @@ public class ArticleServiceTest {
         String title = "España";
         String text = "Un hejemplo\n\nX\n\nOtro hejemplo.";
 
-        Article randomArticle = new Article.ArticleBuilder().setId(id).setTitle(title).build();
-        Mockito.when(potentialErrorRepository
+        Article randomArticle = Article.builder().setId(id).setTitle(title).build();
+        Mockito.when(replacementRepository
                 .findRandomByWord(Mockito.anyString(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(randomArticle));
 
@@ -119,9 +123,9 @@ public class ArticleServiceTest {
         ArticleReplacement replacement1 = new ArticleReplacement(3, "hejemplo");
         ArticleReplacement replacement2 = new ArticleReplacement(21, "hejemplo");
         replacement1.setComment("ejemplo");
-        replacement1.setType(PotentialErrorType.MISSPELLING);
+        replacement1.setType(ReplacementType.MISSPELLING);
         replacement2.setComment("ejemplo");
-        replacement2.setType(PotentialErrorType.MISSPELLING);
+        replacement2.setType(ReplacementType.MISSPELLING);
         Mockito.when(potentialErrorFinder.findPotentialErrors(Mockito.anyString())).thenReturn(Arrays.asList(replacement1, replacement2));
         Mockito.when(potentialErrorFinders.iterator()).thenReturn(Collections.singletonList(potentialErrorFinder).iterator());
 
@@ -139,7 +143,7 @@ public class ArticleServiceTest {
     public void testSaveArticleWithoutFixes() throws WikipediaException {
         Map<Integer, ArticleReplacement> articleFixes = new HashMap<>();
         ArticleData article = new ArticleData(1, "", "", articleFixes);
-        Article articleDb = new Article.ArticleBuilder().setId(1).setTitle("").build();
+        Article articleDb = Article.builder().setId(1).setTitle("").build();
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(articleDb));
 
         articleService.saveArticleChanges(article);
@@ -154,7 +158,7 @@ public class ArticleServiceTest {
         String title = "España";
         String text = "Un hejemplo\n\nX\n\nOtro hejemplo.";
 
-        Article articleDb = new Article.ArticleBuilder().setId(id).setTitle(title).build();
+        Article articleDb = Article.builder().setId(id).setTitle(title).build();
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(articleDb));
 
         Map<Integer, ArticleReplacement> articleFixes = new HashMap<>();

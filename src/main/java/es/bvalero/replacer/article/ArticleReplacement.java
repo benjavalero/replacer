@@ -1,5 +1,6 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.persistence.ReplacementType;
 import es.bvalero.replacer.utils.RegexMatch;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public class ArticleReplacement extends RegexMatch {
 
-    private PotentialErrorType type;
+    private ReplacementType type;
     private String subtype;
     private List<String> proposedFixes = new ArrayList<>();
     private String comment;
@@ -29,11 +30,11 @@ public class ArticleReplacement extends RegexMatch {
         super(regexMatch.getPosition(), regexMatch.getOriginalText());
     }
 
-    public PotentialErrorType getType() {
+    public ReplacementType getType() {
         return type;
     }
 
-    public void setType(PotentialErrorType type) {
+    public void setType(ReplacementType type) {
         this.type = type;
     }
 

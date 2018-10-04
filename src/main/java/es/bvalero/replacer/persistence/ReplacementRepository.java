@@ -1,5 +1,6 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.persistence;
 
+import es.bvalero.replacer.article.MisspellingCount;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,16 +15,16 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public interface PotentialErrorRepository extends JpaRepository<PotentialError, Long> {
+public interface ReplacementRepository extends JpaRepository<Replacement, Long> {
 
-    List<PotentialError> findByArticle(Article article);
+    List<Replacement> findByArticle(Article article);
 
     void deleteByArticle(Article article);
 
-    @Query("SELECT new es.bvalero.replacer.article.MisspellingCount(text, COUNT(*)) FROM PotentialError WHERE type = 'MISSPELLING' GROUP BY text")
+    @Query("SELECT new es.bvalero.replacer.article.MisspellingCount(text, COUNT(*)) FROM Replacement WHERE type = 'MISSPELLING' GROUP BY text")
     List<MisspellingCount> findMisspellingsGrouped();
 
-    @Query(value = "SELECT pe.article FROM PotentialError pe WHERE pe.text = :word ORDER BY RAND()")
+    @Query("SELECT pe.article FROM Replacement pe WHERE pe.text = :word ORDER BY RAND()")
     List<Article> findRandomByWord(@Param("word") String word, Pageable pageable);
 
 }
