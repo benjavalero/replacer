@@ -3,6 +3,7 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.article.*;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
+import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,19 +21,20 @@ import java.util.*;
 @Component
 class DumpArticleProcessor {
 
+    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpArticleProcessor.class);
 
-    private static final Set<WikipediaNamespace> PROCESSABLE_NAMESPACES =
-            new HashSet<>(Arrays.asList(WikipediaNamespace.ARTICLE, WikipediaNamespace.ANNEX));
+    private static final Collection<WikipediaNamespace> PROCESSABLE_NAMESPACES =
+            EnumSet.of(WikipediaNamespace.ARTICLE, WikipediaNamespace.ANNEX);
 
     private static final int CACHE_SIZE = 1000;
     // Load a bunch of articles from DB to improve performance
     private final Map<Integer, Article> articlesDb = new HashMap<>(CACHE_SIZE);
     // Save articles in batches to improve performance
-    private final List<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
-    private final List<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
-    private final List<PotentialError> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
-    private final List<PotentialError> replacementsToAdd = new ArrayList<>(CACHE_SIZE);
+    private final Collection<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
+    private final Collection<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
+    private final Collection<PotentialError> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
+    private final Collection<PotentialError> replacementsToAdd = new ArrayList<>(CACHE_SIZE);
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -43,7 +45,7 @@ class DumpArticleProcessor {
     @Autowired
     private ArticleService articleService;
 
-    private int maxCachedId = 0;
+    private int maxCachedId;
 
     /**
      * Process a dump article: find the potential errors and add them to the database.
@@ -110,6 +112,7 @@ class DumpArticleProcessor {
         }
 
         // TODO Create interface for this
+        // Find replacements
         List<ArticleReplacement> articleReplacements = articleService.findPotentialErrorsIgnoringExceptions(dumpArticle.getContent());
 
         if (articleReplacements.isEmpty()) {
@@ -120,15 +123,12 @@ class DumpArticleProcessor {
             });
         } else if (dbArticle.isPresent()) {
             // Compare the new replacements with the existing ones
-            Set<PotentialError> newPotentialErrors = new HashSet<>(articleReplacements.size());
-            for (ArticleReplacement articleReplacement : articleReplacements) {
-                PotentialError potentialError = new PotentialError.PotentialErrorBuilder()
-                        .setArticle(dbArticle.get())
-                        .setType(articleReplacement.getType())
-                        .setText(articleReplacement.getSubtype())
-                        .createPotentialError();
-                newPotentialErrors.add(potentialError);
-            }
+            Collection<PotentialError> newPotentialErrors = new HashSet<>(articleReplacements.size());
+            articleReplacements.forEach(replacement -> newPotentialErrors.add(PotentialError.builder()
+                    .setArticle(dbArticle.get())
+                    .setType(replacement.getType())
+                    .setText(replacement.getSubtype())
+                    .build()));
 
             // To know if any real has been changed in the replacements in DB
             boolean modified = false;
@@ -167,14 +167,11 @@ class DumpArticleProcessor {
             articlesToSave.add(newArticle);
 
             // Add replacements in DB
-            for (ArticleReplacement articleReplacement : articleReplacements) {
-                PotentialError newPotentialError = new PotentialError.PotentialErrorBuilder()
-                        .setArticle(newArticle)
-                        .setType(articleReplacement.getType())
-                        .setText(articleReplacement.getSubtype())
-                        .createPotentialError();
-                replacementsToAdd.add(newPotentialError);
-            }
+            articleReplacements.forEach(replacement -> replacementsToAdd.add(PotentialError.builder()
+                    .setArticle(newArticle)
+                    .setType(replacement.getType())
+                    .setText(replacement.getSubtype())
+                    .build()));
         }
 
         return true;

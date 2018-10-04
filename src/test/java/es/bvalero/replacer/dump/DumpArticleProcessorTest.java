@@ -223,12 +223,12 @@ public class DumpArticleProcessorTest {
                 .setArticle(dbArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("1")
-                .createPotentialError();
+                .build();
         PotentialError replacement2 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(dbArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("2")
-                .createPotentialError();
+                .build();
         Mockito.when(potentialErrorRepository.findByArticle(dbArticle)).thenReturn(Arrays.asList(replacement1, replacement2));
         // And the new ones are 2 and 3
         ArticleReplacement articleReplacement2 = Mockito.mock(ArticleReplacement.class);
@@ -263,7 +263,7 @@ public class DumpArticleProcessorTest {
                 .setArticle(dbArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("1")
-                .createPotentialError();
+                .build();
         Mockito.when(potentialErrorRepository.findByArticle(dbArticle)).thenReturn(Collections.singletonList(replacement1));
         // And the new one is 1
         ArticleReplacement articleReplacement1 = Mockito.mock(ArticleReplacement.class);
@@ -296,12 +296,12 @@ public class DumpArticleProcessorTest {
                 .setArticle(dbArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("1")
-                .createPotentialError();
+                .build();
         PotentialError replacement2 = new PotentialError.PotentialErrorBuilder()
                 .setArticle(dbArticle)
                 .setType(PotentialErrorType.MISSPELLING)
                 .setText("2")
-                .createPotentialError();
+                .build();
         Mockito.when(potentialErrorRepository.findByArticle(dbArticle)).thenReturn(Arrays.asList(replacement1, replacement2));
         // And there are no replacements found
         Mockito.when(articleService.findPotentialErrorsIgnoringExceptions(Mockito.anyString())).thenReturn(Collections.emptyList());
