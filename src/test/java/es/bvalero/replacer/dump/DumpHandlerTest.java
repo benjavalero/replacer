@@ -13,11 +13,11 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class DumpHandlerTest {
@@ -35,50 +35,46 @@ public class DumpHandlerTest {
 
     @Test
     public void testHandleDumpFile() throws URISyntaxException, DumpException {
-        File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
+        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(DumpArticle.class), Mockito.anyBoolean()))
                 .thenReturn(Boolean.TRUE);
 
-        try (InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile))) {
+        try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile))) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
             SAXParser saxParser = factory.newSAXParser();
 
             // Parse with the Dump Handler
             saxParser.parse(xmlInput, dumpHandler);
-        } catch (IOException e) {
-            throw new DumpException("Dump file not valid: " + dumpFile, e);
-        } catch (ParserConfigurationException | SAXException e) {
-            throw new DumpException("SAX Error parsing dump file: " + dumpFile, e);
+        } catch (IOException | ParserConfigurationException | SAXException e) {
+            throw new DumpException("", e);
         }
 
         // Check number of articles read and processed (we have mocked the result from the processor)
-        Assert.assertEquals(4, dumpHandler.getNumArticlesRead());
-        Assert.assertEquals(4, dumpHandler.getNumArticlesProcessed());
+        Assert.assertEquals(4L, dumpHandler.getNumArticlesRead());
+        Assert.assertEquals(4L, dumpHandler.getNumArticlesProcessed());
     }
 
     @Test
     public void testHandDumpFileWithException() throws URISyntaxException, DumpException {
-        File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
+        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(DumpArticle.class)))
                 .thenThrow(Mockito.mock(NullPointerException.class));
 
-        try (InputStream xmlInput = new BZip2CompressorInputStream(new FileInputStream(dumpFile))) {
+        try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile))) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
             SAXParser saxParser = factory.newSAXParser();
 
             // Parse with the Dump Handler
             saxParser.parse(xmlInput, dumpHandler);
-        } catch (IOException e) {
-            throw new DumpException("Dump file not valid: " + dumpFile, e);
-        } catch (ParserConfigurationException | SAXException e) {
-            throw new DumpException("SAX Error parsing dump file: " + dumpFile, e);
+        } catch (IOException | ParserConfigurationException | SAXException e) {
+            throw new DumpException("", e);
         }
 
         // Check number of articles read and processed (we have mocked the result from the processor)
-        Assert.assertEquals(4, dumpHandler.getNumArticlesRead());
-        Assert.assertEquals(0, dumpHandler.getNumArticlesProcessed());
+        Assert.assertEquals(4L, dumpHandler.getNumArticlesRead());
+        Assert.assertEquals(0L, dumpHandler.getNumArticlesProcessed());
     }
 
 }

@@ -92,7 +92,7 @@ public class WikipediaFacade implements IWikipediaFacade {
             request.addParameter("minor", "true");
             request.addParameter("token", getEditToken());
 
-            OAuth1AccessToken accessToken = (OAuth1AccessToken) session.getAttribute("accessToken");
+            OAuth1AccessToken accessToken = (OAuth1AccessToken) session.getAttribute(IWikipediaFacade.TOKEN_ACCESS);
             getOAuthService().signRequest(accessToken, request);
             Response response = getOAuthService().execute(request);
             handleError(response);
@@ -108,7 +108,7 @@ public class WikipediaFacade implements IWikipediaFacade {
         request.addParameter("action", "query");
         request.addParameter("meta", "tokens");
 
-        OAuth1AccessToken accessToken = (OAuth1AccessToken) session.getAttribute("accessToken");
+        OAuth1AccessToken accessToken = (OAuth1AccessToken) session.getAttribute(IWikipediaFacade.TOKEN_ACCESS);
         getOAuthService().signRequest(accessToken, request);
         Response response = getOAuthService().execute(request);
         handleError(response);

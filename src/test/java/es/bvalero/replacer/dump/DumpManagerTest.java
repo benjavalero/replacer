@@ -9,9 +9,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class DumpManagerTest {
@@ -33,15 +34,18 @@ public class DumpManagerTest {
 
     @Test
     public void testFindLatestDumpFile() throws DumpException, IOException {
-        File subFolder1 = dumpFolder.newFolder("20170101");
-        File subFolder2 = dumpFolder.newFolder("20170201");
-        File dumpFile1 = new File(subFolder1, "eswiki-" + subFolder1.getName() + "-pages-articles.xml.bz2");
-        File dumpFile2 = new File(subFolder2, "eswiki-" + subFolder2.getName() + "-pages-articles.xml.bz2");
-        Assert.assertTrue(dumpFile1.createNewFile());
-        Assert.assertTrue(dumpFile2.createNewFile());
+        Path dumpFolderFile = Paths.get(dumpFolder.getRoot().toURI());
+        Path subFolder1 = dumpFolderFile.resolve("20170101");
+        Path subFolder2 = dumpFolderFile.resolve("20170201");
+        Files.createDirectory(subFolder1);
+        Files.createDirectory(subFolder2);
+        Path dumpFile1 = subFolder1.resolve(String.format(DumpManager.DUMP_NAME_FORMAT, subFolder1.getFileName()));
+        Path dumpFile2 = subFolder2.resolve(String.format(DumpManager.DUMP_NAME_FORMAT, subFolder2.getFileName()));
+        Files.createFile(dumpFile1);
+        Files.createFile(dumpFile2);
         dumpManager.setDumpFolderPath(dumpFolder.getRoot().getPath());
 
-        File latestDumpFile = dumpManager.findLatestDumpFile();
+        Path latestDumpFile = dumpManager.findLatestDumpFile();
 
         Assert.assertNotNull(latestDumpFile);
         Assert.assertEquals(dumpFile2, latestDumpFile);
@@ -50,13 +54,16 @@ public class DumpManagerTest {
     @Test
     public void testFindLatestDumpFileInOldSubFolder() throws DumpException, IOException {
         // In case the latest sub-folder has not the dump yet (it has not been finished)
-        File subFolder1 = dumpFolder.newFolder("20170101");
-        dumpFolder.newFolder("20170201");
-        File dumpFile1 = new File(subFolder1, "eswiki-" + subFolder1.getName() + "-pages-articles.xml.bz2");
-        Assert.assertTrue(dumpFile1.createNewFile());
+        Path dumpFolderFile = Paths.get(dumpFolder.getRoot().toURI());
+        Path subFolder1 = dumpFolderFile.resolve("20170101");
+        Path subFolder2 = dumpFolderFile.resolve("20170201");
+        Files.createDirectory(subFolder1);
+        Files.createDirectory(subFolder2);
+        Path dumpFile1 = subFolder1.resolve(String.format(DumpManager.DUMP_NAME_FORMAT, subFolder1.getFileName()));
+        Files.createFile(dumpFile1);
         dumpManager.setDumpFolderPath(dumpFolder.getRoot().getPath());
 
-        File latestDumpFile = dumpManager.findLatestDumpFile();
+        Path latestDumpFile = dumpManager.findLatestDumpFile();
 
         Assert.assertNotNull(latestDumpFile);
         Assert.assertEquals(dumpFile1, latestDumpFile);
@@ -87,9 +94,9 @@ public class DumpManagerTest {
 
     @Test
     public void testParseDumpFile() throws URISyntaxException, DumpException {
-        File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
+        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Assert.assertNotNull(dumpFile);
-        Assert.assertTrue(dumpFile.exists());
+        Assert.assertTrue(Files.exists(dumpFile));
 
         dumpManager.parseDumpFile(dumpFile);
 
@@ -98,26 +105,26 @@ public class DumpManagerTest {
 
     @Test(expected = DumpException.class)
     public void testParseDumpFileNotExisting() throws DumpException {
-        File dumpFile = new File("");
-        Assert.assertFalse(dumpFile.exists());
+        Path dumpFile = Paths.get("xxx");
+        Assert.assertFalse(Files.exists(dumpFile));
 
         dumpManager.parseDumpFile(dumpFile);
     }
 
     @Test(expected = DumpException.class)
     public void testParseDumpFileWithParseException() throws URISyntaxException, DumpException {
-        File dumpFile = Paths.get(getClass().getResource("/false-positives.txt").toURI()).toFile();
+        Path dumpFile = Paths.get(getClass().getResource("/false-positives.txt").toURI());
         Assert.assertNotNull(dumpFile);
-        Assert.assertTrue(dumpFile.exists());
+        Assert.assertTrue(Files.exists(dumpFile));
 
         dumpManager.parseDumpFile(dumpFile);
     }
 
     @Test
     public void testParseDumpFileAlreadyRunning() throws URISyntaxException, DumpException {
-        File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
+        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Assert.assertNotNull(dumpFile);
-        Assert.assertTrue(dumpFile.exists());
+        Assert.assertTrue(Files.exists(dumpFile));
 
         dumpManager.setRunning();
         dumpManager.parseDumpFile(dumpFile);
@@ -127,39 +134,39 @@ public class DumpManagerTest {
 
     @Test
     public void testProcessNewDumpFile() throws URISyntaxException {
-        File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
-        dumpManager.setDumpFolderPath(dumpFile.getParentFile().getParentFile().getPath());
+        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
 
-        Assert.assertEquals("-", dumpManager.getLatestDumpFile());
+        Assert.assertNull(dumpManager.getLatestDumpFile());
 
         dumpManager.processLatestDumpFile(false, false);
 
         Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
-        Assert.assertEquals(dumpFile.getPath(), dumpManager.getLatestDumpFile());
+        Assert.assertEquals(dumpFile, dumpManager.getLatestDumpFile());
     }
 
     @Test
     public void testProcessDumpFileAlreadyProcessed() throws URISyntaxException {
-        File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
-        dumpManager.setDumpFolderPath(dumpFile.getParentFile().getParentFile().getPath());
-        dumpManager.setLatestDumpFile(dumpFile.getPath());
+        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
+        dumpManager.setLatestDumpFile(dumpFile);
 
         dumpManager.processLatestDumpFile(false, false);
 
         Mockito.verify(dumpHandler, Mockito.times(0)).startDocument();
-        Assert.assertEquals(dumpFile.getPath(), dumpManager.getLatestDumpFile());
+        Assert.assertEquals(dumpFile, dumpManager.getLatestDumpFile());
     }
 
     @Test
     public void testForceProcessDumpFileAlreadyProcessed() throws URISyntaxException {
-        File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
-        dumpManager.setDumpFolderPath(dumpFile.getParentFile().getParentFile().getPath());
-        dumpManager.setLatestDumpFile(dumpFile.getPath());
+        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
+        dumpManager.setLatestDumpFile(dumpFile);
 
         dumpManager.processLatestDumpFile(true, false);
 
         Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
-        Assert.assertEquals(dumpFile.getPath(), dumpManager.getLatestDumpFile());
+        Assert.assertEquals(dumpFile, dumpManager.getLatestDumpFile());
     }
 
     @Test
@@ -178,8 +185,8 @@ public class DumpManagerTest {
 
     @Test
     public void testProcessStatisticsWithMoreArticlesThanExpected() throws URISyntaxException {
-        File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
-        dumpManager.setDumpFolderPath(dumpFile.getParentFile().getParentFile().getPath());
+        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
         dumpManager.setNumArticlesEstimation(3);
         Mockito.when(dumpHandler.getNumArticlesRead()).thenReturn(4L);
         Mockito.when(dumpHandler.getNumArticlesProcessed()).thenReturn(3L);
@@ -198,8 +205,8 @@ public class DumpManagerTest {
 
     @Test
     public void testProcessStatisticsWithLessArticlesThanExpected() throws URISyntaxException {
-        File dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI()).toFile();
-        dumpManager.setDumpFolderPath(dumpFile.getParentFile().getParentFile().getPath());
+        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
         dumpManager.setNumArticlesEstimation(5);
         Mockito.when(dumpHandler.getNumArticlesRead()).thenReturn(4L);
         Mockito.when(dumpHandler.getNumArticlesProcessed()).thenReturn(3L);

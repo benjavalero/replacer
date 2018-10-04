@@ -12,9 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function runIndexation(forceIndexation) {
     reqwest({
-        url: 'dump/run',
+        url: 'dump/run' + forceIndexation ? '/force' : '',
         type: 'json',
-        data: { force: forceIndexation },
         success: function(response) {
             document.querySelector('#notRunning').classList.add('hidden');
             document.querySelector('#running').classList.remove('hidden');
