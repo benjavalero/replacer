@@ -1,6 +1,6 @@
 package es.bvalero.replacer.statistics;
 
-import es.bvalero.replacer.article.MisspellingCount;
+import es.bvalero.replacer.persistence.ReplacementCount;
 import es.bvalero.replacer.persistence.ArticleRepository;
 import es.bvalero.replacer.persistence.ReplacementRepository;
 import org.jetbrains.annotations.NonNls;
@@ -25,10 +25,10 @@ public class StatisticsController {
     private ArticleRepository articleRepository;
 
     @RequestMapping("/statistics/count/replacements")
-    Long countPotentialErrors() {
-        LOGGER.info("Count potential errors...");
+    Long countReplacements() {
+        LOGGER.info("Count replacements...");
         Long count = replacementRepository.count();
-        LOGGER.info("Potential errors found: {}", count);
+        LOGGER.info("Replacements found: {}", count);
         return count;
     }
 
@@ -49,9 +49,9 @@ public class StatisticsController {
     }
 
     @RequestMapping("/statistics/count/misspellings")
-    List<MisspellingCount> listMisspellings() {
+    List<ReplacementCount> listMisspellings() {
         LOGGER.info("Listing misspellings...");
-        List<MisspellingCount> list = replacementRepository.findMisspellingsGrouped();
+        List<ReplacementCount> list = replacementRepository.findMisspellingsGrouped();
         LOGGER.info("Misspelling list found: {}", list.size());
         return list;
     }

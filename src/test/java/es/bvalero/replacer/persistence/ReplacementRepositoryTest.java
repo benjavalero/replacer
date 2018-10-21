@@ -49,7 +49,7 @@ public class ReplacementRepositoryTest {
                 .build();
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3, error4));
 
-        Assert.assertEquals(3L, (long) replacementRepository.findMisspellingsGrouped().size());
+        Assert.assertEquals(3, replacementRepository.findMisspellingsGrouped().size());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class ReplacementRepositoryTest {
                 .findRandomByWord("xxx", PageRequest.of(0, 1))
                 .isEmpty());
 
-        Assert.assertEquals(3L, (long) replacementRepository
+        Assert.assertEquals(3, replacementRepository
                 .findRandomByWord("aber", PageRequest.of(0, 3))
                 .size());
     }

@@ -1,9 +1,13 @@
 package es.bvalero.replacer.article;
 
-public class InvalidArticleException extends Exception {
+class InvalidArticleException extends Exception {
 
-    public InvalidArticleException() {
-        super();
+    InvalidArticleException(String message) {
+        super(message);
+    }
+
+    InvalidArticleException(Throwable e) {
+        super(e);
     }
 
 }

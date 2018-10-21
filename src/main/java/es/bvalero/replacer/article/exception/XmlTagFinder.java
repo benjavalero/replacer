@@ -3,29 +3,28 @@ package es.bvalero.replacer.article.exception;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.utils.RegExUtils;
-import es.bvalero.replacer.utils.RegexMatch;
+import es.bvalero.replacer.article.ArticleReplacement;
+import es.bvalero.replacer.article.ArticleReplacementFinder;
+import es.bvalero.replacer.article.IgnoredReplacementFinder;
+import es.bvalero.replacer.persistence.ReplacementType;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Component
-public class XmlTagFinder implements ExceptionMatchFinder {
+public class XmlTagFinder implements IgnoredReplacementFinder {
 
     // We want to avoid the XML comments to be captured by this
+    // For the automaton the < needs an extra backslash
+    @SuppressWarnings("RegExpRedundantEscape")
+    @org.intellij.lang.annotations.RegExp
+    private static final String REGEX_XML_TAG = "\\</?[A-Za-z](<L>|<N>|[ =\"_-])+/?\\>";
     private static final RunAutomaton AUTOMATON_XML_TAG =
-            new RunAutomaton(new RegExp("\\</?[A-Za-z](<L>|<N>|[ =\"_-])+/?\\>").toAutomaton(new DatatypesAutomatonProvider()));
-
-    private static final Pattern REGEX_XML_TAG_ESCAPED = Pattern.compile("&lt;/?[A-z][\\p{L}\\p{N} =&;_-]+?/?&gt;");
+            new RunAutomaton(new RegExp(REGEX_XML_TAG).toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
-    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        if (isTextEscaped) {
-            return RegExUtils.findMatches(text, REGEX_XML_TAG_ESCAPED);
-        } else {
-            return RegExUtils.findMatchesAutomaton(text, AUTOMATON_XML_TAG);
-        }
+    public List<ArticleReplacement> findIgnoredReplacements(String text) {
+        return ArticleReplacementFinder.findReplacements(text, AUTOMATON_XML_TAG, ReplacementType.IGNORED);
     }
 
 }

@@ -1,17 +1,13 @@
 package es.bvalero.replacer.article;
 
-import es.bvalero.replacer.article.exception.ExceptionMatchFinder;
-import es.bvalero.replacer.article.finder.PotentialErrorFinder;
 import es.bvalero.replacer.persistence.Article;
 import es.bvalero.replacer.persistence.ArticleRepository;
-import es.bvalero.replacer.persistence.Replacement;
 import es.bvalero.replacer.persistence.ReplacementRepository;
-import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.StringUtils;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,21 +16,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
- * Provides methods to find articles with potential errors.
+ * Provides methods to find articles with potential replacements.
  */
 @Service
 public class ArticleService {
 
+    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
-
-    private static final Pattern REGEX_BUTTON_TAG =
-            Pattern.compile("<button.+?</button>", Pattern.DOTALL);
-    private static final int TRIM_THRESHOLD = 200;
-
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -45,340 +39,221 @@ public class ArticleService {
     private IWikipediaFacade wikipediaFacade;
 
     @Autowired
-    private List<ExceptionMatchFinder> exceptionMatchFinders;
+    private List<IgnoredReplacementFinder> ignoredReplacementFinders;
 
     @Autowired
-    private List<PotentialErrorFinder> potentialErrorFinders;
+    private List<ArticleReplacementFinder> articleReplacementFinders;
 
     @Value("${replacer.highlight.exceptions}")
     private boolean highlightExceptions;
 
     @Value("${replacer.hide.empty.paragraphs}")
-    private boolean hideEmptyParagraphs;
+    private boolean trimText;
 
-    private boolean isHighlightExceptions() {
-        return highlightExceptions;
+    static List<ArticleReplacement> removeNestedReplacements(List<ArticleReplacement> replacements) {
+        // The list of replacements must be of type LinkedList
+        if (replacements.isEmpty()) {
+            return replacements;
+        }
+
+        replacements.sort(Collections.reverseOrder());
+        ListIterator<ArticleReplacement> it = replacements.listIterator();
+        ArticleReplacement previous = it.next();
+        while (it.hasNext()) {
+            ArticleReplacement current = it.next();
+            if (current.isContainedIn(previous)) {
+                it.remove();
+            } else if (current.intersects(previous)) {
+                // Merge previous and current
+                ArticleReplacement merged = previous.withText(previous.getText().substring(0, current.getStart() - previous.getStart()) + current.getText());
+                it.remove(); // Remove the current match
+                it.previous();
+                it.remove(); // Remove the previous match
+                it.add(merged); // Add the merged match
+                previous = merged;
+            } else {
+                previous = current;
+            }
+        }
+        return replacements;
     }
 
-    @SuppressWarnings("SameParameterValue")
+    @TestOnly
     void setHighlightExceptions(boolean highlightExceptions) {
         this.highlightExceptions = highlightExceptions;
     }
 
-    private boolean isHideEmptyParagraphs() {
-        return hideEmptyParagraphs;
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    void setHideEmptyParagraphs(boolean hideEmptyParagraphs) {
-        this.hideEmptyParagraphs = hideEmptyParagraphs;
-    }
-
-    ArticleData findRandomArticleWithPotentialErrors() throws UnfoundArticleException, InvalidArticleException {
+    ArticleReview findRandomArticleWithReplacements() throws UnfoundArticleException, InvalidArticleException {
         // Find random article in Replacer database (the result can be empty)
         List<Article> randomArticles = articleRepository.findRandomArticleNotReviewed(PageRequest.of(0, 1));
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
-            throw new UnfoundArticleException();
+            throw new UnfoundArticleException("No se ha encontrado ningún artículo para revisar");
         }
 
         Article randomArticle = randomArticles.get(0);
 
-        // Get the content of the article from Wikipedia
         try {
+            // Get the content of the article from Wikipedia
             String articleContent = wikipediaFacade.getArticleContent(randomArticle.getTitle());
 
             // Check if the article is processable
             if (WikipediaUtils.isRedirectionArticle(articleContent)) {
                 LOGGER.warn("Found article is a redirection page: {}", randomArticle.getTitle());
-                throw new InvalidArticleException();
+                throw new InvalidArticleException("Found article is a redirection page");
             }
 
-            return getArticleDataWithReplacements(randomArticle, articleContent);
+            // Find the replacements sorted (the first ones in the list are the last in the text)
+            List<ArticleReplacement> replacements = findReplacements(articleContent, highlightExceptions);
+            Collections.sort(replacements);
+
+            return ArticleReview.builder()
+                    .setTitle(randomArticle.getTitle())
+                    .setContent(articleContent)
+                    .setReplacements(replacements)
+                    .setTrimText(trimText)
+                    .build();
         } catch (InvalidArticleException e) {
             articleRepository.deleteById(randomArticle.getId());
             throw e;
         } catch (WikipediaException e) {
             LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle());
             articleRepository.deleteById(randomArticle.getId());
-            throw new InvalidArticleException();
+            throw new InvalidArticleException(e);
         }
     }
 
-    @NotNull
-    ArticleData findRandomArticleWithPotentialErrors(@NotNull String word)
-            throws UnfoundArticleException, InvalidArticleException {
+    ArticleReview findRandomArticleWithReplacements(String word) throws UnfoundArticleException, InvalidArticleException {
         // Find random article in Replacer database (the result can be empty)
-        List<Article> randomArticles = replacementRepository
-                .findRandomByWord(word, PageRequest.of(0, 1));
+        List<Article> randomArticles = replacementRepository.findRandomByWord(word, PageRequest.of(0, 1));
+        articleRepository.findRandomArticleNotReviewed(PageRequest.of(0, 1));
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
-            throw new UnfoundArticleException();
+            throw new UnfoundArticleException("No se ha encontrado ningún artículo para revisar");
         }
 
         Article randomArticle = randomArticles.get(0);
 
-        // Get the content of the article from Wikipedia
-        ArticleData articleData;
+        ArticleReview articleReview;
         try {
+            // Get the content of the article from Wikipedia
             String articleContent = wikipediaFacade.getArticleContent(randomArticle.getTitle());
 
             // Check if the article is processable
             if (WikipediaUtils.isRedirectionArticle(articleContent)) {
                 LOGGER.warn("Found article is a redirection page: {}", randomArticle.getTitle());
-                throw new InvalidArticleException();
+                throw new InvalidArticleException("Found article is a redirection page");
             }
 
-            articleData = getArticleDataWithReplacements(randomArticle, articleContent);
+            // Find the replacements sorted (the first ones in the list are the last in the text)
+            List<ArticleReplacement> replacements = findReplacements(articleContent, highlightExceptions);
+            Collections.sort(replacements);
+
+            articleReview = ArticleReview.builder()
+                    .setTitle(randomArticle.getTitle())
+                    .setContent(articleContent)
+                    .setReplacements(replacements)
+                    .setTrimText(trimText)
+                    .build();
         } catch (InvalidArticleException e) {
             articleRepository.deleteById(randomArticle.getId());
             throw e;
         } catch (WikipediaException e) {
             LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle());
             articleRepository.deleteById(randomArticle.getId());
-            throw new InvalidArticleException();
+            throw new InvalidArticleException(e);
         }
 
-        // Check if the requested word is found in the potential fixes
+        // Check if the requested word is found in the replacements
+        // If not we delete the replacement from the article but let the article
         boolean wordFound = false;
-        for (ArticleReplacement replacement : articleData.getFixes().values()) {
-            if (word.equals(replacement.getOriginalText())) {
+        for (ArticleReplacement replacement : articleReview.getReplacements()) {
+            if (word.equals(replacement.getText())) {
                 wordFound = true;
             }
         }
-        // If not we delete the potential error from the article but let the article
         if (!wordFound) {
-            LOGGER.warn("Word {} not found as a potential error for article: {}", word, randomArticle.getTitle());
-            for (Replacement replacement : replacementRepository.findByArticle(randomArticle)) {
-                if (replacement.getText().equals(word)) {
-                    replacementRepository.delete(replacement);
-                }
-            }
-
-            throw new InvalidArticleException();
+            LOGGER.warn("Word {} not found as a replacement for article: {}", word, randomArticle.getTitle());
+            replacementRepository.deleteByArticleAndText(randomArticle, word);
+            throw new InvalidArticleException("Word not found as a replacement");
         }
 
-        return articleData;
-    }
-
-    @NotNull
-    private ArticleData getArticleDataWithReplacements(@NotNull Article article, @NotNull String articleContent)
-            throws InvalidArticleException {
-        // Escape the content just in case it contains XML tags
-        String escapedContent = StringUtils.escapeText(articleContent);
-
-        // This method is called when processing only one article from the web interface
-        // so the performance is not so important. We retrieve all exception matches and remove the nested ones.
-        List<RegexMatch> exceptionMatches = new LinkedList<>();
-        for (ExceptionMatchFinder exceptionMatchFinder : exceptionMatchFinders) {
-            exceptionMatches.addAll(exceptionMatchFinder.findExceptionMatches(escapedContent, true));
-        }
-        // LinkedList is better to run iterators and remove items from it
-        RegexMatch.removedNestedMatches(exceptionMatches);
-
-        // Find the potential errors
-        List<ArticleReplacement> articleReplacements =
-                findPotentialErrorsIgnoringExceptions(escapedContent, exceptionMatches);
-        LOGGER.info("Article has {} potential errors to review: {}", articleReplacements.size(), article.getTitle());
-        if (articleReplacements.isEmpty()) {
-            throw new InvalidArticleException();
-        }
-
-        // Replace the proposed replacements with buttons to interact with them
-        // Replace the error exceptions with a span to highlight them
-        String replacedContent = escapedContent;
-
-        if (isHighlightExceptions()) {
-            // Include the exception matches as replacements to be highlighted
-            for (RegexMatch exceptionMatch : exceptionMatches) {
-                articleReplacements.add(new ArticleReplacement(exceptionMatch));
-            }
-        }
-
-        Collections.sort(articleReplacements);
-        Map<Integer, ArticleReplacement> proposedFixes = new TreeMap<>();
-
-        for (ArticleReplacement replacement : articleReplacements) {
-            // Check if the replacement is actually a replacement or an exception match
-            String newText;
-            if (replacement.getType() == null && isHighlightExceptions()) {
-                newText = getErrorExceptionSpanText(replacement);
-            } else {
-                proposedFixes.put(replacement.getPosition(), replacement);
-                newText = getReplacementButtonText(replacement);
-            }
-
-            replacedContent = StringUtils.replaceAt(replacedContent, replacement.getPosition(),
-                    replacement.getOriginalText(), newText);
-            if (replacedContent == null) {
-                throw new InvalidArticleException();
-            }
-        }
-
-        // Return only the text blocks with replacements
-        if (isHideEmptyParagraphs()) {
-            replacedContent = hideNotMatchingParagraphs(replacedContent);
-        }
-
-        return new ArticleData(article.getId(), article.getTitle(), replacedContent, proposedFixes);
+        return articleReview;
     }
 
     /**
-     * @return A list with all the occurrences of potential errors.
-     * Potential errors contained in exceptions are ignored.
-     * If there are no potential errors, the list will be empty.
+     * @return A list with all the occurrences of replacements.
+     * Replacements contained in exceptions are ignored.
+     * If there are no replacements, the list will be empty.
      */
-    @NotNull
-    public List<ArticleReplacement> findPotentialErrorsIgnoringExceptions(@NotNull String text) {
-        // Find the potential errors in the article content
-        List<ArticleReplacement> articleReplacements = findPotentialErrors(text);
+    public List<ArticleReplacement> findReplacements(String text) {
+        return findReplacements(text, false);
+    }
+
+    private List<ArticleReplacement> findReplacements(String text, boolean includeIgnored) {
+        // Find the replacements in the article content
+        // LinkedList is better to run iterators and remove items from it
+        List<ArticleReplacement> articleReplacements = new LinkedList<>();
+        for (ArticleReplacementFinder finder : articleReplacementFinders) {
+            articleReplacements.addAll(finder.findReplacements(text));
+        }
 
         // No need to find the exceptions if there are no replacements found
         if (articleReplacements.isEmpty()) {
             return articleReplacements;
         }
 
-        // Ignore the potential errors included in exceptions
-        for (ExceptionMatchFinder exceptionMatchFinder : exceptionMatchFinders) {
-            List<RegexMatch> exceptionMatches = exceptionMatchFinder.findExceptionMatches(text, false);
-
-            articleReplacements.removeIf(articleReplacement -> articleReplacement.isContainedIn(exceptionMatches));
+        // Ignore the replacements which must be ignored
+        List<ArticleReplacement> allIgnoredReplacements = new LinkedList<>();
+        for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
+            List<ArticleReplacement> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
+            articleReplacements.removeIf(replacement -> replacement.isContainedIn(ignoredReplacements));
 
             if (articleReplacements.isEmpty()) {
                 return articleReplacements;
             }
+
+            allIgnoredReplacements.addAll(ignoredReplacements);
+        }
+
+        // Include in the result the ignored replacements if wanted
+        if (includeIgnored) {
+            articleReplacements.addAll(removeNestedReplacements(allIgnoredReplacements));
         }
 
         return articleReplacements;
-    }
-
-    @NotNull
-    private List<ArticleReplacement> findPotentialErrorsIgnoringExceptions(
-            @NotNull String text, @NotNull List<RegexMatch> exceptionMatches) {
-        // Find the potential errors in the article content
-        List<ArticleReplacement> articleReplacements = findPotentialErrors(text);
-
-        // Ignore the potential errors included in exceptions
-        articleReplacements.removeIf(articleReplacement -> articleReplacement.isContainedIn(exceptionMatches));
-
-        return articleReplacements;
-    }
-
-    /**
-     * @return A list with all the occurrences of potential errors.
-     * If there are no potential errors, the list will be empty.
-     */
-    @NotNull
-    private List<ArticleReplacement> findPotentialErrors(@NotNull String text) {
-        // LinkedList is better to run iterators and remove items from it
-        List<ArticleReplacement> articleReplacements = new LinkedList<>();
-        for (PotentialErrorFinder potentialErrorFinder : potentialErrorFinders) {
-            articleReplacements.addAll(potentialErrorFinder.findPotentialErrors(text));
-        }
-        return articleReplacements;
-    }
-
-    @NotNull
-    private String getReplacementButtonText(@NotNull ArticleReplacement replacement) {
-        return "<button " +
-                "id=\"miss-" + replacement.getPosition() + "\" " +
-                "title=\"" + replacement.getComment() + "\" " +
-                "type=\"button\" " +
-                "class=\"miss btn btn-danger\" " +
-                "data-toggle=\"tooltip\" " +
-                "data-placement=\"top\">" +
-                replacement.getOriginalText() +
-                "</button>";
-    }
-
-    @NotNull
-    private String getErrorExceptionSpanText(@NotNull RegexMatch regexMatch) {
-        return "<span class=\"syntax exception\">" + regexMatch.getOriginalText() + "</span>";
-    }
-
-    @NotNull
-    private String hideNotMatchingParagraphs(@NotNull String text) {
-        List<String> matchingParagraphs = StringUtils.removeParagraphsNotMatching(text, REGEX_BUTTON_TAG);
-
-        // Join the paragraphs, trimming them, and adding a ruler between.
-        StringBuilder reducedContent = new StringBuilder();
-        for (String paragraph : matchingParagraphs) {
-            if (reducedContent.length() != 0) {
-                reducedContent.append("\n<hr>\n");
-            }
-            reducedContent.append(StringUtils.trimText(paragraph, TRIM_THRESHOLD, REGEX_BUTTON_TAG));
-        }
-        return reducedContent.toString();
     }
 
     /**
      * Saves in Wikipedia the changes on an article validated in the front-end.
      */
-    boolean saveArticleChanges(@NotNull ArticleData article) {
-        // Find the fixes verified by the user
-        List<ArticleReplacement> fixedReplacements = new ArrayList<>();
-        for (ArticleReplacement replacement : article.getFixes().values()) {
-            if (replacement.isFixed()) {
-                fixedReplacements.add(replacement);
-            }
-        }
-
-        if (fixedReplacements.isEmpty()) {
-            LOGGER.info("Nothing to fix in article: {}", article.getTitle());
-            markArticleAsReviewed(article);
-            return true;
-        }
-
-        // Apply the fixes
-
+    boolean saveArticleChanges(String title, String text) {
+        // Upload the new content to Wikipedia
         try {
-            String currentContent = wikipediaFacade.getArticleContent(article.getTitle());
-
-            // Escape the content just in case it contains XML tags, as done when finding the replacements.
-            String replacedContent = StringUtils.escapeText(currentContent);
-
-            Collections.sort(fixedReplacements);
-            for (ArticleReplacement fix : fixedReplacements) {
-                LOGGER.debug("Fixing article {}: {} -> {}", article.getTitle(), fix.getOriginalText(), fix.getFixedText());
-                replacedContent = StringUtils.replaceAt(replacedContent, fix.getPosition(), fix.getOriginalText(), fix.getFixedText());
-                if (replacedContent == null) {
-                    LOGGER.error("Error replacing the validated fixes");
-                    throw new InvalidArticleException();
-                }
-            }
-            String contentToUpload = StringUtils.unEscapeText(replacedContent);
-
-            // Upload the new content to Wikipedia
-            // It may happen there has been changes during the edition, but in this point the fixes can be applied anyway.
-            // Check just before uploading there are no changes during the edition
-            if (contentToUpload.equals(currentContent)) {
-                LOGGER.warn("The content to upload matches with the current content");
-                markArticleAsReviewed(article);
-                return true;
-            }
-
-            wikipediaFacade.editArticleContent(article.getTitle(), contentToUpload, "Correcciones ortográficas");
+            wikipediaFacade.editArticleContent(title, text);
 
             // Mark the article as reviewed in the database
-            markArticleAsReviewed(article);
+            markArticleAsReviewed(title);
 
             return true;
-        } catch (InvalidArticleException e) {
-            articleRepository.deleteById(article.getId());
-            return false;
         } catch (WikipediaException e) {
-            LOGGER.error("Error saving or retrieving the content of the article: {}", article.getTitle());
-            articleRepository.deleteById(article.getId());
+            LOGGER.error("Error saving or retrieving the content of the article: {}", title);
+            articleRepository.deleteByTitle(title);
             return false;
         }
     }
 
-    private void markArticleAsReviewed(@NotNull ArticleData article) {
-        articleRepository.findById(article.getId()).ifPresent(dbArticle -> {
+    boolean markArticleAsReviewed(String articleTitle) {
+        Article dbArticle = articleRepository.findByTitle(articleTitle);
+        if (dbArticle == null) {
+            LOGGER.error("Article not found with title: {}", articleTitle);
+            return false;
+        } else {
             Article articleToSave = dbArticle.withReviewDate(LocalDateTime.now());
             replacementRepository.deleteInBatch(replacementRepository.findByArticle(articleToSave));
             articleRepository.save(articleToSave);
-        });
+            return true;
+        }
     }
 
 }

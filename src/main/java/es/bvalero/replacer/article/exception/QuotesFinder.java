@@ -2,60 +2,69 @@ package es.bvalero.replacer.article.exception;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.utils.RegExUtils;
-import es.bvalero.replacer.utils.RegexMatch;
+import es.bvalero.replacer.article.ArticleReplacement;
+import es.bvalero.replacer.article.ArticleReplacementFinder;
+import es.bvalero.replacer.article.IgnoredReplacementFinder;
+import es.bvalero.replacer.persistence.ReplacementType;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Component
-public class QuotesFinder implements ExceptionMatchFinder {
+public class QuotesFinder implements IgnoredReplacementFinder {
 
+    @org.intellij.lang.annotations.RegExp
+    private static final String REGEX_SINGLE_QUOTES_CURSIVE = "[^']''[^']([^'\n]|'''[^'\n]+''')+''[^']";
     private static final RunAutomaton AUTOMATON_SINGLE_QUOTES_CURSIVE =
-            new RunAutomaton(new RegExp("[^']''[^']([^'\n]|'''[^'\n]+''')+''[^']").toAutomaton());
+            new RunAutomaton(new RegExp(REGEX_SINGLE_QUOTES_CURSIVE).toAutomaton());
+
+    @org.intellij.lang.annotations.RegExp
+    private static final String REGEX_SINGLE_QUOTES_BOLD = "[^']'''[^']([^'\n]|''[^'\n]+'')+'''[^']";
     private static final RunAutomaton AUTOMATON_SINGLE_QUOTES_BOLD =
-            new RunAutomaton(new RegExp("[^']'''[^']([^'\n]|''[^'\n]+'')+'''[^']").toAutomaton());
+            new RunAutomaton(new RegExp(REGEX_SINGLE_QUOTES_BOLD).toAutomaton());
+
+    @org.intellij.lang.annotations.RegExp
+    private static final String REGEX_SINGLE_QUOTES_CURSIVE_BOLD = "'''''[^'\n]+'''''";
     private static final RunAutomaton AUTOMATON_SINGLE_QUOTES_CURSIVE_BOLD =
-            new RunAutomaton(new RegExp("'''''[^'\n]+'''''").toAutomaton());
-    private static final Pattern REGEX_SINGLE_QUOTES_ESCAPED =
-            Pattern.compile("((&apos;){2,5}).+?(?<!&apos;)\\1(?!&apos;)");
+            new RunAutomaton(new RegExp(REGEX_SINGLE_QUOTES_CURSIVE_BOLD).toAutomaton());
 
+    @org.intellij.lang.annotations.RegExp
+    private static final String REGEX_ANGULAR_QUOTES = "«[^»]+»";
     private static final RunAutomaton AUTOMATON_ANGULAR_QUOTES =
-            new RunAutomaton(new RegExp("«[^»]+»").toAutomaton());
+            new RunAutomaton(new RegExp(REGEX_ANGULAR_QUOTES).toAutomaton());
 
+    @org.intellij.lang.annotations.RegExp
+    private static final String REGEX_TYPOGRAPHIC_QUOTES = "“[^”]+”";
     private static final RunAutomaton AUTOMATON_TYPOGRAPHIC_QUOTES =
-            new RunAutomaton(new RegExp("“[^”]+”").toAutomaton());
+            new RunAutomaton(new RegExp(REGEX_TYPOGRAPHIC_QUOTES).toAutomaton());
 
     // For the automaton the quote needs an extra backslash
+    @SuppressWarnings("RegExpRedundantEscape")
+    @org.intellij.lang.annotations.RegExp
+    private static final String REGEX_DOUBLE_QUOTES = "\\\"[^\\\"\n]+\\\"";
     private static final RunAutomaton AUTOMATON_DOUBLE_QUOTES =
-            new RunAutomaton(new RegExp("\\\"[^\\\"\n]+\\\"").toAutomaton());
-    private static final Pattern REGEX_DOUBLE_QUOTES_ESCAPED = Pattern.compile("&quot;.+?&quot;");
+            new RunAutomaton(new RegExp(REGEX_DOUBLE_QUOTES).toAutomaton());
 
     @Override
-    public List<RegexMatch> findExceptionMatches(String text, boolean isTextEscaped) {
-        List<RegexMatch> matches = new ArrayList<>(100);
-        if (isTextEscaped) {
-            // There are lots of lines with single quotes not closed
-            matches.addAll(RegExUtils.findMatches(text, REGEX_SINGLE_QUOTES_ESCAPED));
-            matches.addAll(RegExUtils.findMatches(text, REGEX_DOUBLE_QUOTES_ESCAPED));
-        } else {
-            // For the single-quotes regex, we have to remove the first and last positions found
-            List<RegexMatch> singleQuotesMatches = new ArrayList<>(100);
-            singleQuotesMatches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_SINGLE_QUOTES_CURSIVE));
-            singleQuotesMatches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_SINGLE_QUOTES_BOLD));
-            for (RegexMatch match : singleQuotesMatches) {
-                match.setPosition(match.getPosition() + 1);
-                match.setOriginalText(match.getOriginalText().substring(1, match.getOriginalText().length() - 1));
-            }
+    public List<ArticleReplacement> findIgnoredReplacements(String text) {
+        List<ArticleReplacement> matches = new ArrayList<>(100);
 
-            matches.addAll(singleQuotesMatches);
-            matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_SINGLE_QUOTES_CURSIVE_BOLD));
-            matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_DOUBLE_QUOTES));
+        // For the single-quotes regex, we have to remove the first and last positions found
+        Collection<ArticleReplacement> singleQuotesMatches = new ArrayList<>(100);
+        singleQuotesMatches.addAll(ArticleReplacementFinder.findReplacements(text, AUTOMATON_SINGLE_QUOTES_CURSIVE, ReplacementType.IGNORED));
+        singleQuotesMatches.addAll(ArticleReplacementFinder.findReplacements(text, AUTOMATON_SINGLE_QUOTES_BOLD, ReplacementType.IGNORED));
+        for (ArticleReplacement match : singleQuotesMatches) {
+            matches.add(match
+                    .withStart(match.getStart() + 1)
+                    .withText(match.getText().substring(1, match.getText().length() - 1)));
         }
-        matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_ANGULAR_QUOTES));
-        matches.addAll(RegExUtils.findMatchesAutomaton(text, AUTOMATON_TYPOGRAPHIC_QUOTES));
+
+        matches.addAll(ArticleReplacementFinder.findReplacements(text, AUTOMATON_SINGLE_QUOTES_CURSIVE_BOLD, ReplacementType.IGNORED));
+        matches.addAll(ArticleReplacementFinder.findReplacements(text, AUTOMATON_DOUBLE_QUOTES, ReplacementType.IGNORED));
+        matches.addAll(ArticleReplacementFinder.findReplacements(text, AUTOMATON_ANGULAR_QUOTES, ReplacementType.IGNORED));
+        matches.addAll(ArticleReplacementFinder.findReplacements(text, AUTOMATON_TYPOGRAPHIC_QUOTES, ReplacementType.IGNORED));
         return matches;
     }
 

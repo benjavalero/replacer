@@ -10,7 +10,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -75,7 +78,7 @@ public class ArticleRepositoryTest {
 
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(2L, replacementRepository.count());
-        Assert.assertEquals(2L, (long) replacementRepository.findByArticle(newArticle).size());
+        Assert.assertEquals(2, replacementRepository.findByArticle(newArticle).size());
     }
 
     @Test
@@ -131,14 +134,14 @@ public class ArticleRepositoryTest {
 
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(3L, replacementRepository.count());
-        Assert.assertEquals(3L, (long) replacementRepository.findByArticle(newArticle).size());
+        Assert.assertEquals(3, replacementRepository.findByArticle(newArticle).size());
 
         // Delete replacements
         replacementRepository.deleteInBatch(Arrays.asList(replacement1, replacement3));
 
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(1L, replacementRepository.count());
-        Assert.assertEquals(1L, (long) replacementRepository.findByArticle(newArticle).size());
+        Assert.assertEquals(1, replacementRepository.findByArticle(newArticle).size());
         Assert.assertEquals("B", replacementRepository.findByArticle(newArticle).get(0).getText());
 
         // Add replacements
@@ -151,7 +154,7 @@ public class ArticleRepositoryTest {
 
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(2L, replacementRepository.count());
-        Assert.assertEquals(2L, (long) replacementRepository.findByArticle(newArticle).size());
+        Assert.assertEquals(2, replacementRepository.findByArticle(newArticle).size());
     }
 
     @Test(expected = DataIntegrityViolationException.class)

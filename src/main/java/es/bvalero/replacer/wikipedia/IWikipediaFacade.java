@@ -7,12 +7,12 @@ public interface IWikipediaFacade {
     String TOKEN_REQUEST = "requestToken";
     String TOKEN_ACCESS = "accessToken";
     String TOKEN_VERIFIER = "oauth_verifier";
+    String EDIT_SUMMARY = "Correcciones ortográficas";
 
     OAuth10aService getOAuthService();
 
     String getArticleContent(String articleTitle) throws WikipediaException;
 
-    void editArticleContent(String articleTitle, String articleContent, String editSummary)
-            throws WikipediaException;
+    void editArticleContent(String articleTitle, String articleContent) throws WikipediaException;
 
 }

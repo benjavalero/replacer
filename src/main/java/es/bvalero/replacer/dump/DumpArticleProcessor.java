@@ -39,7 +39,8 @@ class DumpArticleProcessor {
     private final Collection<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
     private final Collection<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
     private final Collection<Replacement> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
-    private final Collection<Replacement> replacementsToAdd = new ArrayList<>(CACHE_SIZE);
+    // Prepare a Set to avoid duplicates
+    private final Collection<Replacement> replacementsToAdd = new HashSet<>(CACHE_SIZE);
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -53,7 +54,7 @@ class DumpArticleProcessor {
     private int maxCachedId;
 
     /**
-     * Process a dump article: find the potential errors and add them to the database.
+     * Process a dump article: find the replacements and add them to the database.
      */
     @TestOnly
     boolean processArticle(DumpArticle dumpArticle) {
@@ -61,7 +62,7 @@ class DumpArticleProcessor {
     }
 
     /**
-     * Process a dump article: find the potential errors and add them to the database.
+     * Process a dump article: find the replacements and add them to the database.
      */
     boolean processArticle(DumpArticle dumpArticle, boolean forceProcess) {
         LOGGER.debug("Processing article: {}...", dumpArticle.getTitle());
@@ -116,9 +117,8 @@ class DumpArticleProcessor {
             }
         }
 
-        // TODO Create interface for this
         // Find replacements
-        List<ArticleReplacement> articleReplacements = articleService.findPotentialErrorsIgnoringExceptions(dumpArticle.getContent());
+        List<ArticleReplacement> articleReplacements = articleService.findReplacements(dumpArticle.getContent());
 
         if (articleReplacements.isEmpty()) {
             LOGGER.debug("No errors found in article: {}", dumpArticle.getTitle());

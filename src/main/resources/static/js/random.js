@@ -1,59 +1,139 @@
-var pageId;
-var pageTitle;
-var pageFixes;
-var word;
+var threshold = 200; // Number of characters to display between replacements
+var originalArticle;
 
-$(document).ready(function() {
-    // Check authentication
-    $.get("isAuthenticated", function(data) {
-        if (!data) {
-          window.location.href = 'index.html';
+// Map to store the replacements. The key is the button ID.
+var replacements = [];
+
+/*
+var word;
+*/
+
+document.addEventListener('DOMContentLoaded', function () {
+    reqwest('isAuthenticated', function(authenticated) {
+        if (!authenticated) {
+            window.location.href = 'index.html';
         }
     });
 
+/*
     word = $.url('?word');
+*/
 
-    // Enable the collapse effects
-    $('.collapse').collapse();
-
-    $('#button-save').click(function() {
+    // Add click event to the misspelling buttons
+    document.querySelector('#button-save').addEventListener('click', function () {
         saveChanges();
     });
 
+    addMessage('Buscando artículo con reemplazos…', 'info', true);
     findRandomArticle();
 });
 
+/**
+ * Get the URL parameters
+ * source: https://css-tricks.com/snippets/javascript/get-url-variables/
+ * @param  {String} url The URL
+ * @return {Object}     The URL parameters
+ */
+var getParams = function (url) {
+	var params = {};
+	var parser = document.createElement('a');
+	parser.href = url;
+	var query = parser.search.substring(1);
+	var vars = query.split('&');
+	for (var i = 0; i < vars.length; i++) {
+		var pair = vars[i].split('=');
+		params[pair[0]] = decodeURIComponent(pair[1]);
+	}
+	return params;
+};
+
+function addMessage(message, type, clear) {
+    if (clear) {
+        document.querySelector('#article').classList.add('hidden');
+        document.querySelector('#button-save').classList.add('hidden');
+        document.querySelector('#messages').textContent = '';
+        document.querySelector('#messages').classList.remove('hidden');
+    }
+
+    var alertDiv = document.createElement('div');
+    alertDiv.classList.add('alert', 'alert-' + type, 'text-center');
+    alertDiv.setAttribute('role', 'alert');
+    alertDiv.textContent = message;
+
+    document.querySelector('#messages').appendChild(alertDiv);
+}
+
 function findRandomArticle() {
-    // Call REST to get the article to check
-    $.ajax({
-        url : 'article/random' + (word ? '/word/' + word : ''),
-        dataType : 'json'
-    }).done(function(response) {
-        loadArticle(response);
-    }).fail(function(response) {
-        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
-            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
-            + 'Error cargando artículo con errores ortográfico. Recargue la página.'
-            + '</div>');
+    var word = getParams(window.location.href).word;
+
+    reqwest({
+        url: 'article/random/' + (word || ''),
+        type: 'json',
+        success: function(response) {
+            if (!response.content) {
+                addMessage(response.title, 'danger');
+            } else {
+                loadArticle(response);
+            }
+        }
     });
 }
 
-
 function loadArticle(response) {
-    pageId = response.id;
-    pageTitle = response.title;
-    $('#article-title').text(pageTitle);
-    if (response.content) {
-        $('#article-link').attr("href", "https://es.wikipedia.org/wiki/" + pageTitle);
-        $('#article-link').removeClass("disabled");
-        $('#button-save').removeClass("disabled");
-        $('#article-content').html(response.content);
-    }
-    pageFixes = response.fixes;
+    document.querySelector('#messages').classList.add('hidden');
+    document.querySelector('#article').classList.remove('hidden');
+    document.querySelector('#button-save').classList.remove('hidden');
 
-    // Add event to the misspelling buttons
-    $('.miss').click(function() {
-        turnMisspelling(this.id);
+    document.querySelector('#title').textContent = response.title;
+    document.querySelector('#link').setAttribute('href', 'https://es.wikipedia.org/wiki/' + response.title);
+
+    // Insert replacements
+    originalArticle = response;
+    var articleContent = response.content;
+    response.replacements.forEach(function(replacement) {
+        if (replacement.type == 'MISSPELLING') {
+            var button = document.createElement('button');
+            button.textContent = replacement.text;
+            button.setAttribute('id', 'repl-' + replacement.start);
+            button.setAttribute('type', 'button');
+            button.setAttribute('data-toggle', 'tooltip');
+            button.setAttribute('title', replacement.comment);
+            button.classList.add('btn', 'btn-danger', 'replacement');
+
+            articleContent = articleContent.slice(0, replacement.start)
+                + button.outerHTML
+                + articleContent.slice(replacement.end);
+
+            // Add the replacement to the map
+            replacements[button.id] = replacement;
+        } else if (replacement.type == 'IGNORED') {
+            // The span may include HTML content
+            articleContent = articleContent.slice(0, replacement.start)
+                + '<span class="btn ignored-replacement">' + replacement.text + '</span>'
+                + articleContent.slice(replacement.end);
+        }
+    });
+
+    // We could insert the text with "textContent" but we cannot add the buttons later
+    // We need to encode the text and insert it with "innerHTML" instead
+    articleContent = htmlEscape(articleContent);
+
+    // So we "decode" only the buttons
+    articleContent = articleContent.replace(/&lt;(button|span)(.+?)&gt;/g, '<$1$2>');
+    articleContent = articleContent.replace(/&lt;\/(button|span)&gt;/g, '</$1>');
+
+    // "Trim" the parts with no replacements
+    if (response.trimText) {
+        articleContent = trimText(articleContent);
+    }
+
+    document.querySelector('#content').innerHTML = articleContent;
+
+    // Add click event to the misspelling buttons
+    document.querySelectorAll('.replacement').forEach(function(button) {
+        button.addEventListener('click', function () {
+            toggleReplacement(this.id);
+        });
     });
 
     // Add cool Bootstrap tooltips
@@ -62,44 +142,90 @@ function loadArticle(response) {
     });
 }
 
-function turnMisspelling(missId) {
-    var idx = missId.split('-')[1];
-    var missFix = pageFixes[idx];
-    if (missFix.fixed) {
-        $('#' + missId).removeClass('btn-success');
-        $('#' + missId).addClass('btn-danger');
-        $('#' + missId).html(missFix.originalText);
-        missFix.fixedText = missFix.originalText;
-        missFix.fixed = false;
+function htmlEscape(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function trimText(text) {
+    var result = '';
+
+    var re = new RegExp('<(button|span).+?</\\1>', 'g');
+    var lastEnd = 0;
+    var m;
+    while (m = re.exec(text)) {
+        var matchText = m[0];
+        var matchStart = m.index;
+        var matchEnd = m.index + matchText.length;
+        var textBefore = text.substring(lastEnd, matchStart);
+
+        if (lastEnd == 0) {
+            result += textBefore.length <= threshold ? textBefore : '...' + textBefore.substring(textBefore.length - threshold);
+        } else {
+            result += textBefore.length <= threshold * 2 ? textBefore
+                        : textBefore.substring(0, threshold) + '... <hr> ...' + textBefore.substring(textBefore.length - threshold);
+        }
+        result += matchText;
+
+        lastEnd = matchEnd;
+    }
+
+    // Append the rest after the last button
+    var rest = text.substring(lastEnd);
+    result += rest.length <= threshold ? rest : rest.substring(0, threshold) + '...';
+
+    return result;
+}
+
+function toggleReplacement(id) {
+    var replacement = replacements[id];
+    var button = document.querySelector('#' + id);
+    if (button.classList.contains('btn-danger')) {
+        button.classList.remove('btn-danger');
+        button.classList.add('btn-success');
+        button.textContent = replacement.suggestion;
     } else {
-        $('#' + missId).removeClass('btn-danger');
-        $('#' + missId).addClass('btn-success');
-        $('#' + missId).html(missFix.proposedFixes[0]);
-        missFix.fixedText = missFix.proposedFixes[0];
-        missFix.fixed = true;
+        button.classList.remove('btn-success');
+        button.classList.add('btn-danger');
+        button.textContent = replacement.text;
     }
 }
 
 function saveChanges() {
-    var data = {'id' : pageId, 'title' : pageTitle, 'fixes' : pageFixes}
-
-    $('#button-save').addClass("disabled");
-    $('#article-link').addClass("disabled");
-    $('#article-title').text("Cargando artículo…");
-    $('#article-content').html('');
-
-    $.ajax({
-        type : "POST",
-        contentType : "application/json",
-        url : "article/save",
-        data : JSON.stringify(data),
-        dataType : 'json'
-    }).done(function(response) {
-        findRandomArticle();
-    }).fail(function(response) {
-        $('#main-container').prepend('<div class="alert alert-danger alert-dismissible">'
-            + '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'
-            + 'Error guardando los cambios en ' + pageTitle + ': ' + JSON.stringify(response)
-            + '</div>');
+    // Take the original text and replace the replacements
+    var textToSave = originalArticle.content;
+    originalArticle.replacements.forEach(function(replacement) {
+        if (replacement.type == 'MISSPELLING') {
+            textToSave = textToSave.slice(0, replacement.start)
+                + document.querySelector('#repl-' + replacement.start).textContent
+                + textToSave.slice(replacement.end);
+        }
     });
+
+    addMessage('Guardando cambios en «' + originalArticle.title + '»…', 'info', true);
+
+    if (textToSave === originalArticle.content) {
+        reqwest({
+            url: 'article/save/nochanges',
+            method: 'post',
+            data: { title: originalArticle.title },
+            success: function (resp) {
+                addMessage('Artículo «' + originalArticle.title + '» marcado como revisado', 'success');
+                addMessage('Buscando artículo con reemplazos…', 'info');
+                findRandomArticle();
+            }
+        });
+    } else {
+        reqwest({
+            url: 'article/save',
+            method: 'post',
+            data: { title: originalArticle.title, text: textToSave },
+            success: function (resp) {
+                addMessage('Artículo «' + originalArticle.title + '» guardado', 'success');
+                addMessage('Buscando artículo con reemplazos…', 'info');
+                findRandomArticle();
+            }
+        });
+    }
 }

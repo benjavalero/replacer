@@ -19,6 +19,9 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.format.DateTimeParseException;
 
 public class DumpHandlerTest {
 
@@ -75,6 +78,18 @@ public class DumpHandlerTest {
         // Check number of articles read and processed (we have mocked the result from the processor)
         Assert.assertEquals(4L, dumpHandler.getNumArticlesRead());
         Assert.assertEquals(0L, dumpHandler.getNumArticlesProcessed());
+    }
+
+
+    @Test
+    public void testParseWikipediaDate() {
+        LocalDateTime expected = LocalDateTime.of(2018, Month.AUGUST, 31, 5, 17, 28);
+        Assert.assertEquals(expected, DumpHandler.parseWikipediaDate("2018-08-31T05:17:28Z"));
+    }
+
+    @Test(expected = DateTimeParseException.class)
+    public void testParseWikipediaDateBadFormat() {
+        DumpHandler.parseWikipediaDate("xxx");
     }
 
 }

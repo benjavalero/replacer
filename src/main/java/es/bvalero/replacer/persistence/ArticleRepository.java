@@ -18,6 +18,10 @@ public interface ArticleRepository extends JpaRepository<Article, Integer>, Arti
     @Query("FROM Article WHERE reviewDate IS NULL ORDER BY RAND()")
     List<Article> findRandomArticleNotReviewed(Pageable pageable);
 
+    Article findByTitle(String title);
+
+    void deleteByTitle(String title);
+
     Long countByReviewDateNull();
 
     Long countByReviewDateNotNull();

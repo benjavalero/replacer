@@ -1,7 +1,6 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +8,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Handler to parse a Wikipedia XML dump.
@@ -23,6 +23,7 @@ class DumpHandler extends DefaultHandler {
     private static final String TIMESTAMP_TAG = "timestamp";
     private static final String TEXT_TAG = "text";
     private static final String PAGE_TAG = "page";
+    private static final String WIKIPEDIA_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     private final DumpArticleProcessor dumpArticleProcessor;
     private final boolean forceProcess;
@@ -47,6 +48,11 @@ class DumpHandler extends DefaultHandler {
     DumpHandler(DumpArticleProcessor processor, boolean forceProcess) {
         dumpArticleProcessor = processor;
         this.forceProcess = forceProcess;
+    }
+
+    static LocalDateTime parseWikipediaDate(CharSequence dateStr) {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(WIKIPEDIA_DATE_PATTERN);
+        return LocalDateTime.from(dateFormat.parse(dateStr));
     }
 
     boolean isForceProcess() {
@@ -100,7 +106,7 @@ class DumpHandler extends DefaultHandler {
                 }
                 break;
             case TIMESTAMP_TAG:
-                currentTimestamp = WikipediaUtils.parseWikipediaDate(currentChars.toString());
+                currentTimestamp = parseWikipediaDate(currentChars.toString());
                 break;
             case TEXT_TAG:
                 currentContent = currentChars.toString();
@@ -121,7 +127,7 @@ class DumpHandler extends DefaultHandler {
         currentChars.append(ch, start, length);
     }
 
-    void processPage() {
+    private void processPage() {
         numArticlesRead++;
         DumpArticle dumpArticle = DumpArticle.builder()
                 .setId(currentId)
