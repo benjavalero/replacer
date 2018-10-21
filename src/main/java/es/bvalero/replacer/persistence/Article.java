@@ -1,6 +1,5 @@
 package es.bvalero.replacer.persistence;
 
-import org.hibernate.annotations.Immutable;
 import org.jetbrains.annotations.NonNls;
 
 import javax.persistence.Column;
@@ -12,10 +11,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
- * An article in the database containing potential errors.
+ * An article in the database containing replacements.
  */
 @Entity
-@Immutable
 @Table(name = "article")
 public class Article implements Serializable {
 
@@ -106,6 +104,7 @@ public class Article implements Serializable {
         return new Article(id, title, additionDate, reviewDate);
     }
 
+    @SuppressWarnings("unused")
     public static class ArticleBuilder {
         private int id;
         private String title;

@@ -1,11 +1,11 @@
 package es.bvalero.replacer.article.exception;
 
+import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.misspelling.MisspellingManager;
-import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import java.util.List;
 public class ProperNounFinderTest {
 
     @Mock
-    MisspellingManager misspellingManager;
+    private MisspellingManager misspellingManager;
 
     @InjectMocks
     private ProperNounFinder properNounFinder;
@@ -34,18 +34,15 @@ public class ProperNounFinderTest {
     public void testRegexProperNoun() {
         String noun = "Julio";
         String surname = "Verne";
-        String text = "xxx " + noun + " " + surname + " zzz";
+        String text = "xxx " + noun + ' ' + surname + " zzz";
 
-        RunAutomaton uppercaseMisspellingsAutomaton = new RunAutomaton(new RegExp("").toAutomaton());
-        Mockito.when(misspellingManager.getUppercaseMisspellingsAutomaton()).thenReturn(uppercaseMisspellingsAutomaton);
+        RunAutomaton automaton = Mockito.mock(RunAutomaton.class);
+        Mockito.when(automaton.newMatcher(Mockito.anyString())).thenReturn(Mockito.mock(AutomatonMatcher.class));
+        Mockito.when(misspellingManager.getUppercaseAutomaton()).thenReturn(automaton);
 
-        List<RegexMatch> matches = properNounFinder.findExceptionMatches(text, false);
+        List<ArticleReplacement> matches = properNounFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(noun, matches.get(0).getOriginalText());
-
-        matches = properNounFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(StringUtils.escapeText(noun), matches.get(0).getOriginalText());
+        Assert.assertEquals(noun, matches.get(0).getText());
     }
 
     @Test
@@ -54,22 +51,18 @@ public class ProperNounFinderTest {
         String noun2 = "Febrero";
         String text = "{{ param=" + noun1 + " | " + noun2 + " }} zzz";
 
-        String regexUppercaseAlternations = "[\\.!\\*#\\|=]<Z>?(Enero|Febrero)";
-        RunAutomaton uppercaseMisspellingsAutomaton
-                = new RunAutomaton(new RegExp(regexUppercaseAlternations).toAutomaton(new DatatypesAutomatonProvider()));
-        Mockito.when(misspellingManager.getUppercaseMisspellingsAutomaton()).thenReturn(uppercaseMisspellingsAutomaton);
+        @org.intellij.lang.annotations.RegExp
+        String regexUppercase = "(Enero|Febrero)";
+        RunAutomaton uppercaseAutomaton
+                = new RunAutomaton(new RegExp(regexUppercase).toAutomaton(new DatatypesAutomatonProvider()));
+        Mockito.when(misspellingManager.getUppercaseAutomaton()).thenReturn(uppercaseAutomaton);
 
-        List<RegexMatch> matches = properNounFinder.findExceptionMatches(text, false);
+        List<ArticleReplacement> matches = properNounFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(noun1, matches.get(0).getOriginalText());
-        Assert.assertEquals(9, matches.get(0).getPosition());
-        Assert.assertEquals(noun2, matches.get(1).getOriginalText());
-        Assert.assertEquals(17, matches.get(1).getPosition());
-
-        matches = properNounFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(StringUtils.escapeText(noun1), matches.get(0).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(noun2), matches.get(1).getOriginalText());
+        Assert.assertEquals(noun1, matches.get(0).getText());
+        Assert.assertEquals(9, matches.get(0).getStart());
+        Assert.assertEquals(noun2, matches.get(1).getText());
+        Assert.assertEquals(17, matches.get(1).getStart());
     }
 
 }

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.article.exception;
 
-import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.StringUtils;
+import es.bvalero.replacer.article.ArticleReplacement;
+import es.bvalero.replacer.article.IgnoredReplacementFinder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,15 +14,11 @@ public class LinkSuffixedFinderTest {
         String suffixed = "[[brasil]]eño";
         String text = "xxx " + suffixed + " zzz";
 
-        LinkSuffixedFinder linkSuffixedFinder = new LinkSuffixedFinder();
+        IgnoredReplacementFinder linkSuffixedFinder = new LinkSuffixedFinder();
 
-        List<RegexMatch> matches = linkSuffixedFinder.findExceptionMatches(text, false);
+        List<ArticleReplacement> matches = linkSuffixedFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(suffixed, matches.get(0).getOriginalText());
-
-        matches = linkSuffixedFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(StringUtils.escapeText(suffixed), matches.get(0).getOriginalText());
+        Assert.assertEquals(suffixed, matches.get(0).getText());
     }
 
 }

@@ -1,41 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Replacer - Modo aleatorio</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <link rel="shortcut icon" href="https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico"/>
-    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/css/bootstrap.min.css"/>
-    <script type="text/javascript" src="webjars/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="webjars/bootstrap/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript" src="js/url.min.js"></script>
-    <script type="text/javascript" src="js/random.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="webjars/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/replacer.css">
+    <link rel="stylesheet" href="css/random.css">
 
-    <link rel="stylesheet" type="text/css" href="css/replacer.css">
-    <link rel="stylesheet" type="text/css" href="css/random.css">
+    <title>Replacer - Modo aleatorio</title>
 </head>
 <body>
 
-<div id="main-container" class="container">
-
-    <h1 id="article-title">Cargando artículo…</h1>
-    <div>
-        <a id="article-link" class="btn btn-link disabled" href="#" target="_blank">Abrir artículo en Wikipedia</a>
+<div class="container">
+    <div id="messages" class="container hidden"></div>
+    <div id="article" class="hidden">
+        <h1 id="title"></h1>
+        <div><a id="link" target="_blank">Abrir artículo en Wikipedia</a></div>
+        <div id="content" class="pre"></div>
     </div>
-
-    <div id="article-content" class="pre"></div>
-
 </div>
-
 <footer class="footer">
     <div class="container">
-        <a id="button-save" href="#" class="btn btn-default disabled" role="button">Guardar cambios</a>
+        <button id="button-save" type="button" class="btn btn-primary hidden">Guardar cambios</button>
     </div>
 </footer>
 
+<!-- I have not achieved to use Popper/Tooltip without jQuery -->
+<script src="webjars/jquery-slim/dist/jquery.slim.min.js"></script>
+<script src="webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Lightweight Ajax library -->
+<script src="webjars/reqwest/reqwest.min.js"></script>
+
+<script type="text/javascript" src="js/random.js"></script>
+
 </body>
 </html>
+
+
+<!--
+    <script type="text/javascript" src="js/url.min.js"></script>
+-->

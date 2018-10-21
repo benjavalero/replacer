@@ -1,61 +1,76 @@
 package es.bvalero.replacer.misspelling;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * Domain class corresponding to the lines in the Wikipedia article containing potential misspellings.
  */
-public class Misspelling {
+final class Misspelling {
 
     private final String word;
     private final boolean caseSensitive;
     private final String comment;
 
-    // Derived from the comment. In order not to calculate them every time.
-    private List<String> suggestions;
-
-    public Misspelling(String word, boolean caseSensitive, String comment) {
+    private Misspelling(String word, boolean caseSensitive, String comment) {
         this.word = word;
         this.caseSensitive = caseSensitive;
         this.comment = comment;
+    }
+
+    static Misspelling.MisspellingBuilder builder() {
+        return new Misspelling.MisspellingBuilder();
     }
 
     public String getWord() {
         return word;
     }
 
-    public boolean isCaseSensitive() {
+    boolean isCaseSensitive() {
         return caseSensitive;
     }
 
-    public String getComment() {
+    String getComment() {
         return comment;
     }
 
-    public List<String> getSuggestions() {
-        if (this.suggestions == null) {
-            this.suggestions = parseSuggestionsFromComment();
-        }
-        return this.suggestions;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Misspelling that = (Misspelling) obj;
+        return caseSensitive == that.caseSensitive &&
+                Objects.equals(word, that.word) &&
+                Objects.equals(comment, that.comment);
     }
 
-    private List<String> parseSuggestionsFromComment() {
-        List<String> commentSuggestions = new ArrayList<>();
+    @Override
+    public int hashCode() {
+        return Objects.hash(word, caseSensitive, comment);
+    }
 
-        String suggestionWithoutBrackets = getComment().replaceAll("\\(.+?\\)", "");
-        for (String suggestion : suggestionWithoutBrackets.split(",")) {
-            String suggestionWord = suggestion.trim();
+    static class MisspellingBuilder {
+        private String word;
+        private boolean caseSensitive;
+        private String comment;
 
-            // Don't suggest the misspelling main word
-            if (StringUtils.isNotBlank(suggestionWord) && !suggestionWord.equals(getWord())) {
-                commentSuggestions.add(suggestionWord);
-            }
+        Misspelling.MisspellingBuilder setWord(String word) {
+            this.word = word;
+            return this;
         }
 
-        return commentSuggestions;
+        Misspelling.MisspellingBuilder setCaseSensitive(boolean caseSensitive) {
+            this.caseSensitive = caseSensitive;
+            return this;
+        }
+
+        Misspelling.MisspellingBuilder setComment(String comment) {
+            this.comment = comment;
+            return this;
+        }
+
+        public Misspelling build() {
+            return new Misspelling(word, caseSensitive, comment);
+        }
     }
 
 }

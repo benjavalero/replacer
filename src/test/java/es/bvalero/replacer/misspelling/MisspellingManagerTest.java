@@ -4,10 +4,12 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.utils.RegExUtils;
-import es.bvalero.replacer.utils.RegexMatch;
+import es.bvalero.replacer.article.ArticleReplacement;
+import es.bvalero.replacer.article.ArticleReplacementFinder;
+import es.bvalero.replacer.persistence.ReplacementType;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -16,6 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -23,8 +27,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class MisspellingManagerTest {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingManagerTest.class);
 
     @Mock
     private IWikipediaFacade wikipediaService;
@@ -39,20 +46,18 @@ public class MisspellingManagerTest {
     }
 
     @Test
-    public void testFindWikipediaMisspellingsWithErrors() throws Exception {
+    public void testFindWikipediaMisspellingsWithErrors() throws WikipediaException {
         Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenThrow(new WikipediaException());
-
-        misspellingManager.updateMisspellings();
+        Assert.assertTrue(misspellingManager.findWikipediaMisspellings().isEmpty());
     }
 
     @Test
-    public void testUpdateMisspellings() throws WikipediaException {
-        String misspellingListText = "Texto\n" +
-                "\n" +
-                "A||B\n" +
+    public void testParseMisspellingListText() {
+        String misspellingListText = "Texto\n\n" +
+                "A||B\n" + // No starting whitespace
                 " C|cs|D\n" +
-                " E|CS|F\n" + // No case sensitive
-                " G|H\n" +
+                " E|CS|F\n" +
+                " G|H\n" + // Bad formatted
                 " I||J\n" +
                 " k||k (letra), que, qué, kg (kilogramo)\n" +
                 " I||J\n" + // Duplicated
@@ -60,79 +65,100 @@ public class MisspellingManagerTest {
                 " remake||(nueva) versión o adaptación\n" +
                 " desempeño||desempeño (sustantivo o verbo, 1.ª persona), desempeñó (verbo, 3.ª persona)";
 
-        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenReturn(misspellingListText);
+        Collection<Misspelling> misspellings = MisspellingManager.parseMisspellingListText(misspellingListText);
+        Assert.assertEquals(7, misspellings.size());
 
-        misspellingManager.updateMisspellings();
-
-        Assert.assertNull(misspellingManager.findMisspellingByWord("A"));
-
-        Misspelling misspellingC = misspellingManager.findMisspellingByWord("C");
-        Assert.assertNotNull(misspellingC);
-        Assert.assertEquals("C", misspellingC.getWord());
-        Assert.assertTrue(misspellingC.isCaseSensitive());
-        Assert.assertEquals("D", misspellingC.getComment());
-
-        Misspelling misspellingE = misspellingManager.findMisspellingByWord("E");
-        Assert.assertNotNull(misspellingE);
-        Assert.assertEquals("E", misspellingE.getWord());
-        Assert.assertTrue(misspellingE.isCaseSensitive());
-        Assert.assertEquals("F", misspellingE.getComment());
-
-        Assert.assertNull(misspellingManager.findMisspellingByWord("G"));
-
-        Misspelling misspellingI = misspellingManager.findMisspellingByWord("I");
-        Assert.assertNotNull(misspellingI);
-        Assert.assertEquals("i", misspellingI.getWord());
-        Assert.assertFalse(misspellingI.isCaseSensitive());
-        Assert.assertEquals("J", misspellingI.getComment());
-
-        Misspelling misspellingK = misspellingManager.findMisspellingByWord("K");
-        Assert.assertNotNull(misspellingK);
-        Assert.assertEquals("k", misspellingK.getWord());
-        Assert.assertEquals(3, misspellingK.getSuggestions().size());
-        Assert.assertTrue(misspellingK.getSuggestions().contains("qué"));
-        Assert.assertFalse(misspellingK.getSuggestions().contains("k"));
-
-        Misspelling misspellingRenuncio = misspellingManager.findMisspellingByWord("renuncio");
-        Assert.assertNotNull(misspellingRenuncio);
-        Assert.assertEquals(1, misspellingRenuncio.getSuggestions().size());
-        Assert.assertEquals("renunció", misspellingRenuncio.getSuggestions().get(0));
-
-        Misspelling misspellingRemake = misspellingManager.findMisspellingByWord("remake");
-        Assert.assertNotNull(misspellingRemake);
-        Assert.assertFalse(misspellingRemake.getSuggestions().isEmpty());
-        Assert.assertEquals("versión o adaptación", misspellingRemake.getSuggestions().get(0));
-
-        // Test with commas between brackets
-        Misspelling misspellingDesempeno = misspellingManager.findMisspellingByWord("desempeño");
-        Assert.assertNotNull(misspellingDesempeno);
-        Assert.assertEquals(1, misspellingDesempeno.getSuggestions().size());
-        Assert.assertEquals("desempeñó", misspellingDesempeno.getSuggestions().get(0));
+        Assert.assertTrue(misspellings.contains(Misspelling.builder()
+                .setWord("C").setCaseSensitive(true).setComment("D").build()));
+        Assert.assertTrue(misspellings.contains(Misspelling.builder()
+                .setWord("E").setCaseSensitive(true).setComment("F").build()));
+        Assert.assertTrue(misspellings.contains(Misspelling.builder()
+                .setWord("I").setCaseSensitive(false).setComment("J").build()));
     }
 
     @Test
-    public void testFindMisspellingByWord() throws WikipediaException {
-        String wikiText = " conprar||comprar\n madrid|cs|Madrid\n álvaro|cs|Álvaro";
-        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenReturn(wikiText);
+    public void testSetFirstUpperCase() {
+        Assert.assertEquals("Álvaro", MisspellingManager.setFirstUpperCase("Álvaro"));
+        Assert.assertEquals("Úlcera", MisspellingManager.setFirstUpperCase("úlcera"));
+        Assert.assertEquals("Ñ", MisspellingManager.setFirstUpperCase("ñ"));
+    }
 
-        Assert.assertEquals("conprar",
-                Objects.requireNonNull(misspellingManager.findMisspellingByWord("conprar")).getWord());
-        Assert.assertEquals("conprar",
-                Objects.requireNonNull(misspellingManager.findMisspellingByWord("Conprar")).getWord());
-        Assert.assertEquals("madrid",
-                Objects.requireNonNull(misspellingManager.findMisspellingByWord("madrid")).getWord());
-        Assert.assertEquals("álvaro",
-                Objects.requireNonNull(misspellingManager.findMisspellingByWord("álvaro")).getWord());
+    @Test
+    public void testStartsWithUpperCase() {
+        Assert.assertTrue(MisspellingManager.startsWithUpperCase("Álvaro"));
+        Assert.assertFalse(MisspellingManager.startsWithUpperCase("úlcera"));
+    }
+
+    @Test
+    public void testBuildMisspellingMap() {
+        Misspelling misspelling1 =
+                Misspelling.builder().setWord("haver").setComment("haber").setCaseSensitive(false).build();
+        Misspelling misspelling2 =
+                Misspelling.builder().setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
+        List<Misspelling> misspellingList = Arrays.asList(misspelling1, misspelling2);
+
+        Map<String, Misspelling> misspellingMap = MisspellingManager.buildMisspellingMap(misspellingList);
+
+        Assert.assertEquals(3, misspellingMap.size());
+        Assert.assertEquals(misspelling1, misspellingMap.get("haver"));
+        Assert.assertEquals(misspelling1, misspellingMap.get("Haver"));
+        Assert.assertEquals(misspelling2, misspellingMap.get("madrid"));
+    }
+
+    @Test
+    public void testBuildMisspellingAutomaton() {
+        Misspelling misspelling1 =
+                Misspelling.builder().setWord("aun").setComment("aún").setCaseSensitive(false).build();
+        Misspelling misspelling2 =
+                Misspelling.builder().setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
+        List<Misspelling> misspellingList = Arrays.asList(misspelling1, misspelling2);
+
+        RunAutomaton automaton = MisspellingManager.buildMisspellingAutomaton(misspellingList);
+
+        // This automaton finds the sequence of letters even if not complete words
+        String text = "En madrid Aun pauna.";
+        List<ArticleReplacement> replacements = ArticleReplacementFinder.findReplacements(text, automaton, ReplacementType.MISSPELLING);
+        Assert.assertEquals(3, replacements.size());
+        Assert.assertEquals("madrid", replacements.get(0).getText());
+        Assert.assertEquals("Aun", replacements.get(1).getText());
+        Assert.assertEquals("aun", replacements.get(2).getText());
+    }
+
+    @Test
+    public void testBuildUppercaseAutomaton() {
+        Misspelling misspelling1 =
+                Misspelling.builder().setWord("Marzo").setComment("marzo").setCaseSensitive(true).build();
+        Misspelling misspelling2 =
+                Misspelling.builder().setWord("Febrero").setComment("febrero").setCaseSensitive(true).build();
+        List<Misspelling> misspellingList = Arrays.asList(misspelling1, misspelling2);
+
+        RunAutomaton automaton = MisspellingManager.buildUppercaseAutomaton(misspellingList);
+
+        // This automaton finds the sequence of letters even if not complete words
+        String text = "En Febrero. Marzo.";
+        List<ArticleReplacement> replacements = ArticleReplacementFinder.findReplacements(text, automaton, ReplacementType.MISSPELLING);
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals(". Marzo", replacements.get(0).getText());
+    }
+
+    @Test
+    public void testFindMisspellingByWord() {
+        Map<String, Misspelling> misspellings = new HashMap<>(1);
+        Misspelling misspelling =
+                Misspelling.builder().setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
+        misspellings.put("madrid", misspelling);
+        misspellingManager.setMisspellings(misspellings);
+
+        Assert.assertEquals(misspelling, misspellingManager.findMisspellingByWord("madrid"));
         Assert.assertNull(misspellingManager.findMisspellingByWord("Madrid"));
-        Assert.assertNull(misspellingManager.findMisspellingByWord("Álvaro"));
     }
 
     @Test
     @Ignore
     public void testFindMisspellingsPerformance() throws WikipediaException {
-        System.out.println("BEGIN FIND POTENTIAL ERRORS EXPERIMENT");
+        LOGGER.info("BEGIN FIND POTENTIAL ERRORS EXPERIMENT");
 
-        String text = null;
+        String text = "";
         String misspellingText = null;
         try {
             text = new String(Files.readAllBytes(Paths.get(MisspellingManagerTest.class.getResource("/article-longest.txt").toURI())),
@@ -140,138 +166,134 @@ public class MisspellingManagerTest {
             misspellingText = new String(Files.readAllBytes(Paths.get(MisspellingManagerTest.class.getResource("/misspelling-list.txt").toURI())),
                     StandardCharsets.UTF_8);
         } catch (IOException | URISyntaxException e) {
-            e.printStackTrace();
+            LOGGER.error("", e);
         }
         Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenReturn(misspellingText);
         // Pre-load the misspellings map
-        System.out.println("Loading misspellings...");
+        LOGGER.info("Loading misspellings...");
         misspellingManager.updateMisspellings();
-        System.out.println();
 
         // Test 1 : Find all the words and check if they are potential errors
-        System.out.println("Building automaton...");
+        LOGGER.info("\nBuilding automaton...");
         RunAutomaton automatonWord = new RunAutomaton(new RegExp("(<L>|<N>)+").toAutomaton(new DatatypesAutomatonProvider()));
 
-        System.out.println("BEGIN TEST #1");
-        long start = System.currentTimeMillis();
-        List<RegexMatch> textWords = RegExUtils.findMatchesAutomaton(text, automatonWord);
+        LOGGER.info("BEGIN TEST #1");
+        long start1 = System.currentTimeMillis();
+        List<ArticleReplacement> textWords = ArticleReplacementFinder.findReplacements(text, automatonWord, ReplacementType.IGNORED);
         // For each word, check if it is a known potential misspelling.
         int count1 = 0;
-        for (RegexMatch textWord : textWords) {
-            String originalText = textWord.getOriginalText();
+        for (ArticleReplacement textWord : textWords) {
+            String originalText = textWord.getText();
             Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
             if (wordMisspelling != null) {
-                System.out.println("MATCH: " + originalText);
+                LOGGER.info("MATCH: {}", wordMisspelling.getWord());
                 count1++;
             }
         }
-        long timeElapsed = System.currentTimeMillis() - start;
-        System.out.println("TEST 1: " + timeElapsed + " ms / " + count1 + " results");
-        System.out.println("Words: " + textWords.size());
-        System.out.println();
+        long timeElapsed1 = System.currentTimeMillis() - start1;
+        LOGGER.info("TEST 1: {} ms / {} results", +timeElapsed1, count1);
+        LOGGER.info("Words: {}\n", textWords.size());
 
 
         // Test 2 : Build a long long regex with all the potential errors and match the text
-        System.out.println("Building alternations...");
-        Set<Misspelling> misspellingList = new HashSet<>(misspellingManager.getMisspellingMap().values());
-        List<String> alternations = new ArrayList<>(misspellingList.size());
+        LOGGER.info("Building alternations...");
+        Set<Misspelling> misspellingList = new HashSet<>(misspellingManager.getMisspellings().values());
+        Collection<String> alternations = new ArrayList<>(misspellingList.size());
         for (Misspelling misspelling : misspellingList) {
             if (misspelling.isCaseSensitive()) {
                 alternations.add(misspelling.getWord());
             } else {
                 String word = misspelling.getWord();
                 String firstLetter = word.substring(0, 1);
-                String newWord = "[" + firstLetter + firstLetter.toUpperCase(Locale.forLanguageTag("es")) + "]" + word.substring(1);
+                String newWord = '[' + firstLetter + firstLetter.toUpperCase(Locale.forLanguageTag("es")) + ']' + word.substring(1);
                 alternations.add(newWord);
             }
         }
 
-        System.out.println("Building automaton...");
-        String regexAlternations = " (" + org.apache.commons.lang3.StringUtils.join(alternations, "|") + ") ";
+        LOGGER.info("Building automaton...");
+        String regexAlternations2 = " (" + StringUtils.join(alternations, "|") + ") ";
         // IMPORTANT : WE NEED AT LEAST 2 MB OF STACK SIZE -Xss2m !!!
-        RunAutomaton automatonMisspellings = new RunAutomaton(new RegExp(regexAlternations).toAutomaton());
+        RunAutomaton automatonMisspellings2 = new RunAutomaton(new RegExp(regexAlternations2).toAutomaton());
 
-        System.out.println("BEGIN TEST #2");
-        start = System.currentTimeMillis();
+        LOGGER.info("BEGIN TEST #2");
+        long start2 = System.currentTimeMillis();
 
         // Replace any character non-alphanumeric with a whitespace
-        String cleanText = text.replaceAll("[^\\p{L}\\p{N}]", " ");
+        Pattern nonAlphanumeric = Pattern.compile("[^\\p{L}\\p{N}]");
+        String cleanText2 = nonAlphanumeric.matcher(text).replaceAll(" ");
 
-        AutomatonMatcher automatonMatcher = automatonMisspellings.newMatcher(cleanText);
+        AutomatonMatcher automatonMatcher2 = automatonMisspellings2.newMatcher(cleanText2);
         int count2 = 0;
-        while (automatonMatcher.find()) {
-            String originalText = automatonMatcher.group(0).trim();
+        while (automatonMatcher2.find()) {
+            String originalText = automatonMatcher2.group(0).trim();
             Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
             if (wordMisspelling != null) {
-                System.out.println("MATCH: " + originalText);
+                LOGGER.info("MATCH: {}", wordMisspelling.getWord());
                 count2++;
             }
         }
-        timeElapsed = System.currentTimeMillis() - start;
-        System.out.println("TEST 2: " + timeElapsed + " ms / " + count2 + " results");
-        System.out.println("Misspellings: " + misspellingList.size());
-        System.out.println();
+        long timeElapsed2 = System.currentTimeMillis() - start2;
+        LOGGER.info("TEST 2: {} ms / {} results", +timeElapsed2, count2);
+        LOGGER.info("Misspellings: {}\n", misspellingList.size());
 
 
         // Test 2B : Change the way we build the long regex with the alternations (no leading space)
-        System.out.println("Building automaton...");
-        regexAlternations = "(" + org.apache.commons.lang3.StringUtils.join(alternations, "|") + ") ";
+        LOGGER.info("Building automaton...");
+        String regexAlternations2B = '(' + StringUtils.join(alternations, "|") + ") ";
         // IMPORTANT : WE NEED AT LEAST 2 MB OF STACK SIZE -Xss2m !!!
-        automatonMisspellings = new RunAutomaton(new RegExp(regexAlternations).toAutomaton());
+        RunAutomaton automatonMisspellings2B = new RunAutomaton(new RegExp(regexAlternations2B).toAutomaton());
 
-        System.out.println("BEGIN TEST #2B");
-        start = System.currentTimeMillis();
+        LOGGER.info("BEGIN TEST #2B");
+        long start2B = System.currentTimeMillis();
 
         // Replace any character non-alphanumeric with a whitespace
-        cleanText = text.replaceAll("[^\\p{L}\\p{N}]", " ");
+        String cleanText2B = nonAlphanumeric.matcher(text).replaceAll(" ");
 
-        automatonMatcher = automatonMisspellings.newMatcher(cleanText);
+        AutomatonMatcher automatonMatcher2B = automatonMisspellings2B.newMatcher(cleanText2B);
         int count2B = 0;
-        while (automatonMatcher.find()) {
+        while (automatonMatcher2B.find()) {
             // Check if the found word is complete, i. e. check the character before the match
-            if (cleanText.substring(automatonMatcher.start() - 1, automatonMatcher.start()).equals(" ")) {
-                String originalText = automatonMatcher.group(0).trim();
+            if (" ".equals(cleanText2B.substring(automatonMatcher2B.start() - 1, automatonMatcher2B.start()))) {
+                String originalText = automatonMatcher2B.group(0).trim();
                 Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
                 if (wordMisspelling != null) {
-                    System.out.println("MATCH: " + originalText);
+                    LOGGER.info("MATCH: {}", wordMisspelling.getWord());
                     count2B++;
                 }
             }
         }
-        timeElapsed = System.currentTimeMillis() - start;
-        System.out.println("TEST 2B: " + timeElapsed + " ms / " + count2B + " results");
-        System.out.println();
+        long timeElapsed2B = System.currentTimeMillis() - start2B;
+        LOGGER.info("TEST 2B: {} ms / {} results\n", +timeElapsed2B, count2B);
 
 
         // Test 2C : Change the way we build the long regex with the alternations (no leading or trailing space)
-        System.out.println("Building automaton...");
-        regexAlternations = "(" + org.apache.commons.lang3.StringUtils.join(alternations, "|") + ")";
+        LOGGER.info("Building automaton...");
+        String regexAlternations2C = '(' + StringUtils.join(alternations, "|") + ')';
         // IMPORTANT : WE NEED AT LEAST 2 MB OF STACK SIZE -Xss2m !!!
-        automatonMisspellings = new RunAutomaton(new RegExp(regexAlternations).toAutomaton());
+        RunAutomaton automatonMisspellings2C = new RunAutomaton(new RegExp(regexAlternations2C).toAutomaton());
 
-        System.out.println("BEGIN TEST #2C");
-        start = System.currentTimeMillis();
+        LOGGER.info("BEGIN TEST #2C");
+        long start2C = System.currentTimeMillis();
 
         // Replace any character non-alphanumeric with a whitespace
-        cleanText = text.replaceAll("[^\\p{L}\\p{N}]", " ");
+        String cleanText2C = nonAlphanumeric.matcher(text).replaceAll(" ");
 
-        automatonMatcher = automatonMisspellings.newMatcher(cleanText);
+        AutomatonMatcher automatonMatcher2C = automatonMisspellings2C.newMatcher(cleanText2C);
         int count2C = 0;
-        while (automatonMatcher.find()) {
+        while (automatonMatcher2C.find()) {
             // Check if the found word is complete, i. e. check the character before the match
-            if (cleanText.substring(automatonMatcher.start() - 1, automatonMatcher.start()).equals(" ")
-                    && cleanText.substring(automatonMatcher.end(), automatonMatcher.end() + 1).equals(" ")) {
-                String originalText = automatonMatcher.group(0).trim();
+            if (" ".equals(cleanText2C.substring(automatonMatcher2C.start() - 1, automatonMatcher2C.start()))
+                    && " ".equals(cleanText2C.substring(automatonMatcher2C.end(), automatonMatcher2C.end() + 1))) {
+                String originalText = automatonMatcher2C.group(0).trim();
                 Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
                 if (wordMisspelling != null) {
-                    System.out.println("MATCH: " + originalText);
+                    LOGGER.info("MATCH: {}", wordMisspelling.getWord());
                     count2C++;
                 }
             }
         }
-        timeElapsed = System.currentTimeMillis() - start;
-        System.out.println("TEST 2C: " + timeElapsed + " ms / " + count2C + " results");
-        System.out.println();
+        long timeElapsed2C = System.currentTimeMillis() - start2C;
+        LOGGER.info("TEST 2C: {} ms / {} results\n", +timeElapsed2C, count2C);
 
 /*
         // Test 3 : Create one regex for each misspelling and try to match the text
@@ -282,7 +304,7 @@ public class MisspellingManagerTest {
             misspellingAutomatonList.add(new RunAutomaton(new RegExp(" " + alternation + " ").toAutomaton()));
         }
 
-        System.out.println("BEGIN TEST #3");
+        LOGGER.info("BEGIN TEST #3");
         start = System.currentTimeMillis();
 
         // Replace any character non-alphanumeric with a whitespace
@@ -295,14 +317,14 @@ public class MisspellingManagerTest {
                 String originalText = automatonMatcher.group(0);
                 Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(originalText);
                 if (wordMisspelling != null) {
-                    System.out.println("MATCH: " + originalText);
+                    LOGGER.info("MATCH: " + originalText);
                     count3++;
                 }
             }
         }
         timeElapsed = System.currentTimeMillis() - start;
-        System.out.println("TEST 3: " + timeElapsed + " ms / " + count3 + " results");
-        System.out.println();
+        LOGGER.info("TEST 3: " + timeElapsed + " ms / " + count3 + " results");
+        LOGGER.info();
 */
     }
 

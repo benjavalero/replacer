@@ -1,4 +1,9 @@
-/* FIXED FOOTER */
+div#messages {
+    width: 50%;
+    padding-top: 5%;
+}
+
+/* FIXED FOOTER : http://getbootstrap.com/docs/4.1/examples/sticky-footer/ */
 
 html {
   position: relative;
@@ -6,21 +11,20 @@ html {
 }
 
 body {
-  margin-bottom: 7ex;
+  margin-bottom: 7ex; /* Margin bottom by footer height */
 }
 
 .footer {
-  position: fixed;
+  position: absolute;
   bottom: 0;
   width: 100%;
-  height: 6ex;
-  background-color: #ffffff;
+  height: 7ex; /* Set the fixed height of the footer here */
+  line-height: 7ex; /* Vertically center the text there */
 }
 
 /* MISPELLINGS */
 
 .pre {
-/*  font-family: monospace; */
   white-space: pre-wrap;
 }
 
@@ -29,27 +33,17 @@ body {
 }
 
 hr {
-  border-color: #333;
-  border-style: double none none;
-  border-width: medium;
+  border-top: medium double black;
 }
 
 #button-save {
   width: 100%;
-  margin: 1ex 0 1ex 0;
 }
 
 /* SYNTAX */
 
-.syntax {
-  border: 1px solid transparent;
-  border-radius: 4px;
-  padding: 2px;
-}
-
-.exception {
+.ignored-replacement {
+  border: 1px solid;
   background-color: #dcdcdc;
-  border-color: #444444;
-  color: #444444;
 }
 

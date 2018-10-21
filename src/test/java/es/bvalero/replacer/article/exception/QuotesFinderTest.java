@@ -1,7 +1,7 @@
 package es.bvalero.replacer.article.exception;
 
-import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.StringUtils;
+import es.bvalero.replacer.article.ArticleReplacement;
+import es.bvalero.replacer.article.IgnoredReplacementFinder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,27 +18,19 @@ public class QuotesFinderTest {
         String quotes5 = "'''ccc ''dd'' ee'''";
         String quotes6 = "'''''bbb'''''";
 
-        String text = "xxx " + quotes1 + " / " + quotes2 + " / " + quotes3 + " / " + quotes4 + " / " + quotes5 + " / " + quotes6 + ".";
+        String text = "xxx " + quotes1 + " / " + quotes2 + " / " + quotes3 + " / " + quotes4 + " / " + quotes5 + " / " + quotes6 + '.';
 
-        QuotesFinder quotesFinder = new QuotesFinder();
+        IgnoredReplacementFinder quotesFinder = new QuotesFinder();
 
-        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
+        List<ArticleReplacement> matches = quotesFinder.findIgnoredReplacements(text);
 
         Assert.assertEquals(6, matches.size());
-        Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
-        Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
-        Assert.assertEquals("''dd''", matches.get(2).getOriginalText());
-        Assert.assertEquals(quotes4, matches.get(3).getOriginalText());
-        Assert.assertEquals(quotes5, matches.get(4).getOriginalText());
-        Assert.assertEquals(quotes6, matches.get(5).getOriginalText());
-
-        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertEquals(5, matches.size());
-        Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(quotes4), matches.get(2).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(quotes5), matches.get(3).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(quotes6), matches.get(4).getOriginalText());
+        Assert.assertEquals(quotes1, matches.get(0).getText());
+        Assert.assertEquals(quotes2, matches.get(1).getText());
+        Assert.assertEquals("''dd''", matches.get(2).getText());
+        Assert.assertEquals(quotes4, matches.get(3).getText());
+        Assert.assertEquals(quotes5, matches.get(4).getText());
+        Assert.assertEquals(quotes6, matches.get(5).getText());
     }
 
     @Test
@@ -46,21 +38,15 @@ public class QuotesFinderTest {
         String quotes1 = "«yáy»";
         String quotes2 = "«z, zz»";
         String quotes3 = "«z\nz»";
-        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + ".";
+        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + '.';
 
-        QuotesFinder quotesFinder = new QuotesFinder();
+        IgnoredReplacementFinder quotesFinder = new QuotesFinder();
 
-        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
+        List<ArticleReplacement> matches = quotesFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
-        Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
-        Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
-        Assert.assertEquals(quotes3, matches.get(2).getOriginalText());
-
-        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertEquals(3, matches.size());
-        Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(quotes3), matches.get(2).getOriginalText());
+        Assert.assertEquals(quotes1, matches.get(0).getText());
+        Assert.assertEquals(quotes2, matches.get(1).getText());
+        Assert.assertEquals(quotes3, matches.get(2).getText());
     }
 
     @Test
@@ -68,21 +54,15 @@ public class QuotesFinderTest {
         String quotes1 = "“yáy”";
         String quotes2 = "“z, zz”";
         String quotes3 = "“z\nz”";
-        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + ".";
+        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + '.';
 
-        QuotesFinder quotesFinder = new QuotesFinder();
+        IgnoredReplacementFinder quotesFinder = new QuotesFinder();
 
-        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
+        List<ArticleReplacement> matches = quotesFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
-        Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
-        Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
-        Assert.assertEquals(quotes3, matches.get(2).getOriginalText());
-
-        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertEquals(3, matches.size());
-        Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(quotes3), matches.get(2).getOriginalText());
+        Assert.assertEquals(quotes1, matches.get(0).getText());
+        Assert.assertEquals(quotes2, matches.get(1).getText());
+        Assert.assertEquals(quotes3, matches.get(2).getText());
     }
 
     @Test
@@ -90,19 +70,14 @@ public class QuotesFinderTest {
         String quotes1 = "\"yáy\"";
         String quotes2 = "\"zzz\"";
         String quotes3 = "\"z\nz\"";
-        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + ".";
+        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + '.';
 
-        QuotesFinder quotesFinder = new QuotesFinder();
+        IgnoredReplacementFinder quotesFinder = new QuotesFinder();
 
-        List<RegexMatch> matches = quotesFinder.findExceptionMatches(text, false);
+        List<ArticleReplacement> matches = quotesFinder.findIgnoredReplacements(text);
         Assert.assertEquals(2, matches.size());
-        Assert.assertEquals(quotes1, matches.get(0).getOriginalText());
-        Assert.assertEquals(quotes2, matches.get(1).getOriginalText());
-
-        matches = quotesFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertEquals(2, matches.size());
-        Assert.assertEquals(StringUtils.escapeText(quotes1), matches.get(0).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(quotes2), matches.get(1).getOriginalText());
+        Assert.assertEquals(quotes1, matches.get(0).getText());
+        Assert.assertEquals(quotes2, matches.get(1).getText());
     }
 
 }

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.article.exception;
 
-import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.StringUtils;
+import es.bvalero.replacer.article.ArticleReplacement;
+import es.bvalero.replacer.article.IgnoredReplacementFinder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,19 +16,13 @@ public class CompleteTagFinderTest {
         String tag3 = "<source>Otro ejemplo</source>";
         String text = "xxx " + tag1 + " / " + tag2 + " / " + tag3 + " zzz";
 
-        CompleteTagFinder completeTagFinder = new CompleteTagFinder();
+        IgnoredReplacementFinder completeTagFinder = new CompleteTagFinder();
 
-        List<RegexMatch> matches = completeTagFinder.findExceptionMatches(text, false);
+        List<ArticleReplacement> matches = completeTagFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
-        Assert.assertEquals(tag1, matches.get(0).getOriginalText());
-        Assert.assertEquals(tag2, matches.get(1).getOriginalText());
-        Assert.assertEquals(tag3, matches.get(2).getOriginalText());
-
-        matches = completeTagFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertEquals(3, matches.size());
-        Assert.assertEquals(StringUtils.escapeText(tag1), matches.get(0).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(tag2), matches.get(1).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(tag3), matches.get(2).getOriginalText());
+        Assert.assertEquals(tag1, matches.get(0).getText());
+        Assert.assertEquals(tag2, matches.get(1).getText());
+        Assert.assertEquals(tag3, matches.get(2).getText());
     }
 
 }

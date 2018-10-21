@@ -1,7 +1,7 @@
 package es.bvalero.replacer.article.exception;
 
-import es.bvalero.replacer.utils.RegexMatch;
-import es.bvalero.replacer.utils.StringUtils;
+import es.bvalero.replacer.article.ArticleReplacement;
+import es.bvalero.replacer.article.IgnoredReplacementFinder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,15 +14,11 @@ public class UrlFinderTest {
         String url = "https://google.es?u=aj&t2+rl=http://www.marca.com#!page~2,3";
         String text = "xxx " + url + " zzz";
 
-        UrlFinder urlFinder = new UrlFinder();
+        IgnoredReplacementFinder urlFinder = new UrlFinder();
 
-        List<RegexMatch> matches = urlFinder.findExceptionMatches(text, false);
+        List<ArticleReplacement> matches = urlFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(url, matches.get(0).getOriginalText());
-
-        matches = urlFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(StringUtils.escapeText(url), matches.get(0).getOriginalText());
+        Assert.assertEquals(url, matches.get(0).getText());
     }
 
     @Test
@@ -32,17 +28,12 @@ public class UrlFinderTest {
         String domain3 = "BBC.co.uk";
         String text = "xxx " + domain1 + " / " + domain2 + " / " + domain3 + " zzz";
 
-        UrlFinder urlFinder = new UrlFinder();
+        IgnoredReplacementFinder urlFinder = new UrlFinder();
 
-        List<RegexMatch> matches = urlFinder.findExceptionMatches(text, false);
+        List<ArticleReplacement> matches = urlFinder.findIgnoredReplacements(text);
         Assert.assertEquals(2, matches.size());
-        Assert.assertEquals(domain1, matches.get(0).getOriginalText());
-        Assert.assertEquals(domain2, matches.get(1).getOriginalText());
-
-        matches = urlFinder.findExceptionMatches(StringUtils.escapeText(text), true);
-        Assert.assertEquals(2, matches.size());
-        Assert.assertEquals(StringUtils.escapeText(domain1), matches.get(0).getOriginalText());
-        Assert.assertEquals(StringUtils.escapeText(domain2), matches.get(1).getOriginalText());
+        Assert.assertEquals(domain1, matches.get(0).getText());
+        Assert.assertEquals(domain2, matches.get(1).getText());
     }
 
 }

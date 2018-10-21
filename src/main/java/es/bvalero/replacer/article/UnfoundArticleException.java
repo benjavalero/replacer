@@ -1,9 +1,9 @@
 package es.bvalero.replacer.article;
 
-public class UnfoundArticleException extends Exception {
+class UnfoundArticleException extends Exception {
 
-    public UnfoundArticleException() {
-        super();
+    UnfoundArticleException(String message) {
+        super(message);
     }
 
 }

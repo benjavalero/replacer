@@ -8,13 +8,14 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * A potential error in the database related to an article.
+ * A replacement in the database related to an article.
+ * TODO : Rename DB table
+ * TODO : Add the unique constraint to DB and redo the indexes
  */
 @Entity
 @Immutable
 @Table(name = "potentialerror", uniqueConstraints = @UniqueConstraint(columnNames = {"articleid", "type", "text"}))
 public class Replacement implements Serializable {
-    // TODO Rename table
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +29,6 @@ public class Replacement implements Serializable {
     @Enumerated(EnumType.STRING)
     private ReplacementType type;
 
-    // TODO Add the unique constraint to the MariaDB database and redo the indexes
     @Column(name = "text", nullable = false, length = 30)
     private String text;
 
