@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Find the Wikipedia dumps in the filesystem where the application runs.
@@ -95,8 +96,8 @@ class DumpManager {
         // Find the file in the latest folder
         // It may be possible that a folder does not contain the file because it is not processed yet
         Path dumpFolderFile = Paths.get(dumpFolderPath);
-        try {
-            List<Path> dumpSubFolders = Files.list(dumpFolderFile)
+        try (Stream<Path> dumpSubPaths = Files.list(dumpFolderFile)) { 
+            List<Path> dumpSubFolders = dumpSubPaths
                     .filter(folder -> PATTERN_DUMP_FOLDER.matcher(folder.getFileName().toString()).matches())
                     .sorted(Collections.reverseOrder())
                     .collect(Collectors.toList());
@@ -109,7 +110,7 @@ class DumpManager {
             for (Path dumpSubFolder : dumpSubFolders) {
                 String dumpFileName = String.format(DUMP_NAME_FORMAT, dumpSubFolder.getFileName());
                 Path dumpFile = dumpSubFolder.resolve(dumpFileName);
-                if (Files.exists(dumpFile)) {
+                if (dumpFile.toFile().exists()) {
                     return dumpFile;
                 }
             }

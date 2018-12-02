@@ -77,6 +77,7 @@ class DumpHandler extends DefaultHandler {
 
     @Override
     public void startDocument() {
+    	// Do nothing
     }
 
     @Override
