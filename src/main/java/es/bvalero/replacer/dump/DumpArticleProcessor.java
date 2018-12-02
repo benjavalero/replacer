@@ -67,13 +67,8 @@ class DumpArticleProcessor {
     boolean processArticle(DumpArticle dumpArticle, boolean forceProcess) {
         LOGGER.debug("Processing article: {}...", dumpArticle.getTitle());
 
-        // Check namespace
-        if (!PROCESSABLE_NAMESPACES.contains(dumpArticle.getNamespace())) {
-            return false;
-        }
-
-        // Check redirection articles
-        if (WikipediaUtils.isRedirectionArticle(dumpArticle.getContent())) {
+        // Check namespace and redirection articles
+        if (!isDumpArticleProcessable(dumpArticle)) {
             return false;
         }
 
@@ -182,6 +177,13 @@ class DumpArticleProcessor {
         return true;
     }
 
+    private boolean isDumpArticleProcessable(DumpArticle dumpArticle) {
+        // Check namespace and redirection articles
+    	return PROCESSABLE_NAMESPACES.contains(dumpArticle.getNamespace())
+    			&& !WikipediaUtils.isRedirectionArticle(dumpArticle.getContent());
+    }
+
+    
     private void flushModifications() {
         // There is a FK Replacement-Article, we need to remove the replacements first.
         if (!replacementsToDelete.isEmpty()) {

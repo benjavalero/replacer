@@ -43,7 +43,8 @@ class RegexPerformanceExperiments {
         // templateParamExperiment();
     }
 
-    private static void angularQuotesExperiment() {
+    @SuppressWarnings("unused")
+	private static void angularQuotesExperiment() {
         System.out.println("BEGIN ANGULAR QUOTES EXPERIMENT...");
 
         // With the Automaton, the dot is really greedy, and it matches even the », so it fails with several matches.
@@ -73,7 +74,8 @@ class RegexPerformanceExperiments {
         // Thus we prefer a little penalty for medium-texts and choose the regex6
     }
 
-    private static void templateNameExperiment() {
+    @SuppressWarnings("unused")
+	private static void templateNameExperiment() {
         System.out.println("BEGIN TEMPLATE EXPERIMENT...");
 
         String regex1 = "\\{\\{[^|}:]+";
@@ -99,7 +101,8 @@ class RegexPerformanceExperiments {
         // The best ones are the regex2 variants. We choose regex2 as it is simpler.
     }
 
-    private static void xmlTagExperiment() {
+    @SuppressWarnings("unused")
+	private static void xmlTagExperiment() {
         System.out.println("BEGIN XML TAG EXPERIMENT...");
 
         String regex1 = "</?[A-Za-z][\\p{L}\\p{N} =\"_-]+/?>";
@@ -125,7 +128,8 @@ class RegexPerformanceExperiments {
         // For the automaton, all results are similar but the regex1 for long text. We take regex2A as the best average result.
     }
 
-    private static void xmlEntityExperiment() {
+    @SuppressWarnings("unused")
+	private static void xmlEntityExperiment() {
         System.out.println("BEGIN XML ENTITY EXPERIMENT...");
 
         String regex1 = "&[a-z]+;";
@@ -147,7 +151,8 @@ class RegexPerformanceExperiments {
         // For the automaton, all results are similar but the regex1 for long text. We take regex2A as the best average result.
     }
 
-    private static void completeTemplateExperiment() {
+    @SuppressWarnings("unused")
+	private static void completeTemplateExperiment() {
         System.out.println("BEGIN COMPLETE TEMPLATE EXPERIMENT...");
 
         String regex1 = "\\{\\{Cita\\|[^}]+";
@@ -180,7 +185,8 @@ class RegexPerformanceExperiments {
         }
     }
 
-    private static void indexValueExperiment() {
+    @SuppressWarnings("unused")
+	private static void indexValueExperiment() {
         System.out.println("BEGIN INDEX VALUE EXPERIMENT...");
 
         String regex1 = "\\|\\s*índice\\s*=[^}|]+";
@@ -210,7 +216,8 @@ class RegexPerformanceExperiments {
         }
     }
 
-    private static void wordExperiment() {
+    @SuppressWarnings("unused")
+	private static void wordExperiment() {
         System.out.println("BEGIN WORD EXPERIMENT...");
 
         String letter = "A-Za-zÁÉÍÓÚÜáéíóúüÑñ";
@@ -246,7 +253,8 @@ class RegexPerformanceExperiments {
         // There are no differences between all the regex. We can choose the simpler.
     }
 
-    private static void fileNameExperiment() {
+    @SuppressWarnings("unused")
+	private static void fileNameExperiment() {
         System.out.println("BEGIN FILE NAME EXPERIMENT...");
 
         String regex1 = "\\[\\[(File|Archivo|Imagen):[^]|]+]]";
@@ -276,7 +284,8 @@ class RegexPerformanceExperiments {
         }
     }
 
-    private static void completeTagExperiment() {
+    @SuppressWarnings("unused")
+	private static void completeTagExperiment() {
         System.out.println("BEGIN COMPLETE TAG EXPERIMENT...");
 
         // As the dot in Automaton is really greedy we cannot use it if we want to catch nested tags
@@ -316,7 +325,8 @@ class RegexPerformanceExperiments {
         // The back-reference regex9 is 50% slower than regex4 => Winner for more than one tag name
     }
 
-    private static void templateParamExperiment() {
+    @SuppressWarnings("unused")
+	private static void templateParamExperiment() {
         System.out.println("BEGIN TEMPLATE PARAMETER EXPERIMENT...");
 
         String regex1 = "\\|\\s*[\\p{L}\\p{N} _-]+\\s*=";
@@ -362,7 +372,8 @@ class RegexPerformanceExperiments {
         // It is not worth to use the look-ahead (regex7) not to capture the =
     }
 
-    private static void runExperiment(String regex, String regexDescription, String input, boolean printOutput) {
+    @SuppressWarnings("unused")
+	private static void runExperiment(String regex, String regexDescription, String input, boolean printOutput) {
         Pattern p = Pattern.compile(regex);
 
         boolean matches = false;
@@ -383,7 +394,8 @@ class RegexPerformanceExperiments {
         }
     }
 
-    private static void runExperimentAutomaton(String regex, String regexDescription, String input, boolean printOutput) {
+    @SuppressWarnings("unused")
+	private static void runExperimentAutomaton(String regex, String regexDescription, String input, boolean printOutput) {
         RegExp r = new RegExp(regex);
         Automaton a = r.toAutomaton(new DatatypesAutomatonProvider());
         RunAutomaton ra = new RunAutomaton(a);
