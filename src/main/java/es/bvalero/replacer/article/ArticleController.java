@@ -68,7 +68,7 @@ public class ArticleController {
 
     @RequestMapping("/article/save/nochanges")
     public boolean saveNoChanges(@RequestParam("title") String title) {
-        LOGGER.info("Saving with no changes changes in: {}", title);
+        LOGGER.info("Saving with no changes: {}", title);
         return articleService.markArticleAsReviewed(title);
     }
 

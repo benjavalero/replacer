@@ -33,7 +33,7 @@ public class LoginController {
 
         // Go to authorization page
         // Add the request token to the session to use it when getting back
-        session.setAttribute(IWikipediaFacade.TOKEN_ACCESS, requestToken);
+        session.setAttribute(IWikipediaFacade.TOKEN_REQUEST, requestToken);
         return new ModelAndView("redirect:" + wikipediaFacade.getOAuthService().getAuthorizationUrl(requestToken));
     }
 
