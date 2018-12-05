@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     reqwest({
-        url: '/statistics/count/misspellings',
+        url: 'statistics/count/misspellings',
         type: 'json',
         success: function(response) {
             var tbody = document.querySelector('#tbody-misspellings');
