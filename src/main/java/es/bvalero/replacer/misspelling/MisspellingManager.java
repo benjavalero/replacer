@@ -118,11 +118,14 @@ public class MisspellingManager {
         // Build a long long regex with all the misspellings
         Collection<String> alternations = new ArrayList<>(misspellingList.size());
         for (Misspelling misspelling : misspellingList) {
+            // If the misspelling contains a dot we escape it
+            String word = misspelling.getWord()
+                    .replace(".", "\\.");
+
             if (misspelling.isCaseSensitive()) {
-                alternations.add(misspelling.getWord());
+                alternations.add(word);
             } else {
                 // If case-insensitive, we add to the map "[wW]ord".
-                String word = misspelling.getWord();
                 String firstLetter = word.substring(0, 1);
                 String newWord = '[' + firstLetter + firstLetter.toUpperCase(Locale.forLanguageTag("es")) + ']' + word.substring(1);
                 alternations.add(newWord);
