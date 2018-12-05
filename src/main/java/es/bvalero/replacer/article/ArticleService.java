@@ -126,7 +126,6 @@ public class ArticleService {
     ArticleReview findRandomArticleWithReplacements(String word) throws UnfoundArticleException, InvalidArticleException {
         // Find random article in Replacer database (the result can be empty)
         List<Article> randomArticles = replacementRepository.findRandomByWord(word, PageRequest.of(0, 1));
-        articleRepository.findRandomArticleNotReviewed(PageRequest.of(0, 1));
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
             throw new UnfoundArticleException("No se ha encontrado ningún artículo para revisar");
