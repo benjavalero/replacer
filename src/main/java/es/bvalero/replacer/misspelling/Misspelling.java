@@ -48,6 +48,15 @@ final class Misspelling {
         return Objects.hash(word, caseSensitive, comment);
     }
 
+    @Override
+    public String toString() {
+        return "Misspelling{" +
+                "word='" + word + '\'' +
+                ", caseSensitive=" + caseSensitive +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
+
     static class MisspellingBuilder {
         private String word;
         private boolean caseSensitive;
