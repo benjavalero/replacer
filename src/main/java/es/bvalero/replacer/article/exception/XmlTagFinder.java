@@ -18,7 +18,7 @@ public class XmlTagFinder implements IgnoredReplacementFinder {
     // For the automaton the < needs an extra backslash
     @SuppressWarnings("RegExpRedundantEscape")
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_XML_TAG = "\\</?[A-Za-z](<L>|<N>|[ =\"_-])+/?\\>";
+    private static final String REGEX_XML_TAG = "\\</?[A-Za-z][^/\\>]+/?\\>";
     private static final RunAutomaton AUTOMATON_XML_TAG =
             new RunAutomaton(new RegExp(REGEX_XML_TAG).toAutomaton(new DatatypesAutomatonProvider()));
 

@@ -26,6 +26,20 @@ public class XmlTagFinderTest {
     }
 
     @Test
+    public void testRegexSpan() {
+        String span1 = "<span style=\"color:green;\">";
+        String span2 = "</span>";
+        String text = "xxx " + span1 + "zzz" + span2 + '.';
+
+        IgnoredReplacementFinder xmlTagFinder = new XmlTagFinder();
+
+        List<ArticleReplacement> matches = xmlTagFinder.findIgnoredReplacements(text);
+        Assert.assertEquals(2, matches.size());
+        Assert.assertEquals(span1, matches.get(0).getText());
+        Assert.assertEquals(span2, matches.get(1).getText());
+    }
+
+    @Test
     public void testRegexCommentNotMatched() {
         String comment = "<!-- Esto es un comentario -->";
         String text = "xxx " + comment + " zzz";
