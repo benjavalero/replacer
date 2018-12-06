@@ -144,7 +144,6 @@ public class ArticleServiceTest {
         Mockito.when(articleReplacementFinders.iterator())
                 .thenReturn(Collections.singletonList(articleReplacementFinder).iterator());
 
-        articleService.setHighlightExceptions(true);
         ArticleReview articleData = articleService.findRandomArticleWithReplacements();
 
         Assert.assertNotNull(articleData);
@@ -152,9 +151,9 @@ public class ArticleServiceTest {
         Assert.assertEquals(text, articleData.getContent());
 
         List<ArticleReplacement> replacements = articleData.getReplacements();
-        Assert.assertEquals(2, replacements.size());
+        Assert.assertEquals(1, replacements.size());
         Assert.assertTrue(replacements.contains(replacement));
-        Assert.assertTrue(replacements.contains(ignored));
+        Assert.assertFalse(replacements.contains(ignored));
     }
 
     @Test
