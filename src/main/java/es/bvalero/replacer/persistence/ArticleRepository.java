@@ -20,8 +20,6 @@ public interface ArticleRepository extends JpaRepository<Article, Integer>, Arti
 
     Article findByTitle(String title);
 
-    void deleteByTitle(String title);
-
     Long countByReviewDateNull();
 
     Long countByReviewDateNotNull();
