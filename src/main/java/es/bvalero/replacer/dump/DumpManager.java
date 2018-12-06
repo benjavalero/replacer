@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -58,9 +60,8 @@ class DumpManager {
     private DumpHandler dumpHandler = new DumpHandler(dumpArticleProcessor);
 
     // Statistics
-    private Path latestDumpFile;
-    private boolean running;
-    private long numArticlesEstimation = NUM_ARTICLES;
+    private Path latestDumpFile = null;
+    private boolean running = false;
 
     @TestOnly
     void setDumpFolderPath(String dumpFolderPath) {
@@ -82,11 +83,6 @@ class DumpManager {
         running = true;
     }
 
-    @TestOnly
-    void setNumArticlesEstimation(long numArticlesEstimation) {
-        this.numArticlesEstimation = numArticlesEstimation;
-    }
-
     /* FIND DUMP FILE */
 
     /**
@@ -96,7 +92,7 @@ class DumpManager {
         // Find the file in the latest folder
         // It may be possible that a folder does not contain the file because it is not processed yet
         Path dumpFolderFile = Paths.get(dumpFolderPath);
-        try (Stream<Path> dumpSubPaths = Files.list(dumpFolderFile)) { 
+        try (Stream<Path> dumpSubPaths = Files.list(dumpFolderFile)) {
             List<Path> dumpSubFolders = dumpSubPaths
                     .filter(folder -> PATTERN_DUMP_FOLDER.matcher(folder.getFileName().toString()).matches())
                     .sorted(Collections.reverseOrder())
@@ -198,7 +194,6 @@ class DumpManager {
 
                 // Once finished we mark the file as processed
                 running = false;
-                numArticlesEstimation = dumpHandler.getNumArticlesRead();
             } else {
                 LOGGER.info("Latest dump file found already indexed");
             }
@@ -208,11 +203,6 @@ class DumpManager {
     }
 
     DumpProcessStatus getProcessStatus() {
-        // In case the dump contains more articles than estimated
-        if (dumpHandler.getNumArticlesRead() > numArticlesEstimation) {
-            numArticlesEstimation++;
-        }
-
         //noinspection MagicNumber
         return DumpProcessStatus.builder()
                 .setRunning(running)
@@ -220,31 +210,51 @@ class DumpManager {
                 .setNumArticlesRead(dumpHandler.getNumArticlesRead())
                 .setNumArticlesProcessed(dumpHandler.getNumArticlesProcessed())
                 .setDumpFileName(latestDumpFile == null ? "-" : latestDumpFile.getFileName().toString())
-                .setAverage(getAverageTimePerArticle())
+                .setAverage(getAverageTimePerArticle().toMillis())
                 .setTime(getTime())
-                .setProgress(String.format(PERCENTAGE_FORMAT,
-                        (double) dumpHandler.getNumArticlesRead() * 100.0 / (double) numArticlesEstimation))
+                .setProgress(getProgressPercentage())
                 .build();
     }
 
-    private long getAverageTimePerArticle() {
-        // The process may not be running
+    private Duration getAverageTimePerArticle() {
+        Duration average;
         if (dumpHandler.getNumArticlesRead() == 0L) {
-            return 0L;
+            average = Duration.ofMillis(0L);
         } else if (running) {
-            return (System.currentTimeMillis() - dumpHandler.getStartTime()) / dumpHandler.getNumArticlesRead();
+            Duration elapsed = Duration.between(dumpHandler.getStartTime(), Instant.now());
+            average = Duration.ofMillis(elapsed.toMillis() / dumpHandler.getNumArticlesRead());
+        } else if (dumpHandler.getEndTime() == null) {
+            average = Duration.ofMillis(0L);
         } else {
-            return dumpHandler.getEndTime() == 0L ? 0L
-                    : (dumpHandler.getEndTime() - dumpHandler.getStartTime()) / dumpHandler.getNumArticlesRead();
+            Duration elapsed = Duration.between(dumpHandler.getStartTime(), dumpHandler.getEndTime());
+            average = Duration.ofMillis(elapsed.toMillis() / dumpHandler.getNumArticlesRead());
         }
+        return average;
     }
 
     private String getTime() {
-        // The final process time if it is not running, and the current process time if it is still running.
-        return DurationFormatUtils.formatDuration(running
-                        ? (numArticlesEstimation - dumpHandler.getNumArticlesRead()) * getAverageTimePerArticle() // ETA
-                        : (dumpHandler.getEndTime() == 0L ? 0L : dumpHandler.getEndTime() - dumpHandler.getStartTime()), // Total time
-                DURATION_FORMAT, true);
+        Duration time;
+        if (running) {
+            long numArticlesToRead = Math.max(NUM_ARTICLES, dumpHandler.getNumArticlesRead()) - dumpHandler.getNumArticlesRead();
+            time = Duration.ofMillis(numArticlesToRead * getAverageTimePerArticle().toMillis());
+        } else if (dumpHandler.getEndTime() == null) {
+            time = Duration.ofMillis(0L);
+        } else {
+            time = Duration.between(dumpHandler.getStartTime(), dumpHandler.getEndTime());
+        }
+        return DurationFormatUtils.formatDuration(time.toMillis(), DURATION_FORMAT, true);
+    }
+
+    private String getProgressPercentage() {
+        String progress = null;
+        // This only has sense if the dump process is running
+        if (running) {
+            long numArticlesRead = dumpHandler.getNumArticlesRead();
+            // If we read more articles than expected, the result will always be 100%
+            double percent = (double) numArticlesRead * 100.0 / (double) Math.max(NUM_ARTICLES, numArticlesRead);
+            progress = String.format(PERCENTAGE_FORMAT, percent);
+        }
+        return progress;
     }
 
 }

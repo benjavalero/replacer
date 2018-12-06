@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -27,7 +28,6 @@ class DumpHandler extends DefaultHandler {
 
     private final DumpArticleProcessor dumpArticleProcessor;
     private final boolean forceProcess;
-    private final long startTime = System.currentTimeMillis();
 
     private final StringBuilder currentChars = new StringBuilder(5000);
     private int currentId;
@@ -39,7 +39,8 @@ class DumpHandler extends DefaultHandler {
     // Statistics
     private long numArticlesRead;
     private long numArticlesProcessed;
-    private long endTime;
+    private Instant startTime;
+    private Instant endTime;
 
     DumpHandler(DumpArticleProcessor processor) {
         this(processor, false);
@@ -67,23 +68,25 @@ class DumpHandler extends DefaultHandler {
         return numArticlesProcessed;
     }
 
-    long getStartTime() {
+    Instant getStartTime() {
         return startTime;
     }
 
-    long getEndTime() {
+    Instant getEndTime() {
         return endTime;
     }
 
     @Override
     public void startDocument() {
-    	// Do nothing
+        numArticlesRead = 0L;
+        numArticlesProcessed = 0L;
+        startTime = Instant.now();
     }
 
     @Override
     public void endDocument() {
         dumpArticleProcessor.finish();
-        endTime = System.currentTimeMillis();
+        endTime = Instant.now();
     }
 
     @Override
