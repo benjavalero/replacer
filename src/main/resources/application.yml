@@ -13,8 +13,6 @@ logging:
 replacer:
   # Path where the XML dumps are located for the Spanish Wikipedia
   dump.folder.path: /public/dumps/public/eswiki
-  # Highlight the exception matches
-  highlight.exceptions: false
   # Hide paragraphs not containing potential replacements and trim the ones matching
   hide.empty.paragraphs: true
 
@@ -38,7 +36,6 @@ logging:
 
 replacer:
   dump.folder.path: /Users/benja/Developer/pywikibot
-  highlight.exceptions: true
   hide.empty.paragraphs: false
 
 ---

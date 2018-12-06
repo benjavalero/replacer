@@ -7,7 +7,6 @@ import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,12 +43,13 @@ public class ArticleService {
     @Autowired
     private List<ArticleReplacementFinder> articleReplacementFinders;
 
-    @Value("${replacer.highlight.exceptions}")
-    private boolean highlightExceptions;
-
     @Value("${replacer.hide.empty.paragraphs}")
     private boolean trimText;
 
+    /**
+     * @deprecated Used before to remove nested ignore replacements. Kept in case it is needed in the future.
+     */
+    @Deprecated
     static List<ArticleReplacement> removeNestedReplacements(List<ArticleReplacement> replacements) {
         // The list of replacements must be of type LinkedList
         if (replacements.isEmpty()) {
@@ -78,11 +78,6 @@ public class ArticleService {
         return replacements;
     }
 
-    @TestOnly
-    void setHighlightExceptions(boolean highlightExceptions) {
-        this.highlightExceptions = highlightExceptions;
-    }
-
     ArticleReview findRandomArticleWithReplacements() throws UnfoundArticleException, InvalidArticleException {
         // Find random article in Replacer database (the result can be empty)
         List<Article> randomArticles = articleRepository.findRandomArticleNotReviewed(PageRequest.of(0, 1));
@@ -104,7 +99,7 @@ public class ArticleService {
             }
 
             // Find the replacements sorted (the first ones in the list are the last in the text)
-            List<ArticleReplacement> replacements = findReplacements(articleContent, highlightExceptions);
+            List<ArticleReplacement> replacements = findReplacements(articleContent);
             if (replacements.isEmpty()) {
                 throw new InvalidArticleException("No replacements found in article: " + randomArticle.getTitle());
             }
@@ -151,7 +146,7 @@ public class ArticleService {
             }
 
             // Find the replacements sorted (the first ones in the list are the last in the text)
-            List<ArticleReplacement> replacements = findReplacements(articleContent, highlightExceptions);
+            List<ArticleReplacement> replacements = findReplacements(articleContent);
             if (replacements.isEmpty()) {
                 throw new InvalidArticleException("No replacements found in article: " + randomArticle.getTitle());
             }
@@ -198,10 +193,6 @@ public class ArticleService {
      * If there are no replacements, the list will be empty.
      */
     public List<ArticleReplacement> findReplacements(String text) {
-        return findReplacements(text, false);
-    }
-
-    private List<ArticleReplacement> findReplacements(String text, boolean includeIgnored) {
         // Find the replacements in the article content
         // LinkedList is better to run iterators and remove items from it
         List<ArticleReplacement> articleReplacements = new LinkedList<>();
@@ -215,21 +206,13 @@ public class ArticleService {
         }
 
         // Ignore the replacements which must be ignored
-        List<ArticleReplacement> allIgnoredReplacements = new LinkedList<>();
         for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
             List<ArticleReplacement> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
             articleReplacements.removeIf(replacement -> replacement.isContainedIn(ignoredReplacements));
 
             if (articleReplacements.isEmpty()) {
-                return articleReplacements;
+                break;
             }
-
-            allIgnoredReplacements.addAll(ignoredReplacements);
-        }
-
-        // Include in the result the ignored replacements if wanted
-        if (includeIgnored) {
-            articleReplacements.addAll(removeNestedReplacements(allIgnoredReplacements));
         }
 
         return articleReplacements;

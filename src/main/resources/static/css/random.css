@@ -39,11 +39,3 @@ hr {
 #button-save {
   width: 100%;
 }
-
-/* SYNTAX */
-
-.ignored-replacement {
-  border: 1px solid;
-  background-color: #dcdcdc;
-}
-

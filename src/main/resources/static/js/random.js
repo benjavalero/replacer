@@ -98,11 +98,6 @@ function loadArticle(response) {
 
             // Add the replacement to the map
             replacements[button.id] = replacement;
-        } else if (replacement.type == 'IGNORED') {
-            // The span may include HTML content
-            articleContent = articleContent.slice(0, replacement.start)
-                + '<span class="btn ignored-replacement">' + replacement.text + '</span>'
-                + articleContent.slice(replacement.end);
         }
     });
 
@@ -111,8 +106,8 @@ function loadArticle(response) {
     articleContent = htmlEscape(articleContent);
 
     // So we "decode" only the buttons
-    articleContent = articleContent.replace(/&lt;(button)(.+?)&gt;/g, '<$1$2>');
-    articleContent = articleContent.replace(/&lt;\/(button)&gt;/g, '</$1>');
+    articleContent = articleContent.replace(/&lt;button(.+?)&gt;/g, '<button$1>');
+    articleContent = articleContent.replace(/&lt;\/button&gt;/g, '</button>');
 
     // "Trim" the parts with no replacements
     if (response.trimText) {
@@ -143,7 +138,7 @@ function htmlEscape(str) {
 function trimText(text) {
     var result = '';
 
-    var re = new RegExp('<(button|span).+?</\\1>', 'g');
+    var re = new RegExp('<button.+?</button>', 'g');
     var lastEnd = 0;
     var m;
     while (m = re.exec(text)) {
