@@ -7254,7 +7254,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  espreso||expreso
  espresó||expresó
  esprin||esprín
- esprínes||esprínes
+ esprínes||esprines
  esprinter||esprínter
  esprinteres||esprínteres
  esprinters||esprínteres
