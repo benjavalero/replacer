@@ -4,20 +4,12 @@ var originalArticle;
 // Map to store the replacements. The key is the button ID.
 var replacements = [];
 
-/*
-var word;
-*/
-
 document.addEventListener('DOMContentLoaded', function () {
     reqwest('isAuthenticated', function(authenticated) {
         if (!authenticated) {
             window.location.href = 'index.html';
         }
     });
-
-/*
-    word = $.url('?word');
-*/
 
     // Add click event to the misspelling buttons
     document.querySelector('#button-save').addEventListener('click', function () {
@@ -119,8 +111,8 @@ function loadArticle(response) {
     articleContent = htmlEscape(articleContent);
 
     // So we "decode" only the buttons
-    articleContent = articleContent.replace(/&lt;(button|span)(.+?)&gt;/g, '<$1$2>');
-    articleContent = articleContent.replace(/&lt;\/(button|span)&gt;/g, '</$1>');
+    articleContent = articleContent.replace(/&lt;(button)(.+?)&gt;/g, '<$1$2>');
+    articleContent = articleContent.replace(/&lt;\/(button)&gt;/g, '</$1>');
 
     // "Trim" the parts with no replacements
     if (response.trimText) {
