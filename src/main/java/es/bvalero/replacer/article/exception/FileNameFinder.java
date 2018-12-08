@@ -15,7 +15,7 @@ import java.util.List;
 public class FileNameFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_FILE_TAG = "(Archivo|File|Imagen):[^|\\]\n]+";
+    private static final String REGEX_FILE_TAG = "(Archivo|File|Imagen?):[^|\\]\n]+";
     private static final RunAutomaton AUTOMATON_FILE_TAG = new RunAutomaton(new RegExp(REGEX_FILE_TAG).toAutomaton());
 
     @org.intellij.lang.annotations.RegExp
