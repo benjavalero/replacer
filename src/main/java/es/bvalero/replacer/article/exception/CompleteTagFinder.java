@@ -18,7 +18,7 @@ public class CompleteTagFinder implements IgnoredReplacementFinder {
 
     // The gain on performance is so high (500x faster) using the text-directed version that it is better
     // to make different regex for each tag name
-    private static final String[] TAG_NAMES = {"math", "source", "syntaxhighlight", "blockquote"};
+    private static final String[] TAG_NAMES = {"math", "source", "syntaxhighlight", "blockquote", "pre", "score", "poem"};
 
     private static final Collection<RunAutomaton> AUTOMATON_COMPLETE_TAGS = new ArrayList<>(TAG_NAMES.length);
 
