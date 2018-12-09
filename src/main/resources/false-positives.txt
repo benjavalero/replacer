@@ -4,6 +4,11 @@
 (Central|East|North|[Ss]outhern|South|Tropical|UCI|West) Africa
 Africa (Cup|Sports|Tour)
 
+[Aa]lbum (certifications|[Cc]harts?|[Cc]overs?|[Dd]etails|Discography|Guide|notes|ratings|[Rr]elease|[Rr]eviews?|Sales|single|Track|[Tt]itle|Top|[Vv]ersion|Volume)
+(Best|Black|Blue|Chenopodium|Christmas|[Dd]ebut|Family|First|Galium|Gaon|Live|Mega|Mini|Next|[Nn]ew|Oricon|Pop|Remix|Second|Sedum|Solo|Stone|Studio|UK|Veratrum|Viscum|Weekly) [Aa]lbum
+
+will\.i\.am
+
 (Captain|Central|Latin|Morning|North|Skate|South|UCI) America
 All\-America
 America's
@@ -15,6 +20,7 @@ Los Angeles (Angels|Clippers|County|Dodgers|Galaxy|Lakers|Memorial|Rams|Sparks|T
 # aun + gerundio
 [Aa]un (así|sin|\w+?ndo)
 
+aún\.
 ([Aa]unque|[Cc]uando|donde|era|están?|estaba|es|fue|[Mm]ás|mejor|menos|peor|[Pp]ero|porque|que|ser|sido|[Ss]iendo|[Ss]i|son|[Yy]) aún
 [Aa]ún (conservan?|continúan?|eran?|están?|estaban?|es|existen?|hay|hoy|más|mayores|mayor|mejor|perduran?|permanecen?|persisten?|pueden?|quedan?|quedaban?|no|seguían?|se|siguen?|son|viven?|vivían?)
 
@@ -22,19 +28,33 @@ Diego Comic
 [Cc]omic[\s\-]([Bb]ooks?|[Cc]on|Sans)
 (Action|Adventure|DC|Detective|Horse|Image|Marvel|Panini) Comics
 
+\[\[:?(m:)?commons:
+
 (José|Juan|Plácido|Santo) Domingo
+
+# El guion es separador de palabra así que encontramos "mail". Así que lo ignoramos.
+[Ee]\-mails?
+
+Elenco de Grandezas y Títulos Nobiliarios Españoles
+
 Lista de [Ee]spécies Flora
 Brasileiro de Geografia
 (Blind|The) Guardian
+
+The Hindu
+Hindu (Kush|Temple)
 
 # index: casi todos son parte de URL
 # Index: casi todos son en inglés o latín
 Index
 
 Torneo Invierno
-(Campeonato|Guerra|Olímpicos|Paralímpicos|Torneo) de Verano
+(Campeonato|Guerra|Olímpicos|Paralímpicos|Torneo) de Invierno
 
 (Carlos|Cayo|Estadio|Lucio|Nacional|Sexto) Julio
+
+Jennifer Lopez
+Ke$ha
 
 Magazine
 Manchester (City|Evening|United|University)
@@ -45,6 +65,8 @@ Martin (Brundle|Damm|Emmrich|Fischer|Freeman|Garrix|Gore|Heidegger|Kližan|Luthe
 Martin's
 Martin\-d[eu]
 
+(AC|Calcio) Milan
+
 (Carlos|Saúl) Menem
 Missouri (Botanical|Valley)
 
@@ -52,6 +74,8 @@ Missouri (Botanical|Valley)
 [Oo]nline
 
 Jet Propulsion
+
+Ramon Llull
 
 # reference(s): prácticamente todos los casos son en inglés
 [Rr]eferences?
@@ -71,8 +95,12 @@ Superman
 Torneo Verano
 (Campeonato|Olímpicos|Paralímpicos|Teatro|Torneo) de Verano
 
+([Aa]coustic|Alternate|Cast|Deluxe|Demo|Electronic|English|Europaea|Extended|Florida|Instrumental|Japanese|List|Live|Long|LP|[Nn]ew|[Oo]nline|[Oo]riginal|Radio|[Ss]ingle|Spanish|Vector|Video|Vocal) [Vv]ersion
+
 (RCA|Saint)[\s\-]Victor
 Victor Hugo
+
+Led Zeppelin
 
 # Topónimos
 (in|of|[Tt]he) (Africa|America|Los Angeles|Manchester|Missouri)
