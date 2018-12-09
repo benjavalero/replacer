@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 public class ProperNounFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_PROPER_NOUN = "(Domingo|Julio)<Z><Lu>";
+    private static final String REGEX_PROPER_NOUN = "(Domingo|Julio|Sidney)<Z><Lu>";
     private static final RunAutomaton AUTOMATON_PROPER_NOUN =
             new RunAutomaton(new RegExp(REGEX_PROPER_NOUN).toAutomaton(new DatatypesAutomatonProvider()));
 

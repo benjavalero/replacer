@@ -24,6 +24,8 @@ aún\.
 ([Aa]unque|[Cc]uando|donde|era|están?|estaba|es|fue|[Mm]ás|mejor|menos|peor|[Pp]ero|porque|que|ser|sido|[Ss]iendo|[Ss]i|son|[Yy]) aún
 [Aa]ún (conservan?|continúan?|eran?|están?|estaban?|es|existen?|hay|hoy|más|mayores|mayor|mejor|perduran?|permanecen?|persisten?|pueden?|quedan?|quedaban?|no|seguían?|se|siguen?|son|viven?|vivían?)
 
+([Dd]u|of) Canton
+
 Diego Comic
 [Cc]omic[\s\-]([Bb]ooks?|[Cc]on|Sans)
 (Action|Adventure|DC|Detective|Horse|Image|Marvel|Panini) Comics
@@ -65,6 +67,11 @@ Martin (Brundle|Damm|Emmrich|Fischer|Freeman|Garrix|Gore|Heidegger|Kližan|Luthe
 Martin's
 Martin\-d[eu]
 
+(Artur|Emmanuel|Josep|Timun) Mas
+
+Mason (City|Patriots|University)
+(George|Harvey|James|John|Nick|Perry|Suárez|Tom) Mason
+
 (AC|Calcio) Milan
 
 (Carlos|Saúl) Menem
@@ -83,8 +90,13 @@ Ramon Llull
 Records
 records of
 
+(Championship|[Ff]irst|Go|[Ss]econd)\-[Rr]ound
+[Rr]ound\-(Lake|Midnight|pick|[Rr]obin|Rock|Table|[Uu]p)
+
 ([Ii]slas|South|Sur y) Sandwich
 Sandwich del Sur
+
+Corriere della [Ss]era
 
 the sky
 Sky
@@ -113,7 +125,7 @@ Led Zeppelin
 (publica|especifica|practica) (el|en|las?|los|sus?|un[ao]s?|un)
 
 # Sustantivos que parecen verbos
-([Aa]l|[Dd]el?|[Ee]l|[Ss]u|[Uu]n) (desempeño|disparo|logro|regreso|retiro)
+([Aa]l|[Dd]el?|[Ee]l|[Ee]n[Ss]u|[Uu]n) (desempeño|disparo|logro|regreso|retiro)
 
 # Verdaderos positivos que de momento no quiero corregir
 [Aa]quél(l[ao]s?)?

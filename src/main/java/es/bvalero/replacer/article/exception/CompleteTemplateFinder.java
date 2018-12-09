@@ -30,7 +30,7 @@ public class CompleteTemplateFinder implements IgnoredReplacementFinder {
             new RunAutomaton(new RegExp(REGEX_COMPLETE_TEMPLATE).toAutomaton());
 
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_CATEGORY = "\\[\\[Categoría:[^]]+]]";
+    private static final String REGEX_CATEGORY = "\\[\\[(Categoría|als):[^]]+]]";
     private static final RunAutomaton AUTOMATON_CATEGORY =
             new RunAutomaton(new RegExp(REGEX_CATEGORY).toAutomaton());
 
