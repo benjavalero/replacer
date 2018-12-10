@@ -42,7 +42,7 @@ public class ProperNounFinder implements IgnoredReplacementFinder {
 
         // Lowercase nouns that start with uppercase because after some special character
         // We don't need the extra letters captured for the separator
-        for (ArticleReplacement match : ArticleReplacementFinder.findReplacements(text, misspellingManager.getUppercaseAutomaton(), ReplacementType.IGNORED)) {
+        for (ArticleReplacement match : ArticleReplacementFinder.findReplacements(text, misspellingManager.getUppercaseAfterAutomaton(), ReplacementType.IGNORED)) {
             // Find the letter position
             Matcher m = PATTERN_UPPERCASE.matcher(match.getText());
             if (m.find()) {
@@ -50,6 +50,14 @@ public class ProperNounFinder implements IgnoredReplacementFinder {
                         .withStart(match.getStart() + m.start())
                         .withText(match.getText().substring(m.start())));
             }
+        }
+
+        // Lowercase nouns that start with uppercase because in the first part of links
+        // We don't need the extra letters captured for the separator
+        for (ArticleReplacement match : ArticleReplacementFinder.findReplacements(text, misspellingManager.getUppercaseLinkAutomaton(), ReplacementType.IGNORED)) {
+            matches.add(match
+                    .withStart(match.getStart() + 2)
+                    .withText(match.getText().substring(2, match.getText().length() - 1)));
         }
 
         return matches;

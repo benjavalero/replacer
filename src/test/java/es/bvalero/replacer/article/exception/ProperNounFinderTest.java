@@ -38,7 +38,7 @@ public class ProperNounFinderTest {
 
         RunAutomaton automaton = Mockito.mock(RunAutomaton.class);
         Mockito.when(automaton.newMatcher(Mockito.anyString())).thenReturn(Mockito.mock(AutomatonMatcher.class));
-        Mockito.when(misspellingManager.getUppercaseAutomaton()).thenReturn(automaton);
+        Mockito.when(misspellingManager.getUppercaseAfterAutomaton()).thenReturn(automaton);
 
         List<ArticleReplacement> matches = properNounFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
@@ -55,7 +55,7 @@ public class ProperNounFinderTest {
         String regexUppercase = "(Enero|Febrero)";
         RunAutomaton uppercaseAutomaton
                 = new RunAutomaton(new RegExp(regexUppercase).toAutomaton(new DatatypesAutomatonProvider()));
-        Mockito.when(misspellingManager.getUppercaseAutomaton()).thenReturn(uppercaseAutomaton);
+        Mockito.when(misspellingManager.getUppercaseAfterAutomaton()).thenReturn(uppercaseAutomaton);
 
         List<ArticleReplacement> matches = properNounFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());

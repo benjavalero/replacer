@@ -125,20 +125,37 @@ public class MisspellingManagerTest {
     }
 
     @Test
-    public void testBuildUppercaseAutomaton() {
+    public void testBuildUppercaseAfterAutomaton() {
         Misspelling misspelling1 =
                 Misspelling.builder().setWord("Marzo").setComment("marzo").setCaseSensitive(true).build();
         Misspelling misspelling2 =
                 Misspelling.builder().setWord("Febrero").setComment("febrero").setCaseSensitive(true).build();
         List<Misspelling> misspellingList = Arrays.asList(misspelling1, misspelling2);
 
-        RunAutomaton automaton = MisspellingManager.buildUppercaseAutomaton(misspellingList);
+        RunAutomaton automaton = MisspellingManager.buildUppercaseAfterAutomaton(misspellingList);
 
         // This automaton finds the sequence of letters even if not complete words
         String text = "En Febrero. Marzo.";
         List<ArticleReplacement> replacements = ArticleReplacementFinder.findReplacements(text, automaton, ReplacementType.MISSPELLING);
         Assert.assertEquals(1, replacements.size());
         Assert.assertEquals(". Marzo", replacements.get(0).getText());
+    }
+
+    @Test
+    public void testBuildUppercaseLinkAutomaton() {
+        Misspelling misspelling1 =
+                Misspelling.builder().setWord("Marzo").setComment("marzo").setCaseSensitive(true).build();
+        Misspelling misspelling2 =
+                Misspelling.builder().setWord("Febrero").setComment("febrero").setCaseSensitive(true).build();
+        List<Misspelling> misspellingList = Arrays.asList(misspelling1, misspelling2);
+
+        RunAutomaton automaton = MisspellingManager.buildUppercaseLinkAutomaton(misspellingList);
+
+        // This automaton finds the sequence of letters even if not complete words
+        String text = "En [[Febrero|Marzo]].";
+        List<ArticleReplacement> replacements = ArticleReplacementFinder.findReplacements(text, automaton, ReplacementType.MISSPELLING);
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals("[[Febrero|", replacements.get(0).getText());
     }
 
     @Test

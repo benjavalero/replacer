@@ -32,7 +32,9 @@ public class MisspellingManager {
     private static final String CASE_SENSITIVE_VALUE = "cs";
     private static final int MISSPELLING_ESTIMATED_COUNT = 20000;
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_UPPERCASE_WORDS = "[\\\\.!*#|=]<Z>?(%s)";
+    private static final String REGEX_UPPERCASE_AFTER_PUNCTUATION = "[\\\\.!*#|=]<Z>?(%s)";
+    @org.intellij.lang.annotations.RegExp
+    private static final String REGEX_UPPERCASE_IN_LINK = "\\[\\[(%s)\\|";
 
     // Derived from the misspelling list to access faster by word
     private final Map<String, Misspelling> misspellings = new HashMap<>(MISSPELLING_ESTIMATED_COUNT);
@@ -46,7 +48,10 @@ public class MisspellingManager {
 
     // Regex with the misspellings which start with uppercase and are case-sensitive
     // and starting with a special character which justifies the uppercase
-    private RunAutomaton uppercaseAutomaton;
+    private RunAutomaton uppercaseAfterAutomaton;
+
+    // Regex with the misspellings which start with uppercase in links, e. g. [[Hispano|hispanidad]]
+    private RunAutomaton uppercaseLinkAutomaton;
 
     static Collection<Misspelling> parseMisspellingListText(String misspellingListText) {
         Collection<Misspelling> misspellingSet = new HashSet<>(MISSPELLING_ESTIMATED_COUNT);
@@ -139,8 +144,8 @@ public class MisspellingManager {
         return automaton;
     }
 
-    static RunAutomaton buildUppercaseAutomaton(Collection<Misspelling> misspellingList) {
-        LOGGER.info("Start building uppercase automaton...");
+    static RunAutomaton buildUppercaseAfterAutomaton(Collection<Misspelling> misspellingList) {
+        LOGGER.info("Start building uppercaseAfter automaton...");
 
         // Build an automaton with the misspellings starting with uppercase
         Collection<String> alternations = new ArrayList<>(misspellingList.size());
@@ -149,10 +154,28 @@ public class MisspellingManager {
                 alternations.add(misspelling.getWord());
             }
         }
-        String regexAlternations = String.format(REGEX_UPPERCASE_WORDS, StringUtils.join(alternations, "|"));
+        String regexAlternations = String.format(REGEX_UPPERCASE_AFTER_PUNCTUATION, StringUtils.join(alternations, "|"));
         RunAutomaton automaton = new RunAutomaton(new RegExp(regexAlternations).toAutomaton(new DatatypesAutomatonProvider()));
 
-        LOGGER.info("End building uppercase automaton");
+        LOGGER.info("End building uppercaseAfter automaton");
+
+        return automaton;
+    }
+
+    static RunAutomaton buildUppercaseLinkAutomaton(Collection<Misspelling> misspellingList) {
+        LOGGER.info("Start building uppercaseLink automaton...");
+
+        // Build an automaton with the misspellings starting with uppercase
+        Collection<String> alternations = new ArrayList<>(misspellingList.size());
+        for (Misspelling misspelling : misspellingList) {
+            if (misspelling.isCaseSensitive() && startsWithUpperCase(misspelling.getWord())) {
+                alternations.add(misspelling.getWord());
+            }
+        }
+        String regexAlternations = String.format(REGEX_UPPERCASE_IN_LINK, StringUtils.join(alternations, "|"));
+        RunAutomaton automaton = new RunAutomaton(new RegExp(regexAlternations).toAutomaton(new DatatypesAutomatonProvider()));
+
+        LOGGER.info("End building uppercaseLink automaton");
 
         return automaton;
     }
@@ -181,15 +204,26 @@ public class MisspellingManager {
         this.misspellingAutomaton = misspellingAutomaton;
     }
 
-    public synchronized RunAutomaton getUppercaseAutomaton() {
-        if (uppercaseAutomaton == null) { // For the first time
+    public synchronized RunAutomaton getUppercaseAfterAutomaton() {
+        if (uppercaseAfterAutomaton == null) { // For the first time
             updateMisspellings();
         }
-        return uppercaseAutomaton;
+        return uppercaseAfterAutomaton;
     }
 
-    private synchronized void setUppercaseAutomaton(RunAutomaton uppercaseAutomaton) {
-        this.uppercaseAutomaton = uppercaseAutomaton;
+    private synchronized void setUppercaseAfterAutomaton(RunAutomaton uppercaseAfterAutomaton) {
+        this.uppercaseAfterAutomaton = uppercaseAfterAutomaton;
+    }
+
+    public synchronized RunAutomaton getUppercaseLinkAutomaton() {
+        if (uppercaseLinkAutomaton == null) { // For the first time
+            updateMisspellings();
+        }
+        return uppercaseLinkAutomaton;
+    }
+
+    private synchronized void setUppercaseLinkAutomaton(RunAutomaton uppercaseLinkAutomaton) {
+        this.uppercaseLinkAutomaton = uppercaseLinkAutomaton;
     }
 
     /**
@@ -213,8 +247,11 @@ public class MisspellingManager {
             setMisspellingAutomaton(null);
             setMisspellingAutomaton(buildMisspellingAutomaton(newMisspellingList));
 
-            setUppercaseAutomaton(null);
-            setUppercaseAutomaton(buildUppercaseAutomaton(newMisspellingList));
+            setUppercaseAfterAutomaton(null);
+            setUppercaseAfterAutomaton(buildUppercaseAfterAutomaton(newMisspellingList));
+
+            setUppercaseLinkAutomaton(null);
+            setUppercaseLinkAutomaton(buildUppercaseLinkAutomaton(newMisspellingList));
         }
     }
 
