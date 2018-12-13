@@ -15,7 +15,7 @@ import java.util.List;
 public class LinkSuffixedFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_LINK_SUFFIXED = "\\[\\[<L>+]]<Ll>+";
+    private static final String REGEX_LINK_SUFFIXED = "(\\[\\[|\\|)<L>+]]<Ll>+";
     private static final RunAutomaton AUTOMATON_LINK_SUFFIXED =
             new RunAutomaton(new RegExp(REGEX_LINK_SUFFIXED).toAutomaton(new DatatypesAutomatonProvider()));
 
