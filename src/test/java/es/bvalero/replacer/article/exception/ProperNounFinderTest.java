@@ -39,6 +39,7 @@ public class ProperNounFinderTest {
         RunAutomaton automaton = Mockito.mock(RunAutomaton.class);
         Mockito.when(automaton.newMatcher(Mockito.anyString())).thenReturn(Mockito.mock(AutomatonMatcher.class));
         Mockito.when(misspellingManager.getUppercaseAfterAutomaton()).thenReturn(automaton);
+        Mockito.when(misspellingManager.getUppercaseLinkAutomaton()).thenReturn(automaton);
 
         List<ArticleReplacement> matches = properNounFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
@@ -56,6 +57,10 @@ public class ProperNounFinderTest {
         RunAutomaton uppercaseAutomaton
                 = new RunAutomaton(new RegExp(regexUppercase).toAutomaton(new DatatypesAutomatonProvider()));
         Mockito.when(misspellingManager.getUppercaseAfterAutomaton()).thenReturn(uppercaseAutomaton);
+
+        RunAutomaton automaton = Mockito.mock(RunAutomaton.class);
+        Mockito.when(automaton.newMatcher(Mockito.anyString())).thenReturn(Mockito.mock(AutomatonMatcher.class));
+        Mockito.when(misspellingManager.getUppercaseLinkAutomaton()).thenReturn(automaton);
 
         List<ArticleReplacement> matches = properNounFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
