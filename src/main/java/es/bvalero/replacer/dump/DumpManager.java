@@ -44,7 +44,7 @@ class DumpManager {
     @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpManager.class);
     // Rough amount of articles to be read
-    private static final long NUM_ARTICLES = 3666708L;
+    private static final long NUM_ARTICLES = 3718238L;
     @RegExp
     private static final String REGEX_DUMP_FOLDER = "\\d+";
     private static final Pattern PATTERN_DUMP_FOLDER = Pattern.compile(REGEX_DUMP_FOLDER);
