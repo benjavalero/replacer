@@ -26,6 +26,10 @@ aún\.
 
 ([Dd]u|of) Canton
 
+Circuit de (Barcelona\-)?Catalunya
+(Biblioteca de|Caixa( de)?|Capella Reial de|Ciutadans de|Club Natació|Comunistes de|Democràtica de|Descobrir|El Periódico de|Esquerra Republicana de|Estaciones de Rodalies de|Generalitat de|Gran geografia comarcal de|Guia del Patrimoni Monumental i Artístic de|Guía de|Història de|Iniciativa per|Institut Cartogràfic de|Junts per|La Veu de|Museu Nacional d'Art de|Nacional de|Parlament de|Partit dels Socialistes de|Partit Socialista Unificat de|Plataforma per|Pobles de|Principat de|Rally|Revista de|Socialista de|Universitat (Oberta|Politècnica) de|Volta( Ciclista)? a) Catalunya
+Catalunya (Banc|en (Comú|Miniatura)|Ràdio|[Rr]omànica|Sí|Televisió|Verds)
+
 Diego Comic
 [Cc]omic[\s\-]([Bb]ooks?|[Cc]on|Sans)
 (Action|Adventure|DC|Detective|Horse|Image|Marvel|Panini) Comics
@@ -41,6 +45,7 @@ Elenco de Grandezas y Títulos Nobiliarios Españoles
 
 Lista de [Ee]spécies Flora
 Brasileiro de Geografia
+[Gg]lass
 (Blind|The) Guardian
 
 The Hindu
@@ -66,6 +71,7 @@ Saint\-Martin
 Martin (Brundle|Damm|Emmrich|Fischer|Freeman|Garrix|Gore|Heidegger|Kližan|Luther|Racing|Scorsese|Sheen|Solveig|Vantage|Van)
 Martin's
 Martin\-d[eu]
+martín pescador
 
 (Artur|Emmanuel|Josep|Timun) Mas
 
