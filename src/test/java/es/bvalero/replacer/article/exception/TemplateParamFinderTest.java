@@ -15,7 +15,7 @@ public class TemplateParamFinderTest {
         String param2 = "parám_2";
         String param3 = "param-3";
         String param4 = "param4";
-        String text = "xxx {{Template| " + param1 + "= value1 | " + param2 + "= value2 |" + param3 + "=| " + param4 + "}}";
+        String text = "xxx {{Template| " + param1 + " = value1 | " + param2 + "\t= value2 |" + param3 + "=| " + param4 + "}}";
 
         IgnoredReplacementFinder templateParamFinder = new TemplateParamFinder();
 

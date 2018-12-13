@@ -208,7 +208,6 @@ public class ArticleService {
         // Ignore the replacements which must be ignored
         for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
             List<ArticleReplacement> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
-            ignoredReplacements.forEach(articleReplacement -> LOGGER.debug("IGNORED: {}", articleReplacement));
             articleReplacements.removeIf(replacement -> replacement.isContainedIn(ignoredReplacements));
 
             if (articleReplacements.isEmpty()) {
