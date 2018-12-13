@@ -28,22 +28,22 @@ public class ReplacementRepositoryTest {
         articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
         Replacement error1 = new Replacement.ReplacementBuilder()
-                .setArticle(article1)
+                .setArticleId(article1.getId())
                 .setType(ReplacementType.MISSPELLING)
                 .setText("aber")
                 .build();
         Replacement error2 = new Replacement.ReplacementBuilder()
-                .setArticle(article2)
+                .setArticleId(article2.getId())
                 .setType(ReplacementType.MISSPELLING)
                 .setText("aber")
                 .build();
         Replacement error3 = new Replacement.ReplacementBuilder()
-                .setArticle(article2)
+                .setArticleId(article2.getId())
                 .setType(ReplacementType.MISSPELLING)
                 .setText("madrid")
                 .build();
         Replacement error4 = new Replacement.ReplacementBuilder()
-                .setArticle(article3)
+                .setArticleId(article3.getId())
                 .setType(ReplacementType.MISSPELLING)
                 .setText("paris")
                 .build();
@@ -60,17 +60,17 @@ public class ReplacementRepositoryTest {
         articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
         Replacement error1 = new Replacement.ReplacementBuilder()
-                .setArticle(article1)
+                .setArticleId(article1.getId())
                 .setType(ReplacementType.MISSPELLING)
                 .setText("aber")
                 .build();
         Replacement error2 = new Replacement.ReplacementBuilder()
-                .setArticle(article2)
+                .setArticleId(article2.getId())
                 .setType(ReplacementType.MISSPELLING)
                 .setText("aber")
                 .build();
         Replacement error3 = new Replacement.ReplacementBuilder()
-                .setArticle(article3)
+                .setArticleId(article3.getId())
                 .setType(ReplacementType.MISSPELLING)
                 .setText("aber")
                 .build();

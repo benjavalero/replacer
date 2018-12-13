@@ -113,12 +113,12 @@ public class ArticleService {
                     .setTrimText(trimText)
                     .build();
         } catch (InvalidArticleException e) {
-            replacementRepository.deleteByArticle(randomArticle);
+            replacementRepository.deleteByArticleId(randomArticle.getId());
             articleRepository.delete(randomArticle);
             throw e;
         } catch (WikipediaException e) {
             LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle());
-            replacementRepository.deleteByArticle(randomArticle);
+            replacementRepository.deleteByArticleId(randomArticle.getId());
             articleRepository.delete(randomArticle);
             throw new InvalidArticleException(e);
         }
@@ -126,13 +126,13 @@ public class ArticleService {
 
     ArticleReview findRandomArticleWithReplacements(String word) throws UnfoundArticleException, InvalidArticleException {
         // Find random article in Replacer database (the result can be empty)
-        List<Article> randomArticles = replacementRepository.findRandomByWord(word, PageRequest.of(0, 1));
+        List<Integer> randomArticles = replacementRepository.findRandomByWord(word, PageRequest.of(0, 1));
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
             throw new UnfoundArticleException("No se ha encontrado ningún artículo para revisar");
         }
 
-        Article randomArticle = randomArticles.get(0);
+        Article randomArticle = articleRepository.getOne(randomArticles.get(0));
 
         ArticleReview articleReview;
         try {
@@ -160,12 +160,12 @@ public class ArticleService {
                     .setTrimText(trimText)
                     .build();
         } catch (InvalidArticleException e) {
-            replacementRepository.deleteByArticle(randomArticle);
+            replacementRepository.deleteByArticleId(randomArticle.getId());
             articleRepository.delete(randomArticle);
             throw e;
         } catch (WikipediaException e) {
             LOGGER.warn("Content could not be retrieved for title: {}", randomArticle.getTitle());
-            replacementRepository.deleteByArticle(randomArticle);
+            replacementRepository.deleteByArticleId(randomArticle.getId());
             articleRepository.delete(randomArticle);
             throw new InvalidArticleException(e);
         }
@@ -180,7 +180,7 @@ public class ArticleService {
         }
         if (!wordFound) {
             LOGGER.warn("Word {} not found as a replacement for article: {}", word, randomArticle.getTitle());
-            replacementRepository.deleteByArticleAndText(randomArticle, word);
+            replacementRepository.deleteByArticleIdAndText(randomArticle.getId(), word);
             throw new InvalidArticleException("Word not found as a replacement");
         }
 
@@ -233,7 +233,7 @@ public class ArticleService {
         } catch (WikipediaException e) {
             LOGGER.error("Error saving or retrieving the content of the article: {}", title);
             Article dbArticle = articleRepository.findByTitle(title);
-            replacementRepository.deleteByArticle(dbArticle);
+            replacementRepository.deleteByArticleId(dbArticle.getId());
             articleRepository.delete(dbArticle);
             return false;
         }
@@ -246,7 +246,7 @@ public class ArticleService {
             return false;
         } else {
             Article articleToSave = dbArticle.withReviewDate(LocalDateTime.now());
-            replacementRepository.deleteInBatch(replacementRepository.findByArticle(articleToSave));
+            replacementRepository.deleteInBatch(replacementRepository.findByArticleId(articleToSave.getId()));
             articleRepository.save(articleToSave);
             return true;
         }

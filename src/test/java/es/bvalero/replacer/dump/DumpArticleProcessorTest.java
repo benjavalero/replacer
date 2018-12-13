@@ -225,16 +225,16 @@ public class DumpArticleProcessorTest {
                 .thenReturn(Collections.singletonList(dbArticle));
         // And it has replacements 1 and 2
         Replacement replacement1 = new Replacement.ReplacementBuilder()
-                .setArticle(dbArticle)
+                .setArticleId(dbArticle.getId())
                 .setType(ReplacementType.MISSPELLING)
                 .setText("1")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
-                .setArticle(dbArticle)
+                .setArticleId(dbArticle.getId())
                 .setType(ReplacementType.MISSPELLING)
                 .setText("2")
                 .build();
-        Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Arrays.asList(replacement1, replacement2));
+        Mockito.when(replacementRepository.findByArticleId(dbArticle.getId())).thenReturn(Arrays.asList(replacement1, replacement2));
         // And the new ones are 2 and 3
         ArticleReplacement articleReplacement2 = ArticleReplacement.builder()
                 .setType(ReplacementType.MISSPELLING)
@@ -267,11 +267,11 @@ public class DumpArticleProcessorTest {
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
         // And it has replacement 1
         Replacement replacement1 = new Replacement.ReplacementBuilder()
-                .setArticle(dbArticle)
+                .setArticleId(dbArticle.getId())
                 .setType(ReplacementType.MISSPELLING)
                 .setText("1")
                 .build();
-        Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Collections.singletonList(replacement1));
+        Mockito.when(replacementRepository.findByArticleId(dbArticle.getId())).thenReturn(Collections.singletonList(replacement1));
         // And the new one is 1
         ArticleReplacement articleReplacement1 = ArticleReplacement.builder()
                 .setType(ReplacementType.MISSPELLING)
@@ -301,23 +301,23 @@ public class DumpArticleProcessorTest {
                 .thenReturn(Collections.singletonList(dbArticle));
         // And it has replacements 1 and 2
         Replacement replacement1 = new Replacement.ReplacementBuilder()
-                .setArticle(dbArticle)
+                .setArticleId(dbArticle.getId())
                 .setType(ReplacementType.MISSPELLING)
                 .setText("1")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
-                .setArticle(dbArticle)
+                .setArticleId(dbArticle.getId())
                 .setType(ReplacementType.MISSPELLING)
                 .setText("2")
                 .build();
-        Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Arrays.asList(replacement1, replacement2));
+        Mockito.when(replacementRepository.findByArticleId(dbArticle.getId())).thenReturn(Arrays.asList(replacement1, replacement2));
         // And there are no replacements found
         Mockito.when(articleService.findReplacements(Mockito.anyString())).thenReturn(Collections.emptyList());
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         dumpArticleProcessor.finish();
 
-        Mockito.verify(replacementRepository).deleteByArticle(dbArticle);
+        Mockito.verify(replacementRepository).deleteByArticleId(dbArticle.getId());
         Mockito.verify(articleRepository).deleteInBatch(Mockito.anyList());
     }
 
