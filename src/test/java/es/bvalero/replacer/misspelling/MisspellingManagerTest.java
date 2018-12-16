@@ -1,37 +1,18 @@
 package es.bvalero.replacer.misspelling;
 
-import dk.brics.automaton.AutomatonMatcher;
-import dk.brics.automaton.DatatypesAutomatonProvider;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.article.ArticleReplacement;
-import es.bvalero.replacer.article.ArticleReplacementFinder;
-import es.bvalero.replacer.persistence.ReplacementType;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.Collection;
 
 public class MisspellingManagerTest {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingManagerTest.class);
 
     @Mock
     private IWikipediaFacade wikipediaService;
@@ -77,99 +58,12 @@ public class MisspellingManagerTest {
     }
 
     @Test
-    public void testSetFirstUpperCase() {
-        Assert.assertEquals("Álvaro", MisspellingManager.setFirstUpperCase("Álvaro"));
-        Assert.assertEquals("Úlcera", MisspellingManager.setFirstUpperCase("úlcera"));
-        Assert.assertEquals("Ñ", MisspellingManager.setFirstUpperCase("ñ"));
-    }
-
-    @Test
     public void testStartsWithUpperCase() {
         Assert.assertTrue(MisspellingManager.startsWithUpperCase("Álvaro"));
         Assert.assertFalse(MisspellingManager.startsWithUpperCase("úlcera"));
     }
 
-    @Test
-    public void testBuildMisspellingMap() {
-        Misspelling misspelling1 =
-                Misspelling.builder().setWord("haver").setComment("haber").setCaseSensitive(false).build();
-        Misspelling misspelling2 =
-                Misspelling.builder().setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
-        List<Misspelling> misspellingList = Arrays.asList(misspelling1, misspelling2);
-
-        Map<String, Misspelling> misspellingMap = MisspellingManager.buildMisspellingMap(misspellingList);
-
-        Assert.assertEquals(3, misspellingMap.size());
-        Assert.assertEquals(misspelling1, misspellingMap.get("haver"));
-        Assert.assertEquals(misspelling1, misspellingMap.get("Haver"));
-        Assert.assertEquals(misspelling2, misspellingMap.get("madrid"));
-    }
-
-    @Test
-    public void testBuildMisspellingAutomaton() {
-        Misspelling misspelling1 =
-                Misspelling.builder().setWord("aun").setComment("aún").setCaseSensitive(false).build();
-        Misspelling misspelling2 =
-                Misspelling.builder().setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
-        List<Misspelling> misspellingList = Arrays.asList(misspelling1, misspelling2);
-
-        RunAutomaton automaton = MisspellingManager.buildMisspellingAutomaton(misspellingList);
-
-        // This automaton finds the sequence of letters even if not complete words
-        String text = "En madrid Aun pauna.";
-        List<ArticleReplacement> replacements = ArticleReplacementFinder.findReplacements(text, automaton, ReplacementType.MISSPELLING);
-        Assert.assertEquals(3, replacements.size());
-        Assert.assertEquals("madrid", replacements.get(0).getText());
-        Assert.assertEquals("Aun", replacements.get(1).getText());
-        Assert.assertEquals("aun", replacements.get(2).getText());
-    }
-
-    @Test
-    public void testBuildUppercaseAfterAutomaton() {
-        Misspelling misspelling1 =
-                Misspelling.builder().setWord("Marzo").setComment("marzo").setCaseSensitive(true).build();
-        Misspelling misspelling2 =
-                Misspelling.builder().setWord("Febrero").setComment("febrero").setCaseSensitive(true).build();
-        List<Misspelling> misspellingList = Arrays.asList(misspelling1, misspelling2);
-
-        RunAutomaton automaton = MisspellingManager.buildUppercaseAfterAutomaton(misspellingList);
-
-        // This automaton finds the sequence of letters even if not complete words
-        String text = "En Febrero. Marzo.";
-        List<ArticleReplacement> replacements = ArticleReplacementFinder.findReplacements(text, automaton, ReplacementType.MISSPELLING);
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(". Marzo", replacements.get(0).getText());
-    }
-
-    @Test
-    public void testBuildUppercaseLinkAutomaton() {
-        Misspelling misspelling1 =
-                Misspelling.builder().setWord("Marzo").setComment("marzo").setCaseSensitive(true).build();
-        Misspelling misspelling2 =
-                Misspelling.builder().setWord("Febrero").setComment("febrero").setCaseSensitive(true).build();
-        List<Misspelling> misspellingList = Arrays.asList(misspelling1, misspelling2);
-
-        RunAutomaton automaton = MisspellingManager.buildUppercaseLinkAutomaton(misspellingList);
-
-        // This automaton finds the sequence of letters even if not complete words
-        String text = "En [[Febrero|Marzo]].";
-        List<ArticleReplacement> replacements = ArticleReplacementFinder.findReplacements(text, automaton, ReplacementType.MISSPELLING);
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals("[[Febrero|", replacements.get(0).getText());
-    }
-
-    @Test
-    public void testFindMisspellingByWord() {
-        Map<String, Misspelling> misspellings = new HashMap<>(1);
-        Misspelling misspelling =
-                Misspelling.builder().setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
-        misspellings.put("madrid", misspelling);
-        misspellingManager.setMisspellings(misspellings);
-
-        Assert.assertEquals(misspelling, misspellingManager.findMisspellingByWord("madrid"));
-        Assert.assertNull(misspellingManager.findMisspellingByWord("Madrid"));
-    }
-
+/*
     @Test
     @Ignore
     public void testFindMisspellingsPerformance() throws WikipediaException {
@@ -311,7 +205,7 @@ public class MisspellingManagerTest {
         }
         long timeElapsed2C = System.currentTimeMillis() - start2C;
         LOGGER.info("TEST 2C: {} ms / {} results\n", +timeElapsed2C, count2C);
-
+*/
 /*
         // Test 3 : Create one regex for each misspelling and try to match the text
         // Heap Size Exception
@@ -343,6 +237,7 @@ public class MisspellingManagerTest {
         LOGGER.info("TEST 3: " + timeElapsed + " ms / " + count3 + " results");
         LOGGER.info();
 */
+/*
     }
-
+*/
 }

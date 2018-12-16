@@ -1,26 +1,48 @@
 package es.bvalero.replacer.misspelling;
 
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.article.ArticleReplacementFinder;
 import es.bvalero.replacer.persistence.ReplacementType;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NonNls;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
  * Find misspelling replacements in a given text.
  */
 @Component
-public class MisspellingFinder implements ArticleReplacementFinder {
+public class MisspellingFinder implements ArticleReplacementFinder, PropertyChangeListener {
 
+    @NonNls
+    private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingFinder.class);
     private static final Pattern PATTERN_BRACKETS = Pattern.compile("\\(.+?\\)");
 
     @Autowired
     private MisspellingManager misspellingManager;
+
+    // Regex with all the misspellings
+    // IMPORTANT : WE NEED AT LEAST 2 MB OF STACK SIZE -Xss2m !!!
+    private RunAutomaton misspellingAutomaton;
+
+    // Derived from the misspelling set to access faster by word
+    private Map<String, Misspelling> misspellingMap = new HashMap<>();
+
+    /**
+     * @return The given word turning the first letter into uppercase (if needed)
+     */
+    static String setFirstUpperCase(String word) {
+        return word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")) + word.substring(1);
+    }
 
     static String findMisspellingSuggestion(CharSequence originalWord, Misspelling misspelling) {
         List<String> suggestions = parseCommentSuggestions(misspelling);
@@ -29,7 +51,7 @@ public class MisspellingFinder implements ArticleReplacementFinder {
         String suggestion = suggestions.get(0);
 
         if (MisspellingManager.startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()) {
-            suggestion = MisspellingManager.setFirstUpperCase(suggestion);
+            suggestion = setFirstUpperCase(suggestion);
         }
 
         return suggestion;
@@ -51,6 +73,81 @@ public class MisspellingFinder implements ArticleReplacementFinder {
         return suggestions;
     }
 
+    private RunAutomaton getMisspellingAutomaton() {
+        if (misspellingAutomaton == null) { // For the first time
+            setMisspellingAutomaton(buildMisspellingAutomaton());
+        }
+        return misspellingAutomaton;
+    }
+
+    private void setMisspellingAutomaton(RunAutomaton misspellingAutomaton) {
+        this.misspellingAutomaton = misspellingAutomaton;
+    }
+
+    private Map<String, Misspelling> getMisspellingMap() {
+        if (misspellingMap.isEmpty()) { // For the first time
+            setMisspellingMap(buildMisspellingMap());
+        }
+        return misspellingMap;
+    }
+
+    void setMisspellingMap(Map<String, Misspelling> misspellingMap) {
+        this.misspellingMap = misspellingMap;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        setMisspellingAutomaton(buildMisspellingAutomaton());
+        setMisspellingMap(buildMisspellingMap());
+    }
+
+    private RunAutomaton buildMisspellingAutomaton() {
+        LOGGER.info("Start building misspelling automaton...");
+
+        // Build a long long regex with all the misspellings
+        Set<Misspelling> misspellings = misspellingManager.getMisspellings();
+        List<String> alternations = new ArrayList<>(misspellings.size());
+        for (Misspelling misspelling : misspellings) {
+            // If the misspelling contains a dot we escape it
+            String word = misspelling.getWord()
+                    .replace(".", "\\.");
+
+            if (misspelling.isCaseSensitive()) {
+                alternations.add(word);
+            } else {
+                // If case-insensitive, we add to the map "[wW]ord".
+                String firstLetter = word.substring(0, 1);
+                String newWord = '[' + firstLetter + firstLetter.toUpperCase(Locale.forLanguageTag("es")) + ']' + word.substring(1);
+                alternations.add(newWord);
+            }
+        }
+        String regexAlternations = '(' + StringUtils.join(alternations, "|") + ')';
+        RunAutomaton automaton = new RunAutomaton(new RegExp(regexAlternations).toAutomaton());
+
+        LOGGER.info("End building misspelling automaton");
+        return automaton;
+    }
+
+    Map<String, Misspelling> buildMisspellingMap() {
+        LOGGER.info("Start building misspelling map...");
+
+        // Build a map to quick access the misspellings by word
+        Set<Misspelling> misspellings = misspellingManager.getMisspellings();
+        Map<String, Misspelling> misspellingMap = new HashMap<>(misspellings.size());
+        for (Misspelling misspelling : misspellings) {
+            if (misspelling.isCaseSensitive()) {
+                misspellingMap.put(misspelling.getWord(), misspelling);
+            } else {
+                // If case-insensitive, we add to the map "word" and "Word".
+                misspellingMap.put(misspelling.getWord(), misspelling);
+                misspellingMap.put(setFirstUpperCase(misspelling.getWord()), misspelling);
+            }
+        }
+
+        LOGGER.info("End building misspelling map");
+        return misspellingMap;
+    }
+
     /**
      * @return A list with the misspelling replacements in a given text.
      */
@@ -59,7 +156,7 @@ public class MisspellingFinder implements ArticleReplacementFinder {
         List<ArticleReplacement> articleReplacements = new ArrayList<>(100);
 
         List<ArticleReplacement> misspellingMatches = ArticleReplacementFinder.findReplacements(text,
-                misspellingManager.getMisspellingAutomaton(), ReplacementType.MISSPELLING);
+                getMisspellingAutomaton(), ReplacementType.MISSPELLING);
 
         for (ArticleReplacement misspellingMatch : misspellingMatches) {
             // The regex may find misspellings which are not complete words, e. g. "és" inside "inglés"
@@ -67,7 +164,7 @@ public class MisspellingFinder implements ArticleReplacementFinder {
             if (misspellingMatch.getStart() == 0 || misspellingMatch.getEnd() == text.length() ||
                     (!Character.isLetterOrDigit(text.charAt(misspellingMatch.getStart() - 1))
                             && !Character.isLetterOrDigit(text.charAt(misspellingMatch.getEnd())))) {
-                Misspelling wordMisspelling = misspellingManager.findMisspellingByWord(misspellingMatch.getText());
+                Misspelling wordMisspelling = findMisspellingByWord(misspellingMatch.getText());
 
                 articleReplacements.add(misspellingMatch
                         .withSubtype(wordMisspelling.getWord())
@@ -76,7 +173,16 @@ public class MisspellingFinder implements ArticleReplacementFinder {
             }
         }
 
+        // Add the listener if the misspelling list changes from now
+        misspellingManager.addPropertyChangeListener(this);
         return articleReplacements;
+    }
+
+    /**
+     * @return The misspelling related to the given word, or null if there is no such misspelling.
+     */
+    Misspelling findMisspellingByWord(String word) {
+        return getMisspellingMap().get(word);
     }
 
 }

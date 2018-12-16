@@ -1,7 +1,5 @@
 package es.bvalero.replacer.misspelling;
 
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.persistence.ReplacementType;
 import org.junit.Assert;
@@ -12,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.List;
+import java.util.*;
 
 public class MisspellingFinderTest {
 
@@ -35,31 +33,27 @@ public class MisspellingFinderTest {
         Misspelling misspelling1 = Misspelling.builder()
                 .setWord("um")
                 .build();
-        Mockito.when(misspellingManager.findMisspellingByWord("un")).thenReturn(misspelling1);
 
         Misspelling misspelling2 = Misspelling.builder()
                 .setWord("vonito")
                 .setComment("bonito")
                 .build();
-        Mockito.when(misspellingManager.findMisspellingByWord("vonito")).thenReturn(misspelling2);
 
         Misspelling misspelling3 = Misspelling.builder()
                 .setWord("exemplo")
                 .setComment("ejemplo")
                 .build();
-        Mockito.when(misspellingManager.findMisspellingByWord("Exemplo")).thenReturn(misspelling3);
-        Mockito.when(misspellingManager.findMisspellingByWord("exemplo")).thenReturn(misspelling3);
 
-        String misspellingRegex = "([Uu]m|[Vv]onito|[Ee]xemplo)";
-        RunAutomaton misspellingAutomaton = new RunAutomaton(new RegExp(misspellingRegex).toAutomaton());
-        Mockito.when(misspellingManager.getMisspellingAutomaton()).thenReturn(misspellingAutomaton);
+        Mockito.when(misspellingManager.getMisspellings())
+                .thenReturn(new HashSet<>(Arrays.asList(misspelling1, misspelling2, misspelling3)));
+
 
         List<ArticleReplacement> result = misspellingFinder.findReplacements(articleContent);
 
         Assert.assertNotNull(result);
         Assert.assertEquals(3, result.size());
 
-        // "UN" will be ignored because it is all in uppercase and has not a known uppercase misspelling
+        // "UM" will be ignored because it is all in uppercase and has not a known uppercase misspelling
 
         ArticleReplacement result1 = result.get(0);
         Assert.assertEquals("vonito", result1.getText());
@@ -127,6 +121,42 @@ public class MisspellingFinderTest {
                 .setComment("k (letra), que, qué, kg (kilogramo)").build();
         List<String> suggestions4 = MisspellingFinder.parseCommentSuggestions(misspelling4);
         Assert.assertEquals(3, suggestions4.size());
+    }
+
+    @Test
+    public void testSetFirstUpperCase() {
+        Assert.assertEquals("Álvaro", MisspellingFinder.setFirstUpperCase("Álvaro"));
+        Assert.assertEquals("Úlcera", MisspellingFinder.setFirstUpperCase("úlcera"));
+        Assert.assertEquals("Ñ", MisspellingFinder.setFirstUpperCase("ñ"));
+    }
+
+    @Test
+    public void testBuildMisspellingMap() {
+        Misspelling misspelling1 =
+                Misspelling.builder().setWord("haver").setComment("haber").setCaseSensitive(false).build();
+        Misspelling misspelling2 =
+                Misspelling.builder().setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
+        Mockito.when(misspellingManager.getMisspellings())
+                .thenReturn(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
+
+        Map<String, Misspelling> misspellingMap = misspellingFinder.buildMisspellingMap();
+
+        Assert.assertEquals(3, misspellingMap.size());
+        Assert.assertEquals(misspelling1, misspellingMap.get("haver"));
+        Assert.assertEquals(misspelling1, misspellingMap.get("Haver"));
+        Assert.assertEquals(misspelling2, misspellingMap.get("madrid"));
+    }
+
+    @Test
+    public void testFindMisspellingByWord() {
+        Map<String, Misspelling> misspellings = new HashMap<>(1);
+        Misspelling misspelling = Misspelling.builder()
+                .setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
+        misspellings.put("madrid", misspelling);
+        misspellingFinder.setMisspellingMap(misspellings);
+
+        Assert.assertEquals(misspelling, misspellingFinder.findMisspellingByWord("madrid"));
+        Assert.assertNull(misspellingFinder.findMisspellingByWord("Madrid"));
     }
 
 }
