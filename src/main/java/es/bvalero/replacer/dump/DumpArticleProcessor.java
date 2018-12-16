@@ -91,6 +91,8 @@ class DumpArticleProcessor {
             // The remaining cached articles are not in the dump so we remove them from DB
             articlesToDelete.addAll(articlesDb.values());
             articlesDb.clear();
+
+            flushModifications();
         }
 
         if (dbArticle.isPresent() && !forceProcess) {
