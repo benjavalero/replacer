@@ -1,5 +1,6 @@
 # LISTA DE FALSOS POSITIVOS
 # Si es posible intentamos que no se solapen con otras excepciones
+# OJO: Las expresiones regulares han de ser compatibles con el formato de los automaton
 
 (Central|East|North|[Ss]outhern|South|Tropical|UCI|West) Africa
 Africa (Cup|Sports|Tour)
@@ -18,7 +19,7 @@ Los Angeles (Angels|Clippers|County|Dodgers|Galaxy|Lakers|Memorial|Rams|Sparks|T
 
 [Nn]i aun
 # aun + gerundio
-[Aa]un (así|sin|\w+?ndo)
+[Aa]un (así|sin|<L>+?ndo)
 
 aún\.
 ([Aa]unque|[Cc]uando|donde|era|están?|estaba|es|fue|[Mm]ás|mejor|menos|peor|[Pp]ero|porque|que|ser|sido|[Ss]iendo|[Ss]i|son|[Yy]) aún
@@ -31,7 +32,7 @@ Circuit de (Barcelona\-)?Catalunya
 Catalunya (Banc|en (Comú|Miniatura)|Ràdio|[Rr]omànica|Sí|Televisió|Verds)
 
 Diego Comic
-[Cc]omic[\s\-]([Bb]ooks?|[Cc]on|Sans)
+[Cc]omic(<Z>|\-)([Bb]ooks?|[Cc]on|Sans)
 (Action|Adventure|DC|Detective|Horse|Image|Marvel|Panini) Comics
 
 \[\[:?(m:)?commons:
@@ -115,7 +116,7 @@ Torneo Verano
 
 ([Aa]coustic|Alternate|Cast|Deluxe|Demo|Electronic|English|Europaea|Extended|Florida|Instrumental|Japanese|List|Live|Long|LP|[Nn]ew|[Oo]nline|[Oo]riginal|Radio|[Ss]ingle|Spanish|Vector|Video|Vocal) [Vv]ersion
 
-(RCA|Saint)[\s\-]Victor
+(RCA|Saint)(<Z>|\-)Victor
 Victor Hugo
 
 Led Zeppelin

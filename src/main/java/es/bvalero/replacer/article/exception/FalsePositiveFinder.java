@@ -1,5 +1,6 @@
 package es.bvalero.replacer.article.exception;
 
+import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.article.ArticleReplacement;
@@ -43,7 +44,7 @@ public class FalsePositiveFinder implements IgnoredReplacementFinder {
             List<String> falsePositivesList = loadFalsePositives();
             String alternations = StringUtils.collectionToDelimitedString(falsePositivesList, "|");
             RegExp r = new RegExp(alternations);
-            falsePositivesAutomaton = new RunAutomaton(r.toAutomaton());
+            falsePositivesAutomaton = new RunAutomaton(r.toAutomaton(new DatatypesAutomatonProvider()));
         }
         return falsePositivesAutomaton;
     }
