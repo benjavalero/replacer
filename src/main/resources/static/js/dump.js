@@ -40,12 +40,12 @@ function findDumpStatus() {
             }
 
             document.querySelector('#force-check').checked = response.forceProcess;
-            document.querySelector('.dumpName').textContent = response.dumpFileName;
-            document.querySelector('.dumpTime').textContent = response.time;
-            document.querySelector('.numArticlesRead').textContent = response.numArticlesRead;
-            document.querySelector('.numArticlesProcessed').textContent = response.numArticlesProcessed;
-            document.querySelector('.dumpProgress').textContent = response.progress;
-            document.querySelector('.dumpAverage').textContent = response.average;
+            document.querySelectorAll('.dumpName').forEach(function(span) { span.textContent = response.dumpFileName });
+            document.querySelectorAll('.dumpTime').forEach(function(span) { span.textContent = response.time });
+            document.querySelectorAll('.numArticlesRead').forEach(function(span) { span.textContent = response.numArticlesRead });
+            document.querySelectorAll('.numArticlesProcessed').forEach(function(span) { span.textContent = response.numArticlesProcessed });
+            document.querySelectorAll('.dumpProgress').forEach(function(span) { span.textContent = response.progress });
+            document.querySelectorAll('.dumpAverage').forEach(function(span) { span.textContent = response.average });
         }
     });
 
