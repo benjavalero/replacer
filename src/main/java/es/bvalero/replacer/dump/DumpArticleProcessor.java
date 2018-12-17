@@ -120,14 +120,14 @@ class DumpArticleProcessor {
         if (articleReplacements.isEmpty()) {
             LOGGER.debug("No errors found in article: {}", dumpArticle.getTitle());
             dbArticle.ifPresent(article -> {
-                replacementRepository.deleteByArticleId(article.getId()); // No need to delete in batch
+                replacementRepository.deleteByArticle(article); // No need to delete in batch
                 articlesToDelete.add(article);
             });
         } else if (dbArticle.isPresent()) {
             // Compare the new replacements with the existing ones
             Collection<Replacement> newReplacements = new HashSet<>(articleReplacements.size());
             articleReplacements.forEach(replacement -> newReplacements.add(Replacement.builder()
-                    .setArticleId(dbArticle.get().getId())
+                    .setArticle(dbArticle.get())
                     .setType(replacement.getType())
                     .setText(replacement.getSubtype())
                     .build()));
@@ -136,7 +136,7 @@ class DumpArticleProcessor {
             boolean modified = false;
 
             // Replacements to remove from DB
-            List<Replacement> oldReplacements = replacementRepository.findByArticleId(dbArticle.get().getId());
+            List<Replacement> oldReplacements = replacementRepository.findByArticle(dbArticle.get());
 
             for (Replacement oldReplacement : oldReplacements) {
                 if (!newReplacements.contains(oldReplacement)) {
@@ -170,7 +170,7 @@ class DumpArticleProcessor {
 
             // Add replacements in DB
             articleReplacements.forEach(replacement -> replacementsToAdd.add(Replacement.builder()
-                    .setArticleId(newArticle.getId())
+                    .setArticle(newArticle)
                     .setType(replacement.getType())
                     .setText(replacement.getSubtype())
                     .build()));

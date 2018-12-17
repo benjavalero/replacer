@@ -1,6 +1,7 @@
 package es.bvalero.replacer.persistence;
 
 import org.hibernate.annotations.Immutable;
+import org.jetbrains.annotations.NonNls;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,11 +21,9 @@ public class Replacement implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Removed relationship to improve performance on bulk indexing
-    // @ManyToOne(fetch = FetchType.EAGER)
-    // @JoinColumn(name = "articleid")
-    @Column(name = "articleid", nullable = false)
-    private int articleId;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "articleid")
+    private Article article;
 
     @Column(name = "type", nullable = false, length = 25)
     @Enumerated(EnumType.STRING)
@@ -38,8 +37,8 @@ public class Replacement implements Serializable {
         // Needed by JPA
     }
 
-    private Replacement(int articleId, ReplacementType type, String text) {
-        this.articleId = articleId;
+    private Replacement(Article article, ReplacementType type, String text) {
+        this.article = article;
         this.type = type;
         this.text = text;
     }
@@ -53,36 +52,38 @@ public class Replacement implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Replacement that = (Replacement) o;
-        return articleId == that.articleId &&
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Replacement that = (Replacement) obj;
+        return Objects.equals(article, that.article) &&
                 type == that.type &&
-                text.equals(that.text);
+                Objects.equals(text, that.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(articleId, type, text);
+        return Objects.hash(article, type, text);
     }
 
+    @NonNls
     @Override
     public String toString() {
         return "Replacement{" +
-                "articleId=" + articleId +
+                "id=" + id +
+                ", article=" + article +
                 ", type=" + type +
                 ", text='" + text + '\'' +
                 '}';
     }
 
     public static class ReplacementBuilder {
-        private int articleId;
+        private Article article;
         private ReplacementType type;
         private String text;
 
-        public Replacement.ReplacementBuilder setArticleId(int articleId) {
-            this.articleId = articleId;
+        public Replacement.ReplacementBuilder setArticle(Article article) {
+            this.article = article;
             return this;
         }
 
@@ -97,7 +98,7 @@ public class Replacement implements Serializable {
         }
 
         public Replacement build() {
-            return new Replacement(articleId, type, text);
+            return new Replacement(article, type, text);
         }
 
     }

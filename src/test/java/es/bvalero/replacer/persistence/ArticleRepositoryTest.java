@@ -66,11 +66,11 @@ public class ArticleRepositoryTest {
         Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
         Replacement replacement1 = new Replacement.ReplacementBuilder()
-                .setArticleId(newArticle.getId())
+                .setArticle(newArticle)
                 .setType(ReplacementType.MISSPELLING)
                 .setText("A").build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
-                .setArticleId(newArticle.getId())
+                .setArticle(newArticle)
                 .setType(ReplacementType.MISSPELLING)
                 .setText("B")
                 .build();
@@ -78,7 +78,7 @@ public class ArticleRepositoryTest {
 
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(2L, replacementRepository.count());
-        Assert.assertEquals(2, replacementRepository.findByArticleId(newArticle.getId()).size());
+        Assert.assertEquals(2, replacementRepository.findByArticle(newArticle).size());
     }
 
     @Test
@@ -116,17 +116,17 @@ public class ArticleRepositoryTest {
         Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
         Replacement replacement1 = new Replacement.ReplacementBuilder()
-                .setArticleId(newArticle.getId())
+                .setArticle(newArticle)
                 .setType(ReplacementType.MISSPELLING)
                 .setText("A")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
-                .setArticleId(newArticle.getId())
+                .setArticle(newArticle)
                 .setType(ReplacementType.MISSPELLING)
                 .setText("B")
                 .build();
         Replacement replacement3 = new Replacement.ReplacementBuilder()
-                .setArticleId(newArticle.getId())
+                .setArticle(newArticle)
                 .setType(ReplacementType.MISSPELLING)
                 .setText("C")
                 .build();
@@ -134,19 +134,19 @@ public class ArticleRepositoryTest {
 
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(3L, replacementRepository.count());
-        Assert.assertEquals(3, replacementRepository.findByArticleId(newArticle.getId()).size());
+        Assert.assertEquals(3, replacementRepository.findByArticle(newArticle).size());
 
         // Delete replacements
         replacementRepository.deleteInBatch(Arrays.asList(replacement1, replacement3));
 
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(1L, replacementRepository.count());
-        Assert.assertEquals(1, replacementRepository.findByArticleId(newArticle.getId()).size());
-        Assert.assertEquals("B", replacementRepository.findByArticleId(newArticle.getId()).get(0).getText());
+        Assert.assertEquals(1, replacementRepository.findByArticle(newArticle).size());
+        Assert.assertEquals("B", replacementRepository.findByArticle(newArticle).get(0).getText());
 
         // Add replacements
         Replacement replacement4 = new Replacement.ReplacementBuilder()
-                .setArticleId(newArticle.getId())
+                .setArticle(newArticle)
                 .setType(ReplacementType.MISSPELLING)
                 .setText("D")
                 .build();
@@ -154,7 +154,7 @@ public class ArticleRepositoryTest {
 
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(2L, replacementRepository.count());
-        Assert.assertEquals(2, replacementRepository.findByArticleId(newArticle.getId()).size());
+        Assert.assertEquals(2, replacementRepository.findByArticle(newArticle).size());
     }
 
     @Test(expected = DataIntegrityViolationException.class)
@@ -164,31 +164,31 @@ public class ArticleRepositoryTest {
         Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
         Replacement replacement1 = new Replacement.ReplacementBuilder()
-                .setArticleId(newArticle.getId())
+                .setArticle(newArticle)
                 .setType(ReplacementType.MISSPELLING)
                 .setText("A")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
-                .setArticleId(newArticle.getId())
+                .setArticle(newArticle)
                 .setType(ReplacementType.MISSPELLING)
                 .setText("A")
                 .build();
         replacementRepository.saveAll(Arrays.asList(replacement1, replacement2));
     }
 
-    @Test // (expected = DataIntegrityViolationException.class)
+    @Test(expected = DataIntegrityViolationException.class)
     public void testDeleteArticleWithReplacements() {
         Assert.assertEquals(0L, articleRepository.count());
 
         Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
         Replacement replacement1 = new Replacement.ReplacementBuilder()
-                .setArticleId(newArticle.getId())
+                .setArticle(newArticle)
                 .setType(ReplacementType.MISSPELLING)
                 .setText("A")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
-                .setArticleId(newArticle.getId())
+                .setArticle(newArticle)
                 .setType(ReplacementType.MISSPELLING)
                 .setText("B")
                 .build();
@@ -197,8 +197,8 @@ public class ArticleRepositoryTest {
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(2L, replacementRepository.count());
 
-        // This will NOT fail
-        // We have removed the relation between the entities
+        // This will fail
+        // We have removed partially the relation between the entities but we keep the FK in Replacement
         articleRepository.delete(newArticle);
         Assert.assertEquals(0L, articleRepository.count());
     }
@@ -210,12 +210,12 @@ public class ArticleRepositoryTest {
         Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
         articleRepository.save(newArticle);
         Replacement replacement1 = new Replacement.ReplacementBuilder()
-                .setArticleId(newArticle.getId())
+                .setArticle(newArticle)
                 .setType(ReplacementType.MISSPELLING)
                 .setText("A")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
-                .setArticleId(newArticle.getId())
+                .setArticle(newArticle)
                 .setType(ReplacementType.MISSPELLING)
                 .setText("B")
                 .build();
@@ -224,7 +224,7 @@ public class ArticleRepositoryTest {
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(2L, replacementRepository.count());
 
-        replacementRepository.deleteByArticleId(newArticle.getId());
+        replacementRepository.deleteByArticle(newArticle);
         articleRepository.delete(newArticle);
         Assert.assertEquals(0L, articleRepository.count());
         Assert.assertEquals(0L, replacementRepository.count());
@@ -239,7 +239,7 @@ public class ArticleRepositoryTest {
             Article newArticle = Article.builder().setId(i).setTitle("Title " + i).build();
             for (int j = 0; j < 10; j++) {
                 replacements.add(Replacement.builder()
-                        .setArticleId(newArticle.getId())
+                        .setArticle(newArticle)
                         .setType(ReplacementType.MISSPELLING)
                         .setText("Text " + j)
                         .build());

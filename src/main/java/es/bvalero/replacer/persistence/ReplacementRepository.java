@@ -16,16 +16,16 @@ import java.util.List;
 @Transactional
 public interface ReplacementRepository extends JpaRepository<Replacement, Long> {
 
-    List<Replacement> findByArticleId(int articleId);
+    List<Replacement> findByArticle(Article article);
 
-    void deleteByArticleId(int articleId);
+    void deleteByArticle(Article article);
 
-    void deleteByArticleIdAndText(int articleId, String text);
+    void deleteByArticleAndText(Article article, String text);
 
     @Query("SELECT new es.bvalero.replacer.persistence.ReplacementCount(text, COUNT(*)) FROM Replacement WHERE type = 'MISSPELLING' GROUP BY text")
     List<ReplacementCount> findMisspellingsGrouped();
 
-    @Query("SELECT pe.articleId FROM Replacement pe WHERE pe.text = :word ORDER BY RAND()")
-    List<Integer> findRandomByWord(@Param("word") String word, Pageable pageable);
+    @Query("SELECT pe.article FROM Replacement pe WHERE pe.text = :word ORDER BY RAND()")
+    List<Article> findRandomByWord(@Param("word") String word, Pageable pageable);
 
 }
