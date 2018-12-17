@@ -33,15 +33,14 @@ class DumpArticleProcessor {
             EnumSet.of(WikipediaNamespace.ARTICLE, WikipediaNamespace.ANNEX);
 
     private static final int CACHE_SIZE = 1000;
-    // Load a bunch of articles from DB to improve performance
-    private final Map<Integer, Article> articlesDb = new HashMap<>(CACHE_SIZE);
     // Save articles in batches to improve performance
     private final Collection<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
     private final Collection<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
     private final Collection<Replacement> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
     // Prepare a Set to avoid duplicates
     private final Collection<Replacement> replacementsToAdd = new HashSet<>(CACHE_SIZE);
-
+    // Load a bunch of articles from DB to improve performance
+    private Map<Integer, Article> articlesDb;
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -73,8 +72,13 @@ class DumpArticleProcessor {
         }
 
         // Load the cache of database articles
-        if (articlesDb.isEmpty()) {
-            for (Article article : articleRepository.findByIdGreaterThanOrderById(dumpArticle.getId() - 1, PageRequest.of(0, CACHE_SIZE))) {
+        // The first time we load the cache with the first 1000 articles
+        if (articlesDb == null || articlesDb.isEmpty()) {
+            int minId = articlesDb == null ? 0 : dumpArticle.getId() - 1;
+            if (articlesDb == null) {
+                articlesDb = new HashMap<>(CACHE_SIZE);
+            }
+            for (Article article : articleRepository.findByIdGreaterThanOrderById(minId, PageRequest.of(0, CACHE_SIZE))) {
                 articlesDb.put(article.getId(), article);
                 maxCachedId = article.getId();
             }
@@ -119,10 +123,7 @@ class DumpArticleProcessor {
 
         if (articleReplacements.isEmpty()) {
             LOGGER.debug("No errors found in article: {}", dumpArticle.getTitle());
-            dbArticle.ifPresent(article -> {
-                replacementRepository.deleteByArticle(article); // No need to delete in batch
-                articlesToDelete.add(article);
-            });
+            dbArticle.ifPresent(articlesToDelete::add);
         } else if (dbArticle.isPresent()) {
             // Compare the new replacements with the existing ones
             Collection<Replacement> newReplacements = new HashSet<>(articleReplacements.size());
@@ -181,13 +182,17 @@ class DumpArticleProcessor {
 
     private boolean isDumpArticleProcessable(DumpArticle dumpArticle) {
         // Check namespace and redirection articles
-    	return PROCESSABLE_NAMESPACES.contains(dumpArticle.getNamespace())
-    			&& !WikipediaUtils.isRedirectionArticle(dumpArticle.getContent());
+        return PROCESSABLE_NAMESPACES.contains(dumpArticle.getNamespace())
+                && !WikipediaUtils.isRedirectionArticle(dumpArticle.getContent());
     }
 
-    
+
     private void flushModifications() {
         // There is a FK Replacement-Article, we need to remove the replacements first.
+        for (Article articleToDelete : articlesToDelete) {
+            replacementsToDelete.addAll(replacementRepository.findByArticle(articleToDelete));
+        }
+
         if (!replacementsToDelete.isEmpty()) {
             replacementRepository.deleteInBatch(replacementsToDelete);
             replacementsToDelete.clear();
