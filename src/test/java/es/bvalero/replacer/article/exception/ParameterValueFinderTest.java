@@ -7,17 +7,17 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class IndexValueFinderTest {
+public class ParameterValueFinderTest {
 
     @Test
-    public void testRegexIndexValue() {
+    public void testRegexParameterValue() {
         String value1 = "yyyy \\n zzz";
         String value2 = "xxx";
         String text = "{{Plantilla | índice = " + value1 + "|index= " + value2 + "}}";
 
-        IgnoredReplacementFinder indexValueFinder = new IndexValueFinder();
+        IgnoredReplacementFinder parameterValueFinder = new ParameterValueFinder();
 
-        List<ArticleReplacement> matches = indexValueFinder.findIgnoredReplacements(text);
+        List<ArticleReplacement> matches = parameterValueFinder.findIgnoredReplacements(text);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(value1, matches.get(0).getText());
         Assert.assertEquals(value2, matches.get(1).getText());

@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class IndexValueFinder implements IgnoredReplacementFinder {
+public class ParameterValueFinder implements IgnoredReplacementFinder {
 
     // Look-ahead takes more time
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_INDEX_VALUE = "\\|<Z>*(índice|index|cita)<Z>*=[^}|]+";
+    private static final String REGEX_INDEX_VALUE = "\\|<Z>*(índice|index|cita|location|ubicación)<Z>*=[^}|]+";
     private static final RunAutomaton AUTOMATON_INDEX_VALUE =
             new RunAutomaton(new RegExp(REGEX_INDEX_VALUE).toAutomaton(new DatatypesAutomatonProvider()));
 
