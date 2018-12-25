@@ -10,19 +10,18 @@ una base de datos con la información de qué artículos contienen qué
 reemplazos, y cuáles han sido ya revisados.
 
 
-## Indexación
+## Nomenclatura
 
-Wikipedia vuelca mensualmente toda la información en _dumps_, ficheros XML
-enormes (~13 GB, ~3 GB comprimidos) con todo el contenido. Semanalmente,
-la herramienta comprueba si hay un nuevo _dump_ disponible y lo indexa:
-- Solo se tienen en cuenta los contenidos de tipo «Artículo» o «Anexo».
-- Se reindexan los artículos modificados posteriormente a su inserción en
-la base de datos o a su revisión.
-- Hay una opción para reindexarlo todo para tener en cuenta nuevas
-excepciones o potenciales reemplazos.
+- *Article*: artículo o página de la Wikipedia.
+- *Namespace*: determina el tipo de página: artículo, anexo, usuario, etc.
+- *Replacement*: potencial reemplazo, p. ej. el término «habia» que es
+candidato a reemplazarse con «había».
+- *IgnoredReplacement*: porción de un artículo que no se tiene en cuenta
+para buscar los reemplazos, p. ej. las frases entrecomilladas.
+- *Dump*: ficheros generados mensualmente con toda la información en la
+Wikipedia. El que usa esta herramienta es un XML enorme (~13 GB,
+~3 GB comprimidos) con todos los artículos de la Wikipedia.
 
-El sistema además ofrece una sección para comprobar el estado de la
-indexación en tiempo real.
 
 ## Búsqueda de reemplazos
 
@@ -37,28 +36,26 @@ Las posibles faltas de ortografía se extraen del artículo
 
 Hay muchísimos casos de falsos positivos. El sistema intenta minimizar
 éstos ignorando las faltas de ortografía que se encuentran en partes del
-texto que se consideran «excepciones»: frases entrecomilladas o en cursiva,
+texto que se consideran excepciones: frases entrecomilladas o en cursiva,
 nombres de ficheros, citas, etc.
 
+### Optimizaciones
 
-## Optimizaciones
-
-### Búsqueda de reemplazos
-
-Hay expresiones regulares que pueden llegar a consumir mucho tiempo o recursos
-para textos muy largos. Esto no es muy importante al analizar un artículo en
-concreto pero sí cuando se analiza toda la Wikipedia.
+Hay expresiones regulares para encontrar reemplazos o excepciones que
+pueden llegar a consumir mucho tiempo o recursos para textos muy largos.
+Esto no es muy importante al analizar un artículo en concreto pero sí
+cuando se analiza toda la Wikipedia.
 
 He realizado un pequeño estudio sobre el tamaño de los artículos de la
-Wikipedia. Hay aproximadamente unos 1,5 millones que son artículos y anexos.
+Wikipedia. Hay aproximadamente 1,5 millones que son artículos y anexos.
 * Mínimo: 18 bytes
 * Primer cuartil: 2 kB
 * Mediana: 3 kB
 * Tercer cuartil: 6 kB
 * Máximo: 771 kB (artículo «Literatura victoriana»)
 
-Nótese que solo el 1 % de los artículos tiene más de 55 kB y solo el 1 ‰ tiene más
-de 150 kB.
+Nótese que solo el 1 % de los artículos tiene más de 55 kB y solo el 1 ‰
+tiene más de 150 kB.
 
 Por tanto, a la hora de optimizar las expresiones regulares, he tenido en
 cuenta tres tipos de artículos:
@@ -71,9 +68,7 @@ _regex-directed_ y _text-directed_. El primero es el habitual, y que
 contiene todas las características interesantes: _look-ahead_, _look-behind_,
 _lazy_, _possessive_, _back-references_, etc. El segundo es más limitado en
 sintaxis pero a cambio ofrece un rendimiento lineal, logrando en algunos
-casos un rendimiento 1000 veces superior. A la hora de analizar un solo
-artículo no se nota mucho, pero cuando hay que analizar toda la Wikipedia
-la diferencia es notable.
+casos un rendimiento 1000 veces superior.
 
 En general, siempre que he logrado encontrar una expresión satisfactoria,
 he optado por usar la versión _text-directed_. Aquí el único cuantificador
@@ -81,10 +76,22 @@ válido es «+». Para el resto de casos he usado la versión estándar,
 usando el cuantificador «+?» en la mayoría de ocasiones por ser el más
 eficiente en los experimentos.
 
-### Indexación
+
+## Indexación
 
 El proceso de indexación tiene dos partes principales: la lectura de cada uno
 de los artículos y el procesado de los artículos (si procede).
+
+- Solo se tienen en cuenta los contenidos de tipo «Artículo» o «Anexo».
+- Se reindexan los artículos modificados posteriormente a su inserción en
+la base de datos o a su revisión.
+- Hay una opción para reindexarlo todo para tener en cuenta nuevas
+excepciones o potenciales reemplazos.
+
+El sistema además ofrece una sección para comprobar el estado de la
+indexación en tiempo real.
+
+### Optimizaciones
 
 En cuanto a la lectura de los artículos del _dump_ no hay optimización posible.
 La lectura de un XML es mucho más rápida que de un XML comprimido (estimo que
