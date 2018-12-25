@@ -189,17 +189,15 @@ class DumpArticleProcessor {
 
     private void flushModifications() {
         // There is a FK Replacement-Article, we need to remove the replacements first.
-        for (Article articleToDelete : articlesToDelete) {
-            replacementsToDelete.addAll(replacementRepository.findByArticle(articleToDelete));
-        }
-
         if (!replacementsToDelete.isEmpty()) {
             replacementRepository.deleteInBatch(replacementsToDelete);
             replacementsToDelete.clear();
         }
 
         if (!articlesToDelete.isEmpty()) {
-            articleRepository.deleteInBatch(articlesToDelete);
+            for (Article articleToDelete : articlesToDelete) {
+                articleService.deleteArticle(articleToDelete);
+            }
             articlesToDelete.clear();
         }
 

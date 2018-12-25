@@ -20,8 +20,6 @@ public interface ReplacementRepository extends JpaRepository<Replacement, Long> 
 
     void deleteByArticle(Article article);
 
-    void deleteByArticleAndText(Article article, String text);
-
     @Query("SELECT new es.bvalero.replacer.persistence.ReplacementCount(text, COUNT(*)) FROM Replacement WHERE type = 'MISSPELLING' GROUP BY text")
     List<ReplacementCount> findMisspellingsGrouped();
 

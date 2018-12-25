@@ -171,7 +171,7 @@ public class ArticleService {
         return articleReplacements;
     }
 
-    private void deleteArticle(Article article) {
+    public void deleteArticle(Article article) {
         replacementRepository.deleteByArticle(article);
         articleRepository.delete(article);
     }
@@ -213,7 +213,7 @@ public class ArticleService {
         // Remove the replacements in DB and update the article
         Article articleToSave = articleRepository.findByTitle(articleTitle)
                 .withReviewDate(LocalDateTime.now());
-        replacementRepository.deleteInBatch(replacementRepository.findByArticle(articleToSave));
+        replacementRepository.deleteByArticle(articleToSave);
         articleRepository.save(articleToSave);
     }
 
