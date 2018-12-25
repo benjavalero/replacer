@@ -1,4 +1,7 @@
-var threshold = 200; // Number of characters to display between replacements
+var THRESHOLD = 200; // Number of characters to display between replacements
+var WIKIPEDIA_BASE_URL = 'https://es.wikipedia.org/wiki/';
+var BUTTON_REGEX = new RegExp('<button.+?</button>', 'g');
+var REPLACEMENT_PREFIX = 'repl-';
 var originalArticle;
 
 // Map to store the replacements. The key is the button ID.
@@ -17,27 +20,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     addMessage('Buscando artículo con reemplazos…', 'info', true);
-    findRandomArticle();
+    findAndDisplayRandomArticle();
 });
-
-/**
- * Get the URL parameters
- * source: https://css-tricks.com/snippets/javascript/get-url-variables/
- * @param  {String} url The URL
- * @return {Object}     The URL parameters
- */
-var getParams = function (url) {
-	var params = {};
-	var parser = document.createElement('a');
-	parser.href = url;
-	var query = parser.search.substring(1);
-	var vars = query.split('&');
-	for (var i = 0; i < vars.length; i++) {
-		var pair = vars[i].split('=');
-		params[pair[0]] = decodeURIComponent(pair[1]);
-	}
-	return params;
-};
 
 function addMessage(message, type, clear) {
     if (clear) {
@@ -55,9 +39,33 @@ function addMessage(message, type, clear) {
     document.querySelector('#messages').appendChild(alertDiv);
 }
 
-function findRandomArticle() {
+function findAndDisplayRandomArticle() {
     var word = getParams(window.location.href).word;
+    findRandomArticle(word, function(article) {
+        displayArticle(article);
+    });
+}
 
+/**
+ * Get the URL parameters
+ * source: https://css-tricks.com/snippets/javascript/get-url-variables/
+ * @param  {String} url The URL
+ * @return {Object}     The URL parameters
+ */
+function getParams(url) {
+	var params = {};
+	var parser = document.createElement('a');
+	parser.href = url;
+	var query = parser.search.substring(1);
+	var vars = query.split('&');
+	for (var i = 0; i < vars.length; i++) {
+		var pair = vars[i].split('=');
+		params[pair[0]] = decodeURIComponent(pair[1]);
+	}
+	return params;
+};
+
+function findRandomArticle(word, callback) {
     reqwest({
         url: 'article/random/' + (word || ''),
         type: 'json',
@@ -65,39 +73,33 @@ function findRandomArticle() {
             if (!response.content) {
                 addMessage(response.title, 'danger');
             } else {
-                loadArticle(response);
+                callback(response);
             }
         }
     });
 }
 
-function loadArticle(response) {
+function displayArticle(response) {
+    // Hide messages and display article title
     document.querySelector('#messages').classList.add('hidden');
     document.querySelector('#article').classList.remove('hidden');
     document.querySelector('#button-save').classList.remove('hidden');
 
     document.querySelector('#title').textContent = response.title;
-    document.querySelector('#link').setAttribute('href', 'https://es.wikipedia.org/wiki/' + response.title);
+    document.querySelector('#link').setAttribute('href', WIKIPEDIA_BASE_URL + response.title);
 
-    // Insert replacements
+    // Keep original article text to apply the replacements later
     originalArticle = response;
+
+    // Create the replacement buttons and insert them in the text
     var articleContent = response.content;
     response.replacements.forEach(function(replacement) {
         if (replacement.type == 'MISSPELLING') {
-            var button = document.createElement('button');
-            button.textContent = replacement.text;
-            button.setAttribute('id', 'repl-' + replacement.start);
-            button.setAttribute('type', 'button');
-            button.setAttribute('data-toggle', 'tooltip');
-            button.setAttribute('title', replacement.comment);
-            button.classList.add('btn', 'btn-danger', 'replacement');
-
-            articleContent = articleContent.slice(0, replacement.start)
-                + button.outerHTML
-                + articleContent.slice(replacement.end);
+            var replacementButton = createReplacementButton(replacement);
+            articleContent = replaceText(articleContent, replacement.start, replacement.text, replacementButton.outerHTML);
 
             // Add the replacement to the map
-            replacements[button.id] = replacement;
+            replacements[replacementButton.id] = replacement;
         }
     });
 
@@ -129,6 +131,23 @@ function loadArticle(response) {
     });
 }
 
+function createReplacementButton(replacement) {
+    var button = document.createElement('button');
+    button.textContent = replacement.text;
+    button.setAttribute('id', REPLACEMENT_PREFIX + replacement.start);
+    button.setAttribute('type', 'button');
+    button.setAttribute('data-toggle', 'tooltip');
+    button.setAttribute('title', replacement.comment);
+    button.classList.add('btn', 'btn-danger', 'replacement');
+    return button;
+}
+
+function replaceText(fullText, position, currentText, newText) {
+    return fullText.slice(0, position)
+        + newText
+        + fullText.slice(position + currentText.length);
+}
+
 function htmlEscape(str) {
     var div = document.createElement('div');
     div.textContent = str;
@@ -138,20 +157,19 @@ function htmlEscape(str) {
 function trimText(text) {
     var result = '';
 
-    var re = new RegExp('<button.+?</button>', 'g');
     var lastEnd = 0;
     var m;
-    while (m = re.exec(text)) {
+    while (m = BUTTON_REGEX.exec(text)) {
         var matchText = m[0];
         var matchStart = m.index;
         var matchEnd = m.index + matchText.length;
         var textBefore = text.substring(lastEnd, matchStart);
 
         if (lastEnd == 0) {
-            result += textBefore.length <= threshold ? textBefore : '...' + textBefore.substring(textBefore.length - threshold);
+            result += textBefore.length <= THRESHOLD ? textBefore : '...' + textBefore.substring(textBefore.length - THRESHOLD);
         } else {
-            result += textBefore.length <= threshold * 2 ? textBefore
-                        : textBefore.substring(0, threshold) + '... <hr> ...' + textBefore.substring(textBefore.length - threshold);
+            result += textBefore.length <= THRESHOLD * 2 ? textBefore
+                        : textBefore.substring(0, THRESHOLD) + '... <hr> ...' + textBefore.substring(textBefore.length - THRESHOLD);
         }
         result += matchText;
 
@@ -160,7 +178,7 @@ function trimText(text) {
 
     // Append the rest after the last button
     var rest = text.substring(lastEnd);
-    result += rest.length <= threshold ? rest : rest.substring(0, threshold) + '...';
+    result += rest.length <= THRESHOLD ? rest : rest.substring(0, THRESHOLD) + '...';
 
     return result;
 }
@@ -184,9 +202,8 @@ function saveChanges() {
     var textToSave = originalArticle.content;
     originalArticle.replacements.forEach(function(replacement) {
         if (replacement.type == 'MISSPELLING') {
-            textToSave = textToSave.slice(0, replacement.start)
-                + document.querySelector('#repl-' + replacement.start).textContent
-                + textToSave.slice(replacement.end);
+            textToSave = replaceText(textToSave, replacement.start, replacement.text,
+                document.querySelector('#' + REPLACEMENT_PREFIX + replacement.start).textContent);
         }
     });
 
@@ -200,7 +217,7 @@ function saveChanges() {
             success: function (resp) {
                 addMessage('Artículo «' + originalArticle.title + '» marcado como revisado', 'success');
                 addMessage('Buscando artículo con reemplazos…', 'info');
-                findRandomArticle();
+                findAndDisplayRandomArticle();
             }
         });
     } else {
@@ -211,7 +228,7 @@ function saveChanges() {
             success: function (resp) {
                 addMessage('Artículo «' + originalArticle.title + '» guardado', 'success');
                 addMessage('Buscando artículo con reemplazos…', 'info');
-                findRandomArticle();
+                findAndDisplayRandomArticle();
             }
         });
     }

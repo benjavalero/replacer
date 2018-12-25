@@ -20,6 +20,7 @@ public class ArticleController {
 
     /**
      * @return A random article whose text contains replacements to review.
+     * In case of error we return a fake article with the exception message.
      */
     @RequestMapping("/article/random")
     public ArticleReview findRandomArticleWithReplacements() {
@@ -69,7 +70,13 @@ public class ArticleController {
     @RequestMapping("/article/save/nochanges")
     public boolean saveNoChanges(@RequestParam("title") String title) {
         LOGGER.info("Saving with no changes: {}", title);
-        return articleService.markArticleAsReviewed(title);
+        try {
+            articleService.markArticleAsReviewed(title);
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("Error marking article as reviewed: {}", title);
+            return false;
+        }
     }
 
 }
