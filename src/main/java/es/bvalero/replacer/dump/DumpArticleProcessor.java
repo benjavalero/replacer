@@ -9,6 +9,7 @@ import es.bvalero.replacer.persistence.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,19 +29,17 @@ class DumpArticleProcessor {
 
     @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpArticleProcessor.class);
-
     private static final Collection<WikipediaNamespace> PROCESSABLE_NAMESPACES =
             EnumSet.of(WikipediaNamespace.ARTICLE, WikipediaNamespace.ANNEX);
-
     private static final int CACHE_SIZE = 1000;
+
     // Save articles in batches to improve performance
-    private final Collection<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
-    private final Collection<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
-    private final Collection<Replacement> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
-    // Prepare a Set to avoid duplicates
-    private final Collection<Replacement> replacementsToAdd = new HashSet<>(CACHE_SIZE);
-    // Load a bunch of articles from DB to improve performance
-    private Map<Integer, Article> articlesDb;
+    private DumpArticleCache cache = new DumpArticleCache(CACHE_SIZE);
+    private Collection<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
+    private Collection<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
+    private Collection<Replacement> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
+    private Collection<Replacement> replacementsToAdd = new HashSet<>(CACHE_SIZE); // Set to avoid duplicates
+
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -50,11 +49,6 @@ class DumpArticleProcessor {
     @Autowired
     private ArticleService articleService;
 
-    private int maxCachedId;
-
-    /**
-     * Process a dump article: find the replacements and add them to the database.
-     */
     @TestOnly
     boolean processArticle(DumpArticle dumpArticle) {
         return processArticle(dumpArticle, false);
@@ -67,55 +61,15 @@ class DumpArticleProcessor {
         LOGGER.debug("Processing article: {}...", dumpArticle.getTitle());
 
         // Check namespace and redirection articles
-        if (!isDumpArticleProcessable(dumpArticle)) {
+        if (!checkArticleByNamespaceAndContent(dumpArticle)) {
             return false;
         }
 
-        // Load the cache of database articles
-        // The first time we load the cache with the first 1000 articles
-        if (articlesDb == null || articlesDb.isEmpty()) {
-            int minId = articlesDb == null ? 0 : dumpArticle.getId() - 1;
-            if (articlesDb == null) {
-                articlesDb = new HashMap<>(CACHE_SIZE);
-            }
-            for (Article article : articleRepository.findByIdGreaterThanOrderById(minId, PageRequest.of(0, CACHE_SIZE))) {
-                articlesDb.put(article.getId(), article);
-                maxCachedId = article.getId();
-            }
-        }
+        Article dbArticle = cache.findArticleById(dumpArticle.getId());
 
-        // Find the article in the cache
-        Optional<Article> dbArticle = Optional.ofNullable(articlesDb.get(dumpArticle.getId()));
-
-        // If the article is in the cache we can remove it from the cache
-        dbArticle.ifPresent(article -> articlesDb.remove(article.getId()));
-
-        // Clear the cache if obsolete (we assume the dump articles are in order)
-        if (dumpArticle.getId() >= maxCachedId) {
-            // The remaining cached articles are not in the dump so we remove them from DB
-            articlesToDelete.addAll(articlesDb.values());
-            articlesDb.clear();
-
-            flushModifications();
-        }
-
-        if (dbArticle.isPresent() && !forceProcess) {
-            // Check if reviewed after dump article timestamp
-            // We compare with seconds because the DB timestamps is milliseconds-level but the Dump date is not
-            // and it is possible that the review date and the timestamp is exactly the same
-            if (dbArticle.get().getReviewDate() != null &&
-                    !dbArticle.get().getReviewDate().truncatedTo(ChronoUnit.SECONDS)
-                            .isBefore(dumpArticle.getTimestamp().truncatedTo(ChronoUnit.SECONDS))) {
-                LOGGER.debug("Article reviewed after dump timestamp. Skipping.");
-                return false;
-            }
-
-            // Check if added after dump article timestamp
-            if (dbArticle.get().getAdditionDate().truncatedTo(ChronoUnit.SECONDS)
-                    .isAfter(dumpArticle.getTimestamp().truncatedTo(ChronoUnit.SECONDS))) {
-                LOGGER.debug("Article added after dump timestamp. Skipping.");
-                return false;
-            }
+        // Check if reviewed after dump article timestamp
+        if (dbArticle != null && !forceProcess && !checkArticleByDate(dbArticle, dumpArticle.getTimestamp())) {
+            return false;
         }
 
         // Find replacements
@@ -123,46 +77,26 @@ class DumpArticleProcessor {
 
         if (articleReplacements.isEmpty()) {
             LOGGER.debug("No errors found in article: {}", dumpArticle.getTitle());
-            dbArticle.ifPresent(articlesToDelete::add);
-        } else if (dbArticle.isPresent()) {
+            if (dbArticle != null) {
+                articlesToDelete.add(dbArticle);
+            }
+        } else if (dbArticle != null) {
             // Compare the new replacements with the existing ones
+            List<Replacement> oldReplacements = replacementRepository.findByArticle(dbArticle);
+
             Collection<Replacement> newReplacements = new HashSet<>(articleReplacements.size());
-            articleReplacements.forEach(replacement -> newReplacements.add(Replacement.builder()
-                    .setArticle(dbArticle.get())
-                    .setType(replacement.getType())
-                    .setText(replacement.getSubtype())
-                    .build()));
-
-            // To know if any real has been changed in the replacements in DB
-            boolean modified = false;
-
-            // Replacements to remove from DB
-            List<Replacement> oldReplacements = replacementRepository.findByArticle(dbArticle.get());
-
-            for (Replacement oldReplacement : oldReplacements) {
-                if (!newReplacements.contains(oldReplacement)) {
-                    replacementsToDelete.add(oldReplacement);
-                    modified = true;
-                }
+            for (ArticleReplacement replacement : articleReplacements) {
+                newReplacements.add(adaptArticleReplacement(replacement, dbArticle));
             }
 
-            // Replacements to add to DB
-            for (Replacement newReplacement : newReplacements) {
-                if (!oldReplacements.contains(newReplacement)) {
-                    replacementsToAdd.add(newReplacement);
-                    modified = true;
-                }
-            }
-
-            if (modified) {
-                Article articleToSave = dbArticle.get()
+            if (!compareReplacements(oldReplacements, newReplacements)) {
+                articlesToSave.add(dbArticle
                         .withTitle(dumpArticle.getTitle()) // In case the title of the article has changed
                         .withAdditionDate(LocalDateTime.now())
-                        .withReviewDate(null);
-                articlesToSave.add(articleToSave);
+                        .withReviewDate(null));
             }
         } else {
-            // New article to insert in DB
+            // Insert new article and its replacements in DB
             Article newArticle = Article.builder()
                     .setId(dumpArticle.getId())
                     .setTitle(dumpArticle.getTitle())
@@ -170,58 +104,154 @@ class DumpArticleProcessor {
             articlesToSave.add(newArticle);
 
             // Add replacements in DB
-            articleReplacements.forEach(replacement -> replacementsToAdd.add(Replacement.builder()
-                    .setArticle(newArticle)
-                    .setType(replacement.getType())
-                    .setText(replacement.getSubtype())
-                    .build()));
+            for (ArticleReplacement replacement : articleReplacements) {
+                replacementsToAdd.add(adaptArticleReplacement(replacement, newArticle));
+            }
         }
 
         return true;
     }
 
-    private boolean isDumpArticleProcessable(DumpArticle dumpArticle) {
+    private boolean checkArticleByNamespaceAndContent(DumpArticle dumpArticle) {
         // Check namespace and redirection articles
         return PROCESSABLE_NAMESPACES.contains(dumpArticle.getNamespace())
                 && !WikipediaUtils.isRedirectionArticle(dumpArticle.getContent());
     }
 
-
-    private void flushModifications() {
-        // There is a FK Replacement-Article, we need to remove the replacements first.
-        if (!replacementsToDelete.isEmpty()) {
-            replacementRepository.deleteInBatch(replacementsToDelete);
-            replacementsToDelete.clear();
+    private boolean checkArticleByDate(Article dbArticle, LocalDateTime dumpTimestamp) {
+        // We compare with seconds because the DB timestamps is milliseconds-level but the Dump date is not
+        // and it is possible that the review date and the timestamp is exactly the same
+        if (dbArticle.getReviewDate() != null &&
+                !dbArticle.getReviewDate().truncatedTo(ChronoUnit.SECONDS)
+                        .isBefore(dumpTimestamp.truncatedTo(ChronoUnit.SECONDS))) {
+            LOGGER.debug("Article reviewed after dump timestamp. Skipping.");
+            return false;
         }
 
-        if (!articlesToDelete.isEmpty()) {
-            for (Article articleToDelete : articlesToDelete) {
-                articleService.deleteArticle(articleToDelete);
+        // Check if added after dump article timestamp
+        if (dbArticle.getAdditionDate().truncatedTo(ChronoUnit.SECONDS)
+                .isAfter(dumpTimestamp.truncatedTo(ChronoUnit.SECONDS))) {
+            LOGGER.debug("Article added after dump timestamp. Skipping.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private Replacement adaptArticleReplacement(ArticleReplacement articleReplacement, Article article) {
+        return Replacement.builder()
+                .setArticle(article)
+                .setType(articleReplacement.getType())
+                .setText(articleReplacement.getSubtype())
+                .build();
+    }
+
+    private boolean compareReplacements(Collection<Replacement> oldReplacements, Collection<Replacement> newReplacements) {
+        boolean modified = false;
+
+        for (Replacement oldReplacement : oldReplacements) {
+            if (!newReplacements.contains(oldReplacement)) {
+                replacementsToDelete.add(oldReplacement);
+                modified = true;
             }
-            articlesToDelete.clear();
         }
 
-        if (!articlesToSave.isEmpty()) {
-            articleRepository.saveAll(articlesToSave);
-            articlesToSave.clear();
+        // Replacements to add to DB
+        for (Replacement newReplacement : newReplacements) {
+            if (!oldReplacements.contains(newReplacement)) {
+                replacementsToAdd.add(newReplacement);
+                modified = true;
+            }
         }
 
-        if (!replacementsToAdd.isEmpty()) {
-            replacementRepository.saveAll(replacementsToAdd);
-            replacementsToAdd.clear();
-        }
-
-        // Flush and clear to avoid memory leaks (we are performing millions of updates)
-        articleRepository.flush();
-        replacementRepository.flush();
-        articleRepository.clear(); // This clears all the EntityManager
+        return modified;
     }
 
     void finish() {
         // The remaining cached articles are not in the dump so we remove them from DB
-        articlesToDelete.addAll(articlesDb.values());
+        cache.cleanCache();
+    }
 
-        flushModifications();
+    private class DumpArticleCache {
+
+        private Map<Integer, Article> articles;
+        private int maxCachedId;
+
+        DumpArticleCache(int size) {
+            articles = new HashMap<>(size);
+            maxCachedId = 0;
+        }
+
+        @Nullable
+        Article findArticleById(int id) {
+            if (articles.isEmpty()) {
+                loadCache(id);
+            }
+
+            Article article = articles.get(id);
+            if (article != null) {
+                articles.remove(id);
+            }
+
+            if (id >= maxCachedId) {
+                cleanCache();
+            }
+
+            return article;
+        }
+
+        private void loadCache(int id) {
+            // Load the cache of database articles
+            // The first time we load the cache with the first 1000 articles
+            int minId = articles == null ? 0 : id - 1;
+            if (articles == null) {
+                articles = new HashMap<>(CACHE_SIZE);
+            }
+            for (Article article : articleRepository.findByIdGreaterThanOrderById(minId, PageRequest.of(0, CACHE_SIZE))) {
+                articles.put(article.getId(), article);
+                maxCachedId = article.getId();
+            }
+        }
+
+        private void cleanCache() {
+            // Clear the cache if obsolete (we assume the dump articles are in order)
+            // The remaining cached articles are not in the dump so we remove them from DB
+            articlesToDelete.addAll(articles.values());
+            articles.clear();
+
+            flushModifications();
+        }
+
+        private void flushModifications() {
+            // There is a FK Replacement-Article, we need to remove the replacements first.
+            if (!replacementsToDelete.isEmpty()) {
+                replacementRepository.deleteInBatch(replacementsToDelete);
+                replacementsToDelete.clear();
+            }
+
+            if (!articlesToDelete.isEmpty()) {
+                for (Article articleToDelete : articlesToDelete) {
+                    articleService.deleteArticle(articleToDelete);
+                }
+                articlesToDelete.clear();
+            }
+
+            if (!articlesToSave.isEmpty()) {
+                articleRepository.saveAll(articlesToSave);
+                articlesToSave.clear();
+            }
+
+            if (!replacementsToAdd.isEmpty()) {
+                replacementRepository.saveAll(replacementsToAdd);
+                replacementsToAdd.clear();
+            }
+
+            // Flush and clear to avoid memory leaks (we are performing millions of updates)
+            articleRepository.flush();
+            replacementRepository.flush();
+            articleRepository.clear(); // This clears all the EntityManager
+        }
+
     }
 
 }
