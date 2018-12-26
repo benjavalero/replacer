@@ -89,7 +89,7 @@ class DumpArticleProcessor {
                 newReplacements.add(adaptArticleReplacement(replacement, dbArticle));
             }
 
-            if (!compareReplacements(oldReplacements, newReplacements)) {
+            if (compareReplacements(oldReplacements, newReplacements)) {
                 articlesToSave.add(dbArticle
                         .withTitle(dumpArticle.getTitle()) // In case the title of the article has changed
                         .withAdditionDate(LocalDateTime.now())
