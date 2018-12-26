@@ -55,7 +55,6 @@ public final class FindRegexExperiment {
         private final RunAutomaton ra;
 
         MyDumpHandler(RunAutomaton ra, Pattern pattern) {
-            super(new DumpArticleProcessor());
             this.ra = ra;
             this.pattern = pattern;
         }

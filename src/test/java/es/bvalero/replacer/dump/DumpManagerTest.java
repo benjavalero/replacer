@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -23,13 +24,13 @@ public class DumpManagerTest {
     @Mock
     private DumpHandler dumpHandler;
 
+    @InjectMocks
     private DumpManager dumpManager;
 
     @Before
     public void setUp() {
-        dumpManager = Mockito.spy(new DumpManager());
+        dumpManager = new DumpManager();
         MockitoAnnotations.initMocks(this);
-        Mockito.when(dumpManager.createDumpHandler(Mockito.anyBoolean())).thenReturn(dumpHandler);
     }
 
     @Test
@@ -98,7 +99,7 @@ public class DumpManagerTest {
         Assert.assertNotNull(dumpFile);
         Assert.assertTrue(Files.exists(dumpFile));
 
-        dumpManager.parseDumpFile(dumpFile);
+        dumpManager.parseDumpFile(dumpFile, false);
 
         Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
     }
@@ -108,7 +109,7 @@ public class DumpManagerTest {
         Path dumpFile = Paths.get("xxx");
         Assert.assertFalse(Files.exists(dumpFile));
 
-        dumpManager.parseDumpFile(dumpFile);
+        dumpManager.parseDumpFile(dumpFile, false);
     }
 
     @Test(expected = DumpException.class)
@@ -117,17 +118,17 @@ public class DumpManagerTest {
         Assert.assertNotNull(dumpFile);
         Assert.assertTrue(Files.exists(dumpFile));
 
-        dumpManager.parseDumpFile(dumpFile);
+        dumpManager.parseDumpFile(dumpFile, false);
     }
 
     @Test
-    public void testParseDumpFileAlreadyRunning() throws URISyntaxException, DumpException {
+    public void testParseDumpFileAlreadyRunning() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Assert.assertNotNull(dumpFile);
         Assert.assertTrue(Files.exists(dumpFile));
 
-        dumpManager.setRunning();
-        dumpManager.parseDumpFile(dumpFile);
+        Mockito.when(dumpHandler.isRunning()).thenReturn(true);
+        dumpManager.processLatestDumpFile(false, false);
 
         Mockito.verify(dumpHandler, Mockito.times(0)).startDocument();
     }
@@ -137,69 +138,32 @@ public class DumpManagerTest {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
 
-        Assert.assertNull(dumpManager.getLatestDumpFile());
-
         dumpManager.processLatestDumpFile(false, false);
 
+        Mockito.verify(dumpHandler, Mockito.times(1)).setLatestDumpFile(dumpFile);
         Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
-        Assert.assertEquals(dumpFile, dumpManager.getLatestDumpFile());
     }
 
     @Test
     public void testProcessDumpFileAlreadyProcessed() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
-        dumpManager.setLatestDumpFile(dumpFile);
+        Mockito.when(dumpHandler.getLatestDumpFile()).thenReturn(dumpFile);
 
         dumpManager.processLatestDumpFile(false, false);
 
         Mockito.verify(dumpHandler, Mockito.times(0)).startDocument();
-        Assert.assertEquals(dumpFile, dumpManager.getLatestDumpFile());
     }
 
     @Test
     public void testForceProcessDumpFileAlreadyProcessed() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
-        dumpManager.setLatestDumpFile(dumpFile);
+        Mockito.when(dumpHandler.getLatestDumpFile()).thenReturn(dumpFile);
 
         dumpManager.processLatestDumpFile(true, false);
 
         Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
-        Assert.assertEquals(dumpFile, dumpManager.getLatestDumpFile());
-    }
-
-    @Test
-    public void testProcessDefaultStatistics() {
-        // Default statistics
-        DumpProcessStatus defaultStats = dumpManager.getProcessStatus();
-        Assert.assertFalse(defaultStats.isRunning());
-        Assert.assertFalse(defaultStats.isForceProcess());
-        Assert.assertEquals(0L, defaultStats.getNumArticlesRead());
-        Assert.assertEquals(0L, defaultStats.getNumArticlesProcessed());
-        Assert.assertEquals("-", defaultStats.getDumpFileName());
-        Assert.assertEquals(0L, defaultStats.getAverage());
-        Assert.assertEquals("0:00:00:00", defaultStats.getTime());
-        Assert.assertNull(defaultStats.getProgress());
-    }
-
-    @Test
-    public void testProcessStatistics() throws URISyntaxException {
-        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
-        Mockito.when(dumpHandler.getNumArticlesRead()).thenReturn(4L);
-        Mockito.when(dumpHandler.getNumArticlesProcessed()).thenReturn(3L);
-
-        dumpManager.processLatestDumpFile(false, false);
-
-        // Statistics after processing
-        DumpProcessStatus afterStats = dumpManager.getProcessStatus();
-        Assert.assertFalse(afterStats.isRunning());
-        Assert.assertFalse(afterStats.isForceProcess());
-        Assert.assertEquals(4L, afterStats.getNumArticlesRead());
-        Assert.assertEquals(3L, afterStats.getNumArticlesProcessed());
-        Assert.assertEquals("eswiki-20170101-pages-articles.xml.bz2", afterStats.getDumpFileName());
-        Assert.assertNull(afterStats.getProgress());
     }
 
 }

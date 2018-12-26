@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class DumpController {
 
     @Autowired
+    private DumpHandler dumpHandler;
+
+    @Autowired
     private DumpManager dumpManager;
 
     @RequestMapping("/dump/status")
     public DumpProcessStatus getDumpStatus() {
-        return dumpManager.getProcessStatus();
+        return dumpHandler.getProcessStatus();
     }
 
     @RequestMapping("/dump/run")

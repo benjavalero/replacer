@@ -4,6 +4,7 @@ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -28,12 +29,13 @@ public class DumpHandlerTest {
     @Mock
     private DumpArticleProcessor dumpArticleProcessor;
 
+    @InjectMocks
     private DumpHandler dumpHandler;
 
     @Before
     public void setUp() {
+        dumpHandler = new DumpHandler();
         MockitoAnnotations.initMocks(this);
-        dumpHandler = new DumpHandler(dumpArticleProcessor);
     }
 
     @Test
@@ -54,8 +56,9 @@ public class DumpHandlerTest {
         }
 
         // Check number of articles read and processed (we have mocked the result from the processor)
-        Assert.assertEquals(4L, dumpHandler.getNumArticlesRead());
-        Assert.assertEquals(4L, dumpHandler.getNumArticlesProcessed());
+        DumpProcessStatus status = dumpHandler.getProcessStatus();
+        Assert.assertEquals(4L, status.getNumArticlesRead());
+        Assert.assertEquals(4L, status.getNumArticlesProcessed());
     }
 
     @Test
@@ -76,20 +79,35 @@ public class DumpHandlerTest {
         }
 
         // Check number of articles read and processed (we have mocked the result from the processor)
-        Assert.assertEquals(4L, dumpHandler.getNumArticlesRead());
-        Assert.assertEquals(0L, dumpHandler.getNumArticlesProcessed());
+        DumpProcessStatus status = dumpHandler.getProcessStatus();
+        Assert.assertEquals(4L, status.getNumArticlesRead());
+        Assert.assertEquals(0L, status.getNumArticlesProcessed());
     }
 
 
     @Test
     public void testParseWikipediaDate() {
         LocalDateTime expected = LocalDateTime.of(2018, Month.AUGUST, 31, 5, 17, 28);
-        Assert.assertEquals(expected, DumpHandler.parseWikipediaDate("2018-08-31T05:17:28Z"));
+        Assert.assertEquals(expected, dumpHandler.parseWikipediaDate("2018-08-31T05:17:28Z"));
     }
 
     @Test(expected = DateTimeParseException.class)
     public void testParseWikipediaDateBadFormat() {
-        DumpHandler.parseWikipediaDate("xxx");
+        dumpHandler.parseWikipediaDate("xxx");
+    }
+
+    @Test
+    public void testProcessDefaultStatistics() {
+        // Default statistics
+        DumpProcessStatus defaultStats = dumpHandler.getProcessStatus();
+        Assert.assertFalse(defaultStats.isRunning());
+        Assert.assertFalse(defaultStats.isForceProcess());
+        Assert.assertEquals(0L, defaultStats.getNumArticlesRead());
+        Assert.assertEquals(0L, defaultStats.getNumArticlesProcessed());
+        Assert.assertEquals("-", defaultStats.getDumpFileName());
+        Assert.assertEquals(0L, defaultStats.getAverage());
+        Assert.assertEquals("0:00:00:00", defaultStats.getTime());
+        Assert.assertNull(defaultStats.getProgress());
     }
 
 }
