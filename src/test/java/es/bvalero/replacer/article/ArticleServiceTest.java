@@ -167,8 +167,8 @@ public class ArticleServiceTest {
         articleService.saveArticleChanges(title, text);
 
         Mockito.verify(wikipediaFacade).editArticleContent(title, text);
+        Mockito.verify(replacementRepository).deleteByArticle(Mockito.any(Article.class));
         Mockito.verify(articleRepository).save(Mockito.any(Article.class));
-        Mockito.verify(replacementRepository).deleteInBatch(Mockito.anyList());
     }
 
     @Test
@@ -189,6 +189,7 @@ public class ArticleServiceTest {
     }
 
     @Test
+    @Deprecated
     public void testRemoveNestedMatches() {
         // Sample text: F R E N É T I C A M E N T E
         ArticleReplacement match1 = ArticleReplacement.builder().setStart(1).setText("REN").build(); // 1-3

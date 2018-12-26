@@ -317,8 +317,7 @@ public class DumpArticleProcessorTest {
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         dumpArticleProcessor.finish();
 
-        Mockito.verify(replacementRepository).deleteInBatch(Mockito.anyList());
-        Mockito.verify(articleRepository).deleteInBatch(Mockito.anyList());
+        Mockito.verify(articleService).deleteArticle(Mockito.any(Article.class));
     }
 
     @Test
@@ -346,7 +345,7 @@ public class DumpArticleProcessorTest {
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         dumpArticleProcessor.finish();
 
-        Mockito.verify(articleRepository).deleteInBatch(Mockito.anyList());
+        Mockito.verify(articleService).deleteArticle(Mockito.any(Article.class));
         Mockito.verify(articleRepository).saveAll(Mockito.anyList());
         Mockito.verify(replacementRepository).saveAll(Mockito.anySet());
     }
