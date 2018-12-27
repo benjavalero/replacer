@@ -21,7 +21,7 @@ public class Article implements Serializable {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, unique = true)
     private String title;
 
     @Column(name = "dtadd", nullable = false, columnDefinition = "TIMESTAMP")
@@ -29,10 +29,6 @@ public class Article implements Serializable {
 
     @Column(name = "dtreview", columnDefinition = "TIMESTAMP")
     private LocalDateTime reviewDate;
-
-    // Removed relationship to improve performance on bulk indexing
-    // @OneToMany(mappedBy = "article", cascade = {CascadeType.ALL}, orphanRemoval = true)
-    // private List<Replacement> replacements = new ArrayList<>();
 
     public Article() {
         // Needed by JPA
@@ -100,7 +96,7 @@ public class Article implements Serializable {
     }
 
     public Article withReviewDate(LocalDateTime reviewDate) {
-        if (this.reviewDate == null ? reviewDate == null : this.reviewDate.equals(reviewDate)) return this;
+        if (Objects.equals(this.reviewDate, reviewDate)) return this;
         return new Article(id, title, additionDate, reviewDate);
     }
 

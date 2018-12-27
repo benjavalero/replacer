@@ -9,7 +9,6 @@ import java.util.Objects;
 
 /**
  * A replacement in the database related to an article.
- * TODO : Add the unique constraint to DB and redo the indexes
  */
 @Entity
 @Immutable
@@ -21,7 +20,7 @@ public class Replacement implements Serializable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "articleid")
+    @JoinColumn(name = "articleid", nullable = false)
     private Article article;
 
     @Column(name = "type", nullable = false, length = 25)
@@ -55,9 +54,9 @@ public class Replacement implements Serializable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Replacement that = (Replacement) obj;
-        return Objects.equals(article, that.article) &&
+        return article.equals(that.article) &&
                 type == that.type &&
-                Objects.equals(text, that.text);
+                text.equals(that.text);
     }
 
     @Override
@@ -69,8 +68,7 @@ public class Replacement implements Serializable {
     @Override
     public String toString() {
         return "Replacement{" +
-                "id=" + id +
-                ", article=" + article +
+                "article=" + article +
                 ", type=" + type +
                 ", text='" + text + '\'' +
                 '}';
