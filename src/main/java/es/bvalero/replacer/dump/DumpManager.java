@@ -58,20 +58,17 @@ class DumpManager {
      */
     @Scheduled(fixedDelay = 7 * 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
     void processDumpScheduled() {
-        processLatestDumpFile(false, false);
+        processLatestDumpFile(false);
     }
 
     /**
      * Find the latest dump file and process it.
      *
-     * @param forceProcessDump         When triggered manually we always process the latest dump although it has been
-     *                                 already processed.
      * @param forceProcessDumpArticles Force processing all dump articles event if they have not been modified since
      *                                 last processing.
      */
-    void processLatestDumpFile(boolean forceProcessDump, boolean forceProcessDumpArticles) {
-        LOGGER.info("Start processing latest dump file. Force dump process: {}. Force article process: {}",
-                forceProcessDump, forceProcessDumpArticles);
+    void processLatestDumpFile(boolean forceProcessDumpArticles) {
+        LOGGER.info("Start processing latest dump file. Force article process: {}", forceProcessDumpArticles);
 
         // Check just in case the handler is already running
         if (dumpHandler.isRunning()) {
@@ -83,13 +80,8 @@ class DumpManager {
             Path latestDumpFileFound = findLatestDumpFile();
             LOGGER.info("Latest dump file found: {}", latestDumpFileFound);
 
-            // We check against the latest dump file processed
-            if (!latestDumpFileFound.equals(dumpHandler.getLatestDumpFile()) || forceProcessDump) {
-                parseDumpFile(latestDumpFileFound, forceProcessDumpArticles);
-                LOGGER.info("Finished processing latest dump file: {}", latestDumpFileFound);
-            } else {
-                LOGGER.info("Latest dump file found already indexed");
-            }
+            parseDumpFile(latestDumpFileFound, forceProcessDumpArticles);
+            LOGGER.info("Finished processing latest dump file: {}", latestDumpFileFound);
         } catch (DumpException e) {
             LOGGER.error("Error processing last dump file", e);
         }

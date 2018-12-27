@@ -79,6 +79,10 @@ eficiente en los experimentos.
 
 ## Indexación
 
+El sistema comprueba semanalmente el último _dump_ generado y lo procesa,
+esto es, lee uno a uno los artículos, busca los potenciales reemplazos y
+los añade a la base de datos.
+
 El proceso de indexación tiene dos partes principales: la lectura de cada uno
 de los artículos y el procesado de los artículos (si procede).
 

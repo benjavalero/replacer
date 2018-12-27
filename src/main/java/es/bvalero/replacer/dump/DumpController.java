@@ -23,13 +23,13 @@ public class DumpController {
 
     @RequestMapping("/dump/run")
     public boolean processLatestDumpFileManually() {
-        dumpManager.processLatestDumpFile(true, false);
+        dumpManager.processLatestDumpFile(false);
         return true;
     }
 
     @RequestMapping("/dump/run/force")
     public boolean processLatestDumpFileManuallyForced() {
-        dumpManager.processLatestDumpFile(true, true);
+        dumpManager.processLatestDumpFile(true);
         return true;
     }
 

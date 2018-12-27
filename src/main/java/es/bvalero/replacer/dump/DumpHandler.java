@@ -61,10 +61,6 @@ class DumpHandler extends DefaultHandler {
         return running;
     }
 
-    Path getLatestDumpFile() {
-        return latestDumpFile;
-    }
-
     void setLatestDumpFile(Path latestDumpFile) {
         this.latestDumpFile = latestDumpFile;
     }
