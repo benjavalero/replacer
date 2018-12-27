@@ -9,12 +9,11 @@ import java.util.Objects;
 
 /**
  * A replacement in the database related to an article.
- * TODO : Rename DB table
  * TODO : Add the unique constraint to DB and redo the indexes
  */
 @Entity
 @Immutable
-@Table(name = "potentialerror", uniqueConstraints = @UniqueConstraint(columnNames = {"articleid", "type", "text"}))
+@Table(name = "replacement", uniqueConstraints = @UniqueConstraint(columnNames = {"articleid", "type", "text"}))
 public class Replacement implements Serializable {
 
     @Id
