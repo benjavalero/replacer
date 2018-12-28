@@ -2,7 +2,7 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  * Domain class corresponding to a Wikipedia article in the XML dump.
@@ -12,10 +12,10 @@ final class DumpArticle {
     private final int id;
     private final String title;
     private final WikipediaNamespace namespace;
-    private final LocalDateTime timestamp;
+    private final LocalDate timestamp;
     private final String content;
 
-    private DumpArticle(int id, String title, WikipediaNamespace namespace, LocalDateTime timestamp, String content) {
+    private DumpArticle(int id, String title, WikipediaNamespace namespace, LocalDate timestamp, String content) {
         this.id = id;
         this.title = title;
         this.namespace = namespace;
@@ -39,7 +39,7 @@ final class DumpArticle {
         return namespace;
     }
 
-    LocalDateTime getTimestamp() {
+    LocalDate getTimestamp() {
         return timestamp;
     }
 
@@ -51,7 +51,7 @@ final class DumpArticle {
         private int id;
         private String title;
         private WikipediaNamespace namespace;
-        private LocalDateTime timestamp;
+        private LocalDate timestamp;
         private String content;
 
         DumpArticle.DumpArticleBuilder setId(int id) {
@@ -69,7 +69,7 @@ final class DumpArticle {
             return this;
         }
 
-        DumpArticle.DumpArticleBuilder setTimestamp(LocalDateTime timestamp) {
+        DumpArticle.DumpArticleBuilder setTimestamp(LocalDate timestamp) {
             this.timestamp = timestamp;
             return this;
         }

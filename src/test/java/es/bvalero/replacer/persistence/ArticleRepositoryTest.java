@@ -9,7 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class ArticleRepositoryTest {
         dbArticle.ifPresent(article -> Assert.assertEquals(newArticle, article));
 
         // By default Addition Date is the current one
-        dbArticle.ifPresent(article -> Assert.assertNotNull(article.getAdditionDate()));
+        dbArticle.ifPresent(article -> Assert.assertNotNull(article.getLastUpdate()));
     }
 
     @Test
@@ -85,27 +85,25 @@ public class ArticleRepositoryTest {
     public void testModifyArticle() {
         Assert.assertEquals(0L, articleRepository.count());
 
-        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").build();
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1);
+        Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").setLastUpdate(yesterday).build();
         articleRepository.save(newArticle);
 
         articleRepository.findById(1).ifPresent(
-                article -> Assert.assertNull(article.getReviewDate()));
+                article -> Assert.assertEquals(yesterday, article.getLastUpdate()));
 
         // Modify attributes
         String newTitle = "España";
-        LocalDateTime newAdditionDate = LocalDateTime.now();
-        LocalDateTime newReviewDate = LocalDateTime.now();
         Article toSave = newArticle
                 .withTitle(newTitle)
-                .withAdditionDate(newAdditionDate)
-                .withReviewDate(newReviewDate);
+                .withLastUpdate(today);
         articleRepository.save(toSave);
 
         Assert.assertEquals(1L, articleRepository.count());
         articleRepository.findById(1).ifPresent(article -> {
             Assert.assertEquals(newTitle, article.getTitle());
-            Assert.assertEquals(newAdditionDate, article.getAdditionDate());
-            Assert.assertEquals(newReviewDate, article.getReviewDate());
+            Assert.assertEquals(today, article.getLastUpdate());
         });
     }
 

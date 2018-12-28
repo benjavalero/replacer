@@ -14,7 +14,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -45,7 +45,7 @@ class DumpHandler extends DefaultHandler {
     private String currentTitle;
     private WikipediaNamespace currentNamespace;
     private int currentId;
-    private LocalDateTime currentTimestamp;
+    private LocalDate currentTimestamp;
     private String currentContent;
 
     // Status
@@ -130,9 +130,9 @@ class DumpHandler extends DefaultHandler {
         currentChars.append(ch, start, length);
     }
 
-    LocalDateTime parseWikipediaDate(CharSequence dateStr) {
+    LocalDate parseWikipediaDate(CharSequence dateStr) {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(WIKIPEDIA_DATE_PATTERN);
-        return LocalDateTime.from(dateFormat.parse(dateStr));
+        return LocalDate.from(dateFormat.parse(dateStr));
     }
 
     private void processPage() {

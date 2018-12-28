@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -24,21 +24,17 @@ public class Article implements Serializable {
     @Column(name = "title", nullable = false, unique = true)
     private String title;
 
-    @Column(name = "dtadd", nullable = false, columnDefinition = "TIMESTAMP")
-    private LocalDateTime additionDate;
-
-    @Column(name = "dtreview", columnDefinition = "TIMESTAMP")
-    private LocalDateTime reviewDate;
+    @Column(name = "lastupdate", nullable = false)
+    private LocalDate lastUpdate;
 
     public Article() {
         // Needed by JPA
     }
 
-    private Article(int id, String title, LocalDateTime additionDate, LocalDateTime reviewDate) {
+    private Article(int id, String title, LocalDate lastUpdate) {
         this.id = id;
         this.title = title;
-        this.additionDate = additionDate;
-        this.reviewDate = reviewDate;
+        this.lastUpdate = lastUpdate;
     }
 
     public static Article.ArticleBuilder builder() {
@@ -53,12 +49,8 @@ public class Article implements Serializable {
         return title;
     }
 
-    public LocalDateTime getAdditionDate() {
-        return additionDate;
-    }
-
-    public LocalDateTime getReviewDate() {
-        return reviewDate;
+    public LocalDate getLastUpdate() {
+        return lastUpdate;
     }
 
     @Override
@@ -80,35 +72,29 @@ public class Article implements Serializable {
         return "Article{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", additionDate=" + additionDate +
-                ", reviewDate=" + reviewDate +
+                ", lastUpdate=" + lastUpdate +
                 '}';
     }
 
     public Article withTitle(String title) {
         if (this.title.equals(title)) return this;
-        return new Article(id, title, additionDate, reviewDate);
+        return new Article(id, title, lastUpdate);
     }
 
-    public Article withAdditionDate(LocalDateTime additionDate) {
-        if (this.additionDate.equals(additionDate)) return this;
-        return new Article(id, title, additionDate, reviewDate);
-    }
-
-    public Article withReviewDate(LocalDateTime reviewDate) {
-        if (Objects.equals(this.reviewDate, reviewDate)) return this;
-        return new Article(id, title, additionDate, reviewDate);
+    public Article withLastUpdate(LocalDate lastUpdate) {
+        if (this.lastUpdate.equals(lastUpdate)) return this;
+        return new Article(id, title, lastUpdate);
     }
 
     @SuppressWarnings("unused")
     public static class ArticleBuilder {
         private int id;
         private String title;
-        private LocalDateTime additionDate;
-        private LocalDateTime reviewDate;
+        private LocalDate lastUpdate;
 
         ArticleBuilder() {
-            additionDate = LocalDateTime.now();
+            // Default value especially for tests
+            lastUpdate = LocalDate.now();
         }
 
         public Article.ArticleBuilder setId(int id) {
@@ -121,18 +107,13 @@ public class Article implements Serializable {
             return this;
         }
 
-        public Article.ArticleBuilder setAdditionDate(LocalDateTime additionDate) {
-            this.additionDate = additionDate;
-            return this;
-        }
-
-        public Article.ArticleBuilder setReviewDate(LocalDateTime reviewDate) {
-            this.reviewDate = reviewDate;
+        public Article.ArticleBuilder setLastUpdate(LocalDate lastUpdate) {
+            this.lastUpdate = lastUpdate;
             return this;
         }
 
         public Article build() {
-            return new Article(id, title, additionDate, reviewDate);
+            return new Article(id, title, lastUpdate);
         }
 
     }

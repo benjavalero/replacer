@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -100,7 +100,7 @@ public class ArticleService {
 
     private Article findRandomArticleNotReviewedInDb(@Nullable String word) throws UnfoundArticleException {
         List<Article> randomArticles = (word == null)
-                ? articleRepository.findRandomArticleNotReviewed(PageRequest.of(0, 1))
+                ? replacementRepository.findRandom(PageRequest.of(0, 1))
                 : replacementRepository.findRandomByWord(word, PageRequest.of(0, 1));
 
         if (randomArticles.isEmpty()) {
@@ -212,7 +212,7 @@ public class ArticleService {
     void markArticleAsReviewed(String articleTitle) {
         // Remove the replacements in DB and update the article
         Article articleToSave = articleRepository.findByTitle(articleTitle)
-                .withReviewDate(LocalDateTime.now());
+                .withLastUpdate(LocalDate.now());
         replacementRepository.deleteByArticle(articleToSave);
         articleRepository.save(articleToSave);
     }

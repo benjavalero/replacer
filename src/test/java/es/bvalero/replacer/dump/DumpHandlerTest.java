@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeParseException;
 
@@ -87,7 +87,7 @@ public class DumpHandlerTest {
 
     @Test
     public void testParseWikipediaDate() {
-        LocalDateTime expected = LocalDateTime.of(2018, Month.AUGUST, 31, 5, 17, 28);
+        LocalDate expected = LocalDate.of(2018, Month.AUGUST, 31);
         Assert.assertEquals(expected, dumpHandler.parseWikipediaDate("2018-08-31T05:17:28Z"));
     }
 

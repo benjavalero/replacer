@@ -1,7 +1,7 @@
 package es.bvalero.replacer.statistics;
 
-import es.bvalero.replacer.persistence.ReplacementCount;
 import es.bvalero.replacer.persistence.ArticleRepository;
+import es.bvalero.replacer.persistence.ReplacementCount;
 import es.bvalero.replacer.persistence.ReplacementRepository;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
@@ -35,7 +35,7 @@ public class StatisticsController {
     @RequestMapping("/statistics/count/articles")
     Long countArticlesNotReviewed() {
         LOGGER.info("Count articles not reviewed...");
-        Long count = articleRepository.countByReviewDateNull();
+        Long count = articleRepository.countNotReviewed();
         LOGGER.info("Articles not reviewed found: {}", count);
         return count;
     }
@@ -43,7 +43,7 @@ public class StatisticsController {
     @RequestMapping("/statistics/count/articles-reviewed")
     Long countArticlesReviewed() {
         LOGGER.info("Count articles reviewed...");
-        Long count = articleRepository.countByReviewDateNotNull();
+        Long count = articleRepository.countReviewed();
         LOGGER.info("Articles reviewed found: {}", count);
         return count;
     }

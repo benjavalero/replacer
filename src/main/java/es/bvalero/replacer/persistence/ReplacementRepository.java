@@ -23,6 +23,9 @@ public interface ReplacementRepository extends JpaRepository<Replacement, Long> 
     @Query("SELECT new es.bvalero.replacer.persistence.ReplacementCount(text, COUNT(*)) FROM Replacement WHERE type = 'MISSPELLING' GROUP BY text")
     List<ReplacementCount> findMisspellingsGrouped();
 
+    @Query("SELECT pe.article FROM Replacement pe ORDER BY RAND()")
+    List<Article> findRandom(Pageable pageable);
+
     @Query("SELECT pe.article FROM Replacement pe WHERE pe.text = :word ORDER BY RAND()")
     List<Article> findRandomByWord(@Param("word") String word, Pageable pageable);
 

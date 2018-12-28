@@ -122,7 +122,7 @@ public class ArticleServiceTest {
         Article randomArticle = Article.builder()
                 .setTitle(title)
                 .build();
-        Mockito.when(articleRepository.findRandomArticleNotReviewed(Mockito.any(PageRequest.class)))
+        Mockito.when(replacementRepository.findRandom(Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(randomArticle));
         Mockito.when(wikipediaFacade.getArticleContent(Mockito.anyString())).thenReturn(text);
 

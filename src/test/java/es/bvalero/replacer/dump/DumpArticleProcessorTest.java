@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
@@ -66,8 +66,8 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessReviewedAfterTimestamp() {
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime yesterday = today.minusDays(1L);
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1L);
 
         DumpArticle dumpArticle = DumpArticle.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
@@ -76,7 +76,7 @@ public class DumpArticleProcessorTest {
                 .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getReviewDate()).thenReturn(today);
+        Mockito.when(dbArticle.getLastUpdate()).thenReturn(today);
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
 
@@ -85,8 +85,8 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessReviewedAfterTimestampForced() {
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime yesterday = today.minusDays(1L);
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1L);
 
         DumpArticle dumpArticle = DumpArticle.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
@@ -95,85 +95,70 @@ public class DumpArticleProcessorTest {
                 .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getReviewDate()).thenReturn(today);
+        Mockito.when(dbArticle.getLastUpdate()).thenReturn(today);
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, true));
     }
 
     @Test
-    public void testProcessReviewedWhenTimestamp() {
+    public void testProcessLastUpdateWhenTimestampAndReviewed() {
+        LocalDate today = LocalDate.now();
         DumpArticle dumpArticle = DumpArticle.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
-                .setTimestamp(LocalDateTime.now())
+                .setTimestamp(today)
                 .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getReviewDate()).thenReturn(LocalDateTime.now());
+        Mockito.when(dbArticle.getLastUpdate()).thenReturn(today);
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
+        Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Collections.emptyList());
 
         Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
-    public void testProcessReviewedBeforeTimestamp() {
-        LocalDateTime yesterday = LocalDateTime.now().minusDays(1L);
-
+    public void testProcessLastUpdateWhenTimestampAndNotReviewed() {
+        LocalDate today = LocalDate.now();
         DumpArticle dumpArticle = DumpArticle.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
+                .setTimestamp(today)
                 .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getReviewDate()).thenReturn(yesterday);
-        Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
+        Mockito.when(dbArticle.getLastUpdate()).thenReturn(today);
+        Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
+                .thenReturn(Collections.singletonList(dbArticle));
+        Replacement replacement = Mockito.mock(Replacement.class);
+        Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Collections.singletonList(replacement));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
-    public void testProcessAddedAfterTimestamp() {
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime yesterday = today.minusDays(1L);
-
+    public void testProcessLastUpdateWhenTimestampAndReviewedAndForced() {
+        LocalDate today = LocalDate.now();
         DumpArticle dumpArticle = DumpArticle.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
-                .setTimestamp(yesterday)
+                .setTimestamp(today)
                 .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getAdditionDate()).thenReturn(today);
+        Mockito.when(dbArticle.getLastUpdate()).thenReturn(today);
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
-
-        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
-    }
-
-    @Test
-    public void testProcessAddedAfterTimestampForced() {
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime yesterday = today.minusDays(1L);
-
-        DumpArticle dumpArticle = DumpArticle.builder()
-                .setNamespace(WikipediaNamespace.ARTICLE)
-                .setContent("")
-                .setTimestamp(yesterday)
-                .build();
-
-        Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getAdditionDate()).thenReturn(today);
-        Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
+        Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Collections.emptyList());
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, true));
     }
 
     @Test
-    public void testProcessAddedBeforeTimestamp() {
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime yesterday = today.minusDays(1L);
+    public void testProcessLastUpdateBeforeTimestamp() {
+        LocalDate yesterday = LocalDate.now().minusDays(1L);
 
         DumpArticle dumpArticle = DumpArticle.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
@@ -181,7 +166,7 @@ public class DumpArticleProcessorTest {
                 .build();
 
         Article dbArticle = Mockito.mock(Article.class);
-        Mockito.when(dbArticle.getAdditionDate()).thenReturn(yesterday);
+        Mockito.when(dbArticle.getLastUpdate()).thenReturn(yesterday);
         Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
@@ -213,7 +198,7 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessExistingArticleWithReplacementChanges() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         DumpArticle dumpArticle = DumpArticle.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
@@ -221,7 +206,7 @@ public class DumpArticleProcessorTest {
                 .build();
 
         // Let's suppose the article exists in DB
-        Article dbArticle = Article.builder().setTitle("").setAdditionDate(now).build();
+        Article dbArticle = Article.builder().setTitle("").setLastUpdate(now).build();
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
         // And it has replacements 1 and 2
@@ -293,7 +278,7 @@ public class DumpArticleProcessorTest {
         DumpArticle dumpArticle = DumpArticle.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
-                .setTimestamp(LocalDateTime.now())
+                .setTimestamp(LocalDate.now())
                 .build();
 
         // Let's suppose the article exists in DB

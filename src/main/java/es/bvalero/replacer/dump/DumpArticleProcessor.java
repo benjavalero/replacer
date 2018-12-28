@@ -17,8 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -60,15 +59,14 @@ class DumpArticleProcessor {
     boolean processArticle(DumpArticle dumpArticle, boolean forceProcess) {
         LOGGER.debug("Processing article: {}...", dumpArticle.getTitle());
 
-        // Check namespace and redirection articles
-        if (!checkArticleByNamespaceAndContent(dumpArticle)) {
+        if (!isArticleProcessableByNamespace(dumpArticle.getNamespace())
+                || WikipediaUtils.isRedirectionArticle(dumpArticle.getContent())) {
             return false;
         }
 
         Article dbArticle = cache.findArticleById(dumpArticle.getId());
 
-        // Check if reviewed after dump article timestamp
-        if (dbArticle != null && !forceProcess && !checkArticleByDate(dbArticle, dumpArticle.getTimestamp())) {
+        if (dbArticle != null && !isArticleProcessableByTimestamp(dumpArticle.getTimestamp(), dbArticle, forceProcess)) {
             return false;
         }
 
@@ -92,8 +90,7 @@ class DumpArticleProcessor {
             if (compareReplacements(oldReplacements, newReplacements)) {
                 articlesToSave.add(dbArticle
                         .withTitle(dumpArticle.getTitle()) // In case the title of the article has changed
-                        .withAdditionDate(LocalDateTime.now())
-                        .withReviewDate(null));
+                        .withLastUpdate(dumpArticle.getTimestamp()));
             }
         } else {
             // Insert new article and its replacements in DB
@@ -112,30 +109,29 @@ class DumpArticleProcessor {
         return true;
     }
 
-    private boolean checkArticleByNamespaceAndContent(DumpArticle dumpArticle) {
-        // Check namespace and redirection articles
-        return PROCESSABLE_NAMESPACES.contains(dumpArticle.getNamespace())
-                && !WikipediaUtils.isRedirectionArticle(dumpArticle.getContent());
+    private boolean isArticleProcessableByNamespace(WikipediaNamespace namespace) {
+        return PROCESSABLE_NAMESPACES.contains(namespace);
     }
 
-    private boolean checkArticleByDate(Article dbArticle, LocalDateTime dumpTimestamp) {
-        // We compare with seconds because the DB timestamps is milliseconds-level but the Dump date is not
-        // and it is possible that the review date and the timestamp is exactly the same
-        if (dbArticle.getReviewDate() != null &&
-                !dbArticle.getReviewDate().truncatedTo(ChronoUnit.SECONDS)
-                        .isBefore(dumpTimestamp.truncatedTo(ChronoUnit.SECONDS))) {
-            LOGGER.debug("Article reviewed after dump timestamp. Skipping.");
-            return false;
+    private boolean isArticleProcessableByTimestamp(LocalDate dumpDate, Article dbArticle, boolean forceProcess) {
+        LocalDate dbDate = dbArticle.getLastUpdate();
+        if (dumpDate.isAfter(dbDate)) {
+            // Article modified in dump after last indexing. Reprocess always.
+            return true;
+        } else if (dumpDate.isEqual(dbDate)) {
+            // Article not modified in dump after last indexing. Reprocess if forcing or the article has not been reviewed.
+            return forceProcess || !isArticleReviewed(dbArticle);
+        } else if (dumpDate.isBefore(dbDate)) {
+            // Article reviewed. Reprocess only if forcing
+            return forceProcess;
+        } else {
+            // Default option. The code should not arrive here.
+            return true;
         }
+    }
 
-        // Check if added after dump article timestamp
-        if (dbArticle.getAdditionDate().truncatedTo(ChronoUnit.SECONDS)
-                .isAfter(dumpTimestamp.truncatedTo(ChronoUnit.SECONDS))) {
-            LOGGER.debug("Article added after dump timestamp. Skipping.");
-            return false;
-        }
-
-        return true;
+    private boolean isArticleReviewed(Article article) {
+        return replacementRepository.findByArticle(article).isEmpty();
     }
 
     private Replacement adaptArticleReplacement(ArticleReplacement articleReplacement, Article article) {

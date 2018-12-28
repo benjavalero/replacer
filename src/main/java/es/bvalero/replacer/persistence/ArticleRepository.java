@@ -15,14 +15,13 @@ import java.util.List;
 @Transactional
 public interface ArticleRepository extends JpaRepository<Article, Integer>, ArticleRepositoryCustom {
 
-    @Query("FROM Article WHERE reviewDate IS NULL ORDER BY RAND()")
-    List<Article> findRandomArticleNotReviewed(Pageable pageable);
-
     Article findByTitle(String title);
 
-    Long countByReviewDateNull();
+    @Query("SELECT COUNT(*) FROM Article AS a WHERE NOT EXISTS (FROM Replacement AS r WHERE r.article = a)")
+    Long countReviewed();
 
-    Long countByReviewDateNotNull();
+    @Query("SELECT COUNT(*) FROM Article AS a WHERE EXISTS (FROM Replacement AS r WHERE r.article = a)")
+    Long countNotReviewed();
 
     List<Article> findByIdGreaterThanOrderById(Integer minId, Pageable pageable);
 
