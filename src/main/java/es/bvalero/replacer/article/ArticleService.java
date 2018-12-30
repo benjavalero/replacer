@@ -93,6 +93,7 @@ public class ArticleService {
                     .setTrimText(trimText)
                     .build();
         } catch (InvalidArticleException e) {
+            LOGGER.info("Deleting invalid article: " + e.getMessage());
             deleteArticle(randomArticle);
             throw e;
         }
@@ -116,14 +117,12 @@ public class ArticleService {
 
             // Check if the article is processable
             if (WikipediaUtils.isRedirectionArticle(articleContent)) {
-                LOGGER.warn("Found article is a redirection page: {}", title);
                 throw new InvalidArticleException("Found article is a redirection page");
             }
 
             return articleContent;
         } catch (WikipediaException e) {
-            LOGGER.warn("Content could not be retrieved for title: {}", title);
-            throw new InvalidArticleException(e);
+            throw new InvalidArticleException("Content could not be retrieved");
         }
     }
 
@@ -185,7 +184,6 @@ public class ArticleService {
 
         Optional<ArticleReplacement> wordReplacement = replacements.stream().filter(replacement -> word.equals(replacement.getText())).findAny();
         if (!wordReplacement.isPresent()) {
-            LOGGER.warn("Word {} not found as a replacement for article", word);
             throw new InvalidArticleException("Word not found as a replacement");
         }
     }

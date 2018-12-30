@@ -61,12 +61,15 @@ class DumpArticleProcessor {
 
         if (!isArticleProcessableByNamespace(dumpArticle.getNamespace())
                 || WikipediaUtils.isRedirectionArticle(dumpArticle.getContent())) {
+            LOGGER.debug("Article not processable by namespace or content");
             return false;
         }
 
         Article dbArticle = cache.findArticleById(dumpArticle.getId());
 
         if (dbArticle != null && !isArticleProcessableByTimestamp(dumpArticle.getTimestamp(), dbArticle, forceProcess)) {
+            LOGGER.debug("Article not processable by date. Dump date: {} -  DB date: {}",
+                dumpArticle.getTimestamp(), dbArticle.getLastUpdate());
             return false;
         }
 
@@ -74,7 +77,7 @@ class DumpArticleProcessor {
         List<ArticleReplacement> articleReplacements = articleService.findReplacements(dumpArticle.getContent());
 
         if (articleReplacements.isEmpty()) {
-            LOGGER.debug("No errors found in article: {}", dumpArticle.getTitle());
+            LOGGER.debug("No replacements found. Deleting article...");
             if (dbArticle != null) {
                 articlesToDelete.add(dbArticle);
             }
@@ -88,11 +91,18 @@ class DumpArticleProcessor {
             }
 
             if (compareReplacements(oldReplacements, newReplacements)) {
+                LOGGER.debug("Found replacements don't match with the ones in database. Updating database...");
                 articlesToSave.add(dbArticle
                         .withTitle(dumpArticle.getTitle()) // In case the title of the article has changed
                         .withLastUpdate(dumpArticle.getTimestamp()));
+            } else {
+                LOGGER.debug("Found replacements match with the ones in database. Nothing to do.");
+                if (!dbArticle.getLastUpdate().equals(dumpArticle.getTimestamp())) {
+                    articlesToSave.add(dbArticle.withLastUpdate(dumpArticle.getTimestamp()));
+                }
             }
         } else {
+            LOGGER.debug("Adding article to database...");
             // Insert new article and its replacements in DB
             Article newArticle = Article.builder()
                     .setId(dumpArticle.getId())
