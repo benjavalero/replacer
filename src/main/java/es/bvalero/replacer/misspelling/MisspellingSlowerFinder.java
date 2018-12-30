@@ -19,6 +19,8 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Find misspelling replacements in a given text.
  * This algorithm is slower but uses less memory.
@@ -75,27 +77,26 @@ public class MisspellingSlowerFinder implements ArticleReplacementFinder, Proper
         return suggestions;
     }
 
-    private Map<String, Misspelling> getMisspellingMap() {
-        if (misspellingMap.isEmpty()) { // For the first time
-            setMisspellingMap(buildMisspellingMap());
-        }
-        return misspellingMap;
-    }
-
-    void setMisspellingMap(Map<String, Misspelling> misspellingMap) {
-        this.misspellingMap = misspellingMap;
+    @PostConstruct
+    public void init() {
+        misspellingManager.addPropertyChangeListener(this);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        setMisspellingMap(buildMisspellingMap());
+        @SuppressWarnings("unchecked")
+        Set<Misspelling> newMisspellings = (Set<Misspelling>) evt.getNewValue();
+        buildMisspellingRelatedFields(newMisspellings);
     }
 
-    Map<String, Misspelling> buildMisspellingMap() {
+    void buildMisspellingRelatedFields(Set<Misspelling> newMisspellings) {
+        this.misspellingMap = buildMisspellingMap(newMisspellings);
+    }
+
+    Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
         LOGGER.info("Start building misspelling map...");
 
         // Build a map to quick access the misspellings by word
-        Set<Misspelling> misspellings = misspellingManager.getMisspellings();
         Map<String, Misspelling> misspellingMap = new HashMap<>(misspellings.size());
         for (Misspelling misspelling : misspellings) {
             if (misspelling.isCaseSensitive()) {
@@ -132,8 +133,6 @@ public class MisspellingSlowerFinder implements ArticleReplacementFinder, Proper
             }
         }
 
-        // Add the listener if the misspelling list changes from now
-        misspellingManager.addPropertyChangeListener(this);
         return articleReplacements;
     }
 
@@ -141,7 +140,7 @@ public class MisspellingSlowerFinder implements ArticleReplacementFinder, Proper
      * @return The misspelling related to the given word, or null if there is no such misspelling.
      */
     Misspelling findMisspellingByWord(String word) {
-        return getMisspellingMap().get(word);
+        return this.misspellingMap.get(word);
     }
 
 }

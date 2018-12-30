@@ -8,7 +8,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
@@ -35,6 +34,7 @@ public class ProperNounFinderTest {
         String surname = "Verne";
         String text = "xxx " + noun + ' ' + surname + " zzz";
 
+        properNounFinder.buildMisspellingRelatedFields(new HashSet<Misspelling>());
         List<ArticleReplacement> matches = properNounFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(1, matches.size());
@@ -49,8 +49,7 @@ public class ProperNounFinderTest {
 
         Misspelling misspelling1 = Misspelling.builder().setWord("Enero").setCaseSensitive(true).build();
         Misspelling misspelling2 = Misspelling.builder().setWord("Febrero").setCaseSensitive(true).build();
-        Mockito.when(misspellingManager.getMisspellings())
-                .thenReturn(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
+        properNounFinder.buildMisspellingRelatedFields(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
 
         List<ArticleReplacement> matches = properNounFinder.findIgnoredReplacements(text);
 
@@ -69,8 +68,7 @@ public class ProperNounFinderTest {
 
         Misspelling misspelling1 = Misspelling.builder().setWord("Enero").setCaseSensitive(true).build();
         Misspelling misspelling2 = Misspelling.builder().setWord("Febrero").setCaseSensitive(true).build();
-        Mockito.when(misspellingManager.getMisspellings())
-                .thenReturn(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
+        properNounFinder.buildMisspellingRelatedFields(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
 
         List<ArticleReplacement> matches = properNounFinder.findIgnoredReplacements(text);
 

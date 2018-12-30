@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.PostConstruct;
+
 @Component
 public class ProperNounFinder implements IgnoredReplacementFinder, PropertyChangeListener {
 
@@ -55,39 +57,27 @@ public class ProperNounFinder implements IgnoredReplacementFinder, PropertyChang
     // Regex with the misspellings which start with uppercase in links, e. g. [[Hispano|hispanidad]]
     private RunAutomaton uppercaseLinkAutomaton;
 
-    private RunAutomaton getUppercaseAfterAutomaton() {
-        if (uppercaseAfterAutomaton == null) { // For the first time
-            setUppercaseAfterAutomaton(buildUppercaseAfterAutomaton());
-        }
-        return uppercaseAfterAutomaton;
-    }
-
-    private void setUppercaseAfterAutomaton(RunAutomaton uppercaseAfterAutomaton) {
-        this.uppercaseAfterAutomaton = uppercaseAfterAutomaton;
-    }
-
-    private RunAutomaton getUppercaseLinkAutomaton() {
-        if (uppercaseLinkAutomaton == null) { // For the first time
-            setUppercaseLinkAutomaton(buildUppercaseLinkAutomaton());
-        }
-        return uppercaseLinkAutomaton;
-    }
-
-    private void setUppercaseLinkAutomaton(RunAutomaton uppercaseLinkAutomaton) {
-        this.uppercaseLinkAutomaton = uppercaseLinkAutomaton;
+    @PostConstruct
+    public void init() {
+        misspellingManager.addPropertyChangeListener(this);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        setUppercaseAfterAutomaton(buildUppercaseAfterAutomaton());
-        setUppercaseLinkAutomaton(buildUppercaseLinkAutomaton());
+        @SuppressWarnings("unchecked")
+        Set<Misspelling> newMisspellings = (Set<Misspelling>) evt.getNewValue();
+        buildMisspellingRelatedFields(newMisspellings);
     }
 
-    private RunAutomaton buildUppercaseAfterAutomaton() {
+    void buildMisspellingRelatedFields(Set<Misspelling> newMisspellings) {
+        this.uppercaseAfterAutomaton = buildUppercaseAfterAutomaton(newMisspellings);
+        this.uppercaseLinkAutomaton = buildUppercaseLinkAutomaton(newMisspellings);
+    }
+
+    private RunAutomaton buildUppercaseAfterAutomaton(Set<Misspelling> misspellings) {
         LOGGER.info("Start building uppercaseAfter automaton...");
 
         // Build an automaton with the misspellings starting with uppercase
-        Set<Misspelling> misspellings = misspellingManager.getMisspellings();
         List<String> alternations = new ArrayList<>(misspellings.size());
         for (Misspelling misspelling : misspellings) {
             if (misspelling.isCaseSensitive() && MisspellingManager.startsWithUpperCase(misspelling.getWord())) {
@@ -98,15 +88,13 @@ public class ProperNounFinder implements IgnoredReplacementFinder, PropertyChang
         RunAutomaton automaton = new RunAutomaton(new RegExp(regexAlternations).toAutomaton(new DatatypesAutomatonProvider()));
 
         LOGGER.info("End building uppercaseAfter automaton");
-
         return automaton;
     }
 
-    private RunAutomaton buildUppercaseLinkAutomaton() {
+    private RunAutomaton buildUppercaseLinkAutomaton(Set<Misspelling> misspellings) {
         LOGGER.info("Start building uppercaseLink automaton...");
 
         // Build an automaton with the misspellings starting with uppercase
-        Set<Misspelling> misspellings = misspellingManager.getMisspellings();
         List<String> alternations = new ArrayList<>(misspellings.size());
         for (Misspelling misspelling : misspellings) {
             if (misspelling.isCaseSensitive() && MisspellingManager.startsWithUpperCase(misspelling.getWord())) {
@@ -117,7 +105,6 @@ public class ProperNounFinder implements IgnoredReplacementFinder, PropertyChang
         RunAutomaton automaton = new RunAutomaton(new RegExp(regexAlternations).toAutomaton(new DatatypesAutomatonProvider()));
 
         LOGGER.info("End building uppercaseLink automaton");
-
         return automaton;
     }
 
@@ -132,7 +119,7 @@ public class ProperNounFinder implements IgnoredReplacementFinder, PropertyChang
 
         // Lowercase nouns that start with uppercase because after some special character
         // We don't need the extra letters captured for the separator
-        for (ArticleReplacement match : ArticleReplacementFinder.findReplacements(text, getUppercaseAfterAutomaton(), ReplacementType.IGNORED)) {
+        for (ArticleReplacement match : ArticleReplacementFinder.findReplacements(text, this.uppercaseAfterAutomaton, ReplacementType.IGNORED)) {
             // Find the letter position
             Matcher m = PATTERN_UPPERCASE.matcher(match.getText());
             if (m.find()) {
@@ -144,14 +131,12 @@ public class ProperNounFinder implements IgnoredReplacementFinder, PropertyChang
 
         // Lowercase nouns that start with uppercase because in the first part of links
         // We don't need the extra letters captured for the separator
-        for (ArticleReplacement match : ArticleReplacementFinder.findReplacements(text, getUppercaseLinkAutomaton(), ReplacementType.IGNORED)) {
+        for (ArticleReplacement match : ArticleReplacementFinder.findReplacements(text, this.uppercaseLinkAutomaton, ReplacementType.IGNORED)) {
             matches.add(match
                     .withStart(match.getStart() + 2)
                     .withText(match.getText().substring(2, match.getText().length() - 1)));
         }
 
-        // Add the listener if the misspelling list changes from now
-        misspellingManager.addPropertyChangeListener(this);
         return matches;
     }
 

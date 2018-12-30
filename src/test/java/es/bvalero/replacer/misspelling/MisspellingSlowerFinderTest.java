@@ -44,9 +44,7 @@ public class MisspellingSlowerFinderTest {
                 .setComment("ejemplo")
                 .build();
 
-        Mockito.when(misspellingManager.getMisspellings())
-                .thenReturn(new HashSet<>(Arrays.asList(misspelling1, misspelling2, misspelling3)));
-
+        misspellingFinder.buildMisspellingRelatedFields(new HashSet<>(Arrays.asList(misspelling1, misspelling2, misspelling3)));
 
         List<ArticleReplacement> result = misspellingFinder.findReplacements(articleContent);
 
@@ -136,10 +134,9 @@ public class MisspellingSlowerFinderTest {
                 Misspelling.builder().setWord("haver").setComment("haber").setCaseSensitive(false).build();
         Misspelling misspelling2 =
                 Misspelling.builder().setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
-        Mockito.when(misspellingManager.getMisspellings())
-                .thenReturn(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
 
-        Map<String, Misspelling> misspellingMap = misspellingFinder.buildMisspellingMap();
+        Set<Misspelling> misspellings = new HashSet<>(Arrays.asList(misspelling1, misspelling2));
+        Map<String, Misspelling> misspellingMap = misspellingFinder.buildMisspellingMap(misspellings);
 
         Assert.assertEquals(3, misspellingMap.size());
         Assert.assertEquals(misspelling1, misspellingMap.get("haver"));
@@ -149,11 +146,10 @@ public class MisspellingSlowerFinderTest {
 
     @Test
     public void testFindMisspellingByWord() {
-        Map<String, Misspelling> misspellings = new HashMap<>(1);
         Misspelling misspelling = Misspelling.builder()
                 .setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
-        misspellings.put("madrid", misspelling);
-        misspellingFinder.setMisspellingMap(misspellings);
+
+        misspellingFinder.buildMisspellingRelatedFields(new HashSet<>(Collections.singletonList(misspelling)));
 
         Assert.assertEquals(misspelling, misspellingFinder.findMisspellingByWord("madrid"));
         Assert.assertNull(misspellingFinder.findMisspellingByWord("Madrid"));

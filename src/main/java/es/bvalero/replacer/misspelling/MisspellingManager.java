@@ -80,14 +80,7 @@ public class MisspellingManager {
         return Character.isUpperCase(word.charAt(0));
     }
 
-    public synchronized Set<Misspelling> getMisspellings() {
-        if (misspellings.isEmpty()) { // For the first time
-            setMisspellings(findWikipediaMisspellings());
-        }
-        return misspellings;
-    }
-
-    public synchronized void setMisspellings(Set<Misspelling> misspellings) {
+    private void setMisspellings(Set<Misspelling> misspellings) {
         changeSupport.firePropertyChange("name", this.misspellings, misspellings);
         this.misspellings = misspellings;
     }
@@ -99,8 +92,9 @@ public class MisspellingManager {
     /**
      * Update daily the list of misspellings from Wikipedia.
      */
-    @Scheduled(fixedDelay = 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
+    @Scheduled(fixedDelay = 3600 * 24 * 1000)
     void updateMisspellings() {
+        LOGGER.info("Scheduled misspellings update...");
         Set<Misspelling> newMisspellings = findWikipediaMisspellings();
         if (!newMisspellings.isEmpty()) {
             setMisspellings(newMisspellings);

@@ -18,6 +18,8 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Find misspelling replacements in a given text.
  */
@@ -75,39 +77,27 @@ public class MisspellingFinder implements ArticleReplacementFinder, PropertyChan
         return suggestions;
     }
 
-    private RunAutomaton getMisspellingAutomaton() {
-        if (misspellingAutomaton == null) { // For the first time
-            setMisspellingAutomaton(buildMisspellingAutomaton());
-        }
-        return misspellingAutomaton;
-    }
-
-    private void setMisspellingAutomaton(RunAutomaton misspellingAutomaton) {
-        this.misspellingAutomaton = misspellingAutomaton;
-    }
-
-    private Map<String, Misspelling> getMisspellingMap() {
-        if (misspellingMap.isEmpty()) { // For the first time
-            setMisspellingMap(buildMisspellingMap());
-        }
-        return misspellingMap;
-    }
-
-    void setMisspellingMap(Map<String, Misspelling> misspellingMap) {
-        this.misspellingMap = misspellingMap;
+    @PostConstruct
+    public void init() {
+        misspellingManager.addPropertyChangeListener(this);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        setMisspellingAutomaton(buildMisspellingAutomaton());
-        setMisspellingMap(buildMisspellingMap());
+        @SuppressWarnings("unchecked")
+        Set<Misspelling> newMisspellings = (Set<Misspelling>) evt.getNewValue();
+        buildMisspellingRelatedFields(newMisspellings);
     }
 
-    private RunAutomaton buildMisspellingAutomaton() {
+    void buildMisspellingRelatedFields(Set<Misspelling> newMisspellings) {
+        this.misspellingAutomaton = buildMisspellingAutomaton(newMisspellings);
+        this.misspellingMap = buildMisspellingMap(newMisspellings);
+    }
+
+    private RunAutomaton buildMisspellingAutomaton(Set<Misspelling> misspellings) {
         LOGGER.info("Start building misspelling automaton...");
 
         // Build a long long regex with all the misspellings
-        Set<Misspelling> misspellings = misspellingManager.getMisspellings();
         List<String> alternations = new ArrayList<>(misspellings.size());
         for (Misspelling misspelling : misspellings) {
             // If the misspelling contains a dot we escape it
@@ -130,11 +120,10 @@ public class MisspellingFinder implements ArticleReplacementFinder, PropertyChan
         return automaton;
     }
 
-    Map<String, Misspelling> buildMisspellingMap() {
+    Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
         LOGGER.info("Start building misspelling map...");
 
         // Build a map to quick access the misspellings by word
-        Set<Misspelling> misspellings = misspellingManager.getMisspellings();
         Map<String, Misspelling> misspellingMap = new HashMap<>(misspellings.size());
         for (Misspelling misspelling : misspellings) {
             if (misspelling.isCaseSensitive()) {
@@ -158,7 +147,7 @@ public class MisspellingFinder implements ArticleReplacementFinder, PropertyChan
         List<ArticleReplacement> articleReplacements = new ArrayList<>(100);
 
         List<ArticleReplacement> misspellingMatches = ArticleReplacementFinder.findReplacements(text,
-                getMisspellingAutomaton(), ReplacementType.MISSPELLING);
+                this.misspellingAutomaton, ReplacementType.MISSPELLING);
 
         for (ArticleReplacement misspellingMatch : misspellingMatches) {
             // The regex may find misspellings which are not complete words, e. g. "és" inside "inglés"
@@ -175,8 +164,6 @@ public class MisspellingFinder implements ArticleReplacementFinder, PropertyChan
             }
         }
 
-        // Add the listener if the misspelling list changes from now
-        misspellingManager.addPropertyChangeListener(this);
         return articleReplacements;
     }
 
@@ -184,7 +171,7 @@ public class MisspellingFinder implements ArticleReplacementFinder, PropertyChan
      * @return The misspelling related to the given word, or null if there is no such misspelling.
      */
     Misspelling findMisspellingByWord(String word) {
-        return getMisspellingMap().get(word);
+        return this.misspellingMap.get(word);
     }
 
 }
