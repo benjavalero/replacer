@@ -9,7 +9,6 @@ import java.util.Objects;
 /**
  * Domain class of a potential replacement in an article.
  */
-@SuppressWarnings("unused")
 public final class ArticleReplacement implements Comparable<ArticleReplacement> {
 
     private final String text;

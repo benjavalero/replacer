@@ -1,6 +1,5 @@
 package es.bvalero.replacer.persistence;
 
-@SuppressWarnings("unused")
 public class ReplacementCount {
 
     private final String text;

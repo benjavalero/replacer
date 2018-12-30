@@ -15,6 +15,8 @@ import java.util.Objects;
 @Table(name = "replacement", uniqueConstraints = @UniqueConstraint(columnNames = {"articleid", "type", "text"}))
 public class Replacement implements Serializable {
 
+    private static final long serialVersionUID = -6766305982117992712L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,7 +32,6 @@ public class Replacement implements Serializable {
     @Column(name = "text", nullable = false, length = 30)
     private String text;
 
-    @SuppressWarnings("unused")
     public Replacement() {
         // Needed by JPA
     }

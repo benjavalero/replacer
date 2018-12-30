@@ -17,6 +17,8 @@ import java.util.Objects;
 @Table(name = "article")
 public class Article implements Serializable {
 
+    private static final long serialVersionUID = 2886241217232701474L;
+
     @Id
     @Column(name = "id", nullable = false)
     private int id;
@@ -86,7 +88,6 @@ public class Article implements Serializable {
         return new Article(id, title, lastUpdate);
     }
 
-    @SuppressWarnings("unused")
     public static class ArticleBuilder {
         private int id;
         private String title;

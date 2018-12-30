@@ -1,6 +1,5 @@
 package es.bvalero.replacer.dump;
 
-@SuppressWarnings("WeakerAccess")
 public final class DumpProcessStatus {
 
     private final boolean running;

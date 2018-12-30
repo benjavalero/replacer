@@ -21,7 +21,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-@SuppressWarnings("HardCodedStringLiteral")
 @Service
 @Profile("default")
 public class WikipediaFacade implements IWikipediaFacade {
@@ -67,7 +66,6 @@ public class WikipediaFacade implements IWikipediaFacade {
 
     @Override
     public String getArticleContent(String articleTitle) throws WikipediaException {
-        // TODO : Test the time zone
         LOGGER.info("Getting content for article: {}", articleTitle);
         try {
             String articleContent = getWiki().getPageContent(articleTitle);
@@ -97,7 +95,6 @@ public class WikipediaFacade implements IWikipediaFacade {
     public void editArticleContent(String articleTitle, String articleContent)
             throws WikipediaException {
         // TODO : Check just before uploading there are no changes during the edition
-        // TODO : Test the time zone
         try {
             OAuthRequest request = new OAuthRequest(Verb.POST, WIKIPEDIA_API_URL);
             request.addParameter("format", "json");

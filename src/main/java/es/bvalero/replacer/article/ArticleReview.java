@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * Domain class of an article to review to be used in the front-end.
  */
-@SuppressWarnings("unused")
 public final class ArticleReview {
 
     private final String title;

@@ -16,7 +16,6 @@ public class XmlTagFinder implements IgnoredReplacementFinder {
 
     // We want to avoid the XML comments to be captured by this
     // For the automaton the < needs an extra backslash
-    @SuppressWarnings("RegExpRedundantEscape")
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_XML_TAG = "\\</?[A-Za-z][^/\\>]+/?\\>";
     private static final RunAutomaton AUTOMATON_XML_TAG =

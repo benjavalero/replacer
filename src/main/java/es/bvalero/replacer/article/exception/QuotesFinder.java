@@ -41,7 +41,6 @@ public class QuotesFinder implements IgnoredReplacementFinder {
             new RunAutomaton(new RegExp(REGEX_TYPOGRAPHIC_QUOTES).toAutomaton());
 
     // For the automaton the quote needs an extra backslash
-    @SuppressWarnings("RegExpRedundantEscape")
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_DOUBLE_QUOTES = "\\\"[^\\\"\n]+\\\"";
     private static final RunAutomaton AUTOMATON_DOUBLE_QUOTES =
