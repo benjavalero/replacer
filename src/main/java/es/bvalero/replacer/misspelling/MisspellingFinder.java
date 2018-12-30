@@ -41,42 +41,6 @@ public class MisspellingFinder implements ArticleReplacementFinder, PropertyChan
     // Derived from the misspelling set to access faster by word
     private Map<String, Misspelling> misspellingMap = new HashMap<>();
 
-    /**
-     * @return The given word turning the first letter into uppercase (if needed)
-     */
-    static String setFirstUpperCase(String word) {
-        return word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")) + word.substring(1);
-    }
-
-    static String findMisspellingSuggestion(CharSequence originalWord, Misspelling misspelling) {
-        List<String> suggestions = parseCommentSuggestions(misspelling);
-
-        // TODO Take into account all the suggestions
-        String suggestion = suggestions.get(0);
-
-        if (MisspellingManager.startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()) {
-            suggestion = setFirstUpperCase(suggestion);
-        }
-
-        return suggestion;
-    }
-
-    static List<String> parseCommentSuggestions(Misspelling misspelling) {
-        List<String> suggestions = new ArrayList<>(5);
-
-        String suggestionNoBrackets = PATTERN_BRACKETS.matcher(misspelling.getComment()).replaceAll("");
-        for (String suggestion : suggestionNoBrackets.split(",")) {
-            String suggestionWord = suggestion.trim();
-
-            // Don't suggest the misspelling main word
-            if (StringUtils.isNotBlank(suggestionWord) && !suggestionWord.equals(misspelling.getWord())) {
-                suggestions.add(suggestionWord);
-            }
-        }
-
-        return suggestions;
-    }
-
     @PostConstruct
     public void init() {
         misspellingManager.addPropertyChangeListener(this);
@@ -140,6 +104,13 @@ public class MisspellingFinder implements ArticleReplacementFinder, PropertyChan
     }
 
     /**
+     * @return The given word turning the first letter into uppercase (if needed)
+     */
+    String setFirstUpperCase(String word) {
+        return word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")) + word.substring(1);
+    }
+
+    /**
      * @return A list with the misspelling replacements in a given text.
      */
     @Override
@@ -172,6 +143,35 @@ public class MisspellingFinder implements ArticleReplacementFinder, PropertyChan
      */
     Misspelling findMisspellingByWord(String word) {
         return this.misspellingMap.get(word);
+    }
+
+    String findMisspellingSuggestion(CharSequence originalWord, Misspelling misspelling) {
+        List<String> suggestions = parseCommentSuggestions(misspelling);
+
+        // TODO Take into account all the suggestions
+        String suggestion = suggestions.get(0);
+
+        if (MisspellingManager.startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()) {
+            suggestion = setFirstUpperCase(suggestion);
+        }
+
+        return suggestion;
+    }
+
+    List<String> parseCommentSuggestions(Misspelling misspelling) {
+        List<String> suggestions = new ArrayList<>(5);
+
+        String suggestionNoBrackets = PATTERN_BRACKETS.matcher(misspelling.getComment()).replaceAll("");
+        for (String suggestion : suggestionNoBrackets.split(",")) {
+            String suggestionWord = suggestion.trim();
+
+            // Don't suggest the misspelling main word
+            if (StringUtils.isNotBlank(suggestionWord) && !suggestionWord.equals(misspelling.getWord())) {
+                suggestions.add(suggestionWord);
+            }
+        }
+
+        return suggestions;
     }
 
 }

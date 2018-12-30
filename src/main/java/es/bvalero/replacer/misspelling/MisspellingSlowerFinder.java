@@ -31,51 +31,15 @@ public class MisspellingSlowerFinder implements ArticleReplacementFinder, Proper
 
     @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingSlowerFinder.class);
-    private static final Pattern PATTERN_BRACKETS = Pattern.compile("\\(.+?\\)");
     private static final RunAutomaton WORD_AUTOMATON = new RunAutomaton(new RegExp("(<L>|<N>)+")
-            .toAutomaton(new DatatypesAutomatonProvider()));
+        .toAutomaton(new DatatypesAutomatonProvider()));
+    private static final Pattern PATTERN_BRACKETS = Pattern.compile("\\(.+?\\)");
 
     @Autowired
     private MisspellingManager misspellingManager;
 
     // Derived from the misspelling set to access faster by word
     private Map<String, Misspelling> misspellingMap = new HashMap<>();
-
-    /**
-     * @return The given word turning the first letter into uppercase (if needed)
-     */
-    private static String setFirstUpperCase(String word) {
-        return word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")) + word.substring(1);
-    }
-
-    private static String findMisspellingSuggestion(CharSequence originalWord, Misspelling misspelling) {
-        List<String> suggestions = parseCommentSuggestions(misspelling);
-
-        // TODO Take into account all the suggestions
-        String suggestion = suggestions.get(0);
-
-        if (MisspellingManager.startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()) {
-            suggestion = setFirstUpperCase(suggestion);
-        }
-
-        return suggestion;
-    }
-
-    private static List<String> parseCommentSuggestions(Misspelling misspelling) {
-        List<String> suggestions = new ArrayList<>(5);
-
-        String suggestionNoBrackets = PATTERN_BRACKETS.matcher(misspelling.getComment()).replaceAll("");
-        for (String suggestion : suggestionNoBrackets.split(",")) {
-            String suggestionWord = suggestion.trim();
-
-            // Don't suggest the misspelling main word
-            if (StringUtils.isNotBlank(suggestionWord) && !suggestionWord.equals(misspelling.getWord())) {
-                suggestions.add(suggestionWord);
-            }
-        }
-
-        return suggestions;
-    }
 
     @PostConstruct
     public void init() {
@@ -113,6 +77,13 @@ public class MisspellingSlowerFinder implements ArticleReplacementFinder, Proper
     }
 
     /**
+     * @return The given word turning the first letter into uppercase (if needed)
+     */
+    String setFirstUpperCase(String word) {
+        return word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")) + word.substring(1);
+    }
+
+    /**
      * @return A list with the misspelling replacements in a given text.
      */
     @Override
@@ -141,6 +112,35 @@ public class MisspellingSlowerFinder implements ArticleReplacementFinder, Proper
      */
     Misspelling findMisspellingByWord(String word) {
         return this.misspellingMap.get(word);
+    }
+
+    String findMisspellingSuggestion(CharSequence originalWord, Misspelling misspelling) {
+        List<String> suggestions = parseCommentSuggestions(misspelling);
+
+        // TODO Take into account all the suggestions
+        String suggestion = suggestions.get(0);
+
+        if (MisspellingManager.startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()) {
+            suggestion = setFirstUpperCase(suggestion);
+        }
+
+        return suggestion;
+    }
+
+    List<String> parseCommentSuggestions(Misspelling misspelling) {
+        List<String> suggestions = new ArrayList<>(5);
+
+        String suggestionNoBrackets = PATTERN_BRACKETS.matcher(misspelling.getComment()).replaceAll("");
+        for (String suggestion : suggestionNoBrackets.split(",")) {
+            String suggestionWord = suggestion.trim();
+
+            // Don't suggest the misspelling main word
+            if (StringUtils.isNotBlank(suggestionWord) && !suggestionWord.equals(misspelling.getWord())) {
+                suggestions.add(suggestionWord);
+            }
+        }
+
+        return suggestions;
     }
 
 }
