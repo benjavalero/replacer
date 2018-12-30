@@ -26,10 +26,10 @@ public class MisspellingManagerTest {
         MockitoAnnotations.initMocks(this);
     }
 
-    @Test
+    @Test(expected = WikipediaException.class)
     public void testFindWikipediaMisspellingsWithErrors() throws WikipediaException {
         Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenThrow(new WikipediaException());
-        Assert.assertTrue(misspellingManager.findWikipediaMisspellings().isEmpty());
+        misspellingManager.findWikipediaMisspellings();
     }
 
     @Test

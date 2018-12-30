@@ -95,23 +95,19 @@ public class MisspellingManager {
     @Scheduled(fixedDelay = 3600 * 24 * 1000)
     void updateMisspellings() {
         LOGGER.info("Scheduled misspellings update...");
-        Set<Misspelling> newMisspellings = findWikipediaMisspellings();
-        if (!newMisspellings.isEmpty()) {
-            setMisspellings(newMisspellings);
+        try {
+            setMisspellings(findWikipediaMisspellings());
+        } catch (WikipediaException e) {
+            LOGGER.error("Error loading misspellings list from Wikipedia", e);
         }
     }
 
-    Set<Misspelling> findWikipediaMisspellings() {
-        try {
-            LOGGER.info("Start loading misspelling list from Wikipedia...");
-            String misspellingListText = wikipediaFacade.getArticleContent(WikipediaFacade.MISSPELLING_LIST_ARTICLE);
-            Set<Misspelling> misspellingSet = parseMisspellingListText(misspellingListText);
-            LOGGER.info("End parsing misspelling list from Wikipedia: {} items", misspellingSet.size());
-            return misspellingSet;
-        } catch (WikipediaException e) {
-            LOGGER.error("Error loading misspellings list from Wikipedia");
-            return Collections.emptySet();
-        }
+    Set<Misspelling> findWikipediaMisspellings() throws WikipediaException {
+        LOGGER.info("Start loading misspelling list from Wikipedia...");
+        String misspellingListText = wikipediaFacade.getArticleContent(WikipediaFacade.MISSPELLING_LIST_ARTICLE);
+        Set<Misspelling> misspellingSet = parseMisspellingListText(misspellingListText);
+        LOGGER.info("End parsing misspelling list from Wikipedia: {} items", misspellingSet.size());
+        return misspellingSet;
     }
 
 }
