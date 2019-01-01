@@ -84,13 +84,14 @@ esto es, lee uno a uno los artículos, busca los potenciales reemplazos y
 los añade a la base de datos.
 
 El proceso de indexación tiene dos partes principales: la lectura de cada uno
-de los artículos y el procesado de los artículos (si procede).
+de los artículos y el procesado de los artículos (si procede):
 
-- Solo se tienen en cuenta los contenidos de tipo «Artículo» o «Anexo».
-- Se reindexan los artículos modificados posteriormente a su inserción en
-la base de datos o a su revisión.
-- Hay una opción para reindexarlo todo para tener en cuenta nuevas
+- Solo se procesan los contenidos de tipo «Artículo» o «Anexo».
+- Se procesan los artículos ya indexados para tener en cuenta nuevas
 excepciones o potenciales reemplazos.
+- No se procesan los artículos ya revisados manualmente.
+- Hay una opción para forzar y reindexarlo todo, incluso los artículos
+revisados.
 
 El sistema además ofrece una sección para comprobar el estado de la
 indexación en tiempo real.
