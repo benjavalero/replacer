@@ -132,7 +132,7 @@ Led Zeppelin
 (publica|especifica|practica) (el|en|las?|los|sus?|un[ao]s?|un)
 
 # Sustantivos que parecen verbos
-([Aa]l|[Dd]el?|[Ee]l|[Ee]n[Ss]u|[Uu]n) (desempeño|disparo|logro|regreso|retiro)
+([Aa]l|[Dd]el?|[Ee]l|[Ee]n|[Ss]u|[Uu]n) (desempeño|disparo|logro|regreso|retiro)
 
 # Verdaderos positivos que de momento no quiero corregir
 [Aa]quél(l[ao]s?)?
