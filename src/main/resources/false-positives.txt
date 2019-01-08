@@ -1,13 +1,162 @@
 # LISTA DE FALSOS POSITIVOS
 # Si es posible intentamos que no se solapen con otras excepciones
 # OJO: Las expresiones regulares han de ser compatibles con el formato de los automaton
+# Busco falsos positivos que aparecen más de 100 veces en el dump
 
-(Central|East|North|[Ss]outhern|South|Tropical|UCI|West) Africa
-Africa (Cup|Sports|Tour)
+# Aaron
+Hank Aaron
+Aaron Brown
+Aaron Burr
+Aaron Carter
+Aaron Copland
+Aaron Eckhart
+Aaron Haddad
+Aaron Johnson
+Aaron Krickstein
+Aaron Paul
+Aaron Peirsol
+Aaron Ramsey
+Aaron Rodgers
+Aaron Sorkin
+Aaron Spelling
+Aaron Springer
+Aaron Stone
+Aaron Swartz
+Aaron Taylor
+Aaron's
 
-[Aa]lbum (certifications|[Cc]harts?|[Cc]overs?|[Dd]etails|Discography|Guide|notes|ratings|[Rr]elease|[Rr]eviews?|Sales|single|Track|[Tt]itle|Top|[Vv]ersion|Volume)
-(Best|Black|Blue|Chenopodium|Christmas|[Dd]ebut|Family|First|Galium|Gaon|Live|Mega|Mini|Next|[Nn]ew|Oricon|Pop|Remix|Second|Sedum|Solo|Stone|Studio|UK|Veratrum|Viscum|Weekly) [Aa]lbum
+# Abril
+Abril Martorell
+Editora Abril
+Editorial Abril
+Feria de Abril
+Fernando Abril
+García Abril
+Revolución de Abril
+Silvia Abril
+Simón Abril
+Victoria Abril
 
+# Adrian
+Adrian Belew
+Adrian Boult
+Adrian Dantley
+Adrian Frutiger
+Adrian Goldsworthy
+Adrian Hardy
+Adrian Lyne
+Adrian Mannarino
+Adrian Neville
+Adrian Newey
+Adrian Quaife
+Adrian Quist
+Adrian Sikora
+Adrian Smith
+Adrian Sutil
+Adrian Ungur
+Adrian Voinea
+Adrian Wood
+
+# Africa
+All Africa
+Black Africa
+Central Africa
+East Africa
+Eastern Africa
+FIBA Africa Clubs Champions Cup
+North Africa
+Rugby Africa
+Saharan Africa
+South Africa
+[Ss]outhern Africa
+Tropical Africa
+UCI Africa
+West Africa
+Africa Cup
+Africa Sports
+Africa Tour
+Mem. Bot. Surv. S. Africa 2
+Africa's
+
+# Agosto
+Feria de Agosto
+Primeiro de Agosto
+Virgen de Agosto
+
+# Album
+album certifications
+[Aa]lbum [Cc]harts?
+[Aa]lbum [Cc]over
+Album Details
+Album Discography
+Album Guide
+Album notes
+Album Release
+[Aa]lbum [Rr]eviews?
+[Aa]lbum [Ss]ales
+Album Title
+Album Top
+Album Track
+[Aa]lbum [Vv]ersion
+Album Volume
+Topp? 40 [Aa]lbum
+Artist Album
+Best Album
+Black Album
+Christmas Album
+[Dd]ebut [Aa]lbum
+Family Album
+First Album
+Live Album
+Love Album
+Mini Album
+Music Album
+Next Album
+[Nn]ew [Aa]lbum
+Non-album
+Oricon Album
+Pop Album
+Remix Album
+Second Album
+[Ss]olo [Aa]lbum
+[Ss]tudio [Aa]lbum
+[Tt]he [Aa]lbum
+Top Album
+Weekly Album
+White Album
+<L>'s [Aa]lbum
+No. 1 Album
+(class|type)=album
+
+# Albums
+Albums Chart
+Albums of
+Canadian Albums
+German Albums
+Independent Albums
+Irish Albums
+Italian Albums
+Latin Albums
+Pop Albums
+Rock Albums
+Swiss Albums
+Top Albums
+UK Albums
+World Albums
+100 Albums
+200 Albums
+
+# alla
+Introduzione alla
+Teatro alla Scala
+alla fine
+Alla Kudryavtseva
+Alla Nazimova
+alla prima
+
+# am
+<L>+ AM
+<L>+ am
 will\.i\.am
 
 (Captain|Central|Latin|Morning|North|Skate|South|UCI) America
@@ -121,8 +270,9 @@ Victor Hugo
 
 Led Zeppelin
 
-# Topónimos
-(in|of|[Tt]he) (Africa|America|Los Angeles|Manchester|Missouri)
+# Topónimos o palabras en inglés precedidas o seguidas por otras palabras comunes en inglés
+(and|for|from|[Ii]n|of|to) (Africa|America|Los Angeles|Manchester|Missouri)
+(Africa|[Aa]lbum) (and|[Ii]n|[Ii]s|of|on)
 
 # Días señalados
 (Lunes|Martes|Miércoles|Jueves|Viernes|Sábado|Domingo) de
