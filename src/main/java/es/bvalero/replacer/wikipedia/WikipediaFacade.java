@@ -25,7 +25,6 @@ import java.util.concurrent.ExecutionException;
 @Profile("default")
 public class WikipediaFacade implements IWikipediaFacade {
 
-    public static final String MISSPELLING_LIST_ARTICLE = "Wikipedia:Corrector_ortográfico/Listado";
     @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(WikipediaFacade.class);
     private static final String WIKIPEDIA_URL = "https://es.wikipedia.org";

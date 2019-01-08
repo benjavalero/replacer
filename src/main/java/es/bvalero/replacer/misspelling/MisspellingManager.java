@@ -2,7 +2,6 @@ package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaFacade;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +102,7 @@ public class MisspellingManager {
 
     Set<Misspelling> findWikipediaMisspellings() throws WikipediaException {
         LOGGER.info("Start loading misspelling list from Wikipedia...");
-        String misspellingListText = wikipediaFacade.getArticleContent(WikipediaFacade.MISSPELLING_LIST_ARTICLE);
+        String misspellingListText = wikipediaFacade.getArticleContent(IWikipediaFacade.MISSPELLING_LIST_ARTICLE);
         Set<Misspelling> misspellingSet = parseMisspellingListText(misspellingListText);
         LOGGER.info("End parsing misspelling list from Wikipedia: {} items", misspellingSet.size());
         return misspellingSet;

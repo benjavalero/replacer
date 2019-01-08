@@ -27,9 +27,19 @@ class WikipediaFacadeMock implements IWikipediaFacade {
 
     @Override
     public String getArticleContent(String articleTitle) throws WikipediaException {
-        return WikipediaFacade.MISSPELLING_LIST_ARTICLE.equals(articleTitle)
-                ? loadArticleContent("/misspelling-list.txt")
-                : loadArticleContent("/article-long.txt");
+        String content;
+        switch (articleTitle) {
+            case MISSPELLING_LIST_ARTICLE:
+                content = loadArticleContent("/misspelling-list.txt");
+                break;
+            case FALSE_POSITIVE_LIST_ARTICLE:
+                content = loadArticleContent("/false-positives.txt");
+                break;
+            default:
+                content = loadArticleContent("/article-long.txt");
+                break;
+        }
+        return content;
     }
 
     @Override

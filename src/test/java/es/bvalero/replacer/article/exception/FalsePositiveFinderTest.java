@@ -5,15 +5,20 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.article.ArticleReplacementFinder;
 import es.bvalero.replacer.persistence.ReplacementType;
+import es.bvalero.replacer.wikipedia.IWikipediaFacade;
+import es.bvalero.replacer.wikipedia.WikipediaException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StringUtils;
 
@@ -31,19 +36,26 @@ public class FalsePositiveFinderTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinderTest.class);
 
-    @Value("classpath:false-positives.txt")
-    private Resource resource;
+    @Mock
+    private IWikipediaFacade wikipediaService;
 
+    @InjectMocks
     private FalsePositiveFinder falsePositiveFinder;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException, URISyntaxException, WikipediaException {
         falsePositiveFinder = new FalsePositiveFinder();
-        falsePositiveFinder.setResource(resource);
+        MockitoAnnotations.initMocks(this);
+
+        String text = new String(Files.readAllBytes(Paths.get(
+            FalsePositiveFinderTest.class.getResource("/false-positives.txt").toURI())), StandardCharsets.UTF_8);
+        Mockito.when(wikipediaService.getArticleContent(IWikipediaFacade.FALSE_POSITIVE_LIST_ARTICLE)).thenReturn(text);
+
+        falsePositiveFinder.updateFalsePositives();
     }
 
     @Test
-    public void testLoadFalsePositives() {
+    public void testLoadFalsePositives() throws WikipediaException {
         List<String> falsePositives = falsePositiveFinder.loadFalsePositives();
         Assert.assertFalse(falsePositives.isEmpty());
         Assert.assertTrue(falsePositives.contains("Index"));
@@ -90,7 +102,7 @@ public class FalsePositiveFinderTest {
 
     @Test
     @Ignore
-    public void testFalsePositivesAutomatons() {
+    public void testFalsePositivesAutomatons() throws WikipediaException {
         String text = null;
         try {
             text = new String(Files.readAllBytes(Paths.get(FalsePositiveFinderTest.class.getResource("/article-longest.txt").toURI())),
@@ -99,7 +111,6 @@ public class FalsePositiveFinderTest {
             LOGGER.error("", e);
         }
 
-        FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
         List<String> falsePositives = falsePositiveFinder.loadFalsePositives();
 
         // Test 1 : One single automaton with all the alternations

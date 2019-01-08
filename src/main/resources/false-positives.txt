@@ -1,292 +1,293 @@
-# LISTA DE FALSOS POSITIVOS
-# Si es posible intentamos que no se solapen con otras excepciones
-# OJO: Las expresiones regulares han de ser compatibles con el formato de los automaton
-# Busco falsos positivos que aparecen más de 100 veces en el dump
+== Lista de falsos positivos ==
 
-# Aaron
-Hank Aaron
-Aaron Brown
-Aaron Burr
-Aaron Carter
-Aaron Copland
-Aaron Eckhart
-Aaron Haddad
-Aaron Johnson
-Aaron Krickstein
-Aaron Paul
-Aaron Peirsol
-Aaron Ramsey
-Aaron Rodgers
-Aaron Sorkin
-Aaron Spelling
-Aaron Springer
-Aaron Stone
-Aaron Swartz
-Aaron Taylor
-Aaron's
+* Si es posible intentamos que no se solapen con otras excepciones
+* ¡OJO! Las expresiones regulares han de ser compatibles con el formato de los automaton
+* Busco falsos positivos que aparecen más de 100 veces en el dump
 
-# Abril
-Abril Martorell
-Editora Abril
-Editorial Abril
-Feria de Abril
-Fernando Abril
-García Abril
-Revolución de Abril
-Silvia Abril
-Simón Abril
-Victoria Abril
+ # Aaron
+ Hank Aaron
+ Aaron Brown
+ Aaron Burr
+ Aaron Carter
+ Aaron Copland
+ Aaron Eckhart
+ Aaron Haddad
+ Aaron Johnson
+ Aaron Krickstein
+ Aaron Paul
+ Aaron Peirsol
+ Aaron Ramsey
+ Aaron Rodgers
+ Aaron Sorkin
+ Aaron Spelling
+ Aaron Springer
+ Aaron Stone
+ Aaron Swartz
+ Aaron Taylor
+ Aaron's
 
-# Adrian
-Adrian Belew
-Adrian Boult
-Adrian Dantley
-Adrian Frutiger
-Adrian Goldsworthy
-Adrian Hardy
-Adrian Lyne
-Adrian Mannarino
-Adrian Neville
-Adrian Newey
-Adrian Quaife
-Adrian Quist
-Adrian Sikora
-Adrian Smith
-Adrian Sutil
-Adrian Ungur
-Adrian Voinea
-Adrian Wood
+ # Abril
+ Abril Martorell
+ Editora Abril
+ Editorial Abril
+ Feria de Abril
+ Fernando Abril
+ García Abril
+ Revolución de Abril
+ Silvia Abril
+ Simón Abril
+ Victoria Abril
 
-# Africa
-All Africa
-Black Africa
-Central Africa
-East Africa
-Eastern Africa
-FIBA Africa Clubs Champions Cup
-North Africa
-Rugby Africa
-Saharan Africa
-South Africa
-[Ss]outhern Africa
-Tropical Africa
-UCI Africa
-West Africa
-Africa Cup
-Africa Sports
-Africa Tour
-Mem. Bot. Surv. S. Africa 2
-Africa's
+ # Adrian
+ Adrian Belew
+ Adrian Boult
+ Adrian Dantley
+ Adrian Frutiger
+ Adrian Goldsworthy
+ Adrian Hardy
+ Adrian Lyne
+ Adrian Mannarino
+ Adrian Neville
+ Adrian Newey
+ Adrian Quaife
+ Adrian Quist
+ Adrian Sikora
+ Adrian Smith
+ Adrian Sutil
+ Adrian Ungur
+ Adrian Voinea
+ Adrian Wood
 
-# Agosto
-Feria de Agosto
-Primeiro de Agosto
-Virgen de Agosto
+ # Africa
+ All Africa
+ Black Africa
+ Central Africa
+ East Africa
+ Eastern Africa
+ FIBA Africa Clubs Champions Cup
+ North Africa
+ Rugby Africa
+ Saharan Africa
+ South Africa
+ [Ss]outhern Africa
+ Tropical Africa
+ UCI Africa
+ West Africa
+ Africa Cup
+ Africa Sports
+ Africa Tour
+ Mem. Bot. Surv. S. Africa 2
+ Africa's
 
-# Album
-album certifications
-[Aa]lbum [Cc]harts?
-[Aa]lbum [Cc]over
-Album Details
-Album Discography
-Album Guide
-Album notes
-Album Release
-[Aa]lbum [Rr]eviews?
-[Aa]lbum [Ss]ales
-Album Title
-Album Top
-Album Track
-[Aa]lbum [Vv]ersion
-Album Volume
-Topp? 40 [Aa]lbum
-Artist Album
-Best Album
-Black Album
-Christmas Album
-[Dd]ebut [Aa]lbum
-Family Album
-First Album
-Live Album
-Love Album
-Mini Album
-Music Album
-Next Album
-[Nn]ew [Aa]lbum
-Non-album
-Oricon Album
-Pop Album
-Remix Album
-Second Album
-[Ss]olo [Aa]lbum
-[Ss]tudio [Aa]lbum
-[Tt]he [Aa]lbum
-Top Album
-Weekly Album
-White Album
-<L>'s [Aa]lbum
-No. 1 Album
-(class|type)=album
+ # Agosto
+ Feria de Agosto
+ Primeiro de Agosto
+ Virgen de Agosto
 
-# Albums
-Albums Chart
-Albums of
-Canadian Albums
-German Albums
-Independent Albums
-Irish Albums
-Italian Albums
-Latin Albums
-Pop Albums
-Rock Albums
-Swiss Albums
-Top Albums
-UK Albums
-World Albums
-100 Albums
-200 Albums
+ # Album
+ album certifications
+ [Aa]lbum [Cc]harts?
+ [Aa]lbum [Cc]over
+ Album Details
+ Album Discography
+ Album Guide
+ Album notes
+ Album Release
+ [Aa]lbum [Rr]eviews?
+ [Aa]lbum [Ss]ales
+ Album Title
+ Album Top
+ Album Track
+ [Aa]lbum [Vv]ersion
+ Album Volume
+ Topp? 40 [Aa]lbum
+ Artist Album
+ Best Album
+ Black Album
+ Christmas Album
+ [Dd]ebut [Aa]lbum
+ Family Album
+ First Album
+ Live Album
+ Love Album
+ Mini Album
+ Music Album
+ Next Album
+ [Nn]ew [Aa]lbum
+ Non-album
+ Oricon Album
+ Pop Album
+ Remix Album
+ Second Album
+ [Ss]olo [Aa]lbum
+ [Ss]tudio [Aa]lbum
+ [Tt]he [Aa]lbum
+ Top Album
+ Weekly Album
+ White Album
+ <L>'s [Aa]lbum
+ No. 1 Album
+ (class|type)=album
 
-# alla
-Introduzione alla
-Teatro alla Scala
-alla fine
-Alla Kudryavtseva
-Alla Nazimova
-alla prima
+ # Albums
+ Albums Chart
+ Albums of
+ Canadian Albums
+ German Albums
+ Independent Albums
+ Irish Albums
+ Italian Albums
+ Latin Albums
+ Pop Albums
+ Rock Albums
+ Swiss Albums
+ Top Albums
+ UK Albums
+ World Albums
+ 100 Albums
+ 200 Albums
 
-# am
-<L>+ AM
-<L>+ am
-will\.i\.am
+ # alla
+ Introduzione alla
+ Teatro alla Scala
+ alla fine
+ Alla Kudryavtseva
+ Alla Nazimova
+ alla prima
 
-(Captain|Central|Latin|Morning|North|Skate|South|UCI) America
-All\-America
-America's
-America (Editorial|Tour)
+ # am
+ <L>+ AM
+ <L>+ am
+ will\.i\.am
 
-Los Angeles (Angels|Clippers|County|Dodgers|Galaxy|Lakers|Memorial|Rams|Sparks|Times)
+ (Captain|Central|Latin|Morning|North|Skate|South|UCI) America
+ All\-America
+ America's
+ America (Editorial|Tour)
 
-[Nn]i aun
-# aun + gerundio
-[Aa]un (así|sin|<L>+?ndo)
+ Los Angeles (Angels|Clippers|County|Dodgers|Galaxy|Lakers|Memorial|Rams|Sparks|Times)
 
-aún\.
-([Aa]unque|[Cc]uando|donde|era|están?|estaba|es|fue|[Mm]ás|mejor|menos|peor|[Pp]ero|porque|que|ser|sido|[Ss]iendo|[Ss]i|son|[Yy]) aún
-[Aa]ún (conservan?|continúan?|eran?|están?|estaban?|es|existen?|hay|hoy|más|mayores|mayor|mejor|perduran?|permanecen?|persisten?|pueden?|quedan?|quedaban?|no|seguían?|se|siguen?|son|viven?|vivían?)
+ [Nn]i aun
+ # aun + gerundio
+ [Aa]un (así|sin|<L>+?ndo)
 
-([Dd]u|of) Canton
+ aún\.
+ ([Aa]unque|[Cc]uando|donde|era|están?|estaba|es|fue|[Mm]ás|mejor|menos|peor|[Pp]ero|porque|que|ser|sido|[Ss]iendo|[Ss]i|son|[Yy]) aún
+ [Aa]ún (conservan?|continúan?|eran?|están?|estaban?|es|existen?|hay|hoy|más|mayores|mayor|mejor|perduran?|permanecen?|persisten?|pueden?|quedan?|quedaban?|no|seguían?|se|siguen?|son|viven?|vivían?)
 
-Circuit de (Barcelona\-)?Catalunya
-(Biblioteca de|Caixa( de)?|Capella Reial de|Ciutadans de|Club Natació|Comunistes de|Democràtica de|Descobrir|El Periódico de|Esquerra Republicana de|Estaciones de Rodalies de|Generalitat de|Gran geografia comarcal de|Guia del Patrimoni Monumental i Artístic de|Guía de|Història de|Iniciativa per|Institut Cartogràfic de|Junts per|La Veu de|Museu Nacional d'Art de|Nacional de|Parlament de|Partit dels Socialistes de|Partit Socialista Unificat de|Plataforma per|Pobles de|Principat de|Rally|Revista de|Socialista de|Universitat (Oberta|Politècnica) de|Volta( Ciclista)? a) Catalunya
-Catalunya (Banc|en (Comú|Miniatura)|Ràdio|[Rr]omànica|Sí|Televisió|Verds)
+ ([Dd]u|of) Canton
 
-Diego Comic
-[Cc]omic(<Z>|\-)([Bb]ooks?|[Cc]on|Sans)
-(Action|Adventure|DC|Detective|Horse|Image|Marvel|Panini) Comics
+ Circuit de (Barcelona\-)?Catalunya
+ (Biblioteca de|Caixa( de)?|Capella Reial de|Ciutadans de|Club Natació|Comunistes de|Democràtica de|Descobrir|El Periódico de|Esquerra Republicana de|Estaciones de Rodalies de|Generalitat de|Gran geografia comarcal de|Guia del Patrimoni Monumental i Artístic de|Guía de|Història de|Iniciativa per|Institut Cartogràfic de|Junts per|La Veu de|Museu Nacional d'Art de|Nacional de|Parlament de|Partit dels Socialistes de|Partit Socialista Unificat de|Plataforma per|Pobles de|Principat de|Rally|Revista de|Socialista de|Universitat (Oberta|Politècnica) de|Volta( Ciclista)? a) Catalunya
+ Catalunya (Banc|en (Comú|Miniatura)|Ràdio|[Rr]omànica|Sí|Televisió|Verds)
 
-\[\[:?(m:)?commons:
+ Diego Comic
+ [Cc]omic(<Z>|\-)([Bb]ooks?|[Cc]on|Sans)
+ (Action|Adventure|DC|Detective|Horse|Image|Marvel|Panini) Comics
 
-(José|Juan|Plácido|Santo) Domingo
+ \[\[:?(m:)?commons:
 
-# El guion es separador de palabra así que encontramos "mail". Así que lo ignoramos.
-[Ee]\-mails?
+ (José|Juan|Plácido|Santo) Domingo
 
-Elenco de Grandezas y Títulos Nobiliarios Españoles
+ # El guion es separador de palabra así que encontramos "mail". Así que lo ignoramos.
+ [Ee]\-mails?
 
-Lista de [Ee]spécies Flora
-Brasileiro de Geografia
-[Gg]lass
-(Blind|The) Guardian
+ Elenco de Grandezas y Títulos Nobiliarios Españoles
 
-The Hindu
-Hindu (Kush|Temple)
+ Lista de [Ee]spécies Flora
+ Brasileiro de Geografia
+ [Gg]lass
+ (Blind|The) Guardian
 
-# index: casi todos son parte de URL
-# Index: casi todos son en inglés o latín
-Index
+ The Hindu
+ Hindu (Kush|Temple)
 
-Torneo Invierno
-(Campeonato|Guerra|Olímpicos|Paralímpicos|Torneo) de Invierno
+ # index: casi todos son parte de URL
+ # Index: casi todos son en inglés o latín
+ Index
 
-(Carlos|Cayo|Estadio|Lucio|Nacional|Sexto) Julio
+ Torneo Invierno
+ (Campeonato|Guerra|Olímpicos|Paralímpicos|Torneo) de Invierno
 
-Jennifer Lopez
-Ke$ha
+ (Carlos|Cayo|Estadio|Lucio|Nacional|Sexto) Julio
 
-Magazine
-Manchester (City|Evening|United|University)
+ Jennifer Lopez
+ Ke$ha
 
-(Andrej|Aston|Billy|Chris|Daniel|David|Dean|Fabrice|George|John|Lockheed|Paul|Ricky|Saint|Steve|St|Todd|Tony) Martin
-Saint\-Martin
-Martin (Brundle|Damm|Emmrich|Fischer|Freeman|Garrix|Gore|Heidegger|Kližan|Luther|Racing|Scorsese|Sheen|Solveig|Vantage|Van)
-Martin's
-Martin\-d[eu]
-martín pescador
+ Magazine
+ Manchester (City|Evening|United|University)
 
-(Artur|Emmanuel|Josep|Timun) Mas
+ (Andrej|Aston|Billy|Chris|Daniel|David|Dean|Fabrice|George|John|Lockheed|Paul|Ricky|Saint|Steve|St|Todd|Tony) Martin
+ Saint\-Martin
+ Martin (Brundle|Damm|Emmrich|Fischer|Freeman|Garrix|Gore|Heidegger|Kližan|Luther|Racing|Scorsese|Sheen|Solveig|Vantage|Van)
+ Martin's
+ Martin\-d[eu]
+ martín pescador
 
-Mason (City|Patriots|University)
-(George|Harvey|James|John|Nick|Perry|Suárez|Tom) Mason
+ (Artur|Emmanuel|Josep|Timun) Mas
 
-(AC|Calcio) Milan
+ Mason (City|Patriots|University)
+ (George|Harvey|James|John|Nick|Perry|Suárez|Tom) Mason
 
-(Carlos|Saúl) Menem
-Missouri (Botanical|Valley)
+ (AC|Calcio) Milan
 
-# online: no acaba de convencerme la sustitución por «en línea»
-[Oo]nline
+ (Carlos|Saúl) Menem
+ Missouri (Botanical|Valley)
 
-Jet Propulsion
+ # online: no acaba de convencerme la sustitución por «en línea»
+ [Oo]nline
 
-Ramon Llull
+ Jet Propulsion
 
-# reference(s): prácticamente todos los casos son en inglés
-[Rr]eferences?
+ Ramon Llull
 
-Records
-records of
+ # reference(s): prácticamente todos los casos son en inglés
+ [Rr]eferences?
 
-(Championship|[Ff]irst|Go|[Ss]econd)\-[Rr]ound
-[Rr]ound\-(Lake|Midnight|pick|[Rr]obin|Rock|Table|[Uu]p)
+ Records
+ records of
 
-([Ii]slas|South|Sur y) Sandwich
-Sandwich del Sur
+ (Championship|[Ff]irst|Go|[Ss]econd)\-[Rr]ound
+ [Rr]ound\-(Lake|Midnight|pick|[Rr]obin|Rock|Table|[Uu]p)
 
-Corriere della [Ss]era
+ ([Ii]slas|South|Sur y) Sandwich
+ Sandwich del Sur
 
-the sky
-Sky
+ Corriere della [Ss]era
 
-Superman
-# [Tt]ropicos\.org Ya no hace falta porque la captura una excepción genérica
+ the sky
+ Sky
 
-Torneo Verano
-(Campeonato|Olímpicos|Paralímpicos|Teatro|Torneo) de Verano
+ Superman
+ # [Tt]ropicos\.org Ya no hace falta porque la captura una excepción genérica
 
-([Aa]coustic|Alternate|Cast|Deluxe|Demo|Electronic|English|Europaea|Extended|Florida|Instrumental|Japanese|List|Live|Long|LP|[Nn]ew|[Oo]nline|[Oo]riginal|Radio|[Ss]ingle|Spanish|Vector|Video|Vocal) [Vv]ersion
+ Torneo Verano
+ (Campeonato|Olímpicos|Paralímpicos|Teatro|Torneo) de Verano
 
-(RCA|Saint)(<Z>|\-)Victor
-Victor Hugo
+ ([Aa]coustic|Alternate|Cast|Deluxe|Demo|Electronic|English|Europaea|Extended|Florida|Instrumental|Japanese|List|Live|Long|LP|[Nn]ew|[Oo]nline|[Oo]riginal|Radio|[Ss]ingle|Spanish|Vector|Video|Vocal) [Vv]ersion
 
-Led Zeppelin
+ (RCA|Saint)(<Z>|\-)Victor
+ Victor Hugo
 
-# Topónimos o palabras en inglés precedidas o seguidas por otras palabras comunes en inglés
-(and|for|from|[Ii]n|of|to) (Africa|America|Los Angeles|Manchester|Missouri)
-(Africa|[Aa]lbum) (and|[Ii]n|[Ii]s|of|on)
+ Led Zeppelin
 
-# Días señalados
-(Lunes|Martes|Miércoles|Jueves|Viernes|Sábado|Domingo) de
+ # Topónimos o palabras en inglés precedidas o seguidas por otras palabras comunes en inglés
+ (and|for|from|[Ii]n|of|to) (Africa|America|Los Angeles|Manchester|Missouri)
+ (Africa|[Aa]lbum) (and|[Ii]n|[Ii]s|of|on)
 
-# Verbos en tercera persona
-(que|[Ss]e) (especifica|fabrica|practica|publica)
-(publica|especifica|practica) (el|en|las?|los|sus?|un[ao]s?|un)
+ # Días señalados
+ (Lunes|Martes|Miércoles|Jueves|Viernes|Sábado|Domingo) de
 
-# Sustantivos que parecen verbos
-([Aa]l|[Dd]el?|[Ee]l|[Ee]n|[Ss]u|[Uu]n) (desempeño|disparo|logro|regreso|retiro)
+ # Verbos en tercera persona
+ (que|[Ss]e) (especifica|fabrica|practica|publica)
+ (publica|especifica|practica) (el|en|las?|los|sus?|un[ao]s?|un)
 
-# Verdaderos positivos que de momento no quiero corregir
-[Aa]quél(l[ao]s?)?
-[Éé]st?[aeo]s?
-[Ff]ans
-setiembre
-[Ss]ólo
+ # Sustantivos que parecen verbos
+ ([Aa]l|[Dd]el?|[Ee]l|[Ee]n|[Ss]u|[Uu]n) (desempeño|disparo|logro|regreso|retiro)
+
+ # Verdaderos positivos que de momento no quiero corregir
+ [Aa]quél(l[ao]s?)?
+ [Éé]st?[aeo]s?
+ [Ff]ans
+ setiembre
+ [Ss]ólo
