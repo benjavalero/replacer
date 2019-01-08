@@ -6,6 +6,7 @@ import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.article.ArticleReplacementFinder;
 import es.bvalero.replacer.persistence.ReplacementType;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,10 +34,16 @@ public class FalsePositiveFinderTest {
     @Value("classpath:false-positives.txt")
     private Resource resource;
 
+    private FalsePositiveFinder falsePositiveFinder;
+
+    @Before
+    public void setUp() {
+        falsePositiveFinder = new FalsePositiveFinder();
+        falsePositiveFinder.setResource(resource);
+    }
+
     @Test
     public void testLoadFalsePositives() {
-        FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
-        falsePositiveFinder.setResource(resource);
         List<String> falsePositives = falsePositiveFinder.loadFalsePositives();
         Assert.assertFalse(falsePositives.isEmpty());
         Assert.assertTrue(falsePositives.contains("Index"));
@@ -47,9 +54,6 @@ public class FalsePositiveFinderTest {
     @Test
     public void testRegexFalsePositives() {
         String text = "Un sólo de Éstos en el Index Online de ésta Tropicos.org Aquél aquéllo Saint-Martin.";
-
-        FalsePositiveFinder falsePositiveFinder = new FalsePositiveFinder();
-        falsePositiveFinder.setResource(resource);
         List<ArticleReplacement> matches = falsePositiveFinder.findIgnoredReplacements(text);
 
         Assert.assertFalse(matches.isEmpty());
@@ -63,6 +67,25 @@ public class FalsePositiveFinderTest {
         Assert.assertTrue(matches.contains(ArticleReplacement.builder().setStart(57).setText("Aquél").build()));
         Assert.assertTrue(matches.contains(ArticleReplacement.builder().setStart(63).setText("aquéllo").build()));
         Assert.assertTrue(matches.contains(ArticleReplacement.builder().setStart(71).setText("Saint-Martin").build()));
+    }
+
+    @Test
+    public void testNestedFalsePositives() {
+        String text1 = "A Top Album Chart.";
+        List<ArticleReplacement> matches1 = falsePositiveFinder.findIgnoredReplacements(text1);
+
+        Assert.assertFalse(matches1.isEmpty());
+        Assert.assertEquals(1, matches1.size());
+        Assert.assertTrue(matches1.contains(ArticleReplacement.builder().setStart(2).setText("Top Album").build()));
+        // Only the first match is found
+        Assert.assertFalse(matches1.contains(ArticleReplacement.builder().setStart(6).setText("Album Chart").build()));
+
+        String text2 = "A Topp Album Chart.";
+        List<ArticleReplacement> matches2 = falsePositiveFinder.findIgnoredReplacements(text2);
+
+        Assert.assertFalse(matches2.isEmpty());
+        Assert.assertEquals(1, matches2.size());
+        Assert.assertTrue(matches2.contains(ArticleReplacement.builder().setStart(7).setText("Album Chart").build()));
     }
 
     @Test
