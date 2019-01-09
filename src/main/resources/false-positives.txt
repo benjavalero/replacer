@@ -160,10 +160,37 @@
  <L>+ am
  will\.i\.am
 
- (Captain|Central|Latin|Morning|North|Skate|South|UCI) America
- All\-America
+ All-America
+ Baseball America
+ BBC America
+ Captain America
+ Central America
+ Mid-America
+ Miss America
+ Good Morning America
+ Latin America
+ Native America
+ Naughty America
+ North America
+ Road America
+ Skate America
+ South America
+ Spanish America
+ Team America
+ UCI America Tour
+ Virgin America
+ America Awards?
+ America East
+ America Ferrera
+ America Football
+ America Line
+ America [Nn]orth
+ America Online
+ America Plaza
+ America Press
+ America West
+ America’s
  America's
- America (Editorial|Tour)
 
  Los Angeles (Angels|Clippers|County|Dodgers|Galaxy|Lakers|Memorial|Rams|Sparks|Times)
 
@@ -272,8 +299,8 @@
  Led Zeppelin
 
  # Topónimos o palabras en inglés precedidas o seguidas por otras palabras comunes en inglés
- (and|for|from|[Ii]n|of|to) (Africa|America|Los Angeles|Manchester|Missouri)
- (Africa|[Aa]lbum) (and|[Ii]n|[Ii]s|of|on)
+ (and|for|from|[Ii]n|[Oo]f|to) (Africa|America|Los Angeles|Manchester|Missouri)
+ (Africa|[Aa]lbum|America) (and|[Ii]n|[Ii]s|of|on)
 
  # Días señalados
  (Lunes|Martes|Miércoles|Jueves|Viernes|Sábado|Domingo) de
