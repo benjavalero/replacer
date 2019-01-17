@@ -160,6 +160,7 @@
  <L>+ am
  will\.i\.am
 
+ # America
  All-America
  Baseball America
  BBC America
@@ -191,6 +192,36 @@
  America West
  America’s
  America's
+
+ # Americas
+ the Americas
+
+ # Angel
+ Angel Beats
+ Angel Dust
+ Angel Eyes
+ Angel Heart
+ Angel Stadium
+ Angel's
+ [Aa]n Angel
+ Battle Angel
+ Blue Angel
+ Burst Angel
+ Criss Angel
+ Dark Angel
+ Elegant Angel
+ Evil Angel
+ Fallen Angel
+ Galaxy Angel
+ Guardian Angel
+ Joanna Angel
+ Morbid Angel
+ My Angel
+ D•N•Angel
+ No Angel
+ Saint-Angel
+ [Tt]he Angel
+ 's Angel
 
  Los Angeles (Angels|Clippers|County|Dodgers|Galaxy|Lakers|Memorial|Rams|Sparks|Times)
 
@@ -300,7 +331,7 @@
 
  # Topónimos o palabras en inglés precedidas o seguidas por otras palabras comunes en inglés
  (and|for|from|[Ii]n|[Oo]f|to) (Africa|America|Los Angeles|Manchester|Missouri)
- (Africa|[Aa]lbum|America) (and|[Ii]n|[Ii]s|of|on)
+ (Africa|[Aa]lbum|America|Angel) (and|[Ii]n|[Ii]s|of|on)
 
  # Días señalados
  (Lunes|Martes|Miércoles|Jueves|Viernes|Sábado|Domingo) de
