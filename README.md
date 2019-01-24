@@ -9,13 +9,13 @@ https://tools.wmflabs.org/replacer
 La herramient busca artículos que contienen errores ortográficos potenciales, basándose en la lista del artículo «[Wikipedia:Corrector_ortográfico/Listado](https://es.wikipedia.org/wiki/Wikipedia:Corrector_ortogr%C3%A1fico/Listado)».
 
 Además, excluye ciertas expresiones para tratar de ignorar un buen número de falsos positivos.
-* V. [Excepciones](exceptions.md)
+* V. [Excepciones](./doc/exceptions.md)
 * V. [Lista de falsos positivos](https://es.wikipedia.org/wiki/Usuario:Benjavalero/FalsePositives)
 
 Prácticamente la mitad de los artículos de la Wikipedia en español contienen potenciales reemplazos. La herramienta mantiene una base de datos (también en los servidores de Wikimedia Toolforge) con información relativamente reciente sobre qué artículos contienen reemplazos, y si ya han sido revisados.
 
 El código está disponible en [GitHub](https://github.com/benjavalero/replacer).
-* V. [Detalles técnicos](docs/technical-details.md)
+* V. [Detalles técnicos](./doc/technical-details.md)
 
 
 ## TODO

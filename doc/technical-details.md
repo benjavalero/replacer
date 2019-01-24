@@ -17,7 +17,7 @@ Para cada artículo, buscamos posibles reemplazos que validará el usuario. Actu
 
 Las posibles faltas de ortografía se extraen del artículo «Wikipedia:Corrector_ortográfico/Listado».
 
-Hay muchísimos casos de falsos positivos. El sistema intenta minimizar éstos ignorando las faltas de ortografía que se encuentran en partes del texto que se consideran excepciones: frases entrecomilladas o en cursiva, nombres de ficheros, citas, etc. (v. [Excepciones](exceptions.md))
+Hay muchísimos casos de falsos positivos. El sistema intenta minimizar éstos ignorando las faltas de ortografía que se encuentran en partes del texto que se consideran excepciones: frases entrecomilladas o en cursiva, nombres de ficheros, citas, etc. (v. [Excepciones](./exceptions.md))
 
 ### Optimizaciones
 
