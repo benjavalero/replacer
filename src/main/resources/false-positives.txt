@@ -7,23 +7,14 @@
  # Aaron
  Hank Aaron
  Aaron Brown
- Aaron Burr
  Aaron Carter
  Aaron Copland
  Aaron Eckhart
- Aaron Haddad
  Aaron Johnson
  Aaron Krickstein
  Aaron Paul
- Aaron Peirsol
- Aaron Ramsey
- Aaron Rodgers
  Aaron Sorkin
  Aaron Spelling
- Aaron Springer
- Aaron Stone
- Aaron Swartz
- Aaron Taylor
  Aaron's
 
  # Abril
@@ -35,41 +26,30 @@
  García Abril
  Revolución de Abril
  Silvia Abril
- Simón Abril
  Victoria Abril
 
  # Adrian
  Adrian Belew
  Adrian Boult
  Adrian Dantley
- Adrian Frutiger
- Adrian Goldsworthy
- Adrian Hardy
  Adrian Lyne
  Adrian Mannarino
- Adrian Neville
- Adrian Newey
- Adrian Quaife
  Adrian Quist
  Adrian Sikora
  Adrian Smith
  Adrian Sutil
  Adrian Ungur
- Adrian Voinea
  Adrian Wood
 
  # Africa
  All Africa
- Black Africa
  Central Africa
- East Africa
  Eastern Africa
- FIBA Africa Clubs Champions Cup
+ East Africa
  North Africa
- Rugby Africa
  Saharan Africa
- South Africa
  [Ss]outhern Africa
+ South Africa
  Tropical Africa
  UCI Africa
  West Africa
@@ -91,7 +71,6 @@
  Album Details
  Album Discography
  Album Guide
- Album notes
  Album Release
  [Aa]lbum [Rr]eviews?
  [Aa]lbum [Ss]ales
@@ -99,7 +78,6 @@
  Album Top
  Album Track
  [Aa]lbum [Vv]ersion
- Album Volume
  Topp? 40 [Aa]lbum
  Artist Album
  Best Album
@@ -125,7 +103,7 @@
  Top Album
  Weekly Album
  White Album
- <L>'s [Aa]lbum
+ <L>+'s [Aa]lbum
  No. 1 Album
  (class|type)=album
 
@@ -152,7 +130,6 @@
  Teatro alla Scala
  alla fine
  Alla Kudryavtseva
- Alla Nazimova
  alla prima
 
  # am
@@ -177,7 +154,6 @@
  Skate America
  South America
  Spanish America
- Team America
  UCI America Tour
  Virgin America
  America Awards?
@@ -187,7 +163,6 @@
  America Line
  America [Nn]orth
  America Online
- America Plaza
  America Press
  America West
  America’s
@@ -197,16 +172,12 @@
  the Americas
 
  # Angel
- Angel Beats
  Angel Dust
  Angel Eyes
  Angel Heart
- Angel Stadium
  Angel's
  [Aa]n Angel
- Battle Angel
  Blue Angel
- Burst Angel
  Criss Angel
  Dark Angel
  Elegant Angel
@@ -214,14 +185,11 @@
  Fallen Angel
  Galaxy Angel
  Guardian Angel
- Joanna Angel
  Morbid Angel
  My Angel
- D•N•Angel
  No Angel
- Saint-Angel
  [Tt]he Angel
- 's Angel
+ <L>+'s Angel
 
  Los Angeles (Angels|Clippers|County|Dodgers|Galaxy|Lakers|Memorial|Rams|Sparks|Times)
 
