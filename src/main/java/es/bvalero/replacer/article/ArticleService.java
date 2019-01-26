@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.threeten.bp.LocalDate;
 
-import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -39,7 +39,7 @@ public class ArticleService {
     private List<IgnoredReplacementFinder> ignoredReplacementFinders;
 
     @Autowired
-    private List<ArticleReplacementFinder> articleReplacementFinders;
+    private List<IArticleReplacementFinder> articleReplacementFinders;
 
     @Value("${replacer.hide.empty.paragraphs}")
     private boolean trimText;
@@ -54,7 +54,7 @@ public class ArticleService {
             return replacements;
         }
 
-        replacements.sort(Collections.reverseOrder());
+        Collections.sort(replacements, Collections.reverseOrder());
         ListIterator<ArticleReplacement> it = replacements.listIterator();
         ArticleReplacement previous = it.next();
         while (it.hasNext()) {
@@ -101,8 +101,8 @@ public class ArticleService {
 
     private Article findRandomArticleNotReviewedInDb(@Nullable String word) throws UnfoundArticleException {
         List<Article> randomArticles = (word == null)
-                ? replacementRepository.findRandom(PageRequest.of(0, 1))
-                : replacementRepository.findRandomByWord(word, PageRequest.of(0, 1));
+                ? replacementRepository.findRandom(new PageRequest(0, 1))
+                : replacementRepository.findRandomByWord(word, new PageRequest(0, 1));
 
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
@@ -148,7 +148,7 @@ public class ArticleService {
         // Find the replacements in the article content
         // LinkedList is better to run iterators and remove items from it
         List<ArticleReplacement> articleReplacements = new LinkedList<>();
-        for (ArticleReplacementFinder finder : articleReplacementFinders) {
+        for (IArticleReplacementFinder finder : articleReplacementFinders) {
             articleReplacements.addAll(finder.findReplacements(text));
         }
 
@@ -160,7 +160,13 @@ public class ArticleService {
         // Ignore the replacements which must be ignored
         for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
             List<ArticleReplacement> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
-            articleReplacements.removeIf(replacement -> replacement.isContainedIn(ignoredReplacements));
+            Iterator<ArticleReplacement> it = articleReplacements.iterator();
+            while (it.hasNext()) {
+                ArticleReplacement articleReplacement = it.next();
+                if (articleReplacement.isContainedIn(ignoredReplacements)) {
+                    it.remove();
+                }
+            }
 
             if (articleReplacements.isEmpty()) {
                 break;
@@ -182,8 +188,14 @@ public class ArticleService {
             return;
         }
 
-        Optional<ArticleReplacement> wordReplacement = replacements.stream().filter(replacement -> word.equals(replacement.getText())).findAny();
-        if (!wordReplacement.isPresent()) {
+        boolean wordExists = false;
+        for (ArticleReplacement replacement : replacements) {
+            if (word.equals(replacement.getText())) {
+                wordExists = true;
+                break;
+            }
+        }
+        if (!wordExists) {
             throw new InvalidArticleException("Word not found as a replacement");
         }
     }

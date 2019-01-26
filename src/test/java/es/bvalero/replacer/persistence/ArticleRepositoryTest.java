@@ -8,12 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.threeten.bp.LocalDate;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -33,12 +32,12 @@ public class ArticleRepositoryTest {
         articleRepository.save(newArticle);
 
         Assert.assertEquals(1L, articleRepository.count());
-        Optional<Article> dbArticle = articleRepository.findById(1);
-        Assert.assertTrue(dbArticle.isPresent());
-        dbArticle.ifPresent(article -> Assert.assertEquals(newArticle, article));
+        Article dbArticle = articleRepository.findOne(1);
+        Assert.assertNotNull(dbArticle);
+        Assert.assertEquals(newArticle, dbArticle);
 
         // By default Addition Date is the current one
-        dbArticle.ifPresent(article -> Assert.assertNotNull(article.getLastUpdate()));
+        Assert.assertNotNull(dbArticle.getLastUpdate());
     }
 
     @Test
@@ -54,9 +53,9 @@ public class ArticleRepositoryTest {
 
         // The second insert updates the first
         Assert.assertEquals(1L, articleRepository.count());
-        Optional<Article> dbArticle = articleRepository.findById(1);
-        Assert.assertTrue(dbArticle.isPresent());
-        dbArticle.ifPresent(article -> Assert.assertEquals(title, article.getTitle()));
+        Article dbArticle = articleRepository.findOne(1);
+        Assert.assertNotNull(dbArticle);
+        Assert.assertEquals(title, dbArticle.getTitle());
     }
 
     @Test
@@ -74,7 +73,7 @@ public class ArticleRepositoryTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setText("B")
                 .build();
-        replacementRepository.saveAll(Arrays.asList(replacement1, replacement2));
+        replacementRepository.save(Arrays.asList(replacement1, replacement2));
 
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(2L, replacementRepository.count());
@@ -90,8 +89,7 @@ public class ArticleRepositoryTest {
         Article newArticle = new Article.ArticleBuilder().setId(1).setTitle("Andorra").setLastUpdate(yesterday).build();
         articleRepository.save(newArticle);
 
-        articleRepository.findById(1).ifPresent(
-                article -> Assert.assertEquals(yesterday, article.getLastUpdate()));
+        Assert.assertEquals(yesterday, articleRepository.findOne(1).getLastUpdate());
 
         // Modify attributes
         String newTitle = "España";
@@ -101,10 +99,8 @@ public class ArticleRepositoryTest {
         articleRepository.save(toSave);
 
         Assert.assertEquals(1L, articleRepository.count());
-        articleRepository.findById(1).ifPresent(article -> {
-            Assert.assertEquals(newTitle, article.getTitle());
-            Assert.assertEquals(today, article.getLastUpdate());
-        });
+        Assert.assertEquals(newTitle, articleRepository.findOne(1).getTitle());
+        Assert.assertEquals(today, articleRepository.findOne(1).getLastUpdate());
     }
 
     @Test
@@ -128,7 +124,7 @@ public class ArticleRepositoryTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setText("C")
                 .build();
-        replacementRepository.saveAll(Arrays.asList(replacement1, replacement2, replacement3));
+        replacementRepository.save(Arrays.asList(replacement1, replacement2, replacement3));
 
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(3L, replacementRepository.count());
@@ -171,7 +167,7 @@ public class ArticleRepositoryTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setText("A")
                 .build();
-        replacementRepository.saveAll(Arrays.asList(replacement1, replacement2));
+        replacementRepository.save(Arrays.asList(replacement1, replacement2));
     }
 
     @Test(expected = DataIntegrityViolationException.class)
@@ -190,7 +186,7 @@ public class ArticleRepositoryTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setText("B")
                 .build();
-        replacementRepository.saveAll(Arrays.asList(replacement1, replacement2));
+        replacementRepository.save(Arrays.asList(replacement1, replacement2));
 
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(2L, replacementRepository.count());
@@ -217,7 +213,7 @@ public class ArticleRepositoryTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setText("B")
                 .build();
-        replacementRepository.saveAll(Arrays.asList(replacement1, replacement2));
+        replacementRepository.save(Arrays.asList(replacement1, replacement2));
 
         Assert.assertEquals(1L, articleRepository.count());
         Assert.assertEquals(2L, replacementRepository.count());
@@ -244,9 +240,9 @@ public class ArticleRepositoryTest {
             }
             articles.add(newArticle);
             if (articles.size() == 50) {
-                articleRepository.saveAll(articles);
+                articleRepository.save(articles);
                 articles.clear();
-                replacementRepository.saveAll(replacements);
+                replacementRepository.save(replacements);
                 replacements.clear();
 
                 articleRepository.flush();

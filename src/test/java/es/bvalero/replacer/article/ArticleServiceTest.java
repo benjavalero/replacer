@@ -35,7 +35,7 @@ public class ArticleServiceTest {
     private List<IgnoredReplacementFinder> ignoredReplacementFinders;
 
     @Mock
-    private List<ArticleReplacementFinder> articleReplacementFinders;
+    private List<IArticleReplacementFinder> articleReplacementFinders;
 
     @InjectMocks
     private ArticleService articleService;
@@ -48,7 +48,7 @@ public class ArticleServiceTest {
 
     @Test
     public void testFindReplacementsEmpty() {
-        ArticleReplacementFinder finder = Mockito.mock(ArticleReplacementFinder.class);
+        IArticleReplacementFinder finder = Mockito.mock(IArticleReplacementFinder.class);
         Mockito.when(articleReplacementFinders.iterator())
                 .thenReturn(Collections.singletonList(finder).iterator());
 
@@ -61,12 +61,12 @@ public class ArticleServiceTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setSubtype("")
                 .build();
-        ArticleReplacementFinder finder = Mockito.mock(ArticleReplacementFinder.class);
+        IArticleReplacementFinder finder = Mockito.mock(IArticleReplacementFinder.class);
         Mockito.when(finder.findReplacements(Mockito.anyString()))
                 .thenReturn(Collections.singletonList(replacement));
         Mockito.when(articleReplacementFinders.iterator())
                 .thenReturn(Collections.singletonList(finder).iterator());
-        Mockito.when(ignoredReplacementFinders.iterator()).thenReturn(Collections.emptyIterator());
+        Mockito.when(ignoredReplacementFinders.iterator()).thenReturn(Collections.<IgnoredReplacementFinder>emptyIterator());
 
         List<ArticleReplacement> replacements = articleService.findReplacements("");
 
@@ -89,7 +89,7 @@ public class ArticleServiceTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setSubtype("2")
                 .build();
-        ArticleReplacementFinder finder = Mockito.mock(ArticleReplacementFinder.class);
+        IArticleReplacementFinder finder = Mockito.mock(IArticleReplacementFinder.class);
         Mockito.when(finder.findReplacements(Mockito.anyString()))
                 .thenReturn(Arrays.asList(replacement1, replacement2));
         Mockito.when(articleReplacementFinders.iterator())
@@ -136,7 +136,7 @@ public class ArticleServiceTest {
                 .thenReturn(Collections.singletonList(ignoredReplacementFinder).iterator());
 
         // Replacement matches
-        ArticleReplacementFinder articleReplacementFinder = Mockito.mock(ArticleReplacementFinder.class);
+        IArticleReplacementFinder articleReplacementFinder = Mockito.mock(IArticleReplacementFinder.class);
         ArticleReplacement replacement = ArticleReplacement.builder()
                 .setStart(0).setText("Z").setType(ReplacementType.MISSPELLING).build();
         Mockito.when(articleReplacementFinder.findReplacements(Mockito.anyString()))

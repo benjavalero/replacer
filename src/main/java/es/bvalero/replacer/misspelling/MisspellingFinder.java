@@ -4,6 +4,7 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.article.ArticleReplacement;
 import es.bvalero.replacer.article.ArticleReplacementFinder;
+import es.bvalero.replacer.article.IArticleReplacementFinder;
 import es.bvalero.replacer.persistence.ReplacementType;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NonNls;
@@ -25,7 +26,7 @@ import javax.annotation.PostConstruct;
  */
 @Component
 @Profile("default")
-public class MisspellingFinder implements ArticleReplacementFinder, PropertyChangeListener {
+public class MisspellingFinder implements IArticleReplacementFinder, PropertyChangeListener {
 
     @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingFinder.class);

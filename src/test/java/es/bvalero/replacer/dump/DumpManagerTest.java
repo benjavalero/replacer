@@ -88,7 +88,7 @@ public class DumpManagerTest {
 
     @Test(expected = DumpException.class)
     public void testFindLatestDumpFileWithNotExistingDumpPath() throws DumpException {
-        dumpManager.setDumpFolderPath("");
+        dumpManager.setDumpFolderPath("xxx");
 
         dumpManager.findLatestDumpFile();
     }

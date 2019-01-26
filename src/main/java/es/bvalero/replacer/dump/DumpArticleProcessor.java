@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import org.threeten.bp.LocalDate;
 
-import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -213,7 +213,7 @@ class DumpArticleProcessor {
             if (articles == null) {
                 articles = new HashMap<>(CACHE_SIZE);
             }
-            for (Article article : articleRepository.findByIdGreaterThanOrderById(minId, PageRequest.of(0, CACHE_SIZE))) {
+            for (Article article : articleRepository.findByIdGreaterThanOrderById(minId, new PageRequest(0, CACHE_SIZE))) {
                 articles.put(article.getId(), article);
                 maxCachedId = article.getId();
             }
@@ -243,12 +243,12 @@ class DumpArticleProcessor {
             }
 
             if (!articlesToSave.isEmpty()) {
-                articleRepository.saveAll(articlesToSave);
+                articleRepository.save(articlesToSave);
                 articlesToSave.clear();
             }
 
             if (!replacementsToAdd.isEmpty()) {
-                replacementRepository.saveAll(replacementsToAdd);
+                replacementRepository.save(replacementsToAdd);
                 replacementsToAdd.clear();
             }
 
