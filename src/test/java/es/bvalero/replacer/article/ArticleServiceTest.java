@@ -1,5 +1,7 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.persistence.Article;
 import es.bvalero.replacer.persistence.ArticleRepository;
 import es.bvalero.replacer.persistence.ReplacementRepository;
@@ -23,6 +25,9 @@ import java.util.List;
 public class ArticleServiceTest {
 
     @Mock
+    private ReplacementFinderService replacementFinderService;
+
+    @Mock
     private ArticleRepository articleRepository;
 
     @Mock
@@ -31,12 +36,6 @@ public class ArticleServiceTest {
     @Mock
     private IWikipediaFacade wikipediaFacade;
 
-    @Mock
-    private List<IgnoredReplacementFinder> ignoredReplacementFinders;
-
-    @Mock
-    private List<IArticleReplacementFinder> articleReplacementFinders;
-
     @InjectMocks
     private ArticleService articleService;
 
@@ -44,73 +43,6 @@ public class ArticleServiceTest {
     public void setUp() {
         articleService = new ArticleService();
         MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    public void testFindReplacementsEmpty() {
-        IArticleReplacementFinder finder = Mockito.mock(IArticleReplacementFinder.class);
-        Mockito.when(articleReplacementFinders.iterator())
-                .thenReturn(Collections.singletonList(finder).iterator());
-
-        Assert.assertTrue(articleService.findReplacements("").isEmpty());
-    }
-
-    @Test
-    public void testFindReplacements() {
-        ArticleReplacement replacement = ArticleReplacement.builder()
-                .setType(ReplacementType.MISSPELLING)
-                .setSubtype("")
-                .build();
-        IArticleReplacementFinder finder = Mockito.mock(IArticleReplacementFinder.class);
-        Mockito.when(finder.findReplacements(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(replacement));
-        Mockito.when(articleReplacementFinders.iterator())
-                .thenReturn(Collections.singletonList(finder).iterator());
-        Mockito.when(ignoredReplacementFinders.iterator()).thenReturn(Collections.<IgnoredReplacementFinder>emptyIterator());
-
-        List<ArticleReplacement> replacements = articleService.findReplacements("");
-
-        Assert.assertFalse(replacements.isEmpty());
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertTrue(replacements.contains(replacement));
-    }
-
-    @Test
-    public void testFindReplacementsIgnoringExceptions() {
-        ArticleReplacement replacement1 = ArticleReplacement.builder()
-                .setStart(0)
-                .setText("1")
-                .setType(ReplacementType.MISSPELLING)
-                .setSubtype("1")
-                .build();
-        ArticleReplacement replacement2 = ArticleReplacement.builder()
-                .setStart(1)
-                .setText("2")
-                .setType(ReplacementType.MISSPELLING)
-                .setSubtype("2")
-                .build();
-        IArticleReplacementFinder finder = Mockito.mock(IArticleReplacementFinder.class);
-        Mockito.when(finder.findReplacements(Mockito.anyString()))
-                .thenReturn(Arrays.asList(replacement1, replacement2));
-        Mockito.when(articleReplacementFinders.iterator())
-                .thenReturn(Collections.singletonList(finder).iterator());
-
-        ArticleReplacement ignored1 = ArticleReplacement.builder()
-                .setStart(0)
-                .setText("1")
-                .setType(ReplacementType.IGNORED)
-                .build();
-        IgnoredReplacementFinder ignoredFinder = Mockito.mock(IgnoredReplacementFinder.class);
-        Mockito.when(ignoredFinder.findIgnoredReplacements(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(ignored1));
-        Mockito.when(ignoredReplacementFinders.iterator())
-                .thenReturn(Collections.singletonList(ignoredFinder).iterator());
-
-        List<ArticleReplacement> replacements = articleService.findReplacements("");
-
-        Assert.assertFalse(replacements.isEmpty());
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertTrue(replacements.contains(replacement2));
     }
 
     @Test
@@ -126,23 +58,12 @@ public class ArticleServiceTest {
                 .thenReturn(Collections.singletonList(randomArticle));
         Mockito.when(wikipediaFacade.getArticleContent(Mockito.anyString())).thenReturn(text);
 
-        // Exception matches
-        IgnoredReplacementFinder ignoredReplacementFinder = Mockito.mock(IgnoredReplacementFinder.class);
-        ArticleReplacement ignored = ArticleReplacement.builder()
-                .setStart(10).setText("X").setType(ReplacementType.IGNORED).build();
-        Mockito.when(ignoredReplacementFinder.findIgnoredReplacements(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(ignored));
-        Mockito.when(ignoredReplacementFinders.iterator())
-                .thenReturn(Collections.singletonList(ignoredReplacementFinder).iterator());
-
         // Replacement matches
-        IArticleReplacementFinder articleReplacementFinder = Mockito.mock(IArticleReplacementFinder.class);
         ArticleReplacement replacement = ArticleReplacement.builder()
                 .setStart(0).setText("Z").setType(ReplacementType.MISSPELLING).build();
-        Mockito.when(articleReplacementFinder.findReplacements(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(replacement));
-        Mockito.when(articleReplacementFinders.iterator())
-                .thenReturn(Collections.singletonList(articleReplacementFinder).iterator());
+        List<ArticleReplacement> replacementList = new LinkedList<>();
+        replacementList.add(replacement);
+        Mockito.when(replacementFinderService.findReplacements(text)).thenReturn(replacementList);
 
         ArticleReview articleData = articleService.findRandomArticleWithReplacements();
 
@@ -153,7 +74,6 @@ public class ArticleServiceTest {
         List<ArticleReplacement> replacements = articleData.getReplacements();
         Assert.assertEquals(1, replacements.size());
         Assert.assertTrue(replacements.contains(replacement));
-        Assert.assertFalse(replacements.contains(ignored));
     }
 
     @Test

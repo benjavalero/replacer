@@ -1,7 +1,8 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.ArticleReplacement;
+import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.persistence.*;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import org.junit.Assert;
@@ -13,9 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 import org.threeten.bp.LocalDate;
-import org.threeten.bp.LocalDateTime;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -29,6 +28,9 @@ public class DumpArticleProcessorTest {
 
     @Mock
     private ArticleService articleService;
+
+    @Mock
+    private ReplacementFinderService replacementFinderService;
 
     @InjectMocks
     private DumpArticleProcessor dumpArticleProcessor;
@@ -187,14 +189,14 @@ public class DumpArticleProcessorTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setSubtype("")
                 .build();
-        Mockito.when(articleService.findReplacements(Mockito.anyString()))
+        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString()))
                 .thenReturn(Collections.singletonList(articleReplacement));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         dumpArticleProcessor.finish();
 
-        Mockito.verify(articleRepository).save(Mockito.anyList());
-        Mockito.verify(replacementRepository).save(Mockito.anySet());
+        Mockito.verify(articleRepository).save(Mockito.anyListOf(Article.class));
+        Mockito.verify(replacementRepository).save(Mockito.anySetOf(Replacement.class));
     }
 
     @Test
@@ -231,15 +233,15 @@ public class DumpArticleProcessorTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setSubtype("3")
                 .build();
-        Mockito.when(articleService.findReplacements(Mockito.anyString()))
+        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString()))
                 .thenReturn(Arrays.asList(articleReplacement2, articleReplacement3));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         dumpArticleProcessor.finish();
 
-        Mockito.verify(replacementRepository).deleteInBatch(Mockito.anyList());
-        Mockito.verify(articleRepository).save(Mockito.anyList());
-        Mockito.verify(replacementRepository).save(Mockito.anySet());
+        Mockito.verify(replacementRepository).deleteInBatch(Mockito.anyListOf(Replacement.class));
+        Mockito.verify(articleRepository).save(Mockito.anyListOf(Article.class));
+        Mockito.verify(replacementRepository).save(Mockito.anySetOf(Replacement.class));
     }
 
     @Test
@@ -264,7 +266,7 @@ public class DumpArticleProcessorTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setSubtype("1")
                 .build();
-        Mockito.when(articleService.findReplacements(Mockito.anyString()))
+        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString()))
                 .thenReturn(Collections.singletonList(articleReplacement1));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
@@ -299,7 +301,7 @@ public class DumpArticleProcessorTest {
                 .build();
         Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Arrays.asList(replacement1, replacement2));
         // And there are no replacements found
-        Mockito.when(articleService.findReplacements(Mockito.anyString())).thenReturn(Collections.<ArticleReplacement>emptyList());
+        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString())).thenReturn(Collections.<ArticleReplacement>emptyList());
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         dumpArticleProcessor.finish();
@@ -326,15 +328,15 @@ public class DumpArticleProcessorTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setSubtype("")
                 .build();
-        Mockito.when(articleService.findReplacements(Mockito.anyString()))
+        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString()))
                 .thenReturn(Collections.singletonList(articleReplacement));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         dumpArticleProcessor.finish();
 
         Mockito.verify(articleService).deleteArticle(Mockito.any(Article.class));
-        Mockito.verify(articleRepository).save(Mockito.anyList());
-        Mockito.verify(replacementRepository).save(Mockito.anySet());
+        Mockito.verify(articleRepository).save(Mockito.anyListOf(Article.class));
+        Mockito.verify(replacementRepository).save(Mockito.anySetOf(Replacement.class));
     }
 
 }

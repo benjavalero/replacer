@@ -1,5 +1,7 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.persistence.Article;
 import es.bvalero.replacer.persistence.ArticleRepository;
 import es.bvalero.replacer.persistence.ReplacementRepository;
@@ -26,6 +28,10 @@ public class ArticleService {
 
     @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
+
+    @Autowired
+    private ReplacementFinderService replacementFinderService;
+
     @Autowired
     private ArticleRepository articleRepository;
 
@@ -34,12 +40,6 @@ public class ArticleService {
 
     @Autowired
     private IWikipediaFacade wikipediaFacade;
-
-    @Autowired
-    private List<IgnoredReplacementFinder> ignoredReplacementFinders;
-
-    @Autowired
-    private List<IArticleReplacementFinder> articleReplacementFinders;
 
     @Value("${replacer.hide.empty.paragraphs}")
     private boolean trimText;
@@ -130,49 +130,12 @@ public class ArticleService {
         // Find the replacements sorted (the first ones in the list are the last in the text)
 
         // LinkedList is better to run iterators and remove items from it
-        List<ArticleReplacement> articleReplacements = findReplacements(articleContent);
+        List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(articleContent);
         if (articleReplacements.isEmpty()) {
             throw new InvalidArticleException("No replacements found in article");
         }
 
         Collections.sort(articleReplacements);
-        return articleReplacements;
-    }
-
-    /**
-     * @return A list with all the occurrences of replacements.
-     * Replacements contained in exceptions are ignored.
-     * If there are no replacements, the list will be empty.
-     */
-    public List<ArticleReplacement> findReplacements(String text) {
-        // Find the replacements in the article content
-        // LinkedList is better to run iterators and remove items from it
-        List<ArticleReplacement> articleReplacements = new LinkedList<>();
-        for (IArticleReplacementFinder finder : articleReplacementFinders) {
-            articleReplacements.addAll(finder.findReplacements(text));
-        }
-
-        // No need to find the exceptions if there are no replacements found
-        if (articleReplacements.isEmpty()) {
-            return articleReplacements;
-        }
-
-        // Ignore the replacements which must be ignored
-        for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
-            List<ArticleReplacement> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
-            Iterator<ArticleReplacement> it = articleReplacements.iterator();
-            while (it.hasNext()) {
-                ArticleReplacement articleReplacement = it.next();
-                if (articleReplacement.isContainedIn(ignoredReplacements)) {
-                    it.remove();
-                }
-            }
-
-            if (articleReplacements.isEmpty()) {
-                break;
-            }
-        }
-
         return articleReplacements;
     }
 

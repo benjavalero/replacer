@@ -1,5 +1,7 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.finder.ArticleReplacement;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

@@ -1,7 +1,8 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.ArticleReplacement;
+import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.persistence.Article;
 import es.bvalero.replacer.persistence.ArticleRepository;
 import es.bvalero.replacer.persistence.Replacement;
@@ -48,6 +49,9 @@ class DumpArticleProcessor {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private ReplacementFinderService replacementFinderService;
+
     @TestOnly
     boolean processArticle(DumpArticle dumpArticle) {
         return processArticle(dumpArticle, false);
@@ -74,7 +78,7 @@ class DumpArticleProcessor {
         }
 
         // Find replacements
-        List<ArticleReplacement> articleReplacements = articleService.findReplacements(dumpArticle.getContent());
+        List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(dumpArticle.getContent());
 
         if (articleReplacements.isEmpty()) {
             LOGGER.debug("No replacements found. Deleting article...");
