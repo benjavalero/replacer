@@ -1,7 +1,6 @@
 package es.bvalero.replacer.persistence;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.threeten.bp.LocalDate;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -222,34 +219,6 @@ public class ArticleRepositoryTest {
         articleRepository.delete(newArticle);
         Assert.assertEquals(0L, articleRepository.count());
         Assert.assertEquals(0L, replacementRepository.count());
-    }
-
-    @Test
-    @Ignore
-    public void testPerformance() {
-        Collection<Article> articles = new ArrayList<>(50);
-        Collection<Replacement> replacements = new ArrayList<>(500);
-        for (int i = 0; i < 1000000; i++) {
-            Article newArticle = Article.builder().setId(i).setTitle("Title " + i).build();
-            for (int j = 0; j < 10; j++) {
-                replacements.add(Replacement.builder()
-                        .setArticle(newArticle)
-                        .setType(ReplacementType.MISSPELLING)
-                        .setText("Text " + j)
-                        .build());
-            }
-            articles.add(newArticle);
-            if (articles.size() == 50) {
-                articleRepository.save(articles);
-                articles.clear();
-                replacementRepository.save(replacements);
-                replacements.clear();
-
-                articleRepository.flush();
-                replacementRepository.flush();
-                articleRepository.clear();
-            }
-        }
     }
 
 }
