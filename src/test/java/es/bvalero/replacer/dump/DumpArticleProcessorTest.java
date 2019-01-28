@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.persistence.*;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;

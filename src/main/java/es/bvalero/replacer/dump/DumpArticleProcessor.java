@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.persistence.Article;
 import es.bvalero.replacer.persistence.ArticleRepository;
@@ -73,7 +73,7 @@ class DumpArticleProcessor {
 
         if (dbArticle != null && !isArticleProcessableByTimestamp(dumpArticle.getTimestamp(), dbArticle, forceProcess)) {
             LOGGER.debug("Article not processable by date. Dump date: {} -  DB date: {}",
-                dumpArticle.getTimestamp(), dbArticle.getLastUpdate());
+                    dumpArticle.getTimestamp(), dbArticle.getLastUpdate());
             return false;
         }
 

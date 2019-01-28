@@ -155,7 +155,7 @@ class DumpHandler extends DefaultHandler {
         }
     }
 
-    boolean processArticle(DumpArticle dumpArticle) {
+    private boolean processArticle(DumpArticle dumpArticle) {
         return dumpArticleProcessor.processArticle(dumpArticle, forceProcess);
     }
 

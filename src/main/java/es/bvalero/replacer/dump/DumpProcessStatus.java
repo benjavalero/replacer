@@ -23,7 +23,7 @@ public final class DumpProcessStatus {
         this.progress = progress;
     }
 
-    public static DumpProcessStatus.DumpProcessStatusBuilder builder() {
+    static DumpProcessStatus.DumpProcessStatusBuilder builder() {
         return new DumpProcessStatus.DumpProcessStatusBuilder();
     }
 

@@ -108,7 +108,7 @@ class DumpManager {
             final List<Path> dumpSubFolders = new ArrayList<>();
             Files.walkFileTree(Paths.get(dumpFolderPath), new SimpleFileVisitor<Path>() {
                 @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
                     String fileName = dir.getFileName().toString();
                     if (PATTERN_DUMP_FOLDER.matcher(fileName).matches()) {
                         dumpSubFolders.add(dir);
