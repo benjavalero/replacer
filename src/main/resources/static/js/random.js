@@ -13,18 +13,11 @@ document.addEventListener('DOMContentLoaded', function () {
         saveChanges();
     });
 
-    addMessage('Buscando artículo con reemplazos…', 'info', true);
+    addMessage('Buscando artículo con reemplazos…', 'info');
     findAndDisplayRandomArticle();
 });
 
-function addMessage(message, type, clear) {
-    if (clear) {
-        document.querySelector('#article').hidden = true;
-        document.querySelector('#button-save').hidden = true;
-        document.querySelector('#messages').textContent = '';
-        document.querySelector('#messages').hidden = false;
-    }
-
+function addMessage(message, type) {
     var alertDiv = document.createElement('div');
     alertDiv.classList.add('alert', 'alert-' + type, 'text-center');
     alertDiv.setAttribute('role', 'alert');
@@ -57,25 +50,29 @@ function getParams(url) {
 		params[pair[0]] = decodeURIComponent(pair[1]);
 	}
 	return params;
-};
+}
 
 function findRandomArticle(word, callback) {
     reqwest({
         url: 'article/random/' + (word || ''),
         type: 'json',
         success: function(response) {
-            if (!response.content) {
-                addMessage(response.title, 'danger');
-            } else {
+            if (response.content) {
                 callback(response);
+            } else if (response.title) {
+                // Managed exception
+                addMessage(response.title, 'danger');
             }
+        },
+        error: function (response) {
+            addMessage('Error:\n' + response.responseText, 'danger');
         }
     });
 }
 
 function displayArticle(response) {
     // Hide messages and display article title
-    document.querySelector('#messages').hidden = true;
+    document.querySelector('#messages').textContent = '';
     document.querySelector('#article').hidden = false;
     document.querySelector('#button-save').hidden = false;
 
@@ -201,7 +198,11 @@ function saveChanges() {
         }
     });
 
-    addMessage('Guardando cambios en «' + originalArticle.title + '»…', 'info', true);
+    // Hide article
+    document.querySelector('#article').hidden = true;
+    document.querySelector('#button-save').hidden = true;
+
+    addMessage('Guardando cambios en «' + originalArticle.title + '»…', 'info');
 
     if (textToSave === originalArticle.content) {
         reqwest({
