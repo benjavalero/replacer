@@ -3,72 +3,63 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 
-    <link rel="shortcut icon" href="https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico"/>
+    <link href="https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico" rel="shortcut icon"/>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="webjars/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/replacer.css">
+    <link href="webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/replacer.css" rel="stylesheet">
 
     <title>Replacer - Reemplazador de la Wikipedia en español</title>
 </head>
 <body>
 
-<article class="container d-flex flex-column align-items-stretch">
+<div class="container d-flex flex-column align-items-stretch min-height-100">
     <header class="flex-shrink-0">
-    <h1>Reemplazador de la Wikipedia en español</h1>
+        <h3>Replacer</h3>
+        <hr/>
     </header>
 
     <main class="flex-grow-1 flex-shrink-0">
-    <div id="notAuthenticated" hidden>
         <p>
-            No está autenticado en MediaWiki. Haga <a href="login">clic aquí</a> para iniciar sesión.
-        </p>
-    </div>
-    <div id="authenticated" hidden>
-        <p>
-            El propósito de esta herramienta es corregir los errores ortográficos y de estilo más comunes en la
+            <strong>Replacer</strong> ayuda a corregir los errores ortográficos y de estilo más comunes en la
             Wikipedia en español.
         </p>
-        <ul>
-            <li>
-                <a href="random.html"><strong>Errores ortográficos</strong></a> Pulse en las palabras resaltadas para
-                sustituirlas por su corrección sugerida (si procede). Finalmente pulse en el botón «Guardar cambios»
-                para aplicar las correcciones.
-            </li>
-            <li>
-                <a href="statistics.html"><strong>Estadísticas</strong></a> Muestra diversas estadísticas de la
-                herramienta.
-            </li>
-            <li>
-                <a href="dump.html"><strong>Procesamiento de <em>dumps</em></strong></a> Muestra el estado actual del
-                procesamiento del último <em>dump</em>.
-            </li>
-        </ul>
-    </div>
+
+        <!-- We want to use cards as links :: https://github.com/twbs/bootstrap/issues/18294 -->
+        <!-- This will be easier in v4.3 : https://github.com/twbs/bootstrap/pull/26184 -->
+        <!-- For the moment we add click events to the cards -->
+        <div class="card-deck">
+            <div class="card bg-light">
+                <a href="random.html">
+                    <div class="card-body">
+                        <h4 class="card-title">Artículo aleatorio</h4>
+                        <p class="card-text">Busca un artículo aleatorio con potenciales reemplazos.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card bg-light">
+                <a href="statistics.html">
+                    <div class="card-body">
+                        <h4 class="card-title">Estadísticas</h4>
+                        <p class="card-text">Muestra el número de artículos revisados y otros números relacionados.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="card bg-light">
+                <a href="dump.html">
+                    <div class="card-body">
+                        <h4 class="card-title">Indexación</h4>
+                        <p class="card-text">Muestra el estado de la última indexación.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
     </main>
 
     <footer class="flex-shrink-0"></footer>
-</article>
-
-<!-- Lightweight Ajax library -->
-<script src="webjars/reqwest/reqwest.min.js"></script>
-
-<script type="text/javascript">
-document.addEventListener('DOMContentLoaded', function () {
-
-    reqwest('isAuthenticated', function(authenticated) {
-        if (authenticated) {
-            document.querySelector('#authenticated').hidden = false;
-        } else {
-            document.querySelector('#notAuthenticated').hidden = true;
-        }
-    });
-
-});
-
-</script>
+</div>
 
 </body>
 </html>

@@ -1,28 +1,3 @@
-div#messages {
-    padding-top: 5%;
-}
-
-/* FIXED FOOTER : http://getbootstrap.com/docs/4.1/examples/sticky-footer/ */
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
-body {
-  margin-bottom: 7ex; /* Margin bottom by footer height */
-}
-
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 7ex; /* Set the fixed height of the footer here */
-  line-height: 7ex; /* Vertically center the text there */
-}
-
-/* MISPELLINGS */
-
 .pre {
   white-space: pre-wrap;
 }
@@ -31,8 +6,12 @@ body {
   vertical-align: baseline;
 }
 
-hr {
+#article hr {
   border-top: medium double black;
+}
+
+footer {
+  padding: 1ex;
 }
 
 #button-save {

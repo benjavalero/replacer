@@ -8,12 +8,6 @@ var originalArticle;
 var replacements = [];
 
 document.addEventListener('DOMContentLoaded', function () {
-    reqwest('isAuthenticated', function(authenticated) {
-        if (!authenticated) {
-            window.location.href = 'index.html';
-        }
-    });
-
     // Add click event to the misspelling buttons
     document.querySelector('#button-save').addEventListener('click', function () {
         saveChanges();
@@ -25,10 +19,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function addMessage(message, type, clear) {
     if (clear) {
-        document.querySelector('#article').classList.add('hidden');
-        document.querySelector('#button-save').classList.add('hidden');
+        document.querySelector('#article').hidden = true;
+        document.querySelector('#button-save').hidden = true;
         document.querySelector('#messages').textContent = '';
-        document.querySelector('#messages').classList.remove('hidden');
+        document.querySelector('#messages').hidden = false;
     }
 
     var alertDiv = document.createElement('div');
@@ -81,9 +75,9 @@ function findRandomArticle(word, callback) {
 
 function displayArticle(response) {
     // Hide messages and display article title
-    document.querySelector('#messages').classList.add('hidden');
-    document.querySelector('#article').classList.remove('hidden');
-    document.querySelector('#button-save').classList.remove('hidden');
+    document.querySelector('#messages').hidden = true;
+    document.querySelector('#article').hidden = false;
+    document.querySelector('#button-save').hidden = false;
 
     document.querySelector('#title').textContent = response.title;
     document.querySelector('#link').setAttribute('href', WIKIPEDIA_BASE_URL + response.title);

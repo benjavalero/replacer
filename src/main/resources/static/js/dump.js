@@ -15,8 +15,8 @@ function runIndexation(forceIndexation) {
         url: 'dump/run' + (forceIndexation ? '/force' : ''),
         type: 'json',
         success: function(response) {
-            document.querySelector('#notRunning').classList.add('hidden');
-            document.querySelector('#running').classList.remove('hidden');
+            document.querySelector('#notRunning').hidden = true;
+            document.querySelector('#running').hidden = false;
 
             findDumpStatus();
         }
@@ -29,13 +29,13 @@ function findDumpStatus() {
         type: 'json',
         success: function(response) {
             if (response.running) {
-                document.querySelector('#notRunning').classList.add('hidden');
-                document.querySelector('#running').classList.remove('hidden');
+                document.querySelector('#notRunning').hidden = true;
+                document.querySelector('#running').hidden = false;
             } else {
-                document.querySelector('#running').classList.add('hidden');
-                document.querySelector('#notRunning').classList.remove('hidden');
+                document.querySelector('#running').hidden = true;
+                document.querySelector('#notRunning').hidden = false;
                 if (response.numArticlesRead) {
-                    document.querySelector('#notRunningStatus').classList.remove('hidden');
+                    document.querySelector('#notRunningStatus').hidden = false;
                 }
             }
 

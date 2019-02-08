@@ -1,11 +1,10 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.oauth.OAuth10aService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -16,12 +15,13 @@ import java.nio.file.Paths;
 @Profile("offline")
 class WikipediaFacadeMock implements IWikipediaFacade {
 
-    @Autowired
-    private HttpSession session;
+    @Override
+    public boolean isAuthenticated(HttpServletRequest request) {
+        return true;
+    }
 
     @Override
     public OAuth10aService getOAuthService() {
-        session.setAttribute(IWikipediaFacade.TOKEN_ACCESS, "");
         return null;
     }
 

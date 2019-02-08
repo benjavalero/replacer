@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -51,6 +52,11 @@ public class WikipediaFacade implements IWikipediaFacade {
             LOGGER.error("Error accessing the Spanish Wikipedia: {}", errMsg);
             throw new WikipediaException(errMsg);
         }
+    }
+
+    @Override
+    public boolean isAuthenticated(HttpServletRequest request) {
+        return request.getSession().getAttribute(IWikipediaFacade.TOKEN_ACCESS) != null;
     }
 
     public OAuth10aService getOAuthService() {

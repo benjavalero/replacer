@@ -3,58 +3,64 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 
-    <link rel="shortcut icon" href="https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico"/>
+    <link href="https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico" rel="shortcut icon"/>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="webjars/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/replacer.css">
+    <link href="webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/replacer.css" rel="stylesheet">
 
     <title>Replacer - Procesamiento de dumps</title>
 </head>
 <body>
 
-<div class="container">
-    <h1>Procesamiento de dumps</h1>
+<div class="container d-flex flex-column align-items-stretch min-height-100">
+    <header class="flex-shrink-0">
+        <h2>Indexación</h2>
+        <hr/>
+    </header>
 
-    <div id="running" class="hidden">
-        <p>El procesamiento se está ejecutando.</p>
-        <ul>
-            <li>Fichero en proceso: <strong><span class="dumpName"></span></strong></li>
-            <li>Tiempo estimado: <strong><span class="dumpTime"></span></strong> (dd:hh:mm:ss)</li>
-            <li>Artículos leídos: <strong><span class="numArticlesRead"></span></strong></li>
-            <li>Artículos procesados: <strong><span class="numArticlesProcessed"></span></strong></li>
-            <li>Progreso: <strong><span class="dumpProgress"></span></strong>&nbsp;%</li>
-            <li>Tiempo medio por artículo: <strong><span class="dumpAverage"></span></strong> ms</li>
-        </ul>
-    </div>
-    <div id="notRunning" class="hidden">
-        <p>El procesamiento no se está ejecutando.</p>
-        <ul id="notRunningStatus" class="hidden">
-            <li>Fichero procesado: <strong><span class="dumpName"></span></strong></li>
-            <li>Tiempo total: <strong><span class="dumpTime"></span></strong> (dd:hh:mm:ss)</li>
-            <li>Artículos leídos: <strong><span class="numArticlesRead"></span></strong></li>
-            <li>Artículos procesados: <strong><span class="numArticlesProcessed"></span></strong></li>
-            <li>Tiempo medio por artículo: <strong><span class="dumpAverage"></span></strong> ms</li>
-        </ul>
+    <main class="flex-grow-1 flex-shrink-0">
+        <div hidden id="running">
+            <p>El procesamiento se está ejecutando.</p>
+            <ul>
+                <li>Fichero en proceso: <strong><span class="dumpName"></span></strong></li>
+                <li>Tiempo estimado: <strong><span class="dumpTime"></span></strong> (dd:hh:mm:ss)</li>
+                <li>Artículos leídos: <strong><span class="numArticlesRead"></span></strong></li>
+                <li>Artículos procesados: <strong><span class="numArticlesProcessed"></span></strong></li>
+                <li>Progreso: <strong><span class="dumpProgress"></span></strong>&nbsp;%</li>
+                <li>Tiempo medio por artículo: <strong><span class="dumpAverage"></span></strong> ms</li>
+            </ul>
+        </div>
+        <div hidden id="notRunning">
+            <p>El procesamiento no se está ejecutando.</p>
+            <ul class="hidden" id="notRunningStatus">
+                <li>Fichero procesado: <strong><span class="dumpName"></span></strong></li>
+                <li>Tiempo total: <strong><span class="dumpTime"></span></strong> (dd:hh:mm:ss)</li>
+                <li>Artículos leídos: <strong><span class="numArticlesRead"></span></strong></li>
+                <li>Artículos procesados: <strong><span class="numArticlesProcessed"></span></strong></li>
+                <li>Tiempo medio por artículo: <strong><span class="dumpAverage"></span></strong> ms</li>
+            </ul>
 
-        <form>
-            <div class="form-group form-check">
-                <input class="form-check-input" type="checkbox" value="" id="force-check">
-                <label class="form-check-label" for="force-check">Forzar procesamiento de artículos antiguos</label>
-            </div>
+            <form>
+                <div class="form-group form-check">
+                    <input class="form-check-input" id="force-check" type="checkbox" value="">
+                    <label class="form-check-label" for="force-check">Forzar procesamiento de artículos antiguos</label>
+                </div>
 
-            <button class="btn btn-primary" type="button" id="button-index">Comenzar procesamiento</button>
-        </form>
-    </div>
+                <button class="btn btn-primary" id="button-index" type="button">Comenzar procesamiento</button>
+            </form>
+        </div>
+    </main>
 
+    <footer class="flex-shrink-0"></footer>
 </div>
 
 <!-- Lightweight Ajax library -->
 <script src="webjars/reqwest/reqwest.min.js"></script>
 
-<script type="text/javascript" src="js/dump.js"></script>
+<script src="js/dump.js" type="text/javascript"></script>
 
 </body>
 </html>

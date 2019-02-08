@@ -3,56 +3,63 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
 
-    <link rel="shortcut icon" href="https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico"/>
+    <link href="https://tools-static.wmflabs.org/toolforge/favicons/favicon.ico" rel="shortcut icon"/>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="webjars/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/replacer.css">
+    <link href="webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/replacer.css" rel="stylesheet">
 
     <!-- DataTable JS files: http://holt59.github.io/datatable/ -->
-    <link rel="stylesheet" href="css/datatable-bootstrap.min.css" media="screen">
+    <link href="css/datatable-bootstrap.min.css" media="screen" rel="stylesheet">
 
     <title>Replacer - Estadísticas</title>
 </head>
 <body>
 
-<div class="container">
-    <h1>Estadísticas</h1>
+<div class="container d-flex flex-column align-items-stretch min-height-100">
+    <header class="flex-shrink-0">
+        <h2>Estadísticas</h2>
+        <hr/>
+    </header>
 
-    <h2>Reemplazos por revisar</h2>
-    <p><strong><span id="count-replacements">Calculando número de</span></strong> reemplazos.</p>
+    <main class="flex-grow-1 flex-shrink-0">
+        <h3>Reemplazos por revisar</h3>
+        <p><strong><span id="count-replacements">Calculando número de</span></strong> reemplazos.</p>
 
-    <h2>Artículos con reemplazos por revisar</h2>
-    <p><strong><span id="count-articles">Calculando número de</span></strong> artículos.</p>
+        <h3>Artículos con reemplazos por revisar</h3>
+        <p><strong><span id="count-articles">Calculando número de</span></strong> artículos.</p>
 
-    <h2>Artículos revisados</h2>
-    <p><strong><span id="count-articles-reviewed">Calculando número de</span></strong> artículos.</p>
+        <h3>Artículos revisados</h3>
+        <p><strong><span id="count-articles-reviewed">Calculando número de</span></strong> artículos.</p>
 
-    <h2>Reemplazos ortográficos por revisar</h2>
-    <div id="find-misspellings"><p>Calculando...</p></div>
-    <table id="table-misspellings" class="table table-bordered hidden">
-        <thead>
-        <tr>
-            <th scope="col">Término</th>
-            <th scope="col">#</th>
-        </tr>
-        </thead>
-        <tbody id="tbody-misspellings">
-        </tbody>
-    </table>
-    <nav aria-label="Paginación de la tabla de reemplazos ortográficos por revisar" id="paging-list-misspellings"></nav>
+        <h3>Reemplazos ortográficos por revisar</h3>
+        <div id="find-misspellings"><p>Calculando...</p></div>
+        <table class="table table-bordered" hidden id="table-misspellings">
+            <thead>
+            <tr>
+                <th scope="col">Término</th>
+                <th scope="col">#</th>
+            </tr>
+            </thead>
+            <tbody id="tbody-misspellings">
+            </tbody>
+        </table>
+        <nav aria-label="Paginación de la tabla de reemplazos ortográficos por revisar"
+             id="paging-list-misspellings"></nav>
+    </main>
 
+    <footer class="flex-shrink-0"></footer>
 </div>
 
 <!-- Lightweight Ajax library -->
 <script src="webjars/reqwest/reqwest.min.js"></script>
 
 <!-- Library to add pagination to the table of misspellings -->
-<script type="text/javascript" src="js/datatable.min.js"></script>
+<script src="js/datatable.min.js" type="text/javascript"></script>
 
-<script type="text/javascript" src="js/statistics.js"></script>
+<script src="js/statistics.js" type="text/javascript"></script>
 
 </body>
 </html>

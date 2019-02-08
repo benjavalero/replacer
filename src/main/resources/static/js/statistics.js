@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             // Display the table
-            document.querySelector('#find-misspellings').classList.add('hidden');
-            document.querySelector('#table-misspellings').classList.remove('hidden');
+            document.querySelector('#find-misspellings').hidden = true;
+            document.querySelector('#table-misspellings').hidden = false;
         }
     });
 
