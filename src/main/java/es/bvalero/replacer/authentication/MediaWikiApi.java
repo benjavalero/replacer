@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.authentication;
 
 import com.github.scribejava.core.builder.api.DefaultApi10a;
 

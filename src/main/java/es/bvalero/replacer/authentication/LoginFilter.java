@@ -1,6 +1,5 @@
-package es.bvalero.replacer;
+package es.bvalero.replacer.authentication;
 
-import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ public class LoginFilter implements Filter {
     private static final String LOGIN_PAGE = "/login.html";
 
     @Autowired
-    private IWikipediaFacade wikipediaFacade;
+    private AuthenticationService authenticationService;
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -33,8 +32,9 @@ public class LoginFilter implements Filter {
         LOGGER.debug("Logging Request  {} : {} : {}", req.getMethod(), req.getRequestURI(), req.getRequestURL());
 
         // Avoid infinite loop redirecting to login page
-        if (!wikipediaFacade.isAuthenticated(req) && isUriFilterable(req.getRequestURI())) {
-            req.getSession().setAttribute(LoginController.REDIRECT_URL, req.getRequestURL());
+        if (!authenticationService.isAuthenticated() && isUriFilterable(req.getRequestURI())) {
+            // Keep the current URL to redirect after authenticate
+            authenticationService.setRedirectUrlInSession(req.getRequestURL().toString());
             res.sendRedirect(LOGIN_PAGE);
         }
 
