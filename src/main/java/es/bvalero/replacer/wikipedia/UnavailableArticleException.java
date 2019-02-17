@@ -1,8 +1,10 @@
 package es.bvalero.replacer.wikipedia;
 
-public class UnavailableArticleException extends WikipediaException {
+class UnavailableArticleException extends WikipediaException {
 
-    public UnavailableArticleException() {
+    private static final long serialVersionUID = -6888253566663933887L;
+
+    UnavailableArticleException() {
     }
 
 }

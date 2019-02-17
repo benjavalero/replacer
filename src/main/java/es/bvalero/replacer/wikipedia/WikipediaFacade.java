@@ -3,7 +3,7 @@ package es.bvalero.replacer.wikipedia;
 import com.bitplan.mediawiki.japi.Mediawiki;
 import com.github.scribejava.core.model.OAuthRequest;
 import es.bvalero.replacer.authentication.AuthenticationException;
-import es.bvalero.replacer.authentication.AuthenticationService;
+import es.bvalero.replacer.authentication.IAuthenticationService;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ public class WikipediaFacade implements IWikipediaFacade {
     private static final String EDIT_SUMMARY = "Correcciones ortográficas";
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private IAuthenticationService authenticationService;
 
     private Mediawiki wiki;
 
@@ -52,8 +52,7 @@ public class WikipediaFacade implements IWikipediaFacade {
     }
 
     @Override
-    public void editArticleContent(String articleTitle, String articleContent)
-            throws WikipediaException {
+    public void editArticleContent(String articleTitle, String articleContent) throws WikipediaException {
         // TODO : Check just before uploading there are no changes during the edition
         try {
             OAuthRequest request = authenticationService.createOauthRequest();

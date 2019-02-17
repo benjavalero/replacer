@@ -18,7 +18,7 @@ public class LoginController {
     private static final String TOKEN_VERIFIER = "oauth_verifier";
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private IAuthenticationService authenticationService;
 
     @GetMapping(value = "/")
     public ModelAndView redirectToIndex(HttpServletRequest request)

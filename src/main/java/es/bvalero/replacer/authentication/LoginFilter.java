@@ -17,7 +17,7 @@ public class LoginFilter implements Filter {
     private static final String LOGIN_PAGE = "/login.html";
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private IAuthenticationService authenticationService;
 
     @Override
     public void init(FilterConfig filterConfig) {

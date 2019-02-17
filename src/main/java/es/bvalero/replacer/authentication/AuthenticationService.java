@@ -7,6 +7,7 @@ import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -14,7 +15,8 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 @Service
-public class AuthenticationService {
+@Profile("default")
+class AuthenticationService implements IAuthenticationService {
 
     private static final String WIKIPEDIA_API_URL = "https://es.wikipedia.org/w/api.php";
     private static final String TOKEN_ACCESS = "accessToken";
@@ -42,10 +44,12 @@ public class AuthenticationService {
         return oAuthService;
     }
 
+    @Override
     public OAuthRequest createOauthRequest() {
         return new OAuthRequest(Verb.POST, WIKIPEDIA_API_URL);
     }
 
+    @Override
     public Response signAndExecuteOauthRequest(OAuthRequest request) throws AuthenticationException {
         OAuth1AccessToken accessToken = getAccessTokenInSession();
         if (accessToken == null) {
@@ -75,6 +79,7 @@ public class AuthenticationService {
         }
     }
 
+    @Override
     public String getEditToken() throws AuthenticationException {
         try {
             OAuthRequest request = createOauthRequest();
@@ -93,22 +98,26 @@ public class AuthenticationService {
         }
     }
 
-    boolean isAuthenticated() {
+    @Override
+    public boolean isAuthenticated() {
         // Check if the access token exists
         return getAccessTokenInSession() != null;
     }
 
-    String getAuthorizationUrl(OAuth1RequestToken requestToken) {
+    @Override
+    public String getAuthorizationUrl(OAuth1RequestToken requestToken) {
         return getOAuthService().getAuthorizationUrl(requestToken);
     }
 
     /* REQUEST TOKEN */
 
-    OAuth1RequestToken getRequestToken() throws InterruptedException, ExecutionException, IOException {
+    @Override
+    public OAuth1RequestToken getRequestToken() throws InterruptedException, ExecutionException, IOException {
         return getOAuthService().getRequestToken();
     }
 
-    OAuth1RequestToken getRequestTokenInSession() {
+    @Override
+    public OAuth1RequestToken getRequestTokenInSession() {
         Object requestToken = session.getAttribute(TOKEN_REQUEST);
         if (requestToken == null) {
             return null;
@@ -117,17 +126,20 @@ public class AuthenticationService {
         }
     }
 
-    void setRequestTokenInSession(OAuth1RequestToken requestToken) {
+    @Override
+    public void setRequestTokenInSession(OAuth1RequestToken requestToken) {
         session.setAttribute(TOKEN_REQUEST, requestToken);
     }
 
-    void removeRequestTokenInSession() {
+    @Override
+    public void removeRequestTokenInSession() {
         session.removeAttribute(TOKEN_REQUEST);
     }
 
     /* ACCESS TOKEN */
 
-    OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
+    @Override
+    public OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
             throws InterruptedException, ExecutionException, IOException {
         return getOAuthService().getAccessToken(requestToken, oauthVerifier);
     }
@@ -141,13 +153,15 @@ public class AuthenticationService {
         }
     }
 
-    void setAccessTokenInSession(OAuth1AccessToken accessToken) {
+    @Override
+    public void setAccessTokenInSession(OAuth1AccessToken accessToken) {
         session.setAttribute(TOKEN_ACCESS, accessToken);
     }
 
     /* REDIRECT TOKEN */
 
-    String getRedirectUrlInSession() {
+    @Override
+    public String getRedirectUrlInSession() {
         Object url = session.getAttribute(REDIRECT_URL);
         if (url == null) {
             return null;
@@ -156,11 +170,13 @@ public class AuthenticationService {
         }
     }
 
-    void setRedirectUrlInSession(String url) {
+    @Override
+    public void setRedirectUrlInSession(String url) {
         session.setAttribute(REDIRECT_URL, url);
     }
 
-    void removeRedirectUrlInSession() {
+    @Override
+    public void removeRedirectUrlInSession() {
         session.removeAttribute(REDIRECT_URL);
     }
 
