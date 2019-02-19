@@ -14,7 +14,7 @@ import java.io.IOException;
 public class LoginFilter implements Filter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginFilter.class);
-    private static final String LOGIN_PAGE = "/login.html";
+    private static final String LOGIN_PAGE = "login.html";
 
     @Autowired
     private IAuthenticationService authenticationService;
@@ -42,7 +42,7 @@ public class LoginFilter implements Filter {
     }
 
     private boolean isUriFilterable(String uri) {
-        return uri.endsWith(".html") && !uri.equals(LOGIN_PAGE);
+        return uri.endsWith(".html") && !uri.endsWith(LOGIN_PAGE);
     }
 
     @Override
