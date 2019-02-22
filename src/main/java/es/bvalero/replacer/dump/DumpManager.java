@@ -18,11 +18,14 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.*;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Find the Wikipedia dumps in the filesystem where the application runs.
@@ -104,20 +107,11 @@ class DumpManager {
     }
 
     private List<Path> findDumpFolders() throws DumpException {
-        try {
-            final List<Path> dumpSubFolders = new ArrayList<>();
-            Files.walkFileTree(Paths.get(dumpFolderPath), new SimpleFileVisitor<Path>() {
-                @Override
-                public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
-                    String fileName = dir.getFileName().toString();
-                    if (PATTERN_DUMP_FOLDER.matcher(fileName).matches()) {
-                        dumpSubFolders.add(dir);
-                    }
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-            Collections.sort(dumpSubFolders, Collections.<Path>reverseOrder());
-
+        try (Stream<Path> dumpSubPaths = Files.list(Paths.get(dumpFolderPath))) {
+            List<Path> dumpSubFolders = dumpSubPaths
+                    .filter(folder -> PATTERN_DUMP_FOLDER.matcher(folder.getFileName().toString()).matches())
+                    .sorted(Collections.reverseOrder())
+                    .collect(Collectors.toList());
             if (dumpSubFolders.isEmpty()) {
                 throw new DumpException("Sub-folders not found in dump path");
             }

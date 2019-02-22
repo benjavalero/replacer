@@ -4,12 +4,11 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.ArticleReplacement;
-import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.persistence.ReplacementType;
 import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +18,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Component
 public class FalsePositiveFinder extends ReplacementFinder implements IgnoredReplacementFinder {
@@ -69,21 +65,16 @@ public class FalsePositiveFinder extends ReplacementFinder implements IgnoredRep
     private List<String> parseFalsePositivesListText(String falsePositivesListText) {
         List<String> falsePositivesList = new ArrayList<>(1000);
 
-        try (InputStream stream = new ByteArrayInputStream(falsePositivesListText.getBytes(StandardCharsets.UTF_8));
-             BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
-            // Read file line by line
-            String strLine;
-            while ((strLine = br.readLine()) != null) {
+        Stream<String> stream = new BufferedReader(new StringReader(falsePositivesListText)).lines();
+        stream.forEach(strLine -> {
+            if (strLine.startsWith(" ")) {
                 String trim = strLine.trim();
                 // Skip empty and commented lines
                 if (!StringUtils.isEmpty(trim) && !trim.startsWith("#")) {
                     falsePositivesList.add(trim);
                 }
             }
-        } catch (IOException e) {
-            LOGGER.error("Error loading the list of false positives", e);
-        }
-
+        });
         return falsePositivesList;
     }
 

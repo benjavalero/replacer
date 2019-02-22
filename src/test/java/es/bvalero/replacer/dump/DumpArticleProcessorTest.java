@@ -13,10 +13,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
-import org.threeten.bp.LocalDate;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Optional;
 
 public class DumpArticleProcessorTest {
 
@@ -99,7 +100,7 @@ public class DumpArticleProcessorTest {
 
         Article dbArticle = Mockito.mock(Article.class);
         Mockito.when(dbArticle.getLastUpdate()).thenReturn(today);
-        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(dbArticle);
+        Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, true));
     }
@@ -117,7 +118,7 @@ public class DumpArticleProcessorTest {
         Mockito.when(dbArticle.getLastUpdate()).thenReturn(today);
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
-        Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Collections.<Replacement>emptyList());
+        Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Collections.emptyList());
 
         Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
@@ -154,9 +155,9 @@ public class DumpArticleProcessorTest {
         Mockito.when(dbArticle.getLastUpdate()).thenReturn(today);
         Mockito.when(articleRepository.findByIdGreaterThanOrderById(Mockito.anyInt(), Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(dbArticle));
-        Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Collections.<Replacement>emptyList());
+        Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Collections.emptyList());
 
-        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, true));
     }
 
     @Test
@@ -170,7 +171,7 @@ public class DumpArticleProcessorTest {
 
         Article dbArticle = Mockito.mock(Article.class);
         Mockito.when(dbArticle.getLastUpdate()).thenReturn(yesterday);
-        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(dbArticle);
+        Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
     }
@@ -195,8 +196,8 @@ public class DumpArticleProcessorTest {
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         dumpArticleProcessor.finish();
 
-        Mockito.verify(articleRepository).save(Mockito.anyListOf(Article.class));
-        Mockito.verify(replacementRepository).save(Mockito.anySetOf(Replacement.class));
+        Mockito.verify(articleRepository).saveAll(Mockito.anyList());
+        Mockito.verify(replacementRepository).saveAll(Mockito.anySet());
     }
 
     @Test
@@ -239,9 +240,9 @@ public class DumpArticleProcessorTest {
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         dumpArticleProcessor.finish();
 
-        Mockito.verify(replacementRepository).deleteInBatch(Mockito.anyListOf(Replacement.class));
-        Mockito.verify(articleRepository).save(Mockito.anyListOf(Article.class));
-        Mockito.verify(replacementRepository).save(Mockito.anySetOf(Replacement.class));
+        Mockito.verify(replacementRepository).deleteInBatch(Mockito.anyList());
+        Mockito.verify(articleRepository).saveAll(Mockito.anyList());
+        Mockito.verify(replacementRepository).saveAll(Mockito.anySet());
     }
 
     @Test
@@ -253,7 +254,7 @@ public class DumpArticleProcessorTest {
 
         // Let's suppose the article exists in DB
         Article dbArticle = Article.builder().build();
-        Mockito.when(articleRepository.findOne(Mockito.anyInt())).thenReturn(dbArticle);
+        Mockito.when(articleRepository.findById(Mockito.anyInt())).thenReturn(Optional.of(dbArticle));
         // And it has replacement 1
         Replacement replacement1 = new Replacement.ReplacementBuilder()
                 .setArticle(dbArticle)
@@ -301,7 +302,7 @@ public class DumpArticleProcessorTest {
                 .build();
         Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Arrays.asList(replacement1, replacement2));
         // And there are no replacements found
-        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString())).thenReturn(Collections.<ArticleReplacement>emptyList());
+        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString())).thenReturn(Collections.emptyList());
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         dumpArticleProcessor.finish();
@@ -335,8 +336,8 @@ public class DumpArticleProcessorTest {
         dumpArticleProcessor.finish();
 
         Mockito.verify(articleService).deleteArticle(Mockito.any(Article.class));
-        Mockito.verify(articleRepository).save(Mockito.anyListOf(Article.class));
-        Mockito.verify(replacementRepository).save(Mockito.anySetOf(Replacement.class));
+        Mockito.verify(articleRepository).saveAll(Mockito.anyList());
+        Mockito.verify(replacementRepository).saveAll(Mockito.anySet());
     }
 
 }

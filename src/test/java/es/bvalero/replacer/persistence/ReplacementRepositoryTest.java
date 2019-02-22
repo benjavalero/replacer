@@ -25,7 +25,7 @@ public class ReplacementRepositoryTest {
         Article article1 = new Article.ArticleBuilder().setId(1).setTitle("1").build();
         Article article2 = new Article.ArticleBuilder().setId(2).setTitle("2").build();
         Article article3 = new Article.ArticleBuilder().setId(3).setTitle("3").build();
-        articleRepository.save(Arrays.asList(article1, article2, article3));
+        articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
         Replacement error1 = new Replacement.ReplacementBuilder()
                 .setArticle(article1)
@@ -47,7 +47,7 @@ public class ReplacementRepositoryTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setText("paris")
                 .build();
-        replacementRepository.save(Arrays.asList(error1, error2, error3, error4));
+        replacementRepository.saveAll(Arrays.asList(error1, error2, error3, error4));
 
         Assert.assertEquals(3, replacementRepository.findMisspellingsGrouped().size());
     }
@@ -57,7 +57,7 @@ public class ReplacementRepositoryTest {
         Article article1 = new Article.ArticleBuilder().setId(1).setTitle("1").build();
         Article article2 = new Article.ArticleBuilder().setId(2).setTitle("2").build();
         Article article3 = new Article.ArticleBuilder().setId(3).setTitle("3").build();
-        articleRepository.save(Arrays.asList(article1, article2, article3));
+        articleRepository.saveAll(Arrays.asList(article1, article2, article3));
 
         Replacement error1 = new Replacement.ReplacementBuilder()
                 .setArticle(article1)
@@ -74,14 +74,14 @@ public class ReplacementRepositoryTest {
                 .setType(ReplacementType.MISSPELLING)
                 .setText("aber")
                 .build();
-        replacementRepository.save(Arrays.asList(error1, error2, error3));
+        replacementRepository.saveAll(Arrays.asList(error1, error2, error3));
 
         Assert.assertTrue(replacementRepository
-                .findRandomByWord("xxx", new PageRequest(0, 1))
+                .findRandomByWord("xxx", PageRequest.of(0, 1))
                 .isEmpty());
 
         Assert.assertEquals(3, replacementRepository
-                .findRandomByWord("aber", new PageRequest(0, 3))
+                .findRandomByWord("aber", PageRequest.of(0, 3))
                 .size());
     }
 

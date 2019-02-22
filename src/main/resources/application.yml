@@ -4,6 +4,11 @@ spring:
   jackson:
     date-format: dd-MM-yyyy HH:mm:ss
 
+server:
+  port: 8000
+  # For SpringBoot 1.x the property is server.context-path
+  servlet.context-path: /replacer/
+
 logging:
   level:
     es.bvalero.replacer: INFO

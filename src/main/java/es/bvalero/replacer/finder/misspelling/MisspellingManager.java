@@ -11,10 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Manages the cache for the misspelling list in order to reduce the calls to Wikipedia.
@@ -68,20 +69,14 @@ public class MisspellingManager {
     Set<Misspelling> parseMisspellingListText(String misspellingListText) {
         Set<Misspelling> misspellingSet = new HashSet<>(MISSPELLING_ESTIMATED_COUNT);
 
-        try (InputStream stream = new ByteArrayInputStream(misspellingListText.getBytes(StandardCharsets.UTF_8));
-             BufferedReader br = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
-            // Read file line by line
-            String strLine;
-            while ((strLine = br.readLine()) != null) {
-                Misspelling misspelling = parseMisspellingLine(strLine);
-                // Add the misspelling and check if it is duplicated
-                if (misspelling != null && !misspellingSet.add(misspelling)) {
-                    LOGGER.warn("Duplicated misspelling term: {}", misspelling.getWord());
-                }
+        Stream<String> stream = new BufferedReader(new StringReader(misspellingListText)).lines();
+        stream.forEach(strLine -> {
+            Misspelling misspelling = parseMisspellingLine(strLine);
+            // Add the misspelling and check if it is duplicated
+            if (misspelling != null && !misspellingSet.add(misspelling)) {
+                LOGGER.warn("Duplicated misspelling term: {}", misspelling.getWord());
             }
-        } catch (IOException e) {
-            LOGGER.error("Error parsing misspelling list", e);
-        }
+        });
 
         return misspellingSet;
     }

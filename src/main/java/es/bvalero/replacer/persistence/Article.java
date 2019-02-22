@@ -1,11 +1,13 @@
 package es.bvalero.replacer.persistence;
 
 import org.jetbrains.annotations.NonNls;
-import org.springframework.data.jpa.convert.threetenbp.ThreeTenBackPortJpaConverters;
-import org.threeten.bp.LocalDate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -25,7 +27,6 @@ public class Article implements Serializable {
     private String title;
 
     @Column(name = "lastupdate", nullable = false)
-    @Convert(converter = ThreeTenBackPortJpaConverters.LocalDateConverter.class)
     private LocalDate lastUpdate;
 
     public Article() {

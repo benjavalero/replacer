@@ -16,9 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.threeten.bp.LocalDate;
 
-import java.util.*;
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Optional;
 
 /**
  * Provides methods to find articles with potential replacements.
@@ -54,7 +57,7 @@ public class ArticleService {
             return replacements;
         }
 
-        Collections.sort(replacements, Collections.reverseOrder());
+        replacements.sort(Collections.reverseOrder());
         ListIterator<ArticleReplacement> it = replacements.listIterator();
         ArticleReplacement previous = it.next();
         while (it.hasNext()) {
@@ -101,8 +104,8 @@ public class ArticleService {
 
     private Article findRandomArticleNotReviewedInDb(@Nullable String word) throws UnfoundArticleException {
         List<Article> randomArticles = (word == null)
-                ? replacementRepository.findRandom(new PageRequest(0, 1))
-                : replacementRepository.findRandomByWord(word, new PageRequest(0, 1));
+                ? replacementRepository.findRandom(PageRequest.of(0, 1))
+                : replacementRepository.findRandomByWord(word, PageRequest.of(0, 1));
 
         if (randomArticles.isEmpty()) {
             LOGGER.warn("No random article found to review");
@@ -151,14 +154,8 @@ public class ArticleService {
             return;
         }
 
-        boolean wordExists = false;
-        for (ArticleReplacement replacement : replacements) {
-            if (word.equals(replacement.getText())) {
-                wordExists = true;
-                break;
-            }
-        }
-        if (!wordExists) {
+        Optional<ArticleReplacement> wordReplacement = replacements.stream().filter(replacement -> word.equals(replacement.getText())).findAny();
+        if (!wordReplacement.isPresent()) {
             throw new InvalidArticleException("Word not found as a replacement");
         }
     }

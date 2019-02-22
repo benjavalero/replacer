@@ -1,11 +1,10 @@
 package es.bvalero.replacer.finder;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class ReplacementFinderService {
@@ -38,13 +37,7 @@ public class ReplacementFinderService {
         // Ignore the replacements which must be ignored
         for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
             List<ArticleReplacement> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
-            Iterator<ArticleReplacement> it = articleReplacements.iterator();
-            while (it.hasNext()) {
-                ArticleReplacement articleReplacement = it.next();
-                if (articleReplacement.isContainedIn(ignoredReplacements)) {
-                    it.remove();
-                }
-            }
+            articleReplacements.removeIf(replacement -> replacement.isContainedIn(ignoredReplacements));
 
             if (articleReplacements.isEmpty()) {
                 break;

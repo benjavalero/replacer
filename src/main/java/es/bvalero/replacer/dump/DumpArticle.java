@@ -1,7 +1,8 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import org.threeten.bp.LocalDate;
+
+import java.time.LocalDate;
 
 /**
  * Domain class corresponding to a Wikipedia article in the XML dump.
