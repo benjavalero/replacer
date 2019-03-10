@@ -3,9 +3,7 @@
 .classpath
 .settings
 target
-**/.DS_Store
-.buildpath
-.tern-project
+.DS_Store
 .vscode
-replacer.iml
+*.iml
 logs
