@@ -1,0 +1,26 @@
+<h2>Artículo aleatorio</h2>
+
+<h3 [hidden]="loading">{{ article.title }}</h3>
+
+<div class="container">
+  <div
+    *ngFor="let alert of messages"
+    class="alert alert-{{ alert.type }} text-center"
+    role="alert"
+  >
+    {{ alert.message }}
+  </div>
+</div>
+
+<div [hidden]="loading">
+  <a href="https://es.wikipedia.org/wiki/{{ article.title }}" target="_blank"
+    >Abrir artículo en Wikipedia</a
+  >
+</div>
+
+<app-content-editor
+  [hidden]="loading"
+  [article]="article"
+  (saving)="onSaving($event)"
+  (saved)="onSaved($event)"
+></app-content-editor>

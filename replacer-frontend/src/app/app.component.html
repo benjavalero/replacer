@@ -1,0 +1,12 @@
+<!-- The main container has min-height=100% so the footer gets fixed at the bottom -->
+<div class="container d-flex flex-column align-items-stretch min-height-100">
+  <header class="flex-shrink-0">
+    <app-header></app-header>
+  </header>
+
+  <main class="flex-grow-1 flex-shrink-0">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer role="contentinfo" class="flex-shrink-0 bg-light"></footer>
+</div>

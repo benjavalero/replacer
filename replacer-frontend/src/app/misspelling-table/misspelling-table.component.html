@@ -1,0 +1,37 @@
+<p *ngIf="!misspellings">Calculando...</p>
+<div *ngIf="misspellings">
+  <form>
+    <div class="form-group form-inline">
+      <input
+        class="form-control"
+        type="text"
+        [formControl]="filter"
+        placeholder="Filtrar"
+      />
+    </div>
+  </form>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col" appSortable="text" (sort)="onSort($event)">Término</th>
+        <th scope="col" appSortable="count" (sort)="onSort($event)">#</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let misspelling of filteredMisspellings">
+        <td class="w-75">{{ misspelling.text }}</td>
+        <td class="w-25">{{ misspelling.count }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ngb-pagination
+    [collectionSize]="collectionSize"
+    [(page)]="page"
+    [pageSize]="pageSize"
+    [maxSize]="3"
+    class="d-flex justify-content-center"
+  >
+  </ngb-pagination>
+</div>
