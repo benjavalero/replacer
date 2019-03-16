@@ -34,7 +34,7 @@
                 <version>1.7.5</version>
                 <configuration>
                     <nodeVersion>v10.15.1</nodeVersion>
-                    <npmVersion>6.4.1</npmVersion>
+                    <npmVersion>6.9.0</npmVersion>
                 </configuration>
                 <executions>
                     <!-- default phase is "generate-resources" -->

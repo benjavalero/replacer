@@ -1,3 +1,3 @@
 #!/bin/sh
 cd $HOME
-exec java -Xmx1024m -Xss2m -XX:+HeapDumpOnOutOfMemoryError -jar $HOME/replacer/target/replacer.jar
+exec java -Xmx1024m -Xss2m -XX:+HeapDumpOnOutOfMemoryError -jar $HOME/replacer/replacer-backend/target/replacer.jar
