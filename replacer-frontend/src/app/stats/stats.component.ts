@@ -13,11 +13,7 @@ export class StatsComponent implements OnInit {
   numArticles: string;
   numReviewedArticles: string;
 
-  constructor(private httpClient: HttpClient) {
-    this.numReplacements = 'Calculando número de';
-    this.numArticles = 'Calculando número de';
-    this.numReviewedArticles = 'Calculando número de';
-  }
+  constructor(private httpClient: HttpClient) {}
 
   ngOnInit() {
     this.findNumReplacements();
