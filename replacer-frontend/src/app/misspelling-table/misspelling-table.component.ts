@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { FormControl } from '@angular/forms';
 
 import { environment } from '../../environments/environment';
 
@@ -15,8 +16,7 @@ interface ReplacementCount {
 })
 export class MisspellingTableComponent implements OnInit {
   misspellingCount: ReplacementCount[];
-
-  // Pagination
+  filter = new FormControl('');
   page: number;
   pageSize: number;
   collectionSize: number;
@@ -33,10 +33,14 @@ export class MisspellingTableComponent implements OnInit {
   }
 
   get misspellings(): ReplacementCount[] {
-    return this.misspellingCount.slice(
-      (this.page - 1) * this.pageSize,
-      (this.page - 1) * this.pageSize + this.pageSize
-    );
+    return this.misspellingCount
+      .filter(misspelling =>
+        misspelling.text.toLowerCase().includes(this.filter.value.toLowerCase())
+      )
+      .slice(
+        (this.page - 1) * this.pageSize,
+        (this.page - 1) * this.pageSize + this.pageSize
+      );
   }
 
   private findMisspellingCount() {
