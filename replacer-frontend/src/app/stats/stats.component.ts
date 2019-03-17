@@ -1,0 +1,51 @@
+import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
+import { environment } from '../../environments/environment';
+
+@Component({
+  selector: 'app-stats',
+  templateUrl: './stats.component.html',
+  styleUrls: ['./stats.component.css']
+})
+export class StatsComponent implements OnInit {
+  numReplacements: string;
+  numArticles: string;
+  numReviewedArticles: string;
+
+  constructor(private httpClient: HttpClient) {
+    this.numReplacements = 'Calculando número de';
+    this.numArticles = 'Calculando número de';
+    this.numReviewedArticles = 'Calculando número de';
+  }
+
+  ngOnInit() {
+    this.findNumReplacements();
+    this.findNumArticles();
+    this.findNumReviewedArticles();
+  }
+
+  private findNumReplacements() {
+    this.httpClient
+      .get<string>(`${environment.apiUrl}/statistics/count/replacements`)
+      .subscribe(res => {
+        this.numReplacements = res;
+      });
+  }
+
+  private findNumArticles() {
+    this.httpClient
+      .get<string>(`${environment.apiUrl}/statistics/count/articles`)
+      .subscribe(res => {
+        this.numArticles = res;
+      });
+  }
+
+  private findNumReviewedArticles() {
+    this.httpClient
+      .get<string>(`${environment.apiUrl}/statistics/count/articles-reviewed`)
+      .subscribe(res => {
+        this.numReviewedArticles = res;
+      });
+  }
+}

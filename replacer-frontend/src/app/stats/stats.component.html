@@ -1,0 +1,19 @@
+<h2>Estadísticas</h2>
+
+<h3>Reemplazos por revisar</h3>
+<p *ngIf="!numReplacements">Calculando...</p>
+<p *ngIf="numReplacements">
+  <strong>{{ numReplacements }}</strong> reemplazos
+</p>
+
+<h3>Artículos con reemplazos por revisar</h3>
+<p *ngIf="!numArticles">Calculando...</p>
+<p *ngIf="numArticles">
+  <strong>{{ numArticles }}</strong> artículos.
+</p>
+
+<h3>Artículos revisados</h3>
+<p *ngIf="!numReviewedArticles">Calculando...</p>
+<p *ngIf="numReviewedArticles">
+  <strong>{{ numReviewedArticles }}</strong> artículos.
+</p>
