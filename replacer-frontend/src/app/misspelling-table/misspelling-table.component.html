@@ -1,5 +1,5 @@
-<p *ngIf="!misspellingCount">Calculando...</p>
-<div *ngIf="misspellingCount">
+<p *ngIf="!misspellings">Calculando...</p>
+<div *ngIf="misspellings">
   <form>
     <div class="form-group form-inline">
       <input
@@ -14,14 +14,14 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">Término</th>
-        <th scope="col">#</th>
+        <th scope="col" appSortable="text" (sort)="onSort($event)">Término</th>
+        <th scope="col" appSortable="count" (sort)="onSort($event)">#</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let misspelling of misspellings">
-        <td>{{ misspelling.text }}</td>
-        <td>{{ misspelling.count }}</td>
+      <tr *ngFor="let misspelling of filteredMisspellings">
+        <td class="w-75">{{ misspelling.text }}</td>
+        <td class="w-25">{{ misspelling.count }}</td>
       </tr>
     </tbody>
   </table>

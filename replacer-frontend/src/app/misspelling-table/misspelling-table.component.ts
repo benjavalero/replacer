@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 
 import { environment } from '../../environments/environment';
+
+import { SortableDirective, SortEvent, compare } from './sortable.directive';
 
 interface ReplacementCount {
   text: string;
@@ -15,25 +17,27 @@ interface ReplacementCount {
   styleUrls: ['./misspelling-table.component.css']
 })
 export class MisspellingTableComponent implements OnInit {
-  misspellingCount: ReplacementCount[];
+  @ViewChildren(SortableDirective) headers: QueryList<SortableDirective>;
+
+  misspellings: ReplacementCount[];
   filter = new FormControl('');
   page: number;
   pageSize: number;
   collectionSize: number;
 
   constructor(private httpClient: HttpClient) {
-    this.misspellingCount = [];
+    this.misspellings = [];
     this.page = 1;
     this.pageSize = 10;
-    this.collectionSize = this.misspellingCount.length;
+    this.collectionSize = this.misspellings.length;
   }
 
   ngOnInit() {
-    this.findMisspellingCount();
+    this.findMisspellings();
   }
 
-  get misspellings(): ReplacementCount[] {
-    return this.misspellingCount
+  get filteredMisspellings(): ReplacementCount[] {
+    return this.misspellings
       .filter(misspelling =>
         misspelling.text.toLowerCase().includes(this.filter.value.toLowerCase())
       )
@@ -43,14 +47,29 @@ export class MisspellingTableComponent implements OnInit {
       );
   }
 
-  private findMisspellingCount() {
+  private findMisspellings() {
     this.httpClient
       .get<ReplacementCount[]>(
         `${environment.apiUrl}/statistics/count/misspellings`
       )
       .subscribe(res => {
-        this.misspellingCount = res;
-        this.collectionSize = this.misspellingCount.length;
+        this.misspellings = res;
+        this.collectionSize = this.misspellings.length;
       });
+  }
+
+  onSort({ column, direction }: SortEvent) {
+    // Resetting other headers
+    this.headers.forEach(header => {
+      if (header.appSortable !== column) {
+        header.direction = '';
+      }
+    });
+
+    // Sorting misspellings
+    this.misspellings = [...this.misspellings].sort((a, b) => {
+      const res = compare(a[column], b[column]);
+      return direction === 'asc' ? res : -res;
+    });
   }
 }

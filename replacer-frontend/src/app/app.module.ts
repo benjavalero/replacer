@@ -11,6 +11,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { HeaderComponent } from './header/header.component';
 import { StatsComponent } from './stats/stats.component';
 import { MisspellingTableComponent } from './misspelling-table/misspelling-table.component';
+import { SortableDirective } from './misspelling-table/sortable.directive';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { MisspellingTableComponent } from './misspelling-table/misspelling-table
     DashboardComponent,
     HeaderComponent,
     StatsComponent,
-    MisspellingTableComponent
+    MisspellingTableComponent,
+    SortableDirective
   ],
   imports: [
     BrowserModule,
