@@ -23,6 +23,7 @@ public class DumpController {
 
     @RequestMapping("/dump/run")
     public boolean processLatestDumpFileManually() {
+        // TODO : Estos métodos deberían devolver el true lo antes posible
         dumpManager.processLatestDumpFile(false);
         return true;
     }

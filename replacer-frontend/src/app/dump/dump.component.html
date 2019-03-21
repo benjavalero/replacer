@@ -1,0 +1,68 @@
+<h2>Indexación</h2>
+
+<p *ngIf="!status">Cargando estado de la indexación...</p>
+
+<div *ngIf="status && status.running">
+  <p>El procesamiento se está ejecutando.</p>
+  <ul>
+    <li>
+      Fichero en proceso: <strong>{{ status.dumpFileName }}</strong>
+    </li>
+    <li>
+      Tiempo estimado: <strong>{{ status.time }}</strong> (dd:hh:mm:ss)
+    </li>
+    <li>
+      Artículos leídos: <strong>{{ status.numArticlesRead }}</strong>
+    </li>
+    <li>
+      Artículos procesados: <strong>{{ status.numArticlesProcessed }}</strong>
+    </li>
+    <li>
+      Progreso: <strong>{{ status.progress }}</strong
+      >&nbsp;%
+    </li>
+    <li>
+      Tiempo medio por artículo: <strong>{{ status.average }}</strong> ms
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="status && !status.running">
+  <p>El procesamiento no se está ejecutando.</p>
+  <ul *ngIf="status.numArticlesRead">
+    <li>
+      Fichero procesado: <strong>{{ status.dumpFileName }}</strong>
+    </li>
+    <li>
+      Tiempo total: <strong>{{ status.time }}</strong> (dd:hh:mm:ss)
+    </li>
+    <li>
+      Artículos leídos: <strong>{{ status.numArticlesRead }}</strong>
+    </li>
+    <li>
+      Artículos procesados: <strong>{{ status.numArticlesProcessed }}</strong>
+    </li>
+    <li>
+      Tiempo medio por artículo: <strong>{{ status.average }}</strong> ms
+    </li>
+  </ul>
+
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group form-check">
+      <input
+        class="form-check-input"
+        id="force-check"
+        name="force-check"
+        type="checkbox"
+        [(ngModel)]="status.forceProcess"
+      />
+      <label class="form-check-label" for="force-check"
+        >Forzar procesamiento de artículos antiguos</label
+      >
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="button-index">
+      Comenzar procesamiento
+    </button>
+  </form>
+</div>
