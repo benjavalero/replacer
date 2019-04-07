@@ -1,0 +1,14 @@
+<h2>Artículo aleatorio</h2>
+
+<h3>{{ article.title }}</h3>
+
+<div *ngIf="article.title">
+  <a href="https://es.wikipedia.org/wiki/{{ article.title }}" target="_blank"
+    >Abrir artículo en Wikipedia</a
+  >
+</div>
+
+<app-content-editor
+  *ngIf="article.title"
+  [article]="article"
+></app-content-editor>

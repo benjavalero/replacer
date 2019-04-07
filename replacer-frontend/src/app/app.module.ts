@@ -13,6 +13,12 @@ import { StatsComponent } from './stats/stats.component';
 import { MisspellingTableComponent } from './misspelling-table/misspelling-table.component';
 import { SortableDirective } from './misspelling-table/sortable.directive';
 import { DumpComponent } from './dump/dump.component';
+import { RandomComponent } from './random/random.component';
+import { MisspellingReplacerComponent } from './misspelling-replacer/misspelling-replacer.component';
+import {
+  ContentEditorComponent,
+  replacerComponents
+} from './content-editor/content-editor.component';
 
 @NgModule({
   declarations: [
@@ -22,8 +28,13 @@ import { DumpComponent } from './dump/dump.component';
     StatsComponent,
     MisspellingTableComponent,
     SortableDirective,
-    DumpComponent
+    DumpComponent,
+    RandomComponent,
+    ContentEditorComponent,
+    replacerComponents,
+    MisspellingReplacerComponent
   ],
+  entryComponents: [replacerComponents],
   imports: [
     BrowserModule,
     FormsModule,

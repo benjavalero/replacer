@@ -25,7 +25,6 @@ export class DumpComponent implements OnInit {
   }
 
   private findDumpStatus() {
-    console.log('Find dump status');
     this.httpClient
       .get<DumpStatus>(`${environment.apiUrl}/dump/status`)
       .subscribe(res => {
