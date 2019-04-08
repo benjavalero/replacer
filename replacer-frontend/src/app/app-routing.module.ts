@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'stats', component: StatsComponent },
   { path: 'dump', component: DumpComponent },
   { path: 'random', component: RandomComponent },
+  { path: 'random/:word', component: RandomComponent },
   { path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
 ];
 

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 import { environment } from '../../environments/environment';
 import { ArticleReview } from './article-review';
@@ -12,12 +13,14 @@ import { AlertMessage } from './alert-message';
 })
 export class RandomComponent implements OnInit {
   loading = true;
+  word: string;
   article = {} as ArticleReview;
   messages: AlertMessage[] = [];
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.word = this.route.snapshot.paramMap.get('word');
     this.findRandomArticle();
   }
 
@@ -26,16 +29,15 @@ export class RandomComponent implements OnInit {
   }
 
   private findRandomArticle(): void {
-    const word = ''; // TODO : Leer de la ruta
-    // TODO : Usar el parámetro word de la ruta
-
     this.addMessage({
       type: 'info',
       message: 'Buscando artículo con reemplazos…'
     });
 
     this.httpClient
-      .get<ArticleReview>(`${environment.apiUrl}/article/random`)
+      .get<ArticleReview>(
+        `${environment.apiUrl}/article/random/${this.word || ''}`
+      )
       .subscribe((res: ArticleReview) => {
         this.messages = [];
         if (res.content) {
