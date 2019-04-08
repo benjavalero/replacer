@@ -7,9 +7,11 @@ import {
   ComponentRef,
   DoCheck,
   ElementRef,
+  EventEmitter,
   Injector,
   Input,
   OnDestroy,
+  Output,
   ViewChild
 } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -18,6 +20,7 @@ import { environment } from '../../environments/environment';
 import { MisspellingReplacerComponent } from '../misspelling-replacer/misspelling-replacer.component';
 import { ArticleReview } from '../random/article-review';
 import { ArticleReplacement } from '../random/article-replacements';
+import { AlertMessage } from '../random/alert-message';
 
 export const replacerComponents = [MisspellingReplacerComponent];
 const THRESHOLD = 200; // Number of characters to display between replacements
@@ -44,6 +47,9 @@ export class ContentEditorComponent implements DoCheck, OnDestroy {
     ComponentFactory<any>
   > = new Map();
   private embeddedComponents: ComponentRef<any>[] = [];
+
+  @Output() saving = new EventEmitter<AlertMessage>();
+  @Output() saved = new EventEmitter<AlertMessage>();
 
   constructor(
     private httpClient: HttpClient,
@@ -130,9 +136,6 @@ export class ContentEditorComponent implements DoCheck, OnDestroy {
           replacement.text,
           this.createMisspellingReplacement(replacement)
         );
-
-        // Add the replacement to the map
-        // TODO : replacements[replacementButton.id] = replacement;
       }
     });
 
@@ -247,6 +250,11 @@ export class ContentEditorComponent implements DoCheck, OnDestroy {
       }
     });
 
+    this.saving.emit({
+      type: 'info',
+      message: `Guardando cambios en «${this.articleTitle}»…`
+    });
+
     const formDataHeaders = new HttpHeaders({
       enctype: 'multipart/form-data'
     });
@@ -259,8 +267,12 @@ export class ContentEditorComponent implements DoCheck, OnDestroy {
           formData,
           { headers: formDataHeaders }
         )
-        .subscribe(res => console.log(`Artículo revisado con éxito: ${res}`));
-      // TODO : Mostrar mensaje de éxito y cargar el siguiente artículo
+        .subscribe(res => {
+          this.saved.emit({
+            type: 'success',
+            message: `Artículo «${this.articleTitle}» marcado como revisado`
+          });
+        });
     } else {
       formData.append('title', this.articleTitle);
       formData.append('text', textToSave);
@@ -268,8 +280,12 @@ export class ContentEditorComponent implements DoCheck, OnDestroy {
         .post(`${environment.apiUrl}/article/save`, formData, {
           headers: formDataHeaders
         })
-        .subscribe(res => console.log(`Artículo revisado con éxito: ${res}`));
-      // TODO : Mostrar mensaje de éxito y cargar el siguiente artículo
+        .subscribe(res => {
+          this.saved.emit({
+            type: 'success',
+            message: `Artículo «${this.articleTitle}» editado con éxito`
+          });
+        });
     }
   }
 }
