@@ -9,7 +9,7 @@ import { interval } from 'rxjs';
 @Component({
   selector: 'app-dump',
   templateUrl: './dump.component.html',
-  styleUrls: ['./dump.component.css']
+  styleUrls: []
 })
 export class DumpComponent implements OnInit {
   status: DumpStatus;

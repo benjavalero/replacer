@@ -9,7 +9,7 @@ import { AlertMessage } from './alert-message';
 @Component({
   selector: 'app-random',
   templateUrl: './random.component.html',
-  styleUrls: ['./random.component.css']
+  styleUrls: []
 })
 export class RandomComponent implements OnInit {
   loading = true;
