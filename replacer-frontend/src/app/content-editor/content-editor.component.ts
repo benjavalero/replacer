@@ -228,7 +228,7 @@ export class ContentEditorComponent implements DoCheck, OnDestroy {
     return result;
   }
 
-  private onSaveChanges() {
+  onSaveChanges() {
     let replacers: MisspellingReplacerComponent[] = [];
     this.embeddedComponents.forEach(comp => {
       replacers.push(comp.instance);

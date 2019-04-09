@@ -19,7 +19,7 @@ export class MisspellingReplacerComponent implements AfterViewInit {
   @Output() replaced = new EventEmitter<boolean>();
 
   newText: string;
-  private fixed = false;
+  fixed = false;
 
   constructor() {}
 
