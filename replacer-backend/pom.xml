@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>es.bvalero</groupId>
+        <groupId>es.bvalero.replacer</groupId>
         <artifactId>replacer-parent</artifactId>
         <version>1.6.5</version>
     </parent>

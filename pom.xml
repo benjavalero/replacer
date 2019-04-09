@@ -10,7 +10,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>es.bvalero</groupId>
+    <groupId>es.bvalero.replacer</groupId>
     <artifactId>replacer-parent</artifactId>
     <version>1.6.5</version>
     <packaging>pom</packaging>
