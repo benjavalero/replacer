@@ -4,6 +4,7 @@ import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,13 +33,6 @@ public class LoginController {
             OAuth1AccessToken accessToken = authenticationService.getAccessToken(requestToken, oauthVerifier);
             authenticationService.setAccessTokenInSession(accessToken);
             authenticationService.removeRequestTokenInSession();
-
-            // Redirect to the previous URL
-            String redirectUrl = authenticationService.getRedirectUrlInSession();
-            if (redirectUrl != null) {
-                authenticationService.removeRedirectUrlInSession();
-                return new ModelAndView("redirect:" + redirectUrl);
-            }
         }
 
         return new ModelAndView("redirect:/index.html");
@@ -54,6 +48,12 @@ public class LoginController {
         // Add the request token to the session to use it when getting back
         authenticationService.setRequestTokenInSession(requestToken);
         return new ModelAndView("redirect:" + authenticationService.getAuthorizationUrl(requestToken));
+    }
+
+    @RequestMapping("/authenticated")
+    public boolean authenticated(HttpSession session) {
+        // TODO : Move to Angular Auth Guard in case we can check the token in session there
+        return authenticationService.isAuthenticated();
     }
 
 }

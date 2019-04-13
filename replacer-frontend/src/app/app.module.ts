@@ -7,7 +7,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+import { AuthGuard } from './guards/auth-guard.service';
+
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 import { StatsComponent } from './stats/stats.component';
 import { MisspellingTableComponent } from './misspelling-table/misspelling-table.component';
@@ -24,6 +27,7 @@ import {
   declarations: [
     AppComponent,
     DashboardComponent,
+    LoginComponent,
     HeaderComponent,
     StatsComponent,
     MisspellingTableComponent,
@@ -43,7 +47,7 @@ import {
     AppRoutingModule,
     NgbModule
   ],
-  providers: [],
+  providers: [AuthGuard],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

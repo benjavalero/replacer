@@ -66,18 +66,4 @@ class AuthenticationServiceMock implements IAuthenticationService {
         // Do nothing
     }
 
-    @Override
-    public String getRedirectUrlInSession() {
-        return null;
-    }
-
-    @Override
-    public void setRedirectUrlInSession(String url) {
-        // Do nothing
-    }
-
-    @Override
-    public void removeRedirectUrlInSession() {
-        // Do nothing
-    }
 }

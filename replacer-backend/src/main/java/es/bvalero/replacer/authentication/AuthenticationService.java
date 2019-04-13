@@ -20,7 +20,6 @@ class AuthenticationService implements IAuthenticationService {
 
     private static final String WIKIPEDIA_API_URL = "https://es.wikipedia.org/w/api.php";
     private static final String TOKEN_ACCESS = "accessToken";
-    private static final String REDIRECT_URL = "redirectUrl";
     private static final String TOKEN_REQUEST = "requestToken";
 
     @Autowired
@@ -156,28 +155,6 @@ class AuthenticationService implements IAuthenticationService {
     @Override
     public void setAccessTokenInSession(OAuth1AccessToken accessToken) {
         session.setAttribute(TOKEN_ACCESS, accessToken);
-    }
-
-    /* REDIRECT TOKEN */
-
-    @Override
-    public String getRedirectUrlInSession() {
-        Object url = session.getAttribute(REDIRECT_URL);
-        if (url == null) {
-            return null;
-        } else {
-            return (String) url;
-        }
-    }
-
-    @Override
-    public void setRedirectUrlInSession(String url) {
-        session.setAttribute(REDIRECT_URL, url);
-    }
-
-    @Override
-    public void removeRedirectUrlInSession() {
-        session.removeAttribute(REDIRECT_URL);
     }
 
 }

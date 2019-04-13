@@ -37,12 +37,4 @@ public interface IAuthenticationService {
 
     void setAccessTokenInSession(OAuth1AccessToken accessToken);
 
-    /* REDIRECT TOKEN */
-
-    String getRedirectUrlInSession();
-
-    void setRedirectUrlInSession(String url);
-
-    void removeRedirectUrlInSession();
-
 }
