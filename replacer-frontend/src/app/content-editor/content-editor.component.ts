@@ -14,13 +14,14 @@ import {
   Output,
   ViewChild
 } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 import { MisspellingReplacerComponent } from '../misspelling-replacer/misspelling-replacer.component';
 import { ArticleReview } from '../random/article-review';
 import { ArticleReplacement } from '../random/article-replacements';
 import { AlertMessage } from '../random/alert-message';
+import { AuthenticationService } from '../authentication/authentication.service';
 
 export const replacerComponents = [MisspellingReplacerComponent];
 const THRESHOLD = 200; // Number of characters to display between replacements
@@ -53,6 +54,7 @@ export class ContentEditorComponent implements DoCheck, OnDestroy {
 
   constructor(
     private httpClient: HttpClient,
+    private authenticationService: AuthenticationService,
     componentFactoryResolver: ComponentFactoryResolver,
     private injector: Injector
   ) {
@@ -166,9 +168,9 @@ export class ContentEditorComponent implements DoCheck, OnDestroy {
   ): string {
     return `<app-misspelling-replacer start="${replacement.start}" text="${
       replacement.text
-    }" comment="${replacement.comment}" suggestion="${
+      }" comment="${replacement.comment}" suggestion="${
       replacement.suggestion
-    }"></app-misspelling-replacer>`;
+      }"></app-misspelling-replacer>`;
   }
 
   private replaceText(
@@ -177,6 +179,9 @@ export class ContentEditorComponent implements DoCheck, OnDestroy {
     currentText: string,
     newText: string
   ): string {
+    // Force the cast to number as it seems the position comes as a string
+    position = +position;
+
     return (
       fullText.slice(0, position) +
       newText +
@@ -212,8 +217,8 @@ export class ContentEditorComponent implements DoCheck, OnDestroy {
           textBefore.length <= THRESHOLD * 2
             ? textBefore
             : textBefore.substring(0, THRESHOLD) +
-              '... <hr /> ...' +
-              textBefore.substring(textBefore.length - THRESHOLD);
+            '... <hr /> ...' +
+            textBefore.substring(textBefore.length - THRESHOLD);
       }
       result += matchText;
 
@@ -255,18 +260,14 @@ export class ContentEditorComponent implements DoCheck, OnDestroy {
       message: `Guardando cambios en «${this.articleTitle}»…`
     });
 
-    const formDataHeaders = new HttpHeaders({
-      enctype: 'multipart/form-data'
-    });
-    const formData = new FormData();
+    let params = new HttpParams();
+    params = params.append('token', this.authenticationService.accessToken.token);
+    params = params.append('tokenSecret', this.authenticationService.accessToken.tokenSecret);
+    params = params.append('title', this.articleTitle);
+
     if (textToSave === this.originalContent) {
-      formData.append('title', this.articleTitle);
-      this.httpClient
-        .post<boolean>(
-          `${environment.apiUrl}/article/save/nochanges`,
-          formData,
-          { headers: formDataHeaders }
-        )
+      // Send an empty text in the request body
+      this.httpClient.put<boolean>(`${environment.apiUrl}/article`, ' ', { params })
         .subscribe(res => {
           this.saved.emit({
             type: 'success',
@@ -274,12 +275,7 @@ export class ContentEditorComponent implements DoCheck, OnDestroy {
           });
         });
     } else {
-      formData.append('title', this.articleTitle);
-      formData.append('text', textToSave);
-      this.httpClient
-        .post(`${environment.apiUrl}/article/save`, formData, {
-          headers: formDataHeaders
-        })
+      this.httpClient.put<boolean>(`${environment.apiUrl}/article`, textToSave, { params })
         .subscribe(res => {
           this.saved.emit({
             type: 'success',

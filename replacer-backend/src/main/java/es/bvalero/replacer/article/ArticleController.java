@@ -1,13 +1,12 @@
 package es.bvalero.replacer.article;
 
+import com.github.scribejava.core.model.OAuth1AccessToken;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ArticleController {
@@ -61,21 +60,21 @@ public class ArticleController {
         return articleData;
     }
 
-    @RequestMapping("/article/save")
-    public boolean save(@RequestParam("title") String title, @RequestParam("text") String text) {
-        LOGGER.info("Saving changes in: {}", title);
-        return articleService.saveArticleChanges(title, text);
-    }
-
-    @RequestMapping("/article/save/nochanges")
-    public boolean saveNoChanges(@RequestParam("title") String title) {
-        LOGGER.info("Saving with no changes: {}", title);
-        try {
-            articleService.markArticleAsReviewed(title);
-            return true;
-        } catch (Exception e) {
-            LOGGER.error("Error marking article as reviewed: {}", title);
-            return false;
+    @PutMapping("/article")
+    public boolean save(@RequestParam String title, @RequestBody String text,
+                     @RequestParam String token, @RequestParam String tokenSecret) {
+        if (StringUtils.isNotBlank(text)) {
+            OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
+            return articleService.saveArticleChanges(title, text, accessToken);
+        } else {
+            LOGGER.info("Saving with no changes: {}", title);
+            try {
+                articleService.markArticleAsReviewed(title);
+                return true;
+            } catch (Exception e) {
+                LOGGER.error("Error marking article as reviewed: {}", title);
+                return false;
+            }
         }
     }
 

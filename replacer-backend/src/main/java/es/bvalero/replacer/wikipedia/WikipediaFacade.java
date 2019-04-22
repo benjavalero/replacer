@@ -1,6 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.bitplan.mediawiki.japi.Mediawiki;
+import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.authentication.IAuthenticationService;
@@ -52,7 +53,8 @@ public class WikipediaFacade implements IWikipediaFacade {
     }
 
     @Override
-    public void editArticleContent(String articleTitle, String articleContent) throws WikipediaException {
+    public void editArticleContent(String articleTitle, String articleContent, OAuth1AccessToken accessToken)
+            throws WikipediaException {
         // TODO : Check just before uploading there are no changes during the edition
         try {
             OAuthRequest request = authenticationService.createOauthRequest();
@@ -62,9 +64,9 @@ public class WikipediaFacade implements IWikipediaFacade {
             request.addParameter("text", articleContent);
             request.addParameter("summary", EDIT_SUMMARY);
             request.addParameter("minor", "true");
-            request.addParameter("token", authenticationService.getEditToken());
+            request.addParameter("token", authenticationService.getEditToken(accessToken));
 
-            authenticationService.signAndExecuteOauthRequest(request);
+            authenticationService.signAndExecuteOauthRequest(request, accessToken);
         } catch (AuthenticationException e) {
             throw new WikipediaException(e);
         }

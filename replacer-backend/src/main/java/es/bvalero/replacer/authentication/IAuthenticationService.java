@@ -12,29 +12,16 @@ public interface IAuthenticationService {
 
     OAuthRequest createOauthRequest();
 
-    Response signAndExecuteOauthRequest(OAuthRequest request) throws AuthenticationException;
+    Response signAndExecuteOauthRequest(OAuthRequest request, OAuth1AccessToken accessToken)
+            throws AuthenticationException;
 
-    String getEditToken() throws AuthenticationException;
-
-    boolean isAuthenticated();
+    String getEditToken(OAuth1AccessToken accessToken) throws AuthenticationException;
 
     String getAuthorizationUrl(OAuth1RequestToken requestToken);
 
-    /* REQUEST TOKEN */
-
     OAuth1RequestToken getRequestToken() throws InterruptedException, ExecutionException, IOException;
-
-    OAuth1RequestToken getRequestTokenInSession();
-
-    void setRequestTokenInSession(OAuth1RequestToken requestToken);
-
-    void removeRequestTokenInSession();
-
-    /* ACCESS TOKEN */
 
     OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
             throws InterruptedException, ExecutionException, IOException;
-
-    void setAccessTokenInSession(OAuth1AccessToken accessToken);
 
 }
