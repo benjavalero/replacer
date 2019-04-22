@@ -1,5 +1,25 @@
 # Detalles técnicos
 
+## Despliegue
+
+Para poder desplegar en los servidores de Wikipedia, hay que forzar el contexto con el nombre de la herramienta y el puerto para sortear el proxy. Esto se configura en el archivo `application.yml`:
+```
+server:
+  port: 8000
+  servlet.context-path: /replacer/
+```
+
+Al empaquetar, el frontend se compila con el contexto de la herramienta `--baseHref /replacer/`, se incluye en el WAR y por tanto se despliega junto con el backend en https://tools.wmflabs.org/replacer/.
+
+En local por tanto se despliega en http://localhost:8000/replacer/. El frontend se despliega con `--port 8080` para cuadrar con la dirección de vuelta de la autenticación y por tanto lo hace en http://localhost:8080. En `environment.ts` apuntamos al backend local.
+
+## Autenticación
+
+La autenticación se realiza mediante el protocolo Oauth 1.0a contra la API de Wikimedia, lo que permite utilizar la aplicación con los mismos usuarios con los que editamos normalmente en Wikipedia. Por seguridad, se implementa la autenticación en el backend, y el frontend solo contendrá el último token de acceso.
+
+La dirección de vuelta tras autenticar, si se usan los tokens de Producción, es la de inicio: https://tools.wmflabs.org/replacer/. En cambio, si se usan los tokens de desarrollo, la dirección de vuelta tras autenticar es http://localhost:8080/.
+
+
 ## Nomenclatura
 
 - *Article*: artículo o página de la Wikipedia.

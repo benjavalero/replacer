@@ -7,9 +7,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { AuthGuard } from './guards/auth-guard.service';
+import { AuthenticationGuard } from './authentication/authentication.guard';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { IndexComponent } from './authentication/index.component';
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 import { StatsComponent } from './stats/stats.component';
@@ -27,6 +28,7 @@ import {
   declarations: [
     AppComponent,
     DashboardComponent,
+    IndexComponent,
     LoginComponent,
     HeaderComponent,
     StatsComponent,
@@ -47,7 +49,7 @@ import {
     AppRoutingModule,
     NgbModule
   ],
-  providers: [AuthGuard],
+  providers: [AuthenticationGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
