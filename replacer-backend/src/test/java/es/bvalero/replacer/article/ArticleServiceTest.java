@@ -1,5 +1,6 @@
 package es.bvalero.replacer.article;
 
+import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.persistence.Article;
@@ -84,9 +85,10 @@ public class ArticleServiceTest {
         Article articleDb = Article.builder().build();
         Mockito.when(articleRepository.findByTitle(Mockito.anyString())).thenReturn(articleDb);
 
-        articleService.saveArticleChanges(title, text);
+        OAuth1AccessToken accessToken = Mockito.mock(OAuth1AccessToken.class);
+        articleService.saveArticleChanges(title, text, accessToken);
 
-        Mockito.verify(wikipediaFacade).editArticleContent(title, text);
+        Mockito.verify(wikipediaFacade).editArticleContent(title, text, accessToken);
         Mockito.verify(replacementRepository).deleteByArticle(Mockito.any(Article.class));
         Mockito.verify(articleRepository).save(Mockito.any(Article.class));
     }

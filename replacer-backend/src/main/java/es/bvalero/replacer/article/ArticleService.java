@@ -1,5 +1,6 @@
 package es.bvalero.replacer.article;
 
+import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.persistence.Article;
@@ -163,10 +164,10 @@ public class ArticleService {
     /**
      * Saves in Wikipedia the changes on an article validated in the front-end.
      */
-    boolean saveArticleChanges(String title, String text) {
+    boolean saveArticleChanges(String title, String text, OAuth1AccessToken accessToken) {
         try {
             // Upload new content to Wikipedia
-            wikipediaFacade.editArticleContent(title, text);
+            wikipediaFacade.editArticleContent(title, text, accessToken);
 
             // Mark article as reviewed in the database
             markArticleAsReviewed(title);

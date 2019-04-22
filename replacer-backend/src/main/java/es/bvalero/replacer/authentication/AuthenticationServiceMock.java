@@ -17,18 +17,13 @@ class AuthenticationServiceMock implements IAuthenticationService {
     }
 
     @Override
-    public Response signAndExecuteOauthRequest(OAuthRequest request) {
+    public Response signAndExecuteOauthRequest(OAuthRequest request, OAuth1AccessToken accessToken) {
         return null;
     }
 
     @Override
-    public String getEditToken() {
+    public String getEditToken(OAuth1AccessToken accessToken) {
         return null;
-    }
-
-    @Override
-    public boolean isAuthenticated() {
-        return true;
     }
 
     @Override
@@ -42,28 +37,8 @@ class AuthenticationServiceMock implements IAuthenticationService {
     }
 
     @Override
-    public OAuth1RequestToken getRequestTokenInSession() {
-        return null;
-    }
-
-    @Override
-    public void setRequestTokenInSession(OAuth1RequestToken requestToken) {
-        // Do nothing
-    }
-
-    @Override
-    public void removeRequestTokenInSession() {
-        // Do nothing
-    }
-
-    @Override
     public OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier) {
         return null;
-    }
-
-    @Override
-    public void setAccessTokenInSession(OAuth1AccessToken accessToken) {
-        // Do nothing
     }
 
 }

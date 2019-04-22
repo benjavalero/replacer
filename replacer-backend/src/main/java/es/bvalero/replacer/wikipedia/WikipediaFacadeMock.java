@@ -1,5 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
+import com.github.scribejava.core.model.OAuth1AccessToken;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,7 @@ class WikipediaFacadeMock implements IWikipediaFacade {
     }
 
     @Override
-    public void editArticleContent(String articleTitle, String articleContent) {
+    public void editArticleContent(String articleTitle, String articleContent, OAuth1AccessToken accessToken) {
         // Do nothing
     }
 
