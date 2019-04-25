@@ -1,61 +1,51 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.bitplan.mediawiki.japi.Mediawiki;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
-import com.github.scribejava.core.model.OAuthRequest;
 import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.authentication.IAuthenticationService;
-import org.jetbrains.annotations.NonNls;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @Profile("default")
-public class WikipediaFacade implements IWikipediaFacade {
-
-    @NonNls
-    private static final Logger LOGGER = LoggerFactory.getLogger(WikipediaFacade.class);
-    private static final String WIKIPEDIA_URL = "https://es.wikipedia.org";
-    private static final String EDIT_SUMMARY = "Correcciones ortográficas";
+class WikipediaFacade implements IWikipediaFacade {
 
     @Autowired
     private IAuthenticationService authenticationService;
 
-    private Mediawiki wiki;
-
-    private Mediawiki getWiki() throws WikipediaException {
-        if (wiki == null) {
-            try {
-                wiki = new Mediawiki(WIKIPEDIA_URL);
-            } catch (Exception e) {
-                throw new WikipediaException(e);
-            }
-        }
-        return wiki;
-    }
-
     @Override
-    public String getArticleContent(String articleTitle) throws WikipediaException {
-        LOGGER.info("Getting content for article: {}", articleTitle);
+    public String getPageContent(String pageTitle) throws WikipediaException {
+        Map<String, String> params = new HashMap<>();
+        params.put("action", "query");
+        params.put("prop", "revisions");
+        params.put("rvprop", "content");
+        params.put("titles", pageTitle);
+
         try {
-            String articleContent = getWiki().getPageContent(articleTitle);
-            if (articleContent == null) {
-                LOGGER.info("Article not available: {}", articleTitle);
-                throw new UnavailableArticleException();
-            }
-            return articleContent;
-        } catch (Exception e) {
+            // TODO : Use real access token
+            String response = authenticationService.createOAuthRequest(params);
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode json = mapper.readTree(response);
+            return json.get("query").get("pages").get(0).get("revisions").get(0).get("*").asText();
+        } catch (AuthenticationException | IOException e) {
             throw new WikipediaException(e);
         }
     }
 
     @Override
-    public void editArticleContent(String articleTitle, String articleContent, OAuth1AccessToken accessToken)
+    public void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
             throws WikipediaException {
         // TODO : Check just before uploading there are no changes during the edition
+        /* TODO
         try {
             OAuthRequest request = authenticationService.createOauthRequest();
             request.addParameter("format", "json");
@@ -70,6 +60,7 @@ public class WikipediaFacade implements IWikipediaFacade {
         } catch (AuthenticationException e) {
             throw new WikipediaException(e);
         }
+        */
     }
 
 }

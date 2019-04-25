@@ -8,7 +8,7 @@ import es.bvalero.replacer.persistence.ArticleRepository;
 import es.bvalero.replacer.persistence.Replacement;
 import es.bvalero.replacer.persistence.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaUtils;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -41,6 +41,9 @@ class DumpArticleProcessor {
     private Collection<Replacement> replacementsToAdd = new HashSet<>(CACHE_SIZE); // Set to avoid duplicates
 
     @Autowired
+    private WikipediaService wikipediaService;
+
+    @Autowired
     private ArticleRepository articleRepository;
 
     @Autowired
@@ -64,7 +67,7 @@ class DumpArticleProcessor {
         LOGGER.debug("Processing article: {}...", dumpArticle.getTitle());
 
         if (!isArticleProcessableByNamespace(dumpArticle.getNamespace())
-                || WikipediaUtils.isRedirectionArticle(dumpArticle.getContent())) {
+                || wikipediaService.isRedirectionPage(dumpArticle.getContent())) {
             LOGGER.debug("Article not processable by namespace or content");
             return false;
         }

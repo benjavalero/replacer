@@ -6,11 +6,14 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public interface IAuthenticationService {
 
     OAuthRequest createOauthRequest();
+
+    String createOAuthRequest(Map<String, String> params) throws AuthenticationException;
 
     Response signAndExecuteOauthRequest(OAuthRequest request, OAuth1AccessToken accessToken)
             throws AuthenticationException;

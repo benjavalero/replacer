@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -40,6 +41,17 @@ class AuthenticationService implements IAuthenticationService {
     @Override
     public OAuthRequest createOauthRequest() {
         return new OAuthRequest(Verb.POST, WIKIPEDIA_API_URL);
+    }
+
+    @Override
+    public String createOAuthRequest(Map<String, String> params) throws AuthenticationException {
+        OAuthRequest request = createOauthRequest();
+        params.forEach(request::addParameter);
+        try {
+            return getOAuthService().execute(request).getBody();
+        } catch (InterruptedException | ExecutionException | IOException e) {
+            throw new AuthenticationException(e);
+        }
     }
 
     @Override
