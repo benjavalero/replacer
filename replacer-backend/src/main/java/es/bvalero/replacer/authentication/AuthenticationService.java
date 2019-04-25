@@ -40,7 +40,10 @@ class AuthenticationService implements IAuthenticationService {
 
     @Override
     public OAuthRequest createOauthRequest() {
-        return new OAuthRequest(Verb.POST, WIKIPEDIA_API_URL);
+        OAuthRequest request = new OAuthRequest(Verb.POST, WIKIPEDIA_API_URL);
+        request.addParameter("format", "json");
+        request.addParameter("formatversion", "2");
+        return request;
     }
 
     @Override

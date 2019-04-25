@@ -35,7 +35,7 @@ class WikipediaFacade implements IWikipediaFacade {
 
             ObjectMapper mapper = new ObjectMapper();
             JsonNode json = mapper.readTree(response);
-            return json.get("query").get("pages").get(0).get("revisions").get(0).get("*").asText();
+            return json.get("query").get("pages").get(0).get("revisions").get(0).get("content").asText();
         } catch (AuthenticationException | IOException e) {
             throw new WikipediaException(e);
         }
