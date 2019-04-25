@@ -31,11 +31,22 @@ class WikipediaFacade implements IWikipediaFacade {
 
         try {
             // TODO : Use real access token
-            String response = authenticationService.createOAuthRequest(params);
+            String response = authenticationService.executeOAuthRequest(params);
 
             ObjectMapper mapper = new ObjectMapper();
             JsonNode json = mapper.readTree(response);
-            return json.get("query").get("pages").get(0).get("revisions").get(0).get("content").asText();
+            JsonNode pages = json.get("query").get("pages");
+            if (pages != null && pages.size() > 0) {
+                JsonNode page = pages.get(0);
+                if (page != null) {
+                    JsonNode revisions = page.get("revisions");
+                    if (revisions != null && revisions.size() > 0) {
+                        return revisions.get(0).get("content").asText();
+                    }
+                }
+            }
+
+            throw new UnavailableArticleException();
         } catch (AuthenticationException | IOException e) {
             throw new WikipediaException(e);
         }

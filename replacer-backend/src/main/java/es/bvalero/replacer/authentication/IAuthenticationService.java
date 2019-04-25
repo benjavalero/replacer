@@ -13,7 +13,7 @@ public interface IAuthenticationService {
 
     OAuthRequest createOauthRequest();
 
-    String createOAuthRequest(Map<String, String> params) throws AuthenticationException;
+    String executeOAuthRequest(Map<String, String> params) throws AuthenticationException;
 
     Response signAndExecuteOauthRequest(OAuthRequest request, OAuth1AccessToken accessToken)
             throws AuthenticationException;

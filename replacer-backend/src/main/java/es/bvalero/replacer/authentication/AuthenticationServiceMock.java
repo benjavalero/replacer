@@ -19,7 +19,7 @@ class AuthenticationServiceMock implements IAuthenticationService {
     }
 
     @Override
-    public String createOAuthRequest(Map<String, String> params) {
+    public String executeOAuthRequest(Map<String, String> params) {
         return null;
     }
 

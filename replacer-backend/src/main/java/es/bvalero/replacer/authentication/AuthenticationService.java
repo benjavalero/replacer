@@ -47,11 +47,13 @@ class AuthenticationService implements IAuthenticationService {
     }
 
     @Override
-    public String createOAuthRequest(Map<String, String> params) throws AuthenticationException {
+    public String executeOAuthRequest(Map<String, String> params) throws AuthenticationException {
         OAuthRequest request = createOauthRequest();
         params.forEach(request::addParameter);
         try {
-            return getOAuthService().execute(request).getBody();
+            String response = getOAuthService().execute(request).getBody();
+            checkOauthResponse(response);
+            return response;
         } catch (InterruptedException | ExecutionException | IOException e) {
             throw new AuthenticationException(e);
         }
@@ -67,6 +69,20 @@ class AuthenticationService implements IAuthenticationService {
             return response;
         } catch (Exception e) {
             throw new AuthenticationException(e);
+        }
+    }
+
+    private void checkOauthResponse(String response) throws IOException, AuthenticationException {
+        if (response == null) {
+            throw new AuthenticationException("API result is null");
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode json = mapper.readTree(response);
+        if (json.get("error") != null) {
+            throw new AuthenticationException(json.get("error").asText());
+        } else if (json.get("warnings") != null) {
+            throw new AuthenticationException(json.get("warnings").asText());
         }
     }
 
