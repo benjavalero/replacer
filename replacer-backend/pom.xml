@@ -75,11 +75,6 @@
             <version>5.6.0</version>
         </dependency>
         <dependency>
-            <groupId>com.bitplan</groupId>
-            <artifactId>mediawiki-japi</artifactId>
-            <version>0.1.02</version>
-        </dependency>
-        <dependency>
             <groupId>dk.brics</groupId>
             <artifactId>automaton</artifactId>
             <version>1.12-1</version>

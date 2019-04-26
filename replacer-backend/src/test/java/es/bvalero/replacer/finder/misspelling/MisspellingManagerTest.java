@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.misspelling;
 
-import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,7 @@ import java.util.Collection;
 public class MisspellingManagerTest {
 
     @Mock
-    private IWikipediaFacade wikipediaService;
+    private WikipediaService wikipediaService;
 
     @InjectMocks
     private MisspellingManager misspellingManager;
@@ -28,7 +28,7 @@ public class MisspellingManagerTest {
 
     @Test(expected = WikipediaException.class)
     public void testFindWikipediaMisspellingsWithErrors() throws WikipediaException {
-        Mockito.when(wikipediaService.getArticleContent(Mockito.anyString())).thenThrow(new WikipediaException());
+        Mockito.when(wikipediaService.getMisspellingListPageContent()).thenThrow(new WikipediaException());
         misspellingManager.findWikipediaMisspellings();
     }
 

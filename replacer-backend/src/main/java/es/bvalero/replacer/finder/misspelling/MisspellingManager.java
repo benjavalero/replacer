@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.misspelling;
 
-import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ public class MisspellingManager {
     private static final int MISSPELLING_ESTIMATED_COUNT = 20000;
 
     @Autowired
-    private IWikipediaFacade wikipediaFacade;
+    private WikipediaService wikipediaService;
 
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
@@ -60,7 +60,7 @@ public class MisspellingManager {
 
     Set<Misspelling> findWikipediaMisspellings() throws WikipediaException {
         LOGGER.info("Start loading misspelling list from Wikipedia...");
-        String misspellingListText = wikipediaFacade.getArticleContent(IWikipediaFacade.MISSPELLING_LIST_ARTICLE);
+        String misspellingListText = wikipediaService.getMisspellingListPageContent();
         Set<Misspelling> misspellingSet = parseMisspellingListText(misspellingListText);
         LOGGER.info("End parsing misspelling list from Wikipedia: {} items", misspellingSet.size());
         return misspellingSet;

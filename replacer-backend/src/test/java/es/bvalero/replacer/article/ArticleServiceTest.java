@@ -7,8 +7,8 @@ import es.bvalero.replacer.persistence.Article;
 import es.bvalero.replacer.persistence.ArticleRepository;
 import es.bvalero.replacer.persistence.ReplacementRepository;
 import es.bvalero.replacer.persistence.ReplacementType;
-import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -35,7 +36,7 @@ public class ArticleServiceTest {
     private ReplacementRepository replacementRepository;
 
     @Mock
-    private IWikipediaFacade wikipediaFacade;
+    private WikipediaService wikipediaService;
 
     @InjectMocks
     private ArticleService articleService;
@@ -57,7 +58,7 @@ public class ArticleServiceTest {
                 .build();
         Mockito.when(replacementRepository.findRandom(Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(randomArticle));
-        Mockito.when(wikipediaFacade.getArticleContent(Mockito.anyString())).thenReturn(text);
+        Mockito.when(wikipediaService.getPageContent(Mockito.anyString())).thenReturn(text);
 
         // Replacement matches
         ArticleReplacement replacement = ArticleReplacement.builder()
@@ -88,7 +89,8 @@ public class ArticleServiceTest {
         OAuth1AccessToken accessToken = Mockito.mock(OAuth1AccessToken.class);
         articleService.saveArticleChanges(title, text, accessToken);
 
-        Mockito.verify(wikipediaFacade).editArticleContent(title, text, accessToken);
+        Mockito.verify(wikipediaService).savePageContent(
+                Mockito.eq(title), Mockito.eq(text), Mockito.any(LocalDateTime.class), Mockito.eq(accessToken));
         Mockito.verify(replacementRepository).deleteByArticle(Mockito.any(Article.class));
         Mockito.verify(articleRepository).save(Mockito.any(Article.class));
     }

@@ -19,6 +19,11 @@ La autenticación se realiza mediante el protocolo Oauth 1.0a contra la API de W
 
 La dirección de vuelta tras autenticar, si se usan los tokens de Producción, es la de inicio: https://tools.wmflabs.org/replacer/. En cambio, si se usan los tokens de desarrollo, la dirección de vuelta tras autenticar es http://localhost:8080/.
 
+## Wikipedia API
+
+La herramienta no precisa de muchas llamadas distintas a la API de la Wikipedia, principalmente recuperar el contenido de una página y editarlo. Aunque hay librerías que lo facilitan, como [Mediawiki-Japi](https://github.com/WolfgangFahl/Mediawiki-Japi), no permiten la autenticación con Oauth por lo que el autor de las ediciones no quedaría reflejado.
+
+Por tanto he decidido implementar todas las llamadas dentro de la propia herramienta, que irán firmadas con el token OAuth, incluso las de lectura.
 
 ## Nomenclatura
 

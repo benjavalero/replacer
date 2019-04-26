@@ -2,14 +2,22 @@ package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 
-public interface IWikipediaFacade {
+import java.time.LocalDateTime;
 
-    String MISSPELLING_LIST_ARTICLE = "Wikipedia:Corrector_ortográfico/Listado";
-    String FALSE_POSITIVE_LIST_ARTICLE = "Usuario:Benjavalero/FalsePositives";
+interface IWikipediaFacade {
 
-    // TODO : Take into account the difference between UnavailableArticleException and the generic WikipediaException
-    String getArticleContent(String articleTitle) throws WikipediaException;
+    String MISSPELLING_LIST_PAGE = "Wikipedia:Corrector_ortográfico/Listado";
+    String FALSE_POSITIVE_LIST_PAGE = "Usuario:Benjavalero/FalsePositives";
 
-    void editArticleContent(String articleTitle, String articleContent, OAuth1AccessToken accessToken) throws WikipediaException;
+    // TODO : Take into account the difference between UnavailablePageException and the generic WikipediaException
+    String getPageContent(String pageTitle) throws WikipediaException;
+
+    @Deprecated
+    String getPageContent(String pageTitle, OAuth1AccessToken accessToken) throws WikipediaException;
+
+    String getPageContent(int pageId, OAuth1AccessToken accessToken) throws WikipediaException;
+
+    void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
+            throws WikipediaException;
 
 }

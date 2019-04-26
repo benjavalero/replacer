@@ -6,9 +6,8 @@ import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.persistence.Article;
 import es.bvalero.replacer.persistence.ArticleRepository;
 import es.bvalero.replacer.persistence.ReplacementRepository;
-import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaUtils;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -19,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
@@ -43,7 +43,7 @@ public class ArticleService {
     private ReplacementRepository replacementRepository;
 
     @Autowired
-    private IWikipediaFacade wikipediaFacade;
+    private WikipediaService wikipediaService;
 
     @Value("${replacer.hide.empty.paragraphs}")
     private boolean trimText;
@@ -117,10 +117,10 @@ public class ArticleService {
 
     private String findArticleContent(String title) throws InvalidArticleException {
         try {
-            String articleContent = wikipediaFacade.getArticleContent(title);
+            String articleContent = wikipediaService.getPageContent(title);
 
             // Check if the article is processable
-            if (WikipediaUtils.isRedirectionArticle(articleContent)) {
+            if (wikipediaService.isRedirectionPage(articleContent)) {
                 throw new InvalidArticleException("Found article is a redirection page");
             }
 
@@ -167,7 +167,7 @@ public class ArticleService {
     boolean saveArticleChanges(String title, String text, OAuth1AccessToken accessToken) {
         try {
             // Upload new content to Wikipedia
-            wikipediaFacade.editArticleContent(title, text, accessToken);
+            wikipediaService.savePageContent(title, text, LocalDateTime.now(), accessToken);
 
             // Mark article as reviewed in the database
             markArticleAsReviewed(title);
