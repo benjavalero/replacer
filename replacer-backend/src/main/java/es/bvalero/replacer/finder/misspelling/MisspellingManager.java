@@ -66,7 +66,8 @@ public class MisspellingManager {
         return misspellingSet;
     }
 
-    Set<Misspelling> parseMisspellingListText(String misspellingListText) {
+    // We make this method public to be used by the word benchmark
+    public Set<Misspelling> parseMisspellingListText(String misspellingListText) {
         Set<Misspelling> misspellingSet = new HashSet<>(MISSPELLING_ESTIMATED_COUNT);
 
         Stream<String> stream = new BufferedReader(new StringReader(misspellingListText)).lines();
