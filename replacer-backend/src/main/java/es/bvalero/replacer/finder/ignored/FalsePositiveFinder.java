@@ -7,8 +7,8 @@ import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.persistence.ReplacementType;
-import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class FalsePositiveFinder extends ReplacementFinder implements IgnoredRep
     private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinder.class);
 
     @Autowired
-    private IWikipediaFacade wikipediaFacade;
+    private WikipediaService wikipediaService;
 
     private RunAutomaton falsePositivesAutomaton;
 
@@ -56,7 +56,7 @@ public class FalsePositiveFinder extends ReplacementFinder implements IgnoredRep
 
     List<String> loadFalsePositives() throws WikipediaException {
         LOGGER.info("Start loading false positive list from Wikipedia...");
-        String falsePositivesListText = wikipediaFacade.getArticleContent(IWikipediaFacade.FALSE_POSITIVE_LIST_ARTICLE);
+        String falsePositivesListText = wikipediaService.getFalsePositiveListPageContent();
         List<String> falsePositivesList = parseFalsePositivesListText(falsePositivesListText);
         LOGGER.info("End parsing false positive list from Wikipedia: {} items", falsePositivesList.size());
         return falsePositivesList;

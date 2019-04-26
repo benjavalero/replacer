@@ -9,19 +9,20 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 
 @Service
 @Profile("offline")
 class WikipediaFacadeMock implements IWikipediaFacade {
 
     @Override
-    public String getArticleContent(String articleTitle) throws WikipediaException {
+    public String getPageContent(String pageTitle) throws WikipediaException {
         String content;
-        switch (articleTitle) {
-            case MISSPELLING_LIST_ARTICLE:
+        switch (pageTitle) {
+            case MISSPELLING_LIST_PAGE:
                 content = loadArticleContent("/misspelling-list.txt");
                 break;
-            case FALSE_POSITIVE_LIST_ARTICLE:
+            case FALSE_POSITIVE_LIST_PAGE:
                 content = loadArticleContent("/false-positives.txt");
                 break;
             default:
@@ -32,7 +33,17 @@ class WikipediaFacadeMock implements IWikipediaFacade {
     }
 
     @Override
-    public void editArticleContent(String articleTitle, String articleContent, OAuth1AccessToken accessToken) {
+    public String getPageContent(String pageTitle, OAuth1AccessToken accessToken) {
+        return null;
+    }
+
+    @Override
+    public String getPageContent(int pageId, OAuth1AccessToken accessToken) {
+        return null;
+    }
+
+    @Override
+    public void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken) {
         // Do nothing
     }
 

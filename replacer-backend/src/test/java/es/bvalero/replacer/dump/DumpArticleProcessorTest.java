@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.persistence.*;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +21,9 @@ import java.util.Collections;
 import java.util.Optional;
 
 public class DumpArticleProcessorTest {
+
+    @Mock
+    private WikipediaService wikipediaService;
 
     @Mock
     private ArticleRepository articleRepository;
@@ -61,10 +65,8 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessRedirection() {
-        DumpArticle dumpArticle = DumpArticle.builder()
-                .setNamespace(WikipediaNamespace.ARTICLE)
-                .setContent("#REDIRECT xxx")
-                .build();
+        DumpArticle dumpArticle = DumpArticle.builder().build();
+        Mockito.when(wikipediaService.isRedirectionPage(Mockito.anyString())).thenReturn(false);
         Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
 

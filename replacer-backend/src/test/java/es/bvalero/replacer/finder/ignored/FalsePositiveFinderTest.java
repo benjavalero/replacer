@@ -4,9 +4,8 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.persistence.ReplacementType;
-import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -36,7 +35,7 @@ public class FalsePositiveFinderTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinderTest.class);
 
     @Mock
-    private IWikipediaFacade wikipediaService;
+    private WikipediaService wikipediaService;
 
     @InjectMocks
     private FalsePositiveFinder falsePositiveFinder;
@@ -47,8 +46,8 @@ public class FalsePositiveFinderTest {
         MockitoAnnotations.initMocks(this);
 
         String text = new String(Files.readAllBytes(Paths.get(
-            FalsePositiveFinderTest.class.getResource("/false-positives.txt").toURI())), StandardCharsets.UTF_8);
-        Mockito.when(wikipediaService.getArticleContent(IWikipediaFacade.FALSE_POSITIVE_LIST_ARTICLE)).thenReturn(text);
+                FalsePositiveFinderTest.class.getResource("/false-positives.txt").toURI())), StandardCharsets.UTF_8);
+        Mockito.when(wikipediaService.getFalsePositiveListPageContent()).thenReturn(text);
 
         falsePositiveFinder.updateFalsePositives();
     }

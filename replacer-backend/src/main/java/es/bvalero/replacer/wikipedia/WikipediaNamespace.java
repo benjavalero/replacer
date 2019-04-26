@@ -5,7 +5,7 @@ import java.util.Map;
 
 public enum WikipediaNamespace {
 
-    // Odd namespace correspond to the Talk namespaces
+    // Odd numbers correspond to the Talk namespaces
     ARTICLE(0),
     USER(2),
     WIKIPEDIA(4),
