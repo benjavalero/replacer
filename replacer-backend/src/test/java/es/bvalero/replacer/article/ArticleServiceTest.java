@@ -89,7 +89,8 @@ public class ArticleServiceTest {
         OAuth1AccessToken accessToken = Mockito.mock(OAuth1AccessToken.class);
         articleService.saveArticleChanges(title, text, accessToken);
 
-        Mockito.verify(wikipediaService).savePageContent(title, text, Mockito.any(LocalDateTime.class), accessToken);
+        Mockito.verify(wikipediaService).savePageContent(
+                Mockito.eq(title), Mockito.eq(text), Mockito.any(LocalDateTime.class), Mockito.eq(accessToken));
         Mockito.verify(replacementRepository).deleteByArticle(Mockito.any(Article.class));
         Mockito.verify(articleRepository).save(Mockito.any(Article.class));
     }
