@@ -20,9 +20,13 @@ public class WikipediaService {
         return wikipediaFacade.getPageContent(pageTitle);
     }
 
-    // TODO : To be refactored to receive a pageId instead of a title
+    @Deprecated
     public String getPageContent(String pageTitle, OAuth1AccessToken accessToken) throws WikipediaException {
         return wikipediaFacade.getPageContent(pageTitle, accessToken);
+    }
+
+    public String getPageContent(int pageId, OAuth1AccessToken accessToken) throws WikipediaException {
+        return wikipediaFacade.getPageContent(pageId, accessToken);
     }
 
     public void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)

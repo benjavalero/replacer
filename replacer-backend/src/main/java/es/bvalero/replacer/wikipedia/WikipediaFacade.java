@@ -40,7 +40,22 @@ class WikipediaFacade implements IWikipediaFacade {
         params.put("titles", pageTitle);
 
         String apiResponse = executeOAuthRequest(params, accessToken);
-        JsonNode json = parseApiResponse(apiResponse);
+        return extractPageContentFromApiResponse(parseApiResponse(apiResponse));
+    }
+
+    @Override
+    public String getPageContent(int pageId, @Nullable OAuth1AccessToken accessToken) throws WikipediaException {
+        Map<String, String> params = new HashMap<>();
+        params.put("action", "query");
+        params.put("prop", "revisions");
+        params.put("rvprop", "content");
+        params.put("pages", String.valueOf(pageId));
+
+        String apiResponse = executeOAuthRequest(params, accessToken);
+        return extractPageContentFromApiResponse(parseApiResponse(apiResponse));
+    }
+
+    private String extractPageContentFromApiResponse(JsonNode json) throws UnavailablePageException {
         JsonNode pages = json.get("query").get("pages");
         if (pages != null && pages.size() > 0) {
             JsonNode page = pages.get(0);

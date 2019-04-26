@@ -17,11 +17,6 @@ class WikipediaFacadeMock implements IWikipediaFacade {
 
     @Override
     public String getPageContent(String pageTitle) throws WikipediaException {
-        return getPageContent(pageTitle, null);
-    }
-
-    @Override
-    public String getPageContent(String pageTitle, OAuth1AccessToken accessToken) throws WikipediaException {
         String content;
         switch (pageTitle) {
             case MISSPELLING_LIST_PAGE:
@@ -35,6 +30,16 @@ class WikipediaFacadeMock implements IWikipediaFacade {
                 break;
         }
         return content;
+    }
+
+    @Override
+    public String getPageContent(String pageTitle, OAuth1AccessToken accessToken) {
+        return null;
+    }
+
+    @Override
+    public String getPageContent(int pageId, OAuth1AccessToken accessToken) {
+        return null;
     }
 
     @Override
