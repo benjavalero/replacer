@@ -46,7 +46,7 @@ class WikipediaFacade implements IWikipediaFacade {
                 }
             }
 
-            throw new UnavailableArticleException();
+            throw new UnavailablePageException();
         } catch (AuthenticationException | IOException e) {
             throw new WikipediaException(e);
         }
