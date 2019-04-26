@@ -10,6 +10,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Profile("offline")
@@ -39,6 +41,11 @@ class WikipediaFacadeMock implements IWikipediaFacade {
 
     @Override
     public String getPageContent(int pageId, OAuth1AccessToken accessToken) {
+        return null;
+    }
+
+    @Override
+    public Map<Integer, String> getPagesContent(List<Integer> pageIds, OAuth1AccessToken accessToken) {
         return null;
     }
 
