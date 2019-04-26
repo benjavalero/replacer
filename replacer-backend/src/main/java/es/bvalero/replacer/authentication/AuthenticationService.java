@@ -38,8 +38,7 @@ class AuthenticationService implements IAuthenticationService {
         return oAuthService;
     }
 
-    @Override
-    public OAuthRequest createOauthRequest() {
+    private OAuthRequest createOauthRequest() {
         OAuthRequest request = new OAuthRequest(Verb.POST, WIKIPEDIA_API_URL);
         request.addParameter("format", "json");
         request.addParameter("formatversion", "2");
@@ -48,12 +47,10 @@ class AuthenticationService implements IAuthenticationService {
 
     @Override
     public String executeOAuthRequest(Map<String, String> params) throws AuthenticationException {
-        OAuthRequest request = createOauthRequest();
-        params.forEach(request::addParameter);
         try {
-            String response = getOAuthService().execute(request).getBody();
-            checkOauthResponse(response);
-            return response;
+            OAuthRequest request = createOauthRequest();
+            params.forEach(request::addParameter);
+            return getOAuthService().execute(request).getBody();
         } catch (InterruptedException | ExecutionException | IOException e) {
             throw new AuthenticationException(e);
         }

@@ -11,8 +11,6 @@ import java.util.concurrent.ExecutionException;
 
 public interface IAuthenticationService {
 
-    OAuthRequest createOauthRequest();
-
     String executeOAuthRequest(Map<String, String> params) throws AuthenticationException;
 
     Response signAndExecuteOauthRequest(OAuthRequest request, OAuth1AccessToken accessToken)

@@ -21,6 +21,8 @@ class WikipediaFacade implements IWikipediaFacade {
     @Autowired
     private IAuthenticationService authenticationService;
 
+    private ObjectMapper mapper = new ObjectMapper();
+
     @Override
     public String getPageContent(String pageTitle) throws WikipediaException {
         Map<String, String> params = new HashMap<>();
@@ -29,26 +31,53 @@ class WikipediaFacade implements IWikipediaFacade {
         params.put("rvprop", "content");
         params.put("titles", pageTitle);
 
-        try {
-            // TODO : Use real access token
-            String response = authenticationService.executeOAuthRequest(params);
+        // TODO : Use real access token
+        String apiResponse = executeOAuthRequest(params);
 
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode json = mapper.readTree(response);
-            JsonNode pages = json.get("query").get("pages");
-            if (pages != null && pages.size() > 0) {
-                JsonNode page = pages.get(0);
-                if (page != null) {
-                    JsonNode revisions = page.get("revisions");
-                    if (revisions != null && revisions.size() > 0) {
-                        return revisions.get(0).get("content").asText();
-                    }
+        JsonNode json = parseApiResponse(apiResponse);
+        JsonNode pages = json.get("query").get("pages");
+        if (pages != null && pages.size() > 0) {
+            JsonNode page = pages.get(0);
+            if (page != null) {
+                JsonNode revisions = page.get("revisions");
+                if (revisions != null && revisions.size() > 0) {
+                    return revisions.get(0).get("content").asText();
                 }
             }
+        }
 
-            throw new UnavailablePageException();
-        } catch (AuthenticationException | IOException e) {
+        // We arrive here in case no content (and no error/warning) is found
+        throw new UnavailablePageException();
+    }
+
+    private JsonNode parseApiResponse(String apiResponse) throws WikipediaException {
+        try {
+            return this.mapper.readTree(apiResponse);
+        } catch (IOException e) {
             throw new WikipediaException(e);
+        }
+    }
+
+    private String executeOAuthRequest(Map<String, String> params) throws WikipediaException {
+        try {
+            String apiResponse = this.authenticationService.executeOAuthRequest(params);
+            checkApiResponse(apiResponse);
+            return apiResponse;
+        } catch (AuthenticationException e) {
+            throw new WikipediaException(e);
+        }
+    }
+
+    private void checkApiResponse(String apiResponse) throws WikipediaException {
+        if (apiResponse == null) {
+            throw new WikipediaException("API result is null");
+        }
+
+        JsonNode json = parseApiResponse(apiResponse);
+        if (json.get("error") != null) {
+            throw new WikipediaException(json.get("error").asText());
+        } else if (json.get("warnings") != null) {
+            throw new WikipediaException(json.get("warnings").asText());
         }
     }
 

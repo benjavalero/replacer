@@ -14,11 +14,6 @@ import java.util.Map;
 class AuthenticationServiceMock implements IAuthenticationService {
 
     @Override
-    public OAuthRequest createOauthRequest() {
-        return null;
-    }
-
-    @Override
     public String executeOAuthRequest(Map<String, String> params) {
         return null;
     }
