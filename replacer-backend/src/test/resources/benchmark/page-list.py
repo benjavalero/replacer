@@ -6,6 +6,7 @@ import xml.sax
 class DumpHandler(xml.sax.ContentHandler):
     def __init__(self):
         self.CurrentData = ""
+        self.id = ""
         self.title = ""
         self.ns = ""
         self.timestamp = ""
@@ -17,6 +18,10 @@ class DumpHandler(xml.sax.ContentHandler):
 
     # Call when an elements ends
     def endElement(self, tag):
+        if tag == "id":
+            # ID appears several times (contributor, revision, etc). We care about the first one.
+            if (self.id == ""):
+                self.id = self.CurrentData.strip()
         if tag == "title":
             self.title = self.CurrentData.strip()
         elif tag == "ns":
@@ -26,8 +31,9 @@ class DumpHandler(xml.sax.ContentHandler):
         elif tag == "text":
             self.text = self.CurrentData.strip()
         elif tag == "page" and self.ns == "0":
-            str = '%s\t%s\t%s' % (self.title, len(self.text), self.timestamp)
+            str = '%s\t%s\t%s\t%s' % (self.id, self.ns, len(self.text), self.timestamp[:10])
             print str.encode('utf-8')
+            self.id = ""
 
     # Call when a character is read
     def characters(self, content):
@@ -43,6 +49,6 @@ if ( __name__ == "__main__"):
     Handler = DumpHandler()
     parser.setContentHandler(Handler)
 
-    print "Title\tLength\tTimestamp"
+    print "ID\tNS\tLength\tTimestamp"
 
     parser.parse(bz2.BZ2File('/Users/benja/Developer/pywikibot/20190401/eswiki-20190401-pages-meta-current.xml.bz2'))
