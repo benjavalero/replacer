@@ -2,8 +2,6 @@ package es.bvalero.replacer.authentication;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
-import com.github.scribejava.core.model.OAuthRequest;
-import com.github.scribejava.core.model.Response;
 
 import java.io.IOException;
 import java.util.Map;
@@ -13,7 +11,7 @@ public interface IAuthenticationService {
 
     String executeOAuthRequest(Map<String, String> params) throws AuthenticationException;
 
-    Response signAndExecuteOauthRequest(OAuthRequest request, OAuth1AccessToken accessToken)
+    String executeAndSignOAuthRequest(Map<String, String> params, OAuth1AccessToken accessToken)
             throws AuthenticationException;
 
     String getEditToken(OAuth1AccessToken accessToken) throws AuthenticationException;

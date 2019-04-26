@@ -47,17 +47,25 @@ class AuthenticationService implements IAuthenticationService {
 
     @Override
     public String executeOAuthRequest(Map<String, String> params) throws AuthenticationException {
+        return executeAndSignOAuthRequest(params, null);
+    }
+
+    @Override
+    public String executeAndSignOAuthRequest(Map<String, String> params, OAuth1AccessToken accessToken)
+            throws AuthenticationException {
         try {
             OAuthRequest request = createOauthRequest();
             params.forEach(request::addParameter);
+            if (accessToken != null) {
+                getOAuthService().signRequest(accessToken, request);
+            }
             return getOAuthService().execute(request).getBody();
         } catch (InterruptedException | ExecutionException | IOException e) {
             throw new AuthenticationException(e);
         }
     }
 
-    @Override
-    public Response signAndExecuteOauthRequest(OAuthRequest request, OAuth1AccessToken accessToken)
+    private Response signAndExecuteOauthRequest(OAuthRequest request, OAuth1AccessToken accessToken)
             throws AuthenticationException {
         try {
             getOAuthService().signRequest(accessToken, request);
@@ -66,20 +74,6 @@ class AuthenticationService implements IAuthenticationService {
             return response;
         } catch (Exception e) {
             throw new AuthenticationException(e);
-        }
-    }
-
-    private void checkOauthResponse(String response) throws IOException, AuthenticationException {
-        if (response == null) {
-            throw new AuthenticationException("API result is null");
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode json = mapper.readTree(response);
-        if (json.get("error") != null) {
-            throw new AuthenticationException(json.get("error").asText());
-        } else if (json.get("warnings") != null) {
-            throw new AuthenticationException(json.get("warnings").asText());
         }
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.authentication.IAuthenticationService;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -25,15 +26,18 @@ class WikipediaFacade implements IWikipediaFacade {
 
     @Override
     public String getPageContent(String pageTitle) throws WikipediaException {
+        return getPageContent(pageTitle, null);
+    }
+
+    @Override
+    public String getPageContent(String pageTitle, @Nullable OAuth1AccessToken accessToken) throws WikipediaException {
         Map<String, String> params = new HashMap<>();
         params.put("action", "query");
         params.put("prop", "revisions");
         params.put("rvprop", "content");
         params.put("titles", pageTitle);
 
-        // TODO : Use real access token
-        String apiResponse = executeOAuthRequest(params);
-
+        String apiResponse = executeOAuthRequest(params, accessToken);
         JsonNode json = parseApiResponse(apiResponse);
         JsonNode pages = json.get("query").get("pages");
         if (pages != null && pages.size() > 0) {
@@ -58,9 +62,12 @@ class WikipediaFacade implements IWikipediaFacade {
         }
     }
 
-    private String executeOAuthRequest(Map<String, String> params) throws WikipediaException {
+    private String executeOAuthRequest(Map<String, String> params, @Nullable OAuth1AccessToken accessToken)
+            throws WikipediaException {
         try {
-            String apiResponse = this.authenticationService.executeOAuthRequest(params);
+            String apiResponse = accessToken == null
+                    ? this.authenticationService.executeOAuthRequest(params)
+                    : this.authenticationService.executeAndSignOAuthRequest(params, accessToken);
             checkApiResponse(apiResponse);
             return apiResponse;
         } catch (AuthenticationException e) {

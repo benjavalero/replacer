@@ -11,6 +11,7 @@ interface IWikipediaFacade {
 
     // TODO : Take into account the difference between UnavailablePageException and the generic WikipediaException
     String getPageContent(String pageTitle) throws WikipediaException;
+    String getPageContent(String pageTitle, OAuth1AccessToken accessToken) throws WikipediaException;
 
     void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
             throws WikipediaException;

@@ -17,7 +17,12 @@ public class WikipediaService {
     private IWikipediaFacade wikipediaFacade;
 
     public String getPageContent(String pageTitle) throws WikipediaException {
-        return wikipediaFacade.getPageContent(pageTitle);
+        return getPageContent(pageTitle, null);
+    }
+
+    // TODO : To be refactored to receive a pageId instead of a title
+    public String getPageContent(String pageTitle, OAuth1AccessToken accessToken) throws WikipediaException {
+        return wikipediaFacade.getPageContent(pageTitle, accessToken);
     }
 
     public void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
