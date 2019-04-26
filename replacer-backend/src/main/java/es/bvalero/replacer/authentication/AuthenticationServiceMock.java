@@ -22,11 +22,6 @@ class AuthenticationServiceMock implements IAuthenticationService {
     }
 
     @Override
-    public String getEditToken(OAuth1AccessToken accessToken) {
-        return null;
-    }
-
-    @Override
     public String getAuthorizationUrl(OAuth1RequestToken requestToken) {
         return null;
     }

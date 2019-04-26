@@ -17,7 +17,7 @@ public class WikipediaService {
     private IWikipediaFacade wikipediaFacade;
 
     public String getPageContent(String pageTitle) throws WikipediaException {
-        return getPageContent(pageTitle, null);
+        return wikipediaFacade.getPageContent(pageTitle);
     }
 
     // TODO : To be refactored to receive a pageId instead of a title

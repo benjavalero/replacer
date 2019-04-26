@@ -19,6 +19,8 @@ import java.util.Map;
 @Profile("default")
 class WikipediaFacade implements IWikipediaFacade {
 
+    private static final String EDIT_SUMMARY = "Correcciones ortográficas";
+
     @Autowired
     private IAuthenticationService authenticationService;
 
@@ -91,23 +93,26 @@ class WikipediaFacade implements IWikipediaFacade {
     @Override
     public void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
             throws WikipediaException {
-        // TODO : Check just before uploading there are no changes during the edition
-        /* TODO
-        try {
-            OAuthRequest request = authenticationService.createOauthRequest();
-            request.addParameter("format", "json");
-            request.addParameter("action", "edit");
-            request.addParameter("title", articleTitle);
-            request.addParameter("text", articleContent);
-            request.addParameter("summary", EDIT_SUMMARY);
-            request.addParameter("minor", "true");
-            request.addParameter("token", authenticationService.getEditToken(accessToken));
+        // TODO : Use editTime to check just before uploading there are no changes during the edition
+        Map<String, String> params = new HashMap<>();
+        params.put("action", "edit");
+        params.put("title", pageTitle);
+        params.put("text", pageContent);
+        params.put("summary", EDIT_SUMMARY);
+        params.put("minor", "true");
+        params.put("token", getEditToken(accessToken));
 
-            authenticationService.signAndExecuteOauthRequest(request, accessToken);
-        } catch (AuthenticationException e) {
-            throw new WikipediaException(e);
-        }
-        */
+        executeOAuthRequest(params, accessToken);
+    }
+
+    private String getEditToken(OAuth1AccessToken accessToken) throws WikipediaException {
+        Map<String, String> params = new HashMap<>();
+        params.put("action", "query");
+        params.put("meta", "tokens");
+
+        String apiResponse = executeOAuthRequest(params, accessToken);
+        JsonNode json = parseApiResponse(apiResponse);
+        return json.get("query").get("tokens").get("csrftoken").asText();
     }
 
 }

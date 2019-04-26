@@ -14,8 +14,6 @@ public interface IAuthenticationService {
     String executeAndSignOAuthRequest(Map<String, String> params, OAuth1AccessToken accessToken)
             throws AuthenticationException;
 
-    String getEditToken(OAuth1AccessToken accessToken) throws AuthenticationException;
-
     String getAuthorizationUrl(OAuth1RequestToken requestToken);
 
     OAuth1RequestToken getRequestToken() throws InterruptedException, ExecutionException, IOException;
