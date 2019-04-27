@@ -12,7 +12,7 @@ class WordMatchAllPossessiveFinder extends WordFinder {
     private Set<String> words;
 
     WordMatchAllPossessiveFinder(Collection<String> words) {
-        this.wordPattern = Pattern.compile("\\w++", Pattern.UNICODE_CHARACTER_CLASS);
+        this.wordPattern = Pattern.compile("[\\w\\-']++", Pattern.UNICODE_CHARACTER_CLASS);
         this.words = new HashSet<>(words);
     }
 

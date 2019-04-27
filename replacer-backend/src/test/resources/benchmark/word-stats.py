@@ -9,6 +9,6 @@ words = pd.read_csv('word-benchmark.csv', sep='\t')
 # Box Plot (Log)
 f, (ax) = plt.subplots(1, 1, figsize=(12, 4))
 ax.set_xscale('log')
-filtered_words = words[words.FINDER != 'WordMatchDotAllCompleteLazyFinder']
-sns.boxplot(y="FINDER", x="TIME", data=filtered_words, ax=ax)
+# filtered_words = words[words.FINDER != 'WordMatchDotAllCompleteLazyFinder']
+sns.boxplot(y="FINDER", x="TIME", data=words, ax=ax)
 plt.show()

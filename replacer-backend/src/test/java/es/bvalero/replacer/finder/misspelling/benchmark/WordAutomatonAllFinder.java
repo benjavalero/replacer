@@ -15,7 +15,7 @@ class WordAutomatonAllFinder extends WordFinder {
     private Set<String> words;
 
     WordAutomatonAllFinder(Collection<String> words) {
-        this.wordPattern = new RunAutomaton(new RegExp("(<L>|<N>)+").toAutomaton(new DatatypesAutomatonProvider()));
+        this.wordPattern = new RunAutomaton(new RegExp("(<L>|[-'])+").toAutomaton(new DatatypesAutomatonProvider()));
         this.words = new HashSet<>(words);
     }
 

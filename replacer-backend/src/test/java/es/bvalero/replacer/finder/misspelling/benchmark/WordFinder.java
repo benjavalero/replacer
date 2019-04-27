@@ -8,8 +8,12 @@ abstract class WordFinder {
 
     boolean isWordCompleteInText(WordMatch word, String text) {
         return word.getStart() == 0 || word.getEnd() == text.length() ||
-                (!Character.isLetterOrDigit(text.charAt(word.getStart() - 1))
-                        && !Character.isLetterOrDigit(text.charAt(word.getEnd())));
+                (!Character.isLetter(text.charAt(word.getStart() - 1))
+                        && !Character.isLetter(text.charAt(word.getEnd())));
+    }
+
+    boolean isWord(String word) {
+        return word.chars().allMatch(Character::isLetter);
     }
 
 }

@@ -73,9 +73,7 @@ public class WordFinderBenchmarkTest {
         finders.add(new WordAutomatonAllFinder(this.words));
         finders.add(new WordMatchAllPossessiveFinder(this.words));
         finders.add(new WordMatchAllCompleteFinder(this.words));
-        finders.add(new WordMatchAllCompleteLazyFinder(this.words));
         finders.add(new WordMatchAllCompletePossessiveFinder(this.words));
-        finders.add(new WordMatchDotAllCompleteLazyFinder(this.words));
 
         System.out.println();
         System.out.println("FINDER\tTIME");

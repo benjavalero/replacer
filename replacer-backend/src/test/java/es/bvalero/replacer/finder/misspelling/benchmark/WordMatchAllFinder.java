@@ -10,7 +10,7 @@ class WordMatchAllFinder extends WordFinder {
     private Set<String> words;
 
     WordMatchAllFinder(Collection<String> words) {
-        this.wordPattern = Pattern.compile("\\w+", Pattern.UNICODE_CHARACTER_CLASS);
+        this.wordPattern = Pattern.compile("[\\w\\-']+", Pattern.UNICODE_CHARACTER_CLASS);
         this.words = new HashSet<>(words);
     }
 
