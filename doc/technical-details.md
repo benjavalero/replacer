@@ -27,34 +27,22 @@ Por tanto he decidido implementar todas las llamadas dentro de la propia herrami
 
 ## Nomenclatura
 
-- *Article*: artículo o página de la Wikipedia.
-- *Namespace*: determina el tipo de página: artículo, anexo, usuario, etc.
-- *Replacement*: potencial reemplazo, p. ej. el término «habia» que es candidato a reemplazarse con «había».
-- *IgnoredReplacement*: porción de un artículo que no se tiene en cuenta para buscar los reemplazos, p. ej. las frases entrecomilladas.
+- *Page*: Cada una de las páginas de la Wikipedia: artículos, discusiones, anexos, usuarios, plantillas, etc.
+- *Namespace*: espacio de nombres que determina el tipo de página: artículo (`0`), anexo (`104`), etc.
+- *Article*: artículo de la Wikipedia, i. e. página en el _namespace_ de artículos.
+- *Replacement*: potencial reemplazo, e. g. el término «habia» debe reemplazarse con «había», y el término «entreno» es candidato a reemplazarse con «entrenó» o en cambio ser correcto.
+- *Ignored Replacement*: porción de un artículo que no se tiene en cuenta para buscar los reemplazos, e. g. las frases entrecomilladas.
 - *Dump*: ficheros generados mensualmente con toda la información en la Wikipedia. El que usa esta herramienta es un XML enorme (~13 GB, ~3 GB comprimidos) con todos los artículos de la Wikipedia.
 
+## Banco de pruebas
 
-## Búsqueda de reemplazos
-
-Para cada artículo, buscamos posibles reemplazos que validará el usuario. Actualmente, los únicos reemplazos disponibles son potenciales faltas de ortografía.
-
-### Errores ortográficos
-
-Las posibles faltas de ortografía se extraen del artículo «Wikipedia:Corrector_ortográfico/Listado».
-
-Hay muchísimos casos de falsos positivos. El sistema intenta minimizar éstos ignorando las faltas de ortografía que se encuentran en partes del texto que se consideran excepciones: frases entrecomilladas o en cursiva, nombres de ficheros, citas, etc. (v. [Excepciones](./exceptions.md))
-
-### Optimizaciones
-
-A la hora de buscar reemplazos, o excepciones para ignorarlos, es muy importante optimizar los algoritmos o expresiones regulares utilizados. Especialmente al indexar todo el contenido de la Wikipedia.
-
-El script `page-list.py` recorre un _dump_ y muestra todas las páginas existentes, lo cual nos puede ayudar a obtener ciertas estadísticas útiles que analizamos con el script `page-stats.py`.
-
-Actualmente hay más de 6 millones de páginas de las cuales prácticamente la mitad son artículos (_namespace_ `0`):
+El número de páginas de la Wikipedia en español es inmenso (más de 6 millones), de las cuales prácticamente la mitad son artículos:
 
 ![](ns_pie.png)
 
-Si tenemos en cuenta solo los artículos, las estadísticas básicas nos muestran que algunos artículos muy extensos mientras que la mayoría no superan los 2500 caracteres:
+A la hora de indexar los artículos para encontrar reemplazos, es fundamental optimizar los algoritmos o expresiones regulares utilizados.
+
+Para las pruebas de rendimiento, se han extraído estadísticas sobre la longitud de los artículos:
 
 |     |             |
 |-----|-------------|
@@ -67,36 +55,32 @@ Si tenemos en cuenta solo los artículos, las estadísticas básicas nos muestra
 |75%  |      2931.00|
 |max  |    740469.00|
 
+Los datos no son normales (en el sentido estadístico de que no siguen la distribución normal). Si dibujamos el diagrama de caja y bigote (con escala logarítmica) vemos que los artículos con más de 10.000 caracteres son casos puntuales.
+
 ![](length_boxplot.png)
 
-Como curiosidad, el artículo más largo es «6312369 - Literatura victoriana».
+Para hacer las pruebas de los distintos algoritmos, tomaremos 99 artículos de forma aleatoria (aunque no podamos aplicar el TCL y suponer que la muestra mantiene la distribución original), e incluiremos también el más largo. Ejecutaremos cada uno de los algoritmos repetidas veces y compararemos los tiempos.
 
-Los datos no son normales (en el sentido estadístico de que no siguen la distribución normal). Si dibujamos el diagrama de caja y bigote (con escala logarítmica) vemos que los artículos con más de 10 kB son puntuales.
+Para los algoritmos con expresiones regulares, he tenido en cuenta dos tipos de motores de expresiones regulares: _regex-directed_ y _text-directed_. El primero es el que viene con las librerías de Java y que contiene todas las características interesantes: _look-ahead_, _look-behind_, _lazy_, _possessive_, _back-references_, etc.
+El segundo es más limitado en sintaxis pero a cambio ofrece un rendimiento lineal, logrando en algunos casos un rendimiento muy superior.
 
-Para hacer las pruebas, tomaremos 100 artículos aleatorios, más el más largo. Ejecutaremos cada una de las opciones para los 100 artículos y nos quedaremos con el que dé el mejor resultado para el caso general.
+## Errores ortográficos
 
---------------------------
+Los errores ortográficos o _misspellings_ son posibles faltas de ortografía se extraen del artículo «Wikipedia:Corrector_ortográfico/Listado».
+
+### Excepciones
+
+Hay muchísimos casos de falsos positivos. El sistema intenta minimizar éstos ignorando las faltas de ortografía que se encuentran en partes del texto que se consideran excepciones: frases entrecomilladas o en cursiva, nombres de ficheros, citas, etc. (v. [Excepciones](./exceptions.md))
+
+Además, se ignorar los términos del listado que contiene números o puntos, puesto que éstos ya serán tratados en un buscador distinto enfocado exclusivamente en unidades de medida.
+
+### Algoritmo
 
 Para buscar errores ortográficos, he planteado varias pruebas. Primero cargar todos los posibles errores del listado y buscarlos en el texto. Luego al revés buscar todas las palabras del texto y ver si son errores.
 
 Dado que manejamos casi 20.000 errores distintos, la segunda opción es muchísimo más eficiente (unas 100 veces de media) así que me centro en comparar las distintas pruebas para este segundo método, donde comprobamos que la búsqueda de palabras con una expresión regular _text-directed_ es la mejor (la siguiente opción tarda el doble).
 
 ![](word_boxplot.png)
-
---------------------------
-
-Nótese que solo el 1 % de los artículos tiene más de 55 kB y solo el 1 ‰ tiene más de 150 kB.
-
-Por tanto, a la hora de optimizar las expresiones regulares, he tenido en cuenta tres tipos de artículos:
-* Artículos medianos de unos 3 kB (50 % del total): «Aquifoliaceae»
-* Artículos largos de unos 50 kB (1 % del total): «América del Norte»
-* Artículo extremo de 771 kB: «Literatura victoriana»
-
-También he tenido en cuenta dos tipos de motores de expresiones regulares: _regex-directed_ y _text-directed_. El primero es el habitual, y que contiene todas las características interesantes: _look-ahead_, _look-behind_, _lazy_, _possessive_, _back-references_, etc.
-El segundo es más limitado en sintaxis pero a cambio ofrece un rendimiento lineal, logrando en algunos casos un rendimiento 1000 veces superior.
-
-En general, siempre que he logrado encontrar una expresión satisfactoria, he optado por usar la versión _text-directed_. Aquí el único cuantificador válido es «+». Para el resto de casos he usado la versión estándar, usando el cuantificador «+?» en la mayoría de ocasiones por ser el más eficiente en los experimentos.
-
 
 ## Indexación
 
