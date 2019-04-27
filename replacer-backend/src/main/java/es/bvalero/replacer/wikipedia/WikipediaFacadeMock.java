@@ -10,13 +10,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Profile("offline")
 class WikipediaFacadeMock implements IWikipediaFacade {
 
     @Override
-    public String getPageContent(String pageTitle) throws WikipediaException {
+    public String getPageContent(String pageTitle) {
         String content;
         switch (pageTitle) {
             case MISSPELLING_LIST_PAGE:
@@ -34,12 +37,19 @@ class WikipediaFacadeMock implements IWikipediaFacade {
 
     @Override
     public String getPageContent(String pageTitle, OAuth1AccessToken accessToken) {
-        return null;
+        return getPageContent(pageTitle);
     }
 
     @Override
     public String getPageContent(int pageId, OAuth1AccessToken accessToken) {
-        return null;
+        return getPageContent("");
+    }
+
+    @Override
+    public Map<Integer, String> getPagesContent(List<Integer> pageIds, OAuth1AccessToken accessToken) {
+        Map<Integer, String> pagesContent = new HashMap<>();
+        pageIds.forEach(id -> pagesContent.put(id, getPageContent("")));
+        return pagesContent;
     }
 
     @Override
@@ -47,12 +57,12 @@ class WikipediaFacadeMock implements IWikipediaFacade {
         // Do nothing
     }
 
-    private String loadArticleContent(String fileName) throws WikipediaException {
+    private String loadArticleContent(String fileName) {
         try {
             return new String(Files.readAllBytes(Paths.get(getClass().getResource(fileName).toURI())),
                     StandardCharsets.UTF_8);
         } catch (IOException | URISyntaxException e) {
-            throw new WikipediaException(e);
+            return null;
         }
     }
 
