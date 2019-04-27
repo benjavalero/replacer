@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.misspelling;
+package es.bvalero.replacer.misspelling;
 
 import java.util.Objects;
 

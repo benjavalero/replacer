@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.ignored;
 
 import es.bvalero.replacer.finder.ArticleReplacement;
-import es.bvalero.replacer.finder.misspelling.Misspelling;
-import es.bvalero.replacer.finder.misspelling.MisspellingManager;
+import es.bvalero.replacer.misspelling.Misspelling;
+import es.bvalero.replacer.misspelling.MisspellingManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

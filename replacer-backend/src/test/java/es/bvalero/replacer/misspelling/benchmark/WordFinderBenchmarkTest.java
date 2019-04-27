@@ -1,10 +1,11 @@
-package es.bvalero.replacer.finder.misspelling.benchmark;
+package es.bvalero.replacer.misspelling.benchmark;
 
 import es.bvalero.replacer.authentication.AuthenticationService;
-import es.bvalero.replacer.finder.misspelling.MisspellingManager;
+import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaService;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class WordFinderBenchmarkTest {
     private Collection<String> words;
 
     @Test
-    // @Ignore
+    @Ignore
     public void testBenchmark() throws IOException, WikipediaException, URISyntaxException {
         // Load the misspellings
         this.words = new ArrayList<>();

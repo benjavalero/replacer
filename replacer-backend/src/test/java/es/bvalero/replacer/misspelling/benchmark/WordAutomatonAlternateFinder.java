@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.misspelling.benchmark;
+package es.bvalero.replacer.misspelling.benchmark;
 
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;

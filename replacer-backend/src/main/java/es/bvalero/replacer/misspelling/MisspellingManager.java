@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.misspelling;
+package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;

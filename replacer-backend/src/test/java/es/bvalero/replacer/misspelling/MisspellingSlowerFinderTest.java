@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.misspelling;
+package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.persistence.ReplacementType;
@@ -10,14 +10,14 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.*;
 
-public class MisspellingFinderTest {
+public class MisspellingSlowerFinderTest {
 
     @InjectMocks
-    private MisspellingFinder misspellingFinder;
+    private MisspellingSlowerFinder misspellingFinder;
 
     @Before
     public void setUp() {
-        misspellingFinder = new MisspellingFinder();
+        misspellingFinder = new MisspellingSlowerFinder();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -143,6 +143,7 @@ public class MisspellingFinderTest {
     public void testFindMisspellingByWord() {
         Misspelling misspelling = Misspelling.builder()
                 .setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
+
         misspellingFinder.buildMisspellingRelatedFields(new HashSet<>(Collections.singletonList(misspelling)));
 
         Assert.assertEquals(misspelling, misspellingFinder.findMisspellingByWord("madrid"));
