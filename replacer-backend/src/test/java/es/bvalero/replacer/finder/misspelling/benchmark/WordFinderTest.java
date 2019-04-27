@@ -1,21 +1,38 @@
 package es.bvalero.replacer.finder.misspelling.benchmark;
 
+import es.bvalero.replacer.authentication.AuthenticationService;
 import es.bvalero.replacer.finder.misspelling.MisspellingManager;
+import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaFacade;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.ConfigFileApplicationContextInitializer;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 
+@RunWith(SpringRunner.class)
+@ContextConfiguration(classes = {MisspellingManager.class, WikipediaService.class, WikipediaFacade.class, AuthenticationService.class},
+        initializers = ConfigFileApplicationContextInitializer.class)
 public class WordFinderTest {
 
-    private final static int ITERATIONS = 5;
-    private final static int RUNS = 10;
+    private final static int ITERATIONS = 100000;
+
+    @Autowired
+    private MisspellingManager misspellingManager;
+
+    @Autowired
+    private WikipediaService wikipediaService;
 
     private Collection<String> words;
     private String text;
@@ -120,16 +137,10 @@ public class WordFinderTest {
 
     @Test
     // @Ignore
-    public void testBenchmark() throws URISyntaxException, IOException {
-        // Load the text of a medium article
-        this.text = new String(Files.readAllBytes(Paths.get(WordFinderTest.class.getResource("/article-medium.txt").toURI())),
-                StandardCharsets.UTF_8);
-
+    public void testBenchmark() throws IOException, WikipediaException, URISyntaxException {
         // Load the misspellings
         this.words = new ArrayList<>();
-        String misspellingText = new String(Files.readAllBytes(Paths.get(WordFinderTest.class.getResource("/misspelling-list.txt").toURI())),
-                StandardCharsets.UTF_8);
-        new MisspellingManager().parseMisspellingListText(misspellingText).forEach(misspelling -> {
+        this.misspellingManager.findWikipediaMisspellings().forEach(misspelling -> {
             String word = misspelling.getWord();
             if (misspelling.isCaseSensitive()) {
                 this.words.add(word);
@@ -141,15 +152,24 @@ public class WordFinderTest {
             }
         });
 
+        // Load IDs of the sample articles
+        List<Integer> sampleIds = new ArrayList<>();
+        try (Stream<String> stream = Files.lines(Paths.get(WordFinderTest.class.getResource("/benchmark/sample-articles.txt").toURI()))) {
+            stream.forEach(line -> sampleIds.add(Integer.valueOf(line.trim())));
+        }
+
+        // Load sample articles
+        Map<Integer, String> sampleContents = wikipediaService.getPagesContent(sampleIds, null);
+
         // Load the finders
         List<WordFinder> finders = new ArrayList<>();
-        finders.add(new WordIndexOfFinder(this.words)); // 0.75 x WordMatchFinder
-        finders.add(new WordMatchFinder(this.words)); // MUCH slower than the rest of finders, from WordMatchAllFinder.
+        // finders.add(new WordIndexOfFinder(this.words)); // 0.75 x WordMatchFinder
+        // finders.add(new WordMatchFinder(this.words)); // MUCH slower than the rest of finders, from WordMatchAllFinder.
         // finders.add(new WordAutomatonFinder(this.words)); // 1 x WordMatchFinder. To run this, we need to increase the heap.
-        finders.add(new WordMatchCompleteFinder(this.words)); // 10 x WordMatchFinder
-        finders.add(new WordRegexAlternateFinder(this.words)); // 4 x WordMatchFinder. To run this, we need to increase the stack: -Xss3m
-        finders.add(new WordAutomatonAlternateFinder(this.words)); // 4 x WordMatchFinder
-        finders.add(new WordRegexAlternateCompleteFinder(this.words)); // 1 x WordMatchFinder
+        // finders.add(new WordMatchCompleteFinder(this.words)); // 10 x WordMatchFinder
+        // finders.add(new WordRegexAlternateFinder(this.words)); // 4 x WordMatchFinder. To run this, we need to increase the stack: -Xss3m
+        // finders.add(new WordAutomatonAlternateFinder(this.words)); // 4 x WordMatchFinder
+        // finders.add(new WordRegexAlternateCompleteFinder(this.words)); // 1 x WordMatchFinder
         finders.add(new WordMatchAllFinder(this.words));
         finders.add(new WordAutomatonAllFinder(this.words));
         finders.add(new WordMatchAllPossessiveFinder(this.words));
@@ -158,25 +178,18 @@ public class WordFinderTest {
         finders.add(new WordMatchAllCompletePossessiveFinder(this.words));
         finders.add(new WordMatchDotAllCompleteLazyFinder(this.words));
 
-        // When running the test several times for each finder, in general the first run is slower.
-        // However for the rest of runs we find slow and fast runs with no special tendency.
-        // In this case it would better to skip only the first run and extract statistics for all the rest.
-        for (WordFinder finder : finders) {
-            System.out.print(finder.getClass().getSimpleName() + "\t");
-        }
         System.out.println();
-
-        for (int n = 0; n <= RUNS; n++) {
+        System.out.println("FINDER\tTIME");
+        sampleContents.forEach((key, value) -> {
             for (WordFinder finder : finders) {
                 long start = System.currentTimeMillis();
                 for (int i = 0; i < ITERATIONS; i++) {
                     finder.findWords(this.text);
                 }
                 long end = System.currentTimeMillis() - start;
-                System.out.print(end + "\t");
+                System.out.println(finder.getClass().getSimpleName() + "\t" + end);
             }
-            System.out.println();
-        }
+        });
     }
 
 }

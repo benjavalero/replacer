@@ -30,7 +30,7 @@ class DumpHandler(xml.sax.ContentHandler):
             self.timestamp = self.CurrentData.strip()
         elif tag == "text":
             self.text = self.CurrentData.strip()
-        elif tag == "page" and self.ns == "0":
+        elif tag == "page":
             str = '%s\t%s\t%s\t%s' % (self.id, self.ns, len(self.text), self.timestamp[:10])
             print str.encode('utf-8')
             self.id = ""

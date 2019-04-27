@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class WikipediaService {
@@ -27,6 +29,11 @@ public class WikipediaService {
 
     public String getPageContent(int pageId, OAuth1AccessToken accessToken) throws WikipediaException {
         return wikipediaFacade.getPageContent(pageId, accessToken);
+    }
+
+    public Map<Integer, String> getPagesContent(List<Integer> pageIds, OAuth1AccessToken accessToken)
+            throws WikipediaException {
+        return wikipediaFacade.getPagesContent(pageIds, accessToken);
     }
 
     public void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)

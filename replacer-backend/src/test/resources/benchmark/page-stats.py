@@ -6,18 +6,27 @@ import seaborn as sns
 # Import data
 pages = pd.read_csv('pages.csv', sep='\t')
 
-# matplotlib histogram
-# plt.hist(pages['Length'])
-# plt.show()
+# Counts on namespace
+ns_percent = pages['NS'].value_counts(normalize=True) * 100
+ns_percent.plot.pie(y='NS', figsize=(5, 5), autopct='%1.1f%%')
+plt.show()
 
-# Density Plot and Histogram of all arrival delays
-# sns.distplot(pages['Length'], hist=True, kde=True)
-# plt.show()
+# Take only the articles
+articles = pages[pages.NS == 0]
 
-# sns.kdeplot(pages['Length'])
-# plt.show()
+# Basic stats
+pd.set_option('float_format', '{:.2f}'.format)
+# print(articles['Length'].describe())
 
-#Box-plot
-# f, (ax) = plt.subplots(1, 1)
-# sns.boxplot(x="NS", y="Length", data=pages, ax=ax)
-# plt.show()
+# Box Plot (Log scale)
+f, (ax) = plt.subplots(1, 1)
+ax.set_yscale('log')
+sns.boxplot(y="Length", data=articles, ax=ax)
+plt.show()
+
+# Print a random sample of 99 articles
+sample_articles = articles.sample(n=99)
+print sample_articles['ID'].to_string(index=False)
+
+# Also print the maximum
+print articles.iloc[articles['Length'].values.argmax()]['ID']

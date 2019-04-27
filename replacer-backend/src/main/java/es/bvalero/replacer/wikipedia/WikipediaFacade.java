@@ -17,7 +17,7 @@ import java.util.*;
 
 @Service
 @Profile("default")
-class WikipediaFacade implements IWikipediaFacade {
+public class WikipediaFacade implements IWikipediaFacade {
 
     private static final String EDIT_SUMMARY = "Correcciones ortográficas";
     private static final int MAX_PAGES_REQUESTED = 50;
@@ -38,6 +38,7 @@ class WikipediaFacade implements IWikipediaFacade {
         params.put("action", "query");
         params.put("prop", "revisions");
         params.put("rvprop", "content");
+        params.put("rvslots", "main");
         params.put("titles", pageTitle);
 
         String apiResponse = executeOAuthRequest(params, accessToken);
@@ -51,7 +52,7 @@ class WikipediaFacade implements IWikipediaFacade {
         if (pages != null && pages.size() > 0) {
             JsonNode revisions = pages.get(0).get("revisions");
             if (revisions != null && revisions.size() > 0) {
-                content = revisions.get(0).get("content").asText();
+                content = revisions.get(0).get("slots").get("main").get("content").asText();
             }
         }
 
@@ -75,7 +76,7 @@ class WikipediaFacade implements IWikipediaFacade {
         // The maximum number of requested pages is 50
         int start = 0;
         while (pageIds.size() - start >= MAX_PAGES_REQUESTED) {
-            List<Integer> subList = pageIds.subList(start, Math.min(pageIds.size(), MAX_PAGES_REQUESTED));
+            List<Integer> subList = pageIds.subList(start, Math.min(pageIds.size(), start + MAX_PAGES_REQUESTED));
             pageContents.putAll(getPagesContentLimited(subList, accessToken));
             start += subList.size();
         }
@@ -88,7 +89,8 @@ class WikipediaFacade implements IWikipediaFacade {
         params.put("action", "query");
         params.put("prop", "revisions");
         params.put("rvprop", "content");
-        params.put("pages", StringUtils.join(pageIds, "|"));
+        params.put("rvslots", "main");
+        params.put("pageids", StringUtils.join(pageIds, "|"));
 
         String apiResponse = executeOAuthRequest(params, accessToken);
         return extractPagesContentFromApiResponse(parseApiResponse(apiResponse));
@@ -102,7 +104,7 @@ class WikipediaFacade implements IWikipediaFacade {
             pages.forEach(page -> {
                 if (page.get("pageid") != null && page.get("revisions") != null) {
                     int pageId = page.get("pageid").asInt();
-                    String content = page.get("revisions").get(0).get("content").asText();
+                    String content = page.get("revisions").get(0).get("slots").get("main").get("content").asText();
                     pageContents.put(pageId, content);
                 }
             });

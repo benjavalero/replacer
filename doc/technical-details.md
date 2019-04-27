@@ -46,15 +46,44 @@ Hay muchísimos casos de falsos positivos. El sistema intenta minimizar éstos i
 
 ### Optimizaciones
 
-Hay expresiones regulares para encontrar reemplazos o excepciones que pueden llegar a consumir mucho tiempo o recursos para textos muy largos.
-Esto no es muy importante al analizar un artículo en concreto pero sí cuando se analiza toda la Wikipedia.
+A la hora de buscar reemplazos, o excepciones para ignorarlos, es muy importante optimizar los algoritmos o expresiones regulares utilizados. Especialmente al indexar todo el contenido de la Wikipedia.
 
-He realizado un pequeño estudio sobre el tamaño de los artículos de la Wikipedia. Hay aproximadamente 1,5 millones que son artículos y anexos.
-* Mínimo: 18 bytes
-* Primer cuartil: 2 kB
-* Mediana: 3 kB
-* Tercer cuartil: 6 kB
-* Máximo: 771 kB (artículo «Literatura victoriana»)
+El script `page-list.py` recorre un _dump_ y muestra todas las páginas existentes, lo cual nos puede ayudar a obtener ciertas estadísticas útiles que analizamos con el script `page-stats.py`.
+
+Actualmente hay más de 6 millones de páginas de las cuales prácticamente la mitad son artículos (_namespace_ `0`):
+
+![](ns_pie.png)
+
+Si tenemos en cuenta solo los artículos, las estadísticas básicas nos muestran que algunos artículos muy extensos mientras que la mayoría no superan los 2500 caracteres:
+
+|     |             |
+|-----|-------------|
+|count|   3226779.00|
+|mean |      2728.26|
+|std  |      7971.68|
+|min  |        14.00|
+|25%  |        34.00|
+|50%  |        56.00|
+|75%  |      2931.00|
+|max  |    740469.00|
+
+![](length_boxplot.png)
+
+Como curiosidad, el artículo más largo es «6312369 - Literatura victoriana».
+
+Los datos no son normales (en el sentido estadístico de que no siguen la distribución normal). Si dibujamos el diagrama de caja y bigote (con escala logarítmica) vemos que los artículos con más de 10 kB son puntuales.
+
+Para hacer las pruebas, tomaremos 100 artículos aleatorios, más el más largo. Ejecutaremos cada una de las opciones para los 100 artículos y nos quedaremos con el que dé el mejor resultado para el caso general.
+
+--------------------------
+
+Para buscar errores ortográficos, he planteado varias pruebas. Primero cargar todos los posibles errores del listado y buscarlos en el texto. Luego al revés buscar todas las palabras del texto y ver si son errores.
+
+Dado que manejamos casi 20.000 errores distintos, la segunda opción es muchísimo más eficiente (unas 100 veces de media) así que me centro en comparar las distintas pruebas para este segundo método, donde comprobamos que la búsqueda de palabras con una expresión regular _text-directed_ es la mejor (la siguiente opción tarda el doble).
+
+![](word_boxplot.png)
+
+--------------------------
 
 Nótese que solo el 1 % de los artículos tiene más de 55 kB y solo el 1 ‰ tiene más de 150 kB.
 

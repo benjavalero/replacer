@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutionException;
 
 @Service
 @Profile("default")
-class AuthenticationService implements IAuthenticationService {
+public class AuthenticationService implements IAuthenticationService {
 
     private static final String WIKIPEDIA_API_URL = "https://es.wikipedia.org/w/api.php";
 
