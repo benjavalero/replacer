@@ -12,4 +12,10 @@ abstract class WordFinder {
                         && !Character.isLetter(text.charAt(word.getEnd())));
     }
 
+    boolean isWordFollowedByUppercase(WordMatch word, String text) {
+        return word.getEnd() + 1 < text.length()
+                && !Character.isLetter(text.charAt(word.getEnd()))
+                && Character.isUpperCase(text.charAt(word.getEnd() + 1));
+    }
+
 }

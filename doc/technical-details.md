@@ -64,15 +64,33 @@ Para hacer las pruebas de los distintos algoritmos, tomaremos 99 artículos de f
 Para los algoritmos con expresiones regulares, he tenido en cuenta dos tipos de motores de expresiones regulares: _regex-directed_ y _text-directed_. El primero es el que viene con las librerías de Java y que contiene todas las características interesantes: _look-ahead_, _look-behind_, _lazy_, _possessive_, _back-references_, etc.
 El segundo es más limitado en sintaxis pero a cambio ofrece un rendimiento lineal, logrando en algunos casos un rendimiento muy superior.
 
+## Excepciones
+
+Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar muchos falsos positivos, por ejemplo una cita en español antiguo o un parámetro propio de la Wikipedia que no acepta diacríticos:
+* Comentarios HTML: `<!-- españa -->`
+* Nombres de archivos: `[[File:españa.png|España]]`
+* Parámetro índice: `{{... | índice = españa | ...}}`
+* Cursiva, negrita y entrecomillados: `''online''`, `'''Lopez'''`,
+ `"In Paris"`, `«In Paris»`, `“In Paris”` 
+* Código fuente (`source`, `syntaxhighlight` y `math`): `<math>LaTeX</math>`
+* Nombres de plantillas: `{{Album | ...}`
+* Parámetros: `{{ ... | pais = España | ... }}`
+* Plantillas completas: `ORDENAR`, `DEFAULTSORT`, `NF`, `Cita`, `Quote`,
+ ` Coord`, `Commonscat`
+* Categorías: `[[Categoría:Jennifer Lopez]]` 
+* URL: `http://www.jenniferlopez.com`
+* Etiquetas XML: `<ref name="españa">`
+
 ## Errores ortográficos
 
 Los errores ortográficos o _misspellings_ son posibles faltas de ortografía se extraen del artículo «Wikipedia:Corrector_ortográfico/Listado».
 
+Se omiten los términos del listado que contienen números o puntos, puesto que éstos ya serán tratados en un buscador distinto enfocado exclusivamente en unidades de medida.
+
 ### Excepciones
 
-Hay muchísimos casos de falsos positivos. El sistema intenta minimizar éstos ignorando las faltas de ortografía que se encuentran en partes del texto que se consideran excepciones: frases entrecomilladas o en cursiva, nombres de ficheros, citas, etc. (v. [Excepciones](./exceptions.md))
-
-Además, se ignorar los términos del listado que contiene números o puntos, puesto que éstos ya serán tratados en un buscador distinto enfocado exclusivamente en unidades de medida.
+* Términos que suelen ser un nombre propio de persona: Julio, Frances, etc.
+* Términos que deben escribirse en minúscula salvo cuando la puntuación lo exija.
 
 ### Algoritmo
 
