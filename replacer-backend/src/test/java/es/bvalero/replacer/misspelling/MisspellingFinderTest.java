@@ -117,6 +117,7 @@ public class MisspellingFinderTest {
     public void testFindMisspellingByWord() {
         Misspelling misspelling = Misspelling.builder()
                 .setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
+
         misspellingFinder.buildMisspellingRelatedFields(new HashSet<>(Collections.singletonList(misspelling)));
 
         Assert.assertEquals(misspelling, misspellingFinder.findMisspellingByWord("madrid"));
