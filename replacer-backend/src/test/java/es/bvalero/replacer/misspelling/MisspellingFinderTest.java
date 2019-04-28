@@ -53,18 +53,21 @@ public class MisspellingFinderTest {
         Assert.assertEquals(3, result1.getStart());
         Assert.assertEquals(ReplacementType.MISSPELLING, result1.getType());
         Assert.assertEquals("vonito", result1.getSubtype());
+        Assert.assertEquals("bonito", result1.getSuggestion());
 
         ArticleReplacement result2 = result.get(1);
         Assert.assertEquals("Exemplo", result2.getText());
         Assert.assertEquals(10, result2.getStart());
         Assert.assertEquals(ReplacementType.MISSPELLING, result2.getType());
         Assert.assertEquals("exemplo", result2.getSubtype());
+        Assert.assertEquals("Ejemplo", result2.getSuggestion());
 
         ArticleReplacement result3 = result.get(2);
         Assert.assertEquals("exemplo", result3.getText());
         Assert.assertEquals(18, result3.getStart());
         Assert.assertEquals(ReplacementType.MISSPELLING, result3.getType());
         Assert.assertEquals("exemplo", result3.getSubtype());
+        Assert.assertEquals("ejemplo", result3.getSuggestion());
     }
 
     @Test
@@ -122,6 +125,16 @@ public class MisspellingFinderTest {
 
         Assert.assertEquals(misspelling, misspellingFinder.findMisspellingByWord("madrid"));
         Assert.assertNull(misspellingFinder.findMisspellingByWord("Madrid"));
+    }
+
+    @Test
+    public void isMisspellingWordValid() {
+        Assert.assertTrue(misspellingFinder.isMisspellingWordValid("España"));
+        Assert.assertFalse(misspellingFinder.isMisspellingWordValid("m2"));
+        Assert.assertFalse(misspellingFinder.isMisspellingWordValid("n.º"));
+        Assert.assertTrue(misspellingFinder.isMisspellingWordValid("Castilla-León"));
+        Assert.assertTrue(misspellingFinder.isMisspellingWordValid("CD's"));
+        Assert.assertFalse(misspellingFinder.isMisspellingWordValid("cm."));
     }
 
 }

@@ -27,7 +27,6 @@ public class WordFinderTest {
         // Single quotes: dvd's cd's -> Covered by misspelling finder
         // Middle dots: E.E.U.U. -> Not covered
 
-        // TODO : Ignore misspellings with numbers, dots and super-indices
         this.words = Arrays.asList("Um", "um", "españa", "Castilla-León", "cd's");
         this.text = "Um suma um, españa um m2 España y Castilla-León + cd's.";
 

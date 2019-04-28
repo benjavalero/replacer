@@ -1,7 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.authentication.AuthenticationService;
-import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -17,11 +16,14 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {MisspellingManager.class, WikipediaService.class, WikipediaFacade.class, AuthenticationService.class},
+@ContextConfiguration(classes = {MisspellingManager.class, MisspellingFinder.class, WikipediaService.class, WikipediaFacade.class, AuthenticationService.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class WordFinderBenchmarkTest {
 
@@ -29,6 +31,9 @@ public class WordFinderBenchmarkTest {
 
     @Autowired
     private MisspellingManager misspellingManager;
+
+    @Autowired
+    private MisspellingFinder misspellingFinder;
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -45,10 +50,9 @@ public class WordFinderBenchmarkTest {
             if (misspelling.isCaseSensitive()) {
                 this.words.add(word);
             } else {
-                // If case-insensitive, we add to the map "[wW]ord".
-                String firstLetter = word.substring(0, 1);
-                String newWord = '[' + firstLetter + firstLetter.toUpperCase(Locale.forLanguageTag("es")) + ']' + word.substring(1);
-                this.words.add(newWord);
+                // If case-insensitive, we add to the map "word" and "Word".
+                this.words.add(word);
+                this.words.add(misspellingFinder.setFirstUpperCase(word));
             }
         });
 
