@@ -14,12 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
-import java.util.regex.Pattern;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Find misspelling replacements in a given text.
@@ -30,7 +28,6 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
 
     @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingFinder.class);
-    private static final Pattern PATTERN_BRACKETS = Pattern.compile("\\(.+?\\)");
 
     @Autowired
     private MisspellingManager misspellingManager;
@@ -147,7 +144,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
     }
 
     String findMisspellingSuggestion(CharSequence originalWord, Misspelling misspelling) {
-        List<String> suggestions = parseCommentSuggestions(misspelling);
+        List<String> suggestions = misspelling.getSuggestions();
 
         // TODO Take into account all the suggestions
         String suggestion = suggestions.get(0);
@@ -157,22 +154,6 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
         }
 
         return suggestion;
-    }
-
-    List<String> parseCommentSuggestions(Misspelling misspelling) {
-        List<String> suggestions = new ArrayList<>(5);
-
-        String suggestionNoBrackets = PATTERN_BRACKETS.matcher(misspelling.getComment()).replaceAll("");
-        for (String suggestion : suggestionNoBrackets.split(",")) {
-            String suggestionWord = suggestion.trim();
-
-            // Don't suggest the misspelling main word
-            if (StringUtils.isNotBlank(suggestionWord) && !suggestionWord.equals(misspelling.getWord())) {
-                suggestions.add(suggestionWord);
-            }
-        }
-
-        return suggestions;
     }
 
 }

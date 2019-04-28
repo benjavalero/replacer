@@ -42,7 +42,7 @@ public class MisspellingManager {
         this.misspellings = misspellings;
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
+    void addPropertyChangeListener(PropertyChangeListener listener) {
         changeSupport.addPropertyChangeListener(listener);
     }
 
@@ -61,7 +61,7 @@ public class MisspellingManager {
     }
 
     // We make this method public to be used by the word benchmark
-    public Set<Misspelling> findWikipediaMisspellings() throws WikipediaException {
+    Set<Misspelling> findWikipediaMisspellings() throws WikipediaException {
         LOGGER.info("Start loading misspelling list from Wikipedia...");
         String misspellingListText = wikipediaService.getMisspellingListPageContent();
         Set<Misspelling> misspellingSet = parseMisspellingListText(misspellingListText);
