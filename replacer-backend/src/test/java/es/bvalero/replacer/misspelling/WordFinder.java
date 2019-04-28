@@ -1,4 +1,4 @@
-package es.bvalero.replacer.misspelling.benchmark;
+package es.bvalero.replacer.misspelling;
 
 import java.util.Set;
 
@@ -10,10 +10,6 @@ abstract class WordFinder {
         return word.getStart() == 0 || word.getEnd() == text.length() ||
                 (!Character.isLetter(text.charAt(word.getStart() - 1))
                         && !Character.isLetter(text.charAt(word.getEnd())));
-    }
-
-    boolean isWord(String word) {
-        return word.chars().allMatch(Character::isLetter);
     }
 
 }

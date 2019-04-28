@@ -1,4 +1,4 @@
-package es.bvalero.replacer.misspelling.benchmark;
+package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.authentication.AuthenticationService;
 import es.bvalero.replacer.misspelling.MisspellingManager;

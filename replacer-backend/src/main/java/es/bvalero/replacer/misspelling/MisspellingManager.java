@@ -2,6 +2,7 @@ package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,7 @@ public class MisspellingManager {
 
     /**
      * Update daily the list of misspellings from Wikipedia.
+     * It's executed immediately after the tool deployment.
      */
     @Scheduled(fixedDelay = 3600 * 24 * 1000)
     void updateMisspellings() {
@@ -70,12 +72,19 @@ public class MisspellingManager {
     Set<Misspelling> parseMisspellingListText(String misspellingListText) {
         Set<Misspelling> misspellingSet = new HashSet<>(MISSPELLING_ESTIMATED_COUNT);
 
+        // We maintain a temporary set of words to find soft duplicates (only the word)
+        Set<String> words = new HashSet<>(MISSPELLING_ESTIMATED_COUNT);
+
         Stream<String> stream = new BufferedReader(new StringReader(misspellingListText)).lines();
-        stream.forEach(strLine -> {
+        // Ignore the lines not corresponding to misspelling lines
+        stream.filter(line -> line.startsWith(" ") && StringUtils.isNotBlank(line)).forEach(strLine -> {
             Misspelling misspelling = parseMisspellingLine(strLine);
-            // Add the misspelling and check if it is duplicated
-            if (misspelling != null && !misspellingSet.add(misspelling)) {
-                LOGGER.warn("Duplicated misspelling term: {}", misspelling.getWord());
+            if (misspelling != null) {
+                if (words.add(misspelling.getWord())) {
+                    misspellingSet.add(misspelling);
+                } else {
+                    LOGGER.warn("Duplicated misspelling term: {}", misspelling.getWord());
+                }
             }
         });
 
@@ -86,17 +95,14 @@ public class MisspellingManager {
         Misspelling misspelling = null;
 
         String[] tokens = misspellingLine.split("\\|");
-        // Ignore the lines not corresponding to misspelling lines
-        if (!misspellingLine.isEmpty() && misspellingLine.startsWith(" ")) {
-            if (tokens.length == 3) {
-                misspelling = Misspelling.builder()
-                        .setWord(tokens[0].trim())
-                        .setCaseSensitive(CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim()))
-                        .setComment(tokens[2].trim())
-                        .build();
-            } else {
-                LOGGER.warn("Bad formatted misspelling line: {}", misspellingLine);
-            }
+        if (tokens.length == 3) {
+            misspelling = Misspelling.builder()
+                    .setWord(tokens[0].trim())
+                    .setCaseSensitive(CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim()))
+                    .setComment(tokens[2].trim())
+                    .build();
+        } else {
+            LOGGER.warn("Bad formatted misspelling line: {}", misspellingLine);
         }
 
         return misspelling;

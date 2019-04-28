@@ -1,4 +1,4 @@
-package es.bvalero.replacer.misspelling.benchmark;
+package es.bvalero.replacer.misspelling;
 
 import org.junit.Assert;
 import org.junit.Before;

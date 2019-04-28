@@ -1,4 +1,4 @@
-package es.bvalero.replacer.misspelling.benchmark;
+package es.bvalero.replacer.misspelling;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -6,13 +6,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class WordMatchAllPossessiveFinder extends WordFinder {
+class WordMatchAllCompleteFinder extends WordFinder {
 
     private Pattern wordPattern;
     private Set<String> words;
 
-    WordMatchAllPossessiveFinder(Collection<String> words) {
-        this.wordPattern = Pattern.compile("[\\w\\-']++", Pattern.UNICODE_CHARACTER_CLASS);
+    WordMatchAllCompleteFinder(Collection<String> words) {
+        this.wordPattern = Pattern.compile("\\b[\\w\\-']+\\b", Pattern.UNICODE_CHARACTER_CLASS);
         this.words = new HashSet<>(words);
     }
 

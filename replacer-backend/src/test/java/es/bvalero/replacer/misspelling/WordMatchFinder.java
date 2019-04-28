@@ -1,29 +1,25 @@
-package es.bvalero.replacer.misspelling.benchmark;
-
-import dk.brics.automaton.AutomatonMatcher;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
+package es.bvalero.replacer.misspelling;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class WordAutomatonFinder extends WordFinder {
+class WordMatchFinder extends WordFinder {
 
-    private List<RunAutomaton> words;
+    private List<Pattern> words;
 
-    WordAutomatonFinder(Collection<String> words) {
+    WordMatchFinder(Collection<String> words) {
         this.words = new ArrayList<>();
         for (String word : words) {
-            this.words.add(new RunAutomaton(new RegExp(word).toAutomaton()));
+            this.words.add(Pattern.compile(word));
         }
     }
 
     Set<WordMatch> findWords(String text) {
         // We loop over all the words and find them in the text with the indexOf function
         Set<WordMatch> matches = new HashSet<>();
-        for (RunAutomaton word : this.words) {
-            AutomatonMatcher m = word.newMatcher(text);
+        for (Pattern word : this.words) {
+            Matcher m = word.matcher(text);
             while (m.find()) {
                 WordMatch match = new WordMatch(m.start(), m.group());
                 if (isWordCompleteInText(match, text)) {

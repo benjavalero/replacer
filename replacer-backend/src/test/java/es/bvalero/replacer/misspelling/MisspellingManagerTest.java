@@ -42,6 +42,7 @@ public class MisspellingManagerTest {
                 " I||J\n" +
                 " k||k (letra), que, qué, kg (kilogramo)\n" +
                 " I||J\n" + // Duplicated
+                " I||M\n" + // Duplicated but different comment
                 " renuncio||renunció (3.ª persona), renuncio (1.ª persona)\n" +
                 " remake||(nueva) versión o adaptación\n" +
                 " desempeño||desempeño (sustantivo o verbo, 1.ª persona), desempeñó (verbo, 3.ª persona)";

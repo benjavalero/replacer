@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Domain class corresponding to the lines in the Wikipedia article containing potential misspellings.
  */
-public final class Misspelling {
+final class Misspelling {
 
     private final String word;
     private final boolean caseSensitive;
@@ -17,15 +17,15 @@ public final class Misspelling {
         this.comment = comment;
     }
 
-    public static Misspelling.MisspellingBuilder builder() {
+    static Misspelling.MisspellingBuilder builder() {
         return new Misspelling.MisspellingBuilder();
     }
 
-    public String getWord() {
+    String getWord() {
         return word;
     }
 
-    public boolean isCaseSensitive() {
+    boolean isCaseSensitive() {
         return caseSensitive;
     }
 
@@ -33,18 +33,20 @@ public final class Misspelling {
         return comment;
     }
 
+    /** We compare all the fields as maybe only the comment has changed and we want to detect it */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Misspelling that = (Misspelling) o;
         return caseSensitive == that.caseSensitive &&
-                word.equals(that.word);
+                word.equals(that.word) &&
+                comment.equals(that.comment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(word, caseSensitive);
+        return Objects.hash(word, caseSensitive, comment);
     }
 
     @Override
@@ -56,17 +58,17 @@ public final class Misspelling {
                 '}';
     }
 
-    public static class MisspellingBuilder {
+    static class MisspellingBuilder {
         private String word;
         private boolean caseSensitive;
         private String comment;
 
-        public Misspelling.MisspellingBuilder setWord(String word) {
+        Misspelling.MisspellingBuilder setWord(String word) {
             this.word = word;
             return this;
         }
 
-        public Misspelling.MisspellingBuilder setCaseSensitive(boolean caseSensitive) {
+        Misspelling.MisspellingBuilder setCaseSensitive(boolean caseSensitive) {
             this.caseSensitive = caseSensitive;
             return this;
         }
@@ -76,7 +78,7 @@ public final class Misspelling {
             return this;
         }
 
-        public Misspelling build() {
+        Misspelling build() {
             return new Misspelling(word, caseSensitive, comment);
         }
     }

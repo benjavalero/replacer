@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.ignored;
+package es.bvalero.replacer.misspelling;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
@@ -6,8 +6,6 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.misspelling.Misspelling;
-import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.persistence.ReplacementType;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NonNls;
