@@ -12,8 +12,8 @@ import java.util.Map;
 @Service
 public class WikipediaService {
 
-    private static final String TAG_REDIRECTION = "#REDIRECCIÓN";
-    private static final String TAG_REDIRECT = "#REDIRECT";
+    // Here we include #Redirect, #Redireccion and #Redirección
+    private static final String TAG_REDIRECT = "#REDIREC";
 
     @Autowired
     private IWikipediaFacade wikipediaFacade;
@@ -42,8 +42,7 @@ public class WikipediaService {
     }
 
     public boolean isRedirectionPage(String pageContent) {
-        return StringUtils.containsIgnoreCase(pageContent, TAG_REDIRECTION)
-                || StringUtils.containsIgnoreCase(pageContent, TAG_REDIRECT);
+        return StringUtils.containsIgnoreCase(pageContent, TAG_REDIRECT);
     }
 
     public String getMisspellingListPageContent() throws WikipediaException {
