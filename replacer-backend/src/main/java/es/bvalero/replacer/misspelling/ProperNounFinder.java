@@ -31,11 +31,6 @@ public class ProperNounFinder extends ReplacementFinder implements IgnoredReplac
     private static final Logger LOGGER = LoggerFactory.getLogger(ProperNounFinder.class);
 
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_PROPER_NOUN = "(Domingo|Frances|Julio|Sidney)<Z><Lu>";
-    private static final RunAutomaton AUTOMATON_PROPER_NOUN =
-            new RunAutomaton(new RegExp(REGEX_PROPER_NOUN).toAutomaton(new DatatypesAutomatonProvider()));
-
-    @org.intellij.lang.annotations.RegExp
     private static final String REGEX_UPPERCASE = "\\p{Lu}";
     private static final Pattern PATTERN_UPPERCASE = Pattern.compile(REGEX_UPPERCASE);
 
@@ -109,11 +104,6 @@ public class ProperNounFinder extends ReplacementFinder implements IgnoredReplac
     @Override
     public List<ArticleReplacement> findIgnoredReplacements(String text) {
         List<ArticleReplacement> matches = new ArrayList<>(100);
-
-        // Person names. We don't need the extra letter captured for the surname.
-        for (ArticleReplacement match : findReplacements(text, AUTOMATON_PROPER_NOUN, ReplacementType.IGNORED)) {
-            matches.add(match.withText(match.getText().substring(0, match.getText().length() - 2)));
-        }
 
         // Lowercase nouns that start with uppercase because after some special character
         // We don't need the extra letters captured for the separator

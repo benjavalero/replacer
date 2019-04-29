@@ -75,7 +75,7 @@ public class WordFinderBenchmarkTest {
         // finders.add(new WordAutomatonAlternateFinder(this.words)); // 4 x WordMatchFinder
         // finders.add(new WordRegexAlternateCompleteFinder(this.words)); // 1 x WordMatchFinder
         finders.add(new WordMatchAllFinder(this.words));
-        finders.add(new WordAutomatonAllFinder(this.words));
+        finders.add(new WordAutomatonAllFinder(this.words)); // WINNER
         finders.add(new WordMatchAllPossessiveFinder(this.words));
         finders.add(new WordMatchAllCompleteFinder(this.words));
         finders.add(new WordMatchAllCompletePossessiveFinder(this.words));

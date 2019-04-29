@@ -27,19 +27,6 @@ public class ProperNounFinderTest {
     }
 
     @Test
-    public void testRegexProperNoun() {
-        String noun = "Julio";
-        String surname = "Verne";
-        String text = "xxx " + noun + ' ' + surname + " zzz";
-
-        properNounFinder.buildMisspellingRelatedFields(new HashSet<Misspelling>());
-        List<ArticleReplacement> matches = properNounFinder.findIgnoredReplacements(text);
-        Assert.assertFalse(matches.isEmpty());
-        Assert.assertEquals(1, matches.size());
-        Assert.assertEquals(noun, matches.get(0).getText());
-    }
-
-    @Test
     public void testRegexLowercaseNoun() {
         String noun1 = "Enero";
         String noun2 = "Febrero";
