@@ -27,7 +27,7 @@ import java.util.stream.Stream;
         initializers = ConfigFileApplicationContextInitializer.class)
 public class WordFinderBenchmarkTest {
 
-    private final static int ITERATIONS = 10000;
+    private final static int ITERATIONS = 1000;
 
     @Autowired
     private MisspellingManager misspellingManager;

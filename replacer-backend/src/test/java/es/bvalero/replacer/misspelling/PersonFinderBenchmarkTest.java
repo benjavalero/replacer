@@ -24,7 +24,7 @@ import java.util.stream.Stream;
         initializers = ConfigFileApplicationContextInitializer.class)
 public class PersonFinderBenchmarkTest {
 
-    private final static int ITERATIONS = 10000;
+    private final static int ITERATIONS = 1000;
 
     @Autowired
     private WikipediaService wikipediaService;

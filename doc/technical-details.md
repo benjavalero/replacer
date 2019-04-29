@@ -36,9 +36,13 @@ Por tanto he decidido implementar todas las llamadas dentro de la propia herrami
 
 ## Banco de pruebas
 
-El número de páginas de la Wikipedia en español es inmenso (más de 6 millones), de las cuales prácticamente la mitad son artículos:
+El número de páginas de la Wikipedia en español es inmenso (unos 3,7 millones), de las cuales la gran mayoría son artículos:
 
 ![](ns_pie.png)
+
+Y entre los artículos más de la mitad son redirecciones:
+
+![](redirect_pie.png)
 
 A la hora de indexar los artículos para encontrar reemplazos, es fundamental optimizar los algoritmos o expresiones regulares utilizados.
 
@@ -46,20 +50,20 @@ Para las pruebas de rendimiento, se han extraído estadísticas sobre la longitu
 
 |     |             |
 |-----|-------------|
-|count|   3226779.00|
-|mean |      2728.26|
-|std  |      7971.68|
-|min  |        14.00|
-|25%  |        34.00|
-|50%  |        56.00|
-|75%  |      2931.00|
-|max  |    740469.00|
+|count|   1468690.00|
+|mean |      5974.42|
+|std  |     11018.87|
+|min  |        21.00|
+|25%  |      1816.00|
+|50%  |      3289.00|
+|75%  |      6022.00|
+|max  |    745039.00|
 
-Los datos no son normales (en el sentido estadístico de que no siguen la distribución normal). Si dibujamos el diagrama de caja y bigote (con escala logarítmica) vemos que los artículos con más de 10.000 caracteres son casos puntuales.
+Los datos no son normales (en el sentido estadístico de que no siguen la distribución normal). Si dibujamos el diagrama de caja y bigote (con escala logarítmica) vemos que los artículos con más de 10.000 caracteres son casos puntuales. Los artículos más cortos se corresponden en su mayoría con artículos de desambiguación.
 
 ![](length_boxplot.png)
 
-Para hacer las pruebas de los distintos algoritmos, tomaremos 99 artículos de forma aleatoria (aunque no podamos aplicar el TCL y suponer que la muestra mantiene la distribución original), e incluiremos también el más largo. Ejecutaremos cada uno de los algoritmos repetidas veces y compararemos los tiempos.
+Para hacer las pruebas de los distintos algoritmos, tomaremos 100 artículos de forma aleatoria. Ejecutaremos cada uno de los algoritmos repetidas veces y compararemos los tiempos.
 
 Para los algoritmos con expresiones regulares, he tenido en cuenta dos tipos de motores de expresiones regulares: _regex-directed_ y _text-directed_. El primero es el que viene con las librerías de Java y que contiene todas las características interesantes: _look-ahead_, _look-behind_, _lazy_, _possessive_, _back-references_, etc.
 El segundo es más limitado en sintaxis pero a cambio ofrece un rendimiento lineal, logrando en algunos casos un rendimiento muy superior.
@@ -96,7 +100,7 @@ Se omiten los términos del listado que contienen números o puntos, puesto que 
 
 Para buscar errores ortográficos, he planteado varias pruebas. Primero cargar todos los posibles errores del listado y buscarlos en el texto. Luego al revés buscar todas las palabras del texto y ver si son errores.
 
-Dado que manejamos casi 20.000 errores distintos, la segunda opción es muchísimo más eficiente (unas 100 veces de media) así que me centro en comparar las distintas pruebas para este segundo método, donde comprobamos que la búsqueda de palabras con una expresión regular _text-directed_ es la mejor (la siguiente opción tarda el doble).
+Dado que manejamos casi 20.000 errores distintos, la segunda opción es muchísimo más eficiente (unas 100 veces de media) así que me centro en comparar las distintas pruebas para este segundo método, donde comprobamos que la búsqueda de palabras con una expresión regular _text-directed_ es la mejor.
 
 ![](word_boxplot.png)
 
