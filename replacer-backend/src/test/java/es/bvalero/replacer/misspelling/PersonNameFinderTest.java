@@ -22,7 +22,6 @@ public class PersonNameFinderTest {
         String surname = "Verne";
         String text = "xxx " + noun + ' ' + surname + " zzz";
 
-        personNameFinder.init();
         List<ArticleReplacement> matches = personNameFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(1, matches.size());

@@ -45,16 +45,17 @@ public class PersonFinderBenchmarkTest {
 
         // Load the finders
         List<WordFinder> finders = new ArrayList<>();
-        finders.add(new PersonIndexOfFinder(words));
+        finders.add(new PersonIndexOfFinder(words)); // BEST (slightly better than the good ones)
         finders.add(new PersonMatchFinder(words));
         finders.add(new PersonAutomatonFinder(words));
         finders.add(new PersonMatchCompleteFinder(words));
         finders.add(new PersonAutomatonCompleteFinder(words));
         finders.add(new PersonRegexAlternateFinder(words));
-        finders.add(new PersonAutomatonAlternateFinder(words));
+        finders.add(new PersonAutomatonAlternateFinder(words)); // GOOD
         finders.add(new PersonRegexAlternateCompleteFinder(words));
-        finders.add(new PersonAutomatonAlternateCompleteFinder(words)); // WINNER
+        finders.add(new PersonAutomatonAlternateCompleteFinder(words)); // GOOD
         finders.add(new PersonAutomatonAllFinder(words));
+        finders.add(new PersonMatchAllCompleteFinder(words));
 
         System.out.println();
         System.out.println("FINDER\tTIME");

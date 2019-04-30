@@ -1,27 +1,24 @@
 package es.bvalero.replacer.misspelling;
 
-import dk.brics.automaton.AutomatonMatcher;
-import dk.brics.automaton.DatatypesAutomatonProvider;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-class PersonAutomatonAllFinder extends WordFinder {
+class PersonMatchAllFinder extends WordFinder {
 
-    private RunAutomaton wordPattern;
+    private Pattern wordPattern;
     private Set<String> words;
 
-    PersonAutomatonAllFinder(Collection<String> words) {
-        this.wordPattern = new RunAutomaton(new RegExp("<L>+").toAutomaton(new DatatypesAutomatonProvider()));
+    PersonMatchAllFinder(Collection<String> words) {
+        this.wordPattern = Pattern.compile("\\w++", Pattern.UNICODE_CHARACTER_CLASS);
         this.words = new HashSet<>(words);
     }
 
     Set<WordMatch> findWords(String text) {
         Set<WordMatch> matches = new HashSet<>();
-        AutomatonMatcher m = this.wordPattern.newMatcher(text);
+        Matcher m = this.wordPattern.matcher(text);
         while (m.find()) {
             WordMatch match = new WordMatch(m.start(), m.group());
             if (this.words.contains(match.getText()) && isWordFollowedByUppercase(match, text)) {

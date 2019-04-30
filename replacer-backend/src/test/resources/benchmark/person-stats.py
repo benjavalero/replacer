@@ -9,6 +9,12 @@ words = pd.read_csv('person-benchmark.csv', sep='\t')
 # Box Plot (Log)
 f, (ax) = plt.subplots(1, 1, figsize=(12, 4))
 ax.set_xscale('log')
-# filtered_words = words[words.FINDER != 'WordMatchDotAllCompleteLazyFinder']
 sns.boxplot(y="FINDER", x="TIME", data=words, ax=ax)
+plt.show()
+
+winners = ['PersonIndexOfFinder', 'PersonAutomatonAlternateFinder', 'PersonAutomatonAlternateCompleteFinder']
+filtered_words = words[words['FINDER'].isin(winners)]
+f, (ax) = plt.subplots(1, 1, figsize=(12, 4))
+ax.set_xscale('log')
+sns.boxplot(y="FINDER", x="TIME", data=filtered_words, ax=ax)
 plt.show()

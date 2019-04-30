@@ -80,8 +80,20 @@ public class PersonFinderTest {
     }
 
     @Test
+    public void testFindPersonMatchAll() {
+        PersonMatchAllFinder finder = new PersonMatchAllFinder(this.words);
+        Assert.assertEquals(expected, finder.findWords(text));
+    }
+
+    @Test
     public void testFindPersonAutomatonAll() {
         PersonAutomatonAllFinder finder = new PersonAutomatonAllFinder(this.words);
+        Assert.assertEquals(expected, finder.findWords(text));
+    }
+
+    @Test
+    public void testFindPersonMatchAllComplete() {
+        PersonMatchAllCompleteFinder finder = new PersonMatchAllCompleteFinder(this.words);
         Assert.assertEquals(expected, finder.findWords(text));
     }
 

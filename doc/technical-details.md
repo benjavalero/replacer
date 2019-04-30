@@ -68,6 +68,8 @@ Para hacer las pruebas de los distintos algoritmos, tomaremos 100 artículos de 
 Para los algoritmos con expresiones regulares, he tenido en cuenta dos tipos de motores de expresiones regulares: _regex-directed_ y _text-directed_. El primero es el que viene con las librerías de Java y que contiene todas las características interesantes: _look-ahead_, _look-behind_, _lazy_, _possessive_, _back-references_, etc.
 El segundo es más limitado en sintaxis pero a cambio ofrece un rendimiento lineal, logrando en algunos casos un rendimiento muy superior.
 
+Como regla general, dependiendo de la complejidad de la expresión regular, usaremos el autómata _text-directed_. Por otra parte, con el motor _regex-directed_, siempre que sea posible, aplicaremos los cuantificadores _lazy_ o _possessive_, que mejoran un poquito el rendimiento.
+
 ## Excepciones
 
 Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar muchos falsos positivos, por ejemplo una cita en español antiguo o un parámetro propio de la Wikipedia que no acepta diacríticos:
