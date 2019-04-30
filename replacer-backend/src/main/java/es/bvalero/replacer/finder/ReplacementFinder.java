@@ -28,7 +28,7 @@ public abstract class ReplacementFinder {
     /**
      * @return If the first letter of the word is uppercase
      */
-    protected boolean startsWithUpperCase(CharSequence word) {
+    public boolean startsWithUpperCase(CharSequence word) {
         return Character.isUpperCase(word.charAt(0));
     }
 
