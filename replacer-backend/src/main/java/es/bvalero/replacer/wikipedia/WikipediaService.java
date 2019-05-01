@@ -1,7 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,7 @@ import java.util.Map;
 @Service
 public class WikipediaService {
 
-    private static final String TAG_REDIRECTION = "#REDIRECCIÓN";
-    private static final String TAG_REDIRECT = "#REDIRECT";
+    private static final String REDIRECT_PREFIX = "#redirec";
 
     @Autowired
     private IWikipediaFacade wikipediaFacade;
@@ -42,8 +40,7 @@ public class WikipediaService {
     }
 
     public boolean isRedirectionPage(String pageContent) {
-        return StringUtils.containsIgnoreCase(pageContent, TAG_REDIRECTION)
-                || StringUtils.containsIgnoreCase(pageContent, TAG_REDIRECT);
+        return pageContent.toLowerCase().contains(REDIRECT_PREFIX);
     }
 
     public String getMisspellingListPageContent() throws WikipediaException {

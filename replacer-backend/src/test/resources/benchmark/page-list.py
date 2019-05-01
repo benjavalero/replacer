@@ -31,8 +31,9 @@ class DumpHandler(xml.sax.ContentHandler):
         elif tag == "text":
             self.text = self.CurrentData.strip()
         elif tag == "page":
-            str = '%s\t%s\t%s\t%s' % (self.id, self.ns, len(self.text), self.timestamp[:10])
-            print str.encode('utf-8')
+            redirect = "#redirec" in self.text.lower()
+            str = '%s\t%s\t%s\t%s\t%s' % (self.id, self.ns, len(self.text), self.timestamp[:10], redirect)
+            print(str)
             self.id = ""
 
     # Call when a character is read
@@ -49,6 +50,6 @@ if ( __name__ == "__main__"):
     Handler = DumpHandler()
     parser.setContentHandler(Handler)
 
-    print "ID\tNS\tLength\tTimestamp"
+    print("ID\tNS\tLength\tTimestamp\tRedirect")
 
-    parser.parse(bz2.BZ2File('/Users/benja/Developer/pywikibot/20190401/eswiki-20190401-pages-meta-current.xml.bz2'))
+    parser.parse(bz2.BZ2File("C:\\Users\\bvalero\\Downloads\\eswiki-20190420-pages-articles.xml.bz2", "r"))
