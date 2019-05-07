@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public interface IAuthenticationService {
+public interface AuthenticationService {
 
     String executeOAuthRequest(Map<String, String> params) throws AuthenticationException;
 

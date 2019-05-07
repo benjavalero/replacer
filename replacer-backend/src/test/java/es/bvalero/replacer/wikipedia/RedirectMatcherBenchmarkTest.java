@@ -1,6 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
-import es.bvalero.replacer.authentication.AuthenticationService;
+import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {WikipediaService.class, WikipediaFacade.class, AuthenticationService.class},
+@ContextConfiguration(classes = {WikipediaService.class, WikipediaFacade.class, AuthenticationServiceImpl.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class RedirectMatcherBenchmarkTest {
 

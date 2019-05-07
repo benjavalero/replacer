@@ -15,9 +15,10 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+// We make this implementation public to be used by the finder benchmarks
 @Service
 @Profile("default")
-public class AuthenticationServiceImpl implements IAuthenticationService {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private static final String WIKIPEDIA_API_URL = "https://es.wikipedia.org/w/api.php";
 

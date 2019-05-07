@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 public class AuthenticationController {
 
     @Autowired
-    private IAuthenticationService authenticationService;
+    private AuthenticationService authenticationService;
 
     @GetMapping(value = "/requestToken")
     public OAuth1RequestToken getRequestToken() throws InterruptedException, ExecutionException, IOException {

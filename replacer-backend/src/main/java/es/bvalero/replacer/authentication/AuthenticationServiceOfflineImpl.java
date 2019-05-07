@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Service
 @Profile("offline")
-class AuthenticationServiceOfflineImpl implements IAuthenticationService {
+class AuthenticationServiceOfflineImpl implements AuthenticationService {
 
     @Override
     public String executeOAuthRequest(Map<String, String> params) {

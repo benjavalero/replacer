@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.authentication.AuthenticationException;
-import es.bvalero.replacer.authentication.IAuthenticationService;
+import es.bvalero.replacer.authentication.AuthenticationService;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class WikipediaFacade implements IWikipediaFacade {
     private static final int MAX_PAGES_REQUESTED = 50;
 
     @Autowired
-    private IAuthenticationService authenticationService;
+    private AuthenticationService authenticationService;
 
     private ObjectMapper mapper = new ObjectMapper();
 

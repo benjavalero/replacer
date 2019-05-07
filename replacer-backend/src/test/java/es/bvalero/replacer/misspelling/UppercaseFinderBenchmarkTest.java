@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.authentication.AuthenticationService;
+import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaFacade;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {MisspellingManager.class, MisspellingFinder.class, WikipediaService.class, WikipediaFacade.class, AuthenticationService.class},
+@ContextConfiguration(classes = {MisspellingManager.class, MisspellingFinder.class, WikipediaService.class, WikipediaFacade.class, AuthenticationServiceImpl.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class UppercaseFinderBenchmarkTest {
 
