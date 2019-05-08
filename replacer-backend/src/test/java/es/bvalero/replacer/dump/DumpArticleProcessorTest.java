@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.persistence.*;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -48,15 +49,15 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessSimple() {
-        DumpArticle dumpArticle = DumpArticle.builder().setNamespace(WikipediaNamespace.ARTICLE).setContent("").build();
+        WikipediaPage dumpArticle = WikipediaPage.builder().setNamespace(WikipediaNamespace.ARTICLE).setContent("").build();
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
     public void testCheckNamespaces() {
-        DumpArticle dumpArticle = DumpArticle.builder().setNamespace(WikipediaNamespace.ARTICLE).setContent("").build();
-        DumpArticle dumpAnnex = DumpArticle.builder().setNamespace(WikipediaNamespace.ANNEX).setContent("").build();
-        DumpArticle dumpCategory = DumpArticle.builder().setNamespace(WikipediaNamespace.CATEGORY).build();
+        WikipediaPage dumpArticle = WikipediaPage.builder().setNamespace(WikipediaNamespace.ARTICLE).setContent("").build();
+        WikipediaPage dumpAnnex = WikipediaPage.builder().setNamespace(WikipediaNamespace.ANNEX).setContent("").build();
+        WikipediaPage dumpCategory = WikipediaPage.builder().setNamespace(WikipediaNamespace.CATEGORY).build();
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpAnnex));
@@ -65,7 +66,7 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessRedirection() {
-        DumpArticle dumpArticle = DumpArticle.builder().build();
+        WikipediaPage dumpArticle = WikipediaPage.builder().build();
         Mockito.when(wikipediaService.isRedirectionPage(Mockito.anyString())).thenReturn(false);
         Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
@@ -75,7 +76,7 @@ public class DumpArticleProcessorTest {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1L);
 
-        DumpArticle dumpArticle = DumpArticle.builder()
+        WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
                 .setTimestamp(yesterday)
@@ -94,7 +95,7 @@ public class DumpArticleProcessorTest {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1L);
 
-        DumpArticle dumpArticle = DumpArticle.builder()
+        WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
                 .setTimestamp(yesterday)
@@ -110,7 +111,7 @@ public class DumpArticleProcessorTest {
     @Test
     public void testProcessLastUpdateWhenTimestampAndReviewed() {
         LocalDate today = LocalDate.now();
-        DumpArticle dumpArticle = DumpArticle.builder()
+        WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
                 .setTimestamp(today)
@@ -128,7 +129,7 @@ public class DumpArticleProcessorTest {
     @Test
     public void testProcessLastUpdateWhenTimestampAndNotReviewed() {
         LocalDate today = LocalDate.now();
-        DumpArticle dumpArticle = DumpArticle.builder()
+        WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
                 .setTimestamp(today)
@@ -147,7 +148,7 @@ public class DumpArticleProcessorTest {
     @Test
     public void testProcessLastUpdateWhenTimestampAndReviewedAndForced() {
         LocalDate today = LocalDate.now();
-        DumpArticle dumpArticle = DumpArticle.builder()
+        WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
                 .setTimestamp(today)
@@ -166,7 +167,7 @@ public class DumpArticleProcessorTest {
     public void testProcessLastUpdateBeforeTimestamp() {
         LocalDate yesterday = LocalDate.now().minusDays(1L);
 
-        DumpArticle dumpArticle = DumpArticle.builder()
+        WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
                 .build();
@@ -182,7 +183,7 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessNewArticle() {
-        DumpArticle dumpArticle = DumpArticle.builder()
+        WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setId(1)
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
@@ -205,7 +206,7 @@ public class DumpArticleProcessorTest {
     @Test
     public void testProcessExistingArticleWithReplacementChanges() {
         LocalDate now = LocalDate.now();
-        DumpArticle dumpArticle = DumpArticle.builder()
+        WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
                 .setTimestamp(now)
@@ -249,7 +250,7 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessExistingArticleWithNoReplacementChanges() {
-        DumpArticle dumpArticle = DumpArticle.builder()
+        WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
                 .build();
@@ -281,7 +282,7 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessExistingArticleWithNoReplacementsFound() {
-        DumpArticle dumpArticle = DumpArticle.builder()
+        WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
                 .setTimestamp(LocalDate.now())
@@ -315,7 +316,7 @@ public class DumpArticleProcessorTest {
     @Test
     public void testProcessNewArticleAndDeleteObsolete() {
         // New article
-        DumpArticle dumpArticle = DumpArticle.builder()
+        WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setId(2)
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")

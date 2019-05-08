@@ -8,6 +8,7 @@ import es.bvalero.replacer.persistence.ArticleRepository;
 import es.bvalero.replacer.persistence.Replacement;
 import es.bvalero.replacer.persistence.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -56,14 +57,14 @@ class DumpArticleProcessor {
     private ReplacementFinderService replacementFinderService;
 
     @TestOnly
-    boolean processArticle(DumpArticle dumpArticle) {
+    boolean processArticle(WikipediaPage dumpArticle) {
         return processArticle(dumpArticle, false);
     }
 
     /**
      * Process a dump article: find the replacements and add them to the database.
      */
-    boolean processArticle(DumpArticle dumpArticle, boolean forceProcess) {
+    boolean processArticle(WikipediaPage dumpArticle, boolean forceProcess) {
         LOGGER.debug("Processing article: {}...", dumpArticle.getTitle());
 
         if (!isArticleProcessableByNamespace(dumpArticle.getNamespace())

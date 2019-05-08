@@ -1,5 +1,6 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.junit.Assert;
 import org.junit.Before;
@@ -41,7 +42,7 @@ public class DumpHandlerTest {
     @Test
     public void testHandleDumpFile() throws URISyntaxException, DumpException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(DumpArticle.class), Mockito.anyBoolean()))
+        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(WikipediaPage.class), Mockito.anyBoolean()))
                 .thenReturn(Boolean.TRUE);
 
         try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile))) {
@@ -64,7 +65,7 @@ public class DumpHandlerTest {
     @Test
     public void testHandDumpFileWithException() throws URISyntaxException, DumpException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(DumpArticle.class)))
+        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(WikipediaPage.class)))
                 .thenThrow(Mockito.mock(NullPointerException.class));
 
         try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile))) {
@@ -88,12 +89,13 @@ public class DumpHandlerTest {
     @Test
     public void testParseWikipediaDate() {
         LocalDate expected = LocalDate.of(2018, Month.AUGUST, 31);
-        Assert.assertEquals(expected, dumpHandler.parseWikipediaDate("2018-08-31T05:17:28Z"));
+        WikipediaPage page = WikipediaPage.builder().setTimestamp("2018-08-31T05:17:28Z").build();
+        Assert.assertEquals(expected, page.getTimestamp());
     }
 
     @Test(expected = DateTimeParseException.class)
     public void testParseWikipediaDateBadFormat() {
-        dumpHandler.parseWikipediaDate("xxx");
+        WikipediaPage.builder().setTimestamp("xxx").build();
     }
 
     @Test

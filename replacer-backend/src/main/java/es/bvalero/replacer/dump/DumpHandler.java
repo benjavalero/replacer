@@ -1,6 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NonNls;
@@ -14,8 +14,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Handler to parse a Wikipedia XML dump.
@@ -31,7 +29,7 @@ class DumpHandler extends DefaultHandler {
     private static final String TIMESTAMP_TAG = "timestamp";
     private static final String TEXT_TAG = "text";
     private static final String PAGE_TAG = "page";
-    private static final String WIKIPEDIA_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
     private static final long NUM_ARTICLES = 3718238L; // Rough amount of articles to be read
     private static final String DURATION_FORMAT = "d:HH:mm:ss";
     @RegExp
@@ -43,9 +41,9 @@ class DumpHandler extends DefaultHandler {
     // Current article values
     private StringBuilder currentChars = new StringBuilder(5000);
     private String currentTitle;
-    private WikipediaNamespace currentNamespace;
+    private int currentNamespace;
     private int currentId;
-    private LocalDate currentTimestamp;
+    private String currentTimestamp;
     private String currentContent;
 
     // Status
@@ -100,7 +98,7 @@ class DumpHandler extends DefaultHandler {
                 currentTitle = currentChars.toString();
                 break;
             case NAMESPACE_TAG:
-                currentNamespace = WikipediaNamespace.valueOf(Integer.parseInt(currentChars.toString()));
+                currentNamespace = Integer.parseInt(currentChars.toString());
                 break;
             case ID_TAG:
                 // ID appears several times (contributor, revision, etc). We care about the first one.
@@ -109,7 +107,7 @@ class DumpHandler extends DefaultHandler {
                 }
                 break;
             case TIMESTAMP_TAG:
-                currentTimestamp = parseWikipediaDate(currentChars.toString());
+                currentTimestamp = currentChars.toString();
                 break;
             case TEXT_TAG:
                 currentContent = currentChars.toString();
@@ -130,14 +128,9 @@ class DumpHandler extends DefaultHandler {
         currentChars.append(ch, start, length);
     }
 
-    LocalDate parseWikipediaDate(CharSequence dateStr) {
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(WIKIPEDIA_DATE_PATTERN);
-        return LocalDate.from(dateFormat.parse(dateStr));
-    }
-
     private void processPage() {
         numArticlesRead++;
-        DumpArticle dumpArticle = DumpArticle.builder()
+        WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setId(currentId)
                 .setTitle(currentTitle)
                 .setNamespace(currentNamespace)
@@ -155,7 +148,7 @@ class DumpHandler extends DefaultHandler {
         }
     }
 
-    private boolean processArticle(DumpArticle dumpArticle) {
+    private boolean processArticle(WikipediaPage dumpArticle) {
         return dumpArticleProcessor.processArticle(dumpArticle, forceProcess);
     }
 
