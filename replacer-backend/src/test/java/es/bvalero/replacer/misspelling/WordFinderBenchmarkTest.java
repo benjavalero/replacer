@@ -3,7 +3,7 @@ package es.bvalero.replacer.misspelling;
 import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaFacade;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {MisspellingManager.class, MisspellingFinder.class, WikipediaService.class, WikipediaFacade.class, AuthenticationServiceImpl.class},
+@ContextConfiguration(classes = {MisspellingManager.class, MisspellingFinder.class, WikipediaFacade.class, AuthenticationServiceImpl.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class WordFinderBenchmarkTest {
 
@@ -36,7 +36,7 @@ public class WordFinderBenchmarkTest {
     private MisspellingFinder misspellingFinder;
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private IWikipediaFacade wikipediaService;
 
     private Collection<String> words;
 

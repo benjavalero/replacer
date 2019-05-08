@@ -5,7 +5,7 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.persistence.ReplacementType;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -35,7 +35,7 @@ public class FalsePositiveFinderTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinderTest.class);
 
     @Mock
-    private WikipediaService wikipediaService;
+    private IWikipediaFacade wikipediaService;
 
     @InjectMocks
     private FalsePositiveFinder falsePositiveFinder;

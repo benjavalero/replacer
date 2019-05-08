@@ -8,7 +8,7 @@ import es.bvalero.replacer.persistence.ArticleRepository;
 import es.bvalero.replacer.persistence.ReplacementRepository;
 import es.bvalero.replacer.persistence.ReplacementType;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class ArticleServiceTest {
     private ReplacementRepository replacementRepository;
 
     @Mock
-    private WikipediaService wikipediaService;
+    private IWikipediaFacade wikipediaService;
 
     @InjectMocks
     private ArticleService articleService;

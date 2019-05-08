@@ -172,4 +172,12 @@ public class WikipediaFacade implements IWikipediaFacade {
         return json.get("query").get("tokens").get("csrftoken").asText();
     }
 
+    public String getMisspellingListPageContent() throws WikipediaException {
+        return getPageContent(IWikipediaFacade.MISSPELLING_LIST_PAGE);
+    }
+
+    public String getFalsePositiveListPageContent() throws WikipediaException {
+        return getPageContent(IWikipediaFacade.FALSE_POSITIVE_LIST_PAGE);
+    }
+
 }

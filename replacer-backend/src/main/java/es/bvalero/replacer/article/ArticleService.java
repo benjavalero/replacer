@@ -8,7 +8,7 @@ import es.bvalero.replacer.persistence.ArticleRepository;
 import es.bvalero.replacer.persistence.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.IWikipediaFacade;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ public class ArticleService {
     private ReplacementRepository replacementRepository;
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private IWikipediaFacade wikipediaService;
 
     @Value("${replacer.hide.empty.paragraphs}")
     private boolean trimText;

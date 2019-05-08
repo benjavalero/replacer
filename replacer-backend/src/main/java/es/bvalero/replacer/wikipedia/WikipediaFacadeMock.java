@@ -19,36 +19,26 @@ import java.util.Map;
 class WikipediaFacadeMock implements IWikipediaFacade {
 
     @Override
-    public String getPageContent(String pageTitle) {
-        String content;
-        switch (pageTitle) {
-            case MISSPELLING_LIST_PAGE:
-                content = loadArticleContent("/misspelling-list.txt");
-                break;
-            case FALSE_POSITIVE_LIST_PAGE:
-                content = loadArticleContent("/false-positives.txt");
-                break;
-            default:
-                content = loadArticleContent("/article-long.txt");
-                break;
-        }
-        return content;
+    public String getPageContent(String pageTitle) throws WikipediaException {
+        return loadArticleContent("/article-long.txt");
     }
 
     @Override
-    public String getPageContent(String pageTitle, OAuth1AccessToken accessToken) {
+    public String getPageContent(String pageTitle, OAuth1AccessToken accessToken) throws WikipediaException {
         return getPageContent(pageTitle);
     }
 
     @Override
-    public String getPageContent(int pageId, OAuth1AccessToken accessToken) {
+    public String getPageContent(int pageId, OAuth1AccessToken accessToken) throws WikipediaException {
         return getPageContent("");
     }
 
     @Override
-    public Map<Integer, String> getPagesContent(List<Integer> pageIds, OAuth1AccessToken accessToken) {
+    public Map<Integer, String> getPagesContent(List<Integer> pageIds, OAuth1AccessToken accessToken) throws WikipediaException {
         Map<Integer, String> pagesContent = new HashMap<>();
-        pageIds.forEach(id -> pagesContent.put(id, getPageContent("")));
+        for (Integer id : pageIds) {
+            pagesContent.put(id, getPageContent(""));
+        }
         return pagesContent;
     }
 
@@ -57,13 +47,21 @@ class WikipediaFacadeMock implements IWikipediaFacade {
         // Do nothing
     }
 
-    private String loadArticleContent(String fileName) {
+    private String loadArticleContent(String fileName) throws WikipediaException {
         try {
             return new String(Files.readAllBytes(Paths.get(getClass().getResource(fileName).toURI())),
                     StandardCharsets.UTF_8);
         } catch (IOException | URISyntaxException e) {
-            return null;
+            throw new WikipediaException(e);
         }
+    }
+
+    public String getMisspellingListPageContent() throws WikipediaException {
+        return loadArticleContent("/misspelling-list.txt");
+    }
+
+    public String getFalsePositiveListPageContent() throws WikipediaException {
+        return loadArticleContent("/false-positives.txt");
     }
 
 }

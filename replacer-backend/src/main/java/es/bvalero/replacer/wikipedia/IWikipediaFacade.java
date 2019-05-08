@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-interface IWikipediaFacade {
+public interface IWikipediaFacade {
 
     String MISSPELLING_LIST_PAGE = "Wikipedia:Corrector_ortográfico/Listado";
     String FALSE_POSITIVE_LIST_PAGE = "Usuario:Benjavalero/FalsePositives";
@@ -23,5 +23,9 @@ interface IWikipediaFacade {
 
     void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
             throws WikipediaException;
+
+    String getMisspellingListPageContent() throws WikipediaException;
+
+    String getFalsePositiveListPageContent() throws WikipediaException;
 
 }
