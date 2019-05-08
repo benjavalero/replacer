@@ -66,8 +66,8 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessRedirection() {
-        WikipediaPage dumpArticle = WikipediaPage.builder().build();
-        Mockito.when(wikipediaService.isRedirectionPage(Mockito.anyString())).thenReturn(false);
+        WikipediaPage dumpArticle = WikipediaPage.builder().setNamespace(WikipediaNamespace.ARTICLE)
+                .setContent("#Redirect").build();
         Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
 

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 final public class WikipediaPage {
+    private static final String REDIRECT_PREFIX = "#redirec";
 
     private final int id;
     private final String title;
@@ -41,6 +42,10 @@ final public class WikipediaPage {
 
     public String getContent() {
         return content;
+    }
+
+    public boolean isRedirectionPage() {
+        return this.content.toLowerCase().contains(REDIRECT_PREFIX);
     }
 
     public static class WikipediaPageBuilder {

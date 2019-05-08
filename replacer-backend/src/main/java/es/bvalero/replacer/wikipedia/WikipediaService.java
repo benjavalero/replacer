@@ -11,8 +11,6 @@ import java.util.Map;
 @Service
 public class WikipediaService {
 
-    private static final String REDIRECT_PREFIX = "#redirec";
-
     @Autowired
     private IWikipediaFacade wikipediaFacade;
 
@@ -37,10 +35,6 @@ public class WikipediaService {
     public void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
             throws WikipediaException {
         wikipediaFacade.savePageContent(pageTitle, pageContent, editTime, accessToken);
-    }
-
-    public boolean isRedirectionPage(String pageContent) {
-        return pageContent.toLowerCase().contains(REDIRECT_PREFIX);
     }
 
     public String getMisspellingListPageContent() throws WikipediaException {

@@ -7,6 +7,7 @@ import es.bvalero.replacer.persistence.Article;
 import es.bvalero.replacer.persistence.ArticleRepository;
 import es.bvalero.replacer.persistence.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
@@ -120,7 +121,8 @@ public class ArticleService {
             String articleContent = wikipediaService.getPageContent(title);
 
             // Check if the article is processable
-            if (wikipediaService.isRedirectionPage(articleContent)) {
+            WikipediaPage page = WikipediaPage.builder().setTitle(title).setContent(articleContent).build();
+            if (page.isRedirectionPage()) {
                 throw new InvalidArticleException("Found article is a redirection page");
             }
 
