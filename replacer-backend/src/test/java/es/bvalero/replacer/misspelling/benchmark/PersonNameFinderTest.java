@@ -1,6 +1,7 @@
-package es.bvalero.replacer.misspelling;
+package es.bvalero.replacer.misspelling.benchmark;
 
 import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.misspelling.PersonNameFinder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

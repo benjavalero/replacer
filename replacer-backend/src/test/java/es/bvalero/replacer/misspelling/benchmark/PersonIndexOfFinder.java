@@ -1,10 +1,12 @@
-package es.bvalero.replacer.misspelling;
+package es.bvalero.replacer.misspelling.benchmark;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import es.bvalero.replacer.finder.MatchResult;
 
-class PersonIndexOfFinder extends WordFinder {
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+class PersonIndexOfFinder extends PersonAbstractFinder {
 
     private Collection<String> words;
 
@@ -12,17 +14,16 @@ class PersonIndexOfFinder extends WordFinder {
         this.words = words;
     }
 
-    Set<WordMatch> findWords(String text) {
+    Set<MatchResult> findMatches(String text) {
         // We loop over all the words and find them in the text with the indexOf function
-        Set<WordMatch> matches = new HashSet<>();
+        Set<MatchResult> matches = new HashSet<>();
         for (String word : this.words) {
             int start = 0;
             while (start >= 0) {
                 start = text.indexOf(word, start);
                 if (start >= 0) {
-                    WordMatch match = new WordMatch(start, word);
-                    if (isWordFollowedByUppercase(match, text)) {
-                        matches.add(match);
+                    if (isWordFollowedByUppercase(start, word, text)) {
+                        matches.add(new MatchResult(start, word));
                     }
                     start++;
                 }

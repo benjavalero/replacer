@@ -1,10 +1,9 @@
-package es.bvalero.replacer.misspelling;
+package es.bvalero.replacer.misspelling.benchmark;
 
 import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaServiceImpl;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ import java.util.stream.Stream;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
         initializers = ConfigFileApplicationContextInitializer.class)
-public class PersonFinderBenchmarkTest {
+public class PersonFinderBenchmark {
 
     private final static int ITERATIONS = 1000;
 
@@ -30,13 +29,12 @@ public class PersonFinderBenchmarkTest {
     private WikipediaService wikipediaService;
 
     @Test
-    @Ignore
     public void testBenchmark() throws IOException, WikipediaException, URISyntaxException {
         Collection<String> words = Arrays.asList("Domingo", "Frances", "Julio", "Sidney");
 
         // Load IDs of the sample articles
         List<Integer> sampleIds = new ArrayList<>();
-        try (Stream<String> stream = Files.lines(Paths.get(PersonFinderBenchmarkTest.class.getResource("/benchmark/sample-articles.txt").toURI()))) {
+        try (Stream<String> stream = Files.lines(Paths.get(PersonFinderBenchmark.class.getResource("/benchmark/sample-articles.txt").toURI()))) {
             stream.forEach(line -> sampleIds.add(Integer.valueOf(line.trim())));
         }
 
@@ -44,26 +42,27 @@ public class PersonFinderBenchmarkTest {
         Map<Integer, String> sampleContents = wikipediaService.getPagesContent(sampleIds, null);
 
         // Load the finders
-        List<WordFinder> finders = new ArrayList<>();
-        finders.add(new PersonIndexOfFinder(words)); // BEST (slightly better than the good ones)
-        finders.add(new PersonMatchFinder(words));
+        List<PersonAbstractFinder> finders = new ArrayList<>();
+        finders.add(new PersonIndexOfFinder(words)); // BEST
+        finders.add(new PersonRegexFinder(words));
         finders.add(new PersonAutomatonFinder(words));
-        finders.add(new PersonMatchCompleteFinder(words));
+        finders.add(new PersonRegexCompleteFinder(words));
         finders.add(new PersonAutomatonCompleteFinder(words));
-        finders.add(new PersonRegexAlternateFinder(words));
-        finders.add(new PersonAutomatonAlternateFinder(words)); // GOOD
-        finders.add(new PersonRegexAlternateCompleteFinder(words));
-        finders.add(new PersonAutomatonAlternateCompleteFinder(words)); // GOOD
+        finders.add(new PersonAlternateRegexFinder(words));
+        finders.add(new PersonAlternateAutomatonFinder(words)); // GOOD
+        finders.add(new PersonAlternateRegexCompleteFinder(words));
+        finders.add(new PersonAlternateAutomatonCompleteFinder(words)); // GOOD
+        finders.add(new PersonRegexAllFinder(words));
         finders.add(new PersonAutomatonAllFinder(words));
-        finders.add(new PersonMatchAllCompleteFinder(words));
+        finders.add(new PersonRegexAllCompleteFinder(words));
 
         System.out.println();
         System.out.println("FINDER\tTIME");
         sampleContents.values().forEach(value -> {
-            for (WordFinder finder : finders) {
+            for (PersonAbstractFinder finder : finders) {
                 long start = System.currentTimeMillis();
                 for (int i = 0; i < ITERATIONS; i++) {
-                    finder.findWords(value);
+                    finder.findMatches(value);
                 }
                 long end = System.currentTimeMillis() - start;
                 System.out.println(finder.getClass().getSimpleName() + "\t" + end);
