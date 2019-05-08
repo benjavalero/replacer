@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Service
 @Profile("offline")
-class WikipediaFacadeMock implements IWikipediaFacade {
+class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public String getPageContent(String pageTitle) throws WikipediaException {

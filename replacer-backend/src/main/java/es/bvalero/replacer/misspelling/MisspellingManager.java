@@ -1,7 +1,7 @@
 package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.IWikipediaFacade;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class MisspellingManager {
     private static final int MISSPELLING_ESTIMATED_COUNT = 20000;
 
     @Autowired
-    private IWikipediaFacade wikipediaService;
+    private WikipediaService wikipediaService;
 
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 

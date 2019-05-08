@@ -6,10 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-public interface IWikipediaFacade {
-
-    String MISSPELLING_LIST_PAGE = "Wikipedia:Corrector_ortográfico/Listado";
-    String FALSE_POSITIVE_LIST_PAGE = "Usuario:Benjavalero/FalsePositives";
+public interface WikipediaService {
 
     // TODO : Take into account the difference between UnavailablePageException and the generic WikipediaException
     String getPageContent(String pageTitle) throws WikipediaException;

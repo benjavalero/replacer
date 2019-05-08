@@ -15,10 +15,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
+// We make this implementation public to be used by the finder benchmarks
 @Service
 @Profile("default")
-public class WikipediaFacade implements IWikipediaFacade {
+public class WikipediaServiceImpl implements WikipediaService {
 
+    private static final String MISSPELLING_LIST_PAGE = "Wikipedia:Corrector_ortográfico/Listado";
+    private static final String FALSE_POSITIVE_LIST_PAGE = "Usuario:Benjavalero/FalsePositives";
     private static final String EDIT_SUMMARY = "Correcciones ortográficas";
     private static final int MAX_PAGES_REQUESTED = 50;
 
@@ -173,11 +176,11 @@ public class WikipediaFacade implements IWikipediaFacade {
     }
 
     public String getMisspellingListPageContent() throws WikipediaException {
-        return getPageContent(IWikipediaFacade.MISSPELLING_LIST_PAGE);
+        return getPageContent(MISSPELLING_LIST_PAGE);
     }
 
     public String getFalsePositiveListPageContent() throws WikipediaException {
-        return getPageContent(IWikipediaFacade.FALSE_POSITIVE_LIST_PAGE);
+        return getPageContent(FALSE_POSITIVE_LIST_PAGE);
     }
 
 }

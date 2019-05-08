@@ -19,14 +19,14 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {WikipediaFacade.class, AuthenticationServiceImpl.class},
+@ContextConfiguration(classes = {WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class RedirectMatcherBenchmarkTest {
 
     private final static int ITERATIONS = 1000;
 
     @Autowired
-    private IWikipediaFacade wikipediaService;
+    private WikipediaService wikipediaService;
 
     @Test
     @Ignore

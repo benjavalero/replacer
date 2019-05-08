@@ -6,7 +6,7 @@ import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.persistence.*;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.IWikipediaFacade;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import java.util.Optional;
 public class DumpArticleProcessorTest {
 
     @Mock
-    private IWikipediaFacade wikipediaService;
+    private WikipediaService wikipediaService;
 
     @Mock
     private ArticleRepository articleRepository;

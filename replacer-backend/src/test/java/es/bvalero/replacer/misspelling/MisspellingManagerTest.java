@@ -1,7 +1,7 @@
 package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.IWikipediaFacade;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,7 @@ import java.util.List;
 public class MisspellingManagerTest {
 
     @Mock
-    private IWikipediaFacade wikipediaService;
+    private WikipediaService wikipediaService;
 
     @InjectMocks
     private MisspellingManager misspellingManager;

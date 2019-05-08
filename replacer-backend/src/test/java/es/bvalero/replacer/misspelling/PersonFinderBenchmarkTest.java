@@ -2,8 +2,8 @@ package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaFacade;
-import es.bvalero.replacer.wikipedia.IWikipediaFacade;
+import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaServiceImpl;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,14 +20,14 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {WikipediaFacade.class, AuthenticationServiceImpl.class},
+@ContextConfiguration(classes = {WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class PersonFinderBenchmarkTest {
 
     private final static int ITERATIONS = 1000;
 
     @Autowired
-    private IWikipediaFacade wikipediaService;
+    private WikipediaService wikipediaService;
 
     @Test
     @Ignore
