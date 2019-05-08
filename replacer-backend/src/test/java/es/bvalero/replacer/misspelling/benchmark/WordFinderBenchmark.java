@@ -1,10 +1,11 @@
-package es.bvalero.replacer.misspelling;
+package es.bvalero.replacer.misspelling.benchmark;
 
 import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
+import es.bvalero.replacer.misspelling.MisspellingFinder;
+import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaServiceImpl;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import java.util.stream.Stream;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {MisspellingManager.class, MisspellingFinder.class, WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
         initializers = ConfigFileApplicationContextInitializer.class)
-public class WordFinderBenchmarkTest {
+public class WordFinderBenchmark {
 
     private final static int ITERATIONS = 1000;
 
@@ -41,8 +42,7 @@ public class WordFinderBenchmarkTest {
     private Collection<String> words;
 
     @Test
-    @Ignore
-    public void testBenchmark() throws IOException, WikipediaException, URISyntaxException {
+    public void testWordFinderBenchmark() throws IOException, WikipediaException, URISyntaxException {
         // Load the misspellings
         this.words = new ArrayList<>();
         this.misspellingManager.findWikipediaMisspellings().forEach(misspelling -> {
@@ -58,7 +58,7 @@ public class WordFinderBenchmarkTest {
 
         // Load IDs of the sample articles
         List<Integer> sampleIds = new ArrayList<>();
-        try (Stream<String> stream = Files.lines(Paths.get(WordFinderBenchmarkTest.class.getResource("/benchmark/sample-articles.txt").toURI()))) {
+        try (Stream<String> stream = Files.lines(Paths.get(WordFinderBenchmark.class.getResource("/benchmark/sample-articles.txt").toURI()))) {
             stream.forEach(line -> sampleIds.add(Integer.valueOf(line.trim())));
         }
 
@@ -66,27 +66,30 @@ public class WordFinderBenchmarkTest {
         Map<Integer, String> sampleContents = wikipediaService.getPagesContent(sampleIds, null);
 
         // Load the finders
-        List<WordFinder> finders = new ArrayList<>();
-        // finders.add(new WordIndexOfFinder(this.words)); // 0.75 x WordMatchFinder
-        // finders.add(new WordMatchFinder(this.words)); // MUCH slower than the rest of finders, from WordMatchAllFinder.
-        // finders.add(new WordAutomatonFinder(this.words)); // 1 x WordMatchFinder. To run this, we need to increase the heap.
-        // finders.add(new WordMatchCompleteFinder(this.words)); // 10 x WordMatchFinder
-        // finders.add(new WordRegexAlternateFinder(this.words)); // 4 x WordMatchFinder. To run this, we need to increase the stack: -Xss3m
-        // finders.add(new WordAutomatonAlternateFinder(this.words)); // 4 x WordMatchFinder
-        // finders.add(new WordRegexAlternateCompleteFinder(this.words)); // 1 x WordMatchFinder
-        finders.add(new WordMatchAllFinder(this.words));
+        List<WordAbstractFinder> finders = new ArrayList<>();
+        /*
+        // These finders are discarded as the times are about 100x slower compared with the other strategy
+        finders.add(new WordIndexOfFinder(this.words));
+        finders.add(new WordRegexFinder(this.words));
+        // finders.add(new WordAutomatonFinder(this.words)); // Discarded: we need to increase too much the heap size
+        finders.add(new WordRegexCompleteFinder(this.words));
+        finders.add(new WordAlternateRegexFinder(this.words));
+        // finders.add(new WordAlternateAutomatonFinder(this.words)); // Discarded: we need to increase too much the stack size
+        finders.add(new WordAlternateRegexCompleteFinder(this.words));
+        */
+        finders.add(new WordRegexAllFinder(this.words));
         finders.add(new WordAutomatonAllFinder(this.words)); // WINNER
-        finders.add(new WordMatchAllPossessiveFinder(this.words));
-        finders.add(new WordMatchAllCompleteFinder(this.words));
-        finders.add(new WordMatchAllCompletePossessiveFinder(this.words));
+        finders.add(new WordRegexAllPossessiveFinder(this.words));
+        finders.add(new WordRegexAllCompleteFinder(this.words));
+        finders.add(new WordRegexAllCompletePossessiveFinder(this.words));
 
         System.out.println();
         System.out.println("FINDER\tTIME");
         sampleContents.values().forEach(value -> {
-            for (WordFinder finder : finders) {
+            for (WordAbstractFinder finder : finders) {
                 long start = System.currentTimeMillis();
                 for (int i = 0; i < ITERATIONS; i++) {
-                    finder.findWords(value);
+                    finder.findMatches(value);
                 }
                 long end = System.currentTimeMillis() - start;
                 System.out.println(finder.getClass().getSimpleName() + "\t" + end);

@@ -82,7 +82,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
     /**
      * @return The given word turning the first letter into uppercase (if needed)
      */
-    String setFirstUpperCase(String word) {
+    public String setFirstUpperCase(String word) {
         return word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")) + word.substring(1);
     }
 

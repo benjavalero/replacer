@@ -1,14 +1,13 @@
-package es.bvalero.replacer.misspelling;
+package es.bvalero.replacer.misspelling.benchmark;
 
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.MatchResult;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-class WordAutomatonFinder extends WordFinder {
+class WordAutomatonFinder extends WordAbstractFinder {
 
     private List<RunAutomaton> words;
 
@@ -19,15 +18,14 @@ class WordAutomatonFinder extends WordFinder {
         }
     }
 
-    Set<WordMatch> findWords(String text) {
-        // We loop over all the words and find them in the text with the indexOf function
-        Set<WordMatch> matches = new HashSet<>();
+    Set<MatchResult> findMatches(String text) {
+        // We loop over all the words and find them in the text with an automaton
+        Set<MatchResult> matches = new HashSet<>();
         for (RunAutomaton word : this.words) {
             AutomatonMatcher m = word.newMatcher(text);
             while (m.find()) {
-                WordMatch match = new WordMatch(m.start(), m.group());
-                if (isWordCompleteInText(match, text)) {
-                    matches.add(match);
+                if (isWordCompleteInText(m.start(), m.group(), text)) {
+                    matches.add(new MatchResult(m.start(), m.group()));
                 }
             }
         }

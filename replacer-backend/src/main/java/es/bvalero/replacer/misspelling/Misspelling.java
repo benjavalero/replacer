@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * Domain class corresponding to the lines in the Wikipedia article containing potential misspellings.
  */
-final class Misspelling {
+public final class Misspelling {
 
     private static final Pattern PATTERN_BRACKETS = Pattern.compile("\\(.+?\\)");
 
@@ -30,11 +30,11 @@ final class Misspelling {
         return new Misspelling.MisspellingBuilder();
     }
 
-    String getWord() {
+    public String getWord() {
         return word;
     }
 
-    boolean isCaseSensitive() {
+    public boolean isCaseSensitive() {
         return caseSensitive;
     }
 
