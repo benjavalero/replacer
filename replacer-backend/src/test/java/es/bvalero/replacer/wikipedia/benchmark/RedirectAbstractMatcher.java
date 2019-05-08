@@ -1,6 +1,6 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.benchmark;
 
-abstract class RedirectMatcher {
+abstract class RedirectAbstractMatcher {
 
     final static String REDIRECT_PREFIX = "#redirec";
 

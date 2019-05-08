@@ -1,8 +1,8 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.benchmark;
 
 import java.util.regex.Pattern;
 
-class RedirectRegexInsensitiveMatcher extends RedirectMatcher {
+class RedirectRegexInsensitiveMatcher extends RedirectAbstractMatcher {
 
     private final static Pattern PATTERN_REDIRECT = Pattern.compile(REDIRECT_PREFIX, Pattern.CASE_INSENSITIVE);
 

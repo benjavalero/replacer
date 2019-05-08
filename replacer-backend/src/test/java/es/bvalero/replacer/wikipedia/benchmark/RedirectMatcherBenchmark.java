@@ -1,7 +1,9 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.benchmark;
 
 import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
-import org.junit.Ignore;
+import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import java.util.stream.Stream;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
         initializers = ConfigFileApplicationContextInitializer.class)
-public class RedirectMatcherBenchmarkTest {
+public class RedirectMatcherBenchmark {
 
     private final static int ITERATIONS = 1000;
 
@@ -29,27 +31,26 @@ public class RedirectMatcherBenchmarkTest {
     private WikipediaService wikipediaService;
 
     @Test
-    @Ignore
-    public void testBenchmark() throws IOException, WikipediaException, URISyntaxException {
+    public void testRedirectMatcherBenchmark() throws IOException, WikipediaException, URISyntaxException {
         // Load IDs of the sample articles
         List<Integer> sampleIds = new ArrayList<>();
-        try (Stream<String> stream = Files.lines(Paths.get(RedirectMatcherBenchmarkTest.class.getResource("/benchmark/sample-articles.txt").toURI()))) {
+        try (Stream<String> stream = Files.lines(Paths.get(RedirectMatcherBenchmark.class.getResource("/benchmark/sample-articles.txt").toURI()))) {
             stream.forEach(line -> sampleIds.add(Integer.valueOf(line.trim())));
         }
 
         // Load sample articles
         Map<Integer, String> sampleContents = wikipediaService.getPagesContent(sampleIds, null);
 
-        // Load the finders
-        List<RedirectMatcher> matchers = new ArrayList<>();
-        matchers.add(new RedirectContainsLowerMatcher()); // WINNER
-        matchers.add(new RedirectContainsIgnoreMatcher());
+        // Load the matchers
+        List<RedirectAbstractMatcher> matchers = new ArrayList<>();
+        matchers.add(new RedirectLowercaseContainsMatcher()); // WINNER
+        matchers.add(new RedirectContainsIgnoreCaseMatcher());
         matchers.add(new RedirectRegexInsensitiveMatcher());
 
         System.out.println();
         System.out.println("FINDER\tTIME");
         sampleContents.values().forEach(value -> {
-            for (RedirectMatcher matcher : matchers) {
+            for (RedirectAbstractMatcher matcher : matchers) {
                 long start = System.currentTimeMillis();
                 for (int i = 0; i < ITERATIONS; i++) {
                     matcher.isRedirect(value);

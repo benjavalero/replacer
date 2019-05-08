@@ -1,8 +1,8 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.benchmark;
 
 import org.apache.commons.lang3.StringUtils;
 
-class RedirectContainsIgnoreMatcher extends RedirectMatcher {
+class RedirectContainsIgnoreCaseMatcher extends RedirectAbstractMatcher {
 
     @Override
     boolean isRedirect(String text) {

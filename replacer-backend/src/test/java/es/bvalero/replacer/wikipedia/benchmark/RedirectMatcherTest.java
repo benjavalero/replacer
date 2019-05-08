@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.benchmark;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,19 +14,19 @@ public class RedirectMatcherTest {
     }
 
     @Test
-    public void testMatchRedirectContainsLower() {
-        RedirectContainsLowerMatcher matcher = new RedirectContainsLowerMatcher();
+    public void testRedirectLowercaseContainsMatcher() {
+        RedirectLowercaseContainsMatcher matcher = new RedirectLowercaseContainsMatcher();
         Assert.assertTrue(matcher.isRedirect(text));
     }
 
     @Test
-    public void testMatchRedirectContainsIgnore() {
-        RedirectContainsIgnoreMatcher matcher = new RedirectContainsIgnoreMatcher();
+    public void testRedirectContainsIgnoreCaseMatcher() {
+        RedirectContainsIgnoreCaseMatcher matcher = new RedirectContainsIgnoreCaseMatcher();
         Assert.assertTrue(matcher.isRedirect(text));
     }
 
     @Test
-    public void testMatchRedirectRegexInsensitive() {
+    public void testRedirectRegexInsensitiveMatcher() {
         RedirectRegexInsensitiveMatcher matcher = new RedirectRegexInsensitiveMatcher();
         Assert.assertTrue(matcher.isRedirect(text));
     }

@@ -1,6 +1,6 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.benchmark;
 
-class RedirectContainsLowerMatcher extends RedirectMatcher {
+class RedirectLowercaseContainsMatcher extends RedirectAbstractMatcher {
 
     @Override
     boolean isRedirect(String text) {
