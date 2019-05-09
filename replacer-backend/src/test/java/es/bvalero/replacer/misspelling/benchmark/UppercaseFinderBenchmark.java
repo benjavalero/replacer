@@ -1,10 +1,11 @@
-package es.bvalero.replacer.misspelling;
+package es.bvalero.replacer.misspelling.benchmark;
 
 import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
+import es.bvalero.replacer.misspelling.MisspellingFinder;
+import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaServiceImpl;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import java.util.stream.Stream;
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {MisspellingManager.class, MisspellingFinder.class, WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
         initializers = ConfigFileApplicationContextInitializer.class)
-public class UppercaseFinderBenchmarkTest {
+public class UppercaseFinderBenchmark {
 
     private final static int ITERATIONS = 1000;
 
@@ -41,7 +42,6 @@ public class UppercaseFinderBenchmarkTest {
     private Collection<String> words;
 
     @Test
-    @Ignore
     public void testBenchmark() throws WikipediaException, URISyntaxException, IOException {
         // Load the misspellings
         this.words = new ArrayList<>();
@@ -57,7 +57,7 @@ public class UppercaseFinderBenchmarkTest {
 
         // Load IDs of the sample articles
         List<Integer> sampleIds = new ArrayList<>();
-        try (Stream<String> stream = Files.lines(Paths.get(UppercaseFinderBenchmarkTest.class.getResource("/benchmark/sample-articles.txt").toURI()))) {
+        try (Stream<String> stream = Files.lines(Paths.get(UppercaseFinderBenchmark.class.getResource("/benchmark/sample-articles.txt").toURI()))) {
             stream.forEach(line -> sampleIds.add(Integer.valueOf(line.trim())));
         }
 
@@ -65,22 +65,22 @@ public class UppercaseFinderBenchmarkTest {
         Map<Integer, String> sampleContents = wikipediaService.getPagesContent(sampleIds, null);
 
         // Load the finders
-        List<WordFinder> finders = new ArrayList<>();
+        List<UppercaseAbstractFinder> finders = new ArrayList<>();
         finders.add(new UppercaseIndexOfFinder(words));
-        finders.add(new UppercaseMatchFinder(words));
+        finders.add(new UppercaseRegexFinder(words));
         finders.add(new UppercaseAutomatonFinder(words));
-        finders.add(new UppercaseMatchLookBehindFinder(words));
-        finders.add(new UppercaseRegexAlternateFinder(words));
-        finders.add(new UppercaseAutomatonAlternateFinder(words)); // WINNER
-        finders.add(new UppercaseRegexAlternateLookBehindFinder(words));
+        finders.add(new UppercaseRegexLookBehindFinder(words));
+        finders.add(new UppercaseAlternateRegexFinder(words));
+        finders.add(new UppercaseAlternateAutomatonFinder(words)); // WINNER
+        finders.add(new UppercaseAlternateRegexLookBehindFinder(words));
 
         System.out.println();
         System.out.println("FINDER\tTIME");
         sampleContents.values().forEach(value -> {
-            for (WordFinder finder : finders) {
+            for (UppercaseAbstractFinder finder : finders) {
                 long start = System.currentTimeMillis();
                 for (int i = 0; i < ITERATIONS; i++) {
-                    finder.findWords(value);
+                    finder.findMatches(value);
                 }
                 long end = System.currentTimeMillis() - start;
                 System.out.println(finder.getClass().getSimpleName() + "\t" + end);

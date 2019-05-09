@@ -42,7 +42,7 @@ public final class Misspelling {
         return comment;
     }
 
-    List<String> getSuggestions() {
+    public List<String> getSuggestions() {
         // Parse only when needed
         if (this.suggestions.isEmpty()) {
             this.suggestions.addAll(parseSuggestionsFromComment());

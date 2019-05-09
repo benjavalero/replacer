@@ -1,11 +1,13 @@
-package es.bvalero.replacer.misspelling;
+package es.bvalero.replacer.misspelling.benchmark;
+
+import es.bvalero.replacer.finder.MatchResult;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-class UppercaseIndexOfFinder extends WordFinder {
+class UppercaseIndexOfFinder extends UppercaseAbstractFinder {
 
     private final static Collection<Character> PUNCTUATIONS = Arrays.asList('!', '#', '*', '|', '=', '.');
 
@@ -15,16 +17,16 @@ class UppercaseIndexOfFinder extends WordFinder {
         this.words = words;
     }
 
-    Set<WordMatch> findWords(String text) {
-        Set<WordMatch> matches = new HashSet<>();
+    Set<MatchResult> findMatches(String text) {
+        // We loop over all the words and find them in the text with the indexOf function
+        Set<MatchResult> matches = new HashSet<>();
         for (String word : this.words) {
             int start = 0;
             while (start >= 0) {
                 start = text.indexOf(word, start);
                 if (start >= 0) {
                     if (isWordPrecededByPunctuation(start, text)) {
-                        WordMatch match = new WordMatch(start, word);
-                        matches.add(match);
+                        matches.add(new MatchResult(start, word));
                     }
                     start++;
                 }
