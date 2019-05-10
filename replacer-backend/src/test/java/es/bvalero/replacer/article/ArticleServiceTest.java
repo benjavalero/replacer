@@ -8,6 +8,7 @@ import es.bvalero.replacer.persistence.ArticleRepository;
 import es.bvalero.replacer.persistence.ReplacementRepository;
 import es.bvalero.replacer.persistence.ReplacementType;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,7 +59,8 @@ public class ArticleServiceTest {
                 .build();
         Mockito.when(replacementRepository.findRandom(Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(randomArticle));
-        Mockito.when(wikipediaService.getPageContent(Mockito.anyString())).thenReturn(text);
+        WikipediaPage page = WikipediaPage.builder().setContent(text).build();
+        Mockito.when(wikipediaService.getPageByTitle(Mockito.anyString())).thenReturn(page);
 
         // Replacement matches
         ArticleReplacement replacement = ArticleReplacement.builder()

@@ -118,15 +118,14 @@ public class ArticleService {
 
     private String findArticleContent(String title) throws InvalidArticleException {
         try {
-            String articleContent = wikipediaService.getPageContent(title);
+            WikipediaPage page = wikipediaService.getPageByTitle(title);
 
             // Check if the article is processable
-            WikipediaPage page = WikipediaPage.builder().setTitle(title).setContent(articleContent).build();
             if (page.isRedirectionPage()) {
                 throw new InvalidArticleException("Found article is a redirection page");
             }
 
-            return articleContent;
+            return page.getContent();
         } catch (WikipediaException e) {
             throw new InvalidArticleException("Content could not be retrieved");
         }

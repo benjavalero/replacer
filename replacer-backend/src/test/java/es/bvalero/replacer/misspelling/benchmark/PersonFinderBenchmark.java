@@ -2,6 +2,7 @@ package es.bvalero.replacer.misspelling.benchmark;
 
 import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaServiceImpl;
 import org.junit.Test;
@@ -39,7 +40,7 @@ public class PersonFinderBenchmark {
         }
 
         // Load sample articles
-        Map<Integer, String> sampleContents = wikipediaService.getPagesContent(sampleIds, null);
+        Map<Integer, WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds, null);
 
         // Load the finders
         List<PersonAbstractFinder> finders = new ArrayList<>();
@@ -62,7 +63,7 @@ public class PersonFinderBenchmark {
             for (PersonAbstractFinder finder : finders) {
                 long start = System.currentTimeMillis();
                 for (int i = 0; i < ITERATIONS; i++) {
-                    finder.findMatches(value);
+                    finder.findMatches(value.getContent());
                 }
                 long end = System.currentTimeMillis() - start;
                 System.out.println(finder.getClass().getSimpleName() + "\t" + end);

@@ -30,26 +30,31 @@ public class WikipediaServiceIT {
 
     @Test
     public void testGetPageContent() throws WikipediaException {
-        String pageContent = wikipediaService.getPageContent("Usuario:Benjavalero");
-        Assert.assertNotNull(pageContent);
-        Assert.assertTrue(pageContent.contains("Orihuela"));
+        String title = "Usuario:Benjavalero";
+        WikipediaPage page = wikipediaService.getPageByTitle(title);
+        Assert.assertNotNull(page);
+        Assert.assertEquals(6219990, page.getId());
+        Assert.assertEquals(title, page.getTitle());
+        Assert.assertEquals(WikipediaNamespace.USER, page.getNamespace());
+        Assert.assertTrue(page.getTimestamp().getYear() >= 2016);
+        Assert.assertTrue(page.getContent().contains("Orihuela"));
     }
 
     @Test
     public void testGetPagesContent() throws WikipediaException {
         // We pass a null access token to retrieve an anonymous edit token
-        Map<Integer, String> pagesContent = wikipediaService.getPagesContent(Arrays.asList(6219990, 6903884), null);
-        Assert.assertNotNull(pagesContent);
-        Assert.assertEquals(2, pagesContent.size());
-        Assert.assertTrue(pagesContent.containsKey(6219990));
-        Assert.assertTrue(pagesContent.get(6219990).contains("Orihuela"));
-        Assert.assertTrue(pagesContent.containsKey(6903884));
-        Assert.assertTrue(pagesContent.get(6903884).contains("Pais Vasco"));
+        Map<Integer, WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884), null);
+        Assert.assertNotNull(pages);
+        Assert.assertEquals(2, pages.size());
+        Assert.assertTrue(pages.containsKey(6219990));
+        Assert.assertTrue(pages.get(6219990).getContent().contains("Orihuela"));
+        Assert.assertTrue(pages.containsKey(6903884));
+        Assert.assertTrue(pages.get(6903884).getContent().contains("Pais Vasco"));
     }
 
     @Test(expected = UnavailablePageException.class)
     public void testGetPageContentUnavailable() throws WikipediaException {
-        wikipediaService.getPageContent("Usuario:Benjavaleroxx");
+        wikipediaService.getPageByTitle("Usuario:Benjavaleroxx");
     }
 
 }

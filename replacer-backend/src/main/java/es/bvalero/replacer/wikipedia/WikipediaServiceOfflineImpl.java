@@ -19,20 +19,22 @@ import java.util.Map;
 class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
-    public String getPageContent(String pageTitle) throws WikipediaException {
-        return loadArticleContent("/article-long.txt");
+    public WikipediaPage getPageByTitle(String pageTitle) throws WikipediaException {
+        return WikipediaPage.builder()
+                .setContent(loadArticleContent("/article-long.txt"))
+                .build();
     }
 
     @Override
-    public String getPageContent(String pageTitle, OAuth1AccessToken accessToken) throws WikipediaException {
-        return getPageContent(pageTitle);
+    public WikipediaPage getPageByTitle(String pageTitle, OAuth1AccessToken accessToken) throws WikipediaException {
+        return getPageByTitle(pageTitle);
     }
 
     @Override
-    public Map<Integer, String> getPagesContent(List<Integer> pageIds, OAuth1AccessToken accessToken) throws WikipediaException {
-        Map<Integer, String> pagesContent = new HashMap<>();
+    public Map<Integer, WikipediaPage> getPagesByIds(List<Integer> pageIds, OAuth1AccessToken accessToken) throws WikipediaException {
+        Map<Integer, WikipediaPage> pagesContent = new HashMap<>();
         for (Integer id : pageIds) {
-            pagesContent.put(id, getPageContent(""));
+            pagesContent.put(id, getPageByTitle(""));
         }
         return pagesContent;
     }

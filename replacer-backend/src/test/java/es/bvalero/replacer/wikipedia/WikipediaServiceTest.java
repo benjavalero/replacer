@@ -52,31 +52,36 @@ public class WikipediaServiceTest {
     @Test
     public void testGetPageContent() throws IOException, AuthenticationException, WikipediaException {
         // API response
-        String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
+        String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
         JsonNode jsonResponse = jsonMapper.readTree(textResponse);
         Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyMap(), Mockito.nullable(OAuth1AccessToken.class)))
                 .thenReturn(jsonResponse);
 
-        String pageContent = wikipediaService.getPageContent("Usuario:Benjavalero");
-        Assert.assertNotNull(pageContent);
-        Assert.assertTrue(pageContent.contains("Orihuela"));
+        String title = "Usuario:Benjavalero";
+        WikipediaPage page = wikipediaService.getPageByTitle(title);
+        Assert.assertNotNull(page);
+        Assert.assertEquals(6219990, page.getId());
+        Assert.assertEquals(title, page.getTitle());
+        Assert.assertEquals(WikipediaNamespace.USER, page.getNamespace());
+        Assert.assertTrue(page.getTimestamp().getYear() >= 2016);
+        Assert.assertTrue(page.getContent().contains("Orihuela"));
     }
 
     @Test
     public void testGetPagesContent() throws IOException, AuthenticationException, WikipediaException {
         // API response
-        String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]},{\"pageid\":6903884,\"ns\":2,\"title\":\"Usuario:Benjavalero/Taller\",\"revisions\":[{\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Enlace a [[Pais Vasco]].\"}}}]}]}}";
+        String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]},{\"pageid\":6903884,\"ns\":2,\"title\":\"Usuario:Benjavalero/Taller\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Enlace a [[Pais Vasco]].\"}}}]}]}}";
         JsonNode jsonResponse = jsonMapper.readTree(textResponse);
         Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyMap(), Mockito.nullable(OAuth1AccessToken.class)))
                 .thenReturn(jsonResponse);
 
-        Map<Integer, String> pagesContent = wikipediaService.getPagesContent(Arrays.asList(6219990, 6903884), null);
-        Assert.assertNotNull(pagesContent);
-        Assert.assertEquals(2, pagesContent.size());
-        Assert.assertTrue(pagesContent.containsKey(6219990));
-        Assert.assertTrue(pagesContent.get(6219990).contains("Orihuela"));
-        Assert.assertTrue(pagesContent.containsKey(6903884));
-        Assert.assertTrue(pagesContent.get(6903884).contains("Pais Vasco"));
+        Map<Integer, WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884), null);
+        Assert.assertNotNull(pages);
+        Assert.assertEquals(2, pages.size());
+        Assert.assertTrue(pages.containsKey(6219990));
+        Assert.assertTrue(pages.get(6219990).getContent().contains("Orihuela"));
+        Assert.assertTrue(pages.containsKey(6903884));
+        Assert.assertTrue(pages.get(6903884).getContent().contains("Pais Vasco"));
     }
 
     @Test(expected = WikipediaException.class)
@@ -87,7 +92,7 @@ public class WikipediaServiceTest {
         Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyMap(), Mockito.nullable(OAuth1AccessToken.class)))
                 .thenReturn(jsonResponse);
 
-        wikipediaService.getPagesContent(Collections.singletonList(6219990), null);
+        wikipediaService.getPagesByIds(Collections.singletonList(6219990), null);
     }
 
     @Test(expected = UnavailablePageException.class)
@@ -98,7 +103,7 @@ public class WikipediaServiceTest {
         Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyMap(), Mockito.nullable(OAuth1AccessToken.class)))
                 .thenReturn(jsonResponse);
 
-        wikipediaService.getPageContent("Usuario:Benjavaleroxx");
+        wikipediaService.getPageByTitle("Usuario:Benjavaleroxx");
     }
 
 }

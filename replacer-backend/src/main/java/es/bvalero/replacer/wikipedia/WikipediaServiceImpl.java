@@ -30,15 +30,15 @@ public class WikipediaServiceImpl implements WikipediaService {
     private AuthenticationService authenticationService;
 
     @Override
-    public String getPageContent(String pageTitle) throws WikipediaException {
-        return getPageContent(pageTitle, null);
+    public WikipediaPage getPageByTitle(String pageTitle) throws WikipediaException {
+        return getPageByTitle(pageTitle, null);
     }
 
     @Override
-    public String getPageContent(String pageTitle, @Nullable OAuth1AccessToken accessToken)
+    public WikipediaPage getPageByTitle(String pageTitle, @Nullable OAuth1AccessToken accessToken)
             throws WikipediaException {
         // Return the only value that should be in the map
-        Map<Integer, String> contents = getPagesContent("titles", pageTitle, accessToken);
+        Map<Integer, WikipediaPage> contents = getPagesByIds("titles", pageTitle, accessToken);
         if (contents.size() > 0) {
             return new ArrayList<>(contents.values()).get(0);
         } else {
@@ -47,51 +47,58 @@ public class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public Map<Integer, String> getPagesContent(List<Integer> pageIds, @Nullable OAuth1AccessToken accessToken)
+    public Map<Integer, WikipediaPage> getPagesByIds(List<Integer> pageIds, @Nullable OAuth1AccessToken accessToken)
             throws WikipediaException {
-        Map<Integer, String> pageContents = new HashMap<>(pageIds.size());
+        Map<Integer, WikipediaPage> pageContents = new HashMap<>(pageIds.size());
         // There is a maximum number of pages to request
         // We split the request in several sub-lists
         int start = 0;
         while (start < pageIds.size()) {
             List<Integer> subList = pageIds.subList(start, start + Math.min(pageIds.size() - start, MAX_PAGES_REQUESTED));
-            pageContents.putAll(getPagesContent("pageids", StringUtils.join(subList, "|"), accessToken));
+            pageContents.putAll(getPagesByIds("pageids", StringUtils.join(subList, "|"), accessToken));
             start += subList.size();
         }
         return pageContents;
     }
 
-    private Map<Integer, String> getPagesContent(String pagesParam, String pagesValue, @Nullable OAuth1AccessToken accessToken)
+    private Map<Integer, WikipediaPage> getPagesByIds(String pagesParam, String pagesValue, @Nullable OAuth1AccessToken accessToken)
             throws WikipediaException {
         Map<String, String> params = new HashMap<>();
         params.put("action", "query");
         params.put("prop", "revisions");
-        params.put("rvprop", "content");
+        params.put("rvprop", "timestamp|content");
         params.put("rvslots", "main");
         params.put(pagesParam, pagesValue);
 
         try {
             JsonNode jsonResponse = authenticationService.executeOAuthRequest(params, accessToken);
-            return extractPagesContentFromApiResponse(jsonResponse);
+            return extractPagesFromApiResponse(jsonResponse);
         } catch (AuthenticationException e) {
             throw new WikipediaException("Error getting page content", e);
         }
     }
 
-    private Map<Integer, String> extractPagesContentFromApiResponse(JsonNode json) throws WikipediaException {
+    private Map<Integer, WikipediaPage> extractPagesFromApiResponse(JsonNode json) throws WikipediaException {
         JsonNode jsonError = json.get("error");
         if (jsonError != null) {
             String errorMsg = String.format("%s: %s", jsonError.get("code").asText(), jsonError.get("info").asText());
             throw new WikipediaException(errorMsg);
         }
 
-        Map<Integer, String> pageContents = new HashMap<>();
-        json.at("/query/pages").forEach(page -> {
-            JsonNode jsonContent = page.at("/revisions/0/slots/main/content");
+        Map<Integer, WikipediaPage> pageContents = new HashMap<>();
+        json.at("/query/pages").forEach(jsonPage -> {
+            JsonNode jsonContent = jsonPage.at("/revisions/0/slots/main/content");
             // There may be no content if the page is missing
             if (!jsonContent.isMissingNode()) {
-                int pageId = page.get("pageid").asInt();
-                pageContents.put(pageId, jsonContent.asText());
+                int pageId = jsonPage.get("pageid").asInt();
+                WikipediaPage page = WikipediaPage.builder()
+                        .setId(pageId)
+                        .setTitle(jsonPage.get("title").asText())
+                        .setNamespace(jsonPage.get("ns").asInt())
+                        .setContent(jsonContent.asText())
+                        .setTimestamp(jsonPage.at("/revisions/0/timestamp").asText())
+                        .build();
+                pageContents.put(pageId, page);
             }
         });
         return pageContents;
@@ -130,11 +137,11 @@ public class WikipediaServiceImpl implements WikipediaService {
     }
 
     public String getMisspellingListPageContent() throws WikipediaException {
-        return getPageContent(MISSPELLING_LIST_PAGE);
+        return getPageByTitle(MISSPELLING_LIST_PAGE).getContent();
     }
 
     public String getFalsePositiveListPageContent() throws WikipediaException {
-        return getPageContent(FALSE_POSITIVE_LIST_PAGE);
+        return getPageByTitle(FALSE_POSITIVE_LIST_PAGE).getContent();
     }
 
 }
