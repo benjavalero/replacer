@@ -5,136 +5,160 @@ import es.bvalero.replacer.persistence.ReplacementType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 
+import java.beans.PropertyChangeEvent;
 import java.util.*;
 
 public class MisspellingFinderTest {
 
-    @InjectMocks
-    private MisspellingFinder misspellingFinder;
+    private MisspellingFinder misspellingFinder = new MisspellingFinder();
 
     @Before
     public void setUp() {
         misspellingFinder = new MisspellingFinder();
-        MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void testFindMisspellings() {
-        String articleContent = "UM vonito Exemplo exemplo luma.";
+    public void testFindMisspellingsNoResults() {
+        String text = "Sample text";
+        Misspelling misspelling = Misspelling.builder().setWord("a").setComment("b").build();
+        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
 
-        Misspelling misspelling1 = Misspelling.builder()
-                .setWord("um")
-                .build();
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        Misspelling misspelling2 = Misspelling.builder()
-                .setWord("vonito")
-                .setComment("bonito")
-                .build();
+        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
 
-        Misspelling misspelling3 = Misspelling.builder()
-                .setWord("exemplo")
-                .setComment("ejemplo")
-                .build();
+        Assert.assertNotNull(results);
+        Assert.assertTrue(results.isEmpty());
+    }
 
-        misspellingFinder.buildMisspellingRelatedFields(new HashSet<>(Arrays.asList(misspelling1, misspelling2, misspelling3)));
+    @Test
+    public void testFindMisspellingsWithResults() {
+        String text = "sample text.";
+        Misspelling misspelling1 = Misspelling.builder().setWord("sample").setComment("ejemplo").build();
+        Misspelling misspelling2 = Misspelling.builder().setWord("text").setComment("texto").build();
+        Set<Misspelling> misspellingSet = new HashSet<>(Arrays.asList(misspelling1, misspelling2));
 
-        List<ArticleReplacement> result = misspellingFinder.findReplacements(articleContent);
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        Assert.assertNotNull(result);
-        Assert.assertEquals(3, result.size());
+        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
 
-        // "UM" will be ignored because it is all in uppercase and has not a known uppercase misspelling
+        Assert.assertNotNull(results);
+        Assert.assertEquals(2, results.size());
 
-        ArticleReplacement result1 = result.get(0);
-        Assert.assertEquals("vonito", result1.getText());
-        Assert.assertEquals(3, result1.getStart());
+        ArticleReplacement result1 = results.get(0);
+        Assert.assertEquals("sample", result1.getText());
+        Assert.assertEquals(0, result1.getStart());
         Assert.assertEquals(ReplacementType.MISSPELLING, result1.getType());
-        Assert.assertEquals("vonito", result1.getSubtype());
-        Assert.assertEquals("bonito", result1.getSuggestion());
+        Assert.assertEquals("sample", result1.getSubtype());
 
-        ArticleReplacement result2 = result.get(1);
-        Assert.assertEquals("Exemplo", result2.getText());
-        Assert.assertEquals(10, result2.getStart());
+        ArticleReplacement result2 = results.get(1);
+        Assert.assertEquals("text", result2.getText());
+        Assert.assertEquals(7, result2.getStart());
         Assert.assertEquals(ReplacementType.MISSPELLING, result2.getType());
-        Assert.assertEquals("exemplo", result2.getSubtype());
-        Assert.assertEquals("Ejemplo", result2.getSuggestion());
+        Assert.assertEquals("text", result2.getSubtype());
+    }
 
-        ArticleReplacement result3 = result.get(2);
-        Assert.assertEquals("exemplo", result3.getText());
-        Assert.assertEquals(18, result3.getStart());
-        Assert.assertEquals(ReplacementType.MISSPELLING, result3.getType());
-        Assert.assertEquals("exemplo", result3.getSubtype());
-        Assert.assertEquals("ejemplo", result3.getSuggestion());
+    @Test
+    public void testFindMisspellingsWithResultCaseInsensitive() {
+        String text = "Sample Text";
+        Misspelling misspelling = Misspelling.builder().setWord("text").setComment("texto").build();
+        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
+
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
+
+        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        ArticleReplacement result = results.get(0);
+        Assert.assertEquals("Text", result.getText());
+        Assert.assertEquals("text", result.getSubtype());
+    }
+
+    @Test
+    public void testFindMisspellingsWithResultCaseSensitive() {
+        String text = "text Text";
+        Misspelling misspelling = Misspelling.builder().setWord("text").setCaseSensitive(true).setComment("texto").build();
+        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
+
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
+
+        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        ArticleReplacement result = results.get(0);
+        Assert.assertEquals("text", result.getText());
+        Assert.assertEquals(0, result.getStart());
+        Assert.assertEquals("text", result.getSubtype());
+    }
+
+    @Test
+    public void testFindMisspellingsWithCompleteWord() {
+        String text = "Texto Text";
+        Misspelling misspelling = Misspelling.builder().setWord("text").setComment("texto").build();
+        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
+
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
+
+        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        ArticleReplacement result = results.get(0);
+        Assert.assertEquals("Text", result.getText());
+        Assert.assertEquals(6, result.getStart());
+        Assert.assertEquals("text", result.getSubtype());
+    }
+
+    @Test
+    public void testFindMisspellingsWithUppercase() {
+        String text = "SAMPLE TEXT";
+        Misspelling misspelling1 = Misspelling.builder().setWord("SAMPLE").setCaseSensitive(true).setComment("sample").build();
+        Misspelling misspelling2 = Misspelling.builder().setWord("text").setComment("texto").build();
+        Set<Misspelling> misspellingSet = new HashSet<>(Arrays.asList(misspelling1, misspelling2));
+
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
+
+        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        ArticleReplacement result = results.get(0);
+        Assert.assertEquals("SAMPLE", result.getText());
+        Assert.assertEquals(0, result.getStart());
+        Assert.assertEquals("SAMPLE", result.getSubtype());
     }
 
     @Test
     public void testFindMisspellingSuggestion() {
+        // lowercase -> uppercase: españa -> España
+        // uppercase -> lowercase: Domingo -> domingo
+        // lowercase -> lowercase: aguila -> águila
+        // uppercase -> uppercase: Aguila -> Águila
+        String text = "españa Domingo aguila Aguila";
         Misspelling misspellingCS = Misspelling.builder().setWord("españa").setCaseSensitive(true).setComment("España").build();
         Misspelling misspellingCS2 = Misspelling.builder().setWord("Domingo").setCaseSensitive(true).setComment("domingo").build();
-        Misspelling misspellingCI = Misspelling.builder().setWord("habia").setCaseSensitive(false).setComment("había").build();
+        Misspelling misspellingCI = Misspelling.builder().setWord("aguila").setCaseSensitive(false).setComment("águila").build();
 
-        // Uppercase word + Case-sensitive
-        Assert.assertEquals("domingo", misspellingFinder
-                .findMisspellingSuggestion("Domingo", misspellingCS2));
+        Set<Misspelling> misspellingSet = new HashSet<>(Arrays.asList(misspellingCS, misspellingCS2, misspellingCI));
 
-        // Uppercase word + Case-insensitive
-        Assert.assertEquals("Había", misspellingFinder
-                .findMisspellingSuggestion("Habia", misspellingCI));
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        // Lowercase word + Case-sensitive
-        Assert.assertEquals("España", misspellingFinder
-                .findMisspellingSuggestion("españa", misspellingCS));
+        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
 
-        // Lowercase word + Case-insensitive
-        Assert.assertEquals("había", misspellingFinder
-                .findMisspellingSuggestion("habia", misspellingCI));
-    }
-
-    @Test
-    public void testSetFirstUpperCase() {
-        Assert.assertEquals("Álvaro", misspellingFinder.setFirstUpperCase("Álvaro"));
-        Assert.assertEquals("Úlcera", misspellingFinder.setFirstUpperCase("úlcera"));
-        Assert.assertEquals("Ñ", misspellingFinder.setFirstUpperCase("ñ"));
-    }
-
-    @Test
-    public void testBuildMisspellingMap() {
-        Misspelling misspelling1 =
-                Misspelling.builder().setWord("haver").setComment("haber").setCaseSensitive(false).build();
-        Misspelling misspelling2 =
-                Misspelling.builder().setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
-
-        Set<Misspelling> misspellings = new HashSet<>(Arrays.asList(misspelling1, misspelling2));
-        Map<String, Misspelling> misspellingMap = misspellingFinder.buildMisspellingMap(misspellings);
-
-        Assert.assertEquals(3, misspellingMap.size());
-        Assert.assertEquals(misspelling1, misspellingMap.get("haver"));
-        Assert.assertEquals(misspelling1, misspellingMap.get("Haver"));
-        Assert.assertEquals(misspelling2, misspellingMap.get("madrid"));
-    }
-
-    @Test
-    public void testFindMisspellingByWord() {
-        Misspelling misspelling = Misspelling.builder()
-                .setWord("madrid").setComment("Madrid").setCaseSensitive(true).build();
-
-        misspellingFinder.buildMisspellingRelatedFields(new HashSet<>(Collections.singletonList(misspelling)));
-
-        Assert.assertEquals(misspelling, misspellingFinder.findMisspellingByWord("madrid"));
-        Assert.assertNull(misspellingFinder.findMisspellingByWord("Madrid"));
-    }
-
-    @Test
-    public void isMisspellingWordValid() {
-        Assert.assertTrue(misspellingFinder.isMisspellingWordValid("España"));
-        Assert.assertFalse(misspellingFinder.isMisspellingWordValid("m2"));
-        Assert.assertFalse(misspellingFinder.isMisspellingWordValid("n.º"));
-        Assert.assertTrue(misspellingFinder.isMisspellingWordValid("Castilla-León"));
-        Assert.assertTrue(misspellingFinder.isMisspellingWordValid("CD's"));
-        Assert.assertFalse(misspellingFinder.isMisspellingWordValid("cm."));
+        Assert.assertEquals("España", results.get(0).getSuggestion());
+        Assert.assertEquals("domingo", results.get(1).getSuggestion());
+        Assert.assertEquals("águila", results.get(2).getSuggestion());
+        Assert.assertEquals("Águila", results.get(3).getSuggestion());
     }
 
 }

@@ -96,16 +96,23 @@ public class MisspellingManager {
 
         String[] tokens = misspellingLine.split("\\|");
         if (tokens.length == 3) {
-            misspelling = Misspelling.builder()
-                    .setWord(tokens[0].trim())
-                    .setCaseSensitive(CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim()))
-                    .setComment(tokens[2].trim())
-                    .build();
+            String word = tokens[0].trim();
+            if (isMisspellingWordValid(word)) {
+                misspelling = Misspelling.builder()
+                        .setWord(word)
+                        .setCaseSensitive(CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim()))
+                        .setComment(tokens[2].trim())
+                        .build();
+            }
         } else {
             LOGGER.warn("Bad formatted misspelling line: {}", misspellingLine);
         }
 
         return misspelling;
+    }
+
+    private boolean isMisspellingWordValid(String word) {
+        return word.chars().allMatch(c -> Character.isLetter(c) || c == '\'' || c == '-');
     }
 
 }

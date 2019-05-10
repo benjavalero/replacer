@@ -1,7 +1,6 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
 import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
-import es.bvalero.replacer.misspelling.MisspellingFinder;
 import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -18,14 +17,11 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {MisspellingManager.class, MisspellingFinder.class, WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
+@ContextConfiguration(classes = {MisspellingManager.class, WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class WordFinderBenchmark {
 
@@ -33,9 +29,6 @@ public class WordFinderBenchmark {
 
     @Autowired
     private MisspellingManager misspellingManager;
-
-    @Autowired
-    private MisspellingFinder misspellingFinder;
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -53,7 +46,9 @@ public class WordFinderBenchmark {
             } else {
                 // If case-insensitive, we add to the map "word" and "Word".
                 this.words.add(word);
-                this.words.add(misspellingFinder.setFirstUpperCase(word));
+
+                String upperWord = word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")) + word.substring(1);
+                this.words.add(upperWord);
             }
         });
 

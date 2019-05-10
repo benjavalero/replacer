@@ -43,31 +43,24 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        @SuppressWarnings("unchecked")
-        Set<Misspelling> newMisspellings = (Set<Misspelling>) evt.getNewValue();
-        buildMisspellingRelatedFields(newMisspellings);
+        this.misspellingMap = buildMisspellingMap((Set<Misspelling>) evt.getNewValue());
     }
 
-    void buildMisspellingRelatedFields(Set<Misspelling> newMisspellings) {
-        this.misspellingMap = buildMisspellingMap(newMisspellings);
-    }
-
-    Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
+    private Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
         LOGGER.info("Start building misspelling map...");
 
         // Build a map to quick access the misspellings by word
         Map<String, Misspelling> misspellingMap = new HashMap<>(misspellings.size());
         misspellings.forEach(misspelling -> {
             String word = misspelling.getWord();
-            if (isMisspellingWordValid(word)) {
-                if (misspelling.isCaseSensitive()) {
-                    misspellingMap.put(word, misspelling);
-                } else {
-                    // If case-insensitive, we add to the map "word" and "Word".
-                    misspellingMap.put(word, misspelling);
-                    misspellingMap.put(setFirstUpperCase(word), misspelling);
-                }
+            if (misspelling.isCaseSensitive()) {
+                misspellingMap.put(word, misspelling);
+            } else {
+                // If case-insensitive, we add to the map "word" and "Word".
+                misspellingMap.put(word, misspelling);
+                misspellingMap.put(setFirstUpperCase(word), misspelling);
             }
         });
 
@@ -75,14 +68,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
         return misspellingMap;
     }
 
-    boolean isMisspellingWordValid(String word) {
-        return word.chars().allMatch(c -> Character.isLetter(c) || c == '\'' || c == '-');
-    }
-
-    /**
-     * @return The given word turning the first letter into uppercase (if needed)
-     */
-    public String setFirstUpperCase(String word) {
+    private String setFirstUpperCase(String word) {
         return word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")) + word.substring(1);
     }
 
@@ -116,12 +102,12 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
     /**
      * @return The misspelling related to the given word, or null if there is no such misspelling.
      */
-    Misspelling findMisspellingByWord(String word) {
+    private Misspelling findMisspellingByWord(String word) {
         return this.misspellingMap.get(word);
     }
 
     /* Transform the case of the suggestion, e. g. "Habia" -> "Había" */
-    String findMisspellingSuggestion(CharSequence originalWord, Misspelling misspelling) {
+    private String findMisspellingSuggestion(CharSequence originalWord, Misspelling misspelling) {
         List<String> suggestions = misspelling.getSuggestions();
 
         // TODO Take into account all the suggestions
