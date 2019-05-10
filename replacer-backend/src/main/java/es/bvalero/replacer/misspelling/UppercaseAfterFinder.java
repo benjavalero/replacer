@@ -10,6 +10,7 @@ import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.persistence.ReplacementType;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,17 @@ public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredRe
     @Autowired
     private MisspellingManager misspellingManager;
 
+    // Misspellings which start with uppercase and are case-sensitive
+    private List<String> uppercaseWords = new ArrayList<>();
+
     // Regex with the misspellings which start with uppercase and are case-sensitive
     // and starting with a special character which justifies the uppercase
     private RunAutomaton uppercaseAfterAutomaton;
+
+    @TestOnly
+    public List<String> getUppercaseWords() {
+        return uppercaseWords;
+    }
 
     @PostConstruct
     public void init() {
@@ -44,32 +53,26 @@ public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredRe
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        @SuppressWarnings("unchecked")
-        Set<Misspelling> newMisspellings = (Set<Misspelling>) evt.getNewValue();
-        buildMisspellingRelatedFields(newMisspellings);
-    }
-
-    void buildMisspellingRelatedFields(Set<Misspelling> newMisspellings) {
-        this.uppercaseAfterAutomaton = buildUppercaseAfterAutomaton(newMisspellings);
+        this.uppercaseAfterAutomaton = buildUppercaseAfterAutomaton((Set<Misspelling>) evt.getNewValue());
     }
 
     private RunAutomaton buildUppercaseAfterAutomaton(Set<Misspelling> misspellings) {
         LOGGER.info("Start building uppercaseAfter automaton...");
 
         // Load the misspellings
-        List<String> alternations = new ArrayList<>();
         misspellings.forEach(misspelling -> {
             String word = misspelling.getWord();
             if (misspelling.isCaseSensitive()
                     && startsWithUpperCase(word)
                     && misspelling.getSuggestions().size() == 1
                     && misspelling.getSuggestions().get(0).equals(word.toLowerCase())) {
-                alternations.add(word);
+                this.uppercaseWords.add(word);
             }
         });
 
-        String regexAlternations = String.format(REGEX_UPPERCASE_AFTER_PUNCTUATION, StringUtils.join(alternations, "|"));
+        String regexAlternations = String.format(REGEX_UPPERCASE_AFTER_PUNCTUATION, StringUtils.join(this.uppercaseWords, "|"));
         RunAutomaton automaton = new RunAutomaton(new RegExp(regexAlternations).toAutomaton(new DatatypesAutomatonProvider()));
 
         LOGGER.info("End building uppercaseAfter automaton");

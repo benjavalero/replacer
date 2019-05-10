@@ -11,7 +11,7 @@ import java.util.*;
 
 public class MisspellingFinderTest {
 
-    private MisspellingFinder misspellingFinder = new MisspellingFinder();
+    private MisspellingFinder misspellingFinder;
 
     @Before
     public void setUp() {

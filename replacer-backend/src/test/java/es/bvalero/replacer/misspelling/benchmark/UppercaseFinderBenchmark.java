@@ -1,8 +1,8 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
 import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
-import es.bvalero.replacer.misspelling.MisspellingFinder;
 import es.bvalero.replacer.misspelling.MisspellingManager;
+import es.bvalero.replacer.misspelling.UppercaseAfterFinder;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {MisspellingManager.class, MisspellingFinder.class, WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
+@ContextConfiguration(classes = {UppercaseAfterFinder.class, MisspellingManager.class, WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class UppercaseFinderBenchmark {
 
@@ -38,23 +38,13 @@ public class UppercaseFinderBenchmark {
     private MisspellingManager misspellingManager;
 
     @Autowired
-    private MisspellingFinder misspellingFinder;
-
-    private Collection<String> words;
+    private UppercaseAfterFinder uppercaseAfterFinder;
 
     @Test
     public void testBenchmark() throws WikipediaException, URISyntaxException, IOException {
         // Load the misspellings
-        this.words = new ArrayList<>();
-        this.misspellingManager.findWikipediaMisspellings().forEach(misspelling -> {
-            String word = misspelling.getWord();
-            if (misspelling.isCaseSensitive()
-                    && misspellingFinder.startsWithUpperCase(word)
-                    && misspelling.getSuggestions().size() == 1
-                    && misspelling.getSuggestions().get(0).equals(word.toLowerCase())) {
-                this.words.add(word);
-            }
-        });
+        misspellingManager.updateMisspellings();
+        Collection<String> words = uppercaseAfterFinder.getUppercaseWords();
 
         // Load IDs of the sample articles
         List<Integer> sampleIds = new ArrayList<>();

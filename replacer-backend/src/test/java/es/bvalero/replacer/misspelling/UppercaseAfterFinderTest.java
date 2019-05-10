@@ -4,26 +4,17 @@ import es.bvalero.replacer.finder.ArticleReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.beans.PropertyChangeEvent;
+import java.util.*;
 
-public class UppercaseAfterTest {
+public class UppercaseAfterFinderTest {
 
-    @Mock
-    private MisspellingManager misspellingManager;
-
-    @InjectMocks
     private UppercaseAfterFinder uppercaseAfterFinder;
 
     @Before
     public void setUp() {
         uppercaseAfterFinder = new UppercaseAfterFinder();
-        MockitoAnnotations.initMocks(this);
     }
 
     @Test
@@ -34,7 +25,10 @@ public class UppercaseAfterTest {
 
         Misspelling misspelling1 = Misspelling.builder().setWord("Enero").setCaseSensitive(true).setComment("enero").build();
         Misspelling misspelling2 = Misspelling.builder().setWord("Febrero").setCaseSensitive(true).setComment("febrero").build();
-        uppercaseAfterFinder.buildMisspellingRelatedFields(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
+        Set<Misspelling> misspellingSet = new HashSet<>(Arrays.asList(misspelling1, misspelling2));
+
+        // Fake the update of the misspelling list in the misspelling manager
+        uppercaseAfterFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
         List<ArticleReplacement> matches = uppercaseAfterFinder.findIgnoredReplacements(text);
 

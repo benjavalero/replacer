@@ -1,6 +1,7 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
 import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
+import es.bvalero.replacer.misspelling.MisspellingFinder;
 import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -17,11 +18,14 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {MisspellingManager.class, WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
+@ContextConfiguration(classes = {MisspellingFinder.class, MisspellingManager.class, WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class WordFinderBenchmark {
 
@@ -31,26 +35,16 @@ public class WordFinderBenchmark {
     private MisspellingManager misspellingManager;
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private MisspellingFinder misspellingFinder;
 
-    private Collection<String> words;
+    @Autowired
+    private WikipediaService wikipediaService;
 
     @Test
     public void testWordFinderBenchmark() throws IOException, WikipediaException, URISyntaxException {
         // Load the misspellings
-        this.words = new ArrayList<>();
-        this.misspellingManager.findWikipediaMisspellings().forEach(misspelling -> {
-            String word = misspelling.getWord();
-            if (misspelling.isCaseSensitive()) {
-                this.words.add(word);
-            } else {
-                // If case-insensitive, we add to the map "word" and "Word".
-                this.words.add(word);
-
-                String upperWord = word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")) + word.substring(1);
-                this.words.add(upperWord);
-            }
-        });
+        misspellingManager.updateMisspellings();
+        Collection<String> words = misspellingFinder.getMisspellingMap().keySet();
 
         // Load IDs of the sample articles
         List<Integer> sampleIds = new ArrayList<>();
@@ -73,11 +67,11 @@ public class WordFinderBenchmark {
         // finders.add(new WordAlternateAutomatonFinder(this.words)); // Discarded: we need to increase too much the stack size
         finders.add(new WordAlternateRegexCompleteFinder(this.words));
         */
-        finders.add(new WordRegexAllFinder(this.words));
-        finders.add(new WordAutomatonAllFinder(this.words)); // WINNER
-        finders.add(new WordRegexAllPossessiveFinder(this.words));
-        finders.add(new WordRegexAllCompleteFinder(this.words));
-        finders.add(new WordRegexAllCompletePossessiveFinder(this.words));
+        finders.add(new WordRegexAllFinder(words));
+        finders.add(new WordAutomatonAllFinder(words)); // WINNER
+        finders.add(new WordRegexAllPossessiveFinder(words));
+        finders.add(new WordRegexAllCompleteFinder(words));
+        finders.add(new WordRegexAllCompletePossessiveFinder(words));
 
         System.out.println();
         System.out.println("FINDER\tTIME");

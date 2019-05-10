@@ -9,6 +9,7 @@ import es.bvalero.replacer.finder.ArticleReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.persistence.ReplacementType;
 import org.jetbrains.annotations.NonNls;
+import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
 
     // Derived from the misspelling set to access faster by word
     private Map<String, Misspelling> misspellingMap = new HashMap<>();
+
+    @TestOnly
+    public Map<String, Misspelling> getMisspellingMap() {
+        return misspellingMap;
+    }
 
     @PostConstruct
     public void init() {
