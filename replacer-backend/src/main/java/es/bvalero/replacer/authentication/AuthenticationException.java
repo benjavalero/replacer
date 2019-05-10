@@ -8,4 +8,8 @@ public class AuthenticationException extends Exception {
         super(throwable);
     }
 
+    AuthenticationException(String message) {
+        super(message);
+    }
+
 }

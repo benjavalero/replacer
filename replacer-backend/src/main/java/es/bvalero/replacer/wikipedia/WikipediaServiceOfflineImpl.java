@@ -29,11 +29,6 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     @Override
-    public String getPageContent(int pageId, OAuth1AccessToken accessToken) throws WikipediaException {
-        return getPageContent("");
-    }
-
-    @Override
     public Map<Integer, String> getPagesContent(List<Integer> pageIds, OAuth1AccessToken accessToken) throws WikipediaException {
         Map<Integer, String> pagesContent = new HashMap<>();
         for (Integer id : pageIds) {
