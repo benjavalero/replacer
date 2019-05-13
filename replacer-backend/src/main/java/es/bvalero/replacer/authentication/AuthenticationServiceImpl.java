@@ -6,7 +6,6 @@ import com.github.scribejava.apis.MediaWikiApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth10aService;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -42,24 +41,39 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public JsonNode executeOAuthRequest(Map<String, String> params, @Nullable OAuth1AccessToken accessToken)
+    public JsonNode executeOAuthRequest(Map<String, String> params, OAuth1AccessToken accessToken)
             throws AuthenticationException {
-        // Create the OAuth request
-        OAuthRequest request = new OAuthRequest(Verb.POST, WIKIPEDIA_API_URL);
+        OAuthRequest request = createOAuthRequestWithParams(params);
+        signOAuthRequest(request, accessToken);
+        return executeOAuthRequest(request);
+    }
 
+    @Override
+    public JsonNode executeUnsignedOAuthRequest(Map<String, String> params) throws AuthenticationException {
+        OAuthRequest request = createOAuthRequestWithParams(params);
+        return executeOAuthRequest(request);
+    }
+
+    private OAuthRequest createOAuthRequestWithParams(Map<String, String> params) {
+        OAuthRequest request = new OAuthRequest(Verb.POST, WIKIPEDIA_API_URL);
+        addParametersToRequest(request, params);
+        return request;
+    }
+
+    private void addParametersToRequest(OAuthRequest request, Map<String, String> params) {
         // Add standard parameters to receive a JSON response fro Wikipedia API
         request.addParameter("format", "json");
         request.addParameter("formatversion", "2");
 
         // Add the rest of parameters
         params.forEach(request::addParameter);
+    }
 
-        // Sign the request with the OAuth token
-        if (accessToken != null) {
-            getOAuthService().signRequest(accessToken, request);
-        }
+    private void signOAuthRequest(OAuthRequest request, OAuth1AccessToken accessToken) {
+        getOAuthService().signRequest(accessToken, request);
+    }
 
-        // Execute the OAuth request
+    private JsonNode executeOAuthRequest(OAuthRequest request) throws AuthenticationException {
         try {
             Response response = getOAuthService().execute(request);
             if (response.isSuccessful() && response.getBody() != null) {

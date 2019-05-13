@@ -53,7 +53,7 @@ public class UppercaseFinderBenchmark {
         }
 
         // Load sample articles
-        Map<Integer, WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds, null);
+        Map<Integer, WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds);
 
         // Load the finders
         List<UppercaseAbstractFinder> finders = new ArrayList<>();

@@ -21,14 +21,6 @@ public class WikipediaServiceIT {
     private WikipediaServiceImpl wikipediaService;
 
     @Test
-    public void testGetEditToken() throws WikipediaException {
-        // We pass a null access token to retrieve an anonymous edit token
-        String editToken = wikipediaService.getEditToken(null);
-        Assert.assertNotNull(editToken);
-        Assert.assertTrue(editToken.endsWith("+\\"));
-    }
-
-    @Test
     public void testGetPageContent() throws WikipediaException {
         String title = "Usuario:Benjavalero";
         WikipediaPage page = wikipediaService.getPageByTitle(title);
@@ -43,7 +35,7 @@ public class WikipediaServiceIT {
     @Test
     public void testGetPagesContent() throws WikipediaException {
         // We pass a null access token to retrieve an anonymous edit token
-        Map<Integer, WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884), null);
+        Map<Integer, WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884));
         Assert.assertNotNull(pages);
         Assert.assertEquals(2, pages.size());
         Assert.assertTrue(pages.containsKey(6219990));

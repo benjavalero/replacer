@@ -40,7 +40,7 @@ public class RedirectMatcherBenchmark {
         }
 
         // Load sample articles
-        Map<Integer, WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds, null);
+        Map<Integer, WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds);
 
         // Load the matchers
         List<RedirectAbstractMatcher> matchers = new ArrayList<>();

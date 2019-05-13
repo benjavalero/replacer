@@ -54,8 +54,7 @@ public class WikipediaServiceTest {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
         JsonNode jsonResponse = jsonMapper.readTree(textResponse);
-        Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyMap(), Mockito.nullable(OAuth1AccessToken.class)))
-                .thenReturn(jsonResponse);
+        Mockito.when(authenticationService.executeUnsignedOAuthRequest(Mockito.anyMap())).thenReturn(jsonResponse);
 
         String title = "Usuario:Benjavalero";
         WikipediaPage page = wikipediaService.getPageByTitle(title);
@@ -72,10 +71,9 @@ public class WikipediaServiceTest {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]},{\"pageid\":6903884,\"ns\":2,\"title\":\"Usuario:Benjavalero/Taller\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Enlace a [[Pais Vasco]].\"}}}]}]}}";
         JsonNode jsonResponse = jsonMapper.readTree(textResponse);
-        Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyMap(), Mockito.nullable(OAuth1AccessToken.class)))
-                .thenReturn(jsonResponse);
+        Mockito.when(authenticationService.executeUnsignedOAuthRequest(Mockito.anyMap())).thenReturn(jsonResponse);
 
-        Map<Integer, WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884), null);
+        Map<Integer, WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884));
         Assert.assertNotNull(pages);
         Assert.assertEquals(2, pages.size());
         Assert.assertTrue(pages.containsKey(6219990));
@@ -89,10 +87,9 @@ public class WikipediaServiceTest {
         // API response
         String textResponse = "{\"error\":{\"code\":\"too-many-pageids\",\"info\":\"Too many values supplied for parameter \\\"pageids\\\". The limit is 50.\",\"docref\":\"See https://es.wikipedia.org/w/api.php for API usage. Subscribe to the mediawiki-api-announce mailing list at &lt;https://lists.wikimedia.org/mailman/listinfo/mediawiki-api-announce&gt; for notice of API deprecations and breaking changes.\"},\"servedby\":\"mw1342\"}";
         JsonNode jsonResponse = jsonMapper.readTree(textResponse);
-        Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyMap(), Mockito.nullable(OAuth1AccessToken.class)))
-                .thenReturn(jsonResponse);
+        Mockito.when(authenticationService.executeUnsignedOAuthRequest(Mockito.anyMap())).thenReturn(jsonResponse);
 
-        wikipediaService.getPagesByIds(Collections.singletonList(6219990), null);
+        wikipediaService.getPagesByIds(Collections.singletonList(6219990));
     }
 
     @Test(expected = UnavailablePageException.class)
@@ -100,8 +97,7 @@ public class WikipediaServiceTest {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"ns\":2,\"title\":\"Usuario:Benjavaleroxx\",\"missing\":true}]}}";
         JsonNode jsonResponse = jsonMapper.readTree(textResponse);
-        Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyMap(), Mockito.nullable(OAuth1AccessToken.class)))
-                .thenReturn(jsonResponse);
+        Mockito.when(authenticationService.executeUnsignedOAuthRequest(Mockito.anyMap())).thenReturn(jsonResponse);
 
         wikipediaService.getPageByTitle("Usuario:Benjavaleroxx");
     }

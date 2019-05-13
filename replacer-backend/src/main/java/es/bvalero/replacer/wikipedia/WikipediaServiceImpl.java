@@ -5,7 +5,6 @@ import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.authentication.AuthenticationService;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -31,14 +30,8 @@ public class WikipediaServiceImpl implements WikipediaService {
 
     @Override
     public WikipediaPage getPageByTitle(String pageTitle) throws WikipediaException {
-        return getPageByTitle(pageTitle, null);
-    }
-
-    @Override
-    public WikipediaPage getPageByTitle(String pageTitle, @Nullable OAuth1AccessToken accessToken)
-            throws WikipediaException {
         // Return the only value that should be in the map
-        Map<Integer, WikipediaPage> contents = getPagesByIds("titles", pageTitle, accessToken);
+        Map<Integer, WikipediaPage> contents = getPagesByIds("titles", pageTitle);
         if (contents.size() > 0) {
             return new ArrayList<>(contents.values()).get(0);
         } else {
@@ -47,7 +40,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public Map<Integer, WikipediaPage> getPagesByIds(List<Integer> pageIds, @Nullable OAuth1AccessToken accessToken)
+    public Map<Integer, WikipediaPage> getPagesByIds(List<Integer> pageIds)
             throws WikipediaException {
         Map<Integer, WikipediaPage> pageContents = new HashMap<>(pageIds.size());
         // There is a maximum number of pages to request
@@ -55,27 +48,29 @@ public class WikipediaServiceImpl implements WikipediaService {
         int start = 0;
         while (start < pageIds.size()) {
             List<Integer> subList = pageIds.subList(start, start + Math.min(pageIds.size() - start, MAX_PAGES_REQUESTED));
-            pageContents.putAll(getPagesByIds("pageids", StringUtils.join(subList, "|"), accessToken));
+            pageContents.putAll(getPagesByIds("pageids", StringUtils.join(subList, "|")));
             start += subList.size();
         }
         return pageContents;
     }
 
-    private Map<Integer, WikipediaPage> getPagesByIds(String pagesParam, String pagesValue, @Nullable OAuth1AccessToken accessToken)
-            throws WikipediaException {
+    private Map<Integer, WikipediaPage> getPagesByIds(String pagesParam, String pagesValue) throws WikipediaException {
+        try {
+            return extractPagesFromApiResponse(
+                    authenticationService.executeUnsignedOAuthRequest(getParamsToRequestPages(pagesParam, pagesValue)));
+        } catch (AuthenticationException e) {
+            throw new WikipediaException("Error getting page content", e);
+        }
+    }
+
+    private Map<String, String> getParamsToRequestPages(String pagesParam, String pagesValue) {
         Map<String, String> params = new HashMap<>();
         params.put("action", "query");
         params.put("prop", "revisions");
         params.put("rvprop", "timestamp|content");
         params.put("rvslots", "main");
         params.put(pagesParam, pagesValue);
-
-        try {
-            JsonNode jsonResponse = authenticationService.executeOAuthRequest(params, accessToken);
-            return extractPagesFromApiResponse(jsonResponse);
-        } catch (AuthenticationException e) {
-            throw new WikipediaException("Error getting page content", e);
-        }
+        return params;
     }
 
     private Map<Integer, WikipediaPage> extractPagesFromApiResponse(JsonNode json) throws WikipediaException {
