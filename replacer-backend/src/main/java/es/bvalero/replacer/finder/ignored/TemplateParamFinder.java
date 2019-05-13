@@ -3,10 +3,9 @@ package es.bvalero.replacer.finder.ignored;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ArticleReplacement;
-import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.persistence.ReplacementType;
+import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.ReplacementFinder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -21,14 +20,12 @@ public class TemplateParamFinder extends ReplacementFinder implements IgnoredRep
             new RunAutomaton(new RegExp(REGEX_TEMPLATE_PARAM).toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
-    public List<ArticleReplacement> findIgnoredReplacements(String text) {
-        List<ArticleReplacement> matches = new ArrayList<>(100);
+    public List<MatchResult> findIgnoredReplacements(String text) {
+        List<MatchResult> matches = new ArrayList<>(100);
 
-        for (ArticleReplacement match : findReplacements(text, AUTOMATON_TEMPLATE_PARAM, ReplacementType.IGNORED)) {
+        for (MatchResult match : findMatchResults(text, AUTOMATON_TEMPLATE_PARAM)) {
             String param = match.getText().substring(1, match.getText().length() - 1).trim();
-            matches.add(match
-                    .withStart(match.getStart() + match.getText().indexOf(param))
-                    .withText(param));
+            matches.add(new MatchResult(match.getStart() + match.getText().indexOf(param), param));
         }
 
         return matches;

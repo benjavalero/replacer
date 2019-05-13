@@ -5,7 +5,6 @@ package es.bvalero.replacer.persistence;
  */
 public enum ReplacementType {
 
-    MISSPELLING,
-    IGNORED
+    MISSPELLING
 
 }

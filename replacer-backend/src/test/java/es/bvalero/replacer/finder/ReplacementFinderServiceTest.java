@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.persistence.ReplacementType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,25 +31,20 @@ public class ReplacementFinderServiceTest {
 
     @Test
     public void testFindReplacementsEmpty() {
-        ArticleReplacementFinder finder = Mockito.mock(ArticleReplacementFinder.class);
-        Mockito.when(articleReplacementFinders.iterator())
-                .thenReturn(Collections.singletonList(finder).iterator());
+        Mockito.when(articleReplacementFinders.iterator()).thenReturn(Collections.emptyIterator());
 
         Assert.assertTrue(replacementFinderService.findReplacements("").isEmpty());
     }
 
     @Test
     public void testFindReplacements() {
-        ArticleReplacement replacement = ArticleReplacement.builder()
-                .setType(ReplacementType.MISSPELLING)
-                .setSubtype("")
-                .build();
+        ArticleReplacement replacement = Mockito.mock(ArticleReplacement.class);
         ArticleReplacementFinder finder = Mockito.mock(ArticleReplacementFinder.class);
         Mockito.when(finder.findReplacements(Mockito.anyString()))
                 .thenReturn(Collections.singletonList(replacement));
         Mockito.when(articleReplacementFinders.iterator())
                 .thenReturn(Collections.singletonList(finder).iterator());
-        Mockito.when(ignoredReplacementFinders.iterator()).thenReturn(Collections.<IgnoredReplacementFinder>emptyIterator());
+        Mockito.when(ignoredReplacementFinders.iterator()).thenReturn(Collections.emptyIterator());
 
         List<ArticleReplacement> replacements = replacementFinderService.findReplacements("");
 
@@ -61,34 +55,24 @@ public class ReplacementFinderServiceTest {
 
     @Test
     public void testFindReplacementsIgnoringExceptions() {
-        ArticleReplacement replacement1 = ArticleReplacement.builder()
-                .setStart(0)
-                .setText("1")
-                .setType(ReplacementType.MISSPELLING)
-                .setSubtype("1")
-                .build();
-        ArticleReplacement replacement2 = ArticleReplacement.builder()
-                .setStart(1)
-                .setText("2")
-                .setType(ReplacementType.MISSPELLING)
-                .setSubtype("2")
-                .build();
+        ArticleReplacement replacement1 = Mockito.mock(ArticleReplacement.class);
+        ArticleReplacement replacement2 = Mockito.mock(ArticleReplacement.class);
         ArticleReplacementFinder finder = Mockito.mock(ArticleReplacementFinder.class);
         Mockito.when(finder.findReplacements(Mockito.anyString()))
                 .thenReturn(Arrays.asList(replacement1, replacement2));
         Mockito.when(articleReplacementFinders.iterator())
                 .thenReturn(Collections.singletonList(finder).iterator());
 
-        ArticleReplacement ignored1 = ArticleReplacement.builder()
-                .setStart(0)
-                .setText("1")
-                .setType(ReplacementType.IGNORED)
-                .build();
+        MatchResult ignored1 = Mockito.mock(MatchResult.class);
         IgnoredReplacementFinder ignoredFinder = Mockito.mock(IgnoredReplacementFinder.class);
+        List<MatchResult> ignored = Collections.singletonList(ignored1);
         Mockito.when(ignoredFinder.findIgnoredReplacements(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(ignored1));
+                .thenReturn(ignored);
         Mockito.when(ignoredReplacementFinders.iterator())
                 .thenReturn(Collections.singletonList(ignoredFinder).iterator());
+
+        Mockito.when(replacement1.isContainedIn(ignored)).thenReturn(true);
+        Mockito.when(replacement2.isContainedIn(ignored)).thenReturn(false);
 
         List<ArticleReplacement> replacements = replacementFinderService.findReplacements("");
 

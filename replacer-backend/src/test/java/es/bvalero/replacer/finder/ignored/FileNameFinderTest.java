@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.ignored;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ public class FileNameFinderTest {
 
         IgnoredReplacementFinder fileNameFinder = new FileNameFinder();
 
-        List<ArticleReplacement> matches = fileNameFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = fileNameFinder.findIgnoredReplacements(text);
         Assert.assertEquals(6, matches.size());
         Assert.assertEquals(file1, matches.get(0).getText());
         Assert.assertEquals(file2, matches.get(1).getText());

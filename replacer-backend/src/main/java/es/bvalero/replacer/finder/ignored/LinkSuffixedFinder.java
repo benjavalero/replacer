@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.ignored;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.MatchResult;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
 import es.bvalero.replacer.persistence.ReplacementType;
@@ -20,8 +20,8 @@ public class LinkSuffixedFinder extends ReplacementFinder implements IgnoredRepl
             new RunAutomaton(new RegExp(REGEX_LINK_SUFFIXED).toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
-    public List<ArticleReplacement> findIgnoredReplacements(String text) {
-        return findReplacements(text, AUTOMATON_LINK_SUFFIXED, ReplacementType.IGNORED);
+    public List<MatchResult> findIgnoredReplacements(String text) {
+        return findMatchResults(text, AUTOMATON_LINK_SUFFIXED);
     }
 
 }

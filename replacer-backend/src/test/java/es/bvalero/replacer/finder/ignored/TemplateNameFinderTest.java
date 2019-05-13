@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.ignored;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,7 +19,7 @@ public class TemplateNameFinderTest {
 
         IgnoredReplacementFinder templateNameFinder = new TemplateNameFinder();
 
-        List<ArticleReplacement> matches = templateNameFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = templateNameFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(template1, matches.get(0).getText());
         Assert.assertEquals(template2, matches.get(1).getText());

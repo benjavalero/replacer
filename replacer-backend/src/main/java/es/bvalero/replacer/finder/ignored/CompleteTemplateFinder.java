@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.ignored;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.MatchResult;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
 import es.bvalero.replacer.persistence.ReplacementType;
@@ -35,10 +36,10 @@ public class CompleteTemplateFinder extends ReplacementFinder implements Ignored
             new RunAutomaton(new RegExp(REGEX_CATEGORY).toAutomaton());
 
     @Override
-    public List<ArticleReplacement> findIgnoredReplacements(String text) {
-        List<ArticleReplacement> matches = new ArrayList<>(100);
-        matches.addAll(findReplacements(text, AUTOMATON_COMPLETE_TEMPLATE, ReplacementType.IGNORED));
-        matches.addAll(findReplacements(text, AUTOMATON_CATEGORY, ReplacementType.IGNORED));
+    public List<MatchResult> findIgnoredReplacements(String text) {
+        List<MatchResult> matches = new ArrayList<>(100);
+        matches.addAll(findMatchResults(text, AUTOMATON_COMPLETE_TEMPLATE));
+        matches.addAll(findMatchResults(text, AUTOMATON_CATEGORY));
         return matches;
     }
 

@@ -36,7 +36,7 @@ public class ReplacementFinderService {
 
         // Ignore the replacements which must be ignored
         for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
-            List<ArticleReplacement> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
+            List<MatchResult> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
             articleReplacements.removeIf(replacement -> replacement.isContainedIn(ignoredReplacements));
 
             if (articleReplacements.isEmpty()) {

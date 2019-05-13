@@ -2,10 +2,9 @@ package es.bvalero.replacer.finder.ignored;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ArticleReplacement;
-import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.persistence.ReplacementType;
+import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.ReplacementFinder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -38,10 +37,10 @@ public class CompleteTagFinder extends ReplacementFinder implements IgnoredRepla
     }
 
     @Override
-    public List<ArticleReplacement> findIgnoredReplacements(String text) {
-        List<ArticleReplacement> matches = new ArrayList<>(100);
+    public List<MatchResult> findIgnoredReplacements(String text) {
+        List<MatchResult> matches = new ArrayList<>(100);
         for (RunAutomaton automaton : AUTOMATON_COMPLETE_TAGS) {
-            matches.addAll(findReplacements(text, automaton, ReplacementType.IGNORED));
+            matches.addAll(findMatchResults(text, automaton));
         }
         return matches;
     }

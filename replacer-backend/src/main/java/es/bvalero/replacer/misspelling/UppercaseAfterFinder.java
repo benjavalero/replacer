@@ -4,10 +4,9 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.MatchResult;
 import es.bvalero.replacer.finder.ReplacementFinder;
-import es.bvalero.replacer.persistence.ReplacementType;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
@@ -80,18 +79,14 @@ public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredRe
     }
 
     @Override
-    public List<ArticleReplacement> findIgnoredReplacements(String text) {
-        List<ArticleReplacement> matches = new ArrayList<>(100);
+    public List<MatchResult> findIgnoredReplacements(String text) {
+        List<MatchResult> matches = new ArrayList<>(100);
 
         AutomatonMatcher m = this.uppercaseAfterAutomaton.newMatcher(text);
         while (m.find()) {
             String word = m.group().substring(1).trim();
             int start = m.start() + m.group().indexOf(word);
-            matches.add(ArticleReplacement.builder()
-                    .setStart(start)
-                    .setText(word)
-                    .setType(ReplacementType.IGNORED)
-                    .build());
+            matches.add(new MatchResult(start, word));
         }
 
         return matches;

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.ignored;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class CompleteTagFinderTest {
 
         IgnoredReplacementFinder completeTagFinder = new CompleteTagFinder();
 
-        List<ArticleReplacement> matches = completeTagFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = completeTagFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(tag1, matches.get(0).getText());
         Assert.assertEquals(tag2, matches.get(1).getText());

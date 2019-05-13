@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.ignored;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class LinkSuffixedFinderTest {
 
         IgnoredReplacementFinder linkSuffixedFinder = new LinkSuffixedFinder();
 
-        List<ArticleReplacement> matches = linkSuffixedFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = linkSuffixedFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(suffixed1, matches.get(0).getText());

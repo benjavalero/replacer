@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.ignored;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ public class ParameterValueFinderTest {
 
         IgnoredReplacementFinder parameterValueFinder = new ParameterValueFinder();
 
-        List<ArticleReplacement> matches = parameterValueFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = parameterValueFinder.findIgnoredReplacements(text);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(value1, matches.get(0).getText());
         Assert.assertEquals(value2, matches.get(1).getText());

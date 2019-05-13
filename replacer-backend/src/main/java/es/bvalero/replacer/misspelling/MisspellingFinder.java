@@ -91,14 +91,13 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
             String word = m.group();
             Misspelling misspelling = findMisspellingByWord(word);
             if (misspelling != null) {
-                articleReplacements.add(ArticleReplacement.builder()
-                        .setStart(m.start())
-                        .setText(word)
-                        .setType(ReplacementType.MISSPELLING)
-                        .setSubtype(misspelling.getWord())
-                        .setComment(misspelling.getComment())
-                        .setSuggestion(findMisspellingSuggestion(word, misspelling))
-                        .build());
+                articleReplacements.add(new ArticleReplacement(
+                        word,
+                        m.start(),
+                        ReplacementType.MISSPELLING,
+                        misspelling.getWord(),
+                        misspelling.getComment(),
+                        findMisspellingSuggestion(word, misspelling)));
             }
         }
 

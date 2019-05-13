@@ -2,10 +2,9 @@ package es.bvalero.replacer.finder.ignored;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ArticleReplacement;
-import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.persistence.ReplacementType;
+import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.ReplacementFinder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -47,23 +46,21 @@ public class QuotesFinder extends ReplacementFinder implements IgnoredReplacemen
             new RunAutomaton(new RegExp(REGEX_DOUBLE_QUOTES).toAutomaton());
 
     @Override
-    public List<ArticleReplacement> findIgnoredReplacements(String text) {
-        List<ArticleReplacement> matches = new ArrayList<>(100);
+    public List<MatchResult> findIgnoredReplacements(String text) {
+        List<MatchResult> matches = new ArrayList<>(100);
 
         // For the single-quotes regex, we have to remove the first and last positions found
-        Collection<ArticleReplacement> singleQuotesMatches = new ArrayList<>(100);
-        singleQuotesMatches.addAll(findReplacements(text, AUTOMATON_SINGLE_QUOTES_CURSIVE, ReplacementType.IGNORED));
-        singleQuotesMatches.addAll(findReplacements(text, AUTOMATON_SINGLE_QUOTES_BOLD, ReplacementType.IGNORED));
-        for (ArticleReplacement match : singleQuotesMatches) {
-            matches.add(match
-                    .withStart(match.getStart() + 1)
-                    .withText(match.getText().substring(1, match.getText().length() - 1)));
+        Collection<MatchResult> singleQuotesMatches = new ArrayList<>(100);
+        singleQuotesMatches.addAll(findMatchResults(text, AUTOMATON_SINGLE_QUOTES_CURSIVE));
+        singleQuotesMatches.addAll(findMatchResults(text, AUTOMATON_SINGLE_QUOTES_BOLD));
+        for (MatchResult match : singleQuotesMatches) {
+            matches.add(new MatchResult(match.getStart() + 1, match.getText().substring(1, match.getText().length() - 1)));
         }
 
-        matches.addAll(findReplacements(text, AUTOMATON_SINGLE_QUOTES_CURSIVE_BOLD, ReplacementType.IGNORED));
-        matches.addAll(findReplacements(text, AUTOMATON_DOUBLE_QUOTES, ReplacementType.IGNORED));
-        matches.addAll(findReplacements(text, AUTOMATON_ANGULAR_QUOTES, ReplacementType.IGNORED));
-        matches.addAll(findReplacements(text, AUTOMATON_TYPOGRAPHIC_QUOTES, ReplacementType.IGNORED));
+        matches.addAll(findMatchResults(text, AUTOMATON_SINGLE_QUOTES_CURSIVE_BOLD));
+        matches.addAll(findMatchResults(text, AUTOMATON_DOUBLE_QUOTES));
+        matches.addAll(findMatchResults(text, AUTOMATON_ANGULAR_QUOTES));
+        matches.addAll(findMatchResults(text, AUTOMATON_TYPOGRAPHIC_QUOTES));
         return matches;
     }
 

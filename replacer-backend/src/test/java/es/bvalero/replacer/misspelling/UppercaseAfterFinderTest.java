@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +30,7 @@ public class UppercaseAfterFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         uppercaseAfterFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<ArticleReplacement> matches = uppercaseAfterFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = uppercaseAfterFinder.findIgnoredReplacements(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(noun1, matches.get(0).getText());

@@ -3,8 +3,8 @@ package es.bvalero.replacer.finder.ignored;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.MatchResult;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.persistence.ReplacementType;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -79,8 +79,8 @@ public class FalsePositiveFinder extends ReplacementFinder implements IgnoredRep
     }
 
     @Override
-    public List<ArticleReplacement> findIgnoredReplacements(String text) {
-        return findReplacements(text, falsePositivesAutomaton, ReplacementType.IGNORED);
+    public List<MatchResult> findIgnoredReplacements(String text) {
+        return findMatchResults(text, falsePositivesAutomaton);
     }
 
 }

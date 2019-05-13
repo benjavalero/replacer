@@ -22,7 +22,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Optional;
 
 /**
@@ -48,38 +47,6 @@ public class ArticleService {
 
     @Value("${replacer.hide.empty.paragraphs}")
     private boolean trimText;
-
-    /**
-     * @deprecated Used before to remove nested ignore replacements. Kept as it will be probably needed in the future.
-     */
-    @Deprecated
-    static List<ArticleReplacement> removeNestedReplacements(List<ArticleReplacement> replacements) {
-        // The list of replacements must be of type LinkedList
-        if (replacements.isEmpty()) {
-            return replacements;
-        }
-
-        replacements.sort(Collections.reverseOrder());
-        ListIterator<ArticleReplacement> it = replacements.listIterator();
-        ArticleReplacement previous = it.next();
-        while (it.hasNext()) {
-            ArticleReplacement current = it.next();
-            if (current.isContainedIn(previous)) {
-                it.remove();
-            } else if (current.intersects(previous)) {
-                // Merge previous and current
-                ArticleReplacement merged = previous.withText(previous.getText().substring(0, current.getStart() - previous.getStart()) + current.getText());
-                it.remove(); // Remove the current match
-                it.previous();
-                it.remove(); // Remove the previous match
-                it.add(merged); // Add the merged match
-                previous = merged;
-            } else {
-                previous = current;
-            }
-        }
-        return replacements;
-    }
 
     ArticleReview findRandomArticleWithReplacements() throws UnfoundArticleException, InvalidArticleException {
         return findRandomArticleWithReplacements(null);

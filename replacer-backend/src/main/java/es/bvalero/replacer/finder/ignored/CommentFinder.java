@@ -2,10 +2,9 @@ package es.bvalero.replacer.finder.ignored;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ArticleReplacement;
-import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.persistence.ReplacementType;
+import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.ReplacementFinder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,8 +21,8 @@ public class CommentFinder extends ReplacementFinder implements IgnoredReplaceme
             new RunAutomaton(new RegExp(REGEX_COMMENT_TAG).toAutomaton());
 
     @Override
-    public List<ArticleReplacement> findIgnoredReplacements(String text) {
-        return findReplacements(text, AUTOMATON_COMMENT_TAG, ReplacementType.IGNORED);
+    public List<MatchResult> findIgnoredReplacements(String text) {
+        return findMatchResults(text, AUTOMATON_COMMENT_TAG);
     }
 
 }

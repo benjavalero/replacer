@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.ignored;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class XmlTagFinderTest {
 
         IgnoredReplacementFinder xmlTagFinder = new XmlTagFinder();
 
-        List<ArticleReplacement> matches = xmlTagFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = xmlTagFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(ref1, matches.get(0).getText());
         Assert.assertEquals(ref2, matches.get(1).getText());
@@ -33,7 +33,7 @@ public class XmlTagFinderTest {
 
         IgnoredReplacementFinder xmlTagFinder = new XmlTagFinder();
 
-        List<ArticleReplacement> matches = xmlTagFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = xmlTagFinder.findIgnoredReplacements(text);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(span1, matches.get(0).getText());
         Assert.assertEquals(span2, matches.get(1).getText());
@@ -46,7 +46,7 @@ public class XmlTagFinderTest {
 
         IgnoredReplacementFinder xmlTagFinder = new XmlTagFinder();
 
-        List<ArticleReplacement> matches = xmlTagFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = xmlTagFinder.findIgnoredReplacements(text);
         Assert.assertTrue(matches.isEmpty());
     }
 

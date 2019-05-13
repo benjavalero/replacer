@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.ignored;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ public class UrlFinderTest {
 
         IgnoredReplacementFinder urlFinder = new UrlFinder();
 
-        List<ArticleReplacement> matches = urlFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = urlFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(url, matches.get(0).getText());
     }
@@ -30,7 +30,7 @@ public class UrlFinderTest {
 
         IgnoredReplacementFinder urlFinder = new UrlFinder();
 
-        List<ArticleReplacement> matches = urlFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = urlFinder.findIgnoredReplacements(text);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(domain1, matches.get(0).getText());
         Assert.assertEquals(domain2, matches.get(1).getText());

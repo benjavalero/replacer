@@ -2,8 +2,7 @@ package es.bvalero.replacer.finder.ignored;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ArticleReplacement;
-import es.bvalero.replacer.persistence.ReplacementType;
+import es.bvalero.replacer.finder.MatchResult;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
@@ -64,38 +63,38 @@ public class FalsePositiveFinderTest {
     @Test
     public void testRegexFalsePositives() {
         String text = "Un sólo de Éstos en el Index Online de ésta Tropicos.org Aquél aquéllo Saint-Martin.";
-        List<ArticleReplacement> matches = falsePositiveFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = falsePositiveFinder.findIgnoredReplacements(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(8, matches.size());
-        Assert.assertTrue(matches.contains(ArticleReplacement.builder().setStart(3).setText("sólo").build()));
-        Assert.assertTrue(matches.contains(ArticleReplacement.builder().setStart(11).setText("Éstos").build()));
-        Assert.assertTrue(matches.contains(ArticleReplacement.builder().setStart(23).setText("Index").build()));
-        Assert.assertTrue(matches.contains(ArticleReplacement.builder().setStart(29).setText("Online").build()));
-        Assert.assertTrue(matches.contains(ArticleReplacement.builder().setStart(39).setText("ésta").build()));
-        Assert.assertFalse(matches.contains(ArticleReplacement.builder().setStart(44).setText("Tropicos.org").build()));
-        Assert.assertTrue(matches.contains(ArticleReplacement.builder().setStart(57).setText("Aquél").build()));
-        Assert.assertTrue(matches.contains(ArticleReplacement.builder().setStart(63).setText("aquéllo").build()));
-        Assert.assertTrue(matches.contains(ArticleReplacement.builder().setStart(71).setText("Saint-Martin").build()));
+        Assert.assertTrue(matches.contains(new MatchResult(3, "sólo")));
+        Assert.assertTrue(matches.contains(new MatchResult(11, "Éstos")));
+        Assert.assertTrue(matches.contains(new MatchResult(23, "Index")));
+        Assert.assertTrue(matches.contains(new MatchResult(29, "Online")));
+        Assert.assertTrue(matches.contains(new MatchResult(39, "ésta")));
+        Assert.assertFalse(matches.contains(new MatchResult(44, "Tropicos.org")));
+        Assert.assertTrue(matches.contains(new MatchResult(57, "Aquél")));
+        Assert.assertTrue(matches.contains(new MatchResult(63, "aquéllo")));
+        Assert.assertTrue(matches.contains(new MatchResult(71, "Saint-Martin")));
     }
 
     @Test
     public void testNestedFalsePositives() {
         String text1 = "A Top Album Chart.";
-        List<ArticleReplacement> matches1 = falsePositiveFinder.findIgnoredReplacements(text1);
+        List<MatchResult> matches1 = falsePositiveFinder.findIgnoredReplacements(text1);
 
         Assert.assertFalse(matches1.isEmpty());
         Assert.assertEquals(1, matches1.size());
-        Assert.assertTrue(matches1.contains(ArticleReplacement.builder().setStart(2).setText("Top Album").build()));
+        Assert.assertTrue(matches1.contains(new MatchResult(2, "Top Album")));
         // Only the first match is found
-        Assert.assertFalse(matches1.contains(ArticleReplacement.builder().setStart(6).setText("Album Chart").build()));
+        Assert.assertFalse(matches1.contains(new MatchResult(6, "Album Chart")));
 
         String text2 = "A Topp Album Chart.";
-        List<ArticleReplacement> matches2 = falsePositiveFinder.findIgnoredReplacements(text2);
+        List<MatchResult> matches2 = falsePositiveFinder.findIgnoredReplacements(text2);
 
         Assert.assertFalse(matches2.isEmpty());
         Assert.assertEquals(1, matches2.size());
-        Assert.assertTrue(matches2.contains(ArticleReplacement.builder().setStart(7).setText("Album Chart").build()));
+        Assert.assertTrue(matches2.contains(new MatchResult(7, "Album Chart")));
     }
 
     @Test
@@ -119,7 +118,7 @@ public class FalsePositiveFinderTest {
         LOGGER.info("BEGIN TEST #1");
         long start1 = System.currentTimeMillis();
         int count1 = 0;
-        for (ArticleReplacement textWord : falsePositiveFinder.findReplacements(text, automaton, ReplacementType.IGNORED)) {
+        for (MatchResult textWord : falsePositiveFinder.findMatchResults(text, automaton)) {
             LOGGER.info("MATCH: {}", textWord.getText());
             count1++;
         }
@@ -137,7 +136,7 @@ public class FalsePositiveFinderTest {
         long start2 = System.currentTimeMillis();
         int count2 = 0;
         for (RunAutomaton automaton2 : automatons) {
-            for (ArticleReplacement textWord : falsePositiveFinder.findReplacements(text, automaton2, ReplacementType.IGNORED)) {
+            for (MatchResult textWord : falsePositiveFinder.findMatchResults(text, automaton2)) {
                 LOGGER.info("MATCH: {}", textWord.getText());
                 count2++;
             }

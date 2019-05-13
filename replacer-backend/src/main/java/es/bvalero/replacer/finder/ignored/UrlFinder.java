@@ -3,10 +3,9 @@ package es.bvalero.replacer.finder.ignored;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ArticleReplacement;
-import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.persistence.ReplacementType;
+import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.ReplacementFinder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -26,10 +25,10 @@ public class UrlFinder extends ReplacementFinder implements IgnoredReplacementFi
             new RunAutomaton(new RegExp(REGEX_DOMAINS).toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
-    public List<ArticleReplacement> findIgnoredReplacements(String text) {
-        List<ArticleReplacement> matches = new ArrayList<>(100);
-        matches.addAll(findReplacements(text, AUTOMATON_URL, ReplacementType.IGNORED));
-        matches.addAll(findReplacements(text, AUTOMATON_DOMAIN, ReplacementType.IGNORED));
+    public List<MatchResult> findIgnoredReplacements(String text) {
+        List<MatchResult> matches = new ArrayList<>(100);
+        matches.addAll(findMatchResults(text, AUTOMATON_URL));
+        matches.addAll(findMatchResults(text, AUTOMATON_DOMAIN));
         return matches;
     }
 

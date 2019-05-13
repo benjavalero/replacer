@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.ignored;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ public class CompleteTemplateFinderTest {
 
         IgnoredReplacementFinder finder = new CompleteTemplateFinder();
 
-        List<ArticleReplacement> matches = finder.findIgnoredReplacements(text);
+        List<MatchResult> matches = finder.findIgnoredReplacements(text);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(template1, matches.get(0).getText());
         Assert.assertEquals(template2, matches.get(1).getText());
@@ -31,7 +31,7 @@ public class CompleteTemplateFinderTest {
 
         IgnoredReplacementFinder finder = new CompleteTemplateFinder();
 
-        List<ArticleReplacement> matches = finder.findIgnoredReplacements(text);
+        List<MatchResult> matches = finder.findIgnoredReplacements(text);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(category1, matches.get(0).getText());
         Assert.assertEquals(category2, matches.get(1).getText());

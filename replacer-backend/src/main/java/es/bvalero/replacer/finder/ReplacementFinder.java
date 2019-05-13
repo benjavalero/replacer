@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.persistence.ReplacementType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +11,11 @@ import java.util.List;
  */
 public abstract class ReplacementFinder {
 
-    public List<ArticleReplacement> findReplacements(CharSequence text, RunAutomaton automaton, ReplacementType type) {
-        List<ArticleReplacement> matches = new ArrayList<>(100);
+    public List<MatchResult> findMatchResults(CharSequence text, RunAutomaton automaton) {
+        List<MatchResult> matches = new ArrayList<>(100);
         AutomatonMatcher matcher = automaton.newMatcher(text);
         while (matcher.find()) {
-            matches.add(ArticleReplacement.builder()
-                    .setStart(matcher.start())
-                    .setText(matcher.group(0))
-                    .setType(type)
-                    .build());
+            matches.add(new MatchResult(matcher.start(), matcher.group(0)));
         }
         return matches;
     }
