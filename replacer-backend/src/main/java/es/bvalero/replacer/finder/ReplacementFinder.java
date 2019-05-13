@@ -5,6 +5,8 @@ import dk.brics.automaton.RunAutomaton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Abstract class to provide generic methods to find replacements
@@ -16,6 +18,15 @@ public abstract class ReplacementFinder {
         AutomatonMatcher matcher = automaton.newMatcher(text);
         while (matcher.find()) {
             matches.add(new MatchResult(matcher.start(), matcher.group(0)));
+        }
+        return matches;
+    }
+
+    public List<MatchResult> findMatchResults(CharSequence text, Pattern pattern) {
+        List<MatchResult> matches = new ArrayList<>(100);
+        Matcher matcher = pattern.matcher(text);
+        while (matcher.find()) {
+            matches.add(new MatchResult(matcher.start(), matcher.group()));
         }
         return matches;
     }
