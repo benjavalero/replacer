@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 // We make this implementation public to be used by the finder benchmarks
 @Service
@@ -29,14 +29,9 @@ public class WikipediaServiceImpl implements WikipediaService {
     private AuthenticationService authenticationService;
 
     @Override
-    public WikipediaPage getPageByTitle(String pageTitle) throws WikipediaException {
+    public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
         // Return the only value that should be in the map
-        Map<Integer, WikipediaPage> contents = getPagesByIds("titles", pageTitle);
-        if (contents.size() > 0) {
-            return new ArrayList<>(contents.values()).get(0);
-        } else {
-            throw new UnavailablePageException();
-        }
+        return getPagesByIds("titles", pageTitle).values().stream().findFirst();
     }
 
     @Override
@@ -132,11 +127,15 @@ public class WikipediaServiceImpl implements WikipediaService {
     }
 
     public String getMisspellingListPageContent() throws WikipediaException {
-        return getPageByTitle(MISSPELLING_LIST_PAGE).getContent();
+        return getPageByTitle(MISSPELLING_LIST_PAGE)
+                .orElseThrow(WikipediaException::new)
+                .getContent();
     }
 
     public String getFalsePositiveListPageContent() throws WikipediaException {
-        return getPageByTitle(FALSE_POSITIVE_LIST_PAGE).getContent();
+        return getPageByTitle(FALSE_POSITIVE_LIST_PAGE)
+                .orElseThrow(WikipediaException::new)
+                .getContent();
     }
 
 }

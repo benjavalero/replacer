@@ -23,7 +23,8 @@ public class WikipediaServiceIT {
     @Test
     public void testGetPageContent() throws WikipediaException {
         String title = "Usuario:Benjavalero";
-        WikipediaPage page = wikipediaService.getPageByTitle(title);
+        WikipediaPage page = wikipediaService.getPageByTitle(title)
+                .orElseThrow(WikipediaException::new);
         Assert.assertNotNull(page);
         Assert.assertEquals(6219990, page.getId());
         Assert.assertEquals(title, page.getTitle());
@@ -44,9 +45,9 @@ public class WikipediaServiceIT {
         Assert.assertTrue(pages.get(6903884).getContent().contains("Pais Vasco"));
     }
 
-    @Test(expected = UnavailablePageException.class)
+    @Test
     public void testGetPageContentUnavailable() throws WikipediaException {
-        wikipediaService.getPageByTitle("Usuario:Benjavaleroxx");
+        Assert.assertFalse(wikipediaService.getPageByTitle("Usuario:Benjavaleroxx").isPresent());
     }
 
 }

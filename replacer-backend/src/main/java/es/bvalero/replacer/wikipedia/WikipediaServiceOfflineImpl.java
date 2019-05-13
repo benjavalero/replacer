@@ -13,25 +13,26 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Profile("offline")
 class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
-    public WikipediaPage getPageByTitle(String pageTitle) throws WikipediaException {
-        return WikipediaPage.builder()
+    public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
+        return Optional.of(WikipediaPage.builder()
                 .setContent(loadArticleContent("/article-long.txt"))
-                .build();
+                .build());
     }
 
     @Override
     public Map<Integer, WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException {
-        Map<Integer, WikipediaPage> pagesContent = new HashMap<>();
+        Map<Integer, WikipediaPage> pages = new HashMap<>();
         for (Integer id : pageIds) {
-            pagesContent.put(id, getPageByTitle(""));
+            getPageByTitle("").ifPresent(page -> pages.put(id, page));
         }
-        return pagesContent;
+        return pages;
     }
 
     @Override

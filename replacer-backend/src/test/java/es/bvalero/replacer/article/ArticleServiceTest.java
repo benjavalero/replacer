@@ -20,10 +20,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ArticleServiceTest {
 
@@ -60,7 +57,7 @@ public class ArticleServiceTest {
         Mockito.when(replacementRepository.findRandom(Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.singletonList(randomArticle));
         WikipediaPage page = WikipediaPage.builder().setContent(text).build();
-        Mockito.when(wikipediaService.getPageByTitle(Mockito.anyString())).thenReturn(page);
+        Mockito.when(wikipediaService.getPageByTitle(Mockito.anyString())).thenReturn(Optional.of(page));
 
         // Replacement matches
         ArticleReplacement replacement = ArticleReplacement.builder()

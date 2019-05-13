@@ -118,7 +118,8 @@ public class ArticleService {
 
     private String findArticleContent(String title) throws InvalidArticleException {
         try {
-            WikipediaPage page = wikipediaService.getPageByTitle(title);
+            WikipediaPage page = wikipediaService.getPageByTitle(title)
+                    .orElseThrow(() -> new InvalidArticleException(String.format("No article found with title: %s", title)));
 
             // Check if the article is processable
             if (page.isRedirectionPage()) {

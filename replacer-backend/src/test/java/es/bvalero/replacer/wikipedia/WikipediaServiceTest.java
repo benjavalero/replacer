@@ -57,7 +57,8 @@ public class WikipediaServiceTest {
         Mockito.when(authenticationService.executeUnsignedOAuthRequest(Mockito.anyMap())).thenReturn(jsonResponse);
 
         String title = "Usuario:Benjavalero";
-        WikipediaPage page = wikipediaService.getPageByTitle(title);
+        WikipediaPage page = wikipediaService.getPageByTitle(title)
+                .orElseThrow(WikipediaException::new);
         Assert.assertNotNull(page);
         Assert.assertEquals(6219990, page.getId());
         Assert.assertEquals(title, page.getTitle());
@@ -92,14 +93,14 @@ public class WikipediaServiceTest {
         wikipediaService.getPagesByIds(Collections.singletonList(6219990));
     }
 
-    @Test(expected = UnavailablePageException.class)
+    @Test
     public void testGetPageContentUnavailable() throws IOException, AuthenticationException, WikipediaException {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"ns\":2,\"title\":\"Usuario:Benjavaleroxx\",\"missing\":true}]}}";
         JsonNode jsonResponse = jsonMapper.readTree(textResponse);
         Mockito.when(authenticationService.executeUnsignedOAuthRequest(Mockito.anyMap())).thenReturn(jsonResponse);
 
-        wikipediaService.getPageByTitle("Usuario:Benjavaleroxx");
+        Assert.assertFalse(wikipediaService.getPageByTitle("Usuario:Benjavaleroxx").isPresent());
     }
 
 }
