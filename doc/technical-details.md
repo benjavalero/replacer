@@ -75,10 +75,11 @@ Como regla general, dependiendo de la complejidad de la expresión regular, usar
 Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar muchos falsos positivos, por ejemplo una cita en español antiguo o un parámetro propio de la Wikipedia que no acepta diacríticos:
 * Comentarios HTML: `<!-- españa -->`
 * Nombres de archivos: `[[File:españa.png|España]]`
+* Etiquetas XML completas, e. g. para citas o código fuente: `<math>LaTeX</math>`
+
 * Parámetro índice: `{{... | índice = españa | ...}}`
 * Cursiva, negrita y entrecomillados: `''online''`, `'''Lopez'''`,
  `"In Paris"`, `«In Paris»`, `“In Paris”` 
-* Código fuente (`source`, `syntaxhighlight` y `math`): `<math>LaTeX</math>`
 * Nombres de plantillas: `{{Album | ...}`
 * Parámetros: `{{ ... | pais = España | ... }}`
 * Plantillas completas: `ORDENAR`, `DEFAULTSORT`, `NF`, `Cita`, `Quote`,
