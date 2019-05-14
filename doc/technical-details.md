@@ -77,14 +77,12 @@ Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar much
 * Nombres de archivos: `[[File:españa.png|España]]`
 * Etiquetas XML completas, e. g. para citas o código fuente: `<math>LaTeX</math>`
 * Plantillas completas, e. g. para citas o coordenadas: `{{Cita|Texto}}`
+* Textos entrecomillados: `«In Paris»`
 
 * Parámetro índice: `{{... | índice = españa | ...}}`
-* Cursiva, negrita y entrecomillados: `''online''`, `'''Lopez'''`,
- `"In Paris"`, `«In Paris»`, `“In Paris”` 
+* Cursiva y negrita: `''online''`, `'''Lopez'''`
 * Nombres de plantillas: `{{Album | ...}`
 * Parámetros: `{{ ... | pais = España | ... }}`
-* Plantillas completas: `ORDENAR`, `DEFAULTSORT`, `NF`, `Cita`, `Quote`,
- ` Coord`, `Commonscat`
 * Categorías: `[[Categoría:Jennifer Lopez]]` 
 * URL: `http://www.jenniferlopez.com`
 * Etiquetas XML: `<ref name="españa">`
