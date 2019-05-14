@@ -76,6 +76,7 @@ Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar much
 * Comentarios HTML: `<!-- españa -->`
 * Nombres de archivos: `[[File:españa.png|España]]`
 * Etiquetas XML completas, e. g. para citas o código fuente: `<math>LaTeX</math>`
+* Plantillas completas, e. g. para citas o coordenadas: `{{Cita|Texto}}`
 
 * Parámetro índice: `{{... | índice = españa | ...}}`
 * Cursiva, negrita y entrecomillados: `''online''`, `'''Lopez'''`,
