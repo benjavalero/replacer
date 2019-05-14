@@ -21,19 +21,4 @@ public class UrlFinderTest {
         Assert.assertEquals(url, matches.get(0).getText());
     }
 
-    @Test
-    public void testRegexDomain() {
-        String domain1 = "www.google.es";
-        String domain2 = "IMDb.org";
-        String domain3 = "BBC.co.uk";
-        String text = "xxx " + domain1 + " / " + domain2 + " / " + domain3 + " zzz";
-
-        IgnoredReplacementFinder urlFinder = new UrlFinder();
-
-        List<MatchResult> matches = urlFinder.findIgnoredReplacements(text);
-        Assert.assertEquals(2, matches.size());
-        Assert.assertEquals(domain1, matches.get(0).getText());
-        Assert.assertEquals(domain2, matches.get(1).getText());
-    }
-
 }
