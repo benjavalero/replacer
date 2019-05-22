@@ -47,6 +47,9 @@ public class CursiveFinderBenchmark {
         finders.add(new CursiveRegexFinder());
         finders.add(new CursiveRegexPossessiveFinder());
         finders.add(new CursiveAutomatonFinder());
+        finders.add(new CursiveRegexSimpleFinder());
+        finders.add(new CursiveRegexPossessiveSimpleFinder());
+        finders.add(new CursiveAutomatonSimpleFinder());
 
         System.out.println();
         System.out.println("FINDER\tTIME");
