@@ -78,9 +78,9 @@ Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar much
 * Etiquetas XML completas, e. g. para citas o código fuente: `<math>LaTeX</math>`
 * Plantillas completas, e. g. para citas o coordenadas: `{{Cita|Texto}}`
 * Textos entrecomillados: `«In Paris»`
+* Textos en cursiva: `''online''`
 
 * Parámetro índice: `{{... | índice = españa | ...}}`
-* Cursiva y negrita: `''online''`, `'''Lopez'''`
 * Nombres de plantillas: `{{Album | ...}`
 * Parámetros: `{{ ... | pais = España | ... }}`
 * Categorías: `[[Categoría:Jennifer Lopez]]` 
@@ -89,7 +89,7 @@ Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar much
 
 ## Errores ortográficos
 
-Los errores ortográficos o _misspellings_ son posibles faltas de ortografía se extraen del artículo «Wikipedia:Corrector_ortográfico/Listado».
+Los errores ortográficos o _misspellings_ son posibles faltas de ortografía que se extraen del artículo «Wikipedia:Corrector_ortográfico/Listado».
 
 Se omiten los términos del listado que contienen números o puntos, puesto que éstos ya serán tratados en un buscador distinto enfocado exclusivamente en unidades de medida.
 
