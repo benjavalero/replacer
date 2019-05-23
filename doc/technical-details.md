@@ -79,13 +79,15 @@ Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar much
 * Plantillas completas, e. g. para citas o coordenadas: `{{Cita|Texto}}`
 * Textos entrecomillados: `«In Paris»`
 * Textos en cursiva: `''online''`
+* Valores de algunos parámetros:  `{{... | índice = españa | ...}}`
 
-* Parámetro índice: `{{... | índice = españa | ...}}`
+<!---
 * Nombres de plantillas: `{{Album | ...}`
 * Parámetros: `{{ ... | pais = España | ... }}`
 * Categorías: `[[Categoría:Jennifer Lopez]]` 
 * URL: `http://www.jenniferlopez.com`
 * Etiquetas XML: `<ref name="españa">`
+--->
 
 ## Errores ortográficos
 

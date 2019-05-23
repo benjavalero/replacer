@@ -1,19 +1,18 @@
-package es.bvalero.replacer.finder.ignored;
+package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashSet;
 import java.util.List;
 
 public class ParameterValueFinderTest {
 
     @Test
     public void testRegexParameterValue() {
-        String value1 = "yyyy \\n zzz";
-        String value2 = "xxx";
-        String text = "{{Plantilla | índice = " + value1 + "|index= " + value2 + "}}";
+        String value1 = "A\nvalue\n";
+        String value2 = " Another value ";
+        String text = String.format("{{Template|index=%s| location =%s}}", value1, value2);
 
         IgnoredReplacementFinder parameterValueFinder = new ParameterValueFinder();
 
