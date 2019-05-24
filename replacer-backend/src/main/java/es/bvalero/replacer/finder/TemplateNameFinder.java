@@ -1,10 +1,8 @@
-package es.bvalero.replacer.finder.ignored;
+package es.bvalero.replacer.finder;
 
+import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.finder.MatchResult;
-import es.bvalero.replacer.finder.ReplacementFinder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -21,11 +19,11 @@ public class TemplateNameFinder extends ReplacementFinder implements IgnoredRepl
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {
         List<MatchResult> matches = new ArrayList<>(100);
-
-        for (MatchResult match : findMatchResults(text, AUTOMATON_TEMPLATE_NAME)) {
-            matches.add(new MatchResult(match.getStart() + 2, match.getText().substring(2)));
+        AutomatonMatcher m = AUTOMATON_TEMPLATE_NAME.newMatcher(text);
+        while (m.find()) {
+            // Remove the first 2 characters corresponding to the opening curly braces
+            matches.add(new MatchResult(m.start() + 2, m.group().substring(2)));
         }
-
         return matches;
     }
 

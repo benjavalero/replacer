@@ -1,7 +1,5 @@
-package es.bvalero.replacer.finder.ignored;
+package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,11 +9,11 @@ public class TemplateNameFinderTest {
 
     @Test
     public void testRegexTemplateName() {
-        String template1 = "Plantilla 1";
+        String template1 = "Plantilla 1\n";
         String template2 = "Plantilla\n 2";
         String template3 = "Plantilla-3";
 
-        String text = "xxx {{" + template1 + "| yyy }} / {{" + template2 + "}} / {{" + template3 + ":zzz}}.";
+        String text = String.format("{{%s| 1 }} {{%s}} {{%s:3}}", template1, template2, template3);
 
         IgnoredReplacementFinder templateNameFinder = new TemplateNameFinder();
 
