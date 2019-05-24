@@ -14,9 +14,9 @@ public class CursiveFinderTest {
         String cursive3 = "''A cursive text with '''''bold''''' inside''";
         String text = String.format("%s %s %s", cursive1, cursive2, cursive3);
 
-        IgnoredReplacementFinder quotesFinder = new CursiveFinder();
+        IgnoredReplacementFinder cursiveFinder = new CursiveFinder();
 
-        List<MatchResult> matches = quotesFinder.findIgnoredReplacements(text);
+        List<MatchResult> matches = cursiveFinder.findIgnoredReplacements(text);
 
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(cursive1, matches.get(0).getText());

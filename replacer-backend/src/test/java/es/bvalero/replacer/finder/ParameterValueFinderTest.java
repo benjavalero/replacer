@@ -12,7 +12,7 @@ public class ParameterValueFinderTest {
     public void testRegexParameterValue() {
         String value1 = "A\nvalue\n";
         String value2 = " Another value ";
-        String text = String.format("{{Template|index=%s| location =%s}}", value1, value2);
+        String text = String.format("{{Template|index=%s| índice =%s}}", value1, value2);
 
         IgnoredReplacementFinder parameterValueFinder = new ParameterValueFinder();
 

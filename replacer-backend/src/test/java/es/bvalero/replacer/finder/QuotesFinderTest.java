@@ -12,7 +12,7 @@ public class QuotesFinderTest {
         String quotes1 = "«yáy»";
         String quotes2 = "«z, zz»";
         String quotes3 = "«z\nz»";
-        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + '.';
+        String text = String.format("%s %s %s.", quotes1, quotes2, quotes3);
 
         IgnoredReplacementFinder quotesFinder = new QuotesFinder();
 

@@ -14,9 +14,9 @@ public class TemplateFinderTest {
         String template3 = "{{ORDENAR:Apellido, Nombre}}";
         String text = String.format("%s %s %s", template1, template2, template3);
 
-        IgnoredReplacementFinder finder = new TemplateFinder();
+        IgnoredReplacementFinder templateFinder = new TemplateFinder();
 
-        List<MatchResult> matches = finder.findIgnoredReplacements(text);
+        List<MatchResult> matches = templateFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(template1, matches.get(0).getText());
         Assert.assertEquals(template2, matches.get(1).getText());

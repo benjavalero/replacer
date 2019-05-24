@@ -12,7 +12,7 @@ public class CompleteTagFinderTest {
         String tag1 = "<math class=\"latex\">Un <i>ejemplo</i>\n en LaTeX</math>";
         String tag2 = "<math>Otro ejemplo</math>";
         String tag3 = "<source>Otro ejemplo</source>";
-        String text = "xxx " + tag1 + " / " + tag2 + " / " + tag3 + " zzz";
+        String text = String.format("%s %s %s", tag1, tag2, tag3);
 
         IgnoredReplacementFinder completeTagFinder = new CompleteTagFinder();
 
