@@ -1,7 +1,5 @@
-package es.bvalero.replacer.finder.ignored;
+package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,11 +9,11 @@ public class TemplateParamFinderTest {
 
     @Test
     public void testRegexTemplateParam() {
-        String param1 = "param 1";
-        String param2 = "parám_2";
+        String param1 = " param 1 ";
+        String param2 = "\tparám_2\t";
         String param3 = "param-3";
         String param4 = "param4";
-        String text = "xxx {{Template| " + param1 + " = value1 | " + param2 + "\t= value2 |" + param3 + "=| " + param4 + "}}";
+        String text = String.format("{{Template|%s= value1 |%s= value2 |%s|%s=}}", param1, param2, param3, param4);
 
         IgnoredReplacementFinder templateParamFinder = new TemplateParamFinder();
 
@@ -23,7 +21,7 @@ public class TemplateParamFinderTest {
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(param1, matches.get(0).getText());
         Assert.assertEquals(param2, matches.get(1).getText());
-        Assert.assertEquals(param3, matches.get(2).getText());
+        Assert.assertEquals(param4, matches.get(2).getText());
     }
 
 }

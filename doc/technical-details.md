@@ -83,9 +83,9 @@ Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar much
 * Categorías: `[[Categoría:Jennifer Lopez]]`
 * Etiquetas XML: `<span style="color:green;">` o `<br />`
 * Nombres de plantillas: `{{Album|...}}`
+* Parámetros de plantillas: `{{...| pais = España | ...}}`
 
 <!---
-* Parámetros: `{{ ... | pais = España | ... }}`
 * URL: `http://www.jenniferlopez.com`
 --->
 
