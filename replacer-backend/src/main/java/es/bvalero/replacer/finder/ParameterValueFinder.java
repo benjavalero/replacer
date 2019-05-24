@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class ParameterValueFinder extends ReplacementFinder implements IgnoredReplacementFinder {
 
-    private final static List<String> PARAMS = Arrays.asList("índice", "index", "cita", "location", "ubicación");
+    private final static List<String> PARAMS = Arrays.asList("índice", "index", "cita");
     private final static RunAutomaton AUTOMATON = new RunAutomaton(
             new RegExp(String.format("\\|<Z>*(%s)<Z>*=[^|}]+", StringUtils.join(PARAMS, "|")))
                     .toAutomaton(new DatatypesAutomatonProvider()));
