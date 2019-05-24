@@ -80,11 +80,12 @@ Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar much
 * Textos entrecomillados: `«In Paris»`
 * Textos en cursiva: `''online''`
 * Valores de algunos parámetros:  `{{... | índice = españa | ...}}`
+* Categorías: `[[Categoría:Jennifer Lopez]]`
+
 
 <!---
 * Nombres de plantillas: `{{Album | ...}`
 * Parámetros: `{{ ... | pais = España | ... }}`
-* Categorías: `[[Categoría:Jennifer Lopez]]` 
 * URL: `http://www.jenniferlopez.com`
 * Etiquetas XML: `<ref name="españa">`
 --->
