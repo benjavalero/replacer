@@ -1,11 +1,7 @@
-package es.bvalero.replacer.finder.ignored;
+package es.bvalero.replacer.finder;
 
-import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.finder.MatchResult;
-import es.bvalero.replacer.finder.ReplacementFinder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,8 +13,7 @@ public class XmlTagFinder extends ReplacementFinder implements IgnoredReplacemen
     // For the automaton the < needs an extra backslash
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_XML_TAG = "\\</?[A-Za-z][^/\\>]+/?\\>";
-    private static final RunAutomaton AUTOMATON_XML_TAG =
-            new RunAutomaton(new RegExp(REGEX_XML_TAG).toAutomaton(new DatatypesAutomatonProvider()));
+    private static final RunAutomaton AUTOMATON_XML_TAG = new RunAutomaton(new RegExp(REGEX_XML_TAG).toAutomaton());
 
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {

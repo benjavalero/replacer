@@ -81,13 +81,13 @@ Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar much
 * Textos en cursiva: `''online''`
 * Valores de algunos parámetros:  `{{... | índice = españa | ...}}`
 * Categorías: `[[Categoría:Jennifer Lopez]]`
+* Etiquetas XML: `<span style="color:green;">` o `<br />`
 
 
 <!---
 * Nombres de plantillas: `{{Album | ...}`
 * Parámetros: `{{ ... | pais = España | ... }}`
 * URL: `http://www.jenniferlopez.com`
-* Etiquetas XML: `<ref name="españa">`
 --->
 
 ## Errores ortográficos
