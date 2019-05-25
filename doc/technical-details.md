@@ -84,10 +84,7 @@ Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar much
 * Etiquetas XML: `<span style="color:green;">` o `<br />`
 * Nombres de plantillas: `{{Album|...}}`
 * Parámetros de plantillas: `{{...| pais = España | ...}}`
-
-<!---
 * URL: `http://www.jenniferlopez.com`
---->
 
 ## Errores ortográficos
 
