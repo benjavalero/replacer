@@ -1,7 +1,5 @@
-package es.bvalero.replacer.finder.ignored;
+package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.finder.MatchResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,9 +10,9 @@ public class LinkSuffixedFinderTest {
     @Test
     public void testRegexUrl() {
         String suffixed1 = "[[brasil]]eño";
-        String suffixed2 = "|reaccion]]es";
-        String link2 = "[[reacción química" + suffixed2;
-        String text = "xxx " + suffixed1 + " yyy " + link2 + " zzz";
+        String suffixed2 = "[[reacción química|reaccion]]es";
+        String noSuffixed = "[[Text]]";
+        String text = String.format("%s %s %s.", suffixed1, suffixed2, noSuffixed);
 
         IgnoredReplacementFinder linkSuffixedFinder = new LinkSuffixedFinder();
 

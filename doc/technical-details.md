@@ -85,6 +85,7 @@ Hay ciertas partes de un texto que queremos ignorar pues se suelen detectar much
 * Nombres de plantillas: `{{Album|...}}`
 * Parámetros de plantillas: `{{...| pais = España | ...}}`
 * URL: `http://www.jenniferlopez.com`
+* Enlaces internos sufijados: `[brasil]eño`
 
 ## Errores ortográficos
 
