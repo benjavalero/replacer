@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Profile("offline")
 @Configuration
-public class CorsConfigurer {
+public class WebConfig {
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
