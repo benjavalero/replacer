@@ -1,6 +1,7 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
 import dk.brics.automaton.AutomatonMatcher;
+import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.MatchResult;
@@ -16,7 +17,7 @@ class WordAlternateAutomatonFinder extends WordAbstractFinder {
 
     WordAlternateAutomatonFinder(Collection<String> words) {
         String alternations = '(' + StringUtils.join(words, "|") + ')';
-        this.words = new RunAutomaton(new RegExp(alternations).toAutomaton());
+        this.words = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
     }
 
     Set<MatchResult> findMatches(String text) {
