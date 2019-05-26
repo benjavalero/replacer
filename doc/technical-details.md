@@ -98,6 +98,7 @@ Se omiten los términos del listado que contienen números o puntos, puesto que 
 
 * Términos que suelen ser un nombre propio de persona: Julio, Frances, etc.
 * Términos que deben escribirse en minúscula salvo cuando la puntuación lo exija.
+* Falsos positivos muy comunes, e. g. `Los Angeles Lakers`
 
 ### Algoritmo
 
