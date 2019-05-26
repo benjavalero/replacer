@@ -64,11 +64,11 @@ public class ArticleRepositoryTest {
         articleRepository.save(newArticle);
         Replacement replacement1 = new Replacement.ReplacementBuilder()
                 .setArticle(newArticle)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("X")
                 .setText("A").build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
                 .setArticle(newArticle)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("X")
                 .setText("B")
                 .build();
         replacementRepository.saveAll(Arrays.asList(replacement1, replacement2));
@@ -112,17 +112,17 @@ public class ArticleRepositoryTest {
         articleRepository.save(newArticle);
         Replacement replacement1 = new Replacement.ReplacementBuilder()
                 .setArticle(newArticle)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("X")
                 .setText("A")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
                 .setArticle(newArticle)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("X")
                 .setText("B")
                 .build();
         Replacement replacement3 = new Replacement.ReplacementBuilder()
                 .setArticle(newArticle)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("X")
                 .setText("C")
                 .build();
         replacementRepository.saveAll(Arrays.asList(replacement1, replacement2, replacement3));
@@ -142,7 +142,7 @@ public class ArticleRepositoryTest {
         // Add replacements
         Replacement replacement4 = new Replacement.ReplacementBuilder()
                 .setArticle(newArticle)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("X")
                 .setText("D")
                 .build();
         replacementRepository.save(replacement4);
@@ -160,12 +160,12 @@ public class ArticleRepositoryTest {
         articleRepository.save(newArticle);
         Replacement replacement1 = new Replacement.ReplacementBuilder()
                 .setArticle(newArticle)
-                .setType(ReplacementType.MISSPELLING)
+                // .setType(ReplacementType.MISSPELLING)
                 .setText("A")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
                 .setArticle(newArticle)
-                .setType(ReplacementType.MISSPELLING)
+                // .setType(ReplacementType.MISSPELLING)
                 .setText("A")
                 .build();
         replacementRepository.saveAll(Arrays.asList(replacement1, replacement2));
@@ -179,12 +179,12 @@ public class ArticleRepositoryTest {
         articleRepository.save(newArticle);
         Replacement replacement1 = new Replacement.ReplacementBuilder()
                 .setArticle(newArticle)
-                .setType(ReplacementType.MISSPELLING)
+                // .setType(ReplacementType.MISSPELLING)
                 .setText("A")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
                 .setArticle(newArticle)
-                .setType(ReplacementType.MISSPELLING)
+                // .setType(ReplacementType.MISSPELLING)
                 .setText("B")
                 .build();
         replacementRepository.saveAll(Arrays.asList(replacement1, replacement2));
@@ -206,12 +206,12 @@ public class ArticleRepositoryTest {
         articleRepository.save(newArticle);
         Replacement replacement1 = new Replacement.ReplacementBuilder()
                 .setArticle(newArticle)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("X")
                 .setText("A")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
                 .setArticle(newArticle)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("X")
                 .setText("B")
                 .build();
         replacementRepository.saveAll(Arrays.asList(replacement1, replacement2));

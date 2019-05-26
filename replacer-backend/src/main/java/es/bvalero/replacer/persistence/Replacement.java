@@ -26,8 +26,7 @@ public class Replacement implements Serializable {
     private Article article;
 
     @Column(name = "type", nullable = false, length = 25)
-    @Enumerated(EnumType.STRING)
-    private ReplacementType type;
+    private String type;
 
     @Column(name = "text", nullable = false, length = 30)
     private String text;
@@ -36,7 +35,7 @@ public class Replacement implements Serializable {
         // Needed by JPA
     }
 
-    private Replacement(Article article, ReplacementType type, String text) {
+    private Replacement(Article article, String type, String text) {
         this.article = article;
         this.type = type;
         this.text = text;
@@ -56,7 +55,7 @@ public class Replacement implements Serializable {
         if (obj == null || getClass() != obj.getClass()) return false;
         Replacement that = (Replacement) obj;
         return article.equals(that.article) &&
-                type == that.type &&
+                type.equals(that.type) &&
                 text.equals(that.text);
     }
 
@@ -77,7 +76,7 @@ public class Replacement implements Serializable {
 
     public static class ReplacementBuilder {
         private Article article;
-        private ReplacementType type;
+        private String type;
         private String text;
 
         public Replacement.ReplacementBuilder setArticle(Article article) {
@@ -85,7 +84,7 @@ public class Replacement implements Serializable {
             return this;
         }
 
-        public Replacement.ReplacementBuilder setType(ReplacementType type) {
+        public Replacement.ReplacementBuilder setType(String type) {
             this.type = type;
             return this;
         }

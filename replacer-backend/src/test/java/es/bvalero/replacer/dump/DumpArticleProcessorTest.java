@@ -3,7 +3,10 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
-import es.bvalero.replacer.persistence.*;
+import es.bvalero.replacer.persistence.Article;
+import es.bvalero.replacer.persistence.ArticleRepository;
+import es.bvalero.replacer.persistence.Replacement;
+import es.bvalero.replacer.persistence.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -216,12 +219,10 @@ public class DumpArticleProcessorTest {
         // And it has replacements 1 and 2
         Replacement replacement1 = new Replacement.ReplacementBuilder()
                 .setArticle(dbArticle)
-                .setType(ReplacementType.MISSPELLING)
                 .setText("1")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
                 .setArticle(dbArticle)
-                .setType(ReplacementType.MISSPELLING)
                 .setText("2")
                 .build();
         Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Arrays.asList(replacement1, replacement2));
@@ -254,7 +255,6 @@ public class DumpArticleProcessorTest {
         // And it has replacement 1
         Replacement replacement1 = new Replacement.ReplacementBuilder()
                 .setArticle(dbArticle)
-                .setType(ReplacementType.MISSPELLING)
                 .setText("1")
                 .build();
         Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Collections.singletonList(replacement1));
@@ -286,12 +286,10 @@ public class DumpArticleProcessorTest {
         // And it has replacements 1 and 2
         Replacement replacement1 = new Replacement.ReplacementBuilder()
                 .setArticle(dbArticle)
-                .setType(ReplacementType.MISSPELLING)
                 .setText("1")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
                 .setArticle(dbArticle)
-                .setType(ReplacementType.MISSPELLING)
                 .setText("2")
                 .build();
         Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Arrays.asList(replacement1, replacement2));

@@ -7,7 +7,6 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ArticleReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementFinder;
-import es.bvalero.replacer.persistence.ReplacementType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
@@ -26,6 +25,8 @@ import java.util.*;
  */
 @Component
 public class MisspellingFinder extends ReplacementFinder implements ArticleReplacementFinder, PropertyChangeListener {
+
+    static final String MISSPELLING_TYPE = "MISSPELLING";
 
     @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingFinder.class);
@@ -94,7 +95,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
                 articleReplacements.add(new ArticleReplacement(
                         word,
                         m.start(),
-                        ReplacementType.MISSPELLING,
+                        MISSPELLING_TYPE,
                         misspelling.getWord(),
                         misspelling.getComment(),
                         findMisspellingSuggestion(word, misspelling)));

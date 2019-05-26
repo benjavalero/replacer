@@ -29,22 +29,22 @@ public class ReplacementRepositoryTest {
 
         Replacement error1 = new Replacement.ReplacementBuilder()
                 .setArticle(article1)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("MISSPELLING")
                 .setText("aber")
                 .build();
         Replacement error2 = new Replacement.ReplacementBuilder()
                 .setArticle(article2)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("MISSPELLING")
                 .setText("aber")
                 .build();
         Replacement error3 = new Replacement.ReplacementBuilder()
                 .setArticle(article2)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("MISSPELLING")
                 .setText("madrid")
                 .build();
         Replacement error4 = new Replacement.ReplacementBuilder()
                 .setArticle(article3)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("MISSPELLING")
                 .setText("paris")
                 .build();
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3, error4));
@@ -61,17 +61,17 @@ public class ReplacementRepositoryTest {
 
         Replacement error1 = new Replacement.ReplacementBuilder()
                 .setArticle(article1)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("X")
                 .setText("aber")
                 .build();
         Replacement error2 = new Replacement.ReplacementBuilder()
                 .setArticle(article2)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("X")
                 .setText("aber")
                 .build();
         Replacement error3 = new Replacement.ReplacementBuilder()
                 .setArticle(article3)
-                .setType(ReplacementType.MISSPELLING)
+                .setType("X")
                 .setText("aber")
                 .build();
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3));
