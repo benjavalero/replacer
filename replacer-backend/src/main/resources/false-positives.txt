@@ -316,4 +316,4 @@
  # [Éé]st?[aeo]s?
  # [Ff]ans
  # setiembre
- # [Ss]ólo
+ [Ss]ólo
