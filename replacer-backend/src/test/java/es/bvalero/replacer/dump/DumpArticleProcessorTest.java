@@ -219,17 +219,21 @@ public class DumpArticleProcessorTest {
         // And it has replacements 1 and 2
         Replacement replacement1 = new Replacement.ReplacementBuilder()
                 .setArticle(dbArticle)
+                .setType("X")
                 .setText("1")
                 .build();
         Replacement replacement2 = new Replacement.ReplacementBuilder()
                 .setArticle(dbArticle)
+                .setType("X")
                 .setText("2")
                 .build();
         Mockito.when(replacementRepository.findByArticle(dbArticle)).thenReturn(Arrays.asList(replacement1, replacement2));
         // And the new ones are 2 and 3
         ArticleReplacement articleReplacement2 = Mockito.mock(ArticleReplacement.class);
+        Mockito.when(articleReplacement2.getType()).thenReturn("X");
         Mockito.when(articleReplacement2.getSubtype()).thenReturn("2");
         ArticleReplacement articleReplacement3 = Mockito.mock(ArticleReplacement.class);
+        Mockito.when(articleReplacement3.getType()).thenReturn("X");
         Mockito.when(articleReplacement3.getSubtype()).thenReturn("3");
         Mockito.when(replacementFinderService.findReplacements(Mockito.anyString()))
                 .thenReturn(Arrays.asList(articleReplacement2, articleReplacement3));
