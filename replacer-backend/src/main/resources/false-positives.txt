@@ -2,7 +2,7 @@
 
 * Si es posible intentamos que no se solapen con otras excepciones
 * ¡OJO! Las expresiones regulares han de ser compatibles con el formato de los automaton
-* Busco falsos positivos que aparecen más de 100 veces en el dump
+* Busco falsos positivos que aparecen más de 100 veces en el dump y en la búsqueda entrecomillada de la Wikipedia
 
  # # Aaron
  # Hank Aaron
@@ -193,7 +193,8 @@
 
  # Los Angeles (Angels|Clippers|County|Dodgers|Galaxy|Lakers|Memorial|Rams|Sparks|Times)
 
- # [Nn]i aun
+ # aun
+ [Aa]un así
  # # aun + gerundio
  # [Aa]un (así|sin|<L>+?ndo)
 
@@ -316,4 +317,4 @@
  # [Éé]st?[aeo]s?
  # [Ff]ans
  # setiembre
- [Ss]ólo
+ # [Ss]ólo
