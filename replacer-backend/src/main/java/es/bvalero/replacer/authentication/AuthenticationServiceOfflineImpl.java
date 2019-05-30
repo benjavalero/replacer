@@ -24,17 +24,17 @@ class AuthenticationServiceOfflineImpl implements AuthenticationService {
 
     @Override
     public String getAuthorizationUrl(OAuth1RequestToken requestToken) {
-        return null;
+        return "/?oauth_verifier=x";
     }
 
     @Override
     public OAuth1RequestToken getRequestToken() {
-        return null;
+        return new OAuth1RequestToken("", "", "");
     }
 
     @Override
     public OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier) {
-        return null;
+        return new OAuth1AccessToken("", "", "");
     }
 
 }
