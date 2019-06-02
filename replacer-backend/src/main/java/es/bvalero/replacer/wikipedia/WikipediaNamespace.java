@@ -1,5 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,9 +23,8 @@ public enum WikipediaNamespace {
     private static final Map<Integer, WikipediaNamespace> map = new HashMap<>(12);
 
     static {
-        for (WikipediaNamespace wikipediaNamespace : WikipediaNamespace.values()) {
-            map.put(wikipediaNamespace.value, wikipediaNamespace);
-        }
+        Arrays.stream(WikipediaNamespace.values()).forEach(
+                wikipediaNamespace -> map.put(wikipediaNamespace.value, wikipediaNamespace));
     }
 
     private final int value;

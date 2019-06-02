@@ -24,6 +24,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     private static final String FALSE_POSITIVE_LIST_PAGE = "Usuario:Benjavalero/FalsePositives";
     private static final String EDIT_SUMMARY = "Correcciones ortográficas";
     private static final int MAX_PAGES_REQUESTED = 50;
+    private static final String PARAM_ACTION = "action";
 
     @Autowired
     private AuthenticationService authenticationService;
@@ -60,7 +61,7 @@ public class WikipediaServiceImpl implements WikipediaService {
 
     private Map<String, String> getParamsToRequestPages(String pagesParam, String pagesValue) {
         Map<String, String> params = new HashMap<>();
-        params.put("action", "query");
+        params.put(PARAM_ACTION, "query");
         params.put("prop", "revisions");
         params.put("rvprop", "timestamp|content");
         params.put("rvslots", "main");
@@ -97,9 +98,8 @@ public class WikipediaServiceImpl implements WikipediaService {
     @Override
     public void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
             throws WikipediaException {
-        // TODO : Use editTime to check just before uploading there are no changes during the edition
         Map<String, String> params = new HashMap<>();
-        params.put("action", "edit");
+        params.put(PARAM_ACTION, "edit");
         params.put("title", pageTitle);
         params.put("text", pageContent);
         params.put("summary", EDIT_SUMMARY);
@@ -115,7 +115,7 @@ public class WikipediaServiceImpl implements WikipediaService {
 
     String getEditToken(OAuth1AccessToken accessToken) throws WikipediaException {
         Map<String, String> params = new HashMap<>();
-        params.put("action", "query");
+        params.put(PARAM_ACTION, "query");
         params.put("meta", "tokens");
 
         try {

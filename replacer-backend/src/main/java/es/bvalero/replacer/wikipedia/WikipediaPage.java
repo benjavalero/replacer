@@ -3,7 +3,7 @@ package es.bvalero.replacer.wikipedia;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-final public class WikipediaPage {
+public final class WikipediaPage {
     private static final String REDIRECT_PREFIX = "#redirec";
 
     private final int id;
