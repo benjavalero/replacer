@@ -12,12 +12,8 @@
 
     <groupId>es.bvalero.replacer</groupId>
     <artifactId>replacer-parent</artifactId>
-    <version>${project.version}</version>
+    <version>1.99.SNAPSHOT</version>
     <packaging>pom</packaging>
-
-    <properties>
-        <project.version>1.99</project.version>
-    </properties>
 
     <modules>
         <module>replacer-frontend</module>

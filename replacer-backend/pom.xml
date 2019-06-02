@@ -6,7 +6,7 @@
     <parent>
         <groupId>es.bvalero.replacer</groupId>
         <artifactId>replacer-parent</artifactId>
-        <version>${project.version}</version>
+        <version>1.99.SNAPSHOT</version>
     </parent>
 
     <artifactId>replacer-backend</artifactId>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.github.scribejava</groupId>
             <artifactId>scribejava-apis</artifactId>
-            <version>5.6.0</version>
+            <version>6.6.2</version>
         </dependency>
         <dependency>
             <groupId>dk.brics</groupId>

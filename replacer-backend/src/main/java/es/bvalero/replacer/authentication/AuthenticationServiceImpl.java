@@ -81,7 +81,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             } else {
                 throw new AuthenticationException(String.format("Call not successful: %d - %s", response.getCode(), response.getMessage()));
             }
-        } catch (InterruptedException | ExecutionException | IOException e) {
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new AuthenticationException(e);
+        } catch (ExecutionException | IOException e) {
             throw new AuthenticationException(e);
         }
     }
@@ -92,14 +95,28 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public OAuth1RequestToken getRequestToken() throws InterruptedException, ExecutionException, IOException {
-        return getOAuthService().getRequestToken();
+    public OAuth1RequestToken getRequestToken() throws AuthenticationException {
+        try {
+            return getOAuthService().getRequestToken();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new AuthenticationException(e);
+        } catch (ExecutionException | IOException e) {
+            throw new AuthenticationException(e);
+        }
     }
 
     @Override
     public OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
-            throws InterruptedException, ExecutionException, IOException {
-        return getOAuthService().getAccessToken(requestToken, oauthVerifier);
+            throws AuthenticationException {
+        try {
+            return getOAuthService().getAccessToken(requestToken, oauthVerifier);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new AuthenticationException(e);
+        } catch (ExecutionException | IOException e) {
+            throw new AuthenticationException(e);
+        }
     }
 
 }
