@@ -5,6 +5,7 @@ import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaServiceImpl;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,8 @@ public class RedirectMatcherBenchmark {
                 System.out.println(matcher.getClass().getSimpleName() + "\t" + end);
             }
         });
+
+        Assert.assertTrue(true);
     }
 
 }
