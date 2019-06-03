@@ -6,7 +6,7 @@
     <parent>
         <groupId>es.bvalero.replacer</groupId>
         <artifactId>replacer-parent</artifactId>
-        <version>1.99.SNAPSHOT</version>
+        <version>1.99-SNAPSHOT</version>
     </parent>
 
     <artifactId>replacer-frontend</artifactId>
