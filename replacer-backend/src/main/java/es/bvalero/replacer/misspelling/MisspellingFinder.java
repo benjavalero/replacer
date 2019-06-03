@@ -59,20 +59,20 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
         LOGGER.info("Start building misspelling map...");
 
         // Build a map to quick access the misspellings by word
-        Map<String, Misspelling> misspellingMap = new HashMap<>(misspellings.size());
+        Map<String, Misspelling> map = new HashMap<>(misspellings.size());
         misspellings.forEach(misspelling -> {
             String word = misspelling.getWord();
             if (misspelling.isCaseSensitive()) {
-                misspellingMap.put(word, misspelling);
+                map.put(word, misspelling);
             } else {
                 // If case-insensitive, we add to the map "word" and "Word".
-                misspellingMap.put(word, misspelling);
-                misspellingMap.put(setFirstUpperCase(word), misspelling);
+                map.put(word, misspelling);
+                map.put(setFirstUpperCase(word), misspelling);
             }
         });
 
         LOGGER.info("End building misspelling map");
-        return misspellingMap;
+        return map;
     }
 
     private String setFirstUpperCase(String word) {
@@ -116,7 +116,6 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
     private String findMisspellingSuggestion(CharSequence originalWord, Misspelling misspelling) {
         List<String> suggestions = misspelling.getSuggestions();
 
-        // TODO Take into account all the suggestions
         String suggestion = suggestions.get(0);
 
         if (startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()) {

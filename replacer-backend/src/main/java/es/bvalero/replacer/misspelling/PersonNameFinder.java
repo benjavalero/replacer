@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class PersonNameFinder implements IgnoredReplacementFinder {
 
-    private final static Collection<String> PERSON_NAMES = Arrays.asList("Domingo", "Frances", "Julio", "Sidney");
+    private static final Collection<String> PERSON_NAMES = Arrays.asList("Domingo", "Frances", "Julio", "Sidney");
 
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {

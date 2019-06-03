@@ -78,7 +78,7 @@ final class Misspelling {
     }
 
     private List<String> parseSuggestionsFromComment() {
-        List<String> suggestions = new ArrayList<>(5);
+        List<String> suggestionList = new ArrayList<>(5);
 
         String suggestionNoBrackets = PATTERN_BRACKETS.matcher(getComment()).replaceAll("");
         for (String suggestion : suggestionNoBrackets.split(",")) {
@@ -86,11 +86,11 @@ final class Misspelling {
 
             // Don't suggest the misspelling main word
             if (StringUtils.isNotBlank(suggestionWord) && !suggestionWord.equals(getWord())) {
-                suggestions.add(suggestionWord);
+                suggestionList.add(suggestionWord);
             }
         }
 
-        return suggestions;
+        return suggestionList;
     }
 
     static class MisspellingBuilder {
