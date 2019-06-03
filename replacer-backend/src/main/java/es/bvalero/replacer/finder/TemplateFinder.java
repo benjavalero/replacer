@@ -17,7 +17,7 @@ public class TemplateFinder extends ReplacementFinder implements IgnoredReplacem
     private static final String REGEX_NESTED_TEMPLATE = "\\{\\{(%s)[|:](%s|[^}])+?}}";
     private static final List<String> TEMPLATE_NAMES =
             Arrays.asList("cita", "quote", "cquote", "caja de cita", "coord", "commonscat", "ORDENAR", "DEFAULTSORT", "NF");
-    private static RunAutomaton AUTOMATON_TEMPLATE;
+    private static final RunAutomaton AUTOMATON_TEMPLATE;
 
     static {
         Set<String> wordsToJoin = new HashSet<>();
@@ -31,7 +31,7 @@ public class TemplateFinder extends ReplacementFinder implements IgnoredReplacem
     }
 
     private static boolean isLowercase(String word) {
-        return word.equals(word.toLowerCase(Locale.forLanguageTag("es")));
+        return word.chars().allMatch(Character::isLowerCase);
     }
 
     private static String setFirstUpperCase(String word) {

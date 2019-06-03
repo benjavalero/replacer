@@ -2,6 +2,8 @@ package es.bvalero.replacer.finder;
 
 import org.jetbrains.annotations.NonNls;
 
+import java.util.Objects;
+
 /**
  * Domain class of a potential replacement in an article.
  */
@@ -34,6 +36,21 @@ public class ArticleReplacement extends MatchResult {
 
     public String getSuggestion() {
         return suggestion;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        ArticleReplacement that = (ArticleReplacement) o;
+        return type.equals(that.type) &&
+                subtype.equals(that.subtype);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), type, subtype);
     }
 
     @NonNls
