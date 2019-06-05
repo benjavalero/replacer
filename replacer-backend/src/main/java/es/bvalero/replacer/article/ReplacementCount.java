@@ -14,6 +14,7 @@ public class ReplacementCount {
         return text;
     }
 
+    @SuppressWarnings("unused")
     public long getCount() {
         return count;
     }

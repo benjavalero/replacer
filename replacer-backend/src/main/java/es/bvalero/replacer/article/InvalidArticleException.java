@@ -8,8 +8,4 @@ class InvalidArticleException extends Exception {
         super(message);
     }
 
-    InvalidArticleException(Throwable e) {
-        super(e);
-    }
-
 }

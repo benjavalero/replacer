@@ -44,10 +44,6 @@ public class Replacement implements Serializable {
     @Column(name = "reviewer")
     private String reviewer;
 
-    public Replacement() {
-        // Needed by JPA
-    }
-
     public Replacement(int articleId, String type, String subtype, int position) {
         this.articleId = articleId;
         this.type = type;
