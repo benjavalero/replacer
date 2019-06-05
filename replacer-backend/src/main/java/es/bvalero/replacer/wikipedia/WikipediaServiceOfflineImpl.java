@@ -27,6 +27,11 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     @Override
+    public Optional<WikipediaPage> getPageById(int articleId) throws WikipediaException {
+        return getPageByTitle("");
+    }
+
+    @Override
     public Map<Integer, WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException {
         Map<Integer, WikipediaPage> pages = new HashMap<>();
         for (Integer id : pageIds) {

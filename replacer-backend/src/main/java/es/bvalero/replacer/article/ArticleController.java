@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class ArticleController {
 
@@ -21,48 +23,29 @@ public class ArticleController {
      * @return A random article whose text contains replacements to review.
      * In case of error we return a fake article with the exception message.
      */
-    @RequestMapping("/article/random")
+    @GetMapping(value = "/article/random")
     public ArticleReview findRandomArticleWithReplacements() {
         LOGGER.info("Finding random article with replacements...");
-
-        ArticleReview articleData = null;
-        do {
-            try {
-                articleData = articleService.findRandomArticleWithReplacements();
-            } catch (UnfoundArticleException e) {
-                articleData = ArticleReview.builder().setTitle(e.getMessage()).build();
-            } catch (InvalidArticleException e) {
-                // Retry
-            }
-        } while (articleData == null);
-
-        return articleData;
+        try {
+            return articleService.findRandomArticleToReview();
+        } catch (UnfoundArticleException e) {
+            return ArticleReview.builder().setTitle(e.getMessage()).build();
+        }
     }
 
-    /**
-     * @return A random article whose text contains a specific error.
-     */
-    @RequestMapping("/article/random/{word}")
+    @GetMapping(value = "/article/random/{word}")
     public ArticleReview findRandomArticleByWord(@PathVariable("word") String word) {
         LOGGER.info("Finding random article by word: {}", word);
-
-        ArticleReview articleData = null;
-        do {
-            try {
-                articleData = articleService.findRandomArticleWithReplacements(word);
-            } catch (UnfoundArticleException e) {
-                articleData = ArticleReview.builder().setTitle(e.getMessage()).build();
-            } catch (InvalidArticleException e) {
-                // Retry
-            }
-        } while (articleData == null);
-
-        return articleData;
+        try {
+            return articleService.findRandomArticleToReview(word);
+        } catch (UnfoundArticleException e) {
+            return ArticleReview.builder().setTitle(e.getMessage()).build();
+        }
     }
 
     @PutMapping("/article")
     public boolean save(@RequestParam String title, @RequestBody String text,
-                     @RequestParam String token, @RequestParam String tokenSecret) {
+                        @RequestParam String token, @RequestParam String tokenSecret) {
         if (StringUtils.isNotBlank(text)) {
             OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
             return articleService.saveArticleChanges(title, text, accessToken);
@@ -76,6 +59,40 @@ public class ArticleController {
                 return false;
             }
         }
+    }
+
+    /* STATISTICS */
+
+    @GetMapping(value = "/statistics/count/replacements")
+    public Long countReplacements() {
+        LOGGER.info("Count replacements...");
+        Long count = articleService.countReplacements();
+        LOGGER.info("Replacements found: {}", count);
+        return count;
+    }
+
+    @GetMapping(value = "/statistics/count/articles")
+    public Long countReplacementsToReview() {
+        LOGGER.info("Count replacements not reviewed...");
+        Long count = articleService.countReplacementsToReview();
+        LOGGER.info("Replacements not reviewed found: {}", count);
+        return count;
+    }
+
+    @GetMapping("/statistics/count/articles-reviewed")
+    public Long countReplacementsReviewed() {
+        LOGGER.info("Count replacements reviewed...");
+        Long count = articleService.countReplacementsReviewed();
+        LOGGER.info("Replacements reviewed found: {}", count);
+        return count;
+    }
+
+    @GetMapping(value = "/statistics/count/misspellings")
+    List<ReplacementCount> listMisspellings() {
+        LOGGER.info("Listing misspellings...");
+        List<ReplacementCount> list = articleService.findMisspellingsGrouped();
+        LOGGER.info("Misspelling list found: {}", list.size());
+        return list;
     }
 
 }

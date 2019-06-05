@@ -10,10 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 // We make this implementation public to be used by the finder benchmarks
 @Service
@@ -33,6 +30,12 @@ public class WikipediaServiceImpl implements WikipediaService {
     public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
         // Return the only value that should be in the map
         return getPagesByIds("titles", pageTitle).values().stream().findFirst();
+    }
+
+    @Override
+    public Optional<WikipediaPage> getPageById(int pageId) throws WikipediaException {
+        // Return the only value that should be in the map
+        return getPagesByIds(Collections.singletonList(pageId)).values().stream().findFirst();
     }
 
     @Override

@@ -16,6 +16,8 @@ public interface WikipediaService {
      */
     Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException;
 
+    Optional<WikipediaPage> getPageById(int pageId) throws WikipediaException;
+
     /**
      * @param pageIds The list of numeric IDs of the Wikipedia pages to retrieve
      * @return A map with the each and the retrieved page. If any page is missing or deleted will not exist in the map.

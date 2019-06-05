@@ -1,4 +1,4 @@
-package es.bvalero.replacer.persistence;
+package es.bvalero.replacer.article;
 
 public class ReplacementCount {
 

@@ -1,11 +1,11 @@
-package es.bvalero.replacer.persistence;
+package es.bvalero.replacer.article;
 
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-public class ArticleRepositoryImpl implements ArticleRepositoryCustom {
+class ReplacementRepositoryImpl implements ReplacementRepositoryCustom {
 
     @PersistenceContext
     private EntityManager em;

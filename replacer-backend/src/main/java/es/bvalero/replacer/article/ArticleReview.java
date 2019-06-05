@@ -12,12 +12,14 @@ import java.util.List;
  */
 public final class ArticleReview {
 
+    private final Integer articleId;
     private final String title;
     private final String content;
     private final List<ArticleReplacement> replacements;
     private final boolean trimText;
 
-    private ArticleReview(String title, String content, List<ArticleReplacement> replacements, boolean trimText) {
+    private ArticleReview(Integer articleId, String title, String content, List<ArticleReplacement> replacements, boolean trimText) {
+        this.articleId = articleId;
         this.title = title;
         this.content = content;
         this.replacements = replacements;
@@ -26,6 +28,11 @@ public final class ArticleReview {
 
     public static ArticleReview.ArticleReviewBuilder builder() {
         return new ArticleReview.ArticleReviewBuilder();
+    }
+
+    @SuppressWarnings("unused")
+    public Integer getArticleId() {
+        return articleId;
     }
 
     public String getTitle() {
@@ -40,15 +47,22 @@ public final class ArticleReview {
         return Collections.unmodifiableList(replacements);
     }
 
+    @SuppressWarnings("unused")
     public boolean isTrimText() {
         return trimText;
     }
 
     static class ArticleReviewBuilder {
         private final List<ArticleReplacement> replacements = new ArrayList<>(100);
+        private Integer articleId;
         private String title;
         private String content;
         private boolean trimText;
+
+        ArticleReview.ArticleReviewBuilder setArticleId(Integer articleId) {
+            this.articleId = articleId;
+            return this;
+        }
 
         ArticleReview.ArticleReviewBuilder setTitle(String title) {
             this.title = title;
@@ -72,7 +86,7 @@ public final class ArticleReview {
         }
 
         ArticleReview build() {
-            return new ArticleReview(title, content, replacements, trimText);
+            return new ArticleReview(articleId, title, content, replacements, trimText);
         }
     }
 

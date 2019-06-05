@@ -1,21 +1,16 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.article.Replacement;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
-import es.bvalero.replacer.persistence.Article;
-import es.bvalero.replacer.persistence.ArticleRepository;
-import es.bvalero.replacer.persistence.Replacement;
-import es.bvalero.replacer.persistence.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -31,20 +26,9 @@ class DumpArticleProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpArticleProcessor.class);
     private static final Collection<WikipediaNamespace> PROCESSABLE_NAMESPACES =
             EnumSet.of(WikipediaNamespace.ARTICLE, WikipediaNamespace.ANNEX);
-    private static final int CACHE_SIZE = 1000;
 
     // Save articles in batches to improve performance
-    private DumpArticleCache cache = new DumpArticleCache(CACHE_SIZE);
-    private Collection<Article> articlesToDelete = new ArrayList<>(CACHE_SIZE);
-    private Collection<Article> articlesToSave = new ArrayList<>(CACHE_SIZE);
-    private Collection<Replacement> replacementsToDelete = new ArrayList<>(CACHE_SIZE);
-    private Collection<Replacement> replacementsToAdd = new HashSet<>(CACHE_SIZE); // Set to avoid duplicates
-
-    @Autowired
-    private ArticleRepository articleRepository;
-
-    @Autowired
-    private ReplacementRepository replacementRepository;
+    private DumpArticleCache cache = new DumpArticleCache();
 
     @Autowired
     private ArticleService articleService;
@@ -57,23 +41,24 @@ class DumpArticleProcessor {
         return processArticle(dumpArticle, false);
     }
 
-    /**
-     * Process a dump article: find the replacements and add them to the database.
-     */
     boolean processArticle(WikipediaPage dumpArticle, boolean forceProcess) {
         LOGGER.debug("Processing article: {}...", dumpArticle.getTitle());
 
-        if (!isArticleProcessableByNamespace(dumpArticle.getNamespace())
-                || dumpArticle.isRedirectionPage()) {
+        if (!isDumpArticleProcessable(dumpArticle)) {
             LOGGER.debug("Article not processable by namespace or content");
             return false;
         }
 
-        Article dbArticle = cache.findArticleById(dumpArticle.getId());
+        Collection<Replacement> dbReplacements = cache.findReplacementsByArticleId(dumpArticle.getId());
 
-        if (dbArticle != null && !isArticleProcessableByTimestamp(dumpArticle.getTimestamp(), dbArticle, forceProcess)) {
+        LocalDate dbLastUpdate = dbReplacements.stream()
+                .map(Replacement::getLastUpdate)
+                .max(Comparator.comparing(LocalDate::toEpochDay)).orElse(LocalDate.now());
+
+        if (!dbReplacements.isEmpty()
+                && !isArticleProcessableByTimestamp(dumpArticle.getTimestamp(), dbLastUpdate, forceProcess)) {
             LOGGER.debug("Article not processable by date. Dump date: {} -  DB date: {}",
-                    dumpArticle.getTimestamp(), dbArticle.getLastUpdate());
+                    dumpArticle.getTimestamp(), dbLastUpdate);
             return false;
         }
 
@@ -81,100 +66,28 @@ class DumpArticleProcessor {
         List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(dumpArticle.getContent());
 
         if (articleReplacements.isEmpty()) {
-            LOGGER.debug("No replacements found. Deleting article...");
-            if (dbArticle != null) {
-                articlesToDelete.add(dbArticle);
-            }
-        } else if (dbArticle != null) {
-            // Compare the new replacements with the existing ones
-            List<Replacement> oldReplacements = replacementRepository.findByArticle(dbArticle);
-
-            Collection<Replacement> newReplacements = new HashSet<>(articleReplacements.size());
-            for (ArticleReplacement replacement : articleReplacements) {
-                newReplacements.add(adaptArticleReplacement(replacement, dbArticle));
-            }
-
-            if (compareReplacements(oldReplacements, newReplacements)) {
-                LOGGER.debug("Found replacements don't match with the ones in database. Updating database...");
-                articlesToSave.add(dbArticle
-                        .withTitle(dumpArticle.getTitle()) // In case the title of the article has changed
-                        .withLastUpdate(dumpArticle.getTimestamp()));
-            } else {
-                LOGGER.debug("Found replacements match with the ones in database. Nothing to do.");
-                if (!dbArticle.getLastUpdate().equals(dumpArticle.getTimestamp())) {
-                    articlesToSave.add(dbArticle.withLastUpdate(dumpArticle.getTimestamp()));
-                }
-            }
+            LOGGER.debug("No replacements found");
+            articleService.deleteNotReviewedReplacements(dumpArticle.getId());
         } else {
-            LOGGER.debug("Adding article to database...");
-            // Insert new article and its replacements in DB
-            Article newArticle = Article.builder()
-                    .setId(dumpArticle.getId())
-                    .setTitle(dumpArticle.getTitle())
-                    .build();
-            articlesToSave.add(newArticle);
-
-            // Add replacements in DB
-            for (ArticleReplacement replacement : articleReplacements) {
-                replacementsToAdd.add(adaptArticleReplacement(replacement, newArticle));
-            }
+            LOGGER.debug("Indexing found replacements...");
+            cache.indexArticleReplacements(dumpArticle, articleReplacements);
         }
 
         return true;
     }
 
-    private boolean isArticleProcessableByNamespace(WikipediaNamespace namespace) {
-        return PROCESSABLE_NAMESPACES.contains(namespace);
+    private boolean isDumpArticleProcessable(WikipediaPage dumpArticle) {
+        return PROCESSABLE_NAMESPACES.contains(dumpArticle.getNamespace()) && !dumpArticle.isRedirectionPage();
     }
 
-    private boolean isArticleProcessableByTimestamp(LocalDate dumpDate, Article dbArticle, boolean forceProcess) {
-        LocalDate dbDate = dbArticle.getLastUpdate();
+    private boolean isArticleProcessableByTimestamp(LocalDate dumpDate, LocalDate dbDate, boolean forceProcess) {
         if (dumpDate.isAfter(dbDate)) {
             // Article modified in dump after last indexing. Reprocess always.
             return true;
-        } else if (dumpDate.isEqual(dbDate)) {
-            // Article not modified in dump after last indexing. Reprocess if forcing or the article has not been reviewed.
-            return forceProcess || !isArticleReviewed(dbArticle);
-        } else if (dumpDate.isBefore(dbDate)) {
-            // Article reviewed. Reprocess only if forcing
-            return forceProcess;
         } else {
-            // Default option. The code should not arrive here.
-            return true;
+            // Article not modified in dump after last indexing. Reprocess when forcing.
+            return forceProcess;
         }
-    }
-
-    private boolean isArticleReviewed(Article article) {
-        return replacementRepository.findByArticle(article).isEmpty();
-    }
-
-    private Replacement adaptArticleReplacement(ArticleReplacement articleReplacement, Article article) {
-        return Replacement.builder()
-                .setArticle(article)
-                .setType(articleReplacement.getType())
-                .setText(articleReplacement.getSubtype())
-                .build();
-    }
-
-    private boolean compareReplacements(Collection<Replacement> oldReplacements, Collection<Replacement> newReplacements) {
-        boolean modified = false;
-
-        for (Replacement oldReplacement : oldReplacements) {
-            if (!newReplacements.contains(oldReplacement)) {
-                replacementsToDelete.add(oldReplacement);
-                modified = true;
-            }
-        }
-
-        // Replacements to add to DB
-        for (Replacement newReplacement : newReplacements) {
-            if (!oldReplacements.contains(newReplacement)) {
-                replacementsToAdd.add(newReplacement);
-                modified = true;
-            }
-        }
-
-        return modified;
     }
 
     void finish() {
@@ -184,82 +97,48 @@ class DumpArticleProcessor {
 
     private class DumpArticleCache {
 
-        private Map<Integer, Article> articles;
-        private int maxCachedId;
+        private static final int CACHE_SIZE = 1000;
+        private Map<Integer, Collection<Replacement>> replacementMap;
+        private int maxCachedId = 0;
 
-        DumpArticleCache(int size) {
-            articles = new HashMap<>(size);
-            maxCachedId = 0;
-        }
+        private Collection<Replacement> toIndex = new HashSet<>(CACHE_SIZE * 10);
 
-        @Nullable
-        Article findArticleById(int id) {
-            if (articles.isEmpty()) {
+        Collection<Replacement> findReplacementsByArticleId(int id) {
+            if (replacementMap == null) {
                 loadCache(id);
             }
 
-            Article article = articles.get(id);
-            if (article != null) {
-                articles.remove(id);
-            }
+            Collection<Replacement> replacements = replacementMap.get(id);
+            replacementMap.remove(id); // No need to check if the ID exists
 
             if (id >= maxCachedId) {
                 cleanCache();
             }
 
-            return article;
+            return replacements == null ? Collections.emptySet() : replacements;
+        }
+
+        void indexArticleReplacements(WikipediaPage dumpArticle, Collection<ArticleReplacement> articleReplacements) {
+            toIndex.addAll(articleService.convertArticleReplacements(dumpArticle, articleReplacements));
         }
 
         private void loadCache(int id) {
             // Load the cache of database articles
             // The first time we load the cache with the first 1000 articles
-            int minId = articles == null ? 0 : id - 1;
-            if (articles == null) {
-                articles = new HashMap<>(CACHE_SIZE);
-            }
-            for (Article article : articleRepository.findByIdGreaterThanOrderById(minId, PageRequest.of(0, CACHE_SIZE))) {
-                articles.put(article.getId(), article);
-                maxCachedId = article.getId();
-            }
+            int minId = replacementMap == null ? 0 : id - 1;
+            List<Replacement> replacements = articleService.findAllReplacementsWithArticleIdGreaterThan(minId, CACHE_SIZE);
+            replacementMap = articleService.buildReplacementMapByArticle(replacements);
+            maxCachedId = replacementMap.keySet().stream().max(Comparator.comparingInt(Integer::valueOf)).orElse(-1);
         }
 
         private void cleanCache() {
             // Clear the cache if obsolete (we assume the dump articles are in order)
             // The remaining cached articles are not in the dump so we remove them from DB
-            articlesToDelete.addAll(articles.values());
-            articles.clear();
+            articleService.deleteArticles(replacementMap.keySet());
+            replacementMap = new HashMap<>(CACHE_SIZE);
 
-            flushModifications();
-        }
-
-        private void flushModifications() {
-            // There is a FK Replacement-Article, we need to remove the replacements first.
-            if (!replacementsToDelete.isEmpty()) {
-                replacementRepository.deleteInBatch(replacementsToDelete);
-                replacementsToDelete.clear();
-            }
-
-            if (!articlesToDelete.isEmpty()) {
-                for (Article articleToDelete : articlesToDelete) {
-                    articleService.deleteArticle(articleToDelete);
-                }
-                articlesToDelete.clear();
-            }
-
-            if (!articlesToSave.isEmpty()) {
-                articleRepository.saveAll(articlesToSave);
-                articlesToSave.clear();
-            }
-
-            if (!replacementsToAdd.isEmpty()) {
-                replacementRepository.saveAll(replacementsToAdd);
-                replacementsToAdd.clear();
-            }
-
-            // Flush and clear to avoid memory leaks (we are performing millions of updates)
-            articleRepository.flush();
-            replacementRepository.flush();
-            articleRepository.clear(); // This clears all the EntityManager
+            // Send all replacements to index
+            articleService.indexReplacements(toIndex);
         }
 
     }
