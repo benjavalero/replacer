@@ -1,6 +1,6 @@
 package es.bvalero.replacer.article;
 
-import org.hibernate.annotations.Immutable;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,8 +11,7 @@ import java.util.Objects;
  * A replacement in the database related to an article.
  */
 @Entity
-@Immutable
-@Table(name = "replacement")
+@Table(name = "replacement2")
 public class Replacement implements Serializable {
 
     private static final long serialVersionUID = -6766305982117992712L;
@@ -22,26 +21,29 @@ public class Replacement implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "articleid", nullable = false)
+    @Column
     private int articleId;
 
-    @Column(name = "type", nullable = false, length = 25)
+    @Column(nullable = false, length = 25)
     private String type;
 
-    @Column(name = "subtype", nullable = false, length = 30)
+    @Column(nullable = false, length = 30)
     private String subtype;
 
-    @Column(name = "position", nullable = false)
+    @Column
+    @ColumnDefault(value = "0")
     private int position;
 
-    @Column(name = "status", nullable = false, length = 10)
+    @Column(nullable = false, length = 10)
+    @ColumnDefault("'TO_REVIEW'")
     @Enumerated(EnumType.STRING)
     private ReplacementStatus status;
 
-    @Column(name = "lastupdate", nullable = false)
+    @Column(nullable = false)
+    @ColumnDefault("NOW()")
     private LocalDate lastUpdate;
 
-    @Column(name = "reviewer")
+    @Column
     private String reviewer;
 
     public Replacement(int articleId, String type, String subtype, int position) {
