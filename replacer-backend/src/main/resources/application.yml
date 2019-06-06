@@ -1,6 +1,8 @@
 spring:
   main:
     banner-mode: 'off'
+  output:
+    ansi.enabled: ALWAYS
   jackson:
     date-format: dd-MM-yyyy HH:mm:ss
 
@@ -33,13 +35,6 @@ spring:
   profiles: offline
   datasource:
     platform: h2
-  output:
-    ansi.enabled: ALWAYS
-
-logging:
-  level:
-    es.bvalero.replacer: DEBUG
-    org.hibernate.SQL: DEBUG
 
 replacer:
   dump.folder.path: /Users/benja/Developer/pywikibot

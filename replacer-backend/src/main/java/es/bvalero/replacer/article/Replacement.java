@@ -40,7 +40,6 @@ public class Replacement implements Serializable {
     private ReplacementStatus status;
 
     @Column(nullable = false)
-    @ColumnDefault("NOW()")
     private LocalDate lastUpdate;
 
     @Column

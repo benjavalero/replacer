@@ -30,10 +30,10 @@ CREATE TABLE replacement2 (
     subtype VARCHAR(30) COLLATE utf8mb4_bin NOT NULL,
     position INT NOT NULL DEFAULT 0,
     status VARCHAR(10) NOT NULL DEFAULT 'TO_REVIEW',
-    last_update DATE NOT NULL DEFAULT NOW(),
-    type VARCHAR,
+    last_update DATE NOT NULL,
+    reviewer VARCHAR(255),
     PRIMARY KEY (id),
-    INDEX (articleId),
+    INDEX (article_id),
     INDEX (status),
     INDEX (type, subtype)
 );
