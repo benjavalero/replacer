@@ -5,6 +5,8 @@ import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.authentication.AuthenticationService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.*;
 @Profile("default")
 public class WikipediaServiceImpl implements WikipediaService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(WikipediaServiceImpl.class);
     private static final String MISSPELLING_LIST_PAGE = "Wikipedia:Corrector_ortográfico/Listado";
     private static final String FALSE_POSITIVE_LIST_PAGE = "Usuario:Benjavalero/FalsePositives";
     private static final String EDIT_SUMMARY = "Correcciones ortográficas";
@@ -28,6 +31,7 @@ public class WikipediaServiceImpl implements WikipediaService {
 
     @Override
     public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
+        LOGGER.info("Find Wikipedia page by title: {}", pageTitle);
         // Return the only value that should be in the map
         return getPagesByIds("titles", pageTitle).values().stream().findFirst();
     }
@@ -58,7 +62,7 @@ public class WikipediaServiceImpl implements WikipediaService {
             return extractPagesFromApiResponse(
                     authenticationService.executeUnsignedOAuthRequest(getParamsToRequestPages(pagesParam, pagesValue)));
         } catch (AuthenticationException e) {
-            throw new WikipediaException("Error getting page content", e);
+            throw new WikipediaException("Error getting Wikipedia pages", e);
         }
     }
 
@@ -101,6 +105,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     @Override
     public void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
             throws WikipediaException {
+        LOGGER.info("Save page content into Wikipedia");
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, "edit");
         params.put("title", pageTitle);

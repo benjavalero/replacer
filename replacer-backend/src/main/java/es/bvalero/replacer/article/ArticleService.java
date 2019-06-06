@@ -7,7 +7,6 @@ import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +26,7 @@ import java.util.stream.Collectors;
 @Service
 public class ArticleService {
 
-    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
-
     private static final String DEFAULT_REVIEWER = "system";
 
     @Autowired
@@ -49,6 +46,7 @@ public class ArticleService {
     private Collection<Replacement> toDelete = new HashSet<>();
 
     public void indexReplacements(Collection<Replacement> replacements) {
+        LOGGER.debug("Index replacements: {}", replacements);
         Map<Integer, Collection<Replacement>> replacementsByArticle = buildReplacementMapByArticle(replacements);
 
         List<Replacement> dbReplacements = replacementRepository.findByArticleIdIn(replacementsByArticle.keySet());
@@ -73,6 +71,7 @@ public class ArticleService {
     }
 
     private void indexArticleReplacements(Collection<Replacement> replacements, Collection<Replacement> dbReplacements) {
+        LOGGER.debug("Index replacements. New: {}. Old: {}", replacements, dbReplacements);
         for (Replacement replacement : replacements) {
             // Find if the replacement already exists in the database
             Optional<Replacement> existing = findSameReplacementInCollection(replacement, dbReplacements);
@@ -157,22 +156,28 @@ public class ArticleService {
     }
 
     ArticleReview findRandomArticleToReview(@Nullable String word) throws UnfoundArticleException {
+        LOGGER.info("Find random article to review. Filter by word: {}", word);
         ArticleReview review = null;
         while (review == null) {
-            // Find a replacement to be reviewed
+            LOGGER.info("Find random replacement to review");
             Replacement randomReplacement = findRandomReplacementNotReviewedInDb(word)
                     .orElseThrow(() -> new UnfoundArticleException("No replacement found to be reviewed"));
+            LOGGER.info("Found random replacement to review: {}", randomReplacement);
 
             try {
-                // Retrieve the article content from Wikipedia
+                LOGGER.info("Retrieve page related to the replacement with ID: {}", randomReplacement.getArticleId());
                 WikipediaPage article = findArticleById(randomReplacement.getArticleId());
 
-                // Find the replacements in the current content
+                LOGGER.info("Find replacements in article");
                 List<ArticleReplacement> articleReplacements = findArticleReplacements(article.getContent());
-                // We index them to update the database
+                LOGGER.info("Found replacements in article: {}", articleReplacements.size());
+
+                // Index the found replacements to add the new ones and remove the obsolete ones from last index in DB
+                LOGGER.info("Update database with found replacements");
                 indexReplacements(convertArticleReplacements(article, articleReplacements));
 
                 // Build the article review if the replacements found are valid
+                // Note the DB has just been updated in case the word doesn't exist in the found replacements
                 if (!articleReplacements.isEmpty()
                         && checkWordExistsInReplacements(word, articleReplacements)) {
                     review = ArticleReview.builder()
@@ -184,11 +189,14 @@ public class ArticleService {
                             .build();
                 }
             } catch (InvalidArticleException e) {
-                LOGGER.info("Deleting invalid article", e);
+                LOGGER.warn("Found article is not valid. Delete from database.", e);
                 deleteArticle(randomReplacement.getArticleId());
+            } catch (WikipediaException e) {
+                LOGGER.error("Error retrieving page from Wikipedia", e);
             }
         }
 
+        LOGGER.info("Return article to review: {}", review.getTitle());
         return review;
     }
 
@@ -200,20 +208,16 @@ public class ArticleService {
         return randomReplacements.isEmpty() ? Optional.empty() : Optional.of(randomReplacements.get(0));
     }
 
-    private WikipediaPage findArticleById(int articleId) throws InvalidArticleException {
-        try {
-            WikipediaPage page = wikipediaService.getPageById(articleId)
-                    .orElseThrow(() -> new InvalidArticleException(String.format("No article found with ID: %s", articleId)));
+    private WikipediaPage findArticleById(int articleId) throws InvalidArticleException, WikipediaException {
+        WikipediaPage page = wikipediaService.getPageById(articleId)
+                .orElseThrow(() -> new InvalidArticleException(String.format("No article found with ID: %s", articleId)));
 
-            // Check if the article is processable
-            if (page.isRedirectionPage()) {
-                throw new InvalidArticleException("Found article is a redirection page");
-            }
-
-            return page;
-        } catch (WikipediaException e) {
-            throw new InvalidArticleException(String.format("Content could not be retrieved for page: %s", articleId));
+        // Check if the article is processable
+        if (page.isRedirectionPage()) {
+            throw new InvalidArticleException("Found article is a redirection page");
         }
+
+        return page;
     }
 
     private List<ArticleReplacement> findArticleReplacements(String articleContent) {
@@ -243,7 +247,11 @@ public class ArticleService {
         if (StringUtils.isBlank(word)) {
             return true;
         } else {
-            return replacements.stream().anyMatch(replacement -> word.equals(replacement.getSubtype()));
+            if (replacements.stream().noneMatch(replacement -> word.equals(replacement.getSubtype()))) {
+                LOGGER.info("The filter word is not contained in the article replacements");
+                return false;
+            }
+            return true;
         }
     }
 
@@ -260,16 +268,23 @@ public class ArticleService {
 
             return true;
         } catch (WikipediaException e) {
-            LOGGER.error("Error saving or retrieving the content of the article: {}", title);
+            LOGGER.error("Error saving article: {}", title, e);
             return false;
         }
     }
 
-    void markArticleAsReviewed(String articleTitle) throws WikipediaException {
+    boolean markArticleAsReviewed(String articleTitle) {
+        LOGGER.info("Mark article as reviewed: {}", articleTitle);
         // For the moment we need to retrieve the ID from the title
-        wikipediaService.getPageByTitle(articleTitle).ifPresent(page ->
-                replacementRepository.findByArticleIdAndStatus(page.getId(), ReplacementStatus.TO_REVIEW)
-                        .forEach(this::fixReplacement));
+        try {
+            wikipediaService.getPageByTitle(articleTitle).ifPresent(page ->
+                    replacementRepository.findByArticleIdAndStatus(page.getId(), ReplacementStatus.TO_REVIEW)
+                            .forEach(this::fixReplacement));
+            return true;
+        } catch (WikipediaException e) {
+            LOGGER.error("Error marking article as reviewed: {}", articleTitle, e);
+            return false;
+        }
     }
 
     private void fixReplacement(Replacement replacement) {

@@ -23,7 +23,7 @@ export class StatsComponent implements OnInit {
 
   private findNumReplacements() {
     this.httpClient
-      .get<string>(`${environment.apiUrl}/statistics/count/replacements`)
+      .get<string>(`${environment.apiUrl}/article/count/replacements`)
       .subscribe(res => {
         this.numReplacements = res;
       });
@@ -31,7 +31,7 @@ export class StatsComponent implements OnInit {
 
   private findNumArticles() {
     this.httpClient
-      .get<string>(`${environment.apiUrl}/statistics/count/articles`)
+      .get<string>(`${environment.apiUrl}/article/count/replacements/to-review`)
       .subscribe(res => {
         this.numArticles = res;
       });
@@ -39,7 +39,7 @@ export class StatsComponent implements OnInit {
 
   private findNumReviewedArticles() {
     this.httpClient
-      .get<string>(`${environment.apiUrl}/statistics/count/articles-reviewed`)
+      .get<string>(`${environment.apiUrl}/article/count/replacements/reviewed`)
       .subscribe(res => {
         this.numReviewedArticles = res;
       });

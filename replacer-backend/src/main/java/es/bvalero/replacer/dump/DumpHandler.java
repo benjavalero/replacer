@@ -3,7 +3,6 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.intellij.lang.annotations.RegExp;
-import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import java.time.Instant;
 @Component
 class DumpHandler extends DefaultHandler {
 
-    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpHandler.class);
     private static final String TITLE_TAG = "title";
     private static final String NAMESPACE_TAG = "ns";
@@ -69,7 +67,7 @@ class DumpHandler extends DefaultHandler {
 
     @Override
     public void startDocument() {
-        LOGGER.info("Start parsing dump document...");
+        LOGGER.info("Start dump document");
 
         running = true;
         numArticlesRead = 0L;
@@ -79,7 +77,7 @@ class DumpHandler extends DefaultHandler {
 
     @Override
     public void endDocument() {
-        LOGGER.info("Finished parsing dump document...");
+        LOGGER.info("End dump document");
 
         running = false;
         dumpArticleProcessor.finish();
@@ -144,7 +142,7 @@ class DumpHandler extends DefaultHandler {
                 numArticlesProcessed++;
             }
         } catch (Exception e) {
-            LOGGER.error("Error processing article: {}", currentTitle, e);
+            LOGGER.error("Error processing dump page: {}", currentTitle, e);
         }
     }
 

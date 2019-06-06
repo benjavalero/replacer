@@ -1,7 +1,6 @@
 package es.bvalero.replacer.dump;
 
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,6 @@ import java.util.stream.Stream;
 class DumpManager {
 
     static final String DUMP_NAME_FORMAT = "eswiki-%s-pages-articles.xml.bz2";
-    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpManager.class);
     private static final String REGEX_DUMP_FOLDER = "\\d+";
     private static final Pattern PATTERN_DUMP_FOLDER = Pattern.compile(REGEX_DUMP_FOLDER);
@@ -58,6 +56,7 @@ class DumpManager {
      */
     @Scheduled(fixedDelay = 7 * 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
     void processDumpScheduled() {
+        LOGGER.info("Execute scheduled weekly index of the last dump");
         processLatestDumpFile(false);
     }
 
@@ -68,22 +67,23 @@ class DumpManager {
      *                                 last processing.
      */
     void processLatestDumpFile(boolean forceProcessDumpArticles) {
-        LOGGER.info("Start processing latest dump file. Force article process: {}", forceProcessDumpArticles);
+        LOGGER.info("Index latest dump file. Force: {}", forceProcessDumpArticles);
 
         // Check just in case the handler is already running
         if (dumpHandler.isRunning()) {
-            LOGGER.info("Dump indexation is already running");
+            LOGGER.info("Dump indexation is already running. Quit.");
             return;
         }
 
         try {
+            LOGGER.info("Find latest dump file");
             Path latestDumpFileFound = findLatestDumpFile();
-            LOGGER.info("Latest dump file found: {}", latestDumpFileFound);
+            LOGGER.info("Found latest dump file: {}", latestDumpFileFound);
 
             parseDumpFile(latestDumpFileFound, forceProcessDumpArticles);
-            LOGGER.info("Finished processing latest dump file: {}", latestDumpFileFound);
+            LOGGER.info("Finished dump indexation");
         } catch (DumpException e) {
-            LOGGER.error("Error processing last dump file", e);
+            LOGGER.error("Error indexing dump", e);
         }
     }
 
@@ -107,6 +107,7 @@ class DumpManager {
     }
 
     private List<Path> findDumpFolders() throws DumpException {
+        LOGGER.info("Find dump folders in path: {}", dumpFolderPath);
         try (Stream<Path> dumpSubPaths = Files.list(Paths.get(dumpFolderPath))) {
             List<Path> dumpSubFolders = dumpSubPaths
                     .filter(folder -> PATTERN_DUMP_FOLDER.matcher(folder.getFileName().toString()).matches())
@@ -123,17 +124,16 @@ class DumpManager {
 
     @Async
     void parseDumpFile(Path dumpFile, boolean forceProcess) throws DumpException {
-        LOGGER.info("Start parsing dump file: {}...", dumpFile);
+        LOGGER.info("Parse dump file: {}. Force: {}", dumpFile, forceProcess);
 
         try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile))) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
-            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, false);
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             SAXParser saxParser = factory.newSAXParser();
 
             dumpHandler.setLatestDumpFile(dumpFile);
             dumpHandler.setForceProcess(forceProcess);
             saxParser.parse(xmlInput, dumpHandler);
-            LOGGER.info("Finished parsing dump file: {}", dumpFile);
         } catch (IOException e) {
             throw new DumpException("Dump file not valid", e);
         } catch (ParserConfigurationException | SAXException e) {

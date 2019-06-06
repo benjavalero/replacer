@@ -7,7 +7,6 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ArticleReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementFinder;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,6 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
 
     static final String MISSPELLING_TYPE = "MISSPELLING";
 
-    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingFinder.class);
     private static final RunAutomaton WORD_AUTOMATON = new RunAutomaton(new RegExp("(<L>|[-'])+")
             .toAutomaton(new DatatypesAutomatonProvider()));
@@ -56,7 +54,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
     }
 
     private Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
-        LOGGER.info("Start building misspelling map...");
+        LOGGER.info("Build misspelling map");
 
         // Build a map to quick access the misspellings by word
         Map<String, Misspelling> map = new HashMap<>(misspellings.size());
@@ -71,7 +69,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
             }
         });
 
-        LOGGER.info("End building misspelling map");
+        LOGGER.info("Built misspelling map: {}", map.size());
         return map;
     }
 

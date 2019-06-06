@@ -6,7 +6,6 @@ import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,6 @@ import java.util.*;
 @Component
 class DumpArticleProcessor {
 
-    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpArticleProcessor.class);
     private static final Collection<WikipediaNamespace> PROCESSABLE_NAMESPACES =
             EnumSet.of(WikipediaNamespace.ARTICLE, WikipediaNamespace.ANNEX);
@@ -42,10 +40,10 @@ class DumpArticleProcessor {
     }
 
     boolean processArticle(WikipediaPage dumpArticle, boolean forceProcess) {
-        LOGGER.debug("Processing article: {}...", dumpArticle.getTitle());
+        LOGGER.debug("Process dump article: {}. Force: {}", dumpArticle.getTitle(), forceProcess);
 
         if (!isDumpArticleProcessable(dumpArticle)) {
-            LOGGER.debug("Article not processable by namespace or content");
+            LOGGER.debug("Dump article not processable by namespace or content");
             return false;
         }
 
@@ -57,19 +55,18 @@ class DumpArticleProcessor {
 
         if (!dbReplacements.isEmpty()
                 && !isArticleProcessableByTimestamp(dumpArticle.getTimestamp(), dbLastUpdate, forceProcess)) {
-            LOGGER.debug("Article not processable by date. Dump date: {} -  DB date: {}",
+            LOGGER.debug("Dump article not processable by date. Dump date: {}. DB date: {}",
                     dumpArticle.getTimestamp(), dbLastUpdate);
             return false;
         }
 
-        // Find replacements
+        LOGGER.debug("Find replacements in dump article");
         List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(dumpArticle.getContent());
+        LOGGER.debug("Found replacements in dump article: {}", articleReplacements.size());
 
         if (articleReplacements.isEmpty()) {
-            LOGGER.debug("No replacements found");
             articleService.deleteNotReviewedReplacements(dumpArticle.getId());
         } else {
-            LOGGER.debug("Indexing found replacements...");
             cache.indexArticleReplacements(dumpArticle, articleReplacements);
         }
 
@@ -104,7 +101,7 @@ class DumpArticleProcessor {
         private Collection<Replacement> toIndex = new HashSet<>(CACHE_SIZE * 10);
 
         Collection<Replacement> findReplacementsByArticleId(int id) {
-            if (replacementMap == null) {
+            if (replacementMap == null || replacementMap.isEmpty()) {
                 loadCache(id);
             }
 
@@ -123,6 +120,7 @@ class DumpArticleProcessor {
         }
 
         private void loadCache(int id) {
+            LOGGER.debug("Load replacements from database to cache. Min ID: {}", id);
             // Load the cache of database articles
             // The first time we load the cache with the first 1000 articles
             int minId = replacementMap == null ? 0 : id - 1;
@@ -132,6 +130,7 @@ class DumpArticleProcessor {
         }
 
         private void cleanCache() {
+            LOGGER.debug("Flush replacement modifications to database");
             // Clear the cache if obsolete (we assume the dump articles are in order)
             // The remaining cached articles are not in the dump so we remove them from DB
             articleService.deleteArticles(replacementMap.keySet());
@@ -139,6 +138,7 @@ class DumpArticleProcessor {
 
             // Send all replacements to index
             articleService.indexReplacements(toIndex);
+            toIndex = new HashSet<>(CACHE_SIZE * 10);
         }
 
     }

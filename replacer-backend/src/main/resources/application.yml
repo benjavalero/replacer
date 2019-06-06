@@ -33,6 +33,8 @@ spring:
   profiles: offline
   datasource:
     platform: h2
+  output:
+    ansi.enabled: ALWAYS
 
 logging:
   level:

@@ -8,7 +8,6 @@ import es.bvalero.replacer.finder.IgnoredReplacementFinder;
 import es.bvalero.replacer.finder.MatchResult;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,6 @@ import java.util.Set;
 @Component
 public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredReplacementFinder, PropertyChangeListener {
 
-    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(UppercaseAfterFinder.class);
 
     @org.intellij.lang.annotations.RegExp
@@ -58,7 +56,7 @@ public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredRe
     }
 
     private RunAutomaton buildUppercaseAfterAutomaton(Set<Misspelling> misspellings) {
-        LOGGER.info("Start building uppercaseAfter automaton...");
+        LOGGER.info("Build uppercase-after automaton");
 
         // Load the misspellings
         misspellings.forEach(misspelling -> {
@@ -74,7 +72,7 @@ public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredRe
         String regexAlternations = String.format(REGEX_UPPERCASE_AFTER_PUNCTUATION, StringUtils.join(this.uppercaseWords, "|"));
         RunAutomaton automaton = new RunAutomaton(new RegExp(regexAlternations).toAutomaton(new DatatypesAutomatonProvider()));
 
-        LOGGER.info("End building uppercaseAfter automaton");
+        LOGGER.info("Built uppercase-after automaton");
         return automaton;
     }
 

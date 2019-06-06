@@ -3,7 +3,6 @@ package es.bvalero.replacer.misspelling;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import java.util.stream.Stream;
 @Service
 public class MisspellingManager {
 
-    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingManager.class);
     private static final String CASE_SENSITIVE_VALUE = "cs";
     private static final int MISSPELLING_ESTIMATED_COUNT = 20000;
@@ -52,23 +50,23 @@ public class MisspellingManager {
      */
     @Scheduled(fixedDelay = 3600 * 24 * 1000)
     public void updateMisspellings() {
-        LOGGER.info("Scheduled misspellings update...");
+        LOGGER.info("Execute scheduled daily update of misspellings");
         try {
             setMisspellings(findWikipediaMisspellings());
+            LOGGER.info("Number of misspellings after update: {}", misspellings.size());
         } catch (WikipediaException e) {
-            LOGGER.error("Error loading misspellings list from Wikipedia", e);
+            LOGGER.error("Error updating misspelling list", e);
         }
     }
 
     private Set<Misspelling> findWikipediaMisspellings() throws WikipediaException {
-        LOGGER.info("Start loading misspelling list from Wikipedia...");
+        LOGGER.info("Load misspellings from Wikipedia");
         String misspellingListText = wikipediaService.getMisspellingListPageContent();
-        Set<Misspelling> misspellingSet = parseMisspellingListText(misspellingListText);
-        LOGGER.info("End parsing misspelling list from Wikipedia: {} items", misspellingSet.size());
-        return misspellingSet;
+        return parseMisspellingListText(misspellingListText);
     }
 
     Set<Misspelling> parseMisspellingListText(String misspellingListText) {
+        LOGGER.info("Parse content of misspelling article");
         Set<Misspelling> misspellingSet = new HashSet<>(MISSPELLING_ESTIMATED_COUNT);
 
         // We maintain a temporary set of words to find soft duplicates (only the word)
@@ -104,7 +102,7 @@ public class MisspellingManager {
                         .build();
             }
         } else {
-            LOGGER.warn("Bad formatted misspelling line: {}", misspellingLine);
+            LOGGER.warn("Wrong format in misspelling: {}", misspellingLine);
         }
 
         return misspelling;

@@ -6,6 +6,8 @@ import com.github.scribejava.apis.MediaWikiApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth10aService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 @Profile("default")
 public class AuthenticationServiceImpl implements AuthenticationService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
     private static final String WIKIPEDIA_API_URL = "https://es.wikipedia.org/w/api.php";
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
@@ -43,6 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public JsonNode executeOAuthRequest(Map<String, String> params, OAuth1AccessToken accessToken)
             throws AuthenticationException {
+        LOGGER.debug("Execute OAuth request with params: {}", params);
         OAuthRequest request = createOAuthRequestWithParams(params);
         signOAuthRequest(request, accessToken);
         return executeOAuthRequest(request);
@@ -77,6 +81,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         try {
             Response response = getOAuthService().execute(request);
             if (response.isSuccessful() && response.getBody() != null) {
+                LOGGER.debug("OAuth response body: {}", response.getBody());
                 return JSON_MAPPER.readTree(response.getBody());
             } else {
                 throw new AuthenticationException(String.format("Call not successful: %d - %s", response.getCode(), response.getMessage()));

@@ -1,6 +1,8 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import java.util.Optional;
 @Service
 @Profile("offline")
 class WikipediaServiceOfflineImpl implements WikipediaService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WikipediaServiceOfflineImpl.class);
 
     @Override
     public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
@@ -46,6 +50,7 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     private String loadArticleContent(String fileName) throws WikipediaException {
+        LOGGER.info("Load fake content from file: {}", fileName);
         try {
             return new String(Files.readAllBytes(Paths.get(getClass().getResource(fileName).toURI())),
                     StandardCharsets.UTF_8);

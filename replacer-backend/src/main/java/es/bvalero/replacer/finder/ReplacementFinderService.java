@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +10,8 @@ import java.util.List;
 
 @Service
 public class ReplacementFinderService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReplacementFinderService.class);
 
     @Autowired
     private List<ArticleReplacementFinder> articleReplacementFinders;
@@ -22,12 +26,14 @@ public class ReplacementFinderService {
      * If there are no replacements, the list will be empty.
      */
     public List<ArticleReplacement> findReplacements(String text) {
+        LOGGER.info("Find replacements in text");
         // Find the replacements in the text
         // LinkedList is better to run iterators and remove items from it
         List<ArticleReplacement> articleReplacements = new LinkedList<>();
         for (ArticleReplacementFinder finder : articleReplacementFinders) {
             articleReplacements.addAll(finder.findReplacements(text));
         }
+        LOGGER.info("Found potential replacements: {}", articleReplacements.size());
 
         // No need to find the exceptions if there are no replacements found
         if (articleReplacements.isEmpty()) {
@@ -44,6 +50,7 @@ public class ReplacementFinderService {
             }
         }
 
+        LOGGER.info("Return replacements after applying exceptions: {}", articleReplacements.size());
         return articleReplacements;
     }
 

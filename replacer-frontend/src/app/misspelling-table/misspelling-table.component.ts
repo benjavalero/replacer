@@ -50,7 +50,7 @@ export class MisspellingTableComponent implements OnInit {
   private findMisspellings() {
     this.httpClient
       .get<ReplacementCount[]>(
-        `${environment.apiUrl}/statistics/count/misspellings`
+        `${environment.apiUrl}/article/count/misspellings`
       )
       .subscribe(res => {
         this.misspellings = res;

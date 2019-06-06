@@ -9,6 +9,8 @@ import es.bvalero.replacer.finder.MatchResult;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,8 @@ import java.util.Set;
  */
 @Component
 public class FalsePositiveFinder extends ReplacementFinder implements IgnoredReplacementFinder, PropertyChangeListener {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinder.class);
 
     @Autowired
     private FalsePositiveManager falsePositiveManager;
@@ -52,8 +56,11 @@ public class FalsePositiveFinder extends ReplacementFinder implements IgnoredRep
     }
 
     private RunAutomaton buildFalsePositivesAutomaton(Set<String> falsePositives) {
+        LOGGER.info("Build false positive automaton");
         String alternations = String.format("(%s)", StringUtils.join(falsePositives, "|"));
-        return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
+        RunAutomaton automaton = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
+        LOGGER.info("Built false positive automaton");
+        return automaton;
     }
 
     @Override

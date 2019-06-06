@@ -2,7 +2,6 @@ package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import org.jetbrains.annotations.NonNls;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import java.util.stream.Stream;
 @Service
 public class FalsePositiveManager {
 
-    @NonNls
     private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveManager.class);
     private static final int FALSE_POSITIVE_ESTIMATED_COUNT = 1000;
 
@@ -50,23 +48,23 @@ public class FalsePositiveManager {
      */
     @Scheduled(fixedDelay = 3600 * 24 * 1000)
     public void updateFalsePositives() {
-        LOGGER.info("Scheduled false positives update...");
+        LOGGER.info("Execute scheduled daily update of false positives");
         try {
             setFalsePositives(findWikipediaFalsePositives());
+            LOGGER.info("Number of false positives after update: {}", falsePositives.size());
         } catch (WikipediaException e) {
-            LOGGER.error("Error loading false positive list from Wikipedia", e);
+            LOGGER.error("Error updating false positive list", e);
         }
     }
 
     private Set<String> findWikipediaFalsePositives() throws WikipediaException {
-        LOGGER.info("Start loading false positive list from Wikipedia...");
+        LOGGER.info("Load false positives from Wikipedia");
         String falsePositiveListText = wikipediaService.getFalsePositiveListPageContent();
-        Set<String> falsePositiveSet = parseFalsePositiveListText(falsePositiveListText);
-        LOGGER.info("End parsing false positive list from Wikipedia: {} items", falsePositiveSet.size());
-        return falsePositiveSet;
+        return parseFalsePositiveListText(falsePositiveListText);
     }
 
     private Set<String> parseFalsePositiveListText(String falsePositivesListText) {
+        LOGGER.info("Parse content of false positive article");
         Set<String> falsePositivesList = new HashSet<>(FALSE_POSITIVE_ESTIMATED_COUNT);
 
         Stream<String> stream = new BufferedReader(new StringReader(falsePositivesListText)).lines();
