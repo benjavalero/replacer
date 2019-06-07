@@ -11,11 +11,11 @@ import java.util.Objects;
  * A replacement in the database related to an article.
  */
 @Entity
-@Table(name = "replacement2")
+@Table(name = "replacement2",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"articleId", "type", "subtype", "position"}))
 public class Replacement implements Serializable {
 
     private static final long serialVersionUID = -6766305982117992712L;
-    private static final int MIGRATED_POSITION = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -104,19 +104,6 @@ public class Replacement implements Serializable {
 
     boolean isFixed() {
         return this.status == ReplacementStatus.FIXED;
-    }
-
-    boolean isMigrated() {
-        return this.position == MIGRATED_POSITION;
-    }
-
-    Replacement migrate() {
-        Replacement newRep = new Replacement(articleId, type, subtype, MIGRATED_POSITION);
-        newRep.id = id;
-        newRep.status = status;
-        newRep.lastUpdate = lastUpdate;
-        newRep.reviewer = reviewer;
-        return newRep;
     }
 
     boolean isSame(Replacement that) {

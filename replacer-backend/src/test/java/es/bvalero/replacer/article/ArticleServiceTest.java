@@ -48,9 +48,7 @@ public class ArticleServiceTest {
         Replacement rep11 = new Replacement(2, "", "", 3);
         Replacement rep13 = new Replacement(2, "", "", 4);
         Replacement rep15 = new Replacement(2, "", "", 5);
-        Replacement rep17 = new Replacement(2, "", "A", 6);
-        Replacement rep19 = new Replacement(2, "", "B", 7);
-        List<Replacement> newReplacements = Arrays.asList(rep1, rep7, rep9, rep11, rep13, rep15, rep17, rep19);
+        List<Replacement> newReplacements = Arrays.asList(rep1, rep7, rep9, rep11, rep13, rep15);
 
         // DB replacements
         Replacement rep2 = new Replacement(1, "", "", 2)
@@ -59,24 +57,17 @@ public class ArticleServiceTest {
                 .withStatus(ReplacementStatus.REVIEWED); // Obsolete Reviewed => DO NOTHING
         Replacement rep4 = new Replacement(1, "", "", 4)
                 .withStatus(ReplacementStatus.FIXED); // Obsolete Fixed => DO NOTHING
-        Replacement rep5 = new Replacement(1, "", "A", 0)
-                .withStatus(ReplacementStatus.TO_REVIEW); // Obsolete Migrated To review => DELETE
-        Replacement rep6 = new Replacement(1, "", "B", 0)
-                .withStatus(ReplacementStatus.REVIEWED); // Obsolete Migrated Reviewed => DELETE
-        List<Replacement> dbReplacements1 = new ArrayList<>(Arrays.asList(rep2, rep3, rep4, rep5, rep6));
+        List<Replacement> dbReplacements1 = new ArrayList<>(Arrays.asList(rep2, rep3, rep4));
 
         Replacement rep8 = rep7.withStatus(ReplacementStatus.TO_REVIEW)
                 .withLastUpdate(rep7.getLastUpdate().minusDays(1)); // Existing To Review Older => UPDATE
         Replacement rep10 = rep9.withStatus(ReplacementStatus.TO_REVIEW); // Existing To Review Equal => DO NOTHING
         Replacement rep12 = rep11.withStatus(ReplacementStatus.REVIEWED); // Existing Reviewed => DO NOTHING
-        Replacement rep14 = rep13.withStatus(ReplacementStatus.FIXED); // Existing Fixed Equal => DO NOTHING
+        Replacement rep14 = rep13.withStatus(ReplacementStatus.FIXED)
+                .withLastUpdate(rep13.getLastUpdate().plusDays(1)); // Existing Fixed Newer => DO NOTHING
         Replacement rep16 = rep15.withStatus(ReplacementStatus.FIXED)
-                .withLastUpdate(rep15.getLastUpdate().minusDays(1)); // Existing Fixed Older => UPDATE
-        Replacement rep18 = rep17.withStatus(ReplacementStatus.TO_REVIEW)
-                .migrate(); // Existing To Review Migrated => DELETE + ADD NEW
-        Replacement rep20 = rep19.withStatus(ReplacementStatus.REVIEWED)
-                .migrate(); // Existing Reviewed Migrated => DELETE + ADD NEW REVIEWED
-        List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(rep8, rep10, rep12, rep14, rep16, rep18, rep20));
+                .withLastUpdate(rep15.getLastUpdate().minusDays(1)); // Existing Fixed Older => UPDATE STATUS
+        List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(rep8, rep10, rep12, rep14, rep16));
 
         dbReplacements1.addAll(dbReplacements2);
         Set<Integer> articleIds = new HashSet<>(Arrays.asList(1, 2));
@@ -87,14 +78,12 @@ public class ArticleServiceTest {
 
 
         Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(
-                new HashSet<>(Arrays.asList(rep2, rep5, rep6, rep18, rep20))
+                new HashSet<>(Collections.singletonList(rep2))
         );
         Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
                 new HashSet<>(Arrays.asList(rep1,
                         rep8.withLastUpdate(rep7.getLastUpdate()),
-                        rep16.withLastUpdate(rep15.getLastUpdate()),
-                        rep17,
-                        rep19.withStatus(ReplacementStatus.REVIEWED)))
+                        rep16.withLastUpdate(rep15.getLastUpdate()).withStatus(ReplacementStatus.TO_REVIEW)))
         );
     }
 

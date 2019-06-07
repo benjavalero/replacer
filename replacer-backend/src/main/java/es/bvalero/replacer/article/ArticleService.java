@@ -79,24 +79,13 @@ public class ArticleService {
                 handleExistingReplacement(replacement, existing.get());
                 dbReplacements.remove(existing.get());
             } else {
-                // Find if the replacement already exists in the database but migrated
-                Optional<Replacement> migrated = findSameReplacementInCollection(replacement.migrate(), dbReplacements);
-                if (migrated.isPresent()) {
-                    handleExistingMigratedReplacement(replacement, migrated.get());
-                } else {
-                    // New replacement
-                    addReplacement(replacement);
-                }
+                // New replacement
+                addReplacement(replacement);
             }
         }
 
         // Remove the remaining replacements
-        for (Replacement dbReplacement : dbReplacements) {
-            if (dbReplacement.isToBeReviewed()
-                    || (dbReplacement.isReviewed() && dbReplacement.isMigrated())) {
-                deleteReplacement(dbReplacement);
-            }
-        }
+        dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(this::deleteReplacement);
     }
 
     private Optional<Replacement> findSameReplacementInCollection(Replacement replacement, Collection<Replacement> replacements) {
@@ -104,17 +93,10 @@ public class ArticleService {
     }
 
     private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement) {
-        if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())
-                && (dbReplacement.isToBeReviewed() || dbReplacement.isFixed())) {
-            updateReplacementDate(dbReplacement, newReplacement.getLastUpdate());
-        }
-    }
-
-    private void handleExistingMigratedReplacement(Replacement newReplacement, Replacement dbMigrated) {
-        if (dbMigrated.isToBeReviewed()) {
-            addReplacement(newReplacement);
-        } else if (dbMigrated.isReviewed()) {
-            addReplacement(newReplacement.withStatus(ReplacementStatus.REVIEWED));
+        if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())) {
+            addReplacement(dbReplacement
+                    .withLastUpdate(newReplacement.getLastUpdate())
+                    .withStatus(ReplacementStatus.TO_REVIEW));
         }
     }
 
@@ -137,10 +119,6 @@ public class ArticleService {
 
     private void deleteReplacement(Replacement replacement) {
         toDelete.add(replacement);
-    }
-
-    private void updateReplacementDate(Replacement replacement, LocalDate lastUpdate) {
-        toSave.add(replacement.withLastUpdate(lastUpdate));
     }
 
     public Collection<Replacement> convertArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
