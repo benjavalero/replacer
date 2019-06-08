@@ -3,6 +3,7 @@ package es.bvalero.replacer.misspelling;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,28 +89,24 @@ public class MisspellingManager {
         return misspellingSet;
     }
 
-    private Misspelling parseMisspellingLine(String misspellingLine) {
-        Misspelling misspelling = null;
+    private @Nullable Misspelling parseMisspellingLine(String misspellingLine) {
+        Misspelling misspelling;
 
         String[] tokens = misspellingLine.split("\\|");
         if (tokens.length == 3) {
             String word = tokens[0].trim();
-            if (isMisspellingWordValid(word)) {
-                misspelling = Misspelling.builder()
-                        .setWord(word)
-                        .setCaseSensitive(CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim()))
-                        .setComment(tokens[2].trim())
-                        .build();
-            }
+            String comment = tokens[2].trim();
+            misspelling = Misspelling.builder()
+                    .setWord(word)
+                    .setCaseSensitive(CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim()))
+                    .setComment(comment)
+                    .build();
         } else {
             LOGGER.warn("Wrong format in misspelling: {}", misspellingLine);
+            return null;
         }
 
         return misspelling;
-    }
-
-    private boolean isMisspellingWordValid(String word) {
-        return word.chars().allMatch(c -> Character.isLetter(c) || c == '\'' || c == '-');
     }
 
 }
