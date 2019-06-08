@@ -39,18 +39,29 @@ public class ArticleServiceTest {
     }
 
     @Test
-    public void testIndexArticleReplacements() {
-        // New replacements
+    public void testIndexNewArticle() {
         Replacement rep1 = new Replacement(1, "", "", 1); // New => ADD
+        List<Replacement> newReplacements = Collections.singletonList(rep1);
 
-        Replacement rep7 = new Replacement(2, "", "", 1);
-        Replacement rep9 = new Replacement(2, "", "", 2);
-        Replacement rep11 = new Replacement(2, "", "", 3);
-        Replacement rep13 = new Replacement(2, "", "", 4);
-        Replacement rep15 = new Replacement(2, "", "", 5);
-        List<Replacement> newReplacements = Arrays.asList(rep1, rep7, rep9, rep11, rep13, rep15);
+        List<Replacement> dbReplacements1 = Collections.emptyList();
 
-        // DB replacements
+
+        articleService.indexArticleReplacements(newReplacements, dbReplacements1, true);
+        articleService.flushReplacements();
+
+
+        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(
+                Collections.emptySet()
+        );
+        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
+                Collections.singleton(rep1)
+        );
+    }
+
+    @Test
+    public void testIndexObsoleteArticle() {
+        List<Replacement> newReplacements = Collections.emptyList();
+
         Replacement rep2 = new Replacement(1, "", "", 2)
                 .withStatus(ReplacementStatus.TO_REVIEW); // Obsolete To review => DELETE
         Replacement rep3 = new Replacement(1, "", "", 3)
@@ -58,6 +69,28 @@ public class ArticleServiceTest {
         Replacement rep4 = new Replacement(1, "", "", 4)
                 .withStatus(ReplacementStatus.FIXED); // Obsolete Fixed => DO NOTHING
         List<Replacement> dbReplacements1 = new ArrayList<>(Arrays.asList(rep2, rep3, rep4));
+
+
+        articleService.indexArticleReplacements(newReplacements, dbReplacements1, true);
+        articleService.flushReplacements();
+
+
+        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(
+                Collections.singleton(rep2)
+        );
+        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
+                Collections.emptySet()
+        );
+    }
+
+    @Test
+    public void testIndexExistingArticle() {
+        Replacement rep7 = new Replacement(2, "", "", 1);
+        Replacement rep9 = new Replacement(2, "", "", 2);
+        Replacement rep11 = new Replacement(2, "", "", 3);
+        Replacement rep13 = new Replacement(2, "", "", 4);
+        Replacement rep15 = new Replacement(2, "", "", 5);
+        List<Replacement> newReplacements = Arrays.asList(rep7, rep9, rep11, rep13, rep15);
 
         Replacement rep8 = rep7.withStatus(ReplacementStatus.TO_REVIEW)
                 .withLastUpdate(rep7.getLastUpdate().minusDays(1)); // Existing To Review Older => UPDATE
@@ -69,19 +102,16 @@ public class ArticleServiceTest {
                 .withLastUpdate(rep15.getLastUpdate().minusDays(1)); // Existing Fixed Older => UPDATE STATUS
         List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(rep8, rep10, rep12, rep14, rep16));
 
-        dbReplacements1.addAll(dbReplacements2);
-        Set<Integer> articleIds = new HashSet<>(Arrays.asList(1, 2));
-        Mockito.when(replacementRepository.findByArticleIdIn(articleIds)).thenReturn(dbReplacements1);
 
-
-        articleService.indexReplacements(newReplacements);
+        articleService.indexArticleReplacements(newReplacements, dbReplacements2, true);
+        articleService.flushReplacements();
 
 
         Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(
-                new HashSet<>(Collections.singletonList(rep2))
+                Collections.emptySet()
         );
         Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
-                new HashSet<>(Arrays.asList(rep1,
+                new HashSet<>(Arrays.asList(
                         rep8.withLastUpdate(rep7.getLastUpdate()),
                         rep16.withLastUpdate(rep15.getLastUpdate()).withStatus(ReplacementStatus.TO_REVIEW)))
         );

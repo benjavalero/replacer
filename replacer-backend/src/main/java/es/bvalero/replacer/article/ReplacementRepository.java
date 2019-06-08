@@ -17,13 +17,14 @@ import java.util.Set;
 @Transactional
 interface ReplacementRepository extends JpaRepository<Replacement, Long>, ReplacementRepositoryCustom {
 
-    List<Replacement> findByArticleIdIn(Set<Integer> articleIds);
+    List<Replacement> findByArticleId(int articleId);
 
     List<Replacement> findByArticleIdAndStatus(int articleId, ReplacementStatus status);
 
     void deleteByArticleIdIn(Set<Integer> articleIds);
 
-    List<Replacement> findByArticleIdGreaterThanOrderById(Integer minArticleId, Pageable pageable);
+    @Query("SELECT new es.bvalero.replacer.article.ArticleTimestamp(articleId, MAX(lastUpdate)) FROM Replacement WHERE articleId BETWEEN :minId AND :maxId GROUP BY articleId")
+    List<ArticleTimestamp> findMaxLastUpdate(@Param("minId") int minArticleId, @Param("maxId") int maxArticleId);
 
     void deleteByArticleIdAndStatus(int articleId, ReplacementStatus status);
 

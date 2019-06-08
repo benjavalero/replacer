@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.ArticleService;
-import es.bvalero.replacer.article.Replacement;
+import es.bvalero.replacer.article.ArticleTimestamp;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
@@ -47,14 +47,9 @@ class DumpArticleProcessor {
             return false;
         }
 
-        Collection<Replacement> dbReplacements = cache.findReplacementsByArticleId(dumpArticle.getId());
-
-        LocalDate dbLastUpdate = dbReplacements.stream()
-                .map(Replacement::getLastUpdate)
-                .max(Comparator.comparing(LocalDate::toEpochDay)).orElse(LocalDate.now());
-
-        if (!dbReplacements.isEmpty()
-                && !isArticleProcessableByTimestamp(dumpArticle.getTimestamp(), dbLastUpdate, forceProcess)) {
+        Optional<LocalDate> dbLastUpdate = cache.findArticleLastUpdate(dumpArticle.getId());
+        if (dbLastUpdate.isPresent()
+                && !isArticleProcessableByTimestamp(dumpArticle.getTimestamp(), dbLastUpdate.get(), forceProcess)) {
             LOGGER.debug("Dump article not processable by date. Dump date: {}. DB date: {}",
                     dumpArticle.getTimestamp(), dbLastUpdate);
             return false;
@@ -62,12 +57,12 @@ class DumpArticleProcessor {
 
         LOGGER.debug("Find replacements in dump article");
         List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(dumpArticle.getContent());
-        LOGGER.debug("Found replacements in dump article: {}", articleReplacements.size());
 
         if (articleReplacements.isEmpty()) {
+            LOGGER.debug("No replacements found in dump article. Delete replacements pending to be reviewed.");
             articleService.deleteNotReviewedReplacements(dumpArticle.getId());
         } else {
-            cache.indexArticleReplacements(dumpArticle, articleReplacements);
+            articleService.indexArticleReplacements(dumpArticle, articleReplacements, true);
         }
 
         return true;
@@ -90,55 +85,44 @@ class DumpArticleProcessor {
     void finish() {
         // The remaining cached articles are not in the dump so we remove them from DB
         cache.cleanCache();
+        articleService.flushReplacements();
     }
 
     private class DumpArticleCache {
 
         private static final int CACHE_SIZE = 1000;
-        private Map<Integer, Collection<Replacement>> replacementMap;
-        private int maxCachedId = 0;
+        private Map<Integer, LocalDate> articleTimestamps = new HashMap<>(CACHE_SIZE);
+        private int maxCachedId;
 
-        private Collection<Replacement> toIndex = new HashSet<>(CACHE_SIZE * 10);
-
-        Collection<Replacement> findReplacementsByArticleId(int id) {
-            if (replacementMap == null || replacementMap.isEmpty()) {
+        Optional<LocalDate> findArticleLastUpdate(int id) {
+            if (articleTimestamps.isEmpty()) {
                 loadCache(id);
             }
 
-            Collection<Replacement> replacements = replacementMap.get(id);
-            replacementMap.remove(id); // No need to check if the ID exists
+            LocalDate lastUpdate = articleTimestamps.get(id);
+            articleTimestamps.remove(id); // No need to check if the ID exists
 
             if (id >= maxCachedId) {
                 cleanCache();
             }
 
-            return replacements == null ? Collections.emptySet() : replacements;
-        }
-
-        void indexArticleReplacements(WikipediaPage dumpArticle, Collection<ArticleReplacement> articleReplacements) {
-            toIndex.addAll(articleService.convertArticleReplacements(dumpArticle, articleReplacements));
+            return Optional.ofNullable(lastUpdate);
         }
 
         private void loadCache(int id) {
-            LOGGER.debug("Load replacements from database to cache. Min ID: {}", id);
-            // Load the cache of database articles
-            // The first time we load the cache with the first 1000 articles
-            int minId = replacementMap == null ? 0 : id - 1;
-            List<Replacement> replacements = articleService.findAllReplacementsWithArticleIdGreaterThan(minId, CACHE_SIZE);
-            replacementMap = articleService.buildReplacementMapByArticle(replacements);
-            maxCachedId = replacementMap.keySet().stream().max(Comparator.comparingInt(Integer::valueOf)).orElse(-1);
+            LOGGER.debug("Load timestamps from database to cache. Min ID: {}", id);
+            for (ArticleTimestamp timestamp : articleService.findMaxLastUpdateByArticleIdIn(id, id + CACHE_SIZE - 1)) {
+                articleTimestamps.put(timestamp.getArticleId(), timestamp.getLastUpdate());
+            }
+            maxCachedId = articleTimestamps.keySet().stream().max(Comparator.comparingInt(Integer::valueOf)).orElse(0);
         }
 
         private void cleanCache() {
-            LOGGER.debug("Flush replacement modifications to database");
             // Clear the cache if obsolete (we assume the dump articles are in order)
             // The remaining cached articles are not in the dump so we remove them from DB
-            articleService.deleteArticles(replacementMap.keySet());
-            replacementMap = new HashMap<>(CACHE_SIZE);
-
-            // Send all replacements to index
-            articleService.indexReplacements(toIndex);
-            toIndex = new HashSet<>(CACHE_SIZE * 10);
+            LOGGER.debug("Delete obsolete articles in DB: {}", articleTimestamps.size());
+            articleService.deleteArticles(articleTimestamps.keySet());
+            articleTimestamps = new HashMap<>(CACHE_SIZE);
         }
 
     }

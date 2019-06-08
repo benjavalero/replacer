@@ -28,6 +28,7 @@ public class ArticleService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
     private static final String DEFAULT_REVIEWER = "system";
+    private static final int BATCH_SIZE = 1000;
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -45,62 +46,47 @@ public class ArticleService {
     private Collection<Replacement> toSave = new HashSet<>();
     private Collection<Replacement> toDelete = new HashSet<>();
 
-    public void indexReplacements(Collection<Replacement> replacements) {
-        LOGGER.debug("Index replacements: {}", replacements);
-        Map<Integer, Collection<Replacement>> replacementsByArticle = buildReplacementMapByArticle(replacements);
-
-        List<Replacement> dbReplacements = replacementRepository.findByArticleIdIn(replacementsByArticle.keySet());
-        Map<Integer, Collection<Replacement>> dbReplacementsByArticle = buildReplacementMapByArticle(dbReplacements);
-
-        replacementsByArticle.forEach((key, value) ->
-                indexArticleReplacements(value, dbReplacementsByArticle.getOrDefault(key, Collections.emptySet())));
-
-        flushReplacements();
+    public void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements,
+                                         boolean batch) {
+        LOGGER.debug("Index replacements for article: {}", article.getId());
+        indexArticleReplacements(
+                convertArticleReplacements(article, articleReplacements),
+                replacementRepository.findByArticleId(article.getId()),
+                batch);
     }
 
-    public Map<Integer, Collection<Replacement>> buildReplacementMapByArticle(Collection<Replacement> replacements) {
-        Map<Integer, Collection<Replacement>> map = new TreeMap<>();
-        for (Replacement replacement : replacements) {
-            int articleId = replacement.getArticleId();
-            if (!map.containsKey(articleId)) {
-                map.put(articleId, new HashSet<>());
-            }
-            map.get(articleId).add(replacement);
-        }
-        return map;
-    }
-
-    private void indexArticleReplacements(Collection<Replacement> replacements, Collection<Replacement> dbReplacements) {
-        LOGGER.debug("Index replacements. New: {}. Old: {}", replacements, dbReplacements);
-        for (Replacement replacement : replacements) {
-            // Find if the replacement already exists in the database
+    void indexArticleReplacements(Collection<Replacement> replacements, Collection<Replacement> dbReplacements,
+                                  boolean batch) {
+        LOGGER.debug("Index replacements in DB. New: {}. Old: {}", replacements.size(), dbReplacements.size());
+        replacements.forEach(replacement -> {
             Optional<Replacement> existing = findSameReplacementInCollection(replacement, dbReplacements);
             if (existing.isPresent()) {
-                handleExistingReplacement(replacement, existing.get());
+                handleExistingReplacement(replacement, existing.get(), batch);
                 dbReplacements.remove(existing.get());
             } else {
                 // New replacement
-                addReplacement(replacement);
+                saveReplacement(replacement, batch);
             }
-        }
+        });
 
         // Remove the remaining replacements
-        dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(this::deleteReplacement);
+        dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(rep -> deleteReplacement(rep, batch));
     }
 
     private Optional<Replacement> findSameReplacementInCollection(Replacement replacement, Collection<Replacement> replacements) {
         return replacements.stream().filter(rep -> rep.isSame(replacement)).findFirst();
     }
 
-    private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement) {
+    private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement, boolean batch) {
         if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())) {
-            addReplacement(dbReplacement
+            saveReplacement(dbReplacement
                     .withLastUpdate(newReplacement.getLastUpdate())
-                    .withStatus(ReplacementStatus.TO_REVIEW));
+                    .withStatus(ReplacementStatus.TO_REVIEW), batch);
         }
     }
 
-    private void flushReplacements() {
+    public void flushReplacements() {
+        LOGGER.debug("Save and delete replacements in database. To save: {}. To delete: {}", toSave.size(), toDelete.size());
         replacementRepository.deleteInBatch(toDelete);
         replacementRepository.saveAll(toSave);
 
@@ -113,15 +99,29 @@ public class ArticleService {
         replacementRepository.clear(); // This clears all the EntityManager
     }
 
-    private void addReplacement(Replacement replacement) {
-        toSave.add(replacement);
+    private void saveReplacement(Replacement replacement, boolean batch) {
+        if (batch) {
+            toSave.add(replacement);
+            if (toSave.size() >= BATCH_SIZE) {
+                flushReplacements();
+            }
+        } else {
+            replacementRepository.save(replacement);
+        }
     }
 
-    private void deleteReplacement(Replacement replacement) {
-        toDelete.add(replacement);
+    private void deleteReplacement(Replacement replacement, boolean batch) {
+        if (batch) {
+            toDelete.add(replacement);
+            if (toDelete.size() >= BATCH_SIZE) {
+                flushReplacements();
+            }
+        } else {
+            replacementRepository.delete(replacement);
+        }
     }
 
-    public Collection<Replacement> convertArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
+    private Collection<Replacement> convertArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
         return articleReplacements.stream().map(
                 articleReplacement -> new Replacement(
                         article.getId(), articleReplacement.getType(), articleReplacement.getSubtype(), articleReplacement.getStart())
@@ -143,8 +143,9 @@ public class ArticleService {
             LOGGER.info("Found random replacement to review: {}", randomReplacement);
 
             try {
-                LOGGER.info("Retrieve page related to the replacement with ID: {}", randomReplacement.getArticleId());
-                WikipediaPage article = findArticleById(randomReplacement.getArticleId());
+                int articleId = randomReplacement.getArticleId();
+                LOGGER.info("Retrieve page related to the replacement with ID: {}", articleId);
+                WikipediaPage article = findArticleById(articleId);
 
                 LOGGER.info("Find replacements in article");
                 List<ArticleReplacement> articleReplacements = findArticleReplacements(article.getContent());
@@ -152,7 +153,7 @@ public class ArticleService {
 
                 // Index the found replacements to add the new ones and remove the obsolete ones from last index in DB
                 LOGGER.info("Update database with found replacements");
-                indexReplacements(convertArticleReplacements(article, articleReplacements));
+                indexArticleReplacements(article, articleReplacements, false);
 
                 // Build the article review if the replacements found are valid
                 // Note the DB has just been updated in case the word doesn't exist in the found replacements
@@ -217,8 +218,8 @@ public class ArticleService {
         replacementRepository.deleteByArticleIdAndStatus(articleId, ReplacementStatus.TO_REVIEW);
     }
 
-    public List<Replacement> findAllReplacementsWithArticleIdGreaterThan(Integer minArticleId, int numArticles) {
-        return replacementRepository.findByArticleIdGreaterThanOrderById(minArticleId, PageRequest.of(0, numArticles));
+    public List<ArticleTimestamp> findMaxLastUpdateByArticleIdIn(int minId, int maxId) {
+        return replacementRepository.findMaxLastUpdate(minId, maxId);
     }
 
     private boolean checkWordExistsInReplacements(@Nullable String word, List<ArticleReplacement> replacements) {
