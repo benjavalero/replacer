@@ -45,7 +45,11 @@ public class Replacement implements Serializable {
     @Column
     private String reviewer;
 
-    public Replacement(int articleId, String type, String subtype, int position) {
+    public Replacement() {
+        // Needed by JPA
+    }
+
+    Replacement(int articleId, String type, String subtype, int position) {
         this.articleId = articleId;
         this.type = type;
         this.subtype = subtype;
@@ -76,7 +80,7 @@ public class Replacement implements Serializable {
         return newRep;
     }
 
-    public Replacement withLastUpdate(LocalDate newLastUpdate) {
+    Replacement withLastUpdate(LocalDate newLastUpdate) {
         Replacement newRep = new Replacement(articleId, type, subtype, position);
         newRep.id = id;
         newRep.status = status;

@@ -56,10 +56,10 @@ public class FalsePositiveFinder extends ReplacementFinder implements IgnoredRep
     }
 
     private RunAutomaton buildFalsePositivesAutomaton(Set<String> falsePositives) {
-        LOGGER.info("Build false positive automaton");
+        LOGGER.info("Start building false positive automaton");
         String alternations = String.format("(%s)", StringUtils.join(falsePositives, "|"));
         RunAutomaton automaton = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
-        LOGGER.info("Built false positive automaton");
+        LOGGER.info("Finish building false positive automaton");
         return automaton;
     }
 

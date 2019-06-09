@@ -28,7 +28,6 @@ public class ArticleService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
     private static final String DEFAULT_REVIEWER = "system";
-    private static final int BATCH_SIZE = 1000;
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -43,88 +42,85 @@ public class ArticleService {
     private boolean trimText;
 
     // We use sets to compare easily in the unit tests
-    private Collection<Replacement> toSave = new HashSet<>();
-    private Collection<Replacement> toDelete = new HashSet<>();
+    private Collection<Replacement> toSaveInBatch = new HashSet<>();
+    private Collection<Replacement> toDeleteInBatch = new HashSet<>();
 
-    public void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements,
-                                         boolean batch) {
+    private void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
         LOGGER.debug("Index replacements for article: {}", article.getId());
-        indexArticleReplacements(
+        indexReplacements(
                 convertArticleReplacements(article, articleReplacements),
                 replacementRepository.findByArticleId(article.getId()),
-                batch);
+                false);
     }
 
-    void indexArticleReplacements(Collection<Replacement> replacements, Collection<Replacement> dbReplacements,
-                                  boolean batch) {
+    void indexReplacements(Collection<Replacement> replacements, Collection<Replacement> dbReplacements,
+                           boolean indexInBatch) {
         LOGGER.debug("Index replacements in DB. New: {}. Old: {}", replacements.size(), dbReplacements.size());
         replacements.forEach(replacement -> {
             Optional<Replacement> existing = findSameReplacementInCollection(replacement, dbReplacements);
             if (existing.isPresent()) {
-                handleExistingReplacement(replacement, existing.get(), batch);
+                handleExistingReplacement(replacement, existing.get(), indexInBatch);
                 dbReplacements.remove(existing.get());
             } else {
                 // New replacement
-                saveReplacement(replacement, batch);
+                saveReplacement(replacement, indexInBatch);
             }
         });
 
         // Remove the remaining replacements
-        dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(rep -> deleteReplacement(rep, batch));
+        dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(rep -> deleteReplacement(rep, indexInBatch));
     }
 
-    private Optional<Replacement> findSameReplacementInCollection(Replacement replacement, Collection<Replacement> replacements) {
+    private Optional<Replacement> findSameReplacementInCollection(Replacement replacement,
+                                                                  Collection<Replacement> replacements) {
         return replacements.stream().filter(rep -> rep.isSame(replacement)).findFirst();
     }
 
-    private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement, boolean batch) {
+    private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement, boolean indexInBatch) {
         if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())) {
             saveReplacement(dbReplacement
                     .withLastUpdate(newReplacement.getLastUpdate())
-                    .withStatus(ReplacementStatus.TO_REVIEW), batch);
+                    .withStatus(ReplacementStatus.TO_REVIEW), indexInBatch);
         }
     }
 
-    public void flushReplacements() {
-        LOGGER.debug("Save and delete replacements in database. To save: {}. To delete: {}", toSave.size(), toDelete.size());
-        replacementRepository.deleteInBatch(toDelete);
-        replacementRepository.saveAll(toSave);
+    void flushReplacementsInBatch() {
+        LOGGER.debug("Save and delete replacements in database. To save: {}. To delete: {}",
+                toSaveInBatch.size(), toDeleteInBatch.size());
+        replacementRepository.deleteInBatch(toDeleteInBatch);
+        replacementRepository.saveAll(toSaveInBatch);
 
         // Using .clear() the unit tests don't pass don't know why
-        toDelete = new HashSet<>();
-        toSave = new HashSet<>();
+        toDeleteInBatch = new HashSet<>();
+        toSaveInBatch = new HashSet<>();
 
         // Flush and clear to avoid memory leaks (we are performing millions of updates when indexing the dump)
         replacementRepository.flush();
         replacementRepository.clear(); // This clears all the EntityManager
     }
 
-    private void saveReplacement(Replacement replacement, boolean batch) {
-        if (batch) {
-            toSave.add(replacement);
-            if (toSave.size() >= BATCH_SIZE) {
-                flushReplacements();
-            }
+    private void saveReplacement(Replacement replacement, boolean saveInBatch) {
+        if (saveInBatch) {
+            toSaveInBatch.add(replacement);
         } else {
             replacementRepository.save(replacement);
         }
     }
 
-    private void deleteReplacement(Replacement replacement, boolean batch) {
-        if (batch) {
-            toDelete.add(replacement);
-            if (toDelete.size() >= BATCH_SIZE) {
-                flushReplacements();
-            }
+    private void deleteReplacement(Replacement replacement, boolean deleteInBatch) {
+        if (deleteInBatch) {
+            toDeleteInBatch.add(replacement);
         } else {
             replacementRepository.delete(replacement);
         }
     }
 
-    private Collection<Replacement> convertArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
+    private Collection<Replacement> convertArticleReplacements(WikipediaPage article,
+                                                               Collection<ArticleReplacement> articleReplacements) {
         return articleReplacements.stream().map(
                 articleReplacement -> new Replacement(
-                        article.getId(), articleReplacement.getType(), articleReplacement.getSubtype(), articleReplacement.getStart())
+                        article.getId(), articleReplacement.getType(), articleReplacement.getSubtype(),
+                        articleReplacement.getStart())
                         .withLastUpdate(article.getTimestamp()))
                 .collect(Collectors.toList());
     }
@@ -134,26 +130,21 @@ public class ArticleService {
     }
 
     ArticleReview findRandomArticleToReview(@Nullable String word) throws UnfoundArticleException {
-        LOGGER.info("Find random article to review. Filter by word: {}", word);
+        LOGGER.info("Start finding random article to review. Filter by word: {}", word);
         ArticleReview review = null;
         while (review == null) {
-            LOGGER.info("Find random replacement to review");
             Replacement randomReplacement = findRandomReplacementNotReviewedInDb(word)
                     .orElseThrow(() -> new UnfoundArticleException("No replacement found to be reviewed"));
             LOGGER.info("Found random replacement to review: {}", randomReplacement);
 
             try {
                 int articleId = randomReplacement.getArticleId();
-                LOGGER.info("Retrieve page related to the replacement with ID: {}", articleId);
                 WikipediaPage article = findArticleById(articleId);
-
-                LOGGER.info("Find replacements in article");
                 List<ArticleReplacement> articleReplacements = findArticleReplacements(article.getContent());
-                LOGGER.info("Found replacements in article: {}", articleReplacements.size());
 
                 // Index the found replacements to add the new ones and remove the obsolete ones from last index in DB
                 LOGGER.info("Update database with found replacements");
-                indexArticleReplacements(article, articleReplacements, false);
+                indexArticleReplacements(article, articleReplacements);
 
                 // Build the article review if the replacements found are valid
                 // Note the DB has just been updated in case the word doesn't exist in the found replacements
@@ -175,7 +166,7 @@ public class ArticleService {
             }
         }
 
-        LOGGER.info("Return article to review: {}", review.getTitle());
+        LOGGER.info("Finish finding random article to review: {}", review.getTitle());
         return review;
     }
 
@@ -211,11 +202,25 @@ public class ArticleService {
     }
 
     private void deleteArticle(int articleId) {
-        replacementRepository.deleteByArticleIdIn(Collections.singleton(articleId));
+        replacementRepository.deleteByArticleId(articleId);
     }
 
-    public void deleteNotReviewedReplacements(int articleId) {
-        replacementRepository.deleteByArticleIdAndStatus(articleId, ReplacementStatus.TO_REVIEW);
+    public void indexArticleReplacementsInBatch(Map<WikipediaPage, Collection<ArticleReplacement>> articleReplacements) {
+        // Retrieve all the replacements at a time for all the articles
+        List<Replacement> dbAllReplacements = replacementRepository.findByArticleIdIn(
+                articleReplacements.keySet().stream().map(WikipediaPage::getId).collect(Collectors.toSet())
+        );
+
+        for (Map.Entry<WikipediaPage, Collection<ArticleReplacement>> entry : articleReplacements.entrySet()) {
+            Collection<Replacement> pageReplacements = convertArticleReplacements(entry.getKey(), entry.getValue());
+            Collection<Replacement> dbReplacements = dbAllReplacements.stream()
+                    .filter(rep -> rep.getArticleId() == entry.getKey().getId())
+                    .collect(Collectors.toList());
+
+            indexReplacements(pageReplacements, dbReplacements, true);
+        }
+
+        flushReplacementsInBatch();
     }
 
     public List<ArticleTimestamp> findMaxLastUpdateByArticleIdIn(int minId, int maxId) {
@@ -257,7 +262,8 @@ public class ArticleService {
         // For the moment we need to retrieve the ID from the title
         try {
             wikipediaService.getPageByTitle(articleTitle).ifPresent(page ->
-                    replacementRepository.findByArticleIdAndStatus(page.getId(), ReplacementStatus.TO_REVIEW)
+                    replacementRepository.findByArticleId(page.getId()).stream()
+                            .filter(dbReplacement -> dbReplacement.getStatus() == ReplacementStatus.TO_REVIEW)
                             .forEach(this::fixReplacement));
             return true;
         } catch (WikipediaException e) {

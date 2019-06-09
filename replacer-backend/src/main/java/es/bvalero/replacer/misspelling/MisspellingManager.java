@@ -54,20 +54,20 @@ public class MisspellingManager {
         LOGGER.info("Execute scheduled daily update of misspellings");
         try {
             setMisspellings(findWikipediaMisspellings());
-            LOGGER.info("Number of misspellings after update: {}", misspellings.size());
         } catch (WikipediaException e) {
             LOGGER.error("Error updating misspelling list", e);
         }
     }
 
     private Set<Misspelling> findWikipediaMisspellings() throws WikipediaException {
-        LOGGER.info("Load misspellings from Wikipedia");
+        LOGGER.info("Start loading misspellings from Wikipedia");
         String misspellingListText = wikipediaService.getMisspellingListPageContent();
-        return parseMisspellingListText(misspellingListText);
+        Set<Misspelling> misspellingSet = parseMisspellingListText(misspellingListText);
+        LOGGER.info("Finish loading misspellings from Wikipedia: {} items", misspellingSet.size());
+        return misspellingSet;
     }
 
     Set<Misspelling> parseMisspellingListText(String misspellingListText) {
-        LOGGER.info("Parse content of misspelling article");
         Set<Misspelling> misspellingSet = new HashSet<>(MISSPELLING_ESTIMATED_COUNT);
 
         // We maintain a temporary set of words to find soft duplicates (only the word)
@@ -81,7 +81,7 @@ public class MisspellingManager {
                 if (words.add(misspelling.getWord())) {
                     misspellingSet.add(misspelling);
                 } else {
-                    LOGGER.warn("Duplicated misspelling term: {}", misspelling.getWord());
+                    LOGGER.warn("Duplicated misspelling: {}", misspelling.getWord());
                 }
             }
         });
@@ -102,7 +102,7 @@ public class MisspellingManager {
                     .setComment(comment)
                     .build();
         } else {
-            LOGGER.warn("Wrong format in misspelling: {}", misspellingLine);
+            LOGGER.warn("Bad formatted misspelling: {}", misspellingLine);
             return null;
         }
 

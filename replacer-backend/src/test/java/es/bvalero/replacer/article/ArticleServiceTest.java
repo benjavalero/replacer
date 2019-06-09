@@ -46,8 +46,8 @@ public class ArticleServiceTest {
         List<Replacement> dbReplacements1 = Collections.emptyList();
 
 
-        articleService.indexArticleReplacements(newReplacements, dbReplacements1, true);
-        articleService.flushReplacements();
+        articleService.indexReplacements(newReplacements, dbReplacements1, true);
+        articleService.flushReplacementsInBatch();
 
 
         Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(
@@ -71,8 +71,8 @@ public class ArticleServiceTest {
         List<Replacement> dbReplacements1 = new ArrayList<>(Arrays.asList(rep2, rep3, rep4));
 
 
-        articleService.indexArticleReplacements(newReplacements, dbReplacements1, true);
-        articleService.flushReplacements();
+        articleService.indexReplacements(newReplacements, dbReplacements1, true);
+        articleService.flushReplacementsInBatch();
 
 
         Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(
@@ -103,8 +103,8 @@ public class ArticleServiceTest {
         List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(rep8, rep10, rep12, rep14, rep16));
 
 
-        articleService.indexArticleReplacements(newReplacements, dbReplacements2, true);
-        articleService.flushReplacements();
+        articleService.indexReplacements(newReplacements, dbReplacements2, true);
+        articleService.flushReplacementsInBatch();
 
 
         Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(
@@ -154,7 +154,7 @@ public class ArticleServiceTest {
         Mockito.when(wikipediaService.getPageByTitle(title)).thenReturn(Optional.of(page));
 
         Replacement replacement = new Replacement(1, "", "", 1);
-        Mockito.when(replacementRepository.findByArticleIdAndStatus(Mockito.anyInt(), Mockito.any(ReplacementStatus.class)))
+        Mockito.when(replacementRepository.findByArticleId(Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(replacement));
 
         OAuth1AccessToken accessToken = Mockito.mock(OAuth1AccessToken.class);

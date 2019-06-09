@@ -100,13 +100,13 @@ final class Misspelling {
 
         @Nullable Misspelling build() {
             if (!isMisspellingWordValid(word)) {
-                LOGGER.warn("Misspelling word not valid: {}. Skipping.", word);
+                LOGGER.warn("Not valid misspelling word: {}", word);
                 return null;
             }
 
             List<String> suggestions = parseSuggestionsFromComment(word, comment);
             if (suggestions.isEmpty()) {
-                LOGGER.warn("Misspelling comment not valid: {}. Word: {}. Skipping.", comment, word);
+                LOGGER.warn("Not valid misspelling comment: {}", comment);
             }
 
             return new Misspelling(word, caseSensitive, comment, suggestions);

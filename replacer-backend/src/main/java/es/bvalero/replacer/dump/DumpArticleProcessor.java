@@ -40,36 +40,38 @@ class DumpArticleProcessor {
     }
 
     boolean processArticle(WikipediaPage dumpArticle, boolean forceProcess) {
-        LOGGER.debug("Process dump article: {}. Force: {}", dumpArticle.getTitle(), forceProcess);
+        LOGGER.debug("Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
 
-        if (!isDumpArticleProcessable(dumpArticle)) {
-            LOGGER.debug("Dump article not processable by namespace or content");
+        if (!isDumpArticleProcessableByNamespace(dumpArticle)) {
+            LOGGER.debug("Dump article not processable by namespace: {}", dumpArticle.getTitle());
+            return false;
+        }
+        if (!isDumpArticleProcessableByContent(dumpArticle)) {
+            LOGGER.debug("Dump article not processable by content: {}", dumpArticle.getTitle());
             return false;
         }
 
         Optional<LocalDate> dbLastUpdate = cache.findArticleLastUpdate(dumpArticle.getId());
         if (dbLastUpdate.isPresent()
                 && !isArticleProcessableByTimestamp(dumpArticle.getTimestamp(), dbLastUpdate.get(), forceProcess)) {
-            LOGGER.debug("Dump article not processable by date. Dump date: {}. DB date: {}",
-                    dumpArticle.getTimestamp(), dbLastUpdate);
+            LOGGER.debug("Dump article not processable by date: {}. Dump date: {}. DB date: {}",
+                    dumpArticle.getTitle(), dumpArticle.getTimestamp(), dbLastUpdate);
             return false;
         }
 
-        LOGGER.debug("Find replacements in dump article");
-        List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(dumpArticle.getContent());
-
-        if (articleReplacements.isEmpty()) {
-            LOGGER.debug("No replacements found in dump article. Delete replacements pending to be reviewed.");
-            articleService.deleteNotReviewedReplacements(dumpArticle.getId());
-        } else {
-            articleService.indexArticleReplacements(dumpArticle, articleReplacements, true);
-        }
+        cache.indexArticleReplacementsInBatch(
+                dumpArticle,
+                replacementFinderService.findReplacements(dumpArticle.getContent()));
 
         return true;
     }
 
-    private boolean isDumpArticleProcessable(WikipediaPage dumpArticle) {
-        return PROCESSABLE_NAMESPACES.contains(dumpArticle.getNamespace()) && !dumpArticle.isRedirectionPage();
+    private boolean isDumpArticleProcessableByNamespace(WikipediaPage dumpArticle) {
+        return PROCESSABLE_NAMESPACES.contains(dumpArticle.getNamespace());
+    }
+
+    private boolean isDumpArticleProcessableByContent(WikipediaPage dumpArticle) {
+        return !dumpArticle.isRedirectionPage();
     }
 
     private boolean isArticleProcessableByTimestamp(LocalDate dumpDate, LocalDate dbDate, boolean forceProcess) {
@@ -85,7 +87,6 @@ class DumpArticleProcessor {
     void finish() {
         // The remaining cached articles are not in the dump so we remove them from DB
         cache.cleanCache();
-        articleService.flushReplacements();
     }
 
     private class DumpArticleCache {
@@ -93,10 +94,12 @@ class DumpArticleProcessor {
         private static final int CACHE_SIZE = 1000;
         private Map<Integer, LocalDate> articleTimestamps = new HashMap<>(CACHE_SIZE);
         private int maxCachedId;
+        private Map<WikipediaPage, Collection<ArticleReplacement>> articleReplacementMap = new HashMap<>(CACHE_SIZE);
 
         Optional<LocalDate> findArticleLastUpdate(int id) {
-            if (articleTimestamps.isEmpty()) {
-                loadCache(id);
+            // Load the cache the first time
+            if (maxCachedId == 0) {
+                loadCache(1);
             }
 
             LocalDate lastUpdate = articleTimestamps.get(id);
@@ -104,6 +107,7 @@ class DumpArticleProcessor {
 
             if (id >= maxCachedId) {
                 cleanCache();
+                loadCache(Math.max(maxCachedId + 1, id));
             }
 
             return Optional.ofNullable(lastUpdate);
@@ -111,10 +115,10 @@ class DumpArticleProcessor {
 
         private void loadCache(int id) {
             LOGGER.debug("Load timestamps from database to cache. Min ID: {}", id);
-            for (ArticleTimestamp timestamp : articleService.findMaxLastUpdateByArticleIdIn(id, id + CACHE_SIZE - 1)) {
+            maxCachedId = id + CACHE_SIZE - 1;
+            for (ArticleTimestamp timestamp : articleService.findMaxLastUpdateByArticleIdIn(id, maxCachedId)) {
                 articleTimestamps.put(timestamp.getArticleId(), timestamp.getLastUpdate());
             }
-            maxCachedId = articleTimestamps.keySet().stream().max(Comparator.comparingInt(Integer::valueOf)).orElse(0);
         }
 
         private void cleanCache() {
@@ -123,6 +127,14 @@ class DumpArticleProcessor {
             LOGGER.debug("Delete obsolete articles in DB: {}", articleTimestamps.size());
             articleService.deleteArticles(articleTimestamps.keySet());
             articleTimestamps = new HashMap<>(CACHE_SIZE);
+
+            // Really send the article replacements to index in batch
+            articleService.indexArticleReplacementsInBatch(articleReplacementMap);
+            articleReplacementMap = new HashMap<>(CACHE_SIZE);
+        }
+
+        void indexArticleReplacementsInBatch(WikipediaPage page, Collection<ArticleReplacement> articleReplacements) {
+            articleReplacementMap.put(page, articleReplacements);
         }
 
     }

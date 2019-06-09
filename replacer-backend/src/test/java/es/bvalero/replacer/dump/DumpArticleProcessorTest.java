@@ -15,7 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.*;
 
 public class DumpArticleProcessorTest {
 
@@ -158,11 +158,16 @@ public class DumpArticleProcessorTest {
 
         Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(Collections.emptyList());
+        List<ArticleReplacement> articleReplacements = Collections.singletonList(Mockito.mock(ArticleReplacement.class));
         Mockito.when(replacementFinderService.findReplacements(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(Mockito.mock(ArticleReplacement.class)));
+                .thenReturn(articleReplacements);
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
-        Mockito.verify(articleService).indexArticleReplacements(Mockito.eq(dumpArticle), Mockito.anyCollection(), Mockito.eq(true));
+        dumpArticleProcessor.finish();
+
+        Map<WikipediaPage, Collection<ArticleReplacement>> mapToIndex = new HashMap<>();
+        mapToIndex.put(dumpArticle, articleReplacements);
+        Mockito.verify(articleService).indexArticleReplacementsInBatch(mapToIndex);
     }
 
     @Test
@@ -175,10 +180,16 @@ public class DumpArticleProcessorTest {
         ArticleTimestamp timestamp = new ArticleTimestamp(1, LocalDate.now());
         Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(timestamp));
-        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString())).thenReturn(Collections.emptyList());
+        List<ArticleReplacement> articleReplacements = Collections.emptyList();
+        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString()))
+                .thenReturn(articleReplacements);
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
-        Mockito.verify(articleService).deleteNotReviewedReplacements(Mockito.anyInt());
+        dumpArticleProcessor.finish();
+
+        Map<WikipediaPage, Collection<ArticleReplacement>> mapToIndex = new HashMap<>();
+        mapToIndex.put(dumpArticle, articleReplacements);
+        Mockito.verify(articleService).indexArticleReplacementsInBatch(mapToIndex);
     }
 
 }

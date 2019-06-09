@@ -54,7 +54,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
     }
 
     private Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
-        LOGGER.info("Build misspelling map");
+        LOGGER.info("Start building misspelling map");
 
         // Build a map to quick access the misspellings by word
         Map<String, Misspelling> map = new HashMap<>(misspellings.size());
@@ -69,7 +69,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
             }
         });
 
-        LOGGER.info("Built misspelling map: {}", map.size());
+        LOGGER.info("Finish building misspelling map: {} items", map.size());
         return map;
     }
 

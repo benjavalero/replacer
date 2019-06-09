@@ -38,6 +38,7 @@ public class WikipediaServiceImpl implements WikipediaService {
 
     @Override
     public Optional<WikipediaPage> getPageById(int pageId) throws WikipediaException {
+        LOGGER.info("Find Wikipedia page by ID: {}", pageId);
         // Return the only value that should be in the map
         return getPagesByIds(Collections.singletonList(pageId)).values().stream().findFirst();
     }

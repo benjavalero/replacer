@@ -51,20 +51,20 @@ public class FalsePositiveManager {
         LOGGER.info("Execute scheduled daily update of false positives");
         try {
             setFalsePositives(findWikipediaFalsePositives());
-            LOGGER.info("Number of false positives after update: {}", falsePositives.size());
         } catch (WikipediaException e) {
             LOGGER.error("Error updating false positive list", e);
         }
     }
 
     private Set<String> findWikipediaFalsePositives() throws WikipediaException {
-        LOGGER.info("Load false positives from Wikipedia");
+        LOGGER.info("Start loading false positives from Wikipedia");
         String falsePositiveListText = wikipediaService.getFalsePositiveListPageContent();
-        return parseFalsePositiveListText(falsePositiveListText);
+        Set<String> falsePositiveSet = parseFalsePositiveListText(falsePositiveListText);
+        LOGGER.info("Finish loading false positives from Wikipedia: {} items", falsePositiveSet.size());
+        return falsePositiveSet;
     }
 
     private Set<String> parseFalsePositiveListText(String falsePositivesListText) {
-        LOGGER.info("Parse content of false positive article");
         Set<String> falsePositivesList = new HashSet<>(FALSE_POSITIVE_ESTIMATED_COUNT);
 
         Stream<String> stream = new BufferedReader(new StringReader(falsePositivesListText)).lines();
