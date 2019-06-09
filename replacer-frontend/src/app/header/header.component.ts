@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { AuthenticationService } from '../authentication/authentication.service';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -7,8 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
   isNavCollapsed = true;
+  username: string;
 
-  constructor() {}
+  constructor(private authenticationService: AuthenticationService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.username = this.authenticationService.username;
+    this.authenticationService.usernameEvent.subscribe((username: string) => this.username = username);
+  }
 }

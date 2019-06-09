@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -9,6 +9,8 @@ import { OauthToken } from './oauth-token.model';
   providedIn: 'root'
 })
 export class AuthenticationService {
+
+  @Output() usernameEvent: EventEmitter<string> = new EventEmitter();
 
   constructor(private httpClient: HttpClient) { }
 
@@ -90,6 +92,7 @@ export class AuthenticationService {
     } else {
       sessionStorage.removeItem('username');
     }
+    this.usernameEvent.emit(username);
   }
 
 }
