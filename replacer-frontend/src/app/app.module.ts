@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { AuthenticationGuard } from './authentication/authentication.guard';
 
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { IndexComponent } from './authentication/index.component';
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 import { StatsComponent } from './stats/stats.component';
@@ -28,7 +27,6 @@ import {
   declarations: [
     AppComponent,
     DashboardComponent,
-    IndexComponent,
     LoginComponent,
     HeaderComponent,
     StatsComponent,

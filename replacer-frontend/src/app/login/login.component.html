@@ -1,20 +1,24 @@
-<div class="card mb-3 mt-3">
-  <div class="card-body">
-    <h2 class="card-title">Replacer</h2>
-    <h3 class="card-subtitle">Reemplazador de la Wikipedia en español</h3>
-    <p class="card-text pt-3">
-      <strong>Replacer</strong> ayuda a corregir los errores ortográficos y de
-      estilo más comunes en la Wikipedia en español.
-    </p>
-  </div>
-</div>
+<p *ngIf="!authorizationUrl">Comprobando autenticación…</p>
 
-<div class="card bg-light">
-  <div class="card-body">
-    <p class="card-text">
-      Necesita autenticarse en la Wikipedia para guardar los cambios con su usuario.
-    </p>
-    <a class="btn btn-primary w-100" [ngClass]="{ 'disabled': !authorizationUrl }" href="{{ authorizationUrl }}">
-      Iniciar sesión</a>
+<div *ngIf="authorizationUrl">
+  <div class="card mb-3 mt-3">
+    <div class="card-body">
+      <h2 class="card-title">Replacer</h2>
+      <h3 class="card-subtitle">Reemplazador de la Wikipedia en español</h3>
+      <p class="card-text pt-3">
+        <strong>Replacer</strong> ayuda a corregir los errores ortográficos y de
+        estilo más comunes en la Wikipedia en español.
+      </p>
+    </div>
+  </div>
+
+  <div class="card bg-light">
+    <div class="card-body">
+      <p class="card-text">
+        Necesita autenticarse en la Wikipedia para guardar los cambios con su usuario.
+      </p>
+      <a class="btn btn-primary w-100" href="{{ authorizationUrl }}">
+        Iniciar sesión</a>
+    </div>
   </div>
 </div>

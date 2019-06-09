@@ -17,7 +17,7 @@ export class AuthenticationGuard implements CanActivate {
       this.authenticationService.redirectPath = route.url[0].path;
 
       // Navigate to login page
-      this.router.navigate(['login']);
+      this.router.navigate(['']);
 
       return false;
     }
