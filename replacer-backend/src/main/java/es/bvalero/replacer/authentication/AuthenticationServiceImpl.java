@@ -124,4 +124,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
+    @Override
+    public String identify(OAuth1AccessToken accessToken) throws AuthenticationException {
+        OAuthRequest request = new OAuthRequest(Verb.GET, WIKIPEDIA_API_URL);
+        request.addParameter("action", "query");
+        request.addParameter("format", "json");
+        request.addParameter("meta", "userinfo");
+        signOAuthRequest(request, accessToken);
+        JsonNode jsonResponse = executeOAuthRequest(request);
+        return jsonResponse.at("/query/userinfo/name").asText();
+    }
+
 }

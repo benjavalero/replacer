@@ -66,6 +66,30 @@ export class AuthenticationService {
 
   set accessToken(token: OauthToken) {
     sessionStorage.setItem('accessToken', JSON.stringify(token));
+    this.findUserName();
+  }
+
+  private findUserName(): void {
+    let params = new HttpParams();
+    params = params.append('token', this.accessToken.token);
+    params = params.append('tokenSecret', this.accessToken.tokenSecret);
+
+    this.httpClient.get<string>(`${environment.apiUrl}/authentication/username`, { params })
+      .subscribe((username: string) => {
+        this.username = username;
+      });
+  }
+
+  get username(): string {
+    return sessionStorage.getItem('username');
+  }
+
+  set username(username: string) {
+    if (username) {
+      sessionStorage.setItem('username', username);
+    } else {
+      sessionStorage.removeItem('username');
+    }
   }
 
 }

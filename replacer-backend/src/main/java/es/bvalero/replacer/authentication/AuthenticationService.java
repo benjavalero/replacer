@@ -20,4 +20,5 @@ public interface AuthenticationService {
     OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
             throws AuthenticationException;
 
+    String identify(OAuth1AccessToken accessToken) throws AuthenticationException;
 }

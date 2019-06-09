@@ -47,4 +47,14 @@ public class AuthenticationController {
         return authenticationService.getAccessToken(requestToken, verificationToken);
     }
 
+    @GetMapping(value = "/username")
+    public List<String> getUsername(@RequestParam String token, @RequestParam String tokenSecret)
+            throws AuthenticationException {
+        LOGGER.info("GET username");
+        OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
+
+        // We need to return a JSON object so we fake it with a list with only one string
+        return Collections.singletonList(authenticationService.identify(accessToken));
+    }
+
 }

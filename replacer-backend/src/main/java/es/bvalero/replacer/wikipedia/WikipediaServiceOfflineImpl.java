@@ -59,10 +59,12 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
         }
     }
 
+    @Override
     public String getMisspellingListPageContent() throws WikipediaException {
         return loadArticleContent("/misspelling-list.txt");
     }
 
+    @Override
     public String getFalsePositiveListPageContent() throws WikipediaException {
         return loadArticleContent("/false-positives.txt");
     }

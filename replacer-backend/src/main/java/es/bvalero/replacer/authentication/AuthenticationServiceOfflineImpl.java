@@ -37,4 +37,9 @@ class AuthenticationServiceOfflineImpl implements AuthenticationService {
         return new OAuth1AccessToken("", "", "");
     }
 
+    @Override
+    public String identify(OAuth1AccessToken accessToken) {
+        return "offline";
+    }
+
 }

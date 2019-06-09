@@ -135,12 +135,14 @@ public class WikipediaServiceImpl implements WikipediaService {
         }
     }
 
+    @Override
     public String getMisspellingListPageContent() throws WikipediaException {
         return getPageByTitle(MISSPELLING_LIST_PAGE)
                 .orElseThrow(WikipediaException::new)
                 .getContent();
     }
 
+    @Override
     public String getFalsePositiveListPageContent() throws WikipediaException {
         return getPageByTitle(FALSE_POSITIVE_LIST_PAGE)
                 .orElseThrow(WikipediaException::new)
