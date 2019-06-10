@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
           this.authenticationService.requestToken = null;
 
           // Redirect to previous URL
-          this.router.navigate([this.authenticationService.redirectPath]);
+          this.router.navigate([this.authenticationService.redirectPath || 'dashboard']);
           this.authenticationService.redirectPath = null;
         });
       } else {
