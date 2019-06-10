@@ -125,49 +125,50 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    ArticleReview findRandomArticleToReview() throws UnfoundArticleException {
+    Optional<Integer> findRandomArticleToReview() {
         return findRandomArticleToReview(null);
     }
 
-    ArticleReview findRandomArticleToReview(@Nullable String word) throws UnfoundArticleException {
+    Optional<Integer> findRandomArticleToReview(@Nullable String word) {
         LOGGER.info("Start finding random article to review. Filter by word: {}", word);
-        ArticleReview review = null;
-        while (review == null) {
-            Replacement randomReplacement = findRandomReplacementNotReviewedInDb(word)
-                    .orElseThrow(() -> new UnfoundArticleException("No replacement found to be reviewed"));
-            LOGGER.info("Found random replacement to review: {}", randomReplacement);
+        Optional<Replacement> randomReplacement = findRandomReplacementNotReviewedInDb(word);
+        return randomReplacement.map(Replacement::getArticleId);
+    }
 
-            try {
-                int articleId = randomReplacement.getArticleId();
-                WikipediaPage article = findArticleById(articleId);
-                List<ArticleReplacement> articleReplacements = findArticleReplacements(article.getContent());
+    Optional<ArticleReview> findArticleReviewById(int articleId) {
+        return findArticleReviewById(articleId, null);
+    }
 
-                // Index the found replacements to add the new ones and remove the obsolete ones from last index in DB
-                LOGGER.info("Update database with found replacements");
-                indexArticleReplacements(article, articleReplacements);
+    Optional<ArticleReview> findArticleReviewById(int articleId, @Nullable String word) {
+        try {
+            WikipediaPage article = findArticleById(articleId);
+            List<ArticleReplacement> articleReplacements = findArticleReplacements(article.getContent());
 
-                // Build the article review if the replacements found are valid
-                // Note the DB has just been updated in case the word doesn't exist in the found replacements
-                if (!articleReplacements.isEmpty()
-                        && checkWordExistsInReplacements(word, articleReplacements)) {
-                    review = ArticleReview.builder()
-                            .setArticleId(article.getId())
-                            .setTitle(article.getTitle())
-                            .setContent(article.getContent())
-                            .setReplacements(articleReplacements)
-                            .setTrimText(trimText)
-                            .build();
-                }
-            } catch (InvalidArticleException e) {
-                LOGGER.warn("Found article is not valid. Delete from database.", e);
-                deleteArticle(randomReplacement.getArticleId());
-            } catch (WikipediaException e) {
-                LOGGER.error("Error retrieving page from Wikipedia", e);
+            // Index the found replacements to add the new ones and remove the obsolete ones from last index in DB
+            LOGGER.info("Update database with found replacements");
+            indexArticleReplacements(article, articleReplacements);
+
+            // Build the article review if the replacements found are valid
+            // Note the DB has just been updated in case the word doesn't exist in the found replacements
+            if (!articleReplacements.isEmpty()
+                    && checkWordExistsInReplacements(word, articleReplacements)) {
+                LOGGER.info("Finish finding random article to review: {}", article.getTitle());
+                return Optional.of(ArticleReview.builder()
+                        .setArticleId(article.getId())
+                        .setTitle(article.getTitle())
+                        .setContent(article.getContent())
+                        .setReplacements(articleReplacements)
+                        .setTrimText(trimText)
+                        .build());
             }
+        } catch (InvalidArticleException e) {
+            LOGGER.warn("Found article is not valid. Delete from database.", e);
+            deleteArticle(articleId);
+        } catch (WikipediaException e) {
+            LOGGER.error("Error retrieving page from Wikipedia", e);
         }
 
-        LOGGER.info("Finish finding random article to review: {}", review.getTitle());
-        return review;
+        return Optional.empty();
     }
 
     private Optional<Replacement> findRandomReplacementNotReviewedInDb(@Nullable String word) {

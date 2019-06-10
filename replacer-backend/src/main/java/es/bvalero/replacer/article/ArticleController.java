@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("article")
@@ -26,25 +27,30 @@ public class ArticleController {
     @GetMapping(value = "/random")
     public List<Integer> findRandomArticleWithReplacements() {
         LOGGER.info("GET Find random article with replacements");
-        try {
-            // TODO : Break the method to find first the article and then the replacements
-            // TODO : Return an optional response
-            return Collections.singletonList(articleService.findRandomArticleToReview().getArticleId());
-        } catch (UnfoundArticleException e) {
-            LOGGER.warn("No article found with replacements");
-            return Collections.emptyList();
-        }
+        return articleService.findRandomArticleToReview()
+                .map(Collections::singletonList)
+                .orElse(Collections.emptyList());
     }
 
     @GetMapping(value = "/random/{word}")
-    public ArticleReview findRandomArticleByWord(@PathVariable("word") String word) {
+    public List<Integer> findRandomArticleByWord(@PathVariable("word") String word) {
         LOGGER.info("GET Find random article with replacements by word: {}", word);
-        try {
-            return articleService.findRandomArticleToReview(word);
-        } catch (UnfoundArticleException e) {
-            LOGGER.info("No article found with replacements by word: {}", word);
-            return ArticleReview.builder().setTitle(e.getMessage()).build();
-        }
+        return articleService.findRandomArticleToReview(word)
+                .map(Collections::singletonList)
+                .orElse(Collections.emptyList());
+    }
+
+    @GetMapping(value = "/review/{id}")
+    public Optional<ArticleReview> findArticleReviewById(@PathVariable("id") int articleId) {
+        LOGGER.info("GET Find replacements for article: {}", articleId);
+        return articleService.findArticleReviewById(articleId);
+    }
+
+    @GetMapping(value = "/review/{id}/{word}")
+    public Optional<ArticleReview> findArticleReviewById(@PathVariable("id") int articleId,
+                                                         @PathVariable("word") String word) {
+        LOGGER.info("GET Find replacements for article {} by word: {}", articleId, word);
+        return articleService.findArticleReviewById(articleId, word);
     }
 
     @PutMapping(value = "/")

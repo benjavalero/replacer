@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -118,14 +117,9 @@ public class ArticleServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleWithReplacements() throws WikipediaException, UnfoundArticleException {
+    public void testFindArticleReview() throws WikipediaException {
         String title = "España";
         String text = "Un texto";
-
-        Replacement randomReplacement = new Replacement(1, "", "", 1);
-        Mockito.when(replacementRepository.findRandomByStatus(
-                Mockito.any(ReplacementStatus.class), Mockito.any(PageRequest.class)))
-                .thenReturn(Collections.singletonList(randomReplacement));
 
         WikipediaPage page = WikipediaPage.builder().setTitle(title).setContent(text).build();
         Mockito.when(wikipediaService.getPageById(Mockito.anyInt())).thenReturn(Optional.of(page));
@@ -134,13 +128,13 @@ public class ArticleServiceTest {
         ArticleReplacement replacement = Mockito.mock(ArticleReplacement.class);
         Mockito.when(replacementFinderService.findReplacements(text)).thenReturn(Collections.singletonList(replacement));
 
-        ArticleReview articleData = articleService.findRandomArticleToReview();
+        Optional<ArticleReview> articleData = articleService.findArticleReviewById(1);
 
-        Assert.assertNotNull(articleData);
-        Assert.assertEquals(title, articleData.getTitle());
-        Assert.assertEquals(text, articleData.getContent());
+        Assert.assertTrue(articleData.isPresent());
+        Assert.assertEquals(title, articleData.get().getTitle());
+        Assert.assertEquals(text, articleData.get().getContent());
 
-        List<ArticleReplacement> replacements = articleData.getReplacements();
+        List<ArticleReplacement> replacements = articleData.get().getReplacements();
         Assert.assertEquals(1, replacements.size());
         Assert.assertTrue(replacements.contains(replacement));
     }

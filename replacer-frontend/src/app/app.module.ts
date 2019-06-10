@@ -14,6 +14,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 import { FindRandomComponent } from './article/find-random.component';
+import { EditArticleComponent } from './article/edit-article.component';
 import { StatsComponent } from './stats/stats.component';
 import { MisspellingTableComponent } from './misspelling-table/misspelling-table.component';
 import { SortableDirective } from './misspelling-table/sortable.directive';
@@ -33,6 +34,7 @@ import {
     LoginComponent,
     HeaderComponent,
     FindRandomComponent,
+    EditArticleComponent,
     StatsComponent,
     MisspellingTableComponent,
     SortableDirective,

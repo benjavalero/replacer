@@ -36,11 +36,13 @@ export class LoginComponent implements OnInit {
           this.authenticationService.requestToken = null;
 
           // Redirect to previous URL
+          this.alertService.clearAlertMessages();
           this.router.navigate([this.authenticationService.redirectPath || 'dashboard']);
           this.authenticationService.redirectPath = null;
         });
       } else {
         if (this.authenticationService.isAuthenticated()) {
+          this.alertService.clearAlertMessages();
           this.router.navigate(['dashboard']);
         } else {
           this.generateAuthenticationUrl();
