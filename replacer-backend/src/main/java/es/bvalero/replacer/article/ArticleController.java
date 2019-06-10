@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -23,13 +24,15 @@ public class ArticleController {
      * In case of error we return a fake article with the exception message.
      */
     @GetMapping(value = "/random")
-    public ArticleReview findRandomArticleWithReplacements() {
+    public List<Integer> findRandomArticleWithReplacements() {
         LOGGER.info("GET Find random article with replacements");
         try {
-            return articleService.findRandomArticleToReview();
+            // TODO : Break the method to find first the article and then the replacements
+            // TODO : Return an optional response
+            return Collections.singletonList(articleService.findRandomArticleToReview().getArticleId());
         } catch (UnfoundArticleException e) {
             LOGGER.warn("No article found with replacements");
-            return ArticleReview.builder().setTitle(e.getMessage()).build();
+            return Collections.emptyList();
         }
     }
 
