@@ -9,9 +9,11 @@ import { AppComponent } from './app.component';
 
 import { AuthenticationGuard } from './authentication/authentication.guard';
 
+import { AlertContainerComponent } from './alert/alert-container.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
+import { FindRandomComponent } from './find-random/find-random.component';
 import { StatsComponent } from './stats/stats.component';
 import { MisspellingTableComponent } from './misspelling-table/misspelling-table.component';
 import { SortableDirective } from './misspelling-table/sortable.directive';
@@ -26,9 +28,11 @@ import {
 @NgModule({
   declarations: [
     AppComponent,
+    AlertContainerComponent,
     DashboardComponent,
     LoginComponent,
     HeaderComponent,
+    FindRandomComponent,
     StatsComponent,
     MisspellingTableComponent,
     SortableDirective,

@@ -1,0 +1,5 @@
+<div class="container mb-3 mt-3">
+  <div *ngFor="let alert of alerts" class="alert alert-{{ alert.type }} text-center" role="alert">
+    {{ alert.message }}
+  </div>
+</div>

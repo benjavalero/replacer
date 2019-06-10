@@ -14,21 +14,21 @@
   <div id="navbarSupportedContent" class="navbar-collapse" [collapse]="isNavCollapsed">
 -->
   <div id="navbarSupportedContent" class="navbar-collapse">
-    <!--
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link active" href="/random">Aleatorio</a>
+        <a class="nav-link" routerLinkActive="active" routerLink="/random">Artículo aleatorio</a>
+      </li>
+      <!--
+      <li class="nav-item ">
+        <a class="nav-link" routerLinkActive="active" routerLink="/stats">Estadísticas</a>
       </li>
       <li class="nav-item ">
-        <a class="nav-link" href="/stats">Estadísticas</a>
+        <a class="nav-link" routerLinkActive="active" routerLink="/dump">Indexación</a>
       </li>
-      <li class="nav-item ">
-        <a class="nav-link" href="/dump">Indexación</a>
-      </li>
+      -->
     </ul>
-    -->
     <ul class="navbar-nav ml-auto justify-content-end">
-        <span class="navbar-text"><em>{{ username }}</em></span>
+      <span class="navbar-text"><em>{{ username }}</em></span>
     </ul>
   </div>
 </nav>

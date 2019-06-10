@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { AuthenticationService } from '../authentication/authentication.service';
 import { OauthToken } from '../authentication/oauth-token.model';
+import { AlertService } from '../alert/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -13,9 +14,15 @@ export class LoginComponent implements OnInit {
 
   authorizationUrl: string;
 
-  constructor(private route: ActivatedRoute, private authenticationService: AuthenticationService, private router: Router) { }
+  constructor(private route: ActivatedRoute, private authenticationService: AuthenticationService, private router: Router,
+              private alertService: AlertService) { }
 
   ngOnInit() {
+    this.alertService.addAlertMessage({
+      type: 'primary',
+      message: 'Comprobando autenticación…'
+    });
+
     // Manage return from authorization URL
     this.route.queryParams.subscribe(params => {
       /* tslint:disable: no-string-literal */
@@ -51,6 +58,7 @@ export class LoginComponent implements OnInit {
       // Retrieve the authorization URL to redirect
       this.authenticationService.generateAuthorizationUrl().subscribe((url: string) => {
         this.authorizationUrl = url;
+        this.alertService.clearAlertMessages();
       });
     });
   }
