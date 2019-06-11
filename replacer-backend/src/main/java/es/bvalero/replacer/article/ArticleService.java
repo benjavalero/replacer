@@ -189,7 +189,7 @@ public class ArticleService {
     private List<ArticleReplacement> findArticleReplacements(String articleContent) {
         // Find the replacements sorted (the first ones in the list are the last in the text)
         List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(articleContent);
-        Collections.sort(articleReplacements);
+        Collections.sort(articleReplacements, Collections.reverseOrder());
         return articleReplacements;
     }
 

@@ -15,6 +15,7 @@ export class EditArticleComponent implements OnInit {
 
   articleId: number;
   title = '';
+  content: string;
   replacements: ArticleReplacement[] = [];
 
   constructor(private route: ActivatedRoute, private alertService: AlertService, private articleService: ArticleService,
@@ -31,6 +32,7 @@ export class EditArticleComponent implements OnInit {
       if (review) {
         this.alertService.clearAlertMessages();
         this.title = review.title;
+        this.content = review.content;
         this.replacements = review.replacements;
       } else {
         this.alertService.addAlertMessage({
