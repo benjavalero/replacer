@@ -14,6 +14,7 @@ import { ArticleReplacement } from './article-replacement.model';
 export class EditArticleComponent implements OnInit {
 
   articleId: number;
+  title = '';
   replacements: ArticleReplacement[] = [];
 
   constructor(private route: ActivatedRoute, private alertService: AlertService, private articleService: ArticleService,
@@ -29,6 +30,7 @@ export class EditArticleComponent implements OnInit {
     this.articleService.findArticleReviewById(this.articleId).subscribe((review: ArticleReview) => {
       if (review) {
         this.alertService.clearAlertMessages();
+        this.title = review.title;
         this.replacements = review.replacements;
       } else {
         this.alertService.addAlertMessage({

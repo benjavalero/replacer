@@ -1,5 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
+import es.bvalero.replacer.finder.ReplacementSuggestion;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -19,9 +21,9 @@ final class Misspelling {
     private final boolean caseSensitive;
     private final String comment;
 
-    private final List<String> suggestions;
+    private final List<ReplacementSuggestion> suggestions;
 
-    private Misspelling(String word, boolean caseSensitive, String comment, List<String> suggestions) {
+    private Misspelling(String word, boolean caseSensitive, String comment, List<ReplacementSuggestion> suggestions) {
         this.word = word;
         this.caseSensitive = caseSensitive;
         this.comment = comment;
@@ -40,11 +42,7 @@ final class Misspelling {
         return caseSensitive;
     }
 
-    String getComment() {
-        return comment;
-    }
-
-    List<String> getSuggestions() {
+    List<ReplacementSuggestion> getSuggestions() {
         return suggestions;
     }
 
@@ -77,7 +75,7 @@ final class Misspelling {
 
     static class MisspellingBuilder {
         private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingBuilder.class);
-        private static final Pattern PATTERN_BRACKETS = Pattern.compile("\\(.+?\\)");
+        private static final Pattern PATTERN_COMMENT = Pattern.compile("([^,(]+)(\\([^)]+\\))?");
 
         private String word;
         private boolean caseSensitive;
@@ -104,7 +102,13 @@ final class Misspelling {
                 return null;
             }
 
-            List<String> suggestions = parseSuggestionsFromComment(word, comment);
+            List<ReplacementSuggestion> suggestions = new ArrayList<>();
+            try {
+                suggestions.addAll(parseSuggestionsFromComment(comment));
+            } catch (Exception e) {
+                LOGGER.error("Error parsing misspelling comment", e);
+            }
+
             if (suggestions.isEmpty()) {
                 LOGGER.warn("Not valid misspelling comment: {}", comment);
             }
@@ -116,17 +120,15 @@ final class Misspelling {
             return word.chars().allMatch(c -> Character.isLetter(c) || c == '\'' || c == '-');
         }
 
-        private List<String> parseSuggestionsFromComment(String word, String comment) {
-            List<String> suggestionList = new ArrayList<>(5);
+        private List<ReplacementSuggestion> parseSuggestionsFromComment(String comment) {
+            List<ReplacementSuggestion> suggestionList = new ArrayList<>(5);
 
-            String suggestionNoBrackets = PATTERN_BRACKETS.matcher(comment).replaceAll("");
-            for (String suggestion : suggestionNoBrackets.split(",")) {
-                String suggestionWord = suggestion.trim();
-
-                // Don't suggest the misspelling main word
-                if (StringUtils.isNotBlank(suggestionWord) && !suggestionWord.equals(word)) {
-                    suggestionList.add(suggestionWord);
-                }
+            Matcher m = PATTERN_COMMENT.matcher(comment);
+            while (m.find()) {
+                String text = m.group(1).trim();
+                String explanation = StringUtils.isNotBlank(m.group(2))
+                        ? m.group(2).substring(1, m.group(2).length() - 1) : ""; // Remove brackets
+                suggestionList.add(new ReplacementSuggestion(text, explanation));
             }
 
             return suggestionList;

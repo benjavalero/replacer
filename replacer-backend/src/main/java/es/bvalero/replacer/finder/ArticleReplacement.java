@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder;
 
 import org.jetbrains.annotations.NonNls;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -10,15 +11,13 @@ import java.util.Objects;
 public class ArticleReplacement extends MatchResult {
     private String type;
     private String subtype;
-    private String comment;
-    private String suggestion;
+    private List<ReplacementSuggestion> suggestions;
 
-    public ArticleReplacement(String text, int start, String type, String subtype, String comment, String suggestion) {
+    public ArticleReplacement(String text, int start, String type, String subtype, List<ReplacementSuggestion> suggestions) {
         super(start, text);
         this.type = type;
         this.subtype = subtype;
-        this.comment = comment;
-        this.suggestion = suggestion;
+        this.suggestions = suggestions;
     }
 
     public String getType() {
@@ -29,13 +28,8 @@ public class ArticleReplacement extends MatchResult {
         return subtype;
     }
 
-    @SuppressWarnings("unused")
-    public String getComment() {
-        return comment;
-    }
-
-    public String getSuggestion() {
-        return suggestion;
+    public List<ReplacementSuggestion> getSuggestions() {
+        return suggestions;
     }
 
     @Override
@@ -61,8 +55,7 @@ public class ArticleReplacement extends MatchResult {
                 ", start=" + getStart() +
                 ", type=" + type +
                 ", subtype='" + subtype + '\'' +
-                ", comment='" + comment + '\'' +
-                ", suggestion='" + suggestion + '\'' +
+                ", suggestions='" + suggestions + '\'' +
                 '}';
     }
 

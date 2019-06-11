@@ -64,7 +64,7 @@ public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredRe
             if (misspelling.isCaseSensitive()
                     && startsWithUpperCase(word)
                     && misspelling.getSuggestions().size() == 1
-                    && misspelling.getSuggestions().get(0).equalsIgnoreCase(word)) {
+                    && misspelling.getSuggestions().get(0).getText().equalsIgnoreCase(word)) {
                 this.uppercaseWords.add(word);
             }
         });

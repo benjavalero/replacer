@@ -7,6 +7,7 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ArticleReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementFinder;
+import es.bvalero.replacer.finder.ReplacementSuggestion;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,8 +96,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
                         m.start(),
                         MISSPELLING_TYPE,
                         misspelling.getWord(),
-                        misspelling.getComment(),
-                        findMisspellingSuggestion(word, misspelling)));
+                        findMisspellingSuggestions(word, misspelling)));
             }
         }
 
@@ -111,16 +111,19 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
     }
 
     /* Transform the case of the suggestion, e. g. "Habia" -> "Había" */
-    private String findMisspellingSuggestion(CharSequence originalWord, Misspelling misspelling) {
-        List<String> suggestions = misspelling.getSuggestions();
+    private List<ReplacementSuggestion> findMisspellingSuggestions(CharSequence originalWord, Misspelling misspelling) {
+        List<ReplacementSuggestion> suggestions = new ArrayList<>();
 
-        String suggestion = suggestions.get(0);
+        misspelling.getSuggestions().forEach(suggestion -> {
+            if (startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()) {
+                suggestions.add(new ReplacementSuggestion(
+                        setFirstUpperCase(suggestion.getText()), suggestion.getComment()));
+            } else {
+                suggestions.add(suggestion);
+            }
+        });
 
-        if (startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()) {
-            suggestion = setFirstUpperCase(suggestion);
-        }
-
-        return suggestion;
+        return suggestions;
     }
 
 }

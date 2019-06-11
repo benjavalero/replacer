@@ -154,10 +154,10 @@ public class MisspellingFinderTest {
 
         List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
 
-        Assert.assertEquals("España", results.get(0).getSuggestion());
-        Assert.assertEquals("domingo", results.get(1).getSuggestion());
-        Assert.assertEquals("águila", results.get(2).getSuggestion());
-        Assert.assertEquals("Águila", results.get(3).getSuggestion());
+        Assert.assertEquals("España", results.get(0).getSuggestions().get(0).getText());
+        Assert.assertEquals("domingo", results.get(1).getSuggestions().get(0).getText());
+        Assert.assertEquals("águila", results.get(2).getSuggestions().get(0).getText());
+        Assert.assertEquals("Águila", results.get(3).getSuggestions().get(0).getText());
     }
 
 }

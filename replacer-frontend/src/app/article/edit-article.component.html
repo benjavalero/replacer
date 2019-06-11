@@ -1,5 +1,7 @@
-<ul *ngFor="let replacement of replacements">
-  <li>Start: {{ replacement.start }}</li>
-  <li>Text: {{ replacement.text }}</li>
-  <li>Suggestion: {{ replacement.suggestion }}</li>
-</ul>
+<h3>{{ title }}</h3>
+
+<app-edit-snippet *ngFor="let replacement of replacements"
+ [start]="replacement.start"
+ [text]="replacement.text"
+ [suggestions]="replacement.suggestions">
+</app-edit-snippet>

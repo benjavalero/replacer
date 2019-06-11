@@ -1,5 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
+import es.bvalero.replacer.finder.ReplacementSuggestion;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,26 +12,23 @@ public class MisspellingTest {
     public void testParseSuggestionsFromComment() {
         Misspelling misspelling1 = Misspelling.builder().setWord("renuncio")
                 .setComment("renunció (3.ª persona), renuncio (1.ª persona)").build();
-        List<String> suggestions1 = misspelling1.getSuggestions();
-        Assert.assertEquals(1, suggestions1.size());
-        Assert.assertEquals("renunció", suggestions1.get(0));
-
-        Misspelling misspelling2 = Misspelling.builder().setWord("remake")
-                .setComment("(nueva) versión o adaptación").build();
-        List<String> suggestions2 = misspelling2.getSuggestions();
-        Assert.assertEquals(1, suggestions2.size());
-        Assert.assertEquals("versión o adaptación", suggestions2.get(0));
+        List<ReplacementSuggestion> suggestions1 = misspelling1.getSuggestions();
+        Assert.assertEquals(2, suggestions1.size());
+        Assert.assertEquals("renunció", suggestions1.get(0).getText());
+        Assert.assertEquals("3.ª persona", suggestions1.get(0).getComment());
 
         Misspelling misspelling3 = Misspelling.builder().setWord("desempeño")
                 .setComment("desempeño (sustantivo o verbo, 1.ª persona), desempeñó (verbo, 3.ª persona)").build();
-        List<String> suggestions3 = misspelling3.getSuggestions();
-        Assert.assertEquals(1, suggestions3.size());
-        Assert.assertEquals("desempeñó", suggestions3.get(0));
+        List<ReplacementSuggestion> suggestions3 = misspelling3.getSuggestions();
+        Assert.assertEquals(2, suggestions3.size());
+        Assert.assertEquals("desempeño", suggestions3.get(0).getText());
+        Assert.assertEquals("sustantivo o verbo, 1.ª persona", suggestions3.get(0).getComment());
 
         Misspelling misspelling4 = Misspelling.builder().setWord("k")
                 .setComment("k (letra), que, qué, kg (kilogramo)").build();
-        List<String> suggestions4 = misspelling4.getSuggestions();
-        Assert.assertEquals(3, suggestions4.size());
+        List<ReplacementSuggestion> suggestions4 = misspelling4.getSuggestions();
+        Assert.assertEquals(4, suggestions4.size());
+        Assert.assertEquals("kg", suggestions4.get(3).getText());
     }
 
 }
