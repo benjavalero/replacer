@@ -16,14 +16,12 @@ public final class ArticleReview {
     private final String title;
     private final String content;
     private final List<ArticleReplacement> replacements;
-    private final boolean trimText;
 
-    private ArticleReview(Integer articleId, String title, String content, List<ArticleReplacement> replacements, boolean trimText) {
+    private ArticleReview(Integer articleId, String title, String content, List<ArticleReplacement> replacements) {
         this.articleId = articleId;
         this.title = title;
         this.content = content;
         this.replacements = replacements;
-        this.trimText = trimText;
     }
 
     public static ArticleReview.ArticleReviewBuilder builder() {
@@ -47,17 +45,11 @@ public final class ArticleReview {
         return Collections.unmodifiableList(replacements);
     }
 
-    @SuppressWarnings("unused")
-    public boolean isTrimText() {
-        return trimText;
-    }
-
     static class ArticleReviewBuilder {
         private final List<ArticleReplacement> replacements = new ArrayList<>(100);
         private Integer articleId;
         private String title;
         private String content;
-        private boolean trimText;
 
         ArticleReview.ArticleReviewBuilder setArticleId(Integer articleId) {
             this.articleId = articleId;
@@ -80,13 +72,8 @@ public final class ArticleReview {
             return this;
         }
 
-        ArticleReview.ArticleReviewBuilder setTrimText(boolean trimText) {
-            this.trimText = trimText;
-            return this;
-        }
-
         ArticleReview build() {
-            return new ArticleReview(articleId, title, content, replacements, trimText);
+            return new ArticleReview(articleId, title, content, replacements);
         }
     }
 

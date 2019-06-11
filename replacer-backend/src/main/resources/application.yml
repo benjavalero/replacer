@@ -20,8 +20,6 @@ logging:
 replacer:
   # Path where the XML dumps are located for the Spanish Wikipedia
   dump.folder.path: /public/dumps/public/eswiki
-  # Hide paragraphs not containing potential replacements and trim the ones matching
-  hide.empty.paragraphs: true
 
 wikipedia:
   # TODO Externalize

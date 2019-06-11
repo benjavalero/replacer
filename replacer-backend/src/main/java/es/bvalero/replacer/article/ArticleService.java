@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +36,6 @@ public class ArticleService {
 
     @Autowired
     private WikipediaService wikipediaService;
-
-    @Value("${replacer.hide.empty.paragraphs}")
-    private boolean trimText;
 
     // We use sets to compare easily in the unit tests
     private Collection<Replacement> toSaveInBatch = new HashSet<>();
@@ -158,7 +154,6 @@ public class ArticleService {
                         .setTitle(article.getTitle())
                         .setContent(article.getContent())
                         .setReplacements(articleReplacements)
-                        .setTrimText(trimText)
                         .build());
             }
         } catch (InvalidArticleException e) {

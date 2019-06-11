@@ -8,8 +8,9 @@ import { ReplacementSuggestion } from './replacement-suggestion.model';
 })
 export class EditSnippetComponent implements OnInit {
 
-  @Input() start: number;
   @Input() text: string;
+  @Input() start: number;
+  @Input() word: string;
   @Input() suggestions: ReplacementSuggestion[];
 
   constructor() { }

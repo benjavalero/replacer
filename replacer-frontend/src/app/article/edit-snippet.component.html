@@ -1,5 +1,9 @@
 <ul>
   <li>Start: {{ start }}</li>
   <li>Text: {{ text }}</li>
-  <li>Suggestions: {{ suggestions }}</li>
+  <li>Suggestions:</li>
+  <ul *ngFor="let suggestion of suggestions">
+    <li>Term: {{ suggestion.text }}</li>
+    <li>Comment: {{ suggestion.comment }}</li>
+  </ul>
 </ul>
