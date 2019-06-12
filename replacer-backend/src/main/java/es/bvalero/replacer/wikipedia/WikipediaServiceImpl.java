@@ -117,7 +117,6 @@ public class WikipediaServiceImpl implements WikipediaService {
 
         // TODO : Save the reviewer
         // TODO : Take into account conflicts during the edition
-        // TODO : Merge status reviewed and fixed
         // TODO : Test saving when session has expired in frontend
         try {
             authenticationService.executeOAuthRequest(params, accessToken);

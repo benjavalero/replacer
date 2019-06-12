@@ -40,6 +40,4 @@ interface ReplacementRepository extends JpaRepository<Replacement, Long>, Replac
 
     long countByStatus(ReplacementStatus status);
 
-    long countByStatusIn(Set<ReplacementStatus> status);
-
 }

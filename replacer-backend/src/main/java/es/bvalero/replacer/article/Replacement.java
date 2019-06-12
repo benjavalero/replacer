@@ -106,10 +106,6 @@ public class Replacement implements Serializable {
         return this.status == ReplacementStatus.REVIEWED;
     }
 
-    boolean isFixed() {
-        return this.status == ReplacementStatus.FIXED;
-    }
-
     boolean isSame(Replacement that) {
         return articleId == that.articleId &&
                 position == that.position &&

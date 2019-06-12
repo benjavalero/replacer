@@ -65,9 +65,7 @@ public class ArticleServiceTest {
                 .withStatus(ReplacementStatus.TO_REVIEW); // Obsolete To review => DELETE
         Replacement rep3 = new Replacement(1, "", "", 3)
                 .withStatus(ReplacementStatus.REVIEWED); // Obsolete Reviewed => DO NOTHING
-        Replacement rep4 = new Replacement(1, "", "", 4)
-                .withStatus(ReplacementStatus.FIXED); // Obsolete Fixed => DO NOTHING
-        List<Replacement> dbReplacements1 = new ArrayList<>(Arrays.asList(rep2, rep3, rep4));
+        List<Replacement> dbReplacements1 = new ArrayList<>(Arrays.asList(rep2, rep3));
 
 
         articleService.indexReplacements(newReplacements, dbReplacements1, true);
@@ -91,25 +89,17 @@ public class ArticleServiceTest {
         Replacement rep17 = new Replacement(2, "", "", 6);
         Replacement rep19 = new Replacement(2, "", "", 7);
 
-        Replacement rep15 = new Replacement(2, "", "", 5);
-        Replacement rep21 = new Replacement(2, "", "", 8);
-        Replacement rep13 = new Replacement(2, "", "", 4);
-        List<Replacement> newReplacements = Arrays.asList(rep7, rep9, rep11, rep13, rep15, rep17, rep19, rep21);
+        List<Replacement> newReplacements = Arrays.asList(rep7, rep9, rep11, rep17, rep19);
 
         // If the existing replacement is not reviewed and:
         // - Is older => Update the "lastUpdate" to help skipping future indexations
         // - Is equal => All as in the last indexation => nothing to do
         // - Is newer => Impossible case
 
-        // If the existing replacement is reviewed and:
+        // If the existing replacement is reviewed/fixed and:
         // - Is older => Update the "lastUpdate" to help skipping future indexations
         // - Is equal => All as in the last indexation => nothing to do
-        // - Is newer => Reviewed after indexation => nothing to do
-
-        // If the existing replacement is fixed and:
-        // - Is older => The replacement is back => Update the "lastUpdate" to help skipping future indexations and reset to "TO REVIEW"
-        // - Is equal => Strange case => we do nothing
-        // - Is newer => Fixed after indexation => nothing to do
+        // - Is newer => Reviewed/fixed after indexation => nothing to do
 
         Replacement rep8 = rep7.withStatus(ReplacementStatus.TO_REVIEW)
                 .withLastUpdate(rep7.getLastUpdate().minusDays(1)); // Existing To Review Older => UPDATE DATE
@@ -121,13 +111,7 @@ public class ArticleServiceTest {
         Replacement rep20 = rep19.withStatus(ReplacementStatus.REVIEWED)
                 .withLastUpdate(rep19.getLastUpdate().plusDays(1)); // Existing Reviewed Newer => DO NOTHING
 
-        Replacement rep16 = rep15.withStatus(ReplacementStatus.FIXED)
-                .withLastUpdate(rep15.getLastUpdate().minusDays(1)); // Existing Fixed Older => UPDATE DATE AND STATUS
-        Replacement rep22 = rep21.withStatus(ReplacementStatus.FIXED); // Existing Fixed Equal => DO NOTHING
-        Replacement rep14 = rep13.withStatus(ReplacementStatus.FIXED)
-                .withLastUpdate(rep13.getLastUpdate().plusDays(1)); // Existing Fixed Newer => DO NOTHING
-
-        List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(rep8, rep10, rep12, rep14, rep16, rep18, rep20, rep22));
+        List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(rep8, rep10, rep12, rep18, rep20));
 
         articleService.indexReplacements(newReplacements, dbReplacements2, true);
         articleService.flushReplacementsInBatch();
@@ -139,7 +123,6 @@ public class ArticleServiceTest {
         Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
                 new HashSet<>(Arrays.asList(
                         rep8.withLastUpdate(rep7.getLastUpdate()),
-                        rep16.withLastUpdate(rep15.getLastUpdate()).withStatus(ReplacementStatus.TO_REVIEW),
                         rep12.withLastUpdate(rep11.getLastUpdate())))
         );
     }

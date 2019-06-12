@@ -74,13 +74,7 @@ public class ArticleService {
 
     private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement, boolean indexInBatch) {
         if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())) { // DB older than Dump
-            if (dbReplacement.isFixed()) {
-                saveReplacement(dbReplacement
-                        .withLastUpdate(newReplacement.getLastUpdate())
-                        .withStatus(ReplacementStatus.TO_REVIEW), indexInBatch);
-            } else {
-                saveReplacement(dbReplacement.withLastUpdate(newReplacement.getLastUpdate()), indexInBatch);
-            }
+            saveReplacement(dbReplacement.withLastUpdate(newReplacement.getLastUpdate()), indexInBatch);
         }
     }
 
@@ -259,13 +253,13 @@ public class ArticleService {
         LOGGER.info("Mark article as reviewed: {}", articleId);
         replacementRepository.findByArticleId(articleId).stream()
                 .filter(dbReplacement -> dbReplacement.getStatus() == ReplacementStatus.TO_REVIEW)
-                .forEach(this::fixReplacement);
+                .forEach(this::reviewReplacement);
         return true;
     }
 
-    private void fixReplacement(Replacement replacement) {
+    private void reviewReplacement(Replacement replacement) {
         replacementRepository.save(replacement
-                .withStatus(ReplacementStatus.FIXED)
+                .withStatus(ReplacementStatus.REVIEWED)
                 .withReviewer(DEFAULT_REVIEWER)
                 .withLastUpdate(LocalDate.now()));
     }
@@ -275,8 +269,7 @@ public class ArticleService {
     }
 
     long countReplacementsReviewed() {
-        return replacementRepository.countByStatusIn(
-                new HashSet<>(Arrays.asList(ReplacementStatus.REVIEWED, ReplacementStatus.FIXED)));
+        return replacementRepository.countByStatus(ReplacementStatus.REVIEWED);
     }
 
     long countReplacementsToReview() {
