@@ -115,7 +115,6 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put("minor", "true");
         params.put("token", getEditToken(accessToken));
 
-        // TODO : Save the reviewer
         // TODO : Take into account conflicts during the edition
         // TODO : Test saving when session has expired in frontend
         try {

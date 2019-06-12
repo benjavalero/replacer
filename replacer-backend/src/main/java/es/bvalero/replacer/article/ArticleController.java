@@ -54,15 +54,15 @@ public class ArticleController {
     }
 
     @PutMapping(value = "/")
-    public boolean save(@RequestParam("id") int articleId, @RequestBody String text,
+    public boolean save(@RequestParam("id") int articleId, @RequestBody String text, @RequestParam String reviewer,
                         @RequestParam String token, @RequestParam String tokenSecret) {
         LOGGER.info("PUT Save article with ID: {}", articleId);
         if (StringUtils.isNotBlank(text)) {
             OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
-            return articleService.saveArticleChanges(articleId, text, accessToken);
+            return articleService.saveArticleChanges(articleId, text, reviewer, accessToken);
         } else {
             LOGGER.info("No changes in article. Mark directly as reviewed: {}", articleId);
-            return articleService.markArticleAsReviewed(articleId);
+            return articleService.markArticleAsReviewed(articleId, reviewer);
         }
     }
 

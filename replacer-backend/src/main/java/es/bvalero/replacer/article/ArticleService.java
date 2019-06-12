@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 public class ArticleService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
-    private static final String DEFAULT_REVIEWER = "system";
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -236,30 +235,30 @@ public class ArticleService {
     /**
      * Saves in Wikipedia the changes on an article validated in the front-end.
      */
-    boolean saveArticleChanges(int articleId, String text, OAuth1AccessToken accessToken) {
+    boolean saveArticleChanges(int articleId, String text, String reviewer, OAuth1AccessToken accessToken) {
         try {
             // Upload new content to Wikipedia
             wikipediaService.savePageContent(articleId, text, LocalDateTime.now(), accessToken);
 
             // Mark article as reviewed in the database
-            return markArticleAsReviewed(articleId);
+            return markArticleAsReviewed(articleId, reviewer);
         } catch (WikipediaException e) {
             LOGGER.error("Error saving article: {}", articleId, e);
             return false;
         }
     }
 
-    boolean markArticleAsReviewed(int articleId) {
+    boolean markArticleAsReviewed(int articleId, String reviewer) {
         LOGGER.info("Mark article as reviewed: {}", articleId);
         replacementRepository.findByArticleId(articleId).stream()
                 .filter(Replacement::isToBeReviewed)
-                .forEach(this::reviewReplacement);
+                .forEach(rep -> reviewReplacement(rep, reviewer));
         return true;
     }
 
-    private void reviewReplacement(Replacement replacement) {
+    private void reviewReplacement(Replacement replacement, String reviewer) {
         replacementRepository.save(replacement
-                .withReviewer(DEFAULT_REVIEWER)
+                .withReviewer(reviewer)
                 .withLastUpdate(LocalDate.now()));
     }
 
