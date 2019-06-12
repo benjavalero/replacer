@@ -31,13 +31,14 @@ interface ReplacementRepository extends JpaRepository<Replacement, Long>, Replac
     @Query("SELECT new es.bvalero.replacer.article.ReplacementCount(subtype, COUNT(*)) FROM Replacement WHERE type = 'MISSPELLING' GROUP BY subtype")
     List<ReplacementCount> findMisspellingsGrouped();
 
-    @Query("FROM Replacement WHERE status = :status ORDER BY RAND()")
-    List<Replacement> findRandomByStatus(@Param("status") ReplacementStatus status, Pageable pageable);
+    @Query("FROM Replacement WHERE reviewer IS NULL ORDER BY RAND()")
+    List<Replacement> findRandomToReview(Pageable pageable);
 
-    @Query("FROM Replacement WHERE subtype = :word AND status = :status ORDER BY RAND()")
-    List<Replacement> findRandomByWordAndStatus(@Param("word") String word, @Param("status") ReplacementStatus status,
-                                                Pageable pageable);
+    @Query("FROM Replacement WHERE subtype = :word AND reviewer IS NULL ORDER BY RAND()")
+    List<Replacement> findRandomByWordToReview(@Param("word") String word, Pageable pageable);
 
-    long countByStatus(ReplacementStatus status);
+    long countByReviewerIsNull();
+
+    long countByReviewerIsNotNull();
 
 }

@@ -167,8 +167,8 @@ public class ArticleService {
     private Optional<Replacement> findRandomReplacementNotReviewedInDb(@Nullable String word) {
         PageRequest pagination = PageRequest.of(0, 1);
         List<Replacement> randomReplacements = StringUtils.isBlank(word)
-                ? replacementRepository.findRandomByStatus(ReplacementStatus.TO_REVIEW, pagination)
-                : replacementRepository.findRandomByWordAndStatus(word, ReplacementStatus.TO_REVIEW, pagination);
+                ? replacementRepository.findRandomToReview(pagination)
+                : replacementRepository.findRandomByWordToReview(word, pagination);
         return randomReplacements.isEmpty() ? Optional.empty() : Optional.of(randomReplacements.get(0));
     }
 
@@ -252,14 +252,13 @@ public class ArticleService {
     boolean markArticleAsReviewed(int articleId) {
         LOGGER.info("Mark article as reviewed: {}", articleId);
         replacementRepository.findByArticleId(articleId).stream()
-                .filter(dbReplacement -> dbReplacement.getStatus() == ReplacementStatus.TO_REVIEW)
+                .filter(Replacement::isToBeReviewed)
                 .forEach(this::reviewReplacement);
         return true;
     }
 
     private void reviewReplacement(Replacement replacement) {
         replacementRepository.save(replacement
-                .withStatus(ReplacementStatus.REVIEWED)
                 .withReviewer(DEFAULT_REVIEWER)
                 .withLastUpdate(LocalDate.now()));
     }
@@ -269,11 +268,11 @@ public class ArticleService {
     }
 
     long countReplacementsReviewed() {
-        return replacementRepository.countByStatus(ReplacementStatus.REVIEWED);
+        return replacementRepository.countByReviewerIsNotNull();
     }
 
     long countReplacementsToReview() {
-        return replacementRepository.countByStatus(ReplacementStatus.TO_REVIEW);
+        return replacementRepository.countByReviewerIsNull();
     }
 
     List<ReplacementCount> findMisspellingsGrouped() {

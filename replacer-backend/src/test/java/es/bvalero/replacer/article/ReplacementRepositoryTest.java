@@ -35,12 +35,12 @@ public class ReplacementRepositoryTest {
         Replacement error3 = new Replacement(3, "X", "aber", 3);
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3));
 
-        Assert.assertTrue(replacementRepository.findRandomByWordAndStatus(
-                "xxx", ReplacementStatus.TO_REVIEW, PageRequest.of(0, 1))
+        Assert.assertTrue(replacementRepository.findRandomByWordToReview(
+                "xxx", PageRequest.of(0, 1))
                 .isEmpty());
 
-        Assert.assertEquals(3, replacementRepository.findRandomByWordAndStatus(
-                "aber", ReplacementStatus.TO_REVIEW, PageRequest.of(0, 3))
+        Assert.assertEquals(3, replacementRepository.findRandomByWordToReview(
+                "aber", PageRequest.of(0, 3))
                 .size());
     }
 

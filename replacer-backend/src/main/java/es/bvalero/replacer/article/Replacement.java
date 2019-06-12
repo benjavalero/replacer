@@ -34,11 +34,6 @@ public class Replacement implements Serializable {
     @ColumnDefault(value = "0")
     private int position;
 
-    @Column(nullable = false, length = 10)
-    @ColumnDefault("'TO_REVIEW'")
-    @Enumerated(EnumType.STRING)
-    private ReplacementStatus status;
-
     @Column(nullable = false)
     private LocalDate lastUpdate;
 
@@ -54,7 +49,6 @@ public class Replacement implements Serializable {
         this.type = type;
         this.subtype = subtype;
         this.position = position;
-        this.status = ReplacementStatus.TO_REVIEW;
         this.lastUpdate = LocalDate.now();
         this.reviewer = null;
     }
@@ -63,27 +57,13 @@ public class Replacement implements Serializable {
         return articleId;
     }
 
-    ReplacementStatus getStatus() {
-        return status;
-    }
-
-    public LocalDate getLastUpdate() {
+    LocalDate getLastUpdate() {
         return lastUpdate;
-    }
-
-    Replacement withStatus(ReplacementStatus newStatus) {
-        Replacement newRep = new Replacement(articleId, type, subtype, position);
-        newRep.id = id;
-        newRep.status = newStatus;
-        newRep.lastUpdate = lastUpdate;
-        newRep.reviewer = reviewer;
-        return newRep;
     }
 
     Replacement withLastUpdate(LocalDate newLastUpdate) {
         Replacement newRep = new Replacement(articleId, type, subtype, position);
         newRep.id = id;
-        newRep.status = status;
         newRep.lastUpdate = newLastUpdate;
         newRep.reviewer = reviewer;
         return newRep;
@@ -92,18 +72,13 @@ public class Replacement implements Serializable {
     Replacement withReviewer(String newReviewer) {
         Replacement newRep = new Replacement(articleId, type, subtype, position);
         newRep.id = id;
-        newRep.status = status;
         newRep.lastUpdate = lastUpdate;
         newRep.reviewer = newReviewer;
         return newRep;
     }
 
     boolean isToBeReviewed() {
-        return this.status == ReplacementStatus.TO_REVIEW;
-    }
-
-    boolean isReviewed() {
-        return this.status == ReplacementStatus.REVIEWED;
+        return this.reviewer == null;
     }
 
     boolean isSame(Replacement that) {
@@ -123,14 +98,13 @@ public class Replacement implements Serializable {
                 position == that.position &&
                 type.equals(that.type) &&
                 subtype.equals(that.subtype) &&
-                status == that.status &&
                 lastUpdate.equals(that.lastUpdate) &&
                 Objects.equals(reviewer, that.reviewer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, articleId, type, subtype, position, status, lastUpdate, reviewer);
+        return Objects.hash(id, articleId, type, subtype, position, lastUpdate, reviewer);
     }
 
 
@@ -142,7 +116,6 @@ public class Replacement implements Serializable {
                 ", type='" + type + '\'' +
                 ", subtype='" + subtype + '\'' +
                 ", position=" + position +
-                ", status=" + status +
                 ", lastUpdate=" + lastUpdate +
                 ", reviewer='" + reviewer + '\'' +
                 '}';
