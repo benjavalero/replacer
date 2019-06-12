@@ -73,10 +73,14 @@ public class ArticleService {
     }
 
     private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement, boolean indexInBatch) {
-        if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())) {
-            saveReplacement(dbReplacement
-                    .withLastUpdate(newReplacement.getLastUpdate())
-                    .withStatus(ReplacementStatus.TO_REVIEW), indexInBatch);
+        if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())) { // DB older than Dump
+            if (dbReplacement.isFixed()) {
+                saveReplacement(dbReplacement
+                        .withLastUpdate(newReplacement.getLastUpdate())
+                        .withStatus(ReplacementStatus.TO_REVIEW), indexInBatch);
+            } else {
+                saveReplacement(dbReplacement.withLastUpdate(newReplacement.getLastUpdate()), indexInBatch);
+            }
         }
     }
 
@@ -189,7 +193,7 @@ public class ArticleService {
     private List<ArticleReplacement> findArticleReplacements(String articleContent) {
         // Find the replacements sorted (the first ones in the list are the last in the text)
         List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(articleContent);
-        Collections.sort(articleReplacements, Collections.reverseOrder());
+        articleReplacements.sort(Collections.reverseOrder());
         return articleReplacements;
     }
 
@@ -238,34 +242,25 @@ public class ArticleService {
     /**
      * Saves in Wikipedia the changes on an article validated in the front-end.
      */
-    boolean saveArticleChanges(String title, String text, OAuth1AccessToken accessToken) {
+    boolean saveArticleChanges(int articleId, String text, OAuth1AccessToken accessToken) {
         try {
             // Upload new content to Wikipedia
-            wikipediaService.savePageContent(title, text, LocalDateTime.now(), accessToken);
+            wikipediaService.savePageContent(articleId, text, LocalDateTime.now(), accessToken);
 
             // Mark article as reviewed in the database
-            markArticleAsReviewed(title);
-
-            return true;
+            return markArticleAsReviewed(articleId);
         } catch (WikipediaException e) {
-            LOGGER.error("Error saving article: {}", title, e);
+            LOGGER.error("Error saving article: {}", articleId, e);
             return false;
         }
     }
 
-    boolean markArticleAsReviewed(String articleTitle) {
-        LOGGER.info("Mark article as reviewed: {}", articleTitle);
-        // For the moment we need to retrieve the ID from the title
-        try {
-            wikipediaService.getPageByTitle(articleTitle).ifPresent(page ->
-                    replacementRepository.findByArticleId(page.getId()).stream()
-                            .filter(dbReplacement -> dbReplacement.getStatus() == ReplacementStatus.TO_REVIEW)
-                            .forEach(this::fixReplacement));
-            return true;
-        } catch (WikipediaException e) {
-            LOGGER.error("Error marking article as reviewed: {}", articleTitle, e);
-            return false;
-        }
+    boolean markArticleAsReviewed(int articleId) {
+        LOGGER.info("Mark article as reviewed: {}", articleId);
+        replacementRepository.findByArticleId(articleId).stream()
+                .filter(dbReplacement -> dbReplacement.getStatus() == ReplacementStatus.TO_REVIEW)
+                .forEach(this::fixReplacement);
+        return true;
     }
 
     private void fixReplacement(Replacement replacement) {

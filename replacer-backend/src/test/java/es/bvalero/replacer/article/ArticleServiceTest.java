@@ -86,21 +86,48 @@ public class ArticleServiceTest {
     public void testIndexExistingArticle() {
         Replacement rep7 = new Replacement(2, "", "", 1);
         Replacement rep9 = new Replacement(2, "", "", 2);
+
         Replacement rep11 = new Replacement(2, "", "", 3);
-        Replacement rep13 = new Replacement(2, "", "", 4);
+        Replacement rep17 = new Replacement(2, "", "", 6);
+        Replacement rep19 = new Replacement(2, "", "", 7);
+
         Replacement rep15 = new Replacement(2, "", "", 5);
-        List<Replacement> newReplacements = Arrays.asList(rep7, rep9, rep11, rep13, rep15);
+        Replacement rep21 = new Replacement(2, "", "", 8);
+        Replacement rep13 = new Replacement(2, "", "", 4);
+        List<Replacement> newReplacements = Arrays.asList(rep7, rep9, rep11, rep13, rep15, rep17, rep19, rep21);
+
+        // If the existing replacement is not reviewed and:
+        // - Is older => Update the "lastUpdate" to help skipping future indexations
+        // - Is equal => All as in the last indexation => nothing to do
+        // - Is newer => Impossible case
+
+        // If the existing replacement is reviewed and:
+        // - Is older => Update the "lastUpdate" to help skipping future indexations
+        // - Is equal => All as in the last indexation => nothing to do
+        // - Is newer => Reviewed after indexation => nothing to do
+
+        // If the existing replacement is fixed and:
+        // - Is older => The replacement is back => Update the "lastUpdate" to help skipping future indexations and reset to "TO REVIEW"
+        // - Is equal => Strange case => we do nothing
+        // - Is newer => Fixed after indexation => nothing to do
 
         Replacement rep8 = rep7.withStatus(ReplacementStatus.TO_REVIEW)
-                .withLastUpdate(rep7.getLastUpdate().minusDays(1)); // Existing To Review Older => UPDATE
+                .withLastUpdate(rep7.getLastUpdate().minusDays(1)); // Existing To Review Older => UPDATE DATE
         Replacement rep10 = rep9.withStatus(ReplacementStatus.TO_REVIEW); // Existing To Review Equal => DO NOTHING
-        Replacement rep12 = rep11.withStatus(ReplacementStatus.REVIEWED); // Existing Reviewed => DO NOTHING
+
+        Replacement rep12 = rep11.withStatus(ReplacementStatus.REVIEWED)
+                .withLastUpdate(rep11.getLastUpdate().minusDays(1)); // Existing Reviewed Older => UPDATE DATE
+        Replacement rep18 = rep17.withStatus(ReplacementStatus.REVIEWED); // Existing Reviewed Equal => DO NOTHING
+        Replacement rep20 = rep19.withStatus(ReplacementStatus.REVIEWED)
+                .withLastUpdate(rep19.getLastUpdate().plusDays(1)); // Existing Reviewed Newer => DO NOTHING
+
+        Replacement rep16 = rep15.withStatus(ReplacementStatus.FIXED)
+                .withLastUpdate(rep15.getLastUpdate().minusDays(1)); // Existing Fixed Older => UPDATE DATE AND STATUS
+        Replacement rep22 = rep21.withStatus(ReplacementStatus.FIXED); // Existing Fixed Equal => DO NOTHING
         Replacement rep14 = rep13.withStatus(ReplacementStatus.FIXED)
                 .withLastUpdate(rep13.getLastUpdate().plusDays(1)); // Existing Fixed Newer => DO NOTHING
-        Replacement rep16 = rep15.withStatus(ReplacementStatus.FIXED)
-                .withLastUpdate(rep15.getLastUpdate().minusDays(1)); // Existing Fixed Older => UPDATE STATUS
-        List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(rep8, rep10, rep12, rep14, rep16));
 
+        List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(rep8, rep10, rep12, rep14, rep16, rep18, rep20, rep22));
 
         articleService.indexReplacements(newReplacements, dbReplacements2, true);
         articleService.flushReplacementsInBatch();
@@ -112,7 +139,8 @@ public class ArticleServiceTest {
         Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
                 new HashSet<>(Arrays.asList(
                         rep8.withLastUpdate(rep7.getLastUpdate()),
-                        rep16.withLastUpdate(rep15.getLastUpdate()).withStatus(ReplacementStatus.TO_REVIEW)))
+                        rep16.withLastUpdate(rep15.getLastUpdate()).withStatus(ReplacementStatus.TO_REVIEW),
+                        rep12.withLastUpdate(rep11.getLastUpdate())))
         );
     }
 
@@ -141,11 +169,11 @@ public class ArticleServiceTest {
 
     @Test
     public void testSaveArticle() throws WikipediaException {
-        String title = "España";
+        int articleId = 1;
         String text = "Un texto";
 
         WikipediaPage page = WikipediaPage.builder().build();
-        Mockito.when(wikipediaService.getPageByTitle(title)).thenReturn(Optional.of(page));
+        Mockito.when(wikipediaService.getPageById(articleId)).thenReturn(Optional.of(page));
 
         Replacement replacement = new Replacement(1, "", "", 1);
         Mockito.when(replacementRepository.findByArticleId(Mockito.anyInt()))
@@ -153,10 +181,10 @@ public class ArticleServiceTest {
 
         OAuth1AccessToken accessToken = Mockito.mock(OAuth1AccessToken.class);
 
-        articleService.saveArticleChanges(title, text, accessToken);
+        articleService.saveArticleChanges(articleId, text, accessToken);
 
         Mockito.verify(wikipediaService).savePageContent(
-                Mockito.eq(title), Mockito.eq(text), Mockito.any(LocalDateTime.class), Mockito.eq(accessToken));
+                Mockito.eq(articleId), Mockito.eq(text), Mockito.any(LocalDateTime.class), Mockito.eq(accessToken));
         Mockito.verify(replacementRepository).save(Mockito.any(Replacement.class));
     }
 

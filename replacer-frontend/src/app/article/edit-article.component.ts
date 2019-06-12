@@ -60,10 +60,51 @@ export class EditArticleComponent implements OnInit {
   }
 
   onSaveChanges() {
+    // Sort the fixed replacements in reverse to start by the end
     const fixedReplacements = this.getFixedReplacements().sort((a, b): number => b.start - a.start);
-    fixedReplacements.forEach(rep => {
-      // TODO : Apply the fix in the original text
+    if (fixedReplacements) {
+      // Apply the fixes in the original text
+      let contentToSave = this.content;
+      fixedReplacements.forEach(rep => {
+        contentToSave = this.replaceText(contentToSave, rep.start, rep.text, rep.textFixed);
+      });
+      this.saveContent(contentToSave);
+    } else {
+      // Save with no changes => Mark article as reviewed
+      this.saveContent(' ');
+    }
+  }
+
+  private saveContent(content: string) {
+    // Remove replacements as a trick to hide the article
+    this.replacements = [];
+
+    this.alertService.addAlertMessage({
+      type: 'info',
+      message: `Guardando cambios en «${this.title}»…`
     });
+
+    this.articleService.saveArticle(this.articleId, content).subscribe((res: boolean) => {
+      this.alertService.addAlertMessage({
+        type: 'success',
+        message: 'Cambios guardados con éxito'
+      });
+
+      this.router.navigate(['random']);
+    }, (err) => {
+      this.alertService.addAlertMessage({
+        type: 'danger',
+        message: `Error al guardar el artículo: ${err.error.message}`
+      });
+    });
+  }
+
+  private replaceText(fullText: string, position: number, currentText: string, newText: string): string {
+    return (
+      fullText.slice(0, position) +
+      newText +
+      fullText.slice(position + currentText.length)
+    );
   }
 
 }

@@ -104,17 +104,21 @@ public class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public void savePageContent(String pageTitle, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
+    public void savePageContent(int pageId, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
             throws WikipediaException {
         LOGGER.info("Save page content into Wikipedia");
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, "edit");
-        params.put("title", pageTitle);
+        params.put("pageid", Integer.toString(pageId));
         params.put("text", pageContent);
         params.put("summary", EDIT_SUMMARY);
         params.put("minor", "true");
         params.put("token", getEditToken(accessToken));
 
+        // TODO : Save the reviewer
+        // TODO : Take into account conflicts during the edition
+        // TODO : Merge status reviewed and fixed
+        // TODO : Test saving when session has expired in frontend
         try {
             authenticationService.executeOAuthRequest(params, accessToken);
         } catch (AuthenticationException e) {
