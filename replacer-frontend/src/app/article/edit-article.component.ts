@@ -17,6 +17,7 @@ export class EditArticleComponent implements OnInit {
   title = '';
   content: string;
   replacements: ArticleReplacement[] = [];
+  fixedCount = 0;
 
   constructor(private route: ActivatedRoute, private alertService: AlertService, private articleService: ArticleService,
     private router: Router) { }
@@ -46,6 +47,22 @@ export class EditArticleComponent implements OnInit {
         type: 'danger',
         message: 'Error al buscar los reemplazos en el artículo: ' + err.error.message
       });
+    });
+  }
+
+  onFixed(fixed: any) {
+    this.replacements.find(rep => rep.start === fixed.position).textFixed = fixed.newText;
+    this.fixedCount = this.getFixedReplacements().length;
+  }
+
+  private getFixedReplacements(): ArticleReplacement[] {
+    return this.replacements.filter(rep => rep.textFixed);
+  }
+
+  onSaveChanges() {
+    const fixedReplacements = this.getFixedReplacements().sort((a, b): number => b.start - a.start);
+    fixedReplacements.forEach(rep => {
+      // TODO : Apply the fix in the original text
     });
   }
 

@@ -6,4 +6,5 @@ export interface ArticleReplacement {
   type: string;
   subtype: string;
   suggestions: ReplacementSuggestion[];
+  textFixed?: string;
 }

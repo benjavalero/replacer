@@ -5,10 +5,10 @@
     class="p-1 border border-dark rounded font-weight-bold">{{ suggestionSelected.text }}</span>{{ textRight }}
 </div>
 
-<div class="btn-group-vertical btn-group-toggle w-100 mt-3" ngbRadioGroup name="radioBasic"
+<div class="btn-group btn-group-toggle w-100 mt-3" ngbRadioGroup name="radioBasic"
   [(ngModel)]="suggestionSelected">
   <label *ngFor="let suggestion of suggestions" ngbButtonLabel class="btn text-left"
-    [ngClass]="{ 'btn-primary': suggestion === suggestionSelected, 'btn-light': suggestion !== suggestionSelected }">
+    [ngClass]="{ 'btn-primary': suggestion === suggestionSelected, 'btn-outline-primary': suggestion !== suggestionSelected }">
     <input ngbButton type="radio" [value]="suggestion">
     {{ suggestion.text }}
     <span *ngIf="suggestion.comment" class="small">({{ suggestion.comment }})</span>
