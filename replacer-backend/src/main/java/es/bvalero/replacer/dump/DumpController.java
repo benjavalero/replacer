@@ -13,16 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class DumpController {
 
     @Autowired
-    private DumpHandler dumpHandler;
-
-    @Autowired
     private DumpManager dumpManager;
 
     @GetMapping(value = "/status")
     public DumpProcessStatus getDumpStatus() {
-        return dumpHandler.getProcessStatus();
+        return dumpManager.getDumpStatus();
     }
 
+    /*
     @GetMapping(value = "/run")
     public boolean processLatestDumpFileManually() {
         // TODO : Estos métodos deberían devolver el true lo antes posible
@@ -35,5 +33,5 @@ public class DumpController {
         dumpManager.processLatestDumpFile(true);
         return true;
     }
-
+*/
 }

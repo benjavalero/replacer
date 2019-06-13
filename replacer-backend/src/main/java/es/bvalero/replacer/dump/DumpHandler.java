@@ -3,8 +3,6 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.article.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import org.apache.commons.lang3.time.DurationFormatUtils;
-import org.intellij.lang.annotations.RegExp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.nio.file.Path;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -31,11 +28,6 @@ class DumpHandler extends DefaultHandler {
     private static final String TIMESTAMP_TAG = "timestamp";
     private static final String TEXT_TAG = "text";
     private static final String PAGE_TAG = "page";
-
-    private static final long NUM_ARTICLES = 3718238L; // Rough amount of articles to be read
-    private static final String DURATION_FORMAT = "d:HH:mm:ss";
-    @RegExp
-    private static final String PERCENTAGE_FORMAT = "%.2f";
 
     @Autowired
     private DumpArticleProcessor dumpArticleProcessor;
@@ -167,51 +159,10 @@ class DumpHandler extends DefaultHandler {
                 .setForceProcess(forceProcess)
                 .setNumArticlesRead(numArticlesRead)
                 .setNumArticlesProcessed(numArticlesProcessed)
-                .setDumpFileName(latestDumpFile == null ? "-" : latestDumpFile.getFileName().toString())
-                .setAverage(getAverageTimePerArticle().toMillis())
-                .setTime(getTime())
-                .setProgress(getProgressPercentage())
+                .setDumpFileName(latestDumpFile == null ? "" : latestDumpFile.getFileName().toString())
+                .setStart(startTime == null ? null : startTime.toEpochMilli())
+                .setEnd(endTime == null ? null : endTime.toEpochMilli())
                 .build();
-    }
-
-    private Duration getAverageTimePerArticle() {
-        Duration average;
-        if (numArticlesRead == 0L) {
-            average = Duration.ofMillis(0L);
-        } else if (running) {
-            Duration elapsed = Duration.between(startTime, Instant.now());
-            average = Duration.ofMillis(elapsed.toMillis() / numArticlesRead);
-        } else if (endTime == null) {
-            average = Duration.ofMillis(0L);
-        } else {
-            Duration elapsed = Duration.between(startTime, endTime);
-            average = Duration.ofMillis(elapsed.toMillis() / numArticlesRead);
-        }
-        return average;
-    }
-
-    private String getTime() {
-        Duration time;
-        if (running) {
-            long numArticlesToRead = Math.max(NUM_ARTICLES, numArticlesRead) - numArticlesRead;
-            time = Duration.ofMillis(numArticlesToRead * getAverageTimePerArticle().toMillis());
-        } else if (endTime == null) {
-            time = Duration.ofMillis(0L);
-        } else {
-            time = Duration.between(startTime, endTime);
-        }
-        return DurationFormatUtils.formatDuration(time.toMillis(), DURATION_FORMAT, true);
-    }
-
-    private String getProgressPercentage() {
-        String progress = null;
-        // This only has sense if the dump process is running
-        if (running) {
-            // If we read more articles than expected, the result will always be 100%
-            double percent = (double) numArticlesRead * 100.0 / (double) Math.max(NUM_ARTICLES, numArticlesRead);
-            progress = String.format(PERCENTAGE_FORMAT, percent);
-        }
-        return progress;
     }
 
     private class DumpArticleCache {

@@ -26,14 +26,14 @@ public class ReplacementFinderService {
      * If there are no replacements, the list will be empty.
      */
     public List<ArticleReplacement> findReplacements(String text) {
-        LOGGER.info("Start finding replacements in text");
+        LOGGER.debug("Start finding replacements in text");
         // Find the replacements in the text
         // LinkedList is better to run iterators and remove items from it
         List<ArticleReplacement> articleReplacements = new LinkedList<>();
         for (ArticleReplacementFinder finder : articleReplacementFinders) {
             articleReplacements.addAll(finder.findReplacements(text));
         }
-        LOGGER.info("Found replacements (without ignoring): {} items", articleReplacements.size());
+        LOGGER.debug("Found replacements (without ignoring): {} items", articleReplacements.size());
 
         // No need to find the exceptions if there are no replacements found
         if (articleReplacements.isEmpty()) {
@@ -50,7 +50,7 @@ public class ReplacementFinderService {
             }
         }
 
-        LOGGER.info("Finish finding replacements in text: {} items", articleReplacements.size());
+        LOGGER.debug("Finish finding replacements in text: {} items", articleReplacements.size());
         return articleReplacements;
     }
 

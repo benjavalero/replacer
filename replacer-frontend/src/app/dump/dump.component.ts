@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import { environment } from '../../environments/environment';
-
-import { DumpStatus } from './dump-status';
 import { interval } from 'rxjs';
+import { DumpService } from './dump.service';
+import { DumpStatus } from './dump-status.model';
+
+const NUM_ARTICLES = 3718238; // Rough amount of articles to be read
 
 @Component({
   selector: 'app-dump',
@@ -13,9 +13,12 @@ import { interval } from 'rxjs';
 })
 export class DumpComponent implements OnInit {
   status: DumpStatus;
-  submitted = false;
+  // submitted = false;
+  elapsed: number;
+  progress: number;
+  average: number;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private dumpService: DumpService) { }
 
   ngOnInit() {
     this.findDumpStatus();
@@ -25,13 +28,43 @@ export class DumpComponent implements OnInit {
   }
 
   private findDumpStatus() {
-    this.httpClient
-      .get<DumpStatus>(`${environment.apiUrl}/dump/status`)
-      .subscribe(res => {
-        this.status = res;
-      });
+    this.dumpService.findDumpStatus().subscribe((status: DumpStatus) => {
+      this.status = status;
+      this.elapsed = this.calculateElapsed();
+      this.progress = this.calculateProgress();
+      this.average = this.calculateAverage();
+    });
   }
 
+  private calculateElapsed(): number {
+    if (this.status.start) {
+      if (this.status.end) {
+        return this.status.end - this.status.start;
+      } else {
+        return Date.now() - this.status.start;
+      }
+    } else {
+      return 0;
+    }
+  }
+
+  private calculateProgress(): number {
+    if (this.status.numArticlesRead) {
+      return this.status.numArticlesRead * 100.0 / Math.max(NUM_ARTICLES, this.status.numArticlesRead);
+    } else {
+      return 0;
+    }
+  }
+
+  private calculateAverage(): number {
+    if (this.status.numArticlesRead) {
+      return this.calculateElapsed() / this.status.numArticlesRead;
+    } else {
+      return 0;
+    }
+  }
+
+  /*
   onSubmit() {
     this.runIndexation(this.status.forceProcess);
   }
@@ -45,4 +78,5 @@ export class DumpComponent implements OnInit {
         this.findDumpStatus();
       });
   }
+  */
 }

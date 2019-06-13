@@ -141,4 +141,8 @@ class DumpManager {
         }
     }
 
+    DumpProcessStatus getDumpStatus() {
+        return dumpHandler.getProcessStatus();
+    }
+
 }

@@ -4,7 +4,6 @@ export interface DumpStatus {
   numArticlesRead: number;
   numArticlesProcessed: number;
   dumpFileName: string;
-  average: number;
-  time: string;
-  progress: string;
+  start?: number;
+  end?: number;
 }

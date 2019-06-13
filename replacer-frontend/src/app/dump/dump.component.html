@@ -1,52 +1,21 @@
-<h2>Indexación</h2>
+<h3>Indexación</h3>
 
-<p *ngIf="!status">Cargando estado de la indexación...</p>
-
-<div *ngIf="status && status.running">
-  <p>El procesamiento se está ejecutando.</p>
+<div *ngIf="status">
   <ul>
-    <li>
-      Fichero en proceso: <strong>{{ status.dumpFileName }}</strong>
-    </li>
-    <li>
-      Tiempo estimado: <strong>{{ status.time }}</strong> (dd:hh:mm:ss)
-    </li>
-    <li>
-      Artículos leídos: <strong>{{ status.numArticlesRead }}</strong>
-    </li>
-    <li>
-      Artículos procesados: <strong>{{ status.numArticlesProcessed }}</strong>
-    </li>
-    <li>
-      Progreso: <strong>{{ status.progress }}</strong
-      >&nbsp;%
-    </li>
-    <li>
-      Tiempo medio por artículo: <strong>{{ status.average }}</strong> ms
-    </li>
+    <li>En ejecución: <strong>{{ status.running }}</strong></li>
+    <li>Forzado: <strong>{{ status.forceProcess }}</strong></li>
+    <li>Fichero en proceso: <strong>{{ status.dumpFileName }}</strong></li>
+    <li>Inicio: <strong>{{ status.start }}</strong></li>
+    <li>Final: <strong>{{ status.end }}</strong></li>
+    <li>Artículos leídos: <strong>{{ status.numArticlesRead }}</strong></li>
+    <li>Artículos procesados: <strong>{{ status.numArticlesProcessed }}</strong></li>
+    <li>Tiempo transcurrido: <strong>{{ elapsed }}</strong></li>
+    <li>Progreso: <strong>{{ progress }}</strong></li>
+    <li>Tiempo medio por artículo: <strong>{{ average }}</strong></li>
   </ul>
 </div>
 
-<div *ngIf="status && !status.running">
-  <p>El procesamiento no se está ejecutando.</p>
-  <ul *ngIf="status.numArticlesRead">
-    <li>
-      Fichero procesado: <strong>{{ status.dumpFileName }}</strong>
-    </li>
-    <li>
-      Tiempo total: <strong>{{ status.time }}</strong> (dd:hh:mm:ss)
-    </li>
-    <li>
-      Artículos leídos: <strong>{{ status.numArticlesRead }}</strong>
-    </li>
-    <li>
-      Artículos procesados: <strong>{{ status.numArticlesProcessed }}</strong>
-    </li>
-    <li>
-      Tiempo medio por artículo: <strong>{{ status.average }}</strong> ms
-    </li>
-  </ul>
-
+<!--
   <form (ngSubmit)="onSubmit()">
     <div class="form-group form-check">
       <input
@@ -66,3 +35,4 @@
     </button>
   </form>
 </div>
+-->

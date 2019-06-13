@@ -94,10 +94,7 @@ public class DumpHandlerTest {
         Assert.assertFalse(defaultStats.isForceProcess());
         Assert.assertEquals(0L, defaultStats.getNumArticlesRead());
         Assert.assertEquals(0L, defaultStats.getNumArticlesProcessed());
-        Assert.assertEquals("-", defaultStats.getDumpFileName());
-        Assert.assertEquals(0L, defaultStats.getAverage());
-        Assert.assertEquals("0:00:00:00", defaultStats.getTime());
-        Assert.assertNull(defaultStats.getProgress());
+        Assert.assertEquals("", defaultStats.getDumpFileName());
     }
 
 }
