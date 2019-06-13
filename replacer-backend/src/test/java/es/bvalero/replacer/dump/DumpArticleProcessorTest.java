@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class DumpArticleProcessorTest {
@@ -60,8 +61,8 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessLastUpdateAfterTimestamp() {
-        LocalDate today = LocalDate.now();
-        LocalDate yesterday = today.minusDays(1L);
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime yesterday = today.minusDays(1L);
 
         WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setId(1)
@@ -70,7 +71,7 @@ public class DumpArticleProcessorTest {
                 .setTimestamp(yesterday)
                 .build();
 
-        ArticleTimestamp timestamp = new ArticleTimestamp(1, today);
+        ArticleTimestamp timestamp = new ArticleTimestamp(1, today.toLocalDate());
         Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(timestamp));
 
@@ -79,8 +80,8 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessLastUpdateAfterTimestampForced() {
-        LocalDate today = LocalDate.now();
-        LocalDate yesterday = today.minusDays(1L);
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime yesterday = today.minusDays(1L);
 
         WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setId(1)
@@ -89,7 +90,7 @@ public class DumpArticleProcessorTest {
                 .setTimestamp(yesterday)
                 .build();
 
-        ArticleTimestamp timestamp = new ArticleTimestamp(1, today);
+        ArticleTimestamp timestamp = new ArticleTimestamp(1, today.toLocalDate());
         Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(timestamp));
 
@@ -98,7 +99,7 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessLastUpdateWhenTimestamp() {
-        LocalDate today = LocalDate.now();
+        LocalDateTime today = LocalDateTime.now();
         WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setId(1)
                 .setNamespace(WikipediaNamespace.ARTICLE)
@@ -106,7 +107,7 @@ public class DumpArticleProcessorTest {
                 .setTimestamp(today)
                 .build();
 
-        ArticleTimestamp timestamp = new ArticleTimestamp(1, today);
+        ArticleTimestamp timestamp = new ArticleTimestamp(1, today.toLocalDate());
         Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(timestamp));
 
@@ -115,7 +116,7 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessLastUpdateWhenTimestampForced() {
-        LocalDate today = LocalDate.now();
+        LocalDateTime today = LocalDateTime.now();
         WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setId(1)
                 .setNamespace(WikipediaNamespace.ARTICLE)
@@ -123,7 +124,7 @@ public class DumpArticleProcessorTest {
                 .setTimestamp(today)
                 .build();
 
-        ArticleTimestamp timestamp = new ArticleTimestamp(1, today);
+        ArticleTimestamp timestamp = new ArticleTimestamp(1, today.toLocalDate());
         Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(timestamp));
 
@@ -132,8 +133,8 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessLastUpdateBeforeTimestamp() {
-        LocalDate today = LocalDate.now();
-        LocalDate yesterday = LocalDate.now().minusDays(1L);
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime yesterday = today.minusDays(1L);
 
         WikipediaPage dumpArticle = WikipediaPage.builder()
                 .setId(1)
@@ -142,7 +143,7 @@ public class DumpArticleProcessorTest {
                 .setTimestamp(today)
                 .build();
 
-        ArticleTimestamp timestamp = new ArticleTimestamp(1, yesterday);
+        ArticleTimestamp timestamp = new ArticleTimestamp(1, yesterday.toLocalDate());
         Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(timestamp));
 

@@ -21,12 +21,14 @@ export class ArticleService {
     return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/review/${articleId}`);
   }
 
-  saveArticle(articleId: number, content: string): Observable<boolean> {
+  saveArticle(articleId: number, content: string, lastUpdate: string, currentTimestamp: string): Observable<boolean> {
     let params = new HttpParams();
     params = params.append('token', this.authenticationService.accessToken.token);
     params = params.append('tokenSecret', this.authenticationService.accessToken.tokenSecret);
     params = params.append('id', String(articleId));
     params = params.append('reviewer', this.authenticationService.username);
+    params = params.append('lastUpdate', lastUpdate);
+    params = params.append('currentTimestamp', currentTimestamp);
 
     return this.httpClient.put<boolean>(`${environment.apiUrl}/article`, content, { params });
   }

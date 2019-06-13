@@ -52,7 +52,7 @@ public class WikipediaServiceTest {
     @Test
     public void testGetPageContent() throws IOException, AuthenticationException, WikipediaException {
         // API response
-        String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
+        String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
         JsonNode jsonResponse = jsonMapper.readTree(textResponse);
         Mockito.when(authenticationService.executeUnsignedOAuthRequest(Mockito.anyMap())).thenReturn(jsonResponse);
 
@@ -63,14 +63,14 @@ public class WikipediaServiceTest {
         Assert.assertEquals(6219990, page.getId());
         Assert.assertEquals(title, page.getTitle());
         Assert.assertEquals(WikipediaNamespace.USER, page.getNamespace());
-        Assert.assertTrue(page.getTimestamp().getYear() >= 2016);
+        Assert.assertTrue(page.getLastUpdate().getYear() >= 2016);
         Assert.assertTrue(page.getContent().contains("Orihuela"));
     }
 
     @Test
     public void testGetPagesContent() throws IOException, AuthenticationException, WikipediaException {
         // API response
-        String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]},{\"pageid\":6903884,\"ns\":2,\"title\":\"Usuario:Benjavalero/Taller\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Enlace a [[Pais Vasco]].\"}}}]}]}}";
+        String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]},{\"pageid\":6903884,\"ns\":2,\"title\":\"Usuario:Benjavalero/Taller\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Enlace a [[Pais Vasco]].\"}}}]}]}}";
         JsonNode jsonResponse = jsonMapper.readTree(textResponse);
         Mockito.when(authenticationService.executeUnsignedOAuthRequest(Mockito.anyMap())).thenReturn(jsonResponse);
 
@@ -96,7 +96,7 @@ public class WikipediaServiceTest {
     @Test
     public void testGetPageContentUnavailable() throws IOException, AuthenticationException, WikipediaException {
         // API response
-        String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"ns\":2,\"title\":\"Usuario:Benjavaleroxx\",\"missing\":true}]}}";
+        String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"ns\":2,\"title\":\"Usuario:Benjavaleroxx\",\"missing\":true}]}}";
         JsonNode jsonResponse = jsonMapper.readTree(textResponse);
         Mockito.when(authenticationService.executeUnsignedOAuthRequest(Mockito.anyMap())).thenReturn(jsonResponse);
 

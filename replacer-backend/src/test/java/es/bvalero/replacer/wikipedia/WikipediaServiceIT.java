@@ -29,7 +29,7 @@ public class WikipediaServiceIT {
         Assert.assertEquals(6219990, page.getId());
         Assert.assertEquals(title, page.getTitle());
         Assert.assertEquals(WikipediaNamespace.USER, page.getNamespace());
-        Assert.assertTrue(page.getTimestamp().getYear() >= 2016);
+        Assert.assertTrue(page.getLastUpdate().getYear() >= 2016);
         Assert.assertTrue(page.getContent().contains("Orihuela"));
     }
 

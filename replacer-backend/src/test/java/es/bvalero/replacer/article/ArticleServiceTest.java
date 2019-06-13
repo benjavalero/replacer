@@ -132,7 +132,7 @@ public class ArticleServiceTest {
         String title = "España";
         String text = "Un texto";
 
-        WikipediaPage page = WikipediaPage.builder().setTitle(title).setContent(text).build();
+        WikipediaPage page = WikipediaPage.builder().setTitle(title).setContent(text).setTimestamp(LocalDateTime.now()).build();
         Mockito.when(wikipediaService.getPageById(Mockito.anyInt())).thenReturn(Optional.of(page));
 
         // Replacement matches
@@ -164,10 +164,10 @@ public class ArticleServiceTest {
 
         OAuth1AccessToken accessToken = Mockito.mock(OAuth1AccessToken.class);
 
-        articleService.saveArticleChanges(articleId, text, "x", accessToken);
+        articleService.saveArticleChanges(articleId, text, "x", "x", "x", accessToken);
 
         Mockito.verify(wikipediaService).savePageContent(
-                Mockito.eq(articleId), Mockito.eq(text), Mockito.any(LocalDateTime.class), Mockito.eq(accessToken));
+                Mockito.eq(articleId), Mockito.eq(text), Mockito.anyString(), Mockito.anyString(), Mockito.eq(accessToken));
         Mockito.verify(replacementRepository).save(Mockito.any(Replacement.class));
     }
 

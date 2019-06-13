@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -114,7 +113,7 @@ public class ArticleService {
                 articleReplacement -> new Replacement(
                         article.getId(), articleReplacement.getType(), articleReplacement.getSubtype(),
                         articleReplacement.getStart())
-                        .withLastUpdate(article.getTimestamp()))
+                        .withLastUpdate(article.getLastUpdate().toLocalDate()))
                 .collect(Collectors.toList());
     }
 
@@ -151,6 +150,8 @@ public class ArticleService {
                         .setTitle(article.getTitle())
                         .setContent(article.getContent())
                         .setReplacements(articleReplacements)
+                        .setLastUpdate(article.getTimestamp())
+                        .setCurrentTimestamp(article.getQueryTimestamp())
                         .build());
             }
         } catch (InvalidArticleException e) {
@@ -235,10 +236,11 @@ public class ArticleService {
     /**
      * Saves in Wikipedia the changes on an article validated in the front-end.
      */
-    boolean saveArticleChanges(int articleId, String text, String reviewer, OAuth1AccessToken accessToken) {
+    boolean saveArticleChanges(int articleId, String text, String reviewer, String lastUpdate, String currentTimestamp,
+                               OAuth1AccessToken accessToken) {
         try {
             // Upload new content to Wikipedia
-            wikipediaService.savePageContent(articleId, text, LocalDateTime.now(), accessToken);
+            wikipediaService.savePageContent(articleId, text, lastUpdate, currentTimestamp, accessToken);
 
             // Mark article as reviewed in the database
             return markArticleAsReviewed(articleId, reviewer);

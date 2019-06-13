@@ -33,7 +33,7 @@ public class ReplacementFinderService {
         for (ArticleReplacementFinder finder : articleReplacementFinders) {
             articleReplacements.addAll(finder.findReplacements(text));
         }
-        LOGGER.info("Found replacements (without ignoring): {}", articleReplacements.size());
+        LOGGER.info("Found replacements (without ignoring): {} items", articleReplacements.size());
 
         // No need to find the exceptions if there are no replacements found
         if (articleReplacements.isEmpty()) {

@@ -16,12 +16,17 @@ public final class ArticleReview {
     private final String title;
     private final String content;
     private final List<ArticleReplacement> replacements;
+    private final String lastUpdate;
+    private final String currentTimestamp;
 
-    private ArticleReview(Integer articleId, String title, String content, List<ArticleReplacement> replacements) {
+    private ArticleReview(Integer articleId, String title, String content, List<ArticleReplacement> replacements,
+                          String lastUpdate, String currentTimestamp) {
         this.articleId = articleId;
         this.title = title;
         this.content = content;
         this.replacements = replacements;
+        this.lastUpdate = lastUpdate;
+        this.currentTimestamp = currentTimestamp;
     }
 
     public static ArticleReview.ArticleReviewBuilder builder() {
@@ -41,6 +46,16 @@ public final class ArticleReview {
         return content;
     }
 
+    @SuppressWarnings("unused")
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    @SuppressWarnings("unused")
+    public String getCurrentTimestamp() {
+        return currentTimestamp;
+    }
+
     public List<ArticleReplacement> getReplacements() {
         return Collections.unmodifiableList(replacements);
     }
@@ -50,6 +65,8 @@ public final class ArticleReview {
         private Integer articleId;
         private String title;
         private String content;
+        private String lastUpdate;
+        private String currentTimestamp;
 
         ArticleReview.ArticleReviewBuilder setArticleId(Integer articleId) {
             this.articleId = articleId;
@@ -72,8 +89,18 @@ public final class ArticleReview {
             return this;
         }
 
+        ArticleReview.ArticleReviewBuilder setLastUpdate(String lastUpdate) {
+            this.lastUpdate = lastUpdate;
+            return this;
+        }
+
+        ArticleReview.ArticleReviewBuilder setCurrentTimestamp(String currentTimestamp) {
+            this.currentTimestamp = currentTimestamp;
+            return this;
+        }
+
         ArticleReview build() {
-            return new ArticleReview(articleId, title, content, replacements);
+            return new ArticleReview(articleId, title, content, replacements, lastUpdate, currentTimestamp);
         }
     }
 

@@ -5,4 +5,6 @@ export interface ArticleReview {
   title: string;
   content: string;
   replacements: ArticleReplacement[];
+  lastUpdate: string;
+  currentTimestamp: string;
 }

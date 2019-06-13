@@ -2,7 +2,6 @@ package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,8 +24,8 @@ public interface WikipediaService {
      */
     Map<Integer, WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException;
 
-    void savePageContent(int pageId, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
-            throws WikipediaException;
+    void savePageContent(int pageId, String pageContent, String lastUpdate, String currentTimestamp,
+                         OAuth1AccessToken accessToken) throws WikipediaException;
 
     String getMisspellingListPageContent() throws WikipediaException;
 

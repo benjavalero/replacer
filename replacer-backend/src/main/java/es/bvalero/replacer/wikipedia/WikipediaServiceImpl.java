@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 // We make this implementation public to be used by the finder benchmarks
@@ -74,6 +73,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put("rvprop", "timestamp|content");
         params.put("rvslots", "main");
         params.put(pagesParam, pagesValue);
+        params.put("curtimestamp", "true");
         return params;
     }
 
@@ -83,6 +83,9 @@ public class WikipediaServiceImpl implements WikipediaService {
             String errorMsg = String.format("%s: %s", jsonError.get("code").asText(), jsonError.get("info").asText());
             throw new WikipediaException(errorMsg);
         }
+
+        // Query timestamp
+        String queryTimestamp = json.at("/curtimestamp").asText();
 
         Map<Integer, WikipediaPage> pageContents = new HashMap<>();
         json.at("/query/pages").forEach(jsonPage -> {
@@ -96,6 +99,7 @@ public class WikipediaServiceImpl implements WikipediaService {
                         .setNamespace(jsonPage.get("ns").asInt())
                         .setContent(jsonContent.asText())
                         .setTimestamp(jsonPage.at("/revisions/0/timestamp").asText())
+                        .setQueryTimestamp(queryTimestamp)
                         .build();
                 pageContents.put(pageId, page);
             }
@@ -104,8 +108,8 @@ public class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public void savePageContent(int pageId, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken)
-            throws WikipediaException {
+    public void savePageContent(int pageId, String pageContent, String lastUpdate, String currentTimestamp,
+                                OAuth1AccessToken accessToken) throws WikipediaException {
         LOGGER.info("Save page content into Wikipedia");
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, "edit");
@@ -114,8 +118,10 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put("summary", EDIT_SUMMARY);
         params.put("minor", "true");
         params.put("token", getEditToken(accessToken));
+        params.put("starttimestamp", currentTimestamp);
+        params.put("basetimestamp", lastUpdate);
 
-        // TODO : Take into account conflicts during the edition
+        // TODO : Test conflicts during the edition
         // TODO : Test saving when session has expired in frontend
         try {
             authenticationService.executeOAuthRequest(params, accessToken);

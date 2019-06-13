@@ -1,27 +1,44 @@
 package es.bvalero.replacer.wikipedia;
 
-import java.time.LocalDate;
+import org.jetbrains.annotations.Nullable;
+
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public final class WikipediaPage {
+    private static final String WIKIPEDIA_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    private static final DateTimeFormatter WIKIPEDIA_DATE_FORMATTER = DateTimeFormatter.ofPattern(WIKIPEDIA_DATE_PATTERN);
     private static final String REDIRECT_PREFIX = "#redirec";
 
     private final int id;
     private final String title;
     private final WikipediaNamespace namespace;
-    private final LocalDate timestamp;
+    private final String timestamp;
     private final String content;
 
-    private WikipediaPage(int id, String title, WikipediaNamespace namespace, LocalDate timestamp, String content) {
+    // Store the timestamp when the page was queried
+    @Nullable
+    private final String queryTimestamp;
+
+    private WikipediaPage(int id, String title, WikipediaNamespace namespace, String timestamp, String content, @Nullable String queryTimestamp) {
         this.id = id;
         this.title = title;
         this.namespace = namespace;
         this.timestamp = timestamp;
         this.content = content;
+        this.queryTimestamp = queryTimestamp;
     }
 
     public static WikipediaPage.WikipediaPageBuilder builder() {
         return new WikipediaPage.WikipediaPageBuilder();
+    }
+
+    static LocalDateTime parseWikipediaTimestamp(String timestamp) {
+        return LocalDateTime.from(WIKIPEDIA_DATE_FORMATTER.parse(timestamp));
+    }
+
+    static String formatWikipediaTimestamp(LocalDateTime localDateTime) {
+        return WIKIPEDIA_DATE_FORMATTER.format(localDateTime);
     }
 
     public int getId() {
@@ -36,12 +53,21 @@ public final class WikipediaPage {
         return namespace;
     }
 
-    public LocalDate getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
+    }
+
+    public LocalDateTime getLastUpdate() {
+        return parseWikipediaTimestamp(timestamp);
     }
 
     public String getContent() {
         return content;
+    }
+
+    @Nullable
+    public String getQueryTimestamp() {
+        return queryTimestamp;
     }
 
     public boolean isRedirectionPage() {
@@ -49,13 +75,13 @@ public final class WikipediaPage {
     }
 
     public static class WikipediaPageBuilder {
-        private static final String WIKIPEDIA_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
         private int id;
         private String title;
         private WikipediaNamespace namespace;
-        private LocalDate timestamp;
+        private String timestamp;
         private String content;
+        private String queryTimestamp;
 
         public WikipediaPage.WikipediaPageBuilder setId(int id) {
             this.id = id;
@@ -78,12 +104,12 @@ public final class WikipediaPage {
         }
 
         public WikipediaPage.WikipediaPageBuilder setTimestamp(String timestamp) {
-            this.timestamp = parseWikipediaDate(timestamp);
+            this.timestamp = timestamp;
             return this;
         }
 
-        public WikipediaPage.WikipediaPageBuilder setTimestamp(LocalDate timestamp) {
-            this.timestamp = timestamp;
+        public WikipediaPage.WikipediaPageBuilder setTimestamp(LocalDateTime timestamp) {
+            this.timestamp = formatWikipediaTimestamp(timestamp);
             return this;
         }
 
@@ -92,13 +118,13 @@ public final class WikipediaPage {
             return this;
         }
 
-        public WikipediaPage build() {
-            return new WikipediaPage(id, title, namespace, timestamp, content);
+        WikipediaPage.WikipediaPageBuilder setQueryTimestamp(String queryTimestamp) {
+            this.queryTimestamp = queryTimestamp;
+            return this;
         }
 
-        LocalDate parseWikipediaDate(CharSequence dateStr) {
-            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern(WIKIPEDIA_DATE_PATTERN);
-            return LocalDate.from(dateFormat.parse(dateStr));
+        public WikipediaPage build() {
+            return new WikipediaPage(id, title, namespace, timestamp, content, queryTimestamp);
         }
 
     }

@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -26,12 +25,14 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
+        String now = WikipediaPage.formatWikipediaTimestamp(LocalDateTime.now());
         return Optional.of(WikipediaPage.builder()
                 .setId(1)
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setTitle("Norteamérica")
                 .setContent(loadArticleContent("/article-long.txt"))
-                .setTimestamp(LocalDate.now())
+                .setTimestamp(now)
+                .setQueryTimestamp(now)
                 .build());
     }
 
@@ -50,7 +51,8 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     @Override
-    public void savePageContent(int pageId, String pageContent, LocalDateTime editTime, OAuth1AccessToken accessToken) {
+    public void savePageContent(int pageId, String pageContent, String lastUpdate, String currentTimestamp,
+                                OAuth1AccessToken accessToken) {
         // Do nothing
     }
 

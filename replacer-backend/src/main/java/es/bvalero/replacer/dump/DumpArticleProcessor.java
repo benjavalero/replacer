@@ -53,7 +53,7 @@ class DumpArticleProcessor {
 
         Optional<LocalDate> dbLastUpdate = cache.findArticleLastUpdate(dumpArticle.getId());
         if (dbLastUpdate.isPresent()
-                && !isArticleProcessableByTimestamp(dumpArticle.getTimestamp(), dbLastUpdate.get(), forceProcess)) {
+                && !isArticleProcessableByTimestamp(dumpArticle.getLastUpdate().toLocalDate(), dbLastUpdate.get(), forceProcess)) {
             LOGGER.debug("Dump article not processable by date: {}. Dump date: {}. DB date: {}",
                     dumpArticle.getTitle(), dumpArticle.getTimestamp(), dbLastUpdate);
             return false;
