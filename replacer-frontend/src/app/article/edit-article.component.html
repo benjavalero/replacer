@@ -1,16 +1,21 @@
-<h3 *ngIf="replacements.length">{{ title }}</h3>
+<div *ngIf="replacements.length" class="container">
 
-<app-edit-snippet *ngFor="let replacement of replacements" [text]="content" [start]="replacement.start"
-  [word]="replacement.text" [suggestions]="replacement.suggestions" (fixed)="onFixed($event)">
-</app-edit-snippet>
+  <h3>{{ title }}
+    <a href="https://es.wikipedia.org/wiki/{{ title }}" target="_blank" class="small">[Abrir en Wikipedia]</a>
+  </h3>
 
-<hr />
+  <app-edit-snippet *ngFor="let replacement of replacements" [text]="content" [start]="replacement.start"
+    [word]="replacement.text" [suggestions]="replacement.suggestions" (fixed)="onFixed($event)">
+  </app-edit-snippet>
 
-<button *ngIf="replacements.length" type="button" class="btn btn-success w-100 mt-3 mb-2" [disabled]="!fixedCount"
-  (click)="onSaveChanges()">
-  Guardar con cambios <span class="badge badge-light">{{ fixedCount }}</span>
-</button>
+  <hr />
 
-<button *ngIf="replacements.length" type="button" class="btn btn-success w-100 mb-3" (click)="onSaveNoChanges()">
-  Guardar sin cambios
-</button>
+  <button type="button" class="btn btn-success w-100 mt-3 mb-2" [disabled]="!fixedCount" (click)="onSaveChanges()">
+    Guardar con cambios <span class="badge badge-light">{{ fixedCount }}</span>
+  </button>
+
+  <button type="button" class="btn btn-success w-100 mb-3" (click)="onSaveNoChanges()">
+    Guardar sin cambios
+  </button>
+
+</div>
