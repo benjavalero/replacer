@@ -75,6 +75,11 @@ export class EditArticleComponent implements OnInit {
     }
   }
 
+  onSaveNoChanges() {
+    // Save with no changes => Mark article as reviewed
+    this.saveContent(' ');
+  }
+
   private saveContent(content: string) {
     // Remove replacements as a trick to hide the article
     this.replacements = [];

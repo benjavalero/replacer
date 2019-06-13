@@ -53,7 +53,7 @@ public class ArticleController {
         return articleService.findArticleReviewById(articleId, word);
     }
 
-    @PutMapping(value = "/")
+    @PutMapping
     public boolean save(@RequestParam("id") int articleId, @RequestBody String text, @RequestParam String reviewer,
                         @RequestParam String token, @RequestParam String tokenSecret) {
         LOGGER.info("PUT Save article with ID: {}", articleId);

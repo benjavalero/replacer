@@ -1,4 +1,4 @@
-<h3 *ngIf="replacements">{{ title }}</h3>
+<h3 *ngIf="replacements.length">{{ title }}</h3>
 
 <app-edit-snippet *ngFor="let replacement of replacements" [text]="content" [start]="replacement.start"
   [word]="replacement.text" [suggestions]="replacement.suggestions" (fixed)="onFixed($event)">
@@ -6,6 +6,11 @@
 
 <hr />
 
-<button *ngIf="replacements" type="button" class="btn btn-success w-100 mt-3 mb-3" (click)="onSaveChanges()">
-  Guardar cambios <span class="badge badge-light">{{ fixedCount }}</span>
+<button *ngIf="replacements.length" type="button" class="btn btn-success w-100 mt-3 mb-2" [disabled]="!fixedCount"
+  (click)="onSaveChanges()">
+  Guardar con cambios <span class="badge badge-light">{{ fixedCount }}</span>
+</button>
+
+<button *ngIf="replacements.length" type="button" class="btn btn-success w-100 mb-3" (click)="onSaveNoChanges()">
+  Guardar sin cambios
 </button>
