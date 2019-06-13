@@ -1,7 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -17,10 +15,9 @@ public final class WikipediaPage {
     private final String content;
 
     // Store the timestamp when the page was queried
-    @Nullable
     private final String queryTimestamp;
 
-    private WikipediaPage(int id, String title, WikipediaNamespace namespace, String timestamp, String content, @Nullable String queryTimestamp) {
+    private WikipediaPage(int id, String title, WikipediaNamespace namespace, String timestamp, String content, String queryTimestamp) {
         this.id = id;
         this.title = title;
         this.namespace = namespace;
@@ -37,7 +34,7 @@ public final class WikipediaPage {
         return LocalDateTime.from(WIKIPEDIA_DATE_FORMATTER.parse(timestamp));
     }
 
-    static String formatWikipediaTimestamp(LocalDateTime localDateTime) {
+    public static String formatWikipediaTimestamp(LocalDateTime localDateTime) {
         return WIKIPEDIA_DATE_FORMATTER.format(localDateTime);
     }
 
@@ -65,7 +62,6 @@ public final class WikipediaPage {
         return content;
     }
 
-    @Nullable
     public String getQueryTimestamp() {
         return queryTimestamp;
     }
@@ -118,7 +114,7 @@ public final class WikipediaPage {
             return this;
         }
 
-        WikipediaPage.WikipediaPageBuilder setQueryTimestamp(String queryTimestamp) {
+        public WikipediaPage.WikipediaPageBuilder setQueryTimestamp(String queryTimestamp) {
             this.queryTimestamp = queryTimestamp;
             return this;
         }

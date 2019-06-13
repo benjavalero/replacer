@@ -19,14 +19,12 @@ interface ReplacementRepository extends JpaRepository<Replacement, Long>, Replac
 
     List<Replacement> findByArticleId(int articleId);
 
-    List<Replacement> findByArticleIdIn(Set<Integer> articleIds);
-
     void deleteByArticleId(int articleId);
 
     void deleteByArticleIdIn(Set<Integer> articleIds);
 
-    @Query("SELECT new es.bvalero.replacer.article.ArticleTimestamp(articleId, MAX(lastUpdate)) FROM Replacement WHERE articleId BETWEEN :minId AND :maxId GROUP BY articleId")
-    List<ArticleTimestamp> findMaxLastUpdate(@Param("minId") int minArticleId, @Param("maxId") int maxArticleId);
+    @Query("FROM Replacement WHERE articleId BETWEEN :minId AND :maxId")
+    List<Replacement> findByArticles(@Param("minId") int minArticleId, @Param("maxId") int maxArticleId);
 
     @Query("SELECT new es.bvalero.replacer.article.ReplacementCount(subtype, COUNT(*)) FROM Replacement WHERE type = 'MISSPELLING' GROUP BY subtype")
     List<ReplacementCount> findMisspellingsGrouped();

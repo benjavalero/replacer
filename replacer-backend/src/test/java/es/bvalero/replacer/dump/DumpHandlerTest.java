@@ -1,5 +1,6 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.junit.Assert;
@@ -27,6 +28,9 @@ public class DumpHandlerTest {
     @Mock
     private DumpArticleProcessor dumpArticleProcessor;
 
+    @Mock
+    private ArticleService articleService;
+
     @InjectMocks
     private DumpHandler dumpHandler;
 
@@ -39,7 +43,7 @@ public class DumpHandlerTest {
     @Test
     public void testHandleDumpFile() throws URISyntaxException, DumpException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(WikipediaPage.class), Mockito.anyBoolean()))
+        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(WikipediaPage.class), Mockito.anyCollection(), Mockito.anyBoolean()))
                 .thenReturn(Boolean.TRUE);
 
         try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile))) {

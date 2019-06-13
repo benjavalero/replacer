@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public class ArticleService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
+    private static final int BATCH_SIZE = 1000;
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -47,7 +48,7 @@ public class ArticleService {
                 false);
     }
 
-    void indexReplacements(Collection<Replacement> replacements, Collection<Replacement> dbReplacements,
+    public void indexReplacements(Collection<Replacement> replacements, Collection<Replacement> dbReplacements,
                            boolean indexInBatch) {
         LOGGER.debug("Index replacements in DB. New: {}. Old: {}", replacements.size(), dbReplacements.size());
         replacements.forEach(replacement -> {
@@ -76,7 +77,7 @@ public class ArticleService {
         }
     }
 
-    void flushReplacementsInBatch() {
+    public void flushReplacementsInBatch() {
         LOGGER.debug("Save and delete replacements in database. To save: {}. To delete: {}",
                 toSaveInBatch.size(), toDeleteInBatch.size());
         replacementRepository.deleteInBatch(toDeleteInBatch);
@@ -94,6 +95,9 @@ public class ArticleService {
     private void saveReplacement(Replacement replacement, boolean saveInBatch) {
         if (saveInBatch) {
             toSaveInBatch.add(replacement);
+            if (toSaveInBatch.size() >= BATCH_SIZE) {
+                flushReplacementsInBatch();
+            }
         } else {
             replacementRepository.save(replacement);
         }
@@ -102,12 +106,15 @@ public class ArticleService {
     private void deleteReplacement(Replacement replacement, boolean deleteInBatch) {
         if (deleteInBatch) {
             toDeleteInBatch.add(replacement);
+            if (toDeleteInBatch.size() >= BATCH_SIZE) {
+                flushReplacementsInBatch();
+            }
         } else {
             replacementRepository.delete(replacement);
         }
     }
 
-    private Collection<Replacement> convertArticleReplacements(WikipediaPage article,
+    public Collection<Replacement> convertArticleReplacements(WikipediaPage article,
                                                                Collection<ArticleReplacement> articleReplacements) {
         return articleReplacements.stream().map(
                 articleReplacement -> new Replacement(
@@ -199,26 +206,8 @@ public class ArticleService {
         replacementRepository.deleteByArticleId(articleId);
     }
 
-    public void indexArticleReplacementsInBatch(Map<WikipediaPage, Collection<ArticleReplacement>> articleReplacements) {
-        // Retrieve all the replacements at a time for all the articles
-        List<Replacement> dbAllReplacements = replacementRepository.findByArticleIdIn(
-                articleReplacements.keySet().stream().map(WikipediaPage::getId).collect(Collectors.toSet())
-        );
-
-        for (Map.Entry<WikipediaPage, Collection<ArticleReplacement>> entry : articleReplacements.entrySet()) {
-            Collection<Replacement> pageReplacements = convertArticleReplacements(entry.getKey(), entry.getValue());
-            Collection<Replacement> dbReplacements = dbAllReplacements.stream()
-                    .filter(rep -> rep.getArticleId() == entry.getKey().getId())
-                    .collect(Collectors.toList());
-
-            indexReplacements(pageReplacements, dbReplacements, true);
-        }
-
-        flushReplacementsInBatch();
-    }
-
-    public List<ArticleTimestamp> findMaxLastUpdateByArticleIdIn(int minId, int maxId) {
-        return replacementRepository.findMaxLastUpdate(minId, maxId);
+    public List<Replacement> findDatabaseReplacementByArticles(int minArticleId, int maxArticleId) {
+        return replacementRepository.findByArticles(minArticleId, maxArticleId);
     }
 
     private boolean checkWordExistsInReplacements(@Nullable String word, List<ArticleReplacement> replacements) {

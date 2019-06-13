@@ -1,5 +1,7 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.article.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.intellij.lang.annotations.RegExp;
@@ -13,6 +15,8 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * Handler to parse a Wikipedia XML dump.
@@ -36,6 +40,9 @@ class DumpHandler extends DefaultHandler {
     @Autowired
     private DumpArticleProcessor dumpArticleProcessor;
 
+    @Autowired
+    private ArticleService articleService;
+
     // Current article values
     private StringBuilder currentChars = new StringBuilder(5000);
     private String currentTitle;
@@ -52,6 +59,9 @@ class DumpHandler extends DefaultHandler {
     private long numArticlesProcessed;
     private Instant startTime;
     private Instant endTime;
+
+    // Get database replacements in batches to improve performance
+    private DumpArticleCache cache = new DumpArticleCache();
 
     boolean isRunning() {
         return running;
@@ -80,8 +90,8 @@ class DumpHandler extends DefaultHandler {
         LOGGER.info("End dump document");
 
         running = false;
-        dumpArticleProcessor.finish();
         endTime = Instant.now();
+        articleService.flushReplacementsInBatch();
     }
 
     @Override
@@ -134,6 +144,7 @@ class DumpHandler extends DefaultHandler {
                 .setNamespace(currentNamespace)
                 .setTimestamp(currentTimestamp)
                 .setContent(currentContent)
+                .setQueryTimestamp(WikipediaPage.formatWikipediaTimestamp(LocalDateTime.now()))
                 .build();
 
         try {
@@ -147,7 +158,7 @@ class DumpHandler extends DefaultHandler {
     }
 
     private boolean processArticle(WikipediaPage dumpArticle) {
-        return dumpArticleProcessor.processArticle(dumpArticle, forceProcess);
+        return dumpArticleProcessor.processArticle(dumpArticle, cache.findDatabaseReplacements(dumpArticle.getId()), forceProcess);
     }
 
     DumpProcessStatus getProcessStatus() {
@@ -201,6 +212,48 @@ class DumpHandler extends DefaultHandler {
             progress = String.format(PERCENTAGE_FORMAT, percent);
         }
         return progress;
+    }
+
+    private class DumpArticleCache {
+        private static final int CACHE_SIZE = 1000;
+        private int maxCachedId;
+        private Map<Integer, Collection<Replacement>> replacementMap = new HashMap<>(CACHE_SIZE);
+
+        Collection<Replacement> findDatabaseReplacements(int articleId) {
+            // Load the cache the first time
+            if (maxCachedId == 0) {
+                loadCache(1);
+            }
+
+            Collection<Replacement> replacements = replacementMap.getOrDefault(articleId, Collections.emptySet());
+            replacementMap.remove(articleId); // No need to check if the ID exists
+
+            if (articleId >= maxCachedId) {
+                cleanCache();
+                loadCache(Math.max(maxCachedId + 1, articleId));
+            }
+
+            return replacements;
+        }
+
+        private void loadCache(int id) {
+            LOGGER.debug("Load replacements from database to cache. Min ID: {}", id);
+            maxCachedId = id + CACHE_SIZE - 1;
+            for (Replacement replacement : articleService.findDatabaseReplacementByArticles(id, maxCachedId)) {
+                if (!replacementMap.containsKey(replacement.getArticleId())) {
+                    replacementMap.put(replacement.getArticleId(), new HashSet<>());
+                }
+                replacementMap.get(replacement.getArticleId()).add(replacement);
+            }
+        }
+
+        private void cleanCache() {
+            // Clear the cache if obsolete (we assume the dump articles are in order)
+            // The remaining cached articles are not in the dump so we remove them from DB
+            LOGGER.debug("Delete obsolete articles in DB: {}", replacementMap.size());
+            articleService.deleteArticles(replacementMap.keySet());
+            replacementMap = new HashMap<>(CACHE_SIZE);
+        }
     }
 
 }

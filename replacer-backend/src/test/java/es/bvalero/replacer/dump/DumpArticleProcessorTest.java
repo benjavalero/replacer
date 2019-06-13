@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.ArticleService;
-import es.bvalero.replacer.article.ArticleTimestamp;
+import es.bvalero.replacer.article.Replacement;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
@@ -14,9 +14,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class DumpArticleProcessorTest {
 
@@ -71,11 +72,9 @@ public class DumpArticleProcessorTest {
                 .setTimestamp(yesterday)
                 .build();
 
-        ArticleTimestamp timestamp = new ArticleTimestamp(1, today.toLocalDate());
-        Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
-                .thenReturn(Collections.singletonList(timestamp));
+        Replacement replacement = new Replacement(1, "", "", 1);
 
-        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
+        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle, Collections.singleton(replacement)));
     }
 
     @Test
@@ -90,11 +89,9 @@ public class DumpArticleProcessorTest {
                 .setTimestamp(yesterday)
                 .build();
 
-        ArticleTimestamp timestamp = new ArticleTimestamp(1, today.toLocalDate());
-        Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
-                .thenReturn(Collections.singletonList(timestamp));
+        Replacement replacement = new Replacement(1, "", "", 1);
 
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, true));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, Collections.singleton(replacement), true));
     }
 
     @Test
@@ -107,11 +104,9 @@ public class DumpArticleProcessorTest {
                 .setTimestamp(today)
                 .build();
 
-        ArticleTimestamp timestamp = new ArticleTimestamp(1, today.toLocalDate());
-        Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
-                .thenReturn(Collections.singletonList(timestamp));
+        Replacement replacement = new Replacement(1, "", "", 1);
 
-        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
+        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle, Collections.singleton(replacement)));
     }
 
     @Test
@@ -124,11 +119,9 @@ public class DumpArticleProcessorTest {
                 .setTimestamp(today)
                 .build();
 
-        ArticleTimestamp timestamp = new ArticleTimestamp(1, today.toLocalDate());
-        Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
-                .thenReturn(Collections.singletonList(timestamp));
+        Replacement replacement = new Replacement(1, "", "", 1);
 
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, true));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, Collections.singleton(replacement), true));
     }
 
     @Test
@@ -143,11 +136,9 @@ public class DumpArticleProcessorTest {
                 .setTimestamp(today)
                 .build();
 
-        ArticleTimestamp timestamp = new ArticleTimestamp(1, yesterday.toLocalDate());
-        Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
-                .thenReturn(Collections.singletonList(timestamp));
+        Replacement replacement = new Replacement(1, "", "", 1).withLastUpdate(yesterday.toLocalDate());
 
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, Collections.singleton(replacement)));
     }
 
     @Test
@@ -157,40 +148,34 @@ public class DumpArticleProcessorTest {
                 .setContent("")
                 .build();
 
-        Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
-                .thenReturn(Collections.emptyList());
         List<ArticleReplacement> articleReplacements = Collections.singletonList(Mockito.mock(ArticleReplacement.class));
-        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString()))
-                .thenReturn(articleReplacements);
+        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString())).thenReturn(articleReplacements);
 
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
-        dumpArticleProcessor.finish();
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, Collections.emptySet()));
 
-        Map<WikipediaPage, Collection<ArticleReplacement>> mapToIndex = new HashMap<>();
-        mapToIndex.put(dumpArticle, articleReplacements);
-        Mockito.verify(articleService).indexArticleReplacementsInBatch(mapToIndex);
+        Mockito.verify(articleService).indexReplacements(Mockito.anyCollection(), Mockito.eq(Collections.emptySet()), Mockito.eq(true));
     }
 
     @Test
     public void testProcessWithNoReplacementsFound() {
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime yesterday = today.minusDays(1L);
+
         WikipediaPage dumpArticle = WikipediaPage.builder()
+                .setId(1)
                 .setNamespace(WikipediaNamespace.ARTICLE)
                 .setContent("")
+                .setTimestamp(today)
                 .build();
 
-        ArticleTimestamp timestamp = new ArticleTimestamp(1, LocalDate.now());
-        Mockito.when(articleService.findMaxLastUpdateByArticleIdIn(Mockito.anyInt(), Mockito.anyInt()))
-                .thenReturn(Collections.singletonList(timestamp));
-        List<ArticleReplacement> articleReplacements = Collections.emptyList();
-        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString()))
-                .thenReturn(articleReplacements);
+        Replacement replacement = new Replacement(1, "", "", 1).withLastUpdate(yesterday.toLocalDate());
+        Collection<Replacement> dbReplacements = Collections.singleton(replacement);
 
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
-        dumpArticleProcessor.finish();
+        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString())).thenReturn(Collections.emptyList());
 
-        Map<WikipediaPage, Collection<ArticleReplacement>> mapToIndex = new HashMap<>();
-        mapToIndex.put(dumpArticle, articleReplacements);
-        Mockito.verify(articleService).indexArticleReplacementsInBatch(mapToIndex);
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, dbReplacements));
+
+        Mockito.verify(articleService).indexReplacements(Mockito.eq(Collections.emptyList()), Mockito.eq(dbReplacements), Mockito.eq(true));
     }
 
 }
