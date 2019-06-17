@@ -91,22 +91,30 @@ Se omiten los términos del listado que contienen números o puntos, puesto que 
 * Falsos positivos muy comunes, e. g. `Los Angeles Lakers`. Se extraen del artículo «[Usuario:Benjavalero/FalsePositives](https://es.wikipedia.org/wiki/Usuario:Benjavalero/FalsePositives)».
 
 ### Article
-TODO
+
+Este módulo contiene las interacciones entre los reemplazos encontrados por los distintos buscadores y los reemplazos en la base de datos. Además busca artículos que estén por revisar así como distintas estadísticas sobre los reemplazos ya indexados.
 
 ### Indexación
 
-El sistema comprueba semanalmente el último _dump_ generado y lo procesa, esto es, lee uno a uno los artículos, busca los potenciales reemplazos y los añade a la base de datos.
+El sistema comprueba semanalmente el último _dump_ generado y lo procesa, esto es, lee una a una las páginas, busca los potenciales reemplazos y los añade a la base de datos.
 
-El proceso de indexación tiene dos partes principales: la lectura de cada uno de los artículos y el procesado de los artículos (si procede):
-- Solo se procesan los contenidos de tipo «Artículo» o «Anexo».
-- Se procesan los artículos ya indexados para tener en cuenta nuevas excepciones o potenciales reemplazos.
-- No se procesan los artículos ya revisados manualmente.
-- Hay una opción para forzar y reindexarlo todo, incluso los artículos revisados.
+Para cada página encontrada:
+- Solo se indexan las páginas de tipo «Artículo» o «Anexo»
+- Se ignoran las páginas que redirigen a otras
 
-El sistema además ofrece una sección para comprobar el estado de la indexación en tiempo real.
+Además no se vuelven a revisar aquellas páginas que no hayan sido modificadas desde la última indexación. El pequeño inconveniente es que en dichas páginas no se detectarán los nuevos reemplazos que se vayan implementando en la herramienta. En el futuro se implementará una opción oculta para forzar la indexación en este caso, y observar el estado actual de la indexación.
 
 ## Base de datos
-TODO
+
+Se ha reducido el modelo de la base de datos a una sola tabla con todos los reemplazos indexados. Un reemplazo se caracteriza por tener:
+- El artículo en que ha sido detectado
+- El tipo de reemplazo (e. g. error ortográfico)
+- El subtipo (e. g. el término erróneo)
+- La posición en el texto en que ha sido detectado
+
+Un reemplazo tiene dos estados: por revisar y corregido. Un reemplazo revisado pero no modificado (falso positivo) se considera por tanto como corregido. Por tanto, un reemplazo tiene también:
+- Fecha de la última actualización, ya sea por haber sido revisado/corregido o reindexado.
+- Usuario que lo ha revisado/corregido
 
 ## Optimizaciones
 
@@ -141,8 +149,8 @@ Como regla general, dependiendo de la complejidad de la expresión regular, usar
 Aunque la lectura de un XML es mucho más rápida que de un XML comprimido (aprox. 10 veces), en los servidores de Toolforge solo existe la opción de usar la versión comprimida.
 
 En cuanto al procesado de los artículos, también tenemos 3 partes claras:
-1. Consultar la BD para ver si el artículo ya existe y cuál es su estado. El sistema busca varios (1000) artículos a la vez para reducir el número de llamadas a BD.
+1. Consultar la BD para ver si el artículo ya existe y cuál es su estado. El sistema busca varios artículos a la vez para reducir el número de llamadas a BD.
 2. Buscar los errores potenciales y descartar los contenidos en excepciones. El sistema intenta terminar lo antes posible en el caso de no encontrar errores potenciales.
-3. Guardar en BD los reemplazos detectados en el artículo. El sistema intenta realizar solo las inserciones, borrados y actualizaciones necesarias.
+3. Guardar en BD los reemplazos detectados en el artículo. El sistema intenta realizar solo las inserciones, borrados y actualizaciones necesarias, y en bloque.
 
-La herramienta procesa más de un millón de artículos, con lo cual el uso de memoria por parte de JPA no para de crecer. Para evitarlo se ha eliminado la relación _one-to-many_ entre artículos y reemplazos (aunque se mantiene la clave ajena en la BD), y cada cierto número de artículos procesados se limpia el gestor JPA (_flush-clear_). Con esto conseguimos mantener a raya el _heap_ de la JVM.
+La herramienta procesa más de un millón de artículos, con lo cual el uso de memoria por parte de JPA no para de crecer. Para evitarlo, cada cierto número de artículos procesados se limpia el gestor JPA (_flush-clear_). Con esto conseguimos mantener a raya el _heap_ de la JVM.

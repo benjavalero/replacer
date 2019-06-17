@@ -3,3 +3,4 @@
 - Proceso de autenticación separado para facilitar el desarrollo
 - Implementación propia para llamar al API de Wikipedia sin depender de librerías externas
 - Optimización de los buscadores de errores ortográficos y excepciones
+- Se ofrecen varias alternativas de reemplazos (si las hay)
