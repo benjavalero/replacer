@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { AlertService } from '../alert/alert.service';
 import { ArticleService } from './article.service';
@@ -11,22 +11,31 @@ import { ArticleService } from './article.service';
 })
 export class FindRandomComponent implements OnInit {
 
-  constructor(private alertService: AlertService, private articleService: ArticleService, private router: Router) { }
+  private filteredWord: string;
+
+  constructor(private alertService: AlertService, private articleService: ArticleService, private router: Router,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.filteredWord = this.route.snapshot.paramMap.get('word');
+
     this.alertService.addAlertMessage({
       type: 'primary',
-      message: 'Buscando artículo aleatorio con reemplazos…'
+      message: (this.filteredWord
+        ? `Buscando artículo aleatorio con «${this.filteredWord}»…`
+        : 'Buscando artículo aleatorio con reemplazos…')
     });
 
-    this.articleService.findRandomArticle().subscribe((articleIds: number[]) => {
+    this.articleService.findRandomArticle(this.filteredWord).subscribe((articleIds: number[]) => {
       const articleId = articleIds[0];
       if (articleId) {
-        this.router.navigate([`article/${articleId}`]);
+        this.router.navigate([`article/${articleId}/${this.filteredWord || ''}`]);
       } else {
         this.alertService.addAlertMessage({
           type: 'warning',
-          message: 'No se ha encontrado ningún artículo con reemplazos'
+          message: (this.filteredWord
+            ? `No se ha encontrado ningún artículo con «${this.filteredWord}»…`
+            : 'No se ha encontrado ningún artículo con reemplazos…')
         });
       }
     }, (err) => {

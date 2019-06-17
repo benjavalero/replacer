@@ -49,7 +49,7 @@ public class ArticleService {
     }
 
     public void indexReplacements(Collection<Replacement> replacements, Collection<Replacement> dbReplacements,
-                           boolean indexInBatch) {
+                                  boolean indexInBatch) {
         LOGGER.debug("Index replacements in DB. New: {}. Old: {}", replacements.size(), dbReplacements.size());
         replacements.forEach(replacement -> {
             Optional<Replacement> existing = findSameReplacementInCollection(replacement, dbReplacements);
@@ -115,7 +115,7 @@ public class ArticleService {
     }
 
     public Collection<Replacement> convertArticleReplacements(WikipediaPage article,
-                                                               Collection<ArticleReplacement> articleReplacements) {
+                                                              Collection<ArticleReplacement> articleReplacements) {
         return articleReplacements.stream().map(
                 articleReplacement -> new Replacement(
                         article.getId(), articleReplacement.getType(), articleReplacement.getSubtype(),
@@ -147,10 +147,13 @@ public class ArticleService {
             LOGGER.info("Update database with found replacements");
             indexArticleReplacements(article, articleReplacements);
 
+            if (StringUtils.isNotBlank(word)) {
+                articleReplacements = filterReplacementsByWord(word, articleReplacements);
+            }
+
             // Build the article review if the replacements found are valid
             // Note the DB has just been updated in case the word doesn't exist in the found replacements
-            if (!articleReplacements.isEmpty()
-                    && checkWordExistsInReplacements(word, articleReplacements)) {
+            if (!articleReplacements.isEmpty()) {
                 LOGGER.info("Finish finding random article to review: {}", article.getTitle());
                 return Optional.of(ArticleReview.builder()
                         .setArticleId(article.getId())
@@ -210,16 +213,10 @@ public class ArticleService {
         return replacementRepository.findByArticles(minArticleId, maxArticleId);
     }
 
-    private boolean checkWordExistsInReplacements(@Nullable String word, List<ArticleReplacement> replacements) {
-        if (StringUtils.isBlank(word)) {
-            return true;
-        } else {
-            if (replacements.stream().noneMatch(replacement -> word.equals(replacement.getSubtype()))) {
-                LOGGER.info("The filter word is not contained in the article replacements");
-                return false;
-            }
-            return true;
-        }
+    private List<ArticleReplacement> filterReplacementsByWord(String word, List<ArticleReplacement> replacements) {
+        return replacements.stream()
+                .filter(replacement -> word.equals(replacement.getSubtype()))
+                .collect(Collectors.toList());
     }
 
     /**

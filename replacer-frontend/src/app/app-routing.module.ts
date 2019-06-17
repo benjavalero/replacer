@@ -13,13 +13,12 @@ const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthenticationGuard] },
   { path: 'random', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
+  { path: 'random/:word', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
   { path: 'article/:id', component: EditArticleComponent, canActivate: [AuthenticationGuard] },
+  { path: 'article/:id/:word', component: EditArticleComponent, canActivate: [AuthenticationGuard] },
   { path: 'dump', component: DumpComponent, canActivate: [AuthenticationGuard] },
   { path: 'replacement', component: FindReplacementComponent, canActivate: [AuthenticationGuard] },
   { path: 'stats', component: StatsComponent, canActivate: [AuthenticationGuard] },
-  /*
-  { path: 'random/:word', component: RandomComponent, canActivate: [AuthenticationGuard] },
-  */
   { path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
 ];
 

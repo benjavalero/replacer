@@ -16,7 +16,9 @@
       </thead>
       <tbody>
         <tr *ngFor="let misspelling of filteredMisspellings">
-          <td class="w-75">{{ misspelling.text }}</td>
+          <td class="w-75">
+            <a routerLink="/random/{{misspelling.text}}">{{ misspelling.text }}</a>
+          </td>
           <td class="w-25">{{ misspelling.count }}</td>
         </tr>
       </tbody>

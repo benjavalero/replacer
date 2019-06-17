@@ -14,6 +14,8 @@ import { ArticleReplacement } from './article-replacement.model';
 export class EditArticleComponent implements OnInit {
 
   articleId: number;
+  filteredWord: string;
+
   title = '';
   content: string;
   replacements: ArticleReplacement[] = [];
@@ -26,12 +28,14 @@ export class EditArticleComponent implements OnInit {
 
   ngOnInit() {
     this.articleId = +this.route.snapshot.paramMap.get('id');
+    this.filteredWord = this.route.snapshot.paramMap.get('word');
+
     this.alertService.addAlertMessage({
       type: 'primary',
       message: 'Buscando potenciales reemplazos del artículo…'
     });
 
-    this.articleService.findArticleReviewById(this.articleId).subscribe((review: ArticleReview) => {
+    this.articleService.findArticleReviewById(this.articleId, this.filteredWord).subscribe((review: ArticleReview) => {
       if (review) {
         this.alertService.clearAlertMessages();
         this.title = review.title;

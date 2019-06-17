@@ -13,12 +13,12 @@ export class ArticleService {
 
   constructor(private httpClient: HttpClient, private authenticationService: AuthenticationService) { }
 
-  findRandomArticle(): Observable<number[]> {
-    return this.httpClient.get<number[]>(`${environment.apiUrl}/article/random`);
+  findRandomArticle(word: string): Observable<number[]> {
+    return this.httpClient.get<number[]>(`${environment.apiUrl}/article/random/${word || ''}`);
   }
 
-  findArticleReviewById(articleId: number): Observable<ArticleReview> {
-    return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/review/${articleId}`);
+  findArticleReviewById(articleId: number, word: string): Observable<ArticleReview> {
+    return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/review/${articleId}/${word || ''}`);
   }
 
   saveArticle(articleId: number, content: string, lastUpdate: string, currentTimestamp: string): Observable<boolean> {
