@@ -1,0 +1,11 @@
+th[appColumnSortable] {
+  cursor: pointer;
+}
+
+th[appColumnSortable].asc::after {
+  content: ' ▲';
+}
+
+th[appColumnSortable].desc::after {
+  content: ' ▼';
+}

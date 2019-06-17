@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthenticationGuard } from './authentication/authentication.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { FindRandomComponent } from './article/find-random.component';
 import { EditArticleComponent } from './article/edit-article.component';
 import { DumpComponent } from './dump/dump.component';
-import { AuthenticationGuard } from './authentication/authentication.guard';
+import { FindReplacementComponent } from './replacement/find-replacement.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'random', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
   { path: 'article/:id', component: EditArticleComponent, canActivate: [AuthenticationGuard] },
   { path: 'dump', component: DumpComponent, canActivate: [AuthenticationGuard] },
+  { path: 'replacement', component: FindReplacementComponent, canActivate: [AuthenticationGuard] },
   /*
   { path: 'stats', component: StatsComponent, canActivate: [AuthenticationGuard] },
   { path: 'random/:word', component: RandomComponent, canActivate: [AuthenticationGuard] },

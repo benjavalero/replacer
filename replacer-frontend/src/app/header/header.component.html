@@ -1,22 +1,18 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="/">Replacer</a>
-  <!--
-  <button
-    type="button"
-    class="navbar-toggler navbar-toggler-right"
-    (click)="isNavCollapsed = !isNavCollapsed"
-    aria-controls="navbarSupportedContent"
-    [attr.aria-expanded]="!isNavCollapsed"
-    aria-label="Toggle navigation"
-  >
+  <button type="button" class="navbar-toggler navbar-toggler-right" (click)="isNavCollapsed = !isNavCollapsed"
+    aria-controls="navbarSupportedContent" [attr.aria-expanded]="!isNavCollapsed" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div id="navbarSupportedContent" class="navbar-collapse" [collapse]="isNavCollapsed">
--->
-  <div id="navbarSupportedContent" class="navbar-collapse">
+  <div id="navbarSupportedContent" class="navbar-collapse" [ngbCollapse]="isNavCollapsed">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive="active" routerLink="/random">Artículo aleatorio</a>
+        <a class="nav-link" routerLinkActive="active" routerLink="/random"
+          title="Revisar todos los potenciales reemplazos de un artículo aleatorio">Artículo aleatorio</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" routerLink="/replacement"
+          title="Revisar un reemplazo particular en los artículos que lo contienen">Lista de reemplazos</a>
       </li>
       <!--
       <li class="nav-item ">
@@ -27,6 +23,7 @@
       </li>
       -->
     </ul>
+    <hr />
     <ul class="navbar-nav ml-auto justify-content-end">
       <span class="navbar-text"><em>{{ username }}</em></span>
     </ul>

@@ -21,18 +21,18 @@ export interface SortEvent {
 }
 
 @Directive({
-  selector: '[appSortable]'
+  selector: '[appColumnSortable]'
 })
-export class SortableDirective {
-  @Input() appSortable: string;
+export class ColumnSortableDirective {
+  @Input() appColumnSortable: string;
   @Output() sort = new EventEmitter<SortEvent>();
 
   @HostBinding('class') direction: SortDirection = '';
 
   @HostListener('click') onClick() {
     this.direction = rotate[this.direction];
-    this.sort.emit({ column: this.appSortable, direction: this.direction });
+    this.sort.emit({ column: this.appColumnSortable, direction: this.direction });
   }
 
-  constructor() {}
+  constructor() { }
 }

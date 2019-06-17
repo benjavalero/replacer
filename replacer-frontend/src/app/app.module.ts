@@ -16,10 +16,13 @@ import { HeaderComponent } from './header/header.component';
 import { FindRandomComponent } from './article/find-random.component';
 import { EditArticleComponent } from './article/edit-article.component';
 import { EditSnippetComponent } from './article/edit-snippet.component';
-import { StatsComponent } from './stats/stats.component';
-import { MisspellingTableComponent } from './misspelling-table/misspelling-table.component';
-import { SortableDirective } from './misspelling-table/sortable.directive';
 import { DumpComponent } from './dump/dump.component';
+import { FindReplacementComponent } from './replacement/find-replacement.component';
+import { ReplacementTableComponent } from './replacement/replacement-table.component';
+import { ColumnSortableDirective } from './replacement/column-sortable.directive';
+/*
+import { StatsComponent } from './stats/stats.component';
+*/
 
 @NgModule({
   declarations: [
@@ -31,10 +34,13 @@ import { DumpComponent } from './dump/dump.component';
     FindRandomComponent,
     EditArticleComponent,
     EditSnippetComponent,
+    DumpComponent,
+    FindReplacementComponent,
+    ReplacementTableComponent,
+    ColumnSortableDirective
+    /*
     StatsComponent,
-    MisspellingTableComponent,
-    SortableDirective,
-    DumpComponent
+    */
   ],
   entryComponents: [],
   imports: [
