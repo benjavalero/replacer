@@ -1,9 +1,11 @@
 package es.bvalero.replacer.misspelling;
 
+import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -31,13 +34,27 @@ public class MisspellingManager {
     @Autowired
     private WikipediaService wikipediaService;
 
+    @Autowired
+    private ArticleService articleService;
+
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     // Set of misspellings found in the misspelling list
     private Set<Misspelling> misspellings = new HashSet<>(MISSPELLING_ESTIMATED_COUNT);
 
-    private void setMisspellings(Set<Misspelling> misspellings) {
+    @TestOnly
+    void setMisspellings(Set<Misspelling> misspellings) {
         changeSupport.firePropertyChange("name", this.misspellings, misspellings);
+
+        // Find the misspellings removed from the list to remove them from the database
+        Set<String> oldWords = this.misspellings.stream().map(Misspelling::getWord).collect(Collectors.toSet());
+        Set<String> newWords = misspellings.stream().map(Misspelling::getWord).collect(Collectors.toSet());
+        oldWords.removeAll(newWords);
+        if (!oldWords.isEmpty()) {
+            LOGGER.warn("Deleting from database obsolete misspellings: {}", oldWords);
+            articleService.deleteReplacementsByTextIn(oldWords);
+        }
+
         this.misspellings = misspellings;
     }
 

@@ -266,4 +266,8 @@ public class ArticleService {
         return replacementRepository.findMisspellingsGrouped();
     }
 
+    public void deleteReplacementsByTextIn(Collection<String> texts) {
+        replacementRepository.deleteBySubtypeIn(new HashSet<>(texts));
+    }
+
 }

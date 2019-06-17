@@ -1,19 +1,27 @@
 package es.bvalero.replacer.misspelling;
 
+import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
 public class MisspellingManagerTest {
 
     @Mock
     private WikipediaService wikipediaService;
+
+    @Mock
+    private ArticleService articleService;
 
     @InjectMocks
     private MisspellingManager misspellingManager;
@@ -64,6 +72,20 @@ public class MisspellingManagerTest {
                 Misspelling.builder().setWord("Castilla-León").setComment("Castilla y León").build()));
         Assert.assertTrue(misspellings.contains(
                 Misspelling.builder().setWord("CD's").setComment("CD").build()));
+    }
+
+    @Test
+    public void testDeleteObsoleteMisspellings() {
+        Misspelling misspelling1 = Misspelling.builder().setWord("A").build();
+        Misspelling misspelling2 = Misspelling.builder().setWord("B").build();
+        misspellingManager.setMisspellings(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
+
+        Mockito.verify(articleService, Mockito.times(0)).deleteReplacementsByTextIn(Mockito.anySet());
+
+        Misspelling misspelling3 = Misspelling.builder().setWord("C").build();
+        misspellingManager.setMisspellings(new HashSet<>(Arrays.asList(misspelling2, misspelling3)));
+
+        Mockito.verify(articleService, Mockito.times(1)).deleteReplacementsByTextIn(Collections.singleton("A"));
     }
 
 }

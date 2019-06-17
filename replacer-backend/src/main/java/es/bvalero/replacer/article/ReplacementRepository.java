@@ -39,4 +39,6 @@ interface ReplacementRepository extends JpaRepository<Replacement, Long>, Replac
 
     long countByReviewerIsNotNull();
 
+    void deleteBySubtypeIn(Set<String> subtypes);
+
 }
