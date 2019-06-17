@@ -7,6 +7,7 @@ import { FindRandomComponent } from './article/find-random.component';
 import { EditArticleComponent } from './article/edit-article.component';
 import { DumpComponent } from './dump/dump.component';
 import { FindReplacementComponent } from './replacement/find-replacement.component';
+import { StatsComponent } from './stats/stats.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -15,8 +16,8 @@ const routes: Routes = [
   { path: 'article/:id', component: EditArticleComponent, canActivate: [AuthenticationGuard] },
   { path: 'dump', component: DumpComponent, canActivate: [AuthenticationGuard] },
   { path: 'replacement', component: FindReplacementComponent, canActivate: [AuthenticationGuard] },
-  /*
   { path: 'stats', component: StatsComponent, canActivate: [AuthenticationGuard] },
+  /*
   { path: 'random/:word', component: RandomComponent, canActivate: [AuthenticationGuard] },
   */
   { path: '**', redirectTo: '/dashboard', pathMatch: 'full' }

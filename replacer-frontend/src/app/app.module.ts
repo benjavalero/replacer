@@ -20,9 +20,7 @@ import { DumpComponent } from './dump/dump.component';
 import { FindReplacementComponent } from './replacement/find-replacement.component';
 import { ReplacementTableComponent } from './replacement/replacement-table.component';
 import { ColumnSortableDirective } from './replacement/column-sortable.directive';
-/*
 import { StatsComponent } from './stats/stats.component';
-*/
 
 @NgModule({
   declarations: [
@@ -37,10 +35,8 @@ import { StatsComponent } from './stats/stats.component';
     DumpComponent,
     FindReplacementComponent,
     ReplacementTableComponent,
-    ColumnSortableDirective
-    /*
-    StatsComponent,
-    */
+    ColumnSortableDirective,
+    StatsComponent
   ],
   entryComponents: [],
   imports: [

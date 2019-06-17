@@ -33,4 +33,16 @@ export class ArticleService {
     return this.httpClient.put<boolean>(`${environment.apiUrl}/article`, content, { params });
   }
 
+  findNumReplacements(): Observable<number> {
+    return this.httpClient.get<number>(`${environment.apiUrl}/article/count/replacements`);
+  }
+
+  findNumNotReviewed(): Observable<number> {
+    return this.httpClient.get<number>(`${environment.apiUrl}/article/count/replacements/to-review`);
+  }
+
+  findNumReviewed(): Observable<number> {
+    return this.httpClient.get<number>(`${environment.apiUrl}/article/count/replacements/reviewed`);
+  }
+
 }

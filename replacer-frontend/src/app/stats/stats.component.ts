@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
-import { environment } from '../../environments/environment';
+import { ArticleService } from '../article/article.service';
 
 @Component({
   selector: 'app-stats',
@@ -9,39 +8,27 @@ import { environment } from '../../environments/environment';
   styleUrls: []
 })
 export class StatsComponent implements OnInit {
-  numReplacements: string;
-  numArticles: string;
-  numReviewedArticles: string;
+  numReplacements: number;
+  numNotReviewed: number;
+  numReviewed: number;
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private articleService: ArticleService) { }
 
   ngOnInit() {
     this.findNumReplacements();
-    this.findNumArticles();
-    this.findNumReviewedArticles();
+    this.findNumNotReviewed();
+    this.findNumReviewed();
   }
 
   private findNumReplacements() {
-    this.httpClient
-      .get<string>(`${environment.apiUrl}/article/count/replacements`)
-      .subscribe(res => {
-        this.numReplacements = res;
-      });
+    this.articleService.findNumReplacements().subscribe((res: number) => this.numReplacements = res);
   }
 
-  private findNumArticles() {
-    this.httpClient
-      .get<string>(`${environment.apiUrl}/article/count/replacements/to-review`)
-      .subscribe(res => {
-        this.numArticles = res;
-      });
+  private findNumNotReviewed() {
+    this.articleService.findNumNotReviewed().subscribe((res: number) => this.numNotReviewed = res);
   }
 
-  private findNumReviewedArticles() {
-    this.httpClient
-      .get<string>(`${environment.apiUrl}/article/count/replacements/reviewed`)
-      .subscribe(res => {
-        this.numReviewedArticles = res;
-      });
+  private findNumReviewed() {
+    this.articleService.findNumReviewed().subscribe((res: number) => this.numReviewed = res);
   }
 }
