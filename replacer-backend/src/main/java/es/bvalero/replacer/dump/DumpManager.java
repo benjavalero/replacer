@@ -64,7 +64,7 @@ class DumpManager {
      * Find the latest dump file and process it.
      *
      * @param forceProcessDumpArticles Force processing all dump articles event if they have not been modified since
-     *                                 last processing.
+     *                                 last processing. Also force processing again an already indexed dump.
      */
     void processLatestDumpFile(boolean forceProcessDumpArticles) {
         LOGGER.info("Start indexation of latest dump file. Force: {}", forceProcessDumpArticles);
@@ -79,8 +79,13 @@ class DumpManager {
             Path latestDumpFileFound = findLatestDumpFile();
             LOGGER.info("Found latest dump file: {}", latestDumpFileFound);
 
-            parseDumpFile(latestDumpFileFound, forceProcessDumpArticles);
-            LOGGER.info("Finish indexation of latest dump file: {}", latestDumpFileFound);
+            // We check against the latest dump file processed
+            if (!latestDumpFileFound.equals(dumpHandler.getLatestDumpFile()) || forceProcessDumpArticles) {
+                parseDumpFile(latestDumpFileFound, forceProcessDumpArticles);
+                LOGGER.info("Finish indexation of latest dump file: {}", latestDumpFileFound);
+            } else {
+                LOGGER.info("Latest dump file found already indexed");
+            }
         } catch (DumpException e) {
             LOGGER.error("Error indexing latest dump file", e);
         }

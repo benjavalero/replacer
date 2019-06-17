@@ -134,22 +134,23 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessNewDumpFile() throws URISyntaxException {
-        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
-
-        dumpManager.processLatestDumpFile(false);
-
-        Mockito.verify(dumpHandler, Mockito.times(1)).setLatestDumpFile(dumpFile);
-        Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
-    }
-
-    @Test
     public void testProcessDumpFileAlreadyProcessed() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
+        Mockito.when(dumpHandler.getLatestDumpFile()).thenReturn(dumpFile);
 
         dumpManager.processLatestDumpFile(false);
+
+        Mockito.verify(dumpHandler, Mockito.times(0)).startDocument();
+    }
+
+    @Test
+    public void testForceProcessDumpFileAlreadyProcessed() throws URISyntaxException {
+        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
+        Mockito.when(dumpHandler.getLatestDumpFile()).thenReturn(dumpFile);
+
+        dumpManager.processLatestDumpFile(true);
 
         Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
     }
