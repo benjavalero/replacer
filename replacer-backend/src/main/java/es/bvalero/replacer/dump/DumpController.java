@@ -20,10 +20,8 @@ public class DumpController {
         return dumpManager.getDumpStatus();
     }
 
-    /*
     @GetMapping(value = "/run")
     public boolean processLatestDumpFileManually() {
-        // TODO : Estos métodos deberían devolver el true lo antes posible
         dumpManager.processLatestDumpFile(false);
         return true;
     }
@@ -33,5 +31,5 @@ public class DumpController {
         dumpManager.processLatestDumpFile(true);
         return true;
     }
-*/
+
 }

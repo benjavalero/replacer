@@ -102,7 +102,7 @@ Para cada página encontrada:
 - Solo se indexan las páginas de tipo «Artículo» o «Anexo»
 - Se ignoran las páginas que redirigen a otras
 
-Además no se vuelven a revisar aquellas páginas que no hayan sido modificadas desde la última indexación. El pequeño inconveniente es que en dichas páginas no se detectarán los nuevos reemplazos que se vayan implementando en la herramienta. En el futuro se implementará una opción oculta para forzar la indexación en este caso, y observar el estado actual de la indexación.
+Además no se vuelven a revisar aquellas páginas que no hayan sido modificadas desde la última indexación. El pequeño inconveniente es que en dichas páginas no se detectarán los nuevos reemplazos que se vayan implementando en la herramienta. Para solventar esto, existe una opción oculta para forzar la indexación en este caso, así como para observar el estado actual de la indexación.
 
 ## Base de datos
 
