@@ -14,6 +14,7 @@ const rotate: { [key: string]: SortDirection } = {
   desc: 'asc'
 };
 export const compare = (v1, v2) => (v1 < v2 ? -1 : v1 > v2 ? 1 : 0);
+export const compareLocale = (v1: string, v2: string) => v1.localeCompare(v2, 'es', { sensitivity: 'base' });
 
 export interface SortEvent {
   column: string;

@@ -6,7 +6,7 @@ import { ReplacementCount } from './replacement-count.model';
 import { ReplacementService } from './replacement.service';
 import { AlertService } from '../alert/alert.service';
 
-import { ColumnSortableDirective, SortEvent, compare } from './column-sortable.directive';
+import { ColumnSortableDirective, SortEvent, compare, compareLocale } from './column-sortable.directive';
 
 const PAGE_SIZE = 10;
 
@@ -47,12 +47,16 @@ export class ReplacementTableComponent implements OnInit {
   get filteredMisspellings(): ReplacementCount[] {
     return this.misspellings
       .filter(misspelling =>
-        misspelling.text.toLowerCase().includes(this.filter.value.toLowerCase())
+        this.removeDiacritics(misspelling.text).includes(this.removeDiacritics(this.filter.value))
         )
       .slice(
         (this.page - 1) * this.pageSize,
         (this.page - 1) * this.pageSize + this.pageSize
-        );
+      );
+  }
+
+  private removeDiacritics(word: string): string {
+    return word.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
 
   private findMisspellings() {
@@ -74,7 +78,9 @@ export class ReplacementTableComponent implements OnInit {
 
     // Sorting misspellings
     this.misspellings = [...this.misspellings].sort((a, b) => {
-      const res = compare(a[column], b[column]);
+      const res = (column === 'text'
+        ? compareLocale(a[column], b[column])
+        : compare(a[column], b[column]));
       return direction === 'asc' ? res : -res;
     });
   }

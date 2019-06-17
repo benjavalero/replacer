@@ -1,8 +1,9 @@
 <div *ngIf="misspellings">
 
   <form>
-    <div class="form-group form-inline mt-5">
-      <input class="form-control" type="text" [formControl]="filter" placeholder="Filtrar por reemplazo" />
+    <div class="form-group mt-5">
+      <input class="form-control" type="text" [formControl]="filter"
+        placeholder="Filtrar (ignora mayúscula y acentos)" />
     </div>
   </form>
 
