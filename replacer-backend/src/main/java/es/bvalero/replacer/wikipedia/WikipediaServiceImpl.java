@@ -121,8 +121,6 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put("starttimestamp", currentTimestamp);
         params.put("basetimestamp", lastUpdate);
 
-        // TODO : Test conflicts during the edition
-        // TODO : Test saving when session has expired in frontend
         try {
             authenticationService.executeOAuthRequest(params, accessToken);
         } catch (AuthenticationException e) {

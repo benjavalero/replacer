@@ -2,6 +2,7 @@ package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.finder.ReplacementSuggestion;
 import org.apache.commons.lang3.StringUtils;
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +76,9 @@ final class Misspelling {
 
     static class MisspellingBuilder {
         private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingBuilder.class);
-        private static final Pattern PATTERN_COMMENT = Pattern.compile("([^,(]+)(\\([^)]+\\))?");
+        @RegExp
+        private static final String REGEX_COMMENT = "([^,(]+)(\\([^)]+\\))?";
+        private static final Pattern PATTERN_COMMENT = Pattern.compile(REGEX_COMMENT);
 
         private String word;
         private boolean caseSensitive;
