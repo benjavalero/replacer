@@ -26,6 +26,7 @@ public class ArticleService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
     private static final int BATCH_SIZE = 1000;
+    private static final int CACHE_SIZE = 100;
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -39,6 +40,8 @@ public class ArticleService {
     // We use sets to compare easily in the unit tests
     private Collection<Replacement> toSaveInBatch = new HashSet<>();
     private Collection<Replacement> toDeleteInBatch = new HashSet<>();
+
+    private Map<String, Set<Integer>> cachedArticleIdsByWord = new HashMap<>();
 
     private void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
         LOGGER.debug("Index replacements for article: {}", article.getId());
@@ -125,13 +128,41 @@ public class ArticleService {
     }
 
     Optional<Integer> findRandomArticleToReview() {
-        return findRandomArticleToReview(null);
+        return findRandomArticleToReview("");
     }
 
-    Optional<Integer> findRandomArticleToReview(@Nullable String word) {
+    Optional<Integer> findRandomArticleToReview(String word) {
         LOGGER.info("Start finding random article to review. Filter by word: {}", word);
-        Optional<Replacement> randomReplacement = findRandomReplacementNotReviewedInDb(word);
-        return randomReplacement.map(Replacement::getArticleId);
+
+        // First we get the replacements from database and we cache them
+        if (!cachedArticleIdsByWord.containsKey(word)) {
+            // Find replacements by word from the database
+            PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
+            List<Replacement> randomReplacements = StringUtils.isBlank(word)
+                    ? replacementRepository.findRandomToReview(pagination)
+                    : replacementRepository.findRandomByWordToReview(word, pagination);
+
+            // Cache the results
+            Set<Integer> articleIds = randomReplacements.stream()
+                    .map(Replacement::getArticleId).collect(Collectors.toSet());
+            cachedArticleIdsByWord.put(word, articleIds);
+        }
+
+        Set<Integer> articleIdsByWord = cachedArticleIdsByWord.get(word);
+        Optional<Integer> articleId = articleIdsByWord.stream().findFirst();
+        if (articleId.isPresent()) {
+            // Remove the replacement from the cached list and others for the same article
+            articleIdsByWord.remove(articleId.get());
+
+            // If the set gets empty we remove it from the map
+            if (articleIdsByWord.isEmpty()) {
+                cachedArticleIdsByWord.remove(word);
+            }
+        } else {
+            cachedArticleIdsByWord.remove(word);
+        }
+
+        return articleId;
     }
 
     Optional<ArticleReview> findArticleReviewById(int articleId) {
@@ -172,14 +203,6 @@ public class ArticleService {
         }
 
         return Optional.empty();
-    }
-
-    private Optional<Replacement> findRandomReplacementNotReviewedInDb(@Nullable String word) {
-        PageRequest pagination = PageRequest.of(0, 1);
-        List<Replacement> randomReplacements = StringUtils.isBlank(word)
-                ? replacementRepository.findRandomToReview(pagination)
-                : replacementRepository.findRandomByWordToReview(word, pagination);
-        return randomReplacements.isEmpty() ? Optional.empty() : Optional.of(randomReplacements.get(0));
     }
 
     private WikipediaPage findArticleById(int articleId) throws InvalidArticleException, WikipediaException {
