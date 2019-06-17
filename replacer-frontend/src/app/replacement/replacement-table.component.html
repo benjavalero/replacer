@@ -6,22 +6,27 @@
     </div>
   </form>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col" appColumnSortable="text" (sort)="onSort($event)">Término</th>
-        <th scope="col" appColumnSortable="count" (sort)="onSort($event)">#</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let misspelling of filteredMisspellings">
-        <td class="w-75">{{ misspelling.text }}</td>
-        <td class="w-25">{{ misspelling.count }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div *ngIf="filteredMisspellings.length">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col" appColumnSortable="text" (sort)="onSort($event)">Término</th>
+          <th scope="col" appColumnSortable="count" (sort)="onSort($event)">#</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let misspelling of filteredMisspellings">
+          <td class="w-75">{{ misspelling.text }}</td>
+          <td class="w-25">{{ misspelling.count }}</td>
+        </tr>
+      </tbody>
+    </table>
 
-  <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [maxSize]="3"
-    class="d-flex justify-content-center">
-  </ngb-pagination>
+    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [maxSize]="3"
+      class="d-flex justify-content-center">
+    </ngb-pagination>
+  </div>
+  <p *ngIf="!filteredMisspellings.length">
+    No hay reemplazos que cumplan los filtros de búsqueda.
+  </p>
 </div>
