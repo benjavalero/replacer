@@ -93,7 +93,7 @@ export class EditArticleComponent implements OnInit {
     this.replacements = [];
 
     this.alertService.addAlertMessage({
-      type: 'info',
+      type: 'primary',
       message: `Guardando cambios en «${this.title}»…`
     });
 
@@ -103,7 +103,7 @@ export class EditArticleComponent implements OnInit {
         message: 'Cambios guardados con éxito'
       });
 
-      this.router.navigate(['random']);
+      this.router.navigate([`random/${this.filteredWord || ''}`]);
     }, (err) => {
       this.alertService.addAlertMessage({
         type: 'danger',
