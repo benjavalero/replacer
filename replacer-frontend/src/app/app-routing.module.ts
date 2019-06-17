@@ -16,8 +16,8 @@ const routes: Routes = [
   /*
   { path: 'stats', component: StatsComponent, canActivate: [AuthenticationGuard] },
   { path: 'random/:word', component: RandomComponent, canActivate: [AuthenticationGuard] },
-  { path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
   */
+  { path: '**', redirectTo: '/dashboard', pathMatch: 'full' }
 ];
 
 @NgModule({
