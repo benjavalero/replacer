@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertService } from '../alert/alert.service';
 
 @Component({
   selector: 'app-find-replacement',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FindReplacementComponent implements OnInit {
 
-  constructor() { }
+  constructor(private alertService: AlertService) { }
 
   ngOnInit() {
+    this.alertService.clearAlertMessages();
   }
 
 }
