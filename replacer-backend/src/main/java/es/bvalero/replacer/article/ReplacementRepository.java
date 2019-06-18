@@ -26,7 +26,7 @@ interface ReplacementRepository extends JpaRepository<Replacement, Long>, Replac
     @Query("FROM Replacement WHERE articleId BETWEEN :minId AND :maxId")
     List<Replacement> findByArticles(@Param("minId") int minArticleId, @Param("maxId") int maxArticleId);
 
-    @Query("SELECT new es.bvalero.replacer.article.ReplacementCount(subtype, COUNT(*)) FROM Replacement WHERE type = 'MISSPELLING' GROUP BY subtype")
+    @Query("SELECT new es.bvalero.replacer.article.ReplacementCount(subtype, COUNT(*)) FROM Replacement WHERE reviewer IS NULL GROUP BY type, subtype")
     List<ReplacementCount> findMisspellingsGrouped();
 
     @Query("FROM Replacement WHERE reviewer IS NULL ORDER BY RAND()")

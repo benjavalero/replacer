@@ -23,7 +23,8 @@ public class ReplacementRepositoryTest {
         Replacement error2 = new Replacement(2, "MISSPELLING", "aber", 2);
         Replacement error3 = new Replacement(2, "MISSPELLING", "madrid", 3);
         Replacement error4 = new Replacement(3, "MISSPELLING", "paris", 4);
-        replacementRepository.saveAll(Arrays.asList(error1, error2, error3, error4));
+        Replacement error5 = new Replacement(3, "MISSPELLING", "habia", 5).withReviewer("x");
+        replacementRepository.saveAll(Arrays.asList(error1, error2, error3, error4, error5));
 
         Assert.assertEquals(3, replacementRepository.findMisspellingsGrouped().size());
     }
