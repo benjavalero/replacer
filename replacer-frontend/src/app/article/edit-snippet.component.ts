@@ -6,7 +6,7 @@ const THRESHOLD = 200; // Number of characters to display around the replacement
 @Component({
   selector: 'app-edit-snippet',
   templateUrl: './edit-snippet.component.html',
-  styles: [`.pre { white-space: pre-wrap; }`]
+  styleUrls: ['./edit-snippet.component.css']
 })
 export class EditSnippetComponent implements OnInit {
 

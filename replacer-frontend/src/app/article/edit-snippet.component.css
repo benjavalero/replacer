@@ -1,0 +1,12 @@
+.pre {
+  white-space: pre-wrap;
+  font-family: monospace;
+}
+
+.pre .btn {
+  vertical-align: baseline;
+}
+
+label[ngbbuttonlabel] {
+  max-width: 50%;
+}

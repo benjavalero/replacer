@@ -8,14 +8,12 @@
     [word]="replacement.text" [suggestions]="replacement.suggestions" (fixed)="onFixed($event)">
   </app-edit-snippet>
 
-  <hr />
-
   <button type="button" class="btn btn-success w-100 mt-3 mb-2" [disabled]="!fixedCount" (click)="onSaveChanges()">
     Guardar con cambios <span class="badge badge-light">{{ fixedCount }}</span>
   </button>
 
   <button type="button" class="btn btn-success w-100 mb-3" (click)="onSaveNoChanges()">
-    Guardar sin cambios
+    Marcar como revisado sin guardar cambios
   </button>
 
 </div>

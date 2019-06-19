@@ -1,16 +1,16 @@
-<hr />
+<div class="border border-secondary p-2 mt-3 mb-3">
 
-<div class="pre">
-  {{ textLeft }}<span
-    class="p-1 border border-dark rounded font-weight-bold">{{ suggestionSelected.text }}</span>{{ textRight }}
-</div>
+  <div class="pre">{{ textLeft }}<span class="btn"
+      [ngClass]="{ 'btn-danger': word === suggestionSelected.text, 'btn-success': word !== suggestionSelected.text }">{{ suggestionSelected.text }}</span>{{ textRight }}
+  </div>
 
-<div class="btn-group btn-group-toggle w-100 mt-3" ngbRadioGroup name="radioBasic"
-  [(ngModel)]="suggestionSelected">
-  <label *ngFor="let suggestion of suggestions" ngbButtonLabel class="btn text-left"
-    [ngClass]="{ 'btn-primary': suggestion === suggestionSelected, 'btn-outline-primary': suggestion !== suggestionSelected }">
-    <input ngbButton type="radio" [value]="suggestion">
-    {{ suggestion.text }}
-    <span *ngIf="suggestion.comment" class="small">({{ suggestion.comment }})</span>
-  </label>
+  <div class="btn-group btn-group-toggle w-100 mt-3" ngbRadioGroup name="radioBasic" [(ngModel)]="suggestionSelected">
+    <label *ngFor="let suggestion of suggestions" ngbButtonLabel class="btn text-left"
+      [ngClass]="{ 'btn-primary': suggestion === suggestionSelected, 'btn-outline-primary': suggestion !== suggestionSelected }">
+      <input ngbButton type="radio" [value]="suggestion">
+      {{ suggestion.text }}
+      <span *ngIf="suggestion.comment" class="small">({{ suggestion.comment }})</span>
+    </label>
+  </div>
+
 </div>
