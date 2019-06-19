@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -42,6 +43,7 @@ public class ArticleService {
     private Collection<Replacement> toDeleteInBatch = new HashSet<>();
 
     private Map<String, Set<Integer>> cachedArticleIdsByWord = new HashMap<>();
+    private List<ReplacementCount> cachedReplacementCount = new ArrayList<>();
 
     private void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
         LOGGER.debug("Index replacements for article: {}", article.getId());
@@ -285,8 +287,17 @@ public class ArticleService {
         return replacementRepository.countByReviewerIsNull();
     }
 
+    /**
+     * Update every 5 minutes the count of misspellings from Wikipedia
+     */
+    @Scheduled(fixedDelay = 5 * 60 * 1000)
+    public void updateReplacementCount() {
+        this.cachedReplacementCount.clear();
+        this.cachedReplacementCount.addAll(replacementRepository.findMisspellingsGrouped());
+    }
+
     List<ReplacementCount> findMisspellingsGrouped() {
-        return replacementRepository.findMisspellingsGrouped();
+        return this.cachedReplacementCount;
     }
 
     public void deleteReplacementsByTextIn(Collection<String> texts) {
