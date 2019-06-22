@@ -39,35 +39,35 @@ export class AuthenticationService {
   }
 
   get redirectPath(): string {
-    return sessionStorage.getItem('redirectPath');
+    return localStorage.getItem('redirectPath');
   }
 
   set redirectPath(path: string) {
     if (path) {
-      sessionStorage.setItem('redirectPath', path);
+      localStorage.setItem('redirectPath', path);
     } else {
-      sessionStorage.removeItem('redirectPath');
+      localStorage.removeItem('redirectPath');
     }
   }
 
   get requestToken(): OauthToken {
-    return JSON.parse(sessionStorage.getItem('requestToken'));
+    return JSON.parse(localStorage.getItem('requestToken'));
   }
 
   set requestToken(token: OauthToken) {
     if (token) {
-      sessionStorage.setItem('requestToken', JSON.stringify(token));
+      localStorage.setItem('requestToken', JSON.stringify(token));
     } else {
-      sessionStorage.removeItem('requestToken');
+      localStorage.removeItem('requestToken');
     }
   }
 
   get accessToken(): OauthToken {
-    return JSON.parse(sessionStorage.getItem('accessToken'));
+    return JSON.parse(localStorage.getItem('accessToken'));
   }
 
   set accessToken(token: OauthToken) {
-    sessionStorage.setItem('accessToken', JSON.stringify(token));
+    localStorage.setItem('accessToken', JSON.stringify(token));
     this.findUserName();
   }
 
@@ -83,14 +83,14 @@ export class AuthenticationService {
   }
 
   get username(): string {
-    return sessionStorage.getItem('username');
+    return localStorage.getItem('username');
   }
 
   set username(username: string) {
     if (username) {
-      sessionStorage.setItem('username', username);
+      localStorage.setItem('username', username);
     } else {
-      sessionStorage.removeItem('username');
+      localStorage.removeItem('username');
     }
     this.usernameEvent.emit(username);
   }
