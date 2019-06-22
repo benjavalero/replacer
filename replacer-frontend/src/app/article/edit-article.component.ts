@@ -107,7 +107,7 @@ export class EditArticleComponent implements OnInit {
     }, (err) => {
       this.alertService.addAlertMessage({
         type: 'danger',
-        message: `Error al guardar el artículo: ${err.error.message}`
+        message: `Error al guardar el artículo: ${err.error ? err.error.message : err}`
       });
     });
   }
