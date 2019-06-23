@@ -76,4 +76,9 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
         return loadArticleContent("/false-positives.txt");
     }
 
+    @Override
+    public String identify(OAuth1AccessToken accessToken) {
+        return "offline";
+    }
+
 }

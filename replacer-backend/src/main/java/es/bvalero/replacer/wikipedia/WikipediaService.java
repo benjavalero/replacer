@@ -31,4 +31,6 @@ public interface WikipediaService {
 
     String getFalsePositiveListPageContent() throws WikipediaException;
 
+    String identify(OAuth1AccessToken accessToken) throws WikipediaException;
+
 }

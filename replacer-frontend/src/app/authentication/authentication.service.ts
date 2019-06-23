@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { OauthToken } from './oauth-token.model';
+import { AlertService } from '../alert/alert.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class AuthenticationService {
 
   @Output() usernameEvent: EventEmitter<string> = new EventEmitter();
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private alertService: AlertService) { }
 
   isAuthenticated(): boolean {
     return this.accessToken !== null;
@@ -88,6 +89,11 @@ export class AuthenticationService {
     this.httpClient.get<string>(`${environment.apiUrl}/authentication/username`, { params })
       .subscribe((username: string) => {
         this.username = username;
+      }, (err) => {
+        this.alertService.addAlertMessage({
+          type: 'danger',
+          message: 'Error al buscar el nombre del usuario en sesión'
+        });
       });
   }
 

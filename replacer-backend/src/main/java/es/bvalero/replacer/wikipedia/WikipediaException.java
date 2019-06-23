@@ -15,8 +15,4 @@ public class WikipediaException extends Exception {
         super(throwable);
     }
 
-    WikipediaException(String message, Throwable throwable) {
-        super(message, throwable);
-    }
-
 }

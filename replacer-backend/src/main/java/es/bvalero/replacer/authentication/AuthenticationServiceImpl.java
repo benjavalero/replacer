@@ -1,11 +1,10 @@
 package es.bvalero.replacer.authentication;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.apis.MediaWikiApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth10aService;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,8 +21,6 @@ import java.util.concurrent.ExecutionException;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
-    private static final String WIKIPEDIA_API_URL = "https://es.wikipedia.org/w/api.php";
-    private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
     @Value("${wikipedia.api.key}")
     private String apiKey;
@@ -44,32 +41,41 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public JsonNode executeOAuthRequest(Map<String, String> params, OAuth1AccessToken accessToken)
-            throws AuthenticationException {
-        LOGGER.debug("Execute OAuth request with params: {}", params);
-        OAuthRequest request = createOAuthRequestWithParams(params);
-        signOAuthRequest(request, accessToken);
-        return executeOAuthRequest(request);
+    public String executeOAuthRequest(String apiUrl, Map<String, String> params, boolean post,
+                                      @Nullable OAuth1AccessToken accessToken) throws AuthenticationException {
+        LOGGER.debug("START Execute OAuth Request. URL: {} - Params: {} - Post: {} - Signed: {}",
+                apiUrl, params, post, accessToken != null);
+        OAuthRequest request = createOAuthRequestWithParams(apiUrl, params, post);
+        if (accessToken != null) {
+            signOAuthRequest(request, accessToken);
+        }
+
+        try {
+            Response response = getOAuthService().execute(request);
+            String body = response.getBody();
+            if (body == null || !response.isSuccessful()) {
+                throw new AuthenticationException(String.format("Call not successful: %d - %s",
+                        response.getCode(), response.getMessage()));
+            }
+            LOGGER.debug("END Execute OAuth Request. Response: {}", body);
+            return body;
+        } catch (InterruptedException e) {
+            LOGGER.error("ERROR executing OAuth Request", e);
+            Thread.currentThread().interrupt();
+            throw new AuthenticationException();
+        } catch (ExecutionException | IOException e) {
+            LOGGER.error("ERROR executing OAuth Request", e);
+            throw new AuthenticationException();
+        }
     }
 
-    @Override
-    public JsonNode executeUnsignedOAuthRequest(Map<String, String> params) throws AuthenticationException {
-        OAuthRequest request = createOAuthRequestWithParams(params);
-        return executeOAuthRequest(request);
-    }
-
-    private OAuthRequest createOAuthRequestWithParams(Map<String, String> params) {
-        OAuthRequest request = new OAuthRequest(Verb.POST, WIKIPEDIA_API_URL);
+    private OAuthRequest createOAuthRequestWithParams(String apiUrl, Map<String, String> params, boolean post) {
+        OAuthRequest request = new OAuthRequest(post ? Verb.POST : Verb.GET, apiUrl);
         addParametersToRequest(request, params);
         return request;
     }
 
     private void addParametersToRequest(OAuthRequest request, Map<String, String> params) {
-        // Add standard parameters to receive a JSON response fro Wikipedia API
-        request.addParameter("format", "json");
-        request.addParameter("formatversion", "2");
-
-        // Add the rest of parameters
         params.forEach(request::addParameter);
     }
 
@@ -77,37 +83,28 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         getOAuthService().signRequest(accessToken, request);
     }
 
-    private JsonNode executeOAuthRequest(OAuthRequest request) throws AuthenticationException {
-        try {
-            Response response = getOAuthService().execute(request);
-            if (response.isSuccessful() && response.getBody() != null) {
-                LOGGER.debug("OAuth response body: {}", response.getBody());
-                return JSON_MAPPER.readTree(response.getBody());
-            } else {
-                throw new AuthenticationException(String.format("Call not successful: %d - %s", response.getCode(), response.getMessage()));
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new AuthenticationException(e);
-        } catch (ExecutionException | IOException e) {
-            throw new AuthenticationException(e);
-        }
-    }
-
     @Override
     public String getAuthorizationUrl(OAuth1RequestToken requestToken) {
-        return getOAuthService().getAuthorizationUrl(requestToken);
+        LOGGER.info("START Get Authorization URL from MediaWiki API. Request Token: {}", requestToken.getToken());
+        String url = getOAuthService().getAuthorizationUrl(requestToken);
+        LOGGER.info("END Get Authorization URL from MediaWiki API: {}", url);
+        return url;
     }
 
     @Override
     public OAuth1RequestToken getRequestToken() throws AuthenticationException {
         try {
-            return getOAuthService().getRequestToken();
+            LOGGER.info("START Get Request Token from MediaWiki API");
+            OAuth1RequestToken token = getOAuthService().getRequestToken();
+            LOGGER.info("END Get Request Token from MediaWiki API. Token: {}", token.getToken());
+            return token;
         } catch (InterruptedException e) {
+            LOGGER.error("ERROR getting Request Token from MediaWiki API", e);
             Thread.currentThread().interrupt();
-            throw new AuthenticationException(e);
+            throw new AuthenticationException();
         } catch (ExecutionException | IOException e) {
-            throw new AuthenticationException(e);
+            LOGGER.error("ERROR getting Request Token from MediaWiki API", e);
+            throw new AuthenticationException();
         }
     }
 
@@ -115,24 +112,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
             throws AuthenticationException {
         try {
-            return getOAuthService().getAccessToken(requestToken, oauthVerifier);
+            LOGGER.info("START Get Access Token from MediaWiki API. Request Token: {}", requestToken.getToken());
+            OAuth1AccessToken token = getOAuthService().getAccessToken(requestToken, oauthVerifier);
+            LOGGER.info("END Get Access Token from MediaWiki API: {} / {}", token.getToken(), token.getTokenSecret());
+            return token;
         } catch (InterruptedException e) {
+            LOGGER.error("ERROR getting Access Token from MediaWiki API", e);
             Thread.currentThread().interrupt();
-            throw new AuthenticationException(e);
+            throw new AuthenticationException();
         } catch (ExecutionException | IOException e) {
-            throw new AuthenticationException(e);
+            LOGGER.error("ERROR getting Access Token from MediaWiki API", e);
+            throw new AuthenticationException();
         }
-    }
-
-    @Override
-    public String identify(OAuth1AccessToken accessToken) throws AuthenticationException {
-        OAuthRequest request = new OAuthRequest(Verb.GET, WIKIPEDIA_API_URL);
-        request.addParameter("action", "query");
-        request.addParameter("format", "json");
-        request.addParameter("meta", "userinfo");
-        signOAuthRequest(request, accessToken);
-        JsonNode jsonResponse = executeOAuthRequest(request);
-        return jsonResponse.at("/query/userinfo/name").asText();
     }
 
 }
