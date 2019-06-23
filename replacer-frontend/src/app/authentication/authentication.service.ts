@@ -38,6 +38,11 @@ export class AuthenticationService {
     return this.httpClient.get<OauthToken>(`${environment.apiUrl}/authentication/accessToken`, { params });
   }
 
+  clearSession(): void {
+    this.accessToken = null;
+    this.username = null;
+  }
+
   get redirectPath(): string {
     return localStorage.getItem('redirectPath');
   }
@@ -67,8 +72,12 @@ export class AuthenticationService {
   }
 
   set accessToken(token: OauthToken) {
-    localStorage.setItem('accessToken', JSON.stringify(token));
-    this.findUserName();
+    if (token) {
+      localStorage.setItem('accessToken', JSON.stringify(token));
+      this.findUserName();
+    } else {
+      localStorage.removeItem('accessToken');
+    }
   }
 
   private findUserName(): void {

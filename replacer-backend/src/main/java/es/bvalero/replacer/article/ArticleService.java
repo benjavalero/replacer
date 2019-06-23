@@ -247,26 +247,21 @@ public class ArticleService {
     /**
      * Saves in Wikipedia the changes on an article validated in the front-end.
      */
-    boolean saveArticleChanges(int articleId, String text, String reviewer, String lastUpdate, String currentTimestamp,
-                               OAuth1AccessToken accessToken) {
-        try {
-            // Upload new content to Wikipedia
-            wikipediaService.savePageContent(articleId, text, lastUpdate, currentTimestamp, accessToken);
+    void saveArticleChanges(int articleId, String text, String reviewer, String lastUpdate, String currentTimestamp,
+                            OAuth1AccessToken accessToken) throws WikipediaException {
 
-            // Mark article as reviewed in the database
-            return markArticleAsReviewed(articleId, reviewer);
-        } catch (WikipediaException e) {
-            LOGGER.error("Error saving article: {}", articleId, e);
-            return false;
-        }
+        // Upload new content to Wikipedia
+        wikipediaService.savePageContent(articleId, text, lastUpdate, currentTimestamp, accessToken);
+
+        // Mark article as reviewed in the database
+        markArticleAsReviewed(articleId, reviewer);
     }
 
-    boolean markArticleAsReviewed(int articleId, String reviewer) {
+    void markArticleAsReviewed(int articleId, String reviewer) {
         LOGGER.info("Mark article as reviewed: {}", articleId);
         replacementRepository.findByArticleId(articleId).stream()
                 .filter(Replacement::isToBeReviewed)
                 .forEach(rep -> reviewReplacement(rep, reviewer));
-        return true;
     }
 
     private void reviewReplacement(Replacement replacement, String reviewer) {

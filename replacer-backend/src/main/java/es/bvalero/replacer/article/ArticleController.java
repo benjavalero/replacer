@@ -1,6 +1,7 @@
 package es.bvalero.replacer.article;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,15 +57,16 @@ public class ArticleController {
     @PutMapping
     public boolean save(@RequestParam("id") int articleId, @RequestBody String text, @RequestParam String reviewer,
                         @RequestParam String lastUpdate, @RequestParam String currentTimestamp,
-                        @RequestParam String token, @RequestParam String tokenSecret) {
+                        @RequestParam String token, @RequestParam String tokenSecret) throws WikipediaException {
         LOGGER.info("PUT Save article with ID: {}", articleId);
         if (StringUtils.isNotBlank(text)) {
             OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
-            return articleService.saveArticleChanges(articleId, text, reviewer, lastUpdate, currentTimestamp, accessToken);
+            articleService.saveArticleChanges(articleId, text, reviewer, lastUpdate, currentTimestamp, accessToken);
         } else {
             LOGGER.info("No changes in article. Mark directly as reviewed: {}", articleId);
-            return articleService.markArticleAsReviewed(articleId, reviewer);
+            articleService.markArticleAsReviewed(articleId, reviewer);
         }
+        return true;
     }
 
     /* STATISTICS */

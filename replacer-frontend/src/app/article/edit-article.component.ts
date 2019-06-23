@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { AuthenticationService } from '../authentication/authentication.service';
 import { AlertService } from '../alert/alert.service';
 import { ArticleService } from './article.service';
 import { ArticleReview } from './article-review.model';
@@ -24,7 +25,7 @@ export class EditArticleComponent implements OnInit {
   currentTimestamp: string;
 
   constructor(private route: ActivatedRoute, private alertService: AlertService, private articleService: ArticleService,
-    private router: Router) { }
+    private router: Router, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
     this.articleId = +this.route.snapshot.paramMap.get('id');
@@ -105,10 +106,17 @@ export class EditArticleComponent implements OnInit {
 
       this.router.navigate([`random/${this.filteredWord || ''}`]);
     }, (err) => {
-      this.alertService.addAlertMessage({
-        type: 'danger',
-        message: `Error al guardar el artículo: ${err.error ? err.error.message : err}`
-      });
+      const errMsg = `Error al guardar el artículo: ${err.error.message}`;
+      if (errMsg.includes('mwoauth-invalid-authorization')) {
+        // Clear session and reload the page
+        this.authenticationService.clearSession();
+        window.location.reload();
+      } else {
+        this.alertService.addAlertMessage({
+          type: 'danger',
+          message: errMsg
+        });
+      }
     });
   }
 

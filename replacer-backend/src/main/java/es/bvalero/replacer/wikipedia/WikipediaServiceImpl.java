@@ -124,7 +124,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         try {
             authenticationService.executeOAuthRequest(params, accessToken);
         } catch (AuthenticationException e) {
-            throw new WikipediaException(e);
+            throw new WikipediaException("Error on saving page content", e);
         }
     }
 
@@ -135,6 +135,14 @@ public class WikipediaServiceImpl implements WikipediaService {
 
         try {
             JsonNode jsonResponse = authenticationService.executeOAuthRequest(params, accessToken);
+
+            // Check authentication error
+            JsonNode jsonError = jsonResponse.get("error");
+            if (jsonError != null) {
+                String errorMsg = String.format("%s: %s", jsonError.get("code").asText(), jsonError.get("info").asText());
+                throw new WikipediaException(errorMsg);
+            }
+
             return jsonResponse.at("/query/tokens/csrftoken").asText();
         } catch (AuthenticationException e) {
             throw new WikipediaException("Error getting edit token", e);

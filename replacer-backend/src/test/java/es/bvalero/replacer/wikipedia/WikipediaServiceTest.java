@@ -49,6 +49,18 @@ public class WikipediaServiceTest {
         Assert.assertTrue(editToken.endsWith("+\\"));
     }
 
+    @Test(expected = WikipediaException.class)
+    public void testGetEditTokenBadAuthentication() throws IOException, AuthenticationException, WikipediaException {
+        // API response
+        String textResponse = "{\"error\":{\"code\":\"mwoauth-invalid-authorization\",\"info\":\"The authorization headers in your request are not valid: No approved grant was found for that authorization token.\",\"docref\":\"See https://es.wikipedia.org/w/api.php for API usage. Subscribe to the mediawiki-api-announce mailing list at &lt;https://lists.wikimedia.org/mailman/listinfo/mediawiki-api-announce&gt; for notice of API deprecations and breaking changes.\"},\"servedby\":\"mw1235\"}";
+        JsonNode jsonResponse = jsonMapper.readTree(textResponse);
+        Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyMap(), Mockito.nullable(OAuth1AccessToken.class)))
+                .thenReturn(jsonResponse);
+
+        // We pass a null access token to retrieve an anonymous edit token
+        wikipediaService.getEditToken(null);
+    }
+
     @Test
     public void testGetPageContent() throws IOException, AuthenticationException, WikipediaException {
         // API response
