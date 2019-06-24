@@ -21,7 +21,6 @@ export class EditArticleComponent implements OnInit {
   content: string;
   replacements: ArticleReplacement[] = [];
   fixedCount = 0;
-  lastUpdate: string;
   currentTimestamp: string;
 
   constructor(private route: ActivatedRoute, private alertService: AlertService, private articleService: ArticleService,
@@ -41,7 +40,6 @@ export class EditArticleComponent implements OnInit {
         this.alertService.clearAlertMessages();
         this.title = review.title;
         this.content = review.content;
-        this.lastUpdate = review.lastUpdate;
         this.currentTimestamp = review.currentTimestamp;
         this.replacements = review.replacements;
       } else {
@@ -98,7 +96,7 @@ export class EditArticleComponent implements OnInit {
       message: `Guardando cambios en «${this.title}»…`
     });
 
-    this.articleService.saveArticle(this.articleId, content, this.lastUpdate, this.currentTimestamp).subscribe((res: boolean) => {
+    this.articleService.saveArticle(this.articleId, content, this.currentTimestamp).subscribe((res: boolean) => {
       this.alertService.addAlertMessage({
         type: 'success',
         message: 'Cambios guardados con éxito'

@@ -24,8 +24,8 @@ public interface WikipediaService {
      */
     Map<Integer, WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException;
 
-    void savePageContent(int pageId, String pageContent, String lastUpdate, String currentTimestamp,
-                         OAuth1AccessToken accessToken) throws WikipediaException;
+    void savePageContent(int pageId, String pageContent, String currentTimestamp, OAuth1AccessToken accessToken)
+            throws WikipediaException;
 
     String getMisspellingListPageContent() throws WikipediaException;
 

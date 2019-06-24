@@ -1,5 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
+import org.jetbrains.annotations.TestOnly;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -104,6 +106,7 @@ public final class WikipediaPage {
             return this;
         }
 
+        @TestOnly
         public WikipediaPage.WikipediaPageBuilder setTimestamp(LocalDateTime timestamp) {
             this.timestamp = formatWikipediaTimestamp(timestamp);
             return this;

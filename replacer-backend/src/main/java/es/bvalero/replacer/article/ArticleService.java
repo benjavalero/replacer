@@ -211,7 +211,6 @@ public class ArticleService {
                         .setTitle(article.getTitle())
                         .setContent(article.getContent())
                         .setReplacements(articleReplacements)
-                        .setLastUpdate(article.getTimestamp())
                         .setCurrentTimestamp(article.getQueryTimestamp())
                         .build();
                 if (LOGGER.isDebugEnabled()) {
@@ -275,11 +274,11 @@ public class ArticleService {
     /**
      * Saves in Wikipedia the changes on an article validated in the front-end.
      */
-    void saveArticleChanges(int articleId, String text, String reviewer, String lastUpdate, String currentTimestamp,
+    void saveArticleChanges(int articleId, String text, String reviewer, String currentTimestamp,
                             OAuth1AccessToken accessToken) throws WikipediaException {
 
         // Upload new content to Wikipedia
-        wikipediaService.savePageContent(articleId, text, lastUpdate, currentTimestamp, accessToken);
+        wikipediaService.savePageContent(articleId, text, currentTimestamp, accessToken);
 
         // Mark article as reviewed in the database
         markArticleAsReviewed(articleId, reviewer);

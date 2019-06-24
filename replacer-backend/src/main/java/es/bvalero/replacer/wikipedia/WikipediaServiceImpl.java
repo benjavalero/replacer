@@ -143,33 +143,46 @@ public class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public void savePageContent(int pageId, String pageContent, String lastUpdate, String currentTimestamp,
-                                OAuth1AccessToken accessToken) throws WikipediaException {
+    public void savePageContent(int pageId, String pageContent, String currentTimestamp, OAuth1AccessToken accessToken)
+            throws WikipediaException {
         LOGGER.info("START Save page content into Wikipedia. Page ID: {}", pageId);
+
+        EditToken editToken = getEditToken(pageId, accessToken);
+        // Pre-check of edit conflicts
+        if (currentTimestamp.compareTo(editToken.getTimestamp()) <= 0) {
+            throw new WikipediaException("El artículo ha sido editado por otra persona. Recargue la página para revisar el artículo de nuevo.");
+        }
+
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, "edit");
         params.put("pageid", Integer.toString(pageId));
         params.put("text", pageContent);
         params.put("summary", EDIT_SUMMARY);
         params.put("minor", "true");
-        params.put("token", getEditToken(accessToken));
-        params.put("starttimestamp", currentTimestamp);
-        params.put("basetimestamp", lastUpdate);
+        params.put("token", editToken.getCsrftoken());
+        params.put("starttimestamp", currentTimestamp); // Timestamp when the editing process began
+        params.put("basetimestamp", editToken.getTimestamp()); // Timestamp of the base revision
 
         executeWikipediaApiRequest(params, true, accessToken);
         LOGGER.info("END Save page content into Wikipedia. Page ID: {}", pageId);
     }
 
-    String getEditToken(OAuth1AccessToken accessToken) throws WikipediaException {
+    EditToken getEditToken(int pageId, OAuth1AccessToken accessToken) throws WikipediaException {
         LOGGER.debug("START Get edit token. Access Token: {}", accessToken.getToken());
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, VALUE_QUERY);
         params.put("meta", "tokens");
+        params.put("pageids", Integer.toString(pageId));
+        params.put("prop", "revisions");
+        params.put("rvprop", "timestamp");
 
         JsonNode jsonResponse = executeWikipediaApiRequest(params, true, accessToken);
-        String token = jsonResponse.at("/query/tokens/csrftoken").asText();
-        LOGGER.debug("END Get edit token: {}", token);
-        return token;
+        EditToken editToken = new EditToken(
+                jsonResponse.at("/query/tokens/csrftoken").asText(),
+                jsonResponse.at("/query/pages/0/revisions/0/timestamp").asText()
+        );
+        LOGGER.debug("END Get edit token: {}", editToken);
+        return editToken;
     }
 
     @Override
@@ -198,6 +211,5 @@ public class WikipediaServiceImpl implements WikipediaService {
         LOGGER.info("END Get name of the logged user from Wikipedia API: {}", username);
         return username;
     }
-
 
 }

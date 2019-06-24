@@ -51,8 +51,7 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     @Override
-    public void savePageContent(int pageId, String pageContent, String lastUpdate, String currentTimestamp,
-                                OAuth1AccessToken accessToken) {
+    public void savePageContent(int pageId, String pageContent, String currentTimestamp, OAuth1AccessToken accessToken) {
         // Do nothing
     }
 

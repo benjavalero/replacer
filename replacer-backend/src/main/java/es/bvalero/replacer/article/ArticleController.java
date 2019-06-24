@@ -55,14 +55,14 @@ public class ArticleController {
     }
 
     @PutMapping
-    public boolean save(@RequestParam("id") int articleId, @RequestBody String text, @RequestParam String reviewer,
-                        @RequestParam String lastUpdate, @RequestParam String currentTimestamp,
+    public boolean save(@RequestParam("id") int articleId, @RequestBody String text,
+                        @RequestParam String reviewer, @RequestParam String currentTimestamp,
                         @RequestParam String token, @RequestParam String tokenSecret) throws WikipediaException {
         boolean changed = StringUtils.isNotBlank(text);
         LOGGER.info("PUT Save article. ID: {} - Changed: {}", articleId, changed);
         if (changed) {
             OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
-            articleService.saveArticleChanges(articleId, text, reviewer, lastUpdate, currentTimestamp, accessToken);
+            articleService.saveArticleChanges(articleId, text, reviewer, currentTimestamp, accessToken);
         } else {
             articleService.markArticleAsReviewed(articleId, reviewer);
         }

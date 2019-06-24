@@ -32,14 +32,15 @@ public class WikipediaServiceTest {
     @Test
     public void testGetEditToken() throws AuthenticationException, WikipediaException {
         // API response
-        String textResponse = "{\"batchcomplete\":true,\"query\":{\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
+        String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
         Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(),
                 Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
 
         // We pass a null access token to retrieve an anonymous edit token
-        String editToken = wikipediaService.getEditToken(new OAuth1AccessToken("", ""));
-        Assert.assertNotNull(editToken);
-        Assert.assertTrue(editToken.endsWith("+\\"));
+        EditToken editToken = wikipediaService.getEditToken(2209245, new OAuth1AccessToken("", ""));
+        Assert.assertNotNull(editToken.getCsrftoken());
+        Assert.assertEquals("+\\", editToken.getCsrftoken());
+        Assert.assertEquals("2019-06-24T21:24:09Z", editToken.getTimestamp());
     }
 
     @Test(expected = WikipediaException.class)
@@ -50,7 +51,7 @@ public class WikipediaServiceTest {
                 Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
 
         // We pass a null access token to retrieve an anonymous edit token
-        wikipediaService.getEditToken(new OAuth1AccessToken("", ""));
+        wikipediaService.getEditToken(1, new OAuth1AccessToken("", ""));
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.github.scribejava.apis.MediaWikiApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth10aService;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String executeOAuthRequest(String apiUrl, Map<String, String> params, boolean post,
                                       @Nullable OAuth1AccessToken accessToken) throws AuthenticationException {
-        boolean signed = accessToken != null && accessToken.getToken() != null;
+        boolean signed = accessToken != null && StringUtils.isNotBlank(accessToken.getToken());
         LOGGER.debug("START Execute OAuth Request. URL: {} - Params: {} - Post: {} - Signed: {}",
                 apiUrl, params, post, signed);
         OAuthRequest request = createOAuthRequestWithParams(apiUrl, params, post);

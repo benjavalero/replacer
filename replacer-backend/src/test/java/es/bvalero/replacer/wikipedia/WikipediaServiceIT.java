@@ -1,5 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
+import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,6 +49,40 @@ public class WikipediaServiceIT {
     @Test
     public void testGetPageContentUnavailable() throws WikipediaException {
         Assert.assertFalse(wikipediaService.getPageByTitle("Usuario:Benjavaleroxx").isPresent());
+    }
+
+    @Test
+    public void testGetEditToken() throws WikipediaException {
+        // We pass a null access token to retrieve an anonymous edit token
+        EditToken editToken = wikipediaService.getEditToken(6903884, new OAuth1AccessToken("", ""));
+        Assert.assertNotNull(editToken);
+        Assert.assertTrue(editToken.getCsrftoken().endsWith("+\\"));
+        Assert.assertNotNull(editToken.getTimestamp());
+    }
+
+    @Test(expected = WikipediaException.class)
+    public void testSavePageWithConflicts() throws WikipediaException {
+        WikipediaPage page = wikipediaService.getPageByTitle("Wikipedia:Zona de pruebas/5")
+                .orElseThrow(WikipediaException::new);
+
+        String originalContent = page.getContent();
+        String newContent = originalContent + "\nEdición sencilla para probar conflictos de edición.";
+        String conflictContent = originalContent + "\nOtra edición sencilla para probar conflictos de edición.";
+
+        // Save the new content
+        wikipediaService.savePageContent(page.getId(),
+                newContent,
+                page.getQueryTimestamp(),
+                new OAuth1AccessToken("", ""));
+
+        // Save the conflict content started 1 minute before
+        String before = WikipediaPage.formatWikipediaTimestamp(
+                WikipediaPage.parseWikipediaTimestamp(
+                        page.getQueryTimestamp()).minusMinutes(1));
+        wikipediaService.savePageContent(page.getId(),
+                conflictContent,
+                before,
+                new OAuth1AccessToken("", ""));
     }
 
 }
