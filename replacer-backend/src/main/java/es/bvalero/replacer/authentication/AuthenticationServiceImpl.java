@@ -43,10 +43,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String executeOAuthRequest(String apiUrl, Map<String, String> params, boolean post,
                                       @Nullable OAuth1AccessToken accessToken) throws AuthenticationException {
+        boolean signed = accessToken != null && accessToken.getToken() != null;
         LOGGER.debug("START Execute OAuth Request. URL: {} - Params: {} - Post: {} - Signed: {}",
-                apiUrl, params, post, accessToken != null);
+                apiUrl, params, post, signed);
         OAuthRequest request = createOAuthRequestWithParams(apiUrl, params, post);
-        if (accessToken != null) {
+        if (signed) {
             signOAuthRequest(request, accessToken);
         }
 

@@ -101,7 +101,7 @@ final class Misspelling {
 
         @Nullable Misspelling build() {
             if (!isMisspellingWordValid(word)) {
-                LOGGER.info("Not valid misspelling word: {}", word);
+                LOGGER.info("Ignore not valid misspelling word: {}", word);
                 return null;
             }
 

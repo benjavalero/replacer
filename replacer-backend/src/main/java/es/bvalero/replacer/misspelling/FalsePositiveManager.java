@@ -48,7 +48,7 @@ public class FalsePositiveManager {
      */
     @Scheduled(fixedDelay = 3600 * 24 * 1000)
     public void updateFalsePositives() {
-        LOGGER.info("Execute scheduled daily update of false positives");
+        LOGGER.info("EXECUTE Scheduled daily update of false positives");
         try {
             setFalsePositives(findWikipediaFalsePositives());
         } catch (WikipediaException e) {
@@ -57,10 +57,10 @@ public class FalsePositiveManager {
     }
 
     private Set<String> findWikipediaFalsePositives() throws WikipediaException {
-        LOGGER.info("Start loading false positives from Wikipedia");
+        LOGGER.info("START Load false positives from Wikipedia");
         String falsePositiveListText = wikipediaService.getFalsePositiveListPageContent();
         Set<String> falsePositiveSet = parseFalsePositiveListText(falsePositiveListText);
-        LOGGER.info("Finish loading false positives from Wikipedia: {} items", falsePositiveSet.size());
+        LOGGER.info("END Load false positives from Wikipedia. Size: {}", falsePositiveSet.size());
         return falsePositiveSet;
     }
 

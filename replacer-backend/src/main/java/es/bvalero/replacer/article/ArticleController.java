@@ -35,7 +35,7 @@ public class ArticleController {
 
     @GetMapping(value = "/random/{word}")
     public List<Integer> findRandomArticleByWord(@PathVariable("word") String word) {
-        LOGGER.info("GET Find random article with replacements by word: {}", word);
+        LOGGER.info("GET Find random article with replacements. Word: {}", word);
         return articleService.findRandomArticleToReview(word)
                 .map(Collections::singletonList)
                 .orElse(Collections.emptyList());
@@ -43,14 +43,14 @@ public class ArticleController {
 
     @GetMapping(value = "/review/{id}")
     public Optional<ArticleReview> findArticleReviewById(@PathVariable("id") int articleId) {
-        LOGGER.info("GET Find replacements for article: {}", articleId);
+        LOGGER.info("GET Find replacements for article. ID: {}", articleId);
         return articleService.findArticleReviewById(articleId);
     }
 
     @GetMapping(value = "/review/{id}/{word}")
     public Optional<ArticleReview> findArticleReviewById(@PathVariable("id") int articleId,
                                                          @PathVariable("word") String word) {
-        LOGGER.info("GET Find replacements for article {} by word: {}", articleId, word);
+        LOGGER.info("GET Find replacements for article. ID: {} - Word: {}", articleId, word);
         return articleService.findArticleReviewById(articleId, word);
     }
 
@@ -58,12 +58,12 @@ public class ArticleController {
     public boolean save(@RequestParam("id") int articleId, @RequestBody String text, @RequestParam String reviewer,
                         @RequestParam String lastUpdate, @RequestParam String currentTimestamp,
                         @RequestParam String token, @RequestParam String tokenSecret) throws WikipediaException {
-        LOGGER.info("PUT Save article with ID: {}", articleId);
-        if (StringUtils.isNotBlank(text)) {
+        boolean changed = StringUtils.isNotBlank(text);
+        LOGGER.info("PUT Save article. ID: {} - Changed: {}", articleId, changed);
+        if (changed) {
             OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
             articleService.saveArticleChanges(articleId, text, reviewer, lastUpdate, currentTimestamp, accessToken);
         } else {
-            LOGGER.info("No changes in article. Mark directly as reviewed: {}", articleId);
             articleService.markArticleAsReviewed(articleId, reviewer);
         }
         return true;
@@ -73,33 +73,29 @@ public class ArticleController {
 
     @GetMapping(value = "/count/replacements")
     public Long countReplacements() {
-        LOGGER.info("GET Count replacements");
         Long count = articleService.countReplacements();
-        LOGGER.info("Replacements found: {}", count);
+        LOGGER.info("GET Count replacements. Result: {}", count);
         return count;
     }
 
     @GetMapping(value = "/count/replacements/to-review")
     public Long countReplacementsToReview() {
-        LOGGER.info("GET Count replacements not reviewed");
         Long count = articleService.countReplacementsToReview();
-        LOGGER.info("Replacements found not reviewed: {}", count);
+        LOGGER.info("GET Count not reviewed. Results: {}", count);
         return count;
     }
 
     @GetMapping("/count/replacements/reviewed")
     public Long countReplacementsReviewed() {
-        LOGGER.info("GET Count replacements reviewed");
         Long count = articleService.countReplacementsReviewed();
-        LOGGER.info("Replacements found reviewed: {}", count);
+        LOGGER.info("GET Count reviewed replacements. Result: {}", count);
         return count;
     }
 
     @GetMapping(value = "/count/misspellings")
     public List<ReplacementCount> listMisspellings() {
-        LOGGER.info("GET List misspellings");
         List<ReplacementCount> list = articleService.findMisspellingsGrouped();
-        LOGGER.info("Misspelling list found: {}", list.size());
+        LOGGER.info("GET Grouped replacement count. Result Size: {}", list.size());
         return list;
     }
 

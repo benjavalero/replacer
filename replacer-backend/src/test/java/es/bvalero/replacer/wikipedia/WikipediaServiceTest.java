@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.authentication.AuthenticationService;
@@ -24,11 +23,8 @@ public class WikipediaServiceTest {
     @InjectMocks
     private WikipediaServiceImpl wikipediaService;
 
-    private ObjectMapper jsonMapper;
-
     @Before
     public void setUp() {
-        jsonMapper = new ObjectMapper();
         wikipediaService = new WikipediaServiceImpl();
         MockitoAnnotations.initMocks(this);
     }
@@ -41,7 +37,7 @@ public class WikipediaServiceTest {
                 Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
 
         // We pass a null access token to retrieve an anonymous edit token
-        String editToken = wikipediaService.getEditToken(null);
+        String editToken = wikipediaService.getEditToken(new OAuth1AccessToken("", ""));
         Assert.assertNotNull(editToken);
         Assert.assertTrue(editToken.endsWith("+\\"));
     }
@@ -54,7 +50,7 @@ public class WikipediaServiceTest {
                 Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
 
         // We pass a null access token to retrieve an anonymous edit token
-        wikipediaService.getEditToken(null);
+        wikipediaService.getEditToken(new OAuth1AccessToken("", ""));
     }
 
     @Test

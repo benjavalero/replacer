@@ -60,6 +60,18 @@ public final class ArticleReview {
         return Collections.unmodifiableList(replacements);
     }
 
+    @Override
+    public String toString() {
+        return "ArticleReview{" +
+                "articleId=" + articleId +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", replacements=" + replacements +
+                ", lastUpdate='" + lastUpdate + '\'' +
+                ", currentTimestamp='" + currentTimestamp + '\'' +
+                '}';
+    }
+
     static class ArticleReviewBuilder {
         private final List<ArticleReplacement> replacements = new ArrayList<>(100);
         private Integer articleId;

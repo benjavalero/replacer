@@ -56,7 +56,7 @@ public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredRe
     }
 
     private RunAutomaton buildUppercaseAfterAutomaton(Set<Misspelling> misspellings) {
-        LOGGER.info("Start building uppercase-after automaton");
+        LOGGER.info("START Build uppercase-after automaton");
 
         // Load the misspellings
         misspellings.forEach(misspelling -> {
@@ -72,7 +72,7 @@ public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredRe
         String regexAlternations = String.format(REGEX_UPPERCASE_AFTER_PUNCTUATION, StringUtils.join(this.uppercaseWords, "|"));
         RunAutomaton automaton = new RunAutomaton(new RegExp(regexAlternations).toAutomaton(new DatatypesAutomatonProvider()));
 
-        LOGGER.info("Finish building uppercase-after automaton");
+        LOGGER.info("END Build uppercase-after automaton");
         return automaton;
     }
 

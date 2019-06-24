@@ -68,7 +68,7 @@ public class MisspellingManager {
      */
     @Scheduled(fixedDelay = 3600 * 24 * 1000)
     public void updateMisspellings() {
-        LOGGER.info("Execute scheduled daily update of misspellings");
+        LOGGER.info("EXECUTE Scheduled daily update of misspellings");
         try {
             setMisspellings(findWikipediaMisspellings());
         } catch (WikipediaException e) {
@@ -77,10 +77,10 @@ public class MisspellingManager {
     }
 
     private Set<Misspelling> findWikipediaMisspellings() throws WikipediaException {
-        LOGGER.info("Start loading misspellings from Wikipedia");
+        LOGGER.info("START Loading misspellings from Wikipedia");
         String misspellingListText = wikipediaService.getMisspellingListPageContent();
         Set<Misspelling> misspellingSet = parseMisspellingListText(misspellingListText);
-        LOGGER.info("Finish loading misspellings from Wikipedia: {} items", misspellingSet.size());
+        LOGGER.info("END Load misspellings from Wikipedia. Items found: {}", misspellingSet.size());
         return misspellingSet;
     }
 

@@ -64,18 +64,23 @@ public class WikipediaServiceImpl implements WikipediaService {
 
     @Override
     public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
-        LOGGER.info("Find Wikipedia page by title: {}", pageTitle);
+        LOGGER.info("START Find Wikipedia page by title: {}", pageTitle);
         // Return the only value that should be in the map
-        return getPagesByIds("titles", pageTitle).values().stream().findFirst();
+        Optional<WikipediaPage> page = getPagesByIds("titles", pageTitle).values().stream().findFirst();
+        LOGGER.info("END Find Wikipedia page by title: {}", pageTitle);
+        return page;
     }
 
     @Override
     public Optional<WikipediaPage> getPageById(int pageId) throws WikipediaException {
-        LOGGER.info("Find Wikipedia page by ID: {}", pageId);
+        LOGGER.info("START Find Wikipedia page by ID: {}", pageId);
         // Return the only value that should be in the map
-        return getPagesByIds(Collections.singletonList(pageId)).values().stream().findFirst();
+        Optional<WikipediaPage> page = getPagesByIds(Collections.singletonList(pageId)).values().stream().findFirst();
+        LOGGER.info("END Find Wikipedia page by ID: {}", pageId);
+        return page;
     }
 
+    // We make this method public to be used by the finder benchmarks
     @Override
     public Map<Integer, WikipediaPage> getPagesByIds(List<Integer> pageIds)
             throws WikipediaException {
@@ -140,7 +145,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     @Override
     public void savePageContent(int pageId, String pageContent, String lastUpdate, String currentTimestamp,
                                 OAuth1AccessToken accessToken) throws WikipediaException {
-        LOGGER.info("Save page content into Wikipedia");
+        LOGGER.info("START Save page content into Wikipedia. Page ID: {}", pageId);
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, "edit");
         params.put("pageid", Integer.toString(pageId));
@@ -152,15 +157,19 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put("basetimestamp", lastUpdate);
 
         executeWikipediaApiRequest(params, true, accessToken);
+        LOGGER.info("END Save page content into Wikipedia. Page ID: {}", pageId);
     }
 
     String getEditToken(OAuth1AccessToken accessToken) throws WikipediaException {
+        LOGGER.debug("START Get edit token. Access Token: {}", accessToken.getToken());
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, VALUE_QUERY);
         params.put("meta", "tokens");
 
         JsonNode jsonResponse = executeWikipediaApiRequest(params, true, accessToken);
-        return jsonResponse.at("/query/tokens/csrftoken").asText();
+        String token = jsonResponse.at("/query/tokens/csrftoken").asText();
+        LOGGER.debug("END Get edit token: {}", token);
+        return token;
     }
 
     @Override
@@ -182,11 +191,12 @@ public class WikipediaServiceImpl implements WikipediaService {
         LOGGER.info("START Get name of the logged user from Wikipedia API. Token: {}", accessToken.getToken());
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, VALUE_QUERY);
-        params.put("format", "json");
         params.put("meta", "userinfo");
 
         JsonNode jsonResponse = executeWikipediaApiRequest(params, false, accessToken);
-        return jsonResponse.at("/query/userinfo/name").asText();
+        String username = jsonResponse.at("/query/userinfo/name").asText();
+        LOGGER.info("END Get name of the logged user from Wikipedia API: {}", username);
+        return username;
     }
 
 

@@ -46,16 +46,21 @@ public class ArticleService {
     private List<ReplacementCount> cachedReplacementCount = new ArrayList<>();
 
     private void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
-        LOGGER.debug("Index replacements for article: {}", article.getId());
+        LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
         indexReplacements(
                 convertArticleReplacements(article, articleReplacements),
                 replacementRepository.findByArticleId(article.getId()),
                 false);
+        LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
     }
 
     public void indexReplacements(Collection<Replacement> replacements, Collection<Replacement> dbReplacements,
                                   boolean indexInBatch) {
-        LOGGER.debug("Index replacements in DB. New: {}. Old: {}", replacements.size(), dbReplacements.size());
+        LOGGER.debug("START Index list of replacements\n" +
+                        "New: {} - {}\n" +
+                        "Old: {} - {}",
+                replacements.size(), replacements,
+                dbReplacements.size(), dbReplacements);
         replacements.forEach(replacement -> {
             Optional<Replacement> existing = findSameReplacementInCollection(replacement, dbReplacements);
             if (existing.isPresent()) {
@@ -64,11 +69,16 @@ public class ArticleService {
             } else {
                 // New replacement
                 saveReplacement(replacement, indexInBatch);
+                LOGGER.debug("Replacement inserted in DB: {}", replacement);
             }
         });
 
         // Remove the remaining replacements
-        dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(rep -> deleteReplacement(rep, indexInBatch));
+        dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(rep -> {
+            deleteReplacement(rep, indexInBatch);
+            LOGGER.debug("Replacement deleted in DB: {}", rep);
+        });
+        LOGGER.debug("END Index list of replacements");
     }
 
     private Optional<Replacement> findSameReplacementInCollection(Replacement replacement,
@@ -78,12 +88,16 @@ public class ArticleService {
 
     private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement, boolean indexInBatch) {
         if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())) { // DB older than Dump
-            saveReplacement(dbReplacement.withLastUpdate(newReplacement.getLastUpdate()), indexInBatch);
+            Replacement updated = dbReplacement.withLastUpdate(newReplacement.getLastUpdate());
+            saveReplacement(updated, indexInBatch);
+            LOGGER.debug("Replacement updated in DB: {}", updated);
+        } else {
+            LOGGER.debug("Replacement existing in DB: {}", dbReplacement);
         }
     }
 
     public void flushReplacementsInBatch() {
-        LOGGER.debug("Save and delete replacements in database. To save: {}. To delete: {}",
+        LOGGER.debug("START Save and delete replacements in database. To save: {}. To delete: {}",
                 toSaveInBatch.size(), toDeleteInBatch.size());
         replacementRepository.deleteInBatch(toDeleteInBatch);
         replacementRepository.saveAll(toSaveInBatch);
@@ -95,6 +109,7 @@ public class ArticleService {
         // Flush and clear to avoid memory leaks (we are performing millions of updates when indexing the dump)
         replacementRepository.flush();
         replacementRepository.clear(); // This clears all the EntityManager
+        LOGGER.debug("END Save and delete replacements in database");
     }
 
     private void saveReplacement(Replacement replacement, boolean saveInBatch) {
@@ -134,7 +149,7 @@ public class ArticleService {
     }
 
     Optional<Integer> findRandomArticleToReview(String word) {
-        LOGGER.info("Start finding random article to review. Filter by word: {}", word);
+        LOGGER.info("START Find random article to review. Word: {}", word);
 
         // First we get the replacements from database and we cache them
         if (!cachedArticleIdsByWord.containsKey(word)) {
@@ -164,6 +179,7 @@ public class ArticleService {
             cachedArticleIdsByWord.remove(word);
         }
 
+        LOGGER.info("END Find random article to review. Found article ID: {}", articleId.orElse(null));
         return articleId;
     }
 
@@ -172,38 +188,49 @@ public class ArticleService {
     }
 
     Optional<ArticleReview> findArticleReviewById(int articleId, @Nullable String word) {
+        LOGGER.info("START Find review for article. ID: {} - Word: {}", articleId, word);
         try {
             WikipediaPage article = findArticleById(articleId);
             List<ArticleReplacement> articleReplacements = findArticleReplacements(article.getContent());
+            LOGGER.info("Potential replacements found in text: {}", articleReplacements.size());
 
             // Index the found replacements to add the new ones and remove the obsolete ones from last index in DB
-            LOGGER.info("Update database with found replacements");
+            LOGGER.info("Update article replacements in database");
             indexArticleReplacements(article, articleReplacements);
 
             if (StringUtils.isNotBlank(word)) {
                 articleReplacements = filterReplacementsByWord(word, articleReplacements);
             }
+            LOGGER.info("Final replacements found in text after filtering: {}", articleReplacements.size());
 
             // Build the article review if the replacements found are valid
             // Note the DB has just been updated in case the word doesn't exist in the found replacements
             if (!articleReplacements.isEmpty()) {
-                LOGGER.info("Finish finding random article to review: {}", article.getTitle());
-                return Optional.of(ArticleReview.builder()
+                ArticleReview review = ArticleReview.builder()
                         .setArticleId(article.getId())
                         .setTitle(article.getTitle())
                         .setContent(article.getContent())
                         .setReplacements(articleReplacements)
                         .setLastUpdate(article.getTimestamp())
                         .setCurrentTimestamp(article.getQueryTimestamp())
-                        .build());
+                        .build();
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("END Find review for article: {}", review);
+                } else {
+                    LOGGER.info("END Find review for article: {} - {}. Replacements to review: {}",
+                            articleId, review.getTitle(), articleReplacements.size());
+                }
+                return Optional.of(review);
             }
         } catch (InvalidArticleException e) {
             LOGGER.warn("Found article is not valid. Delete from database.", e);
             deleteArticle(articleId);
         } catch (WikipediaException e) {
             LOGGER.error("Error retrieving page from Wikipedia", e);
+            // Do nothing and retry
         }
 
+        LOGGER.info("END Find review for article. No article found to review.");
         return Optional.empty();
     }
 
@@ -213,7 +240,8 @@ public class ArticleService {
 
         // Check if the article is processable
         if (page.isRedirectionPage()) {
-            throw new InvalidArticleException("Found article is a redirection page");
+            throw new InvalidArticleException(
+                    String.format("Found article is a redirection page: %s - %s", articleId, page.getTitle()));
         }
 
         return page;
@@ -258,10 +286,11 @@ public class ArticleService {
     }
 
     void markArticleAsReviewed(int articleId, String reviewer) {
-        LOGGER.info("Mark article as reviewed: {}", articleId);
+        LOGGER.info("START Mark article as reviewed. ID: {}", articleId);
         replacementRepository.findByArticleId(articleId).stream()
                 .filter(Replacement::isToBeReviewed)
                 .forEach(rep -> reviewReplacement(rep, reviewer));
+        LOGGER.info("END Mark article as reviewed. ID: {}", articleId);
     }
 
     private void reviewReplacement(Replacement replacement, String reviewer) {
@@ -287,8 +316,13 @@ public class ArticleService {
      */
     @Scheduled(fixedDelay = 5 * 60 * 1000)
     public void updateReplacementCount() {
+        LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
+        LOGGER.info("START Count grouped replacements");
+        List<ReplacementCount> count = replacementRepository.findMisspellingsGrouped();
+        LOGGER.info("END Count grouped replacements. Size: {}", count.size());
+
         this.cachedReplacementCount.clear();
-        this.cachedReplacementCount.addAll(replacementRepository.findMisspellingsGrouped());
+        this.cachedReplacementCount.addAll(count);
     }
 
     List<ReplacementCount> findMisspellingsGrouped() {
