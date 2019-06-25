@@ -1,4 +1,9 @@
-<div *ngIf="misspellings">
+<div *ngIf="misspellings.length">
+
+  <p>La siguiente tabla muestra una lista de los potenciales errores ortográficos (obtenida de la <a
+      href="https://es.wikipedia.org/wiki/Wikipedia:Corrector_ortográfico/Listado" target="_blank">propia Wikipedia</a>)
+    así como el número de apariciones sin revisar:
+  </p>
 
   <form>
     <div class="form-group mt-4">
@@ -32,4 +37,13 @@
   <p *ngIf="!filteredMisspellings.length">
     No hay reemplazos que cumplan los filtros de búsqueda.
   </p>
+
+  <div class="container mb-3">
+    <div class="alert alert-warning text-center" role="alert">
+      <strong>Nota</strong>: las estadísticas que se presentan en la tabla pueden no estar totalmente actualizadas con
+      el
+      contenido actual de los artículos.
+    </div>
+  </div>
+
 </div>
