@@ -73,7 +73,7 @@ class DumpHandler extends DefaultHandler {
 
     @Override
     public void startDocument() {
-        LOGGER.info("Start dump document");
+        LOGGER.debug("START Handle dump document: {} - Force: {}", latestDumpFile, forceProcess);
 
         running = true;
         numArticlesRead = 0L;
@@ -83,7 +83,7 @@ class DumpHandler extends DefaultHandler {
 
     @Override
     public void endDocument() {
-        LOGGER.info("End dump document");
+        LOGGER.info("END handle dump document: {}", latestDumpFile);
 
         running = false;
         endTime = Instant.now();
@@ -192,7 +192,7 @@ class DumpHandler extends DefaultHandler {
         }
 
         private void loadCache(int id) {
-            LOGGER.debug("Load replacements from database to cache. Min ID: {}", id);
+            LOGGER.debug("START Load replacements from database to cache. Min ID: {}", id);
             maxCachedId = id + CACHE_SIZE - 1;
             for (Replacement replacement : articleService.findDatabaseReplacementByArticles(id, maxCachedId)) {
                 if (!replacementMap.containsKey(replacement.getArticleId())) {
@@ -200,14 +200,16 @@ class DumpHandler extends DefaultHandler {
                 }
                 replacementMap.get(replacement.getArticleId()).add(replacement);
             }
+            LOGGER.debug("END Load replacements from database to cache");
         }
 
         private void cleanCache() {
             // Clear the cache if obsolete (we assume the dump articles are in order)
             // The remaining cached articles are not in the dump so we remove them from DB
-            LOGGER.debug("Delete obsolete articles in DB: {}", replacementMap.size());
+            LOGGER.debug("START Delete obsolete articles in DB: {}", replacementMap.keySet());
             articleService.deleteArticles(replacementMap.keySet());
             replacementMap = new HashMap<>(CACHE_SIZE);
+            LOGGER.debug("END Delete obsolete articles in DB");
         }
     }
 

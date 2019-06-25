@@ -56,7 +56,7 @@ class DumpManager {
      */
     @Scheduled(fixedDelay = 7 * 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
     void processDumpScheduled() {
-        LOGGER.info("Execute scheduled weekly index of the last dump");
+        LOGGER.info("EXECUTE Scheduled weekly index of the last dump");
         processLatestDumpFile(false);
     }
 
@@ -67,24 +67,23 @@ class DumpManager {
      *                                 last processing. Also force processing again an already indexed dump.
      */
     void processLatestDumpFile(boolean forceProcessDumpArticles) {
-        LOGGER.info("Start indexation of latest dump file. Force: {}", forceProcessDumpArticles);
+        LOGGER.info("START Indexation of latest dump file. Force: {}", forceProcessDumpArticles);
 
         // Check just in case the handler is already running
         if (dumpHandler.isRunning()) {
-            LOGGER.info("Dump indexation is already running");
+            LOGGER.info("END Indexation of latest dump file. Dump indexation is already running.");
             return;
         }
 
         try {
             Path latestDumpFileFound = findLatestDumpFile();
-            LOGGER.info("Found latest dump file: {}", latestDumpFileFound);
 
             // We check against the latest dump file processed
             if (!latestDumpFileFound.equals(dumpHandler.getLatestDumpFile()) || forceProcessDumpArticles) {
                 parseDumpFile(latestDumpFileFound, forceProcessDumpArticles);
-                LOGGER.info("Finish indexation of latest dump file: {}", latestDumpFileFound);
+                LOGGER.info("END Indexation of latest dump file: {}", latestDumpFileFound);
             } else {
-                LOGGER.info("Latest dump file found already indexed");
+                LOGGER.info("END Indexation of latest dump file. Latest dump file already indexed.");
             }
         } catch (DumpException e) {
             LOGGER.error("Error indexing latest dump file", e);
@@ -95,6 +94,7 @@ class DumpManager {
      * @return The path of latest available dump file from Wikipedia.
      */
     Path findLatestDumpFile() throws DumpException {
+        LOGGER.info("START Find latest dump file");
         List<Path> dumpSubFolders = findDumpFolders();
 
         // Try with all the folders starting for the latest
@@ -102,6 +102,7 @@ class DumpManager {
             String dumpFileName = String.format(DUMP_NAME_FORMAT, dumpSubFolder.getFileName());
             Path dumpFile = dumpSubFolder.resolve(dumpFileName);
             if (dumpFile.toFile().exists()) {
+                LOGGER.info("END Find latest dump file: {}", dumpFile);
                 return dumpFile;
             }
         }
@@ -111,14 +112,14 @@ class DumpManager {
     }
 
     private List<Path> findDumpFolders() throws DumpException {
-        LOGGER.info("Dump files base path: {}", dumpFolderPath);
+        LOGGER.debug("Dump files base path: {}", dumpFolderPath);
         try (Stream<Path> dumpSubPaths = Files.list(Paths.get(dumpFolderPath))) {
             List<Path> dumpSubFolders = dumpSubPaths
                     .filter(folder -> PATTERN_DUMP_FOLDER.matcher(folder.getFileName().toString()).matches())
                     .sorted(Collections.reverseOrder())
                     .collect(Collectors.toList());
             if (dumpSubFolders.isEmpty()) {
-                throw new DumpException("Sub-folders not found in dump path");
+                throw new DumpException(String.format("Sub-folders not found in dump path: %s", dumpFolderPath));
             }
             return dumpSubFolders;
         } catch (IOException e) {
@@ -128,7 +129,7 @@ class DumpManager {
 
     @Async
     void parseDumpFile(Path dumpFile, boolean forceProcess) throws DumpException {
-        LOGGER.info("Start parsing dump file: {}", dumpFile);
+        LOGGER.info("START Parse dump file: {}", dumpFile);
 
         try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile))) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -138,7 +139,7 @@ class DumpManager {
             dumpHandler.setLatestDumpFile(dumpFile);
             dumpHandler.setForceProcess(forceProcess);
             saxParser.parse(xmlInput, dumpHandler);
-            LOGGER.info("Finish parsing dump file: {}", dumpFile);
+            LOGGER.info("END Parse dump file: {}", dumpFile);
         } catch (IOException e) {
             throw new DumpException("Dump file not valid", e);
         } catch (ParserConfigurationException | SAXException e) {

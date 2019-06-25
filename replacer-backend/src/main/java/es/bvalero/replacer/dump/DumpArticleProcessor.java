@@ -41,21 +41,21 @@ class DumpArticleProcessor {
     }
 
     boolean processArticle(WikipediaPage dumpArticle, Collection<Replacement> dbReplacements, boolean forceProcess) {
-        LOGGER.debug("Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
+        LOGGER.debug("START Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
 
         if (!isDumpArticleProcessableByNamespace(dumpArticle)) {
-            LOGGER.debug("Dump article not processable by namespace: {}", dumpArticle.getTitle());
+            LOGGER.debug("END Process dump article. Not processable by namespace: {}", dumpArticle.getTitle());
             return false;
         }
         if (!isDumpArticleProcessableByContent(dumpArticle)) {
-            LOGGER.debug("Dump article not processable by content: {}", dumpArticle.getTitle());
+            LOGGER.debug("END Process dump article. Not processable by content: {}", dumpArticle.getTitle());
             return false;
         }
 
         Optional<LocalDate> dbLastUpdate = dbReplacements.stream().map(Replacement::getLastUpdate).max(Comparator.comparing(LocalDate::toEpochDay));
         if (dbLastUpdate.isPresent()
                 && !isArticleProcessableByTimestamp(dumpArticle.getLastUpdate().toLocalDate(), dbLastUpdate.get(), forceProcess)) {
-            LOGGER.debug("Dump article not processable by date: {}. Dump date: {}. DB date: {}",
+            LOGGER.debug("END Process dump article. Not processable by date: {}. Dump date: {}. DB date: {}",
                     dumpArticle.getTitle(), dumpArticle.getTimestamp(), dbLastUpdate);
             return false;
         }
@@ -65,6 +65,7 @@ class DumpArticleProcessor {
                 dbReplacements,
                 true);
 
+        LOGGER.debug("END Process dump article: {}", dumpArticle.getTitle());
         return true;
     }
 
