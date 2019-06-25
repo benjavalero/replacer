@@ -30,10 +30,7 @@ export class EditArticleComponent implements OnInit {
     this.articleId = +this.route.snapshot.paramMap.get('id');
     this.filteredWord = this.route.snapshot.paramMap.get('word');
 
-    this.alertService.addAlertMessage({
-      type: 'primary',
-      message: 'Buscando potenciales reemplazos del artículo…'
-    });
+    this.alertService.addInfoMessage('Buscando potenciales reemplazos del artículo…');
 
     this.articleService.findArticleReviewById(this.articleId, this.filteredWord).subscribe((review: ArticleReview) => {
       if (review) {
@@ -43,17 +40,11 @@ export class EditArticleComponent implements OnInit {
         this.currentTimestamp = review.currentTimestamp;
         this.replacements = review.replacements;
       } else {
-        this.alertService.addAlertMessage({
-          type: 'warning',
-          message: 'No se ha encontrado ningún reemplazo en la versión más actualizada del artículo'
-        });
+        this.alertService.addWarningMessage('No se ha encontrado ningún reemplazo en la versión más actualizada del artículo');
         this.router.navigate(['random']);
       }
     }, (err) => {
-      this.alertService.addAlertMessage({
-        type: 'danger',
-        message: 'Error al buscar los reemplazos en el artículo: ' + err.error.message
-      });
+      this.alertService.addErrorMessage('Error al buscar los reemplazos en el artículo: ' + err.error.message);
     });
   }
 
@@ -91,16 +82,10 @@ export class EditArticleComponent implements OnInit {
     // Remove replacements as a trick to hide the article
     this.replacements = [];
 
-    this.alertService.addAlertMessage({
-      type: 'primary',
-      message: `Guardando cambios en «${this.title}»…`
-    });
+    this.alertService.addInfoMessage(`Guardando cambios en «${this.title}»…`);
 
     this.articleService.saveArticle(this.articleId, content, this.currentTimestamp).subscribe((res: boolean) => {
-      this.alertService.addAlertMessage({
-        type: 'success',
-        message: 'Cambios guardados con éxito'
-      });
+      this.alertService.addSuccessMessage('Cambios guardados con éxito');
 
       this.router.navigate([`random/${this.filteredWord || ''}`]);
     }, (err) => {
@@ -110,10 +95,7 @@ export class EditArticleComponent implements OnInit {
         this.authenticationService.clearSession();
         window.location.reload();
       } else {
-        this.alertService.addAlertMessage({
-          type: 'danger',
-          message: errMsg
-        });
+        this.alertService.addErrorMessage(errMsg);
       }
     });
   }

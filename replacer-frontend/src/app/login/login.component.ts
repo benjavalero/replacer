@@ -18,10 +18,7 @@ export class LoginComponent implements OnInit {
     private alertService: AlertService) { }
 
   ngOnInit() {
-    this.alertService.addAlertMessage({
-      type: 'primary',
-      message: 'Comprobando autenticación…'
-    });
+    this.alertService.addInfoMessage('Comprobando autenticación…');
 
     // Manage return from authorization URL
     this.route.queryParams.subscribe(params => {
@@ -40,10 +37,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.authenticationService.redirectPath || 'dashboard']);
           this.authenticationService.redirectPath = null;
         }, (err) => {
-          this.alertService.addAlertMessage({
-            type: 'danger',
-            message: 'Error al solicitar un Access Token del API de MediaWiki'
-          });
+          this.alertService.addErrorMessage('Error al solicitar un Access Token del API de MediaWiki');
         });
       } else {
         if (this.authenticationService.isAuthenticated()) {
@@ -68,10 +62,7 @@ export class LoginComponent implements OnInit {
         this.alertService.clearAlertMessages();
       });
     }, (err) => {
-      this.alertService.addAlertMessage({
-        type: 'danger',
-        message: 'Error al solicitar un Request Token del API de MediaWiki'
-      });
+      this.alertService.addErrorMessage('Error al solicitar un Request Token del API de MediaWiki');
     });
   }
 

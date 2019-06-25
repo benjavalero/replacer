@@ -90,10 +90,7 @@ export class AuthenticationService {
       .subscribe((username: string) => {
         this.username = username;
       }, (err) => {
-        this.alertService.addAlertMessage({
-          type: 'danger',
-          message: 'Error al buscar el nombre del usuario en sesión'
-        });
+        this.alertService.addErrorMessage('Error al buscar el nombre del usuario en sesión');
       });
   }
 

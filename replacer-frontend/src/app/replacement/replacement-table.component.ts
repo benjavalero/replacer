@@ -36,11 +36,7 @@ export class ReplacementTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.alertService.addAlertMessage({
-      type: 'primary',
-      message: 'Cargando estadísticas de reemplazos…'
-    });
-
+    this.alertService.addInfoMessage('Cargando estadísticas de reemplazos…');
     this.findMisspellings();
   }
 
@@ -48,7 +44,7 @@ export class ReplacementTableComponent implements OnInit {
     return this.misspellings
       .filter(misspelling =>
         this.removeDiacritics(misspelling.text).includes(this.removeDiacritics(this.filter.value))
-        )
+      )
       .slice(
         (this.page - 1) * this.pageSize,
         (this.page - 1) * this.pageSize + this.pageSize

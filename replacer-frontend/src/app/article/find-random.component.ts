@@ -19,30 +19,21 @@ export class FindRandomComponent implements OnInit {
   ngOnInit() {
     this.filteredWord = this.route.snapshot.paramMap.get('word');
 
-    this.alertService.addAlertMessage({
-      type: 'primary',
-      message: (this.filteredWord
-        ? `Buscando artículo aleatorio con «${this.filteredWord}»…`
-        : 'Buscando artículo aleatorio con reemplazos…')
-    });
+    this.alertService.addInfoMessage((this.filteredWord
+      ? `Buscando artículo aleatorio con «${this.filteredWord}»…`
+      : 'Buscando artículo aleatorio con reemplazos…'));
 
     this.articleService.findRandomArticle(this.filteredWord).subscribe((articleIds: number[]) => {
       const articleId = articleIds[0];
       if (articleId) {
         this.router.navigate([`article/${articleId}/${this.filteredWord || ''}`]);
       } else {
-        this.alertService.addAlertMessage({
-          type: 'warning',
-          message: (this.filteredWord
-            ? `No se ha encontrado ningún artículo con «${this.filteredWord}»…`
-            : 'No se ha encontrado ningún artículo con reemplazos…')
-        });
+        this.alertService.addWarningMessage((this.filteredWord
+          ? `No se ha encontrado ningún artículo con «${this.filteredWord}»…`
+          : 'No se ha encontrado ningún artículo con reemplazos…'));
       }
     }, (err) => {
-      this.alertService.addAlertMessage({
-        type: 'danger',
-        message: 'Error al buscar artículos con reemplazos: ' + err.error.message
-      });
+      this.alertService.addErrorMessage('Error al buscar artículos con reemplazos: ' + err.error.message);
     });
   }
 
