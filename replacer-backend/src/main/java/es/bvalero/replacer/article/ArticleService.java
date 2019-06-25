@@ -177,6 +177,10 @@ public class ArticleService {
             }
         } else {
             cachedArticleIdsByWord.remove(word);
+
+            // Empty the cached count for the replacement
+            cachedReplacementCount.stream().filter(item -> item.getText().equals(word)).findFirst().ifPresent(
+                    item -> item.setCount(item.getCount()));
         }
 
         LOGGER.info("END Find random article to review. Found article ID: {}", articleId.orElse(null));
