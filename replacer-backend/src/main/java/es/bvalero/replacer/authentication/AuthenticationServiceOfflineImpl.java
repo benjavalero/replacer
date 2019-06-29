@@ -33,4 +33,9 @@ class AuthenticationServiceOfflineImpl implements AuthenticationService {
         return new OAuth1AccessToken("", "", "");
     }
 
+    @Override
+    public boolean isAdminUser(String username) {
+        return true;
+    }
+
 }

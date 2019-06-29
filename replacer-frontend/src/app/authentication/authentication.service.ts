@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { OauthToken } from './oauth-token.model';
+import { User } from './user.model';
 import { AlertService } from '../alert/alert.service';
 
 @Injectable({
@@ -11,7 +12,7 @@ import { AlertService } from '../alert/alert.service';
 })
 export class AuthenticationService {
 
-  @Output() usernameEvent: EventEmitter<string> = new EventEmitter();
+  @Output() userEvent: EventEmitter<User> = new EventEmitter();
 
   constructor(private httpClient: HttpClient, private alertService: AlertService) { }
 
@@ -41,7 +42,7 @@ export class AuthenticationService {
 
   clearSession(): void {
     this.accessToken = null;
-    this.username = null;
+    this.user = null;
   }
 
   get redirectPath(): string {
@@ -86,25 +87,25 @@ export class AuthenticationService {
     params = params.append('token', this.accessToken.token);
     params = params.append('tokenSecret', this.accessToken.tokenSecret);
 
-    this.httpClient.get<string>(`${environment.apiUrl}/authentication/username`, { params })
-      .subscribe((username: string) => {
-        this.username = username;
+    this.httpClient.get<User>(`${environment.apiUrl}/authentication/username`, { params })
+      .subscribe((user: User) => {
+        this.user = user;
       }, (err) => {
         this.alertService.addErrorMessage('Error al buscar el nombre del usuario en sesión');
       });
   }
 
-  get username(): string {
-    return localStorage.getItem('username');
+  get user(): User {
+    return JSON.parse(localStorage.getItem('user'));
   }
 
-  set username(username: string) {
-    if (username) {
-      localStorage.setItem('username', username);
+  set user(user: User) {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
     } else {
-      localStorage.removeItem('username');
+      localStorage.removeItem('user');
     }
-    this.usernameEvent.emit(username);
+    this.userEvent.emit(user);
   }
 
 }

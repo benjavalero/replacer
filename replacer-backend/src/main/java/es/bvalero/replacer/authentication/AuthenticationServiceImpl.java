@@ -29,6 +29,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Value("${wikipedia.api.secret}")
     private String apiSecret;
 
+    @Value("${replacer.admin.user}")
+    private String adminUser;
+
     private OAuth10aService oAuthService;
 
     private OAuth10aService getOAuthService() {
@@ -126,6 +129,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             LOGGER.error("ERROR getting Access Token from MediaWiki API", e);
             throw new AuthenticationException();
         }
+    }
+
+    @Override
+    public boolean isAdminUser(String username) {
+        return this.adminUser.equals(username);
     }
 
 }

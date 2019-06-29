@@ -52,13 +52,14 @@ public class AuthenticationController {
     }
 
     @GetMapping(value = "/username")
-    public List<String> getUsername(@RequestParam String token, @RequestParam String tokenSecret)
+    public User getUsername(@RequestParam String token, @RequestParam String tokenSecret)
             throws WikipediaException {
         LOGGER.info("GET Name of the logged user from Wikipedia API. Token: {} / {}", token, tokenSecret);
         OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
 
-        // We need to return a JSON object so we fake it with a list with only one string
-        return Collections.singletonList(wikipediaService.identify(accessToken));
+        String username = wikipediaService.identify(accessToken);
+        boolean admin = authenticationService.isAdminUser(username);
+        return new User(username, admin);
     }
 
 }

@@ -14,14 +14,14 @@
         <a class="nav-link" routerLinkActive="active" routerLink="/replacement"
           title="Revisar un reemplazo particular en los artículos que lo contienen">Lista de reemplazos</a>
       </li>
-      <!--
-      <li class="nav-item ">
-        <a class="nav-link" routerLinkActive="active" routerLink="/stats">Estadísticas</a>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" routerLink="/stats" [ngbCollapse]="!admin"
+          title="Muestra el número de reemplazos indexados y revisados">Estadísticas</a>
       </li>
-      <li class="nav-item ">
-        <a class="nav-link" routerLinkActive="active" routerLink="/dump">Indexación</a>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" routerLink="/dump" [ngbCollapse]="!admin"
+          title="Muestra el estado de la indexación">Indexación</a>
       </li>
-      -->
     </ul>
     <hr />
     <ul class="navbar-nav ml-auto justify-content-end">

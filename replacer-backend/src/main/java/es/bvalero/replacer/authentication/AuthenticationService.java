@@ -26,4 +26,6 @@ public interface AuthenticationService {
     OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
             throws AuthenticationException;
 
+    boolean isAdminUser(String username);
+
 }

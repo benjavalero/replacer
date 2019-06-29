@@ -1,0 +1,7 @@
+/* Hack to fix the text color in not-collapsed and active admin headers */
+.navbar-light .navbar-nav .nav-link.show {
+  color: rgba(0, 0, 0, .5)
+}
+.navbar-light .navbar-nav .nav-link.active {
+  color: rgba(0, 0, 0, .9)
+}

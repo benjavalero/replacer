@@ -30,7 +30,7 @@ export class ArticleService {
     params = params.append('token', this.authenticationService.accessToken.token);
     params = params.append('tokenSecret', this.authenticationService.accessToken.tokenSecret);
     params = params.append('id', String(articleId));
-    params = params.append('reviewer', this.authenticationService.username);
+    params = params.append('reviewer', this.authenticationService.user.name);
     params = params.append('currentTimestamp', currentTimestamp);
 
     return this.httpClient.put<boolean>(`${environment.apiUrl}/article`, content, { params });
