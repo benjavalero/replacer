@@ -66,7 +66,11 @@ class DumpManager {
      * @param forceProcessDumpArticles Force processing all dump articles event if they have not been modified since
      *                                 last processing. Also force processing again an already indexed dump.
      */
-    void processLatestDumpFile(boolean forceProcessDumpArticles) {
+    // In order to be asynchronous it must be public and called externally:
+    // https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableAsync.html
+    @SuppressWarnings("WeakerAccess")
+    @Async
+    public void processLatestDumpFile(boolean forceProcessDumpArticles) {
         LOGGER.info("START Indexation of latest dump file. Force: {}", forceProcessDumpArticles);
 
         // Check just in case the handler is already running
@@ -127,7 +131,6 @@ class DumpManager {
         }
     }
 
-    @Async
     void parseDumpFile(Path dumpFile, boolean forceProcess) throws DumpException {
         LOGGER.info("START Parse dump file: {}", dumpFile);
 

@@ -13,7 +13,12 @@ export class DumpService {
   constructor(private httpClient: HttpClient) { }
 
   findDumpStatus(): Observable<DumpStatus> {
-    return this.httpClient.get<DumpStatus>(`${environment.apiUrl}/dump/status`);
+    return this.httpClient.get<DumpStatus>(`${environment.apiUrl}/dump/`);
+  }
+
+  runIndexation(forceProcess: boolean): Observable<any> {
+    const force = forceProcess ? 'force' : '';
+    return this.httpClient.post<any>(`${environment.apiUrl}/dump/${force}`, null);
   }
 
 }

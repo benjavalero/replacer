@@ -3,8 +3,14 @@ import { Component, OnInit } from '@angular/core';
 import { interval } from 'rxjs';
 import { DumpService } from './dump.service';
 import { DumpStatus } from './dump-status.model';
+import { AlertService } from '../alert/alert.service';
 
 const NUM_ARTICLES = 3718238; // Rough amount of articles to be read
+
+// https://flaviocopes.com/javascript-sleep/
+const sleep = (milliseconds: number) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+};
 
 @Component({
   selector: 'app-dump',
@@ -12,15 +18,19 @@ const NUM_ARTICLES = 3718238; // Rough amount of articles to be read
   styleUrls: []
 })
 export class DumpComponent implements OnInit {
+  // Status Details
   status: DumpStatus;
-  // submitted = false;
   elapsed: number;
   progress: number;
   average: number;
 
-  constructor(private dumpService: DumpService) { }
+  // Form
+  force: boolean;
+
+  constructor(private dumpService: DumpService, private alertService: AlertService) { }
 
   ngOnInit() {
+    this.alertService.addInfoMessage('Cargando estado de la indexación…');
     this.findDumpStatus();
 
     // Refresh every 10 seconds
@@ -33,6 +43,8 @@ export class DumpComponent implements OnInit {
       this.elapsed = this.calculateElapsed();
       this.progress = this.calculateProgress();
       this.average = this.calculateAverage();
+
+      this.alertService.clearAlertMessages();
     });
   }
 
@@ -64,19 +76,18 @@ export class DumpComponent implements OnInit {
     }
   }
 
-  /*
-  onSubmit() {
-    this.runIndexation(this.status.forceProcess);
+  formatDate(milliseconds: number): Date {
+    return milliseconds ? new Date(milliseconds) : null;
   }
 
-  private runIndexation(forceProcess: boolean) {
-    const force = forceProcess ? '/force' : '';
-    this.httpClient
-      .get<boolean>(`${environment.apiUrl}/dump/run${force}`)
-      .subscribe(res => {
-        this.status.running = true;
-        this.findDumpStatus();
-      });
+  onSubmit() {
+    this.status = null;
+    this.alertService.addInfoMessage('Iniciando indexación…');
+
+    this.dumpService.runIndexation(this.force)
+      .subscribe(
+        // It takes a little for the back-end to set the running status
+        () => sleep(5000).then(() => this.findDumpStatus()));
   }
-  */
+
 }

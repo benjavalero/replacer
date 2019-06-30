@@ -2,6 +2,7 @@ package es.bvalero.replacer.dump;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,18 +16,17 @@ public class DumpController {
     @Autowired
     private DumpManager dumpManager;
 
-    @GetMapping(value = "/status")
+    @GetMapping(value = "/")
     public DumpProcessStatus getDumpStatus() {
         return dumpManager.getDumpStatus();
     }
 
-    @GetMapping(value = "/run")
-    public boolean processLatestDumpFileManually() {
+    @PostMapping(value = "/")
+    public void processLatestDumpFileManually() {
         dumpManager.processLatestDumpFile(false);
-        return true;
     }
 
-    @GetMapping(value = "/run/force")
+    @PostMapping(value = "/force")
     public boolean processLatestDumpFileManuallyForced() {
         dumpManager.processLatestDumpFile(true);
         return true;
