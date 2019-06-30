@@ -27,9 +27,8 @@ public class DumpController {
     }
 
     @PostMapping(value = "/force")
-    public boolean processLatestDumpFileManuallyForced() {
+    public void processLatestDumpFileManuallyForced() {
         dumpManager.processLatestDumpFile(true);
-        return true;
     }
 
 }
