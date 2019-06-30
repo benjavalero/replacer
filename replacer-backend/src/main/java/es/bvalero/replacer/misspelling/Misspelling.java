@@ -129,9 +129,13 @@ final class Misspelling {
             Matcher m = PATTERN_COMMENT.matcher(comment);
             while (m.find()) {
                 String text = m.group(1).trim();
-                String explanation = StringUtils.isNotBlank(m.group(2))
-                        ? m.group(2).substring(1, m.group(2).length() - 1) : ""; // Remove brackets
-                suggestionList.add(new ReplacementSuggestion(text, explanation));
+                if (StringUtils.isNotBlank(text)) {
+                    String explanation = StringUtils.isNotBlank(m.group(2))
+                            ? m.group(2).substring(1, m.group(2).length() - 1) : ""; // Remove brackets
+                    suggestionList.add(new ReplacementSuggestion(text, explanation));
+                } else {
+                    LOGGER.warn("Not valid misspelling comment: {}", comment);
+                }
             }
 
             return suggestionList;

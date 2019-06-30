@@ -17,6 +17,14 @@ public class MisspellingTest {
         Assert.assertEquals("renunció", suggestions1.get(0).getText());
         Assert.assertEquals("3.ª persona", suggestions1.get(0).getComment());
 
+        Misspelling misspelling2 = Misspelling.builder().setWord("cidí")
+                .setComment("cedé, CD, (disco) compacto").build();
+        List<ReplacementSuggestion> suggestions2 = misspelling2.getSuggestions();
+        Assert.assertEquals(3, suggestions2.size());
+        Assert.assertEquals("cedé", suggestions2.get(0).getText());
+        Assert.assertEquals("CD", suggestions2.get(1).getText());
+        Assert.assertEquals("compacto", suggestions2.get(2).getText());
+
         Misspelling misspelling3 = Misspelling.builder().setWord("desempeño")
                 .setComment("desempeño (sustantivo o verbo, 1.ª persona), desempeñó (verbo, 3.ª persona)").build();
         List<ReplacementSuggestion> suggestions3 = misspelling3.getSuggestions();
