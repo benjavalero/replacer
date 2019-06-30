@@ -5,7 +5,6 @@ import java.util.List;
 /**
  * Classes implementing this interface will provide methods to find potential replacements of different types.
  */
-@FunctionalInterface
 public interface ArticleReplacementFinder {
 
     /**
@@ -13,4 +12,5 @@ public interface ArticleReplacementFinder {
      */
     List<ArticleReplacement> findReplacements(String text);
 
+    String getType();
 }

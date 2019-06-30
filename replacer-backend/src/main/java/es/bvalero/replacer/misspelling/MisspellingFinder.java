@@ -26,8 +26,7 @@ import java.util.*;
 @Component
 public class MisspellingFinder extends ReplacementFinder implements ArticleReplacementFinder, PropertyChangeListener {
 
-    static final String MISSPELLING_TYPE = "MISSPELLING";
-
+    private static final String MISSPELLING_TYPE = "Ortografía";
     private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingFinder.class);
     private static final RunAutomaton WORD_AUTOMATON = new RunAutomaton(new RegExp("(<L>|[-'])+")
             .toAutomaton(new DatatypesAutomatonProvider()));
@@ -94,13 +93,18 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
                 articleReplacements.add(new ArticleReplacement(
                         word,
                         m.start(),
-                        MISSPELLING_TYPE,
+                        getType(),
                         misspelling.getWord(),
                         findMisspellingSuggestions(word, misspelling)));
             }
         }
 
         return articleReplacements;
+    }
+
+    @Override
+    public String getType() {
+        return MISSPELLING_TYPE;
     }
 
     /**
