@@ -1,4 +1,5 @@
 export interface ReplacementCount {
-    text: string;
-    count: number;
+  type: string;
+  subtype: string;
+  count: number;
 }

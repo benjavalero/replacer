@@ -19,7 +19,7 @@ export class ReplacementTableComponent implements OnInit {
   // Sorting
   @ViewChildren(ColumnSortableDirective) headers: QueryList<ColumnSortableDirective>;
 
-  misspellings: ReplacementCount[];
+  replacementCounts: ReplacementCount[];
 
   // Filter
   filter = new FormControl('');
@@ -30,20 +30,20 @@ export class ReplacementTableComponent implements OnInit {
   pageSize: number;
 
   constructor(private replacementService: ReplacementService, private alertService: AlertService) {
-    this.misspellings = [];
+    this.replacementCounts = [];
     this.page = 1;
     this.pageSize = PAGE_SIZE;
   }
 
   ngOnInit() {
     this.alertService.addInfoMessage('Cargando estadísticas de reemplazos…');
-    this.findMisspellings();
+    this.findReplacementCounts();
   }
 
-  get filteredMisspellings(): ReplacementCount[] {
-    return this.misspellings
-      .filter(misspelling =>
-        this.removeDiacritics(misspelling.text).includes(this.removeDiacritics(this.filter.value))
+  get filteredCounts(): ReplacementCount[] {
+    return this.replacementCounts
+      .filter(replacementCount =>
+        this.removeDiacritics(replacementCount.subtype).includes(this.removeDiacritics(this.filter.value))
       )
       .slice(
         (this.page - 1) * this.pageSize,
@@ -55,10 +55,10 @@ export class ReplacementTableComponent implements OnInit {
     return word.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
 
-  private findMisspellings() {
-    this.replacementService.findReplacementCounts().subscribe((misspellings: ReplacementCount[]) => {
-      this.misspellings = misspellings;
-      this.collectionSize = this.misspellings.length;
+  private findReplacementCounts() {
+    this.replacementService.findReplacementCounts().subscribe((replacementCounts: ReplacementCount[]) => {
+      this.replacementCounts = replacementCounts;
+      this.collectionSize = this.replacementCounts.length;
 
       this.alertService.clearAlertMessages();
     });
@@ -73,7 +73,7 @@ export class ReplacementTableComponent implements OnInit {
     });
 
     // Sorting misspellings
-    this.misspellings = [...this.misspellings].sort((a, b) => {
+    this.replacementCounts = [...this.replacementCounts].sort((a, b) => {
       const res = (column === 'text'
         ? compareLocale(a[column], b[column])
         : compare(a[column], b[column]));

@@ -1,4 +1,4 @@
-<div *ngIf="misspellings.length">
+<div *ngIf="replacementCounts.length">
 
   <p>La siguiente tabla muestra una lista de los potenciales errores ortográficos (obtenida de la <a
       href="https://es.wikipedia.org/wiki/Wikipedia:Corrector_ortográfico/Listado" target="_blank">propia Wikipedia</a>)
@@ -8,22 +8,24 @@
   <form>
     <div class="form-group mt-4">
       <input class="form-control" type="text" [formControl]="filter"
-        placeholder="Filtrar (ignora mayúsculas y acentos)" />
+        placeholder="Filtrar por subtipo (ignora mayúsculas y acentos)" />
     </div>
   </form>
 
-  <div *ngIf="filteredMisspellings.length">
+  <div *ngIf="filteredCounts.length">
     <table class="table">
       <thead>
         <tr>
-          <th scope="col" appColumnSortable="text" (sort)="onSort($event)">Término</th>
+          <th scope="col" appColumnSortable="type" (sort)="onSort($event)">Tipo</th>
+          <th scope="col" appColumnSortable="subtype" (sort)="onSort($event)">Subtipo</th>
           <th scope="col" appColumnSortable="count" (sort)="onSort($event)">#</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let misspelling of filteredMisspellings">
-          <td class="w-75">
-            <a routerLink="/random/{{misspelling.text}}">{{ misspelling.text }}</a>
+        <tr *ngFor="let misspelling of filteredCounts">
+          <td class="w-25">{{ misspelling.type }}</td>
+          <td class="w-50">
+            <a routerLink="/random/{{misspelling.type}}/{{misspelling.subtype}}">{{ misspelling.subtype }}</a>
           </td>
           <td class="w-25">{{ misspelling.count }}</td>
         </tr>
@@ -34,7 +36,7 @@
       class="d-flex justify-content-center">
     </ngb-pagination>
   </div>
-  <p *ngIf="!filteredMisspellings.length">
+  <p *ngIf="!filteredCounts.length">
     No hay reemplazos que cumplan los filtros de búsqueda.
   </p>
 

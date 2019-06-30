@@ -145,27 +145,28 @@ public class ArticleService {
     }
 
     Optional<Integer> findRandomArticleToReview() {
-        return findRandomArticleToReview("");
+        return findRandomArticleToReview(null, null);
     }
 
-    Optional<Integer> findRandomArticleToReview(String word) {
-        LOGGER.info("START Find random article to review. Word: {}", word);
+    Optional<Integer> findRandomArticleToReview(@Nullable String type, @Nullable String subtype) {
+        LOGGER.info("START Find random article to review. Type: {} - Subtype: {}", type, subtype);
 
         // First we get the replacements from database and we cache them
-        if (!cachedArticleIdsByWord.containsKey(word)) {
+        String key = type != null && subtype != null ? type + "-" + subtype : "";
+        if (!cachedArticleIdsByWord.containsKey(key)) {
             // Find replacements by word from the database
             PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-            List<Replacement> randomReplacements = StringUtils.isBlank(word)
+            List<Replacement> randomReplacements = StringUtils.isBlank(key)
                     ? replacementRepository.findRandomToReview(pagination)
-                    : replacementRepository.findRandomByWordToReview(word, pagination);
+                    : replacementRepository.findRandomToReviewByTypeAndSubtype(type, subtype, pagination);
 
             // Cache the results
             Set<Integer> articleIds = randomReplacements.stream()
                     .map(Replacement::getArticleId).collect(Collectors.toSet());
-            cachedArticleIdsByWord.put(word, articleIds);
+            cachedArticleIdsByWord.put(key, articleIds);
         }
 
-        Set<Integer> articleIdsByWord = cachedArticleIdsByWord.get(word);
+        Set<Integer> articleIdsByWord = cachedArticleIdsByWord.get(key);
         Optional<Integer> articleId = articleIdsByWord.stream().findFirst();
         if (articleId.isPresent()) {
             // Remove the replacement from the cached list and others for the same article
@@ -173,14 +174,16 @@ public class ArticleService {
 
             // If the set gets empty we remove it from the map
             if (articleIdsByWord.isEmpty()) {
-                cachedArticleIdsByWord.remove(word);
+                cachedArticleIdsByWord.remove(key);
             }
         } else {
-            cachedArticleIdsByWord.remove(word);
+            cachedArticleIdsByWord.remove(key);
 
             // Empty the cached count for the replacement
-            cachedReplacementCount.stream().filter(item -> item.getText().equals(word)).findFirst().ifPresent(
-                    item -> item.setCount(item.getCount()));
+            cachedReplacementCount.stream()
+                    .filter(item -> item.getType().equals(type) && item.getSubtype().equals(subtype))
+                    .findFirst()
+                    .ifPresent(item -> item.setCount(item.getCount()));
         }
 
         LOGGER.info("END Find random article to review. Found article ID: {}", articleId.orElse(null));
@@ -188,11 +191,11 @@ public class ArticleService {
     }
 
     Optional<ArticleReview> findArticleReviewById(int articleId) {
-        return findArticleReviewById(articleId, null);
+        return findArticleReviewById(articleId, null, null);
     }
 
-    Optional<ArticleReview> findArticleReviewById(int articleId, @Nullable String word) {
-        LOGGER.info("START Find review for article. ID: {} - Word: {}", articleId, word);
+    Optional<ArticleReview> findArticleReviewById(int articleId, @Nullable String type, @Nullable String subtype) {
+        LOGGER.info("START Find review for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
         try {
             WikipediaPage article = findArticleById(articleId);
             List<ArticleReplacement> articleReplacements = findArticleReplacements(article.getContent());
@@ -202,8 +205,8 @@ public class ArticleService {
             LOGGER.info("Update article replacements in database");
             indexArticleReplacements(article, articleReplacements);
 
-            if (StringUtils.isNotBlank(word)) {
-                articleReplacements = filterReplacementsByWord(word, articleReplacements);
+            if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype)) {
+                articleReplacements = filterReplacementsByTypeAndSubtype(articleReplacements, type, subtype);
             }
             LOGGER.info("Final replacements found in text after filtering: {}", articleReplacements.size());
 
@@ -269,9 +272,10 @@ public class ArticleService {
         return replacementRepository.findByArticles(minArticleId, maxArticleId);
     }
 
-    private List<ArticleReplacement> filterReplacementsByWord(String word, List<ArticleReplacement> replacements) {
+    private List<ArticleReplacement> filterReplacementsByTypeAndSubtype(
+            List<ArticleReplacement> replacements, String type, String subtype) {
         return replacements.stream()
-                .filter(replacement -> word.equals(replacement.getSubtype()))
+                .filter(replacement -> type.equals(replacement.getType()) && subtype.equals(replacement.getSubtype()))
                 .collect(Collectors.toList());
     }
 
@@ -321,7 +325,7 @@ public class ArticleService {
     public void updateReplacementCount() {
         LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
         LOGGER.info("START Count grouped replacements");
-        List<ReplacementCount> count = replacementRepository.findMisspellingsGrouped();
+        List<ReplacementCount> count = replacementRepository.findReplacementCountByTypeAndSubtype();
         LOGGER.info("END Count grouped replacements. Size: {}", count.size());
 
         this.cachedReplacementCount.clear();

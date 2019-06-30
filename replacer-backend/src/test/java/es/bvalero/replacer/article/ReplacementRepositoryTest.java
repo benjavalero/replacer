@@ -26,7 +26,7 @@ public class ReplacementRepositoryTest {
         Replacement error5 = new Replacement(3, "X", "habia", 5).withReviewer("x");
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3, error4, error5));
 
-        Assert.assertEquals(3, replacementRepository.findMisspellingsGrouped().size());
+        Assert.assertEquals(3, replacementRepository.findReplacementCountByTypeAndSubtype().size());
     }
 
     @Test
@@ -36,12 +36,12 @@ public class ReplacementRepositoryTest {
         Replacement error3 = new Replacement(3, "X", "aber", 3);
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3));
 
-        Assert.assertTrue(replacementRepository.findRandomByWordToReview(
-                "xxx", PageRequest.of(0, 1))
+        Assert.assertTrue(replacementRepository.findRandomToReviewByTypeAndSubtype(
+                "xxx", "zzz", PageRequest.of(0, 1))
                 .isEmpty());
 
-        Assert.assertEquals(3, replacementRepository.findRandomByWordToReview(
-                "aber", PageRequest.of(0, 3))
+        Assert.assertEquals(3, replacementRepository.findRandomToReviewByTypeAndSubtype(
+                "X", "aber", PageRequest.of(0, 3))
                 .size());
     }
 

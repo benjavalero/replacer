@@ -11,25 +11,31 @@ import { ArticleService } from './article.service';
 })
 export class FindRandomComponent implements OnInit {
 
-  private filteredWord: string;
+  private filteredType: string;
+  private filteredSubtype: string;
 
   constructor(private alertService: AlertService, private articleService: ArticleService, private router: Router,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.filteredWord = this.route.snapshot.paramMap.get('word');
+    this.filteredType = this.route.snapshot.paramMap.get('type');
+    this.filteredSubtype = this.route.snapshot.paramMap.get('subtype');
 
-    this.alertService.addInfoMessage((this.filteredWord
-      ? `Buscando artículo aleatorio con «${this.filteredWord}»…`
+    this.alertService.addInfoMessage((this.filteredType && this.filteredSubtype
+      ? `Buscando artículo aleatorio de tipo «${this.filteredType} / ${this.filteredSubtype}»…`
       : 'Buscando artículo aleatorio con reemplazos…'));
 
-    this.articleService.findRandomArticle(this.filteredWord).subscribe((articleIds: number[]) => {
+    this.articleService.findRandomArticle(this.filteredType, this.filteredSubtype).subscribe((articleIds: number[]) => {
       const articleId = articleIds[0];
       if (articleId) {
-        this.router.navigate([`article/${articleId}/${this.filteredWord || ''}`]);
+        if (this.filteredType && this.filteredSubtype) {
+          this.router.navigate([`article/${articleId}/${this.filteredType}/${this.filteredSubtype}`]);
+        } else {
+          this.router.navigate([`article/${articleId}`]);
+        }
       } else {
-        this.alertService.addWarningMessage((this.filteredWord
-          ? `No se ha encontrado ningún artículo con «${this.filteredWord}»…`
+        this.alertService.addWarningMessage((this.filteredType && this.filteredSubtype
+          ? `No se ha encontrado ningún artículo de tipo «${this.filteredType} / ${this.filteredSubtype}»…`
           : 'No se ha encontrado ningún artículo con reemplazos…'));
       }
     }, (err) => {

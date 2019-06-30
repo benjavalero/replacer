@@ -13,12 +13,20 @@ export class ArticleService {
 
   constructor(private httpClient: HttpClient, private authenticationService: AuthenticationService) { }
 
-  findRandomArticle(word: string): Observable<number[]> {
-    return this.httpClient.get<number[]>(`${environment.apiUrl}/article/random/${word || ''}`);
+  findRandomArticle(type: string, subtype: string): Observable<number[]> {
+    if (type && subtype) {
+      return this.httpClient.get<number[]>(`${environment.apiUrl}/article/random/${type}/${subtype}`);
+    } else {
+      return this.httpClient.get<number[]>(`${environment.apiUrl}/article/random`);
+    }
   }
 
-  findArticleReviewById(articleId: number, word: string): Observable<ArticleReview> {
-    return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/review/${articleId}/${word || ''}`);
+  findArticleReviewById(articleId: number, type: string, subtype: string): Observable<ArticleReview> {
+    if (type && subtype) {
+      return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/${articleId}/${type}/${subtype}`);
+    } else {
+      return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/${articleId}`);
+    }
   }
 
   saveArticle(articleId: number, content: string, currentTimestamp: string): Observable<any> {

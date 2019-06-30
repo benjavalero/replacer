@@ -13,7 +13,7 @@ export class ReplacementService {
   constructor(private httpClient: HttpClient) { }
 
   findReplacementCounts(): Observable<ReplacementCount[]> {
-    return this.httpClient.get<ReplacementCount[]>(`${environment.apiUrl}/article/count/misspellings`);
+    return this.httpClient.get<ReplacementCount[]>(`${environment.apiUrl}/article/count/replacements/grouped`);
   }
 
 }

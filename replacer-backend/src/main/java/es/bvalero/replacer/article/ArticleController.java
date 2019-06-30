@@ -33,25 +33,26 @@ public class ArticleController {
                 .orElse(Collections.emptyList());
     }
 
-    @GetMapping(value = "/random/{word}")
-    public List<Integer> findRandomArticleByWord(@PathVariable("word") String word) {
-        LOGGER.info("GET Find random article with replacements. Word: {}", word);
-        return articleService.findRandomArticleToReview(word)
+    @GetMapping(value = "/random/{type}/{subtype}")
+    public List<Integer> findRandomArticleByTypeAndSubtype(
+            @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
+        LOGGER.info("GET Find random article with replacements. Type: {} - Subtype: {}", type, subtype);
+        return articleService.findRandomArticleToReview(type, subtype)
                 .map(Collections::singletonList)
                 .orElse(Collections.emptyList());
     }
 
-    @GetMapping(value = "/review/{id}")
+    @GetMapping(value = "/{id}")
     public Optional<ArticleReview> findArticleReviewById(@PathVariable("id") int articleId) {
         LOGGER.info("GET Find replacements for article. ID: {}", articleId);
         return articleService.findArticleReviewById(articleId);
     }
 
-    @GetMapping(value = "/review/{id}/{word}")
-    public Optional<ArticleReview> findArticleReviewById(@PathVariable("id") int articleId,
-                                                         @PathVariable("word") String word) {
-        LOGGER.info("GET Find replacements for article. ID: {} - Word: {}", articleId, word);
-        return articleService.findArticleReviewById(articleId, word);
+    @GetMapping(value = "/{id}/{type}/{subtype}")
+    public Optional<ArticleReview> findArticleReviewByIdByTypeAndSubtype(
+            @PathVariable("id") int articleId,@PathVariable("type") String type, @PathVariable("subtype") String subtype) {
+        LOGGER.info("GET Find replacements for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
+        return articleService.findArticleReviewById(articleId, type, subtype);
     }
 
     @PutMapping
@@ -91,7 +92,7 @@ public class ArticleController {
         return count;
     }
 
-    @GetMapping(value = "/count/misspellings")
+    @GetMapping(value = "/count/replacements/grouped")
     public List<ReplacementCount> listMisspellings() {
         List<ReplacementCount> list = articleService.findMisspellingsGrouped();
         LOGGER.info("GET Grouped replacement count. Result Size: {}", list.size());

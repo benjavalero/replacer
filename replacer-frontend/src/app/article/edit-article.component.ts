@@ -15,7 +15,8 @@ import { ArticleReplacement } from './article-replacement.model';
 export class EditArticleComponent implements OnInit {
 
   articleId: number;
-  filteredWord: string;
+  filteredType: string;
+  filteredSubtype: string;
 
   title = '';
   content: string;
@@ -28,24 +29,26 @@ export class EditArticleComponent implements OnInit {
 
   ngOnInit() {
     this.articleId = +this.route.snapshot.paramMap.get('id');
-    this.filteredWord = this.route.snapshot.paramMap.get('word');
+    this.filteredType = this.route.snapshot.paramMap.get('type');
+    this.filteredSubtype = this.route.snapshot.paramMap.get('subtype');
 
     this.alertService.addInfoMessage('Buscando potenciales reemplazos del artículo…');
 
-    this.articleService.findArticleReviewById(this.articleId, this.filteredWord).subscribe((review: ArticleReview) => {
-      if (review) {
-        this.alertService.clearAlertMessages();
-        this.title = review.title;
-        this.content = review.content;
-        this.currentTimestamp = review.currentTimestamp;
-        this.replacements = review.replacements;
-      } else {
-        this.alertService.addWarningMessage('No se ha encontrado ningún reemplazo en la versión más actualizada del artículo');
-        this.router.navigate(['random']);
-      }
-    }, (err) => {
-      this.alertService.addErrorMessage('Error al buscar los reemplazos en el artículo: ' + err.error.message);
-    });
+    this.articleService.findArticleReviewById(this.articleId, this.filteredType, this.filteredSubtype)
+      .subscribe((review: ArticleReview) => {
+        if (review) {
+          this.alertService.clearAlertMessages();
+          this.title = review.title;
+          this.content = review.content;
+          this.currentTimestamp = review.currentTimestamp;
+          this.replacements = review.replacements;
+        } else {
+          this.alertService.addWarningMessage('No se ha encontrado ningún reemplazo en la versión más actualizada del artículo');
+          this.router.navigate(['random']);
+        }
+      }, (err) => {
+        this.alertService.addErrorMessage('Error al buscar los reemplazos en el artículo: ' + err.error.message);
+      });
   }
 
   onFixed(fixed: any) {
@@ -96,7 +99,11 @@ export class EditArticleComponent implements OnInit {
     }, () => {
       this.alertService.addSuccessMessage('Cambios guardados con éxito');
 
-      this.router.navigate([`random/${this.filteredWord || ''}`]);
+      if (this.filteredType && this.filteredSubtype) {
+        this.router.navigate([`random/${this.filteredType}/${this.filteredSubtype}`]);
+      } else {
+        this.router.navigate(['random']);
+      }
     });
   }
 
