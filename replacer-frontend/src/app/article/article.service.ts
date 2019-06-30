@@ -21,7 +21,7 @@ export class ArticleService {
     return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/review/${articleId}/${word || ''}`);
   }
 
-  saveArticle(articleId: number, content: string, currentTimestamp: string): Observable<boolean> {
+  saveArticle(articleId: number, content: string, currentTimestamp: string): Observable<any> {
     if (!this.authenticationService.isAuthenticated()) {
       return throwError('El usuario no está autenticado. Recargue la página para retomar la sesión.');
     }
@@ -33,7 +33,7 @@ export class ArticleService {
     params = params.append('reviewer', this.authenticationService.user.name);
     params = params.append('currentTimestamp', currentTimestamp);
 
-    return this.httpClient.put<boolean>(`${environment.apiUrl}/article`, content, { params });
+    return this.httpClient.put<any>(`${environment.apiUrl}/article`, content, { params });
   }
 
   findNumReplacements(): Observable<number> {

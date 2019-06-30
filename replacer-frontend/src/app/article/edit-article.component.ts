@@ -84,11 +84,7 @@ export class EditArticleComponent implements OnInit {
 
     this.alertService.addInfoMessage(`Guardando cambios en «${this.title}»…`);
 
-    this.articleService.saveArticle(this.articleId, content, this.currentTimestamp).subscribe((res: boolean) => {
-      this.alertService.addSuccessMessage('Cambios guardados con éxito');
-
-      this.router.navigate([`random/${this.filteredWord || ''}`]);
-    }, (err) => {
+    this.articleService.saveArticle(this.articleId, content, this.currentTimestamp).subscribe((err) => {
       const errMsg = `Error al guardar el artículo: ${err.error.message}`;
       if (errMsg.includes('mwoauth-invalid-authorization')) {
         // Clear session and reload the page
@@ -97,6 +93,10 @@ export class EditArticleComponent implements OnInit {
       } else {
         this.alertService.addErrorMessage(errMsg);
       }
+    }, () => {
+      this.alertService.addSuccessMessage('Cambios guardados con éxito');
+
+      this.router.navigate([`random/${this.filteredWord || ''}`]);
     });
   }
 
