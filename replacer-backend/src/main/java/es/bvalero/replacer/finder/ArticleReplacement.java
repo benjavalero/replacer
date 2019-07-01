@@ -59,4 +59,15 @@ public class ArticleReplacement extends MatchResult {
                 '}';
     }
 
+    boolean isContainedInListSelfIgnoring(List<ArticleReplacement> articleReplacements) {
+        boolean isContained = false;
+        for (ArticleReplacement articleReplacement : articleReplacements) {
+            if (!this.equals(articleReplacement) && this.isContainedIn(articleReplacement)) {
+                isContained = true;
+                break;
+            }
+        }
+        return isContained;
+    }
+
 }

@@ -71,7 +71,7 @@ public class MatchResult implements Comparable<MatchResult> {
         return isContained;
     }
 
-    private boolean isContainedIn(MatchResult matchResult) {
+    boolean isContainedIn(MatchResult matchResult) {
         return start >= matchResult.start && getEnd() <= matchResult.getEnd();
     }
 

@@ -35,6 +35,9 @@ public class ReplacementFinderService {
         }
         LOGGER.debug("Potential replacements found (before ignoring): {}", articleReplacements);
 
+        // Remove nested replacements
+        articleReplacements.removeIf(replacement -> replacement.isContainedInListSelfIgnoring(articleReplacements));
+
         // No need to find the exceptions if there are no replacements found
         if (articleReplacements.isEmpty()) {
             return articleReplacements;
