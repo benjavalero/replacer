@@ -45,12 +45,11 @@ public class CursiveFinderBenchmark {
 
         // Load the finders
         List<CursiveAbstractFinder> finders = new ArrayList<>();
+        finders.add(new CursiveRegexDotLazyFinder());
         finders.add(new CursiveRegexFinder());
-        finders.add(new CursiveRegexPossessiveFinder());
+        finders.add(new CursiveRegexDotAllLookFinder());
+        finders.add(new CursiveRegexLookFinder());
         finders.add(new CursiveAutomatonFinder());
-        finders.add(new CursiveRegexSimpleFinder());
-        finders.add(new CursiveRegexPossessiveSimpleFinder());
-        finders.add(new CursiveAutomatonSimpleFinder());
 
         System.out.println();
         System.out.println("FINDER\tTIME");
