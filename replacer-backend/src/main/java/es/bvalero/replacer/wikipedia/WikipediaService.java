@@ -3,7 +3,6 @@ package es.bvalero.replacer.wikipedia;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface WikipediaService {
@@ -22,7 +21,7 @@ public interface WikipediaService {
      * @return A map with the each and the retrieved page. If any page is missing or deleted will not exist in the map.
      * @throws WikipediaException in case of issues performing the request
      */
-    Map<Integer, WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException;
+    List<WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException;
 
     void savePageContent(int pageId, String pageContent, String currentTimestamp, OAuth1AccessToken accessToken)
             throws WikipediaException;

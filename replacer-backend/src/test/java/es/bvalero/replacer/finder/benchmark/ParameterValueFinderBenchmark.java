@@ -41,7 +41,7 @@ public class ParameterValueFinderBenchmark {
         }
 
         // Load sample articles
-        Map<Integer, WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds);
+        List<WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds);
 
         // Load the finders
         List<ParameterValueAbstractFinder> finders = new ArrayList<>();
@@ -52,7 +52,7 @@ public class ParameterValueFinderBenchmark {
 
         System.out.println();
         System.out.println("FINDER\tTIME");
-        sampleContents.values().forEach(value -> {
+        sampleContents.forEach(value -> {
             for (ParameterValueAbstractFinder finder : finders) {
                 long start = System.currentTimeMillis();
                 for (int i = 0; i < ITERATIONS; i++) {

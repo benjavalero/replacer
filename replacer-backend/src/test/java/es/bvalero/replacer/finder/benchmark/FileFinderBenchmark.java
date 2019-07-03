@@ -41,7 +41,7 @@ public class FileFinderBenchmark {
         }
 
         // Load sample articles
-        Map<Integer, WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds);
+        List<WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds);
 
         // Load the finders
         List<FileAbstractFinder> finders = new ArrayList<>();
@@ -54,7 +54,7 @@ public class FileFinderBenchmark {
 
         System.out.println();
         System.out.println("FINDER\tTIME");
-        sampleContents.values().forEach(value -> {
+        sampleContents.forEach(value -> {
             for (FileAbstractFinder finder : finders) {
                 long start = System.currentTimeMillis();
                 for (int i = 0; i < ITERATIONS; i++) {

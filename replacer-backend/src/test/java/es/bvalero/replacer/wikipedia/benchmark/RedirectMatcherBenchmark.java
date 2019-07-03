@@ -41,7 +41,7 @@ public class RedirectMatcherBenchmark {
         }
 
         // Load sample articles
-        Map<Integer, WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds);
+        List<WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds);
 
         // Load the matchers
         List<RedirectAbstractMatcher> matchers = new ArrayList<>();
@@ -51,7 +51,7 @@ public class RedirectMatcherBenchmark {
 
         System.out.println();
         System.out.println("FINDER\tTIME");
-        sampleContents.values().forEach(value -> {
+        sampleContents.forEach(value -> {
             for (RedirectAbstractMatcher matcher : matchers) {
                 long start = System.currentTimeMillis();
                 for (int i = 0; i < ITERATIONS; i++) {

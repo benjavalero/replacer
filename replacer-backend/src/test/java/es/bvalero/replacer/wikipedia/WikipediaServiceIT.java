@@ -11,7 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
@@ -37,13 +37,13 @@ public class WikipediaServiceIT {
     @Test
     public void testGetPagesContent() throws WikipediaException {
         // We pass a null access token to retrieve an anonymous edit token
-        Map<Integer, WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884));
+        List<WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884));
         Assert.assertNotNull(pages);
         Assert.assertEquals(2, pages.size());
-        Assert.assertTrue(pages.containsKey(6219990));
-        Assert.assertTrue(pages.get(6219990).getContent().contains("Orihuela"));
-        Assert.assertTrue(pages.containsKey(6903884));
-        Assert.assertTrue(pages.get(6903884).getContent().contains("Pais Vasco"));
+        Assert.assertTrue(pages.stream().anyMatch(page -> page.getId() == 6219990));
+        Assert.assertTrue(pages.stream().filter(page -> page.getId() == 6219990).findAny().orElseThrow(WikipediaException::new).getContent().contains("Orihuela"));
+        Assert.assertTrue(pages.stream().anyMatch(page -> page.getId() == 6903884));
+        Assert.assertTrue(pages.stream().filter(page -> page.getId() == 6903884).findAny().orElseThrow(WikipediaException::new).getContent().contains("Pais Vasco"));
     }
 
     @Test

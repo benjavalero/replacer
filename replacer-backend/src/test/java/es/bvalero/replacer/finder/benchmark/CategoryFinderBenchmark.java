@@ -41,7 +41,7 @@ public class CategoryFinderBenchmark {
         }
 
         // Load sample articles
-        Map<Integer, WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds);
+        List<WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds);
 
         // Load the finders
         List<CategoryAbstractFinder> finders = new ArrayList<>();
@@ -53,7 +53,7 @@ public class CategoryFinderBenchmark {
 
         System.out.println();
         System.out.println("FINDER\tTIME");
-        sampleContents.values().forEach(value -> {
+        sampleContents.forEach(value -> {
             for (CategoryAbstractFinder finder : finders) {
                 long start = System.currentTimeMillis();
                 for (int i = 0; i < ITERATIONS; i++) {

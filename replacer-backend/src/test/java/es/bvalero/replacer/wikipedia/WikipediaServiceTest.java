@@ -13,7 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Map;
+import java.util.List;
 
 public class WikipediaServiceTest {
 
@@ -79,13 +79,13 @@ public class WikipediaServiceTest {
         Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(),
                 Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
 
-        Map<Integer, WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884));
+        List<WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884));
         Assert.assertNotNull(pages);
         Assert.assertEquals(2, pages.size());
-        Assert.assertTrue(pages.containsKey(6219990));
-        Assert.assertTrue(pages.get(6219990).getContent().contains("Orihuela"));
-        Assert.assertTrue(pages.containsKey(6903884));
-        Assert.assertTrue(pages.get(6903884).getContent().contains("Pais Vasco"));
+        Assert.assertTrue(pages.stream().anyMatch(page -> page.getId() == 6219990));
+        Assert.assertTrue(pages.stream().filter(page -> page.getId() == 6219990).findAny().orElseThrow(WikipediaException::new).getContent().contains("Orihuela"));
+        Assert.assertTrue(pages.stream().anyMatch(page -> page.getId() == 6903884));
+        Assert.assertTrue(pages.stream().filter(page -> page.getId() == 6903884).findAny().orElseThrow(WikipediaException::new).getContent().contains("Pais Vasco"));
     }
 
     @Test(expected = WikipediaException.class)

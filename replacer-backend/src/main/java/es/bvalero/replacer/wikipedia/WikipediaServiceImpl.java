@@ -66,7 +66,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
         LOGGER.info("START Find Wikipedia page by title: {}", pageTitle);
         // Return the only value that should be in the map
-        Optional<WikipediaPage> page = getPagesByIds("titles", pageTitle).values().stream().findFirst();
+        Optional<WikipediaPage> page = getPagesByIds("titles", pageTitle).stream().findFirst();
         LOGGER.info("END Find Wikipedia page by title: {}", pageTitle);
         return page;
     }
@@ -75,28 +75,27 @@ public class WikipediaServiceImpl implements WikipediaService {
     public Optional<WikipediaPage> getPageById(int pageId) throws WikipediaException {
         LOGGER.info("START Find Wikipedia page by ID: {}", pageId);
         // Return the only value that should be in the map
-        Optional<WikipediaPage> page = getPagesByIds(Collections.singletonList(pageId)).values().stream().findFirst();
+        Optional<WikipediaPage> page = getPagesByIds(Collections.singletonList(pageId)).stream().findFirst();
         LOGGER.info("END Find Wikipedia page by ID: {}", pageId);
         return page;
     }
 
     // We make this method public to be used by the finder benchmarks
     @Override
-    public Map<Integer, WikipediaPage> getPagesByIds(List<Integer> pageIds)
-            throws WikipediaException {
-        Map<Integer, WikipediaPage> pageContents = new HashMap<>(pageIds.size());
+    public List<WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException {
+        List<WikipediaPage> pageContents = new ArrayList<>(pageIds.size());
         // There is a maximum number of pages to request
         // We split the request in several sub-lists
         int start = 0;
         while (start < pageIds.size()) {
             List<Integer> subList = pageIds.subList(start, start + Math.min(pageIds.size() - start, MAX_PAGES_REQUESTED));
-            pageContents.putAll(getPagesByIds("pageids", StringUtils.join(subList, "|")));
+            pageContents.addAll(getPagesByIds("pageids", StringUtils.join(subList, "|")));
             start += subList.size();
         }
         return pageContents;
     }
 
-    private Map<Integer, WikipediaPage> getPagesByIds(String pagesParam, String pagesValue) throws WikipediaException {
+    private List<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue) throws WikipediaException {
         return extractPagesFromApiResponse(executeWikipediaApiRequest(
                 getParamsToRequestPages(pagesParam, pagesValue), false, null));
     }
@@ -112,7 +111,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         return params;
     }
 
-    private Map<Integer, WikipediaPage> extractPagesFromApiResponse(JsonNode json) throws WikipediaException {
+    private List<WikipediaPage> extractPagesFromApiResponse(JsonNode json) throws WikipediaException {
         JsonNode jsonError = json.get("error");
         if (jsonError != null) {
             String errorMsg = String.format("%s: %s", jsonError.get("code").asText(), jsonError.get("info").asText());
@@ -122,7 +121,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         // Query timestamp
         String queryTimestamp = json.at("/curtimestamp").asText();
 
-        Map<Integer, WikipediaPage> pageContents = new HashMap<>();
+        List<WikipediaPage> pageContents = new ArrayList<>();
         json.at("/query/pages").forEach(jsonPage -> {
             JsonNode jsonContent = jsonPage.at("/revisions/0/slots/main/content");
             // There may be no content if the page is missing
@@ -136,7 +135,7 @@ public class WikipediaServiceImpl implements WikipediaService {
                         .setTimestamp(jsonPage.at("/revisions/0/timestamp").asText())
                         .setQueryTimestamp(queryTimestamp)
                         .build();
-                pageContents.put(pageId, page);
+                pageContents.add(page);
             }
         });
         return pageContents;

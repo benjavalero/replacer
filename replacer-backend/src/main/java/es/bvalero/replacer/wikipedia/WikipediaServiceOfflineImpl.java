@@ -12,9 +12,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -42,10 +41,10 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     @Override
-    public Map<Integer, WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException {
-        Map<Integer, WikipediaPage> pages = new HashMap<>();
+    public List<WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException {
+        List<WikipediaPage> pages = new ArrayList<>();
         for (Integer id : pageIds) {
-            getPageByTitle("").ifPresent(page -> pages.put(id, page));
+            getPageByTitle(Integer.toString(id)).ifPresent(pages::add);
         }
         return pages;
     }
