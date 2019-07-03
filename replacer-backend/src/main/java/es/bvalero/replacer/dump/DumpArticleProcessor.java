@@ -12,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Optional;
 
 /**
  * Process an article found in a Wikipedia dump.
@@ -21,8 +24,6 @@ import java.util.*;
 class DumpArticleProcessor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DumpArticleProcessor.class);
-    private static final Collection<WikipediaNamespace> PROCESSABLE_NAMESPACES =
-            EnumSet.of(WikipediaNamespace.ARTICLE, WikipediaNamespace.ANNEX);
 
     @Autowired
     private ArticleService articleService;
@@ -70,7 +71,7 @@ class DumpArticleProcessor {
     }
 
     private boolean isDumpArticleProcessableByNamespace(WikipediaPage dumpArticle) {
-        return PROCESSABLE_NAMESPACES.contains(dumpArticle.getNamespace());
+        return WikipediaNamespace.getProcessableNamespaces().contains(dumpArticle.getNamespace());
     }
 
     private boolean isDumpArticleProcessableByContent(WikipediaPage dumpArticle) {

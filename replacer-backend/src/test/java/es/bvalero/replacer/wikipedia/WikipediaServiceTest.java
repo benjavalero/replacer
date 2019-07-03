@@ -108,4 +108,26 @@ public class WikipediaServiceTest {
         Assert.assertFalse(wikipediaService.getPageByTitle("Usuario:Benjavaleroxx").isPresent());
     }
 
+    @Test
+    public void testGetPageIdsByStringMatch() throws AuthenticationException, WikipediaException {
+        // API response
+        String textResponse = "{\"batchcomplete\":\"\",\"continue\":{\"sroffset\":10,\"continue\":\"-||\"},\"query\":{\"search\":[{\"ns\":0,\"title\":\"Belanova\",\"pageid\":297896},{\"ns\":0,\"title\":\"Wil Hartog\",\"pageid\":7694956},{\"ns\":0,\"title\":\"Compuesto químico\",\"pageid\":10547},{\"ns\":0,\"title\":\"Aun así te vas\",\"pageid\":2460037},{\"ns\":0,\"title\":\"Educación\",\"pageid\":975},{\"ns\":0,\"title\":\"Abolicionismo\",\"pageid\":173068},{\"ns\":0,\"title\":\"Canaán\",\"pageid\":718871},{\"ns\":0,\"title\":\"Coahuila de Zaragoza\",\"pageid\":724588},{\"ns\":0,\"title\":\"Filosofía\",\"pageid\":689592},{\"ns\":0,\"title\":\"Cárites\",\"pageid\":71433}]}}";
+        Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(),
+                Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
+
+        List<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("");
+        Assert.assertEquals(10, pageIds.size());
+    }
+
+    @Test
+    public void testGetPageIdsByStringMatchWithNoResults() throws AuthenticationException, WikipediaException {
+        // API response
+        String textResponse = "{\"batchcomplete\":\"\",\"query\":{\"search\":[]}}";
+        Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(),
+                Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
+
+        List<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("");
+        Assert.assertTrue(pageIds.isEmpty());
+    }
+
 }

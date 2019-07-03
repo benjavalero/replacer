@@ -23,6 +23,8 @@ public interface WikipediaService {
      */
     List<WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException;
 
+    List<Integer> getPageIdsByStringMatch(String text) throws WikipediaException;
+
     void savePageContent(int pageId, String pageContent, String currentTimestamp, OAuth1AccessToken accessToken)
             throws WikipediaException;
 

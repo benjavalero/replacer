@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,11 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
             getPageByTitle(Integer.toString(id)).ifPresent(pages::add);
         }
         return pages;
+    }
+
+    @Override
+    public List<Integer> getPageIdsByStringMatch(String text) {
+        return Collections.singletonList(1);
     }
 
     @Override

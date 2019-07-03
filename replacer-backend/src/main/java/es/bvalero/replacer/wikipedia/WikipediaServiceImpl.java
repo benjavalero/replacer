@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 // We make this implementation public to be used by the finder benchmarks
 @Service
@@ -29,6 +31,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     private static final int MAX_PAGES_REQUESTED = 50;
     private static final String PARAM_ACTION = "action";
     private static final String VALUE_QUERY = "query";
+    private static final String PARAM_PAGE_ID = "pageid";
 
     @Autowired
     private AuthenticationService authenticationService;
@@ -95,6 +98,28 @@ public class WikipediaServiceImpl implements WikipediaService {
         return pageContents;
     }
 
+    @Override
+    public List<Integer> getPageIdsByStringMatch(String text) throws WikipediaException {
+        LOGGER.info("START Find Wikipedia pages by string match: {}", text);
+
+        // Parameters
+        Map<String, String> params = new HashMap<>();
+        params.put(PARAM_ACTION, VALUE_QUERY);
+        params.put("list", "search");
+        params.put("utf8", "1");
+        params.put("srsearch", String.format("\"%s\"", text));
+        params.put("srnamespace", StringUtils.join(WikipediaNamespace.getProcessableNamespaces().stream()
+                .mapToInt(WikipediaNamespace::getValue), "|"));
+        params.put("srwhat", "text");
+        params.put("srinfo", "");
+        params.put("srprop", "");
+
+        JsonNode jsonResponse = executeWikipediaApiRequest(params, false, null);
+        List<Integer> pageIds = extractPageIdsFromApiResponse(jsonResponse);
+        LOGGER.info("END Find Wikipedia pages by string match. Items found: {}", pageIds.size());
+        return pageIds;
+    }
+
     private List<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue) throws WikipediaException {
         return extractPagesFromApiResponse(executeWikipediaApiRequest(
                 getParamsToRequestPages(pagesParam, pagesValue), false, null));
@@ -111,13 +136,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         return params;
     }
 
-    private List<WikipediaPage> extractPagesFromApiResponse(JsonNode json) throws WikipediaException {
-        JsonNode jsonError = json.get("error");
-        if (jsonError != null) {
-            String errorMsg = String.format("%s: %s", jsonError.get("code").asText(), jsonError.get("info").asText());
-            throw new WikipediaException(errorMsg);
-        }
-
+    private List<WikipediaPage> extractPagesFromApiResponse(JsonNode json) {
         // Query timestamp
         String queryTimestamp = json.at("/curtimestamp").asText();
 
@@ -126,7 +145,7 @@ public class WikipediaServiceImpl implements WikipediaService {
             JsonNode jsonContent = jsonPage.at("/revisions/0/slots/main/content");
             // There may be no content if the page is missing
             if (!jsonContent.isMissingNode()) {
-                int pageId = jsonPage.get("pageid").asInt();
+                int pageId = jsonPage.get(PARAM_PAGE_ID).asInt();
                 WikipediaPage page = WikipediaPage.builder()
                         .setId(pageId)
                         .setTitle(jsonPage.get("title").asText())
@@ -139,6 +158,11 @@ public class WikipediaServiceImpl implements WikipediaService {
             }
         });
         return pageContents;
+    }
+
+    private List<Integer> extractPageIdsFromApiResponse(JsonNode json) {
+        return StreamSupport.stream(json.at("/query/search").spliterator(), false)
+                .map(page -> page.get(PARAM_PAGE_ID).asInt()).collect(Collectors.toList());
     }
 
     @Override
@@ -154,7 +178,7 @@ public class WikipediaServiceImpl implements WikipediaService {
 
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, "edit");
-        params.put("pageid", Integer.toString(pageId));
+        params.put(PARAM_PAGE_ID, Integer.toString(pageId));
         params.put("text", pageContent);
         params.put("summary", EDIT_SUMMARY);
         params.put("minor", "true");

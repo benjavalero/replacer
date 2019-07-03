@@ -1,6 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +32,10 @@ public enum WikipediaNamespace {
 
     WikipediaNamespace(int value) {
         this.value = value;
+    }
+
+    public static java.util.Collection<WikipediaNamespace> getProcessableNamespaces() {
+        return EnumSet.of(ARTICLE, ANNEX);
     }
 
     public static WikipediaNamespace valueOf(int namespace) {
