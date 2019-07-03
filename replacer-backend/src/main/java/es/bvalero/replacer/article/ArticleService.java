@@ -42,7 +42,7 @@ public class ArticleService {
     private Collection<Replacement> toSaveInBatch = new HashSet<>();
     private Collection<Replacement> toDeleteInBatch = new HashSet<>();
 
-    private Map<String, Set<Integer>> cachedArticleIdsByWord = new HashMap<>();
+    private Map<String, Set<Integer>> cachedArticleIdsByTypeAndSubtype = new HashMap<>();
     private List<ReplacementCount> cachedReplacementCount = new ArrayList<>();
 
     private void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
@@ -144,40 +144,35 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    Optional<Integer> findRandomArticleToReview() {
-        return findRandomArticleToReview(null, null);
-    }
-
     Optional<Integer> findRandomArticleToReview(@Nullable String type, @Nullable String subtype) {
         LOGGER.info("START Find random article to review. Type: {} - Subtype: {}", type, subtype);
 
         // First we get the replacements from database and we cache them
         String key = type != null && subtype != null ? type + "-" + subtype : "";
-        if (!cachedArticleIdsByWord.containsKey(key)) {
-            // Find replacements by word from the database
+        if (!cachedArticleIdsByTypeAndSubtype.containsKey(key)) {
+            // Find replacements by type and subtype from the database
             PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
             List<Replacement> randomReplacements = StringUtils.isBlank(key)
                     ? replacementRepository.findRandomToReview(pagination)
                     : replacementRepository.findRandomToReviewByTypeAndSubtype(type, subtype, pagination);
 
             // Cache the results
-            Set<Integer> articleIds = randomReplacements.stream()
-                    .map(Replacement::getArticleId).collect(Collectors.toSet());
-            cachedArticleIdsByWord.put(key, articleIds);
+            cachedArticleIdsByTypeAndSubtype.put(key,
+                    randomReplacements.stream().map(Replacement::getArticleId).collect(Collectors.toSet()));
         }
 
-        Set<Integer> articleIdsByWord = cachedArticleIdsByWord.get(key);
-        Optional<Integer> articleId = articleIdsByWord.stream().findFirst();
+        Set<Integer> articleIds = cachedArticleIdsByTypeAndSubtype.get(key);
+        Optional<Integer> articleId = articleIds.stream().findFirst();
         if (articleId.isPresent()) {
             // Remove the replacement from the cached list and others for the same article
-            articleIdsByWord.remove(articleId.get());
+            articleIds.remove(articleId.get());
 
             // If the set gets empty we remove it from the map
-            if (articleIdsByWord.isEmpty()) {
-                cachedArticleIdsByWord.remove(key);
+            if (articleIds.isEmpty()) {
+                cachedArticleIdsByTypeAndSubtype.remove(key);
             }
         } else {
-            cachedArticleIdsByWord.remove(key);
+            cachedArticleIdsByTypeAndSubtype.remove(key);
 
             // Empty the cached count for the replacement
             cachedReplacementCount.stream()
@@ -211,7 +206,7 @@ public class ArticleService {
             LOGGER.info("Final replacements found in text after filtering: {}", articleReplacements.size());
 
             // Build the article review if the replacements found are valid
-            // Note the DB has just been updated in case the word doesn't exist in the found replacements
+            // Note the DB has just been updated in case the subtype doesn't exist in the found replacements
             if (!articleReplacements.isEmpty()) {
                 ArticleReview review = ArticleReview.builder()
                         .setArticleId(article.getId())

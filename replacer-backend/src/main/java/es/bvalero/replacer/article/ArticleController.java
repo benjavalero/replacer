@@ -28,7 +28,7 @@ public class ArticleController {
     @GetMapping(value = "/random")
     public List<Integer> findRandomArticleWithReplacements() {
         LOGGER.info("GET Find random article with replacements");
-        return articleService.findRandomArticleToReview()
+        return articleService.findRandomArticleToReview(null, null)
                 .map(Collections::singletonList)
                 .orElse(Collections.emptyList());
     }
