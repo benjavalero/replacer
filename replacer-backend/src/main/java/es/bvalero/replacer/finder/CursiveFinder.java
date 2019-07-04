@@ -11,9 +11,7 @@ import java.util.List;
 @Component
 public class CursiveFinder extends ReplacementFinder implements IgnoredReplacementFinder {
 
-    // There is almost no difference with the simple version and the one including the bold (at least with the automaton)
-    // so we use the second one which is better
-    private static final String BOLD_TEMPLATE = "'{3,}[^']+{3,}";
+    // There are limitations in the automaton (need to capture more than 1 character in some places) but it is faster
     @org.intellij.lang.annotations.RegExp
     private static final String TWO_QUOTES_ONLY = "[^']''[^']";
     @org.intellij.lang.annotations.RegExp
