@@ -1,4 +1,4 @@
-# 2.0.0 (Beta - Sin fecha prevista)
+# 2.0.0 (4 de julio de 2019)
 - Frontend independiente implementado en Angular aunque se sigue desplegando junto con el backend
 - Proceso de autenticación separado para facilitar el desarrollo
 - Implementación propia para llamar al API de Wikipedia sin depender de librerías externas
