@@ -69,7 +69,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
         LOGGER.info("START Find Wikipedia page by title: {}", pageTitle);
         // Return the only value that should be in the map
-        Optional<WikipediaPage> page = getPagesByIds("titles", pageTitle).stream().findFirst();
+        Optional<WikipediaPage> page = getPagesByIds("titles", pageTitle).stream().findAny();
         LOGGER.info("END Find Wikipedia page by title: {}", pageTitle);
         return page;
     }
@@ -78,7 +78,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     public Optional<WikipediaPage> getPageById(int pageId) throws WikipediaException {
         LOGGER.info("START Find Wikipedia page by ID: {}", pageId);
         // Return the only value that should be in the map
-        Optional<WikipediaPage> page = getPagesByIds(Collections.singletonList(pageId)).stream().findFirst();
+        Optional<WikipediaPage> page = getPagesByIds(Collections.singletonList(pageId)).stream().findAny();
         LOGGER.info("END Find Wikipedia page by ID: {}", pageId);
         return page;
     }
@@ -99,7 +99,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public List<Integer> getPageIdsByStringMatch(String text) throws WikipediaException {
+    public Set<Integer> getPageIdsByStringMatch(String text) throws WikipediaException {
         LOGGER.info("START Find Wikipedia pages by string match: {}", text);
 
         // Parameters
@@ -107,6 +107,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put(PARAM_ACTION, VALUE_QUERY);
         params.put("list", "search");
         params.put("utf8", "1");
+        params.put("srlimit", "100");
         params.put("srsearch", String.format("\"%s\"", text));
         params.put("srnamespace", StringUtils.join(WikipediaNamespace.getProcessableNamespaces().stream()
                 .mapToInt(WikipediaNamespace::getValue), "|"));
@@ -115,7 +116,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put("srprop", "");
 
         JsonNode jsonResponse = executeWikipediaApiRequest(params, false, null);
-        List<Integer> pageIds = extractPageIdsFromApiResponse(jsonResponse);
+        Set<Integer> pageIds = extractPageIdsFromApiResponse(jsonResponse);
         LOGGER.info("END Find Wikipedia pages by string match. Items found: {}", pageIds.size());
         return pageIds;
     }
@@ -160,9 +161,9 @@ public class WikipediaServiceImpl implements WikipediaService {
         return pageContents;
     }
 
-    private List<Integer> extractPageIdsFromApiResponse(JsonNode json) {
+    private Set<Integer> extractPageIdsFromApiResponse(JsonNode json) {
         return StreamSupport.stream(json.at("/query/search").spliterator(), false)
-                .map(page -> page.get(PARAM_PAGE_ID).asInt()).collect(Collectors.toList());
+                .map(page -> page.get(PARAM_PAGE_ID).asInt()).collect(Collectors.toSet());
     }
 
     @Override

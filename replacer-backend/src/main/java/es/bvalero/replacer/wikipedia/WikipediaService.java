@@ -4,6 +4,7 @@ import com.github.scribejava.core.model.OAuth1AccessToken;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface WikipediaService {
 
@@ -23,7 +24,7 @@ public interface WikipediaService {
      */
     List<WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException;
 
-    List<Integer> getPageIdsByStringMatch(String text) throws WikipediaException;
+    Set<Integer> getPageIdsByStringMatch(String text) throws WikipediaException;
 
     void savePageContent(int pageId, String pageContent, String currentTimestamp, OAuth1AccessToken accessToken)
             throws WikipediaException;

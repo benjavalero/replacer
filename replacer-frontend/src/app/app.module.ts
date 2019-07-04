@@ -14,6 +14,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 import { FindRandomComponent } from './article/find-random.component';
+import { FindCustomComponent } from './article/find-custom.component';
 import { EditArticleComponent } from './article/edit-article.component';
 import { EditSnippetComponent } from './article/edit-snippet.component';
 import { DumpComponent } from './dump/dump.component';
@@ -30,6 +31,7 @@ import { StatsComponent } from './stats/stats.component';
     LoginComponent,
     HeaderComponent,
     FindRandomComponent,
+    FindCustomComponent,
     EditArticleComponent,
     EditSnippetComponent,
     DumpComponent,

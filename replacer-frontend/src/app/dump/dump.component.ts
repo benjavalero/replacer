@@ -84,10 +84,10 @@ export class DumpComponent implements OnInit {
     this.status = null;
     this.alertService.addInfoMessage('Iniciando indexación…');
 
-    this.dumpService.runIndexation(this.force)
-      .subscribe(
-        // It takes a little for the back-end to set the running status
-        () => sleep(5000).then(() => this.findDumpStatus()));
+    this.dumpService.runIndexation(this.force).subscribe(() => {
+      // It takes a little for the back-end to set the running status
+      sleep(5000).then(() => this.findDumpStatus());
+    });
   }
 
 }

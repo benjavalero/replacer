@@ -139,7 +139,7 @@ public class ArticleServiceTest {
         ArticleReplacement replacement = Mockito.mock(ArticleReplacement.class);
         Mockito.when(replacementFinderService.findReplacements(text)).thenReturn(Collections.singletonList(replacement));
 
-        Optional<ArticleReview> articleData = articleService.findArticleReviewById(1);
+        Optional<ArticleReview> articleData = articleService.findArticleReviewById(1, null, null);
 
         Assert.assertTrue(articleData.isPresent());
         Assert.assertEquals(title, articleData.get().getTitle());
@@ -159,12 +159,12 @@ public class ArticleServiceTest {
         Mockito.when(wikipediaService.getPageById(articleId)).thenReturn(Optional.of(page));
 
         Replacement replacement = new Replacement(1, "", "", 1);
-        Mockito.when(replacementRepository.findByArticleId(Mockito.anyInt()))
+        Mockito.when(replacementRepository.findByArticleIdAndReviewerIsNull(Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(replacement));
 
         OAuth1AccessToken accessToken = Mockito.mock(OAuth1AccessToken.class);
 
-        articleService.saveArticleChanges(articleId, text, "x", "x", accessToken);
+        articleService.saveArticleChanges(articleId, text, null, null, "x", "x", accessToken);
 
         Mockito.verify(wikipediaService).savePageContent(
                 Mockito.eq(articleId), Mockito.eq(text), Mockito.anyString(), Mockito.eq(accessToken));

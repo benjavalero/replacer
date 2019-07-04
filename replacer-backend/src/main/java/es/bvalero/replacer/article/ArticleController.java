@@ -1,6 +1,7 @@
 package es.bvalero.replacer.article;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -37,35 +38,48 @@ public class ArticleController {
     public List<Integer> findRandomArticleByTypeAndSubtype(
             @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
         LOGGER.info("GET Find random article with replacements. Type: {} - Subtype: {}", type, subtype);
-        return articleService.findRandomArticleToReview(type, subtype)
-                .map(Collections::singletonList)
-                .orElse(Collections.emptyList());
+        Optional<Integer> randomId;
+        if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
+            randomId = articleService.findRandomArticleToReviewByCustomReplacement(subtype);
+        } else {
+            randomId = articleService.findRandomArticleToReview(type, subtype);
+        }
+        return randomId.map(Collections::singletonList).orElse(Collections.emptyList());
     }
 
     @GetMapping(value = "/{id}")
     public Optional<ArticleReview> findArticleReviewById(@PathVariable("id") int articleId) {
         LOGGER.info("GET Find replacements for article. ID: {}", articleId);
-        return articleService.findArticleReviewById(articleId);
+        return articleService.findArticleReviewById(articleId, null, null);
     }
 
     @GetMapping(value = "/{id}/{type}/{subtype}")
     public Optional<ArticleReview> findArticleReviewByIdByTypeAndSubtype(
-            @PathVariable("id") int articleId,@PathVariable("type") String type, @PathVariable("subtype") String subtype) {
+            @PathVariable("id") int articleId, @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
         LOGGER.info("GET Find replacements for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
         return articleService.findArticleReviewById(articleId, type, subtype);
     }
 
+    @GetMapping(value = "/{id}/Personalizado/{subtype}/{suggestion}")
+    public Optional<ArticleReview> findArticleReviewByIdAndCustomReplacement(
+            @PathVariable("id") int articleId, @PathVariable("subtype") String subtype, @PathVariable("suggestion") String suggestion) {
+        LOGGER.info("GET Find replacements for article by custom type. ID: {} - Subtype: {} - Suggestion: {}",
+                articleId, subtype, suggestion);
+        return articleService.findArticleReviewByIdAndCustomReplacement(articleId, subtype, suggestion);
+    }
+
     @PutMapping
     public void save(@RequestParam("id") int articleId, @RequestBody String text,
+                     @RequestParam String type, @RequestParam String subtype,
                      @RequestParam String reviewer, @RequestParam String currentTimestamp,
                      @RequestParam String token, @RequestParam String tokenSecret) throws WikipediaException {
         boolean changed = StringUtils.isNotBlank(text);
         LOGGER.info("PUT Save article. ID: {} - Changed: {}", articleId, changed);
         if (changed) {
             OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
-            articleService.saveArticleChanges(articleId, text, reviewer, currentTimestamp, accessToken);
+            articleService.saveArticleChanges(articleId, text, type, subtype, reviewer, currentTimestamp, accessToken);
         } else {
-            articleService.markArticleAsReviewed(articleId, reviewer);
+            articleService.markArticleAsReviewed(articleId, type, subtype, reviewer);
         }
     }
 

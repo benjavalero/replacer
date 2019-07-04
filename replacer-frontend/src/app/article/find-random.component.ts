@@ -13,6 +13,7 @@ export class FindRandomComponent implements OnInit {
 
   private filteredType: string;
   private filteredSubtype: string;
+  private suggestion: string; // Only for type 'custom'
 
   constructor(private alertService: AlertService, private articleService: ArticleService, private router: Router,
     private route: ActivatedRoute) { }
@@ -20,6 +21,7 @@ export class FindRandomComponent implements OnInit {
   ngOnInit() {
     this.filteredType = this.route.snapshot.paramMap.get('type');
     this.filteredSubtype = this.route.snapshot.paramMap.get('subtype');
+    this.suggestion = this.route.snapshot.paramMap.get('suggestion');
 
     this.alertService.addInfoMessage((this.filteredType && this.filteredSubtype
       ? `Buscando artículo aleatorio de tipo «${this.filteredType} / ${this.filteredSubtype}»…`
@@ -29,7 +31,11 @@ export class FindRandomComponent implements OnInit {
       const articleId = articleIds[0];
       if (articleId) {
         if (this.filteredType && this.filteredSubtype) {
-          this.router.navigate([`article/${articleId}/${this.filteredType}/${this.filteredSubtype}`]);
+          if (this.suggestion) {
+            this.router.navigate([`article/${articleId}/${this.filteredType}/${this.filteredSubtype}/${this.suggestion}`]);
+          } else {
+            this.router.navigate([`article/${articleId}/${this.filteredType}/${this.filteredSubtype}`]);
+          }
         } else {
           this.router.navigate([`article/${articleId}`]);
         }

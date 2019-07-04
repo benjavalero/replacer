@@ -21,15 +21,19 @@ export class ArticleService {
     }
   }
 
-  findArticleReviewById(articleId: number, type: string, subtype: string): Observable<ArticleReview> {
+  findArticleReviewById(articleId: number, type: string, subtype: string, suggestion: string): Observable<ArticleReview> {
     if (type && subtype) {
-      return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/${articleId}/${type}/${subtype}`);
+      if (suggestion) {
+        return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/${articleId}/${type}/${subtype}/${suggestion}`);
+      } else {
+        return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/${articleId}/${type}/${subtype}`);
+      }
     } else {
       return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/${articleId}`);
     }
   }
 
-  saveArticle(articleId: number, content: string, currentTimestamp: string): Observable<any> {
+  saveArticle(articleId: number, type: string, subtype: string, content: string, currentTimestamp: string): Observable<any> {
     if (!this.authenticationService.isAuthenticated()) {
       return throwError('El usuario no está autenticado. Recargue la página para retomar la sesión.');
     }
@@ -38,6 +42,8 @@ export class ArticleService {
     params = params.append('token', this.authenticationService.accessToken.token);
     params = params.append('tokenSecret', this.authenticationService.accessToken.tokenSecret);
     params = params.append('id', String(articleId));
+    params = params.append('type', type);
+    params = params.append('subtype', subtype);
     params = params.append('reviewer', this.authenticationService.user.name);
     params = params.append('currentTimestamp', currentTimestamp);
 

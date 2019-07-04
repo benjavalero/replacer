@@ -17,6 +17,7 @@ export class EditArticleComponent implements OnInit {
   articleId: number;
   filteredType: string;
   filteredSubtype: string;
+  suggestion: string; // Only for type 'custom'
 
   title = '';
   content: string;
@@ -31,10 +32,11 @@ export class EditArticleComponent implements OnInit {
     this.articleId = +this.route.snapshot.paramMap.get('id');
     this.filteredType = this.route.snapshot.paramMap.get('type');
     this.filteredSubtype = this.route.snapshot.paramMap.get('subtype');
+    this.suggestion = this.route.snapshot.paramMap.get('suggestion');
 
     this.alertService.addInfoMessage('Buscando potenciales reemplazos del artículo…');
 
-    this.articleService.findArticleReviewById(this.articleId, this.filteredType, this.filteredSubtype)
+    this.articleService.findArticleReviewById(this.articleId, this.filteredType, this.filteredSubtype, this.suggestion)
       .subscribe((review: ArticleReview) => {
         if (review) {
           this.alertService.clearAlertMessages();
@@ -44,7 +46,7 @@ export class EditArticleComponent implements OnInit {
           this.replacements = review.replacements;
         } else {
           this.alertService.addWarningMessage('No se ha encontrado ningún reemplazo en la versión más actualizada del artículo');
-          this.router.navigate(['random']);
+          this.redirectToNextArticle();
         }
       }, (err) => {
         this.alertService.addErrorMessage('Error al buscar los reemplazos en el artículo: ' + err.error.message);
@@ -87,24 +89,32 @@ export class EditArticleComponent implements OnInit {
 
     this.alertService.addInfoMessage(`Guardando cambios en «${this.title}»…`);
 
-    this.articleService.saveArticle(this.articleId, content, this.currentTimestamp).subscribe((err) => {
-      const errMsg = `Error al guardar el artículo: ${err.error.message}`;
-      if (errMsg.includes('mwoauth-invalid-authorization')) {
-        // Clear session and reload the page
-        this.authenticationService.clearSession();
-        window.location.reload();
-      } else {
-        this.alertService.addErrorMessage(errMsg);
-      }
-    }, () => {
-      this.alertService.addSuccessMessage('Cambios guardados con éxito');
+    this.articleService.saveArticle(this.articleId, this.filteredType, this.filteredSubtype, content, this.currentTimestamp)
+      .subscribe(res => { }, err => {
+        const errMsg = `Error al guardar el artículo: ${err.error.message}`;
+        if (errMsg.includes('mwoauth-invalid-authorization')) {
+          // Clear session and reload the page
+          this.authenticationService.clearSession();
+          window.location.reload();
+        } else {
+          this.alertService.addErrorMessage(errMsg);
+        }
+      }, () => {
+        this.alertService.addSuccessMessage('Cambios guardados con éxito');
+        this.redirectToNextArticle();
+      });
+  }
 
-      if (this.filteredType && this.filteredSubtype) {
-        this.router.navigate([`random/${this.filteredType}/${this.filteredSubtype}`]);
+  private redirectToNextArticle() {
+    if (this.filteredType && this.filteredSubtype) {
+      if (this.suggestion) {
+        this.router.navigate([`random/${this.filteredType}/${this.filteredSubtype}/${this.suggestion}`]);
       } else {
-        this.router.navigate(['random']);
+        this.router.navigate([`random/${this.filteredType}/${this.filteredSubtype}`]);
       }
-    });
+    } else {
+      this.router.navigate(['random']);
+    }
   }
 
   private replaceText(fullText: string, position: number, currentText: string, newText: string): string {

@@ -11,6 +11,7 @@ import java.util.List;
 @Service
 public class ReplacementFinderService {
 
+    public static final String CUSTOM_FINDER_TYPE = "Personalizado";
     private static final Logger LOGGER = LoggerFactory.getLogger(ReplacementFinderService.class);
 
     @Autowired
@@ -18,6 +19,9 @@ public class ReplacementFinderService {
 
     @Autowired
     private List<IgnoredReplacementFinder> ignoredReplacementFinders;
+
+    @Autowired
+    private CustomReplacementFinder customReplacementFinder;
 
     /**
      * @param text The text to find replacements in.
@@ -54,6 +58,31 @@ public class ReplacementFinderService {
         }
 
         LOGGER.debug("END Find replacements in text. Final replacements found: {}", articleReplacements);
+        return articleReplacements;
+    }
+
+    public List<ArticleReplacement> findCustomReplacements(String text, String replacement, String suggestion) {
+        LOGGER.debug("START Find custom replacements. Text: {} - Replacement: {} - Suggestion: {}",
+                text, replacement, suggestion);
+        List<ArticleReplacement> articleReplacements = customReplacementFinder.findReplacements(text, replacement, suggestion);
+        LOGGER.debug("Potential custom replacements found (before ignoring): {}", articleReplacements);
+
+        // No need to find the exceptions if there are no replacements found
+        if (articleReplacements.isEmpty()) {
+            return articleReplacements;
+        }
+
+        // Ignore the replacements which must be ignored
+        for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
+            List<MatchResult> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
+            articleReplacements.removeIf(artRep -> artRep.isContainedIn(ignoredReplacements));
+
+            if (articleReplacements.isEmpty()) {
+                break;
+            }
+        }
+
+        LOGGER.debug("END Find custom replacements in text. Final replacements found: {}", articleReplacements);
         return articleReplacements;
     }
 

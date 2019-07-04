@@ -83,7 +83,7 @@ public class ArticleService {
 
     private Optional<Replacement> findSameReplacementInCollection(Replacement replacement,
                                                                   Collection<Replacement> replacements) {
-        return replacements.stream().filter(rep -> rep.isSame(replacement)).findFirst();
+        return replacements.stream().filter(rep -> rep.isSame(replacement)).findAny();
     }
 
     private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement, boolean indexInBatch) {
@@ -177,7 +177,7 @@ public class ArticleService {
             // Empty the cached count for the replacement
             cachedReplacementCount.stream()
                     .filter(item -> item.getType().equals(type) && item.getSubtype().equals(subtype))
-                    .findFirst()
+                    .findAny()
                     .ifPresent(item -> item.setCount(item.getCount()));
         }
 
@@ -185,8 +185,42 @@ public class ArticleService {
         return articleId;
     }
 
-    Optional<ArticleReview> findArticleReviewById(int articleId) {
-        return findArticleReviewById(articleId, null, null);
+    Optional<Integer> findRandomArticleToReviewByCustomReplacement(String subtype) {
+        LOGGER.info("START Find random article to review by custom replacement: {}", subtype);
+
+        // First we get the replacements from Wikipedia and we cache them
+        String key = ReplacementFinderService.CUSTOM_FINDER_TYPE + "-" + subtype;
+        if (!cachedArticleIdsByTypeAndSubtype.containsKey(key)) {
+            // Find replacements by subtype in Wikipedia and cache the results
+            try {
+                // Check that the custom replacement has not already been reviewed for the articles
+                cachedArticleIdsByTypeAndSubtype.put(key,
+                        wikipediaService.getPageIdsByStringMatch(subtype).stream()
+                                .filter(id -> replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
+                                        id, ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype).isEmpty())
+                                .collect(Collectors.toSet()));
+            } catch (WikipediaException e) {
+                LOGGER.error("Error searching page IDs from Wikipedia", e);
+                return Optional.empty();
+            }
+        }
+
+        Set<Integer> articleIds = cachedArticleIdsByTypeAndSubtype.get(key);
+        Optional<Integer> articleId = articleIds.stream().findFirst();
+        if (articleId.isPresent()) {
+            // Remove the replacement from the cached list and others for the same article
+            articleIds.remove(articleId.get());
+
+            // If the set gets empty we remove it from the map
+            if (articleIds.isEmpty()) {
+                cachedArticleIdsByTypeAndSubtype.remove(key);
+            }
+        } else {
+            cachedArticleIdsByTypeAndSubtype.remove(key);
+        }
+
+        LOGGER.info("END Find random article to review. Found article ID: {}", articleId.orElse(null));
+        return articleId;
     }
 
     Optional<ArticleReview> findArticleReviewById(int articleId, @Nullable String type, @Nullable String subtype) {
@@ -235,6 +269,44 @@ public class ArticleService {
         return Optional.empty();
     }
 
+    Optional<ArticleReview> findArticleReviewByIdAndCustomReplacement(int articleId, String subtype, String suggestion) {
+        LOGGER.info("START Find review for article by custom replacement. ID: {} - Subtype: {} - Suggestion: {}",
+                articleId, subtype, suggestion);
+        try {
+            WikipediaPage article = findArticleById(articleId);
+            List<ArticleReplacement> articleReplacements =
+                    findCustomArticleReplacements(article.getContent(), subtype, suggestion);
+            LOGGER.info("Potential replacements found in text: {}", articleReplacements.size());
+
+            // Build the article review if the replacements found are valid
+            if (!articleReplacements.isEmpty()) {
+                ArticleReview review = ArticleReview.builder()
+                        .setArticleId(article.getId())
+                        .setTitle(article.getTitle())
+                        .setContent(article.getContent())
+                        .setReplacements(articleReplacements)
+                        .setCurrentTimestamp(article.getQueryTimestamp())
+                        .build();
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("END Find review for article: {}", review);
+                } else {
+                    LOGGER.info("END Find review for article: {} - {}. Replacements to review: {}",
+                            articleId, review.getTitle(), articleReplacements.size());
+                }
+                return Optional.of(review);
+            }
+        } catch (InvalidArticleException e) {
+            LOGGER.warn("Found article is not valid. Delete from database.", e);
+            deleteArticle(articleId);
+        } catch (WikipediaException e) {
+            LOGGER.error("Error retrieving page from Wikipedia", e);
+            // Do nothing and retry
+        }
+
+        LOGGER.info("END Find review for article. No article found to review.");
+        return Optional.empty();
+    }
+
     private WikipediaPage findArticleById(int articleId) throws InvalidArticleException, WikipediaException {
         WikipediaPage page = wikipediaService.getPageById(articleId)
                 .orElseThrow(() -> new InvalidArticleException(String.format("No article found with ID: %s", articleId)));
@@ -251,6 +323,15 @@ public class ArticleService {
     private List<ArticleReplacement> findArticleReplacements(String articleContent) {
         // Find the replacements sorted (the first ones in the list are the last in the text)
         List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(articleContent);
+        articleReplacements.sort(Collections.reverseOrder());
+        return articleReplacements;
+    }
+
+    private List<ArticleReplacement> findCustomArticleReplacements(
+            String articleContent, String replacement, String suggestion) {
+        // Find the replacements sorted (the first ones in the list are the last in the text)
+        List<ArticleReplacement> articleReplacements =
+                replacementFinderService.findCustomReplacements(articleContent, replacement, suggestion);
         articleReplacements.sort(Collections.reverseOrder());
         return articleReplacements;
     }
@@ -277,21 +358,32 @@ public class ArticleService {
     /**
      * Saves in Wikipedia the changes on an article validated in the front-end.
      */
-    void saveArticleChanges(int articleId, String text, String reviewer, String currentTimestamp,
-                            OAuth1AccessToken accessToken) throws WikipediaException {
+    void saveArticleChanges(int articleId, String text, @Nullable String type, @Nullable String subtype, String reviewer,
+                            String currentTimestamp, OAuth1AccessToken accessToken) throws WikipediaException {
 
         // Upload new content to Wikipedia
         wikipediaService.savePageContent(articleId, text, currentTimestamp, accessToken);
 
         // Mark article as reviewed in the database
-        markArticleAsReviewed(articleId, reviewer);
+        markArticleAsReviewed(articleId, type, subtype, reviewer);
     }
 
-    void markArticleAsReviewed(int articleId, String reviewer) {
+    void markArticleAsReviewed(int articleId, @Nullable String type, @Nullable String subtype, String reviewer) {
         LOGGER.info("START Mark article as reviewed. ID: {}", articleId);
-        replacementRepository.findByArticleId(articleId).stream()
-                .filter(Replacement::isToBeReviewed)
-                .forEach(rep -> reviewReplacement(rep, reviewer));
+        if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype)) {
+            if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
+                // In case of custom replacements they don't exist in the database to be reviewed
+                reviewReplacement(
+                        new Replacement(articleId, type, subtype, 0),
+                        reviewer);
+            } else {
+                replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(articleId, type, subtype)
+                        .forEach(rep -> reviewReplacement(rep, reviewer));
+            }
+        } else {
+            replacementRepository.findByArticleIdAndReviewerIsNull(articleId)
+                    .forEach(rep -> reviewReplacement(rep, reviewer));
+        }
         LOGGER.info("END Mark article as reviewed. ID: {}", articleId);
     }
 

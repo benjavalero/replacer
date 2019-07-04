@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class WikipediaServiceTest {
 
@@ -115,7 +116,7 @@ public class WikipediaServiceTest {
         Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(),
                 Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
 
-        List<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("");
+        Set<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("");
         Assert.assertEquals(10, pageIds.size());
     }
 
@@ -126,7 +127,7 @@ public class WikipediaServiceTest {
         Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(),
                 Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
 
-        List<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("");
+        Set<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("");
         Assert.assertTrue(pageIds.isEmpty());
     }
 

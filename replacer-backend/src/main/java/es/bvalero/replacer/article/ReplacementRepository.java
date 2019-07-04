@@ -36,6 +36,12 @@ interface ReplacementRepository extends JpaRepository<Replacement, Long>, Replac
     List<Replacement> findRandomToReviewByTypeAndSubtype(
             @Param("type") String type, @Param("subtype") String subtype, Pageable pageable);
 
+    List<Replacement> findByArticleIdAndTypeAndSubtypeAndReviewerNotNull(int articleId, String type, String subtype);
+
+    List<Replacement> findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(int articleId, String type, String subtype);
+
+    List<Replacement> findByArticleIdAndReviewerIsNull(int articleId);
+
     long countByReviewerIsNull();
 
     long countByReviewerIsNotNull();

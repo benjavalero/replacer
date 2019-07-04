@@ -12,10 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Profile("offline")
@@ -51,8 +48,8 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     @Override
-    public List<Integer> getPageIdsByStringMatch(String text) {
-        return Collections.singletonList(1);
+    public Set<Integer> getPageIdsByStringMatch(String text) {
+        return Collections.singleton(1);
     }
 
     @Override
