@@ -1,3 +1,6 @@
+# 2.0.1 (5 de julio de 2019)
+- Corrección de enlaces a algunas secciones
+
 # 2.0.0 (4 de julio de 2019)
 - Frontend independiente implementado en Angular aunque se sigue desplegando junto con el backend
 - Proceso de autenticación separado para facilitar el desarrollo
