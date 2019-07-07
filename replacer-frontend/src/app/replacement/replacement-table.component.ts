@@ -41,14 +41,12 @@ export class ReplacementTableComponent implements OnInit {
   }
 
   get filteredCounts(): ReplacementCount[] {
-    return this.replacementCounts
-      .filter(replacementCount =>
-        this.removeDiacritics(replacementCount.subtype).includes(this.removeDiacritics(this.filter.value))
-      )
-      .slice(
-        (this.page - 1) * this.pageSize,
-        (this.page - 1) * this.pageSize + this.pageSize
-      );
+    const filteredCounts = this.replacementCounts.filter(replacementCount =>
+      this.removeDiacritics(replacementCount.subtype).includes(this.removeDiacritics(this.filter.value)));
+    this.collectionSize = filteredCounts.length;
+    return filteredCounts.slice(
+      (this.page - 1) * this.pageSize,
+      (this.page - 1) * this.pageSize + this.pageSize);
   }
 
   private removeDiacritics(word: string): string {
