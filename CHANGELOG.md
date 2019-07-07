@@ -1,3 +1,8 @@
+# 2.0.2 (7 de julio de 2019)
+- Corrige indexación truncada
+- Pasa a mayúsculas los reemplazos personalizados si procede
+- Otras correcciones menores
+
 # 2.0.1 (5 de julio de 2019)
 - Corrección de enlaces a algunas secciones
 
