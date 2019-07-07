@@ -30,14 +30,6 @@ public class TemplateFinder extends ReplacementFinder implements IgnoredReplacem
         AUTOMATON_TEMPLATE = new RunAutomaton(new RegExp(String.format(REGEX_NESTED_TEMPLATE, StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE)).toAutomaton());
     }
 
-    private static boolean isLowercase(String word) {
-        return word.chars().allMatch(Character::isLowerCase);
-    }
-
-    private static String setFirstUpperCase(String word) {
-        return word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")) + word.substring(1);
-    }
-
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {
         List<MatchResult> matches = new ArrayList<>(100);

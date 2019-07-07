@@ -73,10 +73,6 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
         return map;
     }
 
-    private String setFirstUpperCase(String word) {
-        return word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")) + word.substring(1);
-    }
-
     /**
      * @return A list with the misspelling replacements in a given text.
      */
