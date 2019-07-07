@@ -71,23 +71,28 @@ export class EditArticleComponent implements OnInit {
       fixedReplacements.forEach(rep => {
         contentToSave = this.replaceText(contentToSave, rep.start, rep.text, rep.textFixed);
       });
+
+      this.alertService.addInfoMessage(`Guardando cambios en «${this.title}»…`);
       this.saveContent(contentToSave);
     } else {
       // Save with no changes => Mark article as reviewed
-      this.saveContent(' ');
+      this.saveWithNoChanges();
     }
   }
 
   onSaveNoChanges() {
     // Save with no changes => Mark article as reviewed
+    this.saveWithNoChanges();
+  }
+
+  private saveWithNoChanges() {
+    this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.title}»…`);
     this.saveContent(' ');
   }
 
   private saveContent(content: string) {
     // Remove replacements as a trick to hide the article
     this.replacements = [];
-
-    this.alertService.addInfoMessage(`Guardando cambios en «${this.title}»…`);
 
     this.articleService.saveArticle(this.articleId, this.filteredType, this.filteredSubtype, content, this.currentTimestamp)
       .subscribe(res => { }, err => {
