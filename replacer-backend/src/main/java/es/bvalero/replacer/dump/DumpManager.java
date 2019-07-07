@@ -52,9 +52,9 @@ class DumpManager {
     }
 
     /**
-     * Check weekly if there is a new dump to process (with a one-day delay)
+     * Check daily if there is a new dump to process (with a one-hour delay)
      */
-    @Scheduled(fixedDelay = 7 * 3600 * 24 * 1000, initialDelay = 3600 * 24 * 1000)
+    @Scheduled(fixedDelay = 3600 * 24 * 1000, initialDelay = 3600 * 1000)
     void processDumpScheduled() {
         LOGGER.info("EXECUTE Scheduled weekly index of the last dump");
         processLatestDumpFile(false);
