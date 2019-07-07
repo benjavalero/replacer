@@ -175,10 +175,7 @@ public class ArticleService {
             cachedArticleIdsByTypeAndSubtype.remove(key);
 
             // Empty the cached count for the replacement
-            cachedReplacementCount.stream()
-                    .filter(item -> item.getType().equals(type) && item.getSubtype().equals(subtype))
-                    .findAny()
-                    .ifPresent(item -> item.setCount(item.getCount()));
+            cachedReplacementCount.removeIf(item -> item.getType().equals(type) && item.getSubtype().equals(subtype));
         }
 
         LOGGER.info("END Find random article to review. Found article ID: {}", articleId.orElse(null));
@@ -377,8 +374,15 @@ public class ArticleService {
                         new Replacement(articleId, type, subtype, 0),
                         reviewer);
             } else {
-                replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(articleId, type, subtype)
-                        .forEach(rep -> reviewReplacement(rep, reviewer));
+                List<Replacement> toReview = replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(
+                        articleId, type, subtype);
+                toReview.forEach(rep -> reviewReplacement(rep, reviewer));
+
+                // Decrease the cached count for the replacement
+                cachedReplacementCount.stream()
+                        .filter(item -> item.getType().equals(type) && item.getSubtype().equals(subtype))
+                        .findAny()
+                        .ifPresent(item -> item.setCount(item.getCount() - toReview.size()));
             }
         } else {
             replacementRepository.findByArticleIdAndReviewerIsNull(articleId)
@@ -406,9 +410,9 @@ public class ArticleService {
     }
 
     /**
-     * Update every 5 minutes the count of misspellings from Wikipedia
+     * Update every 10 minutes the count of misspellings from Wikipedia
      */
-    @Scheduled(fixedDelay = 5 * 60 * 1000)
+    @Scheduled(fixedDelay = 10 * 60 * 1000)
     public void updateReplacementCount() {
         LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
         LOGGER.info("START Count grouped replacements");
