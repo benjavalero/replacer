@@ -110,7 +110,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put("srlimit", "100");
         params.put("srsearch", String.format("\"%s\"", text));
         params.put("srnamespace", StringUtils.join(WikipediaNamespace.getProcessableNamespaces().stream()
-                .mapToInt(WikipediaNamespace::getValue), "|"));
+                .map(WikipediaNamespace::getValue).collect(Collectors.toList()), "|"));
         params.put("srwhat", "text");
         params.put("srinfo", "");
         params.put("srprop", "");
