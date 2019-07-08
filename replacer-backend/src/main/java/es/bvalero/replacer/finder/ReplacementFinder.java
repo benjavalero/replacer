@@ -40,7 +40,7 @@ public abstract class ReplacementFinder {
     protected static boolean isWordCompleteInText(int start, String word, String text) {
         int end = start + word.length();
         return start == 0 || end == text.length()
-                || (!Character.isLetter(text.charAt(start - 1)) && !Character.isLetter(text.charAt(end)));
+                || (!Character.isLetterOrDigit(text.charAt(start - 1)) && !Character.isLetterOrDigit(text.charAt(end)));
     }
 
     public List<MatchResult> findMatchResults(CharSequence text, RunAutomaton automaton) {

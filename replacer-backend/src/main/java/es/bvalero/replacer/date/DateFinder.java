@@ -24,7 +24,7 @@ public class DateFinder extends ReplacementFinder implements ArticleReplacementF
             "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
             "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
     @RegExp
-    private static final String REGEX_LONG_DATE = "<N>{1,2} de (%s) de <N>{4}";
+    private static final String REGEX_LONG_DATE = "(3[01]|[12]<N>|<N>) de (%s) de <N>{4}";
     private static final RunAutomaton AUTOMATON_LONG_DATE = new RunAutomaton(new dk.brics.automaton.RegExp(
             String.format(REGEX_LONG_DATE, StringUtils.join(UPPERCASE_MONTHS, "|")))
             .toAutomaton(new DatatypesAutomatonProvider()));
