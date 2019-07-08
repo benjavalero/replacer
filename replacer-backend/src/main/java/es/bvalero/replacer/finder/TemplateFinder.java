@@ -23,7 +23,7 @@ public class TemplateFinder extends ReplacementFinder implements IgnoredReplacem
         Set<String> wordsToJoin = new HashSet<>();
         for (String word : TEMPLATE_NAMES) {
             wordsToJoin.add(word);
-            if (isLowercase(word)) {
+            if (startsWithLowerCase(word)) {
                 wordsToJoin.add(setFirstUpperCase(word));
             }
         }

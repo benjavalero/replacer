@@ -18,7 +18,7 @@ class TemplateAutomatonFinder extends TemplateAbstractFinder {
     TemplateAutomatonFinder(List<String> words) {
         for (String word : words) {
             AUTOMATA.add(new RunAutomaton(new RegExp(String.format("\\{\\{%s[|:](%s|[^}])+?}}", word, REGEX_TEMPLATE)).toAutomaton()));
-            if (isLowercase(word)) {
+            if (startsWithLowerCase(word)) {
                 AUTOMATA.add(new RunAutomaton(new RegExp(String.format("\\{\\{%s[|:](%s|[^}])+?}}", setFirstUpperCase(word), REGEX_TEMPLATE)).toAutomaton()));
             }
         }

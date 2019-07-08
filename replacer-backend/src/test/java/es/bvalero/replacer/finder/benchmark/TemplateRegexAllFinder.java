@@ -18,7 +18,7 @@ class TemplateRegexAllFinder extends TemplateAbstractFinder {
         Set<String> wordsToJoin = new HashSet<>();
         for (String word : words) {
             wordsToJoin.add(word);
-            if (isLowercase(word)) {
+            if (startsWithLowerCase(word)) {
                 wordsToJoin.add(setFirstUpperCase(word));
             }
         }

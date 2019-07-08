@@ -18,12 +18,8 @@ public abstract class ReplacementFinder {
         return Character.isUpperCase(word.charAt(0));
     }
 
-    static boolean startsWithLowerCase(CharSequence word) {
+    protected static boolean startsWithLowerCase(CharSequence word) {
         return Character.isLowerCase(word.charAt(0));
-    }
-
-    protected static boolean isLowercase(String word) {
-        return word.chars().allMatch(Character::isLowerCase);
     }
 
     protected static String setFirstUpperCase(String word) {
