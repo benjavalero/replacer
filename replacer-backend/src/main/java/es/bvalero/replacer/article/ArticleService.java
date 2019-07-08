@@ -28,6 +28,7 @@ public class ArticleService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
     private static final int BATCH_SIZE = 1000;
     private static final int CACHE_SIZE = 100;
+    private static final String SYSTEM_REVIEWER = "system";
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -276,7 +277,10 @@ public class ArticleService {
             LOGGER.info("Potential replacements found in text: {}", articleReplacements.size());
 
             // Build the article review if the replacements found are valid
-            if (!articleReplacements.isEmpty()) {
+            if (articleReplacements.isEmpty()) {
+                // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
+                markArticleAsReviewed(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, SYSTEM_REVIEWER);
+            } else {
                 ArticleReview review = ArticleReview.builder()
                         .setArticleId(article.getId())
                         .setTitle(article.getTitle())
