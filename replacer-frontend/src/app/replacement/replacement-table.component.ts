@@ -50,7 +50,7 @@ export class ReplacementTableComponent implements OnInit {
   }
 
   private removeDiacritics(word: string): string {
-    return word.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    return word.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
 
   private findReplacementCounts() {

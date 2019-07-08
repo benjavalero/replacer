@@ -17,7 +17,7 @@ export class FindCustomComponent implements OnInit {
   }
 
   onSubmit() {
-    this.router.navigate([`random/Personalizado/${this.replacement}/${this.suggestion}`]);
+    this.router.navigate([`random/Personalizado/${this.replacement.trim()}/${this.suggestion.trim()}`]);
   }
 
 }
