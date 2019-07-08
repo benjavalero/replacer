@@ -5,7 +5,7 @@ import { DumpService } from './dump.service';
 import { DumpStatus } from './dump-status.model';
 import { AlertService } from '../alert/alert.service';
 
-const NUM_ARTICLES = 3718238; // Rough amount of articles to be read
+const NUM_ARTICLES = 3790787; // Rough amount of articles to be read
 
 // https://flaviocopes.com/javascript-sleep/
 const sleep = (milliseconds: number) => {
@@ -62,6 +62,7 @@ export class DumpComponent implements OnInit {
 
   private calculateProgress(): number {
     if (this.status.numArticlesRead) {
+      // We might have more read articles than the estimation constant
       return this.status.numArticlesRead * 100.0 / Math.max(NUM_ARTICLES, this.status.numArticlesRead);
     } else {
       return 0;
