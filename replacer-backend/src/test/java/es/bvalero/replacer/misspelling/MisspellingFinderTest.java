@@ -160,4 +160,24 @@ public class MisspellingFinderTest {
         Assert.assertEquals("Águila", results.get(3).getSuggestions().get(0).getText());
     }
 
+    @Test
+    public void testFindMisspellingSuggestionSameWordFirst() {
+        String word = "entreno";
+        String comment = "entrenó (verbo), entreno (sustantivo)";
+        Misspelling misspelling = Misspelling.builder().setWord(word).setComment(comment).build();
+        String text = String.format("Un %s.", word);
+
+        // Fake the update of the misspelling list in the misspelling manager
+        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
+
+        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+
+        Assert.assertEquals(1, results.size());
+        Assert.assertEquals(3, results.get(0).getStart());
+        Assert.assertEquals(word, results.get(0).getText());
+        Assert.assertEquals(2, results.get(0).getSuggestions().size());
+        Assert.assertEquals(word, results.get(0).getSuggestions().get(0).getText());
+    }
+
 }

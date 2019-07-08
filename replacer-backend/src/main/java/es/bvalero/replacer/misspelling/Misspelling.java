@@ -107,7 +107,7 @@ final class Misspelling {
 
             List<ReplacementSuggestion> suggestions = new ArrayList<>();
             try {
-                suggestions.addAll(parseSuggestionsFromComment(comment));
+                suggestions.addAll(parseSuggestionsFromComment(word, comment));
             } catch (Exception e) {
                 LOGGER.error("Error parsing misspelling comment", e);
             }
@@ -123,7 +123,7 @@ final class Misspelling {
             return word.chars().allMatch(c -> Character.isLetter(c) || c == '\'' || c == '-');
         }
 
-        private List<ReplacementSuggestion> parseSuggestionsFromComment(String comment) {
+        private List<ReplacementSuggestion> parseSuggestionsFromComment(String word, String comment) {
             List<ReplacementSuggestion> suggestionList = new ArrayList<>(5);
 
             Matcher m = PATTERN_COMMENT.matcher(comment);
@@ -132,7 +132,13 @@ final class Misspelling {
                 if (StringUtils.isNotBlank(text)) {
                     String explanation = StringUtils.isNotBlank(m.group(2))
                             ? m.group(2).substring(1, m.group(2).length() - 1) : ""; // Remove brackets
-                    suggestionList.add(new ReplacementSuggestion(text, explanation));
+                    // If the suggestion is the same than the original word we insert it as the first option
+                    ReplacementSuggestion suggestion = new ReplacementSuggestion(text, explanation);
+                    if (word.equals(text)) {
+                        suggestionList.add(0, suggestion);
+                    } else {
+                        suggestionList.add(suggestion);
+                    }
                 } else {
                     LOGGER.warn("Not valid misspelling comment: {}", comment);
                 }
