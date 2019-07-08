@@ -1,3 +1,9 @@
+# 2.0.3 (8 de julio de 2019)
+- Corrige captura de fechas que comienzan por 0
+- Muestra el texto original siempre como la primera sugerencia
+- Corrige un bucle infinito en los reemplazos personalizados cuando todos están revisados
+- Corrige la plantilla "Caja de cita" que no se estaba ignorando
+
 # 2.0.2 (7 de julio de 2019)
 - Corrige indexación truncada
 - Pasa a mayúsculas los reemplazos personalizados si procede
