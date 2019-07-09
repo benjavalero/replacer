@@ -115,11 +115,13 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
         List<ReplacementSuggestion> suggestions = new ArrayList<>();
 
         misspelling.getSuggestions().forEach(suggestion -> {
-            if (startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()) {
-                suggestions.add(new ReplacementSuggestion(
-                        setFirstUpperCase(suggestion.getText()), suggestion.getComment()));
+            ReplacementSuggestion newSuggestion = startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()
+                    ? new ReplacementSuggestion(setFirstUpperCase(suggestion.getText()), suggestion.getComment())
+                    : suggestion;
+            if (originalWord.equals(newSuggestion.getText())) {
+                suggestions.add(0, newSuggestion);
             } else {
-                suggestions.add(suggestion);
+                suggestions.add(newSuggestion);
             }
         });
 
