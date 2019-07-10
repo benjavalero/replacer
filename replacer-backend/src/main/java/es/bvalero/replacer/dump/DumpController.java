@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * REST actions to start the dump processing or find the current status.
  */
 @RestController
-@RequestMapping("dump")
+@RequestMapping("api/dump")
 public class DumpController {
 
     @Autowired
