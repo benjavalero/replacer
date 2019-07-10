@@ -61,7 +61,7 @@ class DumpArticleProcessor {
             return false;
         }
 
-        articleService.indexReplacements(
+        articleService.indexReplacements(dumpArticle,
                 articleService.convertArticleReplacements(dumpArticle, replacementFinderService.findReplacements(dumpArticle.getContent())),
                 dbReplacements,
                 true);

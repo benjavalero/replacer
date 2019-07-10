@@ -48,20 +48,30 @@ public class ArticleService {
 
     private void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
         LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
-        indexReplacements(
+        indexReplacements(article,
                 convertArticleReplacements(article, articleReplacements),
                 replacementRepository.findByArticleId(article.getId()),
                 false);
         LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
     }
 
-    public void indexReplacements(Collection<Replacement> replacements, Collection<Replacement> dbReplacements,
-                                  boolean indexInBatch) {
+    public void indexReplacements(WikipediaPage article, Collection<Replacement> replacements,
+                                  Collection<Replacement> dbReplacements, boolean indexInBatch) {
         LOGGER.debug("START Index list of replacements\n" +
                         "New: {} - {}\n" +
                         "Old: {} - {}",
                 replacements.size(), replacements,
                 dbReplacements.size(), dbReplacements);
+
+        // Trick: In case of no replacements found we insert a fake reviewed replacement
+        // in order to be able to skip the article when reindexing
+        if (replacements.isEmpty() && dbReplacements.isEmpty()) {
+            Replacement newReplacement = new Replacement(article.getId(), "", "", 0)
+                    .withLastUpdate(article.getLastUpdate().toLocalDate())
+                    .withReviewer(SYSTEM_REVIEWER);
+            saveReplacement(newReplacement, indexInBatch);
+        }
+
         replacements.forEach(replacement -> {
             Optional<Replacement> existing = findSameReplacementInCollection(replacement, dbReplacements);
             if (existing.isPresent()) {

@@ -45,7 +45,8 @@ public class ArticleServiceTest {
         List<Replacement> dbReplacements1 = Collections.emptyList();
 
 
-        articleService.indexReplacements(newReplacements, dbReplacements1, true);
+        WikipediaPage article = WikipediaPage.builder().build();
+        articleService.indexReplacements(article, newReplacements, dbReplacements1, true);
         articleService.flushReplacementsInBatch();
 
 
@@ -68,7 +69,8 @@ public class ArticleServiceTest {
         List<Replacement> dbReplacements1 = new ArrayList<>(Arrays.asList(rep2, rep3));
 
 
-        articleService.indexReplacements(newReplacements, dbReplacements1, true);
+        WikipediaPage article = WikipediaPage.builder().setTimestamp(LocalDateTime.now()).build();
+        articleService.indexReplacements(article, newReplacements, dbReplacements1, true);
         articleService.flushReplacementsInBatch();
 
 
@@ -78,6 +80,22 @@ public class ArticleServiceTest {
         Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
                 Collections.emptySet()
         );
+    }
+
+    @Test
+    public void testIndexArticleWithoutReplacements() {
+        List<Replacement> newReplacements = Collections.emptyList();
+        List<Replacement> dbReplacements = Collections.emptyList();
+
+        WikipediaPage article = WikipediaPage.builder().setTimestamp(LocalDateTime.now()).build();
+        articleService.indexReplacements(article, newReplacements, dbReplacements, true);
+        articleService.flushReplacementsInBatch();
+
+        // Save the fake replacement
+        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(
+                Collections.emptySet()
+        );
+        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(Mockito.anyIterable());
     }
 
     @Test
@@ -113,7 +131,8 @@ public class ArticleServiceTest {
 
         List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(rep8, rep10, rep12, rep18, rep20));
 
-        articleService.indexReplacements(newReplacements, dbReplacements2, true);
+        WikipediaPage article = WikipediaPage.builder().build();
+        articleService.indexReplacements(article, newReplacements, dbReplacements2, true);
         articleService.flushReplacementsInBatch();
 
 

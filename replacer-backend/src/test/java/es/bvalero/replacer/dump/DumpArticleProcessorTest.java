@@ -153,7 +153,8 @@ public class DumpArticleProcessorTest {
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, Collections.emptySet()));
 
-        Mockito.verify(articleService).indexReplacements(Mockito.anyCollection(), Mockito.eq(Collections.emptySet()), Mockito.eq(true));
+        Mockito.verify(articleService).indexReplacements(
+                Mockito.eq(dumpArticle), Mockito.anyCollection(), Mockito.eq(Collections.emptySet()), Mockito.eq(true));
     }
 
     @Test
@@ -175,7 +176,8 @@ public class DumpArticleProcessorTest {
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, dbReplacements));
 
-        Mockito.verify(articleService).indexReplacements(Mockito.eq(Collections.emptyList()), Mockito.eq(dbReplacements), Mockito.eq(true));
+        Mockito.verify(articleService).indexReplacements(
+                Mockito.eq(dumpArticle), Mockito.eq(Collections.emptyList()), Mockito.eq(dbReplacements), Mockito.eq(true));
     }
 
 }
