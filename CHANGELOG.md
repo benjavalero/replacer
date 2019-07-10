@@ -1,3 +1,7 @@
+# 2.0.4 (10 de julio de 2019)
+- Mejora en la indexación para ignorar los artículos ya indexados sin reemplazos encontrados
+- Corrección de un error al recargar las pantallas
+
 # 2.0.3 (8 de julio de 2019)
 - Corrige captura de fechas que comienzan por 0
 - Muestra el texto original siempre como la primera sugerencia
