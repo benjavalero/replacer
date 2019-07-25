@@ -15,8 +15,9 @@ public class TemplateFinder extends ReplacementFinder implements IgnoredReplacem
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_NESTED_TEMPLATE = "\\{\\{(%s)[|:](%s|[^}])+?}}";
-    private static final List<String> TEMPLATE_NAMES =
-            Arrays.asList("cita", "quote", "cquote", "caja de cita", "coord", "commonscat", "ORDENAR", "DEFAULTSORT", "NF");
+    private static final List<String> TEMPLATE_NAMES = Arrays.asList(
+            "ORDENAR", "DEFAULTSORT", "NF", "commonscat", "coord",
+            "cita libro", "cita", "quote", "cquote", "caja de cita");
     private static final RunAutomaton AUTOMATON_TEMPLATE;
 
     static {
