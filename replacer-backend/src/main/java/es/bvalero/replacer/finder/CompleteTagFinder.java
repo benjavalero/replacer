@@ -11,8 +11,10 @@ import java.util.regex.Pattern;
 @Component
 public class CompleteTagFinder extends ReplacementFinder implements IgnoredReplacementFinder {
 
-    private static final List<String> TAG_NAMES =
-            Arrays.asList("math", "source", "syntaxhighlight", "blockquote", "pre", "score", "poem", "ref", "code", "cite");
+    private static final List<String> TAG_NAMES = Arrays.asList(
+            "nowiki", "pre", "code", "source", "syntaxhighlight",
+            "math", "poem", "score",
+            "ref", "blockquote", "cite");
     private static final Collection<Pattern> PATTERN_COMPLETE_TAGS = new ArrayList<>(TAG_NAMES.size());
 
     static {
