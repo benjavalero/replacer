@@ -85,7 +85,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
         while (m.find()) {
             String word = m.group();
             Misspelling misspelling = findMisspellingByWord(word);
-            if (misspelling != null) {
+            if (misspelling != null && isWordCompleteInText(m.start(), word, text)) {
                 articleReplacements.add(new ArticleReplacement(
                         word,
                         m.start(),

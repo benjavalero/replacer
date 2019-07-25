@@ -137,6 +137,25 @@ public class MisspellingFinderTest {
     }
 
     @Test
+    public void testFindMisspellingsBetweenUnderscores() {
+        String text = "A _Text Text_ _Text_ Text.";
+        Misspelling misspelling = Misspelling.builder().setWord("text").setComment("texto").build();
+        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
+
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
+
+        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+
+        Assert.assertNotNull(results);
+        Assert.assertEquals(1, results.size());
+        ArticleReplacement result = results.get(0);
+        Assert.assertEquals("Text", result.getText());
+        Assert.assertEquals(21, result.getStart());
+        Assert.assertEquals("text", result.getSubtype());
+    }
+
+    @Test
     public void testFindMisspellingSuggestion() {
         // lowercase -> uppercase: españa -> España
         // uppercase -> lowercase: Domingo -> domingo

@@ -36,7 +36,11 @@ public abstract class ReplacementFinder {
     protected static boolean isWordCompleteInText(int start, String word, String text) {
         int end = start + word.length();
         return start == 0 || end == text.length()
-                || (!Character.isLetterOrDigit(text.charAt(start - 1)) && !Character.isLetterOrDigit(text.charAt(end)));
+                || (isValidSeparator(text.charAt(start - 1)) && isValidSeparator(text.charAt(end)));
+    }
+
+    private static boolean isValidSeparator(char separator) {
+        return !Character.isLetterOrDigit(separator) && '_' != separator;
     }
 
     public List<MatchResult> findMatchResults(CharSequence text, RunAutomaton automaton) {
