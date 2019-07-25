@@ -5,14 +5,12 @@
     así como el número de apariciones sin revisar:
   </p>
 
-  <form>
-    <div class="form-group mt-4">
-      <input class="form-control" type="text" [formControl]="filter"
-        placeholder="Filtrar por subtipo (ignora mayúsculas y acentos)" />
-    </div>
-  </form>
+  <div class="form-group mt-4">
+    <input class="form-control" type="text" [(ngModel)]="filter"
+      placeholder="Filtrar por subtipo (ignora mayúsculas y acentos)" />
+  </div>
 
-  <div *ngIf="filteredCounts.length">
+  <div *ngIf="filteredItems.length">
     <table class="table">
       <thead>
         <tr>
@@ -22,12 +20,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let misspelling of filteredCounts">
-          <td class="w-25">{{ misspelling.type }}</td>
+        <tr *ngFor="let item of filteredItems">
+          <td class="w-25">{{ item.type }}</td>
           <td class="w-50">
-            <a routerLink="/random/{{misspelling.type}}/{{misspelling.subtype}}">{{ misspelling.subtype }}</a>
+            <a routerLink="/random/{{item.type}}/{{item.subtype}}">{{ item.subtype }}</a>
           </td>
-          <td class="w-25">{{ misspelling.count }}</td>
+          <td class="w-25">{{ item.count }}</td>
         </tr>
       </tbody>
     </table>
@@ -36,7 +34,7 @@
       class="d-flex justify-content-center">
     </ngb-pagination>
   </div>
-  <p *ngIf="!filteredCounts.length">
+  <p *ngIf="!filteredItems.length">
     No hay reemplazos que cumplan los filtros de búsqueda.
   </p>
 

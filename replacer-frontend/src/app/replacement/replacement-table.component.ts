@@ -20,18 +20,22 @@ export class ReplacementTableComponent implements OnInit {
   @ViewChildren(ColumnSortableDirective) headers: QueryList<ColumnSortableDirective>;
 
   replacementCounts: ReplacementCount[];
+  filteredItems: ReplacementCount[];
 
   // Filter
-  filter = new FormControl('');
+  filterValue: string;
 
   // Pagination
   collectionSize: number;
-  page: number;
+  pageValue: number;
   pageSize: number;
 
   constructor(private replacementService: ReplacementService, private alertService: AlertService) {
     this.replacementCounts = [];
-    this.page = 1;
+    this.filteredItems = this.replacementCounts;
+    this.filterValue = '';
+    this.collectionSize = 0;
+    this.pageValue = 1;
     this.pageSize = PAGE_SIZE;
   }
 
@@ -40,13 +44,16 @@ export class ReplacementTableComponent implements OnInit {
     this.findReplacementCounts();
   }
 
-  get filteredCounts(): ReplacementCount[] {
-    const filteredCounts = this.replacementCounts.filter(replacementCount =>
-      this.removeDiacritics(replacementCount.subtype).includes(this.removeDiacritics(this.filter.value)));
-    this.collectionSize = filteredCounts.length;
-    return filteredCounts.slice(
-      (this.page - 1) * this.pageSize,
-      (this.page - 1) * this.pageSize + this.pageSize);
+  private refreshFilteredItems() {
+    // Apply filter
+    const filtered = this.replacementCounts.filter(item =>
+      this.removeDiacritics(item.subtype).includes(this.removeDiacritics(this.filterValue)));
+    this.collectionSize = filtered.length;
+
+    // Paginate
+    this.filteredItems = filtered.slice(
+      (this.pageValue - 1) * this.pageSize,
+      (this.pageValue - 1) * this.pageSize + this.pageSize);
   }
 
   private removeDiacritics(word: string): string {
@@ -56,10 +63,30 @@ export class ReplacementTableComponent implements OnInit {
   private findReplacementCounts() {
     this.replacementService.findReplacementCounts().subscribe((replacementCounts: ReplacementCount[]) => {
       this.replacementCounts = replacementCounts;
-      this.collectionSize = this.replacementCounts.length;
+
+      this.refreshFilteredItems();
 
       this.alertService.clearAlertMessages();
     });
+  }
+
+  get filter(): string {
+    return this.filterValue;
+  }
+
+  set filter(value: string) {
+    this.filterValue = value;
+    this.page = 1; // Reset page
+    this.refreshFilteredItems();
+  }
+
+  get page(): number {
+    return this.pageValue;
+  }
+
+  set page(value: number) {
+    this.pageValue = value;
+    this.refreshFilteredItems();
   }
 
   onSort({ column, direction }: SortEvent) {
@@ -77,5 +104,7 @@ export class ReplacementTableComponent implements OnInit {
         : compare(a[column], b[column]));
       return direction === 'asc' ? res : -res;
     });
+
+    this.refreshFilteredItems();
   }
 }
