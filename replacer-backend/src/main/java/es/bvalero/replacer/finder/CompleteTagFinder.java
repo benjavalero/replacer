@@ -16,7 +16,7 @@ public class CompleteTagFinder extends ReplacementFinder implements IgnoredRepla
     private static final Collection<Pattern> PATTERN_COMPLETE_TAGS = new ArrayList<>(TAG_NAMES.size());
 
     static {
-        TAG_NAMES.forEach(word -> PATTERN_COMPLETE_TAGS.add(Pattern.compile(String.format("<%s.*?>.+?</%s>", word, word), Pattern.DOTALL)));
+        TAG_NAMES.forEach(word -> PATTERN_COMPLETE_TAGS.add(Pattern.compile(String.format("<%s[^>]*>.+?</%s>", word, word), Pattern.DOTALL)));
     }
 
     @Override

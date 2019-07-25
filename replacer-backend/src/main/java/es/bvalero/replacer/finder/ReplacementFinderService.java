@@ -35,12 +35,18 @@ public class ReplacementFinderService {
         // LinkedList is better to run iterators and remove items from it
         List<ArticleReplacement> articleReplacements = new LinkedList<>();
         for (ArticleReplacementFinder finder : articleReplacementFinders) {
-            articleReplacements.addAll(finder.findReplacements(text));
+            LOGGER.debug("- START Find replacements of type: {}", finder.getType());
+            List<ArticleReplacement> replacements = finder.findReplacements(text);
+            LOGGER.debug("- END Find replacements of type: {}", finder.getType());
+            articleReplacements.addAll(replacements);
         }
-        LOGGER.debug("Potential replacements found (before ignoring): {}", articleReplacements);
+        LOGGER.debug("Potential replacements found (before ignoring): {} - {}",
+                articleReplacements.size(), articleReplacements);
 
         // Remove nested replacements
         articleReplacements.removeIf(replacement -> replacement.isContainedInListSelfIgnoring(articleReplacements));
+        LOGGER.debug("Potential replacements found after removing nested: {} - {}",
+                articleReplacements.size(), articleReplacements);
 
         // No need to find the exceptions if there are no replacements found
         if (articleReplacements.isEmpty()) {
@@ -49,7 +55,9 @@ public class ReplacementFinderService {
 
         // Ignore the replacements which must be ignored
         for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
+            LOGGER.debug("- START Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
             List<MatchResult> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
+            LOGGER.debug("- END Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
             articleReplacements.removeIf(replacement -> replacement.isContainedIn(ignoredReplacements));
 
             if (articleReplacements.isEmpty()) {
@@ -57,7 +65,8 @@ public class ReplacementFinderService {
             }
         }
 
-        LOGGER.debug("END Find replacements in text. Final replacements found: {}", articleReplacements);
+        LOGGER.debug("END Find replacements in text. Final replacements found: {} - {}",
+                articleReplacements.size(), articleReplacements);
         return articleReplacements;
     }
 
