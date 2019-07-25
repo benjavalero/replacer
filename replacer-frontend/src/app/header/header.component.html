@@ -7,24 +7,24 @@
   <div id="navbarSupportedContent" class="navbar-collapse" [ngbCollapse]="isNavCollapsed">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive="active" routerLink="/random"
+        <a class="nav-link" routerLinkActive="active" routerLink="/random" (click)="isNavCollapsed = true"
           title="Revisa todos los posibles reemplazos de un artículo aleatorio">Artículo aleatorio</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive="active" routerLink="/replacement"
+        <a class="nav-link" routerLinkActive="active" routerLink="/replacement" (click)="isNavCollapsed = true"
           title="Revisa todos los artículos que contienen un reemplazo en concreto">Lista de reemplazos</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive="active" routerLink="/custom"
+        <a class="nav-link" routerLinkActive="active" routerLink="/custom" (click)="isNavCollapsed = true"
           title="Revisa todos los artículos que contienen un reemplazo personalizado">Reemplazo personalizado</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLinkActive="active" routerLink="/stats" [ngbCollapse]="!admin"
-          title="Muestra el número de reemplazos indexados y revisados">Estadísticas</a>
+          (click)="isNavCollapsed = true" title="Muestra el número de reemplazos indexados y revisados">Estadísticas</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLinkActive="active" routerLink="/dump" [ngbCollapse]="!admin"
-          title="Muestra el estado de la indexación">Indexación</a>
+          (click)="isNavCollapsed = true" title="Muestra el estado de la indexación">Indexación</a>
       </li>
     </ul>
     <hr />
