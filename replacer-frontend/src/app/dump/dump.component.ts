@@ -5,7 +5,7 @@ import { DumpService } from './dump.service';
 import { DumpStatus } from './dump-status.model';
 import { AlertService } from '../alert/alert.service';
 
-const NUM_ARTICLES = 3790787; // Rough amount of articles to be read
+const NUM_ARTICLES = 3798588; // Rough amount of articles to be read
 
 // https://flaviocopes.com/javascript-sleep/
 const sleep = (milliseconds: number) => {
@@ -20,9 +20,10 @@ const sleep = (milliseconds: number) => {
 export class DumpComponent implements OnInit {
   // Status Details
   status: DumpStatus;
-  elapsed: number;
+  elapsed: string;
   progress: number;
   average: number;
+  eta: string;
 
   // Form
   force: boolean;
@@ -40,9 +41,10 @@ export class DumpComponent implements OnInit {
   private findDumpStatus() {
     this.dumpService.findDumpStatus().subscribe((status: DumpStatus) => {
       this.status = status;
-      this.elapsed = this.calculateElapsed();
+      this.elapsed = this.formatMilliseconds(this.calculateElapsed());
       this.progress = this.calculateProgress();
       this.average = this.calculateAverage();
+      this.eta = this.formatMilliseconds(this.calculateEta());
 
       this.alertService.clearAlertMessages();
     });
@@ -60,6 +62,15 @@ export class DumpComponent implements OnInit {
     }
   }
 
+  private formatMilliseconds(millis: number): string {
+    const totalSeconds = Math.floor(millis / 1000);
+    const seconds = (totalSeconds % 60).toFixed().padStart(2, '0');
+    const totalMinutes = Math.floor(totalSeconds / 60);
+    const minutes = (totalMinutes % 60).toFixed().padStart(2, '0');
+    const totalHours = Math.floor(totalMinutes / 60);
+    return `${totalHours}:${minutes}:${seconds}`;
+  }
+
   private calculateProgress(): number {
     if (this.status.numArticlesRead) {
       // We might have more read articles than the estimation constant
@@ -72,6 +83,15 @@ export class DumpComponent implements OnInit {
   private calculateAverage(): number {
     if (this.status.numArticlesRead) {
       return this.calculateElapsed() / this.status.numArticlesRead;
+    } else {
+      return 0;
+    }
+  }
+
+  private calculateEta(): number {
+    if (this.status.running) {
+      const toRead = Math.max(NUM_ARTICLES, this.status.numArticlesRead) - this.status.numArticlesRead;
+      return toRead * this.calculateAverage();
     } else {
       return 0;
     }

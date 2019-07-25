@@ -10,9 +10,10 @@
     <li>Final: <strong>{{ formatDate(status.end) }}</strong></li>
     <li>Páginas leídas: <strong>{{ status.numArticlesRead }}</strong></li>
     <li>Artículos procesados: <strong>{{ status.numArticlesProcessed }}</strong></li>
-    <li>Tiempo transcurrido: <strong>{{ elapsed }} ms</strong></li>
-    <li>Progreso: <strong>{{ progress }} %</strong></li>
-    <li>Tiempo medio por artículo: <strong>{{ average }} ms</strong></li>
+    <li>Tiempo transcurrido: <strong>{{ elapsed }} (hh:mm:ss)</strong></li>
+    <li>Progreso: <strong>{{ progress | number }} %</strong></li>
+    <li>Tiempo medio por artículo: <strong>{{ average | number }} ms</strong></li>
+    <li *ngIf="status.running">Tiempo estimado de finalización: <strong>{{ eta }} (hh:mm:ss)</strong></li>
   </ul>
 
   <form *ngIf="!status.running" (ngSubmit)="onSubmit()" class="mb-3">
