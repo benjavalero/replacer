@@ -53,8 +53,36 @@ public class DateFinderTest {
 
         List<ArticleReplacement> articleReplacements = dateFinder.findReplacements(text);
 
-        System.out.println(articleReplacements);
-        Assert.assertTrue(articleReplacements.isEmpty());
+        Assert.assertEquals(1, articleReplacements.size());
+        Assert.assertEquals(3, articleReplacements.get(0).getStart());
+        Assert.assertEquals(date, articleReplacements.get(0).getText());
+        Assert.assertEquals("7 de agosto de 2019", articleReplacements.get(0).getSuggestions().get(0).getText());
+    }
+
+    @Test
+    public void testDateFinderSetiembre() {
+        String date = "17 de Setiembre de 2019";
+        String text = String.format("En %s.", date);
+
+        List<ArticleReplacement> articleReplacements = dateFinder.findReplacements(text);
+
+        Assert.assertEquals(1, articleReplacements.size());
+        Assert.assertEquals(3, articleReplacements.get(0).getStart());
+        Assert.assertEquals(date, articleReplacements.get(0).getText());
+        Assert.assertEquals("17 de septiembre de 2019", articleReplacements.get(0).getSuggestions().get(0).getText());
+    }
+
+    @Test
+    public void testDateFinderSeptiembre() {
+        String date = "17 de Septiembre de 2019";
+        String text = String.format("En %s.", date);
+
+        List<ArticleReplacement> articleReplacements = dateFinder.findReplacements(text);
+
+        Assert.assertEquals(1, articleReplacements.size());
+        Assert.assertEquals(3, articleReplacements.get(0).getStart());
+        Assert.assertEquals(date, articleReplacements.get(0).getText());
+        Assert.assertEquals(date.toLowerCase(), articleReplacements.get(0).getSuggestions().get(0).getText());
     }
 
 }
