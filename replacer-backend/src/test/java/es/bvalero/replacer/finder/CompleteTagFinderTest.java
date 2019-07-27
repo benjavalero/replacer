@@ -3,7 +3,11 @@ package es.bvalero.replacer.finder;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CompleteTagFinderTest {
 
@@ -18,9 +22,10 @@ public class CompleteTagFinderTest {
 
         List<MatchResult> matches = completeTagFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
-        Assert.assertEquals(tag1, matches.get(0).getText());
-        Assert.assertEquals(tag2, matches.get(1).getText());
-        Assert.assertEquals(tag3, matches.get(2).getText());
+
+        Set<String> expected = new HashSet<>(Arrays.asList(tag1, tag2, tag3));
+        Set<String> actual = matches.stream().map(MatchResult::getText).collect(Collectors.toSet());
+        Assert.assertEquals(expected, actual);
     }
 
 }
