@@ -3,9 +3,7 @@ package es.bvalero.replacer.finder;
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RunAutomaton;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +11,8 @@ import java.util.regex.Pattern;
  * Abstract class to provide generic methods to find replacements
  */
 public abstract class ReplacementFinder {
+
+    private static final Set<Character> invalidSeparators = new HashSet<>(Arrays.asList('_', '/'));
 
     protected static boolean startsWithUpperCase(CharSequence word) {
         return Character.isUpperCase(word.charAt(0));
@@ -40,7 +40,7 @@ public abstract class ReplacementFinder {
     }
 
     private static boolean isValidSeparator(char separator) {
-        return !Character.isLetterOrDigit(separator) && '_' != separator;
+        return !Character.isLetterOrDigit(separator) && !invalidSeparators.contains(separator);
     }
 
     public List<MatchResult> findMatchResults(CharSequence text, RunAutomaton automaton) {
