@@ -5,3 +5,20 @@
   <li>Número de reemplazos sin revisar: <strong>{{ numNotReviewed }}</strong></li>
   <li>Número de reemplazos revisados: <strong>{{ numReviewed }}</strong></li>
 </ul>
+
+<div *ngIf="numReviewedGrouped.length">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Usuario</th>
+        <th>#</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of numReviewedGrouped">
+        <td class="w-50">{{ item[0] }}</td>
+        <td class="w-50">{{ item[1] }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

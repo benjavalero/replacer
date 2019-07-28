@@ -412,15 +412,19 @@ public class ArticleService {
     }
 
     long countReplacements() {
-        return replacementRepository.count();
+        return replacementRepository.countByReviewerIsNullOrReviewerIsNot(SYSTEM_REVIEWER);
     }
 
     long countReplacementsReviewed() {
-        return replacementRepository.countByReviewerIsNotNull();
+        return replacementRepository.countByReviewerIsNotNullAndReviewerIsNot(SYSTEM_REVIEWER);
     }
 
     long countReplacementsToReview() {
         return replacementRepository.countByReviewerIsNull();
+    }
+
+    List<Object[]> countReplacementsGroupedByReviewer() {
+        return replacementRepository.countGroupedByReviewer(SYSTEM_REVIEWER);
     }
 
     /**

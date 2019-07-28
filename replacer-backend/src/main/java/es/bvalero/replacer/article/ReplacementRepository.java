@@ -42,9 +42,14 @@ interface ReplacementRepository extends JpaRepository<Replacement, Long>, Replac
 
     List<Replacement> findByArticleIdAndReviewerIsNull(int articleId);
 
+    long countByReviewerIsNullOrReviewerIsNot(String reviewer);
+
     long countByReviewerIsNull();
 
-    long countByReviewerIsNotNull();
+    long countByReviewerIsNotNullAndReviewerIsNot(String reviewer);
+
+    @Query("SELECT reviewer, COUNT(*) FROM Replacement WHERE reviewer <> :systemReviewer GROUP BY reviewer ORDER BY COUNT(*) DESC")
+    List<Object[]> countGroupedByReviewer(String systemReviewer);
 
     void deleteBySubtypeIn(Set<String> subtypes);
 

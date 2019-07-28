@@ -62,4 +62,8 @@ export class ArticleService {
     return this.httpClient.get<number>(`${environment.apiUrl}/article/count/replacements/reviewed`);
   }
 
+  findNumReviewedByReviewer(): Observable<any[][]> {
+    return this.httpClient.get<any[][]>(`${environment.apiUrl}/article/count/replacements/reviewed/grouped`);
+  }
+
 }

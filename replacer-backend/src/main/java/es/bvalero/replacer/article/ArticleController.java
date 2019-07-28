@@ -113,4 +113,11 @@ public class ArticleController {
         return list;
     }
 
+    @GetMapping(value = "/count/replacements/reviewed/grouped")
+    public List<Object[]> countReplacementsGroupedByReviewer() {
+        List<Object[]> list = articleService.countReplacementsGroupedByReviewer();
+        LOGGER.info("GET Count grouped by reviewer. Result Size: {}", list.size());
+        return list;
+    }
+
 }

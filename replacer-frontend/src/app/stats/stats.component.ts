@@ -11,6 +11,7 @@ export class StatsComponent implements OnInit {
   numReplacements: number;
   numNotReviewed: number;
   numReviewed: number;
+  numReviewedGrouped: any[][] = [];
 
   constructor(private articleService: ArticleService) { }
 
@@ -18,6 +19,7 @@ export class StatsComponent implements OnInit {
     this.findNumReplacements();
     this.findNumNotReviewed();
     this.findNumReviewed();
+    this.findNumReviewedGrouped();
   }
 
   private findNumReplacements() {
@@ -30,5 +32,9 @@ export class StatsComponent implements OnInit {
 
   private findNumReviewed() {
     this.articleService.findNumReviewed().subscribe((res: number) => this.numReviewed = res);
+  }
+
+  private findNumReviewedGrouped() {
+    this.articleService.findNumReviewedByReviewer().subscribe((res: any[][]) => this.numReviewedGrouped = res);
   }
 }
