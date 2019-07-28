@@ -1,3 +1,12 @@
+# 2.0.5 (28 de julio de 2019)
+- Mejoras de rendimiento al buscar etiquetas para ignorar
+- Ignorar texto rodeado por subrayados o barras
+- Ignorar la etiqueta `nowiki`
+- Ignorar la plantilla `cita libro`
+- Ignorar líneas comenzando por espacio (texto preformateado)
+- Correcciones en el paginado del listado de reemplazos
+- Mejora en la indexación para ignorar los artículos ya indexados sin reemplazos encontrados
+
 # 2.0.4 (10 de julio de 2019)
 - Mejora en la indexación para ignorar los artículos ya indexados sin reemplazos encontrados
 - Corrección de un error al recargar las pantallas
