@@ -175,32 +175,30 @@ class DumpHandler extends DefaultHandler {
         private Map<Integer, Collection<Replacement>> replacementMap = new HashMap<>(CACHE_SIZE);
 
         Collection<Replacement> findDatabaseReplacements(int articleId) {
-            // Load the cache the first time
-            if (maxCachedId == 0) {
-                loadCache(1);
+            // Load the cache the first time or when needed
+            if (maxCachedId == 0 || articleId > maxCachedId) {
+                cleanCache();
+
+                int minId = maxCachedId + 1;
+                maxCachedId += CACHE_SIZE;
+                loadCache(minId, maxCachedId);
             }
 
             Collection<Replacement> replacements = replacementMap.getOrDefault(articleId, Collections.emptySet());
             replacementMap.remove(articleId); // No need to check if the ID exists
 
-            if (articleId >= maxCachedId) {
-                cleanCache();
-                loadCache(Math.max(maxCachedId + 1, articleId));
-            }
-
             return replacements;
         }
 
-        private void loadCache(int id) {
-            LOGGER.debug("START Load replacements from database to cache. Min ID: {}", id);
-            maxCachedId = id + CACHE_SIZE - 1;
-            for (Replacement replacement : articleService.findDatabaseReplacementByArticles(id, maxCachedId)) {
+        private void loadCache(int minId, int maxId) {
+            LOGGER.debug("START Load replacements from database to cache. Article ID between {} and {}", minId, maxId);
+            for (Replacement replacement : articleService.findDatabaseReplacementByArticles(minId, maxId)) {
                 if (!replacementMap.containsKey(replacement.getArticleId())) {
                     replacementMap.put(replacement.getArticleId(), new HashSet<>());
                 }
                 replacementMap.get(replacement.getArticleId()).add(replacement);
             }
-            LOGGER.debug("END Load replacements from database to cache");
+            LOGGER.debug("END Load replacements from database to cache. Articles cached: {}", replacementMap.size());
         }
 
         private void cleanCache() {
