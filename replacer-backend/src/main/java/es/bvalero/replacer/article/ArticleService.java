@@ -396,7 +396,7 @@ public class ArticleService {
                 cachedReplacementCount.stream()
                         .filter(item -> item.getType().equals(type) && item.getSubtype().equals(subtype))
                         .findAny()
-                        .ifPresent(item -> item.setCount(item.getCount() - toReview.size()));
+                        .ifPresent(item -> item.decrementCount(toReview.size()));
             }
         } else {
             replacementRepository.findByArticleIdAndReviewerIsNull(articleId)
