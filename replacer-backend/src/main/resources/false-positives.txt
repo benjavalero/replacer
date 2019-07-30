@@ -198,9 +198,41 @@
  # # aun + gerundio
  # [Aa]un (así|sin|<L>+?ndo)
 
- # aún\.
- # ([Aa]unque|[Cc]uando|donde|era|están?|estaba|es|fue|[Mm]ás|mejor|menos|peor|[Pp]ero|porque|que|ser|sido|[Ss]iendo|[Ss]i|son|[Yy]) aún
- # [Aa]ún (conservan?|continúan?|eran?|están?|estaban?|es|existen?|hay|hoy|más|mayores|mayor|mejor|perduran?|permanecen?|persisten?|pueden?|quedan?|quedaban?|no|seguían?|se|siguen?|son|viven?|vivían?)
+ # aún
+ aún\.
+ aún conserva
+ aún después
+ aún era
+ aún estaba
+ aún están
+ aún está
+ aún es
+ aún existe
+ aún más
+ aún mayor
+ aún muy
+ [Aa]ún se
+ aún sigue
+ aún son
+ aún tiene
+ # La gran mayoría son correctas con tilde
+ aún el
+ [Aa]ún hoy
+ aún la
+ [Aa]ún no
+ aún un
+ aunque aún
+ cuando aún
+ donde aún
+ era aún
+ estaba aún
+ está aún
+ es aún
+ [Mm]ás aún
+ pero aún
+ que aún
+ siendo aún
+ son aún
 
  # ([Dd]u|of) Canton
 
