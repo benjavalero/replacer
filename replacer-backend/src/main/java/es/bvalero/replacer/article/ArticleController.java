@@ -3,9 +3,8 @@ package es.bvalero.replacer.article;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,11 +12,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("api/article")
 public class ArticleController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleController.class);
 
     @Autowired
     private ArticleService articleService;

@@ -5,9 +5,8 @@ import es.bvalero.replacer.article.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +19,9 @@ import java.util.Optional;
 /**
  * Process an article found in a Wikipedia dump.
  */
+@Slf4j
 @Component
 class DumpArticleProcessor {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DumpArticleProcessor.class);
 
     @Autowired
     private ArticleService articleService;

@@ -1,9 +1,8 @@
 package es.bvalero.replacer.dump;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.jetbrains.annotations.TestOnly;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -32,11 +31,11 @@ import java.util.stream.Stream;
  * The dumps are parsed with @{@link DumpHandler}.
  * Each article found in the dump is processed in @{@link DumpArticleProcessor}.
  */
+@Slf4j
 @Component
 class DumpManager {
 
     static final String DUMP_NAME_FORMAT = "eswiki-%s-pages-articles.xml.bz2";
-    private static final Logger LOGGER = LoggerFactory.getLogger(DumpManager.class);
     private static final String REGEX_DUMP_FOLDER = "\\d+";
     private static final Pattern PATTERN_DUMP_FOLDER = Pattern.compile(REGEX_DUMP_FOLDER);
 

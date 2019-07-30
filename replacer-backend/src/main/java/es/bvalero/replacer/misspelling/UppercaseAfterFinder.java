@@ -7,10 +7,9 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
 import es.bvalero.replacer.finder.MatchResult;
 import es.bvalero.replacer.finder.ReplacementFinder;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,10 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Component
 public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredReplacementFinder, PropertyChangeListener {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UppercaseAfterFinder.class);
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_UPPERCASE_AFTER_PUNCTUATION = "[!#*|=.]<Z>*(%s)";

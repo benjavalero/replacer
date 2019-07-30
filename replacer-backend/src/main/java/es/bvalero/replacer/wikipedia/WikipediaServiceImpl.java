@@ -5,9 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.authentication.AuthenticationService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -18,11 +17,11 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 // We make this implementation public to be used by the finder benchmarks
+@Slf4j
 @Service
 @Profile("default")
 public class WikipediaServiceImpl implements WikipediaService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WikipediaServiceImpl.class);
     private static final String WIKIPEDIA_API_URL = "https://es.wikipedia.org/w/api.php";
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
     private static final String MISSPELLING_LIST_PAGE = "Wikipedia:Corrector_ortográfico/Listado";

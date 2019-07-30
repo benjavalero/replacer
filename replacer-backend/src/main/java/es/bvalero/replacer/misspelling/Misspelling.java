@@ -1,11 +1,10 @@
 package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.finder.ReplacementSuggestion;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +73,8 @@ final class Misspelling {
                 '}';
     }
 
+    @Slf4j
     static class MisspellingBuilder {
-        private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingBuilder.class);
         @RegExp
         private static final String REGEX_COMMENT = "([^,(]+)(\\([^)]+\\))?";
         private static final Pattern PATTERN_COMMENT = Pattern.compile(REGEX_COMMENT);

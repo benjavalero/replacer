@@ -7,10 +7,9 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
 import es.bvalero.replacer.finder.MatchResult;
 import es.bvalero.replacer.finder.ReplacementFinder;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,10 +25,9 @@ import java.util.Set;
  * Find misspelling replacements in a given text.
  * Based in the WordAlternateAutomatonFinder winner in the benchmarks.
  */
+@Slf4j
 @Component
 public class FalsePositiveFinder extends ReplacementFinder implements IgnoredReplacementFinder, PropertyChangeListener {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveFinder.class);
 
     @Autowired
     private FalsePositiveManager falsePositiveManager;

@@ -1,8 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +13,10 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 
+@Slf4j
 @Service
 @Profile("offline")
 class WikipediaServiceOfflineImpl implements WikipediaService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(WikipediaServiceOfflineImpl.class);
 
     @Override
     public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {

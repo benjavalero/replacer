@@ -2,8 +2,7 @@ package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,10 +18,10 @@ import java.util.stream.Stream;
 /**
  * Manages the cache for the false positive list in order to reduce the calls to Wikipedia.
  */
+@Slf4j
 @Service
 public class FalsePositiveManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FalsePositiveManager.class);
     private static final int FALSE_POSITIVE_ESTIMATED_COUNT = 1000;
 
     @Autowired

@@ -3,8 +3,7 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.article.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
@@ -18,10 +17,10 @@ import java.util.*;
 /**
  * Handler to parse a Wikipedia XML dump.
  */
+@Slf4j
 @Component
 class DumpHandler extends DefaultHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DumpHandler.class);
     private static final String TITLE_TAG = "title";
     private static final String NAMESPACE_TAG = "ns";
     private static final String ID_TAG = "id";

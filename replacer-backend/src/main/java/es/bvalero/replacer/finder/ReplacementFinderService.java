@@ -1,18 +1,17 @@
 package es.bvalero.replacer.finder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ReplacementFinderService {
 
     public static final String CUSTOM_FINDER_TYPE = "Personalizado";
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReplacementFinderService.class);
 
     @Autowired
     private List<ArticleReplacementFinder> articleReplacementFinders;

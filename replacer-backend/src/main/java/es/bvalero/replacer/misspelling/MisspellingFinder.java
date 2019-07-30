@@ -8,9 +8,8 @@ import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ArticleReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementSuggestion;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +22,11 @@ import java.util.*;
  * Find misspelling replacements in a given text.
  * Based in the WordAutomatonAllFinder winner in the benchmarks.
  */
+@Slf4j
 @Component
 public class MisspellingFinder extends ReplacementFinder implements ArticleReplacementFinder, PropertyChangeListener {
 
     private static final String MISSPELLING_TYPE = "Ortografía";
-    private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingFinder.class);
     private static final RunAutomaton WORD_AUTOMATON = new RunAutomaton(new RegExp("(<L>|[-'])+")
             .toAutomaton(new DatatypesAutomatonProvider()));
 

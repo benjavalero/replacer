@@ -6,10 +6,9 @@ import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,10 +21,10 @@ import java.util.stream.Collectors;
 /**
  * Provides methods to find articles with potential replacements.
  */
+@Slf4j
 @Service
 public class ArticleService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ArticleService.class);
     private static final int BATCH_SIZE = 1000;
     private static final int CACHE_SIZE = 100;
     private static final String SYSTEM_REVIEWER = "system";

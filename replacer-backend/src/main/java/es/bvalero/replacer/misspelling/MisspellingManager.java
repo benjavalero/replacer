@@ -3,11 +3,10 @@ package es.bvalero.replacer.misspelling;
 import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -24,10 +23,10 @@ import java.util.stream.Stream;
 /**
  * Manages the cache for the misspelling list in order to reduce the calls to Wikipedia.
  */
+@Slf4j
 @Service
 public class MisspellingManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MisspellingManager.class);
     private static final String CASE_SENSITIVE_VALUE = "cs";
     private static final int MISSPELLING_ESTIMATED_COUNT = 20000;
 

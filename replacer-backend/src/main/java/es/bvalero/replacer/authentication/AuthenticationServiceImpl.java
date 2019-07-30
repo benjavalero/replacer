@@ -4,10 +4,9 @@ import com.github.scribejava.apis.MediaWikiApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth10aService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -17,11 +16,10 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 // We make this implementation public to be used by the finder benchmarks
+@Slf4j
 @Service
 @Profile("default")
 public class AuthenticationServiceImpl implements AuthenticationService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationServiceImpl.class);
 
     @Value("${wikipedia.api.key}")
     private String apiKey;
