@@ -250,13 +250,12 @@ public class ArticleService {
             // Build the article review if the replacements found are valid
             // Note the DB has just been updated in case the subtype doesn't exist in the found replacements
             if (!articleReplacements.isEmpty()) {
-                ArticleReview review = ArticleReview.builder()
-                        .setArticleId(article.getId())
-                        .setTitle(article.getTitle())
-                        .setContent(article.getContent())
-                        .setReplacements(articleReplacements)
-                        .setCurrentTimestamp(article.getQueryTimestamp())
-                        .build();
+                ArticleReview review = new ArticleReview(
+                        article.getId(),
+                        article.getTitle(),
+                        article.getContent(),
+                        articleReplacements,
+                        article.getQueryTimestamp());
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("END Find review for article: {}", review);
                 } else {
@@ -291,13 +290,12 @@ public class ArticleService {
                 // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
                 markArticleAsReviewed(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, SYSTEM_REVIEWER);
             } else {
-                ArticleReview review = ArticleReview.builder()
-                        .setArticleId(article.getId())
-                        .setTitle(article.getTitle())
-                        .setContent(article.getContent())
-                        .setReplacements(articleReplacements)
-                        .setCurrentTimestamp(article.getQueryTimestamp())
-                        .build();
+                ArticleReview review = new ArticleReview(
+                        article.getId(),
+                        article.getTitle(),
+                        article.getContent(),
+                        articleReplacements,
+                        article.getQueryTimestamp());
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("END Find review for article: {}", review);
                 } else {
