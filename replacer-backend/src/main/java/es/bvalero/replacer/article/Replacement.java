@@ -1,15 +1,19 @@
 package es.bvalero.replacer.article;
 
+import lombok.*;
+import lombok.experimental.Wither;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Objects;
 
 /**
  * A replacement in the database related to an article.
  */
+@Data
+@NoArgsConstructor // Needed by JPA
+@AllArgsConstructor // Needed by @Wither
 @Entity
 @Table(name = "replacement2",
         uniqueConstraints = @UniqueConstraint(columnNames = {"articleId", "type", "subtype", "position"}))
@@ -35,15 +39,12 @@ public class Replacement implements Serializable {
     private int position;
 
     @Column(nullable = false)
+    @Wither
     private LocalDate lastUpdate;
 
     @Column
+    @Wither
     private String reviewer;
-
-    @SuppressWarnings("unused")
-    public Replacement() {
-        // Needed by JPA
-    }
 
     public Replacement(int articleId, String type, String subtype, int position) {
         this.articleId = articleId;
@@ -52,30 +53,6 @@ public class Replacement implements Serializable {
         this.position = position;
         this.lastUpdate = LocalDate.now();
         this.reviewer = null;
-    }
-
-    public int getArticleId() {
-        return articleId;
-    }
-
-    public LocalDate getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public Replacement withLastUpdate(LocalDate newLastUpdate) {
-        Replacement newRep = new Replacement(articleId, type, subtype, position);
-        newRep.id = id;
-        newRep.lastUpdate = newLastUpdate;
-        newRep.reviewer = reviewer;
-        return newRep;
-    }
-
-    Replacement withReviewer(String newReviewer) {
-        Replacement newRep = new Replacement(articleId, type, subtype, position);
-        newRep.id = id;
-        newRep.lastUpdate = lastUpdate;
-        newRep.reviewer = newReviewer;
-        return newRep;
     }
 
     boolean isToBeReviewed() {
@@ -87,39 +64,6 @@ public class Replacement implements Serializable {
                 position == that.position &&
                 type.equals(that.type) &&
                 subtype.equals(that.subtype);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Replacement that = (Replacement) o;
-        return id == that.id &&
-                articleId == that.articleId &&
-                position == that.position &&
-                type.equals(that.type) &&
-                subtype.equals(that.subtype) &&
-                lastUpdate.equals(that.lastUpdate) &&
-                Objects.equals(reviewer, that.reviewer);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, articleId, type, subtype, position, lastUpdate, reviewer);
-    }
-
-
-    @Override
-    public String toString() {
-        return "Replacement{" +
-                "id=" + id +
-                ", articleId=" + articleId +
-                ", type='" + type + '\'' +
-                ", subtype='" + subtype + '\'' +
-                ", position=" + position +
-                ", lastUpdate=" + lastUpdate +
-                ", reviewer='" + reviewer + '\'' +
-                '}';
     }
 
 }

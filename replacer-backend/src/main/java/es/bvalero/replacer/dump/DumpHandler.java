@@ -159,13 +159,13 @@ class DumpHandler extends DefaultHandler {
 
     DumpProcessStatus getProcessStatus() {
         return DumpProcessStatus.builder()
-                .setRunning(running)
-                .setForceProcess(forceProcess)
-                .setNumArticlesRead(numArticlesRead)
-                .setNumArticlesProcessed(numArticlesProcessed)
-                .setDumpFileName(latestDumpFile == null ? "" : latestDumpFile.getFileName().toString())
-                .setStart(startTime == null ? null : startTime.toEpochMilli())
-                .setEnd(endTime == null ? null : endTime.toEpochMilli())
+                .running(running)
+                .forceProcess(forceProcess)
+                .numArticlesRead(numArticlesRead)
+                .numArticlesProcessed(numArticlesProcessed)
+                .dumpFileName(latestDumpFile == null ? "" : latestDumpFile.getFileName().toString())
+                .start(startTime == null ? null : startTime.toEpochMilli())
+                .end(endTime == null ? null : endTime.toEpochMilli())
                 .build();
     }
 

@@ -4,7 +4,7 @@ import lombok.Value;
 import lombok.experimental.NonFinal;
 
 @Value
-public class ReplacementCount {
+class ReplacementCount {
 
     private String type;
     private String subtype;
