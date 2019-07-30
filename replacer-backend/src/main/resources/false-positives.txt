@@ -272,7 +272,50 @@
  # [Rr]eferences?
 
  # Records
- # records of
+ [Rr]ecords of
+ Maverick Records
+ Casablanca Records
+ Vertigo Records
+ Rhino Records
+ King Records
+ Blast Records
+ Chrysalis Records
+ Napalm Records
+ Sanctuary Records
+ London Records
+ Media Records
+ Note Records
+ Blade Records
+ CBS Records
+ Epitaph Records
+ Disney Records
+ Mute Records
+ Universal Records
+ Arista Records
+ Sire Records
+ Apple Records
+ Jive Records
+ Republic Records
+ EMI Records
+ M Records
+ MCA Records
+ Decca Records
+ Hollywood Records
+ Elektra Records
+ World Records
+ Geffen Records
+ Reprise Records
+ Polydor Records
+ Roadrunner Records
+ Mercury Records
+ Interscope Records
+ Virgin Records
+ Island Records
+ RCA Records
+ Epic Records
+ Atlantic Records
+ Capitol Records
+ Columbia Records
 
  # (Championship|[Ff]irst|Go|[Ss]econd)\-[Rr]ound
  # [Rr]ound\-(Lake|Midnight|pick|[Rr]obin|Rock|Table|[Uu]p)
