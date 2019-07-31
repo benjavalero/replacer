@@ -20,14 +20,15 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
-        String now = WikipediaPage.formatWikipediaTimestamp(LocalDateTime.now());
+        LocalDateTime nowDateTime = LocalDateTime.now();
+        String now = WikipediaPage.formatWikipediaTimestamp(nowDateTime);
         return Optional.of(WikipediaPage.builder()
-                .setId(1)
-                .setNamespace(WikipediaNamespace.ARTICLE)
-                .setTitle("Norteamérica")
-                .setContent(loadArticleContent("/article-long.txt"))
-                .setTimestamp(now)
-                .setQueryTimestamp(now)
+                .id(1)
+                .namespace(WikipediaNamespace.ARTICLE)
+                .title("Norteamérica")
+                .content(loadArticleContent("/article-long.txt"))
+                .lastUpdate(nowDateTime)
+                .queryTimestamp(now)
                 .build());
     }
 

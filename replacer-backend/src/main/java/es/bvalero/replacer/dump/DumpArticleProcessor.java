@@ -55,7 +55,7 @@ class DumpArticleProcessor {
         if (dbLastUpdate.isPresent()
                 && !isArticleProcessableByTimestamp(dumpArticle.getLastUpdate().toLocalDate(), dbLastUpdate.get(), forceProcess)) {
             LOGGER.debug("END Process dump article. Not processable by date: {}. Dump date: {}. DB date: {}",
-                    dumpArticle.getTitle(), dumpArticle.getTimestamp(), dbLastUpdate);
+                    dumpArticle.getTitle(), dumpArticle.getLastUpdate().toLocalDate(), dbLastUpdate);
             return false;
         }
 

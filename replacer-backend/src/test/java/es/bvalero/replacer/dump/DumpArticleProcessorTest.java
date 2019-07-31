@@ -38,15 +38,15 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessSimple() {
-        WikipediaPage dumpArticle = WikipediaPage.builder().setNamespace(WikipediaNamespace.ARTICLE).setContent("").build();
+        WikipediaPage dumpArticle = WikipediaPage.builder().namespace(WikipediaNamespace.ARTICLE).content("").build();
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
     public void testCheckNamespaces() {
-        WikipediaPage dumpArticle = WikipediaPage.builder().setNamespace(WikipediaNamespace.ARTICLE).setContent("").build();
-        WikipediaPage dumpAnnex = WikipediaPage.builder().setNamespace(WikipediaNamespace.ANNEX).setContent("").build();
-        WikipediaPage dumpCategory = WikipediaPage.builder().setNamespace(WikipediaNamespace.CATEGORY).build();
+        WikipediaPage dumpArticle = WikipediaPage.builder().namespace(WikipediaNamespace.ARTICLE).content("").build();
+        WikipediaPage dumpAnnex = WikipediaPage.builder().namespace(WikipediaNamespace.ANNEX).content("").build();
+        WikipediaPage dumpCategory = WikipediaPage.builder().namespace(WikipediaNamespace.CATEGORY).build();
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpAnnex));
@@ -55,8 +55,8 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessRedirection() {
-        WikipediaPage dumpArticle = WikipediaPage.builder().setNamespace(WikipediaNamespace.ARTICLE)
-                .setContent("#Redirect").build();
+        WikipediaPage dumpArticle = WikipediaPage.builder().namespace(WikipediaNamespace.ARTICLE)
+                .content("#Redirect").build();
         Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
@@ -66,10 +66,10 @@ public class DumpArticleProcessorTest {
         LocalDateTime yesterday = today.minusDays(1L);
 
         WikipediaPage dumpArticle = WikipediaPage.builder()
-                .setId(1)
-                .setNamespace(WikipediaNamespace.ARTICLE)
-                .setContent("")
-                .setTimestamp(yesterday)
+                .id(1)
+                .namespace(WikipediaNamespace.ARTICLE)
+                .content("")
+                .lastUpdate(yesterday)
                 .build();
 
         Replacement replacement = new Replacement(1, "", "", 1);
@@ -83,10 +83,10 @@ public class DumpArticleProcessorTest {
         LocalDateTime yesterday = today.minusDays(1L);
 
         WikipediaPage dumpArticle = WikipediaPage.builder()
-                .setId(1)
-                .setNamespace(WikipediaNamespace.ARTICLE)
-                .setContent("")
-                .setTimestamp(yesterday)
+                .id(1)
+                .namespace(WikipediaNamespace.ARTICLE)
+                .content("")
+                .lastUpdate(yesterday)
                 .build();
 
         Replacement replacement = new Replacement(1, "", "", 1);
@@ -98,10 +98,10 @@ public class DumpArticleProcessorTest {
     public void testProcessLastUpdateWhenTimestamp() {
         LocalDateTime today = LocalDateTime.now();
         WikipediaPage dumpArticle = WikipediaPage.builder()
-                .setId(1)
-                .setNamespace(WikipediaNamespace.ARTICLE)
-                .setContent("")
-                .setTimestamp(today)
+                .id(1)
+                .namespace(WikipediaNamespace.ARTICLE)
+                .content("")
+                .lastUpdate(today)
                 .build();
 
         Replacement replacement = new Replacement(1, "", "", 1);
@@ -113,10 +113,10 @@ public class DumpArticleProcessorTest {
     public void testProcessLastUpdateWhenTimestampForced() {
         LocalDateTime today = LocalDateTime.now();
         WikipediaPage dumpArticle = WikipediaPage.builder()
-                .setId(1)
-                .setNamespace(WikipediaNamespace.ARTICLE)
-                .setContent("")
-                .setTimestamp(today)
+                .id(1)
+                .namespace(WikipediaNamespace.ARTICLE)
+                .content("")
+                .lastUpdate(today)
                 .build();
 
         Replacement replacement = new Replacement(1, "", "", 1);
@@ -130,10 +130,10 @@ public class DumpArticleProcessorTest {
         LocalDateTime yesterday = today.minusDays(1L);
 
         WikipediaPage dumpArticle = WikipediaPage.builder()
-                .setId(1)
-                .setNamespace(WikipediaNamespace.ARTICLE)
-                .setContent("")
-                .setTimestamp(today)
+                .id(1)
+                .namespace(WikipediaNamespace.ARTICLE)
+                .content("")
+                .lastUpdate(today)
                 .build();
 
         Replacement replacement = new Replacement(1, "", "", 1).withLastUpdate(yesterday.toLocalDate());
@@ -144,8 +144,8 @@ public class DumpArticleProcessorTest {
     @Test
     public void testProcessNewArticle() {
         WikipediaPage dumpArticle = WikipediaPage.builder()
-                .setNamespace(WikipediaNamespace.ARTICLE)
-                .setContent("")
+                .namespace(WikipediaNamespace.ARTICLE)
+                .content("")
                 .build();
 
         List<ArticleReplacement> articleReplacements = Collections.singletonList(Mockito.mock(ArticleReplacement.class));
@@ -163,10 +163,10 @@ public class DumpArticleProcessorTest {
         LocalDateTime yesterday = today.minusDays(1L);
 
         WikipediaPage dumpArticle = WikipediaPage.builder()
-                .setId(1)
-                .setNamespace(WikipediaNamespace.ARTICLE)
-                .setContent("")
-                .setTimestamp(today)
+                .id(1)
+                .namespace(WikipediaNamespace.ARTICLE)
+                .content("")
+                .lastUpdate(today)
                 .build();
 
         Replacement replacement = new Replacement(1, "", "", 1).withLastUpdate(yesterday.toLocalDate());

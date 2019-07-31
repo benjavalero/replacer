@@ -69,7 +69,7 @@ public class ArticleServiceTest {
         List<Replacement> dbReplacements1 = new ArrayList<>(Arrays.asList(rep2, rep3));
 
 
-        WikipediaPage article = WikipediaPage.builder().setTimestamp(LocalDateTime.now()).build();
+        WikipediaPage article = WikipediaPage.builder().lastUpdate(LocalDateTime.now()).build();
         articleService.indexReplacements(article, newReplacements, dbReplacements1, true);
         articleService.flushReplacementsInBatch();
 
@@ -87,7 +87,7 @@ public class ArticleServiceTest {
         List<Replacement> newReplacements = Collections.emptyList();
         List<Replacement> dbReplacements = Collections.emptyList();
 
-        WikipediaPage article = WikipediaPage.builder().setTimestamp(LocalDateTime.now()).build();
+        WikipediaPage article = WikipediaPage.builder().lastUpdate(LocalDateTime.now()).build();
         articleService.indexReplacements(article, newReplacements, dbReplacements, true);
         articleService.flushReplacementsInBatch();
 
@@ -151,7 +151,7 @@ public class ArticleServiceTest {
         String title = "España";
         String text = "Un texto";
 
-        WikipediaPage page = WikipediaPage.builder().setTitle(title).setContent(text).setTimestamp(LocalDateTime.now()).build();
+        WikipediaPage page = WikipediaPage.builder().title(title).content(text).lastUpdate(LocalDateTime.now()).build();
         Mockito.when(wikipediaService.getPageById(Mockito.anyInt())).thenReturn(Optional.of(page));
 
         // Replacement matches

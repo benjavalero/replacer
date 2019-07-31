@@ -147,12 +147,12 @@ public class WikipediaServiceImpl implements WikipediaService {
             if (!jsonContent.isMissingNode()) {
                 int pageId = jsonPage.get(PARAM_PAGE_ID).asInt();
                 WikipediaPage page = WikipediaPage.builder()
-                        .setId(pageId)
-                        .setTitle(jsonPage.get("title").asText())
-                        .setNamespace(jsonPage.get("ns").asInt())
-                        .setContent(jsonContent.asText())
-                        .setTimestamp(jsonPage.at("/revisions/0/timestamp").asText())
-                        .setQueryTimestamp(queryTimestamp)
+                        .id(pageId)
+                        .title(jsonPage.get("title").asText())
+                        .namespace(WikipediaNamespace.valueOf(jsonPage.get("ns").asInt()))
+                        .content(jsonContent.asText())
+                        .lastUpdate(WikipediaPage.parseWikipediaTimestamp(jsonPage.at("/revisions/0/timestamp").asText()))
+                        .queryTimestamp(queryTimestamp)
                         .build();
                 pageContents.add(page);
             }

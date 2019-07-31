@@ -2,6 +2,7 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.article.Replacement;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,12 +135,12 @@ class DumpHandler extends DefaultHandler {
     private void processPage() {
         numArticlesRead++;
         WikipediaPage dumpArticle = WikipediaPage.builder()
-                .setId(currentId)
-                .setTitle(currentTitle)
-                .setNamespace(currentNamespace)
-                .setTimestamp(currentTimestamp)
-                .setContent(currentContent)
-                .setQueryTimestamp(WikipediaPage.formatWikipediaTimestamp(LocalDateTime.now()))
+                .id(currentId)
+                .title(currentTitle)
+                .namespace(WikipediaNamespace.valueOf(currentNamespace))
+                .lastUpdate(WikipediaPage.parseWikipediaTimestamp(currentTimestamp))
+                .content(currentContent)
+                .queryTimestamp(WikipediaPage.formatWikipediaTimestamp(LocalDateTime.now()))
                 .build();
 
         try {
