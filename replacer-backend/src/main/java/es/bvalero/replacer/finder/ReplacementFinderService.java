@@ -56,6 +56,7 @@ public class ReplacementFinderService {
         for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
             LOGGER.debug("- START Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
             List<MatchResult> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
+            LOGGER.debug("- Found ignored of type: {}", ignoredReplacements);
             LOGGER.debug("- END Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
             articleReplacements.removeIf(replacement -> replacement.isContainedIn(ignoredReplacements));
 
