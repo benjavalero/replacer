@@ -6,7 +6,7 @@ import { ReplacementCount } from './replacement-count.model';
 import { ReplacementService } from './replacement.service';
 import { AlertService } from '../alert/alert.service';
 
-import { ColumnSortableDirective, SortEvent, compare, compareLocale } from './column-sortable.directive';
+import { ColumnSortableDirective, SortEvent, compare, compareLocale, SortDirection } from './column-sortable.directive';
 
 const PAGE_SIZE = 10;
 
@@ -62,7 +62,8 @@ export class ReplacementTableComponent implements OnInit {
 
   private findReplacementCounts() {
     this.replacementService.findReplacementCounts().subscribe((replacementCounts: ReplacementCount[]) => {
-      this.replacementCounts = replacementCounts;
+      // Initially we sort by type and then by subtype
+      this.replacementCounts = this.sort(this.sort(replacementCounts, 'subtype', 'asc'), 'type', 'asc');
 
       this.refreshFilteredItems();
 
@@ -98,13 +99,18 @@ export class ReplacementTableComponent implements OnInit {
     });
 
     // Sorting misspellings
-    this.replacementCounts = [...this.replacementCounts].sort((a, b) => {
-      const res = (column === 'text'
+    this.replacementCounts = this.sort(this.replacementCounts, column, direction);
+
+    this.refreshFilteredItems();
+  }
+
+  private sort(items: ReplacementCount[], column: string, direction: SortDirection) {
+    return [...items].sort((a, b) => {
+      const res = (['type', 'subtype'].includes(column)
         ? compareLocale(a[column], b[column])
         : compare(a[column], b[column]));
       return direction === 'asc' ? res : -res;
     });
-
-    this.refreshFilteredItems();
   }
+
 }
