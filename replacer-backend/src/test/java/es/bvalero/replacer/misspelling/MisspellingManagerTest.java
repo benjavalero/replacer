@@ -47,13 +47,13 @@ public class MisspellingManagerTest {
         Collection<Misspelling> misspellings = misspellingManager.parseMisspellingListText(misspellingListText);
         Assert.assertEquals(4, misspellings.size());
         Assert.assertTrue(misspellings.contains(
-                Misspelling.builder().setWord("C").setCaseSensitive(true).setComment("D").build()));
+                new Misspelling("C", true, "D")));
         Assert.assertTrue(misspellings.contains(
-                Misspelling.builder().setWord("E").setCaseSensitive(true).setComment("F").build()));
+                new Misspelling("E", true, "F")));
         Assert.assertTrue(misspellings.contains(
-                Misspelling.builder().setWord("I").setCaseSensitive(false).setComment("J").build()));
+                new Misspelling("I", false, "J")));
         Assert.assertTrue(misspellings.contains(
-                Misspelling.builder().setWord("k").setCaseSensitive(false).setComment("k").build()));
+                new Misspelling("k", false, "k")));
     }
 
     @Test
@@ -67,22 +67,22 @@ public class MisspellingManagerTest {
         Collection<Misspelling> misspellings = misspellingManager.parseMisspellingListText(misspellingListText);
         Assert.assertEquals(3, misspellings.size());
         Assert.assertTrue(misspellings.contains(
-                Misspelling.builder().setWord("aguila").setComment("águila").build()));
+                new Misspelling("aguila", false, "águila")));
         Assert.assertTrue(misspellings.contains(
-                Misspelling.builder().setWord("Castilla-León").setComment("Castilla y León").build()));
+                new Misspelling("Castilla-León", false, "Castilla y León")));
         Assert.assertTrue(misspellings.contains(
-                Misspelling.builder().setWord("CD's").setComment("CD").build()));
+                new Misspelling("CD's", false, "CD")));
     }
 
     @Test
     public void testDeleteObsoleteMisspellings() {
-        Misspelling misspelling1 = Misspelling.builder().setWord("A").build();
-        Misspelling misspelling2 = Misspelling.builder().setWord("B").build();
+        Misspelling misspelling1 = new Misspelling("A", false, "B");
+        Misspelling misspelling2 = new Misspelling("B", false, "C");
         misspellingManager.setMisspellings(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
 
         Mockito.verify(articleService, Mockito.times(0)).deleteReplacementsByTextIn(Mockito.anySet());
 
-        Misspelling misspelling3 = Misspelling.builder().setWord("C").build();
+        Misspelling misspelling3 = new Misspelling("C", false, "D");
         misspellingManager.setMisspellings(new HashSet<>(Arrays.asList(misspelling2, misspelling3)));
 
         Mockito.verify(articleService, Mockito.times(1)).deleteReplacementsByTextIn(Collections.singleton("A"));

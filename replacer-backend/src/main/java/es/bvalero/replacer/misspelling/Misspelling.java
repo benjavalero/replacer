@@ -1,144 +1,68 @@
 package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.finder.ReplacementSuggestion;
-import lombok.extern.slf4j.Slf4j;
+import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Domain class corresponding to the lines in the Wikipedia article containing potential misspellings.
  */
-final class Misspelling {
+@Value
+class Misspelling {
+    @RegExp
+    private static final String REGEX_COMMENT = "([^,(]+)(\\([^)]+\\))?";
+    private static final Pattern PATTERN_COMMENT = Pattern.compile(REGEX_COMMENT);
 
-    private final String word;
-    private final boolean caseSensitive;
-    private final String comment;
+    private String word;
+    private boolean caseSensitive;
+    private List<ReplacementSuggestion> suggestions;
 
-    private final List<ReplacementSuggestion> suggestions;
-
-    private Misspelling(String word, boolean caseSensitive, String comment, List<ReplacementSuggestion> suggestions) {
+    Misspelling(String word, boolean caseSensitive, String comment) {
+        // Validate the word
+        if (!isMisspellingWordValid(word)) {
+            throw new IllegalArgumentException("Not valid misspelling word: " + word);
+        }
         this.word = word;
         this.caseSensitive = caseSensitive;
-        this.comment = comment;
-        this.suggestions = suggestions;
-    }
 
-    static Misspelling.MisspellingBuilder builder() {
-        return new Misspelling.MisspellingBuilder();
-    }
-
-    String getWord() {
-        return word;
-    }
-
-    boolean isCaseSensitive() {
-        return caseSensitive;
-    }
-
-    List<ReplacementSuggestion> getSuggestions() {
-        return suggestions;
-    }
-
-    /**
-     * We compare all the fields as maybe only the comment has changed and we want to detect it
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Misspelling that = (Misspelling) o;
-        return caseSensitive == that.caseSensitive &&
-                word.equals(that.word) &&
-                comment.equals(that.comment);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(word, caseSensitive, comment);
-    }
-
-    @Override
-    public String toString() {
-        return "Misspelling{" +
-                "word='" + word + '\'' +
-                ", caseSensitive=" + caseSensitive +
-                ", comment='" + comment + '\'' +
-                '}';
-    }
-
-    @Slf4j
-    static class MisspellingBuilder {
-        @RegExp
-        private static final String REGEX_COMMENT = "([^,(]+)(\\([^)]+\\))?";
-        private static final Pattern PATTERN_COMMENT = Pattern.compile(REGEX_COMMENT);
-
-        private String word;
-        private boolean caseSensitive;
-        private String comment;
-
-        Misspelling.MisspellingBuilder setWord(String word) {
-            this.word = word;
-            return this;
+        // Validate the comment and extract the suggestions
+        this.suggestions = new ArrayList<>();
+        try {
+            this.suggestions.addAll(parseSuggestionsFromComment(comment));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Not valid misspelling comment: " + comment, e);
         }
-
-        Misspelling.MisspellingBuilder setCaseSensitive(boolean caseSensitive) {
-            this.caseSensitive = caseSensitive;
-            return this;
+        if (this.suggestions.isEmpty()) {
+            throw new IllegalArgumentException("Not valid misspelling comment: " + comment);
         }
+    }
 
-        Misspelling.MisspellingBuilder setComment(String comment) {
-            this.comment = comment;
-            return this;
-        }
+    private boolean isMisspellingWordValid(String word) {
+        return word.chars().allMatch(c -> Character.isLetter(c) || c == '\'' || c == '-');
+    }
 
-        @Nullable Misspelling build() {
-            if (!isMisspellingWordValid(word)) {
-                LOGGER.info("Ignore not valid misspelling word: {}", word);
-                return null;
+    private List<ReplacementSuggestion> parseSuggestionsFromComment(String comment) {
+        List<ReplacementSuggestion> suggestionList = new ArrayList<>(5);
+
+        Matcher m = PATTERN_COMMENT.matcher(comment);
+        while (m.find()) {
+            String text = m.group(1).trim();
+            if (StringUtils.isNotBlank(text)) {
+                String explanation = StringUtils.isNotBlank(m.group(2))
+                        ? m.group(2).substring(1, m.group(2).length() - 1) : ""; // Remove brackets
+                suggestionList.add(new ReplacementSuggestion(text, explanation));
+            } else {
+                throw new IllegalArgumentException("Not valid misspelling comment: " + comment);
             }
-
-            List<ReplacementSuggestion> suggestions = new ArrayList<>();
-            try {
-                suggestions.addAll(parseSuggestionsFromComment(comment));
-            } catch (Exception e) {
-                LOGGER.error("Error parsing misspelling comment", e);
-            }
-
-            if (suggestions.isEmpty()) {
-                LOGGER.warn("Not valid misspelling comment: {}", comment);
-            }
-
-            return new Misspelling(word, caseSensitive, comment, suggestions);
         }
 
-        private boolean isMisspellingWordValid(String word) {
-            return word.chars().allMatch(c -> Character.isLetter(c) || c == '\'' || c == '-');
-        }
-
-        private List<ReplacementSuggestion> parseSuggestionsFromComment(String comment) {
-            List<ReplacementSuggestion> suggestionList = new ArrayList<>(5);
-
-            Matcher m = PATTERN_COMMENT.matcher(comment);
-            while (m.find()) {
-                String text = m.group(1).trim();
-                if (StringUtils.isNotBlank(text)) {
-                    String explanation = StringUtils.isNotBlank(m.group(2))
-                            ? m.group(2).substring(1, m.group(2).length() - 1) : ""; // Remove brackets
-                    suggestionList.add(new ReplacementSuggestion(text, explanation));
-                } else {
-                    LOGGER.warn("Not valid misspelling comment: {}", comment);
-                }
-            }
-
-            return suggestionList;
-        }
+        return suggestionList;
     }
 
 }

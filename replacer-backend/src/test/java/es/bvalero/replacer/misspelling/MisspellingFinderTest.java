@@ -20,7 +20,7 @@ public class MisspellingFinderTest {
     @Test
     public void testFindMisspellingsNoResults() {
         String text = "Sample text";
-        Misspelling misspelling = Misspelling.builder().setWord("a").setComment("b").build();
+        Misspelling misspelling = new Misspelling("a", false, "b");
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
 
         // Fake the update of the misspelling list in the misspelling manager
@@ -35,8 +35,8 @@ public class MisspellingFinderTest {
     @Test
     public void testFindMisspellingsWithResults() {
         String text = "sample text.";
-        Misspelling misspelling1 = Misspelling.builder().setWord("sample").setComment("ejemplo").build();
-        Misspelling misspelling2 = Misspelling.builder().setWord("text").setComment("texto").build();
+        Misspelling misspelling1 = new Misspelling("sample", false, "ejemplo");
+        Misspelling misspelling2 = new Misspelling("text", false, "texto");
         Set<Misspelling> misspellingSet = new HashSet<>(Arrays.asList(misspelling1, misspelling2));
 
         // Fake the update of the misspelling list in the misspelling manager
@@ -63,7 +63,7 @@ public class MisspellingFinderTest {
     @Test
     public void testFindMisspellingsWithResultCaseInsensitive() {
         String text = "Sample Text";
-        Misspelling misspelling = Misspelling.builder().setWord("text").setComment("texto").build();
+        Misspelling misspelling = new Misspelling("text", false, "texto");
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
 
         // Fake the update of the misspelling list in the misspelling manager
@@ -81,7 +81,7 @@ public class MisspellingFinderTest {
     @Test
     public void testFindMisspellingsWithResultCaseSensitive() {
         String text = "text Text";
-        Misspelling misspelling = Misspelling.builder().setWord("text").setCaseSensitive(true).setComment("texto").build();
+        Misspelling misspelling = new Misspelling("text", true, "texto");
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
 
         // Fake the update of the misspelling list in the misspelling manager
@@ -100,7 +100,7 @@ public class MisspellingFinderTest {
     @Test
     public void testFindMisspellingsWithCompleteWord() {
         String text = "Texto Text";
-        Misspelling misspelling = Misspelling.builder().setWord("text").setComment("texto").build();
+        Misspelling misspelling = new Misspelling("text", false, "texto");
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
 
         // Fake the update of the misspelling list in the misspelling manager
@@ -119,8 +119,8 @@ public class MisspellingFinderTest {
     @Test
     public void testFindMisspellingsWithUppercase() {
         String text = "SAMPLE TEXT";
-        Misspelling misspelling1 = Misspelling.builder().setWord("SAMPLE").setCaseSensitive(true).setComment("sample").build();
-        Misspelling misspelling2 = Misspelling.builder().setWord("text").setComment("texto").build();
+        Misspelling misspelling1 = new Misspelling("SAMPLE", true, "sample");
+        Misspelling misspelling2 = new Misspelling("text", false, "texto");
         Set<Misspelling> misspellingSet = new HashSet<>(Arrays.asList(misspelling1, misspelling2));
 
         // Fake the update of the misspelling list in the misspelling manager
@@ -139,7 +139,7 @@ public class MisspellingFinderTest {
     @Test
     public void testFindMisspellingsBetweenUnderscores() {
         String text = "A _Text Text_ _Text_ Text.";
-        Misspelling misspelling = Misspelling.builder().setWord("text").setComment("texto").build();
+        Misspelling misspelling = new Misspelling("text", false, "texto");
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
 
         // Fake the update of the misspelling list in the misspelling manager
@@ -162,9 +162,9 @@ public class MisspellingFinderTest {
         // lowercase -> lowercase: aguila -> águila
         // uppercase -> uppercase: Aguila -> Águila
         String text = "españa Domingo aguila Aguila";
-        Misspelling misspellingCS = Misspelling.builder().setWord("españa").setCaseSensitive(true).setComment("España").build();
-        Misspelling misspellingCS2 = Misspelling.builder().setWord("Domingo").setCaseSensitive(true).setComment("domingo").build();
-        Misspelling misspellingCI = Misspelling.builder().setWord("aguila").setCaseSensitive(false).setComment("águila").build();
+        Misspelling misspellingCS = new Misspelling("españa", true, "España");
+        Misspelling misspellingCS2 = new Misspelling("Domingo", true, "domingo");
+        Misspelling misspellingCI = new Misspelling("aguila", false, "águila");
 
         Set<Misspelling> misspellingSet = new HashSet<>(Arrays.asList(misspellingCS, misspellingCS2, misspellingCI));
 
@@ -183,7 +183,7 @@ public class MisspellingFinderTest {
     public void testFindMisspellingSuggestionSameWordFirst() {
         String word = "entreno";
         String comment = "entrenó (verbo), entreno (sustantivo)";
-        Misspelling misspelling = Misspelling.builder().setWord(word).setComment(comment).build();
+        Misspelling misspelling = new Misspelling(word, false, comment);
         String text = String.format("Un %s.", word);
 
         // Fake the update of the misspelling list in the misspelling manager

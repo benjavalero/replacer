@@ -106,20 +106,20 @@ public class MisspellingManager {
     }
 
     private @Nullable Misspelling parseMisspellingLine(String misspellingLine) {
-        Misspelling misspelling;
+        Misspelling misspelling = null;
 
         String[] tokens = misspellingLine.split("\\|");
         if (tokens.length == 3) {
             String word = tokens[0].trim();
+            boolean cs = CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim());
             String comment = tokens[2].trim();
-            misspelling = Misspelling.builder()
-                    .setWord(word)
-                    .setCaseSensitive(CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim()))
-                    .setComment(comment)
-                    .build();
+            try {
+                misspelling = new Misspelling(word, cs, comment);
+            } catch (IllegalArgumentException e) {
+                LOGGER.warn("Ignore not valid misspelling: " + e.getMessage());
+            }
         } else {
             LOGGER.warn("Bad formatted misspelling: {}", misspellingLine);
-            return null;
         }
 
         return misspelling;
