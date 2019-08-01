@@ -20,10 +20,8 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
-    /**
-     * @return A random article whose text contains replacements to review.
-     * In case of error we return a fake article with the exception message.
-     */
+    /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
+
     @GetMapping(value = "/random")
     public List<Integer> findRandomArticleWithReplacements() {
         LOGGER.info("GET Find random article with replacements");
@@ -45,6 +43,8 @@ public class ArticleController {
         return randomId.map(Collections::singletonList).orElse(Collections.emptyList());
     }
 
+    /* FIND AN ARTICLE REVIEW */
+
     @GetMapping(value = "/{id}")
     public Optional<ArticleReview> findArticleReviewById(@PathVariable("id") int articleId) {
         LOGGER.info("GET Find replacements for article. ID: {}", articleId);
@@ -65,6 +65,8 @@ public class ArticleController {
                 articleId, subtype, suggestion);
         return articleService.findArticleReviewByIdAndCustomReplacement(articleId, subtype, suggestion);
     }
+
+    /* SAVE CHANGES */
 
     @PutMapping
     public void save(@RequestParam("id") int articleId, @RequestBody String text,
@@ -104,17 +106,19 @@ public class ArticleController {
         return count;
     }
 
-    @GetMapping(value = "/count/replacements/grouped")
-    public List<ReplacementCount> listMisspellings() {
-        List<ReplacementCount> list = articleService.findMisspellingsGrouped();
-        LOGGER.info("GET Grouped replacement count. Result Size: {}", list.size());
-        return list;
-    }
-
     @GetMapping(value = "/count/replacements/reviewed/grouped")
     public List<Object[]> countReplacementsGroupedByReviewer() {
         List<Object[]> list = articleService.countReplacementsGroupedByReviewer();
         LOGGER.info("GET Count grouped by reviewer. Result Size: {}", list.size());
+        return list;
+    }
+
+    /* LIST OF REPLACEMENTS */
+
+    @GetMapping(value = "/count/replacements/grouped")
+    public List<ReplacementCount> listMisspellings() {
+        List<ReplacementCount> list = articleService.findMisspellingsGrouped();
+        LOGGER.info("GET Grouped replacement count. Result Size: {}", list.size());
         return list;
     }
 

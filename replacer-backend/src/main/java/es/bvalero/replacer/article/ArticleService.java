@@ -18,141 +18,36 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Provides methods to find articles with potential replacements.
- */
 @Slf4j
 @Service
 public class ArticleService {
 
-    private static final int BATCH_SIZE = 1000;
     private static final int CACHE_SIZE = 100;
+    private static final int BATCH_SIZE = 1000;
     private static final String SYSTEM_REVIEWER = "system";
-
-    @Autowired
-    private ReplacementFinderService replacementFinderService;
 
     @Autowired
     private ReplacementRepository replacementRepository;
 
     @Autowired
+    private ReplacementFinderService replacementFinderService;
+
+    @Autowired
     private WikipediaService wikipediaService;
 
+    // Cache the found articles candidates to be reviewed
+    // to find faster the next one after the user reviews one
+    private Map<String, Set<Integer>> cachedArticleIdsByTypeAndSubtype = new HashMap<>();
+
+    // List of replacements to save and delete in batch
     // We use sets to compare easily in the unit tests
     private Collection<Replacement> toSaveInBatch = new HashSet<>();
     private Collection<Replacement> toDeleteInBatch = new HashSet<>();
 
-    private Map<String, Set<Integer>> cachedArticleIdsByTypeAndSubtype = new HashMap<>();
+    // Cache the count of replacements. This list is updated every 10 minutes and modified when saving changes.
     private List<ReplacementCount> cachedReplacementCount = new ArrayList<>();
 
-    private void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
-        LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
-        indexReplacements(article,
-                convertArticleReplacements(article, articleReplacements),
-                replacementRepository.findByArticleId(article.getId()),
-                false);
-        LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
-    }
-
-    public void indexReplacements(WikipediaPage article, Collection<Replacement> replacements,
-                                  Collection<Replacement> dbReplacements, boolean indexInBatch) {
-        LOGGER.debug("START Index list of replacements\n" +
-                        "New: {} - {}\n" +
-                        "Old: {} - {}",
-                replacements.size(), replacements,
-                dbReplacements.size(), dbReplacements);
-
-        // Trick: In case of no replacements found we insert a fake reviewed replacement
-        // in order to be able to skip the article when reindexing
-        if (replacements.isEmpty() && dbReplacements.isEmpty()) {
-            Replacement newReplacement = new Replacement(article.getId(), "", "", 0)
-                    .withLastUpdate(article.getLastUpdate().toLocalDate())
-                    .withReviewer(SYSTEM_REVIEWER);
-            saveReplacement(newReplacement, indexInBatch);
-        }
-
-        replacements.forEach(replacement -> {
-            Optional<Replacement> existing = findSameReplacementInCollection(replacement, dbReplacements);
-            if (existing.isPresent()) {
-                handleExistingReplacement(replacement, existing.get(), indexInBatch);
-                dbReplacements.remove(existing.get());
-            } else {
-                // New replacement
-                saveReplacement(replacement, indexInBatch);
-                LOGGER.debug("Replacement inserted in DB: {}", replacement);
-            }
-        });
-
-        // Remove the remaining replacements
-        dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(rep -> {
-            deleteReplacement(rep, indexInBatch);
-            LOGGER.debug("Replacement deleted in DB: {}", rep);
-        });
-        LOGGER.debug("END Index list of replacements");
-    }
-
-    private Optional<Replacement> findSameReplacementInCollection(Replacement replacement,
-                                                                  Collection<Replacement> replacements) {
-        return replacements.stream().filter(rep -> rep.isSame(replacement)).findAny();
-    }
-
-    private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement, boolean indexInBatch) {
-        if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())) { // DB older than Dump
-            Replacement updated = dbReplacement.withLastUpdate(newReplacement.getLastUpdate());
-            saveReplacement(updated, indexInBatch);
-            LOGGER.debug("Replacement updated in DB: {}", updated);
-        } else {
-            LOGGER.debug("Replacement existing in DB: {}", dbReplacement);
-        }
-    }
-
-    public void flushReplacementsInBatch() {
-        LOGGER.debug("START Save and delete replacements in database. To save: {}. To delete: {}",
-                toSaveInBatch.size(), toDeleteInBatch.size());
-        replacementRepository.deleteInBatch(toDeleteInBatch);
-        replacementRepository.saveAll(toSaveInBatch);
-
-        // Using .clear() the unit tests don't pass don't know why
-        toDeleteInBatch = new HashSet<>();
-        toSaveInBatch = new HashSet<>();
-
-        // Flush and clear to avoid memory leaks (we are performing millions of updates when indexing the dump)
-        replacementRepository.flush();
-        replacementRepository.clear(); // This clears all the EntityManager
-        LOGGER.debug("END Save and delete replacements in database");
-    }
-
-    private void saveReplacement(Replacement replacement, boolean saveInBatch) {
-        if (saveInBatch) {
-            toSaveInBatch.add(replacement);
-            if (toSaveInBatch.size() >= BATCH_SIZE) {
-                flushReplacementsInBatch();
-            }
-        } else {
-            replacementRepository.save(replacement);
-        }
-    }
-
-    private void deleteReplacement(Replacement replacement, boolean deleteInBatch) {
-        if (deleteInBatch) {
-            toDeleteInBatch.add(replacement);
-            if (toDeleteInBatch.size() >= BATCH_SIZE) {
-                flushReplacementsInBatch();
-            }
-        } else {
-            replacementRepository.delete(replacement);
-        }
-    }
-
-    public Collection<Replacement> convertArticleReplacements(WikipediaPage article,
-                                                              Collection<ArticleReplacement> articleReplacements) {
-        return articleReplacements.stream().map(
-                articleReplacement -> new Replacement(
-                        article.getId(), articleReplacement.getType(), articleReplacement.getSubtype(),
-                        articleReplacement.getStart())
-                        .withLastUpdate(article.getLastUpdate().toLocalDate()))
-                .collect(Collectors.toList());
-    }
+    /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
 
     Optional<Integer> findRandomArticleToReview(@Nullable String type, @Nullable String subtype) {
         LOGGER.info("START Find random article to review. Type: {} - Subtype: {}", type, subtype);
@@ -230,6 +125,8 @@ public class ArticleService {
         return articleId;
     }
 
+    /* FIND AN ARTICLE REVIEW */
+
     Optional<ArticleReview> findArticleReviewById(int articleId, @Nullable String type, @Nullable String subtype) {
         LOGGER.info("START Find review for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
         try {
@@ -249,46 +146,6 @@ public class ArticleService {
             // Build the article review if the replacements found are valid
             // Note the DB has just been updated in case the subtype doesn't exist in the found replacements
             if (!articleReplacements.isEmpty()) {
-                ArticleReview review = new ArticleReview(
-                        article.getId(),
-                        article.getTitle(),
-                        article.getContent(),
-                        articleReplacements,
-                        article.getQueryTimestamp());
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("END Find review for article: {}", review);
-                } else {
-                    LOGGER.info("END Find review for article: {} - {}. Replacements to review: {}",
-                            articleId, review.getTitle(), articleReplacements.size());
-                }
-                return Optional.of(review);
-            }
-        } catch (InvalidArticleException e) {
-            LOGGER.warn("Found article is not valid. Delete from database.", e);
-            deleteArticle(articleId);
-        } catch (WikipediaException e) {
-            LOGGER.error("Error retrieving page from Wikipedia", e);
-            // Do nothing and retry
-        }
-
-        LOGGER.info("END Find review for article. No article found to review.");
-        return Optional.empty();
-    }
-
-    Optional<ArticleReview> findArticleReviewByIdAndCustomReplacement(int articleId, String subtype, String suggestion) {
-        LOGGER.info("START Find review for article by custom replacement. ID: {} - Subtype: {} - Suggestion: {}",
-                articleId, subtype, suggestion);
-        try {
-            WikipediaPage article = findArticleById(articleId);
-            List<ArticleReplacement> articleReplacements =
-                    findCustomArticleReplacements(article.getContent(), subtype, suggestion);
-            LOGGER.info("Potential replacements found in text: {}", articleReplacements.size());
-
-            // Build the article review if the replacements found are valid
-            if (articleReplacements.isEmpty()) {
-                // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
-                markArticleAsReviewed(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, SYSTEM_REVIEWER);
-            } else {
                 ArticleReview review = new ArticleReview(
                         article.getId(),
                         article.getTitle(),
@@ -335,6 +192,53 @@ public class ArticleService {
         return articleReplacements;
     }
 
+    private List<ArticleReplacement> filterReplacementsByTypeAndSubtype(
+            List<ArticleReplacement> replacements, String type, String subtype) {
+        return replacements.stream()
+                .filter(replacement -> type.equals(replacement.getType()) && subtype.equals(replacement.getSubtype()))
+                .collect(Collectors.toList());
+    }
+
+    Optional<ArticleReview> findArticleReviewByIdAndCustomReplacement(int articleId, String subtype, String suggestion) {
+        LOGGER.info("START Find review for article by custom replacement. ID: {} - Subtype: {} - Suggestion: {}",
+                articleId, subtype, suggestion);
+        try {
+            WikipediaPage article = findArticleById(articleId);
+            List<ArticleReplacement> articleReplacements =
+                    findCustomArticleReplacements(article.getContent(), subtype, suggestion);
+            LOGGER.info("Potential replacements found in text: {}", articleReplacements.size());
+
+            // Build the article review if the replacements found are valid
+            if (articleReplacements.isEmpty()) {
+                // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
+                markArticleAsReviewed(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, SYSTEM_REVIEWER);
+            } else {
+                ArticleReview review = new ArticleReview(
+                        article.getId(),
+                        article.getTitle(),
+                        article.getContent(),
+                        articleReplacements,
+                        article.getQueryTimestamp());
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("END Find review for article: {}", review);
+                } else {
+                    LOGGER.info("END Find review for article: {} - {}. Replacements to review: {}",
+                            articleId, review.getTitle(), articleReplacements.size());
+                }
+                return Optional.of(review);
+            }
+        } catch (InvalidArticleException e) {
+            LOGGER.warn("Found article is not valid. Delete from database.", e);
+            deleteArticle(articleId);
+        } catch (WikipediaException e) {
+            LOGGER.error("Error retrieving page from Wikipedia", e);
+            // Do nothing and retry
+        }
+
+        LOGGER.info("END Find review for article. No article found to review.");
+        return Optional.empty();
+    }
+
     private List<ArticleReplacement> findCustomArticleReplacements(
             String articleContent, String replacement, String suggestion) {
         // Find the replacements sorted (the first ones in the list are the last in the text)
@@ -344,28 +248,139 @@ public class ArticleService {
         return articleReplacements;
     }
 
-    public void deleteArticles(Set<Integer> articleIds) {
-        replacementRepository.deleteByArticleIdIn(articleIds);
+    /* INDEX ARTICLES */
+
+    private void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
+        LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
+        indexReplacements(article,
+                convertArticleReplacements(article, articleReplacements),
+                replacementRepository.findByArticleId(article.getId()),
+                false);
+        LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
+    }
+
+    public void indexReplacements(WikipediaPage article, Collection<Replacement> replacements,
+                                  Collection<Replacement> dbReplacements, boolean indexInBatch) {
+        LOGGER.debug("START Index list of replacements\n" +
+                        "New: {} - {}\n" +
+                        "Old: {} - {}",
+                replacements.size(), replacements,
+                dbReplacements.size(), dbReplacements);
+
+        // Trick: In case of no replacements found we insert a fake reviewed replacement
+        // in order to be able to skip the article when reindexing
+        if (replacements.isEmpty() && dbReplacements.isEmpty()) {
+            Replacement newReplacement = new Replacement(article.getId(), "", "", 0)
+                    .withLastUpdate(article.getLastUpdate().toLocalDate())
+                    .withReviewer(SYSTEM_REVIEWER);
+            saveReplacement(newReplacement, indexInBatch);
+        }
+
+        replacements.forEach(replacement -> {
+            Optional<Replacement> existing = findSameReplacementInCollection(replacement, dbReplacements);
+            if (existing.isPresent()) {
+                handleExistingReplacement(replacement, existing.get(), indexInBatch);
+                dbReplacements.remove(existing.get());
+            } else {
+                // New replacement
+                saveReplacement(replacement, indexInBatch);
+                LOGGER.debug("Replacement inserted in DB: {}", replacement);
+            }
+        });
+
+        // Remove the remaining replacements
+        dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(rep -> {
+            deleteReplacement(rep, indexInBatch);
+            LOGGER.debug("Replacement deleted in DB: {}", rep);
+        });
+        LOGGER.debug("END Index list of replacements");
+    }
+
+    private Optional<Replacement> findSameReplacementInCollection(Replacement replacement,
+                                                                  Collection<Replacement> replacements) {
+        return replacements.stream().filter(rep -> rep.isSame(replacement)).findAny();
+    }
+
+    public Collection<Replacement> convertArticleReplacements(WikipediaPage article,
+                                                              Collection<ArticleReplacement> articleReplacements) {
+        return articleReplacements.stream().map(
+                articleReplacement -> new Replacement(
+                        article.getId(), articleReplacement.getType(), articleReplacement.getSubtype(),
+                        articleReplacement.getStart())
+                        .withLastUpdate(article.getLastUpdate().toLocalDate()))
+                .collect(Collectors.toList());
+    }
+
+    private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement, boolean indexInBatch) {
+        if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())) { // DB older than Dump
+            Replacement updated = dbReplacement.withLastUpdate(newReplacement.getLastUpdate());
+            saveReplacement(updated, indexInBatch);
+            LOGGER.debug("Replacement updated in DB: {}", updated);
+        } else {
+            LOGGER.debug("Replacement existing in DB: {}", dbReplacement);
+        }
+    }
+
+    private void saveReplacement(Replacement replacement, boolean saveInBatch) {
+        if (saveInBatch) {
+            toSaveInBatch.add(replacement);
+            if (toSaveInBatch.size() >= BATCH_SIZE) {
+                flushReplacementsInBatch();
+            }
+        } else {
+            replacementRepository.save(replacement);
+        }
+    }
+
+    private void deleteReplacement(Replacement replacement, boolean deleteInBatch) {
+        if (deleteInBatch) {
+            toDeleteInBatch.add(replacement);
+            if (toDeleteInBatch.size() >= BATCH_SIZE) {
+                flushReplacementsInBatch();
+            }
+        } else {
+            replacementRepository.delete(replacement);
+        }
+    }
+
+    public void flushReplacementsInBatch() {
+        LOGGER.debug("START Save and delete replacements in database. To save: {}. To delete: {}",
+                toSaveInBatch.size(), toDeleteInBatch.size());
+        replacementRepository.deleteInBatch(toDeleteInBatch);
+        replacementRepository.saveAll(toSaveInBatch);
+
+        // Using .clear() the unit tests don't pass don't know why
+        toDeleteInBatch = new HashSet<>();
+        toSaveInBatch = new HashSet<>();
+
+        // Flush and clear to avoid memory leaks (we are performing millions of updates when indexing the dump)
+        replacementRepository.flush();
+        replacementRepository.clear(); // This clears all the EntityManager
+        LOGGER.debug("END Save and delete replacements in database");
+    }
+
+    /* DUMP INDEX */
+
+    public List<Replacement> findDatabaseReplacementByArticles(int minArticleId, int maxArticleId) {
+        return replacementRepository.findByArticles(minArticleId, maxArticleId);
     }
 
     private void deleteArticle(int articleId) {
         replacementRepository.deleteByArticleId(articleId);
     }
 
-    public List<Replacement> findDatabaseReplacementByArticles(int minArticleId, int maxArticleId) {
-        return replacementRepository.findByArticles(minArticleId, maxArticleId);
+    public void deleteArticles(Set<Integer> articleIds) {
+        replacementRepository.deleteByArticleIdIn(articleIds);
     }
 
-    private List<ArticleReplacement> filterReplacementsByTypeAndSubtype(
-            List<ArticleReplacement> replacements, String type, String subtype) {
-        return replacements.stream()
-                .filter(replacement -> type.equals(replacement.getType()) && subtype.equals(replacement.getSubtype()))
-                .collect(Collectors.toList());
+    /* MISSPELLINGS */
+
+    public void deleteReplacementsByTextIn(Collection<String> texts) {
+        replacementRepository.deleteBySubtypeIn(new HashSet<>(texts));
     }
 
-    /**
-     * Saves in Wikipedia the changes on an article validated in the front-end.
-     */
+    /* SAVE CHANGES */
+
     void saveArticleChanges(int articleId, String text, @Nullable String type, @Nullable String subtype, String reviewer,
                             String currentTimestamp, OAuth1AccessToken accessToken) throws WikipediaException {
 
@@ -408,6 +423,8 @@ public class ArticleService {
                 .withLastUpdate(LocalDate.now()));
     }
 
+    /* STATISTICS */
+
     long countReplacements() {
         return replacementRepository.countByReviewerIsNullOrReviewerIsNot(SYSTEM_REVIEWER);
     }
@@ -424,6 +441,12 @@ public class ArticleService {
         return replacementRepository.countGroupedByReviewer(SYSTEM_REVIEWER);
     }
 
+    /* LIST OF REPLACEMENTS */
+
+    List<ReplacementCount> findMisspellingsGrouped() {
+        return this.cachedReplacementCount;
+    }
+
     /**
      * Update every 10 minutes the count of misspellings from Wikipedia
      */
@@ -436,14 +459,6 @@ public class ArticleService {
 
         this.cachedReplacementCount.clear();
         this.cachedReplacementCount.addAll(count);
-    }
-
-    List<ReplacementCount> findMisspellingsGrouped() {
-        return this.cachedReplacementCount;
-    }
-
-    public void deleteReplacementsByTextIn(Collection<String> texts) {
-        replacementRepository.deleteBySubtypeIn(new HashSet<>(texts));
     }
 
 }
