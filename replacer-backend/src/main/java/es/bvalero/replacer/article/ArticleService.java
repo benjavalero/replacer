@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,6 +34,9 @@ public class ArticleService {
     @Autowired
     private WikipediaService wikipediaService;
 
+    @Autowired
+    private ArticleStatsService articleStatsService;
+
     // Cache the found articles candidates to be reviewed
     // to find faster the next one after the user reviews one
     private Map<String, Set<Integer>> cachedArticleIdsByTypeAndSubtype = new HashMap<>();
@@ -43,9 +45,6 @@ public class ArticleService {
     // We use sets to compare easily in the unit tests
     private Collection<Replacement> toSaveInBatch = new HashSet<>();
     private Collection<Replacement> toDeleteInBatch = new HashSet<>();
-
-    // Cache the count of replacements. This list is updated every 10 minutes and modified when saving changes.
-    private List<ReplacementCount> cachedReplacementCount = new ArrayList<>();
 
     /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
 
@@ -80,7 +79,7 @@ public class ArticleService {
             cachedArticleIdsByTypeAndSubtype.remove(key);
 
             // Empty the cached count for the replacement
-            cachedReplacementCount.removeIf(item -> item.getType().equals(type) && item.getSubtype().equals(subtype));
+            articleStatsService.removeCachedReplacements(type, subtype);
         }
 
         LOGGER.info("END Find random article to review. Found article ID: {}", articleId.orElse(null));
@@ -405,10 +404,7 @@ public class ArticleService {
                 toReview.forEach(rep -> reviewReplacement(rep, reviewer));
 
                 // Decrease the cached count for the replacement
-                cachedReplacementCount.stream()
-                        .filter(item -> item.getType().equals(type) && item.getSubtype().equals(subtype))
-                        .findAny()
-                        .ifPresent(item -> item.decrementCount(toReview.size()));
+                articleStatsService.decreaseCachedReplacementsCount(type, subtype, toReview.size());
             }
         } else {
             replacementRepository.findByArticleIdAndReviewerIsNull(articleId)
@@ -421,44 +417,6 @@ public class ArticleService {
         replacementRepository.save(replacement
                 .withReviewer(reviewer)
                 .withLastUpdate(LocalDate.now()));
-    }
-
-    /* STATISTICS */
-
-    long countReplacements() {
-        return replacementRepository.countByReviewerIsNullOrReviewerIsNot(SYSTEM_REVIEWER);
-    }
-
-    long countReplacementsReviewed() {
-        return replacementRepository.countByReviewerIsNotNullAndReviewerIsNot(SYSTEM_REVIEWER);
-    }
-
-    long countReplacementsToReview() {
-        return replacementRepository.countByReviewerIsNull();
-    }
-
-    List<Object[]> countReplacementsGroupedByReviewer() {
-        return replacementRepository.countGroupedByReviewer(SYSTEM_REVIEWER);
-    }
-
-    /* LIST OF REPLACEMENTS */
-
-    List<ReplacementCount> findMisspellingsGrouped() {
-        return this.cachedReplacementCount;
-    }
-
-    /**
-     * Update every 10 minutes the count of misspellings from Wikipedia
-     */
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
-    public void updateReplacementCount() {
-        LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
-        LOGGER.info("START Count grouped replacements");
-        List<ReplacementCount> count = replacementRepository.findReplacementCountByTypeAndSubtype();
-        LOGGER.info("END Count grouped replacements. Size: {}", count.size());
-
-        this.cachedReplacementCount.clear();
-        this.cachedReplacementCount.addAll(count);
     }
 
 }

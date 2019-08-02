@@ -20,6 +20,9 @@ public class ArticleController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    private ArticleStatsService articleStatsService;
+
     /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
 
     @GetMapping(value = "/random")
@@ -87,28 +90,28 @@ public class ArticleController {
 
     @GetMapping(value = "/count/replacements")
     public Long countReplacements() {
-        Long count = articleService.countReplacements();
+        Long count = articleStatsService.countReplacements();
         LOGGER.info("GET Count replacements. Result: {}", count);
         return count;
     }
 
     @GetMapping(value = "/count/replacements/to-review")
     public Long countReplacementsToReview() {
-        Long count = articleService.countReplacementsToReview();
+        Long count = articleStatsService.countReplacementsToReview();
         LOGGER.info("GET Count not reviewed. Results: {}", count);
         return count;
     }
 
     @GetMapping("/count/replacements/reviewed")
     public Long countReplacementsReviewed() {
-        Long count = articleService.countReplacementsReviewed();
+        Long count = articleStatsService.countReplacementsReviewed();
         LOGGER.info("GET Count reviewed replacements. Result: {}", count);
         return count;
     }
 
     @GetMapping(value = "/count/replacements/reviewed/grouped")
     public List<Object[]> countReplacementsGroupedByReviewer() {
-        List<Object[]> list = articleService.countReplacementsGroupedByReviewer();
+        List<Object[]> list = articleStatsService.countReplacementsGroupedByReviewer();
         LOGGER.info("GET Count grouped by reviewer. Result Size: {}", list.size());
         return list;
     }
@@ -117,7 +120,7 @@ public class ArticleController {
 
     @GetMapping(value = "/count/replacements/grouped")
     public List<ReplacementCount> listMisspellings() {
-        List<ReplacementCount> list = articleService.findMisspellingsGrouped();
+        List<ReplacementCount> list = articleStatsService.findMisspellingsGrouped();
         LOGGER.info("GET Grouped replacement count. Result Size: {}", list.size());
         return list;
     }
