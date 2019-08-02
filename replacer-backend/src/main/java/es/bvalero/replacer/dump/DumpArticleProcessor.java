@@ -1,6 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.article.ArticleIndexService;
 import es.bvalero.replacer.article.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
@@ -24,7 +24,7 @@ import java.util.Optional;
 class DumpArticleProcessor {
 
     @Autowired
-    private ArticleService articleService;
+    private ArticleIndexService articleIndexService;
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -59,8 +59,8 @@ class DumpArticleProcessor {
             return false;
         }
 
-        articleService.indexReplacements(dumpArticle,
-                articleService.convertArticleReplacements(dumpArticle, replacementFinderService.findReplacements(dumpArticle.getContent())),
+        articleIndexService.indexReplacements(dumpArticle,
+                articleIndexService.convertArticleReplacements(dumpArticle, replacementFinderService.findReplacements(dumpArticle.getContent())),
                 dbReplacements,
                 true);
 

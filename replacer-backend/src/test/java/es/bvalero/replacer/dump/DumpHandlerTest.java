@@ -1,5 +1,6 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.article.ArticleIndexService;
 import es.bvalero.replacer.article.ArticleService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
@@ -30,6 +31,9 @@ public class DumpHandlerTest {
 
     @Mock
     private ArticleService articleService;
+
+    @Mock
+    private ArticleIndexService articleIndexService;
 
     @InjectMocks
     private DumpHandler dumpHandler;

@@ -12,8 +12,6 @@ import java.util.List;
 @Service
 public class ArticleStatsService {
 
-    private static final String SYSTEM_REVIEWER = "system";
-
     @Autowired
     private ReplacementRepository replacementRepository;
 
@@ -23,11 +21,11 @@ public class ArticleStatsService {
     /* STATISTICS */
 
     long countReplacements() {
-        return replacementRepository.countByReviewerIsNullOrReviewerIsNot(SYSTEM_REVIEWER);
+        return replacementRepository.countByReviewerIsNullOrReviewerIsNot(ArticleService.SYSTEM_REVIEWER);
     }
 
     long countReplacementsReviewed() {
-        return replacementRepository.countByReviewerIsNotNullAndReviewerIsNot(SYSTEM_REVIEWER);
+        return replacementRepository.countByReviewerIsNotNullAndReviewerIsNot(ArticleService.SYSTEM_REVIEWER);
     }
 
     long countReplacementsToReview() {
@@ -35,7 +33,7 @@ public class ArticleStatsService {
     }
 
     List<Object[]> countReplacementsGroupedByReviewer() {
-        return replacementRepository.countGroupedByReviewer(SYSTEM_REVIEWER);
+        return replacementRepository.countGroupedByReviewer(ArticleService.SYSTEM_REVIEWER);
     }
 
     /* LIST OF REPLACEMENTS */

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.article.ArticleIndexService;
 import es.bvalero.replacer.article.Replacement;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
@@ -22,7 +22,7 @@ import java.util.List;
 public class DumpArticleProcessorTest {
 
     @Mock
-    private ArticleService articleService;
+    private ArticleIndexService articleIndexService;
 
     @Mock
     private ReplacementFinderService replacementFinderService;
@@ -153,7 +153,7 @@ public class DumpArticleProcessorTest {
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, Collections.emptySet()));
 
-        Mockito.verify(articleService).indexReplacements(
+        Mockito.verify(articleIndexService).indexReplacements(
                 Mockito.eq(dumpArticle), Mockito.anyCollection(), Mockito.eq(Collections.emptySet()), Mockito.eq(true));
     }
 
@@ -176,7 +176,7 @@ public class DumpArticleProcessorTest {
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, dbReplacements));
 
-        Mockito.verify(articleService).indexReplacements(
+        Mockito.verify(articleIndexService).indexReplacements(
                 Mockito.eq(dumpArticle), Mockito.eq(Collections.emptyList()), Mockito.eq(dbReplacements), Mockito.eq(true));
     }
 
