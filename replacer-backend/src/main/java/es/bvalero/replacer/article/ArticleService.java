@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -281,28 +280,22 @@ public class ArticleService {
         if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype)) {
             if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
                 // In case of custom replacements they don't exist in the database to be reviewed
-                reviewReplacement(
+                articleIndexService.reviewReplacement(
                         new Replacement(articleId, type, subtype, 0),
                         reviewer);
             } else {
                 List<Replacement> toReview = replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(
                         articleId, type, subtype);
-                toReview.forEach(rep -> reviewReplacement(rep, reviewer));
+                toReview.forEach(rep -> articleIndexService.reviewReplacement(rep, reviewer));
 
                 // Decrease the cached count for the replacement
                 articleStatsService.decreaseCachedReplacementsCount(type, subtype, toReview.size());
             }
         } else {
             replacementRepository.findByArticleIdAndReviewerIsNull(articleId)
-                    .forEach(rep -> reviewReplacement(rep, reviewer));
+                    .forEach(rep -> articleIndexService.reviewReplacement(rep, reviewer));
         }
         LOGGER.info("END Mark article as reviewed. ID: {}", articleId);
-    }
-
-    private void reviewReplacement(Replacement replacement, String reviewer) {
-        replacementRepository.save(replacement
-                .withReviewer(reviewer)
-                .withLastUpdate(LocalDate.now()));
     }
 
 }

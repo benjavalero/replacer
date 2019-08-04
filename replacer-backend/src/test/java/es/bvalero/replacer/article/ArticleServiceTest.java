@@ -83,7 +83,7 @@ public class ArticleServiceTest {
 
         Mockito.verify(wikipediaService).savePageContent(
                 Mockito.eq(articleId), Mockito.eq(text), Mockito.anyString(), Mockito.eq(accessToken));
-        Mockito.verify(replacementRepository).save(Mockito.any(Replacement.class));
+        Mockito.verify(articleIndexService).reviewReplacement(Mockito.any(Replacement.class), Mockito.anyString());
     }
 
 }
