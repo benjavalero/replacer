@@ -47,10 +47,8 @@ public class ArticleIndexService {
         // Trick: In case of no replacements found we insert a fake reviewed replacement
         // in order to be able to skip the article when reindexing
         if (replacements.isEmpty() && dbReplacements.isEmpty()) {
-            Replacement newReplacement = new Replacement(article.getId(), "", "", 0)
-                    .withLastUpdate(article.getLastUpdate().toLocalDate())
-                    .withReviewer(ArticleService.SYSTEM_REVIEWER);
-            saveReplacement(newReplacement, indexInBatch);
+            Replacement newReplacement = new Replacement(article.getId(), "", "", 0);
+            reviewReplacementAsSystem(newReplacement, indexInBatch);
         }
 
         replacements.forEach(replacement -> {
@@ -67,7 +65,7 @@ public class ArticleIndexService {
 
         // Remove the remaining replacements
         dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(rep -> {
-            reviewReplacement(rep, ArticleService.SYSTEM_REVIEWER, indexInBatch);
+            reviewReplacementAsSystem(rep, indexInBatch);
             LOGGER.debug("Replacement reviewed in DB with system: {}", rep);
         });
         LOGGER.debug("END Index list of replacements");
@@ -125,6 +123,10 @@ public class ArticleIndexService {
 
     void reviewReplacement(Replacement replacement, String reviewer, boolean reviewInBatch) {
         saveReplacement(replacement.withReviewer(reviewer).withLastUpdate(LocalDate.now()), reviewInBatch);
+    }
+
+    private void reviewReplacementAsSystem(Replacement replacement, boolean reviewInBatch) {
+        saveReplacement(replacement.withReviewer(ArticleService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()), reviewInBatch);
     }
 
 }
