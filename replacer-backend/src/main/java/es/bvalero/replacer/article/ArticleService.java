@@ -250,11 +250,11 @@ public class ArticleService {
     }
 
     private void deleteArticle(int articleId) {
-        replacementRepository.deleteByArticleId(articleId);
+        deleteArticles(Collections.singleton(articleId));
     }
 
     public void deleteArticles(Set<Integer> articleIds) {
-        replacementRepository.deleteByArticleIdIn(articleIds);
+        articleIds.forEach(id -> markArticleAsReviewed(id, null, null, SYSTEM_REVIEWER));
     }
 
     /* MISSPELLINGS */
@@ -282,18 +282,18 @@ public class ArticleService {
                 // In case of custom replacements they don't exist in the database to be reviewed
                 articleIndexService.reviewReplacement(
                         new Replacement(articleId, type, subtype, 0),
-                        reviewer);
+                        reviewer, false);
             } else {
                 List<Replacement> toReview = replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(
                         articleId, type, subtype);
-                toReview.forEach(rep -> articleIndexService.reviewReplacement(rep, reviewer));
+                toReview.forEach(rep -> articleIndexService.reviewReplacement(rep, reviewer, false));
 
                 // Decrease the cached count for the replacement
                 articleStatsService.decreaseCachedReplacementsCount(type, subtype, toReview.size());
             }
         } else {
             replacementRepository.findByArticleIdAndReviewerIsNull(articleId)
-                    .forEach(rep -> articleIndexService.reviewReplacement(rep, reviewer));
+                    .forEach(rep -> articleIndexService.reviewReplacement(rep, reviewer, false));
         }
         LOGGER.info("END Mark article as reviewed. ID: {}", articleId);
     }

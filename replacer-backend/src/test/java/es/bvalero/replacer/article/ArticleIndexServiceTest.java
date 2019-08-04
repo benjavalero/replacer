@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -30,44 +31,32 @@ public class ArticleIndexServiceTest {
         Replacement rep1 = new Replacement(1, "", "", 1); // New => ADD
         List<Replacement> newReplacements = Collections.singletonList(rep1);
 
-        List<Replacement> dbReplacements1 = Collections.emptyList();
-
+        List<Replacement> dbReplacements = Collections.emptyList();
 
         WikipediaPage article = WikipediaPage.builder().build();
-        articleIndexService.indexReplacements(article, newReplacements, dbReplacements1, true);
+        articleIndexService.indexReplacements(article, newReplacements, dbReplacements, true);
         articleIndexService.flushReplacementsInBatch();
 
-
-        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(
-                Collections.emptySet()
-        );
         Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
-                Collections.singleton(rep1)
-        );
+                Collections.singleton(rep1));
     }
 
     @Test
     public void testIndexObsoleteArticle() {
         List<Replacement> newReplacements = Collections.emptyList();
 
-        // REVIEWED <=> exists reviewer
-        Replacement rep2 = new Replacement(1, "", "", 2); // Obsolete To review => DELETE
+        Replacement rep2 = new Replacement(1, "", "", 2); // Obsolete To review => REVIEW
         Replacement rep3 = new Replacement(1, "", "", 3)
                 .withReviewer("x"); // Obsolete Reviewed => DO NOTHING
-        List<Replacement> dbReplacements1 = new ArrayList<>(Arrays.asList(rep2, rep3));
-
+        List<Replacement> dbReplacements = new ArrayList<>(Arrays.asList(rep2, rep3));
 
         WikipediaPage article = WikipediaPage.builder().lastUpdate(LocalDateTime.now()).build();
-        articleIndexService.indexReplacements(article, newReplacements, dbReplacements1, true);
+        articleIndexService.indexReplacements(article, newReplacements, dbReplacements, true);
         articleIndexService.flushReplacementsInBatch();
 
-
-        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(
-                Collections.singleton(rep2)
-        );
         Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
-                Collections.emptySet()
-        );
+                Collections.singleton(
+                        rep2.withReviewer(ArticleService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now())));
     }
 
     @Test
@@ -75,63 +64,98 @@ public class ArticleIndexServiceTest {
         List<Replacement> newReplacements = Collections.emptyList();
         List<Replacement> dbReplacements = Collections.emptyList();
 
-        WikipediaPage article = WikipediaPage.builder().lastUpdate(LocalDateTime.now()).build();
+        int articleId = 1;
+        WikipediaPage article = WikipediaPage.builder()
+                .id(articleId)
+                .lastUpdate(LocalDateTime.now())
+                .build();
         articleIndexService.indexReplacements(article, newReplacements, dbReplacements, true);
         articleIndexService.flushReplacementsInBatch();
 
         // Save the fake replacement
-        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(
-                Collections.emptySet()
-        );
-        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(Mockito.anyIterable());
+        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
+                Collections.singleton(
+                        new Replacement(articleId, "", "", 0)
+                                .withReviewer(ArticleService.SYSTEM_REVIEWER)
+                                .withLastUpdate(LocalDate.now())));
     }
 
     @Test
-    public void testIndexExistingArticle() {
-        Replacement rep7 = new Replacement(2, "", "", 1);
-        Replacement rep9 = new Replacement(2, "", "", 2);
+    public void testIndexExistingArticleSameDate() {
+        LocalDate same = LocalDate.now();
+        LocalDate before = same.minusDays(1);
 
-        Replacement rep11 = new Replacement(2, "", "", 3);
-        Replacement rep17 = new Replacement(2, "", "", 6);
-        Replacement rep19 = new Replacement(2, "", "", 7);
+        // R1 : In DB not reviewed => Do nothing
+        // R2 : In DB reviewed => Do nothing
+        // R3 : In DB older not reviewed => Update timestamp
+        // R4 : In DB older reviewed => Do nothing
+        // R5 : Not in DB => Add
+        // R6 : Only in DB not reviewed => Review
+        // R7 : Only in DB reviewed => Do nothing
 
-        List<Replacement> newReplacements = Arrays.asList(rep7, rep9, rep11, rep17, rep19);
+        // Replacements found to index
+        Replacement r1 = new Replacement(1, "1", "1", 1).withLastUpdate(same);
+        Replacement r2 = new Replacement(1, "2", "2", 2).withLastUpdate(same);
+        Replacement r3 = new Replacement(1, "3", "3", 3).withLastUpdate(same);
+        Replacement r4 = new Replacement(1, "4", "4", 4).withLastUpdate(same);
+        Replacement r5 = new Replacement(1, "5", "5", 5).withLastUpdate(same);
+        List<Replacement> newReplacements = Arrays.asList(r1, r2, r3, r4, r5);
 
-        // If the existing replacement is not reviewed and:
-        // - Is older => Update the "lastUpdate" to help skipping future indexations
-        // - Is equal => All as in the last indexation => nothing to do
-        // - Is newer => Impossible case
-
-        // If the existing replacement is reviewed/fixed and:
-        // - Is older => Update the "lastUpdate" to help skipping future indexations
-        // - Is equal => All as in the last indexation => nothing to do
-        // - Is newer => Reviewed/fixed after indexation => nothing to do
-
-        // REVIEWED <=> exists reviewer
-        Replacement rep8 = rep7.withLastUpdate(rep7.getLastUpdate().minusDays(1)); // Existing To Review Older => UPDATE DATE
-        Replacement rep10 = rep9.withLastUpdate(rep9.getLastUpdate()); // Existing To Review Equal => DO NOTHING
-
-        Replacement rep12 = rep11.withReviewer("x")
-                .withLastUpdate(rep11.getLastUpdate().minusDays(1)); // Existing Reviewed Older => UPDATE DATE
-        Replacement rep18 = rep17.withReviewer("x"); // Existing Reviewed Equal => DO NOTHING
-        Replacement rep20 = rep19.withReviewer("x")
-                .withLastUpdate(rep19.getLastUpdate().plusDays(1)); // Existing Reviewed Newer => DO NOTHING
-
-        List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(rep8, rep10, rep12, rep18, rep20));
+        // Existing replacements in DB
+        Replacement r1db = r1.withReviewer(null);
+        Replacement r2db = r2.withReviewer("");
+        Replacement r3db = r3.withLastUpdate(before);
+        Replacement r4db = r4.withLastUpdate(before).withReviewer("");
+        Replacement r6db = new Replacement(1, "6", "6", 6).withLastUpdate(same);
+        Replacement r7db = new Replacement(1, "7", "7", 7)
+                .withLastUpdate(same).withReviewer("");
+        List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(r1db, r2db, r3db, r4db, r6db, r7db));
 
         WikipediaPage article = WikipediaPage.builder().build();
         articleIndexService.indexReplacements(article, newReplacements, dbReplacements2, true);
         articleIndexService.flushReplacementsInBatch();
 
-
-        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(
-                Collections.emptySet()
-        );
         Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
                 new HashSet<>(Arrays.asList(
-                        rep8.withLastUpdate(rep7.getLastUpdate()),
-                        rep12.withLastUpdate(rep11.getLastUpdate())))
-        );
+                        r3db.withLastUpdate(same),
+                        r5,
+                        r6db.withReviewer(ArticleService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()))));
+    }
+
+    @Test
+    public void testIndexExistingArticleDateAfter() {
+        LocalDate same = LocalDate.now();
+        LocalDate before = same.minusDays(1);
+
+        // R1 : In DB older not reviewed => Update timestamp
+        // R2 : In DB older reviewed => Do nothing
+        // R3 : Not in DB => Add
+        // R6 : Only in DB not reviewed => Review
+        // R7 : Only in DB reviewed => Do nothing
+
+        // Replacements found to index
+        Replacement r1 = new Replacement(1, "1", "1", 1).withLastUpdate(same);
+        Replacement r2 = new Replacement(1, "2", "2", 2).withLastUpdate(same);
+        Replacement r3 = new Replacement(1, "3", "3", 3).withLastUpdate(same);
+        List<Replacement> newReplacements = Arrays.asList(r1, r2, r3);
+
+        // Existing replacements in DB
+        Replacement r1db = r1.withLastUpdate(before);
+        Replacement r2db = r2.withLastUpdate(before).withReviewer("");
+        Replacement r4db = new Replacement(1, "4", "4", 4).withLastUpdate(before);
+        Replacement r5db = new Replacement(1, "5", "5", 5)
+                .withLastUpdate(before).withReviewer("");
+        List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(r1db, r2db, r4db, r5db));
+
+        WikipediaPage article = WikipediaPage.builder().build();
+        articleIndexService.indexReplacements(article, newReplacements, dbReplacements2, true);
+        articleIndexService.flushReplacementsInBatch();
+
+        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
+                new HashSet<>(Arrays.asList(
+                        r1db.withLastUpdate(same),
+                        r3,
+                        r4db.withReviewer(ArticleService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()))));
     }
 
 }

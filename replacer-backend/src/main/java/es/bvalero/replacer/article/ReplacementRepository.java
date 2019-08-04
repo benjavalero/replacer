@@ -19,10 +19,6 @@ interface ReplacementRepository extends JpaRepository<Replacement, Long>, Replac
 
     List<Replacement> findByArticleId(int articleId);
 
-    void deleteByArticleId(int articleId);
-
-    void deleteByArticleIdIn(Set<Integer> articleIds);
-
     @Query("FROM Replacement WHERE articleId BETWEEN :minId AND :maxId")
     List<Replacement> findByArticles(@Param("minId") int minArticleId, @Param("maxId") int maxArticleId);
 

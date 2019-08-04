@@ -77,12 +77,13 @@ class DumpArticleProcessor {
     }
 
     private boolean isArticleProcessableByTimestamp(LocalDate dumpDate, LocalDate dbDate, boolean forceProcess) {
-        if (dumpDate.isAfter(dbDate)) {
-            // Article modified in dump after last indexing. Reprocess always.
-            return true;
-        } else {
-            // Article not modified in dump after last indexing. Reprocess when forcing.
+        if (dumpDate.equals(dbDate)) {
+            // Article in dump equals to the last indexing. Reprocess when forcing.
             return forceProcess;
+        } else {
+            // If article modified in dump after last indexing, reprocess always.
+            // If article modified in dump before last indexing, do not reprocess even when forcing.
+            return dumpDate.isAfter(dbDate);
         }
     }
 

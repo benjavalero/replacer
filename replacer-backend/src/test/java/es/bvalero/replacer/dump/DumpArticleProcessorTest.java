@@ -91,7 +91,7 @@ public class DumpArticleProcessorTest {
 
         Replacement replacement = new Replacement(1, "", "", 1);
 
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, Collections.singleton(replacement), true));
+        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle, Collections.singleton(replacement), true));
     }
 
     @Test

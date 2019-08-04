@@ -21,10 +21,9 @@ public class ArticleIndexService {
     @Autowired
     private ReplacementRepository replacementRepository;
 
-    // List of replacements to save and delete in batch
+    // List of replacements to save in batch
     // We use sets to compare easily in the unit tests
     private Collection<Replacement> toSaveInBatch = new HashSet<>();
-    private Collection<Replacement> toDeleteInBatch = new HashSet<>();
 
     /* INDEX ARTICLES */
 
@@ -68,8 +67,8 @@ public class ArticleIndexService {
 
         // Remove the remaining replacements
         dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(rep -> {
-            deleteReplacement(rep, indexInBatch);
-            LOGGER.debug("Replacement deleted in DB: {}", rep);
+            reviewReplacement(rep, ArticleService.SYSTEM_REVIEWER, indexInBatch);
+            LOGGER.debug("Replacement reviewed in DB with system: {}", rep);
         });
         LOGGER.debug("END Index list of replacements");
     }
@@ -90,7 +89,8 @@ public class ArticleIndexService {
     }
 
     private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement, boolean indexInBatch) {
-        if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())) { // DB older than Dump
+        if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())
+                && dbReplacement.isToBeReviewed()) { // DB older than Dump
             Replacement updated = dbReplacement.withLastUpdate(newReplacement.getLastUpdate());
             saveReplacement(updated, indexInBatch);
             LOGGER.debug("Replacement updated in DB: {}", updated);
@@ -110,37 +110,21 @@ public class ArticleIndexService {
         }
     }
 
-    private void deleteReplacement(Replacement replacement, boolean deleteInBatch) {
-        if (deleteInBatch) {
-            toDeleteInBatch.add(replacement);
-            if (toDeleteInBatch.size() >= BATCH_SIZE) {
-                flushReplacementsInBatch();
-            }
-        } else {
-            replacementRepository.delete(replacement);
-        }
-    }
-
     public void flushReplacementsInBatch() {
-        LOGGER.debug("START Save and delete replacements in database. To save: {}. To delete: {}",
-                toSaveInBatch.size(), toDeleteInBatch.size());
-        replacementRepository.deleteInBatch(toDeleteInBatch);
+        LOGGER.debug("START Save replacements in database: {}", toSaveInBatch.size());
         replacementRepository.saveAll(toSaveInBatch);
 
         // Using .clear() the unit tests don't pass don't know why
-        toDeleteInBatch = new HashSet<>();
         toSaveInBatch = new HashSet<>();
 
         // Flush and clear to avoid memory leaks (we are performing millions of updates when indexing the dump)
         replacementRepository.flush();
         replacementRepository.clear(); // This clears all the EntityManager
-        LOGGER.debug("END Save and delete replacements in database");
+        LOGGER.debug("END Save replacements in database");
     }
 
-    void reviewReplacement(Replacement replacement, String reviewer) {
-        replacementRepository.save(replacement
-                .withReviewer(reviewer)
-                .withLastUpdate(LocalDate.now()));
+    void reviewReplacement(Replacement replacement, String reviewer, boolean reviewInBatch) {
+        saveReplacement(replacement.withReviewer(reviewer).withLastUpdate(LocalDate.now()), reviewInBatch);
     }
 
 }
