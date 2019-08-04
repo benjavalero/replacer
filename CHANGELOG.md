@@ -1,3 +1,7 @@
+# 2.0.6 (4 de agosto de 2019)
+- Corrección en la ordenación de la tabla de reemplazos
+- Mejoras en la indexación para evitar reemplazos duplicados
+
 # 2.0.5 (28 de julio de 2019)
 - Mejoras de rendimiento al buscar etiquetas para ignorar
 - Ignorar texto rodeado por subrayados o barras
