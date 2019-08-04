@@ -36,3 +36,5 @@ CREATE TABLE replacement2 (
     INDEX (status),
     INDEX (type, subtype)
 );
+
+ALTER TABLE replacement2 ADD CONSTRAINT same_rep UNIQUE KEY(article_id, type, subtype, position);
