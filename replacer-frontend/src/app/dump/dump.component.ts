@@ -5,7 +5,7 @@ import { DumpService } from './dump.service';
 import { DumpStatus } from './dump-status.model';
 import { AlertService } from '../alert/alert.service';
 
-const NUM_ARTICLES = 3798588; // Rough amount of articles to be read
+const NUM_ARTICLES = 3801980; // Rough amount of articles to be read
 
 // https://flaviocopes.com/javascript-sleep/
 const sleep = (milliseconds: number) => {
