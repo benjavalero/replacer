@@ -23,7 +23,7 @@ class TemplateRegexClassAllFinder extends TemplateAbstractFinder {
                 wordsToJoin.add(word);
             }
         }
-        pattern = Pattern.compile(String.format("\\{\\{(%s)[|:](%s|[^}])+?}}", StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE));
+        pattern = Pattern.compile(String.format("\\{\\{\\s*(%s)\\s*[|:](%s|[^}])+?}}", StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE));
     }
 
     Set<MatchResult> findMatches(String text) {

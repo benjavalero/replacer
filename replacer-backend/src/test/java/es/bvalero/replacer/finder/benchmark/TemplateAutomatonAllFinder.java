@@ -25,7 +25,7 @@ class TemplateAutomatonAllFinder extends TemplateAbstractFinder {
                 wordsToJoin.add(setFirstUpperCase(word));
             }
         }
-        automaton = new RunAutomaton(new RegExp(String.format("\\{\\{(%s)[|:](%s|[^}])+?}}", StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE)).toAutomaton());
+        automaton = new RunAutomaton(new RegExp(String.format("\\{\\{ *(%s) *[|:](%s|[^}])+?}}", StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE)).toAutomaton());
     }
 
     Set<MatchResult> findMatches(String text) {

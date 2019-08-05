@@ -17,9 +17,9 @@ class TemplateRegexClassFinder extends TemplateAbstractFinder {
     TemplateRegexClassFinder(List<String> words) {
         for (String word : words) {
             if (startsWithLowerCase(word)) {
-                PATTERNS.add(Pattern.compile(String.format("\\{\\{%s[|:](%s|[^}])+?}}", setFirstUpperCaseClass(word), REGEX_TEMPLATE)));
+                PATTERNS.add(Pattern.compile(String.format("\\{\\{\\s*%s\\s*[|:](%s|[^}])+?}}", setFirstUpperCaseClass(word), REGEX_TEMPLATE)));
             } else {
-                PATTERNS.add(Pattern.compile(String.format("\\{\\{%s[|:](%s|[^}])+?}}", word, REGEX_TEMPLATE)));
+                PATTERNS.add(Pattern.compile(String.format("\\{\\{\\s*%s\\s*[|:](%s|[^}])+?}}", word, REGEX_TEMPLATE)));
             }
         }
     }

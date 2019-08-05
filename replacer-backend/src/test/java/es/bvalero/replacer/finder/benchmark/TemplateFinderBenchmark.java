@@ -20,7 +20,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
@@ -44,7 +43,8 @@ public class TemplateFinderBenchmark {
         // Load sample articles
         List<WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds);
 
-        List<String> words = Arrays.asList("cita", "quote", "cquote", "coord", "commonscat", "ORDENAR", "DEFAULTSORT", "NF");
+        List<String> words = Arrays.asList("ORDENAR", "DEFAULTSORT", "NF", "commonscat", "coord",
+                "cita libro", "cita", "quote", "cquote", "caja de cita");
 
         // Load the finders
         List<TemplateAbstractFinder> finders = new ArrayList<>();
@@ -54,8 +54,8 @@ public class TemplateFinderBenchmark {
         finders.add(new TemplateRegexClassAllFinder(words));
         finders.add(new TemplateAutomatonFinder(words));
         finders.add(new TemplateAutomatonClassFinder(words));
-        finders.add(new TemplateAutomatonAllFinder(words)); // WINNER
-        finders.add(new TemplateAutomatonClassAllFinder(words));
+        finders.add(new TemplateAutomatonAllFinder(words));
+        finders.add(new TemplateAutomatonClassAllFinder(words)); // WINNER
 
         System.out.println();
         System.out.println("FINDER\tTIME");

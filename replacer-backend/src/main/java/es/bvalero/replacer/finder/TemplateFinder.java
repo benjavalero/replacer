@@ -14,7 +14,7 @@ public class TemplateFinder extends ReplacementFinder implements IgnoredReplacem
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_NESTED_TEMPLATE = "\\{\\{(%s)[|:](%s|[^}])+?}}";
+    private static final String REGEX_NESTED_TEMPLATE = "\\{\\{ *(%s) *[|:](%s|[^}])+?}}";
     private static final List<String> TEMPLATE_NAMES = Arrays.asList(
             "ORDENAR", "DEFAULTSORT", "NF", "commonscat", "coord",
             "cita libro", "cita", "quote", "cquote", "caja de cita");
@@ -23,9 +23,10 @@ public class TemplateFinder extends ReplacementFinder implements IgnoredReplacem
     static {
         Set<String> wordsToJoin = new HashSet<>();
         for (String word : TEMPLATE_NAMES) {
-            wordsToJoin.add(word);
             if (startsWithLowerCase(word)) {
-                wordsToJoin.add(setFirstUpperCase(word));
+                wordsToJoin.add(setFirstUpperCaseClass(word));
+            } else {
+                wordsToJoin.add(word);
             }
         }
         AUTOMATON_TEMPLATE = new RunAutomaton(new RegExp(String.format(REGEX_NESTED_TEMPLATE, StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE)).toAutomaton());

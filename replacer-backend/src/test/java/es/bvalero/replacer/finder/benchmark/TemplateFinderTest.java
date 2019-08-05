@@ -21,7 +21,8 @@ public class TemplateFinderTest {
         String template1 = "{{Cita|Un texto con {{Fecha|2019}} dentro.}}";
         String template2 = "{{cita|Otro\ntexto}}";
         String template3 = "{{ORDENAR:Apellido, Nombre}}";
-        this.text = String.format("%s %s %s", template1, template2, template3);
+        String template4 = "{{ cita | Spaces around }}";
+        this.text = String.format("%s %s %s %s", template1, template2, template3, template4);
 
         this.words = Arrays.asList("cita", "ORDENAR");
 
@@ -29,6 +30,7 @@ public class TemplateFinderTest {
         this.expected.add(new MatchResult(0, template1));
         this.expected.add(new MatchResult(45, template2));
         this.expected.add(new MatchResult(65, template3));
+        this.expected.add(new MatchResult(94, template4));
     }
 
     @Test
