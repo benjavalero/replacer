@@ -83,6 +83,7 @@ class DumpHandler extends DefaultHandler {
         numArticlesRead = 0L;
         numArticlesProcessed = 0L;
         startTime = Instant.now();
+        endTime = null;
     }
 
     @Override
