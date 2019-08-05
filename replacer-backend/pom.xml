@@ -177,6 +177,7 @@
                             <resources>
                                 <resource>
                                     <directory>${basedir}/../replacer-frontend/dist/replacer-frontend/</directory>
+                                    <filtering>true</filtering>
                                 </resource>
                             </resources>
                         </configuration>
