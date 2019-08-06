@@ -181,6 +181,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put(PARAM_PAGE_ID, Integer.toString(pageId));
         params.put("text", pageContent);
         params.put("summary", EDIT_SUMMARY);
+        params.put("bot", "true");
         params.put("minor", "true");
         params.put("token", editToken.getCsrftoken());
         params.put("starttimestamp", currentTimestamp); // Timestamp when the editing process began
