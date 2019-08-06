@@ -4,13 +4,9 @@ import { interval } from 'rxjs';
 import { DumpService } from './dump.service';
 import { DumpStatus } from './dump-status.model';
 import { AlertService } from '../alert/alert.service';
+import { sleep } from '../sleep';
 
 const NUM_ARTICLES = 3801980; // Rough amount of articles to be read
-
-// https://flaviocopes.com/javascript-sleep/
-const sleep = (milliseconds: number) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
-};
 
 @Component({
   selector: 'app-dump',

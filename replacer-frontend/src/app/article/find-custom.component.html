@@ -1,5 +1,12 @@
 <h3>Reemplazo personalizado</h3>
 
+<div class="container mb-3">
+  <div class="alert alert-warning text-center" role="alert">
+    <strong>Nota</strong>: Si el texto a reemplazar comienza por mayúscula, se buscará tal cual.
+    Si comienza por minúscula, esto no se tendrá en cuenta.
+  </div>
+</div>
+
 <form (ngSubmit)="onSubmit()" class="mt-2">
   <div class="form-group row">
     <label for="text-replacement" class="col-sm-2 col-form-label">Texto a reemplazar:</label>

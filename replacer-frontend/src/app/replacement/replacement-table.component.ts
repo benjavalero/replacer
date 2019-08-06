@@ -1,12 +1,10 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 
-import { FormControl } from '@angular/forms';
-
 import { ReplacementCount } from './replacement-count.model';
 import { ReplacementService } from './replacement.service';
 import { AlertService } from '../alert/alert.service';
-
 import { ColumnSortableDirective, SortEvent, compare, compareLocale, SortDirection } from './column-sortable.directive';
+import { sleep } from '../sleep';
 
 const PAGE_SIZE = 10;
 
@@ -68,6 +66,9 @@ export class ReplacementTableComponent implements OnInit {
       this.refreshFilteredItems();
 
       this.alertService.clearAlertMessages();
+
+      // Mark the column Type as sorted. It takes a little for the headers to be loaded.
+      sleep(500).then(() => this.headers.find(header => header.appColumnSortable === 'type').direction = 'asc');
     });
   }
 

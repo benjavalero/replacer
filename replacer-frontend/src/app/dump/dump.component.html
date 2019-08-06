@@ -19,11 +19,11 @@
   <form *ngIf="!status.running" (ngSubmit)="onSubmit()" class="mb-3">
     <div class="form-group form-check">
       <input class="form-check-input" id="force-check" name="force-check" type="checkbox" [(ngModel)]="force" />
-      <label class="form-check-label" for="force-check">Forzar indexado de artículos antiguos</label>
+      <label class="form-check-label" for="force-check">Forzar indexación de artículos antiguos</label>
     </div>
 
     <button type="submit" class="btn btn-primary" id="button-index">
-      Comenzar procesamiento
+      Lanzar indexación
     </button>
   </form>
 
