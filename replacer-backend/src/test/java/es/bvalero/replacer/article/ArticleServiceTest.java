@@ -1,6 +1,5 @@
 package es.bvalero.replacer.article;
 
-import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -23,9 +22,6 @@ public class ArticleServiceTest {
 
     @Mock
     private ReplacementFinderService replacementFinderService;
-
-    @Mock
-    private ReplacementRepository replacementRepository;
 
     @Mock
     private WikipediaService wikipediaService;
@@ -54,7 +50,7 @@ public class ArticleServiceTest {
         ArticleReplacement replacement = Mockito.mock(ArticleReplacement.class);
         Mockito.when(replacementFinderService.findReplacements(text)).thenReturn(Collections.singletonList(replacement));
 
-        Optional<ArticleReview> articleData = articleService.findArticleReviewById(1, null, null);
+        Optional<ArticleReview> articleData = articleService.findArticleReview(1, null, null, null);
 
         Assert.assertTrue(articleData.isPresent());
         Assert.assertEquals(title, articleData.get().getTitle());
@@ -63,27 +59,6 @@ public class ArticleServiceTest {
         List<ArticleReplacement> replacements = articleData.get().getReplacements();
         Assert.assertEquals(1, replacements.size());
         Assert.assertTrue(replacements.contains(replacement));
-    }
-
-    @Test
-    public void testSaveArticle() throws WikipediaException {
-        int articleId = 1;
-        String text = "Un texto";
-
-        WikipediaPage page = WikipediaPage.builder().build();
-        Mockito.when(wikipediaService.getPageById(articleId)).thenReturn(Optional.of(page));
-
-        Replacement replacement = new Replacement(1, "", "", 1);
-        Mockito.when(replacementRepository.findByArticleIdAndReviewerIsNull(Mockito.anyInt()))
-                .thenReturn(Collections.singletonList(replacement));
-
-        OAuth1AccessToken accessToken = Mockito.mock(OAuth1AccessToken.class);
-
-        articleService.saveArticleChanges(articleId, text, null, null, "x", "x", accessToken);
-
-        Mockito.verify(wikipediaService).savePageContent(
-                Mockito.eq(articleId), Mockito.eq(text), Mockito.anyString(), Mockito.eq(accessToken));
-        Mockito.verify(articleIndexService).reviewReplacement(Mockito.any(Replacement.class), Mockito.anyString(), Mockito.anyBoolean());
     }
 
 }

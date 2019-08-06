@@ -3,6 +3,7 @@ package es.bvalero.replacer.article;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,18 @@ public class ArticleController {
     @Autowired
     private ArticleStatsService articleStatsService;
 
+    @Autowired
+    private ArticleIndexService articleIndexService;
+
+    @Autowired
+    private WikipediaService wikipediaService;
+
     /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
 
     @GetMapping(value = "/random")
     public List<Integer> findRandomArticleWithReplacements() {
         LOGGER.info("GET Find random article with replacements");
-        return articleService.findRandomArticleToReview(null, null)
+        return articleService.findRandomArticleToReview(null, null, null)
                 .map(Collections::singletonList)
                 .orElse(Collections.emptyList());
     }
@@ -37,36 +44,41 @@ public class ArticleController {
     public List<Integer> findRandomArticleByTypeAndSubtype(
             @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
         LOGGER.info("GET Find random article with replacements. Type: {} - Subtype: {}", type, subtype);
-        Optional<Integer> randomId;
-        if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
-            randomId = articleService.findRandomArticleToReviewByCustomReplacement(subtype);
-        } else {
-            randomId = articleService.findRandomArticleToReview(type, subtype);
-        }
-        return randomId.map(Collections::singletonList).orElse(Collections.emptyList());
+        return articleService.findRandomArticleToReview(type, subtype, null)
+                .map(Collections::singletonList)
+                .orElse(Collections.emptyList());
+    }
+
+    @GetMapping(value = "/random/Personalizado/{subtype}/{suggestion}")
+    public List<Integer> findRandomArticleByCustomReplacement(
+            @PathVariable("subtype") String subtype, @PathVariable("suggestion") String suggestion) {
+        LOGGER.info("GET Find random article with replacements. Custom replacement: {} - {}", subtype, suggestion);
+        return articleService.findRandomArticleToReview(ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, suggestion)
+                .map(Collections::singletonList)
+                .orElse(Collections.emptyList());
     }
 
     /* FIND AN ARTICLE REVIEW */
 
     @GetMapping(value = "/{id}")
     public Optional<ArticleReview> findArticleReviewById(@PathVariable("id") int articleId) {
-        LOGGER.info("GET Find replacements for article. ID: {}", articleId);
-        return articleService.findArticleReviewById(articleId, null, null);
+        LOGGER.info("GET Find review for article. ID: {}", articleId);
+        return articleService.findArticleReview(articleId, null, null, null);
     }
 
     @GetMapping(value = "/{id}/{type}/{subtype}")
     public Optional<ArticleReview> findArticleReviewByIdByTypeAndSubtype(
             @PathVariable("id") int articleId, @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
-        LOGGER.info("GET Find replacements for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
-        return articleService.findArticleReviewById(articleId, type, subtype);
+        LOGGER.info("GET Find review for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
+        return articleService.findArticleReview(articleId, type, subtype, null);
     }
 
     @GetMapping(value = "/{id}/Personalizado/{subtype}/{suggestion}")
     public Optional<ArticleReview> findArticleReviewByIdAndCustomReplacement(
             @PathVariable("id") int articleId, @PathVariable("subtype") String subtype, @PathVariable("suggestion") String suggestion) {
-        LOGGER.info("GET Find replacements for article by custom type. ID: {} - Subtype: {} - Suggestion: {}",
+        LOGGER.info("GET Find review for article by custom type. ID: {} - Subtype: {} - Suggestion: {}",
                 articleId, subtype, suggestion);
-        return articleService.findArticleReviewByIdAndCustomReplacement(articleId, subtype, suggestion);
+        return articleService.findArticleReview(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, suggestion);
     }
 
     /* SAVE CHANGES */
@@ -80,10 +92,13 @@ public class ArticleController {
         LOGGER.info("PUT Save article. ID: {} - Changed: {}", articleId, changed);
         if (changed) {
             OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
-            articleService.saveArticleChanges(articleId, text, type, subtype, reviewer, currentTimestamp, accessToken);
-        } else {
-            articleService.markArticleAsReviewed(articleId, type, subtype, reviewer);
+
+            // Upload new content to Wikipedia
+            wikipediaService.savePageContent(articleId, text, currentTimestamp, accessToken);
         }
+
+        // Mark article as reviewed in the database
+        articleIndexService.reviewArticle(articleId, type, subtype, reviewer);
     }
 
     /* STATISTICS */

@@ -21,11 +21,11 @@ public class ArticleStatsService {
     /* STATISTICS */
 
     long countReplacements() {
-        return replacementRepository.countByReviewerIsNullOrReviewerIsNot(ArticleService.SYSTEM_REVIEWER);
+        return replacementRepository.countByReviewerIsNullOrReviewerIsNot(ArticleIndexService.SYSTEM_REVIEWER);
     }
 
     long countReplacementsReviewed() {
-        return replacementRepository.countByReviewerIsNotNullAndReviewerIsNot(ArticleService.SYSTEM_REVIEWER);
+        return replacementRepository.countByReviewerIsNotNullAndReviewerIsNot(ArticleIndexService.SYSTEM_REVIEWER);
     }
 
     long countReplacementsToReview() {
@@ -33,7 +33,7 @@ public class ArticleStatsService {
     }
 
     List<Object[]> countReplacementsGroupedByReviewer() {
-        return replacementRepository.countGroupedByReviewer(ArticleService.SYSTEM_REVIEWER);
+        return replacementRepository.countGroupedByReviewer(ArticleIndexService.SYSTEM_REVIEWER);
     }
 
     /* LIST OF REPLACEMENTS */

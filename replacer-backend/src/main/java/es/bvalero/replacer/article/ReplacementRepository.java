@@ -25,14 +25,14 @@ interface ReplacementRepository extends JpaRepository<Replacement, Long>, Replac
     @Query("SELECT new es.bvalero.replacer.article.ReplacementCount(type, subtype, COUNT(*)) FROM Replacement WHERE reviewer IS NULL GROUP BY type, subtype")
     List<ReplacementCount> findReplacementCountByTypeAndSubtype();
 
-    @Query("FROM Replacement WHERE reviewer IS NULL ORDER BY RAND()")
-    List<Replacement> findRandomToReview(Pageable pageable);
+    @Query("SELECT articleId FROM Replacement WHERE reviewer IS NULL ORDER BY RAND()")
+    List<Integer> findRandomArticleIdsToReview(Pageable pageable);
 
-    @Query("FROM Replacement WHERE type = :type AND subtype = :subtype AND reviewer IS NULL ORDER BY RAND()")
-    List<Replacement> findRandomToReviewByTypeAndSubtype(
+    @Query("SELECT articleId FROM Replacement WHERE type = :type AND subtype = :subtype AND reviewer IS NULL ORDER BY RAND()")
+    List<Integer> findRandomArticleIdsToReviewByTypeAndSubtype(
             @Param("type") String type, @Param("subtype") String subtype, Pageable pageable);
 
-    List<Replacement> findByArticleIdAndTypeAndSubtypeAndReviewerNotNull(int articleId, String type, String subtype);
+    long countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(int articleId, String type, String subtype);
 
     List<Replacement> findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(int articleId, String type, String subtype);
 

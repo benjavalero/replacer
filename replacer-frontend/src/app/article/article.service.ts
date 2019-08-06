@@ -13,9 +13,13 @@ export class ArticleService {
 
   constructor(private httpClient: HttpClient, private authenticationService: AuthenticationService) { }
 
-  findRandomArticle(type: string, subtype: string): Observable<number[]> {
+  findRandomArticle(type: string, subtype: string, suggestion: string): Observable<number[]> {
     if (type && subtype) {
-      return this.httpClient.get<number[]>(`${environment.apiUrl}/article/random/${type}/${subtype}`);
+      if (suggestion) {
+        return this.httpClient.get<number[]>(`${environment.apiUrl}/article/random/${type}/${subtype}/${suggestion}`);
+      } else {
+        return this.httpClient.get<number[]>(`${environment.apiUrl}/article/random/${type}/${subtype}`);
+      }
     } else {
       return this.httpClient.get<number[]>(`${environment.apiUrl}/article/random`);
     }

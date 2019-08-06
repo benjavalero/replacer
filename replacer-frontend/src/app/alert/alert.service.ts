@@ -12,9 +12,6 @@ export class AlertService {
   constructor() { }
 
   private addAlertMessage(alert: AlertMessage) {
-    if (this.alerts.length === 5) {
-      this.alerts.shift();
-    }
     this.alerts.push(alert);
     this.alertEvent.emit(this.alerts);
   }

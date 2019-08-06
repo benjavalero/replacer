@@ -27,7 +27,7 @@ export class FindRandomComponent implements OnInit {
       ? `Buscando artículo aleatorio de tipo «${this.filteredType} / ${this.filteredSubtype}»…`
       : 'Buscando artículo aleatorio con reemplazos…'));
 
-    this.articleService.findRandomArticle(this.filteredType, this.filteredSubtype).subscribe((articleIds: number[]) => {
+    this.articleService.findRandomArticle(this.filteredType, this.filteredSubtype, this.suggestion).subscribe((articleIds: number[]) => {
       const articleId = articleIds[0];
       if (articleId) {
         if (this.filteredType && this.filteredSubtype) {

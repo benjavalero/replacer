@@ -36,11 +36,11 @@ public class ReplacementRepositoryTest {
         Replacement error3 = new Replacement(3, "X", "aber", 3);
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3));
 
-        Assert.assertTrue(replacementRepository.findRandomToReviewByTypeAndSubtype(
+        Assert.assertTrue(replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
                 "xxx", "zzz", PageRequest.of(0, 1))
                 .isEmpty());
 
-        Assert.assertEquals(3, replacementRepository.findRandomToReviewByTypeAndSubtype(
+        Assert.assertEquals(3, replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
                 "X", "aber", PageRequest.of(0, 3))
                 .size());
     }

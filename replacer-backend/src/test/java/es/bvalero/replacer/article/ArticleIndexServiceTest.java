@@ -56,7 +56,7 @@ public class ArticleIndexServiceTest {
 
         Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
                 Collections.singleton(
-                        rep2.withReviewer(ArticleService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now())));
+                        rep2.withReviewer(ArticleIndexService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now())));
     }
 
     @Test
@@ -76,7 +76,7 @@ public class ArticleIndexServiceTest {
         Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
                 Collections.singleton(
                         new Replacement(articleId, "", "", 0)
-                                .withReviewer(ArticleService.SYSTEM_REVIEWER)
+                                .withReviewer(ArticleIndexService.SYSTEM_REVIEWER)
                                 .withLastUpdate(LocalDate.now())));
     }
 
@@ -119,7 +119,7 @@ public class ArticleIndexServiceTest {
                 new HashSet<>(Arrays.asList(
                         r3db.withLastUpdate(same),
                         r5,
-                        r6db.withReviewer(ArticleService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()))));
+                        r6db.withReviewer(ArticleIndexService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()))));
     }
 
     @Test
@@ -155,7 +155,7 @@ public class ArticleIndexServiceTest {
                 new HashSet<>(Arrays.asList(
                         r1db.withLastUpdate(same),
                         r3,
-                        r4db.withReviewer(ArticleService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()))));
+                        r4db.withReviewer(ArticleIndexService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()))));
     }
 
 }

@@ -210,7 +210,7 @@ class DumpHandler extends DefaultHandler {
             // Clear the cache if obsolete (we assume the dump articles are in order)
             // The remaining cached articles are not in the dump so we remove them from DB
             LOGGER.debug("START Delete obsolete articles in DB: {}", replacementMap.keySet());
-            articleService.deleteArticles(replacementMap.keySet());
+            articleIndexService.reviewArticlesAsSystem(replacementMap.keySet());
             replacementMap = new HashMap<>(CACHE_SIZE);
             LOGGER.debug("END Delete obsolete articles in DB");
         }

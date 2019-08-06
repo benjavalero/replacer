@@ -1,25 +1,30 @@
 package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class ArticleIndexService {
 
+    static final String SYSTEM_REVIEWER = "system";
     private static final int BATCH_SIZE = 1000;
 
     @Autowired
     private ReplacementRepository replacementRepository;
+
+    @Autowired
+    private ArticleStatsService articleStatsService;
 
     // List of replacements to save in batch
     // We use sets to compare easily in the unit tests
@@ -121,12 +126,43 @@ public class ArticleIndexService {
         LOGGER.debug("END Save replacements in database");
     }
 
-    void reviewReplacement(Replacement replacement, String reviewer, boolean reviewInBatch) {
-        saveReplacement(replacement.withReviewer(reviewer).withLastUpdate(LocalDate.now()), reviewInBatch);
+    private void reviewReplacement(Replacement replacement, String reviewer) {
+        saveReplacement(replacement.withReviewer(reviewer).withLastUpdate(LocalDate.now()), false);
     }
 
-    private void reviewReplacementAsSystem(Replacement replacement, boolean reviewInBatch) {
-        saveReplacement(replacement.withReviewer(ArticleService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()), reviewInBatch);
+    void reviewReplacementAsSystem(Replacement replacement, boolean reviewInBatch) {
+        saveReplacement(replacement.withReviewer(SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()), reviewInBatch);
+    }
+
+    void reviewArticleAsSystem(int articleId) {
+        replacementRepository.findByArticleIdAndReviewerIsNull(articleId).forEach(
+                replacement -> reviewReplacementAsSystem(replacement, false));
+    }
+
+    public void reviewArticlesAsSystem(Set<Integer> articleIds) {
+        articleIds.forEach(this::reviewArticleAsSystem);
+    }
+
+    void reviewArticle(int articleId, @Nullable String type, @Nullable String subtype, String reviewer) {
+        LOGGER.info("START Mark article as reviewed. ID: {}", articleId);
+
+        if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
+            // Custom replacements don't exist in the database to be reviewed
+            Replacement custom = new Replacement(articleId, type, subtype, 0);
+            reviewReplacement(custom, reviewer);
+        } else if (StringUtils.isNotBlank(subtype)) {
+            List<Replacement> toReview = replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(
+                    articleId, type, subtype);
+            toReview.forEach(replacement -> reviewReplacement(replacement, reviewer));
+
+            // Decrease the cached count for the replacement
+            articleStatsService.decreaseCachedReplacementsCount(type, subtype, toReview.size());
+        } else {
+            replacementRepository.findByArticleIdAndReviewerIsNull(articleId)
+                    .forEach(replacement -> reviewReplacement(replacement, reviewer));
+        }
+
+        LOGGER.info("END Mark article as reviewed. ID: {}", articleId);
     }
 
 }
