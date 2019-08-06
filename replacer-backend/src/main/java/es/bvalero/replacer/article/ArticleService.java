@@ -211,23 +211,21 @@ public class ArticleService {
                 article.getContent(), subtype, suggestion);
         LOGGER.info("Potential replacements found in text: {}", articleReplacements.size());
 
-        if (articleReplacements.isEmpty()) {
-            if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
+        if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
+            if (articleReplacements.isEmpty()) {
                 // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
                 Replacement customReplacement = new Replacement(article.getId(), ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, 0);
                 articleIndexService.reviewReplacementAsSystem(customReplacement, false);
             }
-            return Optional.empty();
-        } else if (!ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
-            // We take profit and we update the database with the just calculated replacements
+        } else {
+            // We take profit and we update the database with the just calculated replacements (also when empty)
             LOGGER.info("Update article replacements in database");
             articleIndexService.indexArticleReplacements(article, articleReplacements);
 
             // To build the review we are only interested in the replacements of the given type and subtype
-            if (StringUtils.isNotBlank(subtype)) {
-                articleReplacements = filterReplacementsByTypeAndSubtype(articleReplacements, type, subtype);
-                LOGGER.info("Final replacements found in text after filtering: {}", articleReplacements.size());
-            }
+            // We can run the filter even with an empty list and null type/subtype
+            articleReplacements = filterReplacementsByTypeAndSubtype(articleReplacements, type, subtype);
+            LOGGER.info("Final replacements found in text after filtering: {}", articleReplacements.size());
         }
 
         // If any replacement has been found we build a review
@@ -251,9 +249,9 @@ public class ArticleService {
     }
 
     private List<ArticleReplacement> filterReplacementsByTypeAndSubtype(
-            List<ArticleReplacement> replacements, String type, String subtype) {
+            List<ArticleReplacement> replacements, @Nullable String type, @Nullable String subtype) {
         return replacements.stream()
-                .filter(replacement -> type.equals(replacement.getType()) && subtype.equals(replacement.getSubtype()))
+                .filter(replacement -> replacement.getType().equals(type) && replacement.getSubtype().equals(subtype))
                 .collect(Collectors.toList());
     }
 
