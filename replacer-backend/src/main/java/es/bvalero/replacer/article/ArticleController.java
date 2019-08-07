@@ -35,7 +35,7 @@ public class ArticleController {
     @GetMapping(value = "/random")
     public List<Integer> findRandomArticleWithReplacements() {
         LOGGER.info("GET Find random article with replacements");
-        return articleService.findRandomArticleToReview(null, null, null)
+        return articleService.findRandomArticleToReview()
                 .map(Collections::singletonList)
                 .orElse(Collections.emptyList());
     }
@@ -44,16 +44,16 @@ public class ArticleController {
     public List<Integer> findRandomArticleByTypeAndSubtype(
             @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
         LOGGER.info("GET Find random article with replacements. Type: {} - Subtype: {}", type, subtype);
-        return articleService.findRandomArticleToReview(type, subtype, null)
+        return articleService.findRandomArticleToReview(type, subtype)
                 .map(Collections::singletonList)
                 .orElse(Collections.emptyList());
     }
 
     @GetMapping(value = "/random/Personalizado/{subtype}/{suggestion}")
     public List<Integer> findRandomArticleByCustomReplacement(
-            @PathVariable("subtype") String subtype, @PathVariable("suggestion") String suggestion) {
-        LOGGER.info("GET Find random article with replacements. Custom replacement: {} - {}", subtype, suggestion);
-        return articleService.findRandomArticleToReview(ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, suggestion)
+            @PathVariable("subtype") String replacement, @PathVariable("suggestion") String suggestion) {
+        LOGGER.info("GET Find random article with replacements. Custom replacement: {} - {}", replacement, suggestion);
+        return articleService.findRandomArticleToReviewWithCustomReplacement(replacement, suggestion)
                 .map(Collections::singletonList)
                 .orElse(Collections.emptyList());
     }

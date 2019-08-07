@@ -46,6 +46,18 @@ public class ArticleService {
 
     /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
 
+    Optional<Integer> findRandomArticleToReview() {
+        return findRandomArticleToReview(null, null);
+    }
+
+    Optional<Integer> findRandomArticleToReview(String type, String subtype) {
+        return findRandomArticleToReview(type, subtype, null);
+    }
+
+    Optional<Integer> findRandomArticleToReviewWithCustomReplacement(String replacement, String suggestion) {
+        return findRandomArticleToReview(ReplacementFinderService.CUSTOM_FINDER_TYPE, replacement, suggestion);
+    }
+
     /**
      * Find a random article to be reviewed.
      *
@@ -55,7 +67,7 @@ public class ArticleService {
      * @param suggestion The suggestion in case of custom replacements, i. e. type CUSTOM_FINDER_TYPE.
      * @return The ID of the found article, or empty if there is no such an article.
      */
-    Optional<Integer> findRandomArticleToReview(
+    private Optional<Integer> findRandomArticleToReview(
             @Nullable String type, @Nullable String subtype, @Nullable String suggestion) {
         LOGGER.info("START Find random article to review. Type: {} - {} - {}", type, subtype, suggestion);
 
@@ -223,9 +235,11 @@ public class ArticleService {
             articleIndexService.indexArticleReplacements(article, articleReplacements);
 
             // To build the review we are only interested in the replacements of the given type and subtype
-            // We can run the filter even with an empty list and null type/subtype
-            articleReplacements = filterReplacementsByTypeAndSubtype(articleReplacements, type, subtype);
-            LOGGER.info("Final replacements found in text after filtering: {}", articleReplacements.size());
+            // We can run the filter even with an empty list
+            if (StringUtils.isNotBlank(subtype)) {
+                articleReplacements = filterReplacementsByTypeAndSubtype(articleReplacements, type, subtype);
+                LOGGER.info("Final replacements found in text after filtering: {}", articleReplacements.size());
+            }
         }
 
         // If any replacement has been found we build a review
