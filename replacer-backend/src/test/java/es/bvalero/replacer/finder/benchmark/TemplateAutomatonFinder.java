@@ -13,20 +13,23 @@ import java.util.Set;
 class TemplateAutomatonFinder extends TemplateAbstractFinder {
 
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+}}";
-    private final static List<RunAutomaton> AUTOMATA = new ArrayList<>();
+    private static final String REGEX_TEMPLATE_COMPLETE = "\\{\\{ *%s[ |\n]*[|:](%s|[^}])+?}}";
+    private static final List<RunAutomaton> AUTOMATON = new ArrayList<>();
 
     TemplateAutomatonFinder(List<String> words) {
         for (String word : words) {
-            AUTOMATA.add(new RunAutomaton(new RegExp(String.format("\\{\\{ *%s *[|:](%s|[^}])+?}}", word, REGEX_TEMPLATE)).toAutomaton()));
+            AUTOMATON.add(new RunAutomaton(new RegExp(
+                    String.format(REGEX_TEMPLATE_COMPLETE, word, REGEX_TEMPLATE)).toAutomaton()));
             if (startsWithLowerCase(word)) {
-                AUTOMATA.add(new RunAutomaton(new RegExp(String.format("\\{\\{ *%s *[|:](%s|[^}])+?}}", setFirstUpperCase(word), REGEX_TEMPLATE)).toAutomaton()));
+                AUTOMATON.add(new RunAutomaton(new RegExp(
+                        String.format(REGEX_TEMPLATE_COMPLETE, setFirstUpperCase(word), REGEX_TEMPLATE)).toAutomaton()));
             }
         }
     }
 
     Set<MatchResult> findMatches(String text) {
         Set<MatchResult> matches = new HashSet<>();
-        for (RunAutomaton automaton : AUTOMATA) {
+        for (RunAutomaton automaton : AUTOMATON) {
             AutomatonMatcher m = automaton.newMatcher(text);
             while (m.find()) {
                 matches.add(new MatchResult(m.start(), m.group()));

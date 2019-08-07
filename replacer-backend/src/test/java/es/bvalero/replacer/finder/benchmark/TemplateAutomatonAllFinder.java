@@ -9,12 +9,11 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 class TemplateAutomatonAllFinder extends TemplateAbstractFinder {
 
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
+    private static final String REGEX_TEMPLATE_COMPLETE = "\\{\\{ *(%s)[ |\n]*[|:](%s|[^}])+?}}";
     private static RunAutomaton automaton;
 
     TemplateAutomatonAllFinder(List<String> words) {
@@ -25,7 +24,9 @@ class TemplateAutomatonAllFinder extends TemplateAbstractFinder {
                 wordsToJoin.add(setFirstUpperCase(word));
             }
         }
-        automaton = new RunAutomaton(new RegExp(String.format("\\{\\{ *(%s) *[|:](%s|[^}])+?}}", StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE)).toAutomaton());
+        automaton = new RunAutomaton(new RegExp(
+                String.format(REGEX_TEMPLATE_COMPLETE, StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE))
+                .toAutomaton());
     }
 
     Set<MatchResult> findMatches(String text) {

@@ -12,7 +12,7 @@ public class TemplateFinderTest {
         String template1 = "{{Cita|Un texto con {{Fecha|2019}} dentro.}}";
         String template2 = "{{cita|Otro\ntexto}}";
         String template3 = "{{ORDENAR:Apellido, Nombre}}";
-        String template4 = "{{ cita | Spaces around }}";
+        String template4 = "{{ cita\n| Spaces around }}";
         String text = String.format("%s %s %s %s", template1, template2, template3, template4);
 
         IgnoredReplacementFinder templateFinder = new TemplateFinder();

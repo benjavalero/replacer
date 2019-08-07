@@ -13,6 +13,7 @@ import java.util.Set;
 class TemplateAutomatonClassAllFinder extends TemplateAbstractFinder {
 
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
+    private static final String REGEX_TEMPLATE_COMPLETE = "\\{\\{ *(%s)[ |\n]*[|:](%s|[^}])+?}}";
     private static RunAutomaton automaton;
 
     TemplateAutomatonClassAllFinder(List<String> words) {
@@ -24,7 +25,9 @@ class TemplateAutomatonClassAllFinder extends TemplateAbstractFinder {
                 wordsToJoin.add(word);
             }
         }
-        automaton = new RunAutomaton(new RegExp(String.format("\\{\\{ *(%s) *[|:](%s|[^}])+?}}", StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE)).toAutomaton());
+        automaton = new RunAutomaton(new RegExp(
+                String.format(REGEX_TEMPLATE_COMPLETE, StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE))
+                .toAutomaton());
     }
 
     Set<MatchResult> findMatches(String text) {
