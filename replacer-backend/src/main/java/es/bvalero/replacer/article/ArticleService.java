@@ -99,17 +99,16 @@ public class ArticleService {
             // If it is not cached we try to find it in the database/Wikipedia and add the results to the cache
             List<Integer> articleIds = findArticleIdsToReview(type, subtype);
 
+            // In case of custom replacement check that the replacement has not already been reviewed
+            if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
+                articleIds.removeIf(id -> replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
+                        id, ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype) > 0);
+            }
+
             // Return the first result and cache the rest
             articleId = getFirstResultAndCacheTheRest(articleIds, key);
 
-            if (articleId.isPresent()) {
-                // In case of custom replacement check that the custom replacement has not already been reviewed
-                if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type) &&
-                        (replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
-                                articleId.get(), ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype) > 0)) {
-                    return Optional.empty();
-                }
-            } else {
+            if (!articleId.isPresent()) {
                 // If finally there are no results empty the cached count for the replacement
                 // No need to check if there exists something cached
                 articleStatsService.removeCachedReplacements(type, subtype);
