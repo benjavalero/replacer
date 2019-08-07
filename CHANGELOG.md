@@ -1,3 +1,9 @@
+# 2.1.0 (8 de agosto de 2019)
+- Corrección en la captura de plantillas completas, como las citas.
+- Cambios en la búsqueda de artículos con reemplazos. Se recupera la funcionalidad de que la búsqueda devuelva un
+artículo con reemplazos, gestionando los que no tenga en segundo plano, disminuyendo por tanto la cantidad de mensajes
+en pantalla.
+
 # 2.0.6 (4 de agosto de 2019)
 - Corrección en la ordenación de la tabla de reemplazos
 - Mejoras en la indexación para evitar reemplazos duplicados
