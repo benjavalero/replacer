@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 class ParameterValueRegexFinder extends ParameterValueAbstractFinder {
 
-    private final static Pattern PATTERN
+    private static final Pattern PATTERN
             = Pattern.compile(String.format("\\|\\s*(%s)\\s*=([^|}]+)", StringUtils.join(PARAMS, "|")));
 
     Set<MatchResult> findMatches(String text) {

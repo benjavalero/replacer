@@ -12,7 +12,7 @@ class CursiveAutomatonFinder extends CursiveAbstractFinder {
 
     private static final String TWO_QUOTES_ONLY = "[^']''[^']";
     private static final String CURSIVE_REGEX = "%s(('''''|'''|')?[^'\n])*(%s|\n)";
-    private final static RunAutomaton CURSIVE_AUTOMATON = new RunAutomaton(new RegExp(String.format(CURSIVE_REGEX, TWO_QUOTES_ONLY, TWO_QUOTES_ONLY)).toAutomaton());
+    private static final RunAutomaton CURSIVE_AUTOMATON = new RunAutomaton(new RegExp(String.format(CURSIVE_REGEX, TWO_QUOTES_ONLY, TWO_QUOTES_ONLY)).toAutomaton());
 
     Set<MatchResult> findMatches(String text) {
         Set<MatchResult> matches = new HashSet<>();

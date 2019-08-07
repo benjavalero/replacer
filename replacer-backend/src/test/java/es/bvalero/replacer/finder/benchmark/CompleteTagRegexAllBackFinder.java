@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 class CompleteTagRegexAllBackFinder extends CompleteTagAbstractFinder {
 
-    private final static List<Pattern> PATTERNS = new ArrayList<>();
+    private static final List<Pattern> PATTERNS = new ArrayList<>();
 
     CompleteTagRegexAllBackFinder(List<String> words) {
         words.forEach(word -> PATTERNS.add(Pattern.compile(String.format("<(%s).*?>.+?</\\1>", StringUtils.join(words, "|")), Pattern.DOTALL)));

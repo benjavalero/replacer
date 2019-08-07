@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 class CompleteTagAutomatonFinder extends CompleteTagAbstractFinder {
 
-    private final static List<RunAutomaton> AUTOMATA = new ArrayList<>();
+    private static final List<RunAutomaton> AUTOMATA = new ArrayList<>();
 
     CompleteTagAutomatonFinder(List<String> words) {
         words.forEach(word -> AUTOMATA.add(new RunAutomaton(new RegExp(String.format("\\<%s.*\\>.+\\</%s\\>", word, word)).toAutomaton())));

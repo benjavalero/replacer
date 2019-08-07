@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 class TemplateRegexClassFinder extends TemplateAbstractFinder {
 
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
-    private final static List<Pattern> PATTERNS = new ArrayList<>();
+    private static final List<Pattern> PATTERNS = new ArrayList<>();
 
     TemplateRegexClassFinder(List<String> words) {
         for (String word : words) {

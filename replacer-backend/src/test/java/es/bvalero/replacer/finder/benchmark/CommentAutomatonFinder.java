@@ -10,7 +10,7 @@ import java.util.Set;
 
 class CommentAutomatonFinder extends CommentAbstractFinder {
 
-    private final static RunAutomaton COMMENT_PATTERN
+    private static final RunAutomaton COMMENT_PATTERN
             = new RunAutomaton(new RegExp("\\<!--([^-]|-[^-]|--[^\\>])+--\\>").toAutomaton());
 
     Set<MatchResult> findMatches(String text) {

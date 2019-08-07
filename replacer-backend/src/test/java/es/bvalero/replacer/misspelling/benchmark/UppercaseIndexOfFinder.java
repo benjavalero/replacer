@@ -9,7 +9,7 @@ import java.util.Set;
 
 class UppercaseIndexOfFinder extends UppercaseAbstractFinder {
 
-    private final static Collection<Character> PUNCTUATIONS = Arrays.asList('!', '#', '*', '|', '=', '.');
+    private static final Collection<Character> PUNCTUATIONS = Arrays.asList('!', '#', '*', '|', '=', '.');
 
     private Collection<String> words;
 

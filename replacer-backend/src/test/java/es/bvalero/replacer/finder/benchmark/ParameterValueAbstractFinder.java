@@ -8,7 +8,7 @@ import java.util.Set;
 
 abstract class ParameterValueAbstractFinder {
 
-    final static List<String> PARAMS = Arrays.asList("índice", "index", "cita", "location", "ubicación");
+    static final List<String> PARAMS = Arrays.asList("índice", "index", "cita", "location", "ubicación");
 
     abstract Set<MatchResult> findMatches(String text);
 

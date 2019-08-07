@@ -12,7 +12,7 @@ import java.util.Set;
 
 class CompleteTagAutomatonNegatedFinder extends CompleteTagAbstractFinder {
 
-    private final static List<RunAutomaton> AUTOMATA = new ArrayList<>();
+    private static final List<RunAutomaton> AUTOMATA = new ArrayList<>();
 
     CompleteTagAutomatonNegatedFinder(List<String> words) {
         words.forEach(word -> AUTOMATA.add(new RunAutomaton(new RegExp(String.format("\\<%s[^\\>]*\\>.+\\</%s\\>", word, word)).toAutomaton())));

@@ -12,7 +12,7 @@ import java.util.Set;
 
 class ParameterValueAutomatonFinder extends ParameterValueAbstractFinder {
 
-    private final static RunAutomaton AUTOMATON = new RunAutomaton(
+    private static final RunAutomaton AUTOMATON = new RunAutomaton(
             new RegExp(String.format("\\|<Z>*(%s)<Z>*=[^|}]+", StringUtils.join(PARAMS, "|"))).toAutomaton(new DatatypesAutomatonProvider()));
 
     Set<MatchResult> findMatches(String text) {

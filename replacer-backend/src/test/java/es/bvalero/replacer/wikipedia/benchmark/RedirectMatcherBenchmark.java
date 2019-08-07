@@ -27,7 +27,7 @@ import java.util.stream.Stream;
         initializers = ConfigFileApplicationContextInitializer.class)
 public class RedirectMatcherBenchmark {
 
-    private final static int ITERATIONS = 1000;
+    private static final int ITERATIONS = 1000;
 
     @Autowired
     private WikipediaService wikipediaService;

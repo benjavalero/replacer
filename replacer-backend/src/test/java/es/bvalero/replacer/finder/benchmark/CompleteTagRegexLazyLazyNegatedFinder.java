@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 class CompleteTagRegexLazyLazyNegatedFinder extends CompleteTagAbstractFinder {
 
-    private final static List<Pattern> PATTERNS = new ArrayList<>();
+    private static final List<Pattern> PATTERNS = new ArrayList<>();
 
     CompleteTagRegexLazyLazyNegatedFinder(List<String> words) {
         words.forEach(word -> PATTERNS.add(Pattern.compile(String.format("<%s[^>]*?>.+?</%s>", word, word), Pattern.DOTALL)));

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 class CommentRegexFinder extends CommentAbstractFinder {
 
-    private final static Pattern COMMENT_PATTERN = Pattern.compile("<!--.+?-->", Pattern.DOTALL);
+    private static final Pattern COMMENT_PATTERN = Pattern.compile("<!--.+?-->", Pattern.DOTALL);
 
     Set<MatchResult> findMatches(String text) {
         Set<MatchResult> matches = new HashSet<>();

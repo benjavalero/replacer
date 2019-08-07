@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 class FileAutomatonNoStartFinder extends FileAbstractFinder {
 
-    private final static RunAutomaton AUTOMATON =
+    private static final RunAutomaton AUTOMATON =
             new RunAutomaton(new RegExp("<L>(<L>|<N>|[. _-])+\\.<L>{2,4} *[]}|\n]").toAutomaton(new DatatypesAutomatonProvider()));
 
     Set<MatchResult> findMatches(String text) {

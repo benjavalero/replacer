@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 class FileRegexLazyFinder extends FileAbstractFinder {
 
-    private final static Pattern PATTERN = Pattern.compile("[:=|] *([^=|]+?\\.\\w{2,4}) *[]}|\n]");
+    private static final Pattern PATTERN = Pattern.compile("[:=|] *([^=|]+?\\.\\w{2,4}) *[]}|\n]");
 
     Set<MatchResult> findMatches(String text) {
         Set<MatchResult> matches = new HashSet<>();

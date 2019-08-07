@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 class FileRegexNoStartFinder extends FileAbstractFinder {
 
-    private final static Pattern PATTERN = Pattern.compile("(\\w[\\w. -]+\\.\\w{2,4}) *[]}|\n]", Pattern.UNICODE_CHARACTER_CLASS);
+    private static final Pattern PATTERN = Pattern.compile("(\\w[\\w. -]+\\.\\w{2,4}) *[]}|\n]", Pattern.UNICODE_CHARACTER_CLASS);
 
     Set<MatchResult> findMatches(String text) {
         Set<MatchResult> matches = new HashSet<>();

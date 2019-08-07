@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 class RedirectRegexInsensitiveMatcher extends RedirectAbstractMatcher {
 
-    private final static Pattern PATTERN_REDIRECT = Pattern.compile(REDIRECT_PREFIX, Pattern.CASE_INSENSITIVE);
+    private static final Pattern PATTERN_REDIRECT = Pattern.compile(REDIRECT_PREFIX, Pattern.CASE_INSENSITIVE);
 
     @Override
     boolean isRedirect(String text) {

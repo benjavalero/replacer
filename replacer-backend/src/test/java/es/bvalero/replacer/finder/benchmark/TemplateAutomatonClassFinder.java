@@ -14,15 +14,15 @@ class TemplateAutomatonClassFinder extends TemplateAbstractFinder {
 
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+}}";
     private static final String REGEX_TEMPLATE_COMPLETE = "\\{\\{ *%s[ |\n]*[|:](%s|[^}])+?}}";
-    private static final List<RunAutomaton> AUTOMATON = new ArrayList<>();
+    private static final List<RunAutomaton> AUTOMATA = new ArrayList<>();
 
     TemplateAutomatonClassFinder(List<String> words) {
         for (String word : words) {
             if (startsWithLowerCase(word)) {
-                AUTOMATON.add(new RunAutomaton(new RegExp(
+                AUTOMATA.add(new RunAutomaton(new RegExp(
                         String.format(REGEX_TEMPLATE_COMPLETE, setFirstUpperCaseClass(word), REGEX_TEMPLATE)).toAutomaton()));
             } else {
-                AUTOMATON.add(new RunAutomaton(new RegExp(
+                AUTOMATA.add(new RunAutomaton(new RegExp(
                         String.format(REGEX_TEMPLATE_COMPLETE, word, REGEX_TEMPLATE)).toAutomaton()));
             }
         }
@@ -30,7 +30,7 @@ class TemplateAutomatonClassFinder extends TemplateAbstractFinder {
 
     Set<MatchResult> findMatches(String text) {
         Set<MatchResult> matches = new HashSet<>();
-        for (RunAutomaton automaton : AUTOMATON) {
+        for (RunAutomaton automaton : AUTOMATA) {
             AutomatonMatcher m = automaton.newMatcher(text);
             while (m.find()) {
                 matches.add(new MatchResult(m.start(), m.group()));
