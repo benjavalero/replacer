@@ -49,6 +49,10 @@ export class EditSnippetComponent implements OnInit {
     this.fixed.emit({ position: this.start, newText: suggestion.text === this.word ? null : suggestion.text });
   }
 
+  onSelectSuggestion(index: number) {
+    this.suggestionSelected = this.suggestions[index];
+  }
+
   private trimLeft(text: string): string {
     const limitLeft = Math.max(0, this.start - THRESHOLD);
     return (limitLeft ? '[...] ' : '') + text.slice(limitLeft, this.start);

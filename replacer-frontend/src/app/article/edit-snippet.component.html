@@ -4,13 +4,16 @@
       [ngClass]="{ 'btn-danger': word === suggestionSelected.text, 'btn-success': word !== suggestionSelected.text }">{{ suggestionSelected.text }}</span>{{ textRight }}
   </div>
 
-  <div class="btn-group btn-group-toggle w-100 mt-3" ngbRadioGroup name="radioBasic" [(ngModel)]="suggestionSelected">
-    <label *ngFor="let suggestion of suggestions" ngbButtonLabel class="btn text-left"
-      [ngClass]="{ 'btn-primary': suggestion === suggestionSelected, 'btn-outline-primary': suggestion !== suggestionSelected }">
-      <input ngbButton type="radio" [value]="suggestion">
-      {{ suggestion.text }}
-      <span *ngIf="suggestion.comment" class="small">({{ suggestion.comment }})</span>
-    </label>
+  <div class="container mt-3">
+    <div class="row">
+      <div *ngFor="let suggestion of suggestions; let i = index; let first = first; let last = last"
+        class="btn text-left col-sm" [ngClass]="{ 'btn-primary': suggestion === suggestionSelected,
+         'btn-outline-primary': suggestion !== suggestionSelected,
+         'first-suggestion': first, 'last-suggestion': last }" (click)="onSelectSuggestion(i)">
+        {{ suggestion.text }}
+        <span *ngIf="suggestion.comment" class="small">({{ suggestion.comment }})</span>
+      </div>
+    </div>
   </div>
 
 </div>
