@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { interval } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 import { DumpService } from './dump.service';
 import { DumpStatus } from './dump-status.model';
 import { AlertService } from '../alert/alert.service';
@@ -13,7 +13,7 @@ const NUM_ARTICLES = 3801980; // Rough amount of articles to be read
   templateUrl: './dump.component.html',
   styleUrls: []
 })
-export class DumpComponent implements OnInit {
+export class DumpComponent implements OnInit, OnDestroy {
   // Status Details
   status: DumpStatus;
   elapsed: string;
@@ -24,6 +24,9 @@ export class DumpComponent implements OnInit {
   // Form
   force: boolean;
 
+  // Check the status
+  subscription: Subscription;
+
   constructor(private dumpService: DumpService, private alertService: AlertService) { }
 
   ngOnInit() {
@@ -31,8 +34,12 @@ export class DumpComponent implements OnInit {
     this.findDumpStatus();
 
     // Refresh every 10 seconds
-    interval(10000).subscribe(() => this.findDumpStatus());
+    this.subscription = interval(10000).subscribe(() => this.findDumpStatus());
   }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+ }
 
   private findDumpStatus() {
     this.dumpService.findDumpStatus().subscribe((status: DumpStatus) => {
