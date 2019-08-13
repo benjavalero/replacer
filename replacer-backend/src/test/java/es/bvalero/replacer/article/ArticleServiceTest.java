@@ -67,7 +67,8 @@ public class ArticleServiceTest {
     public void testFindRandomArticleToReviewNoTypeNotInWikipedia() throws WikipediaException {
         // 1 result in DB
         Mockito.when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
-                .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
+                .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
+                .thenReturn(Collections.emptyList());
 
         // The article doesn't exist in Wikipedia
         Mockito.when(wikipediaService.getPageById(randomId))
@@ -105,7 +106,8 @@ public class ArticleServiceTest {
     public void testFindRandomArticleToReviewNoTypeNoReplacements() throws WikipediaException {
         // 1 result in DB
         Mockito.when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
-                .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
+                .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
+                .thenReturn(Collections.emptyList());
 
         // The article exists in Wikipedia
         Mockito.when(wikipediaService.getPageById(randomId))
@@ -154,7 +156,8 @@ public class ArticleServiceTest {
         // 1 result in DB
         Mockito.when(replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
                 Mockito.anyString(), Mockito.anyString(), Mockito.any(PageRequest.class)))
-                .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
+                .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
+                .thenReturn(Collections.emptyList());
 
         // The article exists in Wikipedia
         Mockito.when(wikipediaService.getPageById(randomId))
@@ -259,6 +262,43 @@ public class ArticleServiceTest {
         Mockito.verify(articleIndexService, Mockito.times(1))
                 .reviewReplacementAsSystem(Mockito.any(Replacement.class), Mockito.eq(false));
 
+        Assert.assertFalse(articleId.isPresent());
+    }
+
+    @Test
+    public void testFindRandomArticleToReviewNoTypeAndThenFiltered() throws WikipediaException {
+        // 1. Find the random article 1 by type. In DB there exists also the article 2.
+        // 2. Find the random article 2 by no type. The article 2 is supposed to be removed from all the caches.
+        // 3. Find a random article by type. In DB there is no article.
+
+        // 2 results in DB by type, no results the second time.
+        Mockito.when(replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
+                Mockito.anyString(), Mockito.anyString(), Mockito.any(PageRequest.class)))
+                .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)))
+                .thenReturn(Collections.emptyList());
+        // 1 result in DB by no type
+        Mockito.when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
+                .thenReturn(new ArrayList<>(Collections.singletonList(randomId2)));
+
+        // The articles exist in Wikipedia
+        Mockito.when(wikipediaService.getPageById(randomId))
+                .thenReturn(Optional.of(article));
+        Mockito.when(wikipediaService.getPageById(randomId2))
+                .thenReturn(Optional.of(article2));
+
+        // The articles contains replacements
+        Mockito.when(replacementFinderService.findReplacements(content))
+                .thenReturn(articleReplacements);
+        Mockito.when(replacementFinderService.findReplacements(content2))
+                .thenReturn(articleReplacements);
+
+        Optional<Integer> articleId = articleService.findRandomArticleToReview("X", "Y");
+        Assert.assertEquals(Optional.of(randomId), articleId);
+
+        articleId = articleService.findRandomArticleToReview();
+        Assert.assertEquals(Optional.of(randomId2), articleId);
+
+        articleId = articleService.findRandomArticleToReview("X", "Y");
         Assert.assertFalse(articleId.isPresent());
     }
 

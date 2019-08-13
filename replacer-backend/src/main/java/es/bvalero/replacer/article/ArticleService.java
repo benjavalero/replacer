@@ -126,7 +126,7 @@ public class ArticleService {
         if (cachedArticleIdsByTypeAndSubtype.containsKey(key)) {
             Set<Integer> randomArticleIds = cachedArticleIdsByTypeAndSubtype.get(key);
             Optional<Integer> randomArticleId = randomArticleIds.stream().findFirst();
-            randomArticleId.ifPresent(randomArticleIds::remove);
+            randomArticleId.ifPresent(id -> removeArticleFromCache(id, key));
             return randomArticleId;
         }
         return Optional.empty();
@@ -152,9 +152,18 @@ public class ArticleService {
 
     private Optional<Integer> getFirstResultAndCacheTheRest(List<Integer> articleIds, String cacheKey) {
         Optional<Integer> randomArticleIdFromDb = articleIds.stream().findFirst();
-        randomArticleIdFromDb.ifPresent(articleIds::remove);
         cachedArticleIdsByTypeAndSubtype.put(cacheKey, new HashSet<>(articleIds));
+        randomArticleIdFromDb.ifPresent(id -> removeArticleFromCache(id, cacheKey));
         return randomArticleIdFromDb;
+    }
+
+    private void removeArticleFromCache(int articleId, String cacheKey) {
+        // If no type is specified (empty key) then remove the article ID from all the lists
+        if (StringUtils.isBlank(cacheKey)) {
+            cachedArticleIdsByTypeAndSubtype.values().forEach(list -> list.remove(articleId));
+        } else if (cachedArticleIdsByTypeAndSubtype.containsKey(cacheKey)) {
+            cachedArticleIdsByTypeAndSubtype.get(cacheKey).remove(articleId);
+        }
     }
 
     /**
