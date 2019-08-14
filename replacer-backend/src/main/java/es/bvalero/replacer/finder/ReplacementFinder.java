@@ -27,6 +27,9 @@ public abstract class ReplacementFinder {
     }
 
     protected static String setFirstUpperCaseClass(String word) {
+        if (!startsWithLowerCase(word)) {
+            throw new IllegalArgumentException(String.format("Word not starting with lowercase: %s", word));
+        }
         return String.format("[%s%s]%s",
                 word.substring(0, 1).toUpperCase(Locale.forLanguageTag("es")),
                 word.substring(0, 1),
