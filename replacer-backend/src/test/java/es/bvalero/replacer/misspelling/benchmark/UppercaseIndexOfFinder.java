@@ -26,7 +26,7 @@ class UppercaseIndexOfFinder extends UppercaseAbstractFinder {
                 start = text.indexOf(word, start);
                 if (start >= 0) {
                     if (isWordPrecededByPunctuation(start, text)) {
-                        matches.add(new MatchResult(start, word));
+                        matches.add(MatchResult.of(start, word));
                     }
                     start++;
                 }

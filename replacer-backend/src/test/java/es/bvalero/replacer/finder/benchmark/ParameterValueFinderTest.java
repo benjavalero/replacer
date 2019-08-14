@@ -20,8 +20,8 @@ public class ParameterValueFinderTest {
         this.text = String.format("{{Template|index=%s| location =%s}}", value1, value2);
 
         this.expected = new HashSet<>();
-        this.expected.add(new MatchResult(17, value1));
-        this.expected.add(new MatchResult(37, value2));
+        this.expected.add(MatchResult.of(17, value1));
+        this.expected.add(MatchResult.of(37, value2));
     }
 
     @Test

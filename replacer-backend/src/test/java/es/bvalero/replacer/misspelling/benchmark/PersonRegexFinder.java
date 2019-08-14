@@ -24,7 +24,7 @@ class PersonRegexFinder extends PersonAbstractFinder {
             Matcher m = word.matcher(text);
             while (m.find()) {
                 if (isWordFollowedByUppercase(m.start(), m.group(), text)) {
-                    matches.add(new MatchResult(m.start(), m.group()));
+                    matches.add(MatchResult.of(m.start(), m.group()));
                 }
             }
         }

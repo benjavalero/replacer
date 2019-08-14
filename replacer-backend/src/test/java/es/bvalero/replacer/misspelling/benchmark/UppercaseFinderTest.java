@@ -22,9 +22,9 @@ public class UppercaseFinderTest {
         this.text = "=Enero. Febrero, Lunes #  Martes.";
 
         this.expected = new HashSet<>();
-        this.expected.add(new MatchResult(1, "Enero"));
-        this.expected.add(new MatchResult(8, "Febrero"));
-        this.expected.add(new MatchResult(26, "Martes"));
+        this.expected.add(MatchResult.of(1, "Enero"));
+        this.expected.add(MatchResult.of(8, "Febrero"));
+        this.expected.add(MatchResult.of(26, "Martes"));
     }
 
     @Test

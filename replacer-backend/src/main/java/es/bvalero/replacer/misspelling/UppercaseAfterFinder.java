@@ -82,7 +82,7 @@ public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredRe
         while (m.find()) {
             String word = m.group().substring(1).trim();
             int start = m.start() + m.group().indexOf(word);
-            matches.add(new MatchResult(start, word));
+            matches.add(MatchResult.of(start, word));
         }
 
         return matches;

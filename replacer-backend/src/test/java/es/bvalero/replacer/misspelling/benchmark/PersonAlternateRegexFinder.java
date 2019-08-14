@@ -23,7 +23,7 @@ class PersonAlternateRegexFinder extends PersonAbstractFinder {
         Set<MatchResult> matches = new HashSet<>();
         Matcher m = this.words.matcher(text);
         while (m.find()) {
-            MatchResult match = new MatchResult(m.start(), m.group());
+            MatchResult match = MatchResult.of(m.start(), m.group());
             if (isWordFollowedByUppercase(m.start(), m.group(), text)) {
                 matches.add(match);
             }

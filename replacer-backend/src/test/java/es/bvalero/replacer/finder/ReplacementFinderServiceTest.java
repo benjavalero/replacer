@@ -55,7 +55,7 @@ public class ReplacementFinderServiceTest {
 
     @Test
     public void testFindReplacementsIgnoringExceptions() {
-        MatchResult ignored1 = new MatchResult(0, "AB");
+        MatchResult ignored1 = MatchResult.of(0, "AB");
         ArticleReplacement replacement1 = ArticleReplacement.builder().start(1).text("B").build(); // Contained in ignored
         ArticleReplacement replacement2 = ArticleReplacement.builder().start(2).text("C").build(); // Not contained in ignored
         ArticleReplacementFinder finder = Mockito.mock(ArticleReplacementFinder.class);

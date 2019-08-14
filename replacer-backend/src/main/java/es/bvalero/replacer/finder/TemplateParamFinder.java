@@ -21,7 +21,7 @@ public class TemplateParamFinder extends ReplacementFinder implements IgnoredRep
         List<MatchResult> matches = new ArrayList<>(100);
         AutomatonMatcher m = AUTOMATON_TEMPLATE_PARAM.newMatcher(text);
         while (m.find()) {
-            matches.add(new MatchResult(m.start() + 1, m.group().substring(1, m.group().length() - 1)));
+            matches.add(MatchResult.of(m.start() + 1, m.group().substring(1, m.group().length() - 1)));
         }
         return matches;
     }

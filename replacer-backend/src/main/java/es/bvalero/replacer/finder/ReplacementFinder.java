@@ -47,7 +47,7 @@ public abstract class ReplacementFinder {
         List<MatchResult> matches = new ArrayList<>(100);
         AutomatonMatcher matcher = automaton.newMatcher(text);
         while (matcher.find()) {
-            matches.add(new MatchResult(matcher.start(), matcher.group(0)));
+            matches.add(MatchResult.of(matcher.start(), matcher.group(0)));
         }
         return matches;
     }
@@ -56,7 +56,7 @@ public abstract class ReplacementFinder {
         List<MatchResult> matches = new ArrayList<>(100);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
-            matches.add(new MatchResult(matcher.start(), matcher.group()));
+            matches.add(MatchResult.of(matcher.start(), matcher.group()));
         }
         return matches;
     }

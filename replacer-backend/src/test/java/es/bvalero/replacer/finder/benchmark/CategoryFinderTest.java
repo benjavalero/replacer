@@ -20,8 +20,8 @@ public class CategoryFinderTest {
         this.text = String.format("%s %s", category1, category2);
 
         this.expected = new HashSet<>();
-        this.expected.add(new MatchResult(0, category1));
-        this.expected.add(new MatchResult(21, category2));
+        this.expected.add(MatchResult.of(0, category1));
+        this.expected.add(MatchResult.of(21, category2));
     }
 
     @Test

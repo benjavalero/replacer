@@ -32,7 +32,7 @@ class TemplateAutomatonFinder extends TemplateAbstractFinder {
         for (RunAutomaton automaton : AUTOMATA) {
             AutomatonMatcher m = automaton.newMatcher(text);
             while (m.find()) {
-                matches.add(new MatchResult(m.start(), m.group()));
+                matches.add(MatchResult.of(m.start(), m.group()));
             }
         }
         return matches;

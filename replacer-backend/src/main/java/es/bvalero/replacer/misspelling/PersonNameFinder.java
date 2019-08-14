@@ -25,7 +25,7 @@ public class PersonNameFinder implements IgnoredReplacementFinder {
                 start = text.indexOf(word, start);
                 if (start >= 0) {
                     if (isWordFollowedByUppercase(start, word, text)) {
-                        results.add(new MatchResult(start, word));
+                        results.add(MatchResult.of(start, word));
                     }
                     start++;
                 }

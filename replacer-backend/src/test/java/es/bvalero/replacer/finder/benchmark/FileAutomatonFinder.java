@@ -21,7 +21,7 @@ class FileAutomatonFinder extends FileAbstractFinder {
             // Remove the first and last characters and the possible surrounding spaces
             String file = m.group().substring(1, m.group().length() - 1).trim();
             int pos = m.group().indexOf(file);
-            matches.add(new MatchResult(m.start() + pos, file));
+            matches.add(MatchResult.of(m.start() + pos, file));
         }
         return matches;
     }

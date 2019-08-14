@@ -22,7 +22,7 @@ public class TemplateNameFinder extends ReplacementFinder implements IgnoredRepl
         AutomatonMatcher m = AUTOMATON_TEMPLATE_NAME.newMatcher(text);
         while (m.find()) {
             // Remove the first 2 characters corresponding to the opening curly braces
-            matches.add(new MatchResult(m.start() + 2, m.group().substring(2)));
+            matches.add(MatchResult.of(m.start() + 2, m.group().substring(2)));
         }
         return matches;
     }

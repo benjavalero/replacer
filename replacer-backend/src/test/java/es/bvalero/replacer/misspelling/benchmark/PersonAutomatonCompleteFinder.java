@@ -25,7 +25,7 @@ class PersonAutomatonCompleteFinder extends PersonAbstractFinder {
         for (RunAutomaton word : this.words) {
             AutomatonMatcher m = word.newMatcher(text);
             while (m.find()) {
-                matches.add(new MatchResult(m.start(), m.group().substring(0, m.group().length() - 2)));
+                matches.add(MatchResult.of(m.start(), m.group().substring(0, m.group().length() - 2)));
             }
         }
         return matches;

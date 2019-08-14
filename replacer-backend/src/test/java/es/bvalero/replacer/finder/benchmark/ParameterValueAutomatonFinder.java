@@ -20,7 +20,7 @@ class ParameterValueAutomatonFinder extends ParameterValueAbstractFinder {
         AutomatonMatcher m = AUTOMATON.newMatcher(text);
         while (m.find()) {
             int pos = m.group().indexOf("=") + 1;
-            matches.add(new MatchResult(m.start() + pos, m.group().substring(pos)));
+            matches.add(MatchResult.of(m.start() + pos, m.group().substring(pos)));
         }
         return matches;
     }

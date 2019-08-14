@@ -30,7 +30,7 @@ class TemplateRegexClassAllFinder extends TemplateAbstractFinder {
         Set<MatchResult> matches = new HashSet<>();
         Matcher m = pattern.matcher(text);
         while (m.find()) {
-            matches.add(new MatchResult(m.start(), m.group()));
+            matches.add(MatchResult.of(m.start(), m.group()));
         }
         return matches;
     }

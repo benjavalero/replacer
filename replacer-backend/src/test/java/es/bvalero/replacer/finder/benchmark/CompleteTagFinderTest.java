@@ -27,9 +27,9 @@ public class CompleteTagFinderTest {
         this.text = String.format("%s %s %s", tag1, tag2, tag3);
 
         this.expected = new HashSet<>();
-        this.expected.add(new MatchResult(0, tag1));
-        this.expected.add(new MatchResult(46, tag2));
-        this.expected.add(new MatchResult(87, tag3));
+        this.expected.add(MatchResult.of(0, tag1));
+        this.expected.add(MatchResult.of(46, tag2));
+        this.expected.add(MatchResult.of(87, tag3));
     }
 
     @Test

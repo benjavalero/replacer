@@ -26,7 +26,7 @@ class WordAutomatonAllFinder extends WordAbstractFinder {
         AutomatonMatcher m = this.wordPattern.newMatcher(text);
         while (m.find()) {
             if (this.words.contains(m.group())) {
-                matches.add(new MatchResult(m.start(), m.group()));
+                matches.add(MatchResult.of(m.start(), m.group()));
             }
         }
         return matches;

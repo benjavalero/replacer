@@ -34,7 +34,7 @@ class CustomReplacementFinder extends ReplacementFinder {
         AutomatonMatcher m = automaton.newMatcher(text);
         while (m.find()) {
             if (isWordCompleteInText(m.start(), m.group(), text)) {
-                matches.add(new MatchResult(m.start(), m.group()));
+                matches.add(MatchResult.of(m.start(), m.group()));
             }
         }
         return matches;

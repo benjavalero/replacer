@@ -22,8 +22,8 @@ public class PersonFinderTest {
         this.text = "Con Julio Verne, Frances McDormand y Francesco en Julio de 2019.";
 
         this.expected = new HashSet<>();
-        this.expected.add(new MatchResult(4, "Julio"));
-        this.expected.add(new MatchResult(17, "Frances"));
+        this.expected.add(MatchResult.of(4, "Julio"));
+        this.expected.add(MatchResult.of(17, "Frances"));
     }
 
     @Test

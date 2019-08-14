@@ -17,7 +17,7 @@ class CommentAutomatonFinder extends CommentAbstractFinder {
         Set<MatchResult> matches = new HashSet<>();
         AutomatonMatcher m = COMMENT_PATTERN.newMatcher(text);
         while (m.find()) {
-            matches.add(new MatchResult(m.start(), m.group()));
+            matches.add(MatchResult.of(m.start(), m.group()));
         }
         return matches;
     }

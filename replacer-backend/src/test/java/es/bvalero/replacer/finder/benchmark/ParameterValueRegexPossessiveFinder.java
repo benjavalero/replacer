@@ -17,7 +17,7 @@ class ParameterValueRegexPossessiveFinder extends ParameterValueAbstractFinder {
         Set<MatchResult> matches = new HashSet<>();
         Matcher m = PATTERN.matcher(text);
         while (m.find()) {
-            matches.add(new MatchResult(m.start(2), m.group(2)));
+            matches.add(MatchResult.of(m.start(2), m.group(2)));
         }
         return matches;
     }

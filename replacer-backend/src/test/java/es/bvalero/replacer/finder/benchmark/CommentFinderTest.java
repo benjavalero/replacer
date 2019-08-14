@@ -21,8 +21,8 @@ public class CommentFinderTest {
         this.text = "xxx " + comment1 + " / " + comment2 + " zzz";
 
         this.expected = new HashSet<>();
-        this.expected.add(new MatchResult(4, comment1));
-        this.expected.add(new MatchResult(53, comment2));
+        this.expected.add(MatchResult.of(4, comment1));
+        this.expected.add(MatchResult.of(53, comment2));
     }
 
     @Test

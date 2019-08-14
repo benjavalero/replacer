@@ -21,7 +21,7 @@ class CursiveAutomatonFinder extends CursiveAbstractFinder {
             int start = m.start() + 1;
             int end = m.group().endsWith("\n") ? m.group().length() : m.group().length() - 1;
             String group = m.group().substring(1, end);
-            matches.add(new MatchResult(start, group));
+            matches.add(MatchResult.of(start, group));
         }
         return matches;
     }

@@ -22,8 +22,8 @@ public class FalseFinderTest {
         this.text = "En Abril Victoria Abril salió con Aaron Carter.";
 
         this.expected = new HashSet<>();
-        this.expected.add(new MatchResult(9, "Victoria Abril"));
-        this.expected.add(new MatchResult(34, "Aaron Carter"));
+        this.expected.add(MatchResult.of(9, "Victoria Abril"));
+        this.expected.add(MatchResult.of(34, "Aaron Carter"));
     }
 
     /* NOTE: We can use the same finders that we use for misspellings just with a different set of words */

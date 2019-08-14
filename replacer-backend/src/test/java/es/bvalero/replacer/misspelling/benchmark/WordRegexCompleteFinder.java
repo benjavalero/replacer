@@ -23,7 +23,7 @@ class WordRegexCompleteFinder extends WordAbstractFinder {
         for (Pattern word : this.words) {
             Matcher m = word.matcher(text);
             while (m.find()) {
-                matches.add(new MatchResult(m.start(), m.group()));
+                matches.add(MatchResult.of(m.start(), m.group()));
             }
         }
         return matches;

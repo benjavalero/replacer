@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder;
 
 import lombok.Value;
 
-@Value
+@Value(staticConstructor = "of")
 public class MatchResult {
 
     private int start;

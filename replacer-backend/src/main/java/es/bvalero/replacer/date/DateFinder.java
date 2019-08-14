@@ -64,7 +64,7 @@ public class DateFinder extends ReplacementFinder implements ArticleReplacementF
         AutomatonMatcher m = AUTOMATON_DATE_UPPERCASE_MONTHS.newMatcher(text);
         while (m.find()) {
             if (isWordCompleteInText(m.start(), m.group(), text)) {
-                matches.add(new MatchResult(m.start(), m.group()));
+                matches.add(MatchResult.of(m.start(), m.group()));
             }
         }
         return matches;
@@ -80,7 +80,7 @@ public class DateFinder extends ReplacementFinder implements ArticleReplacementF
         AutomatonMatcher m = AUTOMATON_DATE_LEADING_ZERO.newMatcher(text);
         while (m.find()) {
             if (isWordCompleteInText(m.start(), m.group(), text)) {
-                matches.add(new MatchResult(m.start(), m.group()));
+                matches.add(MatchResult.of(m.start(), m.group()));
             }
         }
         return matches;

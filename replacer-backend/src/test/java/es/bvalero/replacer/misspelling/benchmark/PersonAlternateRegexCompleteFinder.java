@@ -23,7 +23,7 @@ class PersonAlternateRegexCompleteFinder extends PersonAbstractFinder {
         Set<MatchResult> matches = new HashSet<>();
         Matcher m = this.words.matcher(text);
         while (m.find()) {
-            matches.add(new MatchResult(m.start(), m.group().substring(0, m.group().length() - 2)));
+            matches.add(MatchResult.of(m.start(), m.group().substring(0, m.group().length() - 2)));
         }
         return matches;
     }

@@ -23,7 +23,7 @@ class WordIndexOfFinder extends WordAbstractFinder {
                 start = text.indexOf(word, start);
                 if (start >= 0) {
                     if (isWordCompleteInText(start, word, text)) {
-                        matches.add(new MatchResult(start, word));
+                        matches.add(MatchResult.of(start, word));
                     }
                     start++;
                 }

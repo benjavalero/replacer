@@ -26,7 +26,7 @@ class UppercaseAutomatonFinder extends UppercaseAbstractFinder {
             AutomatonMatcher m = word.getValue().newMatcher(text);
             while (m.find()) {
                 int pos = m.group().indexOf(word.getKey());
-                matches.add(new MatchResult(m.start() + pos, word.getKey()));
+                matches.add(MatchResult.of(m.start() + pos, word.getKey()));
             }
         }
         return matches;

@@ -29,10 +29,10 @@ public class FalsePositiveFinderTest {
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(4, matches.size());
-        Assert.assertTrue(matches.contains(new MatchResult(3, "sólo")));
-        Assert.assertTrue(matches.contains(new MatchResult(11, "éstos")));
-        Assert.assertTrue(matches.contains(new MatchResult(23, "Index")));
-        Assert.assertTrue(matches.contains(new MatchResult(29, "Online")));
+        Assert.assertTrue(matches.contains(MatchResult.of(3, "sólo")));
+        Assert.assertTrue(matches.contains(MatchResult.of(11, "éstos")));
+        Assert.assertTrue(matches.contains(MatchResult.of(23, "Index")));
+        Assert.assertTrue(matches.contains(MatchResult.of(29, "Online")));
     }
 
     @Test
@@ -47,16 +47,16 @@ public class FalsePositiveFinderTest {
 
         Assert.assertFalse(matches1.isEmpty());
         Assert.assertEquals(1, matches1.size());
-        Assert.assertTrue(matches1.contains(new MatchResult(2, "Top Album")));
+        Assert.assertTrue(matches1.contains(MatchResult.of(2, "Top Album")));
         // Only the first match is found
-        Assert.assertFalse(matches1.contains(new MatchResult(6, "Album Chart")));
+        Assert.assertFalse(matches1.contains(MatchResult.of(6, "Album Chart")));
 
         String text2 = "A Topp Album Chart.";
         List<MatchResult> matches2 = falsePositiveFinder.findIgnoredReplacements(text2);
 
         Assert.assertFalse(matches2.isEmpty());
         Assert.assertEquals(1, matches2.size());
-        Assert.assertTrue(matches2.contains(new MatchResult(7, "Album Chart")));
+        Assert.assertTrue(matches2.contains(MatchResult.of(7, "Album Chart")));
     }
 
 }

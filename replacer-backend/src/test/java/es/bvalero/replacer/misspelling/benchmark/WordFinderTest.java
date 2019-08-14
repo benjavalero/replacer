@@ -32,12 +32,12 @@ public class WordFinderTest {
         this.text = "Um suma um, españa um m2 España y Castilla-León + cd's.";
 
         this.expected = new HashSet<>();
-        this.expected.add(new MatchResult(0, "Um"));
-        this.expected.add(new MatchResult(8, "um"));
-        this.expected.add(new MatchResult(12, "españa"));
-        this.expected.add(new MatchResult(19, "um"));
-        this.expected.add(new MatchResult(34, "Castilla-León"));
-        this.expected.add(new MatchResult(50, "cd's"));
+        this.expected.add(MatchResult.of(0, "Um"));
+        this.expected.add(MatchResult.of(8, "um"));
+        this.expected.add(MatchResult.of(12, "españa"));
+        this.expected.add(MatchResult.of(19, "um"));
+        this.expected.add(MatchResult.of(34, "Castilla-León"));
+        this.expected.add(MatchResult.of(50, "cd's"));
     }
 
     @Test

@@ -25,7 +25,7 @@ class UppercaseAlternateRegexFinder extends UppercaseAbstractFinder {
         while (m.find()) {
             String w = m.group(1);
             int pos = m.group().indexOf(w);
-            matches.add(new MatchResult(m.start() + pos, w));
+            matches.add(MatchResult.of(m.start() + pos, w));
         }
         return matches;
     }

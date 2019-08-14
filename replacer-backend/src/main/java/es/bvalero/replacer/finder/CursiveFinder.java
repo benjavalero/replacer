@@ -26,7 +26,7 @@ public class CursiveFinder extends ReplacementFinder implements IgnoredReplaceme
         while (matcher.find()) {
             int end = matcher.group().endsWith("\n") ? matcher.group().length() : matcher.group().length() - 1;
             String match = matcher.group().substring(1, end);
-            matches.add(new MatchResult(matcher.start() + 1, match));
+            matches.add(MatchResult.of(matcher.start() + 1, match));
         }
         return matches;
     }

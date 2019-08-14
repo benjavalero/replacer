@@ -15,7 +15,7 @@ class FileRegexLazyFinder extends FileAbstractFinder {
         Set<MatchResult> matches = new HashSet<>();
         Matcher m = PATTERN.matcher(text);
         while (m.find()) {
-            matches.add(new MatchResult(m.start(1), m.group(1)));
+            matches.add(MatchResult.of(m.start(1), m.group(1)));
         }
         return matches;
     }

@@ -24,11 +24,11 @@ public class CursiveFinderTest {
         this.text = String.format("A %s - %s - %s - %s - %s.", cursive1, cursive2, cursive3, cursive4, cursive5);
 
         this.expected = new HashSet<>();
-        this.expected.add(new MatchResult(2, cursive1));
-        this.expected.add(new MatchResult(17, cursive2));
-        this.expected.add(new MatchResult(32, cursive3));
-        this.expected.add(new MatchResult(46, cursive4));
-        this.expected.add(new MatchResult(76, cursive5));
+        this.expected.add(MatchResult.of(2, cursive1));
+        this.expected.add(MatchResult.of(17, cursive2));
+        this.expected.add(MatchResult.of(32, cursive3));
+        this.expected.add(MatchResult.of(46, cursive4));
+        this.expected.add(MatchResult.of(76, cursive5));
     }
 
     @Test

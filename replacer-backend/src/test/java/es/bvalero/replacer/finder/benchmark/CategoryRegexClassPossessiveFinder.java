@@ -16,7 +16,7 @@ class CategoryRegexClassPossessiveFinder extends CategoryAbstractFinder {
         Set<MatchResult> matches = new HashSet<>();
         Matcher m = PATTERN_CATEGORY.matcher(text);
         while (m.find()) {
-            matches.add(new MatchResult(m.start(), m.group()));
+            matches.add(MatchResult.of(m.start(), m.group()));
         }
         return matches;
     }
