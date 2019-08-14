@@ -85,12 +85,13 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
             String word = m.group();
             Misspelling misspelling = findMisspellingByWord(word);
             if (misspelling != null && isWordCompleteInText(m.start(), word, text)) {
-                articleReplacements.add(new ArticleReplacement(
-                        word,
-                        m.start(),
-                        getType(),
-                        misspelling.getWord(),
-                        findMisspellingSuggestions(word, misspelling)));
+                articleReplacements.add(ArticleReplacement.builder()
+                        .type(getType())
+                        .subtype(misspelling.getWord())
+                        .start(m.start())
+                        .text(word)
+                        .suggestions(findMisspellingSuggestions(word, misspelling))
+                        .build());
             }
         }
 
@@ -115,7 +116,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
 
         misspelling.getSuggestions().forEach(suggestion -> {
             ReplacementSuggestion newSuggestion = startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()
-                    ? new ReplacementSuggestion(setFirstUpperCase(suggestion.getText()), suggestion.getComment())
+                    ? ReplacementSuggestion.of(setFirstUpperCase(suggestion.getText()), suggestion.getComment())
                     : suggestion;
             if (originalWord.equals(newSuggestion.getText())) {
                 suggestions.add(0, newSuggestion);

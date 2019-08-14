@@ -3,7 +3,7 @@ package es.bvalero.replacer.dump;
 import lombok.Builder;
 import lombok.Value;
 
-@Value
+@Value(staticConstructor = "of")
 @Builder
 class DumpProcessStatus {
 

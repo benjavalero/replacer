@@ -39,20 +39,22 @@ public class DateFinder extends ReplacementFinder implements ArticleReplacementF
         List<ArticleReplacement> replacements = new ArrayList<>(100);
 
         // Dates with months in uppercase
-        findDatesWithUpperCaseMonths(text).forEach(match -> replacements.add(new ArticleReplacement(
-                match.getText(),
-                match.getStart(),
-                getType(),
-                DATE_UPPERCASE_MONTHS_TYPE,
-                Collections.singletonList(new ReplacementSuggestion(fixDateWithUpperCaseMonths(match.getText()), null)))));
+        findDatesWithUpperCaseMonths(text).forEach(match -> replacements.add(ArticleReplacement.builder()
+                .type(getType())
+                .subtype(DATE_UPPERCASE_MONTHS_TYPE)
+                .start(match.getStart())
+                .text(match.getText())
+                .suggestions(Collections.singletonList(ReplacementSuggestion.ofNoComment(fixDateWithUpperCaseMonths(match.getText()))))
+                .build()));
 
         // Dates with leading zero
-        findDatesWithLeadingZero(text).forEach(match -> replacements.add(new ArticleReplacement(
-                match.getText(),
-                match.getStart(),
-                getType(),
-                DATE_LEADING_ZERO_TYPE,
-                Collections.singletonList(new ReplacementSuggestion(fixDateWithLeadingZero(match.getText()), null)))));
+        findDatesWithLeadingZero(text).forEach(match -> replacements.add(ArticleReplacement.builder()
+                .type(getType())
+                .subtype(DATE_LEADING_ZERO_TYPE)
+                .start(match.getStart())
+                .text(match.getText())
+                .suggestions(Collections.singletonList(ReplacementSuggestion.ofNoComment(fixDateWithLeadingZero(match.getText()))))
+                .build()));
 
         return replacements;
     }

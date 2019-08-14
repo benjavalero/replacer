@@ -278,8 +278,12 @@ public class ArticleService {
     }
 
     private ArticleReview buildArticleReview(WikipediaPage article, List<ArticleReplacement> articleReplacements) {
-        return new ArticleReview(article.getId(), article.getTitle(), article.getContent(),
-                articleReplacements, article.getQueryTimestamp());
+        return ArticleReview.builder()
+                .articleId(article.getId())
+                .title(article.getTitle())
+                .content(article.getContent())
+                .currentTimestamp(article.getQueryTimestamp())
+                .replacements(articleReplacements).build();
     }
 
     /* DUMP INDEX */

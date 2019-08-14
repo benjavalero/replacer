@@ -148,7 +148,8 @@ public class DumpArticleProcessorTest {
                 .content("")
                 .build();
 
-        List<ArticleReplacement> articleReplacements = Collections.singletonList(Mockito.mock(ArticleReplacement.class));
+        ArticleReplacement articleReplacement = ArticleReplacement.builder().build();
+        List<ArticleReplacement> articleReplacements = Collections.singletonList(articleReplacement);
         Mockito.when(replacementFinderService.findReplacements(Mockito.anyString())).thenReturn(articleReplacements);
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, Collections.emptySet()));

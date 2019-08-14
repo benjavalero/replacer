@@ -64,7 +64,7 @@ class Misspelling {
             if (StringUtils.isNotBlank(text)) {
                 String explanation = StringUtils.isNotBlank(m.group(2))
                         ? m.group(2).substring(1, m.group(2).length() - 1) : ""; // Remove brackets
-                suggestionList.add(new ReplacementSuggestion(text, explanation));
+                suggestionList.add(ReplacementSuggestion.of(text, explanation));
             } else {
                 throw new IllegalArgumentException("Not valid misspelling comment: " + comment);
             }

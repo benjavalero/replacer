@@ -6,7 +6,7 @@ import lombok.Value;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Value
+@Value(staticConstructor = "of")
 @Builder
 public class WikipediaPage {
     private static final String WIKIPEDIA_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";

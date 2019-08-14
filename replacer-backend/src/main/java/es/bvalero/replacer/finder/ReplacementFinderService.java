@@ -43,7 +43,7 @@ public class ReplacementFinderService {
                 articleReplacements.size(), articleReplacements);
 
         // Remove nested replacements
-        articleReplacements.removeIf(replacement -> replacement.isContainedInListSelfIgnoring(articleReplacements));
+        articleReplacements.removeIf(replacement -> isReplacementContainedInListIgnoringItself(replacement, articleReplacements));
         LOGGER.debug("Potential replacements found after removing nested: {} - {}",
                 articleReplacements.size(), articleReplacements);
 
@@ -58,7 +58,7 @@ public class ReplacementFinderService {
             List<MatchResult> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
             LOGGER.debug("- Found ignored of type: {}", ignoredReplacements);
             LOGGER.debug("- END Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
-            articleReplacements.removeIf(replacement -> replacement.isContainedIn(ignoredReplacements));
+            articleReplacements.removeIf(replacement -> isReplacementContainedInMatchResultList(replacement, ignoredReplacements));
 
             if (articleReplacements.isEmpty()) {
                 break;
@@ -68,6 +68,35 @@ public class ReplacementFinderService {
         LOGGER.debug("END Find replacements in text. Final replacements found: {} - {}",
                 articleReplacements.size(), articleReplacements);
         return articleReplacements;
+    }
+
+    boolean isReplacementContainedInListIgnoringItself(ArticleReplacement replacement, List<ArticleReplacement> replacementList) {
+        boolean isContained = false;
+        for (ArticleReplacement replacementItem : replacementList) {
+            if (isReplacementContainedInReplacement(replacement, replacementItem)) {
+                isContained = true;
+                break;
+            }
+        }
+        return isContained;
+    }
+
+    private boolean isReplacementContainedInReplacement(ArticleReplacement replacement1, ArticleReplacement replacement2) {
+        return !replacement1.equals(replacement2) && isIntervalContainedInInterval(
+                replacement1.getStart(), replacement1.getEnd(),
+                replacement2.getStart(), replacement2.getEnd());
+    }
+
+    private boolean isIntervalContainedInInterval(int start1, int end1, int start2, int end2) {
+        return start1 >= start2 && end1 <= end2;
+    }
+
+    private boolean isReplacementContainedInMatchResultList(ArticleReplacement replacement, List<MatchResult> matchResults) {
+        return matchResults.stream().anyMatch(match -> isReplacementContainedInMatchResult(replacement, match));
+    }
+
+    private boolean isReplacementContainedInMatchResult(ArticleReplacement replacement, MatchResult matchResult) {
+        return isIntervalContainedInInterval(replacement.getStart(), replacement.getEnd(), matchResult.getStart(), matchResult.getEnd());
     }
 
     public List<ArticleReplacement> findCustomReplacements(String text, String replacement, String suggestion) {
@@ -84,7 +113,7 @@ public class ReplacementFinderService {
         // Ignore the replacements which must be ignored
         for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
             List<MatchResult> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
-            articleReplacements.removeIf(artRep -> artRep.isContainedIn(ignoredReplacements));
+            articleReplacements.removeIf(artRep -> isReplacementContainedInMatchResultList(artRep, ignoredReplacements));
 
             if (articleReplacements.isEmpty()) {
                 break;

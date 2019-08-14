@@ -17,14 +17,14 @@ class CustomReplacementFinder extends ReplacementFinder {
         String regex = startsWithLowerCase(replacement) && startsWithLowerCase(suggestion)
                 ? setFirstUpperCaseClass(replacement)
                 : replacement;
-        return findMatches(text, regex).stream().map(match -> new ArticleReplacement(
-                match.getText(),
-                match.getStart(),
-                ReplacementFinderService.CUSTOM_FINDER_TYPE,
-                replacement,
-                Collections.singletonList(new ReplacementSuggestion(
-                        getNewSuggestion(match.getText(), replacement, suggestion),
-                        null))))
+        return findMatches(text, regex).stream().map(match -> ArticleReplacement.builder()
+                .type(ReplacementFinderService.CUSTOM_FINDER_TYPE)
+                .subtype(replacement)
+                .start(match.getStart())
+                .text(match.getText())
+                .suggestions(Collections.singletonList(ReplacementSuggestion.ofNoComment(
+                        getNewSuggestion(match.getText(), replacement, suggestion))))
+                .build())
                 .collect(Collectors.toList());
     }
 

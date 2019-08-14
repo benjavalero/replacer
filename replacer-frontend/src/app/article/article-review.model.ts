@@ -4,6 +4,6 @@ export interface ArticleReview {
   id: number;
   title: string;
   content: string;
-  replacements: ArticleReplacement[];
   currentTimestamp: string;
+  replacements: ArticleReplacement[];
 }

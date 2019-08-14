@@ -1,38 +1,34 @@
 package es.bvalero.replacer.finder;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
+import lombok.Value;
 
 import java.util.List;
 
 /**
  * Domain class of a potential replacement in an article.
  */
-@Getter
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class ArticleReplacement extends MatchResult {
+@Value(staticConstructor = "of")
+@Builder
+public class ArticleReplacement implements Comparable<ArticleReplacement> {
+
+    @JsonIgnore
     private String type;
+    @JsonIgnore
     private String subtype;
+
+    private int start;
+    private String text;
     private List<ReplacementSuggestion> suggestions;
 
-    public ArticleReplacement(String text, int start, String type, String subtype, List<ReplacementSuggestion> suggestions) {
-        super(start, text);
-        this.type = type;
-        this.subtype = subtype;
-        this.suggestions = suggestions;
+    int getEnd() {
+        return this.start + this.text.length();
     }
 
-    boolean isContainedInListSelfIgnoring(List<ArticleReplacement> articleReplacements) {
-        boolean isContained = false;
-        for (ArticleReplacement articleReplacement : articleReplacements) {
-            if (!this.equals(articleReplacement) && this.isContainedIn(articleReplacement)) {
-                isContained = true;
-                break;
-            }
-        }
-        return isContained;
+    @Override
+    public int compareTo(ArticleReplacement o) {
+        return o.start == start ? getEnd() - o.getEnd() : o.start - start;
     }
 
 }

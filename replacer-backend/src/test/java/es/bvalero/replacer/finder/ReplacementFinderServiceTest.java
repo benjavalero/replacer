@@ -38,7 +38,7 @@ public class ReplacementFinderServiceTest {
 
     @Test
     public void testFindReplacements() {
-        ArticleReplacement replacement = Mockito.mock(ArticleReplacement.class);
+        ArticleReplacement replacement = ArticleReplacement.builder().build();
         ArticleReplacementFinder finder = Mockito.mock(ArticleReplacementFinder.class);
         Mockito.when(finder.findReplacements(Mockito.anyString()))
                 .thenReturn(Collections.singletonList(replacement));
@@ -55,15 +55,15 @@ public class ReplacementFinderServiceTest {
 
     @Test
     public void testFindReplacementsIgnoringExceptions() {
-        ArticleReplacement replacement1 = Mockito.mock(ArticleReplacement.class);
-        ArticleReplacement replacement2 = Mockito.mock(ArticleReplacement.class);
+        MatchResult ignored1 = new MatchResult(0, "AB");
+        ArticleReplacement replacement1 = ArticleReplacement.builder().start(1).text("B").build(); // Contained in ignored
+        ArticleReplacement replacement2 = ArticleReplacement.builder().start(2).text("C").build(); // Not contained in ignored
         ArticleReplacementFinder finder = Mockito.mock(ArticleReplacementFinder.class);
         Mockito.when(finder.findReplacements(Mockito.anyString()))
                 .thenReturn(Arrays.asList(replacement1, replacement2));
         Mockito.when(articleReplacementFinders.iterator())
                 .thenReturn(Collections.singletonList(finder).iterator());
 
-        MatchResult ignored1 = Mockito.mock(MatchResult.class);
         IgnoredReplacementFinder ignoredFinder = Mockito.mock(IgnoredReplacementFinder.class);
         List<MatchResult> ignored = Collections.singletonList(ignored1);
         Mockito.when(ignoredFinder.findIgnoredReplacements(Mockito.anyString()))
@@ -71,14 +71,48 @@ public class ReplacementFinderServiceTest {
         Mockito.when(ignoredReplacementFinders.iterator())
                 .thenReturn(Collections.singletonList(ignoredFinder).iterator());
 
-        Mockito.when(replacement1.isContainedIn(ignored)).thenReturn(true);
-        Mockito.when(replacement2.isContainedIn(ignored)).thenReturn(false);
-
         List<ArticleReplacement> replacements = replacementFinderService.findReplacements("");
 
         Assert.assertFalse(replacements.isEmpty());
         Assert.assertEquals(1, replacements.size());
         Assert.assertTrue(replacements.contains(replacement2));
+    }
+
+    @Test
+    public void testCompareArticleReplacements() {
+        ArticleReplacement result1 = ArticleReplacement.builder().start(0).text("A").build();
+        ArticleReplacement result2 = ArticleReplacement.builder().start(0).text("AB").build();
+        ArticleReplacement result3 = ArticleReplacement.builder().start(1).text("BC").build();
+        ArticleReplacement result4 = ArticleReplacement.builder().start(1).text("BCD").build();
+        ArticleReplacement result5 = ArticleReplacement.builder().start(2).text("C").build();
+        List<ArticleReplacement> results = Arrays.asList(result1, result2, result3, result4, result5);
+
+        Collections.sort(results);
+
+        // Order descendant by start. If equals, the lower end.
+        Assert.assertEquals(result5, results.get(0));
+        Assert.assertEquals(result3, results.get(1));
+        Assert.assertEquals(result4, results.get(2));
+        Assert.assertEquals(result1, results.get(3));
+        Assert.assertEquals(result2, results.get(4));
+    }
+
+    @Test
+    public void testIsContained() {
+        ArticleReplacement result1 = ArticleReplacement.builder().start(0).text("A").build();
+        ArticleReplacement result2 = ArticleReplacement.builder().start(1).text("BC").build();
+        List<ArticleReplacement> results = Arrays.asList(result1, result2);
+
+        Assert.assertFalse(replacementFinderService.isReplacementContainedInListIgnoringItself(result1, results));
+        Assert.assertFalse(replacementFinderService.isReplacementContainedInListIgnoringItself(result2, results));
+        ArticleReplacement result3 = ArticleReplacement.builder().start(1).text("B").build();
+        Assert.assertTrue(replacementFinderService.isReplacementContainedInListIgnoringItself(result3, results));
+        ArticleReplacement result4 = ArticleReplacement.builder().start(0).text("AB").build();
+        Assert.assertFalse(replacementFinderService.isReplacementContainedInListIgnoringItself(result4, results));
+        ArticleReplacement result5 = ArticleReplacement.builder().start(0).text("ABC").build();
+        Assert.assertFalse(replacementFinderService.isReplacementContainedInListIgnoringItself(result5, results));
+        ArticleReplacement result6 = ArticleReplacement.builder().start(2).text("C").build();
+        Assert.assertTrue(replacementFinderService.isReplacementContainedInListIgnoringItself(result6, results));
     }
 
 }

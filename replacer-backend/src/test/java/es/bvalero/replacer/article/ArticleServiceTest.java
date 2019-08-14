@@ -25,7 +25,7 @@ public class ArticleServiceTest {
     private final WikipediaPage article = WikipediaPage.builder().content(content).build();
     private final WikipediaPage article2 = WikipediaPage.builder().content(content2).build();
     private final ArticleReplacement articleReplacement =
-            new ArticleReplacement("", 0, "X", "Y", Collections.emptyList());
+            ArticleReplacement.builder().type("X").subtype("Y").build();
     private final List<ArticleReplacement> articleReplacements = Collections.singletonList(articleReplacement);
 
     @Mock
