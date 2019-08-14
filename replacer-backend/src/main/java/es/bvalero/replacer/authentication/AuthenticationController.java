@@ -57,7 +57,7 @@ public class AuthenticationController {
 
         String username = wikipediaService.identify(accessToken);
         boolean admin = authenticationService.isAdminUser(username);
-        return new User(username, admin);
+        return User.of(username, admin);
     }
 
 }

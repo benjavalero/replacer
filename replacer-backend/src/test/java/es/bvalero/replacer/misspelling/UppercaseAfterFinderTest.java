@@ -23,8 +23,8 @@ public class UppercaseAfterFinderTest {
         String noun2 = "Febrero";
         String text = "{{ param=" + noun1 + " | " + noun2 + " }} zzz";
 
-        Misspelling misspelling1 = new Misspelling("Enero", true, "enero");
-        Misspelling misspelling2 = new Misspelling("Febrero", true, "febrero");
+        Misspelling misspelling1 = Misspelling.of("Enero", true, "enero");
+        Misspelling misspelling2 = Misspelling.of("Febrero", true, "febrero");
         Set<Misspelling> misspellingSet = new HashSet<>(Arrays.asList(misspelling1, misspelling2));
 
         // Fake the update of the misspelling list in the misspelling manager

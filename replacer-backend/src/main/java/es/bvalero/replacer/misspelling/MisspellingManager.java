@@ -114,7 +114,7 @@ public class MisspellingManager {
             boolean cs = CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim());
             String comment = tokens[2].trim();
             try {
-                misspelling = new Misspelling(word, cs, comment);
+                misspelling = Misspelling.of(word, cs, comment);
             } catch (IllegalArgumentException e) {
                 LOGGER.warn("Ignore not valid misspelling: " + e.getMessage());
             }

@@ -23,7 +23,7 @@ class Misspelling {
     private boolean caseSensitive;
     private List<ReplacementSuggestion> suggestions;
 
-    Misspelling(String word, boolean caseSensitive, String comment) {
+    private Misspelling(String word, boolean caseSensitive, String comment) {
         // Validate the word
         if (!isMisspellingWordValid(word)) {
             throw new IllegalArgumentException("Not valid misspelling word: " + word);
@@ -35,12 +35,20 @@ class Misspelling {
         this.suggestions = new ArrayList<>();
         try {
             this.suggestions.addAll(parseSuggestionsFromComment(comment));
+            if (this.suggestions.isEmpty()) {
+                throw new IllegalArgumentException();
+            }
         } catch (Exception e) {
             throw new IllegalArgumentException("Not valid misspelling comment: " + comment, e);
         }
-        if (this.suggestions.isEmpty()) {
-            throw new IllegalArgumentException("Not valid misspelling comment: " + comment);
-        }
+    }
+
+    static Misspelling of(String word, boolean caseSensitive, String comment) {
+        return new Misspelling(word, caseSensitive, comment);
+    }
+
+    static Misspelling ofCaseInsensitive(String word, String comment) {
+        return Misspelling.of(word, false, comment);
     }
 
     private boolean isMisspellingWordValid(String word) {

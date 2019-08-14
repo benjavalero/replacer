@@ -201,10 +201,8 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put("rvprop", "timestamp");
 
         JsonNode jsonResponse = executeWikipediaApiRequest(params, true, accessToken);
-        EditToken editToken = new EditToken(
-                jsonResponse.at("/query/tokens/csrftoken").asText(),
-                jsonResponse.at("/query/pages/0/revisions/0/timestamp").asText()
-        );
+        EditToken editToken = EditToken.of(jsonResponse.at("/query/tokens/csrftoken").asText(),
+                jsonResponse.at("/query/pages/0/revisions/0/timestamp").asText());
         LOGGER.debug("END Get edit token: {}", editToken);
         return editToken;
     }

@@ -18,7 +18,7 @@ public class ReplacementRepositoryTest {
     private ReplacementRepository replacementRepository;
 
     @Test
-    public void testFindXsGrouped() {
+    public void testFindReplacementsGrouped() {
         Replacement error1 = new Replacement(1, "X", "aber", 1);
         Replacement error2 = new Replacement(2, "X", "aber", 2);
         Replacement error3 = new Replacement(2, "X", "madrid", 3);

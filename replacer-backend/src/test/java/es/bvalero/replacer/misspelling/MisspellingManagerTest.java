@@ -47,13 +47,13 @@ public class MisspellingManagerTest {
         Collection<Misspelling> misspellings = misspellingManager.parseMisspellingListText(misspellingListText);
         Assert.assertEquals(4, misspellings.size());
         Assert.assertTrue(misspellings.contains(
-                new Misspelling("C", true, "D")));
+                Misspelling.of("C", true, "D")));
         Assert.assertTrue(misspellings.contains(
-                new Misspelling("E", true, "F")));
+                Misspelling.of("E", true, "F")));
         Assert.assertTrue(misspellings.contains(
-                new Misspelling("I", false, "J")));
+                Misspelling.of("I", false, "J")));
         Assert.assertTrue(misspellings.contains(
-                new Misspelling("k", false, "k")));
+                Misspelling.of("k", false, "k")));
     }
 
     @Test
@@ -67,22 +67,22 @@ public class MisspellingManagerTest {
         Collection<Misspelling> misspellings = misspellingManager.parseMisspellingListText(misspellingListText);
         Assert.assertEquals(3, misspellings.size());
         Assert.assertTrue(misspellings.contains(
-                new Misspelling("aguila", false, "águila")));
+                Misspelling.ofCaseInsensitive("aguila", "águila")));
         Assert.assertTrue(misspellings.contains(
-                new Misspelling("Castilla-León", false, "Castilla y León")));
+                Misspelling.ofCaseInsensitive("Castilla-León", "Castilla y León")));
         Assert.assertTrue(misspellings.contains(
-                new Misspelling("CD's", false, "CD")));
+                Misspelling.ofCaseInsensitive("CD's", "CD")));
     }
 
     @Test
     public void testDeleteObsoleteMisspellings() {
-        Misspelling misspelling1 = new Misspelling("A", false, "B");
-        Misspelling misspelling2 = new Misspelling("B", false, "C");
+        Misspelling misspelling1 = Misspelling.ofCaseInsensitive("A", "B");
+        Misspelling misspelling2 = Misspelling.ofCaseInsensitive("B", "C");
         misspellingManager.setMisspellings(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
 
         Mockito.verify(articleService, Mockito.times(0)).deleteReplacementsByTextIn(Mockito.anySet());
 
-        Misspelling misspelling3 = new Misspelling("C", false, "D");
+        Misspelling misspelling3 = Misspelling.ofCaseInsensitive("C", "D");
         misspellingManager.setMisspellings(new HashSet<>(Arrays.asList(misspelling2, misspelling3)));
 
         Mockito.verify(articleService, Mockito.times(1)).deleteReplacementsByTextIn(Collections.singleton("A"));
