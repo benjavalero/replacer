@@ -1,5 +1,7 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +19,9 @@ public class ArticleIndexServiceTest {
     @Mock
     private ReplacementRepository replacementRepository;
 
+    @Mock
+    private ArticleStatsService articleStatsService;
+
     @InjectMocks
     private ArticleIndexService articleIndexService;
 
@@ -24,6 +29,18 @@ public class ArticleIndexServiceTest {
     public void setUp() {
         articleIndexService = new ArticleIndexService();
         MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void testIndexNewArticleReplacements() {
+        ArticleReplacement rep1 = ArticleReplacement.builder().build();  // New => ADD
+        List<ArticleReplacement> newReplacements = Collections.singletonList(rep1);
+
+        WikipediaPage article = WikipediaPage.builder().lastUpdate(LocalDateTime.now()).build();
+        articleIndexService.indexArticleReplacements(article, newReplacements);
+
+        Mockito.verify(replacementRepository, Mockito.times(1))
+                .save(Mockito.any(Replacement.class));
     }
 
     @Test
@@ -156,6 +173,72 @@ public class ArticleIndexServiceTest {
                         r1db.withLastUpdate(same),
                         r3,
                         r4db.withReviewer(ArticleIndexService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()))));
+    }
+
+    @Test
+    public void testReviewArticleNoType() {
+        int articleId = new Random().nextInt();
+
+        // There is several replacements for the article
+        Replacement rep1 = new Replacement(articleId, "A", "B", 0);
+        Replacement rep2 = new Replacement(articleId, "C", "D", 1);
+        List<Replacement> reps = Arrays.asList(rep1, rep2);
+        Mockito.when(replacementRepository.findByArticleIdAndReviewerIsNull(articleId))
+                .thenReturn(reps);
+
+        articleIndexService.reviewArticle(articleId, null, null, "X");
+
+        Mockito.verify(replacementRepository, Mockito.times(2))
+                .save(Mockito.any(Replacement.class));
+    }
+
+    @Test
+    public void testReviewArticleWithType() {
+        int articleId = new Random().nextInt();
+
+        // There are several replacements for the article
+        Replacement rep1 = new Replacement(articleId, "A", "B", 0);
+        List<Replacement> reps = Collections.singletonList(rep1);
+        Mockito.when(replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(articleId, "A", "B"))
+                .thenReturn(reps);
+
+        articleIndexService.reviewArticle(articleId, "A", "B", "X");
+
+        Mockito.verify(articleStatsService, Mockito.times(1))
+                .decreaseCachedReplacementsCount("A", "B", 1);
+        Mockito.verify(replacementRepository, Mockito.times(1))
+                .save(Mockito.any(Replacement.class));
+    }
+
+    @Test
+    public void testReviewArticleWithCustom() {
+        int articleId = new Random().nextInt();
+
+        articleIndexService.reviewArticle(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, "B", "X");
+
+        Mockito.verify(articleStatsService, Mockito.times(0))
+                .decreaseCachedReplacementsCount(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
+
+        Replacement toSave = new Replacement(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, "B", 0)
+                .withLastUpdate(LocalDate.now()).withReviewer("X");
+        Mockito.verify(replacementRepository, Mockito.times(1)).save(toSave);
+    }
+
+    @Test
+    public void testReviewArticlesAsSystem() {
+        int articleId = new Random().nextInt();
+        Set<Integer> articleIds = Collections.singleton(articleId);
+
+        Replacement rep1 = new Replacement(articleId, "A", "B", 0);
+        List<Replacement> reps = Collections.singletonList(rep1);
+        Mockito.when(replacementRepository.findByArticleIdAndReviewerIsNull(articleId))
+                .thenReturn(reps);
+
+        articleIndexService.reviewArticlesAsSystem(articleIds);
+
+        Replacement toSave = new Replacement(articleId, "A", "B", 0)
+                .withLastUpdate(LocalDate.now()).withReviewer(ArticleIndexService.SYSTEM_REVIEWER);
+        Mockito.verify(replacementRepository, Mockito.times(1)).save(toSave);
     }
 
 }
