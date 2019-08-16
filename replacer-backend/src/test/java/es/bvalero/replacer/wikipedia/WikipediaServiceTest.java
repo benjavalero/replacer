@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -56,17 +57,37 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testGetPageContent() throws AuthenticationException, WikipediaException {
+    public void testGetPageContentByTitle() throws AuthenticationException, WikipediaException {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
         Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(),
                 Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
 
+        int pageId = 6219990;
         String title = "Usuario:Benjavalero";
         WikipediaPage page = wikipediaService.getPageByTitle(title)
                 .orElseThrow(WikipediaException::new);
         Assert.assertNotNull(page);
-        Assert.assertEquals(6219990, page.getId());
+        Assert.assertEquals(pageId, page.getId());
+        Assert.assertEquals(title, page.getTitle());
+        Assert.assertEquals(WikipediaNamespace.USER, page.getNamespace());
+        Assert.assertTrue(page.getLastUpdate().getYear() >= 2016);
+        Assert.assertTrue(page.getContent().contains("Orihuela"));
+    }
+
+    @Test
+    public void testGetPageContentById() throws AuthenticationException, WikipediaException {
+        // API response
+        String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
+        Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(),
+                Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
+
+        int pageId = 6219990;
+        String title = "Usuario:Benjavalero";
+        WikipediaPage page = wikipediaService.getPageById(pageId)
+                .orElseThrow(WikipediaException::new);
+        Assert.assertNotNull(page);
+        Assert.assertEquals(pageId, page.getId());
         Assert.assertEquals(title, page.getTitle());
         Assert.assertEquals(WikipediaNamespace.USER, page.getNamespace());
         Assert.assertTrue(page.getLastUpdate().getYear() >= 2016);
@@ -129,6 +150,49 @@ public class WikipediaServiceTest {
 
         Set<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("");
         Assert.assertTrue(pageIds.isEmpty());
+    }
+
+    @Test
+    public void testIdentify() throws AuthenticationException, WikipediaException {
+        // API response
+        String textResponse = "{\"batchcomplete\": \"\", \"query\": {\"userinfo\": {\"id\": 9620478, \"name\": \"Benjavalero\"}}}";
+        Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(),
+                Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
+
+        OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
+        String username = wikipediaService.identify(accessToken);
+        Assert.assertEquals("Benjavalero", username);
+    }
+
+    @Test(expected = WikipediaException.class)
+    public void testSavePageContentWithConflict() throws WikipediaException, AuthenticationException {
+        // API response for the EditToken request
+        String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
+        Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(),
+                Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
+
+        OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
+        String timestamp = WikipediaPage.formatWikipediaTimestamp(LocalDateTime.now().withYear(2018));
+        wikipediaService.savePageContent(1, "", timestamp, accessToken);
+
+        Mockito.verify(authenticationService, Mockito.times(0))
+                .executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(), Mockito.anyBoolean(), Mockito.any(OAuth1AccessToken.class));
+    }
+
+    @Test
+    public void testSavePageContent() throws WikipediaException, AuthenticationException {
+        // API response for the EditToken request
+        String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
+        Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(),
+                Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
+
+        OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
+        String timestamp = WikipediaPage.formatWikipediaTimestamp(LocalDateTime.now());
+        wikipediaService.savePageContent(1, "", timestamp, accessToken);
+
+        // Two calls: one for the EditToken and another to save the content
+        Mockito.verify(authenticationService, Mockito.times(2))
+                .executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(), Mockito.eq(Boolean.TRUE), Mockito.any(OAuth1AccessToken.class));
     }
 
 }
