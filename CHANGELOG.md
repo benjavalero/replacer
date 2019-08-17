@@ -1,3 +1,8 @@
+# 2.1.1 (17 de agosto de 2019)
+- Mejoras en la visualización de las sugerencias de reemplazos en móviles
+- Mejoras de rendimiento: no se comprueba el estado de la indexación si no
+se está en esa pantalla.
+
 # 2.1.0 (8 de agosto de 2019)
 - Corrección en la captura de plantillas completas, como las citas.
 - Cambios en la búsqueda de artículos con reemplazos. Se recupera la funcionalidad de que la búsqueda devuelva un
