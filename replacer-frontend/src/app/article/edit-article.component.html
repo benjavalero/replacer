@@ -8,7 +8,7 @@
     [word]="replacement.text" [suggestions]="replacement.suggestions" (fixed)="onFixed($event)">
   </app-edit-snippet>
 
-  <button type="button" class="btn btn-success w-100 mt-3 mb-2" [disabled]="!fixedCount" (click)="onSaveChanges()">
+  <button type="button" class="btn btn-success w-100 mt-3 mb-3 p-3" [disabled]="!fixedCount" (click)="onSaveChanges()">
     Guardar cambios <span class="badge badge-light">{{ fixedCount }}</span>
   </button>
 
