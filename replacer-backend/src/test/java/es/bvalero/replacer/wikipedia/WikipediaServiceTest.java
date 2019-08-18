@@ -195,4 +195,17 @@ public class WikipediaServiceTest {
                 .executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(), Mockito.eq(Boolean.TRUE), Mockito.any(OAuth1AccessToken.class));
     }
 
+    @Test
+    public void testBuildSearchExpressionCaseSensitive() {
+        String text = "en Abril";
+        String expected = "\"en Abril\" insource:/\"en Abril\"/";
+        Assert.assertEquals(expected, wikipediaService.buildSearchExpression(text));
+    }
+
+    @Test
+    public void testBuildSearchExpressionCaseInsensitive() {
+        String text = "en abril";
+        String expected = "\"en abril\"";
+        Assert.assertEquals(expected, wikipediaService.buildSearchExpression(text));
+    }
 }

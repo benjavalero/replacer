@@ -107,7 +107,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put("list", "search");
         params.put("utf8", "1");
         params.put("srlimit", "100");
-        params.put("srsearch", String.format("\"%s\"", text));
+        params.put("srsearch", buildSearchExpression(text));
         params.put("srnamespace", StringUtils.join(WikipediaNamespace.getProcessableNamespaces().stream()
                 .map(WikipediaNamespace::getValue).collect(Collectors.toList()), "|"));
         params.put("srwhat", "text");
@@ -118,6 +118,20 @@ public class WikipediaServiceImpl implements WikipediaService {
         Set<Integer> pageIds = extractPageIdsFromApiResponse(jsonResponse);
         LOGGER.info("END Find Wikipedia pages by string match. Items found: {}", pageIds.size());
         return pageIds;
+    }
+
+    String buildSearchExpression(String text) {
+        String quoted = String.format("\"%s\"", text);
+        if (containsUppercase(text)) {
+            // Case-sensitive search with a regex
+            return String.format("%s insource:/%s/", quoted, quoted);
+        } else {
+            return quoted;
+        }
+    }
+
+    private boolean containsUppercase(String text) {
+        return text.chars().anyMatch(Character::isUpperCase);
     }
 
     private List<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue) throws WikipediaException {
