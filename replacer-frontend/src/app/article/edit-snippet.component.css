@@ -13,6 +13,10 @@
 }
 
 @media (min-width: 576px) {
+  .middle-suggestion {
+    border-radius: 0;
+  }
+
   .first-suggestion {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;

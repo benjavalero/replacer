@@ -9,7 +9,8 @@
       <div *ngFor="let suggestion of suggestions; let i = index; let first = first; let last = last"
         class="btn text-left col-sm" [ngClass]="{ 'btn-primary': suggestion === suggestionSelected,
          'btn-outline-primary': suggestion !== suggestionSelected,
-         'first-suggestion': first, 'last-suggestion': last }" (click)="onSelectSuggestion(i)">
+         'first-suggestion': first, 'middle-suggestion': !first && !last, 'last-suggestion': last }"
+        (click)="onSelectSuggestion(i)">
         {{ suggestion.text }}
         <span *ngIf="suggestion.comment" class="small">({{ suggestion.comment }})</span>
       </div>
