@@ -41,8 +41,18 @@ public class ArticleIndexService {
         LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
     }
 
-    public void indexReplacements(WikipediaPage article, Collection<Replacement> replacements,
-                                  Collection<Replacement> dbReplacements, boolean indexInBatch) {
+    public void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements,
+                                         Collection<Replacement> dbReplacements) {
+        LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
+        indexReplacements(article,
+                convertArticleReplacements(article, articleReplacements),
+                dbReplacements,
+                true);
+        LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
+    }
+
+    void indexReplacements(WikipediaPage article, Collection<Replacement> replacements,
+                           Collection<Replacement> dbReplacements, boolean indexInBatch) {
         LOGGER.debug("START Index list of replacements\n" +
                         "New: {} - {}\n" +
                         "Old: {} - {}",
@@ -81,8 +91,8 @@ public class ArticleIndexService {
         return replacements.stream().filter(rep -> rep.isSame(replacement)).findAny();
     }
 
-    public Collection<Replacement> convertArticleReplacements(WikipediaPage article,
-                                                              Collection<ArticleReplacement> articleReplacements) {
+    private Collection<Replacement> convertArticleReplacements(WikipediaPage article,
+                                                               Collection<ArticleReplacement> articleReplacements) {
         return articleReplacements.stream().map(
                 articleReplacement -> new Replacement(
                         article.getId(), articleReplacement.getType(), articleReplacement.getSubtype(),

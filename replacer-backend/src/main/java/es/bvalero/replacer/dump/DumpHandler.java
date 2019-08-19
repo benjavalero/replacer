@@ -1,10 +1,10 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.ArticleIndexService;
-import es.bvalero.replacer.article.ArticleService;
-import es.bvalero.replacer.article.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.*;
 
 /**
  * Handler to parse a Wikipedia XML dump.
@@ -33,8 +32,9 @@ class DumpHandler extends DefaultHandler {
     @Autowired
     private DumpArticleProcessor dumpArticleProcessor;
 
+    // Get database replacements in batches to improve performance
     @Autowired
-    private ArticleService articleService;
+    private DumpArticleCache dumpArticleCache;
 
     @Autowired
     private ArticleIndexService articleIndexService;
@@ -48,32 +48,17 @@ class DumpHandler extends DefaultHandler {
     private String currentContent;
 
     // Status
+    @Getter
     private boolean running = false;
+    @Getter
+    @Setter
     private Path latestDumpFile = null;
+    @Setter
     private boolean forceProcess;
     private long numArticlesRead;
     private long numArticlesProcessed;
     private Instant startTime;
     private Instant endTime;
-
-    // Get database replacements in batches to improve performance
-    private DumpArticleCache cache = new DumpArticleCache();
-
-    boolean isRunning() {
-        return running;
-    }
-
-    Path getLatestDumpFile() {
-        return latestDumpFile;
-    }
-
-    void setLatestDumpFile(Path latestDumpFile) {
-        this.latestDumpFile = latestDumpFile;
-    }
-
-    void setForceProcess(boolean forceProcess) {
-        this.forceProcess = forceProcess;
-    }
 
     @Override
     public void startDocument() {
@@ -92,6 +77,7 @@ class DumpHandler extends DefaultHandler {
 
         running = false;
         endTime = Instant.now();
+        dumpArticleCache.clean();
         articleIndexService.flushReplacementsInBatch();
     }
 
@@ -159,7 +145,7 @@ class DumpHandler extends DefaultHandler {
     }
 
     private boolean processArticle(WikipediaPage dumpArticle) {
-        return dumpArticleProcessor.processArticle(dumpArticle, cache.findDatabaseReplacements(dumpArticle.getId()), forceProcess);
+        return dumpArticleProcessor.processArticle(dumpArticle, forceProcess);
     }
 
     DumpProcessStatus getProcessStatus() {
@@ -172,48 +158,6 @@ class DumpHandler extends DefaultHandler {
                 .start(startTime == null ? null : startTime.toEpochMilli())
                 .end(endTime == null ? null : endTime.toEpochMilli())
                 .build();
-    }
-
-    private class DumpArticleCache {
-        private static final int CACHE_SIZE = 1000;
-        private int maxCachedId;
-        private Map<Integer, Collection<Replacement>> replacementMap = new HashMap<>(CACHE_SIZE);
-
-        Collection<Replacement> findDatabaseReplacements(int articleId) {
-            // Load the cache the first time or when needed
-            if (maxCachedId == 0 || articleId > maxCachedId) {
-                cleanCache();
-
-                int minId = maxCachedId + 1;
-                maxCachedId += CACHE_SIZE;
-                loadCache(minId, maxCachedId);
-            }
-
-            Collection<Replacement> replacements = replacementMap.getOrDefault(articleId, Collections.emptySet());
-            replacementMap.remove(articleId); // No need to check if the ID exists
-
-            return replacements;
-        }
-
-        private void loadCache(int minId, int maxId) {
-            LOGGER.debug("START Load replacements from database to cache. Article ID between {} and {}", minId, maxId);
-            for (Replacement replacement : articleService.findDatabaseReplacementByArticles(minId, maxId)) {
-                if (!replacementMap.containsKey(replacement.getArticleId())) {
-                    replacementMap.put(replacement.getArticleId(), new HashSet<>());
-                }
-                replacementMap.get(replacement.getArticleId()).add(replacement);
-            }
-            LOGGER.debug("END Load replacements from database to cache. Articles cached: {}", replacementMap.size());
-        }
-
-        private void cleanCache() {
-            // Clear the cache if obsolete (we assume the dump articles are in order)
-            // The remaining cached articles are not in the dump so we remove them from DB
-            LOGGER.debug("START Delete obsolete articles in DB: {}", replacementMap.keySet());
-            articleIndexService.reviewArticlesAsSystem(replacementMap.keySet());
-            replacementMap = new HashMap<>(CACHE_SIZE);
-            LOGGER.debug("END Delete obsolete articles in DB");
-        }
     }
 
 }

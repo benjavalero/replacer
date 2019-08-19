@@ -2,6 +2,7 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.ArticleIndexService;
 import es.bvalero.replacer.article.Replacement;
+import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -24,6 +25,9 @@ import java.util.Optional;
 class DumpArticleProcessor {
 
     @Autowired
+    private DumpArticleCache dumpArticleCache;
+
+    @Autowired
     private ArticleIndexService articleIndexService;
 
     @Autowired
@@ -31,15 +35,10 @@ class DumpArticleProcessor {
 
     @TestOnly
     boolean processArticle(WikipediaPage dumpArticle) {
-        return processArticle(dumpArticle, Collections.emptyList(), false);
+        return processArticle(dumpArticle, false);
     }
 
-    @TestOnly
-    boolean processArticle(WikipediaPage dumpArticle, Collection<Replacement> dbReplacements) {
-        return processArticle(dumpArticle, dbReplacements, false);
-    }
-
-    boolean processArticle(WikipediaPage dumpArticle, Collection<Replacement> dbReplacements, boolean forceProcess) {
+    boolean processArticle(WikipediaPage dumpArticle, boolean forceProcess) {
         LOGGER.debug("START Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
 
         if (!isDumpArticleProcessableByNamespace(dumpArticle)) {
@@ -51,7 +50,9 @@ class DumpArticleProcessor {
             return false;
         }
 
-        Optional<LocalDate> dbLastUpdate = dbReplacements.stream().map(Replacement::getLastUpdate).max(Comparator.comparing(LocalDate::toEpochDay));
+        Collection<Replacement> dbReplacements = dumpArticleCache.findDatabaseReplacements(dumpArticle.getId());
+        Optional<LocalDate> dbLastUpdate = dbReplacements.stream().map(Replacement::getLastUpdate)
+                .max(Comparator.comparing(LocalDate::toEpochDay));
         if (dbLastUpdate.isPresent()
                 && !isArticleProcessableByTimestamp(dumpArticle.getLastUpdate().toLocalDate(), dbLastUpdate.get(), forceProcess)) {
             LOGGER.debug("END Process dump article. Not processable by date: {}. Dump date: {}. DB date: {}",
@@ -59,10 +60,8 @@ class DumpArticleProcessor {
             return false;
         }
 
-        articleIndexService.indexReplacements(dumpArticle,
-                articleIndexService.convertArticleReplacements(dumpArticle, replacementFinderService.findReplacements(dumpArticle.getContent())),
-                dbReplacements,
-                true);
+        List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(dumpArticle.getContent());
+        articleIndexService.indexArticleReplacements(dumpArticle, articleReplacements, dbReplacements);
 
         LOGGER.debug("END Process dump article: {}", dumpArticle.getTitle());
         return true;

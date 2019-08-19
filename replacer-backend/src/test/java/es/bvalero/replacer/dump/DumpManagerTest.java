@@ -35,6 +35,7 @@ public class DumpManagerTest {
 
     @Test
     public void testFindLatestDumpFile() throws DumpException, IOException {
+        // Two folders: 1 and 2 (newer). Each with one dump file.
         Path dumpFolderFile = Paths.get(dumpFolder.getRoot().toURI());
         Path subFolder1 = dumpFolderFile.resolve("20170101");
         Path subFolder2 = dumpFolderFile.resolve("20170201");
@@ -72,7 +73,7 @@ public class DumpManagerTest {
 
     @Test(expected = DumpException.class)
     public void testFindLatestDumpFileWithoutDumpFiles() throws DumpException, IOException {
-        // In case the latest sub-folder has not the dump yet (it has not been finished)
+        // In case there is no sub-folder with a dump yet (it has not been finished)
         dumpFolder.newFolder("20170101");
         dumpManager.setDumpFolderPath(dumpFolder.getRoot().getPath());
 
@@ -95,12 +96,15 @@ public class DumpManagerTest {
 
     @Test
     public void testParseDumpFile() throws URISyntaxException, DumpException {
+        // We need a real dump file to create the input stream
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Assert.assertNotNull(dumpFile);
         Assert.assertTrue(Files.exists(dumpFile));
 
-        dumpManager.parseDumpFile(dumpFile, false);
+        dumpManager.parseDumpFile(dumpFile, true);
 
+        Mockito.verify(dumpHandler, Mockito.times(1)).setLatestDumpFile(dumpFile);
+        Mockito.verify(dumpHandler, Mockito.times(1)).setForceProcess(true);
         Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
     }
 
@@ -114,7 +118,7 @@ public class DumpManagerTest {
 
     @Test(expected = DumpException.class)
     public void testParseDumpFileWithParseException() throws URISyntaxException, DumpException {
-        Path dumpFile = Paths.get(getClass().getResource("/false-positives.txt").toURI());
+        Path dumpFile = Paths.get(getClass().getResource("/non-valid-dump.txt.bz2").toURI());
         Assert.assertNotNull(dumpFile);
         Assert.assertTrue(Files.exists(dumpFile));
 
@@ -122,19 +126,35 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testParseDumpFileAlreadyRunning() throws URISyntaxException {
+    public void testProcessLatestDumpFile() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        Assert.assertNotNull(dumpFile);
-        Assert.assertTrue(Files.exists(dumpFile));
+        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
 
-        Mockito.when(dumpHandler.isRunning()).thenReturn(true);
+        dumpManager.processLatestDumpFile(false);
+
+        Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
+    }
+
+    @Test
+    public void testProcessLatestDumpFileWithException() {
+        dumpManager.setDumpFolderPath("");
+
         dumpManager.processLatestDumpFile(false);
 
         Mockito.verify(dumpHandler, Mockito.times(0)).startDocument();
     }
 
     @Test
-    public void testProcessDumpFileAlreadyProcessed() throws URISyntaxException {
+    public void testProcessLatestDumpFileAlreadyRunning() {
+        Mockito.when(dumpHandler.isRunning()).thenReturn(true);
+
+        dumpManager.processLatestDumpFile(false);
+
+        Mockito.verify(dumpHandler, Mockito.times(0)).startDocument();
+    }
+
+    @Test
+    public void testProcessLatestDumpFileAlreadyProcessed() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
         Mockito.when(dumpHandler.getLatestDumpFile()).thenReturn(dumpFile);
@@ -145,12 +165,22 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testForceProcessDumpFileAlreadyProcessed() throws URISyntaxException {
+    public void testProcessLatestDumpFileAlreadyProcessedForced() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
         Mockito.when(dumpHandler.getLatestDumpFile()).thenReturn(dumpFile);
 
         dumpManager.processLatestDumpFile(true);
+
+        Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
+    }
+
+    @Test
+    public void testProcessDumpScheduled() throws URISyntaxException {
+        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
+
+        dumpManager.processDumpScheduled();
 
         Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
     }
