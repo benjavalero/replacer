@@ -1,3 +1,8 @@
+# 2.1.2 (20 de agosto de 2019)
+- Mejoras en la búsqueda de reemplazos personalizados con mayúsculas
+- Resaltado del botón de Guardar cambios
+- Mejoras en el proceso de indexación
+
 # 2.1.1 (17 de agosto de 2019)
 - Mejoras en la visualización de las sugerencias de reemplazos en móviles
 - Mejoras de rendimiento: no se comprueba el estado de la indexación si no
