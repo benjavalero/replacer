@@ -38,3 +38,13 @@ CREATE TABLE replacement2 (
 );
 
 ALTER TABLE replacement2 ADD CONSTRAINT same_rep UNIQUE KEY(article_id, type, subtype, position);
+
+DROP TABLE IF EXISTS indexation;
+
+CREATE TABLE indexation (
+    id INT NOT NULL AUTO_INCREMENT,
+    filename VARCHAR(255) NOT NULL,
+    forced BIT(1) NOT NULL,
+    start DATE NOT NULL,
+    PRIMARY KEY (id)
+);

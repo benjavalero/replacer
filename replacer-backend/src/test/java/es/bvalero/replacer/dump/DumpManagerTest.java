@@ -15,6 +15,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.Collections;
 
 public class DumpManagerTest {
 
@@ -23,6 +25,9 @@ public class DumpManagerTest {
 
     @Mock
     private DumpHandler dumpHandler;
+
+    @Mock
+    private DumpIndexationRepository dumpIndexationRepository;
 
     @InjectMocks
     private DumpManager dumpManager;
@@ -129,10 +134,13 @@ public class DumpManagerTest {
     public void testProcessLatestDumpFile() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
+        Mockito.when(dumpHandler.getProcessStatus())
+                .thenReturn(DumpProcessStatus.builder().start(0L).build());
 
         dumpManager.processLatestDumpFile(false);
 
         Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
+        Mockito.verify(dumpIndexationRepository, Mockito.times(1)).save(Mockito.any());
     }
 
     @Test
@@ -157,7 +165,9 @@ public class DumpManagerTest {
     public void testProcessLatestDumpFileAlreadyProcessed() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
-        Mockito.when(dumpHandler.getLatestDumpFile()).thenReturn(dumpFile);
+        DumpIndexation dumpIndexation = new DumpIndexation("eswiki-20170101-pages-articles.xml.bz2", false, LocalDate.now());
+        Mockito.when(dumpIndexationRepository.findByOrderByIdDesc(Mockito.any()))
+                .thenReturn(Collections.singletonList(dumpIndexation));
 
         dumpManager.processLatestDumpFile(false);
 
@@ -168,21 +178,29 @@ public class DumpManagerTest {
     public void testProcessLatestDumpFileAlreadyProcessedForced() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
-        Mockito.when(dumpHandler.getLatestDumpFile()).thenReturn(dumpFile);
+        DumpIndexation dumpIndexation = new DumpIndexation("eswiki-20170101-pages-articles.xml.bz2", false, LocalDate.now());
+        Mockito.when(dumpIndexationRepository.findByOrderByIdDesc(Mockito.any()))
+                .thenReturn(Collections.singletonList(dumpIndexation));
+        Mockito.when(dumpHandler.getProcessStatus())
+                .thenReturn(DumpProcessStatus.builder().start(0L).build());
 
         dumpManager.processLatestDumpFile(true);
 
         Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
+        Mockito.verify(dumpIndexationRepository, Mockito.times(1)).save(Mockito.any());
     }
 
     @Test
     public void testProcessDumpScheduled() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
+        Mockito.when(dumpHandler.getProcessStatus())
+                .thenReturn(DumpProcessStatus.builder().start(0L).build());
 
         dumpManager.processDumpScheduled();
 
         Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
+        Mockito.verify(dumpIndexationRepository, Mockito.times(1)).save(Mockito.any());
     }
 
 }

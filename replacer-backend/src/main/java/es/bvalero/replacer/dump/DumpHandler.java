@@ -50,7 +50,6 @@ class DumpHandler extends DefaultHandler {
     // Status
     @Getter
     private boolean running = false;
-    @Getter
     @Setter
     private Path latestDumpFile = null;
     @Setter
