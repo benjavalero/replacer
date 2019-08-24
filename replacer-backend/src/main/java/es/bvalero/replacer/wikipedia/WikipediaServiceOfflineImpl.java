@@ -81,4 +81,9 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
         return "offline";
     }
 
+    @Override
+    public List<WikipediaSection> getPageSections(int pageId) {
+        return Collections.emptyList();
+    }
+
 }

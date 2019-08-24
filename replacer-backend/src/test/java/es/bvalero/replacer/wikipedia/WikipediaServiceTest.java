@@ -208,4 +208,40 @@ public class WikipediaServiceTest {
         String expected = "\"en abril\"";
         Assert.assertEquals(expected, wikipediaService.buildSearchExpression(text));
     }
+
+    @Test
+    public void testGetPageSections() throws AuthenticationException, WikipediaException {
+        // API response
+        String textResponse = "{\"parse\":{\"title\":\"Usuario:Benjavalero/Taller\",\"pageid\":6903884,\"sections\":[{\"toclevel\":1,\"level\":\"2\",\"line\":\"Pruebas con cursiva\",\"number\":\"1\",\"index\":\"1\",\"fromtitle\":\"Usuario:Benjavalero/Taller\",\"byteoffset\":1998,\"anchor\":\"Pruebas_con_cursiva\"},{\"toclevel\":1,\"level\":\"2\",\"line\":\"Pruebas de banderas de la Selección Española\",\"number\":\"2\",\"index\":\"2\",\"fromtitle\":\"Usuario:Benjavalero/Taller\",\"byteoffset\":2275,\"anchor\":\"Pruebas_de_banderas_de_la_Selección_Española\"},{\"toclevel\":1,\"level\":\"2\",\"line\":\"Referencias\",\"number\":\"3\",\"index\":\"3\",\"fromtitle\":\"Usuario:Benjavalero/Taller\",\"byteoffset\":2497,\"anchor\":\"Referencias\"}]}}";
+        Mockito.when(authenticationService.executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(),
+                Mockito.anyBoolean(), Mockito.nullable(OAuth1AccessToken.class))).thenReturn(textResponse);
+
+        List<WikipediaSection> sections = wikipediaService.getPageSections(6903884);
+        Assert.assertNotNull(sections);
+        Assert.assertEquals(3, sections.size());
+        Assert.assertTrue(sections.stream().anyMatch(sec -> sec.getNumber().equals("1")));
+        Assert.assertEquals("Pruebas con cursiva", sections.stream()
+                .filter(sec -> sec.getNumber().equals("1"))
+                .findAny().orElseThrow(WikipediaException::new).getLine());
+        Assert.assertEquals(1998, sections.stream()
+                .filter(sec -> sec.getNumber().equals("1"))
+                .findAny().orElseThrow(WikipediaException::new).getByteOffset());
+
+        Assert.assertTrue(sections.stream().anyMatch(sec -> sec.getNumber().equals("2")));
+        Assert.assertEquals("Pruebas de banderas de la Selección Española", sections.stream()
+                .filter(sec -> sec.getNumber().equals("2"))
+                .findAny().orElseThrow(WikipediaException::new).getLine());
+        Assert.assertEquals(2275, sections.stream()
+                .filter(sec -> sec.getNumber().equals("2"))
+                .findAny().orElseThrow(WikipediaException::new).getByteOffset());
+
+        Assert.assertTrue(sections.stream().anyMatch(sec -> sec.getNumber().equals("3")));
+        Assert.assertEquals("Referencias", sections.stream()
+                .filter(sec -> sec.getNumber().equals("3"))
+                .findAny().orElseThrow(WikipediaException::new).getLine());
+        Assert.assertEquals(2497, sections.stream()
+                .filter(sec -> sec.getNumber().equals("3"))
+                .findAny().orElseThrow(WikipediaException::new).getByteOffset());
+    }
+
 }

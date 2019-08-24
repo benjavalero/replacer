@@ -248,4 +248,33 @@ public class WikipediaServiceImpl implements WikipediaService {
         return username;
     }
 
+    @Override
+    public List<WikipediaSection> getPageSections(int pageId) throws WikipediaException {
+        LOGGER.info("START Get page sections. Page ID: {}", pageId);
+        Map<String, String> params = new HashMap<>();
+        params.put(PARAM_ACTION, "parse");
+        params.put(PARAM_PAGE_ID, Integer.toString(pageId));
+        params.put("prop", "sections");
+
+        JsonNode jsonResponse = executeWikipediaApiRequest(params, false, null);
+        List<WikipediaSection> sections = extractSectionsFromApiResponse(jsonResponse);
+        LOGGER.info("END Get page sections. Items found: {}", sections.size());
+        return sections;
+    }
+
+    private List<WikipediaSection> extractSectionsFromApiResponse(JsonNode json) {
+        List<WikipediaSection> pageSections = new ArrayList<>();
+        json.at("/parse/sections").forEach(jsonSection -> {
+            WikipediaSection section = WikipediaSection.builder()
+                    .tocLevel(jsonSection.get("toclevel").asInt())
+                    .level(jsonSection.get("level").asText())
+                    .line(jsonSection.get("line").asText())
+                    .number(jsonSection.get("number").asText())
+                    .byteOffset(jsonSection.get("byteoffset").asInt())
+                    .build();
+            pageSections.add(section);
+        });
+        return pageSections;
+    }
+
 }

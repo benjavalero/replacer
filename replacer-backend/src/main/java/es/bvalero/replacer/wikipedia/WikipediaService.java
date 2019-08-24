@@ -35,4 +35,6 @@ public interface WikipediaService {
 
     String identify(OAuth1AccessToken accessToken) throws WikipediaException;
 
+    List<WikipediaSection> getPageSections(int pageId) throws WikipediaException;
+
 }
