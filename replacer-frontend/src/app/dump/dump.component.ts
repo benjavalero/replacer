@@ -6,7 +6,7 @@ import { DumpStatus } from './dump-status.model';
 import { AlertService } from '../alert/alert.service';
 import { sleep } from '../sleep';
 
-const NUM_ARTICLES = 3801980; // Rough amount of articles to be read
+const NUM_ARTICLES = 3808159; // Rough amount of articles to be read
 
 @Component({
   selector: 'app-dump',
@@ -39,7 +39,7 @@ export class DumpComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
- }
+  }
 
   private findDumpStatus() {
     this.dumpService.findDumpStatus().subscribe((status: DumpStatus) => {
