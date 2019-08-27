@@ -5,11 +5,11 @@ import lombok.Value;
 
 @Value
 @Builder
-class WikipediaSection {
+public class WikipediaSection {
     private int tocLevel;
-    private String level;
+    private int level;
     private String line;
     private String number;
-    private String index;
+    private int index;
     private int byteOffset;
 }

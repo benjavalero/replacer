@@ -86,7 +86,7 @@ public class ArticleController {
     @PutMapping
     public void save(@RequestParam("id") int articleId, @RequestBody String text,
                      @RequestParam String type, @RequestParam String subtype,
-                     @RequestParam String reviewer, @RequestParam String currentTimestamp,
+                     @RequestParam String reviewer, @RequestParam String currentTimestamp, @RequestParam int section,
                      @RequestParam String token, @RequestParam String tokenSecret) throws WikipediaException {
         boolean changed = StringUtils.isNotBlank(text);
         LOGGER.info("PUT Save article. ID: {} - Changed: {}", articleId, changed);
@@ -94,7 +94,7 @@ public class ArticleController {
             OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
 
             // Upload new content to Wikipedia
-            wikipediaService.savePageContent(articleId, text, currentTimestamp, accessToken);
+            wikipediaService.savePageContent(articleId, text, section, currentTimestamp, accessToken);
         }
 
         // Mark article as reviewed in the database

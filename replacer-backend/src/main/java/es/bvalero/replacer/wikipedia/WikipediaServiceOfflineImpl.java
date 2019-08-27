@@ -34,6 +34,11 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public Optional<WikipediaPage> getPageById(int articleId) throws WikipediaException {
+        return getPageByIdAndSection(articleId, 0);
+    }
+
+    @Override
+    public Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section) throws WikipediaException {
         return getPageByTitle("");
     }
 
@@ -52,7 +57,7 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     @Override
-    public void savePageContent(int pageId, String pageContent, String currentTimestamp, OAuth1AccessToken accessToken) {
+    public void savePageContent(int pageId, String pageContent, int section, String currentTimestamp, OAuth1AccessToken accessToken) {
         // Do nothing
     }
 

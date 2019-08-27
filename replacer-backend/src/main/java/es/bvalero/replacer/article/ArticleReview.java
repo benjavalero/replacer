@@ -3,6 +3,7 @@ package es.bvalero.replacer.article;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import lombok.Builder;
 import lombok.Value;
+import lombok.experimental.Wither;
 
 import java.util.List;
 
@@ -13,9 +14,11 @@ import java.util.List;
 @Builder
 class ArticleReview {
 
-    private Integer articleId;
+    private int articleId;
     private String title;
     private String content;
+    @Wither
+    private int section;
     private String currentTimestamp;
     private List<ArticleReplacement> replacements;
 

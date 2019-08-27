@@ -4,6 +4,7 @@ import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,10 +23,11 @@ public class ArticleServiceTest {
     private final int randomId2 = 2;
     private final String content = "X";
     private final String content2 = "Y";
-    private final WikipediaPage article = WikipediaPage.builder().content(content).build();
-    private final WikipediaPage article2 = WikipediaPage.builder().content(content2).build();
+    private final WikipediaPage article = WikipediaPage.builder().id(randomId).content(content).build();
+    private final WikipediaPage article2 = WikipediaPage.builder().id(randomId2).content(content2).build();
+    private final int offset = 2;
     private final ArticleReplacement articleReplacement =
-            ArticleReplacement.builder().type("X").subtype("Y").build();
+            ArticleReplacement.builder().start(offset).type("X").subtype("Y").text("A").build();
     private final List<ArticleReplacement> articleReplacements = Collections.singletonList(articleReplacement);
 
     @Mock
@@ -300,6 +302,61 @@ public class ArticleServiceTest {
 
         articleId = articleService.findRandomArticleToReview("X", "Y");
         Assert.assertFalse(articleId.isPresent());
+    }
+
+    @Test
+    public void testArticleReviewWithSection() throws WikipediaException {
+        final int sectionId = 1;
+
+        // The article exists in Wikipedia
+        Mockito.when(wikipediaService.getPageById(randomId))
+                .thenReturn(Optional.of(article));
+
+        // The article contains replacements
+        Mockito.when(replacementFinderService.findReplacements(content))
+                .thenReturn(articleReplacements);
+
+        // The article has sections
+        WikipediaSection section1 = WikipediaSection.builder().byteOffset(offset).index(sectionId).build();
+        WikipediaSection section2 = WikipediaSection.builder().byteOffset(offset + 10).index(sectionId + 1).build();
+        Mockito.when(wikipediaService.getPageSections(randomId))
+                .thenReturn(Arrays.asList(section1, section2));
+        Mockito.when(wikipediaService.getPageByIdAndSection(randomId, sectionId))
+                .thenReturn(Optional.of(article.withSection(sectionId)));
+
+        Optional<ArticleReview> review = articleService.findArticleReview(randomId, "X", "Y", null);
+
+        Assert.assertTrue(review.isPresent());
+        review.ifPresent(rev -> {
+            Assert.assertEquals(randomId, rev.getArticleId());
+            Assert.assertEquals(articleReplacements.size(), rev.getReplacements().size());
+            Assert.assertEquals(articleReplacements.get(0).getStart() - offset, rev.getReplacements().get(0).getStart());
+            Assert.assertEquals(sectionId, rev.getSection());
+        });
+    }
+
+    @Test
+    public void testArticleReviewWithNoSection() throws WikipediaException {
+        // The article exists in Wikipedia
+        Mockito.when(wikipediaService.getPageById(randomId))
+                .thenReturn(Optional.of(article));
+
+        // The article contains replacements
+        Mockito.when(replacementFinderService.findReplacements(content))
+                .thenReturn(articleReplacements);
+
+        // The article has no sections
+        Mockito.when(wikipediaService.getPageSections(randomId))
+                .thenReturn(Collections.emptyList());
+
+        Optional<ArticleReview> review = articleService.findArticleReview(randomId, "X", "Y", null);
+
+        Assert.assertTrue(review.isPresent());
+        review.ifPresent(rev -> {
+            Assert.assertEquals(randomId, rev.getArticleId());
+            Assert.assertEquals(articleReplacements, rev.getReplacements());
+            Assert.assertEquals(0, rev.getSection());
+        });
     }
 
 }

@@ -17,6 +17,8 @@ public interface WikipediaService {
 
     Optional<WikipediaPage> getPageById(int pageId) throws WikipediaException;
 
+    Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section) throws WikipediaException;
+
     /**
      * @param pageIds The list of numeric IDs of the Wikipedia pages to retrieve
      * @return A map with the each and the retrieved page. If any page is missing or deleted will not exist in the map.
@@ -26,7 +28,7 @@ public interface WikipediaService {
 
     Set<Integer> getPageIdsByStringMatch(String text) throws WikipediaException;
 
-    void savePageContent(int pageId, String pageContent, String currentTimestamp, OAuth1AccessToken accessToken)
+    void savePageContent(int pageId, String pageContent, int section, String currentTimestamp, OAuth1AccessToken accessToken)
             throws WikipediaException;
 
     String getMisspellingListPageContent() throws WikipediaException;

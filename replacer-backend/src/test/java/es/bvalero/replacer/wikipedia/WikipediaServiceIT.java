@@ -72,6 +72,7 @@ public class WikipediaServiceIT {
         // Save the new content
         wikipediaService.savePageContent(page.getId(),
                 newContent,
+                0,
                 page.getQueryTimestamp(),
                 new OAuth1AccessToken("", ""));
 
@@ -81,6 +82,7 @@ public class WikipediaServiceIT {
                         page.getQueryTimestamp()).minusMinutes(1));
         wikipediaService.savePageContent(page.getId(),
                 conflictContent,
+                0,
                 before,
                 new OAuth1AccessToken("", ""));
     }

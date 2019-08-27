@@ -173,7 +173,7 @@ public class WikipediaServiceTest {
 
         OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
         String timestamp = WikipediaPage.formatWikipediaTimestamp(LocalDateTime.now().withYear(2018));
-        wikipediaService.savePageContent(1, "", timestamp, accessToken);
+        wikipediaService.savePageContent(1, "", 0, timestamp, accessToken);
 
         Mockito.verify(authenticationService, Mockito.times(0))
                 .executeOAuthRequest(Mockito.anyString(), Mockito.anyMap(), Mockito.anyBoolean(), Mockito.any(OAuth1AccessToken.class));
@@ -188,7 +188,7 @@ public class WikipediaServiceTest {
 
         OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
         String timestamp = WikipediaPage.formatWikipediaTimestamp(LocalDateTime.now());
-        wikipediaService.savePageContent(1, "", timestamp, accessToken);
+        wikipediaService.savePageContent(1, "", 0, timestamp, accessToken);
 
         // Two calls: one for the EditToken and another to save the content
         Mockito.verify(authenticationService, Mockito.times(2))
@@ -219,7 +219,7 @@ public class WikipediaServiceTest {
         List<WikipediaSection> sections = wikipediaService.getPageSections(6903884);
         Assert.assertNotNull(sections);
         Assert.assertEquals(3, sections.size());
-        Assert.assertTrue(sections.stream().anyMatch(sec -> sec.getNumber().equals("1")));
+        Assert.assertTrue(sections.stream().anyMatch(sec -> sec.getIndex() == 1));
         Assert.assertEquals("Pruebas con cursiva", sections.stream()
                 .filter(sec -> sec.getNumber().equals("1"))
                 .findAny().orElseThrow(WikipediaException::new).getLine());
@@ -227,7 +227,7 @@ public class WikipediaServiceTest {
                 .filter(sec -> sec.getNumber().equals("1"))
                 .findAny().orElseThrow(WikipediaException::new).getByteOffset());
 
-        Assert.assertTrue(sections.stream().anyMatch(sec -> sec.getNumber().equals("2")));
+        Assert.assertTrue(sections.stream().anyMatch(sec -> sec.getIndex() == 2));
         Assert.assertEquals("Pruebas de banderas de la Selección Española", sections.stream()
                 .filter(sec -> sec.getNumber().equals("2"))
                 .findAny().orElseThrow(WikipediaException::new).getLine());
@@ -235,7 +235,7 @@ public class WikipediaServiceTest {
                 .filter(sec -> sec.getNumber().equals("2"))
                 .findAny().orElseThrow(WikipediaException::new).getByteOffset());
 
-        Assert.assertTrue(sections.stream().anyMatch(sec -> sec.getNumber().equals("3")));
+        Assert.assertTrue(sections.stream().anyMatch(sec -> sec.getIndex() == 3));
         Assert.assertEquals("Referencias", sections.stream()
                 .filter(sec -> sec.getNumber().equals("3"))
                 .findAny().orElseThrow(WikipediaException::new).getLine());

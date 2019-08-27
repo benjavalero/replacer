@@ -2,6 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import lombok.Builder;
 import lombok.Value;
+import lombok.experimental.Wither;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,6 +19,8 @@ public class WikipediaPage {
     private WikipediaNamespace namespace;
     private LocalDateTime lastUpdate;
     private String content;
+    @Wither
+    private int section;
 
     // Store the timestamp when the page was queried
     private final String queryTimestamp;

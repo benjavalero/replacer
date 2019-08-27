@@ -37,7 +37,7 @@ export class ArticleService {
     }
   }
 
-  saveArticle(articleId: number, type: string, subtype: string, content: string, currentTimestamp: string): Observable<any> {
+  saveArticle(articleId: number, type: string, subtype: string, content: string, section: number, currentTimestamp: string): Observable<any> {
     if (!this.authenticationService.isAuthenticated()) {
       return throwError('El usuario no está autenticado. Recargue la página para retomar la sesión.');
     }
@@ -50,6 +50,7 @@ export class ArticleService {
     params = params.append('subtype', subtype);
     params = params.append('reviewer', this.authenticationService.user.name);
     params = params.append('currentTimestamp', currentTimestamp);
+    params = params.append('section', String(section));
 
     return this.httpClient.put<any>(`${environment.apiUrl}/article`, content, { params });
   }

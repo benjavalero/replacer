@@ -31,6 +31,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     private static final String PARAM_ACTION = "action";
     private static final String VALUE_QUERY = "query";
     private static final String PARAM_PAGE_ID = "pageid";
+    private static final String PARAM_PAGE_IDS = "pageids";
 
     @Autowired
     private AuthenticationService authenticationService;
@@ -82,6 +83,18 @@ public class WikipediaServiceImpl implements WikipediaService {
         return page;
     }
 
+    @Override
+    public Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section) throws WikipediaException {
+        LOGGER.info("START Find Wikipedia page by ID and section: {} - {}", pageId, section);
+        Map<String, String> params = getParamsToRequestPages(PARAM_PAGE_IDS, Integer.toString(pageId));
+        params.put("rvsection", Integer.toString(section));
+
+        JsonNode jsonResponse = executeWikipediaApiRequest(params, false, null);
+        List<WikipediaPage> pages = extractPagesFromApiResponse(jsonResponse);
+        LOGGER.info("END Find Wikipedia page by ID and section: {} - {}", pageId, section);
+        return pages.stream().findAny().map(page -> page.withSection(section));
+    }
+
     // We make this method public to be used by the finder benchmarks
     @Override
     public List<WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException {
@@ -91,7 +104,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         int start = 0;
         while (start < pageIds.size()) {
             List<Integer> subList = pageIds.subList(start, start + Math.min(pageIds.size() - start, MAX_PAGES_REQUESTED));
-            pageContents.addAll(getPagesByIds("pageids", StringUtils.join(subList, "|")));
+            pageContents.addAll(getPagesByIds(PARAM_PAGE_IDS, StringUtils.join(subList, "|")));
             start += subList.size();
         }
         return pageContents;
@@ -180,7 +193,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public void savePageContent(int pageId, String pageContent, String currentTimestamp, OAuth1AccessToken accessToken)
+    public void savePageContent(int pageId, String pageContent, int section, String currentTimestamp, OAuth1AccessToken accessToken)
             throws WikipediaException {
         LOGGER.info("START Save page content into Wikipedia. Page ID: {}", pageId);
 
@@ -194,6 +207,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put(PARAM_ACTION, "edit");
         params.put(PARAM_PAGE_ID, Integer.toString(pageId));
         params.put("text", pageContent);
+        params.put("section", Integer.toString(section));
         params.put("summary", EDIT_SUMMARY);
         params.put("bot", "true");
         params.put("minor", "true");
@@ -210,7 +224,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, VALUE_QUERY);
         params.put("meta", "tokens");
-        params.put("pageids", Integer.toString(pageId));
+        params.put(PARAM_PAGE_IDS, Integer.toString(pageId));
         params.put("prop", "revisions");
         params.put("rvprop", "timestamp");
 
@@ -267,9 +281,10 @@ public class WikipediaServiceImpl implements WikipediaService {
         json.at("/parse/sections").forEach(jsonSection -> {
             WikipediaSection section = WikipediaSection.builder()
                     .tocLevel(jsonSection.get("toclevel").asInt())
-                    .level(jsonSection.get("level").asText())
+                    .level(Integer.parseInt(jsonSection.get("level").asText()))
                     .line(jsonSection.get("line").asText())
                     .number(jsonSection.get("number").asText())
+                    .index(Integer.parseInt(jsonSection.get("index").asText()))
                     .byteOffset(jsonSection.get("byteoffset").asInt())
                     .build();
             pageSections.add(section);

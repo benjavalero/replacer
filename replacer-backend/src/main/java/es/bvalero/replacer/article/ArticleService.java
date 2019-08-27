@@ -4,6 +4,7 @@ import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -250,10 +251,11 @@ public class ArticleService {
             }
         }
 
-        // If any replacement has been found we build a review
-        return articleReplacements.isEmpty()
-                ? Optional.empty()
-                : Optional.of(buildArticleReview(article, articleReplacements));
+        if (articleReplacements.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return getSectionReview(article, articleReplacements);
+        }
     }
 
     private List<ArticleReplacement> findArticleReplacements(
@@ -277,11 +279,84 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
+    private Optional<ArticleReview> getSectionReview(WikipediaPage article, List<ArticleReplacement> articleReplacements) {
+        // We try to reduce the review size by returning just a section of the page
+
+        try {
+            // Get the sections from the Wikipedia API (better than calculating them by ourselves)
+            List<WikipediaSection> sections = new ArrayList<>(wikipediaService.getPageSections(article.getId()));
+
+            // Find the smallest section containing all the replacements
+            Optional<WikipediaSection> smallestSection =
+                    getSmallestSectionContainingAllReplacements(sections, articleReplacements);
+
+            // Retrieve the section from Wikipedia API. Better than calculating it by ourselves, just in case.
+            if (smallestSection.isPresent()) {
+                Optional<WikipediaPage> pageSection = wikipediaService.getPageByIdAndSection
+                        (article.getId(), smallestSection.get().getIndex());
+                if (pageSection.isPresent()) {
+                    return Optional.of(buildArticleReview(pageSection.get(),
+                            translateReplacementsByOffset(articleReplacements, smallestSection.get().getByteOffset())));
+                }
+            } else {
+                return Optional.of(buildArticleReview(article, articleReplacements));
+            }
+        } catch (WikipediaException e) {
+            LOGGER.error("Error getting section review", e);
+        }
+
+        return Optional.empty();
+    }
+
+    private Optional<WikipediaSection> getSmallestSectionContainingAllReplacements(
+            List<WikipediaSection> sections, List<ArticleReplacement> replacements) {
+        WikipediaSection smallest = null;
+        for (int i = 0; i < sections.size(); i++) {
+            WikipediaSection section = sections.get(i);
+            int start = section.getByteOffset();
+            Integer end = null;
+            for (int j = i + 1; j < sections.size() && end == null; j++) {
+                if (sections.get(j).getLevel() <= section.getLevel()) {
+                    end = sections.get(j).getByteOffset() - 1;
+                }
+            }
+
+            // Check if all replacements are contained in the current section
+            if (areAllReplacementsContainedInInterval(replacements, start, end)) {
+                smallest = section;
+            }
+        }
+        return Optional.ofNullable(smallest);
+    }
+
+    private boolean areAllReplacementsContainedInInterval(List<ArticleReplacement> replacements,
+                                                          Integer start, @Nullable Integer end) {
+        return replacements.stream().allMatch(rep -> isReplacementContainedInInterval(rep, start, end));
+    }
+
+    private boolean isReplacementContainedInInterval(ArticleReplacement replacement,
+                                                     Integer start, @Nullable Integer end) {
+        if (replacement.getStart() >= start) {
+            if (end == null) {
+                return true;
+            } else {
+                return replacement.getEnd() <= end;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private List<ArticleReplacement> translateReplacementsByOffset(List<ArticleReplacement> articleReplacements, int offset) {
+        return articleReplacements.stream().map(rep -> rep.withStart(rep.getStart() - offset)).collect(Collectors.toList());
+    }
+
     private ArticleReview buildArticleReview(WikipediaPage article, List<ArticleReplacement> articleReplacements) {
         return ArticleReview.builder()
                 .articleId(article.getId())
                 .title(article.getTitle())
                 .content(article.getContent())
+                .section(article.getSection())
                 .currentTimestamp(article.getQueryTimestamp())
                 .replacements(articleReplacements).build();
     }

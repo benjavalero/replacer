@@ -21,6 +21,7 @@ export class EditArticleComponent implements OnInit {
 
   title = '';
   content: string;
+  section: number;
   replacements: ArticleReplacement[] = [];
   fixedCount = 0;
   currentTimestamp: string;
@@ -42,6 +43,7 @@ export class EditArticleComponent implements OnInit {
           this.alertService.clearAlertMessages();
           this.title = review.title;
           this.content = review.content;
+          this.section = review.section;
           this.currentTimestamp = review.currentTimestamp;
           this.replacements = review.replacements;
         } else {
@@ -94,7 +96,7 @@ export class EditArticleComponent implements OnInit {
     // Remove replacements as a trick to hide the article
     this.replacements = [];
 
-    this.articleService.saveArticle(this.articleId, this.filteredType, this.filteredSubtype, content, this.currentTimestamp)
+    this.articleService.saveArticle(this.articleId, this.filteredType, this.filteredSubtype, content, this.section, this.currentTimestamp)
       .subscribe(res => { }, err => {
         const errMsg = `Error al guardar el artículo: ${err.error.message}`;
         if (errMsg.includes('mwoauth-invalid-authorization')) {
