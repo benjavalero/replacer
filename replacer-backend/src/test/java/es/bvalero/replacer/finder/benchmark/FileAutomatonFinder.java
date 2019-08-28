@@ -12,7 +12,8 @@ import java.util.Set;
 class FileAutomatonFinder extends FileAbstractFinder {
 
     private static final RunAutomaton AUTOMATON =
-            new RunAutomaton(new RegExp("[:=|] *[^]=|\n]+\\.<L>{2,4} *[]}|\n]").toAutomaton(new DatatypesAutomatonProvider()));
+            new RunAutomaton(new RegExp("[:=|\n] *[^]:=|\n]+\\.[A-Za-z]{2,4} *[]}|\n]")
+                    .toAutomaton(new DatatypesAutomatonProvider()));
 
     Set<MatchResult> findMatches(String text) {
         Set<MatchResult> matches = new HashSet<>();
