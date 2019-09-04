@@ -1,6 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public interface WikipediaService {
 
     Set<Integer> getPageIdsByStringMatch(String text) throws WikipediaException;
 
-    void savePageContent(int pageId, String pageContent, int section, String currentTimestamp, OAuth1AccessToken accessToken)
+    void savePageContent(int pageId, String pageContent, @Nullable Integer section, String currentTimestamp, OAuth1AccessToken accessToken)
             throws WikipediaException;
 
     String getMisspellingListPageContent() throws WikipediaException;

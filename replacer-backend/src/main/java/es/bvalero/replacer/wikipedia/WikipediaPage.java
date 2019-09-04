@@ -20,7 +20,7 @@ public class WikipediaPage {
     private LocalDateTime lastUpdate;
     private String content;
     @Wither
-    private int section;
+    private Integer section;
 
     // Store the timestamp when the page was queried
     private final String queryTimestamp;

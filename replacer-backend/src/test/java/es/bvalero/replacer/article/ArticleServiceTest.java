@@ -331,7 +331,7 @@ public class ArticleServiceTest {
             Assert.assertEquals(randomId, rev.getArticleId());
             Assert.assertEquals(articleReplacements.size(), rev.getReplacements().size());
             Assert.assertEquals(articleReplacements.get(0).getStart() - offset, rev.getReplacements().get(0).getStart());
-            Assert.assertEquals(sectionId, rev.getSection());
+            Assert.assertEquals(sectionId, rev.getSection().intValue());
         });
     }
 
@@ -355,7 +355,7 @@ public class ArticleServiceTest {
         review.ifPresent(rev -> {
             Assert.assertEquals(randomId, rev.getArticleId());
             Assert.assertEquals(articleReplacements, rev.getReplacements());
-            Assert.assertEquals(0, rev.getSection());
+            Assert.assertNull(rev.getSection());
         });
     }
 

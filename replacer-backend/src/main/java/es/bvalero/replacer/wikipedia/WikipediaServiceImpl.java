@@ -7,6 +7,7 @@ import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.authentication.AuthenticationService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -195,7 +196,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public void savePageContent(int pageId, String pageContent, int section, String currentTimestamp, OAuth1AccessToken accessToken)
+    public void savePageContent(int pageId, String pageContent, @Nullable Integer section, String currentTimestamp, OAuth1AccessToken accessToken)
             throws WikipediaException {
         LOGGER.info("START Save page content into Wikipedia. Page ID: {}", pageId);
 
@@ -209,7 +210,9 @@ public class WikipediaServiceImpl implements WikipediaService {
         params.put(PARAM_ACTION, "edit");
         params.put(PARAM_PAGE_ID, Integer.toString(pageId));
         params.put("text", pageContent);
-        params.put("section", Integer.toString(section));
+        if (section != null) {
+            params.put("section", Integer.toString(section));
+        }
         params.put("summary", EDIT_SUMMARY);
         params.put("bot", "true");
         params.put("minor", "true");

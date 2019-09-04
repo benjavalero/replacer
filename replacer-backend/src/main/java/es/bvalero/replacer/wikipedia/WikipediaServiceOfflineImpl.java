@@ -2,6 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +58,7 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     @Override
-    public void savePageContent(int pageId, String pageContent, int section, String currentTimestamp, OAuth1AccessToken accessToken) {
+    public void savePageContent(int pageId, String pageContent, @Nullable Integer section, String currentTimestamp, OAuth1AccessToken accessToken) {
         // Do nothing
     }
 

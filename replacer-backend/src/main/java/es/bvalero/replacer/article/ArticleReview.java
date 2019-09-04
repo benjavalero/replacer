@@ -18,7 +18,7 @@ class ArticleReview {
     private String title;
     private String content;
     @Wither
-    private int section;
+    private Integer section;
     private String currentTimestamp;
     private List<ArticleReplacement> replacements;
 

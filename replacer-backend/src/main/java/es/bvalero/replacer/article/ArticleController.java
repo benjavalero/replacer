@@ -7,6 +7,7 @@ import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -90,7 +91,7 @@ public class ArticleController {
     @PutMapping
     public void save(@RequestParam("id") int articleId, @RequestBody String text,
                      @RequestParam String type, @RequestParam String subtype,
-                     @RequestParam String reviewer, @RequestParam String currentTimestamp, @RequestParam int section,
+                     @RequestParam String reviewer, @RequestParam String currentTimestamp, @RequestParam @Nullable Integer section,
                      @RequestParam String token, @RequestParam String tokenSecret) throws WikipediaException {
         boolean changed = StringUtils.isNotBlank(text);
         LOGGER.info("PUT Save article. ID: {} - Changed: {}", articleId, changed);

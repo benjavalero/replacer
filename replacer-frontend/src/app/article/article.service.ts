@@ -50,7 +50,7 @@ export class ArticleService {
     params = params.append('subtype', subtype);
     params = params.append('reviewer', this.authenticationService.user.name);
     params = params.append('currentTimestamp', currentTimestamp);
-    params = params.append('section', String(section));
+    params = params.append('section', section ? String(section) : '');
 
     return this.httpClient.put<any>(`${environment.apiUrl}/article`, content, { params });
   }
