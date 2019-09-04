@@ -1,6 +1,7 @@
 package es.bvalero.replacer.article;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import es.bvalero.replacer.cosmetic.CosmeticChangesService;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -29,6 +30,9 @@ public class ArticleController {
 
     @Autowired
     private WikipediaService wikipediaService;
+
+    @Autowired
+    private CosmeticChangesService cosmeticChangesService;
 
     /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
 
@@ -94,7 +98,8 @@ public class ArticleController {
             OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
 
             // Upload new content to Wikipedia
-            wikipediaService.savePageContent(articleId, text, section, currentTimestamp, accessToken);
+            String textToSave = cosmeticChangesService.applyCosmeticChanges(text);
+            wikipediaService.savePageContent(articleId, textToSave, section, currentTimestamp, accessToken);
         }
 
         // Mark article as reviewed in the database
