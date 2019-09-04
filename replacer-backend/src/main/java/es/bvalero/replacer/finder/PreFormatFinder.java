@@ -1,11 +1,9 @@
 package es.bvalero.replacer.finder;
 
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.regex.Pattern;
 
-@Component
+// For the moment we skip these exceptions. Cases within templates should not be ignored.
 public class PreFormatFinder extends ReplacementFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
