@@ -79,7 +79,7 @@ public class WikipediaServiceImpl implements WikipediaService {
         LOGGER.info("START Find Wikipedia page by ID: {}", pageId);
         // Return the only value that should be in the map
         Optional<WikipediaPage> page = getPagesByIds(Collections.singletonList(pageId)).stream().findAny();
-        LOGGER.info("END Find Wikipedia page by ID: {}", pageId);
+        LOGGER.info("END Find Wikipedia page by ID: {} - {}", pageId, page.map(WikipediaPage::getTitle));
         return page;
     }
 
@@ -91,8 +91,10 @@ public class WikipediaServiceImpl implements WikipediaService {
 
         JsonNode jsonResponse = executeWikipediaApiRequest(params, false, null);
         List<WikipediaPage> pages = extractPagesFromApiResponse(jsonResponse);
-        LOGGER.info("END Find Wikipedia page by ID and section: {} - {}", pageId, section);
-        return pages.stream().findAny().map(page -> page.withSection(section));
+        Optional<WikipediaPage> page = pages.stream().findAny().map(p -> p.withSection(section));
+        LOGGER.info("END Find Wikipedia page by ID and section: {} - {} - {}",
+                pageId, section, page.map(WikipediaPage::getTitle));
+        return page;
     }
 
     // We make this method public to be used by the finder benchmarks

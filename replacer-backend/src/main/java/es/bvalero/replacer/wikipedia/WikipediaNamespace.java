@@ -2,8 +2,8 @@ package es.bvalero.replacer.wikipedia;
 
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public enum WikipediaNamespace {
 
@@ -21,12 +21,8 @@ public enum WikipediaNamespace {
     ANNEX(104),
     MODULE(828);
 
-    private static final Map<Integer, WikipediaNamespace> map = new HashMap<>(12);
-
-    static {
-        Arrays.stream(WikipediaNamespace.values()).forEach(
-                wikipediaNamespace -> map.put(wikipediaNamespace.value, wikipediaNamespace));
-    }
+    private static final Map<Integer, WikipediaNamespace> map =
+            Arrays.stream(WikipediaNamespace.values()).collect(Collectors.toMap(ns -> ns.value, ns -> ns));
 
     private final int value;
 
