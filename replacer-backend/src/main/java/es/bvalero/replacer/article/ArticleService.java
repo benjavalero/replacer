@@ -268,6 +268,7 @@ public class ArticleService {
             // Custom replacement
             articleReplacements = replacementFinderService.findCustomReplacements(articleContent, subtype, suggestion);
         }
+        // Return the replacements sorted as they appear in the text
         articleReplacements.sort(Collections.reverseOrder());
         return articleReplacements;
     }

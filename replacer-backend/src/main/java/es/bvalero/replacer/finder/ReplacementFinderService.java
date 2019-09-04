@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class ReplacementFinderService {
                 articleReplacements.size(), articleReplacements);
 
         // Remove nested replacements
+        Collections.sort(articleReplacements);
         articleReplacements.removeIf(replacement -> isReplacementContainedInListIgnoringItself(replacement, articleReplacements));
         LOGGER.debug("Potential replacements found after removing nested: {} - {}",
                 articleReplacements.size(), articleReplacements);

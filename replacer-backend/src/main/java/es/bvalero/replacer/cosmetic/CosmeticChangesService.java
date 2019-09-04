@@ -13,7 +13,8 @@ public class CosmeticChangesService {
 
     public String applyCosmeticChanges(String text) {
         List<ArticleReplacement> replacements = sameLinkFinder.findReplacements(text);
-        replacements.sort(Collections.reverseOrder());
+        // By default the article replacements are sorted in descending order by the start
+        Collections.sort(replacements);
         for (ArticleReplacement replacement : replacements) {
             text = replaceInText(replacement, text);
         }

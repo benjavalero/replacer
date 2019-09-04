@@ -31,6 +31,7 @@ public class ArticleReplacement implements Comparable<ArticleReplacement> {
 
     @Override
     public int compareTo(ArticleReplacement o) {
+        // Order descendant by start. If equals, the lower end.
         return o.start == start ? getEnd() - o.getEnd() : o.start - start;
     }
 
