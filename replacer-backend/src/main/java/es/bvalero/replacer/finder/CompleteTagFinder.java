@@ -4,9 +4,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Component
 public class CompleteTagFinder extends ReplacementFinder implements IgnoredReplacementFinder {
@@ -15,11 +15,9 @@ public class CompleteTagFinder extends ReplacementFinder implements IgnoredRepla
             "nowiki", "pre", "code", "source", "syntaxhighlight",
             "math", "poem", "score",
             "ref", "blockquote", "cite");
-    private static final Collection<Pattern> PATTERN_COMPLETE_TAGS = new ArrayList<>(TAG_NAMES.size());
-
-    static {
-        TAG_NAMES.forEach(word -> PATTERN_COMPLETE_TAGS.add(Pattern.compile(String.format("<%s[^>]*>.+?</%s>", word, word), Pattern.DOTALL)));
-    }
+    private static final List<Pattern> PATTERN_COMPLETE_TAGS = TAG_NAMES.stream()
+            .map(word -> Pattern.compile(String.format("<%s[^>/]*>.+?</%s>", word, word), Pattern.DOTALL))
+            .collect(Collectors.toList());
 
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {

@@ -16,7 +16,8 @@ public class CompleteTagFinderTest {
         String tag1 = "<math class=\"latex\">Un <i>ejemplo</i>\n en LaTeX</math>";
         String tag2 = "<math>Otro ejemplo</math>";
         String tag3 = "<source>Otro ejemplo</source>";
-        String text = String.format("%s %s %s", tag1, tag2, tag3);
+        String tag4 = "<ref name=NH05/>";
+        String text = String.format("En %s %s %s %s.", tag1, tag2, tag3, tag4);
 
         IgnoredReplacementFinder completeTagFinder = new CompleteTagFinder();
 
