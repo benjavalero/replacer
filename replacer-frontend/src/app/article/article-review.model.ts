@@ -1,7 +1,7 @@
 import { ArticleReplacement } from './article-replacement.model';
 
 export interface ArticleReview {
-  id: number;
+  articleId: number;
   title: string;
   content: string;
   section?: number;

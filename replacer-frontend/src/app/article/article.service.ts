@@ -11,17 +11,39 @@ import { AuthenticationService } from '../authentication/authentication.service'
 })
 export class ArticleService {
 
+  private cachedArticleReviews = {};
+
   constructor(private httpClient: HttpClient, private authenticationService: AuthenticationService) { }
 
-  findRandomArticle(type: string, subtype: string, suggestion: string): Observable<number[]> {
+  findRandomArticle(type: string, subtype: string, suggestion: string): Observable<ArticleReview> {
     if (type && subtype) {
       if (suggestion) {
-        return this.httpClient.get<number[]>(`${environment.apiUrl}/article/random/${type}/${subtype}/${suggestion}`);
+        return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/random/${type}/${subtype}/${suggestion}`);
       } else {
-        return this.httpClient.get<number[]>(`${environment.apiUrl}/article/random/${type}/${subtype}`);
+        return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/random/${type}/${subtype}`);
       }
     } else {
-      return this.httpClient.get<number[]>(`${environment.apiUrl}/article/random`);
+      return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/random`);
+    }
+  }
+
+  getArticleReviewFromCache(articleId: number, type: string, subtype: string): ArticleReview {
+    const key = this.buildReviewCacheKey(articleId, type, subtype);
+    const review = this.cachedArticleReviews[key];
+    delete this.cachedArticleReviews[key];
+    return review;
+  }
+
+  putArticleReviewInCache(type: string, subtype: string, review: ArticleReview): void {
+    const key = this.buildReviewCacheKey(review.articleId, type, subtype);
+    this.cachedArticleReviews[key] = review;
+  }
+
+  private buildReviewCacheKey(articleId: number, type: string, subtype: string): string {
+    if (type && subtype) {
+      return `${articleId}-${type}-${subtype}`;
+    } else {
+      return String(articleId);
     }
   }
 

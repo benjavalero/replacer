@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,29 +37,23 @@ public class ArticleController {
     /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
 
     @GetMapping(value = "/random")
-    public List<Integer> findRandomArticleWithReplacements() {
+    public Optional<ArticleReview> findRandomArticleWithReplacements() {
         LOGGER.info("GET Find random article with replacements");
-        return articleService.findRandomArticleToReview()
-                .map(Collections::singletonList)
-                .orElse(Collections.emptyList());
+        return articleService.findRandomArticleToReview();
     }
 
     @GetMapping(value = "/random/{type}/{subtype}")
-    public List<Integer> findRandomArticleByTypeAndSubtype(
+    public Optional<ArticleReview> findRandomArticleByTypeAndSubtype(
             @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
         LOGGER.info("GET Find random article with replacements. Type: {} - Subtype: {}", type, subtype);
-        return articleService.findRandomArticleToReview(type, subtype)
-                .map(Collections::singletonList)
-                .orElse(Collections.emptyList());
+        return articleService.findRandomArticleToReview(type, subtype);
     }
 
     @GetMapping(value = "/random/Personalizado/{subtype}/{suggestion}")
-    public List<Integer> findRandomArticleByCustomReplacement(
+    public Optional<ArticleReview> findRandomArticleByCustomReplacement(
             @PathVariable("subtype") String replacement, @PathVariable("suggestion") String suggestion) {
         LOGGER.info("GET Find random article with replacements. Custom replacement: {} - {}", replacement, suggestion);
-        return articleService.findRandomArticleToReviewWithCustomReplacement(replacement, suggestion)
-                .map(Collections::singletonList)
-                .orElse(Collections.emptyList());
+        return articleService.findRandomArticleToReviewWithCustomReplacement(replacement, suggestion);
     }
 
     /* FIND AN ARTICLE REVIEW */

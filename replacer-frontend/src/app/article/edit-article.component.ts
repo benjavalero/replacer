@@ -37,22 +37,32 @@ export class EditArticleComponent implements OnInit {
 
     this.alertService.addInfoMessage('Buscando potenciales reemplazos del artículo…');
 
-    this.articleService.findArticleReviewById(this.articleId, this.filteredType, this.filteredSubtype, this.suggestion)
-      .subscribe((review: ArticleReview) => {
-        if (review) {
-          this.alertService.clearAlertMessages();
-          this.title = review.title;
-          this.content = review.content;
-          this.section = review.section;
-          this.currentTimestamp = review.currentTimestamp;
-          this.replacements = review.replacements;
-        } else {
-          this.alertService.addWarningMessage('No se ha encontrado ningún reemplazo en la versión más actualizada del artículo');
-          this.redirectToNextArticle();
-        }
-      }, (err) => {
-        this.alertService.addErrorMessage('Error al buscar los reemplazos en el artículo: ' + err.error.message);
-      });
+    // First try to get the review from the cache
+    const cachedReview = this.articleService.getArticleReviewFromCache(this.articleId, this.filteredType, this.filteredSubtype);
+    if (cachedReview) {
+      this.manageReview(cachedReview);
+    } else {
+      this.articleService.findArticleReviewById(this.articleId, this.filteredType, this.filteredSubtype, this.suggestion)
+        .subscribe((review: ArticleReview) => {
+          if (review) {
+            this.manageReview(review);
+          } else {
+            this.alertService.addWarningMessage('No se ha encontrado ningún reemplazo en la versión más actualizada del artículo');
+            this.redirectToNextArticle();
+          }
+        }, (err) => {
+          this.alertService.addErrorMessage('Error al buscar los reemplazos en el artículo: ' + err.error.message);
+        });
+    }
+  }
+
+  private manageReview(review: ArticleReview) {
+    this.alertService.clearAlertMessages();
+    this.title = review.title;
+    this.content = review.content;
+    this.section = review.section;
+    this.currentTimestamp = review.currentTimestamp;
+    this.replacements = review.replacements;
   }
 
   onFixed(fixed: any) {

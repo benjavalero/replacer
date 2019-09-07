@@ -41,21 +41,18 @@ public class ArticleService {
     // to find faster the next one after the user reviews one
     private Map<String, Set<Integer>> cachedArticleIdsByTypeAndSubtype = new HashMap<>();
 
-    // Cache the article reviews
-    private Map<String, ArticleReview> cachedArticleReviews = new HashMap<>();
-
 
     /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
 
-    Optional<Integer> findRandomArticleToReview() {
+    Optional<ArticleReview> findRandomArticleToReview() {
         return findRandomArticleToReview(null, null);
     }
 
-    Optional<Integer> findRandomArticleToReview(String type, String subtype) {
+    Optional<ArticleReview> findRandomArticleToReview(String type, String subtype) {
         return findRandomArticleToReview(type, subtype, null);
     }
 
-    Optional<Integer> findRandomArticleToReviewWithCustomReplacement(String replacement, String suggestion) {
+    Optional<ArticleReview> findRandomArticleToReviewWithCustomReplacement(String replacement, String suggestion) {
         return findRandomArticleToReview(ReplacementFinderService.CUSTOM_FINDER_TYPE, replacement, suggestion);
     }
 
@@ -66,9 +63,9 @@ public class ArticleService {
      * @param subtype    The subtype of the replacement the article must include. Optional.
      *                   If specified, the type must be specified too.
      * @param suggestion The suggestion in case of custom replacements, i. e. type CUSTOM_FINDER_TYPE.
-     * @return The ID of the found article, or empty if there is no such an article.
+     * @return The review of the found article, or empty if there is no such an article.
      */
-    private Optional<Integer> findRandomArticleToReview(
+    private Optional<ArticleReview> findRandomArticleToReview(
             @Nullable String type, @Nullable String subtype, @Nullable String suggestion) {
         LOGGER.info("START Find random article to review. Type: {} - {} - {}", type, subtype, suggestion);
 
@@ -79,9 +76,8 @@ public class ArticleService {
             // If not, find a new random article ID
             Optional<ArticleReview> review = findArticleReview(randomArticleId.get(), type, subtype, suggestion);
             if (review.isPresent()) {
-                cachedArticleReviews.put(buildReviewCacheKey(randomArticleId.get(), type, subtype), review.get());
                 LOGGER.info("END Find random article to review. Found article ID: {}", randomArticleId.get());
-                return randomArticleId;
+                return review;
             }
 
             randomArticleId = findArticleIdToReview(type, subtype);
@@ -176,31 +172,15 @@ public class ArticleService {
             int articleId, @Nullable String type, @Nullable String subtype, @Nullable String suggestion) {
         LOGGER.info("START Find review for article. ID: {} - Type: {} - {} - {}", articleId, type, subtype, suggestion);
 
-        // First we try to get the review from the cache
-        String key = buildReviewCacheKey(articleId, type, subtype);
-        Optional<ArticleReview> review = getArticleReviewFromCache(key);
-        if (!review.isPresent()) {
-            // Load article from Wikipedia
-            Optional<WikipediaPage> article = getArticleFromWikipedia(articleId);
-            if (article.isPresent()) {
-                review = getArticleReview(article.get(), type, subtype, suggestion);
-            }
+        Optional<ArticleReview> review = Optional.empty();
+        // Load article from Wikipedia
+        Optional<WikipediaPage> article = getArticleFromWikipedia(articleId);
+        if (article.isPresent()) {
+            review = getArticleReview(article.get(), type, subtype, suggestion);
         }
 
         LOGGER.info("END Find review for article");
         return review;
-    }
-
-    private String buildReviewCacheKey(int articleId, @Nullable String type, @Nullable String subtype) {
-        return StringUtils.isNotBlank(subtype)
-                ? String.format("%s-%s-%s", articleId, type, subtype)
-                : Integer.toString(articleId);
-    }
-
-    private Optional<ArticleReview> getArticleReviewFromCache(String key) {
-        ArticleReview review = cachedArticleReviews.get(key);
-        cachedArticleReviews.remove(key);
-        return Optional.ofNullable(review);
     }
 
     private Optional<WikipediaPage> getArticleFromWikipedia(int articleId) {

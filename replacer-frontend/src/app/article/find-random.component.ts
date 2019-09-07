@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { AlertService } from '../alert/alert.service';
 import { ArticleService } from './article.service';
+import { ArticleReview } from './article-review.model';
 
 @Component({
   selector: 'app-find-random',
@@ -27,9 +28,14 @@ export class FindRandomComponent implements OnInit {
       ? `Buscando artículo aleatorio de tipo «${this.filteredType} / ${this.filteredSubtype}»…`
       : 'Buscando artículo aleatorio con reemplazos…'));
 
-    this.articleService.findRandomArticle(this.filteredType, this.filteredSubtype, this.suggestion).subscribe((articleIds: number[]) => {
-      const articleId = articleIds[0];
-      if (articleId) {
+    this.articleService.findRandomArticle(this.filteredType, this.filteredSubtype, this.suggestion).subscribe((review: ArticleReview) => {
+      if (review) {
+        // Cache the review
+        this.articleService.putArticleReviewInCache(this.filteredType, this.filteredSubtype, review);
+
+        const articleId = review.articleId;
+        // TODO : Do something with the title
+
         if (this.filteredType && this.filteredSubtype) {
           if (this.suggestion) {
             this.router.navigate([`article/${articleId}/${this.filteredType}/${this.filteredSubtype}/${this.suggestion}`]);
