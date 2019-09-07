@@ -284,15 +284,14 @@ public class WikipediaServiceImpl implements WikipediaService {
     private List<WikipediaSection> extractSectionsFromApiResponse(JsonNode json) {
         List<WikipediaSection> pageSections = new ArrayList<>();
         json.at("/parse/sections").forEach(jsonSection -> {
-            // There are cases where the field "index" is empty
-            String index = jsonSection.get("index").asText();
-            if (StringUtils.isNotBlank(index)) {
+            // There are cases where the field "byteoffset" is empty
+            if (!jsonSection.get("byteoffset").isNull()) {
                 WikipediaSection section = WikipediaSection.builder()
                         .tocLevel(jsonSection.get("toclevel").asInt())
                         .level(Integer.parseInt(jsonSection.get("level").asText()))
                         .line(jsonSection.get("line").asText())
                         .number(jsonSection.get("number").asText())
-                        .index(Integer.parseInt(index))
+                        .index(Integer.parseInt(jsonSection.get("index").asText()))
                         .byteOffset(jsonSection.get("byteoffset").asInt())
                         .build();
                 pageSections.add(section);
