@@ -1,5 +1,10 @@
 # Versiones
 
+## 2.2.1 (7 de septiembre de 2019)
+- Corregir casos puntuales al leer las secciones de un artículo
+- Optimización: al buscar un artículo para revisar, recibir todos los datos
+y así ahorrar una llamada al backend.
+
 ## 2.2.0 (5 de septiembre de 2019)
 - Guardar última indexación en la base de datos
 - Editar solo la sección del artículo con los reemplazos para reducir y
