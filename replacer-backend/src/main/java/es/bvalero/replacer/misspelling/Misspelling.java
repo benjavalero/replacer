@@ -2,7 +2,6 @@ package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.finder.ReplacementSuggestion;
 import lombok.Value;
-import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 
 import java.util.ArrayList;
@@ -16,8 +15,11 @@ import java.util.regex.Pattern;
 @Value
 class Misspelling {
     @RegExp
-    private static final String REGEX_COMMENT = "([^,(]+)(\\([^)]+\\))?";
-    private static final Pattern PATTERN_COMMENT = Pattern.compile(REGEX_COMMENT);
+    private static final String REGEX_BRACKETS = "\\([^)]+\\)";
+    private static final Pattern PATTERN_BRACKETS = Pattern.compile(REGEX_BRACKETS);
+    @RegExp
+    private static final String REGEX_SUGGESTION = String.format("([^,(]|%s)+", REGEX_BRACKETS);
+    private static final Pattern PATTERN_SUGGESTION = Pattern.compile(REGEX_SUGGESTION);
 
     private String word;
     private boolean caseSensitive;
@@ -58,19 +60,25 @@ class Misspelling {
     private List<ReplacementSuggestion> parseSuggestionsFromComment(String comment) {
         List<ReplacementSuggestion> suggestionList = new ArrayList<>(5);
 
-        Matcher m = PATTERN_COMMENT.matcher(comment);
+        Matcher m = PATTERN_SUGGESTION.matcher(comment);
         while (m.find()) {
-            String text = m.group(1).trim();
-            if (StringUtils.isNotBlank(text)) {
-                String explanation = StringUtils.isNotBlank(m.group(2))
-                        ? m.group(2).substring(1, m.group(2).length() - 1) : ""; // Remove brackets
-                suggestionList.add(ReplacementSuggestion.of(text, explanation));
-            } else {
-                throw new IllegalArgumentException("Not valid misspelling comment: " + comment);
-            }
+            String suggestion = m.group().trim();
+            suggestionList.add(parseSuggestion(suggestion));
         }
 
         return suggestionList;
+    }
+
+    private ReplacementSuggestion parseSuggestion(String suggestion) {
+        String text = suggestion.replaceAll(REGEX_BRACKETS, "").trim();
+        Matcher m = PATTERN_BRACKETS.matcher(suggestion);
+        String explanation = "";
+        if (m.find()) {
+            // Remove the leading and trailing brackets
+            String brackets = m.group();
+            explanation = brackets.substring(1, brackets.length() - 1).trim();
+        }
+        return ReplacementSuggestion.of(text, explanation);
     }
 
 }

@@ -9,26 +9,67 @@ import java.util.List;
 public class MisspellingTest {
 
     @Test
-    public void testParseSuggestionsFromComment() {
-        Misspelling misspelling1 = Misspelling.ofCaseInsensitive("renuncio",
-                "renunció (3.ª persona), renuncio (1.ª persona)");
-        List<ReplacementSuggestion> suggestions1 = misspelling1.getSuggestions();
-        Assert.assertEquals(2, suggestions1.size());
-        Assert.assertEquals("renunció", suggestions1.get(0).getText());
-        Assert.assertEquals("3.ª persona", suggestions1.get(0).getComment());
+    public void testParseSimpleSuggestion() {
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "A");
 
-        Misspelling misspelling3 = Misspelling.ofCaseInsensitive("desempeño",
-                "desempeño (sustantivo o verbo, 1.ª persona), desempeñó (verbo, 3.ª persona)");
-        List<ReplacementSuggestion> suggestions3 = misspelling3.getSuggestions();
-        Assert.assertEquals(2, suggestions3.size());
-        Assert.assertEquals("desempeño", suggestions3.get(0).getText());
-        Assert.assertEquals("sustantivo o verbo, 1.ª persona", suggestions3.get(0).getComment());
+        List<ReplacementSuggestion> suggestions = misspelling.getSuggestions();
 
-        Misspelling misspelling4 = Misspelling.ofCaseInsensitive("k",
-                "k (letra), que, qué, kg (kilogramo)");
-        List<ReplacementSuggestion> suggestions4 = misspelling4.getSuggestions();
-        Assert.assertEquals(4, suggestions4.size());
-        Assert.assertEquals("kg", suggestions4.get(3).getText());
+        Assert.assertEquals(1, suggestions.size());
+        Assert.assertEquals("A", suggestions.get(0).getText());
+        Assert.assertEquals("", suggestions.get(0).getComment());
+    }
+
+    @Test
+    public void testParseComposedSuggestion() {
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "A, B, C");
+
+        List<ReplacementSuggestion> suggestions = misspelling.getSuggestions();
+
+        Assert.assertEquals(3, suggestions.size());
+        Assert.assertEquals("A", suggestions.get(0).getText());
+        Assert.assertEquals("B", suggestions.get(1).getText());
+        Assert.assertEquals("C", suggestions.get(2).getText());
+    }
+
+    @Test
+    public void testParseComposedSuggestionWithComments() {
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "A (D), B (E), C (F)");
+
+        List<ReplacementSuggestion> suggestions = misspelling.getSuggestions();
+
+        Assert.assertEquals(3, suggestions.size());
+        Assert.assertEquals("A", suggestions.get(0).getText());
+        Assert.assertEquals("D", suggestions.get(0).getComment());
+        Assert.assertEquals("B", suggestions.get(1).getText());
+        Assert.assertEquals("E", suggestions.get(1).getComment());
+        Assert.assertEquals("C", suggestions.get(2).getText());
+        Assert.assertEquals("F", suggestions.get(2).getComment());
+    }
+
+    @Test
+    public void testParseComposedSuggestionWithCommentsAndCommas() {
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "A (D, G), B (E, H), C (F, I)");
+
+        List<ReplacementSuggestion> suggestions = misspelling.getSuggestions();
+
+        Assert.assertEquals(3, suggestions.size());
+        Assert.assertEquals("A", suggestions.get(0).getText());
+        Assert.assertEquals("D, G", suggestions.get(0).getComment());
+        Assert.assertEquals("B", suggestions.get(1).getText());
+        Assert.assertEquals("E, H", suggestions.get(1).getComment());
+        Assert.assertEquals("C", suggestions.get(2).getText());
+        Assert.assertEquals("F, I", suggestions.get(2).getComment());
+    }
+
+    @Test
+    public void testParseSuggestionWithExplanationBefore() {
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "(B) A");
+
+        List<ReplacementSuggestion> suggestions = misspelling.getSuggestions();
+
+        Assert.assertEquals(1, suggestions.size());
+        Assert.assertEquals("A", suggestions.get(0).getText());
+        Assert.assertEquals("B", suggestions.get(0).getComment());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -39,11 +80,6 @@ public class MisspellingTest {
     @Test(expected = IllegalArgumentException.class)
     public void testMisspellingWithEmptyComment() {
         Misspelling.ofCaseInsensitive("A", "");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testMisspellingNotValidComment() {
-        Misspelling.ofCaseInsensitive("cidí", "cedé, CD, (disco) compacto");
     }
 
 }
