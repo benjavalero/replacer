@@ -1,11 +1,12 @@
 package es.bvalero.replacer.article;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.ListValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -16,7 +17,7 @@ public class ArticleStatsService {
     private ReplacementRepository replacementRepository;
 
     // Cache the count of replacements. This list is updated every 10 minutes and modified when saving changes.
-    private List<ReplacementCount> cachedReplacementCount = new ArrayList<>();
+    private ListValuedMap<String, ReplacementCount> cachedReplacementCount = new ArrayListValuedHashMap<>();
 
     /* STATISTICS */
 
@@ -38,7 +39,7 @@ public class ArticleStatsService {
 
     /* LIST OF REPLACEMENTS */
 
-    List<ReplacementCount> findMisspellingsGrouped() {
+    ListValuedMap<String, ReplacementCount> findMisspellingsGrouped() {
         return this.cachedReplacementCount;
     }
 
@@ -49,20 +50,26 @@ public class ArticleStatsService {
     public void updateReplacementCount() {
         LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
         LOGGER.info("START Count grouped replacements");
-        List<ReplacementCount> count = replacementRepository.findReplacementCountByTypeAndSubtype();
-        LOGGER.info("END Count grouped replacements. Size: {}", count.size());
+        List<ReplacementCount> counts = replacementRepository.findReplacementCountByTypeAndSubtype();
+        LOGGER.info("END Count grouped replacements. Size: {}", counts.size());
 
         this.cachedReplacementCount.clear();
-        this.cachedReplacementCount.addAll(count);
+        this.cachedReplacementCount.putAll(cacheReplacementCounts(counts));
     }
 
-    void removeCachedReplacements(String type, String subtype) {
-        this.cachedReplacementCount.removeIf(item -> item.getType().equals(type) && item.getSubtype().equals(subtype));
+    private ListValuedMap<String, ReplacementCount> cacheReplacementCounts(List<ReplacementCount> counts) {
+        ListValuedMap<String, ReplacementCount> countMap = new ArrayListValuedHashMap<>();
+        counts.forEach(count -> countMap.put(count.getType(), count));
+        return countMap;
+    }
+
+    void removeCachedReplacementCount(String type, String subtype) {
+        this.cachedReplacementCount.get(type).removeIf(item -> item.getSubtype().equals(subtype));
     }
 
     void decreaseCachedReplacementsCount(String type, String subtype, int size) {
-        this.cachedReplacementCount.stream()
-                .filter(item -> item.getType().equals(type) && item.getSubtype().equals(subtype))
+        this.cachedReplacementCount.get(type).stream()
+                .filter(item -> item.getSubtype().equals(subtype))
                 .findAny()
                 .ifPresent(item -> item.decrementCount(size));
     }

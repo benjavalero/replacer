@@ -108,7 +108,7 @@ public class ArticleService {
             if (!articleId.isPresent()) {
                 // If finally there are no results empty the cached count for the replacement
                 // No need to check if there exists something cached
-                articleStatsService.removeCachedReplacements(type, subtype);
+                articleStatsService.removeCachedReplacementCount(type, subtype);
             }
         }
 

@@ -81,23 +81,23 @@ public class ArticleStatsServiceTest {
 
         Assert.assertFalse(articleStatsService.findMisspellingsGrouped().isEmpty());
         Assert.assertEquals(counts.size(), articleStatsService.findMisspellingsGrouped().size());
-        Assert.assertEquals(counts, articleStatsService.findMisspellingsGrouped());
+        Assert.assertEquals(counts, articleStatsService.findMisspellingsGrouped().get("X"));
 
         // Decrease a replacement count
         articleStatsService.decreaseCachedReplacementsCount("X", "Y", 1);
 
         Assert.assertFalse(articleStatsService.findMisspellingsGrouped().isEmpty());
         Assert.assertEquals(1, articleStatsService.findMisspellingsGrouped().size());
-        Assert.assertEquals(1L, articleStatsService.findMisspellingsGrouped().get(0).getCount());
+        Assert.assertEquals(1L, articleStatsService.findMisspellingsGrouped().get("X").get(0).getCount());
 
         // Remove a replacement count not exiting in cache
-        articleStatsService.removeCachedReplacements("A", "B");
+        articleStatsService.removeCachedReplacementCount("A", "B");
 
         Assert.assertFalse(articleStatsService.findMisspellingsGrouped().isEmpty());
         Assert.assertEquals(1, articleStatsService.findMisspellingsGrouped().size());
 
         // Remove a replacement count not exiting in cache
-        articleStatsService.removeCachedReplacements("X", "Y");
+        articleStatsService.removeCachedReplacementCount("X", "Y");
 
         Assert.assertTrue(articleStatsService.findMisspellingsGrouped().isEmpty());
     }

@@ -1,5 +1,6 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 
+import { ReplacementCountList } from './replacement-count-list.model';
 import { ReplacementCount } from './replacement-count.model';
 import { ReplacementService } from './replacement.service';
 import { AlertService } from '../alert/alert.service';
@@ -59,9 +60,20 @@ export class ReplacementTableComponent implements OnInit {
   }
 
   private findReplacementCounts() {
-    this.replacementService.findReplacementCounts().subscribe((replacementCounts: ReplacementCount[]) => {
+    this.replacementService.findReplacementCounts().subscribe((replacementCountLists: ReplacementCountList[]) => {
+      // Expand the reduced tree of replacement counts
+      replacementCountLists.forEach(rc => {
+        rc.l.forEach(c => {
+          const count = new ReplacementCount();
+          count.type = rc.t;
+          count.subtype = c.s;
+          count.count = c.c;
+          this.replacementCounts.push(count);
+        });
+      });
+
       // Initially we sort by type and then by subtype
-      this.replacementCounts = this.sort(this.sort(replacementCounts, 'subtype', 'asc'), 'type', 'asc');
+      this.replacementCounts = this.sort(this.sort(this.replacementCounts, 'subtype', 'asc'), 'type', 'asc');
 
       this.refreshFilteredItems();
 

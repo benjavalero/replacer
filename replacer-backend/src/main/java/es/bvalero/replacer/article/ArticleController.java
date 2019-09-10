@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -133,8 +134,10 @@ public class ArticleController {
     /* LIST OF REPLACEMENTS */
 
     @GetMapping(value = "/count/replacements/grouped")
-    public List<ReplacementCount> listMisspellings() {
-        List<ReplacementCount> list = articleStatsService.findMisspellingsGrouped();
+    public List<ReplacementCountList> listMisspellings() {
+        List<ReplacementCountList> list = articleStatsService.findMisspellingsGrouped().asMap().entrySet().stream()
+                .map(entry -> new ReplacementCountList(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
         LOGGER.info("GET Grouped replacement count. Result Size: {}", list.size());
         return list;
     }
