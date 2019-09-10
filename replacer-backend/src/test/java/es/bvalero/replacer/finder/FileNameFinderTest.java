@@ -26,8 +26,9 @@ public class FileNameFinderTest {
                 "| www.google.com\n" +
                 "| Any text.large\n" +
                 "|}";
+        String link = "* [http://www.link.org Link link.org]";
 
-        String text = String.format("%s %s %s %s %s %s", file1, file2, gallery1, param, gallery2, table);
+        String text = String.format("%s %s %s %s %s %s %s", file1, file2, gallery1, param, gallery2, table, link);
 
         IgnoredReplacementFinder fileNameFinder = new FileNameFinder();
 
