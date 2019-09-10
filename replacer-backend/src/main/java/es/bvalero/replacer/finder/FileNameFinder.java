@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.AutomatonMatcher;
-import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import org.springframework.stereotype.Component;
@@ -15,8 +14,7 @@ public class FileNameFinder extends ReplacementFinder implements IgnoredReplacem
     // With this regex we also capture domains like www.google.com
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_FILE_TAG = "[:=|\n] *[^]:=|/\n]+\\.[A-Za-z]{2,4} *[]}|\n]";
-    private static final RunAutomaton AUTOMATON_FILE_TAG
-            = new RunAutomaton(new RegExp(REGEX_FILE_TAG).toAutomaton(new DatatypesAutomatonProvider()));
+    private static final RunAutomaton AUTOMATON_FILE_TAG = new RunAutomaton(new RegExp(REGEX_FILE_TAG).toAutomaton());
 
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {
