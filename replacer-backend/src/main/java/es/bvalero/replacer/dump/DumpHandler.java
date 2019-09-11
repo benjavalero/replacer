@@ -72,7 +72,7 @@ class DumpHandler extends DefaultHandler {
 
     @Override
     public void endDocument() {
-        LOGGER.info("END handle dump document: {}", latestDumpFile);
+        LOGGER.info("END handle dump document: {}", getProcessStatus());
 
         running = false;
         endTime = Instant.now();
