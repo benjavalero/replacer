@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ArticleService } from '../article/article.service';
+import { AlertService } from '../alert/alert.service';
 
 @Component({
   selector: 'app-stats',
@@ -13,9 +14,11 @@ export class StatsComponent implements OnInit {
   numReviewed: number;
   numReviewedGrouped: any[][] = [];
 
-  constructor(private articleService: ArticleService) { }
+  constructor(private articleService: ArticleService, private alertService: AlertService) { }
 
   ngOnInit() {
+    this.alertService.clearAlertMessages();
+
     this.findNumReplacements();
     this.findNumNotReviewed();
     this.findNumReviewed();
