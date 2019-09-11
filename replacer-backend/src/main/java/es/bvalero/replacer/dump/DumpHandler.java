@@ -144,7 +144,7 @@ class DumpHandler extends DefaultHandler {
     }
 
     private boolean processArticle(WikipediaPage dumpArticle) {
-        return dumpArticleProcessor.processArticle(dumpArticle, forceProcess);
+        return false; // dumpArticleProcessor.processArticle(dumpArticle, forceProcess);
     }
 
     DumpProcessStatus getProcessStatus() {
