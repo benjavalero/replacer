@@ -1,4 +1,5 @@
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 import { ReplacementCountList } from './replacement-count-list.model';
 import { ReplacementCount } from './replacement-count.model';
@@ -29,7 +30,7 @@ export class ReplacementTableComponent implements OnInit {
   pageValue: number;
   pageSize: number;
 
-  constructor(private replacementService: ReplacementService, private alertService: AlertService) {
+  constructor(private replacementService: ReplacementService, private alertService: AlertService, private titleService: Title) {
     this.replacementCounts = [];
     this.filteredItems = this.replacementCounts;
     this.filterValue = '';
@@ -39,6 +40,7 @@ export class ReplacementTableComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Replacer - Lista de reemplazos');
     this.alertService.addInfoMessage('Cargando estadísticas de reemplazos…');
     this.findReplacementCounts();
   }

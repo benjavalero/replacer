@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 import { AlertService } from '../alert/alert.service';
 import { ArticleService } from './article.service';
@@ -17,16 +18,18 @@ export class FindRandomComponent implements OnInit {
   private suggestion: string; // Only for type 'custom'
 
   constructor(private alertService: AlertService, private articleService: ArticleService, private router: Router,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute, private titleService: Title) { }
 
   ngOnInit() {
     this.filteredType = this.route.snapshot.paramMap.get('type');
     this.filteredSubtype = this.route.snapshot.paramMap.get('subtype');
     this.suggestion = this.route.snapshot.paramMap.get('suggestion');
 
-    this.alertService.addInfoMessage((this.filteredType && this.filteredSubtype
-      ? `Buscando artículo aleatorio de tipo «${this.filteredType} / ${this.filteredSubtype}»…`
-      : 'Buscando artículo aleatorio con reemplazos…'));
+    const msg = this.filteredType && this.filteredSubtype
+      ? `Buscando artículo aleatorio de tipo «${this.filteredType} - ${this.filteredSubtype}»…`
+      : 'Buscando artículo aleatorio…';
+    this.titleService.setTitle(`Replacer - ${msg}`);
+    this.alertService.addInfoMessage(msg);
 
     this.articleService.findRandomArticle(this.filteredType, this.filteredSubtype, this.suggestion).subscribe((review: ArticleReview) => {
       if (review) {
@@ -47,8 +50,8 @@ export class FindRandomComponent implements OnInit {
         }
       } else {
         this.alertService.addWarningMessage((this.filteredType && this.filteredSubtype
-          ? `No se ha encontrado ningún artículo de tipo «${this.filteredType} / ${this.filteredSubtype}»…`
-          : 'No se ha encontrado ningún artículo con reemplazos…'));
+          ? `No se ha encontrado ningún artículo de tipo «${this.filteredType} - ${this.filteredSubtype}»`
+          : 'No se ha encontrado ningún artículo'));
       }
     }, (err) => {
       this.alertService.addErrorMessage('Error al buscar artículos con reemplazos: ' + err.error.message);

@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 import { interval, Subscription } from 'rxjs';
 import { DumpService } from './dump.service';
@@ -27,9 +28,10 @@ export class DumpComponent implements OnInit, OnDestroy {
   // Check the status
   subscription: Subscription;
 
-  constructor(private dumpService: DumpService, private alertService: AlertService) { }
+  constructor(private dumpService: DumpService, private alertService: AlertService, private titleService: Title) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Replacer - Indexación');
     this.alertService.addInfoMessage('Cargando estado de la indexación…');
     this.findDumpStatus();
 

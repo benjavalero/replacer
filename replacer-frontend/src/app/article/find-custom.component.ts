@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 import { AlertService } from '../alert/alert.service';
 
@@ -13,9 +14,10 @@ export class FindCustomComponent implements OnInit {
   replacement: string;
   suggestion: string;
 
-  constructor(private router: Router, private alertService: AlertService) { }
+  constructor(private router: Router, private alertService: AlertService, private titleService: Title) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Replacer - Reemplazo personalizado');
     this.alertService.clearAlertMessages();
   }
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 import { ArticleService } from '../article/article.service';
 import { AlertService } from '../alert/alert.service';
@@ -14,9 +15,10 @@ export class StatsComponent implements OnInit {
   numReviewed: number;
   numReviewedGrouped: any[][] = [];
 
-  constructor(private articleService: ArticleService, private alertService: AlertService) { }
+  constructor(private articleService: ArticleService, private alertService: AlertService, private titleService: Title) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Replacer - Estadísticas');
     this.alertService.clearAlertMessages();
 
     this.findNumReplacements();

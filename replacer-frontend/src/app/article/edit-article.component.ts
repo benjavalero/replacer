@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 import { AuthenticationService } from '../authentication/authentication.service';
 import { AlertService } from '../alert/alert.service';
@@ -27,7 +28,7 @@ export class EditArticleComponent implements OnInit {
   currentTimestamp: string;
 
   constructor(private route: ActivatedRoute, private alertService: AlertService, private articleService: ArticleService,
-    private router: Router, private authenticationService: AuthenticationService) { }
+    private router: Router, private authenticationService: AuthenticationService, private titleService: Title) { }
 
   ngOnInit() {
     this.articleId = +this.route.snapshot.paramMap.get('id');
@@ -35,10 +36,17 @@ export class EditArticleComponent implements OnInit {
     this.filteredSubtype = this.route.snapshot.paramMap.get('subtype');
     this.suggestion = this.route.snapshot.paramMap.get('suggestion');
 
-    this.alertService.addInfoMessage('Buscando potenciales reemplazos del artículo…');
-
     // First try to get the review from the cache
     const cachedReview = this.articleService.getArticleReviewFromCache(this.articleId, this.filteredType, this.filteredSubtype);
+
+    let title = 'Replacer - ';
+    if (this.filteredType && this.filteredSubtype) {
+      title += `${this.filteredSubtype} - `;
+    }
+    title += cachedReview ? cachedReview.title : this.articleId;
+    this.titleService.setTitle(title);
+    this.alertService.addInfoMessage('Buscando potenciales reemplazos del artículo…');
+
     if (cachedReview) {
       this.manageReview(cachedReview);
     } else {
