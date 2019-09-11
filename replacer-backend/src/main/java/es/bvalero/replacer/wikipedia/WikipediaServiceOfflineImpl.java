@@ -40,7 +40,7 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section) throws WikipediaException {
-        return getPageByTitle("");
+        return getPageByTitle("").map(page -> page.withId(pageId));
     }
 
     @Override

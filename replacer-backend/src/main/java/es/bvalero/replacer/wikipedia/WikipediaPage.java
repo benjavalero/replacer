@@ -14,6 +14,7 @@ public class WikipediaPage {
     private static final DateTimeFormatter WIKIPEDIA_DATE_FORMATTER = DateTimeFormatter.ofPattern(WIKIPEDIA_DATE_PATTERN);
     private static final String REDIRECT_PREFIX = "#redirec";
 
+    @Wither
     private int id;
     private String title;
     private WikipediaNamespace namespace;
