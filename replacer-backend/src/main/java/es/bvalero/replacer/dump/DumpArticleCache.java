@@ -13,7 +13,7 @@ import java.util.*;
 @Component
 class DumpArticleCache {
 
-    private static final int CACHE_SIZE = 5000;
+    private static final int CACHE_SIZE = 10000;
     private int maxCachedId;
     private Map<Integer, Collection<Replacement>> replacementMap = new HashMap<>(CACHE_SIZE);
 
