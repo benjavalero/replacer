@@ -50,8 +50,8 @@ class DumpArticleProcessor {
             return false;
         }
 
-        /*
         Collection<Replacement> dbReplacements = dumpArticleCache.findDatabaseReplacements(dumpArticle.getId());
+        /*
         Optional<LocalDate> dbLastUpdate = dbReplacements.stream().map(Replacement::getLastUpdate)
                 .max(Comparator.comparing(LocalDate::toEpochDay));
         if (dbLastUpdate.isPresent()
@@ -60,15 +60,13 @@ class DumpArticleProcessor {
                     dumpArticle.getTitle(), dumpArticle.getLastUpdate().toLocalDate(), dbLastUpdate);
             return false;
         }
-         */
 
         List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(dumpArticle.getContent());
-        /*
         articleIndexService.indexArticleReplacements(dumpArticle, articleReplacements, dbReplacements);
          */
 
         LOGGER.debug("END Process dump article: {}", dumpArticle.getTitle());
-        return true;
+        return false;
     }
 
     private boolean isDumpArticleProcessableByNamespace(WikipediaPage dumpArticle) {
