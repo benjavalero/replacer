@@ -51,11 +51,9 @@ public class ArticleIndexServiceTest {
         List<Replacement> dbReplacements = Collections.emptyList();
 
         WikipediaPage article = WikipediaPage.builder().build();
-        articleIndexService.indexReplacements(article, newReplacements, dbReplacements, true);
-        articleIndexService.flushReplacementsInBatch();
+        articleIndexService.indexReplacements(article, newReplacements, dbReplacements);
 
-        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
-                Collections.singleton(rep1));
+        Mockito.verify(replacementRepository, Mockito.times(1)).save(rep1);
     }
 
     @Test
@@ -68,12 +66,10 @@ public class ArticleIndexServiceTest {
         List<Replacement> dbReplacements = new ArrayList<>(Arrays.asList(rep2, rep3));
 
         WikipediaPage article = WikipediaPage.builder().lastUpdate(LocalDateTime.now()).build();
-        articleIndexService.indexReplacements(article, newReplacements, dbReplacements, true);
-        articleIndexService.flushReplacementsInBatch();
+        articleIndexService.indexReplacements(article, newReplacements, dbReplacements);
 
-        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
-                Collections.singleton(
-                        rep2.withReviewer(ArticleIndexService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now())));
+        Mockito.verify(replacementRepository, Mockito.times(1)).save(
+                rep2.withReviewer(ArticleIndexService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()));
     }
 
     @Test
@@ -86,15 +82,13 @@ public class ArticleIndexServiceTest {
                 .id(articleId)
                 .lastUpdate(LocalDateTime.now())
                 .build();
-        articleIndexService.indexReplacements(article, newReplacements, dbReplacements, true);
-        articleIndexService.flushReplacementsInBatch();
+        articleIndexService.indexReplacements(article, newReplacements, dbReplacements);
 
         // Save the fake replacement
-        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
-                Collections.singleton(
-                        new Replacement(articleId, "", "", 0)
-                                .withReviewer(ArticleIndexService.SYSTEM_REVIEWER)
-                                .withLastUpdate(LocalDate.now())));
+        Mockito.verify(replacementRepository, Mockito.times(1)).save(
+                new Replacement(articleId, "", "", 0)
+                        .withReviewer(ArticleIndexService.SYSTEM_REVIEWER)
+                        .withLastUpdate(LocalDate.now()));
     }
 
     @Test
@@ -129,14 +123,13 @@ public class ArticleIndexServiceTest {
         List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(r1db, r2db, r3db, r4db, r6db, r7db));
 
         WikipediaPage article = WikipediaPage.builder().build();
-        articleIndexService.indexReplacements(article, newReplacements, dbReplacements2, true);
-        articleIndexService.flushReplacementsInBatch();
+        articleIndexService.indexReplacements(article, newReplacements, dbReplacements2);
 
-        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
-                new HashSet<>(Arrays.asList(
-                        r3db.withLastUpdate(same),
-                        r5,
-                        r6db.withReviewer(ArticleIndexService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()))));
+        Mockito.verify(replacementRepository, Mockito.times(3)).save(Mockito.any(Replacement.class));
+        Mockito.verify(replacementRepository, Mockito.times(1)).save(r3db.withLastUpdate(same));
+        Mockito.verify(replacementRepository, Mockito.times(1)).save(r5);
+        Mockito.verify(replacementRepository, Mockito.times(1)).save(
+                r6db.withReviewer(ArticleIndexService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()));
     }
 
     @Test
@@ -165,14 +158,13 @@ public class ArticleIndexServiceTest {
         List<Replacement> dbReplacements2 = new ArrayList<>(Arrays.asList(r1db, r2db, r4db, r5db));
 
         WikipediaPage article = WikipediaPage.builder().build();
-        articleIndexService.indexReplacements(article, newReplacements, dbReplacements2, true);
-        articleIndexService.flushReplacementsInBatch();
+        articleIndexService.indexReplacements(article, newReplacements, dbReplacements2);
 
-        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(
-                new HashSet<>(Arrays.asList(
-                        r1db.withLastUpdate(same),
-                        r3,
-                        r4db.withReviewer(ArticleIndexService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()))));
+        Mockito.verify(replacementRepository, Mockito.times(3)).save(Mockito.any(Replacement.class));
+        Mockito.verify(replacementRepository, Mockito.times(1)).save(r1db.withLastUpdate(same));
+        Mockito.verify(replacementRepository, Mockito.times(1)).save(r3);
+        Mockito.verify(replacementRepository, Mockito.times(1)).save(
+                r4db.withReviewer(ArticleIndexService.SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()));
     }
 
     @Test

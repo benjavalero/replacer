@@ -51,7 +51,6 @@ class DumpArticleProcessor {
         }
 
         Collection<Replacement> dbReplacements = dumpArticleCache.findDatabaseReplacements(dumpArticle.getId());
-        /*
         Optional<LocalDate> dbLastUpdate = dbReplacements.stream().map(Replacement::getLastUpdate)
                 .max(Comparator.comparing(LocalDate::toEpochDay));
         if (dbLastUpdate.isPresent()
@@ -63,10 +62,9 @@ class DumpArticleProcessor {
 
         List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(dumpArticle.getContent());
         articleIndexService.indexArticleReplacements(dumpArticle, articleReplacements, dbReplacements);
-         */
 
         LOGGER.debug("END Process dump article: {}", dumpArticle.getTitle());
-        return false;
+        return true;
     }
 
     private boolean isDumpArticleProcessableByNamespace(WikipediaPage dumpArticle) {

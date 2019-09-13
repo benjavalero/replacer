@@ -262,7 +262,7 @@ public class ArticleServiceTest {
                 articleService.findRandomArticleToReviewWithCustomReplacement(replacement, suggestion);
 
         Mockito.verify(articleIndexService, Mockito.times(1))
-                .reviewReplacementAsSystem(Mockito.any(Replacement.class), Mockito.eq(false));
+                .reviewReplacementAsSystem(Mockito.any(Replacement.class));
 
         Assert.assertFalse(review.isPresent());
     }

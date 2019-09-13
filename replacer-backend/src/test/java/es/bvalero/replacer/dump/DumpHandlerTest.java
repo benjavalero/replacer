@@ -78,7 +78,6 @@ public class DumpHandlerTest {
         Assert.assertEquals(3L, status.getNumArticlesProcessed());
 
         Mockito.verify(dumpArticleCache, Mockito.times(1)).clean();
-        Mockito.verify(articleIndexService, Mockito.times(1)).flushReplacementsInBatch();
     }
 
     @Test
