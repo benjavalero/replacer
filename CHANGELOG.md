@@ -1,5 +1,13 @@
 # Versiones
 
+## 2.3.0 (13 de septiembre de 2019)
+- Nuevo tipo de reemplazos: fechas sin día y con el mes en mayúscula.
+- Optimización: se reduce el tamaño interno de los datos para la tabla de reemplazos
+- Mejora en la captura de nombres de ficheros
+- Se añaden títulos (en la barra del navegador) a todas las secciones
+- Se reindexa siempre un artículo del dump si su fecha coincide con la última indexación,
+para indexar los nuevos tipos de reemplazos. 
+
 ## 2.2.1 (7 de septiembre de 2019)
 - Corregir casos puntuales al leer las secciones de un artículo
 - Optimización: al buscar un artículo para revisar, recibir todos los datos
