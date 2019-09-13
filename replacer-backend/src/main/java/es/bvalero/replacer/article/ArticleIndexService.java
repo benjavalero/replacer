@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -18,7 +21,6 @@ import java.util.stream.Collectors;
 public class ArticleIndexService {
 
     static final String SYSTEM_REVIEWER = "system";
-    private static final int BATCH_SIZE = 1000;
 
     @Autowired
     private ReplacementRepository replacementRepository;
@@ -26,18 +28,14 @@ public class ArticleIndexService {
     @Autowired
     private ArticleStatsService articleStatsService;
 
-    // List of replacements to save in batch
-    // We use sets to compare easily in the unit tests
-    private Collection<Replacement> toSaveInBatch = new HashSet<>();
-
     /* INDEX ARTICLES */
 
     void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
         LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
         indexReplacements(article,
                 convertArticleReplacements(article, articleReplacements),
-                replacementRepository.findByArticleId(article.getId()),
-                false);
+                replacementRepository.findByArticleId(article.getId())
+        );
         LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
     }
 
@@ -46,13 +44,13 @@ public class ArticleIndexService {
         LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
         indexReplacements(article,
                 convertArticleReplacements(article, articleReplacements),
-                dbReplacements,
-                true);
+                dbReplacements
+        );
         LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
     }
 
     void indexReplacements(WikipediaPage article, Collection<Replacement> replacements,
-                           Collection<Replacement> dbReplacements, boolean indexInBatch) {
+                           Collection<Replacement> dbReplacements) {
         LOGGER.debug("START Index list of replacements\n" +
                         "New: {} - {}\n" +
                         "Old: {} - {}",
@@ -63,24 +61,24 @@ public class ArticleIndexService {
         // in order to be able to skip the article when reindexing
         if (replacements.isEmpty() && dbReplacements.isEmpty()) {
             Replacement newReplacement = new Replacement(article.getId(), "", "", 0);
-            reviewReplacementAsSystem(newReplacement, indexInBatch);
+            reviewReplacementAsSystem(newReplacement);
         }
 
         replacements.forEach(replacement -> {
             Optional<Replacement> existing = findSameReplacementInCollection(replacement, dbReplacements);
             if (existing.isPresent()) {
-                handleExistingReplacement(replacement, existing.get(), indexInBatch);
+                handleExistingReplacement(replacement, existing.get());
                 dbReplacements.remove(existing.get());
             } else {
                 // New replacement
-                saveReplacement(replacement, indexInBatch);
+                saveReplacement(replacement);
                 LOGGER.debug("Replacement inserted in DB: {}", replacement);
             }
         });
 
         // Remove the remaining replacements
         dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(rep -> {
-            reviewReplacementAsSystem(rep, indexInBatch);
+            reviewReplacementAsSystem(rep);
             LOGGER.debug("Replacement reviewed in DB with system: {}", rep);
         });
         LOGGER.debug("END Index list of replacements");
@@ -101,52 +99,31 @@ public class ArticleIndexService {
                 .collect(Collectors.toList());
     }
 
-    private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement, boolean indexInBatch) {
+    private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement) {
         if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())
                 && dbReplacement.isToBeReviewed()) { // DB older than Dump
             Replacement updated = dbReplacement.withLastUpdate(newReplacement.getLastUpdate());
-            saveReplacement(updated, indexInBatch);
+            saveReplacement(updated);
             LOGGER.debug("Replacement updated in DB: {}", updated);
         } else {
             LOGGER.debug("Replacement existing in DB: {}", dbReplacement);
         }
     }
 
-    private void saveReplacement(Replacement replacement, boolean saveInBatch) {
-        if (saveInBatch) {
-            toSaveInBatch.add(replacement);
-            if (toSaveInBatch.size() >= BATCH_SIZE) {
-                flushReplacementsInBatch();
-            }
-        } else {
-            replacementRepository.save(replacement);
-        }
-    }
-
-    public void flushReplacementsInBatch() {
-        LOGGER.debug("START Save replacements in database: {}", toSaveInBatch.size());
-        replacementRepository.saveAll(toSaveInBatch);
-
-        // Using .clear() the unit tests don't pass don't know why
-        toSaveInBatch = new HashSet<>();
-
-        // Flush and clear to avoid memory leaks (we are performing millions of updates when indexing the dump)
-        replacementRepository.flush();
-        replacementRepository.clear(); // This clears all the EntityManager
-        LOGGER.debug("END Save replacements in database");
+    private void saveReplacement(Replacement replacement) {
+        replacementRepository.save(replacement);
     }
 
     private void reviewReplacement(Replacement replacement, String reviewer) {
-        saveReplacement(replacement.withReviewer(reviewer).withLastUpdate(LocalDate.now()), false);
+        saveReplacement(replacement.withReviewer(reviewer).withLastUpdate(LocalDate.now()));
     }
 
-    void reviewReplacementAsSystem(Replacement replacement, boolean reviewInBatch) {
-        saveReplacement(replacement.withReviewer(SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()), reviewInBatch);
+    void reviewReplacementAsSystem(Replacement replacement) {
+        saveReplacement(replacement.withReviewer(SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()));
     }
 
     void reviewArticleAsSystem(int articleId) {
-        replacementRepository.findByArticleIdAndReviewerIsNull(articleId).forEach(
-                replacement -> reviewReplacementAsSystem(replacement, false));
+        replacementRepository.findByArticleIdAndReviewerIsNull(articleId).forEach(this::reviewReplacementAsSystem);
     }
 
     public void reviewArticlesAsSystem(Set<Integer> articleIds) {

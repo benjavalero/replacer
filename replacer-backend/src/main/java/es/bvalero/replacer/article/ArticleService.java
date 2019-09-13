@@ -216,7 +216,7 @@ public class ArticleService {
             if (articleReplacements.isEmpty()) {
                 // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
                 Replacement customReplacement = new Replacement(article.getId(), ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, 0);
-                articleIndexService.reviewReplacementAsSystem(customReplacement, false);
+                articleIndexService.reviewReplacementAsSystem(customReplacement);
             }
         } else {
             // We take profit and we update the database with the just calculated replacements (also when empty)

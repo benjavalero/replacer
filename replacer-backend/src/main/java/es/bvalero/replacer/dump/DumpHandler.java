@@ -1,6 +1,5 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.ArticleIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import lombok.Getter;
@@ -35,9 +34,6 @@ class DumpHandler extends DefaultHandler {
     // Get database replacements in batches to improve performance
     @Autowired
     private DumpArticleCache dumpArticleCache;
-
-    @Autowired
-    private ArticleIndexService articleIndexService;
 
     // Current article values
     private StringBuilder currentChars = new StringBuilder(5000);
@@ -77,7 +73,6 @@ class DumpHandler extends DefaultHandler {
         running = false;
         endTime = Instant.now();
         dumpArticleCache.clean();
-        articleIndexService.flushReplacementsInBatch();
     }
 
     @Override
