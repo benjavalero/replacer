@@ -48,7 +48,7 @@ public class DumpHandlerTest {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
 
         // The first article is not processed. The rest are.
-        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(WikipediaPage.class), Mockito.anyBoolean()))
+        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(WikipediaPage.class)))
                 .thenReturn(Boolean.FALSE).thenReturn(Boolean.TRUE);
 
         // Start the instance of the handler as done in DumpManager
@@ -85,7 +85,7 @@ public class DumpHandlerTest {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
 
         // The first article is not processed. It throws an exception.
-        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(WikipediaPage.class), Mockito.anyBoolean()))
+        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(WikipediaPage.class)))
                 .thenThrow(Mockito.mock(NullPointerException.class));
 
         // Start the instance of the handler as done in DumpManager

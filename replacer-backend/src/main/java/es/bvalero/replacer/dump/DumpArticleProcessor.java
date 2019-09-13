@@ -7,7 +7,6 @@ import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,12 +32,7 @@ class DumpArticleProcessor {
     @Autowired
     private ReplacementFinderService replacementFinderService;
 
-    @TestOnly
     boolean processArticle(WikipediaPage dumpArticle) {
-        return processArticle(dumpArticle, false);
-    }
-
-    boolean processArticle(WikipediaPage dumpArticle, boolean forceProcess) {
         LOGGER.debug("START Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
 
         if (!isDumpArticleProcessableByNamespace(dumpArticle)) {
@@ -54,7 +48,7 @@ class DumpArticleProcessor {
         Optional<LocalDate> dbLastUpdate = dbReplacements.stream().map(Replacement::getLastUpdate)
                 .max(Comparator.comparing(LocalDate::toEpochDay));
         if (dbLastUpdate.isPresent()
-                && !isArticleProcessableByTimestamp(dumpArticle.getLastUpdate().toLocalDate(), dbLastUpdate.get(), forceProcess)) {
+                && !isArticleProcessableByTimestamp(dumpArticle.getLastUpdate().toLocalDate(), dbLastUpdate.get())) {
             LOGGER.debug("END Process dump article. Not processable by date: {}. Dump date: {}. DB date: {}",
                     dumpArticle.getTitle(), dumpArticle.getLastUpdate().toLocalDate(), dbLastUpdate);
             return false;
@@ -75,15 +69,11 @@ class DumpArticleProcessor {
         return !dumpArticle.isRedirectionPage();
     }
 
-    private boolean isArticleProcessableByTimestamp(LocalDate dumpDate, LocalDate dbDate, boolean forceProcess) {
-        if (dumpDate.equals(dbDate)) {
-            // Article in dump equals to the last indexing. Reprocess when forcing.
-            return forceProcess;
-        } else {
-            // If article modified in dump after last indexing, reprocess always.
-            // If article modified in dump before last indexing, do not reprocess even when forcing.
-            return dumpDate.isAfter(dbDate);
-        }
+    private boolean isArticleProcessableByTimestamp(LocalDate dumpDate, LocalDate dbDate) {
+        // If article modified in dump equals to the last indexing, reprocess always.
+        // If article modified in dump after last indexing, reprocess always.
+        // If article modified in dump before last indexing, do not reprocess even when forcing.
+        return !dumpDate.isBefore(dbDate);
     }
 
 }

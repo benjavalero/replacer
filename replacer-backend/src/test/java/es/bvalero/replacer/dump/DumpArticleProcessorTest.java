@@ -103,7 +103,7 @@ public class DumpArticleProcessorTest {
         Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt()))
                 .thenReturn(Collections.singleton(replacement));
 
-        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle, true));
+        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
@@ -121,25 +121,7 @@ public class DumpArticleProcessorTest {
         Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt()))
                 .thenReturn(Collections.singleton(replacement));
 
-        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
-    }
-
-    @Test
-    public void testProcessLastUpdateWhenTimestampForced() {
-        LocalDateTime today = LocalDateTime.now();
-
-        WikipediaPage dumpArticle = WikipediaPage.builder()
-                .namespace(WikipediaNamespace.ARTICLE)
-                .content("")
-                .lastUpdate(today)
-                .build();
-
-        Replacement replacement = new Replacement(1, "", "", 1)
-                .withLastUpdate(today.toLocalDate());
-        Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt()))
-                .thenReturn(Collections.singleton(replacement));
-
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle, true));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
