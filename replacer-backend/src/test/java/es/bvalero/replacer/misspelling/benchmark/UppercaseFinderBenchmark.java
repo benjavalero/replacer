@@ -44,7 +44,7 @@ public class UppercaseFinderBenchmark {
     @Test
     public void testBenchmark() throws WikipediaException, URISyntaxException, IOException {
         // Load the misspellings
-        misspellingManager.updateMisspellings();
+        misspellingManager.update();
         Collection<String> words = uppercaseAfterFinder.getUppercaseWords();
 
         // Load IDs of the sample articles

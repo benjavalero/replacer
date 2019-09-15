@@ -46,7 +46,7 @@ public class FalseFinderBenchmark {
     @Test
     public void testWordFinderBenchmark() throws IOException, WikipediaException, URISyntaxException {
         // Load the misspellings
-        falsePositiveManager.updateFalsePositives();
+        falsePositiveManager.update();
         Collection<String> words = falsePositiveFinder.getFalsePositives();
 
         // Load IDs of the sample articles

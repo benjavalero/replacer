@@ -22,7 +22,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
@@ -44,7 +43,7 @@ public class WordFinderBenchmark {
     @Test
     public void testWordFinderBenchmark() throws IOException, WikipediaException, URISyntaxException {
         // Load the misspellings
-        misspellingManager.updateMisspellings();
+        misspellingManager.update();
         Collection<String> words = misspellingFinder.getMisspellingMap().keySet();
 
         // Load IDs of the sample articles

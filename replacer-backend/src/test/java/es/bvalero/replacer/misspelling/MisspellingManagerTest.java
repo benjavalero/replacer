@@ -44,7 +44,7 @@ public class MisspellingManagerTest {
                 " k||k\n" +
                 " k||M\n"; // Duplicated but different comment
 
-        Collection<Misspelling> misspellings = misspellingManager.parseMisspellingListText(misspellingListText);
+        Collection<Misspelling> misspellings = misspellingManager.parseItemsText(misspellingListText);
         Assert.assertEquals(4, misspellings.size());
         Assert.assertTrue(misspellings.contains(
                 Misspelling.of("C", true, "D")));
@@ -64,7 +64,7 @@ public class MisspellingManagerTest {
                 " CD's||CD\n" + // Valid with single quotes
                 " cm.||cm\n"; // Not valid with dots
 
-        Collection<Misspelling> misspellings = misspellingManager.parseMisspellingListText(misspellingListText);
+        Collection<Misspelling> misspellings = misspellingManager.parseItemsText(misspellingListText);
         Assert.assertEquals(3, misspellings.size());
         Assert.assertTrue(misspellings.contains(
                 Misspelling.ofCaseInsensitive("aguila", "águila")));
@@ -78,12 +78,12 @@ public class MisspellingManagerTest {
     public void testDeleteObsoleteMisspellings() {
         Misspelling misspelling1 = Misspelling.ofCaseInsensitive("A", "B");
         Misspelling misspelling2 = Misspelling.ofCaseInsensitive("B", "C");
-        misspellingManager.setMisspellings(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
+        misspellingManager.setItems(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
 
         Mockito.verify(articleService, Mockito.times(0)).deleteReplacementsByTextIn(Mockito.anySet());
 
         Misspelling misspelling3 = Misspelling.ofCaseInsensitive("C", "D");
-        misspellingManager.setMisspellings(new HashSet<>(Arrays.asList(misspelling2, misspelling3)));
+        misspellingManager.setItems(new HashSet<>(Arrays.asList(misspelling2, misspelling3)));
 
         Mockito.verify(articleService, Mockito.times(1)).deleteReplacementsByTextIn(Collections.singleton("A"));
     }
