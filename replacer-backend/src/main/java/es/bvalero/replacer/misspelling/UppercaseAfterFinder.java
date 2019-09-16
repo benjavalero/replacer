@@ -1,6 +1,5 @@
 package es.bvalero.replacer.misspelling;
 
-import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
@@ -19,6 +18,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -76,16 +76,15 @@ public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredRe
 
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {
-        List<MatchResult> matches = new ArrayList<>(100);
+        return findMatchResults(text, this.uppercaseAfterAutomaton).stream()
+                .map(this::processMatchResult)
+                .collect(Collectors.toList());
+    }
 
-        AutomatonMatcher m = this.uppercaseAfterAutomaton.newMatcher(text);
-        while (m.find()) {
-            String word = m.group().substring(1).trim();
-            int start = m.start() + m.group().indexOf(word);
-            matches.add(MatchResult.of(start, word));
-        }
-
-        return matches;
+    private MatchResult processMatchResult(MatchResult match) {
+        String word = match.getText().substring(1).trim();
+        int start = match.getStart() + match.getText().indexOf(word);
+        return MatchResult.of(start, word);
     }
 
 }

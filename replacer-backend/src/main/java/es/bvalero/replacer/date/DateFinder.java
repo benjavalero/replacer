@@ -14,10 +14,10 @@ abstract class DateFinder extends ReplacementFinder {
             "enero", "febrero", "marzo", "abril", "mayo", "junio",
             "julio", "agosto", "sep?tiembre", "octubre", "noviembre", "diciembre");
     static final List<String> MONTHS_UPPERCASE = MONTHS.stream()
-            .map(ReplacementFinder::setFirstUpperCase)
+            .map(DateFinder::setFirstUpperCase)
             .collect(Collectors.toList());
     static final List<String> MONTHS_UPPERCASE_CLASS = MONTHS.stream()
-            .map(ReplacementFinder::setFirstUpperCaseClass)
+            .map(DateFinder::setFirstUpperCaseClass)
             .collect(Collectors.toList());
 
     public String getType() {

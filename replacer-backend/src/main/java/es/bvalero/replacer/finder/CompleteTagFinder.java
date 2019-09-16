@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -21,11 +20,7 @@ public class CompleteTagFinder extends ReplacementFinder implements IgnoredRepla
 
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {
-        List<MatchResult> matches = new ArrayList<>(100);
-        for (Pattern pattern : PATTERN_COMPLETE_TAGS) {
-            matches.addAll(findMatchResults(text, pattern));
-        }
-        return matches;
+        return findMatchResultsFromPatterns(text, PATTERN_COMPLETE_TAGS);
     }
 
 }

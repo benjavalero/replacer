@@ -1,12 +1,11 @@
 package es.bvalero.replacer.finder;
 
-import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class TemplateParamFinder extends ReplacementFinder implements IgnoredReplacementFinder {
@@ -18,12 +17,13 @@ public class TemplateParamFinder extends ReplacementFinder implements IgnoredRep
 
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {
-        List<MatchResult> matches = new ArrayList<>(100);
-        AutomatonMatcher m = AUTOMATON_TEMPLATE_PARAM.newMatcher(text);
-        while (m.find()) {
-            matches.add(MatchResult.of(m.start() + 1, m.group().substring(1, m.group().length() - 1)));
-        }
-        return matches;
+        return findMatchResults(text, AUTOMATON_TEMPLATE_PARAM).stream()
+                .map(this::processMatchResult)
+                .collect(Collectors.toList());
+    }
+
+    private MatchResult processMatchResult(MatchResult match) {
+        return MatchResult.of(match.getStart() + 1, match.getText().substring(1, match.getText().length() - 1));
     }
 
 }

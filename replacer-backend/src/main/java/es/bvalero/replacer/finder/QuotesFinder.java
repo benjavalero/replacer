@@ -4,7 +4,6 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,11 +30,7 @@ public class QuotesFinder extends ReplacementFinder implements IgnoredReplacemen
 
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {
-        List<MatchResult> matches = new ArrayList<>(100);
-        for (RunAutomaton automaton : AUTOMATA_QUOTES) {
-            matches.addAll(findMatchResults(text, automaton));
-        }
-        return matches;
+        return findMatchResultsFromAutomata(text, AUTOMATA_QUOTES);
     }
 
 }

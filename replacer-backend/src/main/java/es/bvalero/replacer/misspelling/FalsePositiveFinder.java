@@ -1,6 +1,5 @@
 package es.bvalero.replacer.misspelling;
 
-import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
@@ -16,10 +15,10 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Find misspelling replacements in a given text.
@@ -63,14 +62,9 @@ public class FalsePositiveFinder extends ReplacementFinder implements IgnoredRep
 
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {
-        List<MatchResult> matches = new ArrayList<>();
-        AutomatonMatcher m = this.falsePositivesAutomaton.newMatcher(text);
-        while (m.find()) {
-            if (isWordCompleteInText(m.start(), m.group(), text)) {
-                matches.add(MatchResult.of(m.start(), m.group()));
-            }
-        }
-        return matches;
+        return findMatchResults(text, this.falsePositivesAutomaton).stream()
+                .filter(m -> isWordCompleteInText(m.getStart(), m.getText(), text))
+                .collect(Collectors.toList());
     }
 
 }

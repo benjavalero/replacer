@@ -55,17 +55,7 @@ public class ReplacementFinderService {
         }
 
         // Ignore the replacements which must be ignored
-        for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
-            LOGGER.debug("- START Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
-            List<MatchResult> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
-            LOGGER.debug("- Found ignored of type: {}", ignoredReplacements);
-            LOGGER.debug("- END Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
-            articleReplacements.removeIf(replacement -> isReplacementContainedInMatchResultList(replacement, ignoredReplacements));
-
-            if (articleReplacements.isEmpty()) {
-                break;
-            }
-        }
+        removeIgnoredReplacements(text, articleReplacements);
 
         LOGGER.debug("END Find replacements in text. Final replacements found: {} - {}",
                 articleReplacements.size(), articleReplacements);
@@ -91,6 +81,20 @@ public class ReplacementFinderService {
 
     private boolean isIntervalContainedInInterval(int start1, int end1, int start2, int end2) {
         return start1 >= start2 && end1 <= end2;
+    }
+
+    private void removeIgnoredReplacements(String text, List<ArticleReplacement> articleReplacements) {
+        for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
+            LOGGER.debug("- START Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
+            List<MatchResult> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
+            LOGGER.debug("- Found ignored of type: {}", ignoredReplacements);
+            LOGGER.debug("- END Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
+            articleReplacements.removeIf(replacement -> isReplacementContainedInMatchResultList(replacement, ignoredReplacements));
+
+            if (articleReplacements.isEmpty()) {
+                break;
+            }
+        }
     }
 
     private boolean isReplacementContainedInMatchResultList(ArticleReplacement replacement, List<MatchResult> matchResults) {

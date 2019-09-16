@@ -6,6 +6,7 @@ import dk.brics.automaton.RunAutomaton;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Abstract class to provide generic methods to find replacements
@@ -13,6 +14,9 @@ import java.util.regex.Pattern;
 public abstract class ReplacementFinder {
 
     private static final Set<Character> invalidSeparators = new HashSet<>(Arrays.asList('_', '/'));
+
+    protected ReplacementFinder() {
+    }
 
     protected static boolean startsWithUpperCase(CharSequence word) {
         return Character.isUpperCase(word.charAt(0));
@@ -46,22 +50,32 @@ public abstract class ReplacementFinder {
         return !Character.isLetterOrDigit(separator) && !invalidSeparators.contains(separator);
     }
 
-    public List<MatchResult> findMatchResults(CharSequence text, RunAutomaton automaton) {
+    protected static List<MatchResult> findMatchResults(String text, RunAutomaton automaton) {
         List<MatchResult> matches = new ArrayList<>(100);
         AutomatonMatcher matcher = automaton.newMatcher(text);
         while (matcher.find()) {
-            matches.add(MatchResult.of(matcher.start(), matcher.group(0)));
+            matches.add(MatchResult.of(matcher.start(), matcher.group()));
         }
         return matches;
     }
 
-    public List<MatchResult> findMatchResults(CharSequence text, Pattern pattern) {
+    protected static List<MatchResult> findMatchResults(String text, Pattern pattern) {
         List<MatchResult> matches = new ArrayList<>(100);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
             matches.add(MatchResult.of(matcher.start(), matcher.group()));
         }
         return matches;
+    }
+
+    static List<MatchResult> findMatchResultsFromAutomata(String text, List<RunAutomaton> automata) {
+        return automata.stream().map(automaton -> findMatchResults(text, automaton))
+                .flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    static List<MatchResult> findMatchResultsFromPatterns(String text, List<Pattern> patterns) {
+        return patterns.stream().map(pattern -> findMatchResults(text, pattern))
+                .flatMap(Collection::stream).collect(Collectors.toList());
     }
 
 }

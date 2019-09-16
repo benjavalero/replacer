@@ -1,12 +1,11 @@
 package es.bvalero.replacer.finder;
 
-import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class FileNameFinder extends ReplacementFinder implements IgnoredReplacementFinder {
@@ -18,17 +17,17 @@ public class FileNameFinder extends ReplacementFinder implements IgnoredReplacem
 
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {
-        List<MatchResult> matches = new ArrayList<>(100);
+        return findMatchResults(text, AUTOMATON_FILE_TAG).stream()
+                .map(this::processMatchResult)
+                .collect(Collectors.toList());
+    }
 
-        AutomatonMatcher m = AUTOMATON_FILE_TAG.newMatcher(text);
-        while (m.find()) {
-            // Remove the first and last characters and the possible surrounding spaces
-            String file = m.group().substring(1, m.group().length() - 1).trim();
-            int pos = m.group().indexOf(file);
-            matches.add(MatchResult.of(m.start() + pos, file));
-        }
-
-        return matches;
+    private MatchResult processMatchResult(MatchResult match) {
+        // Remove the first and last characters and the possible surrounding spaces
+        String text = match.getText();
+        String file = text.substring(1, text.length() - 1).trim();
+        int pos = text.indexOf(file);
+        return MatchResult.of(match.getStart() + pos, file);
     }
 
 }

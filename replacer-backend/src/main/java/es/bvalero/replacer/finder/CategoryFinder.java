@@ -11,11 +11,11 @@ class CategoryFinder extends ReplacementFinder implements IgnoredReplacementFind
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_CATEGORY = "\\[\\[(Categoría|als):[^]]+]]";
-    private static final RunAutomaton CATEGORY_AUTOMATON = new RunAutomaton(new RegExp(REGEX_CATEGORY).toAutomaton());
+    private static final RunAutomaton AUTOMATON_CATEGORY = new RunAutomaton(new RegExp(REGEX_CATEGORY).toAutomaton());
 
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {
-        return findMatchResults(text, CATEGORY_AUTOMATON);
+        return findMatchResults(text, AUTOMATON_CATEGORY);
     }
 
 }

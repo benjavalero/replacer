@@ -5,7 +5,10 @@ import dk.brics.automaton.RunAutomaton;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class TemplateFinder extends ReplacementFinder implements IgnoredReplacementFinder {
@@ -36,9 +39,7 @@ public class TemplateFinder extends ReplacementFinder implements IgnoredReplacem
 
     @Override
     public List<MatchResult> findIgnoredReplacements(String text) {
-        List<MatchResult> matches = new ArrayList<>(100);
-        matches.addAll(findMatchResults(text, AUTOMATON_TEMPLATE));
-        return matches;
+        return findMatchResults(text, AUTOMATON_TEMPLATE);
     }
 
 }
