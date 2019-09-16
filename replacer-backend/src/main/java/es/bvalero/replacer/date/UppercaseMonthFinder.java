@@ -4,14 +4,11 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ArticleReplacementFinder;
-import es.bvalero.replacer.finder.ReplacementSuggestion;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
@@ -33,12 +30,6 @@ public class UppercaseMonthFinder extends DateFinder implements ArticleReplaceme
                         SUBTYPE_DATE_UPPERCASE_MONTHS,
                         findSuggestions(match.getText())))
                 .collect(Collectors.toList());
-    }
-
-    private List<ReplacementSuggestion> findSuggestions(String date) {
-        String fixedDate = date.toLowerCase(Locale.forLanguageTag("es"))
-                .replace("setiembre", "septiembre");
-        return Collections.singletonList(ReplacementSuggestion.ofNoComment(fixedDate));
     }
 
 }
