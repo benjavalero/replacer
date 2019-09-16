@@ -17,7 +17,7 @@ public class LeadingZeroFinder extends DateFinder implements ArticleReplacementF
     private static final String SUBTYPE_DATE_LEADING_ZERO = "Día con cero";
 
     @RegExp
-    private static final String REGEX_DATE_LEADING_ZERO = "0<N> de (%s) de <N>{4}";
+    private static final String REGEX_DATE_LEADING_ZERO = "0<N> de (%s) del? <N>{4}";
     private static final RunAutomaton AUTOMATON_DATE_LEADING_ZERO = new RunAutomaton(new dk.brics.automaton.RegExp(
             String.format(REGEX_DATE_LEADING_ZERO, StringUtils.join(MONTHS_UPPERCASE_CLASS, "|")))
             .toAutomaton(new DatatypesAutomatonProvider()));

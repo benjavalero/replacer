@@ -35,6 +35,9 @@ abstract class DateFinder extends ReplacementFinder {
             fixedDate = fixedDate.replaceAll(month, month.toLowerCase(Locale.forLanguageTag("es")));
         }
 
+        // Replace "del"
+        fixedDate = fixedDate.replace("del", "de");
+
         // Replace the leading zero
         if (fixedDate.startsWith("0")) {
             fixedDate = fixedDate.substring(1);

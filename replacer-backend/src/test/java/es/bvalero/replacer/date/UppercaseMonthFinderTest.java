@@ -56,4 +56,17 @@ public class UppercaseMonthFinderTest {
         Assert.assertEquals(date.toLowerCase(), articleReplacements.get(0).getSuggestions().get(0).getText());
     }
 
+    @Test
+    public void testDel() {
+        String date = "17 de Agosto del 2019";
+        String expected = "17 de agosto de 2019";
+        String text = String.format("En %s.", date);
+
+        List<ArticleReplacement> articleReplacements = uppercaseMonthFinder.findReplacements(text);
+
+        Assert.assertEquals(1, articleReplacements.size());
+        Assert.assertEquals(date, articleReplacements.get(0).getText());
+        Assert.assertEquals(expected, articleReplacements.get(0).getSuggestions().get(0).getText());
+    }
+
 }
