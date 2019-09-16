@@ -1,6 +1,5 @@
 package es.bvalero.replacer.misspelling;
 
-import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
@@ -26,8 +25,8 @@ import java.util.*;
 @Component
 public class MisspellingFinder extends ReplacementFinder implements ArticleReplacementFinder, PropertyChangeListener {
 
-    private static final String MISSPELLING_TYPE = "Ortografía";
-    private static final RunAutomaton WORD_AUTOMATON = new RunAutomaton(new RegExp("(<L>|[-'])+")
+    private static final String TYPE_MISSPELLING = "Ortografía";
+    private static final RunAutomaton AUTOMATON_WORD = new RunAutomaton(new RegExp("(<L>|[-'])+")
             .toAutomaton(new DatatypesAutomatonProvider()));
 
     @Autowired
@@ -80,34 +79,24 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
         List<ArticleReplacement> articleReplacements = new ArrayList<>(100);
 
         // Find all the words and check if they are potential errors
-        AutomatonMatcher m = WORD_AUTOMATON.newMatcher(text);
-        while (m.find()) {
-            String word = m.group();
-            Misspelling misspelling = findMisspellingByWord(word);
-            if (misspelling != null && isWordCompleteInText(m.start(), word, text)) {
-                articleReplacements.add(ArticleReplacement.builder()
-                        .type(getType())
-                        .subtype(misspelling.getWord())
-                        .start(m.start())
-                        .text(word)
-                        .suggestions(findMisspellingSuggestions(word, misspelling))
-                        .build());
-            }
-        }
+        findMatchResults(text, AUTOMATON_WORD).stream()
+                .filter(match -> isWordCompleteInText(match.getStart(), match.getText(), text))
+                .forEach(match -> findMisspellingByWord(match.getText()).ifPresent(misspelling ->
+                        articleReplacements.add(convertMatchResultToReplacement(
+                                match,
+                                TYPE_MISSPELLING,
+                                misspelling.getWord(),
+                                findMisspellingSuggestions(match.getText(), misspelling)
+                        ))));
 
         return articleReplacements;
     }
 
-    @Override
-    public String getType() {
-        return MISSPELLING_TYPE;
-    }
-
     /**
-     * @return The misspelling related to the given word, or null if there is no such misspelling.
+     * @return The misspelling related to the given word, or empty if there is no such misspelling.
      */
-    private Misspelling findMisspellingByWord(String word) {
-        return this.misspellingMap.get(word);
+    private Optional<Misspelling> findMisspellingByWord(String word) {
+        return Optional.ofNullable(this.misspellingMap.get(word));
     }
 
     /* Transform the case of the suggestion, e. g. "Habia" -> "Había" */

@@ -35,9 +35,9 @@ public class ReplacementFinderService {
         // LinkedList is better to run iterators and remove items from it
         List<ArticleReplacement> articleReplacements = new LinkedList<>();
         for (ArticleReplacementFinder finder : articleReplacementFinders) {
-            LOGGER.debug("- START Find replacements of type: {}", finder.getType());
+            LOGGER.debug("- START Find replacements of type: {}", finder.getClass().getSimpleName());
             List<ArticleReplacement> replacements = finder.findReplacements(text);
-            LOGGER.debug("- END Find replacements of type: {}", finder.getType());
+            LOGGER.debug("- END Find replacements of type: {}", finder.getClass().getSimpleName());
             articleReplacements.addAll(replacements);
         }
         LOGGER.debug("Potential replacements found (before ignoring): {} - {}",

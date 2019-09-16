@@ -50,13 +50,11 @@ public class MisspellingFinderTest {
         ArticleReplacement result1 = results.get(0);
         Assert.assertEquals("sample", result1.getText());
         Assert.assertEquals(0, result1.getStart());
-        Assert.assertEquals(misspellingFinder.getType(), result1.getType());
         Assert.assertEquals("sample", result1.getSubtype());
 
         ArticleReplacement result2 = results.get(1);
         Assert.assertEquals("text", result2.getText());
         Assert.assertEquals(7, result2.getStart());
-        Assert.assertEquals(misspellingFinder.getType(), result2.getType());
         Assert.assertEquals("text", result2.getSubtype());
     }
 

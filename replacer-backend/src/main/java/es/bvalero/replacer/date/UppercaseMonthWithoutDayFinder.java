@@ -1,23 +1,24 @@
 package es.bvalero.replacer.date;
 
-import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ArticleReplacementFinder;
-import es.bvalero.replacer.finder.MatchResult;
 import es.bvalero.replacer.finder.ReplacementSuggestion;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
 public class UppercaseMonthWithoutDayFinder extends DateFinder implements ArticleReplacementFinder {
 
-    private static final String DATE_UPPERCASE_MONTHS_TYPE = "Mes en mayúscula";
+    private static final String SUBTYPE_DATE_UPPERCASE_MONTHS = "Mes en mayúscula";
 
     private static final List<String> WORDS = Arrays.asList(
             "a", "desde", "de", "durante", "el", "entre", "en", "hacia", "hasta", "para", "y");
@@ -35,36 +36,21 @@ public class UppercaseMonthWithoutDayFinder extends DateFinder implements Articl
 
     @Override
     public List<ArticleReplacement> findReplacements(String text) {
-        return findDatesWithUpperCaseMonths(text).stream()
-                .map(this::convertMatchToReplacement)
+        return findMatchResults(text, AUTOMATON_DATE_UPPERCASE_MONTHS).stream()
+                .filter(match -> isWordCompleteInText(match.getStart(), match.getText(), text))
+                .map(match -> convertMatchResultToReplacement(
+                        match,
+                        TYPE_DATE,
+                        SUBTYPE_DATE_UPPERCASE_MONTHS,
+                        findSuggestions(match.getText())))
                 .collect(Collectors.toList());
     }
 
-    private List<MatchResult> findDatesWithUpperCaseMonths(String text) {
-        List<MatchResult> matches = new ArrayList<>(100);
-        AutomatonMatcher m = AUTOMATON_DATE_UPPERCASE_MONTHS.newMatcher(text);
-        while (m.find()) {
-            if (isWordCompleteInText(m.start(), m.group(), text)) {
-                matches.add(MatchResult.of(m.start(), m.group()));
-            }
-        }
-        return matches;
-    }
-
-    private ArticleReplacement convertMatchToReplacement(MatchResult match) {
-        return ArticleReplacement.builder()
-                .type(getType())
-                .subtype(DATE_UPPERCASE_MONTHS_TYPE)
-                .start(match.getStart())
-                .text(match.getText())
-                .suggestions(Collections.singletonList(ReplacementSuggestion.ofNoComment(fixDateWithUpperCaseMonth(match.getText()))))
-                .build();
-    }
-
-    private String fixDateWithUpperCaseMonth(String date) {
-        return date.substring(0, 1) +
+    private List<ReplacementSuggestion> findSuggestions(String date) {
+        String fixedDate = date.substring(0, 1) +
                 date.substring(1).toLowerCase(Locale.forLanguageTag("es"))
                         .replace("setiembre", "septiembre");
+        return Collections.singletonList(ReplacementSuggestion.ofNoComment(fixedDate));
     }
 
 }

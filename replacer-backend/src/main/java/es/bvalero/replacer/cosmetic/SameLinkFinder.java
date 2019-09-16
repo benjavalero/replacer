@@ -1,8 +1,6 @@
 package es.bvalero.replacer.cosmetic;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
-import es.bvalero.replacer.finder.ArticleReplacementFinder;
-import es.bvalero.replacer.finder.ReplacementSuggestion;
+import es.bvalero.replacer.finder.*;
 import org.intellij.lang.annotations.RegExp;
 
 import java.util.ArrayList;
@@ -11,7 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class SameLinkFinder implements ArticleReplacementFinder {
+class SameLinkFinder extends ReplacementFinder implements ArticleReplacementFinder {
 
     @RegExp
     private static final String REGEX_SAME_LINK = "\\[\\[([^]|]+)\\|(\\1)]]";
@@ -25,12 +23,11 @@ class SameLinkFinder implements ArticleReplacementFinder {
             String link = matcher.group(1);
             String title = matcher.group(2);
             if (isSameLink(link, title)) {
-                replacements.add(ArticleReplacement.builder()
-                        .start(matcher.start())
-                        .text(matcher.group())
-                        .suggestions(Collections.singletonList(
-                                ReplacementSuggestion.ofNoComment(String.format("[[%s]]", title))))
-                        .build());
+                replacements.add(convertMatchResultToReplacement(
+                        MatchResult.of(matcher.start(), matcher.group()),
+                        null,
+                        null,
+                        findSuggestions(title)));
             }
         }
         return replacements;
@@ -41,9 +38,9 @@ class SameLinkFinder implements ArticleReplacementFinder {
                 (Character.isUpperCase(link.charAt(0)) || Character.isLowerCase(title.charAt(0)));
     }
 
-    @Override
-    public String getType() {
-        return null;
+    private List<ReplacementSuggestion> findSuggestions(String linkTitle) {
+        String fixedLink = String.format("[[%s]]", linkTitle);
+        return Collections.singletonList(ReplacementSuggestion.ofNoComment(fixedLink));
     }
 
 }

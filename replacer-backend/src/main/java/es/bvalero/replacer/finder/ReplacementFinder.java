@@ -15,9 +15,6 @@ public abstract class ReplacementFinder {
 
     private static final Set<Character> invalidSeparators = new HashSet<>(Arrays.asList('_', '/'));
 
-    protected ReplacementFinder() {
-    }
-
     protected static boolean startsWithUpperCase(CharSequence word) {
         return Character.isUpperCase(word.charAt(0));
     }
@@ -76,6 +73,17 @@ public abstract class ReplacementFinder {
     static List<MatchResult> findMatchResultsFromPatterns(String text, List<Pattern> patterns) {
         return patterns.stream().map(pattern -> findMatchResults(text, pattern))
                 .flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    protected ArticleReplacement convertMatchResultToReplacement(MatchResult match, String type, String subtype,
+                                                                 List<ReplacementSuggestion> suggestions) {
+        return ArticleReplacement.builder()
+                .type(type)
+                .subtype(subtype)
+                .start(match.getStart())
+                .text(match.getText())
+                .suggestions(suggestions)
+                .build();
     }
 
 }

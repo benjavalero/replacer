@@ -8,7 +8,8 @@ import java.util.stream.Collectors;
 
 abstract class DateFinder extends ReplacementFinder {
 
-    private static final String DATE_TYPE = "Fechas";
+    static final String TYPE_DATE = "Fechas";
+    static final String SUBTYPE_DATE_UPPERCASE_MONTHS = "Mes en mayúscula";
 
     private static final List<String> MONTHS = Arrays.asList(
             "enero", "febrero", "marzo", "abril", "mayo", "junio",
@@ -19,9 +20,5 @@ abstract class DateFinder extends ReplacementFinder {
     static final List<String> MONTHS_UPPERCASE_CLASS = MONTHS.stream()
             .map(DateFinder::setFirstUpperCaseClass)
             .collect(Collectors.toList());
-
-    public String getType() {
-        return DATE_TYPE;
-    }
 
 }
