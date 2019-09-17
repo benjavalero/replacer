@@ -37,7 +37,7 @@ public class ReplacementFinderService {
         for (ArticleReplacementFinder finder : articleReplacementFinders) {
             LOGGER.debug("- START Find replacements of type: {}", finder.getClass().getSimpleName());
             List<ArticleReplacement> replacements = finder.findReplacements(text);
-            LOGGER.debug("- END Find replacements of type: {}", finder.getClass().getSimpleName());
+            LOGGER.debug("- END Find {} replacements of type: {}", replacements.size(), finder.getClass().getSimpleName());
             articleReplacements.addAll(replacements);
         }
         LOGGER.debug("Potential replacements found (before ignoring): {} - {}",

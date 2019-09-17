@@ -276,12 +276,22 @@ public class ArticleService {
                 Optional<WikipediaPage> pageSection = wikipediaService.getPageByIdAndSection
                         (article.getId(), smallestSection.get().getIndex());
                 if (pageSection.isPresent()) {
-                    return Optional.of(buildArticleReview(pageSection.get(),
-                            translateReplacementsByOffset(articleReplacements, smallestSection.get().getByteOffset())));
+                    // Modify the start position of the replacements according to the section start
+                    List<ArticleReplacement> sectionReplacements =
+                            translateReplacementsByOffset(articleReplacements, smallestSection.get().getByteOffset());
+                    // There are some rare cases where the byte-offset doesn't match with the section position
+                    if (sectionReplacements.stream().allMatch(rep -> validateArticleReplacement(rep, pageSection.get().getContent()))) {
+                        return Optional.of(buildArticleReview(pageSection.get(),
+                                translateReplacementsByOffset(articleReplacements, smallestSection.get().getByteOffset())));
+                    } else {
+                        LOGGER.warn("Not valid byte-offset in section {} of article: {}",
+                                smallestSection.get().getIndex(), pageSection.get().getTitle());
+                    }
                 }
-            } else {
-                return Optional.of(buildArticleReview(article, articleReplacements));
             }
+
+            // If no section is found or there are problems the found section we return the review of the whole article
+            return Optional.of(buildArticleReview(article, articleReplacements));
         } catch (WikipediaException e) {
             LOGGER.error("Error getting section review", e);
         }
@@ -298,7 +308,7 @@ public class ArticleService {
             Integer end = null;
             for (int j = i + 1; j < sections.size() && end == null; j++) {
                 if (sections.get(j).getLevel() <= section.getLevel()) {
-                    end = sections.get(j).getByteOffset() - 1;
+                    end = sections.get(j).getByteOffset();
                 }
             }
 
@@ -330,6 +340,11 @@ public class ArticleService {
 
     private List<ArticleReplacement> translateReplacementsByOffset(List<ArticleReplacement> articleReplacements, int offset) {
         return articleReplacements.stream().map(rep -> rep.withStart(rep.getStart() - offset)).collect(Collectors.toList());
+    }
+
+    private boolean validateArticleReplacement(ArticleReplacement articleReplacement, String text) {
+        return articleReplacement.getText().equals(
+                text.substring(articleReplacement.getStart(), articleReplacement.getText().length()));
     }
 
     private ArticleReview buildArticleReview(WikipediaPage article, List<ArticleReplacement> articleReplacements) {

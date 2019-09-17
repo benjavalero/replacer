@@ -21,13 +21,13 @@ public class ArticleServiceTest {
 
     private final int randomId = 1;
     private final int randomId2 = 2;
-    private final String content = "X";
+    private final String content = "XYZ";
     private final String content2 = "Y";
     private final WikipediaPage article = WikipediaPage.builder().id(randomId).content(content).build();
     private final WikipediaPage article2 = WikipediaPage.builder().id(randomId2).content(content2).build();
-    private final int offset = 2;
+    private final int offset = 1;
     private final ArticleReplacement articleReplacement =
-            ArticleReplacement.builder().start(offset).type("X").subtype("Y").text("A").build();
+            ArticleReplacement.builder().start(offset).type("X").subtype("Y").text("Y").build();
     private final List<ArticleReplacement> articleReplacements = Collections.singletonList(articleReplacement);
 
     @Mock
@@ -320,11 +320,11 @@ public class ArticleServiceTest {
 
         // The article has sections
         WikipediaSection section1 = WikipediaSection.builder().byteOffset(offset).index(sectionId).build();
-        WikipediaSection section2 = WikipediaSection.builder().byteOffset(offset + 10).index(sectionId + 1).build();
+        WikipediaSection section2 = WikipediaSection.builder().byteOffset(offset + 1).index(sectionId + 1).build();
         Mockito.when(wikipediaService.getPageSections(randomId))
                 .thenReturn(Arrays.asList(section1, section2));
         Mockito.when(wikipediaService.getPageByIdAndSection(randomId, sectionId))
-                .thenReturn(Optional.of(article.withSection(sectionId)));
+                .thenReturn(Optional.of(WikipediaPage.builder().id(randomId).content(content.substring(offset, offset + 1)).section(sectionId).build()));
 
         Optional<ArticleReview> review = articleService.findArticleReview(randomId, "X", "Y", null);
 
