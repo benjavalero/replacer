@@ -8,13 +8,13 @@ import org.junit.Test;
 import java.beans.PropertyChangeEvent;
 import java.util.*;
 
-public class ComposedFinderTest {
+public class MisspellingComposedFinderTest {
 
-    private ComposedFinder composedFinder;
+    private MisspellingComposedFinder misspellingComposedFinder;
 
     @Before
     public void setUp() {
-        composedFinder = new ComposedFinder();
+        misspellingComposedFinder = new MisspellingComposedFinder();
     }
 
     @Test
@@ -25,9 +25,9 @@ public class ComposedFinderTest {
         Set<Misspelling> misspellings = new HashSet<>(Arrays.asList(simple, composed));
 
         // Fake the update of the misspelling list in the misspelling manager
-        composedFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellings));
+        misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellings));
 
-        List<ArticleReplacement> results = composedFinder.findReplacements(text);
+        List<ArticleReplacement> results = misspellingComposedFinder.findReplacements(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());

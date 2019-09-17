@@ -1,38 +1,25 @@
 package es.bvalero.replacer.misspelling;
 
-import dk.brics.automaton.DatatypesAutomatonProvider;
-import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ArticleReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementSuggestion;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 
-/**
- * Find misspelling replacements in a given text.
- * Based in the WordAutomatonAllFinder winner in the benchmarks.
- */
 @Slf4j
-@Component
-public class MisspellingFinder extends ReplacementFinder implements ArticleReplacementFinder, PropertyChangeListener {
+public abstract class MisspellingFinder extends ReplacementFinder implements ArticleReplacementFinder, PropertyChangeListener {
 
     private static final String TYPE_MISSPELLING = "Ortografía";
-    private static final RunAutomaton AUTOMATON_WORD = new RunAutomaton(new RegExp("(<L>|[-'])+")
-            .toAutomaton(new DatatypesAutomatonProvider()));
-
-    @Autowired
-    private MisspellingManager misspellingManager;
-
     // Derived from the misspelling set to access faster by word
     private Map<String, Misspelling> misspellingMap = new HashMap<>();
+
+    abstract MisspellingManager getMisspellingManager();
 
     public Map<String, Misspelling> getMisspellingMap() {
         return misspellingMap;
@@ -40,13 +27,15 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
 
     @PostConstruct
     public void init() {
-        misspellingManager.addPropertyChangeListener(this);
+        getMisspellingManager().addPropertyChangeListener(this);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        this.misspellingMap = buildMisspellingMap((Set<Misspelling>) evt.getNewValue());
+        Set<Misspelling> misspellings = (Set<Misspelling>) evt.getNewValue();
+        this.misspellingMap = buildMisspellingMap(misspellings);
+        processMisspellingChange(misspellings);
     }
 
     private Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
@@ -69,6 +58,8 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
         return map;
     }
 
+    abstract void processMisspellingChange(Set<Misspelling> misspellings);
+
     /**
      * @return A list with the misspelling replacements in a given text.
      */
@@ -90,9 +81,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
         return articleReplacements;
     }
 
-    RunAutomaton getAutomaton() {
-        return AUTOMATON_WORD;
-    }
+    abstract RunAutomaton getAutomaton();
 
     /**
      * @return The misspelling related to the given word, or empty if there is no such misspelling.

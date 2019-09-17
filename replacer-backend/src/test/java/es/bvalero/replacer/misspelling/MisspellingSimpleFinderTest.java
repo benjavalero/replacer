@@ -8,13 +8,13 @@ import org.junit.Test;
 import java.beans.PropertyChangeEvent;
 import java.util.*;
 
-public class MisspellingFinderTest {
+public class MisspellingSimpleFinderTest {
 
-    private MisspellingFinder misspellingFinder;
+    private MisspellingSimpleFinder misspellingFinder;
 
     @Before
     public void setUp() {
-        misspellingFinder = new MisspellingFinder();
+        misspellingFinder = new MisspellingSimpleFinder();
     }
 
     @Test
