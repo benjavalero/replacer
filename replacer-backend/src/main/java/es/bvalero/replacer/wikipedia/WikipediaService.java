@@ -36,6 +36,8 @@ public interface WikipediaService {
 
     String getFalsePositiveListPageContent() throws WikipediaException;
 
+    String getComposedMisspellingListPageContent() throws WikipediaException;
+
     String identify(OAuth1AccessToken accessToken) throws WikipediaException;
 
     List<WikipediaSection> getPageSections(int pageId) throws WikipediaException;

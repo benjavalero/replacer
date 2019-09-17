@@ -83,6 +83,11 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     @Override
+    public String getComposedMisspellingListPageContent() throws WikipediaException {
+        return loadArticleContent("/composed-misspellings.txt");
+    }
+
+    @Override
     public String identify(OAuth1AccessToken accessToken) {
         return "offline";
     }

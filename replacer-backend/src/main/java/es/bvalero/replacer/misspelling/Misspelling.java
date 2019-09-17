@@ -54,7 +54,7 @@ class Misspelling {
     }
 
     private boolean isMisspellingWordValid(String word) {
-        return word.chars().allMatch(c -> Character.isLetter(c) || c == '\'' || c == '-');
+        return word.chars().allMatch(c -> Character.isLetter(c) || c == '\'' || c == '-' || c == ' ');
     }
 
     private List<ReplacementSuggestion> parseSuggestionsFromComment(String comment) {

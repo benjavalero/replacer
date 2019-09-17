@@ -27,6 +27,7 @@ public class WikipediaServiceImpl implements WikipediaService {
     private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
     private static final String MISSPELLING_LIST_PAGE = "Wikipedia:Corrector_ortográfico/Listado";
     private static final String FALSE_POSITIVE_LIST_PAGE = "Usuario:Benjavalero/FalsePositives";
+    private static final String COMPOSED_MISSPELLING_LIST_PAGE = "Usuario:Benjavalero/ComposedMisspellings";
     private static final String EDIT_SUMMARY = "Correcciones ortográficas";
     private static final int MAX_PAGES_REQUESTED = 50;
     private static final String PARAM_ACTION = "action";
@@ -250,6 +251,13 @@ public class WikipediaServiceImpl implements WikipediaService {
     @Override
     public String getFalsePositiveListPageContent() throws WikipediaException {
         return getPageByTitle(FALSE_POSITIVE_LIST_PAGE)
+                .orElseThrow(WikipediaException::new)
+                .getContent();
+    }
+
+    @Override
+    public String getComposedMisspellingListPageContent() throws WikipediaException {
+        return getPageByTitle(COMPOSED_MISSPELLING_LIST_PAGE)
                 .orElseThrow(WikipediaException::new)
                 .getContent();
     }

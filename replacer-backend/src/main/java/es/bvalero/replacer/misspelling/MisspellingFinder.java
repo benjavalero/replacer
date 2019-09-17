@@ -8,7 +8,6 @@ import es.bvalero.replacer.finder.ArticleReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementSuggestion;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +34,6 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
     // Derived from the misspelling set to access faster by word
     private Map<String, Misspelling> misspellingMap = new HashMap<>();
 
-    @TestOnly
     public Map<String, Misspelling> getMisspellingMap() {
         return misspellingMap;
     }
@@ -79,7 +77,7 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
         List<ArticleReplacement> articleReplacements = new ArrayList<>(100);
 
         // Find all the words and check if they are potential errors
-        findMatchResults(text, AUTOMATON_WORD).stream()
+        findMatchResults(text, getAutomaton()).stream()
                 .filter(match -> isWordCompleteInText(match.getStart(), match.getText(), text))
                 .forEach(match -> findMisspellingByWord(match.getText()).ifPresent(misspelling ->
                         articleReplacements.add(convertMatchResultToReplacement(
@@ -90,6 +88,10 @@ public class MisspellingFinder extends ReplacementFinder implements ArticleRepla
                         ))));
 
         return articleReplacements;
+    }
+
+    RunAutomaton getAutomaton() {
+        return AUTOMATON_WORD;
     }
 
     /**
