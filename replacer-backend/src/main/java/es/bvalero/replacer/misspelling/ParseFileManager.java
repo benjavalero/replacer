@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 @Slf4j
-abstract class ParseFileManager<T> {
+public abstract class ParseFileManager<T> {
 
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
