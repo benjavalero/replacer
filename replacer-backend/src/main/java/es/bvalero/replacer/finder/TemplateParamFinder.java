@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class TemplateParamFinder extends ReplacementFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_TEMPLATE_PARAM = "\\|[^|=}]+=";
+    private static final String REGEX_TEMPLATE_PARAM = "\\|[^]|=}]+=";
     private static final RunAutomaton AUTOMATON_TEMPLATE_PARAM =
             new RunAutomaton(new RegExp(REGEX_TEMPLATE_PARAM).toAutomaton());
 

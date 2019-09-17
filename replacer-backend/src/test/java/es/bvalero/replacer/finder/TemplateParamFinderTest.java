@@ -13,7 +13,8 @@ public class TemplateParamFinderTest {
         String param2 = "\tparám_2\t";
         String param3 = "param-3";
         String param4 = "param4";
-        String text = String.format("{{Template|%s= value1 |%s= value2 |%s|%s=}}", param1, param2, param3, param4);
+        String link = "[[A|B]]\n==Section==";
+        String text = String.format("{{Template|%s= value1 |%s= value2 |%s|%s=}} %s", param1, param2, param3, param4, link);
 
         IgnoredReplacementFinder templateParamFinder = new TemplateParamFinder();
 
