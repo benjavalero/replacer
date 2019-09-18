@@ -1,5 +1,12 @@
 # Versiones
 
+## 2.3.1 (18 de septiembre de 2019)
+- Reemplazos de ortografía con más de una palabra
+- Mejoras en la captura de plantillas completas
+- Ignorar los enlaces interlingüísticos
+- Ignorar todas las plantillas de citas
+- Ignorar dominios web
+
 ## 2.3.0 (13 de septiembre de 2019)
 - Nuevo tipo de reemplazos: fechas sin día y con el mes en mayúscula.
 - Optimización: se reduce el tamaño interno de los datos para la tabla de reemplazos
