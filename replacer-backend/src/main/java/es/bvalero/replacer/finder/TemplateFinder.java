@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder;
 
+import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import org.apache.commons.lang3.StringUtils;
@@ -20,7 +21,7 @@ public class TemplateFinder extends ReplacementFinder implements IgnoredReplacem
     private static final String REGEX_NESTED_TEMPLATE = "\\{\\{ *(%s)[ |\n]*[|:](%s|[^}])+?}}";
     private static final List<String> TEMPLATE_NAMES = Arrays.asList(
             "ORDENAR", "DEFAULTSORT", "NF", "commonscat", "coord",
-            "cita libro", "cita", "quote", "cquote", "caja de cita");
+            "cit[ae] ?<L>*", "quote", "cquote", "caja de cita");
     private static final RunAutomaton AUTOMATON_TEMPLATE;
 
     static {
@@ -34,7 +35,7 @@ public class TemplateFinder extends ReplacementFinder implements IgnoredReplacem
         }
         AUTOMATON_TEMPLATE = new RunAutomaton(new RegExp(
                 String.format(REGEX_NESTED_TEMPLATE, StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE))
-                .toAutomaton());
+                .toAutomaton(new DatatypesAutomatonProvider()));
     }
 
     @Override
