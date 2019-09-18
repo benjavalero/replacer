@@ -344,7 +344,7 @@ public class ArticleService {
 
     private boolean validateArticleReplacement(ArticleReplacement articleReplacement, String text) {
         return articleReplacement.getText().equals(
-                text.substring(articleReplacement.getStart(), articleReplacement.getText().length()));
+                text.substring(articleReplacement.getStart(), articleReplacement.getEnd()));
     }
 
     private ArticleReview buildArticleReview(WikipediaPage article, List<ArticleReplacement> articleReplacements) {
