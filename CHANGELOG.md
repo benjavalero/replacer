@@ -1,5 +1,9 @@
 # Versiones
 
+## 2.3.2 (19 de septiembre de 2019)
+- Fechas: tener en cuenta «De» en mayúsculas
+- Mostrar listas de reemplazos separadas por tipos
+
 ## 2.3.1 (18 de septiembre de 2019)
 - Reemplazos de ortografía con más de una palabra
 - Mejoras en la captura de plantillas completas
