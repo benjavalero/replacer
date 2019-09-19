@@ -59,4 +59,17 @@ public class UppercaseMonthWithoutDayFinderTest {
         Assert.assertEquals(expected, articleReplacements.get(0).getSuggestions().get(0).getText());
     }
 
+    @Test
+    public void testDel() {
+        String date = "Desde Agosto Del 2019";
+        String expected = "Desde agosto de 2019";
+        String text = String.format("- %s.", date);
+
+        List<ArticleReplacement> replacements = uppercaseMonthWithoutDayFinder.findReplacements(text);
+
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals(date, replacements.get(0).getText());
+        Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+    }
+
 }

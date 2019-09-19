@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class UppercaseMonthFinder extends DateFinder implements ArticleReplacementFinder {
 
     @RegExp
-    private static final String REGEX_DATE_UPPERCASE_MONTHS = "(3[01]|[12]<N>|<N>) de (%s) del? <N>{4}";
+    private static final String REGEX_DATE_UPPERCASE_MONTHS = "(3[01]|[12]<N>|<N>) [Dd]e (%s) [Dd]el? <N>{4}";
     private static final RunAutomaton AUTOMATON_DATE_UPPERCASE_MONTHS = new RunAutomaton(new dk.brics.automaton.RegExp(
             String.format(REGEX_DATE_UPPERCASE_MONTHS, StringUtils.join(MONTHS_UPPERCASE, "|")))
             .toAutomaton(new DatatypesAutomatonProvider()));

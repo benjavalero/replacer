@@ -58,7 +58,7 @@ public class UppercaseMonthFinderTest {
 
     @Test
     public void testDel() {
-        String date = "17 de Agosto del 2019";
+        String date = "17 De Agosto Del 2019";
         String expected = "17 de agosto de 2019";
         String text = String.format("En %s.", date);
 

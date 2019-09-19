@@ -36,7 +36,10 @@ abstract class DateFinder extends ReplacementFinder {
         }
 
         // Replace "del"
-        fixedDate = fixedDate.replace("del", "de");
+        fixedDate = fixedDate.replaceAll("[Dd]el", "de");
+
+        // Replace "De" after day
+        fixedDate = fixedDate.replaceAll("(?<=\\d )De", "de");
 
         // Replace the leading zero
         if (fixedDate.startsWith("0")) {

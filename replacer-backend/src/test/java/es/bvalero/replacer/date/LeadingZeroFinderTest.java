@@ -44,4 +44,17 @@ public class LeadingZeroFinderTest {
         Assert.assertEquals("7 de septiembre de 2019", replacements.get(0).getSuggestions().get(0).getText());
     }
 
+    @Test
+    public void testDel() {
+        String date = "07 De Agosto Del 2019";
+        String expected = "7 de agosto de 2019";
+        String text = String.format("En %s.", date);
+
+        List<ArticleReplacement> replacements = leadingZeroFinder.findReplacements(text);
+
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals(date, replacements.get(0).getText());
+        Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+    }
+
 }

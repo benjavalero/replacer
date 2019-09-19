@@ -24,7 +24,7 @@ public class UppercaseMonthWithoutDayFinder extends DateFinder implements Articl
             .collect(Collectors.toList());
 
     @RegExp
-    private static final String REGEX_DATE_UPPERCASE_MONTHS = "(%s) (%s) del? <N>{4}";
+    private static final String REGEX_DATE_UPPERCASE_MONTHS = "(%s) (%s) [Dd]el? <N>{4}";
     private static final RunAutomaton AUTOMATON_DATE_UPPERCASE_MONTHS = new RunAutomaton(new dk.brics.automaton.RegExp(
             String.format(REGEX_DATE_UPPERCASE_MONTHS,
                     StringUtils.join(WORDS_UPPERCASE_CLASS, "|"),
