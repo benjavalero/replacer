@@ -1,17 +1,8 @@
+<h4>{{ type }}</h4>
+
 <div *ngIf="replacementCounts.length">
 
-  <p>La siguiente tabla muestra una lista de potenciales errores ortográficos (<a
-      href="https://es.wikipedia.org/wiki/Wikipedia:Corrector_ortográfico/Listado" target="_blank">obtenidos de la
-      Wikipedia</a>) y de estilo, así como el número estimado sin revisar.
-  </p>
-
-  <div class="container">
-    <div class="alert alert-warning text-center" role="alert">
-      <strong>Nota</strong>: los contadores pueden no estar completamente actualizados.
-    </div>
-  </div>
-
-  <div class="form-group mt-4">
+  <div *ngIf="filtrable" class="form-group mt-4">
     <input class="form-control" type="text" [(ngModel)]="filter"
       placeholder="Filtrar por subtipo (ignora mayúsculas y acentos)" />
   </div>
@@ -20,25 +11,22 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col" appColumnSortable="type" (sort)="onSort($event)">Tipo</th>
-          <th scope="col" appColumnSortable="subtype" (sort)="onSort($event)">Subtipo</th>
-          <th scope="col" appColumnSortable="count" (sort)="onSort($event)">N.º</th>
+          <th scope="col" appColumnSortable="s" (sort)="onSort($event)">Subtipo</th>
+          <th scope="col" appColumnSortable="c" (sort)="onSort($event)">N.º</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let item of filteredItems">
-          <td class="w-25">{{ item.type }}</td>
-          <td class="w-50">
-            <a routerLink="/random/{{item.type}}/{{item.subtype}}">{{ item.subtype }}</a>
+          <td class="w-75">
+            <a routerLink="/random/{{ type }}/{{ item.s }}">{{ item.s }}</a>
           </td>
-          <td class="w-25">{{ item.count }}</td>
+          <td class="w-25">{{ item.c }}</td>
         </tr>
       </tbody>
     </table>
 
-    <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" [maxSize]="3"
-      class="d-flex justify-content-center">
-    </ngb-pagination>
+    <ngb-pagination *ngIf="paginable && collectionSize > pageSize" [collectionSize]="collectionSize" [(page)]="page"
+      [pageSize]="pageSize" [maxSize]="3" class="d-flex justify-content-center"></ngb-pagination>
   </div>
   <p *ngIf="!filteredItems.length">
     No hay reemplazos que cumplan los filtros de búsqueda.

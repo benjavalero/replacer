@@ -1,9 +1,9 @@
 export interface ReplacementCountList {
   t: string; // Type
-  l: ReplacementCountItem[];
+  l: ReplacementCount[];
 }
 
-interface ReplacementCountItem {
+export interface ReplacementCount {
   s: string; // Subtype
   c: number; // Count
 }

@@ -1,1 +1,19 @@
-<app-replacement-table></app-replacement-table>
+<h3>Lista de reemplazos</h3>
+
+<div *ngIf="replacementCountLists.length">
+
+    <p>Las siguientes tablas muestran listas de potenciales errores (<a
+            href="https://es.wikipedia.org/wiki/Wikipedia:Corrector_ortográfico/Listado"
+            target="_blank">ortográficos</a>) y de estilo, así como el número estimado sin revisar.</p>
+
+    <div class="container">
+        <div class="alert alert-warning text-center" role="alert">
+            <strong>Nota</strong>: los contadores pueden no estar completamente actualizados.
+        </div>
+    </div>
+
+    <app-replacement-table *ngFor="let replacementCountList of replacementCountLists" [type]="replacementCountList.t"
+        [replacementCounts]="replacementCountList.l">
+    </app-replacement-table>
+
+</div>

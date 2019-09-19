@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -139,6 +140,7 @@ public class ArticleController {
                 .map(entry -> new ReplacementCountList(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
         LOGGER.info("GET Grouped replacement count. Result Size: {}", list.size());
+        Collections.sort(list);
         return list;
     }
 
