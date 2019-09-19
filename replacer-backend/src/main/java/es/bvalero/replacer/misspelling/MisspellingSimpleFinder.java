@@ -19,6 +19,7 @@ class MisspellingSimpleFinder extends MisspellingFinder {
 
     private static final RunAutomaton AUTOMATON_WORD = new RunAutomaton(new RegExp("(<L>|[-'])+")
             .toAutomaton(new DatatypesAutomatonProvider()));
+    private static final String TYPE_MISSPELLING_SIMPLE = "Ortografía";
 
     @Autowired
     private MisspellingManager misspellingManager;
@@ -35,6 +36,11 @@ class MisspellingSimpleFinder extends MisspellingFinder {
 
     RunAutomaton getAutomaton() {
         return AUTOMATON_WORD;
+    }
+
+    @Override
+    String getType() {
+        return TYPE_MISSPELLING_SIMPLE;
     }
 
 }

@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 @Component
 class MisspellingComposedFinder extends MisspellingFinder {
 
+    private static final String TYPE_MISSPELLING_COMPOSED = "Compuestos";
+
     @Autowired
     private MisspellingComposedManager composedManager;
 
@@ -32,6 +34,11 @@ class MisspellingComposedFinder extends MisspellingFinder {
     @Override
     RunAutomaton getAutomaton() {
         return this.automaton;
+    }
+
+    @Override
+    String getType() {
+        return TYPE_MISSPELLING_COMPOSED;
     }
 
 }

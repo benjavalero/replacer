@@ -26,7 +26,7 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
         return Optional.of(WikipediaPage.builder()
                 .id(1)
                 .namespace(WikipediaNamespace.ARTICLE)
-                .title("Norteamérica")
+                .title("América del Norte")
                 .content(loadArticleContent("/article-long.txt"))
                 .lastUpdate(nowDateTime)
                 .queryTimestamp(now)

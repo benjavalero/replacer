@@ -2,7 +2,6 @@ package es.bvalero.replacer.date;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ArticleReplacementFinder;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
@@ -13,9 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class UppercaseMonthWithoutDayFinder extends DateFinder implements ArticleReplacementFinder {
+class UppercaseMonthWithoutDayFinder extends DateFinder implements ArticleReplacementFinder {
 
-    private static final String SUBTYPE_DATE_UPPERCASE_MONTHS = "Mes en mayúscula";
+    private static final String SUBTYPE_DATE_UPPERCASE_MONTHS_WITHOUT_DAY = "Mes en mayúscula sin día";
 
     private static final List<String> WORDS = Arrays.asList(
             "a", "desde", "de", "durante", "el", "entre", "en", "hacia", "hasta", "para", "y");
@@ -24,23 +23,22 @@ public class UppercaseMonthWithoutDayFinder extends DateFinder implements Articl
             .collect(Collectors.toList());
 
     @RegExp
-    private static final String REGEX_DATE_UPPERCASE_MONTHS = "(%s) (%s) [Dd]el? <N>{4}";
-    private static final RunAutomaton AUTOMATON_DATE_UPPERCASE_MONTHS = new RunAutomaton(new dk.brics.automaton.RegExp(
-            String.format(REGEX_DATE_UPPERCASE_MONTHS,
-                    StringUtils.join(WORDS_UPPERCASE_CLASS, "|"),
-                    StringUtils.join(MONTHS_UPPERCASE, "|")))
-            .toAutomaton(new DatatypesAutomatonProvider()));
+    private static final String REGEX_DATE_UPPERCASE_MONTHS_WITHOUT_DAY = "(%s) (%s) [Dd]el? <N>{4}";
+    private static final RunAutomaton AUTOMATON_DATE_UPPERCASE_MONTHS_WITHOUT_DAY =
+            new RunAutomaton(new dk.brics.automaton.RegExp(
+                    String.format(REGEX_DATE_UPPERCASE_MONTHS_WITHOUT_DAY,
+                            StringUtils.join(WORDS_UPPERCASE_CLASS, "|"),
+                            StringUtils.join(MONTHS_UPPERCASE, "|")))
+                    .toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
-    public List<ArticleReplacement> findReplacements(String text) {
-        return findMatchResults(text, AUTOMATON_DATE_UPPERCASE_MONTHS).stream()
-                .filter(match -> isWordCompleteInText(match.getStart(), match.getText(), text))
-                .map(match -> convertMatchResultToReplacement(
-                        match,
-                        TYPE_DATE,
-                        SUBTYPE_DATE_UPPERCASE_MONTHS,
-                        findSuggestions(match.getText())))
-                .collect(Collectors.toList());
+    RunAutomaton getAutomaton() {
+        return AUTOMATON_DATE_UPPERCASE_MONTHS_WITHOUT_DAY;
+    }
+
+    @Override
+    String getSubType() {
+        return SUBTYPE_DATE_UPPERCASE_MONTHS_WITHOUT_DAY;
     }
 
 }

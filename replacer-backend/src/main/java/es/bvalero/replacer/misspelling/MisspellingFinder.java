@@ -15,7 +15,6 @@ import java.util.*;
 @Slf4j
 public abstract class MisspellingFinder extends ReplacementFinder implements ArticleReplacementFinder, PropertyChangeListener {
 
-    private static final String TYPE_MISSPELLING = "Ortografía";
     // Derived from the misspelling set to access faster by word
     private Map<String, Misspelling> misspellingMap = new HashMap<>();
 
@@ -73,7 +72,7 @@ public abstract class MisspellingFinder extends ReplacementFinder implements Art
                 .forEach(match -> findMisspellingByWord(match.getText()).ifPresent(misspelling ->
                         articleReplacements.add(convertMatchResultToReplacement(
                                 match,
-                                TYPE_MISSPELLING,
+                                getType(),
                                 misspelling.getWord(),
                                 findMisspellingSuggestions(match.getText(), misspelling)
                         ))));
@@ -82,6 +81,8 @@ public abstract class MisspellingFinder extends ReplacementFinder implements Art
     }
 
     abstract RunAutomaton getAutomaton();
+
+    abstract String getType();
 
     /**
      * @return The misspelling related to the given word, or empty if there is no such misspelling.

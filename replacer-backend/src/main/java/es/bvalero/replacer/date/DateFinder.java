@@ -1,5 +1,7 @@
 package es.bvalero.replacer.date;
 
+import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementSuggestion;
 
@@ -11,8 +13,7 @@ import java.util.stream.Collectors;
 
 abstract class DateFinder extends ReplacementFinder {
 
-    static final String TYPE_DATE = "Fechas";
-    static final String SUBTYPE_DATE_UPPERCASE_MONTHS = "Mes en mayúscula";
+    private static final String TYPE_DATE = "Fechas";
 
     private static final List<String> MONTHS = Arrays.asList(
             "enero", "febrero", "marzo", "abril", "mayo", "junio",
@@ -24,7 +25,22 @@ abstract class DateFinder extends ReplacementFinder {
             .map(DateFinder::setFirstUpperCaseClass)
             .collect(Collectors.toList());
 
-    List<ReplacementSuggestion> findSuggestions(String date) {
+    public List<ArticleReplacement> findReplacements(String text) {
+        return findMatchResults(text, getAutomaton()).stream()
+                .filter(match -> isWordCompleteInText(match.getStart(), match.getText(), text))
+                .map(match -> convertMatchResultToReplacement(
+                        match,
+                        TYPE_DATE,
+                        getSubType(),
+                        findSuggestions(match.getText())))
+                .collect(Collectors.toList());
+    }
+
+    abstract RunAutomaton getAutomaton();
+
+    abstract String getSubType();
+
+    private List<ReplacementSuggestion> findSuggestions(String date) {
         return Collections.singletonList(ReplacementSuggestion.ofNoComment(fixDate(date)));
     }
 
