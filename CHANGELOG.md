@@ -1,5 +1,8 @@
 # Versiones
 
+## 2.3.3 (20 de septiembre de 2019)
+- Fechas: corregir también «De» antes del año
+
 ## 2.3.2 (19 de septiembre de 2019)
 - Fechas: tener en cuenta «De» en mayúsculas
 - Mostrar listas de reemplazos separadas por tipos
