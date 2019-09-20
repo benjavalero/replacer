@@ -51,8 +51,8 @@ abstract class DateFinder extends ReplacementFinder {
             fixedDate = fixedDate.replaceAll(month, month.toLowerCase(Locale.forLanguageTag("es")));
         }
 
-        // Replace "del"
-        fixedDate = fixedDate.replaceAll("[Dd]el", "de");
+        // Replace "Del?" before year
+        fixedDate = fixedDate.replaceAll("[Dd]el?(?= \\d)", "de");
 
         // Replace "De" after day
         fixedDate = fixedDate.replaceAll("(?<=\\d )De", "de");
