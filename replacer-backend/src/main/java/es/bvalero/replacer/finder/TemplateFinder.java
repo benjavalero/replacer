@@ -20,7 +20,7 @@ public class TemplateFinder extends ReplacementFinder implements IgnoredReplacem
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_NESTED_TEMPLATE = "\\{\\{ *(%s)[ |\n]*[|:](%s|[^}])+?}}";
     private static final List<String> TEMPLATE_NAMES = Arrays.asList(
-            "ORDENAR", "DEFAULTSORT", "NF", "commonscat", "coord",
+            "ORDENAR", "DEFAULTSORT", "NF", "TA", "commonscat", "coord",
             "cit[ae] ?<L>*", "quote", "cquote", "caja de cita");
     private static final RunAutomaton AUTOMATON_TEMPLATE;
 
