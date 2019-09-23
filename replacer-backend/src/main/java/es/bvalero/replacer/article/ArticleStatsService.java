@@ -44,9 +44,9 @@ public class ArticleStatsService {
     }
 
     /**
-     * Update every 10 minutes the count of misspellings from Wikipedia
+     * Update the count of misspellings from Wikipedia.
      */
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+    @Scheduled(fixedDelayString = "${replacer.article.stats.delay}")
     public void updateReplacementCount() {
         LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
         LOGGER.info("START Count grouped replacements");

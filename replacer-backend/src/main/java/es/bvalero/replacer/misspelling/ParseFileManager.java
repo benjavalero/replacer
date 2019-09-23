@@ -37,10 +37,9 @@ public abstract class ParseFileManager<T> {
     }
 
     /**
-     * Update daily the list of false positives from Wikipedia.
-     * It's executed immediately after the tool deployment.
+     * Update the list of false positives from Wikipedia.
      */
-    @Scheduled(fixedDelay = 3600 * 24 * 1000)
+    @Scheduled(fixedDelayString = "${replacer.parse.file.delay}")
     public void update() {
         LOGGER.info("EXECUTE Scheduled daily update of {} set", getLabel());
         try {
