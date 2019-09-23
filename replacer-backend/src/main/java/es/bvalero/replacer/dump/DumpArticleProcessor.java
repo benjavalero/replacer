@@ -32,9 +32,7 @@ class DumpArticleProcessor {
     @Autowired
     private ReplacementFinderService replacementFinderService;
 
-    boolean processArticle(WikipediaPage dumpArticle) {
-        LOGGER.debug("START Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
-
+    boolean isDumpArticleProcessable(WikipediaPage dumpArticle) {
         if (!isDumpArticleProcessableByNamespace(dumpArticle)) {
             LOGGER.debug("END Process dump article. Not processable by namespace: {}", dumpArticle.getTitle());
             return false;
@@ -43,6 +41,12 @@ class DumpArticleProcessor {
             LOGGER.debug("END Process dump article. Not processable by content: {}", dumpArticle.getTitle());
             return false;
         }
+
+        return true;
+    }
+
+    boolean processArticle(WikipediaPage dumpArticle) {
+        LOGGER.debug("START Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
 
         Collection<Replacement> dbReplacements = dumpArticleCache.findDatabaseReplacements(dumpArticle.getId());
         Optional<LocalDate> dbLastUpdate = dbReplacements.stream().map(Replacement::getLastUpdate)

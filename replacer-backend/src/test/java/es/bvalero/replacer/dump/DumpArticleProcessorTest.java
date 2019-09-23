@@ -56,16 +56,16 @@ public class DumpArticleProcessorTest {
         WikipediaPage dumpAnnex = WikipediaPage.builder().namespace(WikipediaNamespace.ANNEX).content("").build();
         WikipediaPage dumpCategory = WikipediaPage.builder().namespace(WikipediaNamespace.CATEGORY).build();
 
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpAnnex));
-        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpCategory));
+        Assert.assertTrue(dumpArticleProcessor.isDumpArticleProcessable(dumpArticle));
+        Assert.assertTrue(dumpArticleProcessor.isDumpArticleProcessable(dumpAnnex));
+        Assert.assertFalse(dumpArticleProcessor.isDumpArticleProcessable(dumpCategory));
     }
 
     @Test
     public void testProcessRedirection() {
         WikipediaPage dumpArticle = WikipediaPage.builder().namespace(WikipediaNamespace.ARTICLE)
                 .content("#Redirect").build();
-        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
+        Assert.assertFalse(dumpArticleProcessor.isDumpArticleProcessable(dumpArticle));
     }
 
     @Test

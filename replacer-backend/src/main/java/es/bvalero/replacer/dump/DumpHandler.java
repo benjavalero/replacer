@@ -51,6 +51,7 @@ class DumpHandler extends DefaultHandler {
     @Setter
     private boolean forceProcess;
     private long numArticlesRead;
+    private long numArticlesProcessable;
     private long numArticlesProcessed;
     private Instant startTime;
     private Instant endTime;
@@ -61,6 +62,7 @@ class DumpHandler extends DefaultHandler {
 
         running = true;
         numArticlesRead = 0L;
+        numArticlesProcessable = 0L;
         numArticlesProcessed = 0L;
         startTime = Instant.now();
         endTime = null;
@@ -129,9 +131,12 @@ class DumpHandler extends DefaultHandler {
                 .build();
 
         try {
-            boolean articleProcessed = processArticle(dumpArticle);
-            if (articleProcessed) {
-                numArticlesProcessed++;
+            if (dumpArticleProcessor.isDumpArticleProcessable(dumpArticle)) {
+                numArticlesProcessable++;
+                boolean articleProcessed = processArticle(dumpArticle);
+                if (articleProcessed) {
+                    numArticlesProcessed++;
+                }
             }
         } catch (Exception e) {
             LOGGER.error("Error processing dump page: {}", currentTitle, e);
@@ -147,6 +152,7 @@ class DumpHandler extends DefaultHandler {
                 .running(running)
                 .forceProcess(forceProcess)
                 .numArticlesRead(numArticlesRead)
+                .numArticlesProcessable(numArticlesProcessable)
                 .numArticlesProcessed(numArticlesProcessed)
                 .dumpFileName(latestDumpFile == null ? "" : latestDumpFile.getFileName().toString())
                 .start(startTime == null ? null : startTime.toEpochMilli())

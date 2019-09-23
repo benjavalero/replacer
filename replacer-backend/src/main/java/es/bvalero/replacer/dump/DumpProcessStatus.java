@@ -10,6 +10,7 @@ class DumpProcessStatus {
     private boolean running;
     private boolean forceProcess;
     private long numArticlesRead;
+    private long numArticlesProcessable;
     private long numArticlesProcessed;
     private String dumpFileName;
     private Long start;

@@ -48,6 +48,8 @@ public class DumpHandlerTest {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
 
         // The first article is not processed. The rest are.
+        Mockito.when(dumpArticleProcessor.isDumpArticleProcessable(Mockito.any(WikipediaPage.class)))
+                .thenReturn(Boolean.TRUE);
         Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(WikipediaPage.class)))
                 .thenReturn(Boolean.FALSE).thenReturn(Boolean.TRUE);
 
@@ -122,6 +124,7 @@ public class DumpHandlerTest {
         Assert.assertFalse(defaultStats.isRunning());
         Assert.assertFalse(defaultStats.isForceProcess());
         Assert.assertEquals(0L, defaultStats.getNumArticlesRead());
+        Assert.assertEquals(0L, defaultStats.getNumArticlesProcessable());
         Assert.assertEquals(0L, defaultStats.getNumArticlesProcessed());
         Assert.assertEquals("", defaultStats.getDumpFileName());
     }
