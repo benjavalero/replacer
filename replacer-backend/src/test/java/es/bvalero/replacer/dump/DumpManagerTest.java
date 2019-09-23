@@ -15,7 +15,10 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 
 public class DumpManagerTest {
@@ -76,6 +79,32 @@ public class DumpManagerTest {
         Assert.assertEquals(dumpFile1, latestDumpFile);
     }
 
+    @Test
+    public void testDumpFileTooRecent() throws IOException {
+        Path dumpFolderFile = Paths.get(dumpFolder.getRoot().toURI());
+        Path dumpFile = dumpFolderFile.resolve(String.format(DumpManager.DUMP_NAME_FORMAT, dumpFolderFile.getFileName()));
+        Files.createFile(dumpFile);
+
+        LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
+        FileTime fileTime = FileTime.from(oneHourAgo.toInstant(ZoneOffset.UTC));
+        Files.setLastModifiedTime(dumpFile, fileTime);
+
+        Assert.assertFalse(dumpManager.isDumpFileOldEnough(dumpFile));
+    }
+
+    @Test
+    public void testDumpFileOldEnough() throws IOException {
+        Path dumpFolderFile = Paths.get(dumpFolder.getRoot().toURI());
+        Path dumpFile = dumpFolderFile.resolve(String.format(DumpManager.DUMP_NAME_FORMAT, dumpFolderFile.getFileName()));
+        Files.createFile(dumpFile);
+
+        LocalDateTime twoDaysAgo = LocalDateTime.now().minusDays(2);
+        FileTime fileTime = FileTime.from(twoDaysAgo.toInstant(ZoneOffset.UTC));
+        Files.setLastModifiedTime(dumpFile, fileTime);
+
+        Assert.assertTrue(dumpManager.isDumpFileOldEnough(dumpFile));
+    }
+
     @Test(expected = DumpException.class)
     public void testFindLatestDumpFileWithoutDumpFiles() throws DumpException, IOException {
         // In case there is no sub-folder with a dump yet (it has not been finished)
@@ -131,8 +160,10 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFile() throws URISyntaxException {
+    public void testProcessLatestDumpFile() throws URISyntaxException, IOException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        // Make the dump file old enough
+        Files.setLastModifiedTime(dumpFile, FileTime.from(LocalDateTime.now().minusDays(2).toInstant(ZoneOffset.UTC)));
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
         Mockito.when(dumpHandler.getProcessStatus())
                 .thenReturn(DumpProcessStatus.builder().start(0L).build());
@@ -191,8 +222,10 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessDumpScheduled() throws URISyntaxException {
+    public void testProcessDumpScheduled() throws URISyntaxException, IOException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        // Make the dump file old enough
+        Files.setLastModifiedTime(dumpFile, FileTime.from(LocalDateTime.now().minusDays(2).toInstant(ZoneOffset.UTC)));
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
         Mockito.when(dumpHandler.getProcessStatus())
                 .thenReturn(DumpProcessStatus.builder().start(0L).build());

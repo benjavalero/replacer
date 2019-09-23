@@ -20,8 +20,11 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -88,15 +91,27 @@ class DumpManager {
             String latestDumpFileName = latestDumpFileFound.getFileName().toString();
 
             // We check against the latest dump file processed
-            if (!latestDumpFileName.equals(findLatestDumpFileNameFromDatabase()) || forceProcessDump) {
+            if ((!latestDumpFileName.equals(findLatestDumpFileNameFromDatabase())
+                    && isDumpFileOldEnough(latestDumpFileFound)) || forceProcessDump) {
                 parseDumpFile(latestDumpFileFound, forceProcessDump);
                 saveDumpIndexation();
                 LOGGER.info("END Indexation of latest dump file: {}", latestDumpFileFound);
             } else {
-                LOGGER.info("END Indexation of latest dump file. Latest dump file already indexed.");
+                LOGGER.info("END Indexation of latest dump file. Latest dump file already indexed or not old enough.");
             }
         } catch (DumpException e) {
             LOGGER.error("Error indexing latest dump file", e);
+        }
+    }
+
+    // Check if the dump file is old enough, i. e. modified more than a day ago
+    boolean isDumpFileOldEnough(Path dumpFile) {
+        try {
+            LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+            FileTime fileTime = Files.getLastModifiedTime(dumpFile);
+            return fileTime.toInstant().isBefore(oneDayAgo.toInstant(ZoneOffset.UTC));
+        } catch (IOException e) {
+            return false;
         }
     }
 
