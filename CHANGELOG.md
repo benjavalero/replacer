@@ -1,5 +1,10 @@
 # Versiones
 
+## 2.3.4 (24 de septiembre de 2019)
+- Ignorar plantilla «TA»
+- Mejoras en el proceso de indexación
+- Mejoras en la captura de enlaces interlingüísticos
+
 ## 2.3.3 (20 de septiembre de 2019)
 - Fechas: corregir también «De» antes del año
 
