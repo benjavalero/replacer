@@ -17,7 +17,7 @@ public class DumpController {
     private DumpManager dumpManager;
 
     @GetMapping(value = "/")
-    public DumpProcessStatus getDumpStatus() {
+    public DumpIndexation getDumpStatus() {
         return dumpManager.getDumpStatus();
     }
 

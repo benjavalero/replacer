@@ -5,7 +5,6 @@ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -21,9 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
@@ -50,9 +47,6 @@ class DumpManager {
 
     @Autowired
     private DumpHandler dumpHandler;
-
-    @Autowired
-    private DumpIndexationRepository dumpIndexationRepository;
 
     @TestOnly
     void setDumpFolderPath(String dumpFolderPath) {
@@ -81,7 +75,7 @@ class DumpManager {
         LOGGER.info("START Indexation of latest dump file. Force: {}", forceProcessDump);
 
         // Check just in case the handler is already running
-        if (dumpHandler.isRunning()) {
+        if (dumpHandler.getProcessStatus().isRunning()) {
             LOGGER.info("END Indexation of latest dump file. Dump indexation is already running.");
             return;
         }
@@ -94,7 +88,6 @@ class DumpManager {
             if ((!latestDumpFileName.equals(findLatestDumpFileNameFromDatabase())
                     && isDumpFileOldEnough(latestDumpFileFound)) || forceProcessDump) {
                 parseDumpFile(latestDumpFileFound, forceProcessDump);
-                saveDumpIndexation();
                 LOGGER.info("END Indexation of latest dump file: {}", latestDumpFileFound);
             } else {
                 LOGGER.info("END Indexation of latest dump file. Latest dump file already indexed or not old enough.");
@@ -116,17 +109,7 @@ class DumpManager {
     }
 
     private String findLatestDumpFileNameFromDatabase() {
-        return dumpIndexationRepository.findByOrderByIdDesc(PageRequest.of(0, 1))
-                .stream().findAny().map(DumpIndexation::getFilename).orElse(null);
-    }
-
-    private void saveDumpIndexation() {
-        DumpProcessStatus status = getDumpStatus();
-        DumpIndexation toSave = new DumpIndexation(
-                status.getDumpFileName(),
-                status.isForceProcess(),
-                Instant.ofEpochMilli(status.getStart()).atZone(ZoneId.of("UTC")).toLocalDate());
-        dumpIndexationRepository.save(toSave);
+        return dumpHandler.getProcessStatus().getDumpFileName();
     }
 
     /**
@@ -185,7 +168,7 @@ class DumpManager {
         }
     }
 
-    DumpProcessStatus getDumpStatus() {
+    DumpIndexation getDumpStatus() {
         return dumpHandler.getProcessStatus();
     }
 

@@ -26,6 +26,9 @@ import java.nio.file.Paths;
 public class DumpHandlerTest {
 
     @Mock
+    private DumpIndexationRepository dumpIndexationRepository;
+
+    @Mock
     private DumpArticleProcessor dumpArticleProcessor;
 
     @Mock
@@ -66,12 +69,12 @@ public class DumpHandlerTest {
             // Do nothing
         }
 
-        DumpProcessStatus status = dumpHandler.getProcessStatus();
+        DumpIndexation status = dumpHandler.getProcessStatus();
 
         // Check that the execution as finished
         Assert.assertFalse(status.isRunning());
         Assert.assertFalse(status.isForceProcess());
-        Assert.assertNotNull(status.getStart());
+        Assert.assertTrue(status.getStart() > 0);
         Assert.assertNotNull(status.getEnd());
         Assert.assertEquals(dumpFile.getFileName().toString(), status.getDumpFileName());
 
@@ -103,12 +106,12 @@ public class DumpHandlerTest {
             // Do nothing
         }
 
-        DumpProcessStatus status = dumpHandler.getProcessStatus();
+        DumpIndexation status = dumpHandler.getProcessStatus();
 
         // Check that the execution as finished
         Assert.assertFalse(status.isRunning());
         Assert.assertFalse(status.isForceProcess());
-        Assert.assertNotNull(status.getStart());
+        Assert.assertTrue(status.getStart() > 0);
         Assert.assertNotNull(status.getEnd());
         Assert.assertEquals(dumpFile.getFileName().toString(), status.getDumpFileName());
 
@@ -120,13 +123,13 @@ public class DumpHandlerTest {
     @Test
     public void testProcessDefaultStatistics() {
         // Default statistics
-        DumpProcessStatus defaultStats = dumpHandler.getProcessStatus();
+        DumpIndexation defaultStats = dumpHandler.getProcessStatus();
         Assert.assertFalse(defaultStats.isRunning());
         Assert.assertFalse(defaultStats.isForceProcess());
         Assert.assertEquals(0L, defaultStats.getNumArticlesRead());
         Assert.assertEquals(0L, defaultStats.getNumArticlesProcessable());
         Assert.assertEquals(0L, defaultStats.getNumArticlesProcessed());
-        Assert.assertEquals("", defaultStats.getDumpFileName());
+        Assert.assertNull(defaultStats.getDumpFileName());
     }
 
 }

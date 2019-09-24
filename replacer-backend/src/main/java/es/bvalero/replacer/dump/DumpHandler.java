@@ -2,16 +2,15 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.nio.file.Path;
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 /**
@@ -29,6 +28,9 @@ class DumpHandler extends DefaultHandler {
     private static final String PAGE_TAG = "page";
 
     @Autowired
+    private DumpIndexationRepository dumpIndexationRepository;
+
+    @Autowired
     private DumpArticleProcessor dumpArticleProcessor;
 
     // Get database replacements in batches to improve performance
@@ -44,37 +46,27 @@ class DumpHandler extends DefaultHandler {
     private String currentContent;
 
     // Status
-    @Getter
-    private boolean running = false;
+    private DumpIndexation status = null;
+
     @Setter
     private Path latestDumpFile = null;
     @Setter
     private boolean forceProcess;
-    private long numArticlesRead;
-    private long numArticlesProcessable;
-    private long numArticlesProcessed;
-    private Instant startTime;
-    private Instant endTime;
 
     @Override
     public void startDocument() {
         LOGGER.debug("START Handle dump document: {} - Force: {}", latestDumpFile, forceProcess);
 
-        running = true;
-        numArticlesRead = 0L;
-        numArticlesProcessable = 0L;
-        numArticlesProcessed = 0L;
-        startTime = Instant.now();
-        endTime = null;
+        this.status = new DumpIndexation(latestDumpFile.getFileName().toString(), forceProcess);
     }
 
     @Override
     public void endDocument() {
         LOGGER.info("END handle dump document: {}", getProcessStatus());
 
-        running = false;
-        endTime = Instant.now();
+        this.status.finish();
         dumpArticleCache.clean();
+        dumpIndexationRepository.save(this.status);
     }
 
     @Override
@@ -120,7 +112,7 @@ class DumpHandler extends DefaultHandler {
     }
 
     private void processPage() {
-        numArticlesRead++;
+        this.status.incrementNumArticlesRead();
         WikipediaPage dumpArticle = WikipediaPage.builder()
                 .id(currentId)
                 .title(currentTitle)
@@ -132,10 +124,10 @@ class DumpHandler extends DefaultHandler {
 
         try {
             if (dumpArticleProcessor.isDumpArticleProcessable(dumpArticle)) {
-                numArticlesProcessable++;
+                this.status.incrementNumArticlesProcessable();
                 boolean articleProcessed = processArticle(dumpArticle);
                 if (articleProcessed) {
-                    numArticlesProcessed++;
+                    this.status.incrementNumArticlesProcessed();
                 }
             }
         } catch (Exception e) {
@@ -147,17 +139,12 @@ class DumpHandler extends DefaultHandler {
         return dumpArticleProcessor.processArticle(dumpArticle);
     }
 
-    DumpProcessStatus getProcessStatus() {
-        return DumpProcessStatus.builder()
-                .running(running)
-                .forceProcess(forceProcess)
-                .numArticlesRead(numArticlesRead)
-                .numArticlesProcessable(numArticlesProcessable)
-                .numArticlesProcessed(numArticlesProcessed)
-                .dumpFileName(latestDumpFile == null ? "" : latestDumpFile.getFileName().toString())
-                .start(startTime == null ? null : startTime.toEpochMilli())
-                .end(endTime == null ? null : endTime.toEpochMilli())
-                .build();
+    DumpIndexation getProcessStatus() {
+        if (this.status == null) {
+            this.status = dumpIndexationRepository.findByOrderByIdDesc(PageRequest.of(0, 1))
+                    .stream().findAny().orElse(new DumpIndexation());
+        }
+        return this.status;
     }
 
 }
