@@ -43,8 +43,12 @@ DROP TABLE IF EXISTS indexation;
 
 CREATE TABLE indexation (
     id INT NOT NULL AUTO_INCREMENT,
-    filename VARCHAR(255) NOT NULL,
-    forced BIT(1) NOT NULL,
-    start DATE NOT NULL,
+    force_process BIT(1) NOT NULL,
+    num_articles_read INT NOT NULL,
+    num_articles_processable INT NOT NULL,
+    num_articles_processed INT NOT NULL,
+    dump_file_name VARCHAR(255) NOT NULL,
+    start INT NOT NULL,
+    end INT,
     PRIMARY KEY (id)
 );
