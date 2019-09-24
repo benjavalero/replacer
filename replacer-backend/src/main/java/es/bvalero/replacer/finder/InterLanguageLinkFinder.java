@@ -10,7 +10,7 @@ import java.util.List;
 public class InterLanguageLinkFinder extends ReplacementFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_INTER_LANGUAGE_LINK = "\\[\\[:[a-z]{2}:[^]]+]]";
+    private static final String REGEX_INTER_LANGUAGE_LINK = "\\[\\[:?[a-z]{2}:[^]]+]]";
     private static final RunAutomaton AUTOMATON_INTER_LANGUAGE_LINK =
             new RunAutomaton(new RegExp(REGEX_INTER_LANGUAGE_LINK).toAutomaton());
 
