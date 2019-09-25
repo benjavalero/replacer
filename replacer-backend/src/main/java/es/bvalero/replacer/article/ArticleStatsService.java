@@ -72,6 +72,9 @@ public class ArticleStatsService {
                 .filter(item -> item.getSubtype().equals(subtype))
                 .findAny()
                 .ifPresent(item -> item.decrementCount(size));
+
+        // Clean the possible empty counts after decreasing
+        this.cachedReplacementCount.get(type).removeIf(item -> item.getCount() <= 0);
     }
 
 }
