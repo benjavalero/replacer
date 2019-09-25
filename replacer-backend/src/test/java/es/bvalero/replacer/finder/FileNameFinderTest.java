@@ -3,7 +3,11 @@ package es.bvalero.replacer.finder;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class FileNameFinderTest {
 
@@ -16,7 +20,7 @@ public class FileNameFinderTest {
                 + "abc.JPEG|Desc\n"
                 + " Image:b-c.jpg|Desc \n"
                 + "</gallery>";
-        String param = "{{Template| param1 = doc.pdf |param2=zzz.|param3=value.gif}}";
+        String param = "{{Template| param1 = doc.pdf |param2=zzz.|param3=value.gif|param4=image.JPG{{!}}Texto }}";
         String gallery2 = "{{Gallery\n"
                 + "| dóc2.pdf | Desc1 \n"
                 + " | Value_2.gif | Desc2 \n"
@@ -31,19 +35,13 @@ public class FileNameFinderTest {
         String text = String.format("%s %s %s %s %s %s %s", file1, file2, gallery1, param, gallery2, table, link);
 
         IgnoredReplacementFinder fileNameFinder = new FileNameFinder();
-
         List<MatchResult> matches = fileNameFinder.findIgnoredReplacements(text);
-        Assert.assertEquals(10, matches.size());
-        Assert.assertEquals("xx.jpg", matches.get(0).getText());
-        Assert.assertEquals("a b.png", matches.get(1).getText());
-        Assert.assertEquals("aa.jpg", matches.get(2).getText());
-        Assert.assertEquals("abc.JPEG", matches.get(3).getText());
-        Assert.assertEquals("b-c.jpg", matches.get(4).getText());
-        Assert.assertEquals("doc.pdf", matches.get(5).getText());
-        Assert.assertEquals("value.gif", matches.get(6).getText());
-        Assert.assertEquals("dóc2.pdf", matches.get(7).getText());
-        Assert.assertEquals("Value_2.gif", matches.get(8).getText());
-        Assert.assertEquals("www.google.com", matches.get(9).getText()); // We capture also Internet domains
+
+        Set<String> expected = new HashSet<>(Arrays.asList(
+                "xx.jpg", "a b.png", "aa.jpg", "abc.JPEG", "b-c.jpg",
+                "doc.pdf", "value.gif", "image.JPG", "dóc2.pdf", "Value_2.gif",
+                "www.google.com")); // We capture also Internet domains
+        Assert.assertEquals(expected, matches.stream().map(MatchResult::getText).collect(Collectors.toSet()));
     }
 
 }

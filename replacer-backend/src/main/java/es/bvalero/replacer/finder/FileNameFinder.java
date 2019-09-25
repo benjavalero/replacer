@@ -12,7 +12,7 @@ public class FileNameFinder extends ReplacementFinder implements IgnoredReplacem
 
     // With this regex we also capture domains like www.google.com
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_FILE_TAG = "[:=|\n] *[^]:=|/\n]+\\.[A-Za-z]{2,4} *[]}|\n]";
+    private static final String REGEX_FILE_TAG = "[:=|\n] *[^]:=|/\n]+\\.[A-Za-z]{2,4} *[]}{|\n]";
     private static final RunAutomaton AUTOMATON_FILE_TAG = new RunAutomaton(new RegExp(REGEX_FILE_TAG).toAutomaton());
 
     @Override
