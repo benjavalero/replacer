@@ -1,5 +1,9 @@
 # Versiones
 
+## 2.3.5 (24 de septiembre de 2019)
+- Mejoras en la captura de nombres de ficheros
+- Ignorar artículos con las plantillas «Destruir» o «CopyEdit» 
+
 ## 2.3.4 (24 de septiembre de 2019)
 - Ignorar plantilla «TA»
 - Mejoras en el proceso de indexación
