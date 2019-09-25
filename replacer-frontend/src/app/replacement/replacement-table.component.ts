@@ -1,10 +1,9 @@
 import { Component, OnInit, QueryList, ViewChildren, Input } from '@angular/core';
 
+import { PAGE_SIZE } from '../app-const';
 import { ReplacementCount } from './replacement-count-list.model';
 import { ColumnSortableDirective, SortEvent, compare, compareLocale, SortDirection } from './column-sortable.directive';
 import { sleep } from '../sleep';
-
-const PAGE_SIZE = 10;
 
 @Component({
   selector: 'app-replacement-table',

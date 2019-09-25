@@ -1,13 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-
 import { interval, Subscription } from 'rxjs';
+
+import { NUM_ARTICLES } from '../app-const';
 import { DumpService } from './dump.service';
 import { DumpStatus } from './dump-status.model';
 import { AlertService } from '../alert/alert.service';
 import { sleep } from '../sleep';
-
-const NUM_ARTICLES = 3811656; // Rough amount of articles to be read
 
 @Component({
   selector: 'app-dump',
