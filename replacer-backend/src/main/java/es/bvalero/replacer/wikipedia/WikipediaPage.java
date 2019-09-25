@@ -6,13 +6,19 @@ import lombok.experimental.Wither;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 
 @Value(staticConstructor = "of")
 @Builder
 public class WikipediaPage {
     private static final String WIKIPEDIA_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final DateTimeFormatter WIKIPEDIA_DATE_FORMATTER = DateTimeFormatter.ofPattern(WIKIPEDIA_DATE_PATTERN);
-    private static final String REDIRECT_PREFIX = "#redirec";
+    private static final String PREFIX_REDIRECT = "#redirec";
+    private static final String TEMPLATE_DESTROY = "{{destruir";
+    private static final String TEMPLATE_COPY_EDIT = "{{copyedit";
+    private static final List<String> TEMPLATES_NOT_PROCESSABLE =
+            Arrays.asList(PREFIX_REDIRECT, TEMPLATE_DESTROY, TEMPLATE_COPY_EDIT);
 
     @Wither
     private int id;
@@ -38,8 +44,9 @@ public class WikipediaPage {
         return WIKIPEDIA_DATE_FORMATTER.format(localDateTime);
     }
 
-    public boolean isRedirectionPage() {
-        return this.content.toLowerCase().contains(REDIRECT_PREFIX);
+    public boolean isProcessableByContent() {
+        String lowerContent = this.content.toLowerCase();
+        return TEMPLATES_NOT_PROCESSABLE.stream().noneMatch(lowerContent::contains);
     }
 
 }

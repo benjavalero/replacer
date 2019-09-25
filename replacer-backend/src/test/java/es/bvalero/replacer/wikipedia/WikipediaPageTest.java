@@ -9,11 +9,12 @@ import java.time.Month;
 public class WikipediaPageTest {
 
     @Test
-    public void testIsRedirectionPage() {
-        Assert.assertTrue(WikipediaPage.builder().content("xxx #REDIRECCIÓN [[A]] yyy").build().isRedirectionPage());
-        Assert.assertTrue(WikipediaPage.builder().content("xxx #redirección [[A]] yyy").build().isRedirectionPage());
-        Assert.assertTrue(WikipediaPage.builder().content("xxx #REDIRECT [[A]] yyy").build().isRedirectionPage());
-        Assert.assertFalse(WikipediaPage.builder().content("Otro contenido").build().isRedirectionPage());
+    public void testIsProcessableByContent() {
+        Assert.assertFalse(WikipediaPage.builder().content("xxx #REDIRECCIÓN [[A]] yyy").build().isProcessableByContent());
+        Assert.assertFalse(WikipediaPage.builder().content("xxx #redirección [[A]] yyy").build().isProcessableByContent());
+        Assert.assertFalse(WikipediaPage.builder().content("xxx #REDIRECT [[A]] yyy").build().isProcessableByContent());
+        Assert.assertTrue(WikipediaPage.builder().content("Otro contenido").build().isProcessableByContent());
+        Assert.assertFalse(WikipediaPage.builder().content("xxx {{destruir|motivo}}").build().isProcessableByContent());
     }
 
     @Test

@@ -37,7 +37,7 @@ class DumpArticleProcessor {
             LOGGER.debug("END Process dump article. Not processable by namespace: {}", dumpArticle.getTitle());
             return false;
         }
-        if (!isDumpArticleProcessableByContent(dumpArticle)) {
+        if (!dumpArticle.isProcessableByContent()) {
             LOGGER.debug("END Process dump article. Not processable by content: {}", dumpArticle.getTitle());
             return false;
         }
@@ -67,10 +67,6 @@ class DumpArticleProcessor {
 
     private boolean isDumpArticleProcessableByNamespace(WikipediaPage dumpArticle) {
         return WikipediaNamespace.getProcessableNamespaces().contains(dumpArticle.getNamespace());
-    }
-
-    private boolean isDumpArticleProcessableByContent(WikipediaPage dumpArticle) {
-        return !dumpArticle.isRedirectionPage();
     }
 
     private boolean isArticleProcessableByTimestamp(LocalDate dumpDate, LocalDate dbDate) {

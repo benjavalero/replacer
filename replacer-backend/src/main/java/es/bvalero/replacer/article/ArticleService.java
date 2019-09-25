@@ -188,11 +188,11 @@ public class ArticleService {
             Optional<WikipediaPage> page = wikipediaService.getPageById(articleId);
             if (page.isPresent()) {
                 // Check if the article is processable
-                if (page.get().isRedirectionPage()) {
+                if (page.get().isProcessableByContent()) {
+                    return page;
+                } else {
                     LOGGER.warn(String.format("Found article is a redirection page: %s - %s",
                             articleId, page.get().getTitle()));
-                } else {
-                    return page;
                 }
             } else {
                 LOGGER.warn(String.format("No article found. ID: %s", articleId));
