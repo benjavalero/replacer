@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Component
 public class ParameterValueFinder extends ReplacementFinder implements IgnoredReplacementFinder {
 
-    private static final List<String> PARAMS = Arrays.asList("índice", "index", "cita");
+    private static final List<String> PARAMS = Arrays.asList("índice", "index", "cita", "species");
     private static final RunAutomaton AUTOMATON_PARAM_VALUE = new RunAutomaton(
             new RegExp(String.format("\\|<Z>*(%s)<Z>*=[^|}]+", StringUtils.join(PARAMS, "|")))
                     .toAutomaton(new DatatypesAutomatonProvider()));
