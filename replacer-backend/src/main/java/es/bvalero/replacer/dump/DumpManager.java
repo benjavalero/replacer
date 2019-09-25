@@ -45,12 +45,20 @@ class DumpManager {
     @Value("${replacer.dump.folder.path:}")
     private String dumpFolderPath;
 
+    @Value("${replacer.dump.index.wait:}")
+    private int dumpIndexWait;
+
     @Autowired
     private DumpHandler dumpHandler;
 
     @TestOnly
     void setDumpFolderPath(String dumpFolderPath) {
         this.dumpFolderPath = dumpFolderPath;
+    }
+
+    @TestOnly
+    public void setDumpIndexWait(int dumpIndexWait) {
+        this.dumpIndexWait = dumpIndexWait;
     }
 
     /**
@@ -100,7 +108,7 @@ class DumpManager {
     // Check if the dump file is old enough, i. e. modified more than a day ago
     boolean isDumpFileOldEnough(Path dumpFile) {
         try {
-            LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+            LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(dumpIndexWait);
             FileTime fileTime = Files.getLastModifiedTime(dumpFile);
             return fileTime.toInstant().isBefore(oneDayAgo.toInstant(ZoneOffset.UTC));
         } catch (IOException e) {

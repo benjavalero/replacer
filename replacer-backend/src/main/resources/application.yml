@@ -25,6 +25,7 @@ replacer:
   parse.file.delay: 3600000 # Every hour
   dump.index.delay: 86400000 # Daily
   article.stats.delay: 600000 # Every 10 minutes
+  dump.index.wait: 3 # Days to wait after a dump is generated
 
 wikipedia:
   api:

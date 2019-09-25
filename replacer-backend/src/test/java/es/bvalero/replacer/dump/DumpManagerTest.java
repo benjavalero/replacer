@@ -80,6 +80,7 @@ public class DumpManagerTest {
         Path dumpFile = dumpFolderFile.resolve(String.format(DumpManager.DUMP_NAME_FORMAT, dumpFolderFile.getFileName()));
         Files.createFile(dumpFile);
 
+        dumpManager.setDumpIndexWait(1); // 1 day
         LocalDateTime oneHourAgo = LocalDateTime.now().minusHours(1);
         FileTime fileTime = FileTime.from(oneHourAgo.toInstant(ZoneOffset.UTC));
         Files.setLastModifiedTime(dumpFile, fileTime);
@@ -93,6 +94,7 @@ public class DumpManagerTest {
         Path dumpFile = dumpFolderFile.resolve(String.format(DumpManager.DUMP_NAME_FORMAT, dumpFolderFile.getFileName()));
         Files.createFile(dumpFile);
 
+        dumpManager.setDumpIndexWait(1); // 1 day
         LocalDateTime twoDaysAgo = LocalDateTime.now().minusDays(2);
         FileTime fileTime = FileTime.from(twoDaysAgo.toInstant(ZoneOffset.UTC));
         Files.setLastModifiedTime(dumpFile, fileTime);
