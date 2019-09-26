@@ -6,6 +6,8 @@ La herramienta está desplegada en los servidores de Wikimedia Toolforge, y disp
 
 El código fuente de la herramienta está disponible en [GitHub](https://github.com/benjavalero/replacer).
 
+Toda la información no técnica está disponible en la [página de la Wikipedia](https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer) de la herramienta.
+
 ## Arquitectura
 
 La aplicación está compuesta de dos capas independientes, el frontend en Angular y el backend en Java 8 y Spring Boot, además de una base de datos MariaDB alojada en los servidores de Toolforge.
@@ -152,5 +154,3 @@ En cuanto al procesado de los artículos, también tenemos 3 partes claras:
 1. Consultar la BD para ver si el artículo ya existe y cuál es su estado. El sistema busca varios artículos a la vez para reducir el número de llamadas a BD.
 2. Buscar los errores potenciales y descartar los contenidos en excepciones. El sistema intenta terminar lo antes posible en el caso de no encontrar errores potenciales.
 3. Guardar en BD los reemplazos detectados en el artículo. El sistema intenta realizar solo las inserciones, borrados y actualizaciones necesarias, y en bloque.
-
-La herramienta procesa más de un millón de artículos, con lo cual el uso de memoria por parte de JPA no para de crecer. Para evitarlo, cada cierto número de artículos procesados se limpia el gestor JPA (_flush-clear_). Con esto conseguimos mantener a raya el _heap_ de la JVM.

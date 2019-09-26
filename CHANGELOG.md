@@ -1,5 +1,10 @@
 # Versiones
 
+## 2.3.6 (26 de septiembre de 2019)
+- Ignorar plantillas de traducción
+- Enlace a la página de la herramienta en la Wikipedia en el pie 
+y en el resumen de cada edición 
+
 ## 2.3.5 (24 de septiembre de 2019)
 - Mejoras en la captura de nombres de ficheros
 - Ignorar artículos con las plantillas «Destruir» o «CopyEdit» 
