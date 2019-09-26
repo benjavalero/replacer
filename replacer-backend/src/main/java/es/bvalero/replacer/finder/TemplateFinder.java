@@ -21,7 +21,7 @@ public class TemplateFinder extends ReplacementFinder implements IgnoredReplacem
     private static final String REGEX_NESTED_TEMPLATE = "\\{\\{ *(%s)[ |\n]*[|:](%s|[^}])+?}}";
     private static final List<String> TEMPLATE_NAMES = Arrays.asList(
             "ORDENAR", "DEFAULTSORT", "NF", "TA", "commonscat", "coord",
-            "cit[ae] ?<L>*", "quote", "cquote", "caja de cita");
+            "cit[ae] ?<L>*", "quote", "cquote", "caja de cita", "traducido (de|ref)");
     private static final RunAutomaton AUTOMATON_TEMPLATE;
 
     static {
