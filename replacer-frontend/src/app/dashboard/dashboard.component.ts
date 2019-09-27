@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 
 import { AuthenticationService } from '../authentication/authentication.service';
+import { User } from '../authentication/user.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,7 +17,13 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Reemplazador de la Wikipedia en español');
-    this.admin = this.authenticationService.user.admin;
+    if (this.authenticationService.user) {
+      this.admin = this.authenticationService.user.admin;
+    }
+
+    this.authenticationService.userEvent.subscribe((user: User) => {
+      this.admin = user.admin;
+    });
   }
 
 }

@@ -37,7 +37,7 @@
     </div>
   </div>
 
-  <div class="card bg-light" [ngbCollapse]="!admin">
+  <div class="card bg-light" *ngIf="admin">
     <div class="card-body">
       <h4 class="card-title">Estadísticas [ADMIN]</h4>
       <p class="card-text">
@@ -47,7 +47,7 @@
     </div>
   </div>
 
-  <div class="card bg-light" [ngbCollapse]="!admin">
+  <div class="card bg-light" *ngIf="admin">
     <div class="card-body">
       <h4 class="card-title">Indexación [ADMIN]</h4>
       <p class="card-text">Muestra el estado de la indexación.</p>
