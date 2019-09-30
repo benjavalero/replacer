@@ -1,5 +1,9 @@
 # Versiones
 
+## 2.3.6 (30 de septiembre de 2019)
+- Corregir bucle infinito al buscar reemplazos personalizados
+- Corregir permisos para mostrar ciertas secciones 
+
 ## 2.3.6 (26 de septiembre de 2019)
 - Ignorar plantillas de traducción
 - Enlace a la página de la herramienta en la Wikipedia en el pie 
