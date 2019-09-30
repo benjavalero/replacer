@@ -177,6 +177,9 @@ public class ArticleService {
         Optional<WikipediaPage> article = getArticleFromWikipedia(articleId);
         if (article.isPresent()) {
             review = getArticleReview(article.get(), type, subtype, suggestion);
+        } else if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
+            // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
+            addCustomReviewedReplacement(articleId, subtype);
         }
 
         LOGGER.info("END Find review for article");
@@ -191,7 +194,7 @@ public class ArticleService {
                 if (page.get().isProcessableByContent()) {
                     return page;
                 } else {
-                    LOGGER.warn(String.format("Found article is a redirection page: %s - %s",
+                    LOGGER.warn(String.format("Found article is not processable by content: %s - %s",
                             articleId, page.get().getTitle()));
                 }
             } else {
@@ -215,8 +218,7 @@ public class ArticleService {
         if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
             if (articleReplacements.isEmpty()) {
                 // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
-                Replacement customReplacement = new Replacement(article.getId(), ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, 0);
-                articleIndexService.reviewReplacementAsSystem(customReplacement);
+                addCustomReviewedReplacement(article.getId(), subtype);
             }
         } else {
             // We take profit and we update the database with the just calculated replacements (also when empty)
@@ -251,6 +253,11 @@ public class ArticleService {
         // Return the replacements sorted as they appear in the text
         articleReplacements.sort(Collections.reverseOrder());
         return articleReplacements;
+    }
+
+    private void addCustomReviewedReplacement(int articleId, String subtype) {
+        Replacement customReplacement = new Replacement(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, 0);
+        articleIndexService.reviewReplacementAsSystem(customReplacement);
     }
 
     private List<ArticleReplacement> filterReplacementsByTypeAndSubtype(
