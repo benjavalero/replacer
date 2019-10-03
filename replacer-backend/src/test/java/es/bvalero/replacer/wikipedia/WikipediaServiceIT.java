@@ -1,6 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import es.bvalero.replacer.authentication.AuthenticationConfig;
 import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
+@ContextConfiguration(classes = {WikipediaServiceImpl.class, AuthenticationServiceImpl.class, AuthenticationConfig.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class WikipediaServiceIT {
 

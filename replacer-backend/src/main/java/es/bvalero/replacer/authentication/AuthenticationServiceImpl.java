@@ -1,12 +1,11 @@
 package es.bvalero.replacer.authentication;
 
-import com.github.scribejava.apis.MediaWikiApi;
-import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -21,26 +20,11 @@ import java.util.concurrent.ExecutionException;
 @Profile("default")
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    @Value("${wikipedia.api.key}")
-    private String apiKey;
-
-    @Value("${wikipedia.api.secret}")
-    private String apiSecret;
-
     @Value("${replacer.admin.user}")
     private String adminUser;
 
+    @Autowired
     private OAuth10aService oAuthService;
-
-    private OAuth10aService getOAuthService() {
-        if (oAuthService == null) {
-            oAuthService = new ServiceBuilder(apiKey)
-                    .apiSecret(apiSecret)
-                    .callback("oob")
-                    .build(MediaWikiApi.instance());
-        }
-        return oAuthService;
-    }
 
     @Override
     public String executeOAuthRequest(String apiUrl, Map<String, String> params, boolean post,
@@ -54,7 +38,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         try {
-            Response response = getOAuthService().execute(request);
+            Response response = oAuthService.execute(request);
             String body = response.getBody();
             if (body == null || !response.isSuccessful()) {
                 throw new AuthenticationException(String.format("Call not successful: %d - %s",
@@ -83,13 +67,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private void signOAuthRequest(OAuthRequest request, OAuth1AccessToken accessToken) {
-        getOAuthService().signRequest(accessToken, request);
+        oAuthService.signRequest(accessToken, request);
     }
 
     @Override
     public String getAuthorizationUrl(OAuth1RequestToken requestToken) {
         LOGGER.info("START Get Authorization URL from MediaWiki API. Request Token: {}", requestToken.getToken());
-        String url = getOAuthService().getAuthorizationUrl(requestToken);
+        String url = oAuthService.getAuthorizationUrl(requestToken);
         LOGGER.info("END Get Authorization URL from MediaWiki API: {}", url);
         return url;
     }
@@ -98,7 +82,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public OAuth1RequestToken getRequestToken() throws AuthenticationException {
         try {
             LOGGER.info("START Get Request Token from MediaWiki API");
-            OAuth1RequestToken token = getOAuthService().getRequestToken();
+            OAuth1RequestToken token = oAuthService.getRequestToken();
             LOGGER.info("END Get Request Token from MediaWiki API. Token: {}", token.getToken());
             return token;
         } catch (InterruptedException e) {
@@ -116,7 +100,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throws AuthenticationException {
         try {
             LOGGER.info("START Get Access Token from MediaWiki API. Request Token: {}", requestToken.getToken());
-            OAuth1AccessToken token = getOAuthService().getAccessToken(requestToken, oauthVerifier);
+            OAuth1AccessToken token = oAuthService.getAccessToken(requestToken, oauthVerifier);
             LOGGER.info("END Get Access Token from MediaWiki API: {} / {}", token.getToken(), token.getTokenSecret());
             return token;
         } catch (InterruptedException e) {
