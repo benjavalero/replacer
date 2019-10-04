@@ -3,7 +3,7 @@ package es.bvalero.replacer.wikipedia;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-class UserDto {
+class WikipediaUser {
     private String name;
     private boolean admin;
 }

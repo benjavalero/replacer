@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AuthenticationService } from '../authentication/authentication.service';
-import { User } from '../authentication/user.model';
+import { WikipediaUser } from '../authentication/wikipedia-user.model';
 
 @Component({
   selector: 'app-header',
@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
       this.admin = this.authenticationService.user.admin;
     }
 
-    this.authenticationService.userEvent.subscribe((user: User) => {
+    this.authenticationService.userEvent.subscribe((user: WikipediaUser) => {
       this.username = user.name;
       this.admin = user.admin;
     });

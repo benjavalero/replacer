@@ -19,7 +19,7 @@ public class AuthenticationController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/requestToken")
-    public RequestTokenDto getRequestToken() throws AuthenticationException {
+    public RequestToken getRequestToken() throws AuthenticationException {
         LOGGER.info("GET Request Token from MediaWiki API");
         OAuth1RequestToken requestToken = authenticationService.getRequestToken();
         String authorizationUrl = authenticationService.getAuthorizationUrl(requestToken);
@@ -27,26 +27,26 @@ public class AuthenticationController {
     }
 
     @PostMapping(value = "/accessToken")
-    public AccessTokenDto getAccessToken(@RequestBody VerificationTokenDto verificationTokenDto)
+    public AccessToken getAccessToken(@RequestBody VerificationToken verificationToken)
             throws AuthenticationException {
-        LOGGER.info("GET Access Token from MediaWiki API: {}", verificationTokenDto);
+        LOGGER.info("GET Access Token from MediaWiki API: {}", verificationToken);
         return convertToDto(authenticationService.getAccessToken(
-                convertToEntity(verificationTokenDto.getRequestToken()),
-                verificationTokenDto.getVerificationToken()));
+                convertToEntity(verificationToken.getRequestToken()),
+                verificationToken.getVerificationToken()));
     }
 
-    private RequestTokenDto convertToDto(OAuth1RequestToken requestToken, String authorizationUrl) {
-        RequestTokenDto requestTokenDto = modelMapper.map(requestToken, RequestTokenDto.class);
-        requestTokenDto.setUrl(authorizationUrl);
-        return requestTokenDto;
+    private RequestToken convertToDto(OAuth1RequestToken oAuth1RequestToken, String authorizationUrl) {
+        RequestToken requestToken = modelMapper.map(oAuth1RequestToken, RequestToken.class);
+        requestToken.setUrl(authorizationUrl);
+        return requestToken;
     }
 
-    private OAuth1RequestToken convertToEntity(RequestTokenDto requestTokenDto) {
-        return new OAuth1RequestToken(requestTokenDto.getToken(), requestTokenDto.getTokenSecret());
+    private OAuth1RequestToken convertToEntity(RequestToken requestToken) {
+        return new OAuth1RequestToken(requestToken.getToken(), requestToken.getTokenSecret());
     }
 
-    private AccessTokenDto convertToDto(OAuth1AccessToken token) {
-        return modelMapper.map(token, AccessTokenDto.class);
+    private AccessToken convertToDto(OAuth1AccessToken token) {
+        return modelMapper.map(token, AccessToken.class);
     }
 
 }

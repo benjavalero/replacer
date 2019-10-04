@@ -3,7 +3,7 @@ package es.bvalero.replacer.authentication;
 import lombok.Data;
 
 @Data
-class RequestTokenDto {
+class RequestToken {
     private String token;
     private String tokenSecret;
     private String url;

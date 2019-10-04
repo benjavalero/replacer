@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { RequestToken } from './request-token.model';
 import { AccessToken } from './access-token.model';
-import { User } from './user.model';
+import { WikipediaUser } from './wikipedia-user.model';
 import { AlertService } from '../alert/alert.service';
 import { VerificationToken } from './verification-token.model';
 
@@ -14,7 +14,7 @@ import { VerificationToken } from './verification-token.model';
 })
 export class AuthenticationService {
 
-  @Output() userEvent: EventEmitter<User> = new EventEmitter();
+  @Output() userEvent: EventEmitter<WikipediaUser> = new EventEmitter();
 
   constructor(private httpClient: HttpClient, private alertService: AlertService) { }
 
@@ -77,19 +77,19 @@ export class AuthenticationService {
   }
 
   private findUserName(): void {
-    this.httpClient.post<User>(`${environment.apiUrl}/wikipedia/username`, this.accessToken)
-      .subscribe((user: User) => {
+    this.httpClient.post<WikipediaUser>(`${environment.apiUrl}/wikipedia/username`, this.accessToken)
+      .subscribe((user: WikipediaUser) => {
         this.user = user;
       }, (err) => {
         this.alertService.addErrorMessage('Error al buscar el nombre del usuario en sesión');
       });
   }
 
-  get user(): User {
+  get user(): WikipediaUser {
     return JSON.parse(localStorage.getItem('user'));
   }
 
-  set user(user: User) {
+  set user(user: WikipediaUser) {
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
     } else {
