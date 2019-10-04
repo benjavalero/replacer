@@ -2,13 +2,13 @@ package es.bvalero.replacer.date;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ArticleReplacementFinder;
+import es.bvalero.replacer.finder.ReplacementFinder;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
 @Component
-class LeadingZeroFinder extends DateFinder implements ArticleReplacementFinder {
+class LeadingZeroFinder extends DateFinder implements ReplacementFinder {
 
     private static final String SUBTYPE_DATE_LEADING_ZERO = "Día con cero";
 

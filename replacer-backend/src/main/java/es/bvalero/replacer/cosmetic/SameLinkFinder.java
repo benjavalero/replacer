@@ -9,15 +9,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class SameLinkFinder extends ReplacementFinder implements ArticleReplacementFinder {
+class SameLinkFinder extends BaseReplacementFinder implements ReplacementFinder {
 
     @RegExp
     private static final String REGEX_SAME_LINK = "\\[\\[([^]|]+)\\|(\\1)]]";
     private static final Pattern PATTERN_SAME_LINK = Pattern.compile(REGEX_SAME_LINK, Pattern.CASE_INSENSITIVE);
 
     @Override
-    public List<ArticleReplacement> findReplacements(String text) {
-        List<ArticleReplacement> replacements = new ArrayList<>();
+    public List<Replacement> findReplacements(String text) {
+        List<Replacement> replacements = new ArrayList<>();
         Matcher matcher = PATTERN_SAME_LINK.matcher(text);
         while (matcher.find()) {
             String link = matcher.group(1);

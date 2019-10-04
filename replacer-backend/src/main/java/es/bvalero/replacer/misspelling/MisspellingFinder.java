@@ -1,9 +1,9 @@
 package es.bvalero.replacer.misspelling;
 
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ArticleReplacement;
-import es.bvalero.replacer.finder.ArticleReplacementFinder;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinder;
+import es.bvalero.replacer.finder.BaseReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementSuggestion;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,7 +13,7 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 
 @Slf4j
-public abstract class MisspellingFinder extends ReplacementFinder implements ArticleReplacementFinder, PropertyChangeListener {
+public abstract class MisspellingFinder extends BaseReplacementFinder implements ReplacementFinder, PropertyChangeListener {
 
     // Derived from the misspelling set to access faster by word
     private Map<String, Misspelling> misspellingMap = new HashMap<>();
@@ -63,21 +63,21 @@ public abstract class MisspellingFinder extends ReplacementFinder implements Art
      * @return A list with the misspelling replacements in a given text.
      */
     @Override
-    public List<ArticleReplacement> findReplacements(String text) {
-        List<ArticleReplacement> articleReplacements = new ArrayList<>(100);
+    public List<Replacement> findReplacements(String text) {
+        List<Replacement> replacements = new ArrayList<>(100);
 
         // Find all the words and check if they are potential errors
         findMatchResults(text, getAutomaton()).stream()
                 .filter(match -> isWordCompleteInText(match.getStart(), match.getText(), text))
                 .forEach(match -> findMisspellingByWord(match.getText()).ifPresent(misspelling ->
-                        articleReplacements.add(convertMatchResultToReplacement(
+                        replacements.add(convertMatchResultToReplacement(
                                 match,
                                 getType(),
                                 misspelling.getWord(),
                                 findMisspellingSuggestions(match.getText(), misspelling)
                         ))));
 
-        return articleReplacements;
+        return replacements;
     }
 
     abstract RunAutomaton getAutomaton();

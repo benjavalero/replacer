@@ -5,7 +5,7 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
 import es.bvalero.replacer.finder.MatchResult;
-import es.bvalero.replacer.finder.ReplacementFinder;
+import es.bvalero.replacer.finder.BaseReplacementFinder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class UppercaseAfterFinder extends ReplacementFinder implements IgnoredReplacementFinder, PropertyChangeListener {
+public class UppercaseAfterFinder extends BaseReplacementFinder implements IgnoredReplacementFinder, PropertyChangeListener {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_UPPERCASE_AFTER_PUNCTUATION = "[!#*|=.]<Z>*(%s)";

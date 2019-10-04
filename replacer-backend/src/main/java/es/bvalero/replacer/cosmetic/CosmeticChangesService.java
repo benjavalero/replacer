@@ -1,6 +1,6 @@
 package es.bvalero.replacer.cosmetic;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.Replacement;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -12,16 +12,16 @@ public class CosmeticChangesService {
     private SameLinkFinder sameLinkFinder = new SameLinkFinder();
 
     public String applyCosmeticChanges(String text) {
-        List<ArticleReplacement> replacements = sameLinkFinder.findReplacements(text);
+        List<Replacement> replacements = sameLinkFinder.findReplacements(text);
         // By default the article replacements are sorted in descending order by the start
         Collections.sort(replacements);
-        for (ArticleReplacement replacement : replacements) {
+        for (Replacement replacement : replacements) {
             text = replaceInText(replacement, text);
         }
         return text;
     }
 
-    private String replaceInText(ArticleReplacement replacement, String text) {
+    private String replaceInText(Replacement replacement, String text) {
         int start = replacement.getStart();
         String oldText = replacement.getText();
 

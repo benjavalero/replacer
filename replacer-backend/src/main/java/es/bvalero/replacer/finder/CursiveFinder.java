@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class CursiveFinder extends ReplacementFinder implements IgnoredReplacementFinder {
+public class CursiveFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
 
     // There are limitations in the automaton (need to capture more than 1 character in some places) but it is faster
     @org.intellij.lang.annotations.RegExp

@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-class CustomReplacementFinder extends ReplacementFinder {
+class CustomReplacementFinder extends BaseReplacementFinder {
 
-    public List<ArticleReplacement> findReplacements(String text, String replacement, String suggestion) {
+    public List<Replacement> findReplacements(String text, String replacement, String suggestion) {
         String regex = startsWithLowerCase(replacement) && startsWithLowerCase(suggestion)
                 ? setFirstUpperCaseClass(replacement)
                 : replacement;
-        return findMatches(text, regex).stream().map(match -> ArticleReplacement.builder()
+        return findMatches(text, regex).stream().map(match -> Replacement.builder()
                 .type(ReplacementFinderService.CUSTOM_FINDER_TYPE)
                 .subtype(replacement)
                 .start(match.getStart())

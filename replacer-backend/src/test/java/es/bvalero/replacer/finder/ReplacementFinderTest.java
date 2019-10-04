@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ReplacementFinderTest extends ReplacementFinder {
+public class ReplacementFinderTest extends BaseReplacementFinder {
 
     @Test
     public void testStartsWithUpperCase() {

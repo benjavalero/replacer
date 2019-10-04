@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.Replacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,12 +27,12 @@ public class MisspellingComposedFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellings));
 
-        List<ArticleReplacement> results = misspellingComposedFinder.findReplacements(text);
+        List<Replacement> results = misspellingComposedFinder.findReplacements(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
 
-        ArticleReplacement result1 = results.get(0);
+        Replacement result1 = results.get(0);
         Assert.assertEquals("aún así", result1.getText());
         Assert.assertEquals("aún así", result1.getSubtype());
         Assert.assertEquals("aun así", result1.getSuggestions().get(0).getText());

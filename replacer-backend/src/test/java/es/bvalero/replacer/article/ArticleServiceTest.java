@@ -1,6 +1,6 @@
 package es.bvalero.replacer.article;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -26,9 +26,9 @@ public class ArticleServiceTest {
     private final WikipediaPage article = WikipediaPage.builder().id(randomId).content(content).build();
     private final WikipediaPage article2 = WikipediaPage.builder().id(randomId2).content(content2).build();
     private final int offset = 1;
-    private final ArticleReplacement articleReplacement =
-            ArticleReplacement.builder().start(offset).type("X").subtype("Y").text("Y").build();
-    private final List<ArticleReplacement> articleReplacements = Collections.singletonList(articleReplacement);
+    private final Replacement replacement =
+            Replacement.builder().start(offset).type("X").subtype("Y").text("Y").build();
+    private final List<Replacement> replacements = Collections.singletonList(replacement);
 
     @Mock
     private ReplacementRepository replacementRepository;
@@ -93,12 +93,12 @@ public class ArticleServiceTest {
 
         // The article contains replacements
         Mockito.when(replacementFinderService.findReplacements(content))
-                .thenReturn(articleReplacements);
+                .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleToReview();
 
         Mockito.verify(articleIndexService, Mockito.times(1))
-                .indexArticleReplacements(article, articleReplacements);
+                .indexArticleReplacements(article, replacements);
 
         Assert.assertTrue(review.isPresent());
         Assert.assertEquals(randomId, review.get().getArticleId());
@@ -116,7 +116,7 @@ public class ArticleServiceTest {
                 .thenReturn(Optional.of(article));
 
         // The article doesn't contain replacements
-        List<ArticleReplacement> noArticleReplacements = Collections.emptyList();
+        List<Replacement> noArticleReplacements = Collections.emptyList();
         Mockito.when(replacementFinderService.findReplacements(content))
                 .thenReturn(noArticleReplacements);
 
@@ -142,12 +142,12 @@ public class ArticleServiceTest {
 
         // The article contains replacements
         Mockito.when(replacementFinderService.findReplacements(content2))
-                .thenReturn(articleReplacements);
+                .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleToReview();
 
         Mockito.verify(articleIndexService, Mockito.times(1))
-                .indexArticleReplacements(article2, articleReplacements);
+                .indexArticleReplacements(article2, replacements);
 
         Assert.assertTrue(review.isPresent());
         Assert.assertEquals(randomId2, review.get().getArticleId());
@@ -167,12 +167,12 @@ public class ArticleServiceTest {
 
         // The article contains replacements
         Mockito.when(replacementFinderService.findReplacements(content))
-                .thenReturn(articleReplacements);
+                .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleToReview("A", "B");
 
         Mockito.verify(articleIndexService, Mockito.times(1))
-                .indexArticleReplacements(article, articleReplacements);
+                .indexArticleReplacements(article, replacements);
 
         Assert.assertFalse(review.isPresent());
     }
@@ -190,12 +190,12 @@ public class ArticleServiceTest {
 
         // The article contains replacements
         Mockito.when(replacementFinderService.findReplacements(content))
-                .thenReturn(articleReplacements);
+                .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleToReview("X", "Y");
 
         Mockito.verify(articleIndexService, Mockito.times(1))
-                .indexArticleReplacements(article, articleReplacements);
+                .indexArticleReplacements(article, replacements);
 
         Assert.assertTrue(review.isPresent());
         Assert.assertEquals(randomId, review.get().getArticleId());
@@ -221,7 +221,7 @@ public class ArticleServiceTest {
 
         // The article contains replacements
         Mockito.when(replacementFinderService.findCustomReplacements(content, replacement, suggestion))
-                .thenReturn(articleReplacements);
+                .thenReturn(replacements);
 
         Optional<ArticleReview> review =
                 articleService.findRandomArticleToReviewWithCustomReplacement(replacement, suggestion);
@@ -290,9 +290,9 @@ public class ArticleServiceTest {
 
         // The articles contains replacements
         Mockito.when(replacementFinderService.findReplacements(content))
-                .thenReturn(articleReplacements);
+                .thenReturn(replacements);
         Mockito.when(replacementFinderService.findReplacements(content2))
-                .thenReturn(articleReplacements);
+                .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleToReview("X", "Y");
         Assert.assertTrue(review.isPresent());
@@ -316,7 +316,7 @@ public class ArticleServiceTest {
 
         // The article contains replacements
         Mockito.when(replacementFinderService.findReplacements(content))
-                .thenReturn(articleReplacements);
+                .thenReturn(replacements);
 
         // The article has sections
         WikipediaSection section1 = WikipediaSection.builder().byteOffset(offset).index(sectionId).build();
@@ -331,8 +331,8 @@ public class ArticleServiceTest {
         Assert.assertTrue(review.isPresent());
         review.ifPresent(rev -> {
             Assert.assertEquals(randomId, rev.getArticleId());
-            Assert.assertEquals(articleReplacements.size(), rev.getReplacements().size());
-            Assert.assertEquals(articleReplacements.get(0).getStart() - offset, rev.getReplacements().get(0).getStart());
+            Assert.assertEquals(replacements.size(), rev.getReplacements().size());
+            Assert.assertEquals(replacements.get(0).getStart() - offset, rev.getReplacements().get(0).getStart());
             Assert.assertEquals(sectionId, rev.getSection().intValue());
         });
     }
@@ -345,7 +345,7 @@ public class ArticleServiceTest {
 
         // The article contains replacements
         Mockito.when(replacementFinderService.findReplacements(content))
-                .thenReturn(articleReplacements);
+                .thenReturn(replacements);
 
         // The article has no sections
         Mockito.when(wikipediaService.getPageSections(randomId))
@@ -356,7 +356,7 @@ public class ArticleServiceTest {
         Assert.assertTrue(review.isPresent());
         review.ifPresent(rev -> {
             Assert.assertEquals(randomId, rev.getArticleId());
-            Assert.assertEquals(articleReplacements, rev.getReplacements());
+            Assert.assertEquals(replacements, rev.getReplacements());
             Assert.assertNull(rev.getSection());
         });
     }

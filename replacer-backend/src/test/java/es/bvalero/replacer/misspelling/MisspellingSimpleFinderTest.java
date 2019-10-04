@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.Replacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findReplacements(text);
 
         Assert.assertNotNull(results);
         Assert.assertTrue(results.isEmpty());
@@ -42,17 +42,17 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findReplacements(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(2, results.size());
 
-        ArticleReplacement result1 = results.get(0);
+        Replacement result1 = results.get(0);
         Assert.assertEquals("sample", result1.getText());
         Assert.assertEquals(0, result1.getStart());
         Assert.assertEquals("sample", result1.getSubtype());
 
-        ArticleReplacement result2 = results.get(1);
+        Replacement result2 = results.get(1);
         Assert.assertEquals("text", result2.getText());
         Assert.assertEquals(7, result2.getStart());
         Assert.assertEquals("text", result2.getSubtype());
@@ -67,11 +67,11 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findReplacements(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
-        ArticleReplacement result = results.get(0);
+        Replacement result = results.get(0);
         Assert.assertEquals("Text", result.getText());
         Assert.assertEquals("text", result.getSubtype());
     }
@@ -85,11 +85,11 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findReplacements(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
-        ArticleReplacement result = results.get(0);
+        Replacement result = results.get(0);
         Assert.assertEquals("text", result.getText());
         Assert.assertEquals(0, result.getStart());
         Assert.assertEquals("text", result.getSubtype());
@@ -104,11 +104,11 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findReplacements(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
-        ArticleReplacement result = results.get(0);
+        Replacement result = results.get(0);
         Assert.assertEquals("Text", result.getText());
         Assert.assertEquals(6, result.getStart());
         Assert.assertEquals("text", result.getSubtype());
@@ -124,11 +124,11 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findReplacements(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
-        ArticleReplacement result = results.get(0);
+        Replacement result = results.get(0);
         Assert.assertEquals("SAMPLE", result.getText());
         Assert.assertEquals(0, result.getStart());
         Assert.assertEquals("SAMPLE", result.getSubtype());
@@ -143,11 +143,11 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findReplacements(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
-        ArticleReplacement result = results.get(0);
+        Replacement result = results.get(0);
         Assert.assertEquals("Text", result.getText());
         Assert.assertEquals(21, result.getStart());
         Assert.assertEquals("text", result.getSubtype());
@@ -169,7 +169,7 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findReplacements(text);
 
         Assert.assertEquals("España", results.get(0).getSuggestions().get(0).getText());
         Assert.assertEquals("domingo", results.get(1).getSuggestions().get(0).getText());
@@ -188,7 +188,7 @@ public class MisspellingSimpleFinderTest {
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<ArticleReplacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findReplacements(text);
 
         Assert.assertEquals(1, results.size());
         Assert.assertEquals(3, results.get(0).getStart());

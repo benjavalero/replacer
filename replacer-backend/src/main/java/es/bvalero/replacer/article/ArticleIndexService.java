@@ -1,6 +1,6 @@
 package es.bvalero.replacer.article;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import lombok.extern.slf4j.Slf4j;
@@ -30,20 +30,20 @@ public class ArticleIndexService {
 
     /* INDEX ARTICLES */
 
-    void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements) {
+    void indexArticleReplacements(WikipediaPage article, Collection<Replacement> replacements) {
         LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
         indexReplacements(article,
-                convertArticleReplacements(article, articleReplacements),
+                convertArticleReplacements(article, replacements),
                 replacementRepository.findByArticleId(article.getId())
         );
         LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
     }
 
-    public void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements,
+    public void indexArticleReplacements(WikipediaPage article, Collection<Replacement> replacements,
                                          Collection<ReplacementEntity> dbReplacements) {
         LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
         indexReplacements(article,
-                convertArticleReplacements(article, articleReplacements),
+                convertArticleReplacements(article, replacements),
                 dbReplacements
         );
         LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
@@ -90,11 +90,11 @@ public class ArticleIndexService {
     }
 
     private Collection<ReplacementEntity> convertArticleReplacements(WikipediaPage article,
-                                                                     Collection<ArticleReplacement> articleReplacements) {
-        return articleReplacements.stream().map(
-                articleReplacement -> new ReplacementEntity(
-                        article.getId(), articleReplacement.getType(), articleReplacement.getSubtype(),
-                        articleReplacement.getStart())
+                                                                     Collection<Replacement> replacements) {
+        return replacements.stream().map(
+                replacement -> new ReplacementEntity(
+                        article.getId(), replacement.getType(), replacement.getSubtype(),
+                        replacement.getStart())
                         .withLastUpdate(article.getLastUpdate().toLocalDate()))
                 .collect(Collectors.toList());
     }

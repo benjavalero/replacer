@@ -15,12 +15,12 @@ public class CustomReplacementFinderTest {
         String suggestion = "y";
         String text = String.format("Ax %s.", replacement);
 
-        List<ArticleReplacement> articleReplacements =
+        List<Replacement> replacements =
                 customReplacementFinder.findReplacements(text, replacement, suggestion);
 
-        Assert.assertEquals(1, articleReplacements.size());
-        Assert.assertEquals(3, articleReplacements.get(0).getStart());
-        Assert.assertEquals(replacement, articleReplacements.get(0).getText());
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals(3, replacements.get(0).getStart());
+        Assert.assertEquals(replacement, replacements.get(0).getText());
     }
 
     @Test
@@ -29,13 +29,13 @@ public class CustomReplacementFinderTest {
         String suggestion = "París";
         String text = "En parís París.";
 
-        List<ArticleReplacement> articleReplacements =
+        List<Replacement> replacements =
                 customReplacementFinder.findReplacements(text, replacement, suggestion);
 
-        Assert.assertEquals(1, articleReplacements.size());
-        Assert.assertEquals(3, articleReplacements.get(0).getStart());
-        Assert.assertEquals(replacement, articleReplacements.get(0).getText());
-        Assert.assertEquals(suggestion, articleReplacements.get(0).getSuggestions().get(0).getText());
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals(3, replacements.get(0).getStart());
+        Assert.assertEquals(replacement, replacements.get(0).getText());
+        Assert.assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -44,13 +44,13 @@ public class CustomReplacementFinderTest {
         String suggestion = "enero";
         String text = "En Enero enero.";
 
-        List<ArticleReplacement> articleReplacements =
+        List<Replacement> replacements =
                 customReplacementFinder.findReplacements(text, replacement, suggestion);
 
-        Assert.assertEquals(1, articleReplacements.size());
-        Assert.assertEquals(3, articleReplacements.get(0).getStart());
-        Assert.assertEquals(replacement, articleReplacements.get(0).getText());
-        Assert.assertEquals(suggestion, articleReplacements.get(0).getSuggestions().get(0).getText());
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals(3, replacements.get(0).getStart());
+        Assert.assertEquals(replacement, replacements.get(0).getText());
+        Assert.assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -59,13 +59,13 @@ public class CustomReplacementFinderTest {
         String suggestion = "Más";
         String text = "En Mas Más mas más.";
 
-        List<ArticleReplacement> articleReplacements =
+        List<Replacement> replacements =
                 customReplacementFinder.findReplacements(text, replacement, suggestion);
 
-        Assert.assertEquals(1, articleReplacements.size());
-        Assert.assertEquals(3, articleReplacements.get(0).getStart());
-        Assert.assertEquals(replacement, articleReplacements.get(0).getText());
-        Assert.assertEquals(suggestion, articleReplacements.get(0).getSuggestions().get(0).getText());
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals(3, replacements.get(0).getStart());
+        Assert.assertEquals(replacement, replacements.get(0).getText());
+        Assert.assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -74,18 +74,18 @@ public class CustomReplacementFinderTest {
         String suggestion = "más";
         String text = "En mas más Mas Más.";
 
-        List<ArticleReplacement> articleReplacements =
+        List<Replacement> replacements =
                 customReplacementFinder.findReplacements(text, replacement, suggestion);
 
-        Assert.assertEquals(2, articleReplacements.size());
+        Assert.assertEquals(2, replacements.size());
 
-        Assert.assertEquals(3, articleReplacements.get(0).getStart());
-        Assert.assertEquals(replacement, articleReplacements.get(0).getText());
-        Assert.assertEquals(suggestion, articleReplacements.get(0).getSuggestions().get(0).getText());
+        Assert.assertEquals(3, replacements.get(0).getStart());
+        Assert.assertEquals(replacement, replacements.get(0).getText());
+        Assert.assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
 
-        Assert.assertEquals(11, articleReplacements.get(1).getStart());
-        Assert.assertEquals(ReplacementFinder.setFirstUpperCase(replacement), articleReplacements.get(1).getText());
-        Assert.assertEquals(ReplacementFinder.setFirstUpperCase(suggestion), articleReplacements.get(1).getSuggestions().get(0).getText());
+        Assert.assertEquals(11, replacements.get(1).getStart());
+        Assert.assertEquals(BaseReplacementFinder.setFirstUpperCase(replacement), replacements.get(1).getText());
+        Assert.assertEquals(BaseReplacementFinder.setFirstUpperCase(suggestion), replacements.get(1).getSuggestions().get(0).getText());
     }
 
 }

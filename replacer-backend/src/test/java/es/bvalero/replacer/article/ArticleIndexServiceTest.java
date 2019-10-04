@@ -1,6 +1,6 @@
 package es.bvalero.replacer.article;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.junit.Before;
@@ -33,8 +33,8 @@ public class ArticleIndexServiceTest {
 
     @Test
     public void testIndexNewArticleReplacements() {
-        ArticleReplacement rep1 = ArticleReplacement.builder().build();  // New => ADD
-        List<ArticleReplacement> newReplacements = Collections.singletonList(rep1);
+        Replacement rep1 = Replacement.builder().build();  // New => ADD
+        List<Replacement> newReplacements = Collections.singletonList(rep1);
 
         WikipediaPage article = WikipediaPage.builder().lastUpdate(LocalDateTime.now()).build();
         articleIndexService.indexArticleReplacements(article, newReplacements);

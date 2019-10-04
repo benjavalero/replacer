@@ -2,7 +2,7 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.ArticleIndexService;
 import es.bvalero.replacer.article.ReplacementEntity;
-import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -58,8 +58,8 @@ class DumpArticleProcessor {
             return false;
         }
 
-        List<ArticleReplacement> articleReplacements = replacementFinderService.findReplacements(dumpArticle.getContent());
-        articleIndexService.indexArticleReplacements(dumpArticle, articleReplacements, dbReplacements);
+        List<Replacement> replacements = replacementFinderService.findReplacements(dumpArticle.getContent());
+        articleIndexService.indexArticleReplacements(dumpArticle, replacements, dbReplacements);
 
         LOGGER.debug("END Process dump article: {}", dumpArticle.getTitle());
         return true;

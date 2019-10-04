@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Value(staticConstructor = "of")
 @Builder
-public class ArticleReplacement implements Comparable<ArticleReplacement> {
+public class Replacement implements Comparable<Replacement> {
 
     @JsonIgnore
     private String type;
@@ -30,7 +30,7 @@ public class ArticleReplacement implements Comparable<ArticleReplacement> {
     }
 
     @Override
-    public int compareTo(ArticleReplacement o) {
+    public int compareTo(Replacement o) {
         // Order descendant by start. If equals, the lower end.
         return o.start == start ? getEnd() - o.getEnd() : o.start - start;
     }

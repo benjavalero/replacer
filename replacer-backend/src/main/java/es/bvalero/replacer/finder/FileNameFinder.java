@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class FileNameFinder extends ReplacementFinder implements IgnoredReplacementFinder {
+public class FileNameFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
 
     // With this regex we also capture domains like www.google.com
     @org.intellij.lang.annotations.RegExp

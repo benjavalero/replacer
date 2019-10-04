@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Component
-public class CompleteTagFinder extends ReplacementFinder implements IgnoredReplacementFinder {
+public class CompleteTagFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
 
     private static final List<String> TAG_NAMES = Arrays.asList(
             "nowiki", "pre", "code", "source", "syntaxhighlight",

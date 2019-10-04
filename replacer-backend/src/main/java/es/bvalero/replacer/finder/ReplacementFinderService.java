@@ -15,7 +15,7 @@ public class ReplacementFinderService {
     public static final String CUSTOM_FINDER_TYPE = "Personalizado";
 
     @Autowired
-    private List<ArticleReplacementFinder> articleReplacementFinders;
+    private List<ReplacementFinder> replacementFinders;
 
     @Autowired
     private List<IgnoredReplacementFinder> ignoredReplacementFinders;
@@ -29,42 +29,42 @@ public class ReplacementFinderService {
      * Replacements contained in exceptions are ignored.
      * If there are no replacements, the list will be empty.
      */
-    public List<ArticleReplacement> findReplacements(String text) {
+    public List<Replacement> findReplacements(String text) {
         LOGGER.debug("START Find replacements in text: {}", text);
         // Find the replacements in the text
         // LinkedList is better to run iterators and remove items from it
-        List<ArticleReplacement> articleReplacements = new LinkedList<>();
-        for (ArticleReplacementFinder finder : articleReplacementFinders) {
+        List<Replacement> replacements = new LinkedList<>();
+        for (ReplacementFinder finder : replacementFinders) {
             LOGGER.debug("- START Find replacements of type: {}", finder.getClass().getSimpleName());
-            List<ArticleReplacement> replacements = finder.findReplacements(text);
-            LOGGER.debug("- END Find {} replacements of type: {}", replacements.size(), finder.getClass().getSimpleName());
-            articleReplacements.addAll(replacements);
+            List<Replacement> finderReplacements = finder.findReplacements(text);
+            LOGGER.debug("- END Find {} replacements of type: {}", finderReplacements.size(), finder.getClass().getSimpleName());
+            replacements.addAll(finderReplacements);
         }
         LOGGER.debug("Potential replacements found (before ignoring): {} - {}",
-                articleReplacements.size(), articleReplacements);
+                replacements.size(), replacements);
 
         // Remove nested replacements
-        Collections.sort(articleReplacements);
-        articleReplacements.removeIf(replacement -> isReplacementContainedInListIgnoringItself(replacement, articleReplacements));
+        Collections.sort(replacements);
+        replacements.removeIf(replacement -> isReplacementContainedInListIgnoringItself(replacement, replacements));
         LOGGER.debug("Potential replacements found after removing nested: {} - {}",
-                articleReplacements.size(), articleReplacements);
+                replacements.size(), replacements);
 
         // No need to find the exceptions if there are no replacements found
-        if (articleReplacements.isEmpty()) {
-            return articleReplacements;
+        if (replacements.isEmpty()) {
+            return replacements;
         }
 
         // Ignore the replacements which must be ignored
-        removeIgnoredReplacements(text, articleReplacements);
+        removeIgnoredReplacements(text, replacements);
 
         LOGGER.debug("END Find replacements in text. Final replacements found: {} - {}",
-                articleReplacements.size(), articleReplacements);
-        return articleReplacements;
+                replacements.size(), replacements);
+        return replacements;
     }
 
-    boolean isReplacementContainedInListIgnoringItself(ArticleReplacement replacement, List<ArticleReplacement> replacementList) {
+    boolean isReplacementContainedInListIgnoringItself(Replacement replacement, List<Replacement> replacementList) {
         boolean isContained = false;
-        for (ArticleReplacement replacementItem : replacementList) {
+        for (Replacement replacementItem : replacementList) {
             if (isReplacementContainedInReplacement(replacement, replacementItem)) {
                 isContained = true;
                 break;
@@ -73,7 +73,7 @@ public class ReplacementFinderService {
         return isContained;
     }
 
-    private boolean isReplacementContainedInReplacement(ArticleReplacement replacement1, ArticleReplacement replacement2) {
+    private boolean isReplacementContainedInReplacement(Replacement replacement1, Replacement replacement2) {
         return !replacement1.equals(replacement2) && isIntervalContainedInInterval(
                 replacement1.getStart(), replacement1.getEnd(),
                 replacement2.getStart(), replacement2.getEnd());
@@ -83,51 +83,51 @@ public class ReplacementFinderService {
         return start1 >= start2 && end1 <= end2;
     }
 
-    private void removeIgnoredReplacements(String text, List<ArticleReplacement> articleReplacements) {
+    private void removeIgnoredReplacements(String text, List<Replacement> replacements) {
         for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
             LOGGER.debug("- START Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
             List<MatchResult> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
             LOGGER.debug("- Found ignored of type: {}", ignoredReplacements);
             LOGGER.debug("- END Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
-            articleReplacements.removeIf(replacement -> isReplacementContainedInMatchResultList(replacement, ignoredReplacements));
+            replacements.removeIf(replacement -> isReplacementContainedInMatchResultList(replacement, ignoredReplacements));
 
-            if (articleReplacements.isEmpty()) {
+            if (replacements.isEmpty()) {
                 break;
             }
         }
     }
 
-    private boolean isReplacementContainedInMatchResultList(ArticleReplacement replacement, List<MatchResult> matchResults) {
+    private boolean isReplacementContainedInMatchResultList(Replacement replacement, List<MatchResult> matchResults) {
         return matchResults.stream().anyMatch(match -> isReplacementContainedInMatchResult(replacement, match));
     }
 
-    private boolean isReplacementContainedInMatchResult(ArticleReplacement replacement, MatchResult matchResult) {
+    private boolean isReplacementContainedInMatchResult(Replacement replacement, MatchResult matchResult) {
         return isIntervalContainedInInterval(replacement.getStart(), replacement.getEnd(), matchResult.getStart(), matchResult.getEnd());
     }
 
-    public List<ArticleReplacement> findCustomReplacements(String text, String replacement, String suggestion) {
+    public List<Replacement> findCustomReplacements(String text, String replacement, String suggestion) {
         LOGGER.debug("START Find custom replacements. Text: {} - Replacement: {} - Suggestion: {}",
                 text, replacement, suggestion);
-        List<ArticleReplacement> articleReplacements = customReplacementFinder.findReplacements(text, replacement, suggestion);
-        LOGGER.debug("Potential custom replacements found (before ignoring): {}", articleReplacements);
+        List<Replacement> replacements = customReplacementFinder.findReplacements(text, replacement, suggestion);
+        LOGGER.debug("Potential custom replacements found (before ignoring): {}", replacements);
 
         // No need to find the exceptions if there are no replacements found
-        if (articleReplacements.isEmpty()) {
-            return articleReplacements;
+        if (replacements.isEmpty()) {
+            return replacements;
         }
 
         // Ignore the replacements which must be ignored
         for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
             List<MatchResult> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
-            articleReplacements.removeIf(artRep -> isReplacementContainedInMatchResultList(artRep, ignoredReplacements));
+            replacements.removeIf(artRep -> isReplacementContainedInMatchResultList(artRep, ignoredReplacements));
 
-            if (articleReplacements.isEmpty()) {
+            if (replacements.isEmpty()) {
                 break;
             }
         }
 
-        LOGGER.debug("END Find custom replacements in text. Final replacements found: {}", articleReplacements);
-        return articleReplacements;
+        LOGGER.debug("END Find custom replacements in text. Final replacements found: {}", replacements);
+        return replacements;
     }
 
 }

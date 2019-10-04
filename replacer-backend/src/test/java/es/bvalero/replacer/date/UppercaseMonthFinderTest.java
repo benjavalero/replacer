@@ -1,6 +1,6 @@
 package es.bvalero.replacer.date;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.Replacement;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ public class UppercaseMonthFinderTest {
         String date = "15 de Agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<ArticleReplacement> replacements = uppercaseMonthFinder.findReplacements(text);
+        List<Replacement> replacements = uppercaseMonthFinder.findReplacements(text);
 
         Assert.assertEquals(1, replacements.size());
         Assert.assertEquals(date, replacements.get(0).getText());
@@ -27,7 +27,7 @@ public class UppercaseMonthFinderTest {
         String date = "15 de agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<ArticleReplacement> replacements = uppercaseMonthFinder.findReplacements(text);
+        List<Replacement> replacements = uppercaseMonthFinder.findReplacements(text);
 
         Assert.assertTrue(replacements.isEmpty());
     }
@@ -37,11 +37,11 @@ public class UppercaseMonthFinderTest {
         String date = "17 de Setiembre de 2019";
         String text = String.format("En %s.", date);
 
-        List<ArticleReplacement> articleReplacements = uppercaseMonthFinder.findReplacements(text);
+        List<Replacement> replacements = uppercaseMonthFinder.findReplacements(text);
 
-        Assert.assertEquals(1, articleReplacements.size());
-        Assert.assertEquals(date, articleReplacements.get(0).getText());
-        Assert.assertEquals("17 de septiembre de 2019", articleReplacements.get(0).getSuggestions().get(0).getText());
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals(date, replacements.get(0).getText());
+        Assert.assertEquals("17 de septiembre de 2019", replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -49,11 +49,11 @@ public class UppercaseMonthFinderTest {
         String date = "17 de Septiembre de 2019";
         String text = String.format("En %s.", date);
 
-        List<ArticleReplacement> articleReplacements = uppercaseMonthFinder.findReplacements(text);
+        List<Replacement> replacements = uppercaseMonthFinder.findReplacements(text);
 
-        Assert.assertEquals(1, articleReplacements.size());
-        Assert.assertEquals(date, articleReplacements.get(0).getText());
-        Assert.assertEquals(date.toLowerCase(), articleReplacements.get(0).getSuggestions().get(0).getText());
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals(date, replacements.get(0).getText());
+        Assert.assertEquals(date.toLowerCase(), replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -62,11 +62,11 @@ public class UppercaseMonthFinderTest {
         String expected = "17 de agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<ArticleReplacement> articleReplacements = uppercaseMonthFinder.findReplacements(text);
+        List<Replacement> replacements = uppercaseMonthFinder.findReplacements(text);
 
-        Assert.assertEquals(1, articleReplacements.size());
-        Assert.assertEquals(date, articleReplacements.get(0).getText());
-        Assert.assertEquals(expected, articleReplacements.get(0).getSuggestions().get(0).getText());
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals(date, replacements.get(0).getText());
+        Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -75,11 +75,11 @@ public class UppercaseMonthFinderTest {
         String expected = "17 de agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<ArticleReplacement> articleReplacements = uppercaseMonthFinder.findReplacements(text);
+        List<Replacement> replacements = uppercaseMonthFinder.findReplacements(text);
 
-        Assert.assertEquals(1, articleReplacements.size());
-        Assert.assertEquals(date, articleReplacements.get(0).getText());
-        Assert.assertEquals(expected, articleReplacements.get(0).getSuggestions().get(0).getText());
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals(date, replacements.get(0).getText());
+        Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
     }
 
 }

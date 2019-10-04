@@ -1,6 +1,6 @@
 package es.bvalero.replacer.article;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -211,48 +211,48 @@ public class ArticleService {
 
     private Optional<ArticleReview> getArticleReview(WikipediaPage article, String type, String subtype, String suggestion) {
         // Find the replacements in the article
-        List<ArticleReplacement> articleReplacements = findArticleReplacements(
+        List<Replacement> replacements = findArticleReplacements(
                 article.getContent(), subtype, suggestion);
-        LOGGER.info("Potential replacements found in text: {}", articleReplacements.size());
+        LOGGER.info("Potential replacements found in text: {}", replacements.size());
 
         if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
-            if (articleReplacements.isEmpty()) {
+            if (replacements.isEmpty()) {
                 // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
                 addCustomReviewedReplacement(article.getId(), subtype);
             }
         } else {
             // We take profit and we update the database with the just calculated replacements (also when empty)
             LOGGER.info("Update article replacements in database");
-            articleIndexService.indexArticleReplacements(article, articleReplacements);
+            articleIndexService.indexArticleReplacements(article, replacements);
 
             // To build the review we are only interested in the replacements of the given type and subtype
             // We can run the filter even with an empty list
             if (StringUtils.isNotBlank(subtype)) {
-                articleReplacements = filterReplacementsByTypeAndSubtype(articleReplacements, type, subtype);
-                LOGGER.info("Final replacements found in text after filtering: {}", articleReplacements.size());
+                replacements = filterReplacementsByTypeAndSubtype(replacements, type, subtype);
+                LOGGER.info("Final replacements found in text after filtering: {}", replacements.size());
             }
         }
 
-        if (articleReplacements.isEmpty()) {
+        if (replacements.isEmpty()) {
             return Optional.empty();
         } else {
-            return getSectionReview(article, articleReplacements);
+            return getSectionReview(article, replacements);
         }
     }
 
-    private List<ArticleReplacement> findArticleReplacements(
+    private List<Replacement> findArticleReplacements(
             String articleContent, @Nullable String subtype, @Nullable String suggestion) {
         // Find the replacements sorted (the first ones in the list are the last in the text)
-        List<ArticleReplacement> articleReplacements;
+        List<Replacement> replacements;
         if (StringUtils.isBlank(suggestion)) {
-            articleReplacements = replacementFinderService.findReplacements(articleContent);
+            replacements = replacementFinderService.findReplacements(articleContent);
         } else {
             // Custom replacement
-            articleReplacements = replacementFinderService.findCustomReplacements(articleContent, subtype, suggestion);
+            replacements = replacementFinderService.findCustomReplacements(articleContent, subtype, suggestion);
         }
         // Return the replacements sorted as they appear in the text
-        articleReplacements.sort(Collections.reverseOrder());
-        return articleReplacements;
+        replacements.sort(Collections.reverseOrder());
+        return replacements;
     }
 
     private void addCustomReviewedReplacement(int articleId, String subtype) {
@@ -260,14 +260,14 @@ public class ArticleService {
         articleIndexService.reviewReplacementAsSystem(customReplacement);
     }
 
-    private List<ArticleReplacement> filterReplacementsByTypeAndSubtype(
-            List<ArticleReplacement> replacements, @Nullable String type, @Nullable String subtype) {
+    private List<Replacement> filterReplacementsByTypeAndSubtype(
+            List<Replacement> replacements, @Nullable String type, @Nullable String subtype) {
         return replacements.stream()
                 .filter(replacement -> replacement.getType().equals(type) && replacement.getSubtype().equals(subtype))
                 .collect(Collectors.toList());
     }
 
-    private Optional<ArticleReview> getSectionReview(WikipediaPage article, List<ArticleReplacement> articleReplacements) {
+    private Optional<ArticleReview> getSectionReview(WikipediaPage article, List<Replacement> replacements) {
         // We try to reduce the review size by returning just a section of the page
 
         try {
@@ -276,7 +276,7 @@ public class ArticleService {
 
             // Find the smallest section containing all the replacements
             Optional<WikipediaSection> smallestSection =
-                    getSmallestSectionContainingAllReplacements(sections, articleReplacements);
+                    getSmallestSectionContainingAllReplacements(sections, replacements);
 
             // Retrieve the section from Wikipedia API. Better than calculating it by ourselves, just in case.
             if (smallestSection.isPresent()) {
@@ -284,12 +284,12 @@ public class ArticleService {
                         (article.getId(), smallestSection.get().getIndex());
                 if (pageSection.isPresent()) {
                     // Modify the start position of the replacements according to the section start
-                    List<ArticleReplacement> sectionReplacements =
-                            translateReplacementsByOffset(articleReplacements, smallestSection.get().getByteOffset());
+                    List<Replacement> sectionReplacements =
+                            translateReplacementsByOffset(replacements, smallestSection.get().getByteOffset());
                     // There are some rare cases where the byte-offset doesn't match with the section position
                     if (sectionReplacements.stream().allMatch(rep -> validateArticleReplacement(rep, pageSection.get().getContent()))) {
                         return Optional.of(buildArticleReview(pageSection.get(),
-                                translateReplacementsByOffset(articleReplacements, smallestSection.get().getByteOffset())));
+                                translateReplacementsByOffset(replacements, smallestSection.get().getByteOffset())));
                     } else {
                         LOGGER.warn("Not valid byte-offset in section {} of article: {}",
                                 smallestSection.get().getIndex(), pageSection.get().getTitle());
@@ -298,7 +298,7 @@ public class ArticleService {
             }
 
             // If no section is found or there are problems the found section we return the review of the whole article
-            return Optional.of(buildArticleReview(article, articleReplacements));
+            return Optional.of(buildArticleReview(article, replacements));
         } catch (WikipediaException e) {
             LOGGER.error("Error getting section review", e);
         }
@@ -307,7 +307,7 @@ public class ArticleService {
     }
 
     private Optional<WikipediaSection> getSmallestSectionContainingAllReplacements(
-            List<WikipediaSection> sections, List<ArticleReplacement> replacements) {
+            List<WikipediaSection> sections, List<Replacement> replacements) {
         WikipediaSection smallest = null;
         for (int i = 0; i < sections.size(); i++) {
             WikipediaSection section = sections.get(i);
@@ -327,12 +327,12 @@ public class ArticleService {
         return Optional.ofNullable(smallest);
     }
 
-    private boolean areAllReplacementsContainedInInterval(List<ArticleReplacement> replacements,
+    private boolean areAllReplacementsContainedInInterval(List<Replacement> replacements,
                                                           Integer start, @Nullable Integer end) {
         return replacements.stream().allMatch(rep -> isReplacementContainedInInterval(rep, start, end));
     }
 
-    private boolean isReplacementContainedInInterval(ArticleReplacement replacement,
+    private boolean isReplacementContainedInInterval(Replacement replacement,
                                                      Integer start, @Nullable Integer end) {
         if (replacement.getStart() >= start) {
             if (end == null) {
@@ -345,23 +345,23 @@ public class ArticleService {
         }
     }
 
-    private List<ArticleReplacement> translateReplacementsByOffset(List<ArticleReplacement> articleReplacements, int offset) {
-        return articleReplacements.stream().map(rep -> rep.withStart(rep.getStart() - offset)).collect(Collectors.toList());
+    private List<Replacement> translateReplacementsByOffset(List<Replacement> replacements, int offset) {
+        return replacements.stream().map(rep -> rep.withStart(rep.getStart() - offset)).collect(Collectors.toList());
     }
 
-    private boolean validateArticleReplacement(ArticleReplacement articleReplacement, String text) {
-        return articleReplacement.getText().equals(
-                text.substring(articleReplacement.getStart(), articleReplacement.getEnd()));
+    private boolean validateArticleReplacement(Replacement replacement, String text) {
+        return replacement.getText().equals(
+                text.substring(replacement.getStart(), replacement.getEnd()));
     }
 
-    private ArticleReview buildArticleReview(WikipediaPage article, List<ArticleReplacement> articleReplacements) {
+    private ArticleReview buildArticleReview(WikipediaPage article, List<Replacement> replacements) {
         return ArticleReview.builder()
                 .articleId(article.getId())
                 .title(article.getTitle())
                 .content(article.getContent())
                 .section(article.getSection())
                 .currentTimestamp(article.getQueryTimestamp())
-                .replacements(articleReplacements).build();
+                .replacements(replacements).build();
     }
 
     /* DUMP INDEX */

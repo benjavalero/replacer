@@ -1,6 +1,6 @@
 package es.bvalero.replacer.article;
 
-import es.bvalero.replacer.finder.ArticleReplacement;
+import es.bvalero.replacer.finder.Replacement;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.Wither;
@@ -20,6 +20,6 @@ class ArticleReview {
     @Wither
     private Integer section;
     private String currentTimestamp;
-    private List<ArticleReplacement> replacements;
+    private List<Replacement> replacements;
 
 }

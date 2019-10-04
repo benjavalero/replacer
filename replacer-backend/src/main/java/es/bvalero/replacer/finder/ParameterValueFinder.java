@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ParameterValueFinder extends ReplacementFinder implements IgnoredReplacementFinder {
+public class ParameterValueFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
 
     private static final List<String> PARAMS = Arrays.asList("índice", "index", "cita", "species");
     private static final RunAutomaton AUTOMATON_PARAM_VALUE = new RunAutomaton(

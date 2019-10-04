@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class XmlTagFinder extends ReplacementFinder implements IgnoredReplacementFinder {
+public class XmlTagFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
 
     // We want to avoid the XML comments to be captured by this
     // For the automaton the < needs an extra backslash

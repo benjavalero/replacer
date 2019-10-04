@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-public class TemplateFinder extends ReplacementFinder implements IgnoredReplacementFinder {
+public class TemplateFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
 
     // The nested regex takes more but it is worth as it captures completely the templates with inner templates
     @org.intellij.lang.annotations.RegExp

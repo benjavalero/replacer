@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class TemplateNameFinder extends ReplacementFinder implements IgnoredReplacementFinder {
+public class TemplateNameFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}:]+";
