@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class LinkSuffixedFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class LinkSuffixedFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_LINK_SUFFIXED = "\\[\\[[^]]+]]<Ll>+";

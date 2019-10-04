@@ -5,10 +5,9 @@ import dk.brics.automaton.RunAutomaton;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
-public class TemplateNameFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class TemplateNameFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}:]+";
@@ -17,14 +16,13 @@ public class TemplateNameFinder extends BaseReplacementFinder implements Ignored
 
     @Override
     public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, AUTOMATON_TEMPLATE_NAME).stream()
-                .map(this::processMatchResult)
-                .collect(Collectors.toList());
+        return findMatchResults(text, AUTOMATON_TEMPLATE_NAME);
     }
 
-    private IgnoredReplacement processMatchResult(IgnoredReplacement match) {
+    @Override
+    public IgnoredReplacement convertMatch(int start, String text) {
         // Remove the first 2 characters corresponding to the opening curly braces
-        return IgnoredReplacement.of(match.getStart() + 2, match.getText().substring(2));
+        return IgnoredReplacement.of(start + 2, text.substring(2));
     }
 
 }

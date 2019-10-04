@@ -34,12 +34,13 @@ class MisspellingSimpleFinder extends MisspellingFinder {
         // Do nothing
     }
 
+    @Override
     RunAutomaton getAutomaton() {
         return AUTOMATON_WORD;
     }
 
     @Override
-    String getType() {
+    public String getType() {
         return TYPE_MISSPELLING_SIMPLE;
     }
 

@@ -5,10 +5,9 @@ import dk.brics.automaton.RunAutomaton;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
-public class DomainFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class DomainFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_DOMAIN = "[A-Za-z.]+\\.[a-z]{2,4}[^A-Za-z]";
@@ -16,14 +15,13 @@ public class DomainFinder extends BaseReplacementFinder implements IgnoredReplac
 
     @Override
     public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, AUTOMATON_DOMAIN).stream()
-                .map(this::processMatchResult)
-                .collect(Collectors.toList());
+        return findMatchResults(text, AUTOMATON_DOMAIN);
     }
 
-    private IgnoredReplacement processMatchResult(IgnoredReplacement match) {
+    @Override
+    public IgnoredReplacement convertMatch(int start, String text) {
         // Remove the last character
-        return IgnoredReplacement.of(match.getStart(), match.getText().substring(0, match.getText().length() - 1));
+        return IgnoredReplacement.of(start, text.substring(0, text.length() - 1));
     }
 
 }

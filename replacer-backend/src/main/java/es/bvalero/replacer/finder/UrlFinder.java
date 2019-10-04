@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class UrlFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class UrlFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_URL = "https?://<URI>";

@@ -37,7 +37,7 @@ class MisspellingComposedFinder extends MisspellingFinder {
     }
 
     @Override
-    String getType() {
+    public String getType() {
         return TYPE_MISSPELLING_COMPOSED;
     }
 

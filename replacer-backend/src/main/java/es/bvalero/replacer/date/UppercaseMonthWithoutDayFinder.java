@@ -2,6 +2,8 @@ package es.bvalero.replacer.date;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.FinderUtils;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
@@ -19,7 +21,7 @@ class UppercaseMonthWithoutDayFinder extends DateFinder implements ReplacementFi
     private static final List<String> WORDS = Arrays.asList(
             "a", "desde", "de", "durante", "el", "entre", "en", "hacia", "hasta", "para", "y");
     private static final List<String> WORDS_UPPERCASE_CLASS = WORDS.stream()
-            .map(DateFinder::setFirstUpperCaseClass)
+            .map(FinderUtils::setFirstUpperCaseClass)
             .collect(Collectors.toList());
 
     @RegExp
@@ -32,12 +34,12 @@ class UppercaseMonthWithoutDayFinder extends DateFinder implements ReplacementFi
                     .toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
-    RunAutomaton getAutomaton() {
-        return AUTOMATON_DATE_UPPERCASE_MONTHS_WITHOUT_DAY;
+    public List<Replacement> findReplacements(String text) {
+        return findMatchResults(text, AUTOMATON_DATE_UPPERCASE_MONTHS_WITHOUT_DAY);
     }
 
     @Override
-    String getSubType() {
+    public String getSubtype() {
         return SUBTYPE_DATE_UPPERCASE_MONTHS_WITHOUT_DAY;
     }
 

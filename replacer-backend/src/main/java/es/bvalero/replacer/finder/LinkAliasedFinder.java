@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class LinkAliasedFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class LinkAliasedFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_LINK_ALIASED = "\\[\\[[^]|]+\\|";

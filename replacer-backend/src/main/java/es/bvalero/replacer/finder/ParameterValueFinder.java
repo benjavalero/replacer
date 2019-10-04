@@ -8,10 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
-public class ParameterValueFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class ParameterValueFinder implements IgnoredReplacementFinder {
 
     private static final List<String> PARAMS = Arrays.asList("índice", "index", "cita", "species");
     private static final RunAutomaton AUTOMATON_PARAM_VALUE = new RunAutomaton(
@@ -20,14 +19,13 @@ public class ParameterValueFinder extends BaseReplacementFinder implements Ignor
 
     @Override
     public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, AUTOMATON_PARAM_VALUE).stream()
-                .map(this::processMatchResult)
-                .collect(Collectors.toList());
+        return findMatchResults(text, AUTOMATON_PARAM_VALUE);
     }
 
-    private IgnoredReplacement processMatchResult(IgnoredReplacement match) {
-        int pos = match.getText().indexOf('=') + 1;
-        return IgnoredReplacement.of(match.getStart() + pos, match.getText().substring(pos));
+    @Override
+    public IgnoredReplacement convertMatch(int start, String text) {
+        int pos = text.indexOf('=') + 1;
+        return IgnoredReplacement.of(start + pos, text.substring(pos));
     }
 
 }

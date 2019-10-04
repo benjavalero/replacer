@@ -2,10 +2,13 @@ package es.bvalero.replacer.date;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 class LeadingZeroFinder extends DateFinder implements ReplacementFinder {
@@ -19,12 +22,12 @@ class LeadingZeroFinder extends DateFinder implements ReplacementFinder {
             .toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
-    RunAutomaton getAutomaton() {
-        return AUTOMATON_DATE_LEADING_ZERO;
+    public List<Replacement> findReplacements(String text) {
+        return findMatchResults(text, AUTOMATON_DATE_LEADING_ZERO);
     }
 
     @Override
-    String getSubType() {
+    public String getSubtype() {
         return SUBTYPE_DATE_LEADING_ZERO;
     }
 

@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class QuotesFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class QuotesFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_ANGULAR_QUOTES = "«[^»]+»";

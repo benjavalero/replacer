@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.benchmark;
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,8 +20,8 @@ class TemplateAutomatonClassAllFinder extends TemplateAbstractFinder {
     TemplateAutomatonClassAllFinder(List<String> words) {
         Set<String> wordsToJoin = new HashSet<>();
         for (String word : words) {
-            if (startsWithLowerCase(word)) {
-                wordsToJoin.add(setFirstUpperCaseClass(word));
+            if (FinderUtils.startsWithLowerCase(word)) {
+                wordsToJoin.add(FinderUtils.setFirstUpperCaseClass(word));
             } else {
                 wordsToJoin.add(word);
             }

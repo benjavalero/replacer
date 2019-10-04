@@ -1,9 +1,9 @@
 package es.bvalero.replacer.misspelling;
 
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinder;
-import es.bvalero.replacer.finder.BaseReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementSuggestion;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,7 +13,7 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 
 @Slf4j
-public abstract class MisspellingFinder extends BaseReplacementFinder implements ReplacementFinder, PropertyChangeListener {
+public abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeListener {
 
     // Derived from the misspelling set to access faster by word
     private Map<String, Misspelling> misspellingMap = new HashMap<>();
@@ -49,7 +49,7 @@ public abstract class MisspellingFinder extends BaseReplacementFinder implements
             } else {
                 // If case-insensitive, we add to the map "word" and "Word".
                 map.put(word, misspelling);
-                map.put(setFirstUpperCase(word), misspelling);
+                map.put(FinderUtils.setFirstUpperCase(word), misspelling);
             }
         });
 
@@ -59,30 +59,37 @@ public abstract class MisspellingFinder extends BaseReplacementFinder implements
 
     abstract void processMisspellingChange(Set<Misspelling> misspellings);
 
-    /**
-     * @return A list with the misspelling replacements in a given text.
-     */
     @Override
     public List<Replacement> findReplacements(String text) {
-        List<Replacement> replacements = new ArrayList<>(100);
+        return findMatchResults(text, getAutomaton());
+    }
 
-        // Find all the words and check if they are potential errors
-        findMatchResults(text, getAutomaton()).stream()
-                .filter(match -> isWordCompleteInText(match.getStart(), match.getText(), text))
-                .forEach(match -> findMisspellingByWord(match.getText()).ifPresent(misspelling ->
-                        replacements.add(convertMatchResultToReplacement(
-                                match,
-                                getType(),
-                                misspelling.getWord(),
-                                findMisspellingSuggestions(match.getText(), misspelling)
-                        ))));
+    @Override
+    public boolean isValidMatch(int start, String matchedText, String fullText) {
+        return FinderUtils.isWordCompleteInText(start, matchedText, fullText)
+                && findMisspellingByWord(matchedText).isPresent();
+    }
 
-        return replacements;
+    @Override
+    public Replacement convertMatch(int start, String text) {
+        // We are sure in this point that the Misspelling exists
+        Misspelling misspelling = findMisspellingByWord(text).orElseThrow(IllegalArgumentException::new);
+        return Replacement.builder()
+                .type(getType())
+                .subtype(misspelling.getWord())
+                .start(start)
+                .text(text)
+                .suggestions(findSuggestions(text))
+                .build();
     }
 
     abstract RunAutomaton getAutomaton();
 
-    abstract String getType();
+    @Override
+    public String getSubtype() {
+        // It is not used as we return a different subtype depending on the misspelling found
+        return null;
+    }
 
     /**
      * @return The misspelling related to the given word, or empty if there is no such misspelling.
@@ -92,12 +99,15 @@ public abstract class MisspellingFinder extends BaseReplacementFinder implements
     }
 
     /* Transform the case of the suggestion, e. g. "Habia" -> "Había" */
-    private List<ReplacementSuggestion> findMisspellingSuggestions(CharSequence originalWord, Misspelling misspelling) {
+    @Override
+    public List<ReplacementSuggestion> findSuggestions(String originalWord) {
         List<ReplacementSuggestion> suggestions = new ArrayList<>();
 
+        // We are sure in this point that the Misspelling exists
+        Misspelling misspelling = findMisspellingByWord(originalWord).orElseThrow(IllegalArgumentException::new);
         misspelling.getSuggestions().forEach(suggestion -> {
-            ReplacementSuggestion newSuggestion = startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()
-                    ? ReplacementSuggestion.of(setFirstUpperCase(suggestion.getText()), suggestion.getComment())
+            ReplacementSuggestion newSuggestion = FinderUtils.startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()
+                    ? ReplacementSuggestion.of(FinderUtils.setFirstUpperCase(suggestion.getText()), suggestion.getComment())
                     : suggestion;
             if (originalWord.equals(newSuggestion.getText())) {
                 suggestions.add(0, newSuggestion);

@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-class CustomReplacementFinder extends BaseReplacementFinder {
+class CustomReplacementFinder {
 
     public List<Replacement> findReplacements(String text, String replacement, String suggestion) {
-        String regex = startsWithLowerCase(replacement) && startsWithLowerCase(suggestion)
-                ? setFirstUpperCaseClass(replacement)
+        String regex = FinderUtils.startsWithLowerCase(replacement) && FinderUtils.startsWithLowerCase(suggestion)
+                ? FinderUtils.setFirstUpperCaseClass(replacement)
                 : replacement;
         return findMatches(text, regex).stream().map(match -> Replacement.builder()
                 .type(ReplacementFinderService.CUSTOM_FINDER_TYPE)
@@ -33,7 +33,7 @@ class CustomReplacementFinder extends BaseReplacementFinder {
         RunAutomaton automaton = new RunAutomaton(new RegExp(regex).toAutomaton());
         AutomatonMatcher m = automaton.newMatcher(text);
         while (m.find()) {
-            if (isWordCompleteInText(m.start(), m.group(), text)) {
+            if (FinderUtils.isWordCompleteInText(m.start(), m.group(), text)) {
                 matches.add(IgnoredReplacement.of(m.start(), m.group()));
             }
         }
@@ -47,7 +47,7 @@ class CustomReplacementFinder extends BaseReplacementFinder {
         } else if (text.equals(replacement)) {
             return suggestion;
         } else {
-            return setFirstUpperCase(suggestion);
+            return FinderUtils.setFirstUpperCase(suggestion);
         }
     }
 

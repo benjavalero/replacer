@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-class CategoryFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class CategoryFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_CATEGORY = "\\[\\[(Categoría|als):[^]]+]]";

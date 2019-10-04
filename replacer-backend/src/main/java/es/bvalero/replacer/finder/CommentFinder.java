@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @Component
-class CommentFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class CommentFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_COMMENT_TAG = "<!--.+?-->";

@@ -5,10 +5,9 @@ import dk.brics.automaton.RunAutomaton;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
-public class CursiveFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class CursiveFinder implements IgnoredReplacementFinder {
 
     // There are limitations in the automaton (need to capture more than 1 character in some places) but it is faster
     @org.intellij.lang.annotations.RegExp
@@ -20,15 +19,13 @@ public class CursiveFinder extends BaseReplacementFinder implements IgnoredRepla
 
     @Override
     public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, AUTOMATON_CURSIVE).stream()
-                .map(this::processMatchResult)
-                .collect(Collectors.toList());
+        return findMatchResults(text, AUTOMATON_CURSIVE);
     }
 
-    private IgnoredReplacement processMatchResult(IgnoredReplacement match) {
-        String text = match.getText();
+    @Override
+    public IgnoredReplacement convertMatch(int start, String text) {
         int end = text.endsWith("\n") ? text.length() : text.length() - 1;
-        return IgnoredReplacement.of(match.getStart() + 1, text.substring(1, end));
+        return IgnoredReplacement.of(start + 1, text.substring(1, end));
     }
 
 }

@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.IgnoredReplacement;
 
 import java.util.ArrayList;
@@ -16,8 +17,8 @@ class TemplateRegexClassFinder extends TemplateAbstractFinder {
 
     TemplateRegexClassFinder(List<String> words) {
         for (String word : words) {
-            if (startsWithLowerCase(word)) {
-                PATTERNS.add(Pattern.compile(String.format("\\{\\{\\s*%s\\s*[|:](%s|[^}])+?}}", setFirstUpperCaseClass(word), REGEX_TEMPLATE)));
+            if (FinderUtils.startsWithLowerCase(word)) {
+                PATTERNS.add(Pattern.compile(String.format("\\{\\{\\s*%s\\s*[|:](%s|[^}])+?}}", FinderUtils.setFirstUpperCaseClass(word), REGEX_TEMPLATE)));
             } else {
                 PATTERNS.add(Pattern.compile(String.format("\\{\\{\\s*%s\\s*[|:](%s|[^}])+?}}", word, REGEX_TEMPLATE)));
             }

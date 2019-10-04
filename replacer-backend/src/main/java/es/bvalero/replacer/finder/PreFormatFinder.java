@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 // For the moment we skip these exceptions. Cases within templates should not be ignored.
-public class PreFormatFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class PreFormatFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_PRE_FORMAT = "^ .+";

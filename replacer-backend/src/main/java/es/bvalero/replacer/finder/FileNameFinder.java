@@ -5,10 +5,9 @@ import dk.brics.automaton.RunAutomaton;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
-public class FileNameFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class FileNameFinder implements IgnoredReplacementFinder {
 
     // With this regex we also capture domains like www.google.com
     @org.intellij.lang.annotations.RegExp
@@ -17,17 +16,15 @@ public class FileNameFinder extends BaseReplacementFinder implements IgnoredRepl
 
     @Override
     public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, AUTOMATON_FILE_TAG).stream()
-                .map(this::processMatchResult)
-                .collect(Collectors.toList());
+        return findMatchResults(text, AUTOMATON_FILE_TAG);
     }
 
-    private IgnoredReplacement processMatchResult(IgnoredReplacement match) {
+    @Override
+    public IgnoredReplacement convertMatch(int start, String text) {
         // Remove the first and last characters and the possible surrounding spaces
-        String text = match.getText();
         String file = text.substring(1, text.length() - 1).trim();
         int pos = text.indexOf(file);
-        return IgnoredReplacement.of(match.getStart() + pos, file);
+        return IgnoredReplacement.of(start + pos, file);
     }
 
 }

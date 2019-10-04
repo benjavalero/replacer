@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 @Component
-public class TemplateFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class TemplateFinder implements IgnoredReplacementFinder {
 
     // The nested regex takes more but it is worth as it captures completely the templates with inner templates
     @org.intellij.lang.annotations.RegExp
@@ -27,8 +27,8 @@ public class TemplateFinder extends BaseReplacementFinder implements IgnoredRepl
     static {
         Set<String> wordsToJoin = new HashSet<>();
         for (String word : TEMPLATE_NAMES) {
-            if (startsWithLowerCase(word)) {
-                wordsToJoin.add(setFirstUpperCaseClass(word));
+            if (FinderUtils.startsWithLowerCase(word)) {
+                wordsToJoin.add(FinderUtils.setFirstUpperCaseClass(word));
             } else {
                 wordsToJoin.add(word);
             }

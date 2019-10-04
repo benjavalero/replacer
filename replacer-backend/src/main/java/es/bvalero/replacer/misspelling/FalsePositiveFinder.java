@@ -3,9 +3,9 @@ package es.bvalero.replacer.misspelling;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.IgnoredReplacement;
-import es.bvalero.replacer.finder.BaseReplacementFinder;
+import es.bvalero.replacer.finder.IgnoredReplacementFinder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
@@ -18,7 +18,6 @@ import java.beans.PropertyChangeListener;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Find misspelling replacements in a given text.
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class FalsePositiveFinder extends BaseReplacementFinder implements IgnoredReplacementFinder, PropertyChangeListener {
+public class FalsePositiveFinder implements IgnoredReplacementFinder, PropertyChangeListener {
 
     @Autowired
     private FalsePositiveManager falsePositiveManager;
@@ -62,9 +61,12 @@ public class FalsePositiveFinder extends BaseReplacementFinder implements Ignore
 
     @Override
     public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, this.falsePositivesAutomaton).stream()
-                .filter(m -> isWordCompleteInText(m.getStart(), m.getText(), text))
-                .collect(Collectors.toList());
+        return findMatchResults(text, this.falsePositivesAutomaton);
+    }
+
+    @Override
+    public boolean isValidMatch(int start, String matchedText, String fullText) {
+        return FinderUtils.isWordCompleteInText(start, matchedText, fullText);
     }
 
 }

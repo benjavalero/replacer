@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class InterLanguageLinkFinder extends BaseReplacementFinder implements IgnoredReplacementFinder {
+class InterLanguageLinkFinder implements IgnoredReplacementFinder {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_INTER_LANGUAGE_LINK = "\\[\\[:?[a-z]{2}:[^]]+]]";

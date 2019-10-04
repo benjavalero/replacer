@@ -84,8 +84,8 @@ public class CustomReplacementFinderTest {
         Assert.assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
 
         Assert.assertEquals(11, replacements.get(1).getStart());
-        Assert.assertEquals(BaseReplacementFinder.setFirstUpperCase(replacement), replacements.get(1).getText());
-        Assert.assertEquals(BaseReplacementFinder.setFirstUpperCase(suggestion), replacements.get(1).getSuggestions().get(0).getText());
+        Assert.assertEquals(FinderUtils.setFirstUpperCase(replacement), replacements.get(1).getText());
+        Assert.assertEquals(FinderUtils.setFirstUpperCase(suggestion), replacements.get(1).getSuggestions().get(0).getText());
     }
 
 }

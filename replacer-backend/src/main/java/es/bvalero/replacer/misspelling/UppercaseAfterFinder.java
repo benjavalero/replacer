@@ -3,9 +3,9 @@ package es.bvalero.replacer.misspelling;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.IgnoredReplacement;
-import es.bvalero.replacer.finder.BaseReplacementFinder;
+import es.bvalero.replacer.finder.IgnoredReplacementFinder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
@@ -18,11 +18,10 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class UppercaseAfterFinder extends BaseReplacementFinder implements IgnoredReplacementFinder, PropertyChangeListener {
+public class UppercaseAfterFinder implements IgnoredReplacementFinder, PropertyChangeListener {
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_UPPERCASE_AFTER_PUNCTUATION = "[!#*|=.]<Z>*(%s)";
@@ -60,7 +59,7 @@ public class UppercaseAfterFinder extends BaseReplacementFinder implements Ignor
         misspellings.forEach(misspelling -> {
             String word = misspelling.getWord();
             if (misspelling.isCaseSensitive()
-                    && startsWithUpperCase(word)
+                    && FinderUtils.startsWithUpperCase(word)
                     && misspelling.getSuggestions().size() == 1
                     && misspelling.getSuggestions().get(0).getText().equalsIgnoreCase(word)) {
                 this.uppercaseWords.add(word);
@@ -76,15 +75,14 @@ public class UppercaseAfterFinder extends BaseReplacementFinder implements Ignor
 
     @Override
     public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, this.uppercaseAfterAutomaton).stream()
-                .map(this::processMatchResult)
-                .collect(Collectors.toList());
+        return findMatchResults(text, this.uppercaseAfterAutomaton);
     }
 
-    private IgnoredReplacement processMatchResult(IgnoredReplacement match) {
-        String word = match.getText().substring(1).trim();
-        int start = match.getStart() + match.getText().indexOf(word);
-        return IgnoredReplacement.of(start, word);
+    @Override
+    public IgnoredReplacement convertMatch(int start, String text) {
+        String word = text.substring(1).trim();
+        int startPos = start + text.indexOf(word);
+        return IgnoredReplacement.of(startPos, word);
     }
 
 }
