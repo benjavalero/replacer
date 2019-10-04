@@ -19,7 +19,7 @@ public class CompleteTagFinder extends BaseReplacementFinder implements IgnoredR
             .collect(Collectors.toList());
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResultsFromPatterns(text, PATTERN_COMPLETE_TAGS);
     }
 

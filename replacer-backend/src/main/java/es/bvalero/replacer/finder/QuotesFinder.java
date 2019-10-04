@@ -29,7 +29,7 @@ public class QuotesFinder extends BaseReplacementFinder implements IgnoredReplac
             Arrays.asList(AUTOMATON_ANGULAR_QUOTES, AUTOMATON_TYPOGRAPHIC_QUOTES, AUTOMATON_DOUBLE_QUOTES);
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResultsFromAutomata(text, AUTOMATA_QUOTES);
     }
 

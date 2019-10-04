@@ -4,7 +4,7 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 
 import java.util.*;
 
@@ -19,14 +19,14 @@ class UppercaseAutomatonFinder extends UppercaseAbstractFinder {
         }
     }
 
-    Set<MatchResult> findMatches(String text) {
+    Set<IgnoredReplacement> findMatches(String text) {
         // We loop over all the words and find them in the text with an automaton
-        Set<MatchResult> matches = new HashSet<>();
+        Set<IgnoredReplacement> matches = new HashSet<>();
         for (Map.Entry<String, RunAutomaton> word : this.words.entrySet()) {
             AutomatonMatcher m = word.getValue().newMatcher(text);
             while (m.find()) {
                 int pos = m.group().indexOf(word.getKey());
-                matches.add(MatchResult.of(m.start() + pos, word.getKey()));
+                matches.add(IgnoredReplacement.of(m.start() + pos, word.getKey()));
             }
         }
         return matches;

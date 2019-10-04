@@ -4,7 +4,7 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import es.bvalero.replacer.finder.BaseReplacementFinder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -75,16 +75,16 @@ public class UppercaseAfterFinder extends BaseReplacementFinder implements Ignor
     }
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, this.uppercaseAfterAutomaton).stream()
                 .map(this::processMatchResult)
                 .collect(Collectors.toList());
     }
 
-    private MatchResult processMatchResult(MatchResult match) {
+    private IgnoredReplacement processMatchResult(IgnoredReplacement match) {
         String word = match.getText().substring(1).trim();
         int start = match.getStart() + match.getText().indexOf(word);
-        return MatchResult.of(start, word);
+        return IgnoredReplacement.of(start, word);
     }
 
 }

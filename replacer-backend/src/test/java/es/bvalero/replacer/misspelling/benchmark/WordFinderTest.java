@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class WordFinderTest {
 
     private Collection<String> words;
     private String text;
-    private Set<MatchResult> expected;
+    private Set<IgnoredReplacement> expected;
 
     @Before
     public void setUp() {
@@ -32,12 +32,12 @@ public class WordFinderTest {
         this.text = "Um suma um, españa um m2 España y Castilla-León + cd's.";
 
         this.expected = new HashSet<>();
-        this.expected.add(MatchResult.of(0, "Um"));
-        this.expected.add(MatchResult.of(8, "um"));
-        this.expected.add(MatchResult.of(12, "españa"));
-        this.expected.add(MatchResult.of(19, "um"));
-        this.expected.add(MatchResult.of(34, "Castilla-León"));
-        this.expected.add(MatchResult.of(50, "cd's"));
+        this.expected.add(IgnoredReplacement.of(0, "Um"));
+        this.expected.add(IgnoredReplacement.of(8, "um"));
+        this.expected.add(IgnoredReplacement.of(12, "españa"));
+        this.expected.add(IgnoredReplacement.of(19, "um"));
+        this.expected.add(IgnoredReplacement.of(34, "Castilla-León"));
+        this.expected.add(IgnoredReplacement.of(50, "cd's"));
     }
 
     @Test

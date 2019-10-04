@@ -15,7 +15,7 @@ public class CommentFinderTest {
 
         IgnoredReplacementFinder commentFinder = new CommentFinder();
 
-        List<MatchResult> matches = commentFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = commentFinder.findIgnoredReplacements(text);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(comment1, matches.get(0).getText());
         Assert.assertEquals(comment2, matches.get(1).getText());

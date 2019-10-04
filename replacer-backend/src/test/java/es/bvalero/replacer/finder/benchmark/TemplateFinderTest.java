@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class TemplateFinderTest {
 
     private List<String> words;
     private String text;
-    private Set<MatchResult> expected;
+    private Set<IgnoredReplacement> expected;
 
     @Before
     public void setUp() {
@@ -27,10 +27,10 @@ public class TemplateFinderTest {
         this.words = Arrays.asList("cita", "ORDENAR");
 
         this.expected = new HashSet<>();
-        this.expected.add(MatchResult.of(0, template1));
-        this.expected.add(MatchResult.of(45, template2));
-        this.expected.add(MatchResult.of(65, template3));
-        this.expected.add(MatchResult.of(94, template4));
+        this.expected.add(IgnoredReplacement.of(0, template1));
+        this.expected.add(IgnoredReplacement.of(45, template2));
+        this.expected.add(IgnoredReplacement.of(65, template3));
+        this.expected.add(IgnoredReplacement.of(94, template4));
     }
 
     @Test

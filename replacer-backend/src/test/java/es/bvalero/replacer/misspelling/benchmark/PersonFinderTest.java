@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class PersonFinderTest {
 
     private Collection<String> words;
     private String text;
-    private Set<MatchResult> expected;
+    private Set<IgnoredReplacement> expected;
 
     @Before
     public void setUp() {
@@ -22,8 +22,8 @@ public class PersonFinderTest {
         this.text = "Con Julio Verne, Frances McDormand y Francesco en Julio de 2019.";
 
         this.expected = new HashSet<>();
-        this.expected.add(MatchResult.of(4, "Julio"));
-        this.expected.add(MatchResult.of(17, "Frances"));
+        this.expected.add(IgnoredReplacement.of(4, "Julio"));
+        this.expected.add(IgnoredReplacement.of(17, "Frances"));
     }
 
     @Test

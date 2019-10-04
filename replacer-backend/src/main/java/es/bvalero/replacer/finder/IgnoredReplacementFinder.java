@@ -11,6 +11,6 @@ public interface IgnoredReplacementFinder {
     /**
      * @return A list of places in the text to be ignored.
      */
-    List<MatchResult> findIgnoredReplacements(String text);
+    List<IgnoredReplacement> findIgnoredReplacements(String text);
 
 }

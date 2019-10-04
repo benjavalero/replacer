@@ -16,7 +16,7 @@ public class XmlTagFinder extends BaseReplacementFinder implements IgnoredReplac
     private static final RunAutomaton AUTOMATON_XML_TAG = new RunAutomaton(new RegExp(REGEX_XML_TAG).toAutomaton());
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, AUTOMATON_XML_TAG);
     }
 

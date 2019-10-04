@@ -24,7 +24,7 @@ class SameLinkFinder extends BaseReplacementFinder implements ReplacementFinder 
             String title = matcher.group(2);
             if (isSameLink(link, title)) {
                 replacements.add(convertMatchResultToReplacement(
-                        MatchResult.of(matcher.start(), matcher.group()),
+                        IgnoredReplacement.of(matcher.start(), matcher.group()),
                         null,
                         null,
                         findSuggestions(title)));

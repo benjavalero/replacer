@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
@@ -18,12 +18,12 @@ class PersonAlternateRegexCompleteFinder extends PersonAbstractFinder {
         this.words = Pattern.compile(alternations);
     }
 
-    Set<MatchResult> findMatches(String text) {
+    Set<IgnoredReplacement> findMatches(String text) {
         // Build an alternate regex with all the complete words and match it against the text
-        Set<MatchResult> matches = new HashSet<>();
+        Set<IgnoredReplacement> matches = new HashSet<>();
         Matcher m = this.words.matcher(text);
         while (m.find()) {
-            matches.add(MatchResult.of(m.start(), m.group().substring(0, m.group().length() - 2)));
+            matches.add(IgnoredReplacement.of(m.start(), m.group().substring(0, m.group().length() - 2)));
         }
         return matches;
     }

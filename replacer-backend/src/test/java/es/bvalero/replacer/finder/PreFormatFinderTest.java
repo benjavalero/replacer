@@ -16,7 +16,7 @@ public class PreFormatFinderTest {
 
         IgnoredReplacementFinder preFormatFinder = new PreFormatFinder();
 
-        List<MatchResult> matches = preFormatFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = preFormatFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(1, matches.size());
         Assert.assertEquals(text2, matches.get(0).getText());

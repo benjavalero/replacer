@@ -47,35 +47,35 @@ public abstract class BaseReplacementFinder {
         return !Character.isLetterOrDigit(separator) && !invalidSeparators.contains(separator);
     }
 
-    protected static List<MatchResult> findMatchResults(String text, RunAutomaton automaton) {
-        List<MatchResult> matches = new ArrayList<>(100);
+    protected static List<IgnoredReplacement> findMatchResults(String text, RunAutomaton automaton) {
+        List<IgnoredReplacement> matches = new ArrayList<>(100);
         AutomatonMatcher matcher = automaton.newMatcher(text);
         while (matcher.find()) {
-            matches.add(MatchResult.of(matcher.start(), matcher.group()));
+            matches.add(IgnoredReplacement.of(matcher.start(), matcher.group()));
         }
         return matches;
     }
 
-    protected static List<MatchResult> findMatchResults(String text, Pattern pattern) {
-        List<MatchResult> matches = new ArrayList<>(100);
+    protected static List<IgnoredReplacement> findMatchResults(String text, Pattern pattern) {
+        List<IgnoredReplacement> matches = new ArrayList<>(100);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
-            matches.add(MatchResult.of(matcher.start(), matcher.group()));
+            matches.add(IgnoredReplacement.of(matcher.start(), matcher.group()));
         }
         return matches;
     }
 
-    static List<MatchResult> findMatchResultsFromAutomata(String text, List<RunAutomaton> automata) {
+    static List<IgnoredReplacement> findMatchResultsFromAutomata(String text, List<RunAutomaton> automata) {
         return automata.stream().map(automaton -> findMatchResults(text, automaton))
                 .flatMap(Collection::stream).collect(Collectors.toList());
     }
 
-    static List<MatchResult> findMatchResultsFromPatterns(String text, List<Pattern> patterns) {
+    static List<IgnoredReplacement> findMatchResultsFromPatterns(String text, List<Pattern> patterns) {
         return patterns.stream().map(pattern -> findMatchResults(text, pattern))
                 .flatMap(Collection::stream).collect(Collectors.toList());
     }
 
-    protected Replacement convertMatchResultToReplacement(MatchResult match, String type, String subtype,
+    protected Replacement convertMatchResultToReplacement(IgnoredReplacement match, String type, String subtype,
                                                           List<ReplacementSuggestion> suggestions) {
         return Replacement.builder()
                 .type(type)

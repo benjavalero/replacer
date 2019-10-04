@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-public class MatchResult {
+public class IgnoredReplacement {
 
     private int start;
     private String text;

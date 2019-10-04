@@ -15,7 +15,7 @@ public class UrlFinderTest {
 
         IgnoredReplacementFinder urlFinder = new UrlFinder();
 
-        List<MatchResult> matches = urlFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = urlFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(url1, matches.get(0).getText());
         Assert.assertEquals(url2, matches.get(1).getText());

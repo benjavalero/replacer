@@ -35,13 +35,13 @@ public class FileNameFinderTest {
         String text = String.format("%s %s %s %s %s %s %s", file1, file2, gallery1, param, gallery2, table, link);
 
         IgnoredReplacementFinder fileNameFinder = new FileNameFinder();
-        List<MatchResult> matches = fileNameFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = fileNameFinder.findIgnoredReplacements(text);
 
         Set<String> expected = new HashSet<>(Arrays.asList(
                 "xx.jpg", "a b.png", "aa.jpg", "abc.JPEG", "b-c.jpg",
                 "doc.pdf", "value.gif", "image.JPG", "dóc2.pdf", "Value_2.gif",
                 "www.google.com")); // We capture also Internet domains
-        Assert.assertEquals(expected, matches.stream().map(MatchResult::getText).collect(Collectors.toSet()));
+        Assert.assertEquals(expected, matches.stream().map(IgnoredReplacement::getText).collect(Collectors.toSet()));
     }
 
 }

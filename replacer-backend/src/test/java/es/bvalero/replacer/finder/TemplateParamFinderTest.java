@@ -18,7 +18,7 @@ public class TemplateParamFinderTest {
 
         IgnoredReplacementFinder templateParamFinder = new TemplateParamFinder();
 
-        List<MatchResult> matches = templateParamFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = templateParamFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(param1, matches.get(0).getText());
         Assert.assertEquals(param2, matches.get(1).getText());

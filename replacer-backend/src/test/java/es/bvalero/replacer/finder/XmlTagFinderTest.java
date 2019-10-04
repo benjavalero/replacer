@@ -16,7 +16,7 @@ public class XmlTagFinderTest {
 
         IgnoredReplacementFinder xmlTagFinder = new XmlTagFinder();
 
-        List<MatchResult> matches = xmlTagFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = xmlTagFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(tag1, matches.get(0).getText());
         Assert.assertEquals(tag2, matches.get(1).getText());
@@ -30,7 +30,7 @@ public class XmlTagFinderTest {
 
         IgnoredReplacementFinder xmlTagFinder = new XmlTagFinder();
 
-        List<MatchResult> matches = xmlTagFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = xmlTagFinder.findIgnoredReplacements(text);
         Assert.assertTrue(matches.isEmpty());
     }
 

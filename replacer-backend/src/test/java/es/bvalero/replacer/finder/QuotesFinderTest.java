@@ -16,7 +16,7 @@ public class QuotesFinderTest {
 
         IgnoredReplacementFinder quotesFinder = new QuotesFinder();
 
-        List<MatchResult> matches = quotesFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = quotesFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(quotes1, matches.get(0).getText());
         Assert.assertEquals(quotes2, matches.get(1).getText());
@@ -32,7 +32,7 @@ public class QuotesFinderTest {
 
         IgnoredReplacementFinder quotesFinder = new QuotesFinder();
 
-        List<MatchResult> matches = quotesFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = quotesFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(quotes1, matches.get(0).getText());
         Assert.assertEquals(quotes2, matches.get(1).getText());
@@ -48,7 +48,7 @@ public class QuotesFinderTest {
 
         IgnoredReplacementFinder quotesFinder = new QuotesFinder();
 
-        List<MatchResult> matches = quotesFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = quotesFinder.findIgnoredReplacements(text);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(quotes1, matches.get(0).getText());
         Assert.assertEquals(quotes2, matches.get(1).getText());

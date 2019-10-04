@@ -1,7 +1,7 @@
 package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,8 +15,8 @@ public class PersonNameFinder implements IgnoredReplacementFinder {
     private static final Collection<String> PERSON_NAMES = Arrays.asList("Domingo", "Frances", "Julio", "Sidney");
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
-        List<MatchResult> results = new ArrayList<>(100);
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
+        List<IgnoredReplacement> results = new ArrayList<>(100);
 
         // We loop over all the words and find them in the text with the indexOf function
         for (String word : PERSON_NAMES) {
@@ -25,7 +25,7 @@ public class PersonNameFinder implements IgnoredReplacementFinder {
                 start = text.indexOf(word, start);
                 if (start >= 0) {
                     if (isWordFollowedByUppercase(start, word, text)) {
-                        results.add(MatchResult.of(start, word));
+                        results.add(IgnoredReplacement.of(start, word));
                     }
                     start++;
                 }

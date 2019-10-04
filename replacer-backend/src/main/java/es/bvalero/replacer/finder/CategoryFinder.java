@@ -14,7 +14,7 @@ class CategoryFinder extends BaseReplacementFinder implements IgnoredReplacement
     private static final RunAutomaton AUTOMATON_CATEGORY = new RunAutomaton(new RegExp(REGEX_CATEGORY).toAutomaton());
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, AUTOMATON_CATEGORY);
     }
 

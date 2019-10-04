@@ -39,7 +39,7 @@ public class TemplateFinder extends BaseReplacementFinder implements IgnoredRepl
     }
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, AUTOMATON_TEMPLATE);
     }
 

@@ -21,11 +21,11 @@ public class CompleteTagFinderTest {
 
         IgnoredReplacementFinder completeTagFinder = new CompleteTagFinder();
 
-        List<MatchResult> matches = completeTagFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = completeTagFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
 
         Set<String> expected = new HashSet<>(Arrays.asList(tag1, tag2, tag3));
-        Set<String> actual = matches.stream().map(MatchResult::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(IgnoredReplacement::getText).collect(Collectors.toSet());
         Assert.assertEquals(expected, actual);
     }
 

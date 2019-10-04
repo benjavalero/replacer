@@ -16,7 +16,7 @@ public class UrlFinder extends BaseReplacementFinder implements IgnoredReplaceme
             new RunAutomaton(new RegExp(REGEX_URL).toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, AUTOMATON_URL);
     }
 

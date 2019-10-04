@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -17,16 +17,16 @@ class UppercaseIndexOfFinder extends UppercaseAbstractFinder {
         this.words = words;
     }
 
-    Set<MatchResult> findMatches(String text) {
+    Set<IgnoredReplacement> findMatches(String text) {
         // We loop over all the words and find them in the text with the indexOf function
-        Set<MatchResult> matches = new HashSet<>();
+        Set<IgnoredReplacement> matches = new HashSet<>();
         for (String word : this.words) {
             int start = 0;
             while (start >= 0) {
                 start = text.indexOf(word, start);
                 if (start >= 0) {
                     if (isWordPrecededByPunctuation(start, text)) {
-                        matches.add(MatchResult.of(start, word));
+                        matches.add(IgnoredReplacement.of(start, word));
                     }
                     start++;
                 }

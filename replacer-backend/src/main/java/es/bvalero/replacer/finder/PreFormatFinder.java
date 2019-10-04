@@ -11,7 +11,7 @@ public class PreFormatFinder extends BaseReplacementFinder implements IgnoredRep
     private static final Pattern PATTERN_PRE_FORMAT = Pattern.compile(REGEX_PRE_FORMAT, Pattern.MULTILINE);
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, PATTERN_PRE_FORMAT);
     }
 

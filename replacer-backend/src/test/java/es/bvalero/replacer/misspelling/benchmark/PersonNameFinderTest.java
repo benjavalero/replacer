@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import es.bvalero.replacer.misspelling.PersonNameFinder;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +23,7 @@ public class PersonNameFinderTest {
         String surname = "Verne";
         String text = "xxx " + noun + ' ' + surname + " zzz";
 
-        List<MatchResult> matches = personNameFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = personNameFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(1, matches.size());
         Assert.assertEquals(noun, matches.get(0).getText());

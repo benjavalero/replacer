@@ -16,7 +16,7 @@ public class LinkSuffixedFinder extends BaseReplacementFinder implements Ignored
             new RunAutomaton(new RegExp(REGEX_LINK_SUFFIXED).toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, AUTOMATON_LINK_SUFFIXED);
     }
 

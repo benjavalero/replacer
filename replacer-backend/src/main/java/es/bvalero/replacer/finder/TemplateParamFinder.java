@@ -16,14 +16,14 @@ public class TemplateParamFinder extends BaseReplacementFinder implements Ignore
             new RunAutomaton(new RegExp(REGEX_TEMPLATE_PARAM).toAutomaton());
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, AUTOMATON_TEMPLATE_PARAM).stream()
                 .map(this::processMatchResult)
                 .collect(Collectors.toList());
     }
 
-    private MatchResult processMatchResult(MatchResult match) {
-        return MatchResult.of(match.getStart() + 1, match.getText().substring(1, match.getText().length() - 1));
+    private IgnoredReplacement processMatchResult(IgnoredReplacement match) {
+        return IgnoredReplacement.of(match.getStart() + 1, match.getText().substring(1, match.getText().length() - 1));
     }
 
 }

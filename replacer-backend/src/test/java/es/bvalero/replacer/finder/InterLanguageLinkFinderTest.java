@@ -18,10 +18,10 @@ public class InterLanguageLinkFinderTest {
         String text = String.format("En %s %s %s %s.", link1, link2, link3, link4);
 
         IgnoredReplacementFinder interLanguageLinkFinder = new InterLanguageLinkFinder();
-        List<MatchResult> matches = interLanguageLinkFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = interLanguageLinkFinder.findIgnoredReplacements(text);
 
         Assert.assertEquals(Arrays.asList(link1, link2, link4),
-                matches.stream().map(MatchResult::getText).collect(Collectors.toList()));
+                matches.stream().map(IgnoredReplacement::getText).collect(Collectors.toList()));
     }
 
 }

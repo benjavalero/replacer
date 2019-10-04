@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -18,13 +18,13 @@ class WordRegexAllPossessiveFinder extends WordAbstractFinder {
         this.words = new HashSet<>(words);
     }
 
-    Set<MatchResult> findMatches(String text) {
+    Set<IgnoredReplacement> findMatches(String text) {
         // Find all words in the text with a regex and check if they are in the list
-        Set<MatchResult> matches = new HashSet<>();
+        Set<IgnoredReplacement> matches = new HashSet<>();
         Matcher m = this.wordPattern.matcher(text);
         while (m.find()) {
             if (this.words.contains(m.group())) {
-                matches.add(MatchResult.of(m.start(), m.group()));
+                matches.add(IgnoredReplacement.of(m.start(), m.group()));
             }
         }
         return matches;

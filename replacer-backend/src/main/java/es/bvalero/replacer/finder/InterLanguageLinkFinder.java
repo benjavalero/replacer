@@ -15,7 +15,7 @@ public class InterLanguageLinkFinder extends BaseReplacementFinder implements Ig
             new RunAutomaton(new RegExp(REGEX_INTER_LANGUAGE_LINK).toAutomaton());
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, AUTOMATON_INTER_LANGUAGE_LINK);
     }
 

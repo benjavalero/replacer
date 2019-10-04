@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashSet;
@@ -13,12 +13,12 @@ class ParameterValueRegexNoGroupFinder extends ParameterValueAbstractFinder {
     private static final Pattern PATTERN
             = Pattern.compile(String.format("\\|\\s*(?:%s)\\s*=[^|}]+", StringUtils.join(PARAMS, "|")));
 
-    Set<MatchResult> findMatches(String text) {
-        Set<MatchResult> matches = new HashSet<>();
+    Set<IgnoredReplacement> findMatches(String text) {
+        Set<IgnoredReplacement> matches = new HashSet<>();
         Matcher m = PATTERN.matcher(text);
         while (m.find()) {
             int pos = m.group().indexOf("=") + 1;
-            matches.add(MatchResult.of(m.start() + pos, m.group().substring(pos)));
+            matches.add(IgnoredReplacement.of(m.start() + pos, m.group().substring(pos)));
         }
         return matches;
     }

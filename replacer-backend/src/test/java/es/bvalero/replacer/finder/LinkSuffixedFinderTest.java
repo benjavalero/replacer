@@ -16,7 +16,7 @@ public class LinkSuffixedFinderTest {
 
         IgnoredReplacementFinder linkSuffixedFinder = new LinkSuffixedFinder();
 
-        List<MatchResult> matches = linkSuffixedFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = linkSuffixedFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(suffixed1, matches.get(0).getText());

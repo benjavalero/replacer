@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class FalseFinderTest {
 
     private Collection<String> words;
     private String text;
-    private Set<MatchResult> expected;
+    private Set<IgnoredReplacement> expected;
 
     @Before
     public void setUp() {
@@ -22,8 +22,8 @@ public class FalseFinderTest {
         this.text = "En Abril Victoria Abril salió con Aaron Carter.";
 
         this.expected = new HashSet<>();
-        this.expected.add(MatchResult.of(9, "Victoria Abril"));
-        this.expected.add(MatchResult.of(34, "Aaron Carter"));
+        this.expected.add(IgnoredReplacement.of(9, "Victoria Abril"));
+        this.expected.add(IgnoredReplacement.of(34, "Aaron Carter"));
     }
 
     /* NOTE: We can use the same finders that we use for misspellings just with a different set of words */

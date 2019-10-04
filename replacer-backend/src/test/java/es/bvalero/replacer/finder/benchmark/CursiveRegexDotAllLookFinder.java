@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,11 +13,11 @@ class CursiveRegexDotAllLookFinder extends CursiveAbstractFinder {
     private static final String CURSIVE_REGEX = "%s.*?(%s|\n)";
     private static final Pattern CURSIVE_PATTERN = Pattern.compile(String.format(CURSIVE_REGEX, TWO_QUOTES_ONLY, TWO_QUOTES_ONLY));
 
-    Set<MatchResult> findMatches(String text) {
-        Set<MatchResult> matches = new HashSet<>();
+    Set<IgnoredReplacement> findMatches(String text) {
+        Set<IgnoredReplacement> matches = new HashSet<>();
         Matcher m = CURSIVE_PATTERN.matcher(text);
         while (m.find()) {
-            matches.add(MatchResult.of(m.start(), m.group()));
+            matches.add(IgnoredReplacement.of(m.start(), m.group()));
         }
         return matches;
     }

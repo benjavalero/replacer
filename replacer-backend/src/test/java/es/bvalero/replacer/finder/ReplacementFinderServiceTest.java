@@ -55,7 +55,7 @@ public class ReplacementFinderServiceTest {
 
     @Test
     public void testFindReplacementsIgnoringExceptions() {
-        MatchResult ignored1 = MatchResult.of(0, "AB");
+        IgnoredReplacement ignored1 = IgnoredReplacement.of(0, "AB");
         Replacement replacement1 = Replacement.builder().start(1).text("B").build(); // Contained in ignored
         Replacement replacement2 = Replacement.builder().start(2).text("C").build(); // Not contained in ignored
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
@@ -65,7 +65,7 @@ public class ReplacementFinderServiceTest {
                 .thenReturn(Collections.singletonList(finder).iterator());
 
         IgnoredReplacementFinder ignoredFinder = Mockito.mock(IgnoredReplacementFinder.class);
-        List<MatchResult> ignored = Collections.singletonList(ignored1);
+        List<IgnoredReplacement> ignored = Collections.singletonList(ignored1);
         Mockito.when(ignoredFinder.findIgnoredReplacements(Mockito.anyString()))
                 .thenReturn(ignored);
         Mockito.when(ignoredReplacementFinders.iterator())

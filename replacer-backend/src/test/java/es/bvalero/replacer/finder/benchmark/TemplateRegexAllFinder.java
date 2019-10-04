@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashSet;
@@ -25,11 +25,11 @@ class TemplateRegexAllFinder extends TemplateAbstractFinder {
         pattern = Pattern.compile(String.format("\\{\\{\\s*(%s)\\s*[|:](%s|[^}])+?}}", StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE));
     }
 
-    Set<MatchResult> findMatches(String text) {
-        Set<MatchResult> matches = new HashSet<>();
+    Set<IgnoredReplacement> findMatches(String text) {
+        Set<IgnoredReplacement> matches = new HashSet<>();
         Matcher m = pattern.matcher(text);
         while (m.find()) {
-            matches.add(MatchResult.of(m.start(), m.group()));
+            matches.add(IgnoredReplacement.of(m.start(), m.group()));
         }
         return matches;
     }

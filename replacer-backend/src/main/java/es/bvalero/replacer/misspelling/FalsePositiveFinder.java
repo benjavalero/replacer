@@ -4,7 +4,7 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import es.bvalero.replacer.finder.BaseReplacementFinder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -61,7 +61,7 @@ public class FalsePositiveFinder extends BaseReplacementFinder implements Ignore
     }
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, this.falsePositivesAutomaton).stream()
                 .filter(m -> isWordCompleteInText(m.getStart(), m.getText(), text))
                 .collect(Collectors.toList());

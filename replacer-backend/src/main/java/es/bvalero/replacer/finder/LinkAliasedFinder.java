@@ -15,7 +15,7 @@ public class LinkAliasedFinder extends BaseReplacementFinder implements IgnoredR
             new RunAutomaton(new RegExp(REGEX_LINK_ALIASED).toAutomaton());
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, AUTOMATON_LINK_ALIASED);
     }
 

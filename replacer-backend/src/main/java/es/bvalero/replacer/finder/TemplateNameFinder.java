@@ -16,15 +16,15 @@ public class TemplateNameFinder extends BaseReplacementFinder implements Ignored
             new RunAutomaton(new RegExp(REGEX_TEMPLATE_NAME).toAutomaton());
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, AUTOMATON_TEMPLATE_NAME).stream()
                 .map(this::processMatchResult)
                 .collect(Collectors.toList());
     }
 
-    private MatchResult processMatchResult(MatchResult match) {
+    private IgnoredReplacement processMatchResult(IgnoredReplacement match) {
         // Remove the first 2 characters corresponding to the opening curly braces
-        return MatchResult.of(match.getStart() + 2, match.getText().substring(2));
+        return IgnoredReplacement.of(match.getStart() + 2, match.getText().substring(2));
     }
 
 }

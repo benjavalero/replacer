@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.HashSet;
 import java.util.List;
 
 public class ParameterValueFinderTest {
@@ -16,7 +15,7 @@ public class ParameterValueFinderTest {
 
         IgnoredReplacementFinder parameterValueFinder = new ParameterValueFinder();
 
-        List<MatchResult> matches = parameterValueFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = parameterValueFinder.findIgnoredReplacements(text);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(value1, matches.get(0).getText());
         Assert.assertEquals(value2, matches.get(1).getText());

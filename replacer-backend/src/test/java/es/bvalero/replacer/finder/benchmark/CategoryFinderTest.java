@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.util.Set;
 public class CategoryFinderTest {
 
     private String text;
-    private Set<MatchResult> expected;
+    private Set<IgnoredReplacement> expected;
 
     @Before
     public void setUp() {
@@ -20,8 +20,8 @@ public class CategoryFinderTest {
         this.text = String.format("%s %s", category1, category2);
 
         this.expected = new HashSet<>();
-        this.expected.add(MatchResult.of(0, category1));
-        this.expected.add(MatchResult.of(21, category2));
+        this.expected.add(IgnoredReplacement.of(0, category1));
+        this.expected.add(IgnoredReplacement.of(21, category2));
     }
 
     @Test

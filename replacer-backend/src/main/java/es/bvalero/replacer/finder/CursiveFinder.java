@@ -19,16 +19,16 @@ public class CursiveFinder extends BaseReplacementFinder implements IgnoredRepla
             String.format(REGEX_CURSIVE, REGEX_TWO_QUOTES_ONLY, REGEX_TWO_QUOTES_ONLY)).toAutomaton());
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, AUTOMATON_CURSIVE).stream()
                 .map(this::processMatchResult)
                 .collect(Collectors.toList());
     }
 
-    private MatchResult processMatchResult(MatchResult match) {
+    private IgnoredReplacement processMatchResult(IgnoredReplacement match) {
         String text = match.getText();
         int end = text.endsWith("\n") ? text.length() : text.length() - 1;
-        return MatchResult.of(match.getStart() + 1, text.substring(1, end));
+        return IgnoredReplacement.of(match.getStart() + 1, text.substring(1, end));
     }
 
 }

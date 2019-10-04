@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.util.Set;
 public class FileFinderTest {
 
     private String text;
-    private Set<MatchResult> expected;
+    private Set<IgnoredReplacement> expected;
 
     @Before
     public void setUp() {
@@ -35,15 +35,15 @@ public class FileFinderTest {
         this.text = String.format("%s %s %s %s %s %s", file1, file2, gallery1, param, gallery2, table);
 
         this.expected = new HashSet<>();
-        this.expected.add(MatchResult.of(7, "xx.jpg"));
-        this.expected.add(MatchResult.of(25, "a b.png"));
-        this.expected.add(MatchResult.of(52, "aa.jpg"));
-        this.expected.add(MatchResult.of(67, "b-c.jpg"));
-        this.expected.add(MatchResult.of(113, "doc.pdf"));
-        this.expected.add(MatchResult.of(141, "value.gif"));
-        this.expected.add(MatchResult.of(165, "dóc2.pdf"));
-        this.expected.add(MatchResult.of(186, "Value_2.gif"));
-        this.expected.add(MatchResult.of(237, "www.google.com")); // We capture also Internet domains
+        this.expected.add(IgnoredReplacement.of(7, "xx.jpg"));
+        this.expected.add(IgnoredReplacement.of(25, "a b.png"));
+        this.expected.add(IgnoredReplacement.of(52, "aa.jpg"));
+        this.expected.add(IgnoredReplacement.of(67, "b-c.jpg"));
+        this.expected.add(IgnoredReplacement.of(113, "doc.pdf"));
+        this.expected.add(IgnoredReplacement.of(141, "value.gif"));
+        this.expected.add(IgnoredReplacement.of(165, "dóc2.pdf"));
+        this.expected.add(IgnoredReplacement.of(186, "Value_2.gif"));
+        this.expected.add(IgnoredReplacement.of(237, "www.google.com")); // We capture also Internet domains
     }
 
     @Test

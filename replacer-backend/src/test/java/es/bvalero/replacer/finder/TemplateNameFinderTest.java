@@ -17,7 +17,7 @@ public class TemplateNameFinderTest {
 
         IgnoredReplacementFinder templateNameFinder = new TemplateNameFinder();
 
-        List<MatchResult> matches = templateNameFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = templateNameFinder.findIgnoredReplacements(text);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(template1, matches.get(0).getText());
         Assert.assertEquals(template2, matches.get(1).getText());

@@ -15,7 +15,7 @@ public class CategoryFinderTest {
 
         IgnoredReplacementFinder categoryFinder = new CategoryFinder();
 
-        List<MatchResult> matches = categoryFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = categoryFinder.findIgnoredReplacements(text);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(category1, matches.get(0).getText());
         Assert.assertEquals(category2, matches.get(1).getText());

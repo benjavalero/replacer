@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class UppercaseFinderTest {
 
     private Collection<String> words;
     private String text;
-    private Set<MatchResult> expected;
+    private Set<IgnoredReplacement> expected;
 
     @Before
     public void setUp() {
@@ -22,9 +22,9 @@ public class UppercaseFinderTest {
         this.text = "=Enero. Febrero, Lunes #  Martes.";
 
         this.expected = new HashSet<>();
-        this.expected.add(MatchResult.of(1, "Enero"));
-        this.expected.add(MatchResult.of(8, "Febrero"));
-        this.expected.add(MatchResult.of(26, "Martes"));
+        this.expected.add(IgnoredReplacement.of(1, "Enero"));
+        this.expected.add(IgnoredReplacement.of(8, "Febrero"));
+        this.expected.add(IgnoredReplacement.of(26, "Martes"));
     }
 
     @Test

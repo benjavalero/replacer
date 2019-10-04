@@ -1,18 +1,17 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 public class CommentFinderTest {
 
     private String text;
-    private Set<MatchResult> expected;
+    private Set<IgnoredReplacement> expected;
 
     @Before
     public void setUp() {
@@ -21,8 +20,8 @@ public class CommentFinderTest {
         this.text = "xxx " + comment1 + " / " + comment2 + " zzz";
 
         this.expected = new HashSet<>();
-        this.expected.add(MatchResult.of(4, comment1));
-        this.expected.add(MatchResult.of(53, comment2));
+        this.expected.add(IgnoredReplacement.of(4, comment1));
+        this.expected.add(IgnoredReplacement.of(53, comment2));
     }
 
     @Test

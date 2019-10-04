@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.util.Set;
 public class CursiveFinderTest {
 
     private String text;
-    private Set<MatchResult> expected;
+    private Set<IgnoredReplacement> expected;
 
     @Before
     public void setUp() {
@@ -24,11 +24,11 @@ public class CursiveFinderTest {
         this.text = String.format("A %s - %s - %s - %s - %s.", cursive1, cursive2, cursive3, cursive4, cursive5);
 
         this.expected = new HashSet<>();
-        this.expected.add(MatchResult.of(2, cursive1));
-        this.expected.add(MatchResult.of(17, cursive2));
-        this.expected.add(MatchResult.of(32, cursive3));
-        this.expected.add(MatchResult.of(46, cursive4));
-        this.expected.add(MatchResult.of(76, cursive5));
+        this.expected.add(IgnoredReplacement.of(2, cursive1));
+        this.expected.add(IgnoredReplacement.of(17, cursive2));
+        this.expected.add(IgnoredReplacement.of(32, cursive3));
+        this.expected.add(IgnoredReplacement.of(46, cursive4));
+        this.expected.add(IgnoredReplacement.of(76, cursive5));
     }
 
     @Test

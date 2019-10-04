@@ -15,15 +15,15 @@ public class DomainFinder extends BaseReplacementFinder implements IgnoredReplac
     private static final RunAutomaton AUTOMATON_DOMAIN = new RunAutomaton(new RegExp(REGEX_DOMAIN).toAutomaton());
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, AUTOMATON_DOMAIN).stream()
                 .map(this::processMatchResult)
                 .collect(Collectors.toList());
     }
 
-    private MatchResult processMatchResult(MatchResult match) {
+    private IgnoredReplacement processMatchResult(IgnoredReplacement match) {
         // Remove the last character
-        return MatchResult.of(match.getStart(), match.getText().substring(0, match.getText().length() - 1));
+        return IgnoredReplacement.of(match.getStart(), match.getText().substring(0, match.getText().length() - 1));
     }
 
 }

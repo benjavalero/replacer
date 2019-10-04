@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,14 +25,14 @@ public class FalsePositiveFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
 
-        List<MatchResult> matches = falsePositiveFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = falsePositiveFinder.findIgnoredReplacements(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(4, matches.size());
-        Assert.assertTrue(matches.contains(MatchResult.of(3, "sólo")));
-        Assert.assertTrue(matches.contains(MatchResult.of(11, "éstos")));
-        Assert.assertTrue(matches.contains(MatchResult.of(23, "Index")));
-        Assert.assertTrue(matches.contains(MatchResult.of(29, "Online")));
+        Assert.assertTrue(matches.contains(IgnoredReplacement.of(3, "sólo")));
+        Assert.assertTrue(matches.contains(IgnoredReplacement.of(11, "éstos")));
+        Assert.assertTrue(matches.contains(IgnoredReplacement.of(23, "Index")));
+        Assert.assertTrue(matches.contains(IgnoredReplacement.of(29, "Online")));
     }
 
     @Test
@@ -43,20 +43,20 @@ public class FalsePositiveFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
 
-        List<MatchResult> matches1 = falsePositiveFinder.findIgnoredReplacements(text1);
+        List<IgnoredReplacement> matches1 = falsePositiveFinder.findIgnoredReplacements(text1);
 
         Assert.assertFalse(matches1.isEmpty());
         Assert.assertEquals(1, matches1.size());
-        Assert.assertTrue(matches1.contains(MatchResult.of(2, "Top Album")));
+        Assert.assertTrue(matches1.contains(IgnoredReplacement.of(2, "Top Album")));
         // Only the first match is found
-        Assert.assertFalse(matches1.contains(MatchResult.of(6, "Album Chart")));
+        Assert.assertFalse(matches1.contains(IgnoredReplacement.of(6, "Album Chart")));
 
         String text2 = "A Topp Album Chart.";
-        List<MatchResult> matches2 = falsePositiveFinder.findIgnoredReplacements(text2);
+        List<IgnoredReplacement> matches2 = falsePositiveFinder.findIgnoredReplacements(text2);
 
         Assert.assertFalse(matches2.isEmpty());
         Assert.assertEquals(1, matches2.size());
-        Assert.assertTrue(matches2.contains(MatchResult.of(7, "Album Chart")));
+        Assert.assertTrue(matches2.contains(IgnoredReplacement.of(7, "Album Chart")));
     }
 
 }

@@ -4,7 +4,7 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 
 import java.util.*;
 
@@ -19,14 +19,14 @@ class WordAutomatonFinder extends WordAbstractFinder {
         }
     }
 
-    Set<MatchResult> findMatches(String text) {
+    Set<IgnoredReplacement> findMatches(String text) {
         // We loop over all the words and find them in the text with an automaton
-        Set<MatchResult> matches = new HashSet<>();
+        Set<IgnoredReplacement> matches = new HashSet<>();
         for (RunAutomaton word : this.words) {
             AutomatonMatcher m = word.newMatcher(text);
             while (m.find()) {
                 if (isWordCompleteInText(m.start(), m.group(), text)) {
-                    matches.add(MatchResult.of(m.start(), m.group()));
+                    matches.add(IgnoredReplacement.of(m.start(), m.group()));
                 }
             }
         }

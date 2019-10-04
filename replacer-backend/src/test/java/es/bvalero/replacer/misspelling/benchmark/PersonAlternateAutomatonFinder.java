@@ -3,7 +3,7 @@ package es.bvalero.replacer.misspelling.benchmark;
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
@@ -19,13 +19,13 @@ class PersonAlternateAutomatonFinder extends PersonAbstractFinder {
         this.words = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
 
-    Set<MatchResult> findMatches(String text) {
+    Set<IgnoredReplacement> findMatches(String text) {
         // Build an alternate automaton with all the words and match it against the text
-        Set<MatchResult> matches = new HashSet<>();
+        Set<IgnoredReplacement> matches = new HashSet<>();
         AutomatonMatcher m = this.words.newMatcher(text);
         while (m.find()) {
             if (isWordFollowedByUppercase(m.start(), m.group(), text)) {
-                matches.add(MatchResult.of(m.start(), m.group()));
+                matches.add(IgnoredReplacement.of(m.start(), m.group()));
             }
         }
         return matches;

@@ -16,7 +16,7 @@ public class LinkAliasedFinderTest {
 
         IgnoredReplacementFinder linkAliasedFinder = new LinkAliasedFinder();
 
-        List<MatchResult> matches = linkAliasedFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = linkAliasedFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(aliased1, matches.get(0).getText());

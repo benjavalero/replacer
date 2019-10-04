@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,7 @@ public class CompleteTagFinderTest {
 
     private List<String> words;
     private String text;
-    private Set<MatchResult> expected;
+    private Set<IgnoredReplacement> expected;
 
     @Before
     public void setUp() {
@@ -27,9 +27,9 @@ public class CompleteTagFinderTest {
         this.text = String.format("%s %s %s", tag1, tag2, tag3);
 
         this.expected = new HashSet<>();
-        this.expected.add(MatchResult.of(0, tag1));
-        this.expected.add(MatchResult.of(46, tag2));
-        this.expected.add(MatchResult.of(87, tag3));
+        this.expected.add(IgnoredReplacement.of(0, tag1));
+        this.expected.add(IgnoredReplacement.of(46, tag2));
+        this.expected.add(IgnoredReplacement.of(87, tag3));
     }
 
     @Test

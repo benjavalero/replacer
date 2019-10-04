@@ -13,7 +13,7 @@ class CommentFinder extends BaseReplacementFinder implements IgnoredReplacementF
     private static final Pattern PATTERN_COMMENT_TAG = Pattern.compile(REGEX_COMMENT_TAG, Pattern.DOTALL);
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, PATTERN_COMMENT_TAG);
     }
 

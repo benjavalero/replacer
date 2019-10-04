@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +10,6 @@ abstract class ParameterValueAbstractFinder {
 
     static final List<String> PARAMS = Arrays.asList("índice", "index", "cita", "location", "ubicación");
 
-    abstract Set<MatchResult> findMatches(String text);
+    abstract Set<IgnoredReplacement> findMatches(String text);
 
 }

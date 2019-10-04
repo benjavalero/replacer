@@ -19,15 +19,15 @@ public class ParameterValueFinder extends BaseReplacementFinder implements Ignor
                     .toAutomaton(new DatatypesAutomatonProvider()));
 
     @Override
-    public List<MatchResult> findIgnoredReplacements(String text) {
+    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
         return findMatchResults(text, AUTOMATON_PARAM_VALUE).stream()
                 .map(this::processMatchResult)
                 .collect(Collectors.toList());
     }
 
-    private MatchResult processMatchResult(MatchResult match) {
+    private IgnoredReplacement processMatchResult(IgnoredReplacement match) {
         int pos = match.getText().indexOf('=') + 1;
-        return MatchResult.of(match.getStart() + pos, match.getText().substring(pos));
+        return IgnoredReplacement.of(match.getStart() + pos, match.getText().substring(pos));
     }
 
 }

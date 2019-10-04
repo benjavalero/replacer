@@ -28,13 +28,13 @@ class CustomReplacementFinder extends BaseReplacementFinder {
                 .collect(Collectors.toList());
     }
 
-    private List<MatchResult> findMatches(String text, String regex) {
-        List<MatchResult> matches = new ArrayList<>(100);
+    private List<IgnoredReplacement> findMatches(String text, String regex) {
+        List<IgnoredReplacement> matches = new ArrayList<>(100);
         RunAutomaton automaton = new RunAutomaton(new RegExp(regex).toAutomaton());
         AutomatonMatcher m = automaton.newMatcher(text);
         while (m.find()) {
             if (isWordCompleteInText(m.start(), m.group(), text)) {
-                matches.add(MatchResult.of(m.start(), m.group()));
+                matches.add(IgnoredReplacement.of(m.start(), m.group()));
             }
         }
         return matches;

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import java.util.Set;
 public class ParameterValueFinderTest {
 
     private String text;
-    private Set<MatchResult> expected;
+    private Set<IgnoredReplacement> expected;
 
     @Before
     public void setUp() {
@@ -20,8 +20,8 @@ public class ParameterValueFinderTest {
         this.text = String.format("{{Template|index=%s| location =%s}}", value1, value2);
 
         this.expected = new HashSet<>();
-        this.expected.add(MatchResult.of(17, value1));
-        this.expected.add(MatchResult.of(37, value2));
+        this.expected.add(IgnoredReplacement.of(17, value1));
+        this.expected.add(IgnoredReplacement.of(37, value2));
     }
 
     @Test

@@ -17,10 +17,10 @@ public class DomainFinderTest {
         String text = String.format("En %s %s http://%s.", domain1, domain2, domain3);
 
         IgnoredReplacementFinder domainFinder = new DomainFinder();
-        List<MatchResult> matches = domainFinder.findIgnoredReplacements(text);
+        List<IgnoredReplacement> matches = domainFinder.findIgnoredReplacements(text);
 
         Assert.assertEquals(Arrays.asList(domain1, domain2, domain3),
-                matches.stream().map(MatchResult::getText).collect(Collectors.toList()));
+                matches.stream().map(IgnoredReplacement::getText).collect(Collectors.toList()));
     }
 
 }

@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.benchmark;
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.MatchResult;
+import es.bvalero.replacer.finder.IgnoredReplacement;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,12 +27,12 @@ class TemplateAutomatonFinder extends TemplateAbstractFinder {
         }
     }
 
-    Set<MatchResult> findMatches(String text) {
-        Set<MatchResult> matches = new HashSet<>();
+    Set<IgnoredReplacement> findMatches(String text) {
+        Set<IgnoredReplacement> matches = new HashSet<>();
         for (RunAutomaton automaton : AUTOMATA) {
             AutomatonMatcher m = automaton.newMatcher(text);
             while (m.find()) {
-                matches.add(MatchResult.of(m.start(), m.group()));
+                matches.add(IgnoredReplacement.of(m.start(), m.group()));
             }
         }
         return matches;

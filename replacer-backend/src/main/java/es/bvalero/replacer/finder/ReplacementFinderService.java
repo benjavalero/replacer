@@ -86,7 +86,7 @@ public class ReplacementFinderService {
     private void removeIgnoredReplacements(String text, List<Replacement> replacements) {
         for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
             LOGGER.debug("- START Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
-            List<MatchResult> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
+            List<IgnoredReplacement> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
             LOGGER.debug("- Found ignored of type: {}", ignoredReplacements);
             LOGGER.debug("- END Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
             replacements.removeIf(replacement -> isReplacementContainedInMatchResultList(replacement, ignoredReplacements));
@@ -97,11 +97,11 @@ public class ReplacementFinderService {
         }
     }
 
-    private boolean isReplacementContainedInMatchResultList(Replacement replacement, List<MatchResult> matchResults) {
+    private boolean isReplacementContainedInMatchResultList(Replacement replacement, List<IgnoredReplacement> matchResults) {
         return matchResults.stream().anyMatch(match -> isReplacementContainedInMatchResult(replacement, match));
     }
 
-    private boolean isReplacementContainedInMatchResult(Replacement replacement, MatchResult matchResult) {
+    private boolean isReplacementContainedInMatchResult(Replacement replacement, IgnoredReplacement matchResult) {
         return isIntervalContainedInInterval(replacement.getStart(), replacement.getEnd(), matchResult.getStart(), matchResult.getEnd());
     }
 
@@ -118,7 +118,7 @@ public class ReplacementFinderService {
 
         // Ignore the replacements which must be ignored
         for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
-            List<MatchResult> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
+            List<IgnoredReplacement> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
             replacements.removeIf(artRep -> isReplacementContainedInMatchResultList(artRep, ignoredReplacements));
 
             if (replacements.isEmpty()) {
