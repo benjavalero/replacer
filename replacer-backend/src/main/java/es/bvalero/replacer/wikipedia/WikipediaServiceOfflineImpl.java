@@ -97,4 +97,9 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
         return Collections.emptyList();
     }
 
+    @Override
+    public boolean isAdminUser(String username) {
+        return true;
+    }
+
 }

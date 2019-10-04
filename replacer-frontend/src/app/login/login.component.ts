@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { AuthenticationService } from '../authentication/authentication.service';
 import { OauthToken } from '../authentication/oauth-token.model';
+import { OauthUrl } from '../authentication/oauth-url.model';
 import { AlertService } from '../alert/alert.service';
 
 @Component({
@@ -57,8 +58,8 @@ export class LoginComponent implements OnInit {
       this.authenticationService.requestToken = token;
 
       // Retrieve the authorization URL to redirect
-      this.authenticationService.generateAuthorizationUrl().subscribe((url: string) => {
-        this.authorizationUrl = url;
+      this.authenticationService.generateAuthorizationUrl().subscribe((oauthUrl: OauthUrl) => {
+        this.authorizationUrl = oauthUrl.url;
         this.alertService.clearAlertMessages();
       });
     }, (err) => {

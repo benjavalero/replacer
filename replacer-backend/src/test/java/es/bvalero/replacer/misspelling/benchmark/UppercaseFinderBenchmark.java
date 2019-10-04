@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling.benchmark;
 
-import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
+import es.bvalero.replacer.authentication.AuthenticationConfig;
 import es.bvalero.replacer.misspelling.MisspellingManager;
 import es.bvalero.replacer.misspelling.UppercaseAfterFinder;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -22,11 +22,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {UppercaseAfterFinder.class, MisspellingManager.class, WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
+@ContextConfiguration(classes = {UppercaseAfterFinder.class, MisspellingManager.class, WikipediaServiceImpl.class, AuthenticationConfig.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class UppercaseFinderBenchmark {
 

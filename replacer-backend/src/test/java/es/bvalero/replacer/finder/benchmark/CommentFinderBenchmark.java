@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.authentication.AuthenticationServiceImpl;
+import es.bvalero.replacer.authentication.AuthenticationConfig;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -19,11 +19,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {WikipediaServiceImpl.class, AuthenticationServiceImpl.class},
+@ContextConfiguration(classes = {WikipediaServiceImpl.class, AuthenticationConfig.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class CommentFinderBenchmark {
 

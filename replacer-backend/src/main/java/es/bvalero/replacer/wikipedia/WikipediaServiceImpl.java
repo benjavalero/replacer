@@ -3,17 +3,21 @@ package es.bvalero.replacer.wikipedia;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
-import es.bvalero.replacer.authentication.AuthenticationException;
-import es.bvalero.replacer.authentication.AuthenticationService;
+import com.github.scribejava.core.model.OAuthRequest;
+import com.github.scribejava.core.model.Response;
+import com.github.scribejava.core.model.Verb;
+import com.github.scribejava.core.oauth.OAuth10aService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -36,7 +40,10 @@ public class WikipediaServiceImpl implements WikipediaService {
     private static final String PARAM_PAGE_IDS = "pageids";
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private OAuth10aService oAuthService;
+
+    @Value("${replacer.admin.user}")
+    private String adminUser;
 
     private JsonNode executeWikipediaApiRequest(Map<String, String> params, boolean post, OAuth1AccessToken accessToken)
             throws WikipediaException {
@@ -46,17 +53,62 @@ public class WikipediaServiceImpl implements WikipediaService {
             params.put("format", "json");
             params.put("formatversion", "2");
 
-            response = authenticationService.executeOAuthRequest(WIKIPEDIA_API_URL, params, post, accessToken);
+            response = executeOAuthRequest(params, post, accessToken);
             JsonNode json = JSON_MAPPER.readTree(response);
             handleErrorsInJsonResponse(json);
             return json;
-        } catch (AuthenticationException e) {
-            LOGGER.error("Error authenticating wit Wikipedia API", e);
-            throw new WikipediaException("Error authenticating wit Wikipedia API");
         } catch (IOException e) {
             LOGGER.error("Error handling response from Wikipedia: {}", response, e);
             throw new WikipediaException(String.format("Error handling response from Wikipedia: %s", response));
         }
+    }
+
+    /**
+     * Execute an OAuth Request on the Wikipedia API.
+     *
+     * @param params      A key-value map with the parameters sent on the request.
+     * @param post        True if the request is to be done as POST. If not, the request will be GET.
+     * @param accessToken If not null, the request will be signed with it.
+     * @return The body response as a string.
+     */
+    private String executeOAuthRequest(Map<String, String> params, boolean post, @Nullable OAuth1AccessToken accessToken)
+            throws WikipediaException {
+        boolean signed = accessToken != null && StringUtils.isNotBlank(accessToken.getToken());
+        LOGGER.debug("START Execute OAuth Request. Params: {} - Post: {} - Signed: {}", params, post, signed);
+        OAuthRequest request = createOAuthRequestWithParams(params, post);
+        if (signed) {
+            signOAuthRequest(request, accessToken);
+        }
+
+        try {
+            Response response = oAuthService.execute(request);
+            String body = response.getBody();
+            if (body == null || !response.isSuccessful()) {
+                throw new WikipediaException(String.format("Call not successful: %d - %s",
+                        response.getCode(), response.getMessage()));
+            }
+            LOGGER.debug("END Execute OAuth Request. Response: {}", body);
+            return body;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new WikipediaException("ERROR executing OAuth Request", e);
+        } catch (ExecutionException | IOException e) {
+            throw new WikipediaException("ERROR executing OAuth Request", e);
+        }
+    }
+
+    private OAuthRequest createOAuthRequestWithParams(Map<String, String> params, boolean post) {
+        OAuthRequest request = new OAuthRequest(post ? Verb.POST : Verb.GET, WikipediaServiceImpl.WIKIPEDIA_API_URL);
+        addParametersToRequest(request, params);
+        return request;
+    }
+
+    private void addParametersToRequest(OAuthRequest request, Map<String, String> params) {
+        params.forEach(request::addParameter);
+    }
+
+    private void signOAuthRequest(OAuthRequest request, OAuth1AccessToken accessToken) {
+        oAuthService.signRequest(accessToken, request);
     }
 
     private void handleErrorsInJsonResponse(JsonNode json) throws WikipediaException {
@@ -287,6 +339,11 @@ public class WikipediaServiceImpl implements WikipediaService {
         List<WikipediaSection> sections = extractSectionsFromApiResponse(jsonResponse);
         LOGGER.info("END Get page sections. Items found: {}", sections.size());
         return sections;
+    }
+
+    @Override
+    public boolean isAdminUser(String username) {
+        return this.adminUser.equals(username);
     }
 
     private List<WikipediaSection> extractSectionsFromApiResponse(JsonNode json) {

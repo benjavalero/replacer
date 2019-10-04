@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { OauthToken } from './oauth-token.model';
+import { OauthUrl } from './oauth-url.model';
 import { User } from './user.model';
 import { AlertService } from '../alert/alert.service';
 
@@ -24,11 +25,11 @@ export class AuthenticationService {
     return this.httpClient.get<OauthToken>(`${environment.apiUrl}/authentication/requestToken`);
   }
 
-  generateAuthorizationUrl(): Observable<string> {
+  generateAuthorizationUrl(): Observable<OauthUrl> {
     let params = new HttpParams();
     params = params.append('token', this.requestToken.token);
 
-    return this.httpClient.get<string>(`${environment.apiUrl}/authentication/authorizationUrl`, { params });
+    return this.httpClient.get<OauthUrl>(`${environment.apiUrl}/authentication/authorizationUrl`, { params });
   }
 
   generateAccessToken(verificationToken: string): Observable<OauthToken> {
@@ -87,7 +88,7 @@ export class AuthenticationService {
     params = params.append('token', this.accessToken.token);
     params = params.append('tokenSecret', this.accessToken.tokenSecret);
 
-    this.httpClient.get<User>(`${environment.apiUrl}/authentication/username`, { params })
+    this.httpClient.get<User>(`${environment.apiUrl}/wikipedia/username`, { params })
       .subscribe((user: User) => {
         this.user = user;
       }, (err) => {

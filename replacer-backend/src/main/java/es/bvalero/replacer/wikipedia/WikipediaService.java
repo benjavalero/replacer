@@ -42,4 +42,6 @@ public interface WikipediaService {
 
     List<WikipediaSection> getPageSections(int pageId) throws WikipediaException;
 
+    boolean isAdminUser(String username);
+
 }
