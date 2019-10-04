@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.ArticleIndexService;
-import es.bvalero.replacer.article.Replacement;
+import es.bvalero.replacer.article.ReplacementEntity;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
@@ -79,7 +79,7 @@ public class DumpArticleProcessorTest {
                 .lastUpdate(yesterday)
                 .build();
 
-        Replacement replacement = new Replacement(1, "", "", 1)
+        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1)
                 .withLastUpdate(today.toLocalDate());
         Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt()))
                 .thenReturn(Collections.singleton(replacement));
@@ -98,7 +98,7 @@ public class DumpArticleProcessorTest {
                 .lastUpdate(yesterday)
                 .build();
 
-        Replacement replacement = new Replacement(1, "", "", 1)
+        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1)
                 .withLastUpdate(today.toLocalDate());
         Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt()))
                 .thenReturn(Collections.singleton(replacement));
@@ -116,7 +116,7 @@ public class DumpArticleProcessorTest {
                 .lastUpdate(today)
                 .build();
 
-        Replacement replacement = new Replacement(1, "", "", 1)
+        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1)
                 .withLastUpdate(today.toLocalDate());
         Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt()))
                 .thenReturn(Collections.singleton(replacement));
@@ -135,7 +135,7 @@ public class DumpArticleProcessorTest {
                 .lastUpdate(today)
                 .build();
 
-        Replacement replacement = new Replacement(1, "", "", 1)
+        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1)
                 .withLastUpdate(yesterday.toLocalDate());
         Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt()))
                 .thenReturn(Collections.singleton(replacement));
@@ -150,7 +150,7 @@ public class DumpArticleProcessorTest {
                 .content("")
                 .build();
 
-        Collection<Replacement> dbReplacements = Collections.emptySet();
+        Collection<ReplacementEntity> dbReplacements = Collections.emptySet();
         Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt())).thenReturn(dbReplacements);
 
         ArticleReplacement articleReplacement = ArticleReplacement.builder().build();
@@ -174,9 +174,9 @@ public class DumpArticleProcessorTest {
                 .lastUpdate(today)
                 .build();
 
-        Replacement replacement = new Replacement(1, "", "", 1)
+        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1)
                 .withLastUpdate(yesterday.toLocalDate());
-        Collection<Replacement> dbReplacements = Collections.singleton(replacement);
+        Collection<ReplacementEntity> dbReplacements = Collections.singleton(replacement);
         Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt())).thenReturn(dbReplacements);
 
         List<ArticleReplacement> articleReplacements = Collections.emptyList();

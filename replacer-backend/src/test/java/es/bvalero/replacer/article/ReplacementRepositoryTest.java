@@ -19,11 +19,11 @@ public class ReplacementRepositoryTest {
 
     @Test
     public void testFindReplacementsGrouped() {
-        Replacement error1 = new Replacement(1, "X", "aber", 1);
-        Replacement error2 = new Replacement(2, "X", "aber", 2);
-        Replacement error3 = new Replacement(2, "X", "madrid", 3);
-        Replacement error4 = new Replacement(3, "X", "paris", 4);
-        Replacement error5 = new Replacement(3, "X", "habia", 5).withReviewer("x");
+        ReplacementEntity error1 = new ReplacementEntity(1, "X", "aber", 1);
+        ReplacementEntity error2 = new ReplacementEntity(2, "X", "aber", 2);
+        ReplacementEntity error3 = new ReplacementEntity(2, "X", "madrid", 3);
+        ReplacementEntity error4 = new ReplacementEntity(3, "X", "paris", 4);
+        ReplacementEntity error5 = new ReplacementEntity(3, "X", "habia", 5).withReviewer("x");
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3, error4, error5));
 
         Assert.assertEquals(3, replacementRepository.findReplacementCountByTypeAndSubtype().size());
@@ -31,9 +31,9 @@ public class ReplacementRepositoryTest {
 
     @Test
     public void testRandomArticleByWord() {
-        Replacement error1 = new Replacement(1, "X", "aber", 1);
-        Replacement error2 = new Replacement(2, "X", "aber", 2);
-        Replacement error3 = new Replacement(3, "X", "aber", 3);
+        ReplacementEntity error1 = new ReplacementEntity(1, "X", "aber", 1);
+        ReplacementEntity error2 = new ReplacementEntity(2, "X", "aber", 2);
+        ReplacementEntity error3 = new ReplacementEntity(3, "X", "aber", 3);
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3));
 
         Assert.assertTrue(replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(

@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "replacement2",
         uniqueConstraints = @UniqueConstraint(columnNames = {"articleId", "type", "subtype", "position"}))
-public class Replacement implements Serializable {
+public class ReplacementEntity implements Serializable {
 
     private static final long serialVersionUID = -6766305982117992712L;
 
@@ -46,7 +46,7 @@ public class Replacement implements Serializable {
     @Wither
     private String reviewer;
 
-    public Replacement(int articleId, String type, String subtype, int position) {
+    public ReplacementEntity(int articleId, String type, String subtype, int position) {
         this.articleId = articleId;
         this.type = type;
         this.subtype = subtype;
@@ -59,7 +59,7 @@ public class Replacement implements Serializable {
         return this.reviewer == null;
     }
 
-    boolean isSame(Replacement that) {
+    boolean isSame(ReplacementEntity that) {
         return articleId == that.articleId &&
                 position == that.position &&
                 type.equals(that.type) &&

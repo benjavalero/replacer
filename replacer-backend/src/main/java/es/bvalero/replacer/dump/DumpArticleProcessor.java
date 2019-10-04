@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.ArticleIndexService;
-import es.bvalero.replacer.article.Replacement;
+import es.bvalero.replacer.article.ReplacementEntity;
 import es.bvalero.replacer.finder.ArticleReplacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
@@ -48,8 +48,8 @@ class DumpArticleProcessor {
     boolean processArticle(WikipediaPage dumpArticle) {
         LOGGER.debug("START Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
 
-        Collection<Replacement> dbReplacements = dumpArticleCache.findDatabaseReplacements(dumpArticle.getId());
-        Optional<LocalDate> dbLastUpdate = dbReplacements.stream().map(Replacement::getLastUpdate)
+        Collection<ReplacementEntity> dbReplacements = dumpArticleCache.findDatabaseReplacements(dumpArticle.getId());
+        Optional<LocalDate> dbLastUpdate = dbReplacements.stream().map(ReplacementEntity::getLastUpdate)
                 .max(Comparator.comparing(LocalDate::toEpochDay));
         if (dbLastUpdate.isPresent()
                 && !isArticleProcessableByTimestamp(dumpArticle.getLastUpdate().toLocalDate(), dbLastUpdate.get())) {

@@ -15,12 +15,12 @@ import java.util.Set;
  */
 @Repository
 @Transactional
-interface ReplacementRepository extends JpaRepository<Replacement, Long> {
+interface ReplacementRepository extends JpaRepository<ReplacementEntity, Long> {
 
-    List<Replacement> findByArticleId(int articleId);
+    List<ReplacementEntity> findByArticleId(int articleId);
 
     @Query("FROM Replacement WHERE articleId BETWEEN :minId AND :maxId")
-    List<Replacement> findByArticles(@Param("minId") int minArticleId, @Param("maxId") int maxArticleId);
+    List<ReplacementEntity> findByArticles(@Param("minId") int minArticleId, @Param("maxId") int maxArticleId);
 
     @Query("SELECT new es.bvalero.replacer.article.ReplacementCount(type, subtype, COUNT(*)) FROM Replacement WHERE reviewer IS NULL GROUP BY type, subtype")
     List<ReplacementCount> findReplacementCountByTypeAndSubtype();
@@ -34,9 +34,9 @@ interface ReplacementRepository extends JpaRepository<Replacement, Long> {
 
     long countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(int articleId, String type, String subtype);
 
-    List<Replacement> findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(int articleId, String type, String subtype);
+    List<ReplacementEntity> findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(int articleId, String type, String subtype);
 
-    List<Replacement> findByArticleIdAndReviewerIsNull(int articleId);
+    List<ReplacementEntity> findByArticleIdAndReviewerIsNull(int articleId);
 
     long countByReviewerIsNullOrReviewerIsNot(String reviewer);
 

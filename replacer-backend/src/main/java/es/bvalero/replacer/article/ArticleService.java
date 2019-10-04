@@ -256,7 +256,7 @@ public class ArticleService {
     }
 
     private void addCustomReviewedReplacement(int articleId, String subtype) {
-        Replacement customReplacement = new Replacement(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, 0);
+        ReplacementEntity customReplacement = new ReplacementEntity(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, 0);
         articleIndexService.reviewReplacementAsSystem(customReplacement);
     }
 
@@ -366,7 +366,7 @@ public class ArticleService {
 
     /* DUMP INDEX */
 
-    public List<Replacement> findDatabaseReplacementByArticles(int minArticleId, int maxArticleId) {
+    public List<ReplacementEntity> findDatabaseReplacementByArticles(int minArticleId, int maxArticleId) {
         return replacementRepository.findByArticles(minArticleId, maxArticleId);
     }
 

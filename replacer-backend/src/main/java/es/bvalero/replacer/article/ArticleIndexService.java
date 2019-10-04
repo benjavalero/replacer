@@ -40,7 +40,7 @@ public class ArticleIndexService {
     }
 
     public void indexArticleReplacements(WikipediaPage article, Collection<ArticleReplacement> articleReplacements,
-                                         Collection<Replacement> dbReplacements) {
+                                         Collection<ReplacementEntity> dbReplacements) {
         LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
         indexReplacements(article,
                 convertArticleReplacements(article, articleReplacements),
@@ -49,8 +49,8 @@ public class ArticleIndexService {
         LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
     }
 
-    void indexReplacements(WikipediaPage article, Collection<Replacement> replacements,
-                           Collection<Replacement> dbReplacements) {
+    void indexReplacements(WikipediaPage article, Collection<ReplacementEntity> replacements,
+                           Collection<ReplacementEntity> dbReplacements) {
         LOGGER.debug("START Index list of replacements\n" +
                         "New: {} - {}\n" +
                         "Old: {} - {}",
@@ -60,12 +60,12 @@ public class ArticleIndexService {
         // Trick: In case of no replacements found we insert a fake reviewed replacement
         // in order to be able to skip the article when reindexing
         if (replacements.isEmpty() && dbReplacements.isEmpty()) {
-            Replacement newReplacement = new Replacement(article.getId(), "", "", 0);
+            ReplacementEntity newReplacement = new ReplacementEntity(article.getId(), "", "", 0);
             reviewReplacementAsSystem(newReplacement);
         }
 
         replacements.forEach(replacement -> {
-            Optional<Replacement> existing = findSameReplacementInCollection(replacement, dbReplacements);
+            Optional<ReplacementEntity> existing = findSameReplacementInCollection(replacement, dbReplacements);
             if (existing.isPresent()) {
                 handleExistingReplacement(replacement, existing.get());
                 dbReplacements.remove(existing.get());
@@ -77,32 +77,32 @@ public class ArticleIndexService {
         });
 
         // Remove the remaining replacements
-        dbReplacements.stream().filter(Replacement::isToBeReviewed).forEach(rep -> {
+        dbReplacements.stream().filter(ReplacementEntity::isToBeReviewed).forEach(rep -> {
             reviewReplacementAsSystem(rep);
             LOGGER.debug("Replacement reviewed in DB with system: {}", rep);
         });
         LOGGER.debug("END Index list of replacements");
     }
 
-    private Optional<Replacement> findSameReplacementInCollection(Replacement replacement,
-                                                                  Collection<Replacement> replacements) {
+    private Optional<ReplacementEntity> findSameReplacementInCollection(ReplacementEntity replacement,
+                                                                        Collection<ReplacementEntity> replacements) {
         return replacements.stream().filter(rep -> rep.isSame(replacement)).findAny();
     }
 
-    private Collection<Replacement> convertArticleReplacements(WikipediaPage article,
-                                                               Collection<ArticleReplacement> articleReplacements) {
+    private Collection<ReplacementEntity> convertArticleReplacements(WikipediaPage article,
+                                                                     Collection<ArticleReplacement> articleReplacements) {
         return articleReplacements.stream().map(
-                articleReplacement -> new Replacement(
+                articleReplacement -> new ReplacementEntity(
                         article.getId(), articleReplacement.getType(), articleReplacement.getSubtype(),
                         articleReplacement.getStart())
                         .withLastUpdate(article.getLastUpdate().toLocalDate()))
                 .collect(Collectors.toList());
     }
 
-    private void handleExistingReplacement(Replacement newReplacement, Replacement dbReplacement) {
+    private void handleExistingReplacement(ReplacementEntity newReplacement, ReplacementEntity dbReplacement) {
         if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())
                 && dbReplacement.isToBeReviewed()) { // DB older than Dump
-            Replacement updated = dbReplacement.withLastUpdate(newReplacement.getLastUpdate());
+            ReplacementEntity updated = dbReplacement.withLastUpdate(newReplacement.getLastUpdate());
             saveReplacement(updated);
             LOGGER.debug("Replacement updated in DB: {}", updated);
         } else {
@@ -110,15 +110,15 @@ public class ArticleIndexService {
         }
     }
 
-    private void saveReplacement(Replacement replacement) {
+    private void saveReplacement(ReplacementEntity replacement) {
         replacementRepository.save(replacement);
     }
 
-    private void reviewReplacement(Replacement replacement, String reviewer) {
+    private void reviewReplacement(ReplacementEntity replacement, String reviewer) {
         saveReplacement(replacement.withReviewer(reviewer).withLastUpdate(LocalDate.now()));
     }
 
-    void reviewReplacementAsSystem(Replacement replacement) {
+    void reviewReplacementAsSystem(ReplacementEntity replacement) {
         saveReplacement(replacement.withReviewer(SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()));
     }
 
@@ -135,10 +135,10 @@ public class ArticleIndexService {
 
         if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
             // Custom replacements don't exist in the database to be reviewed
-            Replacement custom = new Replacement(articleId, type, subtype, 0);
+            ReplacementEntity custom = new ReplacementEntity(articleId, type, subtype, 0);
             reviewReplacement(custom, reviewer);
         } else if (StringUtils.isNotBlank(subtype)) {
-            List<Replacement> toReview = replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(
+            List<ReplacementEntity> toReview = replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(
                     articleId, type, subtype);
             toReview.forEach(replacement -> reviewReplacement(replacement, reviewer));
 
