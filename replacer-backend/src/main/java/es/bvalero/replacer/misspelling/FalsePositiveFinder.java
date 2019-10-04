@@ -23,6 +23,7 @@ import java.util.Set;
  * Find misspelling replacements in a given text.
  * Based in the WordAlternateAutomatonFinder winner in the benchmarks.
  */
+// We make this implementation public to be used by the finder benchmarks
 @Slf4j
 @Component
 public class FalsePositiveFinder implements IgnoredReplacementFinder, PropertyChangeListener {

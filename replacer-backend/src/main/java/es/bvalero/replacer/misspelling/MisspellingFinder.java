@@ -12,6 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 
+// We make this implementation public to be used by the finder benchmarks
 @Slf4j
 public abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeListener {
 

@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Component
-public class PersonNameFinder implements IgnoredReplacementFinder {
+class PersonNameFinder implements IgnoredReplacementFinder {
 
     private static final Collection<String> PERSON_NAMES = Arrays.asList("Domingo", "Frances", "Julio", "Sidney");
 

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+// We make this implementation public to be used by the finder benchmarks
 @Slf4j
 @Component
 public class UppercaseAfterFinder implements IgnoredReplacementFinder, PropertyChangeListener {
