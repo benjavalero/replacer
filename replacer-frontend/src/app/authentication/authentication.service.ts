@@ -77,11 +77,7 @@ export class AuthenticationService {
   }
 
   private findUserName(): void {
-    let params = new HttpParams();
-    params = params.append('token', this.accessToken.token);
-    params = params.append('tokenSecret', this.accessToken.tokenSecret);
-
-    this.httpClient.get<User>(`${environment.apiUrl}/wikipedia/username`, { params })
+    this.httpClient.post<User>(`${environment.apiUrl}/wikipedia/username`, this.accessToken)
       .subscribe((user: User) => {
         this.user = user;
       }, (err) => {

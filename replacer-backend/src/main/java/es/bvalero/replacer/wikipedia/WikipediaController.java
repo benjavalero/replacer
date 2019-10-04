@@ -1,11 +1,12 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import es.bvalero.replacer.authentication.AccessTokenDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -16,15 +17,16 @@ public class WikipediaController {
     @Autowired
     private WikipediaService wikipediaService;
 
-    @GetMapping(value = "/username")
-    public UserDto getUsername(@RequestParam String token, @RequestParam String tokenSecret)
-            throws WikipediaException {
-        LOGGER.info("GET Name of the logged user from Wikipedia API. Token: {} / {}", token, tokenSecret);
-        OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
-
-        String username = wikipediaService.identify(accessToken);
+    @PostMapping(value = "/username")
+    public UserDto getUsername(@RequestBody AccessTokenDto accessTokenDto) throws WikipediaException {
+        LOGGER.info("GET Name of the logged user from Wikipedia API: {}", accessTokenDto);
+        String username = wikipediaService.identify(convertToEntity(accessTokenDto));
         boolean admin = wikipediaService.isAdminUser(username);
         return UserDto.of(username, admin);
+    }
+
+    private OAuth1AccessToken convertToEntity(AccessTokenDto accessTokenDto) {
+        return new OAuth1AccessToken(accessTokenDto.getToken(), accessTokenDto.getTokenSecret());
     }
 
 }
