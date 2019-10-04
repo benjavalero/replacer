@@ -1,4 +1,4 @@
-export interface OauthToken {
+export interface AccessToken {
   token: string;
   tokenSecret: string;
 }

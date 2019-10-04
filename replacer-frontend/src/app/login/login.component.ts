@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { AuthenticationService } from '../authentication/authentication.service';
-import { OauthToken } from '../authentication/oauth-token.model';
-import { OauthUrl } from '../authentication/oauth-url.model';
+import { RequestToken } from '../authentication/request-token.model';
+import { AccessToken } from '../authentication/access-token.model';
 import { AlertService } from '../alert/alert.service';
 
 @Component({
@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
       /* tslint:disable: no-string-literal */
       const oauthVerifier: string = params['oauth_verifier'];
       if (oauthVerifier) {
-        this.authenticationService.generateAccessToken(oauthVerifier).subscribe((token: OauthToken) => {
+        this.authenticationService.generateAccessToken(oauthVerifier).subscribe((token: AccessToken) => {
           // Save access token to further use in Wikipedia requests
           this.authenticationService.accessToken = token;
 
@@ -53,15 +53,12 @@ export class LoginComponent implements OnInit {
 
   private generateAuthenticationUrl() {
     // We need to generate first a request token
-    this.authenticationService.generateRequestToken().subscribe((token: OauthToken) => {
+    this.authenticationService.generateRequestToken().subscribe((requestToken: RequestToken) => {
       // We keep the request token for further use on verification
-      this.authenticationService.requestToken = token;
+      this.authenticationService.requestToken = requestToken;
 
-      // Retrieve the authorization URL to redirect
-      this.authenticationService.generateAuthorizationUrl().subscribe((oauthUrl: OauthUrl) => {
-        this.authorizationUrl = oauthUrl.url;
-        this.alertService.clearAlertMessages();
-      });
+      this.authorizationUrl = requestToken.url;
+      this.alertService.clearAlertMessages();
     }, (err) => {
       this.alertService.addErrorMessage('Error al solicitar un Request Token del API de MediaWiki');
     });

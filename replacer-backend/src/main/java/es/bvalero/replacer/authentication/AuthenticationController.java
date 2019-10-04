@@ -5,10 +5,7 @@ import com.github.scribejava.core.model.OAuth1RequestToken;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -22,37 +19,34 @@ public class AuthenticationController {
     private ModelMapper modelMapper;
 
     @GetMapping(value = "/requestToken")
-    public OauthTokenDto getRequestToken() throws AuthenticationException {
+    public RequestTokenDto getRequestToken() throws AuthenticationException {
         LOGGER.info("GET Request Token from MediaWiki API");
-        return convertToDto(authenticationService.getRequestToken());
+        OAuth1RequestToken requestToken = authenticationService.getRequestToken();
+        String authorizationUrl = authenticationService.getAuthorizationUrl(requestToken);
+        return convertToDto(requestToken, authorizationUrl);
     }
 
-    @GetMapping(value = "/authorizationUrl")
-    public OauthUrlDto getAuthorizationUrl(@RequestParam String token) {
-        LOGGER.info("GET Authorization URL from MediaWiki API. Token: {}", token);
-        // We don't need the token secret in this call
-        OAuth1RequestToken requestToken = new OAuth1RequestToken(token, "");
-        return convertToDto(authenticationService.getAuthorizationUrl(requestToken));
+    @PostMapping(value = "/accessToken")
+    public AccessTokenDto getAccessToken(@RequestBody VerificationTokenDto verificationTokenDto)
+            throws AuthenticationException {
+        LOGGER.info("GET Access Token from MediaWiki API: {}", verificationTokenDto);
+        return convertToDto(authenticationService.getAccessToken(
+                convertToEntity(verificationTokenDto.getRequestToken()),
+                verificationTokenDto.getVerificationToken()));
     }
 
-    @GetMapping(value = "/accessToken")
-    public OauthTokenDto getAccessToken(@RequestParam String token, @RequestParam String tokenSecret,
-                                        @RequestParam String verificationToken) throws AuthenticationException {
-        LOGGER.info("GET Access Token from MediaWiki API. Token: {} / {} / {}", token, tokenSecret, verificationToken);
-        OAuth1RequestToken requestToken = new OAuth1RequestToken(token, tokenSecret);
-        return convertToDto(authenticationService.getAccessToken(requestToken, verificationToken));
+    private RequestTokenDto convertToDto(OAuth1RequestToken requestToken, String authorizationUrl) {
+        RequestTokenDto requestTokenDto = modelMapper.map(requestToken, RequestTokenDto.class);
+        requestTokenDto.setUrl(authorizationUrl);
+        return requestTokenDto;
     }
 
-    private OauthTokenDto convertToDto(OAuth1RequestToken token) {
-        return modelMapper.map(token, OauthTokenDto.class);
+    private OAuth1RequestToken convertToEntity(RequestTokenDto requestTokenDto) {
+        return new OAuth1RequestToken(requestTokenDto.getToken(), requestTokenDto.getTokenSecret());
     }
 
-    private OauthUrlDto convertToDto(String url) {
-        return OauthUrlDto.of(url);
-    }
-
-    private OauthTokenDto convertToDto(OAuth1AccessToken token) {
-        return modelMapper.map(token, OauthTokenDto.class);
+    private AccessTokenDto convertToDto(OAuth1AccessToken token) {
+        return modelMapper.map(token, AccessTokenDto.class);
     }
 
 }

@@ -3,10 +3,11 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { environment } from '../../environments/environment';
-import { OauthToken } from './oauth-token.model';
-import { OauthUrl } from './oauth-url.model';
+import { RequestToken } from './request-token.model';
+import { AccessToken } from './access-token.model';
 import { User } from './user.model';
 import { AlertService } from '../alert/alert.service';
+import { VerificationToken } from './verification-token.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,24 +22,16 @@ export class AuthenticationService {
     return this.accessToken !== null;
   }
 
-  generateRequestToken(): Observable<OauthToken> {
-    return this.httpClient.get<OauthToken>(`${environment.apiUrl}/authentication/requestToken`);
+  generateRequestToken(): Observable<RequestToken> {
+    return this.httpClient.get<RequestToken>(`${environment.apiUrl}/authentication/requestToken`);
   }
 
-  generateAuthorizationUrl(): Observable<OauthUrl> {
-    let params = new HttpParams();
-    params = params.append('token', this.requestToken.token);
+  generateAccessToken(verificationToken: string): Observable<AccessToken> {
+    const verificationTokenDto = new VerificationToken();
+    verificationTokenDto.requestToken = this.requestToken;
+    verificationTokenDto.verificationToken = verificationToken;
 
-    return this.httpClient.get<OauthUrl>(`${environment.apiUrl}/authentication/authorizationUrl`, { params });
-  }
-
-  generateAccessToken(verificationToken: string): Observable<OauthToken> {
-    let params = new HttpParams();
-    params = params.append('token', this.requestToken.token);
-    params = params.append('tokenSecret', this.requestToken.tokenSecret);
-    params = params.append('verificationToken', verificationToken);
-
-    return this.httpClient.get<OauthToken>(`${environment.apiUrl}/authentication/accessToken`, { params });
+    return this.httpClient.post<AccessToken>(`${environment.apiUrl}/authentication/accessToken`, verificationTokenDto);
   }
 
   clearSession(): void {
@@ -58,11 +51,11 @@ export class AuthenticationService {
     }
   }
 
-  get requestToken(): OauthToken {
+  get requestToken(): RequestToken {
     return JSON.parse(localStorage.getItem('requestToken'));
   }
 
-  set requestToken(token: OauthToken) {
+  set requestToken(token: RequestToken) {
     if (token) {
       localStorage.setItem('requestToken', JSON.stringify(token));
     } else {
@@ -70,11 +63,11 @@ export class AuthenticationService {
     }
   }
 
-  get accessToken(): OauthToken {
+  get accessToken(): AccessToken {
     return JSON.parse(localStorage.getItem('accessToken'));
   }
 
-  set accessToken(token: OauthToken) {
+  set accessToken(token: AccessToken) {
     if (token) {
       localStorage.setItem('accessToken', JSON.stringify(token));
       this.findUserName();
