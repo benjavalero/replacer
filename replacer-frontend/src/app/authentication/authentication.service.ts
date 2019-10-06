@@ -29,7 +29,7 @@ export class AuthenticationService {
   generateAccessToken(verificationToken: string): Observable<AccessToken> {
     const verificationTokenDto = new VerificationToken();
     verificationTokenDto.requestToken = this.requestToken;
-    verificationTokenDto.verificationToken = verificationToken;
+    verificationTokenDto.token = verificationToken;
 
     return this.httpClient.post<AccessToken>(`${environment.apiUrl}/authentication/accessToken`, verificationTokenDto);
   }

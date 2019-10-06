@@ -32,7 +32,7 @@ public class AuthenticationController {
         LOGGER.info("GET Access Token from MediaWiki API: {}", verificationToken);
         return convertToDto(authenticationService.getAccessToken(
                 convertToEntity(verificationToken.getRequestToken()),
-                verificationToken.getVerificationToken()));
+                verificationToken.getToken()));
     }
 
     private RequestToken convertToDto(OAuth1RequestToken oAuth1RequestToken, String authorizationUrl) {

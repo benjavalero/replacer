@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 class VerificationToken {
     private RequestToken requestToken;
-    private String verificationToken;
+    private String token;
 }
