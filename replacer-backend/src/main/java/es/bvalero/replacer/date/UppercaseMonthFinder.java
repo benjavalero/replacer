@@ -27,7 +27,7 @@ class UppercaseMonthFinder extends DateFinder implements ReplacementFinder {
     }
 
     @Override
-    public String getSubtype() {
+    public String getSubtype(String text) {
         return SUBTYPE_DATE_UPPERCASE_MONTHS;
     }
 

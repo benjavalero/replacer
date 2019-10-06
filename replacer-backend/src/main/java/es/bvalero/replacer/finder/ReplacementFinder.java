@@ -1,6 +1,8 @@
 package es.bvalero.replacer.finder;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.regex.MatchResult;
 
 /**
  * Classes implementing this interface will provide methods to find potential replacements of different types.
@@ -18,10 +20,23 @@ public interface ReplacementFinder extends BaseFinder<Replacement> {
     }
 
     @Override
+    default Replacement convertMatch(MatchResult matcher) {
+        int start = matcher.start();
+        String text = matcher.group();
+        return Replacement.builder()
+                .type(getType())
+                .subtype(getSubtype(text))
+                .start(start)
+                .text(text)
+                .suggestions(findSuggestions(matcher))
+                .build();
+    }
+
+    @Override
     default Replacement convertMatch(int start, String text) {
         return Replacement.builder()
                 .type(getType())
-                .subtype(getSubtype())
+                .subtype(getSubtype(text))
                 .start(start)
                 .text(text)
                 .suggestions(findSuggestions(text))
@@ -30,8 +45,14 @@ public interface ReplacementFinder extends BaseFinder<Replacement> {
 
     String getType();
 
-    String getSubtype();
+    String getSubtype(String text);
 
-    List<ReplacementSuggestion> findSuggestions(String text);
+    default List<ReplacementSuggestion> findSuggestions(MatchResult matcher) {
+        return findSuggestions(matcher.group());
+    }
+
+    default List<ReplacementSuggestion> findSuggestions(String text) {
+        return Collections.emptyList();
+    }
 
 }

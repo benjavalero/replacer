@@ -39,7 +39,7 @@ class UppercaseMonthWithoutDayFinder extends DateFinder implements ReplacementFi
     }
 
     @Override
-    public String getSubtype() {
+    public String getSubtype(String text) {
         return SUBTYPE_DATE_UPPERCASE_MONTHS_WITHOUT_DAY;
     }
 

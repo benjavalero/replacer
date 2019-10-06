@@ -5,10 +5,9 @@ import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.ReplacementSuggestion;
 import org.intellij.lang.annotations.RegExp;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
 class SameLinkFinder implements ReplacementFinder {
@@ -19,26 +18,14 @@ class SameLinkFinder implements ReplacementFinder {
 
     @Override
     public List<Replacement> findReplacements(String text) {
-        List<Replacement> replacements = new ArrayList<>(100);
-        Matcher matcher = PATTERN_SAME_LINK.matcher(text);
-        while (matcher.find()) {
-            String link = matcher.group(1);
-            String title = matcher.group(2);
-            if (isSameLink(link, title)) {
-                replacements.add(convertMatch(matcher.start(), matcher.group(), title));
-            }
-        }
-        return replacements;
+        return findMatchResults(text, PATTERN_SAME_LINK);
     }
 
-    public Replacement convertMatch(int start, String text, String linkTitle) {
-        return Replacement.builder()
-                .type(getType())
-                .subtype(getSubtype())
-                .start(start)
-                .text(text)
-                .suggestions(findSuggestions(linkTitle))
-                .build();
+    @Override
+    public boolean isValidMatch(MatchResult matcher, String text) {
+        String link = matcher.group(1);
+        String title = matcher.group(2);
+        return isSameLink(link, title);
     }
 
     @Override
@@ -47,12 +34,13 @@ class SameLinkFinder implements ReplacementFinder {
     }
 
     @Override
-    public String getSubtype() {
+    public String getSubtype(String text) {
         return null;
     }
 
     @Override
-    public List<ReplacementSuggestion> findSuggestions(String linkTitle) {
+    public List<ReplacementSuggestion> findSuggestions(MatchResult matcher) {
+        String linkTitle = matcher.group(2);
         String fixedLink = String.format("[[%s]]", linkTitle);
         return Collections.singletonList(ReplacementSuggestion.ofNoComment(fixedLink));
     }

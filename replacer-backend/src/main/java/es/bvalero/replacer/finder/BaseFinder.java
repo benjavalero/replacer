@@ -6,6 +6,7 @@ import dk.brics.automaton.RunAutomaton;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -16,8 +17,8 @@ interface BaseFinder<T> {
         List<T> matches = new ArrayList<>(100);
         Matcher matcher = pattern.matcher(text);
         while (matcher.find()) {
-            if (isValidMatch(matcher.start(), matcher.group(), text)) {
-                matches.add(convertMatch(matcher.start(), matcher.group()));
+            if (isValidMatch(matcher, text)) {
+                matches.add(convertMatch(matcher));
             }
         }
         return matches;
@@ -32,8 +33,8 @@ interface BaseFinder<T> {
         List<T> matches = new ArrayList<>(100);
         AutomatonMatcher matcher = automaton.newMatcher(text);
         while (matcher.find()) {
-            if (isValidMatch(matcher.start(), matcher.group(), text)) {
-                matches.add(convertMatch(matcher.start(), matcher.group()));
+            if (isValidMatch(matcher, text)) {
+                matches.add(convertMatch(matcher));
             }
         }
         return matches;
@@ -44,9 +45,17 @@ interface BaseFinder<T> {
                 .flatMap(Collection::stream).collect(Collectors.toList());
     }
 
-    boolean isValidMatch(int start, String matchedText, String fullText);
+    default boolean isValidMatch(MatchResult matcher, String fullText) {
+        return isValidMatch(matcher.start(), matcher.group(), fullText);
+    }
 
+    default boolean isValidMatch(int start, String matchedText, String fullText) {
+        return true;
+    }
 
+    default T convertMatch(MatchResult matcher) {
+        return convertMatch(matcher.start(), matcher.group());
+    }
 
     T convertMatch(int start, String text);
 

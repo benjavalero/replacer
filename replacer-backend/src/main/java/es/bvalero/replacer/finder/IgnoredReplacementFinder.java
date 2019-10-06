@@ -13,11 +13,6 @@ public interface IgnoredReplacementFinder extends BaseFinder<IgnoredReplacement>
     List<IgnoredReplacement> findIgnoredReplacements(String text);
 
     @Override
-    default boolean isValidMatch(int start, String matchedText, String fullText) {
-        return true;
-    }
-
-    @Override
     default IgnoredReplacement convertMatch(int start, String text) {
         return IgnoredReplacement.of(start, text);
     }
