@@ -22,7 +22,7 @@ public class Replacement implements Comparable<Replacement> {
     @Wither
     private int start;
     private String text;
-    private List<ReplacementSuggestion> suggestions;
+    private List<Suggestion> suggestions;
 
     @JsonIgnore
     public int getEnd() {

@@ -2,7 +2,7 @@ package es.bvalero.replacer.cosmetic;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinder;
-import es.bvalero.replacer.finder.ReplacementSuggestion;
+import es.bvalero.replacer.finder.Suggestion;
 import org.intellij.lang.annotations.RegExp;
 
 import java.util.Collections;
@@ -39,10 +39,10 @@ class SameLinkFinder implements ReplacementFinder {
     }
 
     @Override
-    public List<ReplacementSuggestion> findSuggestions(MatchResult matcher) {
+    public List<Suggestion> findSuggestions(MatchResult matcher) {
         String linkTitle = matcher.group(2);
         String fixedLink = String.format("[[%s]]", linkTitle);
-        return Collections.singletonList(ReplacementSuggestion.ofNoComment(fixedLink));
+        return Collections.singletonList(Suggestion.ofNoComment(fixedLink));
     }
 
     private boolean isSameLink(String link, String title) {

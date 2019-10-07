@@ -1,7 +1,7 @@
 package es.bvalero.replacer.date;
 
 import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.ReplacementSuggestion;
+import es.bvalero.replacer.finder.Suggestion;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,8 +26,8 @@ abstract class DateFinder {
         return TYPE_DATE;
     }
 
-    public List<ReplacementSuggestion> findSuggestions(String date) {
-        return Collections.singletonList(ReplacementSuggestion.ofNoComment(fixDate(date)));
+    public List<Suggestion> findSuggestions(String date) {
+        return Collections.singletonList(Suggestion.ofNoComment(fixDate(date)));
     }
 
     private String fixDate(String date) {

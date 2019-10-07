@@ -40,8 +40,8 @@ class CustomReplacementFinder implements ReplacementFinder {
     }
 
     @Override
-    public List<ReplacementSuggestion> findSuggestions(String text) {
-        return Collections.singletonList(ReplacementSuggestion.ofNoComment(
+    public List<Suggestion> findSuggestions(String text) {
+        return Collections.singletonList(Suggestion.ofNoComment(
                 getNewSuggestion(text, this.replacement, this.suggestion)));
     }
 

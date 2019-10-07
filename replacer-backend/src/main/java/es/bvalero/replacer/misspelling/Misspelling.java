@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.finder.ReplacementSuggestion;
+import es.bvalero.replacer.finder.Suggestion;
 import lombok.Value;
 import org.intellij.lang.annotations.RegExp;
 
@@ -23,7 +23,7 @@ class Misspelling {
 
     private String word;
     private boolean caseSensitive;
-    private List<ReplacementSuggestion> suggestions;
+    private List<Suggestion> suggestions;
 
     private Misspelling(String word, boolean caseSensitive, String comment) {
         // Validate the word
@@ -57,8 +57,8 @@ class Misspelling {
         return word.chars().allMatch(c -> Character.isLetter(c) || c == '\'' || c == '-' || c == ' ');
     }
 
-    private List<ReplacementSuggestion> parseSuggestionsFromComment(String comment) {
-        List<ReplacementSuggestion> suggestionList = new ArrayList<>(5);
+    private List<Suggestion> parseSuggestionsFromComment(String comment) {
+        List<Suggestion> suggestionList = new ArrayList<>(5);
 
         Matcher m = PATTERN_SUGGESTION.matcher(comment);
         while (m.find()) {
@@ -69,7 +69,7 @@ class Misspelling {
         return suggestionList;
     }
 
-    private ReplacementSuggestion parseSuggestion(String suggestion) {
+    private Suggestion parseSuggestion(String suggestion) {
         String text = suggestion.replaceAll(REGEX_BRACKETS, "").trim();
         Matcher m = PATTERN_BRACKETS.matcher(suggestion);
         String explanation = "";
@@ -78,7 +78,7 @@ class Misspelling {
             String brackets = m.group();
             explanation = brackets.substring(1, brackets.length() - 1).trim();
         }
-        return ReplacementSuggestion.of(text, explanation);
+        return Suggestion.of(text, explanation);
     }
 
 }

@@ -1,8 +1,8 @@
-import { ReplacementSuggestion } from './replacement-suggestion.model';
+import { Suggestion } from './suggestion.model';
 
 export interface ArticleReplacement {
   text: string;
   start: number;
-  suggestions: ReplacementSuggestion[];
+  suggestions: Suggestion[];
   textFixed?: string;
 }

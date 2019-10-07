@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.finder.ReplacementSuggestion;
+import es.bvalero.replacer.finder.Suggestion;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ public class MisspellingTest {
     public void testParseSimpleSuggestion() {
         Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "A");
 
-        List<ReplacementSuggestion> suggestions = misspelling.getSuggestions();
+        List<Suggestion> suggestions = misspelling.getSuggestions();
 
         Assert.assertEquals(1, suggestions.size());
         Assert.assertEquals("A", suggestions.get(0).getText());
@@ -23,7 +23,7 @@ public class MisspellingTest {
     public void testParseComposedSuggestion() {
         Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "A, B, C");
 
-        List<ReplacementSuggestion> suggestions = misspelling.getSuggestions();
+        List<Suggestion> suggestions = misspelling.getSuggestions();
 
         Assert.assertEquals(3, suggestions.size());
         Assert.assertEquals("A", suggestions.get(0).getText());
@@ -35,7 +35,7 @@ public class MisspellingTest {
     public void testParseComposedSuggestionWithComments() {
         Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "A (D), B (E), C (F)");
 
-        List<ReplacementSuggestion> suggestions = misspelling.getSuggestions();
+        List<Suggestion> suggestions = misspelling.getSuggestions();
 
         Assert.assertEquals(3, suggestions.size());
         Assert.assertEquals("A", suggestions.get(0).getText());
@@ -50,7 +50,7 @@ public class MisspellingTest {
     public void testParseComposedSuggestionWithCommentsAndCommas() {
         Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "A (D, G), B (E, H), C (F, I)");
 
-        List<ReplacementSuggestion> suggestions = misspelling.getSuggestions();
+        List<Suggestion> suggestions = misspelling.getSuggestions();
 
         Assert.assertEquals(3, suggestions.size());
         Assert.assertEquals("A", suggestions.get(0).getText());
@@ -65,7 +65,7 @@ public class MisspellingTest {
     public void testParseSuggestionWithExplanationBefore() {
         Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "(B) A");
 
-        List<ReplacementSuggestion> suggestions = misspelling.getSuggestions();
+        List<Suggestion> suggestions = misspelling.getSuggestions();
 
         Assert.assertEquals(1, suggestions.size());
         Assert.assertEquals("A", suggestions.get(0).getText());

@@ -47,11 +47,11 @@ public interface ReplacementFinder extends BaseFinder<Replacement> {
 
     String getSubtype(String text);
 
-    default List<ReplacementSuggestion> findSuggestions(MatchResult matcher) {
+    default List<Suggestion> findSuggestions(MatchResult matcher) {
         return findSuggestions(matcher.group());
     }
 
-    default List<ReplacementSuggestion> findSuggestions(String text) {
+    default List<Suggestion> findSuggestions(String text) {
         return Collections.emptyList();
     }
 

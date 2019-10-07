@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ReplacementSuggestion } from './replacement-suggestion.model';
+
+import { Suggestion } from './suggestion.model';
 
 const THRESHOLD = 200; // Number of characters to display around the replacements
 
@@ -13,10 +14,10 @@ export class EditSnippetComponent implements OnInit {
   @Input() text: string;
   @Input() start: number;
   @Input() word: string;
-  @Input() suggestions: ReplacementSuggestion[];
+  @Input() suggestions: Suggestion[];
 
   textLeft: string;
-  suggestionSelectedValue: ReplacementSuggestion;
+  suggestionSelectedValue: Suggestion;
   textRight: string;
 
   @Output() fixed: EventEmitter<any> = new EventEmitter();
@@ -40,11 +41,11 @@ export class EditSnippetComponent implements OnInit {
     }
   }
 
-  get suggestionSelected(): ReplacementSuggestion {
+  get suggestionSelected(): Suggestion {
     return this.suggestionSelectedValue;
   }
 
-  set suggestionSelected(suggestion: ReplacementSuggestion) {
+  set suggestionSelected(suggestion: Suggestion) {
     this.suggestionSelectedValue = suggestion;
     this.fixed.emit({ position: this.start, newText: suggestion.text === this.word ? null : suggestion.text });
   }

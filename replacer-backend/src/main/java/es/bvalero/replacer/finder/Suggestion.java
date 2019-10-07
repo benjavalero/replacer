@@ -3,11 +3,11 @@ package es.bvalero.replacer.finder;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-public class ReplacementSuggestion {
+public class Suggestion {
     private String text;
     private String comment;
 
-    public static ReplacementSuggestion ofNoComment(String text) {
+    public static Suggestion ofNoComment(String text) {
         return of(text, null);
     }
 

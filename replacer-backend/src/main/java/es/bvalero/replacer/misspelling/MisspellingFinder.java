@@ -4,7 +4,7 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinder;
-import es.bvalero.replacer.finder.ReplacementSuggestion;
+import es.bvalero.replacer.finder.Suggestion;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
@@ -88,14 +88,14 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
 
     /* Transform the case of the suggestion, e. g. "Habia" -> "Había" */
     @Override
-    public List<ReplacementSuggestion> findSuggestions(String originalWord) {
-        List<ReplacementSuggestion> suggestions = new LinkedList<>();
+    public List<Suggestion> findSuggestions(String originalWord) {
+        List<Suggestion> suggestions = new LinkedList<>();
 
         // We are sure in this point that the Misspelling exists
         Misspelling misspelling = findMisspellingByWord(originalWord).orElseThrow(IllegalArgumentException::new);
         misspelling.getSuggestions().forEach(suggestion -> {
-            ReplacementSuggestion newSuggestion = FinderUtils.startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()
-                    ? ReplacementSuggestion.of(FinderUtils.setFirstUpperCase(suggestion.getText()), suggestion.getComment())
+            Suggestion newSuggestion = FinderUtils.startsWithUpperCase(originalWord) && !misspelling.isCaseSensitive()
+                    ? Suggestion.of(FinderUtils.setFirstUpperCase(suggestion.getText()), suggestion.getComment())
                     : suggestion;
             // If the suggested word matches the original then add it as the first suggestion
             if (originalWord.equals(newSuggestion.getText())) {
