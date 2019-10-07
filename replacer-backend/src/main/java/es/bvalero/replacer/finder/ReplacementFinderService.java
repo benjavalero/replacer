@@ -20,9 +20,6 @@ public class ReplacementFinderService {
     @Autowired
     private List<IgnoredReplacementFinder> ignoredReplacementFinders;
 
-    @Autowired
-    private CustomReplacementFinder customReplacementFinder;
-
     /**
      * @param text The text to find replacements in.
      * @return A list with all the replacements in the text.
@@ -31,23 +28,9 @@ public class ReplacementFinderService {
      */
     public List<Replacement> findReplacements(String text) {
         LOGGER.debug("START Find replacements in text: {}", text);
-        // Find the replacements in the text
-        // LinkedList is better to run iterators and remove items from it
-        List<Replacement> replacements = new LinkedList<>();
-        for (ReplacementFinder finder : replacementFinders) {
-            LOGGER.debug("- START Find replacements of type: {}", finder.getClass().getSimpleName());
-            List<Replacement> finderReplacements = finder.findReplacements(text);
-            LOGGER.debug("- END Find {} replacements of type: {}", finderReplacements.size(), finder.getClass().getSimpleName());
-            replacements.addAll(finderReplacements);
-        }
-        LOGGER.debug("Potential replacements found (before ignoring): {} - {}",
-                replacements.size(), replacements);
 
-        // Remove nested replacements
-        Collections.sort(replacements);
-        replacements.removeIf(replacement -> isReplacementContainedInListIgnoringItself(replacement, replacements));
-        LOGGER.debug("Potential replacements found after removing nested: {} - {}",
-                replacements.size(), replacements);
+        // Find the replacements in the text
+        List<Replacement> replacements = findAllReplacements(text);
 
         // No need to find the exceptions if there are no replacements found
         if (replacements.isEmpty()) {
@@ -60,6 +43,30 @@ public class ReplacementFinderService {
         LOGGER.debug("END Find replacements in text. Final replacements found: {} - {}",
                 replacements.size(), replacements);
         return replacements;
+    }
+
+    private List<Replacement> findAllReplacements(String text) {
+        // LinkedList is better to run iterators and remove items from it
+        List<Replacement> replacements = new LinkedList<>();
+        for (ReplacementFinder finder : replacementFinders) {
+            LOGGER.debug("- START Find replacements of type: {}", finder.getClass().getSimpleName());
+            List<Replacement> finderReplacements = finder.findReplacements(text);
+            LOGGER.debug("- END Find {} replacements of type: {}", finderReplacements.size(), finder.getClass().getSimpleName());
+            replacements.addAll(finderReplacements);
+        }
+        LOGGER.debug("Potential replacements found (before ignoring): {} - {}", replacements.size(), replacements);
+
+        // Remove nested replacements
+        removeNestedReplacements(replacements);
+
+        return replacements;
+    }
+
+    private void removeNestedReplacements(List<Replacement> replacements) {
+        Collections.sort(replacements);
+        replacements.removeIf(replacement -> isReplacementContainedInListIgnoringItself(replacement, replacements));
+        LOGGER.debug("Potential replacements found after removing nested: {} - {}",
+                replacements.size(), replacements);
     }
 
     boolean isReplacementContainedInListIgnoringItself(Replacement replacement, List<Replacement> replacementList) {
@@ -89,7 +96,7 @@ public class ReplacementFinderService {
             List<IgnoredReplacement> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
             LOGGER.debug("- Found ignored of type: {}", ignoredReplacements);
             LOGGER.debug("- END Find ignored of type: {}", ignoredFinder.getClass().getSimpleName());
-            replacements.removeIf(replacement -> isReplacementContainedInMatchResultList(replacement, ignoredReplacements));
+            replacements.removeIf(replacement -> isReplacementContainedInIgnoredReplacements(replacement, ignoredReplacements));
 
             if (replacements.isEmpty()) {
                 break;
@@ -97,19 +104,28 @@ public class ReplacementFinderService {
         }
     }
 
-    private boolean isReplacementContainedInMatchResultList(Replacement replacement, List<IgnoredReplacement> matchResults) {
-        return matchResults.stream().anyMatch(match -> isReplacementContainedInMatchResult(replacement, match));
+    private boolean isReplacementContainedInIgnoredReplacements(Replacement replacement, List<IgnoredReplacement> ignoredReplacements) {
+        return ignoredReplacements.stream().anyMatch(match -> isReplacementContainedInIgnoredReplacement(replacement, match));
     }
 
-    private boolean isReplacementContainedInMatchResult(Replacement replacement, IgnoredReplacement matchResult) {
-        return isIntervalContainedInInterval(replacement.getStart(), replacement.getEnd(), matchResult.getStart(), matchResult.getEnd());
+    private boolean isReplacementContainedInIgnoredReplacement(Replacement replacement, IgnoredReplacement ignoredReplacement) {
+        return isIntervalContainedInInterval(replacement.getStart(), replacement.getEnd(), ignoredReplacement.getStart(), ignoredReplacement.getEnd());
     }
 
+    /**
+     * @param text        The text to find custom replacements in.
+     * @param replacement The text to be replaced.
+     * @param suggestion  The custom suggestion for the replaceable text.
+     * @return A list with all the custom replacements in the text.
+     * Replacements contained in exceptions are ignored.
+     * If there are no replacements, the list will be empty.
+     */
     public List<Replacement> findCustomReplacements(String text, String replacement, String suggestion) {
         LOGGER.debug("START Find custom replacements. Text: {} - Replacement: {} - Suggestion: {}",
                 text, replacement, suggestion);
-        List<Replacement> replacements = customReplacementFinder.findReplacements(text, replacement, suggestion);
-        LOGGER.debug("Potential custom replacements found (before ignoring): {}", replacements);
+
+        // Find the replacements in the text
+        List<Replacement> replacements = findAllCustomReplacements(text, replacement, suggestion);
 
         // No need to find the exceptions if there are no replacements found
         if (replacements.isEmpty()) {
@@ -117,17 +133,16 @@ public class ReplacementFinderService {
         }
 
         // Ignore the replacements which must be ignored
-        for (IgnoredReplacementFinder ignoredFinder : ignoredReplacementFinders) {
-            List<IgnoredReplacement> ignoredReplacements = ignoredFinder.findIgnoredReplacements(text);
-            replacements.removeIf(artRep -> isReplacementContainedInMatchResultList(artRep, ignoredReplacements));
+        removeIgnoredReplacements(text, replacements);
 
-            if (replacements.isEmpty()) {
-                break;
-            }
-        }
-
-        LOGGER.debug("END Find custom replacements in text. Final replacements found: {}", replacements);
+        LOGGER.debug("END Find custom replacements in text. Final replacements found: {} - {}",
+                replacements.size(), replacements);
         return replacements;
+    }
+
+    private List<Replacement> findAllCustomReplacements(String text, String replacement, String suggestion) {
+        CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
+        return customReplacementFinder.findReplacements(text);
     }
 
 }

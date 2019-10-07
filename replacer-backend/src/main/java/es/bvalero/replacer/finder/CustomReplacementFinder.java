@@ -1,43 +1,48 @@
 package es.bvalero.replacer.finder;
 
-import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Component
-class CustomReplacementFinder {
+class CustomReplacementFinder implements ReplacementFinder {
 
-    public List<Replacement> findReplacements(String text, String replacement, String suggestion) {
+    private String replacement;
+    private String suggestion;
+
+    CustomReplacementFinder(String replacement, String suggestion) {
+        this.replacement = replacement;
+        this.suggestion = suggestion;
+    }
+
+    @Override
+    public List<Replacement> findReplacements(String text) {
+        RunAutomaton customAutomaton = buildCustomRegex(this.replacement, this.suggestion);
+        return findMatchResults(text, customAutomaton);
+    }
+
+    private RunAutomaton buildCustomRegex(String replacement, String suggestion) {
         String regex = FinderUtils.startsWithLowerCase(replacement) && FinderUtils.startsWithLowerCase(suggestion)
                 ? FinderUtils.setFirstUpperCaseClass(replacement)
                 : replacement;
-        return findMatches(text, regex).stream().map(match -> Replacement.builder()
-                .type(ReplacementFinderService.CUSTOM_FINDER_TYPE)
-                .subtype(replacement)
-                .start(match.getStart())
-                .text(match.getText())
-                .suggestions(Collections.singletonList(ReplacementSuggestion.ofNoComment(
-                        getNewSuggestion(match.getText(), replacement, suggestion))))
-                .build())
-                .collect(Collectors.toList());
+        return new RunAutomaton(new RegExp(regex).toAutomaton());
     }
 
-    private List<IgnoredReplacement> findMatches(String text, String regex) {
-        List<IgnoredReplacement> matches = new ArrayList<>(100);
-        RunAutomaton automaton = new RunAutomaton(new RegExp(regex).toAutomaton());
-        AutomatonMatcher m = automaton.newMatcher(text);
-        while (m.find()) {
-            if (FinderUtils.isWordCompleteInText(m.start(), m.group(), text)) {
-                matches.add(IgnoredReplacement.of(m.start(), m.group()));
-            }
-        }
-        return matches;
+    @Override
+    public String getType() {
+        return ReplacementFinderService.CUSTOM_FINDER_TYPE;
+    }
+
+    @Override
+    public String getSubtype(String text) {
+        return this.replacement;
+    }
+
+    @Override
+    public List<ReplacementSuggestion> findSuggestions(String text) {
+        return Collections.singletonList(ReplacementSuggestion.ofNoComment(
+                getNewSuggestion(text, this.replacement, this.suggestion)));
     }
 
     private String getNewSuggestion(String text, String replacement, String suggestion) {
