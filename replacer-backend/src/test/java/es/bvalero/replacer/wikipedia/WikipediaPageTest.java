@@ -9,6 +9,13 @@ import java.time.Month;
 public class WikipediaPageTest {
 
     @Test
+    public void testIsProcessableByNamespace() {
+        Assert.assertFalse(WikipediaPage.builder().namespace(WikipediaNamespace.WIKIPEDIA).build().isProcessableByNamespace());
+        Assert.assertTrue(WikipediaPage.builder().namespace(WikipediaNamespace.ARTICLE).build().isProcessableByNamespace());
+        Assert.assertTrue(WikipediaPage.builder().namespace(WikipediaNamespace.ANNEX).build().isProcessableByNamespace());
+    }
+
+    @Test
     public void testIsProcessableByContent() {
         Assert.assertFalse(WikipediaPage.builder().content("xxx #REDIRECCIÓN [[A]] yyy").build().isProcessableByContent());
         Assert.assertFalse(WikipediaPage.builder().content("xxx #redirección [[A]] yyy").build().isProcessableByContent());

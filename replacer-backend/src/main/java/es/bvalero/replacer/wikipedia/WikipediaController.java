@@ -20,9 +20,11 @@ public class WikipediaController {
     @PostMapping(value = "/username")
     public WikipediaUser getUsername(@RequestBody AccessToken accessToken) throws WikipediaException {
         LOGGER.info("GET Name of the logged user from Wikipedia API: {}", accessToken);
-        String username = wikipediaService.identify(convertToEntity(accessToken));
-        boolean admin = wikipediaService.isAdminUser(username);
-        return WikipediaUser.of(username, admin);
+        String userName = wikipediaService.getLoggedUserName(convertToEntity(accessToken));
+        boolean admin = wikipediaService.isAdminUser(userName);
+        WikipediaUser user = WikipediaUser.of(userName, admin);
+        LOGGER.info("RETURN Name of the logged user: {}", user);
+        return user;
     }
 
     private OAuth1AccessToken convertToEntity(AccessToken accessToken) {

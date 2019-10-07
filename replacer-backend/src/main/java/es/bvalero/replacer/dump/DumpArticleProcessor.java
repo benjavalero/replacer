@@ -4,7 +4,6 @@ import es.bvalero.replacer.article.ArticleIndexService;
 import es.bvalero.replacer.article.ReplacementEntity;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ class DumpArticleProcessor {
     private ReplacementFinderService replacementFinderService;
 
     boolean isDumpArticleProcessable(WikipediaPage dumpArticle) {
-        if (!isDumpArticleProcessableByNamespace(dumpArticle)) {
+        if (!dumpArticle.isProcessableByNamespace()) {
             LOGGER.debug("END Process dump article. Not processable by namespace: {}", dumpArticle.getTitle());
             return false;
         }
@@ -63,10 +62,6 @@ class DumpArticleProcessor {
 
         LOGGER.debug("END Process dump article: {}", dumpArticle.getTitle());
         return true;
-    }
-
-    private boolean isDumpArticleProcessableByNamespace(WikipediaPage dumpArticle) {
-        return WikipediaNamespace.getProcessableNamespaces().contains(dumpArticle.getNamespace());
     }
 
     private boolean isArticleProcessableByTimestamp(LocalDate dumpDate, LocalDate dbDate) {

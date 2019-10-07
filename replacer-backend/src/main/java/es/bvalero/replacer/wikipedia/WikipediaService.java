@@ -9,28 +9,9 @@ import java.util.Set;
 
 public interface WikipediaService {
 
-    /**
-     * @param pageTitle the title of the page to retrieve
-     * @return The page with the given title in case it exists
-     * @throws WikipediaException in case of issues performing the request
-     */
-    Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException;
+    String getLoggedUserName(OAuth1AccessToken accessToken) throws WikipediaException;
 
-    Optional<WikipediaPage> getPageById(int pageId) throws WikipediaException;
-
-    Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section) throws WikipediaException;
-
-    /**
-     * @param pageIds The list of numeric IDs of the Wikipedia pages to retrieve
-     * @return A map with the each and the retrieved page. If any page is missing or deleted will not exist in the map.
-     * @throws WikipediaException in case of issues performing the request
-     */
-    List<WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException;
-
-    Set<Integer> getPageIdsByStringMatch(String text) throws WikipediaException;
-
-    void savePageContent(int pageId, String pageContent, @Nullable Integer section, String currentTimestamp, OAuth1AccessToken accessToken)
-            throws WikipediaException;
+    boolean isAdminUser(String username);
 
     String getMisspellingListPageContent() throws WikipediaException;
 
@@ -38,10 +19,19 @@ public interface WikipediaService {
 
     String getComposedMisspellingListPageContent() throws WikipediaException;
 
-    String identify(OAuth1AccessToken accessToken) throws WikipediaException;
+    Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException;
+
+    Optional<WikipediaPage> getPageById(int pageId) throws WikipediaException;
+
+    List<WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException;
 
     List<WikipediaSection> getPageSections(int pageId) throws WikipediaException;
 
-    boolean isAdminUser(String username);
+    Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section) throws WikipediaException;
+
+    Set<Integer> getPageIdsByStringMatch(String text) throws WikipediaException;
+
+    void savePageContent(int pageId, String pageContent, @Nullable Integer section, String currentTimestamp,
+                         OAuth1AccessToken accessToken) throws WikipediaException;
 
 }

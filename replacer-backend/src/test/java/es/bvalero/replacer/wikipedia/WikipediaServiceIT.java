@@ -56,7 +56,7 @@ public class WikipediaServiceIT {
         // We pass a null access token to retrieve an anonymous edit token
         EditToken editToken = wikipediaService.getEditToken(6903884, new OAuth1AccessToken("", ""));
         Assert.assertNotNull(editToken);
-        Assert.assertTrue(editToken.getCsrftoken().endsWith("+\\"));
+        Assert.assertTrue(editToken.getCsrfToken().endsWith("+\\"));
         Assert.assertNotNull(editToken.getTimestamp());
     }
 

@@ -30,7 +30,7 @@ public enum WikipediaNamespace {
         this.value = value;
     }
 
-    public static java.util.Collection<WikipediaNamespace> getProcessableNamespaces() {
+    static java.util.Collection<WikipediaNamespace> getProcessableNamespaces() {
         return EnumSet.of(ARTICLE, ANNEX);
     }
 
@@ -38,7 +38,7 @@ public enum WikipediaNamespace {
         return map.get(namespace);
     }
 
-    public int getValue() {
+    int getValue() {
         return value;
     }
 

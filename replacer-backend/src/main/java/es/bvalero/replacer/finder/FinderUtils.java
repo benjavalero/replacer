@@ -29,6 +29,10 @@ public class FinderUtils {
         return Character.isUpperCase(word.charAt(0));
     }
 
+    public static boolean containsUppercase(CharSequence text) {
+        return text.chars().anyMatch(Character::isUpperCase);
+    }
+
     public static String setFirstUpperCase(String word) {
         return toUpperCase(word.substring(0, 1)) + word.substring(1);
     }

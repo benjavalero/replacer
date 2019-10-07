@@ -20,7 +20,6 @@ public class WikipediaPage {
     private static final List<String> TEMPLATES_NOT_PROCESSABLE =
             Arrays.asList(PREFIX_REDIRECT, TEMPLATE_DESTROY, TEMPLATE_COPY_EDIT);
 
-    @Wither
     private int id;
     private String title;
     private WikipediaNamespace namespace;
@@ -32,16 +31,16 @@ public class WikipediaPage {
     // Store the timestamp when the page was queried
     private final String queryTimestamp;
 
-    public static WikipediaPage.WikipediaPageBuilder builder() {
-        return new WikipediaPage.WikipediaPageBuilder();
-    }
-
     public static LocalDateTime parseWikipediaTimestamp(String timestamp) {
         return LocalDateTime.from(WIKIPEDIA_DATE_FORMATTER.parse(timestamp));
     }
 
     public static String formatWikipediaTimestamp(LocalDateTime localDateTime) {
         return WIKIPEDIA_DATE_FORMATTER.format(localDateTime);
+    }
+
+    public boolean isProcessableByNamespace() {
+        return WikipediaNamespace.getProcessableNamespaces().contains(this.namespace);
     }
 
     public boolean isProcessableByContent() {

@@ -20,56 +20,13 @@ import java.util.*;
 class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
-    public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
-        LocalDateTime nowDateTime = LocalDateTime.now();
-        String now = WikipediaPage.formatWikipediaTimestamp(nowDateTime);
-        return Optional.of(WikipediaPage.builder()
-                .id(1)
-                .namespace(WikipediaNamespace.ARTICLE)
-                .title("América del Norte")
-                .content(loadArticleContent("/article-long.txt"))
-                .lastUpdate(nowDateTime)
-                .queryTimestamp(now)
-                .build());
+    public String getLoggedUserName(OAuth1AccessToken accessToken) {
+        return "offline";
     }
 
     @Override
-    public Optional<WikipediaPage> getPageById(int articleId) throws WikipediaException {
-        return getPageByIdAndSection(articleId, 0);
-    }
-
-    @Override
-    public Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section) throws WikipediaException {
-        return getPageByTitle("").map(page -> page.withId(pageId));
-    }
-
-    @Override
-    public List<WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException {
-        List<WikipediaPage> pages = new ArrayList<>();
-        for (Integer id : pageIds) {
-            getPageByTitle(Integer.toString(id)).ifPresent(pages::add);
-        }
-        return pages;
-    }
-
-    @Override
-    public Set<Integer> getPageIdsByStringMatch(String text) {
-        return Collections.singleton(1);
-    }
-
-    @Override
-    public void savePageContent(int pageId, String pageContent, @Nullable Integer section, String currentTimestamp, OAuth1AccessToken accessToken) {
-        // Do nothing
-    }
-
-    private String loadArticleContent(String fileName) throws WikipediaException {
-        LOGGER.info("Load fake content from file: {}", fileName);
-        try {
-            return new String(Files.readAllBytes(Paths.get(getClass().getResource(fileName).toURI())),
-                    StandardCharsets.UTF_8);
-        } catch (IOException | URISyntaxException e) {
-            throw new WikipediaException(e);
-        }
+    public boolean isAdminUser(String username) {
+        return true;
     }
 
     @Override
@@ -88,8 +45,35 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     @Override
-    public String identify(OAuth1AccessToken accessToken) {
-        return "offline";
+    public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
+        return Optional.of(buildFakePage(1));
+    }
+
+    private WikipediaPage buildFakePage(int pageId) throws WikipediaException {
+        LocalDateTime nowDateTime = LocalDateTime.now();
+        String now = WikipediaPage.formatWikipediaTimestamp(nowDateTime);
+        return WikipediaPage.builder()
+                .id(pageId)
+                .namespace(WikipediaNamespace.ARTICLE)
+                .title("América del Norte")
+                .content(loadArticleContent("/article-long.txt"))
+                .lastUpdate(nowDateTime)
+                .queryTimestamp(now)
+                .build();
+    }
+
+    @Override
+    public Optional<WikipediaPage> getPageById(int articleId) throws WikipediaException {
+        return getPageByIdAndSection(articleId, 0);
+    }
+
+    @Override
+    public List<WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException {
+        List<WikipediaPage> pages = new ArrayList<>();
+        for (Integer id : pageIds) {
+            getPageByTitle(Integer.toString(id)).ifPresent(pages::add);
+        }
+        return pages;
     }
 
     @Override
@@ -98,8 +82,29 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     @Override
-    public boolean isAdminUser(String username) {
-        return true;
+    public Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section) throws WikipediaException {
+        return Optional.of(buildFakePage(pageId));
+    }
+
+    @Override
+    public Set<Integer> getPageIdsByStringMatch(String text) {
+        return Collections.singleton(1);
+    }
+
+    @Override
+    public void savePageContent(int pageId, String pageContent, @Nullable Integer section, String currentTimestamp,
+                                OAuth1AccessToken accessToken) {
+        // Do nothing
+    }
+
+    private String loadArticleContent(String fileName) throws WikipediaException {
+        LOGGER.info("Load fake content from file: {}", fileName);
+        try {
+            return new String(Files.readAllBytes(Paths.get(getClass().getResource(fileName).toURI())),
+                    StandardCharsets.UTF_8);
+        } catch (IOException | URISyntaxException e) {
+            throw new WikipediaException(e);
+        }
     }
 
 }
