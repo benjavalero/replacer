@@ -9,6 +9,7 @@ import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,9 @@ public class ArticleService {
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     // Cache the found articles candidates to be reviewed
     // to find faster the next one after the user reviews one
@@ -355,19 +359,13 @@ public class ArticleService {
     }
 
     private ArticleReview buildArticleReview(WikipediaPage article, List<Replacement> replacements) {
-        return ArticleReview.builder()
-                .articleId(article.getId())
-                .title(article.getTitle())
-                .content(article.getContent())
-                .section(article.getSection())
-                .currentTimestamp(article.getQueryTimestamp())
-                .replacements(replacements).build();
+        ArticleReview review = modelMapper.map(article, ArticleReview.class);
+        review.setReplacements(replacements.stream().map(this::convertToDto).collect(Collectors.toList()));
+        return review;
     }
 
-    /* DUMP INDEX */
-
-    public List<ReplacementEntity> findDatabaseReplacementByArticles(int minArticleId, int maxArticleId) {
-        return replacementRepository.findByArticles(minArticleId, maxArticleId);
+    private ArticleReplacement convertToDto(Replacement replacement) {
+        return modelMapper.map(replacement, ArticleReplacement.class);
     }
 
     /* MISSPELLINGS */

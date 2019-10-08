@@ -1,10 +1,10 @@
 import { ArticleReplacement } from './article-replacement.model';
 
 export interface ArticleReview {
-  articleId: number;
+  id: number;
   title: string;
   content: string;
   section?: number;
-  currentTimestamp: string;
+  queryTimestamp: string;
   replacements: ArticleReplacement[];
 }

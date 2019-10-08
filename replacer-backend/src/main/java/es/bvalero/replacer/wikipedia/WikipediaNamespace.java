@@ -30,7 +30,7 @@ public enum WikipediaNamespace {
         this.value = value;
     }
 
-    static java.util.Collection<WikipediaNamespace> getProcessableNamespaces() {
+    public static java.util.Collection<WikipediaNamespace> getProcessableNamespaces() {
         return EnumSet.of(ARTICLE, ANNEX);
     }
 

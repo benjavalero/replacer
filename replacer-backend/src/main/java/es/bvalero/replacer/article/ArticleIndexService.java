@@ -2,10 +2,10 @@ package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -28,34 +27,20 @@ public class ArticleIndexService {
     @Autowired
     private ArticleStatsService articleStatsService;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     /* INDEX ARTICLES */
 
-    void indexArticleReplacements(WikipediaPage article, Collection<Replacement> replacements) {
+    void indexArticleReplacements(IndexableArticle article, List<Replacement> replacements) {
         LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
-        indexReplacements(article,
-                convertArticleReplacements(article, replacements),
-                replacementRepository.findByArticleId(article.getId())
-        );
+        indexArticleReplacements(article, replacements, replacementRepository.findByArticleId(article.getId()));
         LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
     }
 
-    public void indexArticleReplacements(WikipediaPage article, Collection<Replacement> replacements,
-                                         Collection<ReplacementEntity> dbReplacements) {
-        LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
-        indexReplacements(article,
-                convertArticleReplacements(article, replacements),
-                dbReplacements
-        );
-        LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
-    }
-
-    void indexReplacements(WikipediaPage article, Collection<ReplacementEntity> replacements,
-                           Collection<ReplacementEntity> dbReplacements) {
-        LOGGER.debug("START Index list of replacements\n" +
-                        "New: {} - {}\n" +
-                        "Old: {} - {}",
-                replacements.size(), replacements,
-                dbReplacements.size(), dbReplacements);
+    public void indexArticleReplacements(IndexableArticle article, List<Replacement> replacements, List<ReplacementEntity> dbReplacements) {
+        List<IndexableReplacement> indexableReplacements = replacements.stream()
+                .map(rep -> convertToDto(article, rep)).collect(Collectors.toList());
 
         // Trick: In case of no replacements found we insert a fake reviewed replacement
         // in order to be able to skip the article when reindexing
@@ -64,17 +49,25 @@ public class ArticleIndexService {
             reviewReplacementAsSystem(newReplacement);
         }
 
-        replacements.forEach(replacement -> {
-            Optional<ReplacementEntity> existing = findSameReplacementInCollection(replacement, dbReplacements);
-            if (existing.isPresent()) {
-                handleExistingReplacement(replacement, existing.get());
-                dbReplacements.remove(existing.get());
-            } else {
-                // New replacement
-                saveReplacement(replacement);
-                LOGGER.debug("Replacement inserted in DB: {}", replacement);
-            }
-        });
+        indexReplacements(indexableReplacements, dbReplacements);
+    }
+
+    private IndexableReplacement convertToDto(IndexableArticle article, Replacement replacement) {
+        IndexableReplacement indexableReplacement = modelMapper.map(replacement, IndexableReplacement.class);
+        indexableReplacement.setArticleId(article.getId());
+        indexableReplacement.setPosition(replacement.getStart());
+        indexableReplacement.setLastUpdate(article.getLastUpdate().toLocalDate());
+        return indexableReplacement;
+    }
+
+    void indexReplacements(List<IndexableReplacement> replacements, List<ReplacementEntity> dbReplacements) {
+        LOGGER.debug("START Index list of replacements\n" +
+                        "New: {} - {}\n" +
+                        "Old: {} - {}",
+                replacements.size(), replacements,
+                dbReplacements.size(), dbReplacements);
+
+        replacements.forEach(replacement -> indexReplacement(replacement, dbReplacements));
 
         // Remove the remaining replacements
         dbReplacements.stream().filter(ReplacementEntity::isToBeReviewed).forEach(rep -> {
@@ -84,27 +77,36 @@ public class ArticleIndexService {
         LOGGER.debug("END Index list of replacements");
     }
 
-    private Optional<ReplacementEntity> findSameReplacementInCollection(ReplacementEntity replacement,
-                                                                        Collection<ReplacementEntity> replacements) {
-        return replacements.stream().filter(rep -> rep.isSame(replacement)).findAny();
+    private void indexReplacement(IndexableReplacement replacement, List<ReplacementEntity> dbArticleReplacements) {
+        Optional<ReplacementEntity> existing = findSameReplacementInCollection(replacement, dbArticleReplacements);
+        if (existing.isPresent()) {
+            handleExistingReplacement(replacement, existing.get());
+            dbArticleReplacements.remove(existing.get());
+        } else {
+            // New replacement
+            insertReplacement(replacement);
+            LOGGER.debug("Replacement inserted in DB: {}", replacement);
+        }
     }
 
-    private Collection<ReplacementEntity> convertArticleReplacements(WikipediaPage article,
-                                                                     Collection<Replacement> replacements) {
-        return replacements.stream().map(
-                replacement -> new ReplacementEntity(
-                        article.getId(), replacement.getType(), replacement.getSubtype(),
-                        replacement.getStart())
-                        .withLastUpdate(article.getLastUpdate().toLocalDate()))
-                .collect(Collectors.toList());
+    private Optional<ReplacementEntity> findSameReplacementInCollection(
+            IndexableReplacement replacement, Collection<ReplacementEntity> entities) {
+        return entities.stream().filter(entity -> isSame(replacement, entity)).findAny();
     }
 
-    private void handleExistingReplacement(ReplacementEntity newReplacement, ReplacementEntity dbReplacement) {
-        if (dbReplacement.getLastUpdate().isBefore(newReplacement.getLastUpdate())
+    private boolean isSame(IndexableReplacement replacement, ReplacementEntity entity) {
+        return replacement.getArticleId() == entity.getArticleId() &&
+                replacement.getType().equals(entity.getType()) &&
+                replacement.getSubtype().equals(entity.getSubtype()) &&
+                replacement.getPosition() == entity.getPosition();
+    }
+
+    private void handleExistingReplacement(IndexableReplacement replacement, ReplacementEntity dbReplacement) {
+        if (dbReplacement.getLastUpdate().isBefore(replacement.getLastUpdate())
                 && dbReplacement.isToBeReviewed()) { // DB older than Dump
-            ReplacementEntity updated = dbReplacement.withLastUpdate(newReplacement.getLastUpdate());
-            saveReplacement(updated);
-            LOGGER.debug("Replacement updated in DB: {}", updated);
+            dbReplacement.setLastUpdate(replacement.getLastUpdate());
+            saveReplacement(dbReplacement);
+            LOGGER.debug("Replacement updated in DB: {}", dbReplacement);
         } else {
             LOGGER.debug("Replacement existing in DB: {}", dbReplacement);
         }
@@ -114,19 +116,31 @@ public class ArticleIndexService {
         replacementRepository.save(replacement);
     }
 
+    void insertReplacement(IndexableReplacement replacement) {
+        replacementRepository.save(convertToEntity(replacement));
+    }
+
+    private ReplacementEntity convertToEntity(IndexableReplacement replacement) {
+        return modelMapper.map(replacement, ReplacementEntity.class);
+    }
+
     private void reviewReplacement(ReplacementEntity replacement, String reviewer) {
-        saveReplacement(replacement.withReviewer(reviewer).withLastUpdate(LocalDate.now()));
+        replacement.setReviewer(reviewer);
+        replacement.setLastUpdate(LocalDate.now());
+        saveReplacement(replacement);
     }
 
     void reviewReplacementAsSystem(ReplacementEntity replacement) {
-        saveReplacement(replacement.withReviewer(SYSTEM_REVIEWER).withLastUpdate(LocalDate.now()));
+        replacement.setReviewer(SYSTEM_REVIEWER);
+        replacement.setLastUpdate(LocalDate.now());
+        saveReplacement(replacement);
     }
 
     void reviewArticleAsSystem(int articleId) {
         replacementRepository.findByArticleIdAndReviewerIsNull(articleId).forEach(this::reviewReplacementAsSystem);
     }
 
-    public void reviewArticlesAsSystem(Set<Integer> articleIds) {
+    void reviewArticlesAsSystem(Collection<Integer> articleIds) {
         articleIds.forEach(this::reviewArticleAsSystem);
     }
 

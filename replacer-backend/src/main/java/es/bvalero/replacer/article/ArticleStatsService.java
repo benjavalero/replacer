@@ -3,6 +3,7 @@ package es.bvalero.replacer.article;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -16,8 +17,11 @@ public class ArticleStatsService {
     @Autowired
     private ReplacementRepository replacementRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     // Cache the count of replacements. This list is updated every 10 minutes and modified when saving changes.
-    private ListValuedMap<String, ReplacementCount> cachedReplacementCount = new ArrayListValuedHashMap<>();
+    private ListValuedMap<String, SubtypeCount> cachedReplacementCount = new ArrayListValuedHashMap<>();
 
     /* STATISTICS */
 
@@ -33,13 +37,13 @@ public class ArticleStatsService {
         return replacementRepository.countByReviewerIsNull();
     }
 
-    List<Object[]> countReplacementsGroupedByReviewer() {
+    List<ReviewerCount> countReplacementsGroupedByReviewer() {
         return replacementRepository.countGroupedByReviewer(ArticleIndexService.SYSTEM_REVIEWER);
     }
 
     /* LIST OF REPLACEMENTS */
 
-    ListValuedMap<String, ReplacementCount> findMisspellingsGrouped() {
+    ListValuedMap<String, SubtypeCount> findMisspellingsGrouped() {
         return this.cachedReplacementCount;
     }
 
@@ -49,18 +53,16 @@ public class ArticleStatsService {
     @Scheduled(fixedDelayString = "${replacer.article.stats.delay}")
     public void updateReplacementCount() {
         LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
-        LOGGER.info("START Count grouped replacements");
-        List<ReplacementCount> counts = replacementRepository.findReplacementCountByTypeAndSubtype();
+        LOGGER.info("START Count grouped replacements by type and subtype");
+        List<TypeSubtypeCount> counts = replacementRepository.countGroupedByTypeAndSubtype();
         LOGGER.info("END Count grouped replacements. Size: {}", counts.size());
 
         this.cachedReplacementCount.clear();
-        this.cachedReplacementCount.putAll(cacheReplacementCounts(counts));
+        counts.forEach(count -> this.cachedReplacementCount.put(count.getType(), convertToDto(count)));
     }
 
-    private ListValuedMap<String, ReplacementCount> cacheReplacementCounts(List<ReplacementCount> counts) {
-        ListValuedMap<String, ReplacementCount> countMap = new ArrayListValuedHashMap<>();
-        counts.forEach(count -> countMap.put(count.getType(), count));
-        return countMap;
+    private SubtypeCount convertToDto(TypeSubtypeCount entity) {
+        return modelMapper.map(entity, SubtypeCount.class);
     }
 
     void removeCachedReplacementCount(String type, String subtype) {

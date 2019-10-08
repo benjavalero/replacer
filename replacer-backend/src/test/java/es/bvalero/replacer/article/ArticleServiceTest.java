@@ -9,10 +9,8 @@ import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.*;
@@ -44,6 +42,9 @@ public class ArticleServiceTest {
 
     @Mock
     private ReplacementFinderService replacementFinderService;
+
+    @Spy
+    private ModelMapper modelMapper;
 
     @InjectMocks
     private ArticleService articleService;
@@ -101,7 +102,7 @@ public class ArticleServiceTest {
                 .indexArticleReplacements(article, replacements);
 
         Assert.assertTrue(review.isPresent());
-        Assert.assertEquals(randomId, review.get().getArticleId());
+        Assert.assertEquals(randomId, review.get().getId());
     }
 
     @Test
@@ -150,7 +151,7 @@ public class ArticleServiceTest {
                 .indexArticleReplacements(article2, replacements);
 
         Assert.assertTrue(review.isPresent());
-        Assert.assertEquals(randomId2, review.get().getArticleId());
+        Assert.assertEquals(randomId2, review.get().getId());
     }
 
     @Test
@@ -198,7 +199,7 @@ public class ArticleServiceTest {
                 .indexArticleReplacements(article, replacements);
 
         Assert.assertTrue(review.isPresent());
-        Assert.assertEquals(randomId, review.get().getArticleId());
+        Assert.assertEquals(randomId, review.get().getId());
     }
 
     @Test
@@ -227,7 +228,7 @@ public class ArticleServiceTest {
                 articleService.findRandomArticleToReviewWithCustomReplacement(replacement, suggestion);
 
         Assert.assertTrue(review.isPresent());
-        Assert.assertEquals(randomId, review.get().getArticleId());
+        Assert.assertEquals(randomId, review.get().getId());
     }
 
     @Test
@@ -296,11 +297,11 @@ public class ArticleServiceTest {
 
         Optional<ArticleReview> review = articleService.findRandomArticleToReview("X", "Y");
         Assert.assertTrue(review.isPresent());
-        Assert.assertEquals(randomId, review.get().getArticleId());
+        Assert.assertEquals(randomId, review.get().getId());
 
         review = articleService.findRandomArticleToReview();
         Assert.assertTrue(review.isPresent());
-        Assert.assertEquals(randomId2, review.get().getArticleId());
+        Assert.assertEquals(randomId2, review.get().getId());
 
         review = articleService.findRandomArticleToReview("X", "Y");
         Assert.assertFalse(review.isPresent());
@@ -330,7 +331,7 @@ public class ArticleServiceTest {
 
         Assert.assertTrue(review.isPresent());
         review.ifPresent(rev -> {
-            Assert.assertEquals(randomId, rev.getArticleId());
+            Assert.assertEquals(randomId, rev.getId());
             Assert.assertEquals(replacements.size(), rev.getReplacements().size());
             Assert.assertEquals(replacements.get(0).getStart() - offset, rev.getReplacements().get(0).getStart());
             Assert.assertEquals(sectionId, rev.getSection().intValue());
@@ -355,8 +356,8 @@ public class ArticleServiceTest {
 
         Assert.assertTrue(review.isPresent());
         review.ifPresent(rev -> {
-            Assert.assertEquals(randomId, rev.getArticleId());
-            Assert.assertEquals(replacements, rev.getReplacements());
+            Assert.assertEquals(randomId, rev.getId());
+            Assert.assertEquals(replacements.size(), rev.getReplacements().size());
             Assert.assertNull(rev.getSection());
         });
     }

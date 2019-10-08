@@ -1,46 +1,20 @@
 package es.bvalero.replacer.dump;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.time.Instant;
 
 @Data
-@NoArgsConstructor // Needed by JPA
-@Entity
-@Table(name = "indexation")
-class DumpIndexation implements Serializable {
-
-    @JsonIgnore
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @Transient
-    private boolean running = false;
-
-    @Column(nullable = false, columnDefinition = "BIT", length = 1)
+@NoArgsConstructor
+class DumpIndexation {
+    private boolean running;
     private boolean forceProcess;
-
-    @Column(nullable = false)
     private long numArticlesRead;
-
-    @Column(nullable = false)
     private long numArticlesProcessable;
-
-    @Column(nullable = false)
     private long numArticlesProcessed;
-
-    @Column(nullable = false)
     private String dumpFileName;
-
-    @Column(nullable = false)
     private long start;
-
-    @Column
     private Long end;
 
     DumpIndexation(String dumpFileName, boolean forceProcess) {

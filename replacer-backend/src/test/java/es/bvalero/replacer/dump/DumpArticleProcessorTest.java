@@ -1,11 +1,11 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.article.ArticleIndexService;
+import es.bvalero.replacer.article.ReplacementCache;
 import es.bvalero.replacer.article.ReplacementEntity;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,14 +15,13 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 public class DumpArticleProcessorTest {
 
     @Mock
-    private DumpArticleCache dumpArticleCache;
+    private ReplacementCache replacementCache;
 
     @Mock
     private ArticleIndexService articleIndexService;
@@ -41,31 +40,30 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessSimple() {
-        WikipediaPage dumpArticle = WikipediaPage.builder().namespace(WikipediaNamespace.ARTICLE).content("").build();
+        DumpArticle dumpArticle = DumpArticle.builder().namespace(WikipediaNamespace.ARTICLE).content("").build();
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
 
-        Mockito.verify(dumpArticleCache).findDatabaseReplacements(Mockito.anyInt());
+        Mockito.verify(replacementCache).findByArticleId(Mockito.anyInt());
         Mockito.verify(replacementFinderService).findReplacements(Mockito.anyString());
-        Mockito.verify(articleIndexService)
-                .indexArticleReplacements(Mockito.eq(dumpArticle), Mockito.anyList(), Mockito.anyList());
+        Mockito.verify(articleIndexService).indexArticleReplacements(Mockito.eq(dumpArticle), Mockito.anyList(), Mockito.anyList());
     }
 
     @Test
     public void testCheckNamespaces() {
-        WikipediaPage dumpArticle = WikipediaPage.builder().namespace(WikipediaNamespace.ARTICLE).content("").build();
-        WikipediaPage dumpAnnex = WikipediaPage.builder().namespace(WikipediaNamespace.ANNEX).content("").build();
-        WikipediaPage dumpCategory = WikipediaPage.builder().namespace(WikipediaNamespace.CATEGORY).build();
+        DumpArticle dumpArticle = DumpArticle.builder().namespace(WikipediaNamespace.ARTICLE).content("").build();
+        DumpArticle dumpAnnex = DumpArticle.builder().namespace(WikipediaNamespace.ANNEX).content("").build();
+        DumpArticle dumpCategory = DumpArticle.builder().namespace(WikipediaNamespace.CATEGORY).build();
 
-        Assert.assertTrue(dumpArticleProcessor.isDumpArticleProcessable(dumpArticle));
-        Assert.assertTrue(dumpArticleProcessor.isDumpArticleProcessable(dumpAnnex));
-        Assert.assertFalse(dumpArticleProcessor.isDumpArticleProcessable(dumpCategory));
+        Assert.assertTrue(dumpArticle.isProcessable());
+        Assert.assertTrue(dumpAnnex.isProcessable());
+        Assert.assertFalse(dumpCategory.isProcessable());
     }
 
     @Test
     public void testProcessRedirection() {
-        WikipediaPage dumpArticle = WikipediaPage.builder().namespace(WikipediaNamespace.ARTICLE)
+        DumpArticle dumpArticle = DumpArticle.builder().namespace(WikipediaNamespace.ARTICLE)
                 .content("#Redirect").build();
-        Assert.assertFalse(dumpArticleProcessor.isDumpArticleProcessable(dumpArticle));
+        Assert.assertFalse(dumpArticle.isProcessable());
     }
 
     @Test
@@ -73,16 +71,16 @@ public class DumpArticleProcessorTest {
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime yesterday = today.minusDays(1L);
 
-        WikipediaPage dumpArticle = WikipediaPage.builder()
+        DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
                 .content("")
                 .lastUpdate(yesterday)
                 .build();
 
-        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1)
-                .withLastUpdate(today.toLocalDate());
-        Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt()))
-                .thenReturn(Collections.singleton(replacement));
+        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
+        replacement.setLastUpdate(today.toLocalDate());
+        Mockito.when(replacementCache.findByArticleId(Mockito.anyInt()))
+                .thenReturn(Collections.singletonList(replacement));
 
         Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
@@ -92,16 +90,16 @@ public class DumpArticleProcessorTest {
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime yesterday = today.minusDays(1L);
 
-        WikipediaPage dumpArticle = WikipediaPage.builder()
+        DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
                 .content("")
                 .lastUpdate(yesterday)
                 .build();
 
-        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1)
-                .withLastUpdate(today.toLocalDate());
-        Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt()))
-                .thenReturn(Collections.singleton(replacement));
+        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
+        replacement.setLastUpdate(today.toLocalDate());
+        Mockito.when(replacementCache.findByArticleId(Mockito.anyInt()))
+                .thenReturn(Collections.singletonList(replacement));
 
         Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
     }
@@ -110,16 +108,16 @@ public class DumpArticleProcessorTest {
     public void testProcessLastUpdateWhenTimestamp() {
         LocalDateTime today = LocalDateTime.now();
 
-        WikipediaPage dumpArticle = WikipediaPage.builder()
+        DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
                 .content("")
                 .lastUpdate(today)
                 .build();
 
-        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1)
-                .withLastUpdate(today.toLocalDate());
-        Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt()))
-                .thenReturn(Collections.singleton(replacement));
+        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
+        replacement.setLastUpdate(today.toLocalDate());
+        Mockito.when(replacementCache.findByArticleId(Mockito.anyInt()))
+                .thenReturn(Collections.singletonList(replacement));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
     }
@@ -129,29 +127,29 @@ public class DumpArticleProcessorTest {
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime yesterday = today.minusDays(1L);
 
-        WikipediaPage dumpArticle = WikipediaPage.builder()
+        DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
                 .content("")
                 .lastUpdate(today)
                 .build();
 
-        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1)
-                .withLastUpdate(yesterday.toLocalDate());
-        Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt()))
-                .thenReturn(Collections.singleton(replacement));
+        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
+        replacement.setLastUpdate(yesterday.toLocalDate());
+        Mockito.when(replacementCache.findByArticleId(Mockito.anyInt()))
+                .thenReturn(Collections.singletonList(replacement));
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
     }
 
     @Test
     public void testProcessNewArticle() {
-        WikipediaPage dumpArticle = WikipediaPage.builder()
+        DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
                 .content("")
                 .build();
 
-        Collection<ReplacementEntity> dbReplacements = Collections.emptySet();
-        Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt())).thenReturn(dbReplacements);
+        List<ReplacementEntity> dbReplacements = Collections.emptyList();
+        Mockito.when(replacementCache.findByArticleId(Mockito.anyInt())).thenReturn(dbReplacements);
 
         Replacement replacement = Replacement.builder().build();
         List<Replacement> replacements = Collections.singletonList(replacement);
@@ -168,16 +166,16 @@ public class DumpArticleProcessorTest {
         LocalDateTime today = LocalDateTime.now();
         LocalDateTime yesterday = today.minusDays(1L);
 
-        WikipediaPage dumpArticle = WikipediaPage.builder()
+        DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
                 .content("")
                 .lastUpdate(today)
                 .build();
 
-        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1)
-                .withLastUpdate(yesterday.toLocalDate());
-        Collection<ReplacementEntity> dbReplacements = Collections.singleton(replacement);
-        Mockito.when(dumpArticleCache.findDatabaseReplacements(Mockito.anyInt())).thenReturn(dbReplacements);
+        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
+        replacement.setLastUpdate(yesterday.toLocalDate());
+        List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
+        Mockito.when(replacementCache.findByArticleId(Mockito.anyInt())).thenReturn(dbReplacements);
 
         List<Replacement> replacements = Collections.emptyList();
         Mockito.when(replacementFinderService.findReplacements(Mockito.anyString())).thenReturn(replacements);

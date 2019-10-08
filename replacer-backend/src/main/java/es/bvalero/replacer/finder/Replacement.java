@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.Wither;
@@ -14,17 +13,13 @@ import java.util.List;
 @Builder
 public class Replacement implements Comparable<Replacement> {
 
-    @JsonIgnore
     private String type;
-    @JsonIgnore
     private String subtype;
-
     @Wither
     private int start;
     private String text;
     private List<Suggestion> suggestions;
 
-    @JsonIgnore
     public int getEnd() {
         return this.start + this.text.length();
     }

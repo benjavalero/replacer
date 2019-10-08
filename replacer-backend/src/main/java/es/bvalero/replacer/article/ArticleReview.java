@@ -1,25 +1,18 @@
 package es.bvalero.replacer.article;
 
-import es.bvalero.replacer.finder.Replacement;
-import lombok.Builder;
-import lombok.Value;
-import lombok.experimental.Wither;
+import lombok.Data;
 
 import java.util.List;
 
 /**
  * Domain class of an article to review to be used in the front-end.
  */
-@Value(staticConstructor = "of")
-@Builder
+@Data
 class ArticleReview {
-
-    private int articleId;
+    private int id;
     private String title;
     private String content;
-    @Wither
     private Integer section;
-    private String currentTimestamp;
-    private List<Replacement> replacements;
-
+    private String queryTimestamp;
+    private List<ArticleReplacement> replacements;
 }

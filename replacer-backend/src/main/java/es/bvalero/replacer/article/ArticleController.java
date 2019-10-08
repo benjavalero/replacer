@@ -126,8 +126,8 @@ public class ArticleController {
     }
 
     @GetMapping(value = "/count/replacements/reviewed/grouped")
-    public List<Object[]> countReplacementsGroupedByReviewer() {
-        List<Object[]> list = articleStatsService.countReplacementsGroupedByReviewer();
+    public List<ReviewerCount> countReplacementsGroupedByReviewer() {
+        List<ReviewerCount> list = articleStatsService.countReplacementsGroupedByReviewer();
         LOGGER.info("GET Count grouped by reviewer. Result Size: {}", list.size());
         return list;
     }
@@ -135,9 +135,9 @@ public class ArticleController {
     /* LIST OF REPLACEMENTS */
 
     @GetMapping(value = "/count/replacements/grouped")
-    public List<ReplacementCountList> listMisspellings() {
-        List<ReplacementCountList> list = articleStatsService.findMisspellingsGrouped().asMap().entrySet().stream()
-                .map(entry -> new ReplacementCountList(entry.getKey(), entry.getValue()))
+    public List<TypeCount> listMisspellings() {
+        List<TypeCount> list = articleStatsService.findMisspellingsGrouped().asMap().entrySet().stream()
+                .map(entry -> TypeCount.of(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
         LOGGER.info("GET Grouped replacement count. Result Size: {}", list.size());
         Collections.sort(list);

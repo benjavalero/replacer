@@ -23,10 +23,11 @@ public class ReplacementRepositoryTest {
         ReplacementEntity error2 = new ReplacementEntity(2, "X", "aber", 2);
         ReplacementEntity error3 = new ReplacementEntity(2, "X", "madrid", 3);
         ReplacementEntity error4 = new ReplacementEntity(3, "X", "paris", 4);
-        ReplacementEntity error5 = new ReplacementEntity(3, "X", "habia", 5).withReviewer("x");
+        ReplacementEntity error5 = new ReplacementEntity(3, "X", "habia", 5);
+        error5.setReviewer("x");
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3, error4, error5));
 
-        Assert.assertEquals(3, replacementRepository.findReplacementCountByTypeAndSubtype().size());
+        Assert.assertEquals(3, replacementRepository.countGroupedByTypeAndSubtype().size());
     }
 
     @Test

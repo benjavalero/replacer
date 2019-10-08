@@ -8,12 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Repository for replacements in database.
+ * Repository for dump indexations in database.
  */
 @Repository
 @Transactional
-interface DumpIndexationRepository extends JpaRepository<DumpIndexation, Long> {
+interface IndexationRepository extends JpaRepository<IndexationEntity, Long> {
 
-    List<DumpIndexation> findByOrderByIdDesc(Pageable pageable);
+    List<IndexationEntity> findByOrderByIdDesc(Pageable pageable);
 
 }

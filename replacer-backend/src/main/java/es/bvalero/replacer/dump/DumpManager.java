@@ -57,7 +57,7 @@ class DumpManager {
     }
 
     @TestOnly
-    public void setDumpIndexWait(int dumpIndexWait) {
+    void setDumpIndexWait(int dumpIndexWait) {
         this.dumpIndexWait = dumpIndexWait;
     }
 
@@ -117,6 +117,8 @@ class DumpManager {
     }
 
     private String findLatestDumpFileNameFromDatabase() {
+        // At this point we know that the indexation is not running
+        // so the status of the handler matches with last finished indexation in database
         return dumpHandler.getProcessStatus().getDumpFileName();
     }
 

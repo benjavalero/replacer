@@ -22,8 +22,8 @@ interface ReplacementRepository extends JpaRepository<ReplacementEntity, Long> {
     @Query("FROM ReplacementEntity WHERE articleId BETWEEN :minId AND :maxId")
     List<ReplacementEntity> findByArticles(@Param("minId") int minArticleId, @Param("maxId") int maxArticleId);
 
-    @Query("SELECT new es.bvalero.replacer.article.ReplacementCount(type, subtype, COUNT(*)) FROM ReplacementEntity WHERE reviewer IS NULL GROUP BY type, subtype")
-    List<ReplacementCount> findReplacementCountByTypeAndSubtype();
+    @Query("SELECT new es.bvalero.replacer.article.TypeSubtypeCount(type, subtype, COUNT(*)) FROM ReplacementEntity WHERE reviewer IS NULL GROUP BY type, subtype")
+    List<TypeSubtypeCount> countGroupedByTypeAndSubtype();
 
     @Query("SELECT articleId FROM ReplacementEntity WHERE reviewer IS NULL ORDER BY RAND()")
     List<Integer> findRandomArticleIdsToReview(Pageable pageable);
@@ -44,8 +44,8 @@ interface ReplacementRepository extends JpaRepository<ReplacementEntity, Long> {
 
     long countByReviewerIsNotNullAndReviewerIsNot(String reviewer);
 
-    @Query("SELECT reviewer, COUNT(*) FROM ReplacementEntity WHERE reviewer <> :systemReviewer GROUP BY reviewer ORDER BY COUNT(*) DESC")
-    List<Object[]> countGroupedByReviewer(String systemReviewer);
+    @Query("SELECT new es.bvalero.replacer.article.ReviewerCount(reviewer, COUNT(*)) FROM ReplacementEntity WHERE reviewer IS NOT NULL AND reviewer <> :systemReviewer GROUP BY reviewer ORDER BY COUNT(*) DESC")
+    List<ReviewerCount> countGroupedByReviewer(String systemReviewer);
 
     void deleteBySubtypeIn(Set<String> subtypes);
 

@@ -1,18 +1,15 @@
 package es.bvalero.replacer.article;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.Value;
 import lombok.experimental.NonFinal;
 
-@Value
-class ReplacementCount {
+@Data
+class SubtypeCount {
 
-    @JsonIgnore
-    private String type;
     @JsonProperty("s")
     private String subtype;
-    @NonFinal
     @JsonProperty("c")
     private long count;
 

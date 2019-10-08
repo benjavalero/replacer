@@ -5,6 +5,7 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ArticleReview } from './article-review.model';
 import { AuthenticationService } from '../authentication/authentication.service';
+import { ReviewerCount } from '../stats/reviewer-count.model';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +36,7 @@ export class ArticleService {
   }
 
   putArticleReviewInCache(type: string, subtype: string, review: ArticleReview): void {
-    const key = this.buildReviewCacheKey(review.articleId, type, subtype);
+    const key = this.buildReviewCacheKey(review.id, type, subtype);
     this.cachedArticleReviews[key] = review;
   }
 
@@ -89,8 +90,8 @@ export class ArticleService {
     return this.httpClient.get<number>(`${environment.apiUrl}/article/count/replacements/reviewed`);
   }
 
-  findNumReviewedByReviewer(): Observable<any[][]> {
-    return this.httpClient.get<any[][]>(`${environment.apiUrl}/article/count/replacements/reviewed/grouped`);
+  findNumReviewedByReviewer(): Observable<ReviewerCount[]> {
+    return this.httpClient.get<ReviewerCount[]>(`${environment.apiUrl}/article/count/replacements/reviewed/grouped`);
   }
 
 }

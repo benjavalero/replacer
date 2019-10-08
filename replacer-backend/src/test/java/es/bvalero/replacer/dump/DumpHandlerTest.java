@@ -1,7 +1,5 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.ArticleIndexService;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.modelmapper.ModelMapper;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -26,16 +25,13 @@ import java.nio.file.Paths;
 public class DumpHandlerTest {
 
     @Mock
-    private DumpIndexationRepository dumpIndexationRepository;
+    private IndexationRepository indexationRepository;
 
     @Mock
     private DumpArticleProcessor dumpArticleProcessor;
 
     @Mock
-    private DumpArticleCache dumpArticleCache;
-
-    @Mock
-    private ArticleIndexService articleIndexService;
+    private ModelMapper modelMapper;
 
     @InjectMocks
     private DumpHandler dumpHandler;
@@ -50,10 +46,9 @@ public class DumpHandlerTest {
     public void testHandleDumpFile() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
 
+        // The dump contains 4 pages: 1 article, 1 annex, 1 redirection and 1 from other category.
         // The first article is not processed. The rest are.
-        Mockito.when(dumpArticleProcessor.isDumpArticleProcessable(Mockito.any(WikipediaPage.class)))
-                .thenReturn(Boolean.TRUE);
-        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(WikipediaPage.class)))
+        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(DumpArticle.class)))
                 .thenReturn(Boolean.FALSE).thenReturn(Boolean.TRUE);
 
         // Start the instance of the handler as done in DumpManager
@@ -80,17 +75,19 @@ public class DumpHandlerTest {
 
         // Check number of articles read and processed (we have mocked the results from the processor)
         Assert.assertEquals(4L, status.getNumArticlesRead());
-        Assert.assertEquals(3L, status.getNumArticlesProcessed());
+        Assert.assertEquals(2L, status.getNumArticlesProcessable());
+        Assert.assertEquals(1L, status.getNumArticlesProcessed());
 
-        Mockito.verify(dumpArticleCache, Mockito.times(1)).clean();
+        Mockito.verify(dumpArticleProcessor, Mockito.times(1)).finishOverallProcess();
     }
 
     @Test
     public void testHandleDumpFileWithProcessingException() throws URISyntaxException {
         Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
 
-        // The first article is not processed. It throws an exception.
-        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(WikipediaPage.class)))
+        // The dump contains 4 pages: 1 article, 1 annex, 1 redirection and 1 from other category.
+        // No article is not processed. It throws an exception.
+        Mockito.when(dumpArticleProcessor.processArticle(Mockito.any(DumpArticle.class)))
                 .thenThrow(Mockito.mock(NullPointerException.class));
 
         // Start the instance of the handler as done in DumpManager
@@ -117,6 +114,7 @@ public class DumpHandlerTest {
 
         // Check number of articles read and processed (we have mocked the results from the processor)
         Assert.assertEquals(4L, status.getNumArticlesRead());
+        Assert.assertEquals(2L, status.getNumArticlesProcessable());
         Assert.assertEquals(0L, status.getNumArticlesProcessed());
     }
 

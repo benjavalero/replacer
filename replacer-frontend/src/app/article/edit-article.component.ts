@@ -69,7 +69,7 @@ export class EditArticleComponent implements OnInit {
     this.title = review.title;
     this.content = review.content;
     this.section = review.section;
-    this.currentTimestamp = review.currentTimestamp;
+    this.currentTimestamp = review.queryTimestamp;
     this.replacements = review.replacements;
   }
 

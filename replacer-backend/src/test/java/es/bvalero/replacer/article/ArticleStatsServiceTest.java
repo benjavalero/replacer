@@ -3,10 +3,8 @@ package es.bvalero.replacer.article;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
+import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +15,9 @@ public class ArticleStatsServiceTest {
 
     @Mock
     private ReplacementRepository replacementRepository;
+
+    @Spy
+    private ModelMapper modelMapper;
 
     @InjectMocks
     private ArticleStatsService articleStatsService;
@@ -59,7 +60,7 @@ public class ArticleStatsServiceTest {
 
     @Test
     public void testCountReplacementsGroupedByReviewer() {
-        List<Object[]> result = new ArrayList<>();
+        List<ReviewerCount> result = new ArrayList<>();
 
         Mockito.when(replacementRepository.countGroupedByReviewer(Mockito.anyString()))
                 .thenReturn(result);
@@ -72,17 +73,17 @@ public class ArticleStatsServiceTest {
         // At start the count is zero
         Assert.assertTrue(articleStatsService.findMisspellingsGrouped().isEmpty());
 
-        ReplacementCount count1 = new ReplacementCount("X", "Y", 2L);
-        ReplacementCount count2 = new ReplacementCount("X", "Z", 1L);
-        List<ReplacementCount> counts = Arrays.asList(count1, count2);
-        Mockito.when(replacementRepository.findReplacementCountByTypeAndSubtype())
+        TypeSubtypeCount count1 = new TypeSubtypeCount("X", "Y", 2L);
+        TypeSubtypeCount count2 = new TypeSubtypeCount("X", "Z", 1L);
+        List<TypeSubtypeCount> counts = Arrays.asList(count1, count2);
+        Mockito.when(replacementRepository.countGroupedByTypeAndSubtype())
                 .thenReturn(counts);
 
         articleStatsService.updateReplacementCount();
 
         Assert.assertFalse(articleStatsService.findMisspellingsGrouped().isEmpty());
         Assert.assertEquals(2, articleStatsService.findMisspellingsGrouped().size());
-        Assert.assertEquals(counts, articleStatsService.findMisspellingsGrouped().get("X"));
+        Assert.assertEquals(2, articleStatsService.findMisspellingsGrouped().get("X").size());
 
         // Decrease a replacement count
         articleStatsService.decreaseCachedReplacementsCount("X", "Y", 1);
@@ -91,7 +92,7 @@ public class ArticleStatsServiceTest {
         Assert.assertEquals(2, articleStatsService.findMisspellingsGrouped().size());
         Assert.assertEquals(2, articleStatsService.findMisspellingsGrouped().get("X").size());
         Assert.assertEquals(Long.valueOf(1), articleStatsService.findMisspellingsGrouped().get("X").stream()
-                .filter(c -> c.getSubtype().equals("Y")).map(ReplacementCount::getCount).findAny().orElse(0L));
+                .filter(c -> c.getSubtype().equals("Y")).map(SubtypeCount::getCount).findAny().orElse(0L));
 
         // Decrease a replacement count emptying it
         articleStatsService.decreaseCachedReplacementsCount("X", "Z", 1);

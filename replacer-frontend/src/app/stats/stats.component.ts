@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 
 import { ArticleService } from '../article/article.service';
 import { AlertService } from '../alert/alert.service';
+import { ReviewerCount } from './reviewer-count.model';
 
 @Component({
   selector: 'app-stats',
@@ -13,7 +14,7 @@ export class StatsComponent implements OnInit {
   numReplacements: number;
   numNotReviewed: number;
   numReviewed: number;
-  numReviewedGrouped: any[][] = [];
+  numReviewedGrouped: ReviewerCount[] = [];
 
   constructor(private articleService: ArticleService, private alertService: AlertService, private titleService: Title) { }
 
@@ -40,6 +41,6 @@ export class StatsComponent implements OnInit {
   }
 
   private findNumReviewedGrouped() {
-    this.articleService.findNumReviewedByReviewer().subscribe((res: any[][]) => this.numReviewedGrouped = res);
+    this.articleService.findNumReviewedByReviewer().subscribe((res: ReviewerCount[]) => this.numReviewedGrouped = res);
   }
 }

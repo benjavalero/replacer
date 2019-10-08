@@ -1,8 +1,9 @@
 package es.bvalero.replacer.article;
 
-import lombok.*;
-import lombok.experimental.Wither;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.jetbrains.annotations.TestOnly;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,7 +14,6 @@ import java.time.LocalDate;
  */
 @Data
 @NoArgsConstructor // Needed by JPA
-@AllArgsConstructor // Needed by @Wither
 @Entity
 @Table(name = "replacement2",
         uniqueConstraints = @UniqueConstraint(columnNames = {"articleId", "type", "subtype", "position"}))
@@ -39,11 +39,9 @@ public class ReplacementEntity implements Serializable {
     private int position;
 
     @Column(nullable = false)
-    @Wither
     private LocalDate lastUpdate;
 
     @Column
-    @Wither
     private String reviewer;
 
     public ReplacementEntity(int articleId, String type, String subtype, int position) {
@@ -55,15 +53,18 @@ public class ReplacementEntity implements Serializable {
         this.reviewer = null;
     }
 
-    boolean isToBeReviewed() {
-        return this.reviewer == null;
+    @TestOnly
+    public ReplacementEntity(int articleId, String type, String subtype, int position, String reviewer) {
+        this.articleId = articleId;
+        this.type = type;
+        this.subtype = subtype;
+        this.position = position;
+        this.lastUpdate = LocalDate.now();
+        this.reviewer = reviewer;
     }
 
-    boolean isSame(ReplacementEntity that) {
-        return articleId == that.articleId &&
-                position == that.position &&
-                type.equals(that.type) &&
-                subtype.equals(that.subtype);
+    boolean isToBeReviewed() {
+        return this.reviewer == null;
     }
 
 }

@@ -4,6 +4,7 @@ import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.nio.file.Path;
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 /**
  * Handler to parse a Wikipedia XML dump.
@@ -28,14 +29,13 @@ class DumpHandler extends DefaultHandler {
     private static final String PAGE_TAG = "page";
 
     @Autowired
-    private DumpIndexationRepository dumpIndexationRepository;
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private IndexationRepository indexationRepository;
 
     @Autowired
     private DumpArticleProcessor dumpArticleProcessor;
-
-    // Get database replacements in batches to improve performance
-    @Autowired
-    private DumpArticleCache dumpArticleCache;
 
     // Current article values
     private StringBuilder currentChars = new StringBuilder(5000);
@@ -62,11 +62,10 @@ class DumpHandler extends DefaultHandler {
 
     @Override
     public void endDocument() {
-        LOGGER.info("END handle dump document: {}", getProcessStatus());
-
         this.status.finish();
-        dumpArticleCache.clean();
-        dumpIndexationRepository.save(this.status);
+        dumpArticleProcessor.finishOverallProcess();
+        indexationRepository.save(convertToEntity(this.status));
+        LOGGER.info("END handle dump document: {}", getProcessStatus());
     }
 
     @Override
@@ -113,17 +112,16 @@ class DumpHandler extends DefaultHandler {
 
     private void processPage() {
         this.status.incrementNumArticlesRead();
-        WikipediaPage dumpArticle = WikipediaPage.builder()
+        DumpArticle dumpArticle = DumpArticle.builder()
                 .id(currentId)
                 .title(currentTitle)
                 .namespace(WikipediaNamespace.valueOf(currentNamespace))
                 .lastUpdate(WikipediaPage.parseWikipediaTimestamp(currentTimestamp))
                 .content(currentContent)
-                .queryTimestamp(WikipediaPage.formatWikipediaTimestamp(LocalDateTime.now()))
                 .build();
 
         try {
-            if (dumpArticleProcessor.isDumpArticleProcessable(dumpArticle)) {
+            if (dumpArticle.isProcessable()) {
                 this.status.incrementNumArticlesProcessable();
                 boolean articleProcessed = processArticle(dumpArticle);
                 if (articleProcessed) {
@@ -135,16 +133,28 @@ class DumpHandler extends DefaultHandler {
         }
     }
 
-    private boolean processArticle(WikipediaPage dumpArticle) {
+    private boolean processArticle(DumpArticle dumpArticle) {
         return dumpArticleProcessor.processArticle(dumpArticle);
     }
 
     DumpIndexation getProcessStatus() {
         if (this.status == null) {
-            this.status = dumpIndexationRepository.findByOrderByIdDesc(PageRequest.of(0, 1))
-                    .stream().findAny().orElse(new DumpIndexation());
+            this.status = findLastIndexation().orElse(new DumpIndexation());
         }
         return this.status;
+    }
+
+    private Optional<DumpIndexation> findLastIndexation() {
+        return indexationRepository.findByOrderByIdDesc(PageRequest.of(0, 1)).stream().findAny()
+                .map(this::convertToDto);
+    }
+
+    private DumpIndexation convertToDto(IndexationEntity entity) {
+        return modelMapper.map(entity, DumpIndexation.class);
+    }
+
+    private IndexationEntity convertToEntity(DumpIndexation dto) {
+        return modelMapper.map(dto, IndexationEntity.class);
     }
 
 }
