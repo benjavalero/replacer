@@ -65,7 +65,7 @@ class DumpHandler extends DefaultHandler {
         this.status.finish();
         dumpArticleProcessor.finishOverallProcess();
         indexationRepository.save(convertToEntity(this.status));
-        LOGGER.info("END handle dump document: {}", getProcessStatus());
+        LOGGER.info("END Handle dump document: {}", getProcessStatus());
     }
 
     @Override
