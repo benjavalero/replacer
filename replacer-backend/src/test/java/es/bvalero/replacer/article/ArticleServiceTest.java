@@ -4,7 +4,6 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -42,6 +41,9 @@ public class ArticleServiceTest {
 
     @Mock
     private ReplacementFinderService replacementFinderService;
+
+    @Mock
+    private SectionReviewService sectionReviewService;
 
     @Spy
     private ModelMapper modelMapper;
@@ -320,12 +322,8 @@ public class ArticleServiceTest {
                 .thenReturn(replacements);
 
         // The article has sections
-        WikipediaSection section1 = WikipediaSection.builder().byteOffset(offset).index(sectionId).build();
-        WikipediaSection section2 = WikipediaSection.builder().byteOffset(offset + 1).index(sectionId + 1).build();
-        Mockito.when(wikipediaService.getPageSections(randomId))
-                .thenReturn(Arrays.asList(section1, section2));
-        Mockito.when(wikipediaService.getPageByIdAndSection(randomId, sectionId))
-                .thenReturn(Optional.of(WikipediaPage.builder().id(randomId).content(content.substring(offset, offset + 1)).section(sectionId).build()));
+        ArticleReview sectionReview = articleService.buildArticleReview(article, replacements).withSection(sectionId);
+        Mockito.when(sectionReviewService.findSectionReview(Mockito.any(ArticleReview.class))).thenReturn(Optional.of(sectionReview));
 
         Optional<ArticleReview> review = articleService.findArticleReview(randomId, "X", "Y", null);
 
@@ -333,7 +331,6 @@ public class ArticleServiceTest {
         review.ifPresent(rev -> {
             Assert.assertEquals(randomId, rev.getId());
             Assert.assertEquals(replacements.size(), rev.getReplacements().size());
-            Assert.assertEquals(replacements.get(0).getStart() - offset, rev.getReplacements().get(0).getStart());
             Assert.assertEquals(sectionId, rev.getSection().intValue());
         });
     }
@@ -349,8 +346,7 @@ public class ArticleServiceTest {
                 .thenReturn(replacements);
 
         // The article has no sections
-        Mockito.when(wikipediaService.getPageSections(randomId))
-                .thenReturn(Collections.emptyList());
+        Mockito.when(sectionReviewService.findSectionReview(Mockito.any(ArticleReview.class))).thenReturn(Optional.empty());
 
         Optional<ArticleReview> review = articleService.findArticleReview(randomId, "X", "Y", null);
 

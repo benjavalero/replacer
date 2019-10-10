@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import lombok.Builder;
 import lombok.Value;
-import lombok.experimental.Wither;
 
 import java.util.List;
 
@@ -15,7 +14,6 @@ public class Replacement implements Comparable<Replacement> {
 
     private String type;
     private String subtype;
-    @Wither
     private int start;
     private String text;
     private List<Suggestion> suggestions;

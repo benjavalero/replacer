@@ -4,7 +4,6 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +36,9 @@ public class ArticleService {
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
+
+    @Autowired
+    private SectionReviewService sectionReviewService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -240,7 +242,15 @@ public class ArticleService {
         if (replacements.isEmpty()) {
             return Optional.empty();
         } else {
-            return getSectionReview(article, replacements);
+            ArticleReview articleReview = buildArticleReview(article, replacements);
+
+            // We try to reduce the review size by returning just a section of the page
+            Optional<ArticleReview> sectionReview = sectionReviewService.findSectionReview(articleReview);
+            if (sectionReview.isPresent()) {
+                return sectionReview;
+            } else {
+                return Optional.of(articleReview);
+            }
         }
     }
 
@@ -271,94 +281,7 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
-    private Optional<ArticleReview> getSectionReview(WikipediaPage article, List<Replacement> replacements) {
-        // We try to reduce the review size by returning just a section of the page
-
-        try {
-            // Get the sections from the Wikipedia API (better than calculating them by ourselves)
-            List<WikipediaSection> sections = new ArrayList<>(wikipediaService.getPageSections(article.getId()));
-
-            // Find the smallest section containing all the replacements
-            Optional<WikipediaSection> smallestSection =
-                    getSmallestSectionContainingAllReplacements(sections, replacements);
-
-            // Retrieve the section from Wikipedia API. Better than calculating it by ourselves, just in case.
-            if (smallestSection.isPresent()) {
-                Optional<WikipediaPage> pageSection = wikipediaService.getPageByIdAndSection
-                        (article.getId(), smallestSection.get().getIndex());
-                if (pageSection.isPresent()) {
-                    // Modify the start position of the replacements according to the section start
-                    List<Replacement> sectionReplacements =
-                            translateReplacementsByOffset(replacements, smallestSection.get().getByteOffset());
-                    // There are some rare cases where the byte-offset doesn't match with the section position
-                    if (sectionReplacements.stream().allMatch(rep -> validateArticleReplacement(rep, pageSection.get().getContent()))) {
-                        return Optional.of(buildArticleReview(pageSection.get(),
-                                translateReplacementsByOffset(replacements, smallestSection.get().getByteOffset())));
-                    } else {
-                        LOGGER.warn("Not valid byte-offset in section {} of article: {}",
-                                smallestSection.get().getIndex(), pageSection.get().getTitle());
-                    }
-                }
-            }
-
-            // If no section is found or there are problems the found section we return the review of the whole article
-            return Optional.of(buildArticleReview(article, replacements));
-        } catch (WikipediaException e) {
-            LOGGER.error("Error getting section review", e);
-        }
-
-        return Optional.empty();
-    }
-
-    private Optional<WikipediaSection> getSmallestSectionContainingAllReplacements(
-            List<WikipediaSection> sections, List<Replacement> replacements) {
-        WikipediaSection smallest = null;
-        for (int i = 0; i < sections.size(); i++) {
-            WikipediaSection section = sections.get(i);
-            int start = section.getByteOffset();
-            Integer end = null;
-            for (int j = i + 1; j < sections.size() && end == null; j++) {
-                if (sections.get(j).getLevel() <= section.getLevel()) {
-                    end = sections.get(j).getByteOffset();
-                }
-            }
-
-            // Check if all replacements are contained in the current section
-            if (areAllReplacementsContainedInInterval(replacements, start, end)) {
-                smallest = section;
-            }
-        }
-        return Optional.ofNullable(smallest);
-    }
-
-    private boolean areAllReplacementsContainedInInterval(List<Replacement> replacements,
-                                                          Integer start, @Nullable Integer end) {
-        return replacements.stream().allMatch(rep -> isReplacementContainedInInterval(rep, start, end));
-    }
-
-    private boolean isReplacementContainedInInterval(Replacement replacement,
-                                                     Integer start, @Nullable Integer end) {
-        if (replacement.getStart() >= start) {
-            if (end == null) {
-                return true;
-            } else {
-                return replacement.getEnd() <= end;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    private List<Replacement> translateReplacementsByOffset(List<Replacement> replacements, int offset) {
-        return replacements.stream().map(rep -> rep.withStart(rep.getStart() - offset)).collect(Collectors.toList());
-    }
-
-    private boolean validateArticleReplacement(Replacement replacement, String text) {
-        return replacement.getText().equals(
-                text.substring(replacement.getStart(), replacement.getEnd()));
-    }
-
-    private ArticleReview buildArticleReview(WikipediaPage article, List<Replacement> replacements) {
+    ArticleReview buildArticleReview(WikipediaPage article, List<Replacement> replacements) {
         ArticleReview review = modelMapper.map(article, ArticleReview.class);
         review.setReplacements(replacements.stream().map(this::convertToDto).collect(Collectors.toList()));
         return review;
