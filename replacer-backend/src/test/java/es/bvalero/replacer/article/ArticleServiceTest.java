@@ -322,7 +322,8 @@ public class ArticleServiceTest {
                 .thenReturn(replacements);
 
         // The article has sections
-        ArticleReview sectionReview = articleService.buildArticleReview(article, replacements).withSection(sectionId);
+        ArticleReview sectionReview = articleService.buildArticleReview(article, replacements);
+        sectionReview.setSection(sectionId);
         Mockito.when(sectionReviewService.findSectionReview(Mockito.any(ArticleReview.class))).thenReturn(Optional.of(sectionReview));
 
         Optional<ArticleReview> review = articleService.findArticleReview(randomId, "X", "Y", null);

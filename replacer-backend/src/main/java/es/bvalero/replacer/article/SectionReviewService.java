@@ -6,6 +6,7 @@ import es.bvalero.replacer.wikipedia.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,9 @@ class SectionReviewService {
 
     @Autowired
     private WikipediaService wikipediaService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     /**
      * @param review The review of the complete article.
@@ -47,9 +51,8 @@ class SectionReviewService {
                             translateReplacementsByOffset(review.getReplacements(), smallestSection.get().getByteOffset());
                     // We need to check some rare cases where the byte-offset doesn't match with the section position
                     if (sectionReplacements.stream().allMatch(rep -> validateArticleReplacement(rep, pageSection.get().getContent()))) {
-                        return Optional.of(review
-                                .withSection(pageSection.get().getSection())
-                                .withReplacements(translateReplacementsByOffset(review.getReplacements(), smallestSection.get().getByteOffset())));
+                        return Optional.of(buildArticleReview(pageSection.get(),
+                                translateReplacementsByOffset(review.getReplacements(), smallestSection.get().getByteOffset())));
                     } else {
                         LOGGER.warn("Not valid byte-offset in section {} of article: {}",
                                 smallestSection.get().getIndex(), pageSection.get().getTitle());
@@ -109,6 +112,12 @@ class SectionReviewService {
 
     private boolean validateArticleReplacement(ArticleReplacement replacement, String text) {
         return replacement.getText().equals(text.substring(replacement.getStart(), replacement.getEnd()));
+    }
+
+    private ArticleReview buildArticleReview(WikipediaPage article, List<ArticleReplacement> replacements) {
+        ArticleReview review = modelMapper.map(article, ArticleReview.class);
+        review.setReplacements(replacements);
+        return review;
     }
 
 }
