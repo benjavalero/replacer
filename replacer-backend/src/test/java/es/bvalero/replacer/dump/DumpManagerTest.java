@@ -128,7 +128,7 @@ public class DumpManagerTest {
     @Test
     public void testParseDumpFile() throws URISyntaxException, DumpException {
         // We need a real dump file to create the input stream
-        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Assert.assertNotNull(dumpFile);
         Assert.assertTrue(Files.exists(dumpFile));
 
@@ -149,7 +149,7 @@ public class DumpManagerTest {
 
     @Test(expected = DumpException.class)
     public void testParseDumpFileWithParseException() throws URISyntaxException, DumpException {
-        Path dumpFile = Paths.get(getClass().getResource("/non-valid-dump.txt.bz2").toURI());
+        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/non-valid-dump.txt.bz2").toURI());
         Assert.assertNotNull(dumpFile);
         Assert.assertTrue(Files.exists(dumpFile));
 
@@ -158,7 +158,7 @@ public class DumpManagerTest {
 
     @Test
     public void testProcessLatestDumpFile() throws URISyntaxException, IOException {
-        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         // Make the dump file old enough
         Files.setLastModifiedTime(dumpFile, FileTime.from(LocalDateTime.now().minusDays(2).toInstant(ZoneOffset.UTC)));
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
@@ -192,7 +192,7 @@ public class DumpManagerTest {
 
     @Test
     public void testProcessLatestDumpFileAlreadyProcessed() throws URISyntaxException {
-        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
         DumpIndexation status = new DumpIndexation("eswiki-20170101-pages-articles.xml.bz2", false);
         Mockito.when(dumpHandler.getProcessStatus()).thenReturn(status);
@@ -204,7 +204,7 @@ public class DumpManagerTest {
 
     @Test
     public void testProcessLatestDumpFileAlreadyProcessedForced() throws URISyntaxException {
-        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
         Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
 
@@ -215,7 +215,7 @@ public class DumpManagerTest {
 
     @Test
     public void testProcessDumpScheduled() throws URISyntaxException, IOException {
-        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         // Make the dump file old enough
         Files.setLastModifiedTime(dumpFile, FileTime.from(LocalDateTime.now().minusDays(2).toInstant(ZoneOffset.UTC)));
         dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());

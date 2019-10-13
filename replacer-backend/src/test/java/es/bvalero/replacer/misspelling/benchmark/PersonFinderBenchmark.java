@@ -39,7 +39,7 @@ public class PersonFinderBenchmark {
 
         // Load IDs of the sample articles
         List<Integer> sampleIds = new ArrayList<>();
-        try (Stream<String> stream = Files.lines(Paths.get(PersonFinderBenchmark.class.getResource("/benchmark/sample-articles.txt").toURI()))) {
+        try (Stream<String> stream = Files.lines(Paths.get(PersonFinderBenchmark.class.getResource("/es/bvalero/replacer/benchmark/sample-articles.txt").toURI()))) {
             stream.forEach(line -> sampleIds.add(Integer.valueOf(line.trim())));
         }
 

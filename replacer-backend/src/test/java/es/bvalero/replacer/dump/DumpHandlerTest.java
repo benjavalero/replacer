@@ -44,7 +44,7 @@ public class DumpHandlerTest {
 
     @Test
     public void testHandleDumpFile() throws URISyntaxException {
-        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
 
         // The dump contains 4 pages: 1 article, 1 annex, 1 redirection and 1 from other category.
         // The first article is not processed. The rest are.
@@ -83,7 +83,7 @@ public class DumpHandlerTest {
 
     @Test
     public void testHandleDumpFileWithProcessingException() throws URISyntaxException {
-        Path dumpFile = Paths.get(getClass().getResource("/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
 
         // The dump contains 4 pages: 1 article, 1 annex, 1 redirection and 1 from other category.
         // No article is not processed. It throws an exception.
