@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.article.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,7 +21,7 @@ public class MisspellingManagerTest {
     private WikipediaService wikipediaService;
 
     @Mock
-    private ArticleService articleService;
+    private ReplacementRepository replacementRepository;
 
     @InjectMocks
     private MisspellingManager misspellingManager;
@@ -80,12 +80,12 @@ public class MisspellingManagerTest {
         Misspelling misspelling2 = Misspelling.ofCaseInsensitive("B", "C");
         misspellingManager.setItems(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
 
-        Mockito.verify(articleService, Mockito.times(0)).deleteReplacementsByTextIn(Mockito.anySet());
+        Mockito.verify(replacementRepository, Mockito.times(0)).deleteBySubtypeIn(Mockito.anySet());
 
         Misspelling misspelling3 = Misspelling.ofCaseInsensitive("C", "D");
         misspellingManager.setItems(new HashSet<>(Arrays.asList(misspelling2, misspelling3)));
 
-        Mockito.verify(articleService, Mockito.times(1)).deleteReplacementsByTextIn(Collections.singleton("A"));
+        Mockito.verify(replacementRepository, Mockito.times(1)).deleteBySubtypeIn(Collections.singleton("A"));
     }
 
 }

@@ -15,7 +15,7 @@ import java.util.Set;
  */
 @Repository
 @Transactional
-interface ReplacementRepository extends JpaRepository<ReplacementEntity, Long> {
+public interface ReplacementRepository extends JpaRepository<ReplacementEntity, Long> {
 
     List<ReplacementEntity> findByArticleId(int articleId);
 

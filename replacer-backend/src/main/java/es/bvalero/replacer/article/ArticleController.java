@@ -2,7 +2,6 @@ package es.bvalero.replacer.article;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.cosmetic.CosmeticChangesService;
-import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,13 @@ import java.util.stream.Collectors;
 public class ArticleController {
 
     @Autowired
-    private ArticleService articleService;
+    private ArticleReviewNoTypeService articleReviewNoTypeService;
+
+    @Autowired
+    private ArticleReviewTypeSubtypeService articleReviewTypeSubtypeService;
+
+    @Autowired
+    private ArticleReviewCustomService articleReviewCustomService;
 
     @Autowired
     private ArticleStatsService articleStatsService;
@@ -41,21 +46,21 @@ public class ArticleController {
     @GetMapping(value = "/random")
     public Optional<ArticleReview> findRandomArticleWithReplacements() {
         LOGGER.info("GET Find random article with replacements");
-        return articleService.findRandomArticleToReview();
+        return articleReviewNoTypeService.findRandomArticleReview();
     }
 
     @GetMapping(value = "/random/{type}/{subtype}")
     public Optional<ArticleReview> findRandomArticleByTypeAndSubtype(
             @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
         LOGGER.info("GET Find random article with replacements. Type: {} - Subtype: {}", type, subtype);
-        return articleService.findRandomArticleToReview(type, subtype);
+        return articleReviewTypeSubtypeService.findRandomArticleReview(type, subtype);
     }
 
     @GetMapping(value = "/random/Personalizado/{subtype}/{suggestion}")
     public Optional<ArticleReview> findRandomArticleByCustomReplacement(
             @PathVariable("subtype") String replacement, @PathVariable("suggestion") String suggestion) {
         LOGGER.info("GET Find random article with replacements. Custom replacement: {} - {}", replacement, suggestion);
-        return articleService.findRandomArticleToReviewWithCustomReplacement(replacement, suggestion);
+        return articleReviewCustomService.findRandomArticleReview(replacement, suggestion);
     }
 
     /* FIND AN ARTICLE REVIEW */
@@ -63,22 +68,22 @@ public class ArticleController {
     @GetMapping(value = "/{id}")
     public Optional<ArticleReview> findArticleReviewById(@PathVariable("id") int articleId) {
         LOGGER.info("GET Find review for article. ID: {}", articleId);
-        return articleService.findArticleReview(articleId, null, null, null);
+        return articleReviewNoTypeService.getArticleReview(articleId);
     }
 
     @GetMapping(value = "/{id}/{type}/{subtype}")
     public Optional<ArticleReview> findArticleReviewByIdByTypeAndSubtype(
             @PathVariable("id") int articleId, @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
         LOGGER.info("GET Find review for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
-        return articleService.findArticleReview(articleId, type, subtype, null);
+        return articleReviewTypeSubtypeService.getArticleReview(articleId, type, subtype);
     }
 
     @GetMapping(value = "/{id}/Personalizado/{subtype}/{suggestion}")
     public Optional<ArticleReview> findArticleReviewByIdAndCustomReplacement(
-            @PathVariable("id") int articleId, @PathVariable("subtype") String subtype, @PathVariable("suggestion") String suggestion) {
-        LOGGER.info("GET Find review for article by custom type. ID: {} - Subtype: {} - Suggestion: {}",
-                articleId, subtype, suggestion);
-        return articleService.findArticleReview(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, suggestion);
+            @PathVariable("id") int articleId, @PathVariable("subtype") String replacement, @PathVariable("suggestion") String suggestion) {
+        LOGGER.info("GET Find review for article by custom type. ID: {} - Replacement: {} - Suggestion: {}",
+                articleId, replacement, suggestion);
+        return articleReviewCustomService.getArticleReview(articleId, replacement, suggestion);
     }
 
     /* SAVE CHANGES */

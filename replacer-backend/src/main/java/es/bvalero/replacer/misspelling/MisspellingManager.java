@@ -1,12 +1,13 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.article.ArticleService;
+import es.bvalero.replacer.article.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
     private WikipediaService wikipediaService;
 
     @Autowired
-    private ArticleService articleService;
+    private ReplacementRepository replacementRepository;
 
     @Override
     void processRemovedItems(Set<Misspelling> oldItems, Set<Misspelling> newItems) {
@@ -33,7 +34,7 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
         oldWords.removeAll(newWords);
         if (!oldWords.isEmpty()) {
             LOGGER.warn("Deleting from database obsolete misspellings: {}", oldWords);
-            articleService.deleteReplacementsByTextIn(oldWords);
+            replacementRepository.deleteBySubtypeIn(new HashSet<>(oldWords));
         }
     }
 
