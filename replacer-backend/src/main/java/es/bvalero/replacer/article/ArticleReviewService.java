@@ -82,7 +82,7 @@ abstract class ArticleReviewService {
             Optional<WikipediaPage> page = wikipediaService.getPageById(articleId);
             if (page.isPresent()) {
                 // Check if the article is processable
-                if (page.get().isProcessableByContent()) {
+                if (page.get().isProcessable()) {
                     return page;
                 } else {
                     LOGGER.warn(String.format("Found article is not processable by content: %s - %s",

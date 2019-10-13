@@ -3,6 +3,7 @@ package es.bvalero.replacer.article;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
@@ -19,8 +20,12 @@ public class ArticleReviewCustomServiceTest {
     private final int randomId2 = 2;
     private final String content = "XYZ";
     private final String content2 = "Y";
-    private final WikipediaPage article = WikipediaPage.builder().id(randomId).content(content).build();
-    private final WikipediaPage article2 = WikipediaPage.builder().id(randomId2).content(content2).build();
+    private final WikipediaPage article = WikipediaPage.builder()
+            .id(randomId).namespace(WikipediaNamespace.ARTICLE).content(content)
+            .build();
+    private final WikipediaPage article2 = WikipediaPage.builder()
+            .id(randomId2).namespace(WikipediaNamespace.ANNEX).content(content2)
+            .build();
     private final int offset = 1;
     private final Replacement replacement =
             Replacement.builder().start(offset).type("X").subtype("Y").text("Y").build();

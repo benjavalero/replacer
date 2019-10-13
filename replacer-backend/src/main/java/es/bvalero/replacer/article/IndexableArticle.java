@@ -22,10 +22,7 @@ public interface IndexableArticle {
     LocalDateTime getLastUpdate();
 
     default boolean isProcessable() {
-        if (!isProcessableByNamespace()) {
-            return false;
-        }
-        return isProcessableByContent();
+        return isProcessableByNamespace() && isProcessableByContent();
     }
 
     default boolean isProcessableByNamespace() {
