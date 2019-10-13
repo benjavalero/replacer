@@ -23,11 +23,4 @@ public class Replacer {
         return new ModelMapper();
     }
 
-    @Bean
-    public ObjectMapper jsonMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new Jdk8Module());
-        return mapper;
-    }
-
 }

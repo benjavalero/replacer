@@ -1,15 +1,11 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -19,6 +15,7 @@ import java.util.Set;
 
 public class WikipediaServiceTest {
 
+    @Spy
     private ObjectMapper jsonMapper;
 
     @Mock
@@ -29,7 +26,6 @@ public class WikipediaServiceTest {
 
     @Before
     public void setUp() {
-        jsonMapper = new ObjectMapper();
         wikipediaService = new WikipediaServiceImpl();
         MockitoAnnotations.initMocks(this);
     }
@@ -38,9 +34,10 @@ public class WikipediaServiceTest {
     public void testGetEditToken() throws WikipediaException, IOException {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
-        JsonNode response = jsonMapper.readTree(textResponse);
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeSignedPostRequest(Mockito.anyMap(), Mockito.any(OAuth1AccessToken.class)))
                 .thenReturn(response);
+        Assert.assertTrue(response.isBatchcomplete());
 
         // We pass a null access token to retrieve an anonymous edit token
         EditToken editToken = wikipediaService.getEditToken(2209245, new OAuth1AccessToken("", ""));
@@ -53,7 +50,7 @@ public class WikipediaServiceTest {
     public void testGetPageContentByTitle() throws WikipediaException, IOException {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
-        JsonNode response = jsonMapper.readTree(textResponse);
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap())).thenReturn(response);
 
         int pageId = 6219990;
@@ -72,7 +69,7 @@ public class WikipediaServiceTest {
     public void testGetPageContentById() throws WikipediaException, IOException {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
-        JsonNode response = jsonMapper.readTree(textResponse);
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap())).thenReturn(response);
 
         int pageId = 6219990;
@@ -91,7 +88,7 @@ public class WikipediaServiceTest {
     public void testGetPagesContent() throws WikipediaException, IOException {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]},{\"pageid\":6903884,\"ns\":2,\"title\":\"Usuario:Benjavalero/Taller\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Enlace a [[Pais Vasco]].\"}}}]}]}}";
-        JsonNode response = jsonMapper.readTree(textResponse);
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap())).thenReturn(response);
 
         List<WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884));
@@ -107,7 +104,7 @@ public class WikipediaServiceTest {
     public void testGetPageContentUnavailable() throws WikipediaException, IOException {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"ns\":2,\"title\":\"Usuario:Benjavaleroxx\",\"missing\":true}]}}";
-        JsonNode response = jsonMapper.readTree(textResponse);
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap())).thenReturn(response);
 
         Assert.assertFalse(wikipediaService.getPageByTitle("Usuario:Benjavaleroxx").isPresent());
@@ -117,7 +114,7 @@ public class WikipediaServiceTest {
     public void testGetPageIdsByStringMatch() throws WikipediaException, IOException {
         // API response
         String textResponse = "{\"batchcomplete\":\"\",\"continue\":{\"sroffset\":10,\"continue\":\"-||\"},\"query\":{\"search\":[{\"ns\":0,\"title\":\"Belanova\",\"pageid\":297896},{\"ns\":0,\"title\":\"Wil Hartog\",\"pageid\":7694956},{\"ns\":0,\"title\":\"Compuesto químico\",\"pageid\":10547},{\"ns\":0,\"title\":\"Aun así te vas\",\"pageid\":2460037},{\"ns\":0,\"title\":\"Educación\",\"pageid\":975},{\"ns\":0,\"title\":\"Abolicionismo\",\"pageid\":173068},{\"ns\":0,\"title\":\"Canaán\",\"pageid\":718871},{\"ns\":0,\"title\":\"Coahuila de Zaragoza\",\"pageid\":724588},{\"ns\":0,\"title\":\"Filosofía\",\"pageid\":689592},{\"ns\":0,\"title\":\"Cárites\",\"pageid\":71433}]}}";
-        JsonNode response = jsonMapper.readTree(textResponse);
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap())).thenReturn(response);
 
         Set<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("");
@@ -128,7 +125,7 @@ public class WikipediaServiceTest {
     public void testGetPageIdsByStringMatchWithNoResults() throws WikipediaException, IOException {
         // API response
         String textResponse = "{\"batchcomplete\":\"\",\"query\":{\"search\":[]}}";
-        JsonNode response = jsonMapper.readTree(textResponse);
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap())).thenReturn(response);
 
         Set<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("");
@@ -139,7 +136,7 @@ public class WikipediaServiceTest {
     public void testLoggedUserName() throws WikipediaException, IOException {
         // API response
         String textResponse = "{\"batchcomplete\": \"\", \"query\": {\"userinfo\": {\"id\": 9620478, \"name\": \"Benjavalero\"}}}";
-        JsonNode response = jsonMapper.readTree(textResponse);
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeSignedGetRequest(Mockito.anyMap(), Mockito.any(OAuth1AccessToken.class)))
                 .thenReturn(response);
 
@@ -152,7 +149,7 @@ public class WikipediaServiceTest {
     public void testSavePageContentWithConflict() throws WikipediaException, IOException {
         // API response for the EditToken request
         String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
-        JsonNode response = jsonMapper.readTree(textResponse);
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeSignedPostRequest(Mockito.anyMap(), Mockito.any(OAuth1AccessToken.class)))
                 .thenReturn(response);
 
@@ -168,7 +165,7 @@ public class WikipediaServiceTest {
     public void testSavePageContent() throws WikipediaException, IOException {
         // API response for the EditToken request
         String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
-        JsonNode response = jsonMapper.readTree(textResponse);
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeSignedPostRequest(Mockito.anyMap(), Mockito.any(OAuth1AccessToken.class)))
                 .thenReturn(response);
 
@@ -199,7 +196,7 @@ public class WikipediaServiceTest {
     public void testGetPageSections() throws WikipediaException, IOException {
         // API response
         String textResponse = "{\"parse\":{\"title\":\"Usuario:Benjavalero/Taller\",\"pageid\":6903884,\"sections\":[{\"toclevel\":1,\"level\":\"2\",\"line\":\"Pruebas con cursiva\",\"number\":\"1\",\"index\":\"1\",\"fromtitle\":\"Usuario:Benjavalero/Taller\",\"byteoffset\":1998,\"anchor\":\"Pruebas_con_cursiva\"},{\"toclevel\":1,\"level\":\"2\",\"line\":\"Pruebas de banderas de la Selección Española\",\"number\":\"2\",\"index\":\"2\",\"fromtitle\":\"Usuario:Benjavalero/Taller\",\"byteoffset\":2275,\"anchor\":\"Pruebas_de_banderas_de_la_Selección_Española\"},{\"toclevel\":1,\"level\":\"2\",\"line\":\"Referencias\",\"number\":\"3\",\"index\":\"3\",\"fromtitle\":\"Usuario:Benjavalero/Taller\",\"byteoffset\":2497,\"anchor\":\"Referencias\"}]}}";
-        JsonNode response = jsonMapper.readTree(textResponse);
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap())).thenReturn(response);
 
         List<WikipediaSection> sections = wikipediaService.getPageSections(6903884);

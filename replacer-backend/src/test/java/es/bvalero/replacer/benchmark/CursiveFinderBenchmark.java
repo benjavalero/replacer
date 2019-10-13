@@ -1,6 +1,6 @@
 package es.bvalero.replacer.benchmark;
 
-import es.bvalero.replacer.authentication.AuthenticationConfig;
+import es.bvalero.replacer.wikipedia.WikipediaConfig;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {WikipediaServiceImpl.class, AuthenticationConfig.class},
+@ContextConfiguration(classes = {WikipediaServiceImpl.class, WikipediaConfig.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class CursiveFinderBenchmark {
 

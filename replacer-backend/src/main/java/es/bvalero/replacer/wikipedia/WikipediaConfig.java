@@ -1,5 +1,7 @@
-package es.bvalero.replacer.authentication;
+package es.bvalero.replacer.wikipedia;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.github.scribejava.apis.MediaWikiApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.oauth.OAuth10aService;
@@ -8,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AuthenticationConfig {
+public class WikipediaConfig {
 
     @Value("${wikipedia.api.key}")
     private String apiKey;
@@ -22,6 +24,13 @@ public class AuthenticationConfig {
                 .apiSecret(apiSecret)
                 .callback("oob")
                 .build(MediaWikiApi.instance());
+    }
+
+    @Bean
+    public ObjectMapper jsonMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new Jdk8Module());
+        return mapper;
     }
 
 }

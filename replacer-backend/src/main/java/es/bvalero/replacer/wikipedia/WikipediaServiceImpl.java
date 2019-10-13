@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.finder.FinderUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 // We make this implementation public to be used by the finder benchmarks
 @Slf4j
@@ -40,8 +38,8 @@ public class WikipediaServiceImpl implements WikipediaService {
     @Override
     public String getLoggedUserName(OAuth1AccessToken accessToken) throws WikipediaException {
         LOGGER.info("START Get name of the logged user from Wikipedia API. Token: {}", accessToken.getToken());
-        JsonNode jsonResponse = wikipediaRequestService.executeSignedGetRequest(buildUserNameRequestParams(), accessToken);
-        String username = extractUserNameFromJson(jsonResponse);
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedGetRequest(buildUserNameRequestParams(), accessToken);
+        String username = extractUserNameFromJson(apiResponse);
         LOGGER.info("END Get name of the logged user from Wikipedia API: {}", username);
         return username;
     }
@@ -53,8 +51,8 @@ public class WikipediaServiceImpl implements WikipediaService {
         return params;
     }
 
-    private String extractUserNameFromJson(JsonNode json) {
-        return json.at("/query/userinfo/name").asText();
+    private String extractUserNameFromJson(WikipediaApiResponse response) {
+        return response.getQuery().getUserinfo().getName();
     }
 
     @Override
@@ -118,8 +116,8 @@ public class WikipediaServiceImpl implements WikipediaService {
     }
 
     private List<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue) throws WikipediaException {
-        JsonNode jsonResponse = wikipediaRequestService.executeGetRequest(buildPageIdsRequestParams(pagesParam, pagesValue));
-        return extractPagesFromJson(jsonResponse);
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(buildPageIdsRequestParams(pagesParam, pagesValue));
+        return extractPagesFromJson(apiResponse);
     }
 
     private Map<String, String> buildPageIdsRequestParams(String pagesParam, String pagesValue) {
@@ -133,35 +131,31 @@ public class WikipediaServiceImpl implements WikipediaService {
         return params;
     }
 
-    private List<WikipediaPage> extractPagesFromJson(JsonNode json) {
+    private List<WikipediaPage> extractPagesFromJson(WikipediaApiResponse response) {
         // Query timestamp
-        String queryTimestamp = json.at("/curtimestamp").asText();
+        String queryTimestamp = response.getCurtimestamp();
+        return response.getQuery().getPages().stream()
+                .filter(page -> !page.isMissing())
+                .map(page -> convertToDto(page, queryTimestamp))
+                .collect(Collectors.toList());
+    }
 
-        List<WikipediaPage> pageContents = new ArrayList<>();
-        json.at("/query/pages").forEach(jsonPage -> {
-            JsonNode jsonContent = jsonPage.at("/revisions/0/slots/main/content");
-            // There may be no content if the page is missing
-            if (!jsonContent.isMissingNode()) {
-                int pageId = jsonPage.get(PARAM_PAGE_ID).asInt();
-                WikipediaPage page = WikipediaPage.builder()
-                        .id(pageId)
-                        .title(jsonPage.get("title").asText())
-                        .namespace(WikipediaNamespace.valueOf(jsonPage.get("ns").asInt()))
-                        .content(jsonContent.asText())
-                        .lastUpdate(WikipediaPage.parseWikipediaTimestamp(jsonPage.at("/revisions/0/timestamp").asText()))
-                        .queryTimestamp(queryTimestamp)
-                        .build();
-                pageContents.add(page);
-            }
-        });
-        return pageContents;
+    private WikipediaPage convertToDto(WikipediaApiResponse.Page page, String queryTimestamp) {
+        return WikipediaPage.builder()
+                .id(page.getPageid())
+                .title(page.getTitle())
+                .namespace(WikipediaNamespace.valueOf(page.getNs()))
+                .content(page.getRevisions().get(0).getSlots().getMain().getContent())
+                .lastUpdate(WikipediaPage.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
+                .queryTimestamp(queryTimestamp)
+                .build();
     }
 
     @Override
     public List<WikipediaSection> getPageSections(int pageId) throws WikipediaException {
         LOGGER.info("START Get page sections. Page ID: {}", pageId);
-        JsonNode jsonResponse = wikipediaRequestService.executeGetRequest(buildPageSectionsRequestParams(pageId));
-        List<WikipediaSection> sections = extractSectionsFromJson(jsonResponse);
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(buildPageSectionsRequestParams(pageId));
+        List<WikipediaSection> sections = extractSectionsFromJson(apiResponse);
         LOGGER.info("END Get page sections. Items found: {}", sections.size());
         return sections;
     }
@@ -174,27 +168,26 @@ public class WikipediaServiceImpl implements WikipediaService {
         return params;
     }
 
-    private List<WikipediaSection> extractSectionsFromJson(JsonNode json) {
-        List<WikipediaSection> sections = new ArrayList<>();
-        json.at("/parse/sections").forEach(jsonSection -> {
-            // There are cases where the field "byteoffset" is empty
-            if (!jsonSection.get("byteoffset").isNull()) {
-                WikipediaSection section = WikipediaSection.builder()
-                        .level(Integer.parseInt(jsonSection.get("level").asText()))
-                        .index(Integer.parseInt(jsonSection.get("index").asText()))
-                        .byteOffset(jsonSection.get("byteoffset").asInt())
-                        .build();
-                sections.add(section);
-            }
-        });
-        return sections;
+    private List<WikipediaSection> extractSectionsFromJson(WikipediaApiResponse response) {
+        return response.getParse().getSections().stream()
+                .filter(section -> section.getByteoffset() != null)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private WikipediaSection convertToDto(WikipediaApiResponse.Section section) {
+        return WikipediaSection.builder()
+                .level(Integer.parseInt(section.getLevel()))
+                .index(Integer.parseInt(section.getIndex()))
+                .byteOffset(section.getByteoffset())
+                .build();
     }
 
     @Override
     public Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section) throws WikipediaException {
         LOGGER.info("START Get page by ID and section: {} - {}", pageId, section);
-        JsonNode jsonResponse = wikipediaRequestService.executeGetRequest(buildPageIdsAndSectionRequestParams(pageId, section));
-        List<WikipediaPage> pages = extractPagesFromJson(jsonResponse);
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(buildPageIdsAndSectionRequestParams(pageId, section));
+        List<WikipediaPage> pages = extractPagesFromJson(apiResponse);
         Optional<WikipediaPage> page = pages.stream().findAny().map(p -> p.withSection(section));
         LOGGER.info("END Get page by ID and section: {} - {} - {}",
                 pageId, section, page.map(WikipediaPage::getTitle).orElse(""));
@@ -210,8 +203,8 @@ public class WikipediaServiceImpl implements WikipediaService {
     @Override
     public Set<Integer> getPageIdsByStringMatch(String text) throws WikipediaException {
         LOGGER.info("START Get pages by string match: {}", text);
-        JsonNode jsonResponse = wikipediaRequestService.executeGetRequest(buildPageIdsByStringMatchRequestParams(text));
-        Set<Integer> pageIds = extractPageIdsFromSearchJson(jsonResponse);
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(buildPageIdsByStringMatchRequestParams(text));
+        Set<Integer> pageIds = extractPageIdsFromSearchJson(apiResponse);
         LOGGER.info("END Get pages by string match. Items found: {}", pageIds.size());
         return pageIds;
     }
@@ -241,9 +234,10 @@ public class WikipediaServiceImpl implements WikipediaService {
         }
     }
 
-    private Set<Integer> extractPageIdsFromSearchJson(JsonNode json) {
-        return StreamSupport.stream(json.at("/query/search").spliterator(), false)
-                .map(page -> page.get(PARAM_PAGE_ID).asInt()).collect(Collectors.toSet());
+    private Set<Integer> extractPageIdsFromSearchJson(WikipediaApiResponse response) {
+        return response.getQuery().getSearch().stream()
+                .map(WikipediaApiResponse.Page::getPageid)
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -283,9 +277,9 @@ public class WikipediaServiceImpl implements WikipediaService {
 
     EditToken getEditToken(int pageId, OAuth1AccessToken accessToken) throws WikipediaException {
         LOGGER.debug("START Get edit token. Access Token: {}", accessToken.getToken());
-        JsonNode jsonResponse = wikipediaRequestService.executeSignedPostRequest(
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedPostRequest(
                 buildEditTokenRequestParams(pageId), accessToken);
-        EditToken editToken = extractEditTokenFromJson(jsonResponse);
+        EditToken editToken = extractEditTokenFromJson(apiResponse);
         LOGGER.debug("END Get edit token: {}", editToken);
         return editToken;
     }
@@ -300,9 +294,9 @@ public class WikipediaServiceImpl implements WikipediaService {
         return params;
     }
 
-    private EditToken extractEditTokenFromJson(JsonNode json) {
-        return EditToken.of(json.at("/query/tokens/csrftoken").asText(),
-                json.at("/query/pages/0/revisions/0/timestamp").asText());
+    private EditToken extractEditTokenFromJson(WikipediaApiResponse response) {
+        return EditToken.of(response.getQuery().getTokens().getCsrftoken(),
+                response.getQuery().getPages().get(0).getRevisions().get(0).getTimestamp());
     }
 
 }

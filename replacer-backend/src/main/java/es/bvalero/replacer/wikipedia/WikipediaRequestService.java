@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
@@ -29,21 +28,21 @@ class WikipediaRequestService {
     @Autowired
     private ObjectMapper jsonMapper;
 
-    JsonNode executeGetRequest(Map<String, String> params) throws WikipediaException {
+    WikipediaApiResponse executeGetRequest(Map<String, String> params) throws WikipediaException {
         return executeRequest(params, Verb.GET, null);
     }
 
-    JsonNode executeSignedGetRequest(Map<String, String> params, @Nullable OAuth1AccessToken accessToken)
+    WikipediaApiResponse executeSignedGetRequest(Map<String, String> params, @Nullable OAuth1AccessToken accessToken)
             throws WikipediaException {
         return executeRequest(params, Verb.GET, accessToken);
     }
 
-    JsonNode executeSignedPostRequest(Map<String, String> params, @Nullable OAuth1AccessToken accessToken)
+    WikipediaApiResponse executeSignedPostRequest(Map<String, String> params, @Nullable OAuth1AccessToken accessToken)
             throws WikipediaException {
         return executeRequest(params, Verb.POST, accessToken);
     }
 
-    private JsonNode executeRequest(Map<String, String> params, Verb verb, @Nullable OAuth1AccessToken accessToken)
+    private WikipediaApiResponse executeRequest(Map<String, String> params, Verb verb, @Nullable OAuth1AccessToken accessToken)
             throws WikipediaException {
         boolean isSigned = accessToken != null && StringUtils.isNotBlank(accessToken.getToken());
         LOGGER.debug("START Execute OAuth Request. Params: {} - Verb: {} - Signed: {}", params, verb, isSigned);
@@ -61,9 +60,9 @@ class WikipediaRequestService {
             }
 
             LOGGER.debug("END Execute OAuth Request. Response Body: {}", response.getBody());
-            JsonNode json = jsonMapper.readTree(response.getBody());
-            validateJsonResponse(json);
-            return json;
+            WikipediaApiResponse apiResponse = jsonMapper.readValue(response.getBody(), WikipediaApiResponse.class);
+            validateApiResponse(apiResponse);
+            return apiResponse;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new WikipediaException("ERROR executing OAuth Request", e);
@@ -89,11 +88,13 @@ class WikipediaRequestService {
         oAuthService.signRequest(accessToken, request);
     }
 
-    private void validateJsonResponse(JsonNode json) throws WikipediaException {
-        JsonNode jsonError = json.get("error");
-        if (jsonError != null) {
-            String errorMsg = String.format("%s: %s", jsonError.get("code").asText(), jsonError.get("info").asText());
-            throw new WikipediaException(errorMsg);
+    private void validateApiResponse(WikipediaApiResponse response) throws WikipediaException {
+        if (response.getError() != null) {
+            String code = response.getError().getCode();
+            String info = response.getError().getInfo();
+            if (StringUtils.isNotBlank(code) || StringUtils.isNotBlank(info)) {
+                throw new WikipediaException(String.format("%s: %s", code, info));
+            }
         }
     }
 

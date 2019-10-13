@@ -1,6 +1,6 @@
 package es.bvalero.replacer.benchmark;
 
-import es.bvalero.replacer.authentication.AuthenticationConfig;
+import es.bvalero.replacer.wikipedia.WikipediaConfig;
 import es.bvalero.replacer.misspelling.FalsePositiveFinder;
 import es.bvalero.replacer.misspelling.FalsePositiveManager;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {FalsePositiveFinder.class, FalsePositiveManager.class, WikipediaServiceImpl.class, AuthenticationConfig.class},
+@ContextConfiguration(classes = {FalsePositiveFinder.class, FalsePositiveManager.class, WikipediaServiceImpl.class, WikipediaConfig.class},
         initializers = ConfigFileApplicationContextInitializer.class)
 public class FalseFinderBenchmark {
 
