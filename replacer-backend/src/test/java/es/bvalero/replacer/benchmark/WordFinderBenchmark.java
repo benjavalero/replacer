@@ -1,12 +1,7 @@
 package es.bvalero.replacer.benchmark;
 
-import es.bvalero.replacer.wikipedia.WikipediaConfig;
 import es.bvalero.replacer.misspelling.MisspellingFinder;
 import es.bvalero.replacer.misspelling.MisspellingManager;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaService;
-import es.bvalero.replacer.wikipedia.WikipediaServiceImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,17 +12,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {MisspellingFinder.class, MisspellingManager.class, WikipediaServiceImpl.class, WikipediaConfig.class},
+@ContextConfiguration(classes = {MisspellingFinder.class, MisspellingManager.class},
         initializers = ConfigFileApplicationContextInitializer.class)
-public class WordFinderBenchmark {
+public class WordFinderBenchmark extends BaseFinderBenchmark {
 
     private static final int ITERATIONS = 1000;
 
@@ -37,23 +29,11 @@ public class WordFinderBenchmark {
     @Autowired
     private MisspellingFinder misspellingFinder;
 
-    @Autowired
-    private WikipediaService wikipediaService;
-
     @Test
-    public void testWordFinderBenchmark() throws IOException, WikipediaException, URISyntaxException {
+    public void testWordFinderBenchmark() throws IOException, URISyntaxException {
         // Load the misspellings
         misspellingManager.update();
         Collection<String> words = misspellingFinder.getMisspellingMap().keySet();
-
-        // Load IDs of the sample articles
-        List<Integer> sampleIds = new ArrayList<>();
-        try (Stream<String> stream = Files.lines(Paths.get(WordFinderBenchmark.class.getResource("/es/bvalero/replacer/benchmark/sample-articles.txt").toURI()))) {
-            stream.forEach(line -> sampleIds.add(Integer.valueOf(line.trim())));
-        }
-
-        // Load sample articles
-        List<WikipediaPage> sampleContents = wikipediaService.getPagesByIds(sampleIds);
 
         // Load the finders
         List<WordAbstractFinder> finders = new ArrayList<>();
@@ -75,11 +55,11 @@ public class WordFinderBenchmark {
 
         System.out.println();
         System.out.println("FINDER\tTIME");
-        sampleContents.forEach(value -> {
+        findSampleContents().forEach(value -> {
             for (WordAbstractFinder finder : finders) {
                 long start = System.currentTimeMillis();
                 for (int i = 0; i < ITERATIONS; i++) {
-                    finder.findMatches(value.getContent());
+                    finder.findMatches(value);
                 }
                 long end = System.currentTimeMillis() - start;
                 System.out.println(finder.getClass().getSimpleName() + "\t" + end);

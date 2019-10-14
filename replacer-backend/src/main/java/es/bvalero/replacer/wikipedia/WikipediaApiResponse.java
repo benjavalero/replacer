@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-class WikipediaApiResponse {
+public class WikipediaApiResponse {
     private Error error;
     private boolean batchcomplete;
     private String curtimestamp;
@@ -29,7 +29,7 @@ class WikipediaApiResponse {
     }
 
     @Data
-    static class Query {
+    public static class Query {
         private UserInfo userinfo;
         private List<Page> search;
         private List<Page> pages;
@@ -43,7 +43,7 @@ class WikipediaApiResponse {
     }
 
     @Data
-    static class Page {
+    public static class Page {
         private int pageid;
         private int ns;
         private String title;
@@ -53,7 +53,7 @@ class WikipediaApiResponse {
     }
 
     @Data
-    static class Revision {
+    public static class Revision {
         private String timestamp;
         private Slots slots;
     }
@@ -64,12 +64,12 @@ class WikipediaApiResponse {
     }
 
     @Data
-    static class Slots {
+    public static class Slots {
         private Main main;
     }
 
     @Data
-    static class Main {
+    public static class Main {
         private String contentmodel;
         private String contentformat;
         private String content;

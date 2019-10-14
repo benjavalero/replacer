@@ -13,11 +13,10 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-// We make this implementation public to be used by the finder benchmarks
 @Slf4j
 @Service
 @Profile("default")
-public class WikipediaServiceImpl implements WikipediaService {
+class WikipediaServiceImpl implements WikipediaService {
 
     private static final String MISSPELLING_LIST_PAGE = "Wikipedia:Corrector_ortográfico/Listado";
     private static final String FALSE_POSITIVE_LIST_PAGE = "Usuario:Benjavalero/FalsePositives";
