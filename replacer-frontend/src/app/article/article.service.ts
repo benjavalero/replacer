@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { ArticleReview } from './article-review.model';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { ReviewerCount } from '../stats/reviewer-count.model';
+import { SaveArticle } from './save-article.model';
 
 @Injectable({
   providedIn: 'root'
@@ -65,17 +66,21 @@ export class ArticleService {
       return throwError('El usuario no está autenticado. Recargue la página para retomar la sesión.');
     }
 
-    let params = new HttpParams();
-    params = params.append('token', this.authenticationService.accessToken.token);
-    params = params.append('tokenSecret', this.authenticationService.accessToken.tokenSecret);
-    params = params.append('id', String(articleId));
-    params = params.append('type', type);
-    params = params.append('subtype', subtype);
-    params = params.append('reviewer', this.authenticationService.user.name);
-    params = params.append('currentTimestamp', currentTimestamp);
-    params = params.append('section', section ? String(section) : '');
+    const saveArticle = new SaveArticle();
+    saveArticle.articleId = articleId;
+    if (section) {
+      saveArticle.section = section;
+    }
+    saveArticle.content = content;
+    saveArticle.timestamp = currentTimestamp;
+    saveArticle.reviewer = this.authenticationService.user.name;
+    saveArticle.token = this.authenticationService.accessToken;
+    if (type && subtype) {
+      saveArticle.type = type;
+      saveArticle.subtype = subtype;
+    }
 
-    return this.httpClient.put<any>(`${environment.apiUrl}/article`, content, { params });
+    return this.httpClient.post<any>(`${environment.apiUrl}/article`, saveArticle);
   }
 
   findNumReplacements(): Observable<number> {

@@ -1,13 +1,13 @@
 package es.bvalero.replacer.article;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import es.bvalero.replacer.authentication.AccessToken;
 import es.bvalero.replacer.cosmetic.CosmeticChangesService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,23 +83,25 @@ public class ArticleController {
 
     /* SAVE CHANGES */
 
-    @PutMapping
-    public void save(@RequestParam("id") int articleId, @RequestBody String text,
-                     @RequestParam String type, @RequestParam String subtype,
-                     @RequestParam String reviewer, @RequestParam String currentTimestamp, @RequestParam @Nullable Integer section,
-                     @RequestParam String token, @RequestParam String tokenSecret) throws WikipediaException {
-        boolean changed = StringUtils.isNotBlank(text);
-        LOGGER.info("PUT Save article. ID: {} - Changed: {}", articleId, changed);
+    @PostMapping
+    public void save(@RequestBody SaveArticle saveArticle) throws WikipediaException {
+        boolean changed = StringUtils.isNotBlank(saveArticle.getContent());
+        LOGGER.info("PUT Save article. ID: {} - Changed: {}", saveArticle.getArticleId(), changed);
         if (changed) {
-            OAuth1AccessToken accessToken = new OAuth1AccessToken(token, tokenSecret);
-
             // Upload new content to Wikipedia
-            String textToSave = cosmeticChangesService.applyCosmeticChanges(text);
-            wikipediaService.savePageContent(articleId, textToSave, section, currentTimestamp, accessToken);
+            String textToSave = cosmeticChangesService.applyCosmeticChanges(saveArticle.getContent());
+            wikipediaService.savePageContent(saveArticle.getArticleId(), textToSave, saveArticle.getSection(),
+                    saveArticle.getTimestamp(), convertToEntity(saveArticle.getToken()));
         }
 
         // Mark article as reviewed in the database
-        replacementIndexService.reviewArticleReplacements(articleId, type, subtype, reviewer);
+        replacementIndexService.reviewArticleReplacements(saveArticle.getArticleId(), saveArticle.getType(),
+                saveArticle.getSubtype(), saveArticle.getReviewer());
     }
+
+    private OAuth1AccessToken convertToEntity(AccessToken accessToken) {
+        return new OAuth1AccessToken(accessToken.getToken(), accessToken.getTokenSecret());
+    }
+
 
 }
