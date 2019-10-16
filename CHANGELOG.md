@@ -1,5 +1,9 @@
 # Versiones
 
+## 2.4.0
+- Actualización de dependencias
+- Refactorización en el backend especialmente en el uso de DTO
+
 ## 2.3.7 (30 de septiembre de 2019)
 - Corregir bucle infinito al buscar reemplazos personalizados
 - Corregir permisos para mostrar ciertas secciones 
