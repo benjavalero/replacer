@@ -2,6 +2,7 @@ package es.bvalero.replacer.article;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.cosmetic.CosmeticChangesService;
+import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,10 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -30,10 +28,7 @@ public class ArticleController {
     private ArticleReviewCustomService articleReviewCustomService;
 
     @Autowired
-    private ArticleStatsService articleStatsService;
-
-    @Autowired
-    private ArticleIndexService articleIndexService;
+    private ReplacementIndexService replacementIndexService;
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -104,49 +99,7 @@ public class ArticleController {
         }
 
         // Mark article as reviewed in the database
-        articleIndexService.reviewArticle(articleId, type, subtype, reviewer);
-    }
-
-    /* STATISTICS */
-
-    @GetMapping(value = "/count/replacements")
-    public Long countReplacements() {
-        Long count = articleStatsService.countReplacements();
-        LOGGER.info("GET Count replacements. Result: {}", count);
-        return count;
-    }
-
-    @GetMapping(value = "/count/replacements/to-review")
-    public Long countReplacementsToReview() {
-        Long count = articleStatsService.countReplacementsToReview();
-        LOGGER.info("GET Count not reviewed. Results: {}", count);
-        return count;
-    }
-
-    @GetMapping("/count/replacements/reviewed")
-    public Long countReplacementsReviewed() {
-        Long count = articleStatsService.countReplacementsReviewed();
-        LOGGER.info("GET Count reviewed replacements. Result: {}", count);
-        return count;
-    }
-
-    @GetMapping(value = "/count/replacements/reviewed/grouped")
-    public List<ReviewerCount> countReplacementsGroupedByReviewer() {
-        List<ReviewerCount> list = articleStatsService.countReplacementsGroupedByReviewer();
-        LOGGER.info("GET Count grouped by reviewer. Result Size: {}", list.size());
-        return list;
-    }
-
-    /* LIST OF REPLACEMENTS */
-
-    @GetMapping(value = "/count/replacements/grouped")
-    public List<TypeCount> listMisspellings() {
-        List<TypeCount> list = articleStatsService.findMisspellingsGrouped().asMap().entrySet().stream()
-                .map(entry -> TypeCount.of(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
-        LOGGER.info("GET Grouped replacement count. Result Size: {}", list.size());
-        Collections.sort(list);
-        return list;
+        replacementIndexService.reviewArticleReplacements(articleId, type, subtype, reviewer);
     }
 
 }

@@ -2,6 +2,8 @@ package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -13,6 +15,7 @@ import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class ArticleReviewNoTypeServiceTest {
@@ -22,10 +25,10 @@ public class ArticleReviewNoTypeServiceTest {
     private final String content = "XYZ";
     private final String content2 = "Y";
     private final WikipediaPage article = WikipediaPage.builder()
-            .id(randomId).namespace(WikipediaNamespace.ARTICLE).content(content)
+            .id(randomId).namespace(WikipediaNamespace.ARTICLE).content(content).lastUpdate(LocalDateTime.now())
             .build();
     private final WikipediaPage article2 = WikipediaPage.builder()
-            .id(randomId2).namespace(WikipediaNamespace.ANNEX).content(content2)
+            .id(randomId2).namespace(WikipediaNamespace.ANNEX).content(content2).lastUpdate(LocalDateTime.now())
             .build();
     private final int offset = 1;
     private final Replacement replacement =
@@ -39,7 +42,7 @@ public class ArticleReviewNoTypeServiceTest {
     private WikipediaService wikipediaService;
 
     @Mock
-    private ArticleIndexService articleIndexService;
+    private ReplacementIndexService replacementIndexService;
 
     @Mock
     private ReplacementFinderService replacementFinderService;
@@ -103,8 +106,8 @@ public class ArticleReviewNoTypeServiceTest {
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview();
 
-        Mockito.verify(articleIndexService, Mockito.times(1))
-                .indexArticleReplacements(article, replacements);
+        Mockito.verify(replacementIndexService, Mockito.times(1))
+                .indexArticleReplacements(Mockito.eq(randomId), Mockito.anyList());
 
         Assert.assertTrue(review.isPresent());
         Assert.assertEquals(randomId, review.get().getId());
@@ -128,8 +131,8 @@ public class ArticleReviewNoTypeServiceTest {
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview();
 
-        Mockito.verify(articleIndexService, Mockito.times(1))
-                .indexArticleReplacements(article, noArticleReplacements);
+        Mockito.verify(replacementIndexService, Mockito.times(1))
+                .indexArticleReplacements(randomId, Collections.emptyList());
 
         Assert.assertFalse(review.isPresent());
     }
@@ -152,8 +155,8 @@ public class ArticleReviewNoTypeServiceTest {
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview();
 
-        Mockito.verify(articleIndexService, Mockito.times(1))
-                .indexArticleReplacements(article2, replacements);
+        Mockito.verify(replacementIndexService, Mockito.times(1))
+                .indexArticleReplacements(Mockito.eq(randomId2), Mockito.anyList());
 
         Assert.assertTrue(review.isPresent());
         Assert.assertEquals(randomId2, review.get().getId());

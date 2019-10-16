@@ -1,5 +1,8 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.replacement.ReplacementRepository;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +20,7 @@ public class ReplacementCacheTest {
     private ReplacementRepository replacementRepository;
 
     @Mock
-    private ArticleIndexService articleIndexService;
+    private ReplacementIndexService replacementIndexService;
 
     @InjectMocks
     private ReplacementCache replacementCache;
@@ -48,7 +51,7 @@ public class ReplacementCacheTest {
         Assert.assertEquals(dbReplacements2, replacements);
 
         // Check that the article 2 has been cleaned
-        Mockito.verify(articleIndexService).reviewArticlesAsSystem(Collections.singleton(2));
+        Mockito.verify(replacementIndexService).reviewArticlesReplacementsAsSystem(Collections.singleton(2));
     }
 
     @Test

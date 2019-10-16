@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.replacement;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,7 +54,7 @@ public class ReplacementEntity implements Serializable {
     }
 
     @TestOnly
-    public ReplacementEntity(int articleId, String type, String subtype, int position, String reviewer) {
+    ReplacementEntity(int articleId, String type, String subtype, int position, String reviewer) {
         this.articleId = articleId;
         this.type = type;
         this.subtype = subtype;
@@ -68,4 +68,3 @@ public class ReplacementEntity implements Serializable {
     }
 
 }
-

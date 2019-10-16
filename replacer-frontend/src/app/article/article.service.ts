@@ -79,19 +79,19 @@ export class ArticleService {
   }
 
   findNumReplacements(): Observable<number> {
-    return this.httpClient.get<number>(`${environment.apiUrl}/article/count/replacements`);
+    return this.httpClient.get<number>(`${environment.apiUrl}/replacement/count`);
   }
 
   findNumNotReviewed(): Observable<number> {
-    return this.httpClient.get<number>(`${environment.apiUrl}/article/count/replacements/to-review`);
+    return this.httpClient.get<number>(`${environment.apiUrl}/replacement/count/to-review`);
   }
 
   findNumReviewed(): Observable<number> {
-    return this.httpClient.get<number>(`${environment.apiUrl}/article/count/replacements/reviewed`);
+    return this.httpClient.get<number>(`${environment.apiUrl}/replacement/count/reviewed`);
   }
 
   findNumReviewedByReviewer(): Observable<ReviewerCount[]> {
-    return this.httpClient.get<ReviewerCount[]>(`${environment.apiUrl}/article/count/replacements/reviewed/grouped`);
+    return this.httpClient.get<ReviewerCount[]>(`${environment.apiUrl}/replacement/count/reviewed/grouped`);
   }
 
 }

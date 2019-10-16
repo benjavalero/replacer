@@ -1,6 +1,6 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.article.ReplacementRepository;
+import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;

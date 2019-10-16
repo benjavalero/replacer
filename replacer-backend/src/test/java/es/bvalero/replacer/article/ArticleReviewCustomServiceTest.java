@@ -2,6 +2,8 @@ package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -41,7 +43,7 @@ public class ArticleReviewCustomServiceTest {
     private ReplacementFinderService replacementFinderService;
 
     @Mock
-    private ArticleIndexService articleIndexService;
+    private ReplacementIndexService replacementIndexService;
 
     @Mock
     private SectionReviewService sectionReviewService;
@@ -116,8 +118,8 @@ public class ArticleReviewCustomServiceTest {
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(replacement, suggestion);
 
-        Mockito.verify(articleIndexService, Mockito.times(1))
-                .reviewReplacementAsSystem(Mockito.any(ReplacementEntity.class));
+        Mockito.verify(replacementIndexService, Mockito.times(1))
+                .addCustomReviewedReplacement(Mockito.anyInt(), Mockito.anyString());
 
         Assert.assertFalse(review.isPresent());
     }

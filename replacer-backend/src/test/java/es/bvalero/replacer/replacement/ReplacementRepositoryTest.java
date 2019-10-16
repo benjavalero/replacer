@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.replacement;
 
 import org.junit.Assert;
 import org.junit.Test;

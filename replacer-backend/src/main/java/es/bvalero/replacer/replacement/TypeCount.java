@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.replacement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;

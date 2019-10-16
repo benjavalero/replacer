@@ -1,10 +1,10 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.ArticleIndexService;
 import es.bvalero.replacer.article.ReplacementCache;
-import es.bvalero.replacer.article.ReplacementEntity;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.ReplacementIndexService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Process an article found in a Wikipedia dump.
@@ -25,7 +26,7 @@ class DumpArticleProcessor {
     private ReplacementCache replacementCache;
 
     @Autowired
-    private ArticleIndexService articleIndexService;
+    private ReplacementIndexService replacementIndexService;
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -44,7 +45,9 @@ class DumpArticleProcessor {
         }
 
         List<Replacement> replacements = replacementFinderService.findReplacements(dumpArticle.getContent());
-        articleIndexService.indexArticleReplacements(dumpArticle, replacements, dbReplacements);
+        replacementIndexService.indexArticleReplacements(dumpArticle.getId(),
+                replacements.stream().map(dumpArticle::convertReplacementToIndexed).collect(Collectors.toList()),
+                dbReplacements);
 
         LOGGER.debug("END Process dump article: {}", dumpArticle.getTitle());
         return true;

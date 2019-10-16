@@ -13,7 +13,7 @@ export class ReplacementService {
   constructor(private httpClient: HttpClient) { }
 
   findReplacementCounts(): Observable<ReplacementCountList[]> {
-    return this.httpClient.get<ReplacementCountList[]>(`${environment.apiUrl}/article/count/replacements/grouped`);
+    return this.httpClient.get<ReplacementCountList[]>(`${environment.apiUrl}/replacement/count/grouped`);
   }
 
 }

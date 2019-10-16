@@ -1,10 +1,10 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.ArticleIndexService;
 import es.bvalero.replacer.article.ReplacementCache;
-import es.bvalero.replacer.article.ReplacementEntity;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,7 +24,7 @@ public class DumpArticleProcessorTest {
     private ReplacementCache replacementCache;
 
     @Mock
-    private ArticleIndexService articleIndexService;
+    private ReplacementIndexService replacementIndexService;
 
     @Mock
     private ReplacementFinderService replacementFinderService;
@@ -45,7 +45,7 @@ public class DumpArticleProcessorTest {
 
         Mockito.verify(replacementCache).findByArticleId(Mockito.anyInt());
         Mockito.verify(replacementFinderService).findReplacements(Mockito.anyString());
-        Mockito.verify(articleIndexService).indexArticleReplacements(Mockito.eq(dumpArticle), Mockito.anyList(), Mockito.anyList());
+        Mockito.verify(replacementIndexService).indexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.anyList());
     }
 
     @Test
@@ -146,6 +146,7 @@ public class DumpArticleProcessorTest {
         DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
                 .content("")
+                .lastUpdate(LocalDateTime.now())
                 .build();
 
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
@@ -157,8 +158,7 @@ public class DumpArticleProcessorTest {
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
 
-        Mockito.verify(articleIndexService).indexArticleReplacements(
-                Mockito.eq(dumpArticle), Mockito.eq(replacements), Mockito.eq(dbReplacements));
+        Mockito.verify(replacementIndexService).indexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.eq(dbReplacements));
     }
 
     @Test
@@ -182,8 +182,7 @@ public class DumpArticleProcessorTest {
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
 
-        Mockito.verify(articleIndexService).indexArticleReplacements(
-                Mockito.eq(dumpArticle), Mockito.eq(replacements), Mockito.eq(dbReplacements));
+        Mockito.verify(replacementIndexService).indexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.eq(dbReplacements));
     }
 
 }

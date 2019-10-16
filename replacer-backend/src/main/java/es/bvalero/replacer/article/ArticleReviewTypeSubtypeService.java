@@ -1,6 +1,8 @@
 package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.replacement.ReplacementCountService;
+import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ class ArticleReviewTypeSubtypeService extends ArticleReviewCachedService {
     private ReplacementRepository replacementRepository;
 
     @Autowired
-    private ArticleStatsService articleStatsService;
+    private ReplacementCountService replacementCountService;
 
     private String type;
     private String subtype;
@@ -43,7 +45,7 @@ class ArticleReviewTypeSubtypeService extends ArticleReviewCachedService {
         if (articleIds.isEmpty()) {
             // If finally there are no results empty the cached count for the replacement
             // No need to check if there exists something cached
-            articleStatsService.removeCachedReplacementCount(type, subtype);
+            replacementCountService.removeCachedReplacementCount(type, subtype);
         }
 
         return articleIds;

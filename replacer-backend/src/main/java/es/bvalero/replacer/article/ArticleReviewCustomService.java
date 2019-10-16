@@ -2,6 +2,8 @@ package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -28,7 +30,7 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
     private ReplacementFinderService replacementFinderService;
 
     @Autowired
-    private ArticleIndexService articleIndexService;
+    private ReplacementIndexService replacementIndexService;
 
     private String replacement;
     private String suggestion;
@@ -72,15 +74,10 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
 
         if (!article.isPresent()) {
             // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
-            addCustomReviewedReplacement(articleId, replacement);
+            replacementIndexService.addCustomReviewedReplacement(articleId, replacement);
         }
 
         return article;
-    }
-
-    private void addCustomReviewedReplacement(int articleId, String subtype) {
-        ReplacementEntity customReplacement = new ReplacementEntity(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, subtype, 0);
-        articleIndexService.reviewReplacementAsSystem(customReplacement);
     }
 
     @Override
@@ -89,7 +86,7 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
 
         if (replacements.isEmpty()) {
             // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
-            addCustomReviewedReplacement(article.getId(), replacement);
+            replacementIndexService.addCustomReviewedReplacement(article.getId(), replacement);
         }
 
         return replacements;

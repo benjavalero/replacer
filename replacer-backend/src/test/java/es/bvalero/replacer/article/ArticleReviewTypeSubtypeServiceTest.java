@@ -2,6 +2,9 @@ package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.replacement.ReplacementCountService;
+import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -13,6 +16,7 @@ import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class ArticleReviewTypeSubtypeServiceTest {
@@ -22,10 +26,10 @@ public class ArticleReviewTypeSubtypeServiceTest {
     private final String content = "XYZ";
     private final String content2 = "Y";
     private final WikipediaPage article = WikipediaPage.builder()
-            .id(randomId).namespace(WikipediaNamespace.ARTICLE).content(content)
+            .id(randomId).namespace(WikipediaNamespace.ARTICLE).content(content).lastUpdate(LocalDateTime.now())
             .build();
     private final WikipediaPage article2 = WikipediaPage.builder()
-            .id(randomId2).namespace(WikipediaNamespace.ANNEX).content(content2)
+            .id(randomId2).namespace(WikipediaNamespace.ANNEX).content(content2).lastUpdate(LocalDateTime.now())
             .build();
     private final int offset = 1;
     private final Replacement replacement =
@@ -42,13 +46,13 @@ public class ArticleReviewTypeSubtypeServiceTest {
     private ReplacementFinderService replacementFinderService;
 
     @Mock
-    private ArticleIndexService articleIndexService;
+    private ReplacementIndexService replacementIndexService;
 
     @Mock
     private SectionReviewService sectionReviewService;
 
     @Mock
-    private ArticleStatsService articleStatsService;
+    private ReplacementCountService articleStatsService;
 
     @Spy
     private ModelMapper modelMapper;
@@ -80,8 +84,8 @@ public class ArticleReviewTypeSubtypeServiceTest {
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview("A", "B");
 
-        Mockito.verify(articleIndexService, Mockito.times(1))
-                .indexArticleReplacements(article, replacements);
+        Mockito.verify(replacementIndexService, Mockito.times(1))
+                .indexArticleReplacements(Mockito.eq(randomId), Mockito.anyList());
 
         Assert.assertFalse(review.isPresent());
     }
@@ -103,8 +107,8 @@ public class ArticleReviewTypeSubtypeServiceTest {
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview("X", "Y");
 
-        Mockito.verify(articleIndexService, Mockito.times(1))
-                .indexArticleReplacements(article, replacements);
+        Mockito.verify(replacementIndexService, Mockito.times(1))
+                .indexArticleReplacements(Mockito.eq(randomId), Mockito.anyList());
 
         Assert.assertTrue(review.isPresent());
         Assert.assertEquals(randomId, review.get().getId());

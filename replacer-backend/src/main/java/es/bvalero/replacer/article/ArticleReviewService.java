@@ -2,13 +2,13 @@ package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,13 +19,10 @@ import java.util.stream.Collectors;
 abstract class ArticleReviewService {
 
     @Autowired
-    private ReplacementRepository replacementRepository;
-
-    @Autowired
     private WikipediaService wikipediaService;
 
     @Autowired
-    private ArticleIndexService articleIndexService;
+    private ReplacementIndexService replacementIndexService;
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -57,11 +54,7 @@ abstract class ArticleReviewService {
         return Optional.empty();
     }
 
-    Optional<Integer> findArticleIdToReview() {
-        // The default method is finding articles to review from database
-        PageRequest pagination = PageRequest.of(0, 1);
-        return replacementRepository.findRandomArticleIdsToReview(pagination).stream().findAny();
-    }
+    abstract Optional<Integer> findArticleIdToReview();
 
     Optional<ArticleReview> getArticleReview(int articleId) {
         LOGGER.info("START Build review for article: {}", articleId);
@@ -93,7 +86,7 @@ abstract class ArticleReviewService {
             }
 
             // We get here if the article is not found or not processable
-            articleIndexService.reviewArticleAsSystem(articleId);
+            replacementIndexService.reviewArticleReplacementsAsSystem(articleId);
         } catch (WikipediaException e) {
             LOGGER.error("Error finding page from Wikipedia", e);
         }
@@ -134,7 +127,9 @@ abstract class ArticleReviewService {
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.info("Update article replacements in database");
-        articleIndexService.indexArticleReplacements(article, replacements);
+        replacementIndexService.indexArticleReplacements(article.getId(),
+                replacements.stream().map(article::convertReplacementToIndexed)
+                        .collect(Collectors.toList()));
 
         return replacements;
     }

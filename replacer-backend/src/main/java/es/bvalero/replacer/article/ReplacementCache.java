@@ -1,5 +1,8 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.replacement.ReplacementRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
@@ -22,7 +25,7 @@ public class ReplacementCache {
     private ReplacementRepository replacementRepository;
 
     @Autowired
-    private ArticleIndexService articleIndexService;
+    private ReplacementIndexService replacementIndexService;
 
     public List<ReplacementEntity> findByArticleId(int articleId) {
         // Load the cache the first time or when needed
@@ -56,7 +59,7 @@ public class ReplacementCache {
         // The remaining cached articles are not in the dump so we remove them from DB
         Set<Integer> obsoleteIds = new HashSet<>(replacementMap.keySet());
         LOGGER.debug("START Delete obsolete articles in DB: {}", obsoleteIds);
-        articleIndexService.reviewArticlesAsSystem(obsoleteIds);
+        replacementIndexService.reviewArticlesReplacementsAsSystem(obsoleteIds);
         replacementMap.clear();
         LOGGER.debug("END Delete obsolete articles in DB");
     }

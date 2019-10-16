@@ -1,15 +1,12 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.replacement;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
 import java.time.LocalDate;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-class IndexableReplacement {
+@Value(staticConstructor = "of")
+public class IndexableReplacement {
     private int articleId;
     private String type;
     private String subtype;

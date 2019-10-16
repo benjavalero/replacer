@@ -1,5 +1,6 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.replacement.ReplacementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

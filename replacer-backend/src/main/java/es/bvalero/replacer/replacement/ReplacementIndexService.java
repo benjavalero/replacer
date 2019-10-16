@@ -1,6 +1,5 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,11 +12,10 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class ArticleIndexService {
+public class ReplacementIndexService {
 
     static final String SYSTEM_REVIEWER = "system";
 
@@ -25,47 +23,36 @@ public class ArticleIndexService {
     private ReplacementRepository replacementRepository;
 
     @Autowired
-    private ArticleStatsService articleStatsService;
+    private ReplacementCountService replacementCountService;
 
     @Autowired
     private ModelMapper modelMapper;
 
     /* INDEX ARTICLES */
 
-    void indexArticleReplacements(IndexableArticle article, List<Replacement> replacements) {
-        LOGGER.debug("START Index replacements for article: {} - {}", article.getId(), article.getTitle());
-        indexArticleReplacements(article, replacements, replacementRepository.findByArticleId(article.getId()));
-        LOGGER.debug("END Index replacements for article: {} - {}", article.getId(), article.getTitle());
-    }
-
-    public void indexArticleReplacements(IndexableArticle article, List<Replacement> replacements, List<ReplacementEntity> dbReplacements) {
-        List<IndexableReplacement> indexableReplacements = replacements.stream()
-                .map(rep -> convertToDto(article, rep)).collect(Collectors.toList());
-
-        // Trick: In case of no replacements found we insert a fake reviewed replacement
-        // in order to be able to skip the article when reindexing
-        if (replacements.isEmpty() && dbReplacements.isEmpty()) {
-            ReplacementEntity newReplacement = new ReplacementEntity(article.getId(), "", "", 0);
-            reviewReplacementAsSystem(newReplacement);
+    public void indexArticleReplacements(int articleId, List<IndexableReplacement> replacements) {
+        // All replacements correspond to the same article
+        if (replacements.stream().anyMatch(r -> r.getArticleId() != articleId)) {
+            throw new IllegalArgumentException("Indexable replacements from more than one article");
         }
 
-        indexReplacements(indexableReplacements, dbReplacements);
+        // We need the article ID because the replacement list to index might be empty
+        indexArticleReplacements(articleId, replacements, replacementRepository.findByArticleId(articleId));
     }
 
-    private IndexableReplacement convertToDto(IndexableArticle article, Replacement replacement) {
-        IndexableReplacement indexableReplacement = modelMapper.map(replacement, IndexableReplacement.class);
-        indexableReplacement.setArticleId(article.getId());
-        indexableReplacement.setPosition(replacement.getStart());
-        indexableReplacement.setLastUpdate(article.getLastUpdate().toLocalDate());
-        return indexableReplacement;
-    }
-
-    void indexReplacements(List<IndexableReplacement> replacements, List<ReplacementEntity> dbReplacements) {
-        LOGGER.debug("START Index list of replacements\n" +
+    public void indexArticleReplacements(
+            int articleId, List<IndexableReplacement> replacements, List<ReplacementEntity> dbReplacements) {
+        LOGGER.debug("START Index list of replacements. ID: {}\n" +
                         "New: {} - {}\n" +
                         "Old: {} - {}",
+                articleId,
                 replacements.size(), replacements,
                 dbReplacements.size(), dbReplacements);
+
+        // We need the article ID because the replacement list to index might be empty
+        if (replacements.isEmpty() && dbReplacements.isEmpty()) {
+            addFakeReviewedReplacement(articleId);
+        }
 
         replacements.forEach(replacement -> indexReplacement(replacement, dbReplacements));
 
@@ -91,10 +78,10 @@ public class ArticleIndexService {
 
     private Optional<ReplacementEntity> findSameReplacementInCollection(
             IndexableReplacement replacement, Collection<ReplacementEntity> entities) {
-        return entities.stream().filter(entity -> isSame(replacement, entity)).findAny();
+        return entities.stream().filter(entity -> isSameReplacement(replacement, entity)).findAny();
     }
 
-    private boolean isSame(IndexableReplacement replacement, ReplacementEntity entity) {
+    private boolean isSameReplacement(IndexableReplacement replacement, ReplacementEntity entity) {
         return replacement.getArticleId() == entity.getArticleId() &&
                 replacement.getType().equals(entity.getType()) &&
                 replacement.getSubtype().equals(entity.getSubtype()) &&
@@ -130,40 +117,62 @@ public class ArticleIndexService {
         saveReplacement(replacement);
     }
 
-    void reviewReplacementAsSystem(ReplacementEntity replacement) {
+    private void reviewReplacementAsSystem(ReplacementEntity replacement) {
         replacement.setReviewer(SYSTEM_REVIEWER);
         replacement.setLastUpdate(LocalDate.now());
         saveReplacement(replacement);
     }
 
-    void reviewArticleAsSystem(int articleId) {
+    public void reviewArticleReplacementsAsSystem(int articleId) {
         replacementRepository.findByArticleIdAndReviewerIsNull(articleId).forEach(this::reviewReplacementAsSystem);
     }
 
-    void reviewArticlesAsSystem(Collection<Integer> articleIds) {
-        articleIds.forEach(this::reviewArticleAsSystem);
+    public void reviewArticlesReplacementsAsSystem(Collection<Integer> articleIds) {
+        articleIds.forEach(this::reviewArticleReplacementsAsSystem);
     }
 
-    void reviewArticle(int articleId, @Nullable String type, @Nullable String subtype, String reviewer) {
+    public void reviewArticleReplacements(int articleId, @Nullable String type, @Nullable String subtype, String reviewer) {
         LOGGER.info("START Mark article as reviewed. ID: {}", articleId);
 
         if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
             // Custom replacements don't exist in the database to be reviewed
-            ReplacementEntity custom = new ReplacementEntity(articleId, type, subtype, 0);
-            reviewReplacement(custom, reviewer);
-        } else if (StringUtils.isNotBlank(subtype)) {
-            List<ReplacementEntity> toReview = replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(
-                    articleId, type, subtype);
-            toReview.forEach(replacement -> reviewReplacement(replacement, reviewer));
-
-            // Decrease the cached count for the replacement
-            articleStatsService.decreaseCachedReplacementsCount(type, subtype, toReview.size());
+            addCustomReviewedReplacement(articleId, subtype, reviewer);
+        } else if (StringUtils.isNotBlank(type)) {
+            reviewArticleTypedReplacements(articleId, type, subtype, reviewer);
         } else {
-            replacementRepository.findByArticleIdAndReviewerIsNull(articleId)
-                    .forEach(replacement -> reviewReplacement(replacement, reviewer));
+            reviewArticleReplacements(articleId, reviewer);
         }
 
         LOGGER.info("END Mark article as reviewed. ID: {}", articleId);
+    }
+
+    private void reviewArticleReplacements(int articleId, String reviewer) {
+        replacementRepository.findByArticleIdAndReviewerIsNull(articleId)
+                .forEach(replacement -> reviewReplacement(replacement, reviewer));
+    }
+
+    private void reviewArticleTypedReplacements(int articleId, String type, String subtype, String reviewer) {
+        List<ReplacementEntity> toReview = replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(
+                articleId, type, subtype);
+        toReview.forEach(replacement -> reviewReplacement(replacement, reviewer));
+
+        // Decrease the cached count for the replacement
+        replacementCountService.decreaseCachedReplacementsCount(type, subtype, toReview.size());
+    }
+
+    private void addCustomReviewedReplacement(int articleId, String replacement, String reviewer) {
+        ReplacementEntity custom = new ReplacementEntity(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, replacement, 0);
+        reviewReplacement(custom, reviewer);
+    }
+
+    public void addCustomReviewedReplacement(int articleId, String replacement) {
+        ReplacementEntity customReplacement = new ReplacementEntity(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, replacement, 0);
+        reviewReplacementAsSystem(customReplacement);
+    }
+
+    void addFakeReviewedReplacement(int articleId) {
+        ReplacementEntity fakeReplacement = new ReplacementEntity(articleId, "", "", 0);
+        reviewReplacementAsSystem(fakeReplacement);
     }
 
 }
