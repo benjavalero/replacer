@@ -100,11 +100,15 @@ public class ReplacementIndexService {
     }
 
     private void saveReplacement(ReplacementEntity replacement) {
-        replacementRepository.save(replacement);
+        try {
+            replacementRepository.save(replacement);
+        } catch (Exception e) {
+            LOGGER.error("Error when saving replacement: {}", replacement, e);
+        }
     }
 
     void insertReplacement(IndexableReplacement replacement) {
-        replacementRepository.save(convertToEntity(replacement));
+        saveReplacement(convertToEntity(replacement));
     }
 
     private ReplacementEntity convertToEntity(IndexableReplacement replacement) {
