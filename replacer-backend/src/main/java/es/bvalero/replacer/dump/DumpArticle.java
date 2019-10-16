@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Value
 @Builder
@@ -14,14 +13,14 @@ class DumpArticle implements IndexableArticle {
     private int id;
     private String title;
     private WikipediaNamespace namespace;
-    private LocalDateTime lastUpdate;
+    private LocalDate lastUpdate;
     private String content;
 
     boolean isProcessableByTimestamp(LocalDate dbDate) {
         // If article modified in dump equals to the last indexing, reprocess always.
         // If article modified in dump after last indexing, reprocess always.
         // If article modified in dump before last indexing, do not reprocess even when forcing.
-        return !this.getLastUpdate().toLocalDate().isBefore(dbDate);
+        return !this.getLastUpdate().isBefore(dbDate);
     }
 
 }

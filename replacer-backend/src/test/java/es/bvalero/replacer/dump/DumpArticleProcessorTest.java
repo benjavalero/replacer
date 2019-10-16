@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -67,8 +67,8 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessLastUpdateAfterTimestamp() {
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime yesterday = today.minusDays(1L);
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1L);
 
         DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
@@ -77,7 +77,7 @@ public class DumpArticleProcessorTest {
                 .build();
 
         ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
-        replacement.setLastUpdate(today.toLocalDate());
+        replacement.setLastUpdate(today);
         Mockito.when(replacementCache.findByArticleId(Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(replacement));
 
@@ -86,8 +86,8 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessLastUpdateAfterTimestampForced() {
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime yesterday = today.minusDays(1L);
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1L);
 
         DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
@@ -96,7 +96,7 @@ public class DumpArticleProcessorTest {
                 .build();
 
         ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
-        replacement.setLastUpdate(today.toLocalDate());
+        replacement.setLastUpdate(today);
         Mockito.when(replacementCache.findByArticleId(Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(replacement));
 
@@ -105,7 +105,7 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessLastUpdateWhenTimestamp() {
-        LocalDateTime today = LocalDateTime.now();
+        LocalDate today = LocalDate.now();
 
         DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
@@ -114,7 +114,7 @@ public class DumpArticleProcessorTest {
                 .build();
 
         ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
-        replacement.setLastUpdate(today.toLocalDate());
+        replacement.setLastUpdate(today);
         Mockito.when(replacementCache.findByArticleId(Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(replacement));
 
@@ -123,8 +123,8 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessLastUpdateBeforeTimestamp() {
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime yesterday = today.minusDays(1L);
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1L);
 
         DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
@@ -133,7 +133,7 @@ public class DumpArticleProcessorTest {
                 .build();
 
         ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
-        replacement.setLastUpdate(yesterday.toLocalDate());
+        replacement.setLastUpdate(yesterday);
         Mockito.when(replacementCache.findByArticleId(Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(replacement));
 
@@ -145,7 +145,7 @@ public class DumpArticleProcessorTest {
         DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
                 .content("")
-                .lastUpdate(LocalDateTime.now())
+                .lastUpdate(LocalDate.now())
                 .build();
 
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
@@ -162,8 +162,8 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessWithNoReplacementsFound() {
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime yesterday = today.minusDays(1L);
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1L);
 
         DumpArticle dumpArticle = DumpArticle.builder()
                 .namespace(WikipediaNamespace.ARTICLE)
@@ -172,7 +172,7 @@ public class DumpArticleProcessorTest {
                 .build();
 
         ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
-        replacement.setLastUpdate(yesterday.toLocalDate());
+        replacement.setLastUpdate(yesterday);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
         Mockito.when(replacementCache.findByArticleId(Mockito.anyInt())).thenReturn(dbReplacements);
 

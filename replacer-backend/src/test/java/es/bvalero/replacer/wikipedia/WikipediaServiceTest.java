@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.mockito.*;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -154,8 +153,9 @@ public class WikipediaServiceTest {
                 .thenReturn(response);
 
         OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
-        String timestamp = WikipediaPage.formatWikipediaTimestamp(LocalDateTime.now().withYear(2018));
-        wikipediaService.savePageContent(1, "", 0, timestamp, accessToken);
+        // We use a timestamp BEFORE the timestamp of the last edition (from the edit token)
+        String currentTimestamp = "2019-06-23T21:24:09Z";
+        wikipediaService.savePageContent(1, "", 0, currentTimestamp, accessToken);
 
         Mockito.verify(wikipediaRequestService, Mockito.times(0))
                 .executeSignedPostRequest(Mockito.anyMap(), Mockito.any(OAuth1AccessToken.class));
@@ -170,8 +170,9 @@ public class WikipediaServiceTest {
                 .thenReturn(response);
 
         OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
-        String timestamp = WikipediaPage.formatWikipediaTimestamp(LocalDateTime.now());
-        wikipediaService.savePageContent(1, "", 0, timestamp, accessToken);
+        // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
+        String currentTimestamp = "2019-06-25T21:24:09Z";
+        wikipediaService.savePageContent(1, "", 0, currentTimestamp, accessToken);
 
         // Two calls: one for the EditToken and another to save the content
         Mockito.verify(wikipediaRequestService, Mockito.times(2))

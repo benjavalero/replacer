@@ -16,7 +16,7 @@ import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.*;
 
 public class ArticleReviewTypeSubtypeServiceTest {
@@ -26,10 +26,10 @@ public class ArticleReviewTypeSubtypeServiceTest {
     private final String content = "XYZ";
     private final String content2 = "Y";
     private final WikipediaPage article = WikipediaPage.builder()
-            .id(randomId).namespace(WikipediaNamespace.ARTICLE).content(content).lastUpdate(LocalDateTime.now())
+            .id(randomId).namespace(WikipediaNamespace.ARTICLE).content(content).lastUpdate(LocalDate.now())
             .build();
     private final WikipediaPage article2 = WikipediaPage.builder()
-            .id(randomId2).namespace(WikipediaNamespace.ANNEX).content(content2).lastUpdate(LocalDateTime.now())
+            .id(randomId2).namespace(WikipediaNamespace.ANNEX).content(content2).lastUpdate(LocalDate.now())
             .build();
     private final int offset = 1;
     private final Replacement replacement =

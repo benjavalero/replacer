@@ -9,7 +9,7 @@ import org.mockito.*;
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.*;
 
 public class ReplacementIndexServiceTest {
@@ -36,7 +36,7 @@ public class ReplacementIndexServiceTest {
     @Test
     public void testIndexNewArticle() {
         Replacement rep1 = Replacement.builder().build();  // New => ADD
-        WikipediaPage article = WikipediaPage.builder().lastUpdate(LocalDateTime.now()).build();
+        WikipediaPage article = WikipediaPage.builder().lastUpdate(LocalDate.now()).build();
         IndexableReplacement idx1 = article.convertReplacementToIndexed(rep1);
         List<IndexableReplacement> newReplacements = Collections.singletonList(idx1);
 

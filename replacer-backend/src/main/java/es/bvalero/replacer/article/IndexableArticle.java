@@ -4,7 +4,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.replacement.IndexableReplacement;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface IndexableArticle {
 
     String getContent();
 
-    LocalDateTime getLastUpdate();
+    LocalDate getLastUpdate();
 
     default boolean isProcessable() {
         return isProcessableByNamespace() && isProcessableByContent();
@@ -39,7 +39,7 @@ public interface IndexableArticle {
                 replacement.getType(),
                 replacement.getSubtype(),
                 replacement.getStart(),
-                this.getLastUpdate().toLocalDate());
+                this.getLastUpdate());
     }
 
 }

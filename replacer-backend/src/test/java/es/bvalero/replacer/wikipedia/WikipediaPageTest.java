@@ -3,7 +3,7 @@ package es.bvalero.replacer.wikipedia;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.Month;
 
 public class WikipediaPageTest {
@@ -26,7 +26,7 @@ public class WikipediaPageTest {
 
     @Test
     public void testParseWikipediaDate() {
-        LocalDateTime expected = LocalDateTime.of(2018, Month.AUGUST, 31, 5, 17, 28);
+        LocalDate expected = LocalDate.of(2018, Month.AUGUST, 31);
         Assert.assertEquals(expected, WikipediaPage.parseWikipediaTimestamp("2018-08-31T05:17:28Z"));
     }
 

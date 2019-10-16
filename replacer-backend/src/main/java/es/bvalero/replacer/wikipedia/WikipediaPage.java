@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.Wither;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 @Value
@@ -17,7 +17,7 @@ public class WikipediaPage implements IndexableArticle {
     private int id;
     private String title;
     private WikipediaNamespace namespace;
-    private LocalDateTime lastUpdate;
+    private LocalDate lastUpdate;
     private String content;
     @Wither
     private Integer section;
@@ -25,12 +25,12 @@ public class WikipediaPage implements IndexableArticle {
     // Store the timestamp when the page was queried. No need to convert it to Date format.
     private final String queryTimestamp;
 
-    public static LocalDateTime parseWikipediaTimestamp(String timestamp) {
-        return LocalDateTime.from(WIKIPEDIA_DATE_FORMATTER.parse(timestamp));
+    public static LocalDate parseWikipediaTimestamp(String timestamp) {
+        return LocalDate.from(WIKIPEDIA_DATE_FORMATTER.parse(timestamp));
     }
 
-    static String formatWikipediaTimestamp(LocalDateTime localDateTime) {
-        return WIKIPEDIA_DATE_FORMATTER.format(localDateTime);
+    static String formatWikipediaTimestamp(LocalDate localDate) {
+        return WIKIPEDIA_DATE_FORMATTER.format(localDate);
     }
 
 }

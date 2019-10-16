@@ -11,7 +11,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.*;
 
 @Slf4j
@@ -50,14 +50,14 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     private WikipediaPage buildFakePage(int pageId) throws WikipediaException {
-        LocalDateTime nowDateTime = LocalDateTime.now();
-        String now = WikipediaPage.formatWikipediaTimestamp(nowDateTime);
+        LocalDate nowDate = LocalDate.now();
+        String now = WikipediaPage.formatWikipediaTimestamp(nowDate);
         return WikipediaPage.builder()
                 .id(pageId)
                 .namespace(WikipediaNamespace.ARTICLE)
                 .title("América del Norte")
                 .content(loadArticleContent("/es/bvalero/replacer/wikipedia/article-long.txt"))
-                .lastUpdate(nowDateTime)
+                .lastUpdate(nowDate)
                 .queryTimestamp(now)
                 .build();
     }
