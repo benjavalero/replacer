@@ -1,6 +1,5 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.ReplacementCache;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinderService;
 import es.bvalero.replacer.replacement.ReplacementEntity;

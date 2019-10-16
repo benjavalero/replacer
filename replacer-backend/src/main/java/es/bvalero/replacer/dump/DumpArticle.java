@@ -21,7 +21,7 @@ class DumpArticle implements IndexableArticle {
         // If article modified in dump equals to the last indexing, reprocess always.
         // If article modified in dump after last indexing, reprocess always.
         // If article modified in dump before last indexing, do not reprocess even when forcing.
-        return !this.lastUpdate.toLocalDate().isBefore(dbDate);
+        return !this.getLastUpdate().toLocalDate().isBefore(dbDate);
     }
 
 }

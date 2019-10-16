@@ -12,8 +12,6 @@ public interface IndexableArticle {
 
     int getId();
 
-    String getTitle();
-
     WikipediaNamespace getNamespace();
 
     String getContent();

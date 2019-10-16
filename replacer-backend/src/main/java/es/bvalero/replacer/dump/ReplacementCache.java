@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Slf4j
 @Component
-public class ReplacementCache {
+class ReplacementCache {
     private static final int CACHE_SIZE = 1000;
     private int maxCachedId;
     private ListValuedMap<Integer, ReplacementEntity> replacementMap = new ArrayListValuedHashMap<>(CACHE_SIZE);
@@ -27,7 +27,7 @@ public class ReplacementCache {
     @Autowired
     private ReplacementIndexService replacementIndexService;
 
-    public List<ReplacementEntity> findByArticleId(int articleId) {
+    List<ReplacementEntity> findByArticleId(int articleId) {
         // Load the cache the first time or when needed
         if (maxCachedId == 0 || articleId > maxCachedId) {
             clean();
@@ -54,7 +54,7 @@ public class ReplacementCache {
         LOGGER.debug("END Load replacements from database to cache. Articles cached: {}", replacementMap.size());
     }
 
-    public void clean() {
+    void clean() {
         // Clear the cache if obsolete (we assume the dump articles are in order)
         // The remaining cached articles are not in the dump so we remove them from DB
         Set<Integer> obsoleteIds = new HashSet<>(replacementMap.keySet());
