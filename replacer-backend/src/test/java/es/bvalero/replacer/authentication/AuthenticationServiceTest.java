@@ -22,9 +22,12 @@ public class AuthenticationServiceTest {
     @InjectMocks
     private AuthenticationService authenticationService;
 
+    private AuthenticationService authenticationServiceOffline;
+
     @Before
     public void setUp() {
         authenticationService = new AuthenticationServiceImpl();
+        authenticationServiceOffline = new AuthenticationServiceOfflineImpl();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -42,6 +45,14 @@ public class AuthenticationServiceTest {
     public void testGetRequestTokenWithException()
             throws InterruptedException, ExecutionException, IOException, AuthenticationException {
         Mockito.when(oAuthService.getRequestToken()).thenThrow(new IOException());
+
+        authenticationService.getRequestToken();
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void testGetRequestTokenWithInterruption()
+            throws InterruptedException, ExecutionException, IOException, AuthenticationException {
+        Mockito.when(oAuthService.getRequestToken()).thenThrow(new InterruptedException());
 
         authenticationService.getRequestToken();
     }
@@ -73,6 +84,22 @@ public class AuthenticationServiceTest {
         Mockito.when(oAuthService.getAccessToken(requestToken, "")).thenThrow(new IOException());
 
         authenticationService.getAccessToken(requestToken, "");
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void testGetAccessTokenWithInterruption()
+            throws InterruptedException, ExecutionException, IOException, AuthenticationException {
+        OAuth1RequestToken requestToken = Mockito.mock(OAuth1RequestToken.class);
+        Mockito.when(oAuthService.getAccessToken(requestToken, "")).thenThrow(new InterruptedException());
+
+        authenticationService.getAccessToken(requestToken, "");
+    }
+
+    @Test
+    public void testAuthenticationServiceOffline() throws AuthenticationException {
+        Assert.assertNotNull(authenticationServiceOffline.getRequestToken());
+        Assert.assertNotNull(authenticationServiceOffline.getAuthorizationUrl(Mockito.mock(OAuth1RequestToken.class)));
+        Assert.assertNotNull(authenticationServiceOffline.getAccessToken(Mockito.mock(OAuth1RequestToken.class), ""));
     }
 
 }
