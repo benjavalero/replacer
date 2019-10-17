@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class WikipediaApiResponse {
     private Error error;
+    private String servedby;
     private boolean batchcomplete;
     private String curtimestamp;
     @JsonProperty("continue")
@@ -19,6 +20,7 @@ public class WikipediaApiResponse {
     static class Error {
         private String code;
         private String info;
+        private String docref;
     }
 
     @Data

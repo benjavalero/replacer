@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 
 public class WikipediaPageTest {
@@ -28,6 +29,13 @@ public class WikipediaPageTest {
     public void testParseWikipediaDate() {
         LocalDate expected = LocalDate.of(2018, Month.AUGUST, 31);
         Assert.assertEquals(expected, WikipediaPage.parseWikipediaTimestamp("2018-08-31T05:17:28Z"));
+    }
+
+    @Test
+    public void testFormatWikipediaDate() {
+        String expected = "2018-08-31T05:17:28Z";
+        Assert.assertEquals(expected, WikipediaPage.formatWikipediaTimestamp(
+                LocalDateTime.of(2018, Month.AUGUST, 31, 5, 17, 28)));
     }
 
 }

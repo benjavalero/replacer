@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.FinderUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -33,6 +34,11 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Value("${replacer.admin.user}")
     private String adminUser;
+
+    @TestOnly
+    void setAdminUser(String adminUser) {
+        this.adminUser = adminUser;
+    }
 
     @Override
     public String getLoggedUserName(OAuth1AccessToken accessToken) throws WikipediaException {

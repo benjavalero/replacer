@@ -6,6 +6,7 @@ import lombok.Value;
 import lombok.experimental.Wither;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Value
@@ -29,8 +30,8 @@ public class WikipediaPage implements IndexableArticle {
         return LocalDate.from(WIKIPEDIA_DATE_FORMATTER.parse(timestamp));
     }
 
-    static String formatWikipediaTimestamp(LocalDate localDate) {
-        return WIKIPEDIA_DATE_FORMATTER.format(localDate);
+    static String formatWikipediaTimestamp(LocalDateTime localDateTime) {
+        return WIKIPEDIA_DATE_FORMATTER.format(localDateTime);
     }
 
 }

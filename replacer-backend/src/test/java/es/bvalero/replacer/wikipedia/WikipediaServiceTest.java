@@ -2,6 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,9 +24,12 @@ public class WikipediaServiceTest {
     @InjectMocks
     private WikipediaServiceImpl wikipediaService;
 
+    private WikipediaService wikipediaServiceOffline;
+
     @Before
     public void setUp() {
         wikipediaService = new WikipediaServiceImpl();
+        wikipediaServiceOffline = new WikipediaServiceOfflineImpl();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -217,6 +221,48 @@ public class WikipediaServiceTest {
         Assert.assertEquals(2497, sections.stream()
                 .filter(sec -> sec.getIndex() == 3)
                 .findAny().orElseThrow(WikipediaException::new).getByteOffset());
+    }
+
+    @Test
+    public void testIsAdminUser() {
+        wikipediaService.setAdminUser("X");
+        Assert.assertTrue(wikipediaService.isAdminUser("X"));
+        Assert.assertFalse(wikipediaService.isAdminUser("Y"));
+    }
+
+    @Test
+    public void testGetPageContentByIdAndSection() throws WikipediaException, IOException {
+        // API response
+        String textResponse = "{\"batchcomplete\":true,\"curtimestamp\":\"2019-10-17T15:12:03Z\",\"query\":{\"pages\":[{\"pageid\":6903884,\"ns\":2,\"title\":\"Usuario:Benjavalero/Taller\",\"revisions\":[{\"timestamp\":\"2019-08-24T07:51:05Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"== Pruebas con cursiva ==\\n\\n* El libro ''La historia interminable''.\\n* Comillas sin cerrar: ''La historia interminable\\n* Con negrita ''La '''historia''' interminable''.\\n* Con cursiva ''La ''historia'' interminable''.\\n* Con negrita buena ''La '''''historia''''' interminable''.\\n\\n=== Pruebas de subsecciones ===\\n\\nEsta es una subsección tonta solo para probar la captura de secciones.\"}}}]}]}}";
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
+        Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap())).thenReturn(response);
+
+        int pageId = 6903884;
+        int sectionId = 1;
+        String title = "Usuario:Benjavalero/Taller";
+        WikipediaPage page = wikipediaService.getPageByIdAndSection(pageId, sectionId)
+                .orElseThrow(WikipediaException::new);
+        Assert.assertNotNull(page);
+        Assert.assertEquals(pageId, page.getId());
+        Assert.assertEquals(title, page.getTitle());
+        Assert.assertEquals(WikipediaNamespace.USER, page.getNamespace());
+        Assert.assertTrue(page.getLastUpdate().getYear() >= 2019);
+        Assert.assertTrue(page.getContent().startsWith("=="));
+        Assert.assertEquals(Integer.valueOf(sectionId), page.getSection());
+    }
+
+    @Test
+    public void testWikipediaServiceOffline() throws WikipediaException {
+        Assert.assertEquals("offline", wikipediaServiceOffline.getLoggedUserName(Mockito.mock(OAuth1AccessToken.class)));
+        Assert.assertTrue(wikipediaServiceOffline.isAdminUser(""));
+        Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getMisspellingListPageContent()));
+        Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getComposedMisspellingListPageContent()));
+        Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getFalsePositiveListPageContent()));
+        Assert.assertEquals(Integer.valueOf(1), wikipediaServiceOffline.getPageByTitle("").map(WikipediaPage::getId).orElse(0));
+        Assert.assertEquals(Integer.valueOf(0), wikipediaServiceOffline.getPageById(1).map(WikipediaPage::getSection).orElse(1));
+        Assert.assertFalse(wikipediaServiceOffline.getPageIdsByStringMatch("").isEmpty());
+        Assert.assertTrue(wikipediaServiceOffline.getPageSections(1).isEmpty());
+        Assert.assertEquals(2, wikipediaServiceOffline.getPagesByIds(Arrays.asList(1, 2)).size());
     }
 
 }
