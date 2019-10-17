@@ -27,6 +27,7 @@ class AuthenticationServiceImpl implements AuthenticationService {
             LOGGER.info("END Get Request Token from MediaWiki API. Token: {}", token.getToken());
             return token;
         } catch (InterruptedException e) {
+            // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             LOGGER.error("ERROR getting Request Token from MediaWiki API", e);
             Thread.currentThread().interrupt();
             throw new AuthenticationException();
@@ -53,6 +54,7 @@ class AuthenticationServiceImpl implements AuthenticationService {
             LOGGER.info("END Get Access Token from MediaWiki API: {} / {}", token.getToken(), token.getTokenSecret());
             return token;
         } catch (InterruptedException e) {
+            // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             LOGGER.error("ERROR getting Access Token from MediaWiki API", e);
             Thread.currentThread().interrupt();
             throw new AuthenticationException();

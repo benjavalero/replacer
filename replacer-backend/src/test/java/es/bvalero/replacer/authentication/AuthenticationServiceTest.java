@@ -49,14 +49,6 @@ public class AuthenticationServiceTest {
         authenticationService.getRequestToken();
     }
 
-    @Test(expected = AuthenticationException.class)
-    public void testGetRequestTokenWithInterruption()
-            throws InterruptedException, ExecutionException, IOException, AuthenticationException {
-        Mockito.when(oAuthService.getRequestToken()).thenThrow(new InterruptedException());
-
-        authenticationService.getRequestToken();
-    }
-
     @Test
     public void testGetAuthorizationUrl() {
         OAuth1RequestToken requestToken = Mockito.mock(OAuth1RequestToken.class);
@@ -82,15 +74,6 @@ public class AuthenticationServiceTest {
             throws InterruptedException, ExecutionException, IOException, AuthenticationException {
         OAuth1RequestToken requestToken = Mockito.mock(OAuth1RequestToken.class);
         Mockito.when(oAuthService.getAccessToken(requestToken, "")).thenThrow(new IOException());
-
-        authenticationService.getAccessToken(requestToken, "");
-    }
-
-    @Test(expected = AuthenticationException.class)
-    public void testGetAccessTokenWithInterruption()
-            throws InterruptedException, ExecutionException, IOException, AuthenticationException {
-        OAuth1RequestToken requestToken = Mockito.mock(OAuth1RequestToken.class);
-        Mockito.when(oAuthService.getAccessToken(requestToken, "")).thenThrow(new InterruptedException());
 
         authenticationService.getAccessToken(requestToken, "");
     }
