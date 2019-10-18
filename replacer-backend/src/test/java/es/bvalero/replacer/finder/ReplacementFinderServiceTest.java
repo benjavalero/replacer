@@ -79,6 +79,48 @@ public class ReplacementFinderServiceTest {
     }
 
     @Test
+    public void testFindReplacementsAllIgnored() {
+        IgnoredReplacement ignored1 = IgnoredReplacement.of(0, "AB");
+        Replacement replacement1 = Replacement.builder().start(1).text("B").build();
+        ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
+        Mockito.when(finder.findReplacements(Mockito.anyString()))
+                .thenReturn(Collections.singletonList(replacement1));
+        Mockito.when(replacementFinders.iterator())
+                .thenReturn(Collections.singletonList(finder).iterator());
+
+        IgnoredReplacementFinder ignoredFinder = Mockito.mock(IgnoredReplacementFinder.class);
+        List<IgnoredReplacement> ignored = Collections.singletonList(ignored1);
+        Mockito.when(ignoredFinder.findIgnoredReplacements(Mockito.anyString()))
+                .thenReturn(ignored);
+        Mockito.when(ignoredReplacementFinders.iterator())
+                .thenReturn(Collections.singletonList(ignoredFinder).iterator());
+
+        List<Replacement> replacements = replacementFinderService.findReplacements("");
+
+        Assert.assertTrue(replacements.isEmpty());
+    }
+
+    @Test
+    public void testFindCustomReplacements() {
+        Mockito.when(ignoredReplacementFinders.iterator()).thenReturn(Collections.emptyIterator());
+
+        List<Replacement> replacements = replacementFinderService.findCustomReplacements("A X C", "X", "Y");
+
+        Assert.assertFalse(replacements.isEmpty());
+        Assert.assertEquals(1, replacements.size());
+        Assert.assertEquals("X", replacements.get(0).getText());
+    }
+
+    @Test
+    public void testFindCustomReplacementsWithNoResults() {
+        Mockito.when(ignoredReplacementFinders.iterator()).thenReturn(Collections.emptyIterator());
+
+        List<Replacement> replacements = replacementFinderService.findCustomReplacements("AXC", "X", "Y");
+
+        Assert.assertTrue(replacements.isEmpty());
+    }
+
+    @Test
     public void testCompareArticleReplacements() {
         Replacement result1 = Replacement.builder().start(0).text("A").build();
         Replacement result2 = Replacement.builder().start(0).text("AB").build();

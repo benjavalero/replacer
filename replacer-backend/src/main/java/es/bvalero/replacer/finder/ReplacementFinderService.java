@@ -99,7 +99,7 @@ public class ReplacementFinderService {
             replacements.removeIf(replacement -> isReplacementContainedInIgnoredReplacements(replacement, ignoredReplacements));
 
             if (replacements.isEmpty()) {
-                break;
+                return;
             }
         }
     }

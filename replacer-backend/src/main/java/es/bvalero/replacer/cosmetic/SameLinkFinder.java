@@ -50,4 +50,9 @@ class SameLinkFinder implements ReplacementFinder {
                 (Character.isUpperCase(link.charAt(0)) || Character.isLowerCase(title.charAt(0)));
     }
 
+    @Override
+    public List<Suggestion> findSuggestions(String text) {
+        return Collections.emptyList();
+    }
+
 }

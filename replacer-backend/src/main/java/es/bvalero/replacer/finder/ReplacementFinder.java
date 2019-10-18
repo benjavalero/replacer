@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
 
@@ -51,8 +50,6 @@ public interface ReplacementFinder extends BaseFinder<Replacement> {
         return findSuggestions(matcher.group());
     }
 
-    default List<Suggestion> findSuggestions(String text) {
-        return Collections.emptyList();
-    }
+    List<Suggestion> findSuggestions(String text);
 
 }
