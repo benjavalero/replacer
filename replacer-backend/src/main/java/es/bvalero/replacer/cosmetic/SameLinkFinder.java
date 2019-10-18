@@ -46,12 +46,13 @@ class SameLinkFinder implements ReplacementFinder {
     }
 
     private boolean isSameLink(String link, String title) {
-        return (link.substring(1).equalsIgnoreCase(title.substring(1))) &&
-                (Character.isUpperCase(link.charAt(0)) || Character.isLowerCase(title.charAt(0)));
+        // Both parameters are equal ignoring the case
+        return Character.isUpperCase(link.charAt(0)) || Character.isLowerCase(title.charAt(0));
     }
 
     @Override
     public List<Suggestion> findSuggestions(String text) {
+        // Never used
         return Collections.emptyList();
     }
 

@@ -16,7 +16,8 @@ public class SameLinkFinderTest {
         String link2 = "[[Test|test]]";
         String link3 = "[[test|Test]]";
         String link4 = "[[Test|Test]]";
-        String text = String.format("En %s %s %s %s.", link1, link2, link3, link4);
+        String link5 = "[[Test|Mock]]";
+        String text = String.format("En %s %s %s %s %s.", link1, link2, link3, link4, link5);
 
         List<Replacement> replacements = sameLinkFinder.findReplacements(text);
 
