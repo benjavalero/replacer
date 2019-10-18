@@ -1,5 +1,6 @@
 package es.bvalero.replacer.dump;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import java.io.Serializable;
 
 @Data
 @NoArgsConstructor // Needed by JPA
+@AllArgsConstructor
 @Entity
 @Table(name = "indexation")
 class IndexationEntity implements Serializable {
@@ -35,6 +37,6 @@ class IndexationEntity implements Serializable {
     private long start;
 
     @Column(nullable = false)
-    private Long end;
+    private long end;
 
 }

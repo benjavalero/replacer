@@ -1,8 +1,8 @@
 package es.bvalero.replacer.dump;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -42,24 +42,16 @@ class DumpManager {
     private static final String REGEX_DUMP_FOLDER = "\\d+";
     private static final Pattern PATTERN_DUMP_FOLDER = Pattern.compile(REGEX_DUMP_FOLDER);
 
+    @Setter
     @Value("${replacer.dump.folder.path:}")
     private String dumpFolderPath;
 
+    @Setter
     @Value("${replacer.dump.index.wait:}")
     private int dumpIndexWait;
 
     @Autowired
     private DumpHandler dumpHandler;
-
-    @TestOnly
-    void setDumpFolderPath(String dumpFolderPath) {
-        this.dumpFolderPath = dumpFolderPath;
-    }
-
-    @TestOnly
-    void setDumpIndexWait(int dumpIndexWait) {
-        this.dumpIndexWait = dumpIndexWait;
-    }
 
     /**
      * Check if there is a new dump to process.
@@ -106,7 +98,7 @@ class DumpManager {
     }
 
     // Check if the dump file is old enough, i. e. modified more than a day ago
-    boolean isDumpFileOldEnough(Path dumpFile) {
+    private boolean isDumpFileOldEnough(Path dumpFile) {
         try {
             LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(dumpIndexWait);
             FileTime fileTime = Files.getLastModifiedTime(dumpFile);

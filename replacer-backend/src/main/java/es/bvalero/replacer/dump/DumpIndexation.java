@@ -1,5 +1,6 @@
 package es.bvalero.replacer.dump;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -7,6 +8,7 @@ import java.time.Instant;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 class DumpIndexation {
     private boolean running;
     private boolean forceProcess;

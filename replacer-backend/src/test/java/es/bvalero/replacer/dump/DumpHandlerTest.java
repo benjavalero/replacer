@@ -4,11 +4,9 @@ import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
@@ -21,6 +19,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 
 public class DumpHandlerTest {
 
@@ -30,7 +29,7 @@ public class DumpHandlerTest {
     @Mock
     private DumpArticleProcessor dumpArticleProcessor;
 
-    @Mock
+    @Spy
     private ModelMapper modelMapper;
 
     @InjectMocks
@@ -128,6 +127,33 @@ public class DumpHandlerTest {
         Assert.assertEquals(0L, defaultStats.getNumArticlesProcessable());
         Assert.assertEquals(0L, defaultStats.getNumArticlesProcessed());
         Assert.assertNull(defaultStats.getDumpFileName());
+    }
+
+    @Test
+    public void testProcessDatabaseStatistics() {
+        long id = 12;
+        boolean forceProcess = true;
+        long numArticlesRead = 1000;
+        long numArticlesProcessable = 800;
+        long numArticlesProcessed = 500;
+        String dumpFileName = "xxx.xml.bz2";
+        long start = 1500;
+        long end = 2000;
+        IndexationEntity indexation = new IndexationEntity(id, forceProcess, numArticlesRead, numArticlesProcessable,
+                numArticlesProcessed, dumpFileName, start, end);
+        Mockito.when(indexationRepository.findByOrderByIdDesc(Mockito.any(Pageable.class)))
+                .thenReturn(Collections.singletonList(indexation));
+
+        DumpIndexation dbStats = dumpHandler.getProcessStatus();
+
+        Assert.assertFalse(dbStats.isRunning());
+        Assert.assertEquals(forceProcess, dbStats.isForceProcess());
+        Assert.assertEquals(numArticlesRead, dbStats.getNumArticlesRead());
+        Assert.assertEquals(numArticlesProcessable, dbStats.getNumArticlesProcessable());
+        Assert.assertEquals(numArticlesProcessed, dbStats.getNumArticlesProcessed());
+        Assert.assertEquals(dumpFileName, dbStats.getDumpFileName());
+        Assert.assertEquals(start, dbStats.getStart());
+        Assert.assertEquals(end, dbStats.getEnd().intValue());
     }
 
 }

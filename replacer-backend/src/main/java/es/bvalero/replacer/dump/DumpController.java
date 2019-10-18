@@ -16,12 +16,12 @@ public class DumpController {
     @Autowired
     private DumpManager dumpManager;
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     public DumpIndexation getDumpStatus() {
         return dumpManager.getDumpStatus();
     }
 
-    @PostMapping(value = "/")
+    @PostMapping(value = "")
     public void processLatestDumpFileManually() {
         dumpManager.processLatestDumpFile(false);
     }

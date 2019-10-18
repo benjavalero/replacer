@@ -184,4 +184,10 @@ public class DumpArticleProcessorTest {
         Mockito.verify(replacementIndexService).indexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.eq(dbReplacements));
     }
 
+    @Test
+    public void testFinishOverallProcess() {
+        dumpArticleProcessor.finishOverallProcess();
+        Mockito.verify(replacementCache, Mockito.times(1)).clean();
+    }
+
 }
