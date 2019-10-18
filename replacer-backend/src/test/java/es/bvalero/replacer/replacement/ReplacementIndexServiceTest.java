@@ -9,7 +9,6 @@ import org.mockito.*;
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
-import java.time.LocalDate;
 import java.util.*;
 
 public class ReplacementIndexServiceTest {
@@ -31,6 +30,24 @@ public class ReplacementIndexServiceTest {
     public void setUp() {
         replacementIndexService = new ReplacementIndexService();
         MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    public void testIndexNewArticleReplacements() {
+        int articleId = new Random().nextInt();
+
+        replacementIndexService.indexArticleReplacements(articleId, Collections.emptyList());
+
+        Mockito.verify(replacementRepository, Mockito.times(1)).findByArticleId(Mockito.eq(articleId));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testIndexNewArticleInvalidReplacements() {
+        int articleId = new Random().nextInt();
+        int wrongId = articleId + 1;
+
+        IndexableReplacement indexableReplacement = IndexableReplacement.of(wrongId, "", "", 0, LocalDate.now());
+        replacementIndexService.indexArticleReplacements(articleId, Collections.singletonList(indexableReplacement));
     }
 
     @Test

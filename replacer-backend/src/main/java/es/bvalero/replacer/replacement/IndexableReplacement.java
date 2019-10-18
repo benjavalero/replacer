@@ -1,6 +1,5 @@
 package es.bvalero.replacer.replacement;
 
-import lombok.AllArgsConstructor;
 import lombok.Value;
 
 import java.time.LocalDate;
