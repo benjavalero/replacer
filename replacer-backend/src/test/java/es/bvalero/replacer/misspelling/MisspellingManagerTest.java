@@ -1,6 +1,7 @@
 package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.replacement.ReplacementRepository;
+import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,7 +35,7 @@ public class MisspellingManagerTest {
 
     @Test
     public void testParseMisspellingListText() {
-        String misspellingListText = "Texto\n\n" +
+        String misspellingListText = "Text\n\n" +
                 "A||B\n" + // No starting whitespace
                 " C|cs|D\n" +
                 " E|CS|F\n" +
@@ -86,6 +87,15 @@ public class MisspellingManagerTest {
         misspellingManager.setItems(new HashSet<>(Arrays.asList(misspelling2, misspelling3)));
 
         Mockito.verify(replacementRepository, Mockito.times(1)).deleteBySubtypeIn(Collections.singleton("A"));
+    }
+
+    @Test
+    public void testUpdate() throws WikipediaException {
+        Mockito.when(wikipediaService.getMisspellingListPageContent()).thenReturn("");
+
+        misspellingManager.update();
+
+        Mockito.verify(wikipediaService).getMisspellingListPageContent();
     }
 
 }

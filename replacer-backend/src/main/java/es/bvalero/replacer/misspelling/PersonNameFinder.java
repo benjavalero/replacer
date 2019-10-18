@@ -1,7 +1,8 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.IgnoredReplacement;
+import es.bvalero.replacer.finder.IgnoredReplacementFinder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ class PersonNameFinder implements IgnoredReplacementFinder {
             int start = 0;
             while (start >= 0) {
                 start = text.indexOf(word, start);
-                if (start >= 0) {
+                if (start != -1) { // Word found
                     if (isWordFollowedByUppercase(start, word, text)) {
                         results.add(IgnoredReplacement.of(start, word));
                     }
@@ -36,10 +37,10 @@ class PersonNameFinder implements IgnoredReplacementFinder {
     }
 
     private boolean isWordFollowedByUppercase(int start, String word, String text) {
-        int end = start + word.length();
-        return end + 1 < text.length()
-                && !Character.isLetter(text.charAt(end))
-                && Character.isUpperCase(text.charAt(end + 1));
+        int upperCasePos = start + word.length() + 1;
+        return upperCasePos < text.length()
+                && FinderUtils.isWordCompleteInText(start, word, text)
+                && Character.isUpperCase(text.charAt(upperCasePos));
     }
 
 }

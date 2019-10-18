@@ -6,9 +6,9 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.IgnoredReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,16 +31,12 @@ public class UppercaseAfterFinder implements IgnoredReplacementFinder, PropertyC
     private MisspellingManager misspellingManager;
 
     // Misspellings which start with uppercase and are case-sensitive
+    @Getter
     private List<String> uppercaseWords = new ArrayList<>();
 
     // Regex with the misspellings which start with uppercase and are case-sensitive
     // and starting with a special character which justifies the uppercase
     private RunAutomaton uppercaseAfterAutomaton;
-
-    @TestOnly
-    public List<String> getUppercaseWords() {
-        return uppercaseWords;
-    }
 
     @PostConstruct
     public void init() {

@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.Suggestion;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
@@ -17,13 +18,10 @@ import java.util.*;
 public abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeListener {
 
     // Derived from the misspelling set to access faster by word
+    @Getter
     private Map<String, Misspelling> misspellingMap = new HashMap<>();
 
     abstract MisspellingManager getMisspellingManager();
-
-    public Map<String, Misspelling> getMisspellingMap() {
-        return misspellingMap;
-    }
 
     @PostConstruct
     public void init() {

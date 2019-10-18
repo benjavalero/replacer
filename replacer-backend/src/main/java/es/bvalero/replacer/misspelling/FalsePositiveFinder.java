@@ -6,9 +6,9 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.IgnoredReplacement;
 import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,14 +31,10 @@ public class FalsePositiveFinder implements IgnoredReplacementFinder, PropertyCh
     @Autowired
     private FalsePositiveManager falsePositiveManager;
 
+    @Getter
     private Set<String> falsePositives = new HashSet<>();
 
     private RunAutomaton falsePositivesAutomaton;
-
-    @TestOnly
-    public Set<String> getFalsePositives() {
-        return falsePositives;
-    }
 
     @PostConstruct
     public void init() {

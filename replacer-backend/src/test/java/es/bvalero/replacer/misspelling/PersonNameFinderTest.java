@@ -20,12 +20,13 @@ public class PersonNameFinderTest {
     public void testRegexPersonName() {
         String noun = "Julio";
         String surname = "Verne";
-        String text = "xxx " + noun + ' ' + surname + " zzz";
+        String text = String.format("A %s %s %ss %s %s %s.", noun, surname, noun, noun, surname.toLowerCase(), noun);
 
         List<IgnoredReplacement> matches = personNameFinder.findIgnoredReplacements(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(1, matches.size());
         Assert.assertEquals(noun, matches.get(0).getText());
+        Assert.assertEquals(2, matches.get(0).getStart()); // Only the first one
     }
 
 }

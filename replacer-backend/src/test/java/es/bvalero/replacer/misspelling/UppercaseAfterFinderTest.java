@@ -25,7 +25,12 @@ public class UppercaseAfterFinderTest {
 
         Misspelling misspelling1 = Misspelling.of("Enero", true, "enero");
         Misspelling misspelling2 = Misspelling.of("Febrero", true, "febrero");
-        Set<Misspelling> misspellingSet = new HashSet<>(Arrays.asList(misspelling1, misspelling2));
+        Misspelling misspelling3 = Misspelling.of("habia", false, "había"); // Ignored
+        Misspelling misspelling4 = Misspelling.of("madrid", true, "Madrid"); // Ignored
+        Misspelling misspelling5 = Misspelling.of("Julio", true, "Julio, julio"); // Ignored
+        Misspelling misspelling6 = Misspelling.of("Paris", true, "París"); // Ignored
+        Set<Misspelling> misspellingSet = new HashSet<>(
+                Arrays.asList(misspelling1, misspelling2, misspelling3, misspelling4, misspelling5, misspelling6));
 
         // Fake the update of the misspelling list in the misspelling manager
         uppercaseAfterFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
