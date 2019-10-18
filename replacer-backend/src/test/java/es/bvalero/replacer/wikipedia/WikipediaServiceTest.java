@@ -176,10 +176,19 @@ public class WikipediaServiceTest {
         OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         String currentTimestamp = "2019-06-25T21:24:09Z";
-        wikipediaService.savePageContent(1, "", 0, currentTimestamp, accessToken);
+        wikipediaService.savePageContent(1, "", null, currentTimestamp, accessToken);
 
         // Two calls: one for the EditToken and another to save the content
         Mockito.verify(wikipediaRequestService, Mockito.times(2))
+                .executeSignedPostRequest(Mockito.anyMap(), Mockito.any(OAuth1AccessToken.class));
+
+        // Save a section
+        // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
+        currentTimestamp = "2019-06-26T21:24:09Z";
+        wikipediaService.savePageContent(1, "", 2, currentTimestamp, accessToken);
+
+        // Two calls: one for the EditToken and another to save the content (x2 save page and section in this test)
+        Mockito.verify(wikipediaRequestService, Mockito.times(4))
                 .executeSignedPostRequest(Mockito.anyMap(), Mockito.any(OAuth1AccessToken.class));
     }
 
@@ -221,6 +230,18 @@ public class WikipediaServiceTest {
         Assert.assertEquals(2497, sections.stream()
                 .filter(sec -> sec.getIndex() == 3)
                 .findAny().orElseThrow(WikipediaException::new).getByteOffset());
+    }
+
+    @Test
+    public void testGetPageInvalidSections() throws WikipediaException, IOException {
+        // API response
+        String textResponse = "{\"parse\":{\"title\":\"Anexo:Asteroides (161001)\\u2013(162000)\",\"pageid\":6633556,\"sections\":[{\"toclevel\":1,\"level\":\"2\",\"line\":\"Asteroides del (161001) al (161100)\",\"number\":\"1\",\"index\":\"\",\"byteoffset\":null,\"anchor\":\"Asteroides_del_(161001)_al_(161100)\"},{\"toclevel\":1,\"level\":\"2\",\"line\":\"Asteroides del (161101) al (161200)\",\"number\":\"2\",\"index\":\"\",\"byteoffset\":null,\"anchor\":\"Asteroides_del_(161101)_al_(161200)\"}]}}";
+        WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
+        Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap())).thenReturn(response);
+
+        List<WikipediaSection> sections = wikipediaService.getPageSections(6633556);
+        Assert.assertNotNull(sections);
+        Assert.assertTrue(sections.isEmpty());
     }
 
     @Test

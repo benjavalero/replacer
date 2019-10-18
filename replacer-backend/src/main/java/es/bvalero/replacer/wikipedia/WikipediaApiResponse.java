@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 @Data
 public class WikipediaApiResponse {
     private Error error;

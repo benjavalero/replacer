@@ -92,9 +92,7 @@ class WikipediaRequestService {
         if (response.getError() != null) {
             String code = response.getError().getCode();
             String info = response.getError().getInfo();
-            if (StringUtils.isNotBlank(code) || StringUtils.isNotBlank(info)) {
-                throw new WikipediaException(String.format("%s: %s", code, info));
-            }
+            throw new WikipediaException(String.format("%s: %s", code, info));
         }
     }
 

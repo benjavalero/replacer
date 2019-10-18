@@ -2,6 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.List;
 
+@Ignore
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {WikipediaServiceImpl.class, WikipediaRequestService.class, WikipediaConfig.class},
         initializers = ConfigFileApplicationContextInitializer.class)

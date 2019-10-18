@@ -2,10 +2,10 @@ package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.finder.FinderUtils;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -32,13 +32,9 @@ class WikipediaServiceImpl implements WikipediaService {
     @Autowired
     private WikipediaRequestService wikipediaRequestService;
 
+    @Setter
     @Value("${replacer.admin.user}")
     private String adminUser;
-
-    @TestOnly
-    void setAdminUser(String adminUser) {
-        this.adminUser = adminUser;
-    }
 
     @Override
     public String getLoggedUserName(OAuth1AccessToken accessToken) throws WikipediaException {
@@ -175,9 +171,19 @@ class WikipediaServiceImpl implements WikipediaService {
 
     private List<WikipediaSection> extractSectionsFromJson(WikipediaApiResponse response) {
         return response.getParse().getSections().stream()
-                .filter(section -> section.getByteoffset() != null)
+                .filter(this::isSectionValid)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    private boolean isSectionValid(WikipediaApiResponse.Section section) {
+        try {
+            return Integer.parseInt(section.getIndex()) > 0
+                    && section.getByteoffset() != null;
+        } catch (NumberFormatException nfe) {
+            LOGGER.debug("Invalid page section: {}", section);
+            return false;
+        }
     }
 
     private WikipediaSection convertToDto(WikipediaApiResponse.Section section) {
