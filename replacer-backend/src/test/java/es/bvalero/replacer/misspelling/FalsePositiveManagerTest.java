@@ -34,7 +34,7 @@ public class FalsePositiveManagerTest {
                 " # A\n" + // Commented
                 "A\n" + // No starting whitespace
                 " B\n" +
-                " b\n" +
+                " b # X\n" + // With trailing comment
                 " c\n" +
                 " c\n"; // Duplicated
 

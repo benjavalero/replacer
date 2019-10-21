@@ -70,7 +70,7 @@ public abstract class ParseFileManager<T> {
         Stream<String> stream = new BufferedReader(new StringReader(text)).lines();
         // Ignore the lines not corresponding to item lines
         stream.filter(this::isItemLineValid).forEach(strLine -> {
-            T item = parseItemLine(strLine);
+            T item = parseItemLine(trimItemLine(strLine));
             if (item != null) {
                 if (itemKeys.add(getItemKey(item))) {
                     itemSet.add(item);
@@ -85,6 +85,15 @@ public abstract class ParseFileManager<T> {
 
     private boolean isItemLineValid(String itemLine) {
         return itemLine.startsWith(" ") && StringUtils.isNotBlank(itemLine) && !itemLine.trim().startsWith("#");
+    }
+
+    private String trimItemLine(String itemLine) {
+        return removeTrailingComment(itemLine).trim();
+    }
+
+    private String removeTrailingComment(String line) {
+        int idx = line.indexOf('#');
+        return idx != -1 ? line.substring(0, idx) : line;
     }
 
     abstract @Nullable T parseItemLine(String itemLine);
