@@ -197,4 +197,12 @@ public class MisspellingSimpleFinderTest {
         Assert.assertEquals(word, results.get(0).getSuggestions().get(0).getText());
     }
 
+    @Test
+    public void testMisspellingListEmpty() {
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, Collections.EMPTY_SET));
+
+        Assert.assertTrue(misspellingFinder.findReplacements("A sample text").isEmpty());
+    }
+
 }

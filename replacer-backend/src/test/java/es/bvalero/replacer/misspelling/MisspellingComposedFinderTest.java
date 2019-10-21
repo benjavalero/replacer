@@ -38,4 +38,12 @@ public class MisspellingComposedFinderTest {
         Assert.assertEquals("aun así", result1.getSuggestions().get(0).getText());
     }
 
+    @Test
+    public void testComposedMisspellingListEmpty() {
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, Collections.EMPTY_SET));
+
+        Assert.assertTrue(misspellingComposedFinder.findReplacements("A sample text").isEmpty());
+    }
+
 }

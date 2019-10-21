@@ -22,7 +22,7 @@ public class FalsePositiveFinderTest {
         String text = "Un sólo de éstos en el Index Online.";
         Set<String> falsePositives = new HashSet<>(Arrays.asList("[Ss]ólo", "[Éé]st?[aeo]s?", "Index", "[Oo]nline"));
 
-        // Fake the update of the misspelling list in the misspelling manager
+        // Fake the update of the list in the manager
         falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
 
         List<IgnoredReplacement> matches = falsePositiveFinder.findIgnoredReplacements(text);
@@ -40,7 +40,7 @@ public class FalsePositiveFinderTest {
         String text1 = "A Top Album Chart.";
         Set<String> falsePositives = new HashSet<>(Arrays.asList("Top Album", "Album Chart"));
 
-        // Fake the update of the misspelling list in the misspelling manager
+        // Fake the update of the list in the manager
         falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
 
         List<IgnoredReplacement> matches1 = falsePositiveFinder.findIgnoredReplacements(text1);
@@ -57,6 +57,14 @@ public class FalsePositiveFinderTest {
         Assert.assertFalse(matches2.isEmpty());
         Assert.assertEquals(1, matches2.size());
         Assert.assertTrue(matches2.contains(IgnoredReplacement.of(7, "Album Chart")));
+    }
+
+    @Test
+    public void testFalsePositivesListEmpty() {
+        // Fake the update of the list in the manager
+        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, Collections.EMPTY_SET));
+
+        Assert.assertTrue(falsePositiveFinder.findIgnoredReplacements("A sample text").isEmpty());
     }
 
 }

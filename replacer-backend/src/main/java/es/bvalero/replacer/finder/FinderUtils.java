@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
@@ -48,6 +50,10 @@ public class FinderUtils {
     }
 
     public static boolean isWordCompleteInText(int start, String word, String text) {
+        if (StringUtils.isBlank(word)) {
+            return false;
+        }
+
         int end = start + word.length();
         return start == 0 || end == text.length()
                 || (isValidSeparator(text.charAt(start - 1)) && isValidSeparator(text.charAt(end)));
