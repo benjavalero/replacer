@@ -18,6 +18,7 @@ import java.beans.PropertyChangeListener;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Find misspelling replacements in a given text.
@@ -50,10 +51,17 @@ public class FalsePositiveFinder implements IgnoredReplacementFinder, PropertyCh
 
     private RunAutomaton buildFalsePositivesAutomaton(Set<String> falsePositives) {
         LOGGER.info("START Build false positive automaton");
-        String alternations = String.format("(%s)", StringUtils.join(falsePositives, "|"));
+        String alternations = String.format("(%s)", StringUtils.join(
+                falsePositives.stream().map(this::processFalsePositive).collect(Collectors.toList()), "|"));
         RunAutomaton automaton = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
         LOGGER.info("END Build false positive automaton");
         return automaton;
+    }
+
+    private String processFalsePositive(String falsePositive) {
+        return FinderUtils.startsWithLowerCase(falsePositive)
+                ? FinderUtils.setFirstUpperCaseClass(falsePositive)
+                : falsePositive;
     }
 
     @Override

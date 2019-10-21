@@ -20,7 +20,7 @@ public class FalsePositiveFinderTest {
     @Test
     public void testRegexFalsePositives() {
         String text = "Un sólo de éstos en el Index Online.";
-        Set<String> falsePositives = new HashSet<>(Arrays.asList("[Ss]ólo", "[Éé]st?[aeo]s?", "Index", "[Oo]nline"));
+        Set<String> falsePositives = new HashSet<>(Arrays.asList("sólo", "ést?[aeo]s?", "Index", "online"));
 
         // Fake the update of the list in the manager
         falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
@@ -65,6 +65,53 @@ public class FalsePositiveFinderTest {
         falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, Collections.EMPTY_SET));
 
         Assert.assertTrue(falsePositiveFinder.findIgnoredReplacements("A sample text").isEmpty());
+    }
+
+    @Test
+    public void testFalsePositiveLowerCase() {
+        String text = "A Test test.";
+        Set<String> falsePositives = new HashSet<>(Collections.singletonList("test"));
+
+        // Fake the update of the list in the manager
+        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
+
+        List<IgnoredReplacement> matches = falsePositiveFinder.findIgnoredReplacements(text);
+
+        Assert.assertFalse(matches.isEmpty());
+        Assert.assertEquals(2, matches.size());
+        Assert.assertTrue(matches.contains(IgnoredReplacement.of(2, "Test")));
+        Assert.assertTrue(matches.contains(IgnoredReplacement.of(7, "test")));
+    }
+
+    @Test
+    public void testFalsePositiveUpperCase() {
+        String text = "A Test test.";
+        Set<String> falsePositives = new HashSet<>(Collections.singletonList("Test"));
+
+        // Fake the update of the list in the manager
+        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
+
+        List<IgnoredReplacement> matches = falsePositiveFinder.findIgnoredReplacements(text);
+
+        Assert.assertFalse(matches.isEmpty());
+        Assert.assertEquals(1, matches.size());
+        Assert.assertTrue(matches.contains(IgnoredReplacement.of(2, "Test")));
+    }
+
+    @Test
+    public void testFalsePositiveRegex() {
+        String text = "A sample text.";
+        Set<String> falsePositives = new HashSet<>(Collections.singletonList("(sample|text)"));
+
+        // Fake the update of the list in the manager
+        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
+
+        List<IgnoredReplacement> matches = falsePositiveFinder.findIgnoredReplacements(text);
+
+        Assert.assertFalse(matches.isEmpty());
+        Assert.assertEquals(2, matches.size());
+        Assert.assertTrue(matches.contains(IgnoredReplacement.of(2, "sample")));
+        Assert.assertTrue(matches.contains(IgnoredReplacement.of(9, "text")));
     }
 
 }
