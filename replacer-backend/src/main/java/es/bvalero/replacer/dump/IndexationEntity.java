@@ -14,6 +14,8 @@ import java.io.Serializable;
 @Table(name = "indexation")
 class IndexationEntity implements Serializable {
 
+    private static final long serialVersionUID = -5332141712140138606L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
