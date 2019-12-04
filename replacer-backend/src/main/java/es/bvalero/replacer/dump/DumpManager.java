@@ -18,15 +18,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Find the Wikipedia dumps in the filesystem where the application runs.
@@ -38,17 +32,12 @@ import java.util.stream.Stream;
 @Component
 class DumpManager {
 
-    static final String DUMP_NAME_FORMAT = "eswiki-%s-pages-articles.xml.bz2";
-    private static final String REGEX_DUMP_FOLDER = "\\d+";
-    private static final Pattern PATTERN_DUMP_FOLDER = Pattern.compile(REGEX_DUMP_FOLDER);
-
-    @Setter
-    @Value("${replacer.dump.folder.path:}")
-    private String dumpFolderPath;
-
     @Setter
     @Value("${replacer.dump.index.wait:}")
     private int dumpIndexWait;
+
+    @Autowired
+    private DumpFileFinder dumpFileFinder;
 
     @Autowired
     private DumpHandler dumpHandler;
@@ -81,7 +70,7 @@ class DumpManager {
         }
 
         try {
-            Path latestDumpFileFound = findLatestDumpFile();
+            Path latestDumpFileFound = dumpFileFinder.findLatestDumpFile();
             String latestDumpFileName = latestDumpFileFound.getFileName().toString();
 
             // We check against the latest dump file processed
@@ -112,43 +101,6 @@ class DumpManager {
         // At this point we know that the indexation is not running
         // so the status of the handler matches with last finished indexation in database
         return dumpHandler.getProcessStatus().getDumpFileName();
-    }
-
-    /**
-     * @return The path of latest available dump file from Wikipedia.
-     */
-    Path findLatestDumpFile() throws DumpException {
-        LOGGER.info("START Find latest dump file");
-        List<Path> dumpSubFolders = findDumpFolders();
-
-        // Try with all the folders starting for the latest
-        for (Path dumpSubFolder : dumpSubFolders) {
-            String dumpFileName = String.format(DUMP_NAME_FORMAT, dumpSubFolder.getFileName());
-            Path dumpFile = dumpSubFolder.resolve(dumpFileName);
-            if (dumpFile.toFile().exists()) {
-                LOGGER.info("END Find latest dump file: {}", dumpFile);
-                return dumpFile;
-            }
-        }
-
-        // If we get here no dump file has been found
-        throw new DumpException("No dump file has been found in dump path");
-    }
-
-    private List<Path> findDumpFolders() throws DumpException {
-        LOGGER.debug("Dump files base path: {}", dumpFolderPath);
-        try (Stream<Path> dumpSubPaths = Files.list(Paths.get(dumpFolderPath))) {
-            List<Path> dumpSubFolders = dumpSubPaths
-                    .filter(folder -> PATTERN_DUMP_FOLDER.matcher(folder.getFileName().toString()).matches())
-                    .sorted(Collections.reverseOrder())
-                    .collect(Collectors.toList());
-            if (dumpSubFolders.isEmpty()) {
-                throw new DumpException(String.format("Sub-folders not found in dump path: %s", dumpFolderPath));
-            }
-            return dumpSubFolders;
-        } catch (IOException e) {
-            throw new DumpException("Error listing files in dump path", e);
-        }
     }
 
     void parseDumpFile(Path dumpFile, boolean forceProcess) throws DumpException {

@@ -2,9 +2,7 @@ package es.bvalero.replacer.dump;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -21,8 +19,8 @@ import java.time.ZoneOffset;
 
 public class DumpManagerTest {
 
-    @Rule
-    public TemporaryFolder dumpFolder = new TemporaryFolder();
+    @Mock
+    public DumpFileFinder dumpFileFinder;
 
     @Mock
     private DumpHandler dumpHandler;
@@ -34,67 +32,6 @@ public class DumpManagerTest {
     public void setUp() {
         dumpManager = new DumpManager();
         MockitoAnnotations.initMocks(this);
-    }
-
-    @Test
-    public void testFindLatestDumpFile() throws DumpException, IOException {
-        // Two folders: 1 and 2 (newer). Each with one dump file.
-        Path dumpFolderFile = Paths.get(dumpFolder.getRoot().toURI());
-        Path subFolder1 = dumpFolderFile.resolve("20170101");
-        Path subFolder2 = dumpFolderFile.resolve("20170201");
-        Files.createDirectory(subFolder1);
-        Files.createDirectory(subFolder2);
-        Path dumpFile1 = subFolder1.resolve(String.format(DumpManager.DUMP_NAME_FORMAT, subFolder1.getFileName()));
-        Path dumpFile2 = subFolder2.resolve(String.format(DumpManager.DUMP_NAME_FORMAT, subFolder2.getFileName()));
-        Files.createFile(dumpFile1);
-        Files.createFile(dumpFile2);
-        dumpManager.setDumpFolderPath(dumpFolder.getRoot().getPath());
-
-        Path latestDumpFile = dumpManager.findLatestDumpFile();
-
-        Assert.assertNotNull(latestDumpFile);
-        Assert.assertEquals(dumpFile2, latestDumpFile);
-    }
-
-    @Test
-    public void testFindLatestDumpFileInOldSubFolder() throws DumpException, IOException {
-        // In case the latest sub-folder has not the dump yet (it has not been finished)
-        Path dumpFolderFile = Paths.get(dumpFolder.getRoot().toURI());
-        Path subFolder1 = dumpFolderFile.resolve("20170101");
-        Path subFolder2 = dumpFolderFile.resolve("20170201");
-        Files.createDirectory(subFolder1);
-        Files.createDirectory(subFolder2);
-        Path dumpFile1 = subFolder1.resolve(String.format(DumpManager.DUMP_NAME_FORMAT, subFolder1.getFileName()));
-        Files.createFile(dumpFile1);
-        dumpManager.setDumpFolderPath(dumpFolder.getRoot().getPath());
-
-        Path latestDumpFile = dumpManager.findLatestDumpFile();
-
-        Assert.assertNotNull(latestDumpFile);
-        Assert.assertEquals(dumpFile1, latestDumpFile);
-    }
-
-    @Test(expected = DumpException.class)
-    public void testFindLatestDumpFileWithoutDumpFiles() throws DumpException, IOException {
-        // In case there is no sub-folder with a dump yet (it has not been finished)
-        dumpFolder.newFolder("20170101");
-        dumpManager.setDumpFolderPath(dumpFolder.getRoot().getPath());
-
-        dumpManager.findLatestDumpFile();
-    }
-
-    @Test(expected = DumpException.class)
-    public void testFindLatestDumpFileWithoutSubFolders() throws DumpException {
-        dumpManager.setDumpFolderPath(dumpFolder.getRoot().getPath());
-
-        dumpManager.findLatestDumpFile();
-    }
-
-    @Test(expected = DumpException.class)
-    public void testFindLatestDumpFileWithNotExistingDumpPath() throws DumpException {
-        dumpManager.setDumpFolderPath("xxx");
-
-        dumpManager.findLatestDumpFile();
     }
 
     @Test
@@ -129,8 +66,9 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileOldEnough() throws URISyntaxException, IOException {
+    public void testProcessLatestDumpFileOldEnough() throws URISyntaxException, IOException, DumpException {
         Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        Mockito.when(dumpFileFinder.findLatestDumpFile()).thenReturn(dumpFile);
 
         // Make the dump file old enough
         dumpManager.setDumpIndexWait(1); // 1 day
@@ -138,7 +76,6 @@ public class DumpManagerTest {
         FileTime fileTime = FileTime.from(twoDaysAgo.toInstant(ZoneOffset.UTC));
         Files.setLastModifiedTime(dumpFile, fileTime);
 
-        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
         Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
 
         dumpManager.processLatestDumpFile(false);
@@ -147,8 +84,9 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileTooRecent() throws URISyntaxException, IOException {
+    public void testProcessLatestDumpFileTooRecent() throws URISyntaxException, IOException, DumpException {
         Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        Mockito.when(dumpFileFinder.findLatestDumpFile()).thenReturn(dumpFile);
 
         // Make the dump file too recent
         dumpManager.setDumpIndexWait(1); // 1 day
@@ -156,7 +94,6 @@ public class DumpManagerTest {
         FileTime fileTime = FileTime.from(twoDaysAgo.toInstant(ZoneOffset.UTC));
         Files.setLastModifiedTime(dumpFile, fileTime);
 
-        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
         Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
 
         dumpManager.processLatestDumpFile(false);
@@ -165,8 +102,9 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileTooRecentForced() throws URISyntaxException, IOException {
+    public void testProcessLatestDumpFileTooRecentForced() throws URISyntaxException, IOException, DumpException {
         Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        Mockito.when(dumpFileFinder.findLatestDumpFile()).thenReturn(dumpFile);
 
         // Make the dump file too recent
         dumpManager.setDumpIndexWait(1); // 1 day
@@ -174,7 +112,6 @@ public class DumpManagerTest {
         FileTime fileTime = FileTime.from(twoDaysAgo.toInstant(ZoneOffset.UTC));
         Files.setLastModifiedTime(dumpFile, fileTime);
 
-        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
         Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
 
         dumpManager.processLatestDumpFile(true);
@@ -183,8 +120,8 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileWithException() {
-        dumpManager.setDumpFolderPath("");
+    public void testProcessLatestDumpFileWithException() throws DumpException {
+        Mockito.when(dumpFileFinder.findLatestDumpFile()).thenThrow(DumpException.class);
         Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
 
         dumpManager.processLatestDumpFile(false);
@@ -204,9 +141,10 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileAlreadyProcessed() throws URISyntaxException {
+    public void testProcessLatestDumpFileAlreadyProcessed() throws URISyntaxException, DumpException {
         Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
+        Mockito.when(dumpFileFinder.findLatestDumpFile()).thenReturn(dumpFile);
+        
         DumpIndexation status = new DumpIndexation("eswiki-20170101-pages-articles.xml.bz2", false);
         Mockito.when(dumpHandler.getProcessStatus()).thenReturn(status);
 
@@ -216,9 +154,10 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileAlreadyProcessedForced() throws URISyntaxException {
+    public void testProcessLatestDumpFileAlreadyProcessedForced() throws URISyntaxException, DumpException {
         Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
+        Mockito.when(dumpFileFinder.findLatestDumpFile()).thenReturn(dumpFile);
+        
         Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
 
         dumpManager.processLatestDumpFile(true);
@@ -227,11 +166,13 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessDumpScheduled() throws URISyntaxException, IOException {
+    public void testProcessDumpScheduled() throws URISyntaxException, IOException, DumpException {
         Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        Mockito.when(dumpFileFinder.findLatestDumpFile()).thenReturn(dumpFile);
+        
         // Make the dump file old enough
         Files.setLastModifiedTime(dumpFile, FileTime.from(LocalDateTime.now().minusDays(2).toInstant(ZoneOffset.UTC)));
-        dumpManager.setDumpFolderPath(dumpFile.getParent().getParent().toString());
+
         Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
 
         dumpManager.processDumpScheduled();
