@@ -22,12 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 class DumpFileFinder {
-    static final String DUMP_FILE_NAME_FORMAT = "eswiki-%s-pages-articles.xml.bz2";
+    private static final String DUMP_FILE_NAME_FORMAT = "eswiki-%s-pages-articles.xml.bz2";
     private static final String DUMP_FOLDER_NAME_REGEX = "\\d{8}";
     private static final Pattern DUMP_FOLDER_NAME_PATTERN = Pattern.compile(DUMP_FOLDER_NAME_REGEX);
 
     @Setter
-    @Value("${replacer.dump.folder.path:}")
+    @Value("${dump-base-path:}")
     private String dumpBaseFolder;
 
     Path findLatestDumpFile() throws DumpException {

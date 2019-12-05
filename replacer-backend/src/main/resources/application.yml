@@ -18,9 +18,9 @@ logging:
     org.hibernate: ERROR
     org.springframework: ERROR
 
+dump-base-path: /public/dumps/public/eswiki
+
 replacer:
-  # Path where the XML dumps are located for the Spanish Wikipedia
-  dump.folder.path: /public/dumps/public/eswiki
   admin.user: Benjavalero
   parse.file.delay: 3600000 # Every hour
   dump.index.delay: 86400000 # Daily
@@ -40,8 +40,7 @@ spring:
   datasource:
     platform: h2
 
-replacer:
-  dump.folder.path: /Users/benja/Developer/pywikibot
+dump-base-path: /Users/benja/Developer/pywikibot
 
 ---
 

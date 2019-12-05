@@ -1,0 +1,9 @@
+{
+    "properties": [
+        {
+            "name": "dump-base-path",
+            "type": "java.lang.String",
+            "description": "Base path to find the Spanish Wikipedia dumps"
+        }
+    ]
+}
