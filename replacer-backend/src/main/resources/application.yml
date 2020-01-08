@@ -57,3 +57,5 @@ spring:
 logging:
   # Rolling after 10M after the documentation
   file: logs/replacer.log
+  # Disable console logging
+  pattern.console:
