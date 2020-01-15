@@ -28,11 +28,12 @@ The following concepts are used:
   - **Start** A number corresponding to the position in the page contents where the text is found. Take into account that the first position is 0.
   - **Type** The category of the replacement: misspelling, date format, etc.
   - **Suggestions** A list with a least one suggestion to replace the text. Each suggestion is composed by:
-
     - **Suggestion** The new text after the replacement.
     - **Description** An optional description to explain the motivation of the fix.
-
-- **Immutable** A text in the page contents to be left untouched, for instance a literal quote, so any replacement found within it must be ignored and not offered to the user for revision.
+- **Immutable** A section in the page contents to be left untouched, for instance a literal quote, so any replacement found within it must be ignored and not offered to the user for revision. It is composed by:
+  - **Start** The start position of the section in the page contents
+  - **End** The end position of the sectoin in the page contents
+  - **Text** Optionally, the text in the section, especially for debugging purposes, i. e. the text between the start and end position of the section.
 
 For the first use case, the basic steps are:
 
@@ -42,3 +43,11 @@ For the first use case, the basic steps are:
 4. Display to the user the current page contents and all the found replacements
 5. The user discards some replacements and accepts the suggestions for others
 6. The replacements accepted by the user are applied to the page contents and uploaded to Wikipedia
+
+For the second use case:
+
+1. Find latest dump
+2. Parse the dump and extract the pages. For each page:
+    1. Parse the page to find the replacements
+    2. Save the page replacments in the database
+3. Save a summary of the process in the database
