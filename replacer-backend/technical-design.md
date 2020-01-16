@@ -32,7 +32,7 @@ The following concepts are used:
     - **Description** An optional description to explain the motivation of the fix.
 - **Immutable** A section in the page contents to be left untouched, for instance a literal quote, so any replacement found within it must be ignored and not offered to the user for revision. It is composed by:
   - **Start** The start position of the section in the page contents
-  - **End** The end position of the sectoin in the page contents
+  - **End** The end position of the section in the page contents
   - **Text** Optionally, the text in the section, especially for debugging purposes, i. e. the text between the start and end position of the section.
 
 For the first use case, the basic steps are:
@@ -44,10 +44,53 @@ For the first use case, the basic steps are:
 5. The user discards some replacements and accepts the suggestions for others
 6. The replacements accepted by the user are applied to the page contents and uploaded to Wikipedia
 
+```plantuml
+@startuml
+    actor U as "User"
+    participant C as "Page\nController"
+    participant S as "Page\nService"
+    participant R as "Replacement\nRepository"
+    participant W as "Wikipedia\nFaçade"
+    participant F as "Replacement\nFinder"
+    U -> C : Request random page
+    C -> S
+    S -> R : Find random page
+    S -> W : Retrieve page contents
+    S -> F : Find page replacements
+    S --> S : Start again if\nno replacements found
+    S --> C
+    C --> U : Page contents\nand replacements
+    U -> C : Review page
+    C -> S
+    S ->> W : Upload save contents\n(if needed)
+    S ->> R : Mark page and replacements\nas solved
+@enduml
+```
+
 For the second use case:
 
 1. Find latest dump
 2. Parse the dump and extract the pages. For each page:
     1. Parse the page to find the replacements
-    2. Save the page replacments in the database
+    2. Save the page replacements in the database
 3. Save a summary of the process in the database
+
+```plantuml
+@startuml
+    actor U as "System"
+    participant S as "Dump\nService"
+    participant DF as "Dump\nFinder"
+    participant DP as "Dump\nParser"
+    participant RF as "Replacement\nFinder"
+    participant RR as "Replacement\nRepository"
+    participant IR as "Indexation\nRepository"
+    U -> S : Index last dump
+    S -> DF : Find last dump
+    S -> IR : Find last indexation
+    S -> DP : Parse last dump
+    DP --> S : Pages
+    S -> RF : Find replacements (for each page)
+    S -> RR : Save new replacements (for each page)
+    S -> IR : Save indexation summary
+@enduml
+```
