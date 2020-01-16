@@ -160,7 +160,7 @@ class DumpManager {
     void parseDumpFile(Path dumpFile, boolean forceProcess) throws DumpException {
         LOGGER.info("START Parse dump file: {}", dumpFile);
 
-        try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile))) {
+        try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile), true)) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             SAXParser saxParser = factory.newSAXParser();
