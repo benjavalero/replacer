@@ -93,13 +93,17 @@ class DumpHandler extends DefaultHandler {
                 currentTimestamp = currentChars.toString();
                 break;
             case TEXT_TAG:
-                currentContent = currentChars.toString();
+                // Text appears several times (contributor, revision, etc). We care about the first one.
+                if (currentContent == null) {
+                    currentContent = currentChars.toString();
+                }
                 break;
             case PAGE_TAG:
                 processPage();
 
-                // Reset current ID to avoid duplicates
+                // Reset current ID and Content to avoid duplicates
                 currentId = 0;
+                currentContent = null;
                 break;
             default:
                 break;
