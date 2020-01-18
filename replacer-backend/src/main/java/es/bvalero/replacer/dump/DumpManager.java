@@ -39,7 +39,7 @@ class DumpManager {
     private int dumpIndexWait;
 
     @Autowired
-    private DumpFileFinder dumpFileFinder;
+    private DumpFinder dumpFinder;
 
     @Autowired
     private DumpHandler dumpHandler;
@@ -72,7 +72,7 @@ class DumpManager {
         }
 
         try {
-            Path latestDumpFileFound = dumpFileFinder.findLatestDumpFile();
+            Path latestDumpFileFound = dumpFinder.findLatestDumpFile();
             String latestDumpFileName = latestDumpFileFound.getFileName().toString();
 
             // We check against the latest dump file processed

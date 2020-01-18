@@ -15,11 +15,11 @@ public class DumpFileFinderTest {
     @Rule
     public TemporaryFolder dumpBaseFolder = new TemporaryFolder();
 
-    private DumpFileFinder dumpFileFinder;
+    private DumpFinder dumpFinder;
 
     @Before
     public void setUp() {
-        dumpFileFinder = new DumpFileFinder();
+        dumpFinder = new DumpFinder();
     }
 
     @Test
@@ -43,10 +43,10 @@ public class DumpFileFinderTest {
         Files.createFile(dumpFile2);
         Files.createFile(dumpFile3);
 
-        dumpFileFinder.setDumpPathBase(dumpPathBase);
-        dumpFileFinder.setDumpPathProject(dumpPathProject);
+        dumpFinder.setDumpPathBase(dumpPathBase);
+        dumpFinder.setDumpPathProject(dumpPathProject);
 
-        Path latestDumpFile = dumpFileFinder.findLatestDumpFile();
+        Path latestDumpFile = dumpFinder.findLatestDumpFile();
 
         Assert.assertNotNull(latestDumpFile);
         Assert.assertEquals(dumpFile2, latestDumpFile);
@@ -69,10 +69,10 @@ public class DumpFileFinderTest {
         Path dumpFile1 = subFolder1.resolve("eswiki-20170101-pages-articles.xml.bz2");
         Files.createFile(dumpFile1);
 
-        dumpFileFinder.setDumpPathBase(dumpPathBase);
-        dumpFileFinder.setDumpPathProject(dumpPathProject);
+        dumpFinder.setDumpPathBase(dumpPathBase);
+        dumpFinder.setDumpPathProject(dumpPathProject);
 
-        Path latestDumpFile = dumpFileFinder.findLatestDumpFile();
+        Path latestDumpFile = dumpFinder.findLatestDumpFile();
 
         Assert.assertNotNull(latestDumpFile);
         Assert.assertEquals(dumpFile1, latestDumpFile);
@@ -90,10 +90,10 @@ public class DumpFileFinderTest {
         Path subFolder1 = dumpProject.resolve("20170101");
         Files.createDirectory(subFolder1);
 
-        dumpFileFinder.setDumpPathBase(dumpPathBase);
-        dumpFileFinder.setDumpPathProject(dumpPathProject);
+        dumpFinder.setDumpPathBase(dumpPathBase);
+        dumpFinder.setDumpPathProject(dumpPathProject);
 
-        dumpFileFinder.findLatestDumpFile();
+        dumpFinder.findLatestDumpFile();
     }
 
     @Test(expected = ReplacerException.class)
@@ -109,26 +109,26 @@ public class DumpFileFinderTest {
         Path dumpFile1 = subFolder1.resolve("eswiki-20170101-pages-articles.xml.bz2");
         Files.createFile(dumpFile1);
 
-        dumpFileFinder.setDumpPathBase(dumpPathBase);
-        dumpFileFinder.setDumpPathProject(dumpPathProject);
+        dumpFinder.setDumpPathBase(dumpPathBase);
+        dumpFinder.setDumpPathProject(dumpPathProject);
 
-        dumpFileFinder.findLatestDumpFile();
+        dumpFinder.findLatestDumpFile();
     }
 
     @Test(expected = ReplacerException.class)
     public void testNotExistingDumpProjectFolder() throws ReplacerException {
-        dumpFileFinder.setDumpPathBase(dumpBaseFolder.getRoot().getPath());
-        dumpFileFinder.setDumpPathProject("eswiki");
+        dumpFinder.setDumpPathBase(dumpBaseFolder.getRoot().getPath());
+        dumpFinder.setDumpPathProject("eswiki");
 
         // Don't create the project sub-folder for the test
-        dumpFileFinder.findLatestDumpFile();
+        dumpFinder.findLatestDumpFile();
     }
 
     @Test(expected = ReplacerException.class)
     public void testNotExistingDumpBaseFolder() throws ReplacerException {
-        dumpFileFinder.setDumpPathBase("xxx");
-        dumpFileFinder.setDumpPathProject("eswiki");
+        dumpFinder.setDumpPathBase("xxx");
+        dumpFinder.setDumpPathProject("eswiki");
 
-        dumpFileFinder.findLatestDumpFile();
+        dumpFinder.findLatestDumpFile();
     }
 }
