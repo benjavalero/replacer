@@ -8,6 +8,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import es.bvalero.replacer.ReplacerException;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -66,7 +68,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileOldEnough() throws URISyntaxException, IOException, DumpException {
+    public void testProcessLatestDumpFileOldEnough() throws URISyntaxException, IOException, ReplacerException {
         Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Mockito.when(dumpFileFinder.findLatestDumpFile()).thenReturn(dumpFile);
 
@@ -84,7 +86,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileTooRecent() throws URISyntaxException, IOException, DumpException {
+    public void testProcessLatestDumpFileTooRecent() throws URISyntaxException, IOException, ReplacerException {
         Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Mockito.when(dumpFileFinder.findLatestDumpFile()).thenReturn(dumpFile);
 
@@ -102,7 +104,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileTooRecentForced() throws URISyntaxException, IOException, DumpException {
+    public void testProcessLatestDumpFileTooRecentForced() throws URISyntaxException, IOException, ReplacerException {
         Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Mockito.when(dumpFileFinder.findLatestDumpFile()).thenReturn(dumpFile);
 
@@ -120,8 +122,8 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileWithException() throws DumpException {
-        Mockito.when(dumpFileFinder.findLatestDumpFile()).thenThrow(DumpException.class);
+    public void testProcessLatestDumpFileWithException() throws ReplacerException {
+        Mockito.when(dumpFileFinder.findLatestDumpFile()).thenThrow(ReplacerException.class);
         Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
 
         dumpManager.processLatestDumpFile(false);
@@ -141,7 +143,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileAlreadyProcessed() throws URISyntaxException, DumpException {
+    public void testProcessLatestDumpFileAlreadyProcessed() throws URISyntaxException, ReplacerException {
         Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Mockito.when(dumpFileFinder.findLatestDumpFile()).thenReturn(dumpFile);
         
@@ -154,7 +156,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileAlreadyProcessedForced() throws URISyntaxException, DumpException {
+    public void testProcessLatestDumpFileAlreadyProcessedForced() throws URISyntaxException, ReplacerException {
         Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Mockito.when(dumpFileFinder.findLatestDumpFile()).thenReturn(dumpFile);
         
@@ -166,7 +168,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessDumpScheduled() throws URISyntaxException, IOException, DumpException {
+    public void testProcessDumpScheduled() throws URISyntaxException, IOException, ReplacerException {
         Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Mockito.when(dumpFileFinder.findLatestDumpFile()).thenReturn(dumpFile);
         

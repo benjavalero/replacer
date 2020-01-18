@@ -10,6 +10,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
+import es.bvalero.replacer.ReplacerException;
+
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -81,7 +83,7 @@ class DumpManager {
             } else {
                 LOGGER.info("END Indexation of latest dump file. Latest dump file already indexed or not old enough.");
             }
-        } catch (DumpException e) {
+        } catch (DumpException | ReplacerException e) {
             LOGGER.error("Error indexing latest dump file", e);
         }
     }

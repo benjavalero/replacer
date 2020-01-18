@@ -1,9 +1,14 @@
 {
     "properties": [
         {
-            "name": "dump-base-path",
+            "name": "replacer.dump.path.base",
             "type": "java.lang.String",
-            "description": "Base path to find the Spanish Wikipedia dumps"
-        }
+            "description": "Base path to find the dumps by project and date"
+        },
+        {
+            "name": "replacer.dump.path.project",
+            "type": "java.lang.String",
+            "description": "Project name in the dump folder, e. g. `eswiki`"
+        },
     ]
 }

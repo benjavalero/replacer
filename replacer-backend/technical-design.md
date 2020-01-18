@@ -94,3 +94,49 @@ For the second use case:
     S -> IR : Save indexation summary
 @enduml
 ```
+
+## Component Overview
+
+```plantuml
+@startuml
+class DumpFinder << Component >> {
+    +Path findLatestDump()
+}
+hide empty members
+@enduml
+```
+
+### DumpFinder
+
+The dumps are generated monthly and placed in a shared folder in Wikipedia servers. This _dump base folder_ is structured in sub-folders corresponding to the different wiki-projects, e. g. `eswiki`, which are also structured in sub-folders for each generation date, e. g. `20120120`, containing finally the dump files. For instance:
+
+- `/public/dumps/public`
+  - `enwiki`
+  - `eswiki`
+    - `20200101`
+      - `eswiki-20200101-pages-articles-multistream.xml.bz2`
+      - `eswiki-20200101-pages-articles.xml.bz2`
+      - …
+    - `20191220`
+    - `20191201`
+    - …
+  - `eswikibooks`
+  - …
+
+The path of the shared folder and the wiki-project ares configured externally.
+
+## TODO: REVIEW COMPONENTS
+
+- [x] `dump.DumpFinder`
+- [ ] Page Controller
+- [ ] Page Service
+- [ ] Replacement Repository
+- [ ] Wikipedia Façade
+- [ ] Replacement Finder
+- [ ] Dump Service
+- [ ] Dump Parser
+- [ ] Indexation Repository
+
+## TODO: OPTIMIZATION
+
+- [ ] After 1-Mar-2020 the _page-articles_ dumps will be generated both in multi-stream mode but in different ways (cf. <https://phabricator.wikimedia.org/T239866>). We should check if any of them is read/parsed faster.
