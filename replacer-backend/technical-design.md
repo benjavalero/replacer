@@ -26,10 +26,10 @@ The following concepts are used:
 
   - **Text** The text to be checked and fixed. It can be a word or an expression.
   - **Start** A number corresponding to the position in the page contents where the text is found. Take into account that the first position is 0.
-  - **Type** The category of the replacement: misspelling, date format, etc.
-  - **Suggestions** A list with a least one suggestion to replace the text. Each suggestion is composed by:
-    - **Suggestion** The new text after the replacement.
-    - **Description** An optional description to explain the motivation of the fix.
+  - **Type** The category of the replacement: misspelling, date format, etc. It may include a **SubType**, for instance the particular misspelling.
+  - **Suggestions** A list with at least one suggestion to replace the text. Each suggestion is composed by:
+    - **Text** The new text after the replacement.
+    - **Comment** An optional description to explain the motivation of the fix.
 - **Immutable** A section in the page contents to be left untouched, for instance a literal quote, so any replacement found within it must be ignored and not offered to the user for revision. It is composed by:
   - **Start** The start position of the section in the page contents
   - **End** The end position of the section in the page contents
@@ -99,9 +99,51 @@ For the second use case:
 
 ```plantuml
 @startuml
-class DumpFinder << Component >> {
-    +Path findLatestDump()
+package dump {
+    class DumpFinder << Component >> {
+        +findLatestDump(): Path
+    }
 }
+
+package finder {
+    class ReplacementFinder << Component >> {
+        +findReplacements(text: string): Replacement[]
+    }
+    interface IReplacementFinder {
+        +findReplacements(text: string): Replacement[]
+    }
+    class Replacement << Domain >> {
+        text: string
+        start: number
+        type: string
+        subtype: string
+        suggestions: Suggestions[]
+    }
+    class Suggestion << Domain >> {
+        suggestion: string
+        description: string
+    }
+
+    class ImmutableFinder << Component >> {
+        +findImmutables(text: string): Immutable[]
+    }
+    interface IImmutableFinder {
+        +findImmutables(text: string): Immutable[]
+    }
+    class Immutable << Domain >> {
+        start: number
+        end: number
+        text: string
+    }
+}
+
+ReplacementFinder o-- IReplacementFinder
+IReplacementFinder ..> Replacement
+ImmutableFinder o-- IImmutableFinder
+IImmutableFinder ..> Immutable
+ReplacementFinder ..> ImmutableFinder
+Replacement *-- Suggestion
+
 hide empty members
 @enduml
 ```
@@ -125,14 +167,23 @@ The dumps are generated monthly and placed in a shared folder in Wikipedia serve
 
 The path of the shared folder and the wiki-project ares configured externally.
 
+### ReplacementFinder
+
+This is an independent service that finds all the replacements in a given text. It is composed by several specific replacement finders: misspelling, date format, etc. which implement the same interface. The service applies all these specific finders and returns the collected results.
+
+The same way, there is an independent service that finds all the immutables in a given text. It is composed by several specific immutable finders: quotes, comments, hyperlinks, etc. which implement the same interface. The service applies all these specific finders and returns the collected results.
+
+Finally, the replacement finder ignores in the response all the found replacements which are contained in the found immutables. Usually there will be much more immutables found than replacements. Thus it is better to obtain first all the replacements, and then obtain the immutables one by one, aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
+
+
 ## TODO: REVIEW COMPONENTS
 
 - [x] `dump.DumpFinder`
+- [ ] Replacement Finder
 - [ ] Page Controller
 - [ ] Page Service
 - [ ] Replacement Repository
 - [ ] Wikipedia Façade
-- [ ] Replacement Finder
 - [ ] Dump Service
 - [ ] Dump Parser
 - [ ] Indexation Repository
@@ -140,3 +191,8 @@ The path of the shared folder and the wiki-project ares configured externally.
 ## TODO: OPTIMIZATION
 
 - [ ] After 1-Mar-2020 the _page-articles_ dumps will be generated both in multi-stream mode but in different ways (cf. <https://phabricator.wikimedia.org/T239866>). We should check if any of them is read/parsed faster.
+- [ ] Research how to enable/disable replacement/immutable finders by language
+- [ ] Optimize regex for all replacement/immutable finders
+- [ ] Research to return the immutables as a stream or iterator. Research also the immutables more commonly applied in order to give them some kind of priority.
+- [ ] Performance tests to run replacement finders in parallel
+- [ ] Check if it is worth to store the replacement type as an enumerate
