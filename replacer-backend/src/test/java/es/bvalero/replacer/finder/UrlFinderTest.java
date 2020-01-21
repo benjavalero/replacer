@@ -1,9 +1,10 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 public class UrlFinderTest {
 
@@ -13,12 +14,11 @@ public class UrlFinderTest {
         String url2 = "http://www.marca.com";
         String text = String.format("[%s Google] [%s Marca]", url1, url2);
 
-        IgnoredReplacementFinder urlFinder = new UrlFinder();
+        ImmutableFinder urlFinder = new UrlFinder();
 
-        List<IgnoredReplacement> matches = urlFinder.findIgnoredReplacements(text);
+        List<Immutable> matches = urlFinder.findImmutableList(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(url1, matches.get(0).getText());
         Assert.assertEquals(url2, matches.get(1).getText());
     }
-
 }
