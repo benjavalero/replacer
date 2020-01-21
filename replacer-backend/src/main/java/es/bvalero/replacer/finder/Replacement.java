@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder;
 
 import java.util.List;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Value;
 
@@ -12,7 +13,7 @@ import lombok.Value;
  * For instance, in Spanish the word "Paris" could be misspelled if it corresponds to the French city
  * (written correctly as "París"), but it would be correct if it refers to the mythological Trojan prince.
  */
-@Value(staticConstructor = "of")
+@Value
 @Builder
 public class Replacement implements Comparable<Replacement> {
     /**
@@ -22,22 +23,45 @@ public class Replacement implements Comparable<Replacement> {
     private String type;
     private String subtype;
 
-    /** A number corresponding to the position in the page contents where the text is found */
+    /** The start position of the section in the text */
     private int start;
 
-    //** The text to be checked and fixed. It can be a word or an expression. */
+    /**
+     * Optionally, the text in the section, especially for debugging purposes,
+     * i. e. the text between the start and end position of the section.
+     */
     private String text;
 
     /** At least one suggestion to replace the text */
     private List<Suggestion> suggestions;
 
+    /** The end position of the section in the text */
     public int getEnd() {
         return this.start + this.text.length();
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        // Two replacements are equal if they have the same start and end
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Replacement that = (Replacement) o;
+        return start == that.start && getEnd() == that.getEnd();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, getEnd());
     }
 
     @Override
     public int compareTo(Replacement o) {
         // Order descendant by start. If equals, the lower end.
         return o.start == start ? getEnd() - o.getEnd() : o.start - start;
+    }
+
+    public boolean contains(Replacement r) {
+        // i (this) contains r if: startI < startR < endR < endI
+        return this.getStart() < r.getStart() && r.getEnd() < this.getEnd();
     }
 }
