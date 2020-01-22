@@ -106,15 +106,16 @@ package dump {
 }
 
 package finder {
-    class ReplacementFinder << Component >> {
+    class ReplacementFindService << Component >> {
         +findReplacements(text: string): Replacement[]
     }
-    interface IReplacementFinder {
+    interface ReplacementFinder {
         +findReplacements(text: string): Replacement[]
     }
     class Replacement << Domain >> {
         text: string
         start: number
+        end: number
         type: string
         subtype: string
         suggestions: Suggestions[]
@@ -124,10 +125,10 @@ package finder {
         description: string
     }
 
-    class ImmutableFinder << Component >> {
+    class ImmutableFindService << Component >> {
         +findImmutables(text: string): Immutable[]
     }
-    interface IImmutableFinder {
+    interface ImmutableFinder {
         +findImmutables(text: string): Immutable[]
     }
     class Immutable << Domain >> {
@@ -135,14 +136,20 @@ package finder {
         end: number
         text: string
     }
+
+    interface RegexFinder<T> {
+        +find(text: string, regex: Pattern|Automaton): T[]
+    }
 }
 
-ReplacementFinder o-- IReplacementFinder
-IReplacementFinder ..> Replacement
-ImmutableFinder o-- IImmutableFinder
-IImmutableFinder ..> Immutable
-ReplacementFinder ..> ImmutableFinder
+ReplacementFindService o-- ReplacementFinder
+ReplacementFinder ..> Replacement
+ImmutableFindService o-- ImmutableFinder
+ImmutableFinder ..> Immutable
+ReplacementFindService ..> ImmutableFindService
 Replacement *-- Suggestion
+RegexFinder<T> --> ReplacementFinder
+RegexFinder<T> --> ImmutableFinder
 
 hide empty members
 @enduml
@@ -167,14 +174,17 @@ The dumps are generated monthly and placed in a shared folder in Wikipedia serve
 
 The path of the shared folder and the wiki-project ares configured externally.
 
-### ReplacementFinder
+### ReplacementFindService
 
-This is an independent service that finds all the replacements in a given text. It is composed by several specific replacement finders: misspelling, date format, etc. which implement the same interface. The service applies all these specific finders and returns the collected results.
+**ReplacementFindService** is an independent service which finds all the replacements in a given text. This service collects and returns the results of several specific replacement finders: misspelling, date format, etc. which implement the same interface **ReplacementFinder**.
 
-The same way, there is an independent service that finds all the immutables in a given text. It is composed by several specific immutable finders: quotes, comments, hyperlinks, etc. which implement the same interface. The service applies all these specific finders and returns the collected results.
+The same way, there is an independent service **ImmutableFindService** which finds all the immutables in a given text. This service collects and returns the results of several specific immutable finders: quotes, comments, hyperlinks, etc. which implement the same interface **ImmutableFinder**.
 
-Finally, the replacement finder ignores in the response all the found replacements which are contained in the found immutables. Usually there will be much more immutables found than replacements. Thus it is better to obtain first all the replacements, and then obtain the immutables one by one, aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
+Finally, _ReplacementFindService_ ignores in the response all the found replacements which are contained in the found immutables. Usually there will be much more immutables found than replacements. Thus it is better to obtain first all the replacements, and then obtain the immutables one by one, aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
 
+The interface _ImmutableFinder_ has a single abstract method returning the immutables in a text. As we are interested in retrieve them one by one, they will be returned as an _Iterable_. On the other hand, the interface _ReplacementFinder_ has a single abstract method returning the replacements in a text, as a list, as all the replacements will be eventually joined into a list.
+
+Most finders find the items with regular expressions. Thus we create an generic class _RegexFinder\<T\>_ with methods to find all the match results of a regex and transform them into the type _T_, where _T_ will be _Replacement_ or _Immutable_. For simplicity, finally this class will be implemented as an interface with default methods that will be extended by the interfaces _ReplacementFinder_ and _ImmutableFinder_.
 
 ## TODO: REVIEW COMPONENTS
 
