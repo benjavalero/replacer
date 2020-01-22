@@ -142,7 +142,7 @@ public class ReplacementFinderService {
 
     private List<Replacement> findAllCustomReplacements(String text, String replacement, String suggestion) {
         CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
-        return customReplacementFinder.findReplacements(text);
+        return customReplacementFinder.findList(text);
     }
 
 }

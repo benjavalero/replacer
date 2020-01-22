@@ -106,13 +106,14 @@ package dump {
 }
 
 package finder {
-    class ReplacementFindService << Component >> {
+    +class ReplacementFindService << Component >> {
         +findReplacements(text: string): Replacement[]
     }
-    interface ReplacementFinder {
-        +findReplacements(text: string): Replacement[]
+
+    ~interface ReplacementFinder {
+        findReplacements(text: string): Replacement[]
     }
-    class Replacement << Domain >> {
+    +class Replacement << Domain >> {
         text: string
         start: number
         end: number
@@ -120,36 +121,36 @@ package finder {
         subtype: string
         suggestions: Suggestions[]
     }
-    class Suggestion << Domain >> {
+    +class Suggestion << Domain >> {
         suggestion: string
         description: string
     }
 
-    class ImmutableFindService << Component >> {
-        +findImmutables(text: string): Immutable[]
+    ~class ImmutableFindService << Component >> {
+        findImmutables(text: string): Immutable[]
     }
-    interface ImmutableFinder {
-        +findImmutables(text: string): Immutable[]
+    ~interface ImmutableFinder {
+        findImmutables(text: string): Immutable[]
     }
-    class Immutable << Domain >> {
+    ~class Immutable << Domain >> {
         start: number
         end: number
         text: string
     }
 
-    interface RegexFinder<T> {
-        +find(text: string, regex: Pattern|Automaton): T[]
+    ~interface RegexFinder {
+        find(text: string, regex: Pattern|Automaton): T[]
     }
 }
 
 ReplacementFindService o-- ReplacementFinder
-ReplacementFinder ..> Replacement
+ReplacementFindService .> ImmutableFindService
 ImmutableFindService o-- ImmutableFinder
+RegexFinder -left-|> ReplacementFinder
+RegexFinder -right-|> ImmutableFinder
+ReplacementFinder ..> Replacement
+Replacement *- Suggestion
 ImmutableFinder ..> Immutable
-ReplacementFindService ..> ImmutableFindService
-Replacement *-- Suggestion
-RegexFinder<T> --> ReplacementFinder
-RegexFinder<T> --> ImmutableFinder
 
 hide empty members
 @enduml
@@ -189,7 +190,7 @@ Most finders find the items with regular expressions. Thus we create an generic 
 ## TODO: REVIEW COMPONENTS
 
 - [x] `dump.DumpFinder`
-- [ ] Replacement Finder
+- [x] `finder.ReplacementFindService`
 - [ ] Page Controller
 - [ ] Page Service
 - [ ] Replacement Repository
@@ -206,3 +207,4 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] Research to return the immutables as a stream or iterator. Research also the immutables more commonly applied in order to give them some kind of priority.
 - [ ] Performance tests to run replacement finders in parallel
 - [ ] Check if it is worth to store the replacement type as an enumerate
+- [ ] Rename IgnoredReplacement to Immutable. There are hundreds of occurrences (cf. benchmark). Meanwhile all is prepared in package `finder2`

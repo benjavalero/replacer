@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder2;
 
 import es.bvalero.replacer.finder.CustomReplacementFinder;
 import es.bvalero.replacer.finder.Replacement;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ReplacementFindService {
+    public static final String CUSTOM_FINDER_TYPE = "Personalizado";
+
     @Autowired
     private List<ReplacementFinder> replacementFinders;
 
@@ -33,13 +36,10 @@ public class ReplacementFindService {
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
         LOGGER.debug("START Find replacements in text: {}", text);
 
-        Stream<Replacement> allReplacements = findAllReplacements(text);
+        Stream<Replacement> replacements = findAllReplacements(text, replacementFinders);
 
-        // Ignore the replacements contained in immutables
-        Stream<Replacement> filtered = removeImmutables(allReplacements, text).sorted();
-
-        LOGGER.debug("END Find replacements in text. Final replacements found: {}", filtered);
-        return filtered;
+        LOGGER.debug("END Find replacements in text: {}", replacements);
+        return replacements;
     }
 
     public Stream<Replacement> findCustomReplacements(String text, String replacement, String suggestion) {
@@ -50,28 +50,20 @@ public class ReplacementFindService {
             suggestion
         );
 
-        // Find the replacements in the text
-        Stream<Replacement> allReplacements = findAllCustomReplacements(text, replacement, suggestion);
+        CustomReplacementFinder finder = new CustomReplacementFinder(replacement, suggestion);
+        Stream<Replacement> replacements = findAllReplacements(text, Collections.singletonList(finder));
+
+        LOGGER.debug("END Find custom replacements in text: {}", replacements);
+        return replacements;
+    }
+
+    private Stream<Replacement> findAllReplacements(String text, List<ReplacementFinder> finders) {
+        Stream<Replacement> all = finders.stream().map(finder -> finder.find(text)).flatMap(s -> s);
+
+        Stream<Replacement> distinct = removeNestedReplacements(all);
 
         // Ignore the replacements contained in immutables
-        Stream<Replacement> filtered = removeImmutables(allReplacements, text).sorted();
-
-        LOGGER.debug("END Find replacements in text. Final replacements found: {}", filtered);
-        return filtered;
-    }
-
-    private Stream<Replacement> findAllReplacements(String text) {
-        Stream<Replacement> replacements = replacementFinders
-            .stream()
-            .map(finder -> finder.findReplacements(text))
-            .flatMap(s -> s);
-        return removeNestedReplacements(replacements);
-    }
-
-    private Stream<Replacement> findAllCustomReplacements(String text, String replacement, String suggestion) {
-        CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
-        Stream<Replacement> replacements = customReplacementFinder.findReplacements(text).stream();
-        return removeNestedReplacements(replacements);
+        return removeImmutables(distinct, text).sorted();
     }
 
     private Stream<Replacement> removeNestedReplacements(Stream<Replacement> replacements) {

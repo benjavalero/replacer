@@ -24,7 +24,7 @@ class ImmutableIterator implements Iterator<Immutable> {
             if (!finderIterator.hasNext()) {
                 return false;
             }
-            currentFinderResults = finderIterator.next().findImmutables(text);
+            currentFinderResults = finderIterator.next().find(text);
         }
         return true;
     }

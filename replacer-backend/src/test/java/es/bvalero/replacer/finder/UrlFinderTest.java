@@ -16,7 +16,7 @@ public class UrlFinderTest {
 
         ImmutableFinder urlFinder = new UrlFinder();
 
-        List<Immutable> matches = urlFinder.findImmutableList(text);
+        List<Immutable> matches = urlFinder.findList(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(url1, matches.get(0).getText());
         Assert.assertEquals(url2, matches.get(1).getText());

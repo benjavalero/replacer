@@ -1,7 +1,10 @@
 package es.bvalero.replacer.finder2;
 
+import dk.brics.automaton.RunAutomaton;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -10,11 +13,18 @@ import java.util.stream.StreamSupport;
  *
  * For performance reasons, it is preferred to return them as an interator.
  */
-public interface ImmutableFinder {
-    Iterator<Immutable> findImmutables(String text);
+public interface ImmutableFinder extends RegexFinder<Immutable> {
+    static final Function<MatchResult, Immutable> DEFAULT_TRANSFORM = matcher ->
+        Immutable.of(matcher.start(), matcher.group());
 
-    default List<Immutable> findImmutableList(String text) {
-        Iterable<Immutable> iterable = () -> findImmutables(text);
+    Iterator<Immutable> find(String text);
+
+    default List<Immutable> findList(String text) {
+        Iterable<Immutable> iterable = () -> find(text);
         return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
+    }
+
+    default Iterator<Immutable> find(String text, RunAutomaton automaton) {
+        return find(text, automaton, DEFAULT_TRANSFORM);
     }
 }
