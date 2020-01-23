@@ -1,9 +1,10 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 public class CommentFinderTest {
 
@@ -13,12 +14,11 @@ public class CommentFinderTest {
         String comment2 = "<!-- Otro comentario -->";
         String text = String.format("%s %s", comment1, comment2);
 
-        IgnoredReplacementFinder commentFinder = new CommentFinder();
+        ImmutableFinder commentFinder = new CommentFinder();
 
-        List<IgnoredReplacement> matches = commentFinder.findIgnoredReplacements(text);
+        List<Immutable> matches = commentFinder.findList(text);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(comment1, matches.get(0).getText());
         Assert.assertEquals(comment2, matches.get(1).getText());
     }
-
 }

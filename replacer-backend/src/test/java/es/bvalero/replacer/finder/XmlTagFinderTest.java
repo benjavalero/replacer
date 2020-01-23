@@ -1,9 +1,10 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 public class XmlTagFinderTest {
 
@@ -14,9 +15,9 @@ public class XmlTagFinderTest {
         String tag3 = "<br />";
         String text = String.format("%s %s %s", tag1, tag2, tag3);
 
-        IgnoredReplacementFinder xmlTagFinder = new XmlTagFinder();
+        ImmutableFinder xmlTagFinder = new XmlTagFinder();
 
-        List<IgnoredReplacement> matches = xmlTagFinder.findIgnoredReplacements(text);
+        List<Immutable> matches = xmlTagFinder.findList(text);
         Assert.assertEquals(3, matches.size());
         Assert.assertEquals(tag1, matches.get(0).getText());
         Assert.assertEquals(tag2, matches.get(1).getText());
@@ -28,10 +29,9 @@ public class XmlTagFinderTest {
         String comment = "<!-- Esto es un comentario -->";
         String text = "xxx " + comment + " zzz";
 
-        IgnoredReplacementFinder xmlTagFinder = new XmlTagFinder();
+        ImmutableFinder xmlTagFinder = new XmlTagFinder();
 
-        List<IgnoredReplacement> matches = xmlTagFinder.findIgnoredReplacements(text);
+        List<Immutable> matches = xmlTagFinder.findList(text);
         Assert.assertTrue(matches.isEmpty());
     }
-
 }

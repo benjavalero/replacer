@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -26,5 +27,9 @@ public interface ImmutableFinder extends RegexFinder<Immutable> {
 
     default Iterator<Immutable> find(String text, RunAutomaton automaton) {
         return find(text, automaton, DEFAULT_TRANSFORM);
+    }
+
+    default Iterator<Immutable> find(String text, Pattern pattern) {
+        return find(text, pattern, DEFAULT_TRANSFORM);
     }
 }

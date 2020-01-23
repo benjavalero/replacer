@@ -1,20 +1,21 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import java.util.Iterator;
+import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.regex.Pattern;
-
+/**
+ * Find XML comments, e. g. `<!-- A comment -->`
+ */
 @Component
-class CommentFinder implements IgnoredReplacementFinder {
-
-    @org.intellij.lang.annotations.RegExp
+class CommentFinder implements ImmutableFinder {
     private static final String REGEX_COMMENT_TAG = "<!--.+?-->";
     private static final Pattern PATTERN_COMMENT_TAG = Pattern.compile(REGEX_COMMENT_TAG, Pattern.DOTALL);
 
     @Override
-    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, PATTERN_COMMENT_TAG);
+    public Iterator<Immutable> find(String text) {
+        return find(text, PATTERN_COMMENT_TAG);
     }
-
 }

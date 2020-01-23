@@ -9,11 +9,10 @@ import java.util.Iterator;
 import org.springframework.stereotype.Component;
 
 /**
- * Find immutables of type URL, e. g. https://www.google.es
+ * Find URLs, e. g. `https://www.google.es`
  */
 @Component
 class UrlFinder implements ImmutableFinder {
-    @org.intellij.lang.annotations.RegExp
     private static final String REGEX_URL = "https?://<URI>";
 
     private static final RunAutomaton AUTOMATON_URL = new RunAutomaton(

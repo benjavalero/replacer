@@ -187,6 +187,13 @@ The interface _ImmutableFinder_ has a single abstract method returning the immut
 
 Most finders find the items with regular expressions. Thus we create an generic class _RegexFinder\<T\>_ with methods to find all the match results of a regex and transform them into the type _T_, where _T_ will be _Replacement_ or _Immutable_. For simplicity, finally this class will be implemented as an interface with default methods that will be extended by the interfaces _ReplacementFinder_ and _ImmutableFinder_.
 
+#### Immutable Finders
+
+- **UrlFinder** Find URLs, e. g. `https://www.google.es`
+- **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
+- **CommentFinder** Find XML comments, e. g. `<!-- A comment -->`
+- **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
+
 ## TODO: REVIEW COMPONENTS
 
 - [x] `dump.DumpFinder`
@@ -208,3 +215,5 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] Performance tests to run replacement finders in parallel
 - [ ] Check if it is worth to store the replacement type as an enumerate
 - [ ] Rename IgnoredReplacement to Immutable. There are hundreds of occurrences (cf. benchmark). Meanwhile all is prepared in package `finder2`
+
+The Java code is formatted with [Prettier Java](https://github.com/jhipster/prettier-java).
