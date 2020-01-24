@@ -215,5 +215,6 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] Performance tests to run replacement finders in parallel
 - [ ] Check if it is worth to store the replacement type as an enumerate
 - [ ] Rename IgnoredReplacement to Immutable. There are hundreds of occurrences (cf. benchmark). Meanwhile all is prepared in package `finder2`
+- [ ] When testing the database performance, check [jOOQ](https://www.jooq.org/).
 
 The Java code is formatted with [Prettier Java](https://github.com/jhipster/prettier-java).
