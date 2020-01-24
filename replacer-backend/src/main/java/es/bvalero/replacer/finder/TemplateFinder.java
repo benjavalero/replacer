@@ -3,25 +3,37 @@ package es.bvalero.replacer.finder;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+/**
+ * Finds complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
+ */
 @Component
-class TemplateFinder implements IgnoredReplacementFinder {
-
+class TemplateFinder implements ImmutableFinder {
     // The nested regex takes more but it is worth as it captures completely the templates with inner templates
-    @org.intellij.lang.annotations.RegExp
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
-    @org.intellij.lang.annotations.RegExp
     private static final String REGEX_NESTED_TEMPLATE = "\\{\\{ *(%s)[ |\n]*[|:](%s|[^}])+?}}";
     private static final List<String> TEMPLATE_NAMES = Arrays.asList(
-            "ORDENAR", "DEFAULTSORT", "NF", "TA", "commonscat", "coord",
-            "cit[ae] ?<L>*", "quote", "cquote", "caja de cita", "traducido (de|ref)");
+        "ORDENAR",
+        "DEFAULTSORT",
+        "NF",
+        "TA",
+        "commonscat",
+        "coord",
+        "cit[ae] ?<L>*",
+        "quote",
+        "cquote",
+        "caja de cita",
+        "traducido (de|ref)"
+    );
     private static final RunAutomaton AUTOMATON_TEMPLATE;
 
     static {
@@ -33,14 +45,15 @@ class TemplateFinder implements IgnoredReplacementFinder {
                 wordsToJoin.add(word);
             }
         }
-        AUTOMATON_TEMPLATE = new RunAutomaton(new RegExp(
-                String.format(REGEX_NESTED_TEMPLATE, StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE))
-                .toAutomaton(new DatatypesAutomatonProvider()));
+        AUTOMATON_TEMPLATE =
+            new RunAutomaton(
+                new RegExp(String.format(REGEX_NESTED_TEMPLATE, StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE))
+                .toAutomaton(new DatatypesAutomatonProvider())
+            );
     }
 
     @Override
-    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, AUTOMATON_TEMPLATE);
+    public Iterator<Immutable> find(String text) {
+        return find(text, AUTOMATON_TEMPLATE);
     }
-
 }

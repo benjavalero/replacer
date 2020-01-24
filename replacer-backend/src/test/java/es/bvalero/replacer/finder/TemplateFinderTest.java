@@ -1,11 +1,12 @@
 package es.bvalero.replacer.finder;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class TemplateFinderTest {
 
@@ -17,13 +18,20 @@ public class TemplateFinderTest {
         String template4 = "{{ cita libro\n| Spaces around }}";
         String template5 = "{{cite book | text}}";
         String template6 = "{{Traducido ref|Text}}";
-        String text = String.format("En %s %s %s %s %s %s.", template1, template2, template3, template4, template5, template6);
+        String text = String.format(
+            "En %s %s %s %s %s %s.",
+            template1,
+            template2,
+            template3,
+            template4,
+            template5,
+            template6
+        );
 
-        IgnoredReplacementFinder templateFinder = new TemplateFinder();
-        List<IgnoredReplacement> matches = templateFinder.findIgnoredReplacements(text);
+        ImmutableFinder templateFinder = new TemplateFinder();
+        List<Immutable> matches = templateFinder.findList(text);
 
         List<String> expected = Arrays.asList(template1, template2, template3, template4, template5, template6);
-        Assert.assertEquals(expected, matches.stream().map(IgnoredReplacement::getText).collect(Collectors.toList()));
+        Assert.assertEquals(expected, matches.stream().map(Immutable::getText).collect(Collectors.toList()));
     }
-
 }
