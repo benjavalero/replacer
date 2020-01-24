@@ -1,24 +1,24 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 public class ParameterValueFinderTest {
 
     @Test
     public void testRegexParameterValue() {
-        String value1 = "A\nvalue\n";
-        String value2 = " Another value ";
-        String text = String.format("{{Template|index=%s| índice =%s}}", value1, value2);
+        String value1 = "A\nvalue";
+        String value2 = "Another value";
+        String text = String.format("{{Template|index=%s\n| índice = %s }}", value1, value2);
 
-        IgnoredReplacementFinder parameterValueFinder = new ParameterValueFinder();
+        ImmutableFinder parameterValueFinder = new ParameterValueFinder();
 
-        List<IgnoredReplacement> matches = parameterValueFinder.findIgnoredReplacements(text);
+        List<Immutable> matches = parameterValueFinder.findList(text);
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(value1, matches.get(0).getText());
         Assert.assertEquals(value2, matches.get(1).getText());
     }
-
 }

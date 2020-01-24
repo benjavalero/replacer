@@ -194,6 +194,7 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] **CommentFinder** Find XML comments, e. g. `<!-- A comment -->`
 - [ ] **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
 - [x] **CompleteTagFinder** Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`
+- [ ] **ParameterValueFinder** Find the values of some parameters, e. g. `value` in `{{Template|index=value}}`
 
 ## TODO: REVIEW COMPONENTS
 
