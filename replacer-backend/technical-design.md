@@ -189,10 +189,11 @@ Most finders find the items with regular expressions. Thus we create an generic 
 
 #### Immutable Finders
 
-- **UrlFinder** Find URLs, e. g. `https://www.google.es`
-- **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
-- **CommentFinder** Find XML comments, e. g. `<!-- A comment -->`
-- **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
+- [ ] **UrlFinder** Find URLs, e. g. `https://www.google.es`
+- [ ] **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
+- [ ] **CommentFinder** Find XML comments, e. g. `<!-- A comment -->`
+- [ ] **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
+- [x] **CompleteTagFinder** Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`
 
 ## TODO: REVIEW COMPONENTS
 

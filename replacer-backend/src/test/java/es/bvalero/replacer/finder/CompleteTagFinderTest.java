@@ -1,13 +1,14 @@
 package es.bvalero.replacer.finder;
 
-import org.junit.Assert;
-import org.junit.Test;
-
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class CompleteTagFinderTest {
 
@@ -19,14 +20,13 @@ public class CompleteTagFinderTest {
         String tag4 = "<ref name=NH05/>";
         String text = String.format("En %s %s %s %s.", tag1, tag2, tag3, tag4);
 
-        IgnoredReplacementFinder completeTagFinder = new CompleteTagFinder();
+        ImmutableFinder completeTagFinder = new CompleteTagFinder();
 
-        List<IgnoredReplacement> matches = completeTagFinder.findIgnoredReplacements(text);
+        List<Immutable> matches = completeTagFinder.findList(text);
         Assert.assertEquals(3, matches.size());
 
         Set<String> expected = new HashSet<>(Arrays.asList(tag1, tag2, tag3));
-        Set<String> actual = matches.stream().map(IgnoredReplacement::getText).collect(Collectors.toSet());
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assert.assertEquals(expected, actual);
     }
-
 }

@@ -1,26 +1,45 @@
 package es.bvalero.replacer.finder;
 
-import org.springframework.stereotype.Component;
-
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
+/**
+ * Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`
+ */
 @Component
-class CompleteTagFinder implements IgnoredReplacementFinder {
-
+class CompleteTagFinder implements ImmutableFinder {
     private static final List<String> TAG_NAMES = Arrays.asList(
-            "nowiki", "pre", "code", "source", "syntaxhighlight",
-            "math", "poem", "score",
-            "ref", "blockquote", "cite");
-    private static final List<Pattern> PATTERN_COMPLETE_TAGS = TAG_NAMES.stream()
-            .map(word -> Pattern.compile(String.format("<%s[^>/]*>.+?</%s>", word, word), Pattern.DOTALL))
-            .collect(Collectors.toList());
+        "blockquote",
+        "cite",
+        "code",
+        "math",
+        "nowiki",
+        "poem",
+        "pre",
+        "ref",
+        "score",
+        "source",
+        "syntaxhighlight"
+    );
+
+    // The benchmarks show a big difference (an order of magnitude) using a single regex with alternations
+    // and back-references compared to run a simpler regex (even text-based) for each tag.
+    // To capture the opening tag there are no big differences on using a dot or a negated class [^>]:
+    // the negated class is better for some outsiders but the dot works better in the general case.
+    private static final String REGEX_COMPLETE_TAGS = String.format(
+        "<(%s).*?>.+?</\\1>",
+        StringUtils.join(TAG_NAMES, "|")
+    );
+    private static final Pattern PATTERN_COMPLETE_TAGS = Pattern.compile(REGEX_COMPLETE_TAGS, Pattern.DOTALL);
 
     @Override
-    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResultsFromPatterns(text, PATTERN_COMPLETE_TAGS);
+    public Iterator<Immutable> find(String text) {
+        return find(text, PATTERN_COMPLETE_TAGS);
     }
-
 }
