@@ -2,26 +2,27 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import java.util.Iterator;
+import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
+/**
+ * Find web domains, e. g. `www.acb.es`
+ */
 @Component
-class DomainFinder implements IgnoredReplacementFinder {
-
-    @org.intellij.lang.annotations.RegExp
+class DomainFinder implements ImmutableFinder {
     private static final String REGEX_DOMAIN = "[A-Za-z.]+\\.[a-z]{2,4}[^A-Za-z]";
     private static final RunAutomaton AUTOMATON_DOMAIN = new RunAutomaton(new RegExp(REGEX_DOMAIN).toAutomaton());
 
     @Override
-    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, AUTOMATON_DOMAIN);
+    public Iterator<Immutable> find(String text) {
+        return find(text, AUTOMATON_DOMAIN, this::convertMatch);
     }
 
-    @Override
-    public IgnoredReplacement convertMatch(int start, String text) {
-        // Remove the last character
-        return IgnoredReplacement.of(start, text.substring(0, text.length() - 1));
+    private Immutable convertMatch(MatchResult match) {
+        String text = match.group();
+        return Immutable.of(match.hashCode(), text.substring(0, text.length() - 1));
     }
-
 }

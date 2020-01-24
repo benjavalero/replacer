@@ -195,6 +195,7 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
 - [x] **CompleteTagFinder** Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`
 - [ ] **ParameterValueFinder** Find the values of some parameters, e. g. `value` in `{{Template|index=value}}`
+- [ ] **DomainFinder** Find web domains, e. g. `www.acb.es`
 
 ## TODO: REVIEW COMPONENTS
 
