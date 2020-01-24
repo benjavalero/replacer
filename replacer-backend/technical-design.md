@@ -197,6 +197,7 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] **ParameterValueFinder** Find the values of some parameters, e. g. `value` in `{{Template|index=value}}`
 - [ ] **DomainFinder** Find web domains, e. g. `www.acb.es`
 - [ ] **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
+- [ ] **TemplateParamFinder** Find template parameters, e. g. `param` in `{{Template|param=value}}`
 
 ## TODO: REVIEW COMPONENTS
 

@@ -2,26 +2,31 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import java.util.Iterator;
+import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
+/**
+ * Find template parameters, e. g. `param` in `{{Template|param=value}}`
+ */
 @Component
-class TemplateParamFinder implements IgnoredReplacementFinder {
-
-    @org.intellij.lang.annotations.RegExp
+class TemplateParamFinder implements ImmutableFinder {
     private static final String REGEX_TEMPLATE_PARAM = "\\|[^]|=}]+=";
-    private static final RunAutomaton AUTOMATON_TEMPLATE_PARAM =
-            new RunAutomaton(new RegExp(REGEX_TEMPLATE_PARAM).toAutomaton());
+    private static final RunAutomaton AUTOMATON_TEMPLATE_PARAM = new RunAutomaton(
+        new RegExp(REGEX_TEMPLATE_PARAM).toAutomaton()
+    );
 
     @Override
-    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, AUTOMATON_TEMPLATE_PARAM);
+    public Iterator<Immutable> find(String text) {
+        return find(text, AUTOMATON_TEMPLATE_PARAM, this::convertMatch);
     }
 
-    @Override
-    public IgnoredReplacement convertMatch(int start, String text) {
-        return IgnoredReplacement.of(start + 1, text.substring(1, text.length() - 1));
+    private Immutable convertMatch(MatchResult match) {
+        String text = match.group();
+        String param = text.substring(1, text.length() - 1).trim();
+        int pos = text.indexOf(param);
+        return Immutable.of(match.start() + pos, param);
     }
-
 }
