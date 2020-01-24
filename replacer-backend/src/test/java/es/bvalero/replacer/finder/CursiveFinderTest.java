@@ -1,9 +1,10 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 public class CursiveFinderTest {
 
@@ -12,8 +13,8 @@ public class CursiveFinderTest {
         String cursive = "''cursive''";
         String text = String.format("A %s.", cursive);
 
-        IgnoredReplacementFinder cursiveFinder = new CursiveFinder();
-        List<IgnoredReplacement> matches = cursiveFinder.findIgnoredReplacements(text);
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
 
         Assert.assertEquals(1, matches.size());
         Assert.assertEquals(cursive, matches.get(0).getText());
@@ -25,8 +26,8 @@ public class CursiveFinderTest {
         String cursive2 = "''cursive2''";
         String text = String.format("A %s and %s.", cursive1, cursive2);
 
-        IgnoredReplacementFinder cursiveFinder = new CursiveFinder();
-        List<IgnoredReplacement> matches = cursiveFinder.findIgnoredReplacements(text);
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
 
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(cursive1, matches.get(0).getText());
@@ -38,8 +39,8 @@ public class CursiveFinderTest {
         String cursive = "''cursive\n";
         String text = String.format("A %sA", cursive);
 
-        IgnoredReplacementFinder cursiveFinder = new CursiveFinder();
-        List<IgnoredReplacement> matches = cursiveFinder.findIgnoredReplacements(text);
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
 
         Assert.assertEquals(1, matches.size());
         Assert.assertEquals(cursive, matches.get(0).getText());
@@ -50,8 +51,8 @@ public class CursiveFinderTest {
         String bold = "'''bold'''";
         String text = String.format("A %s.", bold);
 
-        IgnoredReplacementFinder cursiveFinder = new CursiveFinder();
-        List<IgnoredReplacement> matches = cursiveFinder.findIgnoredReplacements(text);
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
 
         Assert.assertEquals(0, matches.size());
     }
@@ -62,8 +63,8 @@ public class CursiveFinderTest {
         String bold2 = "'''bold2'''";
         String text = String.format("A %s and %s.", bold1, bold2);
 
-        IgnoredReplacementFinder cursiveFinder = new CursiveFinder();
-        List<IgnoredReplacement> matches = cursiveFinder.findIgnoredReplacements(text);
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
 
         Assert.assertEquals(0, matches.size());
     }
@@ -73,8 +74,8 @@ public class CursiveFinderTest {
         String bold = "'''bold\n";
         String text = String.format("A %sA", bold);
 
-        IgnoredReplacementFinder cursiveFinder = new CursiveFinder();
-        List<IgnoredReplacement> matches = cursiveFinder.findIgnoredReplacements(text);
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
 
         Assert.assertEquals(0, matches.size());
     }
@@ -85,8 +86,8 @@ public class CursiveFinderTest {
         String cursive = "''Beefeater's cool''";
         String text = String.format("A %s.", cursive);
 
-        IgnoredReplacementFinder cursiveFinder = new CursiveFinder();
-        List<IgnoredReplacement> matches = cursiveFinder.findIgnoredReplacements(text);
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
 
         Assert.assertEquals(1, matches.size());
         Assert.assertEquals(cursive, matches.get(0).getText());
@@ -97,8 +98,8 @@ public class CursiveFinderTest {
         String cursive = "''A '''Game''' of Thrones''";
         String text = String.format("A %s.", cursive);
 
-        IgnoredReplacementFinder cursiveFinder = new CursiveFinder();
-        List<IgnoredReplacement> matches = cursiveFinder.findIgnoredReplacements(text);
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
 
         Assert.assertEquals(1, matches.size());
         Assert.assertEquals(cursive, matches.get(0).getText());
@@ -110,8 +111,8 @@ public class CursiveFinderTest {
         String cursive = "''B''";
         String text = String.format("A %s.", cursive);
 
-        IgnoredReplacementFinder cursiveFinder = new CursiveFinder();
-        List<IgnoredReplacement> matches = cursiveFinder.findIgnoredReplacements(text);
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
 
         Assert.assertEquals(0, matches.size());
     }
@@ -121,11 +122,10 @@ public class CursiveFinderTest {
         String cursive = "''Be''";
         String text = String.format("A %s.", cursive);
 
-        IgnoredReplacementFinder cursiveFinder = new CursiveFinder();
-        List<IgnoredReplacement> matches = cursiveFinder.findIgnoredReplacements(text);
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
 
         Assert.assertEquals(1, matches.size());
         Assert.assertEquals(cursive, matches.get(0).getText());
     }
-
 }

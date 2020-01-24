@@ -2,30 +2,32 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import java.util.Iterator;
+import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
+/**
+ * Find text in cursive, e. g. `''cursive''` in `This is a ''cursive'' example`
+ */
 @Component
-class CursiveFinder implements IgnoredReplacementFinder {
-
+class CursiveFinder implements ImmutableFinder {
     // There are limitations in the automaton (need to capture more than 1 character in some places) but it is faster
-    @org.intellij.lang.annotations.RegExp
     private static final String REGEX_TWO_QUOTES_ONLY = "[^']''[^']";
-    @org.intellij.lang.annotations.RegExp
     private static final String REGEX_CURSIVE = "%s(('''''|'''|')?[^'\n])*(%s|\n)";
-    private static final RunAutomaton AUTOMATON_CURSIVE = new RunAutomaton(new RegExp(
-            String.format(REGEX_CURSIVE, REGEX_TWO_QUOTES_ONLY, REGEX_TWO_QUOTES_ONLY)).toAutomaton());
+    private static final RunAutomaton AUTOMATON_CURSIVE = new RunAutomaton(
+        new RegExp(String.format(REGEX_CURSIVE, REGEX_TWO_QUOTES_ONLY, REGEX_TWO_QUOTES_ONLY)).toAutomaton()
+    );
 
     @Override
-    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, AUTOMATON_CURSIVE);
+    public Iterator<Immutable> find(String text) {
+        return find(text, AUTOMATON_CURSIVE, this::convertMatch);
     }
 
-    @Override
-    public IgnoredReplacement convertMatch(int start, String text) {
+    private Immutable convertMatch(MatchResult match) {
+        String text = match.group();
         int end = text.endsWith("\n") ? text.length() : text.length() - 1;
-        return IgnoredReplacement.of(start + 1, text.substring(1, end));
+        return Immutable.of(match.start() + 1, text.substring(1, end));
     }
-
 }
