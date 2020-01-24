@@ -1,7 +1,6 @@
 package es.bvalero.replacer.benchmark;
 
 import es.bvalero.replacer.finder.IgnoredReplacement;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,12 +8,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class CompleteTagRegexLazyNotNegatedFinder extends CompleteTagAbstractFinder {
-
+class CompleteTagRegexNegatedLazyFinder extends CompleteTagAbstractFinder {
     private static final List<Pattern> PATTERNS = new ArrayList<>();
 
-    CompleteTagRegexLazyNotNegatedFinder(List<String> words) {
-        words.forEach(word -> PATTERNS.add(Pattern.compile(String.format("<%s[^>]*?>.+</%s>", word, word), Pattern.DOTALL)));
+    CompleteTagRegexNegatedLazyFinder(List<String> words) {
+        words.forEach(
+            word -> PATTERNS.add(Pattern.compile(String.format("<%s[^>]*?>.+?</%s>", word, word), Pattern.DOTALL))
+        );
     }
 
     Set<IgnoredReplacement> findMatches(String text) {
@@ -27,5 +27,4 @@ class CompleteTagRegexLazyNotNegatedFinder extends CompleteTagAbstractFinder {
         }
         return matches;
     }
-
 }

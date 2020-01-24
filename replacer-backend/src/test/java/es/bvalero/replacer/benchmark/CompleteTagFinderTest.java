@@ -1,17 +1,15 @@
 package es.bvalero.replacer.benchmark;
 
 import es.bvalero.replacer.finder.IgnoredReplacement;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class CompleteTagFinderTest {
-
     private List<String> words;
     private String text;
     private Set<IgnoredReplacement> expected;
@@ -40,19 +38,7 @@ public class CompleteTagFinderTest {
 
     @Test
     public void testCompleteTagRegexLazyLazyFinder() {
-        CompleteTagRegexLazyLazyFinder finder = new CompleteTagRegexLazyLazyFinder(words);
-        Assert.assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    public void testCompleteTagRegexNotLazyFinder() {
-        CompleteTagRegexNotLazyFinder finder = new CompleteTagRegexNotLazyFinder(words);
-        Assert.assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    public void testCompleteTagRegexLazyNotFinder() {
-        CompleteTagRegexLazyNotFinder finder = new CompleteTagRegexLazyNotFinder(words);
+        CompleteTagRegexLazyFinder finder = new CompleteTagRegexLazyFinder(words);
         Assert.assertEquals(expected, finder.findMatches(text));
     }
 
@@ -64,19 +50,7 @@ public class CompleteTagFinderTest {
 
     @Test
     public void testCompleteTagRegexLazyLazyNegatedFinder() {
-        CompleteTagRegexLazyLazyNegatedFinder finder = new CompleteTagRegexLazyLazyNegatedFinder(words);
-        Assert.assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    public void testCompleteTagRegexNotLazyNegatedFinder() {
-        CompleteTagRegexNotLazyNegatedFinder finder = new CompleteTagRegexNotLazyNegatedFinder(words);
-        Assert.assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    public void testCompleteTagRegexLazyNotNegatedFinder() {
-        CompleteTagRegexLazyNotNegatedFinder finder = new CompleteTagRegexLazyNotNegatedFinder(words);
+        CompleteTagRegexNegatedLazyFinder finder = new CompleteTagRegexNegatedLazyFinder(words);
         Assert.assertEquals(expected, finder.findMatches(text));
     }
 
@@ -93,9 +67,14 @@ public class CompleteTagFinderTest {
     }
 
     @Test
-    public void testCompleteTagRegexAllBackFinder() {
-        CompleteTagRegexAllBackFinder finder = new CompleteTagRegexAllBackFinder(words);
+    public void testCompleteTagRegexAlternateFinder() {
+        CompleteTagRegexAlternateFinder finder = new CompleteTagRegexAlternateFinder(words);
         Assert.assertEquals(expected, finder.findMatches(text));
     }
 
+    @Test
+    public void testCompleteTagRegexAlternateNegatedFinder() {
+        CompleteTagRegexAlternateNegatedFinder finder = new CompleteTagRegexAlternateNegatedFinder(words);
+        Assert.assertEquals(expected, finder.findMatches(text));
+    }
 }
