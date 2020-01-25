@@ -8,7 +8,7 @@ import java.util.stream.StreamSupport;
 /**
  * Interface to be implemented by any class returning a collection of immutables.
  *
- * For performance reasons, it is preferred to return them as an interator.
+ * For performance reasons, it is preferred to return them as an iterable.
  */
 public interface ImmutableFinder {
     Iterable<Immutable> find(String text);

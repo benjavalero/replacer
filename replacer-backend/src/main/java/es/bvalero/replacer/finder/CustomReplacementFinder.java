@@ -2,30 +2,27 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.Suggestion;
+import es.bvalero.replacer.finder2.RegexIterable;
 import es.bvalero.replacer.finder2.ReplacementFindService;
 import es.bvalero.replacer.finder2.ReplacementFinder;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
-import java.util.stream.Stream;
 
 public class CustomReplacementFinder implements ReplacementFinder {
-    private String replacement;
-    private String suggestion;
+    private final String replacement;
+    private final String suggestion;
+    private final RunAutomaton automaton;
 
     public CustomReplacementFinder(String replacement, String suggestion) {
         this.replacement = replacement;
         this.suggestion = suggestion;
+        this.automaton = buildCustomRegex(this.replacement, this.suggestion);
     }
 
     @Override
-    public Stream<Replacement> find(String text) {
-        RunAutomaton customAutomaton = buildCustomRegex(this.replacement, this.suggestion);
-        return findStream(text, customAutomaton, matcher -> convertMatch(matcher));
+    public Iterable<Replacement> find(String text) {
+        return new RegexIterable<Replacement>(text, automaton, this::convertMatch, this::isValidMatch);
     }
 
     private RunAutomaton buildCustomRegex(String replacement, String suggestion) {

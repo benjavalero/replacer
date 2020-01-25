@@ -58,7 +58,7 @@ public class ReplacementFindService {
     }
 
     private Stream<Replacement> findAllReplacements(String text, List<ReplacementFinder> finders) {
-        Stream<Replacement> all = finders.stream().map(finder -> finder.find(text)).flatMap(s -> s);
+        Stream<Replacement> all = finders.stream().map(finder -> finder.findStream(text)).flatMap(s -> s);
 
         Stream<Replacement> distinct = removeNestedReplacements(all);
 
