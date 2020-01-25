@@ -1,13 +1,16 @@
 package es.bvalero.replacer.finder;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
 
 public class FileNameFinderTest {
 
@@ -34,14 +37,14 @@ public class FileNameFinderTest {
 
         String text = String.format("%s %s %s %s %s %s %s", file1, file2, gallery1, param, gallery2, table, link);
 
-        IgnoredReplacementFinder fileNameFinder = new FileNameFinder();
-        List<IgnoredReplacement> matches = fileNameFinder.findIgnoredReplacements(text);
+        ImmutableFinder fileNameFinder = new FileNameFinder();
+        List<Immutable> matches = fileNameFinder.findList(text);
 
         Set<String> expected = new HashSet<>(Arrays.asList(
                 "xx.jpg", "a b.png", "aa.jpg", "abc.JPEG", "b-c.jpg",
                 "doc.pdf", "value.gif", "image.JPG", "dóc2.pdf", "Value_2.gif",
                 "www.google.com")); // We capture also Internet domains
-        Assert.assertEquals(expected, matches.stream().map(IgnoredReplacement::getText).collect(Collectors.toSet()));
+        Assert.assertEquals(expected, matches.stream().map(Immutable::getText).collect(Collectors.toSet()));
     }
 
 }

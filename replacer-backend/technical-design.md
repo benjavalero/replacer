@@ -200,6 +200,8 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] **TemplateParamFinder** Find template parameters, e. g. `param` in `{{Template|param=value}}`
 - [ ] **TemplateFinder** Finds complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
 - [ ] **CursiveFinder** Find text in cursive, e. g. `''cursive''` in `This is a ''cursive'' example`
+- [ ] **QuotesFinder** Find text in quotes, e. g. `"text"` or `«texto»`
+- [ ] **FileNameFinder** Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
 
 ## TODO: REVIEW COMPONENTS
 
