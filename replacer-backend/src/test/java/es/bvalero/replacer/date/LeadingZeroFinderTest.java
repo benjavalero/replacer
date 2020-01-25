@@ -15,7 +15,7 @@ public class LeadingZeroFinderTest {
         String date = "7 de Agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = leadingZeroFinder.findReplacements(text);
+        List<Replacement> replacements = leadingZeroFinder.findList(text);
 
         Assert.assertTrue(replacements.isEmpty());
     }
@@ -25,7 +25,7 @@ public class LeadingZeroFinderTest {
         String date = "07 de Agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = leadingZeroFinder.findReplacements(text);
+        List<Replacement> replacements = leadingZeroFinder.findList(text);
 
         Assert.assertEquals(1, replacements.size());
         Assert.assertEquals(date, replacements.get(0).getText());
@@ -37,7 +37,7 @@ public class LeadingZeroFinderTest {
         String date = "07 de setiembre de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = leadingZeroFinder.findReplacements(text);
+        List<Replacement> replacements = leadingZeroFinder.findList(text);
 
         Assert.assertEquals(1, replacements.size());
         Assert.assertEquals(date, replacements.get(0).getText());
@@ -50,7 +50,7 @@ public class LeadingZeroFinderTest {
         String expected = "7 de agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = leadingZeroFinder.findReplacements(text);
+        List<Replacement> replacements = leadingZeroFinder.findList(text);
 
         Assert.assertEquals(1, replacements.size());
         Assert.assertEquals(date, replacements.get(0).getText());

@@ -1,32 +1,58 @@
 package es.bvalero.replacer.date;
 
 import es.bvalero.replacer.finder.FinderUtils;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 
+/**
+ * Abstract class with the common fonctionality to find replacements of type Date Format
+ */
 abstract class DateFinder {
-
     private static final String TYPE_DATE = "Fechas";
-
     private static final List<String> MONTHS = Arrays.asList(
-            "enero", "febrero", "marzo", "abril", "mayo", "junio",
-            "julio", "agosto", "sep?tiembre", "octubre", "noviembre", "diciembre");
-    static final List<String> MONTHS_UPPERCASE = MONTHS.stream()
-            .map(FinderUtils::setFirstUpperCase)
-            .collect(Collectors.toList());
-    static final List<String> MONTHS_UPPERCASE_CLASS = MONTHS.stream()
-            .map(FinderUtils::setFirstUpperCaseClass)
-            .collect(Collectors.toList());
+        "enero",
+        "febrero",
+        "marzo",
+        "abril",
+        "mayo",
+        "junio",
+        "julio",
+        "agosto",
+        "sep?tiembre",
+        "octubre",
+        "noviembre",
+        "diciembre"
+    );
+    static final List<String> MONTHS_UPPERCASE = MONTHS
+        .stream()
+        .map(FinderUtils::setFirstUpperCase)
+        .collect(Collectors.toList());
+    static final List<String> MONTHS_UPPERCASE_CLASS = MONTHS
+        .stream()
+        .map(FinderUtils::setFirstUpperCaseClass)
+        .collect(Collectors.toList());
 
-    public String getType() {
-        return TYPE_DATE;
+    Replacement convertMatch(MatchResult matcher) {
+        int start = matcher.start();
+        String text = matcher.group();
+        return Replacement
+            .builder()
+            .type(TYPE_DATE)
+            .subtype(getSubtype())
+            .start(start)
+            .text(text)
+            .suggestions(findSuggestions(text))
+            .build();
     }
 
-    public List<Suggestion> findSuggestions(String date) {
+    abstract String getSubtype();
+
+    private List<Suggestion> findSuggestions(String date) {
         return Collections.singletonList(Suggestion.ofNoComment(fixDate(date)));
     }
 
@@ -50,5 +76,4 @@ abstract class DateFinder {
 
         return fixedDate;
     }
-
 }

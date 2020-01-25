@@ -214,6 +214,9 @@ Most finders find the items with regular expressions. Thus we create an generic 
 
 - [ ] **MisspellingSimpleFinder** Find misspellings with only word, e. g. `habia` in Spanish
 - [ ] **MisspellingComposedFinder** Find misspellings with more than one word, e. g. `aún así` in Spanish
+- [ ] **LeadingZeroFinder** Find long dates starting with zero, e. g. `02 de septiembre de 2019`
+- [ ] **UppercaseMonthFinder** Find dates with the month in uppercase, e. g. `2 de Septiembre de 2019`
+- [ ] **UppercaseMonthWithoutDayFinder** Find months in uppercase without day and after a common preposition, e. g. `desde Septiembre de 2019`
 
 ## TODO: REVIEW COMPONENTS
 
@@ -237,7 +240,7 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] Check if it is worth to store the replacement type as an enumerate
 - [ ] Rename IgnoredReplacement to Immutable. There are hundreds of occurrences (cf. benchmark). Meanwhile all is prepared in package `finder2`
 - [ ] When testing the database performance, check [jOOQ](https://www.jooq.org/).
-- [ ] Move package `misspelling` to `finder.misspelling`
+- [ ] Move packages `misspelling` and `date` under `finder`
 - [ ] Review the managers for misspellings and false-positives, and remark the Observable pattern.
 
 The Java code is formatted with [Prettier Java](https://github.com/jhipster/prettier-java).
