@@ -5,7 +5,7 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder2.Immutable;
 import es.bvalero.replacer.finder2.ImmutableFinder;
-import java.util.Iterator;
+import es.bvalero.replacer.finder2.RegexIterable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,7 +20,7 @@ class UrlFinder implements ImmutableFinder {
     );
 
     @Override
-    public Iterator<Immutable> find(String text) {
-        return find(text, AUTOMATON_URL);
+    public Iterable<Immutable> find(String text) {
+        return new RegexIterable<Immutable>(text, AUTOMATON_URL, this::convert, this::isValid);
     }
 }

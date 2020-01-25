@@ -4,7 +4,7 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder2.Immutable;
 import es.bvalero.replacer.finder2.ImmutableFinder;
-import java.util.Iterator;
+import es.bvalero.replacer.finder2.RegexIterable;
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +17,8 @@ class DomainFinder implements ImmutableFinder {
     private static final RunAutomaton AUTOMATON_DOMAIN = new RunAutomaton(new RegExp(REGEX_DOMAIN).toAutomaton());
 
     @Override
-    public Iterator<Immutable> find(String text) {
-        return find(text, AUTOMATON_DOMAIN, this::convertMatch);
+    public Iterable<Immutable> find(String text) {
+        return new RegexIterable<Immutable>(text, AUTOMATON_DOMAIN, this::convertMatch, this::isValid);
     }
 
     private Immutable convertMatch(MatchResult match) {

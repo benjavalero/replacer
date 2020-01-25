@@ -4,7 +4,7 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder2.Immutable;
 import es.bvalero.replacer.finder2.ImmutableFinder;
-import java.util.Iterator;
+import es.bvalero.replacer.finder2.RegexIterable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +18,7 @@ class XmlTagFinder implements ImmutableFinder {
     private static final RunAutomaton AUTOMATON_XML_TAG = new RunAutomaton(new RegExp(REGEX_XML_TAG).toAutomaton());
 
     @Override
-    public Iterator<Immutable> find(String text) {
-        return find(text, AUTOMATON_XML_TAG);
+    public Iterable<Immutable> find(String text) {
+        return new RegexIterable<Immutable>(text, AUTOMATON_XML_TAG, this::convert, this::isValid);
     }
 }

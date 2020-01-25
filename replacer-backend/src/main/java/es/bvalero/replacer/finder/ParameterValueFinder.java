@@ -5,8 +5,8 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder2.Immutable;
 import es.bvalero.replacer.finder2.ImmutableFinder;
+import es.bvalero.replacer.finder2.RegexIterable;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
@@ -27,8 +27,8 @@ class ParameterValueFinder implements ImmutableFinder {
     );
 
     @Override
-    public Iterator<Immutable> find(String text) {
-        return find(text, AUTOMATON_PARAM_VALUE, this::convertMatch);
+    public Iterable<Immutable> find(String text) {
+        return new RegexIterable<Immutable>(text, AUTOMATON_PARAM_VALUE, this::convertMatch, this::isValid);
     }
 
     private Immutable convertMatch(MatchResult match) {

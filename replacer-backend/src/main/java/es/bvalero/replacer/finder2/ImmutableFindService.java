@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder2;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,9 @@ public class ImmutableFindService {
     private List<ImmutableFinder> immutableFinders;
 
     public Iterable<Immutable> findImmutables(String text) {
-        ImmutableIterator iterator = new ImmutableIterator(text, immutableFinders);
-        return () -> iterator;
+        // Collect to a list which is already an iterable
+        return new IterableOfIterable<Immutable>(
+            immutableFinders.stream().map(finder -> finder.find(text)).collect(Collectors.toList())
+        );
     }
 }

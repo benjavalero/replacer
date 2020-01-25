@@ -5,9 +5,9 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder2.Immutable;
 import es.bvalero.replacer.finder2.ImmutableFinder;
+import es.bvalero.replacer.finder2.RegexIterable;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +53,7 @@ class TemplateFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterator<Immutable> find(String text) {
-        return find(text, AUTOMATON_TEMPLATE);
+    public Iterable<Immutable> find(String text) {
+        return new RegexIterable<Immutable>(text, AUTOMATON_TEMPLATE, this::convert, this::isValid);
     }
 }

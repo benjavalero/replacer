@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder;
 
 import es.bvalero.replacer.finder2.Immutable;
 import es.bvalero.replacer.finder2.ImmutableFinder;
+import es.bvalero.replacer.finder2.RegexIterable;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +39,7 @@ class CompleteTagFinder implements ImmutableFinder {
     private static final Pattern PATTERN_COMPLETE_TAGS = Pattern.compile(REGEX_COMPLETE_TAGS, Pattern.DOTALL);
 
     @Override
-    public Iterator<Immutable> find(String text) {
-        return find(text, PATTERN_COMPLETE_TAGS);
+    public Iterable<Immutable> find(String text) {
+        return new RegexIterable<Immutable>(text, PATTERN_COMPLETE_TAGS, this::convert, this::isValid);
     }
 }
