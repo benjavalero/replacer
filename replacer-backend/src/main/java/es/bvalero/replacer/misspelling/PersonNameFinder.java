@@ -1,23 +1,26 @@
 package es.bvalero.replacer.misspelling;
 
 import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.IgnoredReplacement;
-import es.bvalero.replacer.finder.IgnoredReplacementFinder;
-import org.springframework.stereotype.Component;
-
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
+/**
+ * Find person names which are used also as nouns and thus are false positives,
+ * e. g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month
+ * to be written in lowercase.
+ */
 @Component
-class PersonNameFinder implements IgnoredReplacementFinder {
-
+class PersonNameFinder implements ImmutableFinder {
     private static final Collection<String> PERSON_NAMES = Arrays.asList("Domingo", "Frances", "Julio", "Sidney");
 
     @Override
-    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        List<IgnoredReplacement> results = new ArrayList<>(100);
+    public Iterable<Immutable> find(String text) {
+        List<Immutable> results = new ArrayList<>(100);
 
         // We loop over all the words and find them in the text with the indexOf function
         for (String word : PERSON_NAMES) {
@@ -26,7 +29,7 @@ class PersonNameFinder implements IgnoredReplacementFinder {
                 start = text.indexOf(word, start);
                 if (start != -1) { // Word found
                     if (isWordFollowedByUppercase(start, word, text)) {
-                        results.add(IgnoredReplacement.of(start, word));
+                        results.add(Immutable.of(start, word));
                     }
                     start++;
                 }
@@ -38,9 +41,10 @@ class PersonNameFinder implements IgnoredReplacementFinder {
 
     private boolean isWordFollowedByUppercase(int start, String word, String text) {
         int upperCasePos = start + word.length() + 1;
-        return upperCasePos < text.length()
-                && FinderUtils.isWordCompleteInText(start, word, text)
-                && Character.isUpperCase(text.charAt(upperCasePos));
+        return (
+            upperCasePos < text.length() &&
+            FinderUtils.isWordCompleteInText(start, word, text) &&
+            Character.isUpperCase(text.charAt(upperCasePos))
+        );
     }
-
 }
