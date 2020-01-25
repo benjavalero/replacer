@@ -1,13 +1,10 @@
 package es.bvalero.replacer.cosmetic;
 
-import es.bvalero.replacer.finder.Replacement;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
-
 public class SameLinkFinderTest {
-
     private SameLinkFinder sameLinkFinder = new SameLinkFinder();
 
     @Test
@@ -19,17 +16,16 @@ public class SameLinkFinderTest {
         String link5 = "[[Test|Mock]]";
         String text = String.format("En %s %s %s %s %s.", link1, link2, link3, link4, link5);
 
-        List<Replacement> replacements = sameLinkFinder.findReplacements(text);
+        List<Cosmetic> replacements = sameLinkFinder.findList(text);
 
         String expectedLink = "[[test]]";
         Assert.assertEquals(3, replacements.size());
         Assert.assertEquals(link1, replacements.get(0).getText());
-        Assert.assertEquals(expectedLink, replacements.get(0).getSuggestions().get(0).getText());
+        Assert.assertEquals(expectedLink, replacements.get(0).getFix());
         Assert.assertEquals(link2, replacements.get(1).getText());
-        Assert.assertEquals(expectedLink, replacements.get(1).getSuggestions().get(0).getText());
+        Assert.assertEquals(expectedLink, replacements.get(1).getFix());
 
         Assert.assertEquals(link4, replacements.get(2).getText());
-        Assert.assertEquals("[[Test]]", replacements.get(2).getSuggestions().get(0).getText());
+        Assert.assertEquals("[[Test]]", replacements.get(2).getFix());
     }
-
 }

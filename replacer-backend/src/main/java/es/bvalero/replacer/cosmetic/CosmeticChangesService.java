@@ -1,40 +1,40 @@
 package es.bvalero.replacer.cosmetic;
 
-import es.bvalero.replacer.finder.Replacement;
-import org.springframework.stereotype.Component;
-
 import java.util.Collections;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class CosmeticChangesService {
-
-    private SameLinkFinder sameLinkFinder = new SameLinkFinder();
+    @Autowired
+    private List<CosmeticFinder> cosmeticFinders;
 
     public String applyCosmeticChanges(String text) {
-        List<Replacement> replacements = sameLinkFinder.findReplacements(text);
-        // By default the article replacements are sorted in descending order by the start
-        Collections.sort(replacements);
-        for (Replacement replacement : replacements) {
-            text = replaceInText(replacement, text);
+        String fixedTest = text;
+        for (CosmeticFinder finder : cosmeticFinders) {
+            List<Cosmetic> cosmetics = finder.findList(fixedTest);
+
+            // By default the results are sorted in descending order by the start
+            Collections.sort(cosmetics);
+            for (Cosmetic cosmetic : cosmetics) {
+                fixedTest = replaceInText(cosmetic, fixedTest);
+            }
         }
-        return text;
+        return fixedTest;
     }
 
-    private String replaceInText(Replacement replacement, String text) {
-        int start = replacement.getStart();
-        String oldText = replacement.getText();
+    private String replaceInText(Cosmetic cosmetic, String text) {
+        int start = cosmetic.getStart();
+        String oldText = cosmetic.getText();
 
-        // Check just in case that the replacement is correct
+        // Check just in case that the cosmetic is correct
         String current = text.substring(start, start + oldText.length());
         if (!current.equals(oldText)) {
-            throw new IllegalArgumentException("Wrong replacement: " + current + " - " + oldText);
+            throw new IllegalArgumentException("Wrong cosmetic: " + current + " - " + oldText);
         }
 
-        String newText = replacement.getSuggestions().get(0).getText();
-        return text.substring(0, start) +
-                newText +
-                text.substring(start + oldText.length());
+        String newText = cosmetic.getFix();
+        return text.substring(0, start) + newText + text.substring(start + oldText.length());
     }
-
 }

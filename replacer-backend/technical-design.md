@@ -218,6 +218,10 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] **UppercaseMonthFinder** Find dates with the month in uppercase, e. g. `2 de Septiembre de 2019`
 - [ ] **UppercaseMonthWithoutDayFinder** Find months in uppercase without day and after a common preposition, e. g. `desde Septiembre de 2019`
 
+### Cosmetic Finders
+
+- [ ] **SameLinkFinder** Find links where the alias matches with the target link and thus the alias can be removed, e. g. `[[Madrid|Madrid]]`
+
 ## TODO: REVIEW COMPONENTS
 
 - [x] `dump.DumpFinder`
