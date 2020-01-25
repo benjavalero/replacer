@@ -26,7 +26,7 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<Replacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findList(text);
 
         Assert.assertNotNull(results);
         Assert.assertTrue(results.isEmpty());
@@ -42,7 +42,7 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<Replacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findList(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(2, results.size());
@@ -67,7 +67,7 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<Replacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findList(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -85,7 +85,7 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<Replacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findList(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -104,7 +104,7 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<Replacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findList(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -124,7 +124,7 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<Replacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findList(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -143,7 +143,7 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<Replacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findList(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -169,7 +169,7 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<Replacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findList(text);
 
         Assert.assertEquals("España", results.get(0).getSuggestions().get(0).getText());
         Assert.assertEquals("domingo", results.get(1).getSuggestions().get(0).getText());
@@ -188,7 +188,7 @@ public class MisspellingSimpleFinderTest {
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet));
 
-        List<Replacement> results = misspellingFinder.findReplacements(text);
+        List<Replacement> results = misspellingFinder.findList(text);
 
         Assert.assertEquals(1, results.size());
         Assert.assertEquals(3, results.get(0).getStart());
@@ -202,7 +202,7 @@ public class MisspellingSimpleFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, Collections.EMPTY_SET));
 
-        Assert.assertTrue(misspellingFinder.findReplacements("A sample text").isEmpty());
+        Assert.assertTrue(misspellingFinder.findList("A sample text").isEmpty());
     }
 
 }

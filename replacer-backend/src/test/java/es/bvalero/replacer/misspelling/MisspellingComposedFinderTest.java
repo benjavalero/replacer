@@ -27,7 +27,7 @@ public class MisspellingComposedFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellings));
 
-        List<Replacement> results = misspellingComposedFinder.findReplacements(text);
+        List<Replacement> results = misspellingComposedFinder.findList(text);
 
         Assert.assertNotNull(results);
         Assert.assertEquals(1, results.size());
@@ -43,7 +43,7 @@ public class MisspellingComposedFinderTest {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, Collections.EMPTY_SET));
 
-        Assert.assertTrue(misspellingComposedFinder.findReplacements("A sample text").isEmpty());
+        Assert.assertTrue(misspellingComposedFinder.findList("A sample text").isEmpty());
     }
 
 }

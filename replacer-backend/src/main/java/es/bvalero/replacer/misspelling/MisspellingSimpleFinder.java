@@ -3,20 +3,18 @@ package es.bvalero.replacer.misspelling;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
 /**
- * Find misspelling replacements in a given text.
- * Based in the WordAutomatonAllFinder winner in the benchmarks.
+ * Find misspellings with only word, e. g. `habia` in Spanish
  */
 @Component
 class MisspellingSimpleFinder extends MisspellingFinder {
-
-    private static final RunAutomaton AUTOMATON_WORD = new RunAutomaton(new RegExp("(<L>|[-'])+")
-            .toAutomaton(new DatatypesAutomatonProvider()));
+    private static final RunAutomaton AUTOMATON_WORD = new RunAutomaton(
+        new RegExp("(<L>|[-'])+").toAutomaton(new DatatypesAutomatonProvider())
+    );
     private static final String TYPE_MISSPELLING_SIMPLE = "Ortografía";
 
     @Autowired
@@ -38,8 +36,7 @@ class MisspellingSimpleFinder extends MisspellingFinder {
     }
 
     @Override
-    public String getType() {
+    String getType() {
         return TYPE_MISSPELLING_SIMPLE;
     }
-
 }
