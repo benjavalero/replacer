@@ -2,21 +2,23 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import es.bvalero.replacer.finder2.RegexIterable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
+/**
+ * Find inter-language links, e. g. `[[:pt:Title]]`
+ */
 @Component
-class InterLanguageLinkFinder implements IgnoredReplacementFinder {
-
-    @org.intellij.lang.annotations.RegExp
+class InterLanguageLinkFinder implements ImmutableFinder {
     private static final String REGEX_INTER_LANGUAGE_LINK = "\\[\\[:?[a-z]{2}:[^]]+]]";
-    private static final RunAutomaton AUTOMATON_INTER_LANGUAGE_LINK =
-            new RunAutomaton(new RegExp(REGEX_INTER_LANGUAGE_LINK).toAutomaton());
+    private static final RunAutomaton AUTOMATON_INTER_LANGUAGE_LINK = new RunAutomaton(
+        new RegExp(REGEX_INTER_LANGUAGE_LINK).toAutomaton()
+    );
 
     @Override
-    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, AUTOMATON_INTER_LANGUAGE_LINK);
+    public Iterable<Immutable> find(String text) {
+        return new RegexIterable<Immutable>(text, AUTOMATON_INTER_LANGUAGE_LINK, this::convert, this::isValid);
     }
-
 }

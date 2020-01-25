@@ -198,10 +198,13 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] **DomainFinder** Find web domains, e. g. `www.acb.es`
 - [ ] **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
 - [ ] **TemplateParamFinder** Find template parameters, e. g. `param` in `{{Template|param=value}}`
-- [ ] **TemplateFinder** Finds complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
+- [ ] **TemplateFinder** Find complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
 - [ ] **CursiveFinder** Find text in cursive, e. g. `''cursive''` in `This is a ''cursive'' example`
 - [ ] **QuotesFinder** Find text in quotes, e. g. `"text"` or `«texto»`
 - [ ] **FileNameFinder** Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
+- [ ] **LinkSuffixedFinder** Find links with suffix, e. g. `[[brasil]]eño`
+- [ ] **LinkAliasedFinder** Find the first part of aliased links, e. g. `brasil` in `[[brasil|Brasil]]`
+- [ ] **InterLanguageLinkFinder** Find inter-language links, e. g. `[[:pt:Title]]`
 
 ## TODO: REVIEW COMPONENTS
 

@@ -1,9 +1,10 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 public class LinkSuffixedFinderTest {
 
@@ -14,13 +15,12 @@ public class LinkSuffixedFinderTest {
         String noSuffixed = "[[Text]]";
         String text = String.format("%s %s %s.", suffixed1, suffixed2, noSuffixed);
 
-        IgnoredReplacementFinder linkSuffixedFinder = new LinkSuffixedFinder();
+        ImmutableFinder linkSuffixedFinder = new LinkSuffixedFinder();
 
-        List<IgnoredReplacement> matches = linkSuffixedFinder.findIgnoredReplacements(text);
+        List<Immutable> matches = linkSuffixedFinder.findList(text);
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(2, matches.size());
         Assert.assertEquals(suffixed1, matches.get(0).getText());
         Assert.assertEquals(suffixed2, matches.get(1).getText());
     }
-
 }

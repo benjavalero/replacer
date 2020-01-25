@@ -3,21 +3,23 @@ package es.bvalero.replacer.finder;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import es.bvalero.replacer.finder2.RegexIterable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
+/**
+ * Find links with suffix, e. g. `[[brasil]]eño`
+ */
 @Component
-class LinkSuffixedFinder implements IgnoredReplacementFinder {
-
-    @org.intellij.lang.annotations.RegExp
+class LinkSuffixedFinder implements ImmutableFinder {
     private static final String REGEX_LINK_SUFFIXED = "\\[\\[[^]]+]]<Ll>+";
-    private static final RunAutomaton AUTOMATON_LINK_SUFFIXED =
-            new RunAutomaton(new RegExp(REGEX_LINK_SUFFIXED).toAutomaton(new DatatypesAutomatonProvider()));
+    private static final RunAutomaton AUTOMATON_LINK_SUFFIXED = new RunAutomaton(
+        new RegExp(REGEX_LINK_SUFFIXED).toAutomaton(new DatatypesAutomatonProvider())
+    );
 
     @Override
-    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, AUTOMATON_LINK_SUFFIXED);
+    public Iterable<Immutable> find(String text) {
+        return new RegexIterable<Immutable>(text, AUTOMATON_LINK_SUFFIXED, this::convert, this::isValid);
     }
-
 }
