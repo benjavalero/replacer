@@ -5,10 +5,10 @@ import java.util.Iterator;
 /**
  * Helper class to iterate over an iterable of iterables, e. g. a list of lists.
  */
-class IterableOfIterable<T> implements Iterable<T> {
+public class IterableOfIterable<T> implements Iterable<T> {
     private final Iterable<Iterable<T>> iterables;
 
-    IterableOfIterable(Iterable<Iterable<T>> iterables) {
+    public IterableOfIterable(Iterable<Iterable<T>> iterables) {
         this.iterables = iterables;
     }
 
