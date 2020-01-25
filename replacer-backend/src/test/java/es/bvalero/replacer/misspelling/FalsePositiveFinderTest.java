@@ -1,15 +1,17 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.finder.IgnoredReplacement;
+import es.bvalero.replacer.finder2.Immutable;
+import java.beans.PropertyChangeEvent;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.beans.PropertyChangeEvent;
-import java.util.*;
-
 public class FalsePositiveFinderTest {
-
     private FalsePositiveFinder falsePositiveFinder;
 
     @Before
@@ -23,16 +25,18 @@ public class FalsePositiveFinderTest {
         Set<String> falsePositives = new HashSet<>(Arrays.asList("sólo", "ést?[aeo]s?", "Index", "online"));
 
         // Fake the update of the list in the manager
-        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
+        falsePositiveFinder.propertyChange(
+            new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives)
+        );
 
-        List<IgnoredReplacement> matches = falsePositiveFinder.findIgnoredReplacements(text);
+        List<Immutable> matches = falsePositiveFinder.findList(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(4, matches.size());
-        Assert.assertTrue(matches.contains(IgnoredReplacement.of(3, "sólo")));
-        Assert.assertTrue(matches.contains(IgnoredReplacement.of(11, "éstos")));
-        Assert.assertTrue(matches.contains(IgnoredReplacement.of(23, "Index")));
-        Assert.assertTrue(matches.contains(IgnoredReplacement.of(29, "Online")));
+        Assert.assertTrue(matches.contains(Immutable.of(3, "sólo")));
+        Assert.assertTrue(matches.contains(Immutable.of(11, "éstos")));
+        Assert.assertTrue(matches.contains(Immutable.of(23, "Index")));
+        Assert.assertTrue(matches.contains(Immutable.of(29, "Online")));
     }
 
     @Test
@@ -41,30 +45,35 @@ public class FalsePositiveFinderTest {
         Set<String> falsePositives = new HashSet<>(Arrays.asList("Top Album", "Album Chart"));
 
         // Fake the update of the list in the manager
-        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
+        falsePositiveFinder.propertyChange(
+            new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives)
+        );
 
-        List<IgnoredReplacement> matches1 = falsePositiveFinder.findIgnoredReplacements(text1);
+        List<Immutable> matches1 = falsePositiveFinder.findList(text1);
 
         Assert.assertFalse(matches1.isEmpty());
         Assert.assertEquals(1, matches1.size());
-        Assert.assertTrue(matches1.contains(IgnoredReplacement.of(2, "Top Album")));
+        Assert.assertTrue(matches1.contains(Immutable.of(2, "Top Album")));
+
         // Only the first match is found
-        Assert.assertFalse(matches1.contains(IgnoredReplacement.of(6, "Album Chart")));
+        Assert.assertFalse(matches1.contains(Immutable.of(6, "Album Chart")));
 
         String text2 = "A Topp Album Chart.";
-        List<IgnoredReplacement> matches2 = falsePositiveFinder.findIgnoredReplacements(text2);
+        List<Immutable> matches2 = falsePositiveFinder.findList(text2);
 
         Assert.assertFalse(matches2.isEmpty());
         Assert.assertEquals(1, matches2.size());
-        Assert.assertTrue(matches2.contains(IgnoredReplacement.of(7, "Album Chart")));
+        Assert.assertTrue(matches2.contains(Immutable.of(7, "Album Chart")));
     }
 
     @Test
     public void testFalsePositivesListEmpty() {
         // Fake the update of the list in the manager
-        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, Collections.EMPTY_SET));
+        falsePositiveFinder.propertyChange(
+            new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, Collections.EMPTY_SET)
+        );
 
-        Assert.assertTrue(falsePositiveFinder.findIgnoredReplacements("A sample text").isEmpty());
+        Assert.assertTrue(falsePositiveFinder.findList("A sample text").isEmpty());
     }
 
     @Test
@@ -73,14 +82,16 @@ public class FalsePositiveFinderTest {
         Set<String> falsePositives = new HashSet<>(Collections.singletonList("test"));
 
         // Fake the update of the list in the manager
-        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
+        falsePositiveFinder.propertyChange(
+            new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives)
+        );
 
-        List<IgnoredReplacement> matches = falsePositiveFinder.findIgnoredReplacements(text);
+        List<Immutable> matches = falsePositiveFinder.findList(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(2, matches.size());
-        Assert.assertTrue(matches.contains(IgnoredReplacement.of(2, "Test")));
-        Assert.assertTrue(matches.contains(IgnoredReplacement.of(7, "test")));
+        Assert.assertTrue(matches.contains(Immutable.of(2, "Test")));
+        Assert.assertTrue(matches.contains(Immutable.of(7, "test")));
     }
 
     @Test
@@ -89,13 +100,15 @@ public class FalsePositiveFinderTest {
         Set<String> falsePositives = new HashSet<>(Collections.singletonList("Test"));
 
         // Fake the update of the list in the manager
-        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
+        falsePositiveFinder.propertyChange(
+            new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives)
+        );
 
-        List<IgnoredReplacement> matches = falsePositiveFinder.findIgnoredReplacements(text);
+        List<Immutable> matches = falsePositiveFinder.findList(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(1, matches.size());
-        Assert.assertTrue(matches.contains(IgnoredReplacement.of(2, "Test")));
+        Assert.assertTrue(matches.contains(Immutable.of(2, "Test")));
     }
 
     @Test
@@ -104,14 +117,15 @@ public class FalsePositiveFinderTest {
         Set<String> falsePositives = new HashSet<>(Collections.singletonList("(sample|text)"));
 
         // Fake the update of the list in the manager
-        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives));
+        falsePositiveFinder.propertyChange(
+            new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, falsePositives)
+        );
 
-        List<IgnoredReplacement> matches = falsePositiveFinder.findIgnoredReplacements(text);
+        List<Immutable> matches = falsePositiveFinder.findList(text);
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(2, matches.size());
-        Assert.assertTrue(matches.contains(IgnoredReplacement.of(2, "sample")));
-        Assert.assertTrue(matches.contains(IgnoredReplacement.of(9, "text")));
+        Assert.assertTrue(matches.contains(Immutable.of(2, "sample")));
+        Assert.assertTrue(matches.contains(Immutable.of(9, "text")));
     }
-
 }

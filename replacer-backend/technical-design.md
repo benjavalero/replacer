@@ -207,6 +207,8 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] **InterLanguageLinkFinder** Find inter-language links, e. g. `[[:pt:Title]]`
 
 - [ ] **PersonNameFinder** Find person names which are used also as nouns and thus are false positives, e. g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month to be written in lowercase.
+- [ ] **FalsePositiveFinder** Find known expressions which are (almost) always false positives, e. g. in Spanish `aun así` which hides the potential replacement `aun`
+- [ ] **UppercaseAfterFinder** Find words in uppercase which are correct according to the punctuation, e. g. `Enero` in `{{Cite|date=Enero de 2020}}`
 
 ## TODO: REVIEW COMPONENTS
 
@@ -231,5 +233,6 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] Rename IgnoredReplacement to Immutable. There are hundreds of occurrences (cf. benchmark). Meanwhile all is prepared in package `finder2`
 - [ ] When testing the database performance, check [jOOQ](https://www.jooq.org/).
 - [ ] Move package `misspelling` to `finder.misspelling`
+- [ ] Review the managers for misspellings and false-positives, and remark the Observable pattern.
 
 The Java code is formatted with [Prettier Java](https://github.com/jhipster/prettier-java).

@@ -4,31 +4,30 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.IgnoredReplacement;
-import es.bvalero.replacer.finder.IgnoredReplacementFinder;
+import es.bvalero.replacer.finder2.Immutable;
+import es.bvalero.replacer.finder2.ImmutableFinder;
+import es.bvalero.replacer.finder2.RegexIterable;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.MatchResult;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 /**
- * Find misspelling replacements in a given text.
- * Based in the WordAlternateAutomatonFinder winner in the benchmarks.
+ * Find known expressions which are (almost) always false positives,
+ * e. g. in Spanish `aun así` which hides the potential replacement `aun`
  */
 // We make this implementation public to be used by the finder benchmarks
 @Slf4j
 @Component
-public class FalsePositiveFinder implements IgnoredReplacementFinder, PropertyChangeListener {
-
+public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
     @Autowired
     private FalsePositiveManager falsePositiveManager;
 
@@ -51,27 +50,29 @@ public class FalsePositiveFinder implements IgnoredReplacementFinder, PropertyCh
 
     private RunAutomaton buildFalsePositivesAutomaton(Set<String> falsePositives) {
         LOGGER.info("START Build false positive automaton");
-        String alternations = String.format("(%s)", StringUtils.join(
-                falsePositives.stream().map(this::processFalsePositive).collect(Collectors.toList()), "|"));
-        RunAutomaton automaton = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
+        String alternations = String.format(
+            "(%s)",
+            StringUtils.join(falsePositives.stream().map(this::processFalsePositive).collect(Collectors.toList()), "|")
+        );
+        RunAutomaton automaton = new RunAutomaton(
+            new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider())
+        );
         LOGGER.info("END Build false positive automaton");
         return automaton;
     }
 
     private String processFalsePositive(String falsePositive) {
         return FinderUtils.startsWithLowerCase(falsePositive)
-                ? FinderUtils.setFirstUpperCaseClass(falsePositive)
-                : falsePositive;
+            ? FinderUtils.setFirstUpperCaseClass(falsePositive)
+            : falsePositive;
     }
 
     @Override
-    public List<IgnoredReplacement> findIgnoredReplacements(String text) {
-        return findMatchResults(text, this.falsePositivesAutomaton);
+    public Iterable<Immutable> find(String text) {
+        return new RegexIterable<Immutable>(text, this.falsePositivesAutomaton, this::convert, this::isValidMatch);
     }
 
-    @Override
-    public boolean isValidMatch(int start, String matchedText, String fullText) {
-        return FinderUtils.isWordCompleteInText(start, matchedText, fullText);
+    private boolean isValidMatch(MatchResult match, String text) {
+        return FinderUtils.isWordCompleteInText(match.start(), match.group(), text);
     }
-
 }
