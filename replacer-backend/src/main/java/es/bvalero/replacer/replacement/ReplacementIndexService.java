@@ -1,6 +1,6 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.finder.ReplacementFindService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -138,7 +138,7 @@ public class ReplacementIndexService {
     public void reviewArticleReplacements(int articleId, @Nullable String type, @Nullable String subtype, String reviewer) {
         LOGGER.info("START Mark article as reviewed. ID: {}", articleId);
 
-        if (ReplacementFinderService.CUSTOM_FINDER_TYPE.equals(type)) {
+        if (ReplacementFindService.CUSTOM_FINDER_TYPE.equals(type)) {
             // Custom replacements don't exist in the database to be reviewed
             addCustomReviewedReplacement(articleId, subtype, reviewer);
         } else if (StringUtils.isNotBlank(type)) {
@@ -165,12 +165,12 @@ public class ReplacementIndexService {
     }
 
     private void addCustomReviewedReplacement(int articleId, String replacement, String reviewer) {
-        ReplacementEntity custom = new ReplacementEntity(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, replacement, 0);
+        ReplacementEntity custom = new ReplacementEntity(articleId, ReplacementFindService.CUSTOM_FINDER_TYPE, replacement, 0);
         reviewReplacement(custom, reviewer);
     }
 
     public void addCustomReviewedReplacement(int articleId, String replacement) {
-        ReplacementEntity customReplacement = new ReplacementEntity(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, replacement, 0);
+        ReplacementEntity customReplacement = new ReplacementEntity(articleId, ReplacementFindService.CUSTOM_FINDER_TYPE, replacement, 0);
         reviewReplacementAsSystem(customReplacement);
     }
 

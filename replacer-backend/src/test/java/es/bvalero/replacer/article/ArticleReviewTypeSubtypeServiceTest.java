@@ -1,7 +1,7 @@
 package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
@@ -43,7 +43,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
     private WikipediaService wikipediaService;
 
     @Mock
-    private ReplacementFinderService replacementFinderService;
+    private ReplacementFindService replacementFindService;
 
     @Mock
     private ReplacementIndexService replacementIndexService;
@@ -79,7 +79,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
                 .thenReturn(Optional.of(article));
 
         // The article contains replacements
-        Mockito.when(replacementFinderService.findReplacements(content))
+        Mockito.when(replacementFindService.findReplacements(content))
                 .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview("A", "B");
@@ -102,7 +102,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
                 .thenReturn(Optional.of(article));
 
         // The article contains replacements
-        Mockito.when(replacementFinderService.findReplacements(content))
+        Mockito.when(replacementFindService.findReplacements(content))
                 .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview("X", "Y");
@@ -136,9 +136,9 @@ public class ArticleReviewTypeSubtypeServiceTest {
                 .thenReturn(Optional.of(article2));
 
         // The articles contains replacements
-        Mockito.when(replacementFinderService.findReplacements(content))
+        Mockito.when(replacementFindService.findReplacements(content))
                 .thenReturn(replacements);
-        Mockito.when(replacementFinderService.findReplacements(content2))
+        Mockito.when(replacementFindService.findReplacements(content2))
                 .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview("X", "Y");
@@ -162,7 +162,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
                 .thenReturn(Optional.of(article));
 
         // The article contains replacements
-        Mockito.when(replacementFinderService.findReplacements(content))
+        Mockito.when(replacementFindService.findReplacements(content))
                 .thenReturn(replacements);
 
         // The article has sections
@@ -187,7 +187,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
                 .thenReturn(Optional.of(article));
 
         // The article contains replacements
-        Mockito.when(replacementFinderService.findReplacements(content))
+        Mockito.when(replacementFindService.findReplacements(content))
                 .thenReturn(replacements);
 
         // The article has no sections

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -40,7 +40,7 @@ public class ArticleReviewCustomServiceTest {
     private WikipediaService wikipediaService;
 
     @Mock
-    private ReplacementFinderService replacementFinderService;
+    private ReplacementFindService replacementFindService;
 
     @Mock
     private ReplacementIndexService replacementIndexService;
@@ -75,11 +75,11 @@ public class ArticleReviewCustomServiceTest {
 
         // The result is not already reviewed
         Mockito.when(replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
-                randomId, ReplacementFinderService.CUSTOM_FINDER_TYPE, replacement))
+                randomId, ReplacementFindService.CUSTOM_FINDER_TYPE, replacement))
                 .thenReturn(0L);
 
         // The article contains replacements
-        Mockito.when(replacementFinderService.findCustomReplacements(content, replacement, suggestion))
+        Mockito.when(replacementFindService.findCustomReplacements(content, replacement, suggestion))
                 .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(replacement, suggestion);
@@ -100,10 +100,10 @@ public class ArticleReviewCustomServiceTest {
         // The result 1 is already reviewed
         // The result 2 is not reviewed the first time, but reviewed the second time.
         Mockito.when(replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
-                randomId, ReplacementFinderService.CUSTOM_FINDER_TYPE, replacement))
+                randomId, ReplacementFindService.CUSTOM_FINDER_TYPE, replacement))
                 .thenReturn(1L);
         Mockito.when(replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
-                randomId2, ReplacementFinderService.CUSTOM_FINDER_TYPE, replacement))
+                randomId2, ReplacementFindService.CUSTOM_FINDER_TYPE, replacement))
                 .thenReturn(0L).thenReturn(1L);
 
         // The articles exist in Wikipedia
@@ -113,7 +113,7 @@ public class ArticleReviewCustomServiceTest {
                 .thenReturn(Optional.of(article2));
 
         // The article 2 contains no replacements
-        Mockito.when(replacementFinderService.findCustomReplacements(content2, replacement, suggestion))
+        Mockito.when(replacementFindService.findCustomReplacements(content2, replacement, suggestion))
                 .thenReturn(Collections.emptyList());
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(replacement, suggestion);

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -25,7 +25,7 @@ abstract class ArticleReviewService {
     private ReplacementIndexService replacementIndexService;
 
     @Autowired
-    private ReplacementFinderService replacementFinderService;
+    private ReplacementFindService replacementFindService;
 
     @Autowired
     private SectionReviewService sectionReviewService;
@@ -123,7 +123,7 @@ abstract class ArticleReviewService {
     }
 
     List<Replacement> findAllReplacements(WikipediaPage article) {
-        List<Replacement> replacements = replacementFinderService.findReplacements(article.getContent());
+        List<Replacement> replacements = replacementFindService.findReplacements(article.getContent());
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.info("Update article replacements in database");

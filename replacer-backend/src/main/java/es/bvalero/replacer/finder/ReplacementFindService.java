@@ -10,7 +10,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class ReplacementFinderService {
+public class ReplacementFindService {
 
     public static final String CUSTOM_FINDER_TYPE = "Personalizado";
 
