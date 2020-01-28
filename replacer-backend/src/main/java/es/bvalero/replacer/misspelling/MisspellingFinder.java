@@ -2,9 +2,9 @@ package es.bvalero.replacer.misspelling;
 
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderUtils;
+import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
-import es.bvalero.replacer.finder2.RegexIterable;
 import es.bvalero.replacer.finder2.ReplacementFinder;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

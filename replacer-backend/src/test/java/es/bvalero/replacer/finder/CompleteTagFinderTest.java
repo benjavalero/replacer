@@ -1,7 +1,5 @@
 package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.finder2.Immutable;
-import es.bvalero.replacer.finder2.ImmutableFinder;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;

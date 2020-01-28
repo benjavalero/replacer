@@ -1,6 +1,6 @@
 package es.bvalero.replacer.cosmetic;
 
-import es.bvalero.replacer.finder2.RegexIterable;
+import es.bvalero.replacer.finder.RegexIterable;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 

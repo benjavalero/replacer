@@ -9,9 +9,6 @@ import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 
-import es.bvalero.replacer.finder2.Immutable;
-import es.bvalero.replacer.finder2.ImmutableFinder;
-
 public class FileNameFinderTest {
 
     @Test

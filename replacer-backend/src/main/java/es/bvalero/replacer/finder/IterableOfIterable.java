@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder2;
+package es.bvalero.replacer.finder;
 
 import java.util.Iterator;
 

@@ -3,9 +3,7 @@ package es.bvalero.replacer.finder;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder2.Immutable;
-import es.bvalero.replacer.finder2.ImmutableFinder;
-import es.bvalero.replacer.finder2.RegexIterable;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder2;
+package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RunAutomaton;

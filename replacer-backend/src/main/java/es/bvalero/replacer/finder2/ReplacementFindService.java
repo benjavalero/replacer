@@ -1,6 +1,8 @@
 package es.bvalero.replacer.finder2;
 
 import es.bvalero.replacer.finder.CustomReplacementFinder;
+import es.bvalero.replacer.finder.Immutable;
+import es.bvalero.replacer.finder.ImmutableFindService;
 import es.bvalero.replacer.finder.Replacement;
 import java.util.Collections;
 import java.util.List;

@@ -1,10 +1,11 @@
 package es.bvalero.replacer.misspelling;
 
-import es.bvalero.replacer.finder2.Immutable;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import es.bvalero.replacer.finder.Immutable;
 
 public class PersonNameFinderTest {
     private PersonNameFinder personNameFinder;

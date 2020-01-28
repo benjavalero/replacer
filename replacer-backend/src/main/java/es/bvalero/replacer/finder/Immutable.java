@@ -1,6 +1,5 @@
-package es.bvalero.replacer.finder2;
+package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.finder.Replacement;
 import lombok.Value;
 
 /**

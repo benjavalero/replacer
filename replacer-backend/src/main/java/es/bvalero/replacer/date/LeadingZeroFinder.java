@@ -2,8 +2,8 @@ package es.bvalero.replacer.date;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder2.RegexIterable;
 import es.bvalero.replacer.finder2.ReplacementFinder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

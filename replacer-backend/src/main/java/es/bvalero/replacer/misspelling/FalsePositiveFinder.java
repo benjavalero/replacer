@@ -4,9 +4,10 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder2.Immutable;
-import es.bvalero.replacer.finder2.ImmutableFinder;
-import es.bvalero.replacer.finder2.RegexIterable;
+import es.bvalero.replacer.finder.Immutable;
+import es.bvalero.replacer.finder.ImmutableFinder;
+import es.bvalero.replacer.finder.RegexIterable;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;

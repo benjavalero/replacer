@@ -1,8 +1,5 @@
 package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.finder2.Immutable;
-import es.bvalero.replacer.finder2.ImmutableFinder;
-import es.bvalero.replacer.finder2.RegexIterable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
