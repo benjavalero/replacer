@@ -11,14 +11,15 @@ import org.mockito.MockitoAnnotations;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class ReplacementFinderServiceTest {
+public class ReplacementFindServiceTest {
 
     @Mock
     private List<ReplacementFinder> replacementFinders;
 
     @Mock
-    private List<IgnoredReplacementFinder> ignoredReplacementFinders;
+    private ImmutableFindService immutableFindService;
 
     @InjectMocks
     private ReplacementFindService replacementFindService;
@@ -31,20 +32,15 @@ public class ReplacementFinderServiceTest {
 
     @Test
     public void testFindReplacementsEmpty() {
-        Mockito.when(replacementFinders.iterator()).thenReturn(Collections.emptyIterator());
-
         Assert.assertTrue(replacementFindService.findReplacements("").isEmpty());
     }
 
     @Test
     public void testFindReplacements() {
-        Replacement replacement = Replacement.builder().build();
+        Replacement replacement = Replacement.builder().start(0).text("").build();
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
-        Mockito.when(finder.findReplacements(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(replacement));
-        Mockito.when(replacementFinders.iterator())
-                .thenReturn(Collections.singletonList(finder).iterator());
-        Mockito.when(ignoredReplacementFinders.iterator()).thenReturn(Collections.emptyIterator());
+        Mockito.when(finder.findStream(Mockito.anyString())).thenReturn(Stream.of(replacement));
+        Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
 
         List<Replacement> replacements = replacementFindService.findReplacements("");
 
@@ -54,22 +50,15 @@ public class ReplacementFinderServiceTest {
     }
 
     @Test
-    public void testFindReplacementsIgnoringExceptions() {
-        IgnoredReplacement ignored1 = IgnoredReplacement.of(0, "AB");
-        Replacement replacement1 = Replacement.builder().start(1).text("B").build(); // Contained in ignored
-        Replacement replacement2 = Replacement.builder().start(2).text("C").build(); // Not contained in ignored
+    public void testFindReplacementsIgnoringImmutables() {
+        Immutable immutable1 = Immutable.of(0, "AB");
+        Replacement replacement1 = Replacement.builder().start(1).text("B").build(); // Contained in immutable
+        Replacement replacement2 = Replacement.builder().start(2).text("C").build(); // Not contained in immutable
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
-        Mockito.when(finder.findReplacements(Mockito.anyString()))
-                .thenReturn(Arrays.asList(replacement1, replacement2));
-        Mockito.when(replacementFinders.iterator())
-                .thenReturn(Collections.singletonList(finder).iterator());
-
-        IgnoredReplacementFinder ignoredFinder = Mockito.mock(IgnoredReplacementFinder.class);
-        List<IgnoredReplacement> ignored = Collections.singletonList(ignored1);
-        Mockito.when(ignoredFinder.findIgnoredReplacements(Mockito.anyString()))
-                .thenReturn(ignored);
-        Mockito.when(ignoredReplacementFinders.iterator())
-                .thenReturn(Collections.singletonList(ignoredFinder).iterator());
+        Mockito.when(finder.findStream(Mockito.anyString())).thenReturn(Stream.of(replacement1, replacement2));
+        Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
+        Mockito.when(immutableFindService.findImmutables(Mockito.anyString()))
+            .thenReturn(Collections.singleton(immutable1));
 
         List<Replacement> replacements = replacementFindService.findReplacements("");
 
@@ -80,20 +69,13 @@ public class ReplacementFinderServiceTest {
 
     @Test
     public void testFindReplacementsAllIgnored() {
-        IgnoredReplacement ignored1 = IgnoredReplacement.of(0, "AB");
+        Immutable immutable1 = Immutable.of(0, "AB");
         Replacement replacement1 = Replacement.builder().start(1).text("B").build();
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
-        Mockito.when(finder.findReplacements(Mockito.anyString()))
-                .thenReturn(Collections.singletonList(replacement1));
-        Mockito.when(replacementFinders.iterator())
-                .thenReturn(Collections.singletonList(finder).iterator());
-
-        IgnoredReplacementFinder ignoredFinder = Mockito.mock(IgnoredReplacementFinder.class);
-        List<IgnoredReplacement> ignored = Collections.singletonList(ignored1);
-        Mockito.when(ignoredFinder.findIgnoredReplacements(Mockito.anyString()))
-                .thenReturn(ignored);
-        Mockito.when(ignoredReplacementFinders.iterator())
-                .thenReturn(Collections.singletonList(ignoredFinder).iterator());
+        Mockito.when(finder.findStream(Mockito.anyString())).thenReturn(Stream.of(replacement1));
+        Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
+        Mockito.when(immutableFindService.findImmutables(Mockito.anyString()))
+            .thenReturn(Collections.singleton(immutable1));
 
         List<Replacement> replacements = replacementFindService.findReplacements("");
 
@@ -102,8 +84,6 @@ public class ReplacementFinderServiceTest {
 
     @Test
     public void testFindCustomReplacements() {
-        Mockito.when(ignoredReplacementFinders.iterator()).thenReturn(Collections.emptyIterator());
-
         List<Replacement> replacements = replacementFindService.findCustomReplacements("A X C", "X", "Y");
 
         Assert.assertFalse(replacements.isEmpty());
@@ -113,8 +93,6 @@ public class ReplacementFinderServiceTest {
 
     @Test
     public void testFindCustomReplacementsWithNoResults() {
-        Mockito.when(ignoredReplacementFinders.iterator()).thenReturn(Collections.emptyIterator());
-
         List<Replacement> replacements = replacementFindService.findCustomReplacements("AXC", "X", "Y");
 
         Assert.assertTrue(replacements.isEmpty());
@@ -143,18 +121,21 @@ public class ReplacementFinderServiceTest {
     public void testIsContained() {
         Replacement result1 = Replacement.builder().start(0).text("A").build();
         Replacement result2 = Replacement.builder().start(1).text("BC").build();
-        List<Replacement> results = Arrays.asList(result1, result2);
 
-        Assert.assertFalse(replacementFindService.isReplacementContainedInListIgnoringItself(result1, results));
-        Assert.assertFalse(replacementFindService.isReplacementContainedInListIgnoringItself(result2, results));
+        Assert.assertFalse(result1.contains(result1));
+        Assert.assertFalse(result2.contains(result2));
         Replacement result3 = Replacement.builder().start(1).text("B").build();
-        Assert.assertTrue(replacementFindService.isReplacementContainedInListIgnoringItself(result3, results));
+        Assert.assertFalse(result1.contains(result3));
+        Assert.assertTrue(result2.contains(result3));
         Replacement result4 = Replacement.builder().start(0).text("AB").build();
-        Assert.assertFalse(replacementFindService.isReplacementContainedInListIgnoringItself(result4, results));
+        Assert.assertFalse(result1.contains(result4));
+        Assert.assertFalse(result2.contains(result4));
         Replacement result5 = Replacement.builder().start(0).text("ABC").build();
-        Assert.assertFalse(replacementFindService.isReplacementContainedInListIgnoringItself(result5, results));
+        Assert.assertFalse(result1.contains(result5));
+        Assert.assertFalse(result2.contains(result5));
         Replacement result6 = Replacement.builder().start(2).text("C").build();
-        Assert.assertTrue(replacementFindService.isReplacementContainedInListIgnoringItself(result6, results));
+        Assert.assertFalse(result1.contains(result6));
+        Assert.assertTrue(result2.contains(result6));
     }
 
 }

@@ -62,6 +62,11 @@ public class Replacement implements Comparable<Replacement> {
 
     public boolean contains(Replacement r) {
         // i (this) contains r if: startI < startR < endR < endI
-        return this.getStart() < r.getStart() && r.getEnd() < this.getEnd();
+        // Also if one limit is strict and the other not
+        return (
+            (this.getStart() < r.getStart() && r.getEnd() < this.getEnd()) ||
+            (this.getStart() <= r.getStart() && r.getEnd() < this.getEnd()) ||
+            (this.getStart() < r.getStart() && r.getEnd() <= this.getEnd())
+        );
     }
 }

@@ -5,7 +5,7 @@ import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
-import es.bvalero.replacer.finder2.ReplacementFinder;
+import es.bvalero.replacer.finder.ReplacementFinder;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;

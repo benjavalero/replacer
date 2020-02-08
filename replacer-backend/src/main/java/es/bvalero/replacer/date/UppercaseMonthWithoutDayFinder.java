@@ -5,7 +5,7 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder2.ReplacementFinder;
+import es.bvalero.replacer.finder.ReplacementFinder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
