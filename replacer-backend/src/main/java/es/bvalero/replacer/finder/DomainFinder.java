@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
@@ -16,10 +15,11 @@ class DomainFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, AUTOMATON_DOMAIN, this::convertMatch, this::isValid);
+        return new RegexIterable<>(text, AUTOMATON_DOMAIN, this::convert);
     }
 
-    private Immutable convertMatch(MatchResult match) {
+    @Override
+    public Immutable convert(MatchResult match) {
         String text = match.group();
         return Immutable.of(match.hashCode(), text.substring(0, text.length() - 1));
     }

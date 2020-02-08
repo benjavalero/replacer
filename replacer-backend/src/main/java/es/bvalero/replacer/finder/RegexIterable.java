@@ -10,10 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Returns an interable of results after running a regex.
+ * Returns an iterable of results after running a regex.
  * It has two constructors in order to use it with a pattern or an automaton.
  * It needs a function parameter to convert the match result into the desired type T.
- * We can also provide an optional predicate to validate the result against the text.
+ * We overload the constructors with an optional predicate to validate the result against the text.
  */
 public class RegexIterable<T> implements Iterable<T> {
     private final Pattern pattern;
@@ -21,6 +21,14 @@ public class RegexIterable<T> implements Iterable<T> {
     private final String text;
     private final Function<MatchResult, T> convert;
     private final BiPredicate<MatchResult, String> isValid;
+
+    public RegexIterable(String text, Pattern pattern, Function<MatchResult, T> convert) {
+        this.pattern = pattern;
+        this.automaton = null;
+        this.text = text;
+        this.convert = convert;
+        this.isValid = null;
+    }
 
     public RegexIterable(
         String text,
@@ -33,6 +41,14 @@ public class RegexIterable<T> implements Iterable<T> {
         this.text = text;
         this.convert = convert;
         this.isValid = isValid;
+    }
+
+    public RegexIterable(String text, RunAutomaton automaton, Function<MatchResult, T> convert) {
+        this.pattern = null;
+        this.automaton = automaton;
+        this.text = text;
+        this.convert = convert;
+        this.isValid = null;
     }
 
     public RegexIterable(
@@ -51,42 +67,33 @@ public class RegexIterable<T> implements Iterable<T> {
     @Override
     public Iterator<T> iterator() {
         if (automaton != null) {
-            return new RegexAutomatonIterator<>(text, automaton, convert, isValid);
+            return new RegexAutomatonIterator<>(convert);
         } else if (pattern != null) {
-            return new RegexPatternIterator<>(text, pattern, convert, isValid);
+            return new RegexPatternIterator<>(convert);
         } else {
             throw new IllegalStateException();
         }
     }
 
-    class RegexPatternIterator<R> implements Iterator<R> {
-        private final String text;
+    private class RegexPatternIterator<R> implements Iterator<R> {
         private final Matcher matcher;
         private final Function<MatchResult, R> convert;
-        private final BiPredicate<MatchResult, String> isValid;
 
-        RegexPatternIterator(
-            String text,
-            Pattern pattern,
-            Function<MatchResult, R> convert,
-            BiPredicate<MatchResult, String> isValid
-        ) {
-            this.text = text;
+        RegexPatternIterator(Function<MatchResult, R> convert) {
             this.matcher = pattern.matcher(text);
             this.convert = convert;
-            this.isValid = isValid;
         }
 
         @Override
         public boolean hasNext() {
-            boolean hasNext = false;
+            boolean hasNext;
             do {
                 hasNext = matcher.find();
-            } while (hasNext && !isValidMatch(matcher, text));
+            } while (hasNext && !isValidMatch(matcher));
             return hasNext;
         }
 
-        private boolean isValidMatch(MatchResult match, String text) {
+        private boolean isValidMatch(MatchResult match) {
             if (isValid == null) {
                 return true;
             } else {
@@ -100,34 +107,25 @@ public class RegexIterable<T> implements Iterable<T> {
         }
     }
 
-    class RegexAutomatonIterator<R> implements Iterator<R> {
-        private final String text;
+    private class RegexAutomatonIterator<R> implements Iterator<R> {
         private final AutomatonMatcher matcher;
         private final Function<MatchResult, R> convert;
-        private final BiPredicate<MatchResult, String> isValid;
 
-        RegexAutomatonIterator(
-            String text,
-            RunAutomaton automaton,
-            Function<MatchResult, R> convert,
-            BiPredicate<MatchResult, String> isValid
-        ) {
-            this.text = text;
+        RegexAutomatonIterator(Function<MatchResult, R> convert) {
             this.matcher = automaton.newMatcher(text);
             this.convert = convert;
-            this.isValid = isValid;
         }
 
         @Override
         public boolean hasNext() {
-            boolean hasNext = false;
+            boolean hasNext;
             do {
                 hasNext = matcher.find();
-            } while (hasNext && !isValidMatch(matcher, text));
+            } while (hasNext && !isValidMatch(matcher));
             return hasNext;
         }
 
-        private boolean isValidMatch(MatchResult match, String text) {
+        private boolean isValidMatch(MatchResult match) {
             if (isValid == null) {
                 return true;
             } else {

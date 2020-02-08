@@ -1,5 +1,9 @@
 package es.bvalero.replacer.finder;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,13 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
-
 public class ReplacementFindServiceTest {
-
     @Mock
     private List<ReplacementFinder> replacementFinders;
 
@@ -57,7 +55,8 @@ public class ReplacementFindServiceTest {
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
         Mockito.when(finder.findStream(Mockito.anyString())).thenReturn(Stream.of(replacement1, replacement2));
         Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
-        Mockito.when(immutableFindService.findImmutables(Mockito.anyString()))
+        Mockito
+            .when(immutableFindService.findImmutables(Mockito.anyString()))
             .thenReturn(Collections.singleton(immutable1));
 
         List<Replacement> replacements = replacementFindService.findReplacements("");
@@ -74,7 +73,8 @@ public class ReplacementFindServiceTest {
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
         Mockito.when(finder.findStream(Mockito.anyString())).thenReturn(Stream.of(replacement1));
         Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
-        Mockito.when(immutableFindService.findImmutables(Mockito.anyString()))
+        Mockito
+            .when(immutableFindService.findImmutables(Mockito.anyString()))
             .thenReturn(Collections.singleton(immutable1));
 
         List<Replacement> replacements = replacementFindService.findReplacements("");
@@ -137,5 +137,4 @@ public class ReplacementFindServiceTest {
         Assert.assertFalse(result1.contains(result6));
         Assert.assertTrue(result2.contains(result6));
     }
-
 }

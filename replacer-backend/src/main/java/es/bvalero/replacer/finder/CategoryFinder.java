@@ -14,6 +14,6 @@ class CategoryFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, AUTOMATON_CATEGORY, this::convert, this::isValid);
+        return new RegexIterable<>(text, AUTOMATON_CATEGORY, this::convert);
     }
 }

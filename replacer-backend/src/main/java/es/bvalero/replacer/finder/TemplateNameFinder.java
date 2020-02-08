@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +17,11 @@ class TemplateNameFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, AUTOMATON_TEMPLATE_NAME, this::convertMatch, this::isValid);
+        return new RegexIterable<>(text, AUTOMATON_TEMPLATE_NAME, this::convert);
     }
 
-    private Immutable convertMatch(MatchResult match) {
+    @Override
+    public Immutable convert(MatchResult match) {
         // Remove the first 2 characters corresponding to the opening curly braces
         String template = match.group().substring(2).trim();
         int pos = match.group().indexOf(template);

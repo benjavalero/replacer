@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,6 +17,6 @@ class LinkSuffixedFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, AUTOMATON_LINK_SUFFIXED, this::convert, this::isValid);
+        return new RegexIterable<>(text, AUTOMATON_LINK_SUFFIXED, this::convert);
     }
 }

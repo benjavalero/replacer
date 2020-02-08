@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +17,11 @@ class LinkAliasedFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, AUTOMATON_LINK_ALIASED, this::convertMatch, this::isValid);
+        return new RegexIterable<>(text, AUTOMATON_LINK_ALIASED, this::convert);
     }
 
-    private Immutable convertMatch(MatchResult match) {
+    @Override
+    public Immutable convert(MatchResult match) {
         return Immutable.of(match.start() + 2, match.group().substring(2, match.group().length() - 1));
     }
 }

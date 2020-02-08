@@ -17,10 +17,6 @@ public interface ImmutableFinder {
         return StreamSupport.stream(find(text).spliterator(), false).collect(Collectors.toList());
     }
 
-    default boolean isValid(MatchResult match, String text) {
-        return true;
-    }
-
     default Immutable convert(MatchResult match) {
         return Immutable.of(match.start(), match.group());
     }

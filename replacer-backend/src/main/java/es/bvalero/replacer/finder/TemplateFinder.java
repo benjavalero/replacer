@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -52,6 +51,6 @@ class TemplateFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, AUTOMATON_TEMPLATE, this::convert, this::isValid);
+        return new RegexIterable<>(text, AUTOMATON_TEMPLATE, this::convert);
     }
 }

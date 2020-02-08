@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +19,11 @@ class CursiveFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, AUTOMATON_CURSIVE, this::convertMatch, this::isValid);
+        return new RegexIterable<>(text, AUTOMATON_CURSIVE, this::convert);
     }
 
-    private Immutable convertMatch(MatchResult match) {
+    @Override
+    public Immutable convert(MatchResult match) {
         String text = match.group();
         int end = text.endsWith("\n") ? text.length() : text.length() - 1;
         return Immutable.of(match.start() + 1, text.substring(1, end));

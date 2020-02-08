@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,10 +36,10 @@ class QuotesFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new IterableOfIterable<Immutable>(
+        return new IterableOfIterable<>(
             AUTOMATA_QUOTES
                 .stream()
-                .map(automaton -> new RegexIterable<Immutable>(text, automaton, this::convert, this::isValid))
+                .map(automaton -> new RegexIterable<>(text, automaton, this::convert))
                 .collect(Collectors.toList())
         );
     }

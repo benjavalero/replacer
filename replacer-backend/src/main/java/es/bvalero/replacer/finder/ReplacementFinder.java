@@ -10,7 +10,7 @@ import java.util.stream.StreamSupport;
  * Interface to be implemented by any class returning a collection of replacements.
  */
 public interface ReplacementFinder {
-    public Iterable<Replacement> find(String text);
+    Iterable<Replacement> find(String text);
 
     default Stream<Replacement> findStream(String text) {
         return StreamSupport.stream(find(text).spliterator(), false);

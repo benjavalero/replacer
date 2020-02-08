@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -75,8 +74,7 @@ public class ReplacementFindService {
         List<Replacement> distinctList = replacements.distinct().collect(Collectors.toList());
 
         // Filter to return the replacements which are NOT strictly contained in any other
-        return distinctList.stream()
-            .filter(r -> distinctList.stream().noneMatch(r2 -> r2.contains(r)));
+        return distinctList.stream().filter(r -> distinctList.stream().noneMatch(r2 -> r2.contains(r)));
     }
 
     private Stream<Replacement> removeImmutables(Stream<Replacement> replacements, String text) {
@@ -89,7 +87,7 @@ public class ReplacementFindService {
         }
 
         for (Immutable immutable : immutableFindService.findImmutables(text)) {
-            replacementList.removeIf(r -> immutable.contains(r));
+            replacementList.removeIf(immutable::contains);
 
             // No need to continue finding the immutables if there are no replacements
             if (replacementList.isEmpty()) {

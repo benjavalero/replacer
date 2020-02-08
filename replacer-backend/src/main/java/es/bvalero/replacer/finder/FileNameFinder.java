@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
@@ -17,10 +16,11 @@ class FileNameFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, AUTOMATON_FILE_TAG, this::convertMatch, this::isValid);
+        return new RegexIterable<>(text, AUTOMATON_FILE_TAG, this::convert);
     }
 
-    private Immutable convertMatch(MatchResult match) {
+    @Override
+    public Immutable convert(MatchResult match) {
         // Remove the first and last characters and the possible surrounding spaces
         String text = match.group();
         String file = text.substring(1, text.length() - 1).trim();

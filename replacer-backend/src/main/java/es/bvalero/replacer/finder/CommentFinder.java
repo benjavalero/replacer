@@ -13,6 +13,6 @@ class CommentFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, PATTERN_COMMENT_TAG, this::convert, this::isValid);
+        return new RegexIterable<>(text, PATTERN_COMMENT_TAG, this::convert);
     }
 }

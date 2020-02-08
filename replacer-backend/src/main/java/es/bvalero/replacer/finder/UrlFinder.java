@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,6 +18,6 @@ class UrlFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, AUTOMATON_URL, this::convert, this::isValid);
+        return new RegexIterable<>(text, AUTOMATON_URL, this::convert);
     }
 }

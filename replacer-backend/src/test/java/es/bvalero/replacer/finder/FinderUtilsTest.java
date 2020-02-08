@@ -51,5 +51,4 @@ public class FinderUtilsTest {
         Assert.assertTrue(FinderUtils.isWordCompleteInText(21, "mismo", text));
         Assert.assertTrue(FinderUtils.isWordCompleteInText(28, "X", text));
     }
-
 }

@@ -85,10 +85,11 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, this.uppercaseAfterAutomaton, this::convertMatch, this::isValid);
+        return new RegexIterable<>(text, this.uppercaseAfterAutomaton, this::convert);
     }
 
-    private Immutable convertMatch(MatchResult match) {
+    @Override
+    public Immutable convert(MatchResult match) {
         String text = match.group();
         String word = text.substring(1).trim();
         int startPos = match.start() + text.indexOf(word);

@@ -15,13 +15,13 @@ import org.springframework.stereotype.Service;
  * an iterator with the results.
  */
 @Service
-public class ImmutableFindService {
+class ImmutableFindService {
     @Autowired
     private List<ImmutableFinder> immutableFinders;
 
-    public Iterable<Immutable> findImmutables(String text) {
+    Iterable<Immutable> findImmutables(String text) {
         // Collect to a list which is already an iterable
-        return new IterableOfIterable<Immutable>(
+        return new IterableOfIterable<>(
             immutableFinders.stream().map(finder -> finder.find(text)).collect(Collectors.toList())
         );
     }

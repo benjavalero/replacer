@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -26,10 +25,11 @@ class ParameterValueFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, AUTOMATON_PARAM_VALUE, this::convertMatch, this::isValid);
+        return new RegexIterable<>(text, AUTOMATON_PARAM_VALUE, this::convert);
     }
 
-    private Immutable convertMatch(MatchResult match) {
+    @Override
+    public Immutable convert(MatchResult match) {
         String text = match.group();
         int posEquals = match.group().indexOf('=');
         String value = text.substring(posEquals + 1).trim();

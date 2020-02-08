@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
@@ -18,10 +17,11 @@ class TemplateParamFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, AUTOMATON_TEMPLATE_PARAM, this::convertMatch, this::isValid);
+        return new RegexIterable<>(text, AUTOMATON_TEMPLATE_PARAM, this::convert);
     }
 
-    private Immutable convertMatch(MatchResult match) {
+    @Override
+    public Immutable convert(MatchResult match) {
         String text = match.group();
         String param = text.substring(1, text.length() - 1).trim();
         int pos = text.indexOf(param);

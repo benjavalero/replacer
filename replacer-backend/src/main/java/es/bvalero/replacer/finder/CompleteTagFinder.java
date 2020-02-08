@@ -37,6 +37,6 @@ class CompleteTagFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, PATTERN_COMPLETE_TAGS, this::convert, this::isValid);
+        return new RegexIterable<>(text, PATTERN_COMPLETE_TAGS, this::convert);
     }
 }
