@@ -186,6 +186,8 @@ When possible, the results will be returned as an _Iterable_. This way, we have 
 
 Most finders are based on regular expressions. The class **RegexIterable**\<T\> provides a generic method to find all results from a given regular expression and return them as an iterable. The constructor needs a function to convert the generic _MatchResult_ into the desired item type _T_. Optionally, we can provide a function to validate the result against the text, e. g. to check if it is a complete word.
 
+Finally, the helper class **FinderUtils** provides static methods to work with words and characters in a text.
+
 ### Immutable Finders
 
 Generic immutable finders are placed in package _finder.immutable_ and implement the interface _ImmutableFinder_. The must have the Spring annotation _@Component_ in order to be found dynamically by the system.
@@ -236,9 +238,8 @@ The tool implements the following generic cosmetic finders:
 
 ### Benchmarks
 
-TODO
+Package _finder.benchmark_ contains subpackages for each finder with different implementations in order to test the results and performance, and choose the best one.
 
-TODO: ImmutableFindServiceTest
 TODO: Return iterables of all
 
 ## TODO: REVIEW COMPONENTS
