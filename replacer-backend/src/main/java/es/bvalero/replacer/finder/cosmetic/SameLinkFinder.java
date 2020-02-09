@@ -1,5 +1,8 @@
-package es.bvalero.replacer.finder;
+package es.bvalero.replacer.finder.cosmetic;
 
+import es.bvalero.replacer.finder.Cosmetic;
+import es.bvalero.replacer.finder.CosmeticFinder;
+import es.bvalero.replacer.finder.RegexIterable;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.MatchResult;

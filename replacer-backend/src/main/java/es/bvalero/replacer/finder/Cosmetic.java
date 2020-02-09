@@ -6,7 +6,7 @@ import lombok.Value;
  * A <strong>cosmetic</strong> is a section in the page contents that can be fixed automatically.
  */
 @Value(staticConstructor = "of")
-class Cosmetic implements Comparable<Cosmetic> {
+public class Cosmetic implements Comparable<Cosmetic> {
     /** The start position of the section in the text */
     private final int start;
 

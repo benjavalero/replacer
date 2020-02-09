@@ -7,7 +7,7 @@ import java.util.stream.StreamSupport;
 /**
  * Interface to be implemented by any class returning a collection of cosmetics.
  */
-interface CosmeticFinder {
+public interface CosmeticFinder {
     Iterable<Cosmetic> find(String text);
 
     default List<Cosmetic> findList(String text) {

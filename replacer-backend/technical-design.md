@@ -201,7 +201,7 @@ The tool implements the following generic immutable finders:
 - [ ] **DomainFinder** Find web domains, e. g. `www.acb.es`
 - [ ] **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
 - [ ] **TemplateParamFinder** Find template parameters, e. g. `param` in `{{Template|param=value}}`
-- [ ] **TemplateFinder** Find complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
+- [ ] **TemplateFinder** Find some complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
 - [ ] **CursiveFinder** Find text in cursive, e. g. `''cursive''` in `This is a ''cursive'' example`
 - [ ] **QuotesFinder** Find text in quotes, e. g. `"text"` or `«texto»`
 - [ ] **FileNameFinder** Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
@@ -224,6 +224,10 @@ The tool implements the following generic immutable finders:
 - [ ] **UppercaseMonthWithoutDayFinder** Find months in uppercase without day and after a common preposition, e. g. `desde Septiembre de 2019`
 
 ### Cosmetic Finders
+
+Cosmetic finders are placed in package _finder.cosmetic_ and implement the interface _CosmeticFinder_. The must have the Spring annotation _@Component_ in order to be found dynamically by the system.
+
+The tool implements the following generic cosmetic finders:
 
 - [ ] **SameLinkFinder** Find links where the alias matches with the target link and thus the alias can be removed, e. g. `[[Madrid|Madrid]]`
 
