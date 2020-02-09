@@ -211,14 +211,17 @@ The tool implements the following generic immutable finders:
 
 ### Misspelling
 
+Package _finder.misspelling_ includes replacement and immutable finders related with misspellings.
+
+- [ ] **MisspellingSimpleFinder** Find misspellings with only word, e. g. `habia` in Spanish
+- [ ] **MisspellingComposedFinder** Find misspellings with more than one word, e. g. `aún así` in Spanish
+
 - [ ] **PersonNameFinder** Find person names which are used also as nouns and thus are false positives, e. g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month to be written in lowercase.
 - [ ] **FalsePositiveFinder** Find known expressions which are (almost) always false positives, e. g. in Spanish `aun así` which hides the potential replacement `aun`
 - [ ] **UppercaseAfterFinder** Find words in uppercase which are correct according to the punctuation, e. g. `Enero` in `{{Cite|date=Enero de 2020}}`
 
 ### Replacement Finders
 
-- [ ] **MisspellingSimpleFinder** Find misspellings with only word, e. g. `habia` in Spanish
-- [ ] **MisspellingComposedFinder** Find misspellings with more than one word, e. g. `aún así` in Spanish
 - [ ] **LeadingZeroFinder** Find long dates starting with zero, e. g. `02 de septiembre de 2019`
 - [ ] **UppercaseMonthFinder** Find dates with the month in uppercase, e. g. `2 de Septiembre de 2019`
 - [ ] **UppercaseMonthWithoutDayFinder** Find months in uppercase without day and after a common preposition, e. g. `desde Septiembre de 2019`
@@ -234,6 +237,9 @@ The tool implements the following generic cosmetic finders:
 ### Benchmarks
 
 TODO
+
+TODO: ImmutableFindServiceTest
+TODO: Return iterables of all
 
 ## TODO: REVIEW COMPONENTS
 

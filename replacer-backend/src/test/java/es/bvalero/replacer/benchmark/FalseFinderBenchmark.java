@@ -1,7 +1,7 @@
 package es.bvalero.replacer.benchmark;
 
-import es.bvalero.replacer.misspelling.FalsePositiveFinder;
-import es.bvalero.replacer.misspelling.FalsePositiveManager;
+import es.bvalero.replacer.finder.misspelling.FalsePositiveFinder;
+import es.bvalero.replacer.finder.misspelling.FalsePositiveManager;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

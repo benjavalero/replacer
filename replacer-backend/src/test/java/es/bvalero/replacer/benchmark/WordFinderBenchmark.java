@@ -1,7 +1,7 @@
 package es.bvalero.replacer.benchmark;
 
-import es.bvalero.replacer.misspelling.MisspellingFinder;
-import es.bvalero.replacer.misspelling.MisspellingManager;
+import es.bvalero.replacer.finder.misspelling.MisspellingFinder;
+import es.bvalero.replacer.finder.misspelling.MisspellingManager;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

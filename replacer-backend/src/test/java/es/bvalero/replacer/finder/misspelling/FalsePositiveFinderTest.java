@@ -1,4 +1,4 @@
-package es.bvalero.replacer.misspelling;
+package es.bvalero.replacer.finder.misspelling;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
