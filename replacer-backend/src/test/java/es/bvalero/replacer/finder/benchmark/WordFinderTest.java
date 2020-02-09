@@ -13,7 +13,7 @@ public class WordFinderTest {
 
     private Collection<String> words;
     private String text;
-    private Set<IgnoredReplacement> expected;
+    private Set<FinderResult> expected;
 
     @Before
     public void setUp() {
@@ -31,12 +31,12 @@ public class WordFinderTest {
         this.text = "Um suma um, españa um m2 España y Castilla-León + cd's.";
 
         this.expected = new HashSet<>();
-        this.expected.add(IgnoredReplacement.of(0, "Um"));
-        this.expected.add(IgnoredReplacement.of(8, "um"));
-        this.expected.add(IgnoredReplacement.of(12, "españa"));
-        this.expected.add(IgnoredReplacement.of(19, "um"));
-        this.expected.add(IgnoredReplacement.of(34, "Castilla-León"));
-        this.expected.add(IgnoredReplacement.of(50, "cd's"));
+        this.expected.add(FinderResult.of(0, "Um"));
+        this.expected.add(FinderResult.of(8, "um"));
+        this.expected.add(FinderResult.of(12, "españa"));
+        this.expected.add(FinderResult.of(19, "um"));
+        this.expected.add(FinderResult.of(34, "Castilla-León"));
+        this.expected.add(FinderResult.of(50, "cd's"));
     }
 
     @Test

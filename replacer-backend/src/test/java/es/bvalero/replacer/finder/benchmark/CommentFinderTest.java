@@ -10,7 +10,7 @@ import java.util.Set;
 public class CommentFinderTest {
 
     private String text;
-    private Set<IgnoredReplacement> expected;
+    private Set<FinderResult> expected;
 
     @Before
     public void setUp() {
@@ -19,8 +19,8 @@ public class CommentFinderTest {
         this.text = "xxx " + comment1 + " / " + comment2 + " zzz";
 
         this.expected = new HashSet<>();
-        this.expected.add(IgnoredReplacement.of(4, comment1));
-        this.expected.add(IgnoredReplacement.of(53, comment2));
+        this.expected.add(FinderResult.of(4, comment1));
+        this.expected.add(FinderResult.of(53, comment2));
     }
 
     @Test

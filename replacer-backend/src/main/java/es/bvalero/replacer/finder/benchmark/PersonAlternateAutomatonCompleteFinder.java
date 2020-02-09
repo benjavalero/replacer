@@ -19,12 +19,12 @@ class PersonAlternateAutomatonCompleteFinder extends PersonAbstractFinder {
         this.words = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
+    Set<FinderResult> findMatches(String text) {
         // Build an alternate automaton with all the complete words and match it against the text
-        Set<IgnoredReplacement> matches = new HashSet<>();
+        Set<FinderResult> matches = new HashSet<>();
         AutomatonMatcher m = this.words.newMatcher(text);
         while (m.find()) {
-            matches.add(IgnoredReplacement.of(m.start(), m.group().substring(0, m.group().length() - 2)));
+            matches.add(FinderResult.of(m.start(), m.group().substring(0, m.group().length() - 2)));
         }
         return matches;
     }

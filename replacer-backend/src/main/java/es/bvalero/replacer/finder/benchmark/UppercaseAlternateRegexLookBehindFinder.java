@@ -17,14 +17,14 @@ class UppercaseAlternateRegexLookBehindFinder extends UppercaseAbstractFinder {
         this.words = Pattern.compile(alternations);
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
+    Set<FinderResult> findMatches(String text) {
         // Build an alternate regex with all the words and match it against the text
-        Set<IgnoredReplacement> matches = new HashSet<>();
+        Set<FinderResult> matches = new HashSet<>();
         Matcher m = this.words.matcher(text);
         while (m.find()) {
             String w = m.group().trim();
             int pos = m.group().indexOf(w);
-            matches.add(IgnoredReplacement.of(m.start() + pos, w));
+            matches.add(FinderResult.of(m.start() + pos, w));
         }
         return matches;
     }

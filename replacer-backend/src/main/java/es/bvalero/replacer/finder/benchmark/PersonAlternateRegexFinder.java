@@ -17,12 +17,12 @@ class PersonAlternateRegexFinder extends PersonAbstractFinder {
         this.words = Pattern.compile(alternations);
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
+    Set<FinderResult> findMatches(String text) {
         // Build an alternate regex with all the words and match it against the text
-        Set<IgnoredReplacement> matches = new HashSet<>();
+        Set<FinderResult> matches = new HashSet<>();
         Matcher m = this.words.matcher(text);
         while (m.find()) {
-            IgnoredReplacement match = IgnoredReplacement.of(m.start(), m.group());
+            FinderResult match = FinderResult.of(m.start(), m.group());
             if (isWordFollowedByUppercase(m.start(), m.group(), text)) {
                 matches.add(match);
             }

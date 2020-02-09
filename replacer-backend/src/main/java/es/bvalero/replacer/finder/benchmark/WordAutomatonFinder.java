@@ -18,14 +18,14 @@ class WordAutomatonFinder extends WordAbstractFinder {
         }
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
+    Set<FinderResult> findMatches(String text) {
         // We loop over all the words and find them in the text with an automaton
-        Set<IgnoredReplacement> matches = new HashSet<>();
+        Set<FinderResult> matches = new HashSet<>();
         for (RunAutomaton word : this.words) {
             AutomatonMatcher m = word.newMatcher(text);
             while (m.find()) {
                 if (isWordCompleteInText(m.start(), m.group(), text)) {
-                    matches.add(IgnoredReplacement.of(m.start(), m.group()));
+                    matches.add(FinderResult.of(m.start(), m.group()));
                 }
             }
         }

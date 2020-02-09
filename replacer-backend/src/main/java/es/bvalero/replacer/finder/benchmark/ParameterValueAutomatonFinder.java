@@ -14,12 +14,12 @@ class ParameterValueAutomatonFinder extends ParameterValueAbstractFinder {
     private static final RunAutomaton AUTOMATON = new RunAutomaton(
             new RegExp(String.format("\\|<Z>*(%s)<Z>*=[^|}]+", StringUtils.join(PARAMS, "|"))).toAutomaton(new DatatypesAutomatonProvider()));
 
-    Set<IgnoredReplacement> findMatches(String text) {
-        Set<IgnoredReplacement> matches = new HashSet<>();
+    Set<FinderResult> findMatches(String text) {
+        Set<FinderResult> matches = new HashSet<>();
         AutomatonMatcher m = AUTOMATON.newMatcher(text);
         while (m.find()) {
             int pos = m.group().indexOf("=") + 1;
-            matches.add(IgnoredReplacement.of(m.start() + pos, m.group().substring(pos)));
+            matches.add(FinderResult.of(m.start() + pos, m.group().substring(pos)));
         }
         return matches;
     }

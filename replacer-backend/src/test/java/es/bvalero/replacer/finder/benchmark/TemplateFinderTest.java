@@ -13,7 +13,7 @@ public class TemplateFinderTest {
 
     private List<String> words;
     private String text;
-    private Set<IgnoredReplacement> expected;
+    private Set<FinderResult> expected;
 
     @Before
     public void setUp() {
@@ -26,10 +26,10 @@ public class TemplateFinderTest {
         this.words = Arrays.asList("cita", "ORDENAR");
 
         this.expected = new HashSet<>();
-        this.expected.add(IgnoredReplacement.of(0, template1));
-        this.expected.add(IgnoredReplacement.of(45, template2));
-        this.expected.add(IgnoredReplacement.of(65, template3));
-        this.expected.add(IgnoredReplacement.of(94, template4));
+        this.expected.add(FinderResult.of(0, template1));
+        this.expected.add(FinderResult.of(45, template2));
+        this.expected.add(FinderResult.of(65, template3));
+        this.expected.add(FinderResult.of(94, template4));
     }
 
     @Test

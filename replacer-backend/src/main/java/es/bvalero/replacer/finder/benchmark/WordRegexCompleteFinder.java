@@ -15,13 +15,13 @@ class WordRegexCompleteFinder extends WordAbstractFinder {
         }
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
+    Set<FinderResult> findMatches(String text) {
         // We loop over all the words and find them completely in the text with a regex
-        Set<IgnoredReplacement> matches = new HashSet<>();
+        Set<FinderResult> matches = new HashSet<>();
         for (Pattern word : this.words) {
             Matcher m = word.matcher(text);
             while (m.find()) {
-                matches.add(IgnoredReplacement.of(m.start(), m.group()));
+                matches.add(FinderResult.of(m.start(), m.group()));
             }
         }
         return matches;

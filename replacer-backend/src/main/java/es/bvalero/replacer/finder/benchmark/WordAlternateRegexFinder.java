@@ -17,13 +17,13 @@ class WordAlternateRegexFinder extends WordAbstractFinder {
         this.words = Pattern.compile(alternations);
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
+    Set<FinderResult> findMatches(String text) {
         // Build an alternate regex with all the words and match it against the text
-        Set<IgnoredReplacement> matches = new HashSet<>();
+        Set<FinderResult> matches = new HashSet<>();
         Matcher m = this.words.matcher(text);
         while (m.find()) {
             if (isWordCompleteInText(m.start(), m.group(), text)) {
-                matches.add(IgnoredReplacement.of(m.start(), m.group()));
+                matches.add(FinderResult.of(m.start(), m.group()));
             }
         }
         return matches;

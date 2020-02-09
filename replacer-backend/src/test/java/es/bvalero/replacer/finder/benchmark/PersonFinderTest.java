@@ -13,7 +13,7 @@ public class PersonFinderTest {
 
     private Collection<String> words;
     private String text;
-    private Set<IgnoredReplacement> expected;
+    private Set<FinderResult> expected;
 
     @Before
     public void setUp() {
@@ -21,8 +21,8 @@ public class PersonFinderTest {
         this.text = "Con Julio Verne, Frances McDormand y Francesco en Julio de 2019.";
 
         this.expected = new HashSet<>();
-        this.expected.add(IgnoredReplacement.of(4, "Julio"));
-        this.expected.add(IgnoredReplacement.of(17, "Frances"));
+        this.expected.add(FinderResult.of(4, "Julio"));
+        this.expected.add(FinderResult.of(17, "Frances"));
     }
 
     @Test

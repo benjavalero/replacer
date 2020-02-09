@@ -15,15 +15,15 @@ class UppercaseRegexLookBehindFinder extends UppercaseAbstractFinder {
         }
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
+    Set<FinderResult> findMatches(String text) {
         // We loop over all the words and find them in the text with a regex
-        Set<IgnoredReplacement> matches = new HashSet<>();
+        Set<FinderResult> matches = new HashSet<>();
         for (Pattern word : this.words) {
             Matcher m = word.matcher(text);
             while (m.find()) {
                 String w = m.group().trim();
                 int pos = m.group().indexOf(w);
-                matches.add(IgnoredReplacement.of(m.start() + pos, w));
+                matches.add(FinderResult.of(m.start() + pos, w));
             }
         }
         return matches;

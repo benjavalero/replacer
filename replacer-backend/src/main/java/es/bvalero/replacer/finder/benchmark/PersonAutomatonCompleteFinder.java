@@ -18,13 +18,13 @@ class PersonAutomatonCompleteFinder extends PersonAbstractFinder {
         }
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
+    Set<FinderResult> findMatches(String text) {
         // We loop over all the words and find them completely in the text with an automaton
-        Set<IgnoredReplacement> matches = new HashSet<>();
+        Set<FinderResult> matches = new HashSet<>();
         for (RunAutomaton word : this.words) {
             AutomatonMatcher m = word.newMatcher(text);
             while (m.find()) {
-                matches.add(IgnoredReplacement.of(m.start(), m.group().substring(0, m.group().length() - 2)));
+                matches.add(FinderResult.of(m.start(), m.group().substring(0, m.group().length() - 2)));
             }
         }
         return matches;

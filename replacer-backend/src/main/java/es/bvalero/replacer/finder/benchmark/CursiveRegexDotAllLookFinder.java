@@ -11,11 +11,11 @@ class CursiveRegexDotAllLookFinder extends CursiveAbstractFinder {
     private static final String CURSIVE_REGEX = "%s.*?(%s|\n)";
     private static final Pattern CURSIVE_PATTERN = Pattern.compile(String.format(CURSIVE_REGEX, TWO_QUOTES_ONLY, TWO_QUOTES_ONLY));
 
-    Set<IgnoredReplacement> findMatches(String text) {
-        Set<IgnoredReplacement> matches = new HashSet<>();
+    Set<FinderResult> findMatches(String text) {
+        Set<FinderResult> matches = new HashSet<>();
         Matcher m = CURSIVE_PATTERN.matcher(text);
         while (m.find()) {
-            matches.add(IgnoredReplacement.of(m.start(), m.group()));
+            matches.add(FinderResult.of(m.start(), m.group()));
         }
         return matches;
     }

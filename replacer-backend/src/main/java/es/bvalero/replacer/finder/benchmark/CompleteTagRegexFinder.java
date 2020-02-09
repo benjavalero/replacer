@@ -15,12 +15,12 @@ class CompleteTagRegexFinder extends CompleteTagAbstractFinder {
         words.forEach(word -> PATTERNS.add(Pattern.compile(String.format("<%s.*>.+</%s>", word, word), Pattern.DOTALL)));
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
-        Set<IgnoredReplacement> matches = new HashSet<>();
+    Set<FinderResult> findMatches(String text) {
+        Set<FinderResult> matches = new HashSet<>();
         for (Pattern pattern : PATTERNS) {
             Matcher m = pattern.matcher(text);
             while (m.find()) {
-                matches.add(IgnoredReplacement.of(m.start(), m.group()));
+                matches.add(FinderResult.of(m.start(), m.group()));
             }
         }
         return matches;

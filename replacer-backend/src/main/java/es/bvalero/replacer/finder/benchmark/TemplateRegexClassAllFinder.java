@@ -26,11 +26,11 @@ class TemplateRegexClassAllFinder extends TemplateAbstractFinder {
         pattern = Pattern.compile(String.format("\\{\\{\\s*(%s)\\s*[|:](%s|[^}])+?}}", StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE));
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
-        Set<IgnoredReplacement> matches = new HashSet<>();
+    Set<FinderResult> findMatches(String text) {
+        Set<FinderResult> matches = new HashSet<>();
         Matcher m = pattern.matcher(text);
         while (m.find()) {
-            matches.add(IgnoredReplacement.of(m.start(), m.group()));
+            matches.add(FinderResult.of(m.start(), m.group()));
         }
         return matches;
     }

@@ -12,16 +12,16 @@ class WordIndexOfFinder extends WordAbstractFinder {
         this.words = words;
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
+    Set<FinderResult> findMatches(String text) {
         // We loop over all the words and find them in the text with the indexOf function
-        Set<IgnoredReplacement> matches = new HashSet<>();
+        Set<FinderResult> matches = new HashSet<>();
         for (String word : this.words) {
             int start = 0;
             while (start >= 0) {
                 start = text.indexOf(word, start);
                 if (start >= 0) {
                     if (isWordCompleteInText(start, word, text)) {
-                        matches.add(IgnoredReplacement.of(start, word));
+                        matches.add(FinderResult.of(start, word));
                     }
                     start++;
                 }

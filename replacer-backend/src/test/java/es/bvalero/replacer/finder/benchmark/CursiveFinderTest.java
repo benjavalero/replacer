@@ -10,7 +10,7 @@ import java.util.Set;
 public class CursiveFinderTest {
 
     private String text;
-    private Set<IgnoredReplacement> expected;
+    private Set<FinderResult> expected;
 
     @Before
     public void setUp() {
@@ -23,11 +23,11 @@ public class CursiveFinderTest {
         this.text = String.format("A %s - %s - %s - %s - %s.", cursive1, cursive2, cursive3, cursive4, cursive5);
 
         this.expected = new HashSet<>();
-        this.expected.add(IgnoredReplacement.of(2, cursive1));
-        this.expected.add(IgnoredReplacement.of(17, cursive2));
-        this.expected.add(IgnoredReplacement.of(32, cursive3));
-        this.expected.add(IgnoredReplacement.of(46, cursive4));
-        this.expected.add(IgnoredReplacement.of(76, cursive5));
+        this.expected.add(FinderResult.of(2, cursive1));
+        this.expected.add(FinderResult.of(17, cursive2));
+        this.expected.add(FinderResult.of(32, cursive3));
+        this.expected.add(FinderResult.of(46, cursive4));
+        this.expected.add(FinderResult.of(76, cursive5));
     }
 
     @Test

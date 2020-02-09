@@ -16,13 +16,13 @@ class WordRegexAllPossessiveFinder extends WordAbstractFinder {
         this.words = new HashSet<>(words);
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
+    Set<FinderResult> findMatches(String text) {
         // Find all words in the text with a regex and check if they are in the list
-        Set<IgnoredReplacement> matches = new HashSet<>();
+        Set<FinderResult> matches = new HashSet<>();
         Matcher m = this.wordPattern.matcher(text);
         while (m.find()) {
             if (this.words.contains(m.group())) {
-                matches.add(IgnoredReplacement.of(m.start(), m.group()));
+                matches.add(FinderResult.of(m.start(), m.group()));
             }
         }
         return matches;

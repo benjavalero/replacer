@@ -4,7 +4,7 @@ import java.util.Set;
 
 abstract class PersonAbstractFinder {
 
-    abstract Set<IgnoredReplacement> findMatches(String text);
+    abstract Set<FinderResult> findMatches(String text);
 
     boolean isWordFollowedByUppercase(int start, String word, String text) {
         int end = start + word.length();

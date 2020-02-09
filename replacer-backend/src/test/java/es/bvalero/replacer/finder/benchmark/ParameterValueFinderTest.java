@@ -10,7 +10,7 @@ import java.util.Set;
 public class ParameterValueFinderTest {
 
     private String text;
-    private Set<IgnoredReplacement> expected;
+    private Set<FinderResult> expected;
 
     @Before
     public void setUp() {
@@ -19,8 +19,8 @@ public class ParameterValueFinderTest {
         this.text = String.format("{{Template|index=%s| location =%s}}", value1, value2);
 
         this.expected = new HashSet<>();
-        this.expected.add(IgnoredReplacement.of(17, value1));
-        this.expected.add(IgnoredReplacement.of(37, value2));
+        this.expected.add(FinderResult.of(17, value1));
+        this.expected.add(FinderResult.of(37, value2));
     }
 
     @Test

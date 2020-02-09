@@ -13,7 +13,7 @@ public class UppercaseFinderTest {
 
     private Collection<String> words;
     private String text;
-    private Set<IgnoredReplacement> expected;
+    private Set<FinderResult> expected;
 
     @Before
     public void setUp() {
@@ -21,9 +21,9 @@ public class UppercaseFinderTest {
         this.text = "=Enero. Febrero, Lunes #  Martes.";
 
         this.expected = new HashSet<>();
-        this.expected.add(IgnoredReplacement.of(1, "Enero"));
-        this.expected.add(IgnoredReplacement.of(8, "Febrero"));
-        this.expected.add(IgnoredReplacement.of(26, "Martes"));
+        this.expected.add(FinderResult.of(1, "Enero"));
+        this.expected.add(FinderResult.of(8, "Febrero"));
+        this.expected.add(FinderResult.of(26, "Martes"));
     }
 
     @Test

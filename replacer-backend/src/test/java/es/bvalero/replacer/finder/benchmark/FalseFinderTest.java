@@ -13,7 +13,7 @@ public class FalseFinderTest {
 
     private Collection<String> words;
     private String text;
-    private Set<IgnoredReplacement> expected;
+    private Set<FinderResult> expected;
 
     @Before
     public void setUp() {
@@ -21,8 +21,8 @@ public class FalseFinderTest {
         this.text = "En Abril Victoria Abril salió con Aaron Carter.";
 
         this.expected = new HashSet<>();
-        this.expected.add(IgnoredReplacement.of(9, "Victoria Abril"));
-        this.expected.add(IgnoredReplacement.of(34, "Aaron Carter"));
+        this.expected.add(FinderResult.of(9, "Victoria Abril"));
+        this.expected.add(FinderResult.of(34, "Aaron Carter"));
     }
 
     /* NOTE: We can use the same finders that we use for misspellings just with a different set of words */

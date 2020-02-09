@@ -10,7 +10,7 @@ import java.util.Set;
 public class CategoryFinderTest {
 
     private String text;
-    private Set<IgnoredReplacement> expected;
+    private Set<FinderResult> expected;
 
     @Before
     public void setUp() {
@@ -19,8 +19,8 @@ public class CategoryFinderTest {
         this.text = String.format("%s %s", category1, category2);
 
         this.expected = new HashSet<>();
-        this.expected.add(IgnoredReplacement.of(0, category1));
-        this.expected.add(IgnoredReplacement.of(21, category2));
+        this.expected.add(FinderResult.of(0, category1));
+        this.expected.add(FinderResult.of(21, category2));
     }
 
     @Test

@@ -12,11 +12,11 @@ class CommentAutomatonFinder extends CommentAbstractFinder {
     private static final RunAutomaton COMMENT_PATTERN
             = new RunAutomaton(new RegExp("\\<!--([^-]|-[^-]|--[^\\>])+--\\>").toAutomaton());
 
-    Set<IgnoredReplacement> findMatches(String text) {
-        Set<IgnoredReplacement> matches = new HashSet<>();
+    Set<FinderResult> findMatches(String text) {
+        Set<FinderResult> matches = new HashSet<>();
         AutomatonMatcher m = COMMENT_PATTERN.newMatcher(text);
         while (m.find()) {
-            matches.add(IgnoredReplacement.of(m.start(), m.group()));
+            matches.add(FinderResult.of(m.start(), m.group()));
         }
         return matches;
     }

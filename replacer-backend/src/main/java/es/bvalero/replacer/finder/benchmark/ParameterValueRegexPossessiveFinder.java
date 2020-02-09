@@ -12,11 +12,11 @@ class ParameterValueRegexPossessiveFinder extends ParameterValueAbstractFinder {
     private static final Pattern PATTERN
             = Pattern.compile(String.format("\\|\\s*(%s)\\s*=([^|}]++)", StringUtils.join(PARAMS, "|")));
 
-    Set<IgnoredReplacement> findMatches(String text) {
-        Set<IgnoredReplacement> matches = new HashSet<>();
+    Set<FinderResult> findMatches(String text) {
+        Set<FinderResult> matches = new HashSet<>();
         Matcher m = PATTERN.matcher(text);
         while (m.find()) {
-            matches.add(IgnoredReplacement.of(m.start(2), m.group(2)));
+            matches.add(FinderResult.of(m.start(2), m.group(2)));
         }
         return matches;
     }

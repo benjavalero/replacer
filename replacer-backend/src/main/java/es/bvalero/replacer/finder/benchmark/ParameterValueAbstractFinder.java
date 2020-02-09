@@ -8,6 +8,6 @@ abstract class ParameterValueAbstractFinder {
 
     static final List<String> PARAMS = Arrays.asList("índice", "index", "cita", "location", "ubicación");
 
-    abstract Set<IgnoredReplacement> findMatches(String text);
+    abstract Set<FinderResult> findMatches(String text);
 
 }

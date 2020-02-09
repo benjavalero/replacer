@@ -4,6 +4,6 @@ import java.util.Set;
 
 abstract class CommentAbstractFinder {
 
-    abstract Set<IgnoredReplacement> findMatches(String text);
+    abstract Set<FinderResult> findMatches(String text);
 
 }

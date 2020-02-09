@@ -10,7 +10,7 @@ import java.util.Set;
 public class FileFinderTest {
 
     private String text;
-    private Set<IgnoredReplacement> expected;
+    private Set<FinderResult> expected;
 
     @Before
     public void setUp() {
@@ -34,15 +34,15 @@ public class FileFinderTest {
         this.text = String.format("%s %s %s %s %s %s", file1, file2, gallery1, param, gallery2, table);
 
         this.expected = new HashSet<>();
-        this.expected.add(IgnoredReplacement.of(7, "xx.jpg"));
-        this.expected.add(IgnoredReplacement.of(25, "a b.png"));
-        this.expected.add(IgnoredReplacement.of(52, "aa.jpg"));
-        this.expected.add(IgnoredReplacement.of(67, "b-c.jpg"));
-        this.expected.add(IgnoredReplacement.of(113, "doc.pdf"));
-        this.expected.add(IgnoredReplacement.of(141, "value.gif"));
-        this.expected.add(IgnoredReplacement.of(165, "dóc2.pdf"));
-        this.expected.add(IgnoredReplacement.of(186, "Value_2.gif"));
-        this.expected.add(IgnoredReplacement.of(237, "www.google.com")); // We capture also Internet domains
+        this.expected.add(FinderResult.of(7, "xx.jpg"));
+        this.expected.add(FinderResult.of(25, "a b.png"));
+        this.expected.add(FinderResult.of(52, "aa.jpg"));
+        this.expected.add(FinderResult.of(67, "b-c.jpg"));
+        this.expected.add(FinderResult.of(113, "doc.pdf"));
+        this.expected.add(FinderResult.of(141, "value.gif"));
+        this.expected.add(FinderResult.of(165, "dóc2.pdf"));
+        this.expected.add(FinderResult.of(186, "Value_2.gif"));
+        this.expected.add(FinderResult.of(237, "www.google.com")); // We capture also Internet domains
     }
 
     @Test

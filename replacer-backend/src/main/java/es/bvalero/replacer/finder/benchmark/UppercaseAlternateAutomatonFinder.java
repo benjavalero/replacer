@@ -19,14 +19,14 @@ class UppercaseAlternateAutomatonFinder extends UppercaseAbstractFinder {
         this.words = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
     }
 
-    Set<IgnoredReplacement> findMatches(String text) {
+    Set<FinderResult> findMatches(String text) {
         // Build an alternate automaton with all the words and match it against the text
-        Set<IgnoredReplacement> matches = new HashSet<>();
+        Set<FinderResult> matches = new HashSet<>();
         AutomatonMatcher m = this.words.newMatcher(text);
         while (m.find()) {
             String word = m.group().substring(1).trim();
             int pos = m.group().indexOf(word);
-            matches.add(IgnoredReplacement.of(m.start() + pos, word));
+            matches.add(FinderResult.of(m.start() + pos, word));
         }
         return matches;
     }

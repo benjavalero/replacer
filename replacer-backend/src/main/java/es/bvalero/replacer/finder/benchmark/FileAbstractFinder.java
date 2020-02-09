@@ -4,6 +4,6 @@ import java.util.Set;
 
 abstract class FileAbstractFinder {
 
-    abstract Set<IgnoredReplacement> findMatches(String text);
+    abstract Set<FinderResult> findMatches(String text);
 
 }

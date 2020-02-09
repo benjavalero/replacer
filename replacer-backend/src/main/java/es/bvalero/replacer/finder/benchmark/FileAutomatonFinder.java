@@ -14,14 +14,14 @@ class FileAutomatonFinder extends FileAbstractFinder {
             new RunAutomaton(new RegExp("[:=|\n] *[^]:=|\n]+\\.[A-Za-z]{2,4} *[]}|\n]")
                     .toAutomaton(new DatatypesAutomatonProvider()));
 
-    Set<IgnoredReplacement> findMatches(String text) {
-        Set<IgnoredReplacement> matches = new HashSet<>();
+    Set<FinderResult> findMatches(String text) {
+        Set<FinderResult> matches = new HashSet<>();
         AutomatonMatcher m = AUTOMATON.newMatcher(text);
         while (m.find()) {
             // Remove the first and last characters and the possible surrounding spaces
             String file = m.group().substring(1, m.group().length() - 1).trim();
             int pos = m.group().indexOf(file);
-            matches.add(IgnoredReplacement.of(m.start() + pos, file));
+            matches.add(FinderResult.of(m.start() + pos, file));
         }
         return matches;
     }

@@ -11,7 +11,7 @@ import org.junit.Test;
 public class CompleteTagFinderTest {
     private List<String> words;
     private String text;
-    private Set<IgnoredReplacement> expected;
+    private Set<FinderResult> expected;
 
     @Before
     public void setUp() {
@@ -24,9 +24,9 @@ public class CompleteTagFinderTest {
         this.text = String.format("%s %s %s", tag1, tag2, tag3);
 
         this.expected = new HashSet<>();
-        this.expected.add(IgnoredReplacement.of(0, tag1));
-        this.expected.add(IgnoredReplacement.of(46, tag2));
-        this.expected.add(IgnoredReplacement.of(87, tag3));
+        this.expected.add(FinderResult.of(0, tag1));
+        this.expected.add(FinderResult.of(46, tag2));
+        this.expected.add(FinderResult.of(87, tag3));
     }
 
     @Test
