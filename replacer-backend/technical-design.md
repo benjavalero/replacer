@@ -7,7 +7,7 @@ The project started to work with Spanish Wikipedia, but it is meant to be extend
 Main use cases:
 
 1. As a user, I want to request a random Wikipedia page containing potential issues to fix, in order to review them, discard the false positives and save the approved fixed into Wikipedia.
-2. As a system, I want to find all the existing issues in Wikipedia pages, in order to find faster a page for the previous use case.
+2. As a system, I want to find all the existing issues in Wikipedia pages, in order to find quickly a page for the previous use case.
 
 The following concepts are used:
 
@@ -19,9 +19,9 @@ The following concepts are used:
   - **Timestamp** The date and time of the last update of the page.
 - **Dump** A huge XML file, generated monthly, containing all the current Wikipedia pages.
 - **Replacement** A potential issue to be checked and fixed (replaced). For instance, the word _aproximated_ is misspelled and therefore could be proposed to be replaced with _approximated_.
-  
+
   Note the importance of the _potential_ adjective, as an issue could be just a false positive. For instance, in Spanish the word _Paris_ could be misspelled if it corresponds to the French city (written correctly as _París_), but it would be correct if it refers to the mythological Trojan prince.
-  
+
   A replacement is composed by:
 
   - **Text** The text to be checked and fixed. It can be a word or an expression.
@@ -34,6 +34,7 @@ The following concepts are used:
   - **Start** The start position of the section in the page contents
   - **End** The end position of the section in the page contents
   - **Text** Optionally, the text in the section, especially for debugging purposes, i. e. the text between the start and end position of the section.
+- **Cosmetic** A special type of replacement which can be applied automatically, concerning cosmetic modifications, visible or not, e. g. replacing `[[Asia|Asia]]` by `[[Asia]]`.
 
 For the first use case, the basic steps are:
 
@@ -175,19 +176,21 @@ The dumps are generated monthly and placed in a shared folder in Wikipedia serve
 
 The path of the shared folder and the wiki-project ares configured externally.
 
-### ReplacementFindService
+## Find Replacements
 
-**ReplacementFindService** is an independent service which finds all the replacements in a given text. This service collects and returns the results of several specific replacement finders: misspelling, date format, etc. which implement the same interface **ReplacementFinder**.
+The core functionality of the tool is to find all potential _replacements_ in a text. We want also to find all the _immutables_ in this text, in order to be able to avoid as many false positives as possible. This operation will be performed millions of times when indexing a whole dump, therefore the performance is critical.
 
-The same way, there is an independent service **ImmutableFindService** which finds all the immutables in a given text. This service collects and returns the results of several specific immutable finders: quotes, comments, hyperlinks, etc. which implement the same interface **ImmutableFinder**.
+In package _finder_ there are services (**finders**) to find all the relevant items in a text: **ReplacementFindService**, **ImmutableFindService** and **CosmeticFindService**. The same way, there are specific interfaces for each item type to be implemented by the finders: **ReplacementFinder**, **ImmutableFinder** and **CosmeticFinder**. Each service will load all finders implementing the related interface, and execute these finders against the given text, returning finally all the results.
 
-Finally, _ReplacementFindService_ ignores in the response all the found replacements which are contained in the found immutables. Usually there will be much more immutables found than replacements. Thus it is better to obtain first all the replacements, and then obtain the immutables one by one, aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
+When possible, the results will be returned as an _Iterable_. This way, we have the possibility to stop finding more results, improving the performance. For instance, when finding immutables to ignore found replacements, if there are no more replacements left in the text, there is no point on finding more immutables. The class **IterableOfIterable** helps traverse an iterable composed of iterables, e. g. a list of lists.
 
-The interface _ImmutableFinder_ has a single abstract method returning the immutables in a text. As we are interested in retrieve them one by one, they will be returned as an _Iterable_. On the other hand, the interface _ReplacementFinder_ has a single abstract method returning the replacements in a text, as a list, as all the replacements will be eventually joined into a list.
+Most finders are based on regular expressions. The class **RegexIterable**\<T\> provides a generic method to find all results from a given regular expression and return them as an iterable. The constructor needs a function to convert the generic _MatchResult_ into the desired item type _T_. Optionally, we can provide a function to validate the result against the text, e. g. to check if it is a complete word.
 
-Most finders find the items with regular expressions. Thus we create an generic class _RegexFinder\<T\>_ with methods to find all the match results of a regex and transform them into the type _T_, where _T_ will be _Replacement_ or _Immutable_. For simplicity, finally this class will be implemented as an interface with default methods that will be extended by the interfaces _ReplacementFinder_ and _ImmutableFinder_.
+### Immutable Finders
 
-#### Immutable Finders
+Generic immutable finders are placed in package _finder.immutable_ and implement the interface _ImmutableFinder_. The must have the Spring annotation _@Component_ in order to be found dynamically by the system.
+
+The tool implements the following generic immutable finders:
 
 - [ ] **UrlFinder** Find URLs, e. g. `https://www.google.es`
 - [ ] **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
@@ -206,6 +209,8 @@ Most finders find the items with regular expressions. Thus we create an generic 
 - [ ] **LinkAliasedFinder** Find the first part of aliased links, e. g. `brasil` in `[[brasil|Brasil]]`
 - [ ] **InterLanguageLinkFinder** Find inter-language links, e. g. `[[:pt:Title]]`
 
+### Misspelling
+
 - [ ] **PersonNameFinder** Find person names which are used also as nouns and thus are false positives, e. g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month to be written in lowercase.
 - [ ] **FalsePositiveFinder** Find known expressions which are (almost) always false positives, e. g. in Spanish `aun así` which hides the potential replacement `aun`
 - [ ] **UppercaseAfterFinder** Find words in uppercase which are correct according to the punctuation, e. g. `Enero` in `{{Cite|date=Enero de 2020}}`
@@ -221,6 +226,10 @@ Most finders find the items with regular expressions. Thus we create an generic 
 ### Cosmetic Finders
 
 - [ ] **SameLinkFinder** Find links where the alias matches with the target link and thus the alias can be removed, e. g. `[[Madrid|Madrid]]`
+
+### Benchmarks
+
+TODO
 
 ## TODO: REVIEW COMPONENTS
 
