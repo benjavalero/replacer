@@ -1,4 +1,4 @@
-package es.bvalero.replacer.date;
+package es.bvalero.replacer.finder.date;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;

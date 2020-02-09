@@ -1,4 +1,4 @@
-package es.bvalero.replacer.date;
+package es.bvalero.replacer.finder.date;
 
 import es.bvalero.replacer.finder.Replacement;
 import org.junit.Assert;

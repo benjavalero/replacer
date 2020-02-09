@@ -211,7 +211,7 @@ The tool implements the following generic immutable finders:
 - [ ] **LinkAliasedFinder** Find the first part of aliased links, e. g. `brasil` in `[[brasil|Brasil]]`
 - [ ] **InterLanguageLinkFinder** Find inter-language links, e. g. `[[:pt:Title]]`
 
-### Misspelling
+### Misspelling finders
 
 Package _finder.misspelling_ includes replacement and immutable finders related with misspellings.
 
@@ -222,7 +222,9 @@ Package _finder.misspelling_ includes replacement and immutable finders related 
 - [ ] **FalsePositiveFinder** Find known expressions which are (almost) always false positives, e. g. in Spanish `aun así` which hides the potential replacement `aun`
 - [ ] **UppercaseAfterFinder** Find words in uppercase which are correct according to the punctuation, e. g. `Enero` in `{{Cite|date=Enero de 2020}}`
 
-### Replacement Finders
+### Date Finders
+
+Package _finder.date_ includes replacement finders related with dates.
 
 - [ ] **LeadingZeroFinder** Find long dates starting with zero, e. g. `02 de septiembre de 2019`
 - [ ] **UppercaseMonthFinder** Find dates with the month in uppercase, e. g. `2 de Septiembre de 2019`
@@ -240,6 +242,7 @@ The tool implements the following generic cosmetic finders:
 
 Package _finder.benchmark_ contains subpackages for each finder with different implementations in order to test the results and performance, and choose the best one.
 
+TODO: Remove IgnoredReplacement
 TODO: Return iterables of all
 
 ## TODO: REVIEW COMPONENTS

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.date;
+package es.bvalero.replacer.finder.date;
 
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Replacement;
