@@ -1,4 +1,4 @@
-package es.bvalero.replacer.cosmetic;
+package es.bvalero.replacer.finder;
 
 import java.util.Collections;
 import java.util.List;
@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CosmeticChangesService {
+public class CosmeticFindService {
     @Autowired
     private List<CosmeticFinder> cosmeticFinders;
 

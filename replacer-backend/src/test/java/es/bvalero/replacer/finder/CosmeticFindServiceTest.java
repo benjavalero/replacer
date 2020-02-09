@@ -1,4 +1,4 @@
-package es.bvalero.replacer.cosmetic;
+package es.bvalero.replacer.finder;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,16 +10,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class CosmeticChangesServiceTest {
+public class CosmeticFindServiceTest {
     @Mock
     private List<CosmeticFinder> cosmeticFinders;
 
     @InjectMocks
-    private CosmeticChangesService cosmeticChangesService;
+    private CosmeticFindService cosmeticFindService;
 
     @Before
     public void setUp() {
-        cosmeticChangesService = new CosmeticChangesService();
+        cosmeticFindService = new CosmeticFindService();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -30,6 +30,6 @@ public class CosmeticChangesServiceTest {
 
         String text = "A [[Link|link]] to simplify.";
         String expected = "A [[link]] to simplify.";
-        Assert.assertEquals(expected, cosmeticChangesService.applyCosmeticChanges(text));
+        Assert.assertEquals(expected, cosmeticFindService.applyCosmeticChanges(text));
     }
 }

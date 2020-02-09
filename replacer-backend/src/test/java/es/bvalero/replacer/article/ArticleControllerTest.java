@@ -3,7 +3,7 @@ package es.bvalero.replacer.article;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.authentication.AccessToken;
-import es.bvalero.replacer.cosmetic.CosmeticChangesService;
+import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -53,7 +53,7 @@ public class ArticleControllerTest {
     private WikipediaService wikipediaService;
 
     @MockBean
-    private CosmeticChangesService cosmeticChangesService;
+    private CosmeticFindService cosmeticFindService;
 
     @Test
     public void testFindRandomArticleWithReplacements() throws Exception {
@@ -163,14 +163,14 @@ public class ArticleControllerTest {
         String subtype = "S";
         SaveArticle saveArticle = new SaveArticle(articleId, section, content, timestamp, reviewer, token, type, subtype);
 
-        when(cosmeticChangesService.applyCosmeticChanges(anyString())).thenReturn("C");
+        when(cosmeticFindService.applyCosmeticChanges(anyString())).thenReturn("C");
 
         mvc.perform(post("/api/article")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(saveArticle)))
                 .andExpect(status().isOk());
 
-        verify(cosmeticChangesService, times(1)).applyCosmeticChanges(eq(content));
+        verify(cosmeticFindService, times(1)).applyCosmeticChanges(eq(content));
         verify(wikipediaService, times(1)).savePageContent(eq(articleId), eq("C"),
                 eq(section), eq(timestamp), eq(new OAuth1AccessToken("A", "B")));
         verify(replacementIndexService, times(1)).reviewArticleReplacements(
@@ -193,7 +193,7 @@ public class ArticleControllerTest {
                 .content(objectMapper.writeValueAsString(saveArticle)))
                 .andExpect(status().isOk());
 
-        verify(cosmeticChangesService, times(0)).applyCosmeticChanges(anyString());
+        verify(cosmeticFindService, times(0)).applyCosmeticChanges(anyString());
         verify(wikipediaService, times(0)).savePageContent(anyInt(), anyString(),
                 anyInt(), anyString(), any(OAuth1AccessToken.class));
         verify(replacementIndexService, times(1)).reviewArticleReplacements(

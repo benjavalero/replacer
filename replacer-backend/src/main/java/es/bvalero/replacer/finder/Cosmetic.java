@@ -1,4 +1,4 @@
-package es.bvalero.replacer.cosmetic;
+package es.bvalero.replacer.finder;
 
 import lombok.Value;
 

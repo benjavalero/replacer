@@ -2,7 +2,7 @@ package es.bvalero.replacer.article;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.authentication.AccessToken;
-import es.bvalero.replacer.cosmetic.CosmeticChangesService;
+import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -34,7 +34,7 @@ public class ArticleController {
     private WikipediaService wikipediaService;
 
     @Autowired
-    private CosmeticChangesService cosmeticChangesService;
+    private CosmeticFindService cosmeticFindService;
 
     /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
 
@@ -89,7 +89,7 @@ public class ArticleController {
         LOGGER.info("PUT Save article. ID: {} - Changed: {}", saveArticle.getArticleId(), changed);
         if (changed) {
             // Upload new content to Wikipedia
-            String textToSave = cosmeticChangesService.applyCosmeticChanges(saveArticle.getContent());
+            String textToSave = cosmeticFindService.applyCosmeticChanges(saveArticle.getContent());
             wikipediaService.savePageContent(saveArticle.getArticleId(), textToSave, saveArticle.getSection(),
                     saveArticle.getTimestamp(), convertToEntity(saveArticle.getToken()));
         }
