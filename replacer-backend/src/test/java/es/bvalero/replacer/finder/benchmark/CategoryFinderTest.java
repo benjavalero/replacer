@@ -1,14 +1,12 @@
 package es.bvalero.replacer.finder.benchmark;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class CategoryFinderTest {
-
     private String text;
     private Set<FinderResult> expected;
 
@@ -52,5 +50,4 @@ public class CategoryFinderTest {
         CategoryAutomatonFinder finder = new CategoryAutomatonFinder();
         Assert.assertEquals(expected, finder.findMatches(text));
     }
-
 }

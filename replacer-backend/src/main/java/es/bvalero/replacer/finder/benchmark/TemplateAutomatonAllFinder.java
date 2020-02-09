@@ -4,14 +4,12 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 
 class TemplateAutomatonAllFinder extends TemplateAbstractFinder {
-
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
     private static final String REGEX_TEMPLATE_COMPLETE = "\\{\\{ *(%s)[ |\n]*[|:](%s|[^}])+?}}";
     private static RunAutomaton automaton;
@@ -24,9 +22,11 @@ class TemplateAutomatonAllFinder extends TemplateAbstractFinder {
                 wordsToJoin.add(FinderUtils.setFirstUpperCase(word));
             }
         }
-        automaton = new RunAutomaton(new RegExp(
-                String.format(REGEX_TEMPLATE_COMPLETE, StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE))
-                .toAutomaton());
+        automaton =
+            new RunAutomaton(
+                new RegExp(String.format(REGEX_TEMPLATE_COMPLETE, StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE))
+                .toAutomaton()
+            );
     }
 
     Set<FinderResult> findMatches(String text) {
@@ -37,5 +37,4 @@ class TemplateAutomatonAllFinder extends TemplateAbstractFinder {
         }
         return matches;
     }
-
 }

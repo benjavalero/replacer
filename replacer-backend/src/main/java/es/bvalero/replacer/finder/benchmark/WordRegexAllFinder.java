@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class WordRegexAllFinder extends WordAbstractFinder {
-
     private Pattern wordPattern;
     private Set<String> words;
 
@@ -27,5 +26,4 @@ class WordRegexAllFinder extends WordAbstractFinder {
         }
         return matches;
     }
-
 }

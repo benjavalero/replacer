@@ -8,9 +8,10 @@ abstract class PersonAbstractFinder {
 
     boolean isWordFollowedByUppercase(int start, String word, String text) {
         int end = start + word.length();
-        return end + 1 < text.length()
-                && !Character.isLetter(text.charAt(end))
-                && Character.isUpperCase(text.charAt(end + 1));
+        return (
+            end + 1 < text.length() &&
+            !Character.isLetter(text.charAt(end)) &&
+            Character.isUpperCase(text.charAt(end + 1))
+        );
     }
-
 }

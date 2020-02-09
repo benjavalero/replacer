@@ -1,13 +1,11 @@
 package es.bvalero.replacer.finder.date;
 
 import es.bvalero.replacer.finder.Replacement;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
-
 public class UppercaseMonthFinderTest {
-
     private UppercaseMonthFinder uppercaseMonthFinder = new UppercaseMonthFinder();
 
     @Test
@@ -81,5 +79,4 @@ public class UppercaseMonthFinderTest {
         Assert.assertEquals(date, replacements.get(0).getText());
         Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
     }
-
 }

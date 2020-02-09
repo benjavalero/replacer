@@ -1,8 +1,7 @@
 package es.bvalero.replacer.finder.cosmetic;
 
-import java.util.List;
-
 import es.bvalero.replacer.finder.Cosmetic;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 

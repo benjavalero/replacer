@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class CategoryRegexClassLazyFinder extends CategoryAbstractFinder {
-
     private static final String REGEX_CATEGORY = "\\[\\[(Categoría|als):[^]]+?]]";
     private static final Pattern PATTERN_CATEGORY = Pattern.compile(REGEX_CATEGORY);
 
@@ -18,5 +17,4 @@ class CategoryRegexClassLazyFinder extends CategoryAbstractFinder {
         }
         return matches;
     }
-
 }

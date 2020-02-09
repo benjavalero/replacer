@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.misspelling;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

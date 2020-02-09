@@ -1,11 +1,6 @@
 package es.bvalero.replacer.finder.misspelling;
 
 import es.bvalero.replacer.wikipedia.WikipediaException;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.scheduling.annotation.Scheduled;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
@@ -13,10 +8,13 @@ import java.io.StringReader;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @Slf4j
 public abstract class ParseFileManager<T> {
-
     private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     // Set of misspellings found in the misspelling list
@@ -69,16 +67,20 @@ public abstract class ParseFileManager<T> {
 
         Stream<String> stream = new BufferedReader(new StringReader(text)).lines();
         // Ignore the lines not corresponding to item lines
-        stream.filter(this::isItemLineValid).forEach(strLine -> {
-            T item = parseItemLine(trimItemLine(strLine));
-            if (item != null) {
-                if (itemKeys.add(getItemKey(item))) {
-                    itemSet.add(item);
-                } else {
-                    LOGGER.warn("Duplicated item: {}", getItemKey(item));
+        stream
+            .filter(this::isItemLineValid)
+            .forEach(
+                strLine -> {
+                    T item = parseItemLine(trimItemLine(strLine));
+                    if (item != null) {
+                        if (itemKeys.add(getItemKey(item))) {
+                            itemSet.add(item);
+                        } else {
+                            LOGGER.warn("Duplicated item: {}", getItemKey(item));
+                        }
+                    }
                 }
-            }
-        });
+            );
 
         return itemSet;
     }
@@ -99,5 +101,4 @@ public abstract class ParseFileManager<T> {
     abstract @Nullable T parseItemLine(String itemLine);
 
     abstract String getItemKey(T item);
-
 }

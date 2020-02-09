@@ -1,10 +1,9 @@
 package es.bvalero.replacer.finder.immutable;
 
-import java.util.regex.Pattern;
-
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.RegexIterable;
+import java.util.regex.Pattern;
 import org.springframework.stereotype.Component;
 
 /**

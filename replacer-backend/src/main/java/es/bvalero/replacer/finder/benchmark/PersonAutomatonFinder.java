@@ -3,11 +3,9 @@ package es.bvalero.replacer.finder.benchmark;
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.*;
 
 class PersonAutomatonFinder extends PersonAbstractFinder {
-
     private List<RunAutomaton> words;
 
     PersonAutomatonFinder(Collection<String> words) {
@@ -30,5 +28,4 @@ class PersonAutomatonFinder extends PersonAbstractFinder {
         }
         return matches;
     }
-
 }

@@ -1,13 +1,11 @@
 package es.bvalero.replacer.finder.date;
 
 import es.bvalero.replacer.finder.Replacement;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
-
 public class LeadingZeroFinderTest {
-
     private LeadingZeroFinder leadingZeroFinder = new LeadingZeroFinder();
 
     @Test
@@ -56,5 +54,4 @@ public class LeadingZeroFinderTest {
         Assert.assertEquals(date, replacements.get(0).getText());
         Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
     }
-
 }

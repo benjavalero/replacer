@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 class UppercaseIndexOfFinder extends UppercaseAbstractFinder {
-
     private static final Collection<Character> PUNCTUATIONS = Arrays.asList('!', '#', '*', '|', '=', '.');
 
     private Collection<String> words;
@@ -44,5 +43,4 @@ class UppercaseIndexOfFinder extends UppercaseAbstractFinder {
         }
         return PUNCTUATIONS.contains(text.charAt(pos));
     }
-
 }

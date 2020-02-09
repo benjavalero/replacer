@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class FileRegexFinder extends FileAbstractFinder {
-
     private static final Pattern PATTERN = Pattern.compile("[:=|] *([^]=|\n]+\\.\\w{2,4}) *[]}|\n]");
 
     Set<FinderResult> findMatches(String text) {
@@ -17,5 +16,4 @@ class FileRegexFinder extends FileAbstractFinder {
         }
         return matches;
     }
-
 }

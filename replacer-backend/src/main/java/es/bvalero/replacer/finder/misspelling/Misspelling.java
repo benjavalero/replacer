@@ -1,13 +1,12 @@
 package es.bvalero.replacer.finder.misspelling;
 
 import es.bvalero.replacer.finder.Suggestion;
-import lombok.Value;
-import org.intellij.lang.annotations.RegExp;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import lombok.Value;
+import org.intellij.lang.annotations.RegExp;
 
 /**
  * Domain class corresponding to the lines in the Wikipedia article containing potential misspellings.
@@ -16,9 +15,12 @@ import java.util.regex.Pattern;
 class Misspelling {
     @RegExp
     private static final String REGEX_BRACKETS = "\\([^)]+\\)";
+
     private static final Pattern PATTERN_BRACKETS = Pattern.compile(REGEX_BRACKETS);
+
     @RegExp
     private static final String REGEX_SUGGESTION = String.format("([^,(]|%s)+", REGEX_BRACKETS);
+
     private static final Pattern PATTERN_SUGGESTION = Pattern.compile(REGEX_SUGGESTION);
 
     private String word;
@@ -80,5 +82,4 @@ class Misspelling {
         }
         return Suggestion.of(text, explanation);
     }
-
 }

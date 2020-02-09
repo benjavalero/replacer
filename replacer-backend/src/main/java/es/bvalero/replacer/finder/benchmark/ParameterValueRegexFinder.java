@@ -1,16 +1,15 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
 class ParameterValueRegexFinder extends ParameterValueAbstractFinder {
-
-    private static final Pattern PATTERN
-            = Pattern.compile(String.format("\\|\\s*(%s)\\s*=([^|}]+)", StringUtils.join(PARAMS, "|")));
+    private static final Pattern PATTERN = Pattern.compile(
+        String.format("\\|\\s*(%s)\\s*=([^|}]+)", StringUtils.join(PARAMS, "|"))
+    );
 
     Set<FinderResult> findMatches(String text) {
         Set<FinderResult> matches = new HashSet<>();
@@ -20,5 +19,4 @@ class ParameterValueRegexFinder extends ParameterValueAbstractFinder {
         }
         return matches;
     }
-
 }

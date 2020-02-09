@@ -1,16 +1,14 @@
 package es.bvalero.replacer.finder.benchmark;
 
 import es.bvalero.replacer.finder.FinderUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
 class TemplateRegexAllFinder extends TemplateAbstractFinder {
-
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
     private static Pattern pattern;
 
@@ -22,7 +20,10 @@ class TemplateRegexAllFinder extends TemplateAbstractFinder {
                 wordsToJoin.add(FinderUtils.setFirstUpperCase(word));
             }
         }
-        pattern = Pattern.compile(String.format("\\{\\{\\s*(%s)\\s*[|:](%s|[^}])+?}}", StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE));
+        pattern =
+            Pattern.compile(
+                String.format("\\{\\{\\s*(%s)\\s*[|:](%s|[^}])+?}}", StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE)
+            );
     }
 
     Set<FinderResult> findMatches(String text) {
@@ -33,5 +34,4 @@ class TemplateRegexAllFinder extends TemplateAbstractFinder {
         }
         return matches;
     }
-
 }

@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class RedirectMatcherTest {
-
     private String text;
 
     @Before
@@ -30,5 +29,4 @@ public class RedirectMatcherTest {
         RedirectRegexInsensitiveMatcher matcher = new RedirectRegexInsensitiveMatcher();
         Assert.assertTrue(matcher.isRedirect(text));
     }
-
 }

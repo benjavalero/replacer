@@ -2,11 +2,10 @@ package es.bvalero.replacer.finder.immutable;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import java.util.regex.MatchResult;
-
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.RegexIterable;
+import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
 /**

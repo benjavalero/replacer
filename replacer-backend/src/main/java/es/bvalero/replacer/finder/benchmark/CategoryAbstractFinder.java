@@ -5,5 +5,4 @@ import java.util.Set;
 abstract class CategoryAbstractFinder {
 
     abstract Set<FinderResult> findMatches(String text);
-
 }

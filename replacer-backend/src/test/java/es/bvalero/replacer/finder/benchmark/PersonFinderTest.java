@@ -1,16 +1,14 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class PersonFinderTest {
-
     private Collection<String> words;
     private String text;
     private Set<FinderResult> expected;
@@ -96,5 +94,4 @@ public class PersonFinderTest {
         PersonRegexAllCompleteFinder finder = new PersonRegexAllCompleteFinder(this.words);
         Assert.assertEquals(expected, finder.findMatches(text));
     }
-
 }

@@ -4,14 +4,12 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 
 class UppercaseAlternateAutomatonFinder extends UppercaseAbstractFinder {
-
     private RunAutomaton words;
 
     UppercaseAlternateAutomatonFinder(Collection<String> words) {
@@ -30,5 +28,4 @@ class UppercaseAlternateAutomatonFinder extends UppercaseAbstractFinder {
         }
         return matches;
     }
-
 }

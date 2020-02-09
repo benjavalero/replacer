@@ -5,7 +5,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class UppercaseRegexLookBehindFinder extends UppercaseAbstractFinder {
-
     private List<Pattern> words;
 
     UppercaseRegexLookBehindFinder(Collection<String> words) {
@@ -28,5 +27,4 @@ class UppercaseRegexLookBehindFinder extends UppercaseAbstractFinder {
         }
         return matches;
     }
-
 }

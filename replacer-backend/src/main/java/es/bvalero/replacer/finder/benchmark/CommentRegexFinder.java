@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class CommentRegexFinder extends CommentAbstractFinder {
-
     private static final Pattern COMMENT_PATTERN = Pattern.compile("<!--.+?-->", Pattern.DOTALL);
 
     Set<FinderResult> findMatches(String text) {
@@ -17,5 +16,4 @@ class CommentRegexFinder extends CommentAbstractFinder {
         }
         return matches;
     }
-
 }

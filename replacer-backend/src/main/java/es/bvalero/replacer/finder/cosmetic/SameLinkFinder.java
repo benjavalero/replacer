@@ -3,10 +3,9 @@ package es.bvalero.replacer.finder.cosmetic;
 import es.bvalero.replacer.finder.Cosmetic;
 import es.bvalero.replacer.finder.CosmeticFinder;
 import es.bvalero.replacer.finder.RegexIterable;
-import org.springframework.stereotype.Component;
-
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import org.springframework.stereotype.Component;
 
 /**
  * Find links where the alias matches with the target link and thus the alias can be removed,

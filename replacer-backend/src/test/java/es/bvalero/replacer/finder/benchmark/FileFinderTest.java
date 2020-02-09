@@ -1,14 +1,12 @@
 package es.bvalero.replacer.finder.benchmark;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class FileFinderTest {
-
     private String text;
     private Set<FinderResult> expected;
 
@@ -16,20 +14,10 @@ public class FileFinderTest {
     public void setUp() {
         String file1 = "[[File:xx.jpg]]";
         String file2 = "[[Image: a b.png ]]";
-        String gallery1 = "<gallery>\n"
-                + "File: aa.jpg \n"
-                + " Image:b-c.jpg|Desc \n"
-                + "</gallery>";
+        String gallery1 = "<gallery>\n" + "File: aa.jpg \n" + " Image:b-c.jpg|Desc \n" + "</gallery>";
         String param = "{{Template| param1 = doc.pdf |param2=zzz.|param3=value.gif}}";
-        String gallery2 = "{{Gallery\n"
-                + "| dóc2.pdf | Desc1 \n"
-                + " | Value_2.gif | Desc2 \n"
-                + "}}";
-        String table = "{| class=\"wikitable\"\n " +
-                "|-\n" +
-                "| www.google.com\n" +
-                "| Any text\n" +
-                "|}";
+        String gallery2 = "{{Gallery\n" + "| dóc2.pdf | Desc1 \n" + " | Value_2.gif | Desc2 \n" + "}}";
+        String table = "{| class=\"wikitable\"\n " + "|-\n" + "| www.google.com\n" + "| Any text\n" + "|}";
 
         this.text = String.format("%s %s %s %s %s %s", file1, file2, gallery1, param, gallery2, table);
 
@@ -80,5 +68,4 @@ public class FileFinderTest {
         FileAutomatonNoStartFinder finder = new FileAutomatonNoStartFinder();
         Assert.assertEquals(expected, finder.findMatches(text));
     }
-
 }

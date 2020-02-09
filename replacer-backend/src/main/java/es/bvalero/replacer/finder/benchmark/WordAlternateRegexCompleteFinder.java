@@ -1,15 +1,13 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
 class WordAlternateRegexCompleteFinder extends WordAbstractFinder {
-
     private Pattern words;
 
     WordAlternateRegexCompleteFinder(Collection<String> words) {
@@ -26,5 +24,4 @@ class WordAlternateRegexCompleteFinder extends WordAbstractFinder {
         }
         return matches;
     }
-
 }

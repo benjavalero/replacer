@@ -1,15 +1,13 @@
 package es.bvalero.replacer.finder.misspelling;
 
 import es.bvalero.replacer.finder.Replacement;
+import java.beans.PropertyChangeEvent;
+import java.util.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.beans.PropertyChangeEvent;
-import java.util.*;
-
 public class MisspellingComposedFinderTest {
-
     private MisspellingComposedFinder misspellingComposedFinder;
 
     @Before
@@ -25,7 +23,9 @@ public class MisspellingComposedFinderTest {
         Set<Misspelling> misspellings = new HashSet<>(Arrays.asList(simple, composed));
 
         // Fake the update of the misspelling list in the misspelling manager
-        misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellings));
+        misspellingComposedFinder.propertyChange(
+            new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellings)
+        );
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
@@ -41,9 +41,10 @@ public class MisspellingComposedFinderTest {
     @Test
     public void testComposedMisspellingListEmpty() {
         // Fake the update of the misspelling list in the misspelling manager
-        misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, Collections.EMPTY_SET));
+        misspellingComposedFinder.propertyChange(
+            new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, Collections.EMPTY_SET)
+        );
 
         Assert.assertTrue(misspellingComposedFinder.findList("A sample text").isEmpty());
     }
-
 }

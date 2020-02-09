@@ -10,7 +10,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 public class MisspellingComposedManagerTest {
-
     @Mock
     private WikipediaService wikipediaService;
 
@@ -31,5 +30,4 @@ public class MisspellingComposedManagerTest {
 
         Mockito.verify(wikipediaService).getComposedMisspellingListPageContent();
     }
-
 }

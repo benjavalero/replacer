@@ -5,5 +5,4 @@ import java.util.Set;
 abstract class FileAbstractFinder {
 
     abstract Set<FinderResult> findMatches(String text);
-
 }

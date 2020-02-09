@@ -2,17 +2,15 @@ package es.bvalero.replacer.finder.misspelling;
 
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
 
 /**
  * Manages the cache for the false positive list in order to reduce the calls to Wikipedia.
  */
 @Service
 public class FalsePositiveManager extends ParseFileManager<String> {
-
     @Autowired
     private WikipediaService wikipediaService;
 
@@ -40,5 +38,4 @@ public class FalsePositiveManager extends ParseFileManager<String> {
     String getItemKey(String falsePositive) {
         return falsePositive;
     }
-
 }

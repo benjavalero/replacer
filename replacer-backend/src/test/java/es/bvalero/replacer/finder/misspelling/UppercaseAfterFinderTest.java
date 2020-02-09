@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.misspelling;
 
+import es.bvalero.replacer.finder.Immutable;
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,8 +10,6 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import es.bvalero.replacer.finder.Immutable;
 
 public class UppercaseAfterFinderTest {
     private UppercaseAfterFinder uppercaseAfterFinder;

@@ -242,8 +242,8 @@ The tool implements the following generic cosmetic finders:
 
 Package _finder.benchmark_ contains subpackages for each finder with different implementations in order to test the results and performance, and choose the best one.
 
-TODO: Remove IgnoredReplacement
 TODO: Return iterables of all
+TODO: Move benchmarks
 
 ## TODO: REVIEW COMPONENTS
 

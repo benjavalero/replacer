@@ -4,14 +4,12 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 
 class WordAlternateAutomatonFinder extends WordAbstractFinder {
-
     private RunAutomaton words;
 
     WordAlternateAutomatonFinder(Collection<String> words) {
@@ -30,5 +28,4 @@ class WordAlternateAutomatonFinder extends WordAbstractFinder {
         }
         return matches;
     }
-
 }

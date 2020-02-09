@@ -6,5 +6,4 @@ class RedirectLowercaseContainsMatcher extends RedirectAbstractMatcher {
     boolean isRedirect(String text) {
         return text.toLowerCase().contains(REDIRECT_PREFIX);
     }
-
 }

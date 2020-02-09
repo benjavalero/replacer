@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class PersonRegexAllCompleteFinder extends PersonAbstractFinder {
-
     private Pattern wordPattern;
     private Set<String> words;
 
@@ -27,5 +26,4 @@ class PersonRegexAllCompleteFinder extends PersonAbstractFinder {
         }
         return matches;
     }
-
 }

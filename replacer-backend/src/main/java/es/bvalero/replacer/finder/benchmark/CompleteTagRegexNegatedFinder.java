@@ -8,11 +8,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class CompleteTagRegexNegatedFinder extends CompleteTagAbstractFinder {
-
     private static final List<Pattern> PATTERNS = new ArrayList<>();
 
     CompleteTagRegexNegatedFinder(List<String> words) {
-        words.forEach(word -> PATTERNS.add(Pattern.compile(String.format("<%s[^>]*>.+</%s>", word, word), Pattern.DOTALL)));
+        words.forEach(
+            word -> PATTERNS.add(Pattern.compile(String.format("<%s[^>]*>.+</%s>", word, word), Pattern.DOTALL))
+        );
     }
 
     Set<FinderResult> findMatches(String text) {
@@ -25,5 +26,4 @@ class CompleteTagRegexNegatedFinder extends CompleteTagAbstractFinder {
         }
         return matches;
     }
-
 }

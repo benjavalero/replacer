@@ -1,15 +1,13 @@
 package es.bvalero.replacer.finder.misspelling;
 
 import es.bvalero.replacer.finder.Replacement;
+import java.beans.PropertyChangeEvent;
+import java.util.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.beans.PropertyChangeEvent;
-import java.util.*;
-
 public class MisspellingSimpleFinderTest {
-
     private MisspellingSimpleFinder misspellingFinder;
 
     @Before
@@ -200,9 +198,10 @@ public class MisspellingSimpleFinderTest {
     @Test
     public void testMisspellingListEmpty() {
         // Fake the update of the misspelling list in the misspelling manager
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, Collections.EMPTY_SET));
+        misspellingFinder.propertyChange(
+            new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, Collections.EMPTY_SET)
+        );
 
         Assert.assertTrue(misspellingFinder.findList("A sample text").isEmpty());
     }
-
 }

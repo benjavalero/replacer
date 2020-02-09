@@ -4,11 +4,9 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.*;
 
 class PersonAutomatonCompleteFinder extends PersonAbstractFinder {
-
     private List<RunAutomaton> words;
 
     PersonAutomatonCompleteFinder(Collection<String> words) {
@@ -29,5 +27,4 @@ class PersonAutomatonCompleteFinder extends PersonAbstractFinder {
         }
         return matches;
     }
-
 }

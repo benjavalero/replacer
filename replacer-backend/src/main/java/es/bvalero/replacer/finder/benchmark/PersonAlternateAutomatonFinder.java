@@ -3,14 +3,12 @@ package es.bvalero.replacer.finder.benchmark;
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 
 class PersonAlternateAutomatonFinder extends PersonAbstractFinder {
-
     private RunAutomaton words;
 
     PersonAlternateAutomatonFinder(Collection<String> words) {
@@ -29,5 +27,4 @@ class PersonAlternateAutomatonFinder extends PersonAbstractFinder {
         }
         return matches;
     }
-
 }

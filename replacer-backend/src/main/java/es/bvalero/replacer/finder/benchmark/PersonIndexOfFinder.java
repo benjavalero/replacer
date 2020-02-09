@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 class PersonIndexOfFinder extends PersonAbstractFinder {
-
     private Collection<String> words;
 
     PersonIndexOfFinder(Collection<String> words) {
@@ -29,5 +28,4 @@ class PersonIndexOfFinder extends PersonAbstractFinder {
         }
         return matches;
     }
-
 }

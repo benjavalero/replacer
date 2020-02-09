@@ -6,8 +6,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class FileRegexNoStartLazyFinder extends FileAbstractFinder {
-
-    private static final Pattern PATTERN = Pattern.compile("(\\w[\\w. -]+?\\.\\w{2,4}) *[]}|\n]", Pattern.UNICODE_CHARACTER_CLASS);
+    private static final Pattern PATTERN = Pattern.compile(
+        "(\\w[\\w. -]+?\\.\\w{2,4}) *[]}|\n]",
+        Pattern.UNICODE_CHARACTER_CLASS
+    );
 
     Set<FinderResult> findMatches(String text) {
         Set<FinderResult> matches = new HashSet<>();
@@ -17,5 +19,4 @@ class FileRegexNoStartLazyFinder extends FileAbstractFinder {
         }
         return matches;
     }
-
 }

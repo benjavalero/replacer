@@ -3,18 +3,21 @@ package es.bvalero.replacer.finder.benchmark;
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 class CompleteTagAutomatonFinder extends CompleteTagAbstractFinder {
-
     private static final List<RunAutomaton> AUTOMATA = new ArrayList<>();
 
     CompleteTagAutomatonFinder(List<String> words) {
-        words.forEach(word -> AUTOMATA.add(new RunAutomaton(new RegExp(String.format("\\<%s.*\\>.+\\</%s\\>", word, word)).toAutomaton())));
+        words.forEach(
+            word ->
+                AUTOMATA.add(
+                    new RunAutomaton(new RegExp(String.format("\\<%s.*\\>.+\\</%s\\>", word, word)).toAutomaton())
+                )
+        );
     }
 
     Set<FinderResult> findMatches(String text) {
@@ -27,5 +30,4 @@ class CompleteTagAutomatonFinder extends CompleteTagAbstractFinder {
         }
         return matches;
     }
-
 }

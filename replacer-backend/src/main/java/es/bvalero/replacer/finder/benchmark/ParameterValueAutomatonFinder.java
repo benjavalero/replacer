@@ -4,15 +4,15 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 
 class ParameterValueAutomatonFinder extends ParameterValueAbstractFinder {
-
     private static final RunAutomaton AUTOMATON = new RunAutomaton(
-            new RegExp(String.format("\\|<Z>*(%s)<Z>*=[^|}]+", StringUtils.join(PARAMS, "|"))).toAutomaton(new DatatypesAutomatonProvider()));
+        new RegExp(String.format("\\|<Z>*(%s)<Z>*=[^|}]+", StringUtils.join(PARAMS, "|")))
+        .toAutomaton(new DatatypesAutomatonProvider())
+    );
 
     Set<FinderResult> findMatches(String text) {
         Set<FinderResult> matches = new HashSet<>();
@@ -23,5 +23,4 @@ class ParameterValueAutomatonFinder extends ParameterValueAbstractFinder {
         }
         return matches;
     }
-
 }

@@ -4,14 +4,13 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.HashSet;
 import java.util.Set;
 
 class FileAutomatonNoStartFinder extends FileAbstractFinder {
-
-    private static final RunAutomaton AUTOMATON =
-            new RunAutomaton(new RegExp("<L>(<L>|<N>|[. _-])+\\.<L>{2,4} *[]}|\n]").toAutomaton(new DatatypesAutomatonProvider()));
+    private static final RunAutomaton AUTOMATON = new RunAutomaton(
+        new RegExp("<L>(<L>|<N>|[. _-])+\\.<L>{2,4} *[]}|\n]").toAutomaton(new DatatypesAutomatonProvider())
+    );
 
     Set<FinderResult> findMatches(String text) {
         Set<FinderResult> matches = new HashSet<>();
@@ -24,5 +23,4 @@ class FileAutomatonNoStartFinder extends FileAbstractFinder {
         }
         return matches;
     }
-
 }

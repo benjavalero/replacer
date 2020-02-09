@@ -7,7 +7,6 @@ import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.RegexIterable;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;

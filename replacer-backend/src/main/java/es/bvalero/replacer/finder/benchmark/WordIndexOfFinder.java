@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 class WordIndexOfFinder extends WordAbstractFinder {
-
     private Collection<String> words;
 
     WordIndexOfFinder(Collection<String> words) {
@@ -29,5 +28,4 @@ class WordIndexOfFinder extends WordAbstractFinder {
         }
         return matches;
     }
-
 }

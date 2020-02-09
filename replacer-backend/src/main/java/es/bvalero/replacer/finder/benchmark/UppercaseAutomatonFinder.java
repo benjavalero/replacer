@@ -4,17 +4,18 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.*;
 
 class UppercaseAutomatonFinder extends UppercaseAbstractFinder {
-
     private Map<String, RunAutomaton> words;
 
     UppercaseAutomatonFinder(Collection<String> words) {
         this.words = new HashMap<>();
         for (String word : words) {
-            this.words.put(word, new RunAutomaton(new RegExp("[!#*|=.]<Z>*" + word).toAutomaton(new DatatypesAutomatonProvider())));
+            this.words.put(
+                    word,
+                    new RunAutomaton(new RegExp("[!#*|=.]<Z>*" + word).toAutomaton(new DatatypesAutomatonProvider()))
+                );
         }
     }
 
@@ -30,5 +31,4 @@ class UppercaseAutomatonFinder extends UppercaseAbstractFinder {
         }
         return matches;
     }
-
 }

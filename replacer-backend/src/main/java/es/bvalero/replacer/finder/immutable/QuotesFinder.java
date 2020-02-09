@@ -2,14 +2,13 @@ package es.bvalero.replacer.finder.immutable;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.IterableOfIterable;
 import es.bvalero.replacer.finder.RegexIterable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 /**

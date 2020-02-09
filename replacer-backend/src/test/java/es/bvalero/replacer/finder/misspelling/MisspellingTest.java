@@ -1,10 +1,9 @@
 package es.bvalero.replacer.finder.misspelling;
 
 import es.bvalero.replacer.finder.Suggestion;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 public class MisspellingTest {
 
@@ -81,5 +80,4 @@ public class MisspellingTest {
     public void testMisspellingWithEmptyComment() {
         Misspelling.ofCaseInsensitive("A", "");
     }
-
 }

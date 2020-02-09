@@ -3,13 +3,12 @@ package es.bvalero.replacer.finder.misspelling;
 import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * Manages the cache for the misspelling list in order to reduce the calls to Wikipedia.
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class MisspellingManager extends ParseFileManager<Misspelling> {
-
     private static final String CASE_SENSITIVE_VALUE = "cs";
 
     @Autowired
@@ -73,5 +71,4 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
     String getItemKey(Misspelling misspelling) {
         return misspelling.getWord();
     }
-
 }

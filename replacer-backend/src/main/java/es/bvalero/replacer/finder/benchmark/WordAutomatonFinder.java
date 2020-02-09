@@ -4,11 +4,9 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-
 import java.util.*;
 
 class WordAutomatonFinder extends WordAbstractFinder {
-
     private List<RunAutomaton> words;
 
     WordAutomatonFinder(Collection<String> words) {
@@ -31,5 +29,4 @@ class WordAutomatonFinder extends WordAbstractFinder {
         }
         return matches;
     }
-
 }

@@ -8,5 +8,4 @@ class RedirectContainsIgnoreCaseMatcher extends RedirectAbstractMatcher {
     boolean isRedirect(String text) {
         return StringUtils.containsIgnoreCase(text, REDIRECT_PREFIX);
     }
-
 }
