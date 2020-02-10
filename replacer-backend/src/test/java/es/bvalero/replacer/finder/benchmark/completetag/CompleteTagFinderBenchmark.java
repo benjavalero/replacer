@@ -1,10 +1,12 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.completetag;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,16 +30,10 @@ public class CompleteTagFinderBenchmark extends BaseFinderBenchmark {
         );
 
         // Load the finders
-        List<CompleteTagAbstractFinder> finders = new ArrayList<>();
-        finders.add(new CompleteTagRegexFinder(words));
+        // In order to capture nested tags we can only use lazy regex
+        List<CompleteTagFinder> finders = new ArrayList<>();
         finders.add(new CompleteTagRegexLazyFinder(words));
-        finders.add(new CompleteTagRegexNegatedFinder(words));
         finders.add(new CompleteTagRegexNegatedLazyFinder(words));
-        finders.add(new CompleteTagAutomatonFinder(words));
-        finders.add(new CompleteTagAutomatonNegatedFinder(words));
-
-        // There are little differences between the regex ones
-        // so we get the lazy one to test a regex with back-references
         finders.add(new CompleteTagRegexAlternateFinder(words));
         finders.add(new CompleteTagRegexAlternateNegatedFinder(words));
 
@@ -46,7 +42,7 @@ public class CompleteTagFinderBenchmark extends BaseFinderBenchmark {
         findSampleContents()
             .forEach(
                 value -> {
-                    for (CompleteTagAbstractFinder finder : finders) {
+                    for (CompleteTagFinder finder : finders) {
                         long start = System.currentTimeMillis();
                         for (int i = 0; i < ITERATIONS; i++) {
                             finder.findMatches(value);

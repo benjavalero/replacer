@@ -242,8 +242,9 @@ The tool implements the following generic cosmetic finders:
 
 Package _finder.benchmark_ contains subpackages for each finder with different implementations in order to test the results and performance, and choose the best one.
 
+To work with regular expressions, the implementation included in Java is _regex-based_, which is the standard containing advanced features like look-ahead, look-behind, references, etc. On the other hand, this tool uses also an implementation which is _text-based_. This implementation builds an automaton from the regex and gives impressive performance improvements of 1-2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking.
+
 TODO: Return iterables of all
-TODO: Move benchmarks
 
 ## TODO: REVIEW COMPONENTS
 
@@ -265,9 +266,7 @@ TODO: Move benchmarks
 - [ ] Research to return the immutables as a stream or iterator. Research also the immutables more commonly applied in order to give them some kind of priority.
 - [ ] Performance tests to run replacement finders in parallel
 - [ ] Check if it is worth to store the replacement type as an enumerate
-- [ ] Rename IgnoredReplacement to Immutable. There are hundreds of occurrences (cf. benchmark). Meanwhile all is prepared in package `finder2`
 - [ ] When testing the database performance, check [jOOQ](https://www.jooq.org/).
-- [ ] Move packages `misspelling` and `date` under `finder`
 - [ ] Review the managers for misspellings and false-positives, and remark the Observable pattern.
 
 The Java code is formatted with [Prettier Java](https://github.com/jhipster/prettier-java).

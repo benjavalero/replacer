@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.completetag;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,21 +7,21 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class CompleteTagRegexLazyFinder extends CompleteTagAbstractFinder {
+class CompleteTagRegexNegatedLazyFinder extends CompleteTagFinder {
     private static final List<Pattern> PATTERNS = new ArrayList<>();
 
-    CompleteTagRegexLazyFinder(List<String> words) {
+    CompleteTagRegexNegatedLazyFinder(List<String> words) {
         words.forEach(
-            word -> PATTERNS.add(Pattern.compile(String.format("<%s.*?>.+?</%s>", word, word), Pattern.DOTALL))
+            word -> PATTERNS.add(Pattern.compile(String.format("<%s[^>]*?>.+?</%s>", word, word), Pattern.DOTALL))
         );
     }
 
-    Set<FinderResult> findMatches(String text) {
-        Set<FinderResult> matches = new HashSet<>();
+    Set<String> findMatches(String text) {
+        Set<String> matches = new HashSet<>();
         for (Pattern pattern : PATTERNS) {
             Matcher m = pattern.matcher(text);
             while (m.find()) {
-                matches.add(FinderResult.of(m.start(), m.group()));
+                matches.add(m.group());
             }
         }
         return matches;

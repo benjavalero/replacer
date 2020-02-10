@@ -10,10 +10,9 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class BaseFinderBenchmark {
-
-    List<String> findSampleContents() throws IOException, URISyntaxException {
-        String fileName = "/es/bvalero/replacer/benchmark/page-samples.json";
+public class BaseFinderBenchmark {
+    public List<String> findSampleContents() throws IOException, URISyntaxException {
+        String fileName = "/es/bvalero/replacer/finder/benchmark/page-samples.json";
         String jsonResponse = new String(
             Files.readAllBytes(Paths.get(getClass().getResource(fileName).toURI())),
             StandardCharsets.UTF_8
