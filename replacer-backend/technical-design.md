@@ -242,9 +242,11 @@ The tool implements the following generic cosmetic finders:
 
 Package _finder.benchmark_ contains subpackages for each finder with different implementations in order to test the results and performance, and choose the best one.
 
-To work with regular expressions, the implementation included in Java is _regex-based_, which is the standard containing advanced features like look-ahead, look-behind, references, etc. On the other hand, this tool uses also an implementation which is _text-based_. This implementation builds an automaton from the regex and gives impressive performance improvements of 1-2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking.
+To work with regular expressions, the implementation included in Java is _regex-based_, which is the standard containing advanced features like look-ahead, look-behind, references, etc. On the other hand, this tool uses also an implementation which is _text-based_. This implementation builds an automaton from the regex and gives impressive performance improvements of 1 to 2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking.
 
-In benchmarks, we usually compare a dot-plus with a negated character. In general, no big differences have been found between both.
+Also, when possible, we try a simpler approach finding strings in the text without regular expressions, which usually gives even better results.
+
+In benchmarks, we usually compare a dot-plus with a negated character. In general, no big differences have been found between both, although the times with the negated character class are slightly better.
 
 ## TODO: REVIEW COMPONENTS
 
@@ -263,7 +265,7 @@ In benchmarks, we usually compare a dot-plus with a negated character. In genera
 - [ ] After 1-Mar-2020 the _page-articles_ dumps will be generated both in multi-stream mode but in different ways (cf. <https://phabricator.wikimedia.org/T239866>). We should check if any of them is read/parsed faster.
 - [ ] Research how to enable/disable replacement/immutable finders by language
 - [ ] Optimize regex for all replacement/immutable finders
-- [ ] Research to return the immutables as a stream or iterator. Research also the immutables more commonly applied in order to give them some kind of priority.
+- [ ] Research the immutables more commonly applied in order to give them some kind of priority.
 - [ ] Performance tests to run replacement finders in parallel
 - [ ] Check if it is worth to store the replacement type as an enumerate
 - [ ] When testing the database performance, check [jOOQ](https://www.jooq.org/).

@@ -62,4 +62,16 @@ public class CompleteTagFinderTest {
         CompleteTagRegexAlternateNegatedFinder finder = new CompleteTagRegexAlternateNegatedFinder(words);
         Assert.assertEquals(expected, finder.findMatches(text));
     }
+
+    @Test
+    public void testCompleteTagIndexOfFinder() {
+        CompleteTagIndexOfFinder finder = new CompleteTagIndexOfFinder(words);
+        Assert.assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    public void testCompleteTagIndexOfLinearFinder() {
+        CompleteTagIndexOfLinearFinder finder = new CompleteTagIndexOfLinearFinder(words);
+        Assert.assertEquals(expected, finder.findMatches(text));
+    }
 }

@@ -1,12 +1,11 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
+import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -36,6 +35,8 @@ public class CompleteTagFinderBenchmark extends BaseFinderBenchmark {
         finders.add(new CompleteTagRegexNegatedLazyFinder(words));
         finders.add(new CompleteTagRegexAlternateFinder(words));
         finders.add(new CompleteTagRegexAlternateNegatedFinder(words));
+        finders.add(new CompleteTagIndexOfFinder(words));
+        finders.add(new CompleteTagIndexOfLinearFinder(words));
 
         System.out.println();
         System.out.println("FINDER\tTIME");

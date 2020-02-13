@@ -6,6 +6,10 @@ import seaborn as sns
 # Import data
 words = pd.read_csv('complete-tag-benchmark.csv', sep='\t')
 
+# Basic stats
+pd.set_option('float_format', '{:.2f}'.format)
+print(words.groupby('FINDER').describe())
+
 # Box Plot (Log)
 f, (ax) = plt.subplots(1, 1, figsize=(12, 4))
 ax.set_xscale('log')

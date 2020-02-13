@@ -1,35 +1,19 @@
-package es.bvalero.replacer.finder.immutable;
+package es.bvalero.replacer.finder.benchmark.completetag;
 
-import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.stereotype.Component;
+import java.util.Set;
 
-/**
- * Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`
- */
-@Component
-class CompleteTagFinder implements ImmutableFinder {
-    private static final List<String> TAG_NAMES = Arrays.asList(
-        "blockquote",
-        "cite",
-        "code",
-        "math",
-        "nowiki",
-        "poem",
-        "pre",
-        "ref",
-        "score",
-        "source",
-        "syntaxhighlight"
-    );
+class CompleteTagIndexOfLinearFinder extends CompleteTagFinder {
+    private final Set<String> words;
 
-    @Override
-    public Iterable<Immutable> find(String text) {
-        List<Immutable> matches = new ArrayList<>(100);
+    CompleteTagIndexOfLinearFinder(List<String> words) {
+        this.words = new HashSet<>(words);
+    }
+
+    Set<String> findMatches(String text) {
+        Set<String> matches = new HashSet<>();
         int start = 0;
         while (start >= 0) {
             start = text.indexOf('<', start);
@@ -37,13 +21,14 @@ class CompleteTagFinder implements ImmutableFinder {
                 int endOpenTag = text.indexOf('>', start);
                 if (endOpenTag >= 0) {
                     String openTag = text.substring(start + 1, endOpenTag);
-                    Optional<String> tag = TAG_NAMES.stream().filter(openTag::startsWith).findAny();
+                    Optional<String> tag = words.stream().filter(openTag::startsWith).findAny();
                     if (tag.isPresent()) {
                         String closeTag = String.format("</%s>", tag.get());
                         int startCloseTag = text.indexOf(closeTag, endOpenTag);
                         if (startCloseTag >= 0) {
                             int endCloseTag = startCloseTag + closeTag.length();
-                            matches.add(Immutable.of(start, text.substring(start, endCloseTag)));
+                            String completeTag = text.substring(start, endCloseTag);
+                            matches.add(completeTag);
                             start = endCloseTag + 1;
                         } else {
                             start++;
