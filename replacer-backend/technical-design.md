@@ -244,7 +244,7 @@ Package _finder.benchmark_ contains subpackages for each finder with different i
 
 To work with regular expressions, the implementation included in Java is _regex-based_, which is the standard containing advanced features like look-ahead, look-behind, references, etc. On the other hand, this tool uses also an implementation which is _text-based_. This implementation builds an automaton from the regex and gives impressive performance improvements of 1-2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking.
 
-TODO: Return iterables of all
+In benchmarks, we usually compare a dot-plus with a negated character. In general, no big differences have been found between both.
 
 ## TODO: REVIEW COMPONENTS
 

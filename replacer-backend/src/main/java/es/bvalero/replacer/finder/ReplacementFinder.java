@@ -2,9 +2,9 @@ package es.bvalero.replacer.finder;
 
 import java.util.List;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import org.apache.commons.collections4.IterableUtils;
 
 /**
  * Interface to be implemented by any class returning a collection of replacements.
@@ -17,7 +17,7 @@ public interface ReplacementFinder {
     }
 
     default List<Replacement> findList(String text) {
-        return findStream(text).collect(Collectors.toList());
+        return IterableUtils.toList(find(text));
     }
 
     default boolean isValidMatch(MatchResult match, String text) {

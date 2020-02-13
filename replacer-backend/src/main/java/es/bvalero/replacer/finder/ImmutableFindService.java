@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 /**
  * Independent service that finds all the immutables in a given text.
  *
- * It is composed by several specific immutable finders: URL, quotes, etc.
- * which implement the same interface.
+ * It is composed by several specific immutable finders: URL, quotes, etc. which
+ * implement the same interface.
  *
- * The service applies all these specific finders one by one, and returns
- * an iterator with the results.
+ * The service applies all these specific finders one by one, and returns an
+ * iterator with the results.
  */
 @Service
 class ImmutableFindService {

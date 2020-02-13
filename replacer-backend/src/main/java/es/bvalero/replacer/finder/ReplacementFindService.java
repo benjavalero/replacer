@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,11 +35,10 @@ public class ReplacementFindService {
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
         LOGGER.debug("START Find replacements in text: {}", text);
 
-        Stream<Replacement> replacements = findAllReplacements(text, replacementFinders);
+        List<Replacement> replacements = findAllReplacements(text, replacementFinders);
 
         LOGGER.debug("END Find replacements in text: {}", replacements);
-        // TODO: Return a stream
-        return replacements.collect(Collectors.toList());
+        return replacements;
     }
 
     public List<Replacement> findCustomReplacements(String text, String replacement, String suggestion) {
@@ -50,20 +50,19 @@ public class ReplacementFindService {
         );
 
         CustomReplacementFinder finder = new CustomReplacementFinder(replacement, suggestion);
-        Stream<Replacement> replacements = findAllReplacements(text, Collections.singletonList(finder));
+        List<Replacement> replacements = findAllReplacements(text, Collections.singletonList(finder));
 
         LOGGER.debug("END Find custom replacements in text: {}", replacements);
-        // TODO: Return a stream
-        return replacements.collect(Collectors.toList());
+        return replacements;
     }
 
-    private Stream<Replacement> findAllReplacements(String text, List<ReplacementFinder> finders) {
-        Stream<Replacement> all = finders.stream().map(finder -> finder.findStream(text)).flatMap(s -> s);
+    private List<Replacement> findAllReplacements(String text, List<ReplacementFinder> finders) {
+        Stream<Replacement> all = finders.stream().map(finder -> finder.findStream(text)).flatMap(s -> s).sorted();
 
         Stream<Replacement> distinct = removeNestedReplacements(all);
 
         // Ignore the replacements contained in immutables
-        return removeImmutables(distinct, text).sorted();
+        return removeImmutables(distinct, text);
     }
 
     private Stream<Replacement> removeNestedReplacements(Stream<Replacement> replacements) {
@@ -77,13 +76,13 @@ public class ReplacementFindService {
         return distinctList.stream().filter(r -> distinctList.stream().noneMatch(r2 -> r2.contains(r)));
     }
 
-    private Stream<Replacement> removeImmutables(Stream<Replacement> replacements, String text) {
+    private List<Replacement> removeImmutables(Stream<Replacement> replacements, String text) {
         // Build a list from the stream and remove the items contained in any immutable
-        List<Replacement> replacementList = replacements.collect(Collectors.toList());
+        List<Replacement> replacementList = replacements.collect(Collectors.toCollection(LinkedList::new));
 
         // No need to find the immutables if there are no replacements
         if (replacementList.isEmpty()) {
-            return Stream.empty();
+            return Collections.emptyList();
         }
 
         for (Immutable immutable : immutableFindService.findImmutables(text)) {
@@ -91,10 +90,10 @@ public class ReplacementFindService {
 
             // No need to continue finding the immutables if there are no replacements
             if (replacementList.isEmpty()) {
-                return Stream.empty();
+                return Collections.emptyList();
             }
         }
 
-        return replacementList.stream();
+        return replacementList;
     }
 }

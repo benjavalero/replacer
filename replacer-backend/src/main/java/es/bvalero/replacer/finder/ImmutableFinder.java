@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder;
 
 import java.util.List;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+
+import org.apache.commons.collections4.IterableUtils;
 
 /**
  * Interface to be implemented by any class returning a collection of immutables.
@@ -14,7 +14,7 @@ public interface ImmutableFinder {
     Iterable<Immutable> find(String text);
 
     default List<Immutable> findList(String text) {
-        return StreamSupport.stream(find(text).spliterator(), false).collect(Collectors.toList());
+        return IterableUtils.toList(find(text));
     }
 
     default Immutable convert(MatchResult match) {
