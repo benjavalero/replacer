@@ -1,8 +1,13 @@
 # Versiones
 
 ## 2.4.0
+- Corrección crítica de configuración que escribía mensajes en consola en Producción
+- T238972: Adaptación al nuevo esquema de los dumps
+- T239866: Adaptación a la nueva compresión de los dumps
 - Actualización de dependencias
-- Refactorización en el backend especialmente en el uso de DTO
+- Refactorización en el backend
+- Inicio de documentación técnica (en inglés)
+- Inicio de preparación para usarse en otros proyectos e idiomas
 
 ## 2.3.7 (30 de septiembre de 2019)
 - Corregir bucle infinito al buscar reemplazos personalizados
