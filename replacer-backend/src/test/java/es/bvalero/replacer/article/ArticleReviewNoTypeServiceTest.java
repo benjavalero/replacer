@@ -1,7 +1,7 @@
 package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -45,7 +45,7 @@ public class ArticleReviewNoTypeServiceTest {
     private ReplacementIndexService replacementIndexService;
 
     @Mock
-    private ReplacementFinderService replacementFinderService;
+    private ReplacementFindService replacementFindService;
 
     @Mock
     private SectionReviewService sectionReviewService;
@@ -101,7 +101,7 @@ public class ArticleReviewNoTypeServiceTest {
                 .thenReturn(Optional.of(article));
 
         // The article contains replacements
-        Mockito.when(replacementFinderService.findReplacements(content))
+        Mockito.when(replacementFindService.findReplacements(content))
                 .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview();
@@ -126,7 +126,7 @@ public class ArticleReviewNoTypeServiceTest {
 
         // The article doesn't contain replacements
         List<Replacement> noArticleReplacements = Collections.emptyList();
-        Mockito.when(replacementFinderService.findReplacements(content))
+        Mockito.when(replacementFindService.findReplacements(content))
                 .thenReturn(noArticleReplacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview();
@@ -150,7 +150,7 @@ public class ArticleReviewNoTypeServiceTest {
                 .thenReturn(Optional.of(article2));
 
         // The article contains replacements
-        Mockito.when(replacementFinderService.findReplacements(content2))
+        Mockito.when(replacementFindService.findReplacements(content2))
                 .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview();

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
@@ -26,7 +26,7 @@ public class DumpArticleProcessorTest {
     private ReplacementIndexService replacementIndexService;
 
     @Mock
-    private ReplacementFinderService replacementFinderService;
+    private ReplacementFindService replacementFindService;
 
     @InjectMocks
     private DumpArticleProcessor dumpArticleProcessor;
@@ -43,7 +43,7 @@ public class DumpArticleProcessorTest {
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
 
         Mockito.verify(replacementCache).findByArticleId(Mockito.anyInt());
-        Mockito.verify(replacementFinderService).findReplacements(Mockito.anyString());
+        Mockito.verify(replacementFindService).findReplacements(Mockito.anyString());
         Mockito.verify(replacementIndexService).indexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.anyList());
     }
 
@@ -153,7 +153,7 @@ public class DumpArticleProcessorTest {
 
         Replacement replacement = Replacement.builder().build();
         List<Replacement> replacements = Collections.singletonList(replacement);
-        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString())).thenReturn(replacements);
+        Mockito.when(replacementFindService.findReplacements(Mockito.anyString())).thenReturn(replacements);
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
 
@@ -177,7 +177,7 @@ public class DumpArticleProcessorTest {
         Mockito.when(replacementCache.findByArticleId(Mockito.anyInt())).thenReturn(dbReplacements);
 
         List<Replacement> replacements = Collections.emptyList();
-        Mockito.when(replacementFinderService.findReplacements(Mockito.anyString())).thenReturn(replacements);
+        Mockito.when(replacementFindService.findReplacements(Mockito.anyString())).thenReturn(replacements);
 
         Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
 

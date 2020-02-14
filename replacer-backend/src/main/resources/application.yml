@@ -18,9 +18,11 @@ logging:
     org.hibernate: ERROR
     org.springframework: ERROR
 
-dump-base-path: /public/dumps/public/eswiki
-
 replacer:
+  dump.path:
+    base: /public/dumps/public
+    project: eswiki
+
   admin.user: Benjavalero
   parse.file.delay: 3600000 # Every hour
   dump.index.delay: 86400000 # Daily
@@ -40,7 +42,9 @@ spring:
   datasource:
     platform: h2
 
-dump-base-path: /Users/benja/Developer/pywikibot
+replacer:
+  dump.path:
+    base: /Users/benja/Developer
 
 ---
 

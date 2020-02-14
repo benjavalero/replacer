@@ -1,10 +1,10 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.ReplacerException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -12,24 +12,28 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 public class DumpFileFinderTest {
-
     @Rule
     public TemporaryFolder dumpBaseFolder = new TemporaryFolder();
 
-    private DumpFileFinder dumpFileFinder;
+    private DumpFinder dumpFinder;
 
     @Before
     public void setUp() {
-        dumpFileFinder = new DumpFileFinder();
+        dumpFinder = new DumpFinder();
     }
 
     @Test
-    public void testFindLatestDumpFile() throws IOException, DumpException {
+    public void testFindLatestDumpFile() throws IOException, ReplacerException {
         // Two folders: 1 (old) and 2 (new). Each with one valid dump file.
-        // The newer contains a non-valid dump file.
-        Path dumpBaseFolderFile = Paths.get(dumpBaseFolder.getRoot().toURI());
-        Path subFolder1 = dumpBaseFolderFile.resolve("20170101");
-        Path subFolder2 = dumpBaseFolderFile.resolve("20170201");
+        // The newer also contains a non-valid dump file.
+        String dumpPathBase = dumpBaseFolder.getRoot().getPath();
+        String dumpPathProject = "eswiki";
+
+        Path dumpBase = Paths.get(dumpPathBase);
+        Path dumpProject = dumpBase.resolve(dumpPathProject);
+        Files.createDirectory(dumpProject);
+        Path subFolder1 = dumpProject.resolve("20170101");
+        Path subFolder2 = dumpProject.resolve("20170201");
         Files.createDirectory(subFolder1);
         Files.createDirectory(subFolder2);
         Path dumpFile1 = subFolder1.resolve("eswiki-20170101-pages-articles.xml.bz2");
@@ -38,55 +42,93 @@ public class DumpFileFinderTest {
         Files.createFile(dumpFile1);
         Files.createFile(dumpFile2);
         Files.createFile(dumpFile3);
-        dumpFileFinder.setDumpBaseFolder(dumpBaseFolderFile.toString());
 
-        Path latestDumpFile = dumpFileFinder.findLatestDumpFile();
+        dumpFinder.setDumpPathBase(dumpPathBase);
+        dumpFinder.setDumpPathProject(dumpPathProject);
+
+        Path latestDumpFile = dumpFinder.findLatestDumpFile();
 
         Assert.assertNotNull(latestDumpFile);
         Assert.assertEquals(dumpFile2, latestDumpFile);
     }
 
     @Test
-    public void testFindLatestDumpFileInOldSubFolder() throws IOException, DumpException {
+    public void testFindLatestDumpFileInOldSubFolder() throws IOException, ReplacerException {
         // In case the latest dump folder has not a valid dump yet
         // (the generation is not done yet)
-        Path dumpBaseFolderFile = Paths.get(dumpBaseFolder.getRoot().toURI());
-        Path subFolder1 = dumpBaseFolderFile.resolve("20170101");
-        Path subFolder2 = dumpBaseFolderFile.resolve("20170201");
+        String dumpPathBase = dumpBaseFolder.getRoot().getPath();
+        String dumpPathProject = "eswiki";
+
+        Path dumpBase = Paths.get(dumpPathBase);
+        Path dumpProject = dumpBase.resolve(dumpPathProject);
+        Files.createDirectory(dumpProject);
+        Path subFolder1 = dumpProject.resolve("20170101");
+        Path subFolder2 = dumpProject.resolve("20170201");
         Files.createDirectory(subFolder1);
         Files.createDirectory(subFolder2);
         Path dumpFile1 = subFolder1.resolve("eswiki-20170101-pages-articles.xml.bz2");
         Files.createFile(dumpFile1);
-        dumpFileFinder.setDumpBaseFolder(dumpBaseFolderFile.toString());
 
-        Path latestDumpFile = dumpFileFinder.findLatestDumpFile();
+        dumpFinder.setDumpPathBase(dumpPathBase);
+        dumpFinder.setDumpPathProject(dumpPathProject);
+
+        Path latestDumpFile = dumpFinder.findLatestDumpFile();
 
         Assert.assertNotNull(latestDumpFile);
         Assert.assertEquals(dumpFile1, latestDumpFile);
     }
 
-    @Test(expected = DumpException.class)
-    public void testNotExistingValidDumpFolder() throws IOException, DumpException {
+    @Test(expected = ReplacerException.class)
+    public void testEmptyDumpFolders() throws IOException, ReplacerException {
         // In case there is no dump folder with a dump yet
-        dumpBaseFolder.newFolder("20170101");
-        dumpFileFinder.setDumpBaseFolder(dumpBaseFolder.getRoot().getPath());
+        String dumpPathBase = dumpBaseFolder.getRoot().getPath();
+        String dumpPathProject = "eswiki";
 
-        dumpFileFinder.findLatestDumpFile();
+        Path dumpBase = Paths.get(dumpPathBase);
+        Path dumpProject = dumpBase.resolve(dumpPathProject);
+        Files.createDirectory(dumpProject);
+        Path subFolder1 = dumpProject.resolve("20170101");
+        Files.createDirectory(subFolder1);
+
+        dumpFinder.setDumpPathBase(dumpPathBase);
+        dumpFinder.setDumpPathProject(dumpPathProject);
+
+        dumpFinder.findLatestDumpFile();
     }
 
-    @Test(expected = DumpException.class)
-    public void testDumpBaseFolderWithoutValidSubFolders() throws IOException, DumpException {
-        dumpBaseFolder.newFolder("20170101-temp");
-        dumpFileFinder.setDumpBaseFolder(dumpBaseFolder.getRoot().getPath());
+    @Test(expected = ReplacerException.class)
+    public void testDumpFolderWithoutValidSubFolders() throws IOException, ReplacerException {
+        String dumpPathBase = dumpBaseFolder.getRoot().getPath();
+        String dumpPathProject = "eswiki";
 
-        dumpFileFinder.findLatestDumpFile();
+        Path dumpBase = Paths.get(dumpPathBase);
+        Path dumpProject = dumpBase.resolve(dumpPathProject);
+        Files.createDirectory(dumpProject);
+        Path subFolder1 = dumpProject.resolve("20170101-temp");
+        Files.createDirectory(subFolder1);
+        Path dumpFile1 = subFolder1.resolve("eswiki-20170101-pages-articles.xml.bz2");
+        Files.createFile(dumpFile1);
+
+        dumpFinder.setDumpPathBase(dumpPathBase);
+        dumpFinder.setDumpPathProject(dumpPathProject);
+
+        dumpFinder.findLatestDumpFile();
     }
 
-    @Test(expected = DumpException.class)
-    public void testNotExistingDumpBaseFolder() throws DumpException {
-        dumpFileFinder.setDumpBaseFolder("xxx");
+    @Test(expected = ReplacerException.class)
+    public void testNotExistingDumpProjectFolder() throws ReplacerException {
+        dumpFinder.setDumpPathBase(dumpBaseFolder.getRoot().getPath());
+        dumpFinder.setDumpPathProject("eswiki");
 
-        dumpFileFinder.findLatestDumpFile();
+        // Don't create the project sub-folder for the test
+        dumpFinder.findLatestDumpFile();
     }
 
+    @Test(expected = ReplacerException.class)
+    public void testNotExistingDumpBaseFolder() throws ReplacerException {
+        dumpFinder.setDumpPathBase("xxx");
+        dumpFinder.setDumpPathProject("eswiki");
+
+        dumpFinder.findLatestDumpFile();
+    }
 }

@@ -2,54 +2,25 @@ package es.bvalero.replacer.finder;
 
 import java.util.List;
 import java.util.regex.MatchResult;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+import org.apache.commons.collections4.IterableUtils;
 
 /**
- * Classes implementing this interface will provide methods to find potential replacements of different types.
+ * Interface to be implemented by any class returning a collection of replacements.
  */
-public interface ReplacementFinder extends BaseFinder<Replacement> {
+public interface ReplacementFinder {
+    Iterable<Replacement> find(String text);
 
-    /**
-     * @return A list of potential replacements in the text.
-     */
-    List<Replacement> findReplacements(String text);
-
-    @Override
-    default boolean isValidMatch(int start, String matchedText, String fullText) {
-        return FinderUtils.isWordCompleteInText(start, matchedText, fullText);
+    default Stream<Replacement> findStream(String text) {
+        return StreamSupport.stream(find(text).spliterator(), false);
     }
 
-    @Override
-    default Replacement convertMatch(MatchResult matcher) {
-        int start = matcher.start();
-        String text = matcher.group();
-        return Replacement.builder()
-                .type(getType())
-                .subtype(getSubtype(text))
-                .start(start)
-                .text(text)
-                .suggestions(findSuggestions(matcher))
-                .build();
+    default List<Replacement> findList(String text) {
+        return IterableUtils.toList(find(text));
     }
 
-    @Override
-    default Replacement convertMatch(int start, String text) {
-        return Replacement.builder()
-                .type(getType())
-                .subtype(getSubtype(text))
-                .start(start)
-                .text(text)
-                .suggestions(findSuggestions(text))
-                .build();
+    default boolean isValidMatch(MatchResult match, String text) {
+        return FinderUtils.isWordCompleteInText(match.start(), match.group(), text);
     }
-
-    String getType();
-
-    String getSubtype(String text);
-
-    default List<Suggestion> findSuggestions(MatchResult matcher) {
-        return findSuggestions(matcher.group());
-    }
-
-    List<Suggestion> findSuggestions(String text);
-
 }

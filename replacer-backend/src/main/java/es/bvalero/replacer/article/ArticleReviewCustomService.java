@@ -1,7 +1,7 @@
 package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
@@ -27,7 +27,7 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
     private ReplacementRepository replacementRepository;
 
     @Autowired
-    private ReplacementFinderService replacementFinderService;
+    private ReplacementFindService replacementFindService;
 
     @Autowired
     private ReplacementIndexService replacementIndexService;
@@ -43,7 +43,7 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
 
     @Override
     String buildReplacementCacheKey() {
-        return String.format("%s-%s", ReplacementFinderService.CUSTOM_FINDER_TYPE, replacement);
+        return String.format("%s-%s", ReplacementFindService.CUSTOM_FINDER_TYPE, replacement);
     }
 
     @Override
@@ -53,7 +53,7 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
 
             // Check that the replacement has not already been reviewed
             articleIds.removeIf(id -> replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
-                    id, ReplacementFinderService.CUSTOM_FINDER_TYPE, replacement) > 0);
+                    id, ReplacementFindService.CUSTOM_FINDER_TYPE, replacement) > 0);
 
             return articleIds;
         } catch (WikipediaException e) {
@@ -82,7 +82,7 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
 
     @Override
     List<Replacement> findAllReplacements(WikipediaPage article) {
-        List<Replacement> replacements = replacementFinderService.findCustomReplacements(article.getContent(), replacement, suggestion);
+        List<Replacement> replacements = replacementFindService.findCustomReplacements(article.getContent(), replacement, suggestion);
 
         if (replacements.isEmpty()) {
             // We add the custom replacement to the database  as reviewed to skip it after the next search in the API

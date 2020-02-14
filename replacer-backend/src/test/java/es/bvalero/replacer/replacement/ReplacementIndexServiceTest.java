@@ -1,7 +1,7 @@
 package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.junit.Before;
 import org.junit.Test;
@@ -205,12 +205,12 @@ public class ReplacementIndexServiceTest {
     public void testReviewArticleWithCustom() {
         int articleId = new Random().nextInt();
 
-        replacementIndexService.reviewArticleReplacements(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, "B", "X");
+        replacementIndexService.reviewArticleReplacements(articleId, ReplacementFindService.CUSTOM_FINDER_TYPE, "B", "X");
 
         Mockito.verify(replacementCountService, Mockito.times(0))
                 .decreaseCachedReplacementsCount(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 
-        ReplacementEntity toSave = new ReplacementEntity(articleId, ReplacementFinderService.CUSTOM_FINDER_TYPE, "B", 0, "X");
+        ReplacementEntity toSave = new ReplacementEntity(articleId, ReplacementFindService.CUSTOM_FINDER_TYPE, "B", 0, "X");
         Mockito.verify(replacementRepository, Mockito.times(1)).save(toSave);
     }
 

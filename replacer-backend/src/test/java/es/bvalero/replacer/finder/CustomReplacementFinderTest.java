@@ -1,9 +1,8 @@
 package es.bvalero.replacer.finder;
 
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 public class CustomReplacementFinderTest {
 
@@ -14,7 +13,7 @@ public class CustomReplacementFinderTest {
         String text = String.format("Ax %s.", replacement);
 
         CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
-        List<Replacement> replacements = customReplacementFinder.findReplacements(text);
+        List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assert.assertEquals(1, replacements.size());
         Assert.assertEquals(3, replacements.get(0).getStart());
@@ -28,7 +27,7 @@ public class CustomReplacementFinderTest {
         String text = "En parís París.";
 
         CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
-        List<Replacement> replacements = customReplacementFinder.findReplacements(text);
+        List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assert.assertEquals(1, replacements.size());
         Assert.assertEquals(3, replacements.get(0).getStart());
@@ -43,7 +42,7 @@ public class CustomReplacementFinderTest {
         String text = "En Enero enero.";
 
         CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
-        List<Replacement> replacements = customReplacementFinder.findReplacements(text);
+        List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assert.assertEquals(1, replacements.size());
         Assert.assertEquals(3, replacements.get(0).getStart());
@@ -58,7 +57,7 @@ public class CustomReplacementFinderTest {
         String text = "En Mas Más mas más.";
 
         CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
-        List<Replacement> replacements = customReplacementFinder.findReplacements(text);
+        List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assert.assertEquals(1, replacements.size());
         Assert.assertEquals(3, replacements.get(0).getStart());
@@ -73,7 +72,7 @@ public class CustomReplacementFinderTest {
         String text = "En mas más Mas Más.";
 
         CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
-        List<Replacement> replacements = customReplacementFinder.findReplacements(text);
+        List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assert.assertEquals(2, replacements.size());
 
@@ -83,7 +82,9 @@ public class CustomReplacementFinderTest {
 
         Assert.assertEquals(11, replacements.get(1).getStart());
         Assert.assertEquals(FinderUtils.setFirstUpperCase(replacement), replacements.get(1).getText());
-        Assert.assertEquals(FinderUtils.setFirstUpperCase(suggestion), replacements.get(1).getSuggestions().get(0).getText());
+        Assert.assertEquals(
+            FinderUtils.setFirstUpperCase(suggestion),
+            replacements.get(1).getSuggestions().get(0).getText()
+        );
     }
-
 }

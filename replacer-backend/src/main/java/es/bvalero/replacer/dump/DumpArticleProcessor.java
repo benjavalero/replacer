@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFinderService;
+import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ class DumpArticleProcessor {
     private ReplacementIndexService replacementIndexService;
 
     @Autowired
-    private ReplacementFinderService replacementFinderService;
+    private ReplacementFindService replacementFindService;
 
     boolean processArticle(DumpArticle dumpArticle) {
         LOGGER.debug("START Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
@@ -43,7 +43,7 @@ class DumpArticleProcessor {
             return false;
         }
 
-        List<Replacement> replacements = replacementFinderService.findReplacements(dumpArticle.getContent());
+        List<Replacement> replacements = replacementFindService.findReplacements(dumpArticle.getContent());
         replacementIndexService.indexArticleReplacements(dumpArticle.getId(),
                 replacements.stream().map(dumpArticle::convertReplacementToIndexed).collect(Collectors.toList()),
                 dbReplacements);
