@@ -198,7 +198,7 @@ The tool implements the following generic immutable finders:
 - [ ] **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
 - [ ] **CommentFinder** Find XML comments, e. g. `<!-- A comment -->`
 - [ ] **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
-- [x] **CompleteTagFinder** Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`
+- [x] **CompleteTagFinder** Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`. In particular, the tags found are: `blockquote`, `cite`, `code`, `math`, `nowiki`, `poem`, `pre`, `ref`, `score`, `source` and `syntaxhighlight`.
 - [ ] **ParameterValueFinder** Find the values of some parameters, e. g. `value` in `{{Template|index=value}}`
 - [ ] **DomainFinder** Find web domains, e. g. `www.acb.es`
 - [ ] **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
@@ -242,9 +242,11 @@ The tool implements the following generic cosmetic finders:
 
 Package _finder.benchmark_ contains subpackages for each finder with different implementations in order to test the results and performance, and choose the best one.
 
-To work with regular expressions, the implementation included in Java is _regex-based_, which is the standard containing advanced features like look-ahead, look-behind, references, etc. On the other hand, this tool uses also an implementation which is _text-based_. This implementation builds an automaton from the regex and gives impressive performance improvements of 1 to 2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking.
+To work with regular expressions, the implementation included in Java is _regex-based_, which is the standard containing advanced features like look-ahead, look-behind, references, etc.
 
-Also, when possible, we try a simpler approach finding strings in the text without regular expressions, which usually gives even better results.
+On the other hand, this tool uses also a _text-based_ implementation. It builds an automaton from the regex and gives impressive performance improvements of 1 to 2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking.
+
+Also, when possible, we try a simpler approach finding strings in the text without regular expressions, which usually gives even better results than the text-based automaton.
 
 In benchmarks, we usually compare a dot-plus with a negated character. In general, no big differences have been found between both, although the times with the negated character class are slightly better.
 
@@ -270,5 +272,7 @@ In benchmarks, we usually compare a dot-plus with a negated character. In genera
 - [ ] Check if it is worth to store the replacement type as an enumerate
 - [ ] When testing the database performance, check [jOOQ](https://www.jooq.org/).
 - [ ] Review the managers for misspellings and false-positives, and remark the Observable pattern.
+- [ ] Research if it is possible to deploy independently the frontend and the backend in ToolLabs.
+- [ ] Check if it is worth to find as immutables some templates like `Cita web` as most of them should be captured by the complete tag `ref`.
 
 The Java code is formatted with [Prettier Java](https://github.com/jhipster/prettier-java).
