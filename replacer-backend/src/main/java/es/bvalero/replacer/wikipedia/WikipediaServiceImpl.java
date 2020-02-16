@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Profile("default")
 class WikipediaServiceImpl implements WikipediaService {
 
-    private static final String MISSPELLING_LIST_PAGE = "Wikipedia:Corrector_ortográfico/Listado";
+    private static final String MISSPELLING_LIST_PAGE = "Wikipedia:Corrector ortográfico/Listado";
     private static final String FALSE_POSITIVE_LIST_PAGE = "Usuario:Benjavalero/FalsePositives";
     private static final String COMPOSED_MISSPELLING_LIST_PAGE = "Usuario:Benjavalero/ComposedMisspellings";
     private static final String EDIT_SUMMARY = "Correcciones ortográficas con [[Usuario:Benjavalero/Replacer|Replacer]] (herramienta en línea de revisión de errores)";

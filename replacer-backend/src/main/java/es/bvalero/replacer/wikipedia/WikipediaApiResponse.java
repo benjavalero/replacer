@@ -1,37 +1,27 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 import lombok.Data;
 
-import java.util.List;
-
-@SuppressWarnings("WeakerAccess")
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WikipediaApiResponse {
     private Error error;
-    private String servedby;
     private boolean batchcomplete;
     private String curtimestamp;
-    @JsonProperty("continue")
-    private Continue continueObj;
     private Query query;
     private Page parse;
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     static class Error {
         private String code;
         private String info;
-        private String docref;
     }
 
     @Data
-    static class Continue {
-        private int sroffset;
-        @JsonProperty("continue")
-        private String continueStr;
-    }
-
-    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Query {
         private UserInfo userinfo;
         private List<Page> search;
@@ -72,9 +62,8 @@ public class WikipediaApiResponse {
     }
 
     @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Main {
-        private String contentmodel;
-        private String contentformat;
         private String content;
     }
 
@@ -89,5 +78,4 @@ public class WikipediaApiResponse {
         private Integer byteoffset;
         private String anchor;
     }
-
 }
