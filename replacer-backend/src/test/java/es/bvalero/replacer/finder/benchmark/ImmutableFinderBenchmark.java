@@ -7,7 +7,9 @@ import es.bvalero.replacer.finder.immutable.FileNameFinder;
 import es.bvalero.replacer.finder.immutable.InterLanguageLinkFinder;
 import es.bvalero.replacer.finder.immutable.LinkAliasedFinder;
 import es.bvalero.replacer.finder.immutable.LinkSuffixedFinder;
+import es.bvalero.replacer.finder.immutable.QuotesAngularFinder;
 import es.bvalero.replacer.finder.immutable.QuotesFinder;
+import es.bvalero.replacer.finder.immutable.QuotesTypographicFinder;
 import es.bvalero.replacer.finder.immutable.TemplateNameFinder;
 import es.bvalero.replacer.finder.immutable.TemplateParamFinder;
 import es.bvalero.replacer.finder.immutable.UrlFinder;
@@ -33,6 +35,8 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
         finders.add(new TemplateNameFinder());
         finders.add(new TemplateParamFinder());
         finders.add(new QuotesFinder());
+        finders.add(new QuotesTypographicFinder());
+        finders.add(new QuotesAngularFinder());
         finders.add(new FileNameFinder());
         finders.add(new LinkSuffixedFinder());
         finders.add(new LinkAliasedFinder());
