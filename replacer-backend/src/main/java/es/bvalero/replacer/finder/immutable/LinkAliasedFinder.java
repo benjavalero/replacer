@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Find the first part of aliased links, e. g. `brasil` in `[[brasil|Brasil]]`
  */
 @Component
-class LinkAliasedFinder implements ImmutableFinder {
+public class LinkAliasedFinder implements ImmutableFinder {
     private static final String REGEX_LINK_ALIASED = "\\[\\[[^]|]+\\|";
     private static final RunAutomaton AUTOMATON_LINK_ALIASED = new RunAutomaton(
         new RegExp(REGEX_LINK_ALIASED).toAutomaton()

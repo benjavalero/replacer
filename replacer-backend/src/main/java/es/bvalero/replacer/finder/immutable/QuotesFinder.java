@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * Find text in quotes, e. g. `"text"`, `“text”` or `«text»`
  */
 @Component
-class QuotesFinder implements ImmutableFinder {
+public class QuotesFinder implements ImmutableFinder {
     private static final String REGEX_ANGULAR_QUOTES = "«[^»]+»";
     private static final RunAutomaton AUTOMATON_ANGULAR_QUOTES = new RunAutomaton(
         new RegExp(REGEX_ANGULAR_QUOTES).toAutomaton()

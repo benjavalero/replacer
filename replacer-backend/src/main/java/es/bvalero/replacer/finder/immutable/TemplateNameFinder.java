@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Find template names, e. g. `Bandera` in `{{Bandera|España}}`
  */
 @Component
-class TemplateNameFinder implements ImmutableFinder {
+public class TemplateNameFinder implements ImmutableFinder {
     private static final String REGEX_TEMPLATE_NAME = "\\{\\{[^|}:]+";
     private static final RunAutomaton AUTOMATON_TEMPLATE_NAME = new RunAutomaton(
         new RegExp(REGEX_TEMPLATE_NAME).toAutomaton()

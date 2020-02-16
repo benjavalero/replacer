@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Find template parameters, e. g. `param` in `{{Template|param=value}}`
  */
 @Component
-class TemplateParamFinder implements ImmutableFinder {
+public class TemplateParamFinder implements ImmutableFinder {
     // Avoid also ] in case the | comes from a link
     private static final String REGEX_TEMPLATE_PARAM = "\\|[^]|=}]+=";
     private static final RunAutomaton AUTOMATON_TEMPLATE_PARAM = new RunAutomaton(

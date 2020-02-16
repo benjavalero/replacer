@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Find web domains, e. g. `www.acb.es` or `es.wikipedia.org`
  */
 @Component
-class DomainFinder implements ImmutableFinder {
+public class DomainFinder implements ImmutableFinder {
     private static final String REGEX_DOMAIN = "[A-Za-z.]+\\.[a-z]{2,4}[^a-z]";
     private static final RunAutomaton AUTOMATON_DOMAIN = new RunAutomaton(new RegExp(REGEX_DOMAIN).toAutomaton());
 

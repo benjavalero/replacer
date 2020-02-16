@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * Find XML tags, e. g. `<span>` or `<br />`
  */
 @Component
-class XmlTagFinder implements ImmutableFinder {
+public class XmlTagFinder implements ImmutableFinder {
     // We want to avoid the XML comments to be captured by this
     // For the automaton the < needs an extra backslash
     private static final String REGEX_XML_TAG = "\\</?[A-Za-z][^/\\>]+/?\\>";

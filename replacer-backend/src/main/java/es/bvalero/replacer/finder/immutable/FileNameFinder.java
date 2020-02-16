@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
  */
 @Component
-class FileNameFinder implements ImmutableFinder {
+public class FileNameFinder implements ImmutableFinder {
     // With this regex we also capture domains like www.google.com
     private static final String REGEX_FILE_TAG = "[:=|\n] *[^]:=|/\n]+\\.[A-Za-z]{2,4} *[]}{|\n]";
     private static final RunAutomaton AUTOMATON_FILE_TAG = new RunAutomaton(new RegExp(REGEX_FILE_TAG).toAutomaton());

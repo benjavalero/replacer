@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Find links with suffix, e. g. `[[brasil]]eño`
  */
 @Component
-class LinkSuffixedFinder implements ImmutableFinder {
+public class LinkSuffixedFinder implements ImmutableFinder {
     private static final String REGEX_LINK_SUFFIXED = "\\[\\[[^]]+]]<Ll>+";
     private static final RunAutomaton AUTOMATON_LINK_SUFFIXED = new RunAutomaton(
         new RegExp(REGEX_LINK_SUFFIXED).toAutomaton(new DatatypesAutomatonProvider())

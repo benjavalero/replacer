@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`
  */
 @Component
-class CompleteTagFinder implements ImmutableFinder {
+public class CompleteTagFinder implements ImmutableFinder {
     private static final List<String> TAG_NAMES = Arrays.asList(
         "blockquote",
         "cite",
