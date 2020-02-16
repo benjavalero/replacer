@@ -190,26 +190,26 @@ Finally, the helper class **FinderUtils** provides static methods to work with w
 
 ### Immutable Finders
 
-Generic immutable finders are placed in package _finder.immutable_ and implement the interface _ImmutableFinder_. The must have the Spring annotation _@Component_ in order to be found dynamically by the system.
+Generic immutable finders are placed in package _finder.immutable_ and implement the interface _ImmutableFinder_. They must have the Spring annotation _@Component_ in order to be found dynamically by the system.
 
 The tool implements the following generic immutable finders:
 
-- [ ] **UrlFinder** Find URLs, e. g. `https://www.google.es`
-- [ ] **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
+- [x] **UrlFinder** Find URLs, e. g. `https://www.google.es`
+- [x] **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
 - [ ] **CommentFinder** Find XML comments, e. g. `<!-- A comment -->`
 - [ ] **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
 - [x] **CompleteTagFinder** Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`. In particular, the tags found are: `blockquote`, `cite`, `code`, `math`, `nowiki`, `poem`, `pre`, `ref`, `score`, `source` and `syntaxhighlight`.
 - [ ] **ParameterValueFinder** Find the values of some parameters, e. g. `value` in `{{Template|index=value}}`
-- [ ] **DomainFinder** Find web domains, e. g. `www.acb.es`
-- [ ] **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
-- [ ] **TemplateParamFinder** Find template parameters, e. g. `param` in `{{Template|param=value}}`
+- [x] **DomainFinder** Find web domains, e. g. `www.acb.es` or `es.wikipedia.org`
+- [x] **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
+- [x] **TemplateParamFinder** Find template parameters, e. g. `param` in `{{Template|param=value}}`
 - [ ] **TemplateFinder** Find some complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
 - [ ] **CursiveFinder** Find text in cursive, e. g. `''cursive''` in `This is a ''cursive'' example`
-- [ ] **QuotesFinder** Find text in quotes, e. g. `"text"` or `«texto»`
-- [ ] **FileNameFinder** Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
-- [ ] **LinkSuffixedFinder** Find links with suffix, e. g. `[[brasil]]eño`
-- [ ] **LinkAliasedFinder** Find the first part of aliased links, e. g. `brasil` in `[[brasil|Brasil]]`
-- [ ] **InterLanguageLinkFinder** Find inter-language links, e. g. `[[:pt:Title]]`
+- [x] **QuotesFinder** Find text in quotes, e. g. `"text"`, `“text”` or `«text»`
+- [x] **FileNameFinder** Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
+- [x] **LinkSuffixedFinder** Find links with suffix, e. g. `[[brasil]]eño`
+- [x] **LinkAliasedFinder** Find the first part of aliased links, e. g. `brasil` in `[[brasil|Brasil]]`
+- [x] **InterLanguageLinkFinder** Find inter-language links, e. g. `[[:pt:Title]]`
 
 ### Misspelling finders
 
@@ -236,7 +236,9 @@ Cosmetic finders are placed in package _finder.cosmetic_ and implement the inter
 
 The tool implements the following generic cosmetic finders:
 
-- [ ] **SameLinkFinder** Find links where the alias matches with the target link and thus the alias can be removed, e. g. `[[Madrid|Madrid]]`
+- **SameLinkFinder** Find links where the alias matches with the target link and thus the alias can be removed, e. g. `[[Madrid|Madrid]]`
+
+This finders are used after a user reviews a replacement so the performance is not so important as when finding replacements and immutables.
 
 ### Benchmarks
 
@@ -246,9 +248,9 @@ To work with regular expressions, the implementation included in Java is _regex-
 
 On the other hand, this tool uses also a _text-based_ implementation. It builds an automaton from the regex and gives impressive performance improvements of 1 to 2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking.
 
-Also, when possible, we try a simpler approach finding strings in the text without regular expressions, which usually gives even better results than the text-based automaton.
+Also, when using an automaton is not possible, we try a simpler approach finding strings in the text without regular expressions, which usually gives even better results.
 
-In benchmarks, we usually compare a dot-plus with a negated character. In general, no big differences have been found between both, although the times with the negated character class are slightly better.
+In benchmarks, we usually compare a dot-plus with a negated character. In general, no big differences have been found between both, although the times with the negated character class are slightly better, so this last one is prefered.
 
 ## TODO: REVIEW COMPONENTS
 

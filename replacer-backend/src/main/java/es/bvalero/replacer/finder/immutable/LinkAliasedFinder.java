@@ -25,6 +25,9 @@ class LinkAliasedFinder implements ImmutableFinder {
 
     @Override
     public Immutable convert(MatchResult match) {
-        return Immutable.of(match.start() + 2, match.group().substring(2, match.group().length() - 1));
+        String text = match.group();
+        String aliased = text.substring(2, text.length() - 1).trim();
+        int pos = text.indexOf(aliased);
+        return Immutable.of(match.start() + pos, aliased);
     }
 }

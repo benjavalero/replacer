@@ -3,7 +3,9 @@ package es.bvalero.replacer.finder.immutable;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,9 +23,8 @@ public class InterLanguageLinkFinderTest {
         ImmutableFinder interLanguageLinkFinder = new InterLanguageLinkFinder();
         List<Immutable> matches = interLanguageLinkFinder.findList(text);
 
-        Assert.assertEquals(
-            Arrays.asList(link1, link2, link4),
-            matches.stream().map(Immutable::getText).collect(Collectors.toList())
-        );
+        Set<String> expected = new HashSet<>(Arrays.asList(link1, link2, link4));
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assert.assertEquals(expected, actual);
     }
 }

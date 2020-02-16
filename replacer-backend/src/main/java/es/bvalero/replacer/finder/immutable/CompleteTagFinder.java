@@ -29,6 +29,8 @@ class CompleteTagFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
+        // We cannot use an automaton because we need a lazy operator to capture inner tags
+        // We simulate it manually with a great performance
         List<Immutable> matches = new ArrayList<>(100);
         int start = 0;
         while (start >= 0) {

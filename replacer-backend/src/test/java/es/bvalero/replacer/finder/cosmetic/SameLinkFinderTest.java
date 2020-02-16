@@ -1,12 +1,16 @@
 package es.bvalero.replacer.finder.cosmetic;
 
 import es.bvalero.replacer.finder.Cosmetic;
+import es.bvalero.replacer.finder.CosmeticFinder;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class SameLinkFinderTest {
-    private SameLinkFinder sameLinkFinder = new SameLinkFinder();
 
     @Test
     public void testSameLinkFinder() {
@@ -17,16 +21,17 @@ public class SameLinkFinderTest {
         String link5 = "[[Test|Mock]]";
         String text = String.format("En %s %s %s %s %s.", link1, link2, link3, link4, link5);
 
-        List<Cosmetic> replacements = sameLinkFinder.findList(text);
+        CosmeticFinder sameLinkFinder = new SameLinkFinder();
+        List<Cosmetic> matches = sameLinkFinder.findList(text);
 
-        String expectedLink = "[[test]]";
-        Assert.assertEquals(3, replacements.size());
-        Assert.assertEquals(link1, replacements.get(0).getText());
-        Assert.assertEquals(expectedLink, replacements.get(0).getFix());
-        Assert.assertEquals(link2, replacements.get(1).getText());
-        Assert.assertEquals(expectedLink, replacements.get(1).getFix());
+        Set<String> expectedMatches = new HashSet<>(Arrays.asList(link1, link2, link4));
+        Set<String> actualMatches = matches.stream().map(Cosmetic::getText).collect(Collectors.toSet());
+        Assert.assertEquals(expectedMatches, actualMatches);
 
-        Assert.assertEquals(link4, replacements.get(2).getText());
-        Assert.assertEquals("[[Test]]", replacements.get(2).getFix());
+        String fix1 = "[[test]]";
+        String fix2 = "[[Test]]";
+        Set<String> expectedFixes = new HashSet<>(Arrays.asList(fix1, fix2));
+        Set<String> actualFixes = matches.stream().map(Cosmetic::getFix).collect(Collectors.toSet());
+        Assert.assertEquals(expectedFixes, actualFixes);
     }
 }

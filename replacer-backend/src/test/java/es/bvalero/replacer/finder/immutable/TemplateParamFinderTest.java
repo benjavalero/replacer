@@ -2,7 +2,11 @@ package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +20,7 @@ public class TemplateParamFinderTest {
         String param4 = "param4";
         String link = "[[A|B]]\n==Section==";
         String text = String.format(
-            "{{Template| %s = value1 |\t%s\t= value2 |%s|%s=}} %s",
+            "{{Template| %s = value1 |\t%s\t= value2 |%s=|%s}} %s",
             param1,
             param2,
             param3,
@@ -25,11 +29,10 @@ public class TemplateParamFinderTest {
         );
 
         ImmutableFinder templateParamFinder = new TemplateParamFinder();
-
         List<Immutable> matches = templateParamFinder.findList(text);
-        Assert.assertEquals(3, matches.size());
-        Assert.assertEquals(param1, matches.get(0).getText());
-        Assert.assertEquals(param2, matches.get(1).getText());
-        Assert.assertEquals(param4, matches.get(2).getText());
+
+        Set<String> expected = new HashSet<>(Arrays.asList(param1, param2, param3));
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assert.assertEquals(expected, actual);
     }
 }

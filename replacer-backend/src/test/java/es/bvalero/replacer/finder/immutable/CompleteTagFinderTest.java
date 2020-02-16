@@ -21,9 +21,7 @@ public class CompleteTagFinderTest {
         String text = String.format("En %s %s %s %s.", tag1, tag2, tag3, tag4);
 
         ImmutableFinder completeTagFinder = new CompleteTagFinder();
-
         List<Immutable> matches = completeTagFinder.findList(text);
-        Assert.assertEquals(3, matches.size());
 
         Set<String> expected = new HashSet<>(Arrays.asList(tag1, tag2, tag3));
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());

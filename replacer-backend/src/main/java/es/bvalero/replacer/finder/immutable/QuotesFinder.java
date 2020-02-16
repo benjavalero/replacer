@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 /**
- * Find text in quotes, e. g. `"text"` or `«texto»`
+ * Find text in quotes, e. g. `"text"`, `“text”` or `«text»`
  */
 @Component
 class QuotesFinder implements ImmutableFinder {
@@ -27,7 +27,7 @@ class QuotesFinder implements ImmutableFinder {
     );
 
     // For the automaton the quote needs an extra backslash
-    private static final String REGEX_DOUBLE_QUOTES = "\\\"[^\\\"\n]+\\\"";
+    private static final String REGEX_DOUBLE_QUOTES = "\\\"[^\\\"]+\\\"";
     private static final RunAutomaton AUTOMATON_DOUBLE_QUOTES = new RunAutomaton(
         new RegExp(REGEX_DOUBLE_QUOTES).toAutomaton()
     );

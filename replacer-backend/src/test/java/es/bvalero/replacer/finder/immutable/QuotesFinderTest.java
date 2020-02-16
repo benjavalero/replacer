@@ -2,7 +2,11 @@ package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,12 +20,11 @@ public class QuotesFinderTest {
         String text = String.format("%s %s %s.", quotes1, quotes2, quotes3);
 
         ImmutableFinder quotesFinder = new QuotesFinder();
-
         List<Immutable> matches = quotesFinder.findList(text);
-        Assert.assertEquals(3, matches.size());
-        Assert.assertEquals(quotes1, matches.get(0).getText());
-        Assert.assertEquals(quotes2, matches.get(1).getText());
-        Assert.assertEquals(quotes3, matches.get(2).getText());
+
+        Set<String> expected = new HashSet<>(Arrays.asList(quotes1, quotes2, quotes3));
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -29,29 +32,28 @@ public class QuotesFinderTest {
         String quotes1 = "“yáy”";
         String quotes2 = "“z, zz”";
         String quotes3 = "“z\nz”";
-        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + '.';
+        String text = String.format("%s %s %s.", quotes1, quotes2, quotes3);
 
         ImmutableFinder quotesFinder = new QuotesFinder();
-
         List<Immutable> matches = quotesFinder.findList(text);
-        Assert.assertEquals(3, matches.size());
-        Assert.assertEquals(quotes1, matches.get(0).getText());
-        Assert.assertEquals(quotes2, matches.get(1).getText());
-        Assert.assertEquals(quotes3, matches.get(2).getText());
+
+        Set<String> expected = new HashSet<>(Arrays.asList(quotes1, quotes2, quotes3));
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void testRegexDoubleQuotes() {
         String quotes1 = "\"yáy\"";
-        String quotes2 = "\"zzz\"";
+        String quotes2 = "\"z, zz\"";
         String quotes3 = "\"z\nz\"";
-        String text = "xxx " + quotes1 + " / " + quotes2 + " /" + quotes3 + '.';
+        String text = String.format("%s %s %s.", quotes1, quotes2, quotes3);
 
         ImmutableFinder quotesFinder = new QuotesFinder();
-
         List<Immutable> matches = quotesFinder.findList(text);
-        Assert.assertEquals(2, matches.size());
-        Assert.assertEquals(quotes1, matches.get(0).getText());
-        Assert.assertEquals(quotes2, matches.get(1).getText());
+
+        Set<String> expected = new HashSet<>(Arrays.asList(quotes1, quotes2, quotes3));
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assert.assertEquals(expected, actual);
     }
 }

@@ -2,7 +2,11 @@ package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,12 +20,11 @@ public class XmlTagFinderTest {
         String text = String.format("%s %s %s", tag1, tag2, tag3);
 
         ImmutableFinder xmlTagFinder = new XmlTagFinder();
-
         List<Immutable> matches = xmlTagFinder.findList(text);
-        Assert.assertEquals(3, matches.size());
-        Assert.assertEquals(tag1, matches.get(0).getText());
-        Assert.assertEquals(tag2, matches.get(1).getText());
-        Assert.assertEquals(tag3, matches.get(2).getText());
+
+        Set<String> expected = new HashSet<>(Arrays.asList(tag1, tag2, tag3));
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -30,8 +33,8 @@ public class XmlTagFinderTest {
         String text = "xxx " + comment + " zzz";
 
         ImmutableFinder xmlTagFinder = new XmlTagFinder();
-
         List<Immutable> matches = xmlTagFinder.findList(text);
+
         Assert.assertTrue(matches.isEmpty());
     }
 }
