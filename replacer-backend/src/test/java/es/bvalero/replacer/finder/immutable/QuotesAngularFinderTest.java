@@ -10,16 +10,16 @@ import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class QuotesFinderTest {
+public class QuotesAngularFinderTest {
 
     @Test
-    public void testRegexDoubleQuotes() {
-        String quotes1 = "\"yáy\"";
-        String quotes2 = "\"z, zz\"";
-        String quotes3 = "\"z\nz\"";
+    public void testRegexQuotesAngular() {
+        String quotes1 = "«yáy»";
+        String quotes2 = "«z, zz»";
+        String quotes3 = "«z\nz»";
         String text = String.format("%s %s %s.", quotes1, quotes2, quotes3);
 
-        ImmutableFinder quotesFinder = new QuotesFinder();
+        ImmutableFinder quotesFinder = new QuotesAngularFinder();
         List<Immutable> matches = quotesFinder.findList(text);
 
         Set<String> expected = new HashSet<>(Arrays.asList(quotes1, quotes2, quotes3));

@@ -205,7 +205,7 @@ The tool implements the following generic immutable finders:
 - [x] **TemplateParamFinder** Find template parameters, e. g. `param` in `{{Template|param=value}}`
 - [ ] **TemplateFinder** Find some complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
 - [ ] **CursiveFinder** Find text in cursive, e. g. `''cursive''` in `This is a ''cursive'' example`
-- [x] **QuotesFinder** Find text in quotes, e. g. `"text"`, `“text”` or `«text»`
+- [x] **QuotesFinder**, **QuotesTypographicFinder** and **QuotesAngularFinder** Find text in quotes, e. g. `"text"`, `“text”` or `«text»`
 - [x] **FileNameFinder** Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
 - [x] **LinkSuffixedFinder** Find links with suffix, e. g. `[[brasil]]eño`
 - [x] **LinkAliasedFinder** Find the first part of aliased links, e. g. `brasil` in `[[brasil|Brasil]]`
