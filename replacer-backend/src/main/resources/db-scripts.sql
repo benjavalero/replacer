@@ -48,7 +48,7 @@ CREATE TABLE indexation (
     num_articles_processable INT NOT NULL,
     num_articles_processed INT NOT NULL,
     dump_file_name VARCHAR(255) NOT NULL,
-    start INT NOT NULL,
-    end INT,
+    start BIGINT UNSIGNED NOT NULL,
+    end BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY (id)
 );
