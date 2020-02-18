@@ -1,11 +1,9 @@
 package es.bvalero.replacer.finder.immutable;
 
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
-import es.bvalero.replacer.finder.RegexIterable;
-import java.util.regex.MatchResult;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,17 +11,36 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DomainFinder implements ImmutableFinder {
-    private static final String REGEX_DOMAIN = "[^A-Za-z./_-][A-Za-z.]+\\.[a-z]{2,4}[^a-z]";
-    private static final RunAutomaton AUTOMATON_DOMAIN = new RunAutomaton(new RegExp(REGEX_DOMAIN).toAutomaton());
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<>(text, AUTOMATON_DOMAIN, this::convert);
+        List<Immutable> matches = new ArrayList<>(100);
+        int start = 0;
+        while (start >= 0) {
+            // Find a letter
+            char ch = text.charAt(start);
+            while (!isAscii(ch)) {
+                start++;
+                if (start == text.length()) return matches;
+                ch = text.charAt(start);
+            }
+            // Find while there are letters or dots
+            int startDomain = start;
+            boolean dotFound = false;
+            while (start < text.length() - 1 && (isAscii(ch) || ch == '.')) {
+                if (ch == '.') dotFound = true;
+                start++;
+                ch = text.charAt(start);
+            }
+            if (dotFound) {
+                matches.add(Immutable.of(startDomain, text.substring(startDomain, start)));
+            }
+            if (start >= text.length() - 1) break;
+        }
+        return matches;
     }
 
-    @Override
-    public Immutable convert(MatchResult match) {
-        String text = match.group();
-        return Immutable.of(match.start(), text.substring(1, text.length() - 1));
+    private boolean isAscii(char ch) {
+        return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
     }
 }
