@@ -2,8 +2,6 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.ReplacementFindService;
-import es.bvalero.replacer.finder.ReplacementFinder;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
