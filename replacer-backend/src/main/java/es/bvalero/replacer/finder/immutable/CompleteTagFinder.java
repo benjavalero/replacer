@@ -4,8 +4,9 @@ import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,18 +14,20 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CompleteTagFinder implements ImmutableFinder {
-    private static final List<String> TAG_NAMES = Arrays.asList(
-        "blockquote",
-        "cite",
-        "code",
-        "math",
-        "nowiki",
-        "poem",
-        "pre",
-        "ref",
-        "score",
-        "source",
-        "syntaxhighlight"
+    private static final Set<String> TAG_NAMES = new HashSet<>(
+        Arrays.asList(
+            "blockquote",
+            "cite",
+            "code",
+            "math",
+            "nowiki",
+            "poem",
+            "pre",
+            "ref",
+            "score",
+            "source",
+            "syntaxhighlight"
+        )
     );
 
     @Override
@@ -36,25 +39,24 @@ public class CompleteTagFinder implements ImmutableFinder {
         while (start >= 0) {
             start = text.indexOf('<', start);
             if (start >= 0) {
-                int endOpenTag = text.indexOf('>', start);
-                if (endOpenTag >= 0) {
-                    String openTag = text.substring(start + 1, endOpenTag);
-                    Optional<String> tag = TAG_NAMES.stream().filter(openTag::startsWith).findAny();
-                    if (tag.isPresent()) {
-                        String closeTag = String.format("</%s>", tag.get());
-                        int startCloseTag = text.indexOf(closeTag, endOpenTag);
-                        if (startCloseTag >= 0) {
-                            int endCloseTag = startCloseTag + closeTag.length();
-                            matches.add(Immutable.of(start, text.substring(start, endCloseTag)));
-                            start = endCloseTag + 1;
-                        } else {
-                            start++;
-                        }
-                    } else {
-                        start++;
+                int startOpenTag = start++;
+                // Find the tag
+                StringBuilder tagBuilder = new StringBuilder();
+                char ch = text.charAt(start);
+                while (Character.isLetter(ch)) {
+                    tagBuilder.append(ch);
+                    ch = text.charAt(++start);
+                }
+                String tag = tagBuilder.toString();
+                if (TAG_NAMES.contains(tag)) {
+                    String closeTag = new StringBuilder("</").append(tag).append('>').toString();
+                    int startCloseTag = text.indexOf(closeTag, start);
+                    if (startCloseTag >= 0) {
+                        int endCloseTag = startCloseTag + closeTag.length();
+                        String completeTag = text.substring(startOpenTag, endCloseTag);
+                        matches.add(Immutable.of(startOpenTag, completeTag));
+                        start = endCloseTag + 1;
                     }
-                } else {
-                    start++;
                 }
             }
         }
