@@ -12,6 +12,6 @@ print(words.groupby('FINDER').describe())
 
 # Box Plot (Log)
 f, (ax) = plt.subplots(1, 1, figsize=(12, 4))
-ax.set_xscale('log')
+# ax.set_xscale('log')
 sns.boxplot(y="FINDER", x="TIME", data=words, ax=ax)
 plt.show()

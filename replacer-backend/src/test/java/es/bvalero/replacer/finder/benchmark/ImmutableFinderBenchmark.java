@@ -50,7 +50,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
                     for (ImmutableFinder finder : finders) {
                         long start = System.currentTimeMillis();
                         for (int i = 0; i < ITERATIONS; i++) {
-                            finder.find(value);
+                            finder.findList(value);
                         }
                         long end = System.currentTimeMillis() - start;
                         System.out.println(finder.getClass().getSimpleName() + "\t" + end);
