@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DomainFinder implements ImmutableFinder {
-    private static final String REGEX_DOMAIN = "[A-Za-z.]+\\.[a-z]{2,4}[^a-z]";
+    private static final String REGEX_DOMAIN = "[^A-Za-z./_-][A-Za-z.]+\\.[a-z]{2,4}[^a-z]";
     private static final RunAutomaton AUTOMATON_DOMAIN = new RunAutomaton(new RegExp(REGEX_DOMAIN).toAutomaton());
 
     @Override
@@ -24,6 +24,6 @@ public class DomainFinder implements ImmutableFinder {
     @Override
     public Immutable convert(MatchResult match) {
         String text = match.group();
-        return Immutable.of(match.start(), text.substring(0, text.length() - 1));
+        return Immutable.of(match.start(), text.substring(1, text.length() - 1));
     }
 }
