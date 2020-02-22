@@ -20,11 +20,21 @@ class CompleteTagIndexOfFinder extends CompleteTagFinder {
             while (start >= 0) {
                 start = text.indexOf(openTag, start);
                 if (start >= 0) {
-                    int startCloseTag = text.indexOf(closeTag, start + openTag.length());
-                    if (startCloseTag >= 0) {
-                        int endCloseTag = startCloseTag + closeTag.length();
-                        matches.add(text.substring(start, endCloseTag));
-                        start = endCloseTag + 1;
+                    int endOpenTag = text.indexOf('>', start + openTag.length());
+                    if (endOpenTag >= 0) {
+                        String openTagContent = text.substring(start, endOpenTag);
+                        if (openTagContent.contains("/")) {
+                            start += openTag.length();
+                        } else {
+                            int startCloseTag = text.indexOf(closeTag, start + openTag.length());
+                            if (startCloseTag >= 0) {
+                                int endCloseTag = startCloseTag + closeTag.length();
+                                matches.add(text.substring(start, endCloseTag));
+                                start = endCloseTag + 1;
+                            } else {
+                                start += openTag.length();
+                            }
+                        }
                     } else {
                         start += openTag.length();
                     }

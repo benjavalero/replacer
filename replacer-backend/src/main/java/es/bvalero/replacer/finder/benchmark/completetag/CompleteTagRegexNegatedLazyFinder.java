@@ -12,7 +12,7 @@ class CompleteTagRegexNegatedLazyFinder extends CompleteTagFinder {
 
     CompleteTagRegexNegatedLazyFinder(List<String> words) {
         words.forEach(
-            word -> PATTERNS.add(Pattern.compile(String.format("<%s[^>]*?>.+?</%s>", word, word), Pattern.DOTALL))
+            word -> PATTERNS.add(Pattern.compile(String.format("<%s[^>/]*?>.+?</%s>", word, word), Pattern.DOTALL))
         );
     }
 

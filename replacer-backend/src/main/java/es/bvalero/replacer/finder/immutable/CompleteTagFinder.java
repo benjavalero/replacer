@@ -48,10 +48,13 @@ public class CompleteTagFinder implements ImmutableFinder {
         if (startCompleteTag >= 0) {
             String tag = findTag(text, startCompleteTag + 1);
             if (tag != null) {
-                int endCompleteTag = findEndCompleteTag(text, tag, startCompleteTag + tag.length());
-                if (endCompleteTag >= 0) {
-                    matches.add(Immutable.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag)));
-                    return endCompleteTag + 1;
+                int endOpenTag = findEndTag(text, startCompleteTag + 1);
+                if (endOpenTag >= 0) {
+                    int endCompleteTag = findEndCompleteTag(text, tag, endOpenTag + 1);
+                    if (endCompleteTag >= 0) {
+                        matches.add(Immutable.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag)));
+                        return endCompleteTag + 1;
+                    }
                 }
             }
             return startCompleteTag + 1;
@@ -72,6 +75,18 @@ public class CompleteTagFinder implements ImmutableFinder {
         }
         String tag = tagBuilder.toString();
         return TAG_NAMES.contains(tag) ? tag : null;
+    }
+
+    private int findEndTag(String text, int start) {
+        for (int i = start; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch == '/') {
+                return -1;
+            } else if (ch == '>') {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private int findEndCompleteTag(String text, String tag, int start) {

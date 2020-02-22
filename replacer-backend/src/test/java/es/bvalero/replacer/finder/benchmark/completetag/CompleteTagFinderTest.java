@@ -34,26 +34,15 @@ public class CompleteTagFinderTest {
         String tag2 = "<math>Otro ejemplo</math>";
         String tag3 = "<source>Otro ejemplo</source>";
         String tag4 = "<ref name=NH05/>";
-        this.text = String.format("En %s %s %s %s.", tag1, tag2, tag3, tag4);
+        String tag5 = "<ref>Text</ref>";
+        this.text = String.format("En %s %s %s %s %s.", tag1, tag2, tag3, tag4, tag5);
 
-        this.expected = new HashSet<>(Arrays.asList(tag1, tag2, tag3));
-    }
-
-    @Test
-    public void testCompleteTagRegexLazyFinder() {
-        CompleteTagRegexLazyFinder finder = new CompleteTagRegexLazyFinder(words);
-        Assert.assertEquals(expected, finder.findMatches(text));
+        this.expected = new HashSet<>(Arrays.asList(tag1, tag2, tag3, tag5));
     }
 
     @Test
     public void testCompleteTagRegexLazyNegatedFinder() {
         CompleteTagRegexNegatedLazyFinder finder = new CompleteTagRegexNegatedLazyFinder(words);
-        Assert.assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    public void testCompleteTagRegexAlternateFinder() {
-        CompleteTagRegexAlternateFinder finder = new CompleteTagRegexAlternateFinder(words);
         Assert.assertEquals(expected, finder.findMatches(text));
     }
 

@@ -11,7 +11,7 @@ class CompleteTagRegexAlternateNegatedFinder extends CompleteTagFinder {
     private Pattern pattern;
 
     CompleteTagRegexAlternateNegatedFinder(List<String> words) {
-        String regex = String.format("<(%s)[^>]*?>.+?</\\1>", StringUtils.join(words, "|"));
+        String regex = String.format("<(%s)[^>/]*?>.+?</\\1>", StringUtils.join(words, "|"));
         pattern = Pattern.compile(regex, Pattern.DOTALL);
     }
 

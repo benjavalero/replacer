@@ -27,13 +27,28 @@ class CompleteTagIndexOfLinearFinder extends CompleteTagFinder {
                 }
                 String tag = tagBuilder.toString();
                 if (words.contains(tag)) {
-                    String closeTag = new StringBuilder("</").append(tag).append('>').toString();
-                    int startCloseTag = text.indexOf(closeTag, start);
-                    if (startCloseTag >= 0) {
-                        int endCloseTag = startCloseTag + closeTag.length();
-                        String completeTag = text.substring(startOpenTag, endCloseTag);
-                        matches.add(completeTag);
-                        start = endCloseTag + 1;
+                    // Find end of open tag
+                    boolean slashFound = false;
+                    while (start < text.length()) {
+                        char ch2 = text.charAt(start);
+                        if (ch2 == '/') {
+                            slashFound = true;
+                        } else if (ch2 == '>') {
+                            break;
+                        }
+                        start++;
+                    }
+                    if (start == text.length()) {
+                        start = -1;
+                    } else if (!slashFound) {
+                        String closeTag = new StringBuilder("</").append(tag).append('>').toString();
+                        int startCloseTag = text.indexOf(closeTag, start);
+                        if (startCloseTag >= 0) {
+                            int endCloseTag = startCloseTag + closeTag.length();
+                            String completeTag = text.substring(startOpenTag, endCloseTag);
+                            matches.add(completeTag);
+                            start = endCloseTag + 1;
+                        }
                     }
                 }
             }

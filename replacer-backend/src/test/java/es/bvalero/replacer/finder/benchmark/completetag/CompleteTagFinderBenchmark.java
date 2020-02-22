@@ -31,9 +31,7 @@ public class CompleteTagFinderBenchmark extends BaseFinderBenchmark {
         // Load the finders
         // In order to capture nested tags we can only use lazy regex
         List<CompleteTagFinder> finders = new ArrayList<>();
-        finders.add(new CompleteTagRegexLazyFinder(words));
         finders.add(new CompleteTagRegexNegatedLazyFinder(words));
-        finders.add(new CompleteTagRegexAlternateFinder(words));
         finders.add(new CompleteTagRegexAlternateNegatedFinder(words));
         finders.add(new CompleteTagIndexOfFinder(words));
         finders.add(new CompleteTagIndexOfLinearFinder(words));
