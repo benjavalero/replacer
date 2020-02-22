@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.immutable;
 
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import java.util.ArrayList;
@@ -37,29 +38,49 @@ public class CompleteTagFinder implements ImmutableFinder {
         List<Immutable> matches = new ArrayList<>(100);
         int start = 0;
         while (start >= 0) {
-            start = text.indexOf('<', start);
-            if (start >= 0) {
-                int startOpenTag = start++;
-                // Find the tag
-                StringBuilder tagBuilder = new StringBuilder();
-                char ch = text.charAt(start);
-                while (Character.isLetter(ch)) {
-                    tagBuilder.append(ch);
-                    ch = text.charAt(++start);
-                }
-                String tag = tagBuilder.toString();
-                if (TAG_NAMES.contains(tag)) {
-                    String closeTag = new StringBuilder("</").append(tag).append('>').toString();
-                    int startCloseTag = text.indexOf(closeTag, start);
-                    if (startCloseTag >= 0) {
-                        int endCloseTag = startCloseTag + closeTag.length();
-                        String completeTag = text.substring(startOpenTag, endCloseTag);
-                        matches.add(Immutable.of(startOpenTag, completeTag));
-                        start = endCloseTag + 1;
-                    }
-                }
-            }
+            start = findCompleteTag(text, start, matches);
         }
         return matches;
+    }
+
+    private int findCompleteTag(String text, int start, List<Immutable> matches) {
+        int startCompleteTag = text.indexOf('<', start);
+        if (startCompleteTag >= 0) {
+            String tag = findTag(text, startCompleteTag + 1);
+            if (tag != null) {
+                int endCompleteTag = findEndCompleteTag(text, tag, startCompleteTag + tag.length());
+                if (endCompleteTag >= 0) {
+                    matches.add(Immutable.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag)));
+                    return endCompleteTag + 1;
+                }
+            }
+            return startCompleteTag + 1;
+        } else {
+            return -1;
+        }
+    }
+
+    private String findTag(String text, int start) {
+        StringBuilder tagBuilder = new StringBuilder();
+        for (int i = start; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (FinderUtils.isAscii(ch)) {
+                tagBuilder.append(ch);
+            } else {
+                break;
+            }
+        }
+        String tag = tagBuilder.toString();
+        return TAG_NAMES.contains(tag) ? tag : null;
+    }
+
+    private int findEndCompleteTag(String text, String tag, int start) {
+        String closeTag = new StringBuilder("</").append(tag).append('>').toString();
+        int startCloseTag = text.indexOf(closeTag, start);
+        if (startCloseTag >= 0) {
+            return startCloseTag + closeTag.length();
+        } else {
+            return -1;
+        }
     }
 }
