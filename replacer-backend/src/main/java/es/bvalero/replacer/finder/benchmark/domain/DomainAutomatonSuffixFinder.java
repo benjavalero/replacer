@@ -6,8 +6,11 @@ import dk.brics.automaton.RunAutomaton;
 import java.util.HashSet;
 import java.util.Set;
 
-class DomainAutomatonFinder extends DomainFinder {
-    private static final String REGEX_DOMAIN = "[A-Za-z0-9.\\-]+\\.[a-z]{2,4}[^a-z]";
+import org.apache.commons.lang3.StringUtils;
+
+class DomainAutomatonSuffixFinder extends DomainFinder {
+    private static final String REGEX_DOMAIN =
+        String.format("[A-Za-z0-9.\\-]+\\.(%s)[^a-z]", StringUtils.join(SUFFIXES, "|"));
     private static final RunAutomaton AUTOMATON_DOMAIN = new RunAutomaton(new RegExp(REGEX_DOMAIN).toAutomaton());
 
     Set<String> findMatches(String text) {

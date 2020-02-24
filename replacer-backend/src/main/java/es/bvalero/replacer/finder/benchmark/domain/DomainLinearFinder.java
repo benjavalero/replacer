@@ -7,6 +7,8 @@ import java.util.Set;
 
 public class DomainLinearFinder extends DomainFinder {
 
+    static final Set<Character> START_DOMAIN = new HashSet<>(Arrays.asList('.', '/', '-', '_'));
+
     @Override
     public Set<String> findMatches(String text) {
         Set<String> matches = new HashSet<>(100);
@@ -66,8 +68,6 @@ public class DomainLinearFinder extends DomainFinder {
         }
         return -1;
     }
-
-    static final Set<Character> START_DOMAIN = new HashSet<>(Arrays.asList('.', '/', '-'));
 
     private boolean isStartDomain(char ch) {
         return !FinderUtils.isAscii(ch) && !START_DOMAIN.contains(ch);

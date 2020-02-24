@@ -1,26 +1,16 @@
-package es.bvalero.replacer.finder.immutable;
+package es.bvalero.replacer.finder.benchmark.domain;
 
 import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import org.springframework.stereotype.Component;
 
-/**
- * Find web domains, e. g. `www.acb.es` or `es.wikipedia.org`
- */
-@Component
-public class DomainFinder implements ImmutableFinder {
+public class DomainLinearSuffixFinder extends DomainFinder {
     static final Set<Character> START_DOMAIN = new HashSet<>(Arrays.asList('/', '-', '_'));
-    static final Set<String> SUFFIXES = new HashSet<>(Arrays.asList("com", "co", "edu", "es", "gob", "gov", "info", "net", "org"));
 
     @Override
-    public Iterable<Immutable> find(String text) {
-        List<Immutable> matches = new ArrayList<>(100);
+    public Set<String> findMatches(String text) {
+        Set<String> matches = new HashSet<>(100);
         int start = 0;
         while (start >= 0) {
             start = findDomain(text, start, matches);
@@ -28,14 +18,14 @@ public class DomainFinder implements ImmutableFinder {
         return matches;
     }
 
-    private int findDomain(String text, int start, List<Immutable> matches) {
+    private int findDomain(String text, int start, Set<String> matches) {
         int dot = text.indexOf('.', start);
         if (dot >= 0) {
             int endSuffix = findSuffix(text, dot + 1);
             if (endSuffix >= 0) {
                 int startPrefix = findPrefix(text, dot - 1);
                 if (startPrefix >= 0) {
-                    matches.add(Immutable.of(startPrefix, text.substring(startPrefix, endSuffix)));
+                    matches.add(text.substring(startPrefix, endSuffix));
                     return endSuffix;
                 } else {
                     return dot + 1;
@@ -48,13 +38,10 @@ public class DomainFinder implements ImmutableFinder {
     }
 
     private int findSuffix(String text, int start) {
-        StringBuilder suffixBuilder = new StringBuilder();
         for (int i = start; i < text.length(); i++) {
-            char ch = text.charAt(i);
-            if (FinderUtils.isAsciiLowercase(ch)) {
-                suffixBuilder.append(ch);
-            } else {
-                return SUFFIXES.contains(suffixBuilder.toString()) ? i : -1;
+            if (!FinderUtils.isAsciiLowercase(text.charAt(i))) {
+                int length = i - start;
+                return length >= 2 && length <= 4 ? i : -1;
             }
         }
         return -1;

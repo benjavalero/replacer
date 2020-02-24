@@ -63,4 +63,8 @@ public class FinderUtils {
     public static boolean isAscii(char ch) {
         return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
     }
+
+    public static boolean isAsciiLowercase(char ch) {
+        return (ch >= 'a' && ch <= 'z');
+    }
 }

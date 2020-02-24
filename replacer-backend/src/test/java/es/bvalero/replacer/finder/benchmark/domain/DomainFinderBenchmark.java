@@ -16,23 +16,26 @@ public class DomainFinderBenchmark extends BaseFinderBenchmark {
         // Load the finders
         // In order to capture nested tags we can only use lazy regex
         List<DomainFinder> finders = new ArrayList<>();
-        finders.add(new DomainRegexFinder());
         finders.add(new DomainAutomatonFinder());
+        finders.add(new DomainAutomatonPrefixFinder());
+        finders.add(new DomainAutomatonSuffixFinder());
+        finders.add(new DomainAutomatonPrefixSuffixFinder());
         finders.add(new DomainLinearFinder());
+        finders.add(new DomainLinearSuffixFinder());
+        finders.add(new DomainLinearSuffixListFinder());
 
         System.out.println();
-        System.out.println("FINDER\tTIME\tCOUNT");
+        System.out.println("FINDER\tTIME");
         findSampleContents()
             .forEach(
                 value -> {
                     for (DomainFinder finder : finders) {
                         long start = System.currentTimeMillis();
-                        int count = -1;
                         for (int i = 0; i < ITERATIONS; i++) {
-                            count = finder.findMatches(value).size();
+                            finder.findMatches(value).size();
                         }
                         long end = System.currentTimeMillis() - start;
-                        System.out.println(finder.getClass().getSimpleName() + "\t" + end + "\t" + count);
+                        System.out.println(finder.getClass().getSimpleName() + "\t" + end);
                     }
                 }
             );
