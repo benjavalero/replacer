@@ -60,4 +60,37 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
 
         Assert.assertTrue(true);
     }
+
+    @Test
+    public void testMatches() throws IOException, URISyntaxException {
+        // Load the finders
+        List<ImmutableFinder> finders = new ArrayList<>();
+        finders.add(new UrlFinder());
+        finders.add(new XmlTagFinder());
+        finders.add(new CompleteTagFinder());
+        finders.add(new DomainFinder());
+        finders.add(new TemplateNameFinder());
+        finders.add(new TemplateParamFinder());
+        finders.add(new QuotesFinder());
+        finders.add(new QuotesTypographicFinder());
+        finders.add(new QuotesAngularFinder());
+        finders.add(new FileNameFinder());
+        finders.add(new LinkSuffixedFinder());
+        finders.add(new LinkAliasedFinder());
+        finders.add(new InterLanguageLinkFinder());
+
+        List<String> sampleContents = findSampleContents();
+
+        finders.forEach(finder -> {
+            System.out.println("FINDER: " + finder.getClass().getSimpleName());
+            sampleContents.forEach(content -> {
+                finder.find(content).forEach(result -> {
+                    System.out.println("==> " + result.getText());
+                });
+                System.out.println("----------");
+            });
+            System.out.println();
+        });
+        Assert.assertTrue(true);
+    }
 }
