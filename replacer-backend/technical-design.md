@@ -195,21 +195,21 @@ Generic immutable finders are placed in package _finder.immutable_ and implement
 The tool implements the following generic immutable finders:
 
 - [x] **UrlFinder** Find URLs, e. g. `https://www.google.es`
-- [x] **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
+- [ ] **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
 - [ ] **CommentFinder** Find XML comments, e. g. `<!-- A comment -->`
 - [ ] **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
 - [x] **CompleteTagFinder** Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`. In particular, the tags found are: `blockquote`, `cite`, `code`, `math`, `nowiki`, `poem`, `pre`, `ref`, `score`, `source` and `syntaxhighlight`.
 - [ ] **ParameterValueFinder** Find the values of some parameters, e. g. `value` in `{{Template|index=value}}`
 - [x] **DomainFinder** Find web domains, e. g. `www.acb.es` or `es.wikipedia.org`
-- [x] **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
-- [x] **TemplateParamFinder** Find template parameters, e. g. `param` in `{{Template|param=value}}`
+- [ ] **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
+- [ ] **TemplateParamFinder** Find template parameters, e. g. `param` in `{{Template|param=value}}`
 - [ ] **TemplateFinder** Find some complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
 - [ ] **CursiveFinder** Find text in cursive, e. g. `''cursive''` in `This is a ''cursive'' example`
 - [x] **QuotesFinder**, **QuotesTypographicFinder** and **QuotesAngularFinder** Find text in quotes, e. g. `"text"`, `“text”` or `«text»`
-- [x] **FileNameFinder** Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
-- [x] **LinkSuffixedFinder** Find links with suffix, e. g. `[[brasil]]eño`
-- [x] **LinkAliasedFinder** Find the first part of aliased links, e. g. `brasil` in `[[brasil|Brasil]]`
-- [x] **InterLanguageLinkFinder** Find inter-language links, e. g. `[[:pt:Title]]`
+- [ ] **FileNameFinder** Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
+- [ ] **LinkSuffixedFinder** Find links with suffix, e. g. `[[brasil]]eño`
+- [ ] **LinkAliasedFinder** Find the first part of aliased links, e. g. `brasil` in `[[brasil|Brasil]]`
+- [ ] **InterLanguageLinkFinder** Find inter-language links, e. g. `[[:pt:Title]]`
 
 ### Misspelling finders
 

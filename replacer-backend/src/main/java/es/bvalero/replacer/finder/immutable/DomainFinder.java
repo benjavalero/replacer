@@ -16,7 +16,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DomainFinder implements ImmutableFinder {
     static final Set<Character> START_DOMAIN = new HashSet<>(Arrays.asList('/', '-', '_'));
-    static final Set<String> SUFFIXES = new HashSet<>(Arrays.asList("com", "co", "edu", "es", "gob", "gov", "info", "net", "org"));
+    static final Set<String> SUFFIXES = new HashSet<>(
+        Arrays.asList("com", "co", "edu", "es", "gob", "gov", "info", "net", "org")
+    );
 
     @Override
     public Iterable<Immutable> find(String text) {
@@ -29,17 +31,15 @@ public class DomainFinder implements ImmutableFinder {
     }
 
     private int findDomain(String text, int start, List<Immutable> matches) {
-        int dot = text.indexOf('.', start);
+        int dot = findDot(text, start);
         if (dot >= 0) {
-            int endSuffix = findSuffix(text, dot + 1);
+            int endSuffix = findEndSuffix(text, dot + 1);
             if (endSuffix >= 0) {
                 int startPrefix = findPrefix(text, dot - 1);
                 if (startPrefix >= 0) {
                     matches.add(Immutable.of(startPrefix, text.substring(startPrefix, endSuffix)));
-                    return endSuffix;
-                } else {
-                    return dot + 1;
                 }
+                return endSuffix;
             } else {
                 return dot + 1;
             }
@@ -47,7 +47,11 @@ public class DomainFinder implements ImmutableFinder {
         return -1;
     }
 
-    private int findSuffix(String text, int start) {
+    private int findDot(String text, int start) {
+        return text.indexOf('.', start);
+    }
+
+    private int findEndSuffix(String text, int start) {
         StringBuilder suffixBuilder = new StringBuilder();
         for (int i = start; i < text.length(); i++) {
             char ch = text.charAt(i);

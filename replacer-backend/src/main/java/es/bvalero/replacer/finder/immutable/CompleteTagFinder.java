@@ -33,8 +33,6 @@ public class CompleteTagFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        // We cannot use an automaton because we need a lazy operator to capture inner tags
-        // We simulate it manually with a great performance
         List<Immutable> matches = new ArrayList<>(100);
         int start = 0;
         while (start >= 0) {
@@ -44,17 +42,21 @@ public class CompleteTagFinder implements ImmutableFinder {
     }
 
     private int findCompleteTag(String text, int start, List<Immutable> matches) {
-        int startCompleteTag = text.indexOf('<', start);
+        int startCompleteTag = findStartCompleteTag(text, start);
         if (startCompleteTag >= 0) {
-            String tag = findTag(text, startCompleteTag + 1);
+            String tag = findSupportedTag(text, startCompleteTag + 1);
             if (tag != null) {
-                int endOpenTag = findEndTag(text, startCompleteTag + 1);
+                int endOpenTag = findEndTag(text, startCompleteTag + tag.length() + 1);
                 if (endOpenTag >= 0) {
-                    int endCompleteTag = findEndCompleteTag(text, tag, endOpenTag + 1);
+                    int endCompleteTag = findEndCompleteTag(text, endOpenTag + 1, tag);
                     if (endCompleteTag >= 0) {
                         matches.add(Immutable.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag)));
-                        return endCompleteTag + 1;
+                        return endCompleteTag;
+                    } else {
+                        return endOpenTag + 1;
                     }
+                } else {
+                    return startCompleteTag + tag.length() + 1;
                 }
             }
             return startCompleteTag + 1;
@@ -63,7 +65,11 @@ public class CompleteTagFinder implements ImmutableFinder {
         }
     }
 
-    private String findTag(String text, int start) {
+    private int findStartCompleteTag(String text, int start) {
+        return text.indexOf('<', start);
+    }
+
+    private String findSupportedTag(String text, int start) {
         StringBuilder tagBuilder = new StringBuilder();
         for (int i = start; i < text.length(); i++) {
             char ch = text.charAt(i);
@@ -81,6 +87,7 @@ public class CompleteTagFinder implements ImmutableFinder {
         for (int i = start; i < text.length(); i++) {
             char ch = text.charAt(i);
             if (ch == '/') {
+                // Avoid cases like <br />
                 return -1;
             } else if (ch == '>') {
                 return i;
@@ -89,10 +96,11 @@ public class CompleteTagFinder implements ImmutableFinder {
         return -1;
     }
 
-    private int findEndCompleteTag(String text, String tag, int start) {
+    private int findEndCompleteTag(String text, int start, String tag) {
         String closeTag = new StringBuilder("</").append(tag).append('>').toString();
         int startCloseTag = text.indexOf(closeTag, start);
         if (startCloseTag >= 0) {
+            // Returns the position next to the end of the complete tag
             return startCloseTag + closeTag.length();
         } else {
             return -1;

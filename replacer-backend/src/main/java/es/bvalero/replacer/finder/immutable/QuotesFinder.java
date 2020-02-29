@@ -28,7 +28,7 @@ public class QuotesFinder implements ImmutableFinder {
             int endQuote = text.indexOf('"', openQuote + 1);
             if (endQuote >= 0) {
                 matches.add(Immutable.of(openQuote, text.substring(openQuote, endQuote + 1)));
-                return endQuote + 2;
+                return endQuote + 1;
             } else {
                 return -1;
             }
