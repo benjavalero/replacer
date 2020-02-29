@@ -65,4 +65,10 @@ public class DomainFinderTest {
         DomainFinder finder = new DomainLinearSuffixListFinder();
         Assert.assertEquals(expected, finder.findMatches(text));
     }
+
+    @Test
+    public void testDomainIteratorSuffixListFinder() {
+        DomainFinder finder = new DomainIteratorSuffixListFinder();
+        Assert.assertEquals(expected, finder.findMatches(text));
+    }
 }

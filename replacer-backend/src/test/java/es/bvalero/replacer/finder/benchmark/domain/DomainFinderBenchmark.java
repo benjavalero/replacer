@@ -23,6 +23,7 @@ public class DomainFinderBenchmark extends BaseFinderBenchmark {
         finders.add(new DomainLinearFinder());
         finders.add(new DomainLinearSuffixFinder());
         finders.add(new DomainLinearSuffixListFinder());
+        finders.add(new DomainIteratorSuffixListFinder());
 
         System.out.println();
         System.out.println("FINDER\tTIME");
