@@ -248,9 +248,11 @@ To work with regular expressions, the implementation included in Java is _regex-
 
 On the other hand, this tool uses also a _text-based_ implementation. It builds an automaton from the regex and gives impressive performance improvements of 1 to 2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking.
 
-Also, when using an automaton is not possible, we try a simpler approach finding strings in the text without regular expressions, which usually gives even better results.
+Also, when using an automaton is not possible, we try a simpler approach finding strings in the text without regular expressions, char by char, which usually gives even better results, about 5 times faster.
 
 In benchmarks, we usually compare a dot-plus with a negated character. In general, no big differences have been found between both, although the times with the negated character class are slightly better, so this last one is prefered.
+
+In conclusion, as performance is critical, we try to use the faster implementation when possible, except if the complexity of the finder makes worth to use an automaton or a regular expression.
 
 ## TODO: REVIEW COMPONENTS
 
@@ -276,5 +278,6 @@ In benchmarks, we usually compare a dot-plus with a negated character. In genera
 - [ ] Review the managers for misspellings and false-positives, and remark the Observable pattern.
 - [ ] Research if it is possible to deploy independently the frontend and the backend in ToolLabs.
 - [ ] Check if it is worth to find as immutables some templates like `Cita web` as most of them should be captured by the complete tag `ref`.
+- [ ] Migrate to JDK11 as the JDK8 is deprecated in ToolForge
 
 The Java code is formatted with [Prettier Java](https://github.com/jhipster/prettier-java).
