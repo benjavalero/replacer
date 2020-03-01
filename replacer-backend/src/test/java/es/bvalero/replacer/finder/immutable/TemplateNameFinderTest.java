@@ -14,10 +14,10 @@ public class TemplateNameFinderTest {
 
     @Test
     public void testRegexTemplateName() {
-        String template1 = "Plantilla 1";
+        String template1 = " Plantilla 1\n";
         String template2 = "Plantilla\n 2";
         String template3 = "Plantilla-3";
-        String text = String.format("{{ %s\n| 1 }} {{%s}} {{%s:3}}", template1, template2, template3);
+        String text = String.format("{{%s| 1 }} {{%s}} {{%s:3}}", template1, template2, template3);
 
         ImmutableFinder templateNameFinder = new TemplateNameFinder();
         List<Immutable> matches = templateNameFinder.findList(text);
