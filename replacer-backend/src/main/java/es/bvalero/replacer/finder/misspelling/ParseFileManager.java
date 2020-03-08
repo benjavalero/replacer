@@ -35,7 +35,7 @@ public abstract class ParseFileManager<T> {
     }
 
     /**
-     * Update the list of false positives from Wikipedia.
+     * Update the list of false positives or replacements from Wikipedia.
      */
     @Scheduled(fixedDelayString = "${replacer.parse.file.delay}")
     public void update() {
