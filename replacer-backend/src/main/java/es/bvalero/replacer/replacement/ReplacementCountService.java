@@ -91,14 +91,17 @@ public class ReplacementCountService {
     }
 
     void decreaseCachedReplacementsCount(String type, String subtype, int size) {
-        long currentCount = this.cachedReplacementCount.get(type).get(subtype);
-        long newCount = currentCount - size;
-        if (newCount > 0) {
-            this.cachedReplacementCount.get(type).put(subtype, newCount);
-        } else {
-            // Clean the possible empty counts after decreasing
-            removeCachedReplacementCount(type, subtype);
+        if (this.cachedReplacementCount.containsKey(type)) {
+            Long currentCount = this.cachedReplacementCount.get(type).get(subtype);
+            if (currentCount != null) {
+                long newCount = currentCount - size;
+                if (newCount > 0) {
+                    this.cachedReplacementCount.get(type).put(subtype, newCount);
+                } else {
+                    // Clean the possible empty counts after decreasing
+                    removeCachedReplacementCount(type, subtype);
+                }
+            }
         }
     }
-
 }
