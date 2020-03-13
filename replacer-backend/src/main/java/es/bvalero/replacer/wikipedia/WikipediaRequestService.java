@@ -66,7 +66,7 @@ class WikipediaRequestService {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new WikipediaException("ERROR executing OAuth Request", e);
-        } catch (ExecutionException | IOException | NullPointerException e) {
+        } catch (ExecutionException | IOException | IllegalArgumentException | NullPointerException e) {
             throw new WikipediaException("ERROR executing OAuth Request", e);
         }
     }

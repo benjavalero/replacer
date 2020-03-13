@@ -4,7 +4,7 @@ import es.bvalero.replacer.finder.Suggestion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Wither;
+import lombok.With;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 class ArticleReplacement {
-    @Wither
+    @With
     private int start;
     private String text;
     private List<Suggestion> suggestions;

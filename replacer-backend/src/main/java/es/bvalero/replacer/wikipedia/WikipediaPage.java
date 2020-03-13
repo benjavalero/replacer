@@ -3,7 +3,7 @@ package es.bvalero.replacer.wikipedia;
 import es.bvalero.replacer.article.IndexableArticle;
 import lombok.Builder;
 import lombok.Value;
-import lombok.experimental.Wither;
+import lombok.With;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ public class WikipediaPage implements IndexableArticle {
     private WikipediaNamespace namespace;
     private LocalDate lastUpdate;
     private String content;
-    @Wither
+    @With
     private Integer section;
 
     // Store the timestamp when the page was queried. No need to convert it to Date format.
