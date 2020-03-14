@@ -68,6 +68,12 @@
             <version>${lombok.version}</version>
             <scope>compile</scope>
         </dependency>
+        <!-- Likely to be unnecessary in next Lombok version: https://github.com/rzwitserloot/lombok/issues/2125 -->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>1.3.1.Final</version>
+        </dependency>
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
