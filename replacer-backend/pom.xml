@@ -30,29 +30,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-            <version>3.3.1-2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>4.2.1</version>
-        </dependency>
-        <!-- Lightweight library for Ajax requests (instead of Vanilla JS) -->
-        <dependency>
-            <groupId>org.webjars.npm</groupId>
-            <artifactId>reqwest</artifactId>
-            <version>2.0.5</version>
-        </dependency>
-        <!-- To make the webjars version-agnostic -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>webjars-locator</artifactId>
-            <version>0.36</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>1.20</version>
