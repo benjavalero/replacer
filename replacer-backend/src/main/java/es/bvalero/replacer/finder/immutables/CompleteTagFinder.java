@@ -1,13 +1,8 @@
 package es.bvalero.replacer.finder.immutables;
 
-import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import es.bvalero.replacer.finder.*;
+import java.util.*;
+import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
 /**
@@ -33,15 +28,18 @@ public class CompleteTagFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        List<Immutable> matches = new ArrayList<>(100);
-        int start = 0;
-        while (start >= 0) {
-            start = findCompleteTag(text, start, matches);
-        }
-        return matches;
+        return new LinearIterable<>(text, this::findResult, this::convert);
     }
 
-    private int findCompleteTag(String text, int start, List<Immutable> matches) {
+    public MatchResult findResult(String text, int start) {
+        List<MatchResult> matches = new ArrayList<>(100);
+        while (start >= 0 && matches.isEmpty()) {
+            start = findCompleteTag(text, start, matches);
+        }
+        return matches.isEmpty() ? null : matches.get(0);
+    }
+
+    private int findCompleteTag(String text, int start, List<MatchResult> matches) {
         int startCompleteTag = findStartCompleteTag(text, start);
         if (startCompleteTag >= 0) {
             String tag = findSupportedTag(text, startCompleteTag + 1);
@@ -50,7 +48,9 @@ public class CompleteTagFinder implements ImmutableFinder {
                 if (endOpenTag >= 0) {
                     int endCompleteTag = findEndCompleteTag(text, endOpenTag + 1, tag);
                     if (endCompleteTag >= 0) {
-                        matches.add(Immutable.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag)));
+                        matches.add(
+                            LinearMatcher.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag))
+                        );
                         return endCompleteTag;
                     } else {
                         return endOpenTag + 1;
@@ -97,7 +97,7 @@ public class CompleteTagFinder implements ImmutableFinder {
     }
 
     private int findEndCompleteTag(String text, int start, String tag) {
-        String closeTag = new StringBuilder("</").append(tag).append('>').toString();
+        String closeTag = "</" + tag + '>';
         int startCloseTag = text.indexOf(closeTag, start);
         if (startCloseTag >= 0) {
             // Returns the position next to the end of the complete tag

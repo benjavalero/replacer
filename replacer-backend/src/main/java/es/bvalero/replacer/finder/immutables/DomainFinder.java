@@ -1,13 +1,8 @@
 package es.bvalero.replacer.finder.immutables;
 
-import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import es.bvalero.replacer.finder.*;
+import java.util.*;
+import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,22 +17,25 @@ public class DomainFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        List<Immutable> matches = new ArrayList<>(100);
-        int start = 0;
-        while (start >= 0) {
-            start = findDomain(text, start, matches);
-        }
-        return matches;
+        return new LinearIterable<>(text, this::findResult, this::convert);
     }
 
-    private int findDomain(String text, int start, List<Immutable> matches) {
+    public MatchResult findResult(String text, int start) {
+        List<MatchResult> matches = new ArrayList<>(100);
+        while (start >= 0 && matches.isEmpty()) {
+            start = findDomain(text, start, matches);
+        }
+        return matches.isEmpty() ? null : matches.get(0);
+    }
+
+    private int findDomain(String text, int start, List<MatchResult> matches) {
         int dot = findDot(text, start);
         if (dot >= 0) {
             int endSuffix = findEndSuffix(text, dot + 1);
             if (endSuffix >= 0) {
                 int startPrefix = findPrefix(text, dot - 1);
                 if (startPrefix >= 0) {
-                    matches.add(Immutable.of(startPrefix, text.substring(startPrefix, endSuffix)));
+                    matches.add(LinearMatcher.of(startPrefix, text.substring(startPrefix, endSuffix)));
                 }
                 return endSuffix;
             } else {
@@ -65,7 +63,7 @@ public class DomainFinder implements ImmutableFinder {
     }
 
     private int findPrefix(String text, int start) {
-        for (int i = start; i < text.length(); i--) {
+        for (int i = start; i > 0; i--) {
             char ch = text.charAt(i);
             if (!Character.isLetterOrDigit(ch) && ch != '.') {
                 return START_DOMAIN.contains(ch) || i == start ? -1 : i + 1;

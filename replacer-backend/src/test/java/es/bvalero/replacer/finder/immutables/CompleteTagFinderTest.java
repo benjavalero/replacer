@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CompleteTagFinderTest {
 
@@ -26,6 +26,6 @@ public class CompleteTagFinderTest {
 
         Set<String> expected = new HashSet<>(Arrays.asList(tag1, tag2, tag3, tag5));
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assert.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 }
