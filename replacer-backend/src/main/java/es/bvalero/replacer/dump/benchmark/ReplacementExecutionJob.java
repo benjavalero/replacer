@@ -1,17 +1,21 @@
 package es.bvalero.replacer.dump.benchmark;
 
 import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.ReplacementRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.EntityManagerFactory;
 
 @Slf4j
 @Component
@@ -32,10 +36,10 @@ public class ReplacementExecutionJob {
     ReplacementProcessor replacementProcessor;
 
     @Autowired
-    JpaInsertWriter jpaInsertWriter;
+    EntityManagerFactory emf;
 
     @Autowired
-    JpaUpdateWriter jpaUpdateWriter;
+    ReplacementRepository replacementRepository;
 
     @Autowired
     ReplacementJobListener replacementJobListener;
@@ -47,7 +51,7 @@ public class ReplacementExecutionJob {
             .<ReplacementEntity, ReplacementEntity>chunk(chunkSize)
             .reader(new CsvReader(resource))
             .processor(replacementProcessor)
-            .writer(jpaInsertWriter)
+            .writer(new JpaInsertWriter(emf))
             .build();
 
         Step step2 = stepBuilderFactory
@@ -55,7 +59,7 @@ public class ReplacementExecutionJob {
             .<ReplacementEntity, ReplacementEntity>chunk(chunkSize)
             .reader(new CsvReader(resource))
             .processor(replacementProcessor)
-            .writer(jpaUpdateWriter)
+            .writer(new JpaUpdateWriter(emf, replacementRepository))
             .build();
 
         return jobBuilderFactory

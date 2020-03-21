@@ -2,19 +2,24 @@ package es.bvalero.replacer.dump.benchmark;
 
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementRepository;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.batch.item.database.JpaItemWriter;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManagerFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-@Component
-public class JpaUpdateWriter implements ItemWriter<ReplacementEntity> {
-    @Autowired
+public class JpaUpdateWriter extends JpaItemWriter<ReplacementEntity> {
+
     private ReplacementRepository replacementRepository;
+
+    public JpaUpdateWriter(EntityManagerFactory emf, ReplacementRepository repository) {
+        super();
+        setEntityManagerFactory(emf);
+        this.replacementRepository = repository;
+    }
 
     @Override
     @Transactional
@@ -29,6 +34,6 @@ public class JpaUpdateWriter implements ItemWriter<ReplacementEntity> {
                 toUpdate.add(dbReps.get(i));
             }
         }
-        replacementRepository.saveAll(toUpdate);
+        super.write(toUpdate);
     }
 }
