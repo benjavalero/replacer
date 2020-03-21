@@ -5,6 +5,7 @@ spring:
     ansi.enabled: ALWAYS
   jackson:
     date-format: dd-MM-yyyy HH:mm:ss
+  batch.job.enabled: false
 
 server:
   port: 8000
@@ -45,6 +46,21 @@ spring:
 replacer:
   dump.path:
     base: /Users/benja/Developer
+
+---
+
+spring:
+  profiles: batch
+  datasource:
+    platform: h2
+  batch.job.enabled: true
+
+logging:
+  level:
+    org.springframework: INFO
+
+input.file: classpath:replacements.csv
+chunk.size: 1000
 
 ---
 

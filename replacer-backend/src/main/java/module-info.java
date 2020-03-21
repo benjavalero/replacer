@@ -3,10 +3,13 @@ open module bvalero.replacer {
     requires java.desktop;
     requires java.persistence;
 
+    requires spring.batch.core;
+    requires spring.batch.infrastructure;
     requires spring.beans;
     requires spring.boot;
     requires spring.boot.autoconfigure;
     requires spring.context;
+    requires spring.core;
     requires spring.data.commons;
     requires spring.data.jpa;
     requires spring.tx;
