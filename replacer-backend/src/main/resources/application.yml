@@ -53,7 +53,6 @@ spring:
   profiles: batch
   datasource:
     platform: h2
-  batch.job.enabled: true
 
 logging:
   level:

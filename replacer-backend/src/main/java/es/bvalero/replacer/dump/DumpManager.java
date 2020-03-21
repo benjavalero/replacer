@@ -3,6 +3,14 @@ package es.bvalero.replacer.dump;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
@@ -44,13 +52,30 @@ class DumpManager {
     @Autowired
     private DumpHandler dumpHandler;
 
+    @Autowired
+    JobLauncher jobLauncher;
+
+    @Autowired
+    Job replacementJob;
+
     /**
      * Check if there is a new dump to process.
      */
     @Scheduled(initialDelay = 60 * 1000, fixedDelayString = "${replacer.dump.index.delay}")
     void processDumpScheduled() {
         LOGGER.info("EXECUTE Scheduled weekly index of the last dump");
-        processLatestDumpFile(false);
+        runDumpBatch();
+        // processLatestDumpFile(false);
+    }
+
+    @Async
+    public void runDumpBatch() {
+        try {
+            JobParameters jobParameters = new JobParametersBuilder().addString("source", "Spring Boot").toJobParameters();
+            jobLauncher.run(replacementJob, jobParameters);
+        } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
+            LOGGER.error("Error running dump batch", e);
+        }
     }
 
     /**
