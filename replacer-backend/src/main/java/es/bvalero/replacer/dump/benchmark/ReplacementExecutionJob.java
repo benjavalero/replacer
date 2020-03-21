@@ -8,14 +8,11 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-
-import javax.persistence.EntityManagerFactory;
 
 @Slf4j
 @Component
@@ -36,9 +33,6 @@ public class ReplacementExecutionJob {
     ReplacementProcessor replacementProcessor;
 
     @Autowired
-    EntityManagerFactory emf;
-
-    @Autowired
     ReplacementRepository replacementRepository;
 
     @Autowired
@@ -51,7 +45,7 @@ public class ReplacementExecutionJob {
             .<ReplacementEntity, ReplacementEntity>chunk(chunkSize)
             .reader(new CsvReader(resource))
             .processor(replacementProcessor)
-            .writer(new JpaInsertWriter(emf))
+            .writer(new RepositoryInsertWriter(replacementRepository))
             .build();
 
         Step step2 = stepBuilderFactory
@@ -59,7 +53,7 @@ public class ReplacementExecutionJob {
             .<ReplacementEntity, ReplacementEntity>chunk(chunkSize)
             .reader(new CsvReader(resource))
             .processor(replacementProcessor)
-            .writer(new JpaUpdateWriter(emf, replacementRepository))
+            .writer(new RepositoryUpdateWriter(replacementRepository))
             .build();
 
         return jobBuilderFactory
