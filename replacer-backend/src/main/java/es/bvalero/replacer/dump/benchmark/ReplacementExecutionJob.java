@@ -3,6 +3,7 @@ package es.bvalero.replacer.dump.benchmark;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.SessionFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -30,6 +31,9 @@ public class ReplacementExecutionJob {
     int chunkSize;
 
     @Autowired
+    SessionFactory sessionFactory;
+
+    @Autowired
     ReplacementProcessor replacementProcessor;
 
     @Autowired
@@ -45,7 +49,7 @@ public class ReplacementExecutionJob {
             .<ReplacementEntity, ReplacementEntity>chunk(chunkSize)
             .reader(new CsvReader(resource))
             .processor(replacementProcessor)
-            .writer(new RepositoryInsertWriter(replacementRepository))
+            .writer(new HibernateInsertWriter(sessionFactory))
             .build();
 
         Step step2 = stepBuilderFactory
@@ -53,7 +57,7 @@ public class ReplacementExecutionJob {
             .<ReplacementEntity, ReplacementEntity>chunk(chunkSize)
             .reader(new CsvReader(resource))
             .processor(replacementProcessor)
-            .writer(new RepositoryUpdateWriter(replacementRepository))
+            .writer(new HibernateUpdateWriter(sessionFactory, replacementRepository))
             .build();
 
         return jobBuilderFactory
