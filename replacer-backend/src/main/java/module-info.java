@@ -14,6 +14,7 @@ open module bvalero.replacer {
     requires spring.core;
     requires spring.data.commons;
     requires spring.data.jpa;
+    requires spring.jdbc;
     requires spring.orm;
     requires spring.tx;
     requires spring.web;

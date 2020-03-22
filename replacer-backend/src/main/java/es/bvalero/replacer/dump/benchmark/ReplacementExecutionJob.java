@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -42,6 +43,9 @@ public class ReplacementExecutionJob {
     @Autowired
     ReplacementJobListener replacementJobListener;
 
+    @Autowired
+    NamedParameterJdbcTemplate jdbcTemplate;
+
     @Bean
     public Job replacementJob() {
         Step step = stepBuilderFactory
@@ -49,7 +53,7 @@ public class ReplacementExecutionJob {
             .<ReplacementEntity, ReplacementEntity>chunk(chunkSize)
             .reader(new CsvReader(resource))
             .processor(replacementProcessor)
-            .writer(new HibernateInsertWriter(sessionFactory))
+            .writer(new JdbcInsertWriter(jdbcTemplate))
             .build();
 
         Step step2 = stepBuilderFactory
@@ -57,7 +61,7 @@ public class ReplacementExecutionJob {
             .<ReplacementEntity, ReplacementEntity>chunk(chunkSize)
             .reader(new CsvReader(resource))
             .processor(replacementProcessor)
-            .writer(new HibernateUpdateWriter(sessionFactory, replacementRepository))
+            .writer(new JdbcUpdateWriter(jdbcTemplate))
             .build();
 
         return jobBuilderFactory
