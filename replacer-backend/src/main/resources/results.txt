@@ -45,3 +45,14 @@ JDBC ITEM WRITER rewriteBatchedStatements=true
 500     0.23    0.22    0.45
 1000    0.19    0.15    0.35
 2000    0.19    0.14    0.33
+MARIA DB PROD 100K
+JDBC ITEM WRITER rewriteBatchedStatements=true
+500     3.33    4.27    8.08
+1000    2.07    2.34    4.50
+2000    1.23    1.32    3.04
+5000    0.53    0.54    1.55
+10000   0.37    0.39    1.24
+20000   0.42    0.36    1.26
+JDBC ITEM WRITER rewriteBatchedStatements=true -C
+500     3.41    4.46    8.36
+1000    2.04    2.38    4.52

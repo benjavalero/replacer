@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS replacement2;
+DROP TABLE IF EXISTS repl;
 
-CREATE TABLE replacement2 (
+CREATE TABLE repl (
     id INT NOT NULL AUTO_INCREMENT,
     article_id INT NOT NULL,
     type VARCHAR(25) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE replacement2 (
     INDEX (type, subtype)
 );
 
-ALTER TABLE replacement2 ADD CONSTRAINT same_rep UNIQUE KEY(article_id, type, subtype, position);
+ALTER TABLE repl ADD CONSTRAINT same_rep UNIQUE KEY(article_id, type, subtype, position);
 
 DROP TABLE IF EXISTS indexation;
 

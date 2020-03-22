@@ -21,7 +21,7 @@ public class JdbcUpdateWriter extends JdbcBatchItemWriter<ReplacementEntity> {
     public JdbcUpdateWriter(NamedParameterJdbcTemplate jdbcTemplate) {
         setJdbcTemplate(jdbcTemplate);
         setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
-        setSql("UPDATE replacement2 "
+        setSql("UPDATE repl "
             + "SET article_id=:articleId, type=:type, subtype=:subtype, position=:position, last_update=:lastUpdate "
             + "WHERE id=:id");
 
@@ -46,7 +46,7 @@ public class JdbcUpdateWriter extends JdbcBatchItemWriter<ReplacementEntity> {
     }
 
     private List<ReplacementEntity> findByArticles(int minId, int maxId) {
-        String sql = "SELECT * FROM replacement2 WHERE id BETWEEN :minId AND :maxId";
+        String sql = "SELECT * FROM repl WHERE id BETWEEN :minId AND :maxId";
         Map<String, Object> params = new HashMap<>();
         params.put("minId", minId);
         params.put("maxId", maxId);

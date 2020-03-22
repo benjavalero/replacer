@@ -54,9 +54,9 @@ spring:
   datasource:
     initialization-mode: always # Only for tests to reset the database !!!
     platform: mariadb
-    url: jdbc:mariadb://localhost:3301/test?rewriteBatchedStatements=true
-    username: root
-    password: root
+    url: jdbc:mariadb://localhost:3306/s52978__replacer?rewriteBatchedStatements=true
+    username: s52978
+    password: xxxxxx
     driver-class-name: org.mariadb.jdbc.Driver
   batch:
     initialize-schema: always

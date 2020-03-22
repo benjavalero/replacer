@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor // Needed by JPA
 @Entity
-@Table(name = "replacement2",
+@Table(name = "repl",
         uniqueConstraints = @UniqueConstraint(columnNames = {"articleId", "type", "subtype", "position"}))
 public class ReplacementEntity implements Serializable {
 
