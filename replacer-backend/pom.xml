@@ -153,8 +153,8 @@
             <id>batch</id>
             <dependencies>
                 <dependency>
-                    <groupId>com.h2database</groupId>
-                    <artifactId>h2</artifactId>
+                    <groupId>org.mariadb.jdbc</groupId>
+                    <artifactId>mariadb-java-client</artifactId>
                     <scope>runtime</scope>
                 </dependency>
             </dependencies>

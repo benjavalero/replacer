@@ -71,7 +71,10 @@ class DumpManager {
     @Async
     public void runDumpBatch() {
         try {
-            JobParameters jobParameters = new JobParametersBuilder().addString("source", "Spring Boot").toJobParameters();
+            JobParameters jobParameters = new JobParametersBuilder()
+                .addString("source", "Spring Boot")
+                .addLong("time",System.currentTimeMillis()) // In order to run the job several times
+                .toJobParameters();
             jobLauncher.run(replacementJob, jobParameters);
         } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
             LOGGER.error("Error running dump batch", e);

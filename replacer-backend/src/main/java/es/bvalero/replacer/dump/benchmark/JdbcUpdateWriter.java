@@ -22,7 +22,7 @@ public class JdbcUpdateWriter extends JdbcBatchItemWriter<ReplacementEntity> {
         setJdbcTemplate(jdbcTemplate);
         setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
         setSql("UPDATE replacement2 "
-            + "SET articleId=:articleId, type=:type, subtype=:subtype, position=:position, lastUpdate=:lastUpdate "
+            + "SET article_id=:articleId, type=:type, subtype=:subtype, position=:position, last_update=:lastUpdate "
             + "WHERE id=:id");
 
         afterPropertiesSet();
@@ -55,12 +55,12 @@ public class JdbcUpdateWriter extends JdbcBatchItemWriter<ReplacementEntity> {
         List<ReplacementEntity> replacements = new ArrayList<>();
         for (Map<String, Object> map : list) {
             ReplacementEntity replacement = new ReplacementEntity();
-            replacement.setId((Long) map.get("ID"));
-            replacement.setArticleId((Integer) map.get("ARTICLEID"));
+            replacement.setId(((Integer) map.get("ID")).longValue());
+            replacement.setArticleId((Integer) map.get("ARTICLE_ID"));
             replacement.setType((String) map.get("TYPE"));
             replacement.setSubtype((String) map.get("SUBTYPE"));
             replacement.setPosition((Integer) map.get("POSITION"));
-            replacement.setLastUpdate(((Date) map.get("LASTUPDATE")).toLocalDate());
+            replacement.setLastUpdate(((Date) map.get("LAST_UPDATE")).toLocalDate());
             replacements.add(replacement);
         }
         return replacements;

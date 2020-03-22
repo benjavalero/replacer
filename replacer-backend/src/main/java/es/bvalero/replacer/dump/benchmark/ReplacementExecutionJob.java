@@ -32,9 +32,6 @@ public class ReplacementExecutionJob {
     int chunkSize;
 
     @Autowired
-    SessionFactory sessionFactory;
-
-    @Autowired
     ReplacementProcessor replacementProcessor;
 
     @Autowired

@@ -12,7 +12,7 @@ public class JdbcInsertWriter extends JdbcBatchItemWriter<ReplacementEntity> {
     public JdbcInsertWriter(NamedParameterJdbcTemplate jdbcTemplate) {
         setJdbcTemplate(jdbcTemplate);
         setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
-        setSql("INSERT INTO replacement2 (articleId, type, subtype, position, lastUpdate) "
+        setSql("INSERT INTO replacement2 (article_id, type, subtype, position, last_update) "
             + "VALUES (:articleId, :type, :subtype, :position, :lastUpdate)");
 
         afterPropertiesSet();
