@@ -14,8 +14,10 @@ open module bvalero.replacer {
     requires spring.core;
     requires spring.data.commons;
     requires spring.data.jpa;
+    requires spring.jcl;
     requires spring.jdbc;
     requires spring.orm;
+    requires spring.oxm;
     requires spring.tx;
     requires spring.web;
     requires spring.webmvc;
@@ -36,4 +38,5 @@ open module bvalero.replacer {
     requires org.jetbrains.annotations;
     requires scribejava.apis;
     requires scribejava.core;
+    requires java.xml.bind;
 }

@@ -56,7 +56,7 @@ class DumpManager {
     JobLauncher jobLauncher;
 
     @Autowired
-    Job replacementJob;
+    Job dumpJob;
 
     /**
      * Check if there is a new dump to process.
@@ -75,7 +75,7 @@ class DumpManager {
                 .addString("source", "Spring Boot")
                 .addLong("time",System.currentTimeMillis()) // In order to run the job several times
                 .toJobParameters();
-            jobLauncher.run(replacementJob, jobParameters);
+            jobLauncher.run(dumpJob, jobParameters);
         } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
             LOGGER.error("Error running dump batch", e);
         }
