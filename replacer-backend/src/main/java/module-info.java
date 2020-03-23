@@ -1,9 +1,9 @@
 open module bvalero.replacer {
     requires java.annotation;
     requires java.desktop;
-    requires java.management;
     requires java.persistence;
     requires java.sql;
+    requires java.xml.bind;
 
     requires spring.batch.core;
     requires spring.batch.infrastructure;
@@ -14,9 +14,7 @@ open module bvalero.replacer {
     requires spring.core;
     requires spring.data.commons;
     requires spring.data.jpa;
-    requires spring.jcl;
     requires spring.jdbc;
-    requires spring.orm;
     requires spring.oxm;
     requires spring.tx;
     requires spring.web;
@@ -29,7 +27,6 @@ open module bvalero.replacer {
     requires org.slf4j;
 
     requires automaton;
-    requires commons.dbcp2;
     requires lombok;
     requires modelmapper;
     requires org.apache.commons.collections4;
@@ -38,5 +35,4 @@ open module bvalero.replacer {
     requires org.jetbrains.annotations;
     requires scribejava.apis;
     requires scribejava.core;
-    requires java.xml.bind;
 }

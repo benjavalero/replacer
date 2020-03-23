@@ -1,9 +1,7 @@
 package es.bvalero.replacer.dump.benchmark;
 
 import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.replacement.ReplacementRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.SessionFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -33,9 +31,6 @@ public class ReplacementExecutionJob {
 
     @Autowired
     ReplacementProcessor replacementProcessor;
-
-    @Autowired
-    ReplacementRepository replacementRepository;
 
     @Autowired
     ReplacementJobListener replacementJobListener;
