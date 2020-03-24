@@ -1,4 +1,4 @@
-package es.bvalero.replacer.dump.benchmark;
+package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import lombok.extern.slf4j.Slf4j;

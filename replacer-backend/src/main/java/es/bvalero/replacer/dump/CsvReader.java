@@ -1,4 +1,4 @@
-package es.bvalero.replacer.dump.benchmark;
+package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import org.springframework.batch.item.file.FlatFileItemReader;

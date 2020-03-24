@@ -1,4 +1,4 @@
-package es.bvalero.replacer.dump.benchmark;
+package es.bvalero.replacer.dump;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

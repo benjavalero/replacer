@@ -1,4 +1,4 @@
-package es.bvalero.replacer.dump.benchmark;
+package es.bvalero.replacer.dump;
 
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.springframework.batch.item.xml.StaxEventItemReader;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.dump.benchmark;
+package es.bvalero.replacer.dump;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
