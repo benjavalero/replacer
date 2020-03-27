@@ -37,8 +37,6 @@ replacer:
   parse.file.delay: 3600000 # Every hour
   article.stats.delay: 600000 # Every 10 minutes
 
-input.file: classpath:replacements-cut.csv
-
 wikipedia:
   api:
     # Externalized
