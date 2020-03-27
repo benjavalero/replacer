@@ -55,7 +55,7 @@ public class DumpExecutionJob {
         ItemWriter<ReplacementEntity> jdbcUpdateWriter
     ) {
         Step step = stepBuilderFactory
-            .get("parse-xml")
+            .get(DumpManager.PARSE_XML_STEP_NAME)
             .<DumpPage, List<ReplacementEntity>>chunk(chunkSize)
             .reader(dumpReader)
             .processor(dumpArticleProcessor)
@@ -63,7 +63,7 @@ public class DumpExecutionJob {
             .build();
 
         return jobBuilderFactory
-            .get("dump-job")
+            .get(DumpManager.DUMP_JOB_NAME)
             .incrementer(new RunIdIncrementer())
             .listener(dumpJobListener)
             .start(step)

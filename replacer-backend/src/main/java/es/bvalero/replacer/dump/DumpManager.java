@@ -7,6 +7,7 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
@@ -19,14 +20,21 @@ import org.springframework.stereotype.Component;
 /**
  * Find the Wikipedia dumps in the filesystem where the application runs.
  * This indexation will be done periodically, or manually from @{@link DumpController}.
- * The dumps are parsed with @{@link DumpHandler}.
+ * The dumps are parsed with @{@link DumpExecutionJob}.
  * Each article found in the dump is processed in @{@link DumpArticleProcessor}.
  */
 @Slf4j
 @Component
 class DumpManager {
+    static final String DUMP_JOB_NAME = "dump-job";
+    static final String DUMP_PATH_PARAMETER = "dumpPath";
+    static final String PARSE_XML_STEP_NAME = "parse-xml";
+
     @Autowired
     private DumpFinder dumpFinder;
+
+    @Autowired
+    private JobExplorer jobExplorer;
 
     @Autowired
     private JobLauncher jobLauncher;
@@ -55,7 +63,11 @@ class DumpManager {
     public void processLatestDumpFile() {
         LOGGER.info("START Indexation of latest dump file");
 
-        // TODO: Check just in case the handler is already running
+        // Check just in case the handler is already running
+        if (!jobExplorer.findRunningJobExecutions(DUMP_JOB_NAME).isEmpty()) {
+            LOGGER.info("END Indexation of latest dump file. Dump indexation is already running.");
+            return;
+        }
 
         try {
             Path latestDumpFileFound = dumpFinder.findLatestDumpFile();
@@ -73,7 +85,7 @@ class DumpManager {
             JobParameters jobParameters = new JobParametersBuilder()
                 .addString("source", "Dump Manager")
                 .addLong("time", System.currentTimeMillis()) // In order to run the job several times
-                .addString("dumpPath", dumpFile.toString())
+                .addString(DUMP_PATH_PARAMETER, dumpFile.toString())
                 .toJobParameters();
             jobLauncher.run(dumpJob, jobParameters);
         } catch (
