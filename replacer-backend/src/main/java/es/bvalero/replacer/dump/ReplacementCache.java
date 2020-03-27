@@ -68,7 +68,9 @@ class ReplacementCache {
             .filter(id -> anyReplacementNotReviewed(replacementMap.get(id)))
             .collect(Collectors.toSet());
         LOGGER.debug("START Delete obsolete and not reviewed articles in DB: {}", notReviewedIds);
-        reviewArticlesReplacementsAsSystem(notReviewedIds);
+        if (!notReviewedIds.isEmpty()) {
+            reviewArticlesReplacementsAsSystem(notReviewedIds);
+        }
         replacementMap.clear();
         LOGGER.debug("END Delete obsolete and not reviewed articles in DB");
     }
