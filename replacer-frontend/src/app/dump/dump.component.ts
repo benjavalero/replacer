@@ -21,9 +21,6 @@ export class DumpComponent implements OnInit, OnDestroy {
   average: number;
   eta: string;
 
-  // Form
-  force: boolean;
-
   // Check the status
   subscription: Subscription;
 
@@ -109,7 +106,7 @@ export class DumpComponent implements OnInit, OnDestroy {
     this.status = null;
     this.alertService.addInfoMessage('Iniciando indexación…');
 
-    this.dumpService.runIndexation(this.force).subscribe(() => {
+    this.dumpService.runIndexation().subscribe(() => {
       // It takes a little for the back-end to set the running status
       sleep(5000).then(() => this.findDumpStatus());
     });

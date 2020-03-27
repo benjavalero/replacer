@@ -16,9 +16,8 @@ export class DumpService {
     return this.httpClient.get<DumpStatus>(`${environment.apiUrl}/dump/`);
   }
 
-  runIndexation(forceProcess: boolean): Observable<any> {
-    const force = forceProcess ? 'force' : '';
-    return this.httpClient.post<any>(`${environment.apiUrl}/dump/${force}`, null);
+  runIndexation(): Observable<any> {
+    return this.httpClient.post<any>(`${environment.apiUrl}/dump/`, null);
   }
 
 }

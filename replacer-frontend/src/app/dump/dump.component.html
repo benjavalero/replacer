@@ -4,12 +4,10 @@
 
   <ul>
     <li>En ejecución: <strong>{{ status.running }}</strong></li>
-    <li>Forzado: <strong>{{ status.forceProcess }}</strong></li>
     <li>Fichero en proceso: <strong>{{ status.dumpFileName }}</strong></li>
     <li>Inicio: <strong>{{ formatDate(status.start) }}</strong></li>
     <li>Final: <strong>{{ formatDate(status.end) }}</strong></li>
     <li>Páginas leídas: <strong>{{ status.numArticlesRead }}</strong></li>
-    <li>Artículos procesables: <strong>{{ status.numArticlesProcessable }}</strong></li>
     <li>Artículos procesados: <strong>{{ status.numArticlesProcessed }}</strong></li>
     <li>Tiempo transcurrido: <strong>{{ elapsed }} (hh:mm:ss)</strong></li>
     <li>Progreso: <strong>{{ progress | number }} %</strong></li>
@@ -18,11 +16,6 @@
   </ul>
 
   <form *ngIf="!status.running" (ngSubmit)="onSubmit()" class="mb-3">
-    <div class="form-group form-check">
-      <input class="form-check-input" id="force-check" name="force-check" type="checkbox" [(ngModel)]="force" />
-      <label class="form-check-label" for="force-check">Forzar indexación de último <em>dump</em></label>
-    </div>
-
     <button type="submit" class="btn btn-primary" id="button-index">
       Lanzar indexación
     </button>
