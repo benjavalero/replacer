@@ -1,15 +1,17 @@
 package es.bvalero.replacer.dump;
 
-import lombok.*;
-
+import java.io.Serializable;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @XmlRootElement(name = "revision", namespace = "http://www.mediawiki.org/xml/export-0.10/")
 public class DumpRevision implements Serializable {
     @XmlElement(namespace = "http://www.mediawiki.org/xml/export-0.10/")

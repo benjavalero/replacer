@@ -1,8 +1,8 @@
 package es.bvalero.replacer.dump;
 
-import lombok.Setter;
+import es.bvalero.replacer.ReplacerException;
+import java.nio.file.Path;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -12,25 +12,9 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.xml.sax.SAXException;
-
-import es.bvalero.replacer.ReplacerException;
-
-import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 /**
  * Find the Wikipedia dumps in the filesystem where the application runs.
@@ -41,119 +25,64 @@ import java.time.ZoneOffset;
 @Slf4j
 @Component
 class DumpManager {
-
-    @Setter
-    @Value("${replacer.dump.index.wait:}")
-    private int dumpIndexWait;
-
     @Autowired
     private DumpFinder dumpFinder;
 
     @Autowired
-    private DumpHandler dumpHandler;
+    private JobLauncher jobLauncher;
 
     @Autowired
-    JobLauncher jobLauncher;
-
-    @Autowired
-    Job dumpJob;
+    private Job dumpJob;
 
     /**
      * Check if there is a new dump to process.
      */
-    @Scheduled(initialDelay = 60 * 1000, fixedDelayString = "${replacer.dump.index.delay}")
-    void processDumpScheduled() {
+    @Scheduled(
+        initialDelayString = "${replacer.dump.batch.delay.initial}",
+        fixedDelayString = "${replacer.dump.batch.delay}"
+    )
+    public void processDumpScheduled() {
         LOGGER.info("EXECUTE Scheduled weekly index of the last dump");
-        runDumpBatch();
-        // processLatestDumpFile(false);
-    }
-
-    @Async
-    public void runDumpBatch() {
-        try {
-            JobParameters jobParameters = new JobParametersBuilder()
-                .addString("source", "Spring Boot")
-                .addLong("time",System.currentTimeMillis()) // In order to run the job several times
-                .toJobParameters();
-            jobLauncher.run(dumpJob, jobParameters);
-        } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
-            LOGGER.error("Error running dump batch", e);
-        }
+        processLatestDumpFile();
     }
 
     /**
-     * Find the latest dump file and process it.
-     *
-     * @param forceProcessDump Force processing again an already indexed dump.
+     * Find the latest dump file and process it
      */
     // In order to be asynchronous it must be public and called externally:
     // https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableAsync.html
-    @SuppressWarnings("WeakerAccess")
     @Async
-    public void processLatestDumpFile(boolean forceProcessDump) {
-        LOGGER.info("START Indexation of latest dump file. Force: {}", forceProcessDump);
+    public void processLatestDumpFile() {
+        LOGGER.info("START Indexation of latest dump file");
 
-        // Check just in case the handler is already running
-        if (dumpHandler.getProcessStatus().isRunning()) {
-            LOGGER.info("END Indexation of latest dump file. Dump indexation is already running.");
-            return;
-        }
+        // TODO: Check just in case the handler is already running
 
         try {
             Path latestDumpFileFound = dumpFinder.findLatestDumpFile();
-            String latestDumpFileName = latestDumpFileFound.getFileName().toString();
-
-            // We check against the latest dump file processed
-            if ((!latestDumpFileName.equals(findLatestDumpFileNameFromDatabase())
-                    && isDumpFileOldEnough(latestDumpFileFound)) || forceProcessDump) {
-                parseDumpFile(latestDumpFileFound, forceProcessDump);
-                LOGGER.info("END Indexation of latest dump file: {}", latestDumpFileFound);
-            } else {
-                LOGGER.info("END Indexation of latest dump file. Latest dump file already indexed or not old enough.");
-            }
-        } catch (DumpException | ReplacerException e) {
+            parseDumpFile(latestDumpFileFound);
+            LOGGER.info("END Indexation of latest dump file: {}", latestDumpFileFound);
+        } catch (ReplacerException e) {
             LOGGER.error("Error indexing latest dump file", e);
         }
     }
 
-    // Check if the dump file is old enough, i. e. modified more than a day ago
-    private boolean isDumpFileOldEnough(Path dumpFile) {
-        try {
-            LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(dumpIndexWait);
-            FileTime fileTime = Files.getLastModifiedTime(dumpFile);
-            return fileTime.toInstant().isBefore(oneDayAgo.toInstant(ZoneOffset.UTC));
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    private String findLatestDumpFileNameFromDatabase() {
-        // At this point we know that the indexation is not running
-        // so the status of the handler matches with last finished indexation in database
-        return dumpHandler.getProcessStatus().getDumpFileName();
-    }
-
-    void parseDumpFile(Path dumpFile, boolean forceProcess) throws DumpException {
+    void parseDumpFile(Path dumpFile) throws ReplacerException {
         LOGGER.info("START Parse dump file: {}", dumpFile);
 
-        try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile), true)) {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-            SAXParser saxParser = factory.newSAXParser();
-
-            dumpHandler.setLatestDumpFile(dumpFile);
-            dumpHandler.setForceProcess(forceProcess);
-            saxParser.parse(xmlInput, dumpHandler);
-            LOGGER.info("END Parse dump file: {}", dumpFile);
-        } catch (IOException e) {
-            throw new DumpException("Dump file not valid", e);
-        } catch (ParserConfigurationException | SAXException e) {
-            throw new DumpException("SAX Error parsing dump file", e);
+        try {
+            JobParameters jobParameters = new JobParametersBuilder()
+                .addString("source", "Dump Manager")
+                .addLong("time", System.currentTimeMillis()) // In order to run the job several times
+                .addString("dumpPath", dumpFile.toString())
+                .toJobParameters();
+            jobLauncher.run(dumpJob, jobParameters);
+        } catch (
+            JobExecutionAlreadyRunningException
+            | JobRestartException
+            | JobInstanceAlreadyCompleteException
+            | JobParametersInvalidException e
+        ) {
+            throw new ReplacerException("Error running dump batch", e);
         }
     }
-
-    DumpIndexation getDumpStatus() {
-        return dumpHandler.getProcessStatus();
-    }
-
 }

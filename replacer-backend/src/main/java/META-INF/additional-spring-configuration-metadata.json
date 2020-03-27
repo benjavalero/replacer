@@ -10,5 +10,20 @@
             "type": "java.lang.String",
             "description": "Project name in the dump folder, e. g. `eswiki`"
         },
+        {
+            "name": "replacer.dump.batch.delay",
+            "type": "java.lang.String",
+            "description": "Delay (in milliseconds) between executions of the dump batch"
+        },
+        {
+            "name": "replacer.dump.batch.delay.initial",
+            "type": "java.lang.String",
+            "description": "Delay (in milliseconds) until the first execution of the dump batch"
+        },
+        {
+            "name": "replacer.dump.batch.chunk.size",
+            "type": "java.lang.Integer",
+            "description": "Number of items to be processed in batch when indexing a dump"
+        }
     ]
 }
