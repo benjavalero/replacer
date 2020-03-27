@@ -60,10 +60,14 @@ public class DumpExecutionJob {
             .reader(dumpReader)
             .processor(dumpArticleProcessor)
             .writer(new DumpWriter(jdbcInsertWriter, jdbcUpdateWriter))
-            .listener(dumpJobListener)
             .build();
 
-        return jobBuilderFactory.get("dump-job").incrementer(new RunIdIncrementer()).start(step).build();
+        return jobBuilderFactory
+            .get("dump-job")
+            .incrementer(new RunIdIncrementer())
+            .listener(dumpJobListener)
+            .start(step)
+            .build();
     }
 
     @Bean

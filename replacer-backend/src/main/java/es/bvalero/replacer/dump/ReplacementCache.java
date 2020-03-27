@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
@@ -26,7 +27,7 @@ class ReplacementCache {
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
 
-    private int maxCachedId;
+    private int maxCachedId = 0;
     private ListValuedMap<Integer, ReplacementEntity> replacementMap = new ArrayListValuedHashMap<>(chunkSize);
 
     List<ReplacementEntity> findByArticleId(int articleId) {
@@ -56,31 +57,48 @@ class ReplacementCache {
         LOGGER.debug("END Load replacements from database to cache. Articles cached: {}", replacementMap.size());
     }
 
-    void clean() {
+    private void clean() {
         // Clear the cache if obsolete (we assume the dump articles are in order)
-        // The remaining cached articles are not in the dump so we remove them from DB
+        // The remaining cached articles are not in the dump so we "remove" them from DB
         Set<Integer> obsoleteIds = new HashSet<>(replacementMap.keySet());
-        LOGGER.debug("START Delete obsolete articles in DB: {}", obsoleteIds);
-        reviewArticlesReplacementsAsSystem(obsoleteIds);
+        // If all the replacements of an article are already reviewed by the system
+        // there is no need to do it again
+        Set<Integer> notReviewedIds = obsoleteIds
+            .stream()
+            .filter(id -> anyReplacementNotReviewed(replacementMap.get(id)))
+            .collect(Collectors.toSet());
+        LOGGER.debug("START Delete obsolete and not reviewed articles in DB: {}", notReviewedIds);
+        reviewArticlesReplacementsAsSystem(notReviewedIds);
         replacementMap.clear();
-        LOGGER.debug("END Delete obsolete articles in DB");
+        LOGGER.debug("END Delete obsolete and not reviewed articles in DB");
+    }
+
+    private boolean anyReplacementNotReviewed(List<ReplacementEntity> list) {
+        return list.stream().anyMatch(item -> item.getReviewer() == null);
     }
 
     private List<ReplacementEntity> findByArticles(int minId, int maxId) {
-        String sql =
-            "SELECT * FROM replacement2 WHERE id BETWEEN :minId AND :maxId";
+        String sql = "SELECT * FROM replacement2 WHERE article_id BETWEEN :minId AND :maxId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("minId", minId)
             .addValue("maxId", maxId);
         return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
-    private void reviewArticlesReplacementsAsSystem(Set<Integer> ids) {
-        String sql = "UPDATE replacement2 SET reviewer=:system, last_update=:now WHERE id IN (:ids) AND reviewer IS NULL";
+    private void reviewArticlesReplacementsAsSystem(Set<Integer> articleIds) {
+        String sql =
+            "UPDATE replacement2 SET reviewer=:system, last_update=:now " +
+            "WHERE article_id IN (:articleIds) AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("system", ReplacementIndexService.SYSTEM_REVIEWER)
             .addValue("now", LocalDate.now())
-            .addValue("ids", ids);
+            .addValue("articleIds", articleIds);
         jdbcTemplate.update(sql, namedParameters);
+    }
+
+    public void finish() {
+        LOGGER.debug("Finish Replacement Cache. Reset maxCacheId and Clean.");
+        this.clean();
+        this.maxCachedId = 0;
     }
 }

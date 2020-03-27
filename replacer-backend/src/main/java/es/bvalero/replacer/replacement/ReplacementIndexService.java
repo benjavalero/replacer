@@ -135,7 +135,7 @@ public class ReplacementIndexService {
         try {
             replacementRepository.save(replacement);
         } catch (Exception e) {
-            LOGGER.error("Error when saving replacements: {}", replacement, e);
+            LOGGER.error("Error when saving replacement: {}", replacement, e);
         }
     }
 

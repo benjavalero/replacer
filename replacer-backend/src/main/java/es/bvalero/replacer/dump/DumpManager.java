@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Find the Wikipedia dumps in the filesystem where the application runs.
- * This indexation will be done weekly, or manually from @{@link DumpController}.
+ * This indexation will be done periodically, or manually from @{@link DumpController}.
  * The dumps are parsed with @{@link DumpHandler}.
  * Each article found in the dump is processed in @{@link DumpArticleProcessor}.
  */
@@ -42,7 +42,7 @@ class DumpManager {
         fixedDelayString = "${replacer.dump.batch.delay}"
     )
     public void processDumpScheduled() {
-        LOGGER.info("EXECUTE Scheduled weekly index of the last dump");
+        LOGGER.info("EXECUTE Scheduled index of the last dump");
         processLatestDumpFile();
     }
 

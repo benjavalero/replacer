@@ -85,7 +85,7 @@ public class DumpArticleProcessor implements ItemProcessor<DumpPage, List<Replac
             dbReplacements
         );
 
-        LOGGER.debug("END Process dump article: {}", dumpArticle.getTitle());
+        LOGGER.debug("END Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
         return toWrite;
     }
 }
