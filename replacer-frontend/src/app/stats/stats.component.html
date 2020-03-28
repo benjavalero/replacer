@@ -7,11 +7,11 @@
 </ul>
 
 <div *ngIf="numReviewedGrouped.length">
-  <table class="table">
+  <table class="table" aria-describedby="Lista de usuarios que han contribuido y su número de contribuciones">
     <thead>
       <tr>
-        <th>Usuario</th>
-        <th>#</th>
+        <th scope="col">Usuario</th>
+        <th scope="col">#</th>
       </tr>
     </thead>
     <tbody>

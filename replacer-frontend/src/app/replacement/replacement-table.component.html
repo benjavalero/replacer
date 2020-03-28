@@ -8,7 +8,7 @@
   </div>
 
   <div *ngIf="filteredItems.length">
-    <table class="table">
+    <table class="table" aria-describedby="Lista de potenciales reemplazos y su cantidad estimada">
       <thead>
         <tr>
           <th scope="col" appColumnSortable="s" (sort)="onSort($event)">Subtipo</th>
