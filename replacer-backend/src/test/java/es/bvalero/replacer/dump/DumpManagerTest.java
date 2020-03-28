@@ -9,6 +9,15 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import es.bvalero.replacer.ReplacerException;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -18,6 +27,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Collections;
 
 public class DumpManagerTest {
 
@@ -25,7 +35,13 @@ public class DumpManagerTest {
     public DumpFinder dumpFinder;
 
     @Mock
-    private DumpHandler dumpHandler;
+    private JobExplorer jobExplorer;
+
+    @Mock
+    private JobLauncher jobLauncher;
+
+    @Mock
+    private Job dumpJob;
 
     @InjectMocks
     private DumpManager dumpManager;
@@ -37,155 +53,47 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testParseDumpFile() throws URISyntaxException, DumpException {
+    public void testParseDumpFile() throws URISyntaxException, ReplacerException, JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
         // We need a real dump file to create the input stream
-        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/eswiki/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Assert.assertNotNull(dumpFile);
         Assert.assertTrue(Files.exists(dumpFile));
 
-        dumpManager.parseDumpFile(dumpFile, true);
+        dumpManager.parseDumpFile(dumpFile);
 
-        Mockito.verify(dumpHandler, Mockito.times(1)).setLatestDumpFile(dumpFile);
-        Mockito.verify(dumpHandler, Mockito.times(1)).setForceProcess(true);
-        Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
-    }
-
-    @Test(expected = DumpException.class)
-    public void testParseDumpFileNotExisting() throws DumpException {
-        Path dumpFile = Paths.get("xxx");
-        Assert.assertFalse(Files.exists(dumpFile));
-
-        dumpManager.parseDumpFile(dumpFile, false);
-    }
-
-    @Test(expected = DumpException.class)
-    public void testParseDumpFileWithParseException() throws URISyntaxException, DumpException {
-        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/non-valid-dump.txt.bz2").toURI());
-        Assert.assertNotNull(dumpFile);
-        Assert.assertTrue(Files.exists(dumpFile));
-
-        dumpManager.parseDumpFile(dumpFile, false);
+        Mockito.verify(jobLauncher).run(Mockito.any(Job.class), Mockito.any(JobParameters.class));
     }
 
     @Test
-    public void testProcessLatestDumpFileOldEnough() throws URISyntaxException, IOException, ReplacerException {
-        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        Mockito.when(dumpFinder.findLatestDumpFile()).thenReturn(dumpFile);
-
-        // Make the dump file old enough
-        dumpManager.setDumpIndexWait(1); // 1 day
-        LocalDateTime twoDaysAgo = LocalDateTime.now().minusDays(2);
-        FileTime fileTime = FileTime.from(twoDaysAgo.toInstant(ZoneOffset.UTC));
-        Files.setLastModifiedTime(dumpFile, fileTime);
-
-        Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
-
-        dumpManager.processLatestDumpFile(false);
-
-        Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
-    }
-
-    @Test
-    public void testProcessLatestDumpFileTooRecent() throws URISyntaxException, IOException, ReplacerException {
-        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        Mockito.when(dumpFinder.findLatestDumpFile()).thenReturn(dumpFile);
-
-        // Make the dump file too recent
-        dumpManager.setDumpIndexWait(1); // 1 day
-        LocalDateTime twoDaysAgo = LocalDateTime.now().minusHours(1);
-        FileTime fileTime = FileTime.from(twoDaysAgo.toInstant(ZoneOffset.UTC));
-        Files.setLastModifiedTime(dumpFile, fileTime);
-
-        Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
-
-        dumpManager.processLatestDumpFile(false);
-
-        Mockito.verify(dumpHandler, Mockito.times(0)).startDocument();
-    }
-
-    @Test
-    public void testProcessLatestDumpFileTooRecentForced() throws URISyntaxException, IOException, ReplacerException {
-        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        Mockito.when(dumpFinder.findLatestDumpFile()).thenReturn(dumpFile);
-
-        // Make the dump file too recent
-        dumpManager.setDumpIndexWait(1); // 1 day
-        LocalDateTime twoDaysAgo = LocalDateTime.now().minusHours(1);
-        FileTime fileTime = FileTime.from(twoDaysAgo.toInstant(ZoneOffset.UTC));
-        Files.setLastModifiedTime(dumpFile, fileTime);
-
-        Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
-
-        dumpManager.processLatestDumpFile(true);
-
-        Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
-    }
-
-    @Test
-    public void testProcessLatestDumpFileWithException() throws ReplacerException {
+    public void testProcessLatestDumpFileWithException() throws ReplacerException, JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
         Mockito.when(dumpFinder.findLatestDumpFile()).thenThrow(ReplacerException.class);
-        Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
 
-        dumpManager.processLatestDumpFile(false);
+        dumpManager.processLatestDumpFile();
 
-        Mockito.verify(dumpHandler, Mockito.times(0)).startDocument();
+        Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(Job.class), Mockito.any(JobParameters.class));
     }
 
     @Test
-    public void testProcessLatestDumpFileAlreadyRunning() {
-        DumpIndexation status = new DumpIndexation();
-        status.setRunning(true);
-        Mockito.when(dumpHandler.getProcessStatus()).thenReturn(status);
+    public void testProcessLatestDumpFileAlreadyRunning() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+        Mockito.when(
+        jobExplorer.findRunningJobExecutions(Mockito.anyString()))
+            .thenReturn(Collections.singleton(Mockito.mock(JobExecution.class)));
 
-        dumpManager.processLatestDumpFile(false);
+        dumpManager.processLatestDumpFile();
 
-        Mockito.verify(dumpHandler, Mockito.times(0)).startDocument();
+        Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(Job.class), Mockito.any(JobParameters.class));
     }
 
     @Test
-    public void testProcessLatestDumpFileAlreadyProcessed() throws URISyntaxException, ReplacerException {
-        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
+    public void testProcessDumpScheduled() throws URISyntaxException, IOException, ReplacerException, JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/eswiki/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
         Mockito.when(dumpFinder.findLatestDumpFile()).thenReturn(dumpFile);
-        
-        DumpIndexation status = new DumpIndexation("eswiki-20170101-pages-articles.xml.bz2", false);
-        Mockito.when(dumpHandler.getProcessStatus()).thenReturn(status);
 
-        dumpManager.processLatestDumpFile(false);
-
-        Mockito.verify(dumpHandler, Mockito.times(0)).startDocument();
-    }
-
-    @Test
-    public void testProcessLatestDumpFileAlreadyProcessedForced() throws URISyntaxException, ReplacerException {
-        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        Mockito.when(dumpFinder.findLatestDumpFile()).thenReturn(dumpFile);
-        
-        Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
-
-        dumpManager.processLatestDumpFile(true);
-
-        Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
-    }
-
-    @Test
-    public void testProcessDumpScheduled() throws URISyntaxException, IOException, ReplacerException {
-        Path dumpFile = Paths.get(getClass().getResource("/es/bvalero/replacer/dump/20170101/eswiki-20170101-pages-articles.xml.bz2").toURI());
-        Mockito.when(dumpFinder.findLatestDumpFile()).thenReturn(dumpFile);
-        
         // Make the dump file old enough
         Files.setLastModifiedTime(dumpFile, FileTime.from(LocalDateTime.now().minusDays(2).toInstant(ZoneOffset.UTC)));
 
-        Mockito.when(dumpHandler.getProcessStatus()).thenReturn(new DumpIndexation());
-
         dumpManager.processDumpScheduled();
 
-        Mockito.verify(dumpHandler, Mockito.times(1)).startDocument();
+        Mockito.verify(jobLauncher, Mockito.times(1)).run(Mockito.any(Job.class), Mockito.any(JobParameters.class));
     }
-
-    @Test
-    public void testGetDumpStatus() {
-        dumpManager.getDumpStatus();
-        Mockito.verify(dumpHandler, Mockito.times(1)).getProcessStatus();
-    }
-
 }
