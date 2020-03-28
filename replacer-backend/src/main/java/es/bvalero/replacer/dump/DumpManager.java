@@ -2,13 +2,14 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.ReplacerException;
 import java.nio.file.Path;
+import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.NoSuchJobExecutionException;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
@@ -38,6 +39,9 @@ class DumpManager {
 
     @Autowired
     private JobLauncher jobLauncher;
+
+    @Autowired
+    private JobOperator jobOperator;
 
     @Autowired
     private Job dumpJob;
@@ -96,5 +100,42 @@ class DumpManager {
         ) {
             throw new ReplacerException("Error running dump batch", e);
         }
+    }
+
+    DumpIndexation getDumpIndexation() {
+        DumpIndexation dumpIndexation = new DumpIndexation();
+
+        // Find job execution
+        JobInstance jobInstance = jobExplorer.getLastJobInstance(DumpManager.DUMP_JOB_NAME);
+        if (jobInstance != null) {
+            JobExecution jobExecution = jobExplorer.getLastJobExecution(jobInstance);
+            if (jobExecution != null) {
+                dumpIndexation.setRunning(jobExecution.isRunning());
+                dumpIndexation.setStart(jobExecution.getStartTime().getTime());
+                if (!jobExecution.isRunning()) {
+                    dumpIndexation.setEnd(jobExecution.getEndTime().getTime());
+                }
+                dumpIndexation.setDumpFileName(
+                    jobExecution.getJobParameters().getString(DumpManager.DUMP_PATH_PARAMETER)
+                );
+
+                // Find step executions
+                try {
+                    Map<Long, String> map = jobOperator.getStepExecutionSummaries(jobExecution.getId());
+                    if (!map.isEmpty()) {
+                        long stepId = map.keySet().stream().findAny().orElse(0L);
+                        StepExecution stepExecution = jobExplorer.getStepExecution(jobExecution.getId(), stepId);
+                        if (stepExecution != null) {
+                            dumpIndexation.setNumArticlesRead(stepExecution.getReadCount());
+                            dumpIndexation.setNumArticlesProcessed(stepExecution.getWriteCount());
+                        }
+                    }
+                } catch (NoSuchJobExecutionException e) {
+                    LOGGER.error("Error finding step executions", e);
+                }
+            }
+        }
+
+        return dumpIndexation;
     }
 }
