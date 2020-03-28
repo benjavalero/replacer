@@ -5,6 +5,10 @@ spring:
     ansi.enabled: ALWAYS
   jackson:
     date-format: dd-MM-yyyy HH:mm:ss
+  batch:
+    job.enabled: false
+    initialize-schema: always
+    initializer.enabled: true
 
 server:
   port: 8000
@@ -17,17 +21,21 @@ logging:
     es.bvalero.replacer: INFO
     org.hibernate: ERROR
     org.springframework: ERROR
+    org.springframework.batch: INFO
 
 replacer:
-  dump.path:
-    base: /public/dumps/public
-    project: eswiki
+  dump:
+    path:
+      base: /public/dumps/public
+      project: eswiki
+    batch:
+      delay: 604800000 # Weekly
+      delay.initial: 86400000 # 1 day
+      chunk.size: 10000
 
   admin.user: Benjavalero
   parse.file.delay: 3600000 # Every hour
-  dump.index.delay: 86400000 # Daily
   article.stats.delay: 600000 # Every 10 minutes
-  dump.index.wait: 3 # Days to wait after a dump is generated
 
 wikipedia:
   api:
@@ -52,10 +60,11 @@ spring:
   profiles: default
   # Externalized
   datasource:
-    url: jdbc:mariadb://localhost:3306/s52978__replacer
+    url: jdbc:mariadb://localhost:3306/s52978__replacer?rewriteBatchedStatements=true
     username: s52978
     password: xxxxxx
     driver-class-name: org.mariadb.jdbc.Driver
+    hikari.max-lifetime: 580000
 
 logging:
   # Rolling after 10M after the documentation

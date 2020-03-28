@@ -62,7 +62,7 @@ public class DumpFinder {
             throw new ReplacerException("No dump file has been found");
         }
 
-        LOGGER.info("END Find latest dump");
+        LOGGER.info("END Find latest dump: {}", latestDumpFile);
         return latestDumpFile;
     }
 

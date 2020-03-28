@@ -1,29 +1,29 @@
 package es.bvalero.replacer.replacement;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import javax.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.jetbrains.annotations.TestOnly;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.time.LocalDate;
 
 /**
  * A replacement in the database related to an article.
  */
 @Data
 @NoArgsConstructor // Needed by JPA
+@AllArgsConstructor
 @Entity
-@Table(name = "replacement2",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"articleId", "type", "subtype", "position"}))
+@Table(
+    name = "replacement2",
+    uniqueConstraints = @UniqueConstraint(columnNames = { "articleId", "type", "subtype", "position" })
+)
 public class ReplacementEntity implements Serializable {
-
-    private static final long serialVersionUID = -6766305982117992712L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column
     private int articleId;
@@ -66,5 +66,4 @@ public class ReplacementEntity implements Serializable {
     boolean isToBeReviewed() {
         return this.reviewer == null;
     }
-
 }

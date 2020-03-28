@@ -1,8 +1,11 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
+import java.util.Collections;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,16 +14,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Collections;
-import java.util.List;
-
 public class ReplacementCacheTest {
-
     @Mock
-    private ReplacementRepository replacementRepository;
-
-    @Mock
-    private ReplacementIndexService replacementIndexService;
+    private ReplacementDao replacementDao;
 
     @InjectMocks
     private ReplacementCache replacementCache;
@@ -28,6 +24,7 @@ public class ReplacementCacheTest {
     @Before
     public void setUp() {
         replacementCache = new ReplacementCache();
+        replacementCache.setChunkSize(1000);
         MockitoAnnotations.initMocks(this);
     }
 
@@ -39,10 +36,8 @@ public class ReplacementCacheTest {
         ReplacementEntity replacement2 = new ReplacementEntity(1001, "", "", 0);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
         List<ReplacementEntity> dbReplacements2 = Collections.singletonList(replacement2);
-        Mockito.when(replacementRepository.findByArticles(1, 1000))
-                .thenReturn(dbReplacements);
-        Mockito.when(replacementRepository.findByArticles(1001, 2000))
-                .thenReturn(dbReplacements2);
+        Mockito.when(replacementDao.findByArticles(1, 1000)).thenReturn(dbReplacements);
+        Mockito.when(replacementDao.findByArticles(1001, 2000)).thenReturn(dbReplacements2);
 
         List<ReplacementEntity> replacements = replacementCache.findByArticleId(1);
         Assert.assertTrue(replacements.isEmpty());
@@ -51,7 +46,7 @@ public class ReplacementCacheTest {
         Assert.assertEquals(dbReplacements2, replacements);
 
         // Check that the article 2 has been cleaned
-        Mockito.verify(replacementIndexService).reviewArticlesReplacementsAsSystem(Collections.singleton(2));
+        Mockito.verify(replacementDao).reviewArticlesReplacementsAsSystem(Collections.singleton(2));
     }
 
     @Test
@@ -60,11 +55,9 @@ public class ReplacementCacheTest {
         // So the first load is enlarged
         ReplacementEntity replacement = new ReplacementEntity(1001, "", "", 0);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
-        Mockito.when(replacementRepository.findByArticles(1, 2000))
-                .thenReturn(dbReplacements);
+        Mockito.when(replacementDao.findByArticles(1, 2000)).thenReturn(dbReplacements);
 
         List<ReplacementEntity> replacements = replacementCache.findByArticleId(1001);
         Assert.assertEquals(dbReplacements, replacements);
     }
-
 }

@@ -40,11 +40,11 @@ public class DumpArticleProcessorTest {
     @Test
     public void testProcessSimple() {
         DumpArticle dumpArticle = DumpArticle.builder().namespace(WikipediaNamespace.ARTICLE).content("").build();
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
+        dumpArticleProcessor.processArticle(dumpArticle);
 
         Mockito.verify(replacementCache).findByArticleId(Mockito.anyInt());
         Mockito.verify(replacementFindService).findReplacements(Mockito.anyString());
-        Mockito.verify(replacementIndexService).indexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.anyList());
+        Mockito.verify(replacementIndexService).findIndexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.anyList());
     }
 
     @Test
@@ -81,26 +81,8 @@ public class DumpArticleProcessorTest {
         Mockito.when(replacementCache.findByArticleId(Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(replacement));
 
-        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
-    }
-
-    @Test
-    public void testProcessLastUpdateAfterTimestampForced() {
-        LocalDate today = LocalDate.now();
-        LocalDate yesterday = today.minusDays(1L);
-
-        DumpArticle dumpArticle = DumpArticle.builder()
-                .namespace(WikipediaNamespace.ARTICLE)
-                .content("")
-                .lastUpdate(yesterday)
-                .build();
-
-        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
-        replacement.setLastUpdate(today);
-        Mockito.when(replacementCache.findByArticleId(Mockito.anyInt()))
-                .thenReturn(Collections.singletonList(replacement));
-
-        Assert.assertFalse(dumpArticleProcessor.processArticle(dumpArticle));
+        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle).isEmpty());
+        Mockito.verify(replacementFindService, Mockito.times(0)).findReplacements(Mockito.anyString());
     }
 
     @Test
@@ -118,7 +100,8 @@ public class DumpArticleProcessorTest {
         Mockito.when(replacementCache.findByArticleId(Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(replacement));
 
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
+        dumpArticleProcessor.processArticle(dumpArticle);
+        Mockito.verify(replacementFindService).findReplacements(Mockito.anyString());
     }
 
     @Test
@@ -137,7 +120,8 @@ public class DumpArticleProcessorTest {
         Mockito.when(replacementCache.findByArticleId(Mockito.anyInt()))
                 .thenReturn(Collections.singletonList(replacement));
 
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
+        dumpArticleProcessor.processArticle(dumpArticle);
+        Mockito.verify(replacementFindService).findReplacements(Mockito.anyString());
     }
 
     @Test
@@ -155,9 +139,9 @@ public class DumpArticleProcessorTest {
         List<Replacement> replacements = Collections.singletonList(replacement);
         Mockito.when(replacementFindService.findReplacements(Mockito.anyString())).thenReturn(replacements);
 
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
+        dumpArticleProcessor.processArticle(dumpArticle);
 
-        Mockito.verify(replacementIndexService).indexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.eq(dbReplacements));
+        Mockito.verify(replacementIndexService).findIndexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.eq(dbReplacements));
     }
 
     @Test
@@ -179,15 +163,9 @@ public class DumpArticleProcessorTest {
         List<Replacement> replacements = Collections.emptyList();
         Mockito.when(replacementFindService.findReplacements(Mockito.anyString())).thenReturn(replacements);
 
-        Assert.assertTrue(dumpArticleProcessor.processArticle(dumpArticle));
+        dumpArticleProcessor.processArticle(dumpArticle);
 
-        Mockito.verify(replacementIndexService).indexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.eq(dbReplacements));
-    }
-
-    @Test
-    public void testFinishOverallProcess() {
-        dumpArticleProcessor.finishOverallProcess();
-        Mockito.verify(replacementCache, Mockito.times(1)).clean();
+        Mockito.verify(replacementIndexService).findIndexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.eq(dbReplacements));
     }
 
 }

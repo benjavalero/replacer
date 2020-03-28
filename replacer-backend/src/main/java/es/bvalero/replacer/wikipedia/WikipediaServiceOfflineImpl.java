@@ -16,7 +16,7 @@ import java.util.*;
 
 @Slf4j
 @Service
-@Profile("offline")
+@Profile("!default")
 class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override

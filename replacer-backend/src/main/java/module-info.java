@@ -2,13 +2,20 @@ open module bvalero.replacer {
     requires java.annotation;
     requires java.desktop;
     requires java.persistence;
+    requires java.sql;
+    requires java.xml.bind;
 
+    requires spring.batch.core;
+    requires spring.batch.infrastructure;
     requires spring.beans;
     requires spring.boot;
     requires spring.boot.autoconfigure;
     requires spring.context;
+    requires spring.core;
     requires spring.data.commons;
     requires spring.data.jpa;
+    requires spring.jdbc;
+    requires spring.oxm;
     requires spring.tx;
     requires spring.web;
     requires spring.webmvc;
