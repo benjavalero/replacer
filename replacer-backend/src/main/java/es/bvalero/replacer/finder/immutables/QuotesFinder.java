@@ -1,36 +1,20 @@
 package es.bvalero.replacer.finder.immutables;
 
-import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
-
-import es.bvalero.replacer.finder.LinearIterable;
-import es.bvalero.replacer.finder.LinearMatcher;
 import org.springframework.stereotype.Component;
-
-import java.util.regex.MatchResult;
 
 /**
  * Find text in double quotes, e. g. `"text"`
  */
 @Component
-public class QuotesFinder implements ImmutableFinder {
-
+public class QuotesFinder extends QuotesAbstractFinder implements ImmutableFinder {
     @Override
-    public Iterable<Immutable> find(String text) {
-        return new LinearIterable<>(text, this::findQuote, this::convert);
+    char getStartChar() {
+        return '"';
     }
 
-    private MatchResult findQuote(String text, int start) {
-        int openQuote = text.indexOf('"', start);
-        if (openQuote >= 0) {
-            int endQuote = text.indexOf('"', openQuote + 1);
-            if (endQuote >= 0) {
-                return LinearMatcher.of(openQuote, text.substring(openQuote, endQuote + 1));
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
+    @Override
+    char getEndChar() {
+        return '"';
     }
 }

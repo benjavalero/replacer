@@ -19,7 +19,7 @@ public class CustomReplacementFinder implements ReplacementFinder {
 
     @Override
     public Iterable<Replacement> find(String text) {
-        return new RegexIterable<Replacement>(text, automaton, this::convertMatch, this::isValidMatch);
+        return new RegexIterable<>(text, automaton, this::convertMatch, this::isValidMatch);
     }
 
     private RunAutomaton buildCustomRegex(String replacement, String suggestion) {

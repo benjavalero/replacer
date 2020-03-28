@@ -70,7 +70,7 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
 
     @Override
     public Iterable<Replacement> find(String text) {
-        return new RegexIterable<Replacement>(text, getAutomaton(), this::convertMatch, this::isValidMatch);
+        return new RegexIterable<>(text, getAutomaton(), this::convertMatch, this::isValidMatch);
     }
 
     @Override

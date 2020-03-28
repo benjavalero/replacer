@@ -49,7 +49,7 @@ class UppercaseMonthWithoutDayFinder extends DateFinder implements ReplacementFi
 
     @Override
     public Iterable<Replacement> find(String text) {
-        return new RegexIterable<Replacement>(
+        return new RegexIterable<>(
             text,
             AUTOMATON_DATE_UPPERCASE_MONTHS_WITHOUT_DAY,
             this::convertMatch,

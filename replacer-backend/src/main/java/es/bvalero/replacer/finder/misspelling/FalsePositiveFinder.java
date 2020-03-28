@@ -69,7 +69,7 @@ public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListe
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<Immutable>(text, this.falsePositivesAutomaton, this::convert, this::isValidMatch);
+        return new RegexIterable<>(text, this.falsePositivesAutomaton, this::convert, this::isValidMatch);
     }
 
     private boolean isValidMatch(MatchResult match, String text) {

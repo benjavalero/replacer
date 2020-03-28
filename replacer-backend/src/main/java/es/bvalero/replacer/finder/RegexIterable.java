@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder;
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RunAutomaton;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.regex.MatchResult;
@@ -103,6 +104,9 @@ public class RegexIterable<T> implements Iterable<T> {
 
         @Override
         public R next() {
+            if (matcher == null || !isValidMatch(matcher)) {
+                throw new NoSuchElementException();
+            }
             return convert.apply(matcher);
         }
     }
@@ -135,6 +139,9 @@ public class RegexIterable<T> implements Iterable<T> {
 
         @Override
         public R next() {
+            if (matcher == null || !isValidMatch(matcher)) {
+                throw new NoSuchElementException();
+            }
             return convert.apply(matcher);
         }
     }

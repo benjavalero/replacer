@@ -24,7 +24,7 @@ class UppercaseMonthFinder extends DateFinder implements ReplacementFinder {
 
     @Override
     public Iterable<Replacement> find(String text) {
-        return new RegexIterable<Replacement>(
+        return new RegexIterable<>(
             text,
             AUTOMATON_DATE_UPPERCASE_MONTHS,
             this::convertMatch,

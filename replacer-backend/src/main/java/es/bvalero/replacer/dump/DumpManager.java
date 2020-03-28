@@ -119,23 +119,26 @@ class DumpManager {
                     jobExecution.getJobParameters().getString(DumpManager.DUMP_PATH_PARAMETER)
                 );
 
-                // Find step executions
-                try {
-                    Map<Long, String> map = jobOperator.getStepExecutionSummaries(jobExecution.getId());
-                    if (!map.isEmpty()) {
-                        long stepId = map.keySet().stream().findAny().orElse(0L);
-                        StepExecution stepExecution = jobExplorer.getStepExecution(jobExecution.getId(), stepId);
-                        if (stepExecution != null) {
-                            dumpIndexation.setNumArticlesRead(stepExecution.getReadCount());
-                            dumpIndexation.setNumArticlesProcessed(stepExecution.getWriteCount());
-                        }
-                    }
-                } catch (NoSuchJobExecutionException e) {
-                    LOGGER.error("Error finding step executions", e);
-                }
+                addStepExecutions(dumpIndexation, jobExecution);
             }
         }
 
         return dumpIndexation;
+    }
+
+    private void addStepExecutions(DumpIndexation dumpIndexation, JobExecution jobExecution) {
+        try {
+            Map<Long, String> map = jobOperator.getStepExecutionSummaries(jobExecution.getId());
+            if (!map.isEmpty()) {
+                long stepId = map.keySet().stream().findAny().orElse(0L);
+                StepExecution stepExecution = jobExplorer.getStepExecution(jobExecution.getId(), stepId);
+                if (stepExecution != null) {
+                    dumpIndexation.setNumArticlesRead(stepExecution.getReadCount());
+                    dumpIndexation.setNumArticlesProcessed(stepExecution.getWriteCount());
+                }
+            }
+        } catch (NoSuchJobExecutionException e) {
+            LOGGER.error("Error finding step executions", e);
+        }
     }
 }

@@ -271,6 +271,7 @@ In conclusion, as performance is critical, we try to use the faster implementati
 ### Important
 - [ ] Pass Sonar. More tests.
 - [ ] Check in Angular why now after opening in different tabs it gets confused with the searched misspelling.
+- [ ] Add Sonar to frontend.
 
 ### Optimization
 - [ ] After 1-Mar-2020 the _page-articles_ dumps will be generated both in multi-stream mode but in different ways (cf. <https://phabricator.wikimedia.org/T239866>). We should check if any of them is read/parsed faster.

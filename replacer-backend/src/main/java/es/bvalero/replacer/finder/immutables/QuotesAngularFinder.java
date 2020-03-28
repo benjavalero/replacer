@@ -11,24 +11,13 @@ import org.springframework.stereotype.Component;
  * Find text in angular quotes, e. g. `«text»`
  */
 @Component
-public class QuotesAngularFinder implements ImmutableFinder {
+public class QuotesAngularFinder extends QuotesAbstractFinder implements ImmutableFinder {
+    @Override
+    char getStartChar() {
+        return '«';
+    }
 
     @Override
-    public Iterable<Immutable> find(String text) {
-        return new LinearIterable<>(text, this::findQuote, this::convert);
-    }
-
-    private MatchResult findQuote(String text, int start) {
-        int openQuote = text.indexOf('«', start);
-        if (openQuote >= 0) {
-            int endQuote = text.indexOf('»', openQuote + 1);
-            if (endQuote >= 0) {
-                return LinearMatcher.of(openQuote, text.substring(openQuote, endQuote + 1));
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-}
+    char getEndChar() {
+        return '»';
+    }}
