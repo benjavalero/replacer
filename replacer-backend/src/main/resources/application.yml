@@ -29,9 +29,9 @@ replacer:
       base: /public/dumps/public
       project: eswiki
     batch:
-      delay: 86400000 # Daily
-      delay.initial: 60000 # 1 minute
-      chunk.size: 1000
+      delay: 604800000 # Weekly
+      delay.initial: 86400000 # 1 day
+      chunk.size: 10000
 
   admin.user: Benjavalero
   parse.file.delay: 3600000 # Every hour
@@ -64,6 +64,7 @@ spring:
     username: s52978
     password: xxxxxx
     driver-class-name: org.mariadb.jdbc.Driver
+    hikari.max-lifetime: 580000
 
 logging:
   # Rolling after 10M after the documentation
