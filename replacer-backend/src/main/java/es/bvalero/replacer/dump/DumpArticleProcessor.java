@@ -60,7 +60,7 @@ public class DumpArticleProcessor implements ItemProcessor<DumpPage, List<Replac
             .build();
     }
 
-    private List<ReplacementEntity> processArticle(DumpArticle dumpArticle) {
+    List<ReplacementEntity> processArticle(DumpArticle dumpArticle) {
         LOGGER.debug("START Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
 
         List<ReplacementEntity> dbReplacements = replacementCache.findByArticleId(dumpArticle.getId());
