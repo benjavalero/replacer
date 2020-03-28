@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
@@ -20,6 +21,7 @@ class ReplacementCache {
     @Autowired
     private ReplacementDao replacementDao;
 
+    @Setter
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
 

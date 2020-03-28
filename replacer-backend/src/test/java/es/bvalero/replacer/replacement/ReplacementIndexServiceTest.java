@@ -3,6 +3,7 @@ package es.bvalero.replacer.replacement;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
@@ -59,9 +60,10 @@ public class ReplacementIndexServiceTest {
 
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
 
-        replacementIndexService.indexArticleReplacements(article.getId(), newReplacements, dbReplacements);
+        List<ReplacementEntity> toIndex =
+            replacementIndexService.findIndexArticleReplacements(article.getId(), newReplacements, dbReplacements);
 
-        Mockito.verify(replacementIndexService, Mockito.times(1)).insertReplacement(idx1);
+        Assert.assertEquals(Collections.singletonList(replacementIndexService.convertToEntity(idx1)), toIndex);
     }
 
     @Test
@@ -73,9 +75,10 @@ public class ReplacementIndexServiceTest {
         rep3.setReviewer("x"); // Obsolete Reviewed => DO NOTHING
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(rep2, rep3));
 
-        replacementIndexService.indexArticleReplacements(1, newReplacements, dbReplacements);
+        List<ReplacementEntity> toIndex =
+            replacementIndexService.findIndexArticleReplacements(1, newReplacements, dbReplacements);
 
-        Mockito.verify(replacementRepository, Mockito.times(1)).save(rep2);
+        Assert.assertEquals(Collections.singletonList(rep2), toIndex);
     }
 
     @Test
@@ -84,11 +87,11 @@ public class ReplacementIndexServiceTest {
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
 
         int articleId = 1;
-        replacementIndexService.indexArticleReplacements(articleId, newReplacements, dbReplacements);
+        replacementIndexService.findIndexArticleReplacements(articleId, newReplacements, dbReplacements);
 
         // Save the fake replacement
         Mockito.verify(replacementIndexService, Mockito.times(1))
-                .addFakeReviewedReplacement(Mockito.eq(articleId));
+            .createFakeReviewedReplacement(Mockito.eq(articleId));
     }
 
     @Test
@@ -122,12 +125,12 @@ public class ReplacementIndexServiceTest {
         ReplacementEntity r7db = new ReplacementEntity(1, "7", "7", 7, "");
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db, r3db, r4db, r6db, r7db));
 
-        replacementIndexService.indexArticleReplacements(1, newReplacements, dbReplacements);
+        List<ReplacementEntity> toIndex =
+            replacementIndexService.findIndexArticleReplacements(1, newReplacements, dbReplacements);
 
-        Mockito.verify(replacementRepository, Mockito.times(3)).save(Mockito.any(ReplacementEntity.class));
-        Mockito.verify(replacementRepository, Mockito.times(1)).save(r3db);
-        Mockito.verify(replacementIndexService, Mockito.times(1)).insertReplacement(r5);
-        Mockito.verify(replacementRepository, Mockito.times(1)).save(r6db);
+        Assert.assertEquals(
+            Arrays.asList(r3db, replacementIndexService.convertToEntity(r5), r6db),
+            toIndex);
     }
 
     @Test
@@ -158,12 +161,12 @@ public class ReplacementIndexServiceTest {
         r5db.setLastUpdate(before);
         List<ReplacementEntity> dbReplacements2 = new ArrayList<>(Arrays.asList(r1db, r2db, r4db, r5db));
 
-        replacementIndexService.indexArticleReplacements(1, newReplacements, dbReplacements2);
+        List<ReplacementEntity> toIndex =
+            replacementIndexService.findIndexArticleReplacements(1, newReplacements, dbReplacements2);
 
-        Mockito.verify(replacementRepository, Mockito.times(3)).save(Mockito.any(ReplacementEntity.class));
-        Mockito.verify(replacementRepository, Mockito.times(1)).save(r1db);
-        Mockito.verify(replacementIndexService, Mockito.times(1)).insertReplacement(r3);
-        Mockito.verify(replacementRepository, Mockito.times(1)).save(r4db);
+        Assert.assertEquals(
+            Arrays.asList(r1db, replacementIndexService.convertToEntity(r3), r4db),
+            toIndex);
     }
 
     @Test
@@ -179,8 +182,8 @@ public class ReplacementIndexServiceTest {
 
         replacementIndexService.reviewArticleReplacements(articleId, null, null, "X");
 
-        Mockito.verify(replacementRepository, Mockito.times(2))
-                .save(Mockito.any(ReplacementEntity.class));
+        Mockito.verify(replacementRepository, Mockito.times(1))
+                .saveAll(Mockito.anyIterable());
     }
 
     @Test
@@ -198,7 +201,7 @@ public class ReplacementIndexServiceTest {
         Mockito.verify(replacementCountService, Mockito.times(1))
                 .decreaseCachedReplacementsCount("A", "B", 1);
         Mockito.verify(replacementRepository, Mockito.times(1))
-                .save(Mockito.any(ReplacementEntity.class));
+                .saveAll(Mockito.anyIterable());
     }
 
     @Test
@@ -211,23 +214,7 @@ public class ReplacementIndexServiceTest {
                 .decreaseCachedReplacementsCount(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 
         ReplacementEntity toSave = new ReplacementEntity(articleId, ReplacementFindService.CUSTOM_FINDER_TYPE, "B", 0, "X");
-        Mockito.verify(replacementRepository, Mockito.times(1)).save(toSave);
-    }
-
-    @Test
-    public void testReviewArticlesAsSystem() {
-        int articleId = new Random().nextInt();
-        Set<Integer> articleIds = Collections.singleton(articleId);
-
-        ReplacementEntity rep1 = new ReplacementEntity(articleId, "A", "B", 0);
-        List<ReplacementEntity> reps = Collections.singletonList(rep1);
-        Mockito.when(replacementRepository.findByArticleIdAndReviewerIsNull(articleId))
-                .thenReturn(reps);
-
-        replacementIndexService.reviewArticlesReplacementsAsSystem(articleIds);
-
-        ReplacementEntity toSave = new ReplacementEntity(articleId, "A", "B", 0, ReplacementIndexService.SYSTEM_REVIEWER);
-        Mockito.verify(replacementRepository, Mockito.times(1)).save(toSave);
+        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(Collections.singletonList(toSave));
     }
 
 }

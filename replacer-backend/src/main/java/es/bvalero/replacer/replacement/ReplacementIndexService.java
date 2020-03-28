@@ -147,7 +147,7 @@ public class ReplacementIndexService {
         }
     }
 
-    private ReplacementEntity convertToEntity(IndexableReplacement replacement) {
+    ReplacementEntity convertToEntity(IndexableReplacement replacement) {
         ReplacementEntity entity = modelMapper.map(replacement, ReplacementEntity.class);
         // It is mapping the articleId also to the entity Id
         entity.setId(null);
@@ -239,7 +239,7 @@ public class ReplacementIndexService {
         saveReplacement(reviewReplacementAsSystem(customReplacement));
     }
 
-    private ReplacementEntity createFakeReviewedReplacement(int articleId) {
+    ReplacementEntity createFakeReviewedReplacement(int articleId) {
         ReplacementEntity fakeReplacement = new ReplacementEntity(articleId, "", "", 0);
         return reviewReplacementAsSystem(fakeReplacement);
     }
