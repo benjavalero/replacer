@@ -1,8 +1,7 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.replacement.ReplacementIndexService;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,16 +12,13 @@ import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 class ReplacementCache {
     @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private ReplacementDao replacementDao;
 
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
@@ -52,7 +48,8 @@ class ReplacementCache {
 
     private void load(int minId, int maxId) {
         LOGGER.debug("START Load replacements from database to cache. Article ID between {} and {}", minId, maxId);
-        findByArticles(minId, maxId)
+        replacementDao
+            .findByArticles(minId, maxId)
             .forEach(replacement -> replacementMap.put(replacement.getArticleId(), replacement));
         LOGGER.debug("END Load replacements from database to cache. Articles cached: {}", replacementMap.size());
     }
@@ -69,7 +66,7 @@ class ReplacementCache {
             .collect(Collectors.toSet());
         LOGGER.debug("START Delete obsolete and not reviewed articles in DB: {}", notReviewedIds);
         if (!notReviewedIds.isEmpty()) {
-            reviewArticlesReplacementsAsSystem(notReviewedIds);
+            replacementDao.reviewArticlesReplacementsAsSystem(notReviewedIds);
         }
         replacementMap.clear();
         LOGGER.debug("END Delete obsolete and not reviewed articles in DB");
@@ -77,25 +74,6 @@ class ReplacementCache {
 
     private boolean anyReplacementNotReviewed(List<ReplacementEntity> list) {
         return list.stream().anyMatch(item -> item.getReviewer() == null);
-    }
-
-    private List<ReplacementEntity> findByArticles(int minId, int maxId) {
-        String sql = "SELECT * FROM replacement2 WHERE article_id BETWEEN :minId AND :maxId";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("minId", minId)
-            .addValue("maxId", maxId);
-        return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
-    }
-
-    private void reviewArticlesReplacementsAsSystem(Set<Integer> articleIds) {
-        String sql =
-            "UPDATE replacement2 SET reviewer=:system, last_update=:now " +
-            "WHERE article_id IN (:articleIds) AND reviewer IS NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("system", ReplacementIndexService.SYSTEM_REVIEWER)
-            .addValue("now", LocalDate.now())
-            .addValue("articleIds", articleIds);
-        jdbcTemplate.update(sql, namedParameters);
     }
 
     public void finish() {

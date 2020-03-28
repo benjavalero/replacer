@@ -19,9 +19,6 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
 
     List<ReplacementEntity> findByArticleId(int articleId);
 
-    @Query("FROM ReplacementEntity WHERE articleId BETWEEN :minId AND :maxId")
-    List<ReplacementEntity> findByArticles(@Param("minId") int minArticleId, @Param("maxId") int maxArticleId);
-
     @Query("SELECT new es.bvalero.replacer.replacement.TypeSubtypeCount(type, subtype, COUNT(*)) FROM ReplacementEntity WHERE reviewer IS NULL GROUP BY type, subtype")
     List<TypeSubtypeCount> countGroupedByTypeAndSubtype();
 
