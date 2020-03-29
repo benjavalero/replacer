@@ -93,16 +93,16 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Override
     public Optional<WikipediaPage> getPageById(int pageId) throws WikipediaException {
-        LOGGER.info("START Get page by ID: {}", pageId);
+        LOGGER.debug("START Get page by ID: {}", pageId);
         // Return the only value that should be in the map
         Optional<WikipediaPage> page = getPagesByIds(Collections.singletonList(pageId)).stream().findAny();
-        LOGGER.info("END Get page by ID: {} - {}", pageId, page.map(WikipediaPage::getTitle).orElse(""));
+        LOGGER.debug("END Get page by ID: {} - {}", pageId, page.map(WikipediaPage::getTitle).orElse(""));
         return page;
     }
 
     @Override
     public List<WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException {
-        LOGGER.info("START Get pages by a list of IDs: {}", pageIds);
+        LOGGER.debug("START Get pages by a list of IDs: {}", pageIds);
         List<WikipediaPage> pages = new ArrayList<>(pageIds.size());
         // There is a maximum number of pages to request
         // We split the request in several sub-lists
@@ -112,7 +112,7 @@ class WikipediaServiceImpl implements WikipediaService {
             pages.addAll(getPagesByIds(PARAM_PAGE_IDS, StringUtils.join(subList, "|")));
             start += subList.size();
         }
-        LOGGER.info("END Get pages by a list of IDs: {}", pages.size());
+        LOGGER.debug("END Get pages by a list of IDs: {}", pages.size());
         return pages;
     }
 
@@ -154,10 +154,10 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Override
     public List<WikipediaSection> getPageSections(int pageId) throws WikipediaException {
-        LOGGER.info("START Get page sections. Page ID: {}", pageId);
+        LOGGER.debug("START Get page sections. Page ID: {}", pageId);
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(buildPageSectionsRequestParams(pageId));
         List<WikipediaSection> sections = extractSectionsFromJson(apiResponse);
-        LOGGER.info("END Get page sections. Items found: {}", sections.size());
+        LOGGER.debug("END Get page sections. Items found: {}", sections.size());
         return sections;
     }
 
@@ -196,11 +196,11 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Override
     public Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section) throws WikipediaException {
-        LOGGER.info("START Get page by ID and section: {} - {}", pageId, section);
+        LOGGER.debug("START Get page by ID and section: {} - {}", pageId, section);
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(buildPageIdsAndSectionRequestParams(pageId, section));
         List<WikipediaPage> pages = extractPagesFromJson(apiResponse);
         Optional<WikipediaPage> page = pages.stream().findAny().map(p -> p.withSection(section));
-        LOGGER.info("END Get page by ID and section: {} - {} - {}",
+        LOGGER.debug("END Get page by ID and section: {} - {} - {}",
                 pageId, section, page.map(WikipediaPage::getTitle).orElse(""));
         return page;
     }

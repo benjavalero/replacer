@@ -36,6 +36,7 @@ class SectionReviewService {
         }
 
         // Get the sections from the Wikipedia API (better than calculating them by ourselves)
+        LOGGER.info("START Find section for article: {}", review.getId());
         try {
             List<WikipediaSection> sections = new ArrayList<>(wikipediaService.getPageSections(review.getId()));
 
@@ -51,6 +52,7 @@ class SectionReviewService {
                             translateReplacementsByOffset(review.getReplacements(), smallestSection.get().getByteOffset());
                     // We need to check some rare cases where the byte-offset doesn't match with the section position
                     if (sectionReplacements.stream().allMatch(rep -> validateArticleReplacement(rep, pageSection.get().getContent()))) {
+                        LOGGER.info("END Found section {} for article: {}", pageSection.get().getSection(), review.getId());
                         return Optional.of(buildArticleReview(pageSection.get(),
                                 translateReplacementsByOffset(review.getReplacements(), smallestSection.get().getByteOffset())));
                     } else {
@@ -63,6 +65,7 @@ class SectionReviewService {
             LOGGER.error("Error getting section review", e);
         }
 
+        LOGGER.info("END Found no section for article: {}", review.getId());
         return Optional.empty();
     }
 

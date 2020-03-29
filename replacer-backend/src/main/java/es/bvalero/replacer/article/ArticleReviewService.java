@@ -34,7 +34,7 @@ abstract class ArticleReviewService {
     private ModelMapper modelMapper;
 
     Optional<ArticleReview> findRandomArticleReview() {
-        LOGGER.info("START Find random article review");
+        LOGGER.debug("START Find random article review");
 
         Optional<Integer> randomArticleId = findArticleIdToReview();
         while (randomArticleId.isPresent()) {
@@ -42,7 +42,6 @@ abstract class ArticleReviewService {
             // If not, find a new random article ID
             Optional<ArticleReview> review = getArticleReview(randomArticleId.get());
             if (review.isPresent()) {
-                LOGGER.info("END Find random article to review. Found article ID: {}", randomArticleId.get());
                 return review;
             }
 
@@ -66,16 +65,18 @@ abstract class ArticleReviewService {
             review = buildArticleReview(article.get());
         }
 
-        LOGGER.info("END Build review for article");
+        LOGGER.info("END Build review for article: {}", articleId);
         return review;
     }
 
     Optional<WikipediaPage> getArticleFromWikipedia(int articleId) {
+        LOGGER.info("START Find Wikipedia article: {}", articleId);
         try {
             Optional<WikipediaPage> page = wikipediaService.getPageById(articleId);
             if (page.isPresent()) {
                 // Check if the article is processable
                 if (page.get().isProcessable()) {
+                    LOGGER.info("END Found Wikipedia article: {} - {}", articleId, page.get().getTitle());
                     return page;
                 } else {
                     LOGGER.warn(String.format("Found article is not processable by content: %s - %s",
@@ -91,13 +92,13 @@ abstract class ArticleReviewService {
             LOGGER.error("Error finding page from Wikipedia", e);
         }
 
+        LOGGER.info("Found no Wikipedia article: {}", articleId);
         return Optional.empty();
     }
 
     private Optional<ArticleReview> buildArticleReview(WikipediaPage article) {
         // Find the replacements in the article
         List<Replacement> replacements = findReplacements(article);
-        LOGGER.info("Potential replacements found in text: {}", replacements.size());
 
         if (replacements.isEmpty()) {
             return Optional.empty();
@@ -115,10 +116,12 @@ abstract class ArticleReviewService {
     }
 
     private List<Replacement> findReplacements(WikipediaPage article) {
+        LOGGER.info("START Find replacements for article: {}", article.getId());
         List<Replacement> replacements = findAllReplacements(article);
 
         // Return the replacements sorted as they appear in the text
         replacements.sort(Collections.reverseOrder());
+        LOGGER.info("END Found {} replacements for article: {}", replacements.size(), article.getId());
         return replacements;
     }
 
@@ -126,7 +129,7 @@ abstract class ArticleReviewService {
         List<Replacement> replacements = replacementFindService.findReplacements(article.getContent());
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
-        LOGGER.info("Update article replacements in database");
+        LOGGER.debug("Update article replacements in database");
         replacementIndexService.indexArticleReplacements(article.getId(),
                 replacements.stream().map(article::convertReplacementToIndexed)
                         .collect(Collectors.toList()));

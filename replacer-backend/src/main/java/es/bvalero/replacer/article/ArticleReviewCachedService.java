@@ -1,5 +1,6 @@
 package es.bvalero.replacer.article;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+@Slf4j
 abstract class ArticleReviewCachedService extends ArticleReviewService {
 
     static final int CACHE_SIZE = 100;
@@ -21,10 +23,11 @@ abstract class ArticleReviewCachedService extends ArticleReviewService {
 
     @Override
     Optional<Integer> findArticleIdToReview() {
+        LOGGER.info("START Find random article ID...");
         // First we try to get the random replacement from the cache
         String key = buildReplacementCacheKey();
         Optional<Integer> articleId = getArticleIdFromCache(key);
-        if (!articleId.isPresent()) {
+        if (articleId.isEmpty()) {
             // We try to find article IDs to review and add them to the cache
             List<Integer> articleIds = findArticleIdsToReview();
 
@@ -32,6 +35,7 @@ abstract class ArticleReviewCachedService extends ArticleReviewService {
             articleId = getFirstResultAndCacheTheRest(articleIds, key);
         }
 
+        LOGGER.info("END Found random article: {}", articleId.orElse(null));
         return articleId;
     }
 

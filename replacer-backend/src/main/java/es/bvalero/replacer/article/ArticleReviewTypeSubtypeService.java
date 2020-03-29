@@ -64,7 +64,7 @@ class ArticleReviewTypeSubtypeService extends ArticleReviewCachedService {
         // To build the review we are only interested in the replacements of the given type and subtype
         // We can run the filter even with an empty list
         replacements = filterReplacementsByTypeAndSubtype(replacements);
-        LOGGER.info("Final replacements found in text after filtering: {}", replacements.size());
+        LOGGER.debug("Final replacements found in text after filtering: {}", replacements.size());
 
         return replacements;
     }

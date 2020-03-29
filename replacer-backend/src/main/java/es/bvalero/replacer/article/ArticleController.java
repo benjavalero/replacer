@@ -40,21 +40,21 @@ public class ArticleController {
 
     @GetMapping(value = "/random")
     public Optional<ArticleReview> findRandomArticleWithReplacements() {
-        LOGGER.info("GET Find random article with replacements");
+        LOGGER.info("GET Find random article");
         return articleReviewNoTypeService.findRandomArticleReview();
     }
 
     @GetMapping(value = "/random/{type}/{subtype}")
     public Optional<ArticleReview> findRandomArticleByTypeAndSubtype(
             @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
-        LOGGER.info("GET Find random article with replacements. Type: {} - Subtype: {}", type, subtype);
+        LOGGER.info("GET Find random article. Type: {} - {}", type, subtype);
         return articleReviewTypeSubtypeService.findRandomArticleReview(type, subtype);
     }
 
     @GetMapping(value = "/random/Personalizado/{subtype}/{suggestion}")
     public Optional<ArticleReview> findRandomArticleByCustomReplacement(
             @PathVariable("subtype") String replacement, @PathVariable("suggestion") String suggestion) {
-        LOGGER.info("GET Find random article with replacements. Custom replacement: {} - {}", replacement, suggestion);
+        LOGGER.info("GET Find random article. Custom replacement: {} - {}", replacement, suggestion);
         return articleReviewCustomService.findRandomArticleReview(replacement, suggestion);
     }
 
