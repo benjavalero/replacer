@@ -269,9 +269,7 @@ In conclusion, as performance is critical, we try to use the faster implementati
 ## TODO: ROADMAP
 
 ### Important
-- [ ] Pass Sonar. More tests.
 - [ ] Check in Angular why now after opening in different tabs it gets confused with the searched misspelling.
-- [ ] Add Sonar to frontend.
 
 ### Optimization
 - [ ] After 1-Mar-2020 the _page-articles_ dumps will be generated both in multi-stream mode but in different ways (cf. <https://phabricator.wikimedia.org/T239866>). We should check if any of them is read/parsed faster.
@@ -290,7 +288,6 @@ In conclusion, as performance is critical, we try to use the faster implementati
 - [ ] Check if it is worth to store the replacement type as an enumerate
 - [ ] Add a new column to store the context of the replacement in order to match replacements where only the position has changed
 - [ ] Research if it is possible to deploy independently the frontend and the backend in ToolLabs
-- [ ] Try to add a property to configure CORS
 - [ ] Adapt unit tests to JUnit5
 - [ ] Research how to enable/disable replacement/immutable finders by language
 - [ ] Review in the bot, in case they exist, possible cases of the template `dts` or `date_table_sorting` with English format, as this template also exists in Spanish. See <https://en.wikipedia.org/wiki/Template:Date_table_sorting>, <https://es.wikipedia.org/wiki/Plantilla:Dts>, <https://es.wikipedia.org/w/index.php?title=Compile_Heart&diff=prev&oldid=122078489>.

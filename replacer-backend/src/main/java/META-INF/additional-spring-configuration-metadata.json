@@ -1,6 +1,11 @@
 {
     "properties": [
         {
+            "name": "replacer.cors.allowed.origins",
+            "type": "java.lang.String",
+            "description": "Allowed origins for CORS e. g. for development"
+        },
+        {
             "name": "replacer.dump.path.base",
             "type": "java.lang.String",
             "description": "Base path to find the dumps by project and date"

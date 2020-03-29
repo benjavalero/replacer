@@ -24,6 +24,7 @@ logging:
     org.springframework.batch: INFO
 
 replacer:
+  cors.allowed.origins: http://localhost:8080
   dump:
     path:
       base: /public/dumps/public
