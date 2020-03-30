@@ -33,19 +33,19 @@ abstract class ArticleReviewService {
     @Autowired
     private ModelMapper modelMapper;
 
-    Optional<ArticleReview> findRandomArticleReview() {
+    Optional<ArticleReview> findRandomArticleReview(ArticleReviewOptions options) {
         LOGGER.debug("START Find random article review");
 
-        Optional<Integer> randomArticleId = findArticleIdToReview();
+        Optional<Integer> randomArticleId = findArticleIdToReview(options);
         while (randomArticleId.isPresent()) {
             // Try to obtain the review from the found article
             // If not, find a new random article ID
-            Optional<ArticleReview> review = getArticleReview(randomArticleId.get());
+            Optional<ArticleReview> review = getArticleReview(randomArticleId.get(), options);
             if (review.isPresent()) {
                 return review;
             }
 
-            randomArticleId = findArticleIdToReview();
+            randomArticleId = findArticleIdToReview(options);
         }
 
         // If we get here, there are no more articles to review in the database
@@ -53,23 +53,24 @@ abstract class ArticleReviewService {
         return Optional.empty();
     }
 
-    abstract Optional<Integer> findArticleIdToReview();
+    abstract Optional<Integer> findArticleIdToReview(ArticleReviewOptions options);
 
-    Optional<ArticleReview> getArticleReview(int articleId) {
+    Optional<ArticleReview> getArticleReview(int articleId, ArticleReviewOptions options) {
         LOGGER.info("START Build review for article: {}", articleId);
         Optional<ArticleReview> review = Optional.empty();
 
         // Load article from Wikipedia
-        Optional<WikipediaPage> article = getArticleFromWikipedia(articleId);
+        Optional<WikipediaPage> article = getArticleFromWikipedia(articleId, options);
         if (article.isPresent()) {
-            review = buildArticleReview(article.get());
+            review = buildArticleReview(article.get(), options);
         }
 
         LOGGER.info("END Build review for article: {}", articleId);
         return review;
     }
 
-    Optional<WikipediaPage> getArticleFromWikipedia(int articleId) {
+    Optional<WikipediaPage> getArticleFromWikipedia(int articleId, ArticleReviewOptions options) {
+        // The "options" parameter is used in implementations
         LOGGER.info("START Find Wikipedia article: {}", articleId);
         try {
             Optional<WikipediaPage> page = wikipediaService.getPageById(articleId);
@@ -96,9 +97,9 @@ abstract class ArticleReviewService {
         return Optional.empty();
     }
 
-    private Optional<ArticleReview> buildArticleReview(WikipediaPage article) {
+    private Optional<ArticleReview> buildArticleReview(WikipediaPage article, ArticleReviewOptions options) {
         // Find the replacements in the article
-        List<Replacement> replacements = findReplacements(article);
+        List<Replacement> replacements = findReplacements(article, options);
 
         if (replacements.isEmpty()) {
             return Optional.empty();
@@ -115,14 +116,19 @@ abstract class ArticleReviewService {
         }
     }
 
-    private List<Replacement> findReplacements(WikipediaPage article) {
+    private List<Replacement> findReplacements(WikipediaPage article, ArticleReviewOptions options) {
         LOGGER.info("START Find replacements for article: {}", article.getId());
-        List<Replacement> replacements = findAllReplacements(article);
+        List<Replacement> replacements = findAllReplacements(article, options);
 
         // Return the replacements sorted as they appear in the text
         replacements.sort(Collections.reverseOrder());
         LOGGER.info("END Found {} replacements for article: {}", replacements.size(), article.getId());
         return replacements;
+    }
+
+    List<Replacement> findAllReplacements(WikipediaPage article, ArticleReviewOptions options) {
+        // The "options" parameter is used in implementations
+        return findAllReplacements(article);
     }
 
     List<Replacement> findAllReplacements(WikipediaPage article) {

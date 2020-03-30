@@ -22,14 +22,14 @@ abstract class ArticleReviewCachedService extends ArticleReviewService {
     }
 
     @Override
-    Optional<Integer> findArticleIdToReview() {
+    Optional<Integer> findArticleIdToReview(ArticleReviewOptions options) {
         LOGGER.info("START Find random article ID...");
         // First we try to get the random replacement from the cache
-        String key = buildReplacementCacheKey();
+        String key = buildReplacementCacheKey(options);
         Optional<Integer> articleId = getArticleIdFromCache(key);
         if (articleId.isEmpty()) {
             // We try to find article IDs to review and add them to the cache
-            List<Integer> articleIds = findArticleIdsToReview();
+            List<Integer> articleIds = findArticleIdsToReview(options);
 
             // Return the first result and cache the rest
             articleId = getFirstResultAndCacheTheRest(articleIds, key);
@@ -39,7 +39,9 @@ abstract class ArticleReviewCachedService extends ArticleReviewService {
         return articleId;
     }
 
-    abstract String buildReplacementCacheKey();
+    String buildReplacementCacheKey(ArticleReviewOptions options) {
+        return String.format("%s-%s", options.getType(), options.getSubtype());
+    }
 
     private Optional<Integer> getArticleIdFromCache(String key) {
         if (cachedArticleIds.containsKey(key)) {
@@ -62,6 +64,6 @@ abstract class ArticleReviewCachedService extends ArticleReviewService {
         cachedArticleIds.removeMapping(cacheKey, articleId);
     }
 
-    abstract List<Integer> findArticleIdsToReview();
+    abstract List<Integer> findArticleIdsToReview(ArticleReviewOptions options);
 
 }

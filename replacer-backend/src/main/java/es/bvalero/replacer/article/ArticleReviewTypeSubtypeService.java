@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -23,53 +22,33 @@ class ArticleReviewTypeSubtypeService extends ArticleReviewCachedService {
     @Autowired
     private ReplacementCountService replacementCountService;
 
-    private String type;
-    private String subtype;
-
-    Optional<ArticleReview> findRandomArticleReview(String type, String subtype) {
-        this.type = type;
-        this.subtype = subtype;
-        return findRandomArticleReview();
-    }
-
     @Override
-    String buildReplacementCacheKey() {
-        return String.format("%s-%s", type, subtype);
-    }
-
-    @Override
-    List<Integer> findArticleIdsToReview() {
+    List<Integer> findArticleIdsToReview(ArticleReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-        List<Integer> articleIds = replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(type, subtype, pagination);
+        List<Integer> articleIds = replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(options.getType(), options.getSubtype(), pagination);
 
         if (articleIds.isEmpty()) {
             // If finally there are no results empty the cached count for the replacement
             // No need to check if there exists something cached
-            replacementCountService.removeCachedReplacementCount(type, subtype);
+            replacementCountService.removeCachedReplacementCount(options.getType(), options.getSubtype());
         }
 
         return articleIds;
     }
 
-    Optional<ArticleReview> getArticleReview(int articleId, String type, String subtype) {
-        this.type = type;
-        this.subtype = subtype;
-        return getArticleReview(articleId);
-    }
-
     @Override
-    List<Replacement> findAllReplacements(WikipediaPage article) {
-        List<Replacement> replacements = super.findAllReplacements(article);
+    List<Replacement> findAllReplacements(WikipediaPage article, ArticleReviewOptions options) {
+        List<Replacement> replacements = findAllReplacements(article);
 
         // To build the review we are only interested in the replacements of the given type and subtype
         // We can run the filter even with an empty list
-        replacements = filterReplacementsByTypeAndSubtype(replacements);
+        replacements = filterReplacementsByTypeAndSubtype(replacements, options.getType(), options.getSubtype());
         LOGGER.debug("Final replacements found in text after filtering: {}", replacements.size());
 
         return replacements;
     }
 
-    private List<Replacement> filterReplacementsByTypeAndSubtype(List<Replacement> replacements) {
+    private List<Replacement> filterReplacementsByTypeAndSubtype(List<Replacement> replacements, String type, String subtype) {
         return replacements.stream()
                 .filter(replacement -> replacement.getType().equals(type) && replacement.getSubtype().equals(subtype))
                 .collect(Collectors.toList());

@@ -15,7 +15,7 @@ class ArticleReviewNoTypeService extends ArticleReviewCachedService {
     private ReplacementRepository replacementRepository;
 
     @Override
-    String buildReplacementCacheKey() {
+    String buildReplacementCacheKey(ArticleReviewOptions options) {
         return "";
     }
 
@@ -27,7 +27,7 @@ class ArticleReviewNoTypeService extends ArticleReviewCachedService {
     }
 
     @Override
-    List<Integer> findArticleIdsToReview() {
+    List<Integer> findArticleIdsToReview(ArticleReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
         return replacementRepository.findRandomArticleIdsToReview(pagination);
     }

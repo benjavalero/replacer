@@ -32,28 +32,14 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
     @Autowired
     private ReplacementIndexService replacementIndexService;
 
-    private String replacement;
-    private String suggestion;
-
-    Optional<ArticleReview> findRandomArticleReview(String replacement, String suggestion) {
-        this.replacement = replacement;
-        this.suggestion = suggestion;
-        return findRandomArticleReview();
-    }
-
     @Override
-    String buildReplacementCacheKey() {
-        return String.format("%s-%s", ReplacementFindService.CUSTOM_FINDER_TYPE, replacement);
-    }
-
-    @Override
-    List<Integer> findArticleIdsToReview() {
+    List<Integer> findArticleIdsToReview(ArticleReviewOptions options) {
         try {
-            List<Integer> articleIds = new ArrayList<>(wikipediaService.getPageIdsByStringMatch(replacement));
+            List<Integer> articleIds = new ArrayList<>(wikipediaService.getPageIdsByStringMatch(options.getSubtype()));
 
             // Check that the replacement has not already been reviewed
             articleIds.removeIf(id -> replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
-                    id, ReplacementFindService.CUSTOM_FINDER_TYPE, replacement) > 0);
+                    id, options.getType(), options.getSubtype()) > 0);
 
             return articleIds;
         } catch (WikipediaException e) {
@@ -62,31 +48,25 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
         }
     }
 
-    Optional<ArticleReview> getArticleReview(int articleId, String replacement, String suggestion) {
-        this.replacement = replacement;
-        this.suggestion = suggestion;
-        return getArticleReview(articleId);
-    }
-
     @Override
-    Optional<WikipediaPage> getArticleFromWikipedia(int articleId) {
-        Optional<WikipediaPage> article = super.getArticleFromWikipedia(articleId);
+    Optional<WikipediaPage> getArticleFromWikipedia(int articleId, ArticleReviewOptions options) {
+        Optional<WikipediaPage> article = super.getArticleFromWikipedia(articleId, options);
 
-        if (!article.isPresent()) {
+        if (article.isEmpty()) {
             // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
-            replacementIndexService.addCustomReviewedReplacement(articleId, replacement);
+            replacementIndexService.addCustomReviewedReplacement(articleId, options.getSubtype());
         }
 
         return article;
     }
 
     @Override
-    List<Replacement> findAllReplacements(WikipediaPage article) {
-        List<Replacement> replacements = replacementFindService.findCustomReplacements(article.getContent(), replacement, suggestion);
+    List<Replacement> findAllReplacements(WikipediaPage article, ArticleReviewOptions options) {
+        List<Replacement> replacements = replacementFindService.findCustomReplacements(article.getContent(), options.getSubtype(), options.getSuggestion());
 
         if (replacements.isEmpty()) {
             // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
-            replacementIndexService.addCustomReviewedReplacement(article.getId(), replacement);
+            replacementIndexService.addCustomReviewedReplacement(article.getId(), options.getSubtype());
         }
 
         return replacements;

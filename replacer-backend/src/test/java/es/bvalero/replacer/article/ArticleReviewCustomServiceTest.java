@@ -82,7 +82,8 @@ public class ArticleReviewCustomServiceTest {
         Mockito.when(replacementFindService.findCustomReplacements(content, replacement, suggestion))
                 .thenReturn(replacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview(replacement, suggestion);
+        ArticleReviewOptions options = ArticleReviewOptions.ofCustom(replacement, suggestion);
+        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
         Assert.assertTrue(review.isPresent());
         Assert.assertEquals(randomId, review.get().getId());
@@ -116,7 +117,8 @@ public class ArticleReviewCustomServiceTest {
         Mockito.when(replacementFindService.findCustomReplacements(content2, replacement, suggestion))
                 .thenReturn(Collections.emptyList());
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview(replacement, suggestion);
+        ArticleReviewOptions options = ArticleReviewOptions.ofCustom(replacement, suggestion);
+        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
         Mockito.verify(replacementIndexService, Mockito.times(1))
                 .addCustomReviewedReplacement(Mockito.anyInt(), Mockito.anyString());

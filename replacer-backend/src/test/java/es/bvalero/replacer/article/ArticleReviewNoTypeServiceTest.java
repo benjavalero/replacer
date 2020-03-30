@@ -34,6 +34,7 @@ public class ArticleReviewNoTypeServiceTest {
     private final Replacement replacement =
             Replacement.builder().start(offset).type("X").subtype("Y").text("Y").build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
+    private final ArticleReviewOptions options = ArticleReviewOptions.ofNoType();
 
     @Mock
     private ReplacementRepository replacementRepository;
@@ -68,7 +69,7 @@ public class ArticleReviewNoTypeServiceTest {
         Mockito.when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
                 .thenReturn(Collections.emptyList());
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview();
+        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
         Assert.assertFalse(review.isPresent());
     }
@@ -85,7 +86,7 @@ public class ArticleReviewNoTypeServiceTest {
         Mockito.when(wikipediaService.getPageById(randomId))
                 .thenReturn(Optional.empty());
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview();
+        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
         Assert.assertFalse(review.isPresent());
     }
@@ -104,7 +105,7 @@ public class ArticleReviewNoTypeServiceTest {
         Mockito.when(replacementFindService.findReplacements(content))
                 .thenReturn(replacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview();
+        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
         Mockito.verify(replacementIndexService, Mockito.times(1))
                 .indexArticleReplacements(Mockito.eq(randomId), Mockito.anyList());
@@ -129,7 +130,7 @@ public class ArticleReviewNoTypeServiceTest {
         Mockito.when(replacementFindService.findReplacements(content))
                 .thenReturn(noArticleReplacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview();
+        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
         Mockito.verify(replacementIndexService, Mockito.times(1))
                 .indexArticleReplacements(randomId, Collections.emptyList());
@@ -153,7 +154,7 @@ public class ArticleReviewNoTypeServiceTest {
         Mockito.when(replacementFindService.findReplacements(content2))
                 .thenReturn(replacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview();
+        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
         Mockito.verify(replacementIndexService, Mockito.times(1))
                 .indexArticleReplacements(Mockito.eq(randomId2), Mockito.anyList());

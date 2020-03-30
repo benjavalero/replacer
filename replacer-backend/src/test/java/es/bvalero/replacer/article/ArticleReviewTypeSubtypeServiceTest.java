@@ -35,6 +35,8 @@ public class ArticleReviewTypeSubtypeServiceTest {
     private final Replacement replacement =
             Replacement.builder().start(offset).type("X").subtype("Y").text("Y").build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
+    private final ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype("X", "Y");
+    private final ArticleReviewOptions options2 = ArticleReviewOptions.ofTypeSubtype("A", "B");
 
     @Mock
     private ReplacementRepository replacementRepository;
@@ -82,7 +84,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
         Mockito.when(replacementFindService.findReplacements(content))
                 .thenReturn(replacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview("A", "B");
+        Optional<ArticleReview> review = articleService.findRandomArticleReview(options2);
 
         Mockito.verify(replacementIndexService, Mockito.times(1))
                 .indexArticleReplacements(Mockito.eq(randomId), Mockito.anyList());
@@ -105,7 +107,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
         Mockito.when(replacementFindService.findReplacements(content))
                 .thenReturn(replacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview("X", "Y");
+        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
         Mockito.verify(replacementIndexService, Mockito.times(1))
                 .indexArticleReplacements(Mockito.eq(randomId), Mockito.anyList());
@@ -141,15 +143,15 @@ public class ArticleReviewTypeSubtypeServiceTest {
         Mockito.when(replacementFindService.findReplacements(content2))
                 .thenReturn(replacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview("X", "Y");
+        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
         Assert.assertTrue(review.isPresent());
         Assert.assertEquals(randomId, review.get().getId());
 
-        review = articleService.findRandomArticleReview();
+        review = articleService.findRandomArticleReview(options);
         Assert.assertTrue(review.isPresent());
         Assert.assertEquals(randomId2, review.get().getId());
 
-        review = articleService.findRandomArticleReview("X", "Y");
+        review = articleService.findRandomArticleReview(options);
         Assert.assertFalse(review.isPresent());
     }
 
@@ -170,7 +172,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
         sectionReview.setSection(sectionId);
         Mockito.when(sectionReviewService.findSectionReview(Mockito.any(ArticleReview.class))).thenReturn(Optional.of(sectionReview));
 
-        Optional<ArticleReview> review = articleService.getArticleReview(randomId, "X", "Y");
+        Optional<ArticleReview> review = articleService.getArticleReview(randomId, options);
 
         Assert.assertTrue(review.isPresent());
         review.ifPresent(rev -> {
@@ -193,7 +195,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
         // The article has no sections
         Mockito.when(sectionReviewService.findSectionReview(Mockito.any(ArticleReview.class))).thenReturn(Optional.empty());
 
-        Optional<ArticleReview> review = articleService.getArticleReview(randomId, "X", "Y");
+        Optional<ArticleReview> review = articleService.getArticleReview(randomId, options);
 
         Assert.assertTrue(review.isPresent());
         review.ifPresent(rev -> {

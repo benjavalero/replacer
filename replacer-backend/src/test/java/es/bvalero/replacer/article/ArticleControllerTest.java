@@ -70,7 +70,8 @@ public class ArticleControllerTest {
         ArticleReplacement replacement = new ArticleReplacement(start, rep, Collections.singletonList(suggestion));
         List<ArticleReplacement> replacements = Collections.singletonList(replacement);
         ArticleReview review = new ArticleReview(id, title, content, section, queryTimestamp, replacements);
-        when(articleReviewNoTypeService.findRandomArticleReview()).thenReturn(Optional.of(review));
+        ArticleReviewOptions options = ArticleReviewOptions.ofNoType();
+        when(articleReviewNoTypeService.findRandomArticleReview(options)).thenReturn(Optional.of(review));
 
         mvc.perform(get("/api/article/random")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -85,12 +86,13 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$.replacements[0].suggestions[0].text", is("a")))
                 .andExpect(jsonPath("$.replacements[0].suggestions[0].comment", is("b")));
 
-        verify(articleReviewNoTypeService, times(1)).findRandomArticleReview();
+        verify(articleReviewNoTypeService, times(1)).findRandomArticleReview(options);
     }
 
     @Test
     public void testFindRandomArticleByTypeAndSubtype() throws Exception {
-        when(articleReviewTypeSubtypeService.findRandomArticleReview("X", "Y"))
+        ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype("X", "Y");
+        when(articleReviewTypeSubtypeService.findRandomArticleReview(options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
         mvc.perform(get("/api/article/random/X/Y")
@@ -98,12 +100,13 @@ public class ArticleControllerTest {
                 .andExpect(status().isOk());
 
         verify(articleReviewTypeSubtypeService, times(1))
-                .findRandomArticleReview(eq("X"), eq("Y"));
+                .findRandomArticleReview(eq(options));
     }
 
     @Test
     public void testFindRandomArticleByCustomReplacement() throws Exception {
-        when(articleReviewCustomService.findRandomArticleReview("X", "Y"))
+        ArticleReviewOptions options = ArticleReviewOptions.ofCustom("X", "Y");
+        when(articleReviewCustomService.findRandomArticleReview(options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
         mvc.perform(get("/api/article/random/Personalizado/X/Y")
@@ -111,12 +114,13 @@ public class ArticleControllerTest {
                 .andExpect(status().isOk());
 
         verify(articleReviewCustomService, times(1))
-                .findRandomArticleReview(eq("X"), eq("Y"));
+                .findRandomArticleReview(eq(options));
     }
 
     @Test
     public void testFindArticleReviewById() throws Exception {
-        when(articleReviewNoTypeService.getArticleReview(123))
+        ArticleReviewOptions options = ArticleReviewOptions.ofNoType();
+        when(articleReviewNoTypeService.getArticleReview(123, options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
         mvc.perform(get("/api/article/123")
@@ -124,12 +128,13 @@ public class ArticleControllerTest {
                 .andExpect(status().isOk());
 
         verify(articleReviewNoTypeService, times(1))
-                .getArticleReview(123);
+                .getArticleReview(123, options);
     }
 
     @Test
     public void testFindArticleReviewByIdByTypeAndSubtype() throws Exception {
-        when(articleReviewTypeSubtypeService.getArticleReview(123, "X", "Y"))
+        ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype("X", "Y");
+        when(articleReviewTypeSubtypeService.getArticleReview(123, options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
         mvc.perform(get("/api/article/123/X/Y")
@@ -137,12 +142,13 @@ public class ArticleControllerTest {
                 .andExpect(status().isOk());
 
         verify(articleReviewTypeSubtypeService, times(1))
-                .getArticleReview(123, "X", "Y");
+                .getArticleReview(123, options);
     }
 
     @Test
     public void testFindArticleReviewByIdAndCustomReplacement() throws Exception {
-        when(articleReviewCustomService.getArticleReview(123, "X", "Y"))
+        ArticleReviewOptions options = ArticleReviewOptions.ofCustom("X", "Y");
+        when(articleReviewCustomService.getArticleReview(123, options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
         mvc.perform(get("/api/article/123/Personalizado/X/Y")
@@ -150,7 +156,7 @@ public class ArticleControllerTest {
                 .andExpect(status().isOk());
 
         verify(articleReviewCustomService, times(1))
-                .getArticleReview(123, "X", "Y");
+                .getArticleReview(123, options);
     }
 
     @Test

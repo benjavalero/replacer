@@ -41,21 +41,21 @@ public class ArticleController {
     @GetMapping(value = "/random")
     public Optional<ArticleReview> findRandomArticleWithReplacements() {
         LOGGER.info("GET Find random article");
-        return articleReviewNoTypeService.findRandomArticleReview();
+        return articleReviewNoTypeService.findRandomArticleReview(ArticleReviewOptions.ofNoType());
     }
 
     @GetMapping(value = "/random/{type}/{subtype}")
     public Optional<ArticleReview> findRandomArticleByTypeAndSubtype(
             @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
         LOGGER.info("GET Find random article. Type: {} - {}", type, subtype);
-        return articleReviewTypeSubtypeService.findRandomArticleReview(type, subtype);
+        return articleReviewTypeSubtypeService.findRandomArticleReview(ArticleReviewOptions.ofTypeSubtype(type, subtype));
     }
 
     @GetMapping(value = "/random/Personalizado/{subtype}/{suggestion}")
     public Optional<ArticleReview> findRandomArticleByCustomReplacement(
             @PathVariable("subtype") String replacement, @PathVariable("suggestion") String suggestion) {
         LOGGER.info("GET Find random article. Custom replacement: {} - {}", replacement, suggestion);
-        return articleReviewCustomService.findRandomArticleReview(replacement, suggestion);
+        return articleReviewCustomService.findRandomArticleReview(ArticleReviewOptions.ofCustom(replacement, suggestion));
     }
 
     /* FIND AN ARTICLE REVIEW */
@@ -63,14 +63,14 @@ public class ArticleController {
     @GetMapping(value = "/{id}")
     public Optional<ArticleReview> findArticleReviewById(@PathVariable("id") int articleId) {
         LOGGER.info("GET Find review for article. ID: {}", articleId);
-        return articleReviewNoTypeService.getArticleReview(articleId);
+        return articleReviewNoTypeService.getArticleReview(articleId, ArticleReviewOptions.ofNoType());
     }
 
     @GetMapping(value = "/{id}/{type}/{subtype}")
     public Optional<ArticleReview> findArticleReviewByIdByTypeAndSubtype(
             @PathVariable("id") int articleId, @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
         LOGGER.info("GET Find review for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
-        return articleReviewTypeSubtypeService.getArticleReview(articleId, type, subtype);
+        return articleReviewTypeSubtypeService.getArticleReview(articleId, ArticleReviewOptions.ofTypeSubtype(type, subtype));
     }
 
     @GetMapping(value = "/{id}/Personalizado/{subtype}/{suggestion}")
@@ -78,7 +78,7 @@ public class ArticleController {
             @PathVariable("id") int articleId, @PathVariable("subtype") String replacement, @PathVariable("suggestion") String suggestion) {
         LOGGER.info("GET Find review for article by custom type. ID: {} - Replacement: {} - Suggestion: {}",
                 articleId, replacement, suggestion);
-        return articleReviewCustomService.getArticleReview(articleId, replacement, suggestion);
+        return articleReviewCustomService.getArticleReview(articleId, ArticleReviewOptions.ofCustom(replacement, suggestion));
     }
 
     /* SAVE CHANGES */
