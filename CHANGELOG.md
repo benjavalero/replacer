@@ -1,10 +1,13 @@
 # Versiones
 
-## 2.4.0
+## 2.4.0 (31 de marzo de 2020)
 - Corrección crítica de configuración que escribía mensajes en consola en Producción
 - T238972: Adaptación al nuevo esquema de los dumps
 - T239866: Adaptación a la nueva compresión de los dumps
-- Actualización de dependencias
+- Adaptación a cambios en la API de Wikipedia
+- Mejora de rendimiento en algunos buscadores de falsos positivos
+- Adaptación de la indexación a Spring Batch
+- Actualización de dependencias: SpringBoot 2.2.5 y Angular 9.1
 - Refactorización en el backend
 - Inicio de documentación técnica (en inglés)
 - Inicio de preparación para usarse en otros proyectos e idiomas
