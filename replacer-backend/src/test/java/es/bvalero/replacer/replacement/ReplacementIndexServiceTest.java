@@ -47,7 +47,7 @@ public class ReplacementIndexServiceTest {
         int articleId = new Random().nextInt();
         int wrongId = articleId + 1;
 
-        IndexableReplacement indexableReplacement = IndexableReplacement.of(wrongId, "", "", 0, LocalDate.now());
+        IndexableReplacement indexableReplacement = IndexableReplacement.of(wrongId, "", "", 0, "", LocalDate.now());
         replacementIndexService.indexArticleReplacements(articleId, Collections.singletonList(indexableReplacement));
     }
 
@@ -108,11 +108,11 @@ public class ReplacementIndexServiceTest {
         // R7 : Only in DB reviewed => Do nothing
 
         // Replacements found to index
-        IndexableReplacement r1 = IndexableReplacement.of(1, "1", "1", 1, same);
-        IndexableReplacement r2 = IndexableReplacement.of(1, "2", "2", 2, same);
-        IndexableReplacement r3 = IndexableReplacement.of(1, "3", "3", 3, same);
-        IndexableReplacement r4 = IndexableReplacement.of(1, "4", "4", 4, same);
-        IndexableReplacement r5 = IndexableReplacement.of(1, "5", "5", 5, same);
+        IndexableReplacement r1 = IndexableReplacement.of(1, "1", "1", 1, "", same);
+        IndexableReplacement r2 = IndexableReplacement.of(1, "2", "2", 2, "", same);
+        IndexableReplacement r3 = IndexableReplacement.of(1, "3", "3", 3, "", same);
+        IndexableReplacement r4 = IndexableReplacement.of(1, "4", "4", 4, "", same);
+        IndexableReplacement r5 = IndexableReplacement.of(1, "5", "5", 5, "", same);
         List<IndexableReplacement> newReplacements = Arrays.asList(r1, r2, r3, r4, r5);
 
         // Existing replacements in DB
@@ -145,9 +145,9 @@ public class ReplacementIndexServiceTest {
         // R7 : Only in DB reviewed => Do nothing
 
         // Replacements found to index
-        IndexableReplacement r1 = IndexableReplacement.of(1, "1", "1", 1, same);
-        IndexableReplacement r2 = IndexableReplacement.of(1, "2", "2", 2, same);
-        IndexableReplacement r3 = IndexableReplacement.of(1, "3", "3", 3, same);
+        IndexableReplacement r1 = IndexableReplacement.of(1, "1", "1", 1, "", same);
+        IndexableReplacement r2 = IndexableReplacement.of(1, "2", "2", 2, "", same);
+        IndexableReplacement r3 = IndexableReplacement.of(1, "3", "3", 3, "", same);
         List<IndexableReplacement> newReplacements = Arrays.asList(r1, r2, r3);
 
         // Existing replacements in DB

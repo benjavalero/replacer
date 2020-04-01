@@ -39,6 +39,7 @@ public interface IndexableArticle {
                 replacement.getType(),
                 replacement.getSubtype(),
                 replacement.getStart(),
+                replacement.getContext(),
                 this.getLastUpdate());
     }
 

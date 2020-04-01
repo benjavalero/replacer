@@ -92,8 +92,8 @@ public class DumpExecutionJob {
     @Bean
     public JdbcBatchItemWriter<ReplacementEntity> jdbcInsertWriter() {
         final String insertSql =
-            "INSERT INTO replacement2 (article_id, type, subtype, position, last_update, reviewer) " +
-            "VALUES (:articleId, :type, :subtype, :position, :lastUpdate, :reviewer)";
+            "INSERT INTO replacement2 (article_id, type, subtype, position, context, last_update, reviewer) " +
+            "VALUES (:articleId, :type, :subtype, :position, :context, :lastUpdate, :reviewer)";
 
         return new JdbcBatchItemWriterBuilder<ReplacementEntity>()
             .namedParametersJdbcTemplate(jdbcTemplate)
@@ -104,7 +104,10 @@ public class DumpExecutionJob {
 
     @Bean
     public JdbcBatchItemWriter<ReplacementEntity> jdbcUpdateWriter() {
-        final String updateSql = "UPDATE replacement2 SET last_update=:lastUpdate, reviewer=:reviewer WHERE id=:id";
+        final String updateSql =
+            "UPDATE replacement2 " +
+            "SET position=:position, context=:context, last_update=:lastUpdate, reviewer=:reviewer " +
+            "WHERE id=:id";
 
         return new JdbcBatchItemWriterBuilder<ReplacementEntity>()
             .namedParametersJdbcTemplate(jdbcTemplate)

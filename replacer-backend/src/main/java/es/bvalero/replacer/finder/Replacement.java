@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Value;
+import lombok.With;
 
 /**
  * A <strong>replacement</strong> is a potential issue to be checked and fixed (replaced). For instance,
@@ -34,6 +35,10 @@ public class Replacement implements Comparable<Replacement> {
 
     /** At least one suggestion to replace the text */
     private List<Suggestion> suggestions;
+
+    /** The snippet around the text to replace */
+    @With
+    private String context;
 
     /** The end position of the section in the text */
     public int getEnd() {

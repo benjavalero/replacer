@@ -10,5 +10,6 @@ public class IndexableReplacement {
     private String type;
     private String subtype;
     private int position;
+    private String context;
     private LocalDate lastUpdate;
 }

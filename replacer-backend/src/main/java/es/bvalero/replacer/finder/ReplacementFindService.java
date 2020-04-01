@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReplacementFindService {
     public static final String CUSTOM_FINDER_TYPE = "Personalizado";
+    private static final int CONTEXT_THRESHOLD = 20;
 
     @Autowired
     private List<ReplacementFinder> replacementFinders;
@@ -62,7 +63,9 @@ public class ReplacementFindService {
         Stream<Replacement> distinct = removeNestedReplacements(all);
 
         // Ignore the replacements contained in immutables
-        return removeImmutables(distinct, text);
+        List<Replacement> noIgnored = removeImmutables(distinct, text);
+
+        return addContextToReplacements(noIgnored, text);
     }
 
     private Stream<Replacement> removeNestedReplacements(Stream<Replacement> replacements) {
@@ -95,5 +98,16 @@ public class ReplacementFindService {
         }
 
         return replacementList;
+    }
+
+    private List<Replacement> addContextToReplacements(List<Replacement> replacements, String text) {
+        return replacements.stream().map(r -> addContextToReplacement(r, text)).collect(Collectors.toList());
+    }
+
+    private Replacement addContextToReplacement(Replacement replacement, String text) {
+        int limitLeft = Math.max(0, replacement.getStart() - CONTEXT_THRESHOLD);
+        int limitRight = Math.min(text.length() - 1, replacement.getEnd() + CONTEXT_THRESHOLD);
+        String context = text.substring(limitLeft, limitRight);
+        return replacement.withContext(context);
     }
 }

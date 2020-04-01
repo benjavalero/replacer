@@ -269,13 +269,13 @@ In conclusion, as performance is critical, we try to use the faster implementati
 ## TODO: ROADMAP
 
 ### Optimization
-- [ ] After 1-Mar-2020 the _page-articles_ dumps will be generated both in multi-stream mode but in different ways (cf. <https://phabricator.wikimedia.org/T239866>). We should check if any of them is read/parsed faster.
 - [ ] Optimize regex for all replacement/immutable finders
 - [ ] Research to improve the database model
 - [ ] Research the immutables more commonly applied in order to give them some kind of priority
 - [ ] Check if it is worth to find as immutables some templates like `Cita web` as most of them should be captured by the complete tag `ref`
 - [ ] \#71: Performance tests to run replacement finders in parallel
 - [ ] \#79: Add some kind of warning for heavy indexations in order to find issues in finder performance
+- [ ] Delete replacements reviewed by the system which are not needed to keep track of the reviewed articles. For the moment, I do it manually by running the query: `DELETE FROM replacement2 WHERE reviewer = 'system' AND position > 0;`
 
 ### Features
 - [ ] \#102: Try to copy the fat-jar out of the project folder in order to package it while still running
@@ -283,7 +283,6 @@ In conclusion, as performance is critical, we try to use the faster implementati
 - [ ] Research in MediaWiki code to apply Spanish date format in references
 - [ ] \#45: Research exceptions for the most common replacements
 - [ ] Check if it is worth to store the replacement type as an enumerate
-- [ ] Add a new column to store the context of the replacement in order to match replacements where only the position has changed
 - [ ] Research if it is possible to deploy independently the frontend and the backend in ToolLabs
 - [ ] Adapt unit tests to JUnit5
 - [ ] Research how to enable/disable replacement/immutable finders by language

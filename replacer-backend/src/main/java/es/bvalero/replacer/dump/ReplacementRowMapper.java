@@ -15,6 +15,7 @@ public class ReplacementRowMapper implements RowMapper<ReplacementEntity> {
             result.getString("TYPE"),
             result.getString("SUBTYPE"),
             result.getInt("POSITION"),
+            result.getString("CONTEXT"),
             result.getDate("LAST_UPDATE").toLocalDate(),
             result.getString("REVIEWER")
         );

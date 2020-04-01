@@ -16,10 +16,7 @@ import org.jetbrains.annotations.TestOnly;
 @NoArgsConstructor // Needed by JPA
 @AllArgsConstructor
 @Entity
-@Table(
-    name = "replacement2",
-    uniqueConstraints = @UniqueConstraint(columnNames = { "articleId", "type", "subtype", "position" })
-)
+@Table(name = "replacement2")
 public class ReplacementEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +34,9 @@ public class ReplacementEntity implements Serializable {
     @Column
     @ColumnDefault(value = "0")
     private int position;
+
+    @Column
+    private String context;
 
     @Column(nullable = false)
     private LocalDate lastUpdate;

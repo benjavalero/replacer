@@ -108,7 +108,7 @@ export class DumpComponent implements OnInit, OnDestroy {
 
     this.dumpService.runIndexation().subscribe(() => {
       // It takes a little for the back-end to set the running status
-      sleep(5000).then(() => this.findDumpStatus());
+      sleep(10000).then(() => this.findDumpStatus());
     });
   }
 

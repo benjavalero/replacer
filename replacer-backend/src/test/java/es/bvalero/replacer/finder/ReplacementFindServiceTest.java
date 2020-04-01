@@ -40,7 +40,7 @@ public class ReplacementFindServiceTest {
         Mockito.when(finder.findStream(Mockito.anyString())).thenReturn(Stream.of(replacement));
         Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
 
-        List<Replacement> replacements = replacementFindService.findReplacements("");
+        List<Replacement> replacements = replacementFindService.findReplacements(" ");
 
         Assert.assertFalse(replacements.isEmpty());
         Assert.assertEquals(1, replacements.size());
@@ -59,7 +59,7 @@ public class ReplacementFindServiceTest {
             .when(immutableFindService.findImmutables(Mockito.anyString()))
             .thenReturn(Collections.singleton(immutable1));
 
-        List<Replacement> replacements = replacementFindService.findReplacements("");
+        List<Replacement> replacements = replacementFindService.findReplacements(" ");
 
         Assert.assertFalse(replacements.isEmpty());
         Assert.assertEquals(1, replacements.size());

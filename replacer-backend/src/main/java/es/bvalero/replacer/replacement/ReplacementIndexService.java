@@ -111,7 +111,7 @@ public class ReplacementIndexService {
             replacement.getArticleId() == entity.getArticleId() &&
             replacement.getType().equals(entity.getType()) &&
             replacement.getSubtype().equals(entity.getSubtype()) &&
-            replacement.getPosition() == entity.getPosition()
+            (replacement.getPosition() == entity.getPosition() || replacement.getContext().equals(entity.getContext()))
         );
     }
 
@@ -122,6 +122,10 @@ public class ReplacementIndexService {
         Optional<ReplacementEntity> result;
         if (dbReplacement.getLastUpdate().isBefore(replacement.getLastUpdate()) && dbReplacement.isToBeReviewed()) { // DB older than Dump
             dbReplacement.setLastUpdate(replacement.getLastUpdate());
+
+            // Also update position and context in case any of them has changed
+            dbReplacement.setPosition(replacement.getPosition());
+            dbReplacement.setContext(replacement.getContext());
             LOGGER.debug("Replacement updated in DB: {}", dbReplacement);
             result = Optional.of(dbReplacement);
         } else {
