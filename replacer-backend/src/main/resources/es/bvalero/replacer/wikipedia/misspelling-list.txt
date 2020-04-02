@@ -12255,10 +12255,6 @@ grecoromanos||grecorromanos
  marmarico||marmárico
  marmaricos||marmáricos
  marmol||mármol
- marmolada||marmoleada
- marmoladas||marmoleadas
- marmolado||marmoleado
- marmolados||marmoleados
  marmoles||mármoles
  maron||marón
  marques||marqués
@@ -14664,7 +14660,7 @@ grecoromanos||grecorromanos
  permanecio||permaneció
  permaneción||permaneció
  permanencen||permanecen
- permanecia||permanecía
+ permanecia||permanecía, permanencia
  permanecian||permanecían
  permansion||permansión
  permica||pérmica
@@ -16036,7 +16032,7 @@ grecoromanos||grecorromanos
  racionalizarian||racionalizarían
  racionalizarias||racionalizarías
  radiacion||radiación
- radian||radián
+ radian||radian (verbo), radián (unidad geométrica)
  radioastronoma||radioastrónoma
  radioastronomas||radioastrónomas
  radioastronomia||radioastronomía
