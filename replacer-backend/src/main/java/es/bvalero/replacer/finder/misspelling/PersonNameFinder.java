@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import es.bvalero.replacer.finder.ImmutableFinderPriority;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,6 +19,11 @@ import org.springframework.stereotype.Component;
 @Component
 class PersonNameFinder implements ImmutableFinder {
     private static final Collection<String> PERSON_NAMES = Arrays.asList("Domingo", "Frances", "Julio", "Sidney");
+
+    @Override
+    public ImmutableFinderPriority getPriority() {
+        return ImmutableFinderPriority.LOW;
+    }
 
     @Override
     public Iterable<Immutable> find(String text) {

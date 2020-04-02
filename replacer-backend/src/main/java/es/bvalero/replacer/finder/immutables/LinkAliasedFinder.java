@@ -4,6 +4,7 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
+import es.bvalero.replacer.finder.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.RegexIterable;
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,11 @@ public class LinkAliasedFinder implements ImmutableFinder {
     private static final RunAutomaton AUTOMATON_LINK_ALIASED = new RunAutomaton(
         new RegExp(REGEX_LINK_ALIASED).toAutomaton()
     );
+
+    @Override
+    public ImmutableFinderPriority getPriority() {
+        return ImmutableFinderPriority.HIGH;
+    }
 
     @Override
     public Iterable<Immutable> find(String text) {

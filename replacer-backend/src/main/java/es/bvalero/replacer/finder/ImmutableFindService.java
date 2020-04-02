@@ -21,8 +21,9 @@ class ImmutableFindService {
 
     Iterable<Immutable> findImmutables(String text) {
         // Collect to a list which is already an iterable
+        // Sort the finders by priority
         return new IterableOfIterable<>(
-            immutableFinders.stream().map(finder -> finder.find(text)).collect(Collectors.toList())
+            immutableFinders.stream().sorted().map(finder -> finder.find(text)).collect(Collectors.toList())
         );
     }
 }

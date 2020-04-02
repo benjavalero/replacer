@@ -4,6 +4,7 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
+import es.bvalero.replacer.finder.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.RegexIterable;
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,11 @@ class CursiveFinder implements ImmutableFinder {
     private static final RunAutomaton AUTOMATON_CURSIVE = new RunAutomaton(
         new RegExp(String.format(REGEX_CURSIVE, REGEX_TWO_QUOTES_ONLY, REGEX_TWO_QUOTES_ONLY)).toAutomaton()
     );
+
+    @Override
+    public ImmutableFinderPriority getPriority() {
+        return ImmutableFinderPriority.MEDIUM;
+    }
 
     @Override
     public Iterable<Immutable> find(String text) {

@@ -27,6 +27,11 @@ public class CompleteTagFinder implements ImmutableFinder {
     );
 
     @Override
+    public ImmutableFinderPriority getPriority() {
+        return ImmutableFinderPriority.HIGH;
+    }
+
+    @Override
     public Iterable<Immutable> find(String text) {
         return new LinearIterable<>(text, this::findResult, this::convert);
     }

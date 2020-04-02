@@ -3,10 +3,8 @@ package es.bvalero.replacer.finder.misspelling;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
-import es.bvalero.replacer.finder.RegexIterable;
+import es.bvalero.replacer.finder.*;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -80,6 +78,11 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
 
         LOGGER.info("END Build uppercase-after automaton");
         return automaton;
+    }
+
+    @Override
+    public ImmutableFinderPriority getPriority() {
+        return ImmutableFinderPriority.LOW;
     }
 
     @Override

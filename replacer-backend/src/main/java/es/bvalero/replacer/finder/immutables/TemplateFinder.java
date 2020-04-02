@@ -3,10 +3,8 @@ package es.bvalero.replacer.finder.immutables;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
-import es.bvalero.replacer.finder.RegexIterable;
+import es.bvalero.replacer.finder.*;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -51,6 +49,11 @@ class TemplateFinder implements ImmutableFinder {
                 new RegExp(String.format(REGEX_NESTED_TEMPLATE, StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE))
                 .toAutomaton(new DatatypesAutomatonProvider())
             );
+    }
+
+    @Override
+    public ImmutableFinderPriority getPriority() {
+        return ImmutableFinderPriority.MEDIUM;
     }
 
     @Override
