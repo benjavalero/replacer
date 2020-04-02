@@ -18,6 +18,6 @@ public interface ImmutableFinder {
     }
 
     default Immutable convert(MatchResult match) {
-        return Immutable.of(match.start(), match.group());
+        return Immutable.of(match.start(), match.group(), this.getClass().getSimpleName());
     }
 }

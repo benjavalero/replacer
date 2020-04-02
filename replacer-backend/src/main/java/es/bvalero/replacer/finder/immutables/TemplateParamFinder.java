@@ -29,6 +29,6 @@ public class TemplateParamFinder implements ImmutableFinder {
         String text = match.group();
         String param = text.substring(1, text.length() - 1).trim();
         int pos = text.indexOf(param);
-        return Immutable.of(match.start() + pos, param);
+        return Immutable.of(match.start() + pos, param, this.getClass().getSimpleName());
     }
 }

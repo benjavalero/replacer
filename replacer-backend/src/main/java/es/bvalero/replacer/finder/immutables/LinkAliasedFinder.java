@@ -28,6 +28,6 @@ public class LinkAliasedFinder implements ImmutableFinder {
         String text = match.group();
         String aliased = text.substring(2, text.length() - 1).trim();
         int pos = text.indexOf(aliased);
-        return Immutable.of(match.start() + pos, aliased);
+        return Immutable.of(match.start() + pos, aliased, this.getClass().getSimpleName());
     }
 }

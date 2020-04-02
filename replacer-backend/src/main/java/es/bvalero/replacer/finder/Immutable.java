@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder;
 
 import lombok.Value;
+import org.jetbrains.annotations.TestOnly;
 
 /**
  * An <strong>immutable</strong> is a section in the page contents to be left untouched,
@@ -18,6 +19,9 @@ public class Immutable {
      */
     private final String text;
 
+    /** The type of immutable, in particular the class name of the finder which has found it. */
+    private final String type;
+
     /** The end position of the section in the text */
     public int getEnd() {
         return this.start + this.text.length();
@@ -26,5 +30,10 @@ public class Immutable {
     boolean contains(Replacement r) {
         // i (this) contains r if: startI <= startR < endR <= endI
         return this.getStart() <= r.getStart() && r.getEnd() <= this.getEnd();
+    }
+
+    @TestOnly
+    public static Immutable of(int theStart, String theText) {
+        return of(theStart, theText, Immutable.class.getSimpleName());
     }
 }

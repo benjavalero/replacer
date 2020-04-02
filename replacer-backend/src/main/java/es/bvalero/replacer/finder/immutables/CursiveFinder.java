@@ -29,6 +29,6 @@ class CursiveFinder implements ImmutableFinder {
     public Immutable convert(MatchResult match) {
         String text = match.group();
         int end = text.endsWith("\n") ? text.length() : text.length() - 1;
-        return Immutable.of(match.start() + 1, text.substring(1, end));
+        return Immutable.of(match.start() + 1, text.substring(1, end), this.getClass().getSimpleName());
     }
 }

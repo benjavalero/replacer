@@ -28,6 +28,6 @@ public class FileNameFinder implements ImmutableFinder {
         String text = match.group();
         String file = text.substring(1, text.length() - 1).trim();
         int pos = text.indexOf(file);
-        return Immutable.of(match.start() + pos, file);
+        return Immutable.of(match.start() + pos, file, this.getClass().getSimpleName());
     }
 }

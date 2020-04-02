@@ -37,6 +37,6 @@ class ParameterValueFinder implements ImmutableFinder {
         int posEquals = match.group().indexOf('=');
         String value = text.substring(posEquals + 1).trim();
         int pos = text.indexOf(value);
-        return Immutable.of(match.start() + pos, value);
+        return Immutable.of(match.start() + pos, value, this.getClass().getSimpleName());
     }
 }

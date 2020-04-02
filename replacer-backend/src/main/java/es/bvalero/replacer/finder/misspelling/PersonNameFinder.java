@@ -29,7 +29,7 @@ class PersonNameFinder implements ImmutableFinder {
                 start = text.indexOf(word, start);
                 if (start != -1) { // Word found
                     if (isWordFollowedByUppercase(start, word, text)) {
-                        results.add(Immutable.of(start, word));
+                        results.add(Immutable.of(start, word, this.getClass().getSimpleName()));
                     }
                     start++;
                 }
