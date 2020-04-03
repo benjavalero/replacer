@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class LinkAliasedFinder implements ImmutableFinder {
-    private static final String REGEX_LINK_ALIASED = "\\[\\[[^]|]+\\|";
+    private static final String REGEX_LINK_ALIASED = "\\[\\[[^]|:\n]+\\|";
     private static final RunAutomaton AUTOMATON_LINK_ALIASED = new RunAutomaton(
         new RegExp(REGEX_LINK_ALIASED).toAutomaton()
     );
@@ -26,7 +26,7 @@ public class LinkAliasedFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 150;
+        return 50;
     }
 
     @Override
