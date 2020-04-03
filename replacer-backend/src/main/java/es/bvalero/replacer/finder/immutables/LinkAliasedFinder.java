@@ -1,11 +1,7 @@
 package es.bvalero.replacer.finder.immutables;
 
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
-import es.bvalero.replacer.finder.ImmutableFinderPriority;
-import es.bvalero.replacer.finder.RegexIterable;
+import es.bvalero.replacer.finder.*;
+import java.util.*;
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class LinkAliasedFinder implements ImmutableFinder {
-    private static final String REGEX_LINK_ALIASED = "\\[\\[[^]|:\n]+\\|";
-    private static final RunAutomaton AUTOMATON_LINK_ALIASED = new RunAutomaton(
-        new RegExp(REGEX_LINK_ALIASED).toAutomaton()
-    );
+    private static final Set<Character> FORBIDDEN_CHARS = new HashSet<>(Arrays.asList(']', '|', ':', '\n'));
 
     @Override
     public ImmutableFinderPriority getPriority() {
@@ -31,14 +24,49 @@ public class LinkAliasedFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<>(text, AUTOMATON_LINK_ALIASED, this::convert);
+        return new LinearIterable<>(text, this::findResult, this::convert);
     }
 
-    @Override
-    public Immutable convert(MatchResult match) {
-        String text = match.group();
-        String aliased = text.substring(2, text.length() - 1).trim();
-        int pos = text.indexOf(aliased);
-        return Immutable.of(match.start() + pos, aliased, this);
+    public MatchResult findResult(String text, int start) {
+        List<MatchResult> matches = new ArrayList<>(100);
+        while (start >= 0 && matches.isEmpty()) {
+            start = findLinkAliased(text, start, matches);
+        }
+        return matches.isEmpty() ? null : matches.get(0);
+    }
+
+    private int findLinkAliased(String text, int start, List<MatchResult> matches) {
+        int startTemplateParam = findStartLink(text, start);
+        if (startTemplateParam >= 0) {
+            int endParam = findEndLink(text, startTemplateParam + 2);
+            if (endParam >= 0) {
+                matches.add(LinearMatcher.of(startTemplateParam + 2, text.substring(startTemplateParam + 2, endParam)));
+                return endParam;
+            } else {
+                return startTemplateParam + 2;
+            }
+        } else {
+            return -1;
+        }
+    }
+
+    private int findStartLink(String text, int start) {
+        return text.indexOf("[[", start);
+    }
+
+    private int findEndLink(String text, int start) {
+        for (int i = start; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch == '|') {
+                return i == start ? -1 : i;
+            } else if (!isLinkChar(ch)) {
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    private boolean isLinkChar(char ch) {
+        return !FORBIDDEN_CHARS.contains(ch);
     }
 }

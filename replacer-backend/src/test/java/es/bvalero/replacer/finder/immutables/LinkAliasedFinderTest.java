@@ -15,12 +15,12 @@ public class LinkAliasedFinderTest {
     @Test
     public void testRegexUrl() {
         String aliased1 = "brasil";
-        String aliased2 = "reacción química";
+        String aliased2 = " reacción química ";
         String noAliased = "Text";
         String withNewLine = "one\nexample";
         String file = "[[File:file.jpg|thumb]]";
         String text = String.format(
-            "[[%s|Brasil]] [[%s]] [[ %s |reacción]] [[%s|example]] %s.",
+            "[[%s|Brasil]] [[%s]] [[%s|reacción]] [[%s|example]] %s.",
             aliased1,
             noAliased,
             aliased2,
