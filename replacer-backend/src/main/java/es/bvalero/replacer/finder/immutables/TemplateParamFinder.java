@@ -26,6 +26,11 @@ public class TemplateParamFinder implements ImmutableFinder {
     }
 
     @Override
+    public int getMaxLength() {
+        return 100;
+    }
+
+    @Override
     public Iterable<Immutable> find(String text) {
         return new RegexIterable<>(text, AUTOMATON_TEMPLATE_PARAM, this::convert);
     }
@@ -35,6 +40,6 @@ public class TemplateParamFinder implements ImmutableFinder {
         String text = match.group();
         String param = text.substring(1, text.length() - 1).trim();
         int pos = text.indexOf(param);
-        return Immutable.of(match.start() + pos, param, this.getClass().getSimpleName());
+        return Immutable.of(match.start() + pos, param, this);
     }
 }

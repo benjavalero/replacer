@@ -27,6 +27,11 @@ class ParameterValueFinder implements ImmutableFinder {
     );
 
     @Override
+    public int getMaxLength() {
+        return 1000;
+    }
+
+    @Override
     public Iterable<Immutable> find(String text) {
         return new RegexIterable<>(text, AUTOMATON_PARAM_VALUE, this::convert);
     }
@@ -37,6 +42,6 @@ class ParameterValueFinder implements ImmutableFinder {
         int posEquals = match.group().indexOf('=');
         String value = text.substring(posEquals + 1).trim();
         int pos = text.indexOf(value);
-        return Immutable.of(match.start() + pos, value, this.getClass().getSimpleName());
+        return Immutable.of(match.start() + pos, value, this);
     }
 }

@@ -27,6 +27,11 @@ class CursiveFinder implements ImmutableFinder {
     }
 
     @Override
+    public int getMaxLength() {
+        return 500;
+    }
+
+    @Override
     public Iterable<Immutable> find(String text) {
         return new RegexIterable<>(text, AUTOMATON_CURSIVE, this::convert);
     }
@@ -35,6 +40,6 @@ class CursiveFinder implements ImmutableFinder {
     public Immutable convert(MatchResult match) {
         String text = match.group();
         int end = text.endsWith("\n") ? text.length() : text.length() - 1;
-        return Immutable.of(match.start() + 1, text.substring(1, end), this.getClass().getSimpleName());
+        return Immutable.of(match.start() + 1, text.substring(1, end), this);
     }
 }

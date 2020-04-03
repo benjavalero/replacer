@@ -57,6 +57,11 @@ class TemplateFinder implements ImmutableFinder {
     }
 
     @Override
+    public int getMaxLength() {
+        return 500;
+    }
+
+    @Override
     public Iterable<Immutable> find(String text) {
         return new RegexIterable<>(text, AUTOMATON_TEMPLATE, this::convert);
     }

@@ -22,6 +22,11 @@ class CategoryFinder implements ImmutableFinder {
     }
 
     @Override
+    public int getMaxLength() {
+        return 150;
+    }
+
+    @Override
     public Iterable<Immutable> find(String text) {
         return new RegexIterable<>(text, AUTOMATON_CATEGORY, this::convert);
     }

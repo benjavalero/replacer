@@ -24,6 +24,11 @@ public class FileNameFinder implements ImmutableFinder {
     }
 
     @Override
+    public int getMaxLength() {
+        return 150;
+    }
+
+    @Override
     public Iterable<Immutable> find(String text) {
         return new RegexIterable<>(text, AUTOMATON_FILE_TAG, this::convert);
     }
@@ -34,6 +39,6 @@ public class FileNameFinder implements ImmutableFinder {
         String text = match.group();
         String file = text.substring(1, text.length() - 1).trim();
         int pos = text.indexOf(file);
-        return Immutable.of(match.start() + pos, file, this.getClass().getSimpleName());
+        return Immutable.of(match.start() + pos, file, this);
     }
 }

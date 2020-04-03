@@ -89,6 +89,16 @@ public class ReplacementFindService {
         }
 
         for (Immutable immutable : immutableFindService.findImmutables(text)) {
+            // Detect too long immutables likely to be errors in the text or in the finder
+            if (immutable.getText().length() > immutable.getFinder().getMaxLength()) {
+                LOGGER.warn(
+                    "Immutable too long: {}\t{}\t{}",
+                    immutable.getFinder().getClass().getSimpleName(),
+                    immutable.getText().length(),
+                    immutable.getText()
+                );
+            }
+
             replacementList.removeIf(immutable::contains);
 
             // No need to continue finding the immutables if there are no replacements

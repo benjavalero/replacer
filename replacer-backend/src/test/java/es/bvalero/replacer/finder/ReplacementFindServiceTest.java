@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
+
+import es.bvalero.replacer.finder.immutables.QuotesFinder;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +51,7 @@ public class ReplacementFindServiceTest {
 
     @Test
     public void testFindReplacementsIgnoringImmutables() {
-        Immutable immutable1 = Immutable.of(0, "AB");
+        Immutable immutable1 = Immutable.of(0, "AB", new QuotesFinder());
         Replacement replacement1 = Replacement.builder().start(1).text("B").build(); // Contained in immutable
         Replacement replacement2 = Replacement.builder().start(2).text("C").build(); // Not contained in immutable
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
@@ -68,7 +70,7 @@ public class ReplacementFindServiceTest {
 
     @Test
     public void testFindReplacementsAllIgnored() {
-        Immutable immutable1 = Immutable.of(0, "AB");
+        Immutable immutable1 = Immutable.of(0, "AB", new QuotesFinder());
         Replacement replacement1 = Replacement.builder().start(1).text("B").build();
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
         Mockito.when(finder.findStream(Mockito.anyString())).thenReturn(Stream.of(replacement1));

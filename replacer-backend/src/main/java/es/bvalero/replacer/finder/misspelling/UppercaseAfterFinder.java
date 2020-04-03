@@ -95,6 +95,6 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
         String text = match.group();
         String word = text.substring(1).trim();
         int startPos = match.start() + text.indexOf(word);
-        return Immutable.of(startPos, word, this.getClass().getSimpleName());
+        return Immutable.of(startPos, word, this);
     }
 }

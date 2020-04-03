@@ -18,7 +18,7 @@ public interface ImmutableFinder extends Comparable<ImmutableFinder> {
     }
 
     default Immutable convert(MatchResult match) {
-        return Immutable.of(match.start(), match.group(), this.getClass().getSimpleName());
+        return Immutable.of(match.start(), match.group(), this);
     }
 
     default ImmutableFinderPriority getPriority() {
@@ -27,5 +27,9 @@ public interface ImmutableFinder extends Comparable<ImmutableFinder> {
 
     default int compareTo(@NotNull ImmutableFinder finder) {
         return Integer.compare(finder.getPriority().getValue(), this.getPriority().getValue());
+    }
+
+    default int getMaxLength() {
+        return Integer.MAX_VALUE;
     }
 }

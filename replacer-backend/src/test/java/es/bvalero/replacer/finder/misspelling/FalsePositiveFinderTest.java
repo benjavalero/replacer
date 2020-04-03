@@ -33,10 +33,10 @@ public class FalsePositiveFinderTest {
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(4, matches.size());
-        Assert.assertTrue(matches.contains(Immutable.of(3, "sólo")));
-        Assert.assertTrue(matches.contains(Immutable.of(11, "éstos")));
-        Assert.assertTrue(matches.contains(Immutable.of(23, "Index")));
-        Assert.assertTrue(matches.contains(Immutable.of(29, "Online")));
+        Assert.assertTrue(matches.contains(Immutable.of(3, "sólo", falsePositiveFinder)));
+        Assert.assertTrue(matches.contains(Immutable.of(11, "éstos", falsePositiveFinder)));
+        Assert.assertTrue(matches.contains(Immutable.of(23, "Index", falsePositiveFinder)));
+        Assert.assertTrue(matches.contains(Immutable.of(29, "Online", falsePositiveFinder)));
     }
 
     @Test
@@ -53,17 +53,17 @@ public class FalsePositiveFinderTest {
 
         Assert.assertFalse(matches1.isEmpty());
         Assert.assertEquals(1, matches1.size());
-        Assert.assertTrue(matches1.contains(Immutable.of(2, "Top Album")));
+        Assert.assertTrue(matches1.contains(Immutable.of(2, "Top Album", falsePositiveFinder)));
 
         // Only the first match is found
-        Assert.assertFalse(matches1.contains(Immutable.of(6, "Album Chart")));
+        Assert.assertFalse(matches1.contains(Immutable.of(6, "Album Chart", falsePositiveFinder)));
 
         String text2 = "A Topp Album Chart.";
         List<Immutable> matches2 = falsePositiveFinder.findList(text2);
 
         Assert.assertFalse(matches2.isEmpty());
         Assert.assertEquals(1, matches2.size());
-        Assert.assertTrue(matches2.contains(Immutable.of(7, "Album Chart")));
+        Assert.assertTrue(matches2.contains(Immutable.of(7, "Album Chart", falsePositiveFinder)));
     }
 
     @Test
@@ -90,8 +90,8 @@ public class FalsePositiveFinderTest {
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(2, matches.size());
-        Assert.assertTrue(matches.contains(Immutable.of(2, "Test")));
-        Assert.assertTrue(matches.contains(Immutable.of(7, "test")));
+        Assert.assertTrue(matches.contains(Immutable.of(2, "Test", falsePositiveFinder)));
+        Assert.assertTrue(matches.contains(Immutable.of(7, "test", falsePositiveFinder)));
     }
 
     @Test
@@ -108,7 +108,7 @@ public class FalsePositiveFinderTest {
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(1, matches.size());
-        Assert.assertTrue(matches.contains(Immutable.of(2, "Test")));
+        Assert.assertTrue(matches.contains(Immutable.of(2, "Test", falsePositiveFinder)));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class FalsePositiveFinderTest {
 
         Assert.assertFalse(matches.isEmpty());
         Assert.assertEquals(2, matches.size());
-        Assert.assertTrue(matches.contains(Immutable.of(2, "sample")));
-        Assert.assertTrue(matches.contains(Immutable.of(9, "text")));
+        Assert.assertTrue(matches.contains(Immutable.of(2, "sample", falsePositiveFinder)));
+        Assert.assertTrue(matches.contains(Immutable.of(9, "text", falsePositiveFinder)));
     }
 }

@@ -25,6 +25,11 @@ public class LinkAliasedFinder implements ImmutableFinder {
     }
 
     @Override
+    public int getMaxLength() {
+        return 150;
+    }
+
+    @Override
     public Iterable<Immutable> find(String text) {
         return new RegexIterable<>(text, AUTOMATON_LINK_ALIASED, this::convert);
     }
@@ -34,6 +39,6 @@ public class LinkAliasedFinder implements ImmutableFinder {
         String text = match.group();
         String aliased = text.substring(2, text.length() - 1).trim();
         int pos = text.indexOf(aliased);
-        return Immutable.of(match.start() + pos, aliased, this.getClass().getSimpleName());
+        return Immutable.of(match.start() + pos, aliased, this);
     }
 }

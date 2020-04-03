@@ -18,6 +18,11 @@ public class XmlTagFinder implements ImmutableFinder {
     private static final RunAutomaton AUTOMATON_XML_TAG = new RunAutomaton(new RegExp(REGEX_XML_TAG).toAutomaton());
 
     @Override
+    public int getMaxLength() {
+        return 100;
+    }
+
+    @Override
     public Iterable<Immutable> find(String text) {
         return new RegexIterable<>(text, AUTOMATON_XML_TAG, this::convert);
     }

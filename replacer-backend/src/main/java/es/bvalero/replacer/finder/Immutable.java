@@ -19,8 +19,8 @@ public class Immutable {
      */
     private final String text;
 
-    /** The type of immutable, in particular the class name of the finder which has found it. */
-    private final String type;
+    /** The finder which has found it. */
+    private final ImmutableFinder finder;
 
     /** The end position of the section in the text */
     public int getEnd() {
@@ -30,10 +30,5 @@ public class Immutable {
     boolean contains(Replacement r) {
         // i (this) contains r if: startI <= startR < endR <= endI
         return this.getStart() <= r.getStart() && r.getEnd() <= this.getEnd();
-    }
-
-    @TestOnly
-    public static Immutable of(int theStart, String theText) {
-        return of(theStart, theText, Immutable.class.getSimpleName());
     }
 }

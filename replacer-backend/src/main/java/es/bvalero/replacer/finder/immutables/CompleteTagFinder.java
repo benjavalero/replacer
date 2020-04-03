@@ -32,6 +32,11 @@ public class CompleteTagFinder implements ImmutableFinder {
     }
 
     @Override
+    public int getMaxLength() {
+        return 1500;
+    }
+
+    @Override
     public Iterable<Immutable> find(String text) {
         return new LinearIterable<>(text, this::findResult, this::convert);
     }

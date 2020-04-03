@@ -15,6 +15,11 @@ class CommentFinder implements ImmutableFinder {
     private static final Pattern PATTERN_COMMENT_TAG = Pattern.compile(REGEX_COMMENT_TAG, Pattern.DOTALL);
 
     @Override
+    public int getMaxLength() {
+        return 10000;
+    }
+
+    @Override
     public Iterable<Immutable> find(String text) {
         return new RegexIterable<>(text, PATTERN_COMMENT_TAG, this::convert);
     }

@@ -14,6 +14,11 @@ abstract class QuotesAbstractFinder implements ImmutableFinder {
     abstract char getEndChar();
 
     @Override
+    public int getMaxLength() {
+        return 1000;
+    }
+
+    @Override
     public Iterable<Immutable> find(String text) {
         return new LinearIterable<>(text, this::findQuote, this::convert);
     }
