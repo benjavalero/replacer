@@ -18,8 +18,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
     private static final int ITERATIONS = 1000;
@@ -58,7 +59,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
                 }
             );
 
-        Assert.assertTrue(true);
+        Assertions.assertTrue(true);
     }
 
     @Test
@@ -84,13 +85,11 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
         finders.forEach(finder -> {
             System.out.println("FINDER: " + finder.getClass().getSimpleName());
             sampleContents.forEach(content -> {
-                finder.find(content).forEach(result -> {
-                    System.out.println("==> " + result.getText());
-                });
+                finder.find(content).forEach(result -> System.out.println("==> " + result.getText()));
                 System.out.println("----------");
             });
             System.out.println();
         });
-        Assert.assertTrue(true);
+        Assertions.assertTrue(true);
     }
 }
