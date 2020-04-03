@@ -28,12 +28,7 @@ public class CompleteTagFinder implements ImmutableFinder {
 
     @Override
     public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.HIGH;
-    }
-
-    @Override
-    public int getMaxLength() {
-        return 1500;
+        return ImmutableFinderPriority.VERY_HIGH;
     }
 
     @Override

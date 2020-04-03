@@ -2,9 +2,10 @@ package es.bvalero.replacer.finder;
 
 public enum ImmutableFinderPriority {
     NONE(0),
-    LOW(1),
+    LOW(2),
     MEDIUM(5),
-    HIGH(10);
+    HIGH(12),
+    VERY_HIGH(25);
 
     private final int value;
 

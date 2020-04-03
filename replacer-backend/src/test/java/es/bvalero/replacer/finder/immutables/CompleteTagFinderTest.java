@@ -14,12 +14,14 @@ public class CompleteTagFinderTest {
 
     @Test
     public void testRegexCompleteTag() {
-        String tag1 = "<math class=\"latex\">Un <i>ejemplo</i>\n en LaTeX</math>";
-        String tag2 = "<math>Otro ejemplo</math>";
-        String tag3 = "<source>Otro ejemplo</source>";
+        String tag1 = "<math class=\"latex\">An <i>example</i>\n in LaTeX</math>";
+        String tag2 = "<math>To test repeated tags</math>";
+        String tag3 = "<source>Another example</source>";
         String tag4 = "<ref name=NH05/>";
         String tag5 = "<ref>Text</ref>";
-        String text = String.format("En %s %s %s %s %s.", tag1, tag2, tag3, tag4, tag5);
+        String tag6 = "<unknown>Unknown</unkown>";
+        String tag7 = "<ref>Unclosed tag";
+        String text = String.format("En %s %s %s %s %s %s %s", tag1, tag2, tag3, tag4, tag5, tag6, tag7);
 
         ImmutableFinder completeTagFinder = new CompleteTagFinder();
         List<Immutable> matches = completeTagFinder.findList(text);
