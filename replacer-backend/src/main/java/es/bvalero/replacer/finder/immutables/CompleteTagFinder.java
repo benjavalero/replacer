@@ -15,6 +15,7 @@ public class CompleteTagFinder implements ImmutableFinder {
             "blockquote",
             "cite",
             "code",
+            "gallery",
             "math",
             "nowiki",
             "poem",

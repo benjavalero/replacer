@@ -6,7 +6,10 @@ import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.RegexIterable;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.MatchResult;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,8 +17,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class FileNameFinder implements ImmutableFinder {
-    // With this regex we also capture domains like www.google.com
-    private static final String REGEX_FILE_TAG = "[:=|\n] *[^]:=|/\n]+\\.[A-Za-z]{2,4} *[]}{|\n]";
+    // Files are also found in:
+    // - Tag "gallery" ==> Managed in CompleteTagFinder
+    // - Template "Gallery" ==> Managed in CompleteTemplateFinder
+    // - Parameter values without File prefix ==> To be managed in ParameterValueFinder
+
+    private static final List<String> ALLOWED_PREFIXES = Arrays.asList("Archivo", "File", "Imagen", "Image");
+    private static final String REGEX_FILE_TAG = String.format(
+        "\\[\\[(%s):[^]|]+",
+        StringUtils.join(ALLOWED_PREFIXES, '|')
+    );
+
     private static final RunAutomaton AUTOMATON_FILE_TAG = new RunAutomaton(new RegExp(REGEX_FILE_TAG).toAutomaton());
 
     @Override
@@ -35,10 +47,8 @@ public class FileNameFinder implements ImmutableFinder {
 
     @Override
     public Immutable convert(MatchResult match) {
-        // Remove the first and last characters and the possible surrounding spaces
         String text = match.group();
-        String file = text.substring(1, text.length() - 1).trim();
-        int pos = text.indexOf(file);
-        return Immutable.of(match.start() + pos, file, this);
+        int filenamePos = text.indexOf(':') + 1;
+        return Immutable.of(match.start() + filenamePos, text.substring(filenamePos), this);
     }
 }

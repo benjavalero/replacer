@@ -31,6 +31,7 @@ class TemplateFinder implements ImmutableFinder {
         "quote",
         "cquote",
         "caja de cita",
+        "galería de imágenes",
         "traducido (de|ref)"
     );
     private static final RunAutomaton AUTOMATON_TEMPLATE;
