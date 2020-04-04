@@ -1,19 +1,8 @@
 package es.bvalero.replacer.finder.benchmark;
 
 import es.bvalero.replacer.finder.ImmutableFinder;
-import es.bvalero.replacer.finder.immutables.CompleteTagFinder;
-import es.bvalero.replacer.finder.immutables.DomainFinder;
-import es.bvalero.replacer.finder.immutables.FileNameFinder;
-import es.bvalero.replacer.finder.immutables.InterLanguageLinkFinder;
-import es.bvalero.replacer.finder.immutables.LinkAliasedFinder;
-import es.bvalero.replacer.finder.immutables.LinkSuffixedFinder;
-import es.bvalero.replacer.finder.immutables.QuotesAngularFinder;
-import es.bvalero.replacer.finder.immutables.QuotesFinder;
-import es.bvalero.replacer.finder.immutables.QuotesTypographicFinder;
-import es.bvalero.replacer.finder.immutables.TemplateNameFinder;
-import es.bvalero.replacer.finder.immutables.TemplateParamFinder;
-import es.bvalero.replacer.finder.immutables.UrlFinder;
-import es.bvalero.replacer.finder.immutables.XmlTagFinder;
+import es.bvalero.replacer.finder.immutables.*;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -35,6 +24,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
         finders.add(new DomainFinder());
         finders.add(new TemplateNameFinder());
         finders.add(new TemplateParamFinder());
+        finders.add(new CursiveFinder());
         finders.add(new QuotesFinder());
         finders.add(new QuotesTypographicFinder());
         finders.add(new QuotesAngularFinder());

@@ -3,8 +3,8 @@ package es.bvalero.replacer.finder.immutables;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class CursiveFinderTest {
 
@@ -16,8 +16,8 @@ public class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assert.assertEquals(1, matches.size());
-        Assert.assertEquals(cursive, matches.get(0).getText());
+        Assertions.assertEquals(1, matches.size());
+        Assertions.assertEquals(cursive, matches.get(0).getText());
     }
 
     @Test
@@ -29,21 +29,22 @@ public class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assert.assertEquals(2, matches.size());
-        Assert.assertEquals(cursive1, matches.get(0).getText());
-        Assert.assertEquals(cursive2, matches.get(1).getText());
+        Assertions.assertEquals(2, matches.size());
+        Assertions.assertEquals(cursive1, matches.get(0).getText());
+        Assertions.assertEquals(cursive2, matches.get(1).getText());
     }
 
     @Test
     public void testCursiveTruncated() {
-        String cursive = "''cursive\n";
-        String text = String.format("A %sA", cursive);
+        String cursive1 = "''cursive1\n";
+        String cursive2 = "''cursive2''";
+        String text = String.format("A %s and %s.", cursive1, cursive2);
 
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assert.assertEquals(1, matches.size());
-        Assert.assertEquals(cursive, matches.get(0).getText());
+        Assertions.assertEquals(1, matches.size());
+        Assertions.assertEquals(cursive2, matches.get(0).getText());
     }
 
     @Test
@@ -54,7 +55,8 @@ public class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assert.assertEquals(0, matches.size());
+        Assertions.assertEquals(1, matches.size());
+        Assertions.assertEquals(bold, matches.get(0).getText());
     }
 
     @Test
@@ -66,18 +68,22 @@ public class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assert.assertEquals(0, matches.size());
+        Assertions.assertEquals(2, matches.size());
+        Assertions.assertEquals(bold1, matches.get(0).getText());
+        Assertions.assertEquals(bold2, matches.get(1).getText());
     }
 
     @Test
     public void testBoldTruncated() {
-        String bold = "'''bold\n";
-        String text = String.format("A %sA", bold);
+        String bold1 = "'''bold\n";
+        String bold2 = "'''bold'''";
+        String text = String.format("A %s and %s.", bold1, bold2);
 
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assert.assertEquals(0, matches.size());
+        Assertions.assertEquals(1, matches.size());
+        Assertions.assertEquals(bold2, matches.get(0).getText());
     }
 
     @Test
@@ -89,8 +95,20 @@ public class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assert.assertEquals(1, matches.size());
-        Assert.assertEquals(cursive, matches.get(0).getText());
+        Assertions.assertEquals(1, matches.size());
+        Assertions.assertEquals(cursive, matches.get(0).getText());
+    }
+
+    @Test
+    public void testCursiveWithNestedQuotes() {
+        String cursive =
+            "La leyenda: ''Y \"será más terrorífica que 'La Mujer de Judas'\"''. La producción será ''[[Almas en Pena]]''.";
+        String text = String.format("A %s.", cursive);
+
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
+
+        Assertions.assertEquals(2, matches.size());
     }
 
     @Test
@@ -101,8 +119,8 @@ public class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assert.assertEquals(1, matches.size());
-        Assert.assertEquals(cursive, matches.get(0).getText());
+        Assertions.assertEquals(1, matches.size());
+        Assertions.assertEquals(cursive, matches.get(0).getText());
     }
 
     @Test
@@ -114,7 +132,8 @@ public class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assert.assertEquals(0, matches.size());
+        Assertions.assertEquals(1, matches.size());
+        Assertions.assertEquals(cursive, matches.get(0).getText());
     }
 
     @Test
@@ -125,7 +144,7 @@ public class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assert.assertEquals(1, matches.size());
-        Assert.assertEquals(cursive, matches.get(0).getText());
+        Assertions.assertEquals(1, matches.size());
+        Assertions.assertEquals(cursive, matches.get(0).getText());
     }
 }
