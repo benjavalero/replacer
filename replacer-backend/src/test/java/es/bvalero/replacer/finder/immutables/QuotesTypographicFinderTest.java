@@ -22,7 +22,7 @@ public class QuotesTypographicFinderTest {
         ImmutableFinder quotesFinder = new QuotesTypographicFinder();
         List<Immutable> matches = quotesFinder.findList(text);
 
-        Set<String> expected = new HashSet<>(Arrays.asList(quotes1, quotes2, quotes3));
+        Set<String> expected = new HashSet<>(Arrays.asList(quotes1, quotes2));
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assertions.assertEquals(expected, actual);
     }

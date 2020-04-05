@@ -4,10 +4,11 @@ import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.LinearIterable;
 import es.bvalero.replacer.finder.LinearMatcher;
-
+import java.util.*;
 import java.util.regex.MatchResult;
 
 abstract class QuotesAbstractFinder implements ImmutableFinder {
+    private static final Set<Character> FORBIDDEN_CHARS = new HashSet<>(Arrays.asList('\n', '#', '{', '}', '<', '>'));
 
     abstract char getStartChar();
 
@@ -20,20 +21,47 @@ abstract class QuotesAbstractFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new LinearIterable<>(text, this::findQuote, this::convert);
+        return new LinearIterable<>(text, this::findResult, this::convert);
     }
 
-    private MatchResult findQuote(String text, int start) {
-        int openQuote = text.indexOf(getStartChar(), start);
-        if (openQuote >= 0) {
-            int endQuote = text.indexOf(getEndChar(), openQuote + 1);
+    public MatchResult findResult(String text, int start) {
+        List<MatchResult> matches = new ArrayList<>(100);
+        while (start >= 0 && matches.isEmpty()) {
+            start = findQuote(text, start, matches);
+        }
+        return matches.isEmpty() ? null : matches.get(0);
+    }
+
+    private int findQuote(String text, int start, List<MatchResult> matches) {
+        int startQuote = findStartQuote(text, start);
+        if (startQuote >= 0) {
+            int endQuote = findEndQuote(text, startQuote + 1);
             if (endQuote >= 0) {
-                return LinearMatcher.of(openQuote, text.substring(openQuote, endQuote + 1));
+                matches.add(LinearMatcher.of(startQuote, text.substring(startQuote, endQuote + 1)));
+                return endQuote + 1;
             } else {
-                return null;
+                return startQuote + 1;
             }
         } else {
-            return null;
+            return -1;
         }
+    }
+
+    private int findStartQuote(String text, int start) {
+        return text.indexOf(getStartChar(), start);
+    }
+
+    private int findEndQuote(String text, int start) {
+        int endQuote = text.indexOf(getEndChar(), start);
+        if (endQuote >= 0) {
+            // Check if the found text contains any forbidden char
+            for (int i = start; i < endQuote; i++) {
+                char ch = text.charAt(i);
+                if (FORBIDDEN_CHARS.contains(ch)) {
+                    return -1;
+                }
+            }
+        }
+        return endQuote;
     }
 }
