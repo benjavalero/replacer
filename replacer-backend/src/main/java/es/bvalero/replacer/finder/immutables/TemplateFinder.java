@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * Find complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
  */
 @Component
-class TemplateFinder implements ImmutableFinder {
+public class TemplateFinder implements ImmutableFinder {
     // The nested regex takes more but it is worth as it captures completely the templates with inner templates
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
     private static final String REGEX_NESTED_TEMPLATE = "\\{\\{ *(%s)[ |\n]*[|:](%s|[^}])+?}}";
