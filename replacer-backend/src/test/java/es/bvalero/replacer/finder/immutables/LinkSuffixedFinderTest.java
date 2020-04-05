@@ -7,13 +7,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class LinkSuffixedFinderTest {
 
     @Test
-    public void testRegexUrl() {
+    public void testLinkSuffixed() {
         String suffixed1 = "[[brasil]]eño";
         String suffixed2 = "[[reacción química|reaccion]]es";
         String noSuffixed = "[[Text]]";
@@ -24,6 +25,6 @@ public class LinkSuffixedFinderTest {
 
         Set<String> expected = new HashSet<>(Arrays.asList(suffixed1, suffixed2));
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assert.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 }
