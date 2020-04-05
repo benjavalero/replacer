@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class UrlFinder implements ImmutableFinder {
+    // The regex works quite well and provides support for complex URLs so it is worth to keep using it
     private static final String REGEX_URL = "https?://<URI>";
 
     private static final RunAutomaton AUTOMATON_URL = new RunAutomaton(
@@ -23,11 +24,6 @@ public class UrlFinder implements ImmutableFinder {
     @Override
     public ImmutableFinderPriority getPriority() {
         return ImmutableFinderPriority.MEDIUM;
-    }
-
-    @Override
-    public int getMaxLength() {
-        return 500;
     }
 
     @Override

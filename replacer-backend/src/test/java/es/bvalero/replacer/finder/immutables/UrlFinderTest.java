@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class UrlFinderTest {
 
@@ -23,6 +23,6 @@ public class UrlFinderTest {
 
         Set<String> expected = new HashSet<>(Arrays.asList(url1, url2));
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assert.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 }
