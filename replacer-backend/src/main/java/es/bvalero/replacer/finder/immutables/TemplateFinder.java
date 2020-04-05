@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TemplateFinder implements ImmutableFinder {
     // The nested regex takes more but it is worth as it captures completely the templates with inner templates
+    // A linear optimization, instead of regex, is too complex and it is not worth for the moment
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
     private static final String REGEX_NESTED_TEMPLATE = "\\{\\{ *(%s)[ |\n]*[|:](%s|[^}])+?}}";
     private static final List<String> TEMPLATE_NAMES = Arrays.asList(
@@ -59,7 +60,8 @@ public class TemplateFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 500;
+        // There may be really long cites
+        return 2000;
     }
 
     @Override
