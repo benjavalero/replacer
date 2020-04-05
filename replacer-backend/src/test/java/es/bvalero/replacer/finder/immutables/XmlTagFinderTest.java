@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class XmlTagFinderTest {
 
@@ -24,7 +24,7 @@ public class XmlTagFinderTest {
 
         Set<String> expected = new HashSet<>(Arrays.asList(tag1, tag2, tag3));
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assert.assertEquals(expected, actual);
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test
@@ -35,6 +35,6 @@ public class XmlTagFinderTest {
         ImmutableFinder xmlTagFinder = new XmlTagFinder();
         List<Immutable> matches = xmlTagFinder.findList(text);
 
-        Assert.assertTrue(matches.isEmpty());
+        Assertions.assertTrue(matches.isEmpty());
     }
 }
