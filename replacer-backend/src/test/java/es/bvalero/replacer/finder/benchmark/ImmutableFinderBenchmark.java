@@ -17,6 +17,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
     public void testBenchmark() throws IOException, URISyntaxException {
         // Load the finders
         List<ImmutableFinder> finders = new ArrayList<>();
+        finders.add(new CategoryFinder());
         finders.add(new UrlFinder());
         finders.add(new XmlTagFinder());
         finders.add(new CompleteTagFinder());
