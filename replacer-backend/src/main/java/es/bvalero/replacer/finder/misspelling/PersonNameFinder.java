@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * to be written in lowercase.
  */
 @Component
-class PersonNameFinder implements ImmutableFinder {
+public class PersonNameFinder implements ImmutableFinder {
     private static final Collection<String> PERSON_NAMES = Arrays.asList("Domingo", "Frances", "Julio", "Sidney");
 
     @Override

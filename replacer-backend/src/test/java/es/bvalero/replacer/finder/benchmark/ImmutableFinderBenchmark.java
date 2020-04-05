@@ -2,12 +2,11 @@ package es.bvalero.replacer.finder.benchmark;
 
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.immutables.*;
-
+import es.bvalero.replacer.finder.misspelling.PersonNameFinder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -33,6 +32,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
         finders.add(new LinkSuffixedFinder());
         finders.add(new LinkAliasedFinder());
         finders.add(new InterLanguageLinkFinder());
+        finders.add(new PersonNameFinder());
 
         System.out.println();
         System.out.println("FINDER\tTIME");
@@ -73,14 +73,18 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
 
         List<String> sampleContents = findSampleContents();
 
-        finders.forEach(finder -> {
-            System.out.println("FINDER: " + finder.getClass().getSimpleName());
-            sampleContents.forEach(content -> {
-                finder.find(content).forEach(result -> System.out.println("==> " + result.getText()));
-                System.out.println("----------");
-            });
-            System.out.println();
-        });
+        finders.forEach(
+            finder -> {
+                System.out.println("FINDER: " + finder.getClass().getSimpleName());
+                sampleContents.forEach(
+                    content -> {
+                        finder.find(content).forEach(result -> System.out.println("==> " + result.getText()));
+                        System.out.println("----------");
+                    }
+                );
+                System.out.println();
+            }
+        );
         Assertions.assertTrue(true);
     }
 }
