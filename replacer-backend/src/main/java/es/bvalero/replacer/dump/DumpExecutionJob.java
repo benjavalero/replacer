@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -114,5 +115,10 @@ public class DumpExecutionJob {
             .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
             .sql(updateSql)
             .build();
+    }
+
+    @PostConstruct
+    public void setProperty() {
+        System.setProperty("jdk.xml.totalEntitySizeLimit", String.valueOf(Integer.MAX_VALUE));
     }
 }
