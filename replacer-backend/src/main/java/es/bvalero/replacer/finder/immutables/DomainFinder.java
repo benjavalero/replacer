@@ -3,22 +3,16 @@ package es.bvalero.replacer.finder.immutables;
 import es.bvalero.replacer.finder.*;
 import java.util.*;
 import java.util.regex.MatchResult;
-import org.springframework.stereotype.Component;
 
 /**
  * Find web domains, e. g. `www.acb.es` or `es.wikipedia.org`
  */
-@Component
+// @Component
 public class DomainFinder implements ImmutableFinder {
     static final Set<Character> START_DOMAIN = new HashSet<>(Arrays.asList('/', '-', '_'));
     static final Set<String> SUFFIXES = new HashSet<>(
         Arrays.asList("com", "co", "edu", "es", "gob", "gov", "info", "net", "org")
     );
-
-    @Override
-    public int getMaxLength() {
-        return 50;
-    }
 
     @Override
     public Iterable<Immutable> find(String text) {
