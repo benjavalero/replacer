@@ -20,6 +20,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
         finders.add(new CategoryFinder());
         finders.add(new UrlFinder());
         finders.add(new XmlTagFinder());
+        finders.add(new CommentFinder());
         finders.add(new CompleteTagFinder());
         finders.add(new DomainFinder());
         finders.add(new TemplateFinder());

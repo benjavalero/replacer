@@ -2,15 +2,15 @@ package es.bvalero.replacer.finder.benchmark;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class CommentFinderTest {
     private String text;
     private Set<FinderResult> expected;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         String comment1 = "<!-- Esto <span>es</span> un- \n comentario -->";
         String comment2 = "<!-- Otro comentario -->";
@@ -24,12 +24,12 @@ public class CommentFinderTest {
     @Test
     public void testCommentRegexFinder() {
         CommentRegexFinder finder = new CommentRegexFinder();
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     public void testCommentAutomatonFinder() {
         CommentAutomatonFinder finder = new CommentAutomatonFinder();
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 }
