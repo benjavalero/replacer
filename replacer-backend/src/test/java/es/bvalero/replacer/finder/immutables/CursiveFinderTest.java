@@ -21,6 +21,18 @@ public class CursiveFinderTest {
     }
 
     @Test
+    public void testCursiveSimpleFinishing() {
+        String cursive = "''cursive''";
+        String text = String.format("%s", cursive);
+
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
+
+        Assertions.assertEquals(1, matches.size());
+        Assertions.assertEquals(cursive, matches.get(0).getText());
+    }
+
+    @Test
     public void testCursiveDouble() {
         String cursive1 = "''cursive1''";
         String cursive2 = "''cursive2''";
@@ -146,5 +158,16 @@ public class CursiveFinderTest {
 
         Assertions.assertEquals(1, matches.size());
         Assertions.assertEquals(cursive, matches.get(0).getText());
+    }
+
+    @Test
+    public void testForbiddenChar() {
+        String text = "'''X''' is '''A\nB'''.";
+
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
+
+        Assertions.assertEquals(1, matches.size());
+        Assertions.assertEquals("'''X'''", matches.get(0).getText());
     }
 }

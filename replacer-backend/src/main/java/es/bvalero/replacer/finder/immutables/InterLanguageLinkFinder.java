@@ -29,7 +29,9 @@ public class InterLanguageLinkFinder implements ImmutableFinder {
         int startLink = findStartLink(text, start);
         if (startLink >= 0) {
             int startLang = startLink + 2;
-            if (text.charAt(startLang) == ':') {
+            if (startLang >= text.length()) {
+                return -1;
+            } else if (text.charAt(startLang) == ':') {
                 startLang++;
             }
             int startInterLanguage = findStartInterLanguage(text, startLang);

@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CursiveFinder implements ImmutableFinder {
-    private static final Set<Character> FORBIDDEN_CHARS = new HashSet<>(Arrays.asList('\n', '#', '{', '}', '<', '>'));
-
     @Override
     public ImmutableFinderPriority getPriority() {
         return ImmutableFinderPriority.MEDIUM;
@@ -76,18 +74,22 @@ public class CursiveFinder implements ImmutableFinder {
 
     private int findEndQuotes(String text, int start, String allQuotes) {
         int endQuotes = text.indexOf(allQuotes, start);
-        // Check there are no more quotes after
-        char c = text.charAt(endQuotes + allQuotes.length());
-        if (c == '\'') {
-            endQuotes = findEndQuotes(text, endQuotes + allQuotes.length() + 1, allQuotes);
-        }
-
         if (endQuotes >= 0) {
-            // Check if the found text contains any forbidden char
-            for (int i = start; i < endQuotes; i++) {
-                char ch = text.charAt(i);
-                if (FORBIDDEN_CHARS.contains(ch)) {
-                    return -1;
+            // Check there are no more quotes after
+            if (endQuotes + allQuotes.length() < text.length()) {
+                char c = text.charAt(endQuotes + allQuotes.length());
+                if (c == '\'') {
+                    endQuotes = findEndQuotes(text, endQuotes + allQuotes.length() + 1, allQuotes);
+                }
+            }
+
+            if (endQuotes >= 0) {
+                // Check if the found text contains any forbidden char
+                for (int i = start; i < endQuotes; i++) {
+                    char ch = text.charAt(i);
+                    if (ch == '\n') {
+                        return -1;
+                    }
                 }
             }
         }
