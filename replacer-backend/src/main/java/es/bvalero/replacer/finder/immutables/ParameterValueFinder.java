@@ -10,12 +10,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Component;
 
 /**
  * Find the values of some parameters, e. g. `value` in `{{Template|index=value}}`
  */
-@Component
+// @Component
 class ParameterValueFinder implements ImmutableFinder {
     private static final List<String> PARAMS = Arrays.asList("cita", "index", "índice", "species");
     private static final String REGEX_PARAM_VALUE = String.format(
@@ -25,11 +24,6 @@ class ParameterValueFinder implements ImmutableFinder {
     private static final RunAutomaton AUTOMATON_PARAM_VALUE = new RunAutomaton(
         new RegExp(REGEX_PARAM_VALUE).toAutomaton(new DatatypesAutomatonProvider())
     );
-
-    @Override
-    public int getMaxLength() {
-        return 1000;
-    }
 
     @Override
     public Iterable<Immutable> find(String text) {
