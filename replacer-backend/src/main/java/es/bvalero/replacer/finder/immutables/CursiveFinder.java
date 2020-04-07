@@ -18,7 +18,7 @@ public class CursiveFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 500;
+        return 5000;
     }
 
     @Override

@@ -61,7 +61,7 @@ public class TemplateFinder implements ImmutableFinder {
     @Override
     public int getMaxLength() {
         // There may be really long cites
-        return 2000;
+        return 100000;
     }
 
     @Override

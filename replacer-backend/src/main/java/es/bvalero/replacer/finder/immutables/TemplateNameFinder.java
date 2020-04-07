@@ -22,7 +22,7 @@ public class TemplateNameFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 100;
+        return 250;
     }
 
     @Override

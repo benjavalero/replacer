@@ -26,7 +26,7 @@ public class FileNameFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 150;
+        return 250;
     }
 
     @Override

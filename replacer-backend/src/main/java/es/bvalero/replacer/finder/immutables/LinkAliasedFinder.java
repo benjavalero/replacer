@@ -19,7 +19,7 @@ public class LinkAliasedFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 50;
+        return 200;
     }
 
     @Override

@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class QuotesAngularFinder extends QuotesAbstractFinder implements ImmutableFinder {
     @Override
+    public int getMaxLength() {
+        return 200;
+    }
+
+    @Override
     char getStartChar() {
         return '«';
     }

@@ -11,7 +11,12 @@ import org.springframework.stereotype.Component;
 public class QuotesFinder extends QuotesAbstractFinder implements ImmutableFinder {
     @Override
     public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.MEDIUM;
+        return ImmutableFinderPriority.LOW;
+    }
+
+    @Override
+    public int getMaxLength() {
+        return 5000;
     }
 
     @Override

@@ -16,7 +16,7 @@ public class TemplateParamFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 50;
+        return 100;
     }
 
     @Override

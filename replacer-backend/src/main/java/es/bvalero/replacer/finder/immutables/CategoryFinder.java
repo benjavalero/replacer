@@ -1,14 +1,11 @@
 package es.bvalero.replacer.finder.immutables;
 
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.*;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
+import org.springframework.stereotype.Component;
 
 /**
  * Find categories, e. g. `[[Categoría:España]]`
@@ -16,8 +13,6 @@ import java.util.regex.MatchResult;
 @Component
 public class CategoryFinder implements ImmutableFinder {
     private static final List<String> SPACES = Arrays.asList("Categoría", "als");
-    private static final String REGEX_CATEGORY = "\\[\\[(Categoría|als):[^]]+]]";
-    private static final RunAutomaton AUTOMATON_CATEGORY = new RunAutomaton(new RegExp(REGEX_CATEGORY).toAutomaton());
 
     @Override
     public ImmutableFinderPriority getPriority() {
