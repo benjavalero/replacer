@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CursiveFinder implements ImmutableFinder {
+
     @Override
     public ImmutableFinderPriority getPriority() {
         return ImmutableFinderPriority.MEDIUM;
@@ -36,18 +37,13 @@ public class CursiveFinder implements ImmutableFinder {
     private int findCursive(String text, int start, List<MatchResult> matches) {
         int startCursive = findStartCursive(text, start);
         if (startCursive >= 0) {
-            String allQuotes = findAllQuotes(text, startCursive);
-            if (allQuotes != null) { // Just in case
-                int endQuotes = findEndQuotes(text, startCursive + allQuotes.length(), allQuotes);
-                if (endQuotes >= 0) {
-                    int end = endQuotes + allQuotes.length();
-                    matches.add(LinearMatcher.of(startCursive, text.substring(startCursive, end)));
-                    return end;
-                } else {
-                    return startCursive + allQuotes.length();
-                }
+            int numQuotes = findNumQuotes(text, startCursive);
+            int endQuotes = findEndQuotes(text, startCursive + numQuotes, numQuotes);
+            if (endQuotes >= 0) {
+                matches.add(LinearMatcher.of(startCursive, text.substring(startCursive, endQuotes)));
+                return endQuotes;
             } else {
-                return startCursive + 2;
+                return startCursive + numQuotes;
             }
         } else {
             return -1;
@@ -58,41 +54,40 @@ public class CursiveFinder implements ImmutableFinder {
         return text.indexOf("''", start);
     }
 
-    private String findAllQuotes(String text, int start) {
-        StringBuilder tagBuilder = new StringBuilder();
+    private int findNumQuotes(String text, int start) {
+        StringBuilder quotesBuilder = new StringBuilder();
         for (int i = start; i < text.length(); i++) {
             char ch = text.charAt(i);
             if (ch == '\'') {
-                tagBuilder.append(ch);
+                quotesBuilder.append(ch);
             } else {
                 break;
             }
         }
-        String tag = tagBuilder.toString();
-        return tag.length() >= 2 ? tag : null;
+        return quotesBuilder.length();
     }
 
-    private int findEndQuotes(String text, int start, String allQuotes) {
-        int endQuotes = text.indexOf(allQuotes, start);
-        if (endQuotes >= 0) {
-            // Check there are no more quotes after
-            if (endQuotes + allQuotes.length() < text.length()) {
-                char c = text.charAt(endQuotes + allQuotes.length());
-                if (c == '\'') {
-                    endQuotes = findEndQuotes(text, endQuotes + allQuotes.length() + 1, allQuotes);
-                }
-            }
-
-            if (endQuotes >= 0) {
-                // Check if the found text contains any forbidden char
-                for (int i = start; i < endQuotes; i++) {
-                    char ch = text.charAt(i);
-                    if (ch == '\n') {
-                        return -1;
-                    }
-                }
+    private int findEndQuotes(String text, int start, int numQuotes) {
+        StringBuilder tagBuilder = new StringBuilder();
+        int i = start;
+        for (; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch == '\n') {
+                break;
+            } else if (ch == '\'') {
+                tagBuilder.append(ch);
+            } else {
+                if (tagBuilder.length() > numQuotes) {
+                    tagBuilder = new StringBuilder(); // Reset and keep on searching
+                } else if (tagBuilder.length() == numQuotes) {
+                    return i;
+                } else if (tagBuilder.length() > 0) {
+                    tagBuilder = new StringBuilder(); // Reset and keep on searching
+                } // else (tabBuilder.length == 0) ==> continue
             }
         }
-        return endQuotes;
+
+        // In case we arrive at the end of the text
+        return tagBuilder.length() == numQuotes ? i : -1;
     }
 }
