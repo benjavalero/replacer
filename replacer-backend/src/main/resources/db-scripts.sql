@@ -8,8 +8,9 @@ CREATE TABLE replacement2 (
     position INT NOT NULL DEFAULT 0,
     context VARCHAR(255) COLLATE utf8mb4_bin,
     last_update DATE NOT NULL,
-    reviewer VARCHAR(255),
+    reviewer VARCHAR(100), -- In order to make the index work
     PRIMARY KEY (id),
-    INDEX (article_id),
-    INDEX (type, subtype)
+    INDEX (article_id)
 );
+
+CREATE INDEX idx_count ON replacement2 (type, subtype, reviewer);
