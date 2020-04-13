@@ -5,8 +5,9 @@ import es.bvalero.replacer.finder.ImmutableFinder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TemplateFinderTest {
 
@@ -18,20 +19,22 @@ public class TemplateFinderTest {
         String template4 = "{{ cita libro\n| Spaces around }}";
         String template5 = "{{cite book | text}}";
         String template6 = "{{Traducido ref|Text}}";
+        String template7 = "{{#expr: -1/3 round 0 }}";
         String text = String.format(
-            "En %s %s %s %s %s %s.",
+            "En %s %s %s %s %s %s %s.",
             template1,
             template2,
             template3,
             template4,
             template5,
-            template6
+            template6,
+            template7
         );
 
         ImmutableFinder templateFinder = new TemplateFinder();
         List<Immutable> matches = templateFinder.findList(text);
 
-        List<String> expected = Arrays.asList(template1, template2, template3, template4, template5, template6);
-        Assert.assertEquals(expected, matches.stream().map(Immutable::getText).collect(Collectors.toList()));
+        List<String> expected = Arrays.asList(template1, template2, template3, template4, template5, template6, template7);
+        Assertions.assertEquals(expected, matches.stream().map(Immutable::getText).collect(Collectors.toList()));
     }
 }

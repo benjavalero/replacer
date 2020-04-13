@@ -7,9 +7,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -25,7 +26,7 @@ public class MisspellingManagerTest {
     @InjectMocks
     private MisspellingManager misspellingManager;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         misspellingManager = new MisspellingManager();
         MockitoAnnotations.initMocks(this);
@@ -45,11 +46,11 @@ public class MisspellingManagerTest {
             " k||M\n"; // Duplicated but different comment
 
         Collection<Misspelling> misspellings = misspellingManager.parseItemsText(misspellingListText);
-        Assert.assertEquals(4, misspellings.size());
-        Assert.assertTrue(misspellings.contains(Misspelling.of("C", true, "D")));
-        Assert.assertTrue(misspellings.contains(Misspelling.of("E", true, "F")));
-        Assert.assertTrue(misspellings.contains(Misspelling.of("I", false, "J")));
-        Assert.assertTrue(misspellings.contains(Misspelling.of("k", false, "k")));
+        Assertions.assertEquals(4, misspellings.size());
+        Assertions.assertTrue(misspellings.contains(Misspelling.of("C", true, "D")));
+        Assertions.assertTrue(misspellings.contains(Misspelling.of("E", true, "F")));
+        Assertions.assertTrue(misspellings.contains(Misspelling.of("I", false, "J")));
+        Assertions.assertTrue(misspellings.contains(Misspelling.of("k", false, "k")));
     }
 
     @Test
@@ -59,13 +60,15 @@ public class MisspellingManagerTest {
             " m2||m²\n" + // Not valid with numbers
             " Castilla-León||Castilla y León\n" + // Valid with dashes
             " CD's||CD\n" + // Valid with single quotes
+            " n°||n.º\n" + // Not valid with degree symbol
+            " nº||n.º\n" + // Not valid with superscript
             " cm.||cm\n"; // Not valid with dots
 
         Collection<Misspelling> misspellings = misspellingManager.parseItemsText(misspellingListText);
-        Assert.assertEquals(3, misspellings.size());
-        Assert.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("aguila", "águila")));
-        Assert.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("Castilla-León", "Castilla y León")));
-        Assert.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("CD's", "CD")));
+        Assertions.assertEquals(3, misspellings.size());
+        Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("aguila", "águila")));
+        Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("Castilla-León", "Castilla y León")));
+        Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("CD's", "CD")));
     }
 
     @Test

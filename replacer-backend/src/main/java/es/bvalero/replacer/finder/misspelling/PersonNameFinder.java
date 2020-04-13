@@ -3,12 +3,11 @@ package es.bvalero.replacer.finder.misspelling;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
+import es.bvalero.replacer.finder.ImmutableFinderPriority;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import es.bvalero.replacer.finder.ImmutableFinderPriority;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,7 +17,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PersonNameFinder implements ImmutableFinder {
-    private static final Collection<String> PERSON_NAMES = Arrays.asList("Domingo", "Frances", "Julio", "Sidney");
+    private static final Collection<String> PERSON_NAMES = Arrays.asList(
+        "Domingo",
+        "Frances",
+        "Julio",
+        "Sidney",
+        "Sky"
+    );
 
     @Override
     public ImmutableFinderPriority getPriority() {
@@ -34,11 +39,11 @@ public class PersonNameFinder implements ImmutableFinder {
             int start = 0;
             while (start >= 0) {
                 start = text.indexOf(word, start);
-                if (start != -1) { // Word found
+                if (start >= 0) { // Word found
                     if (isWordFollowedByUppercase(start, word, text)) {
                         results.add(Immutable.of(start, word, this));
                     }
-                    start++;
+                    start += word.length();
                 }
             }
         }

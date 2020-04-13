@@ -1,419 +1,169 @@
 == Lista de falsos positivos ==
 
+* La idea general es incluir los términos o conjunto de términos que son falsos positivos, o lo son en la gran mayoría de casos, por lo que no compensa tener que revisar por ejemplo mil ocurrencias para detectar un solo verdadero positivo.
 * Si es posible intentamos que no se solapen con otras excepciones
-* ¡OJO! Las expresiones regulares han de ser compatibles con el formato de los automaton
-* Busco falsos positivos que aparecen más de 500 veces en artículos del dump y en la búsqueda entrecomillada de la Wikipedia
+* De momento uso una expresión regular (automaton) por lo que podemos incluir algo de sintaxis de estas.
+* Incluyo los casos con aproximadamente más de 400 ocurrencias
 
- # # Aaron
- # Hank Aaron
- # Aaron Brown
- # Aaron Carter
- # Aaron Copland
- # Aaron Eckhart
- # Aaron Johnson
- # Aaron Krickstein
- # Aaron Paul
- # Aaron Sorkin
- # Aaron Spelling
- # Aaron's
-
- # # Abril
- # Abril Martorell
- # Editora Abril
- # Editorial Abril
- # Feria de Abril
- # Fernando Abril
- # García Abril
- # Revolución de Abril
- # Silvia Abril
- # Victoria Abril
-
- # # Adrian
- # Adrian Belew
- # Adrian Boult
- # Adrian Dantley
- # Adrian Lyne
- # Adrian Mannarino
- # Adrian Quist
- # Adrian Sikora
- # Adrian Smith
- # Adrian Sutil
- # Adrian Ungur
- # Adrian Wood
-
- # # Africa
- # All Africa
- # Central Africa
- # Eastern Africa
- # East Africa
- # North Africa
- # Saharan Africa
- # [Ss]outhern Africa
- # South Africa
- # Tropical Africa
- # UCI Africa
- # West Africa
- # Africa Cup
- # Africa Sports
- # Africa Tour
- # Mem. Bot. Surv. S. Africa 2
- # Africa's
-
- # # Agosto
- # Feria de Agosto
- # Primeiro de Agosto
- # Virgen de Agosto
-
- # # Album
- # album certifications
- # [Aa]lbum [Cc]harts?
- # [Aa]lbum [Cc]over
- # Album Details
- # Album Discography
- # Album Guide
- # Album Release
- # [Aa]lbum [Rr]eviews?
- # [Aa]lbum [Ss]ales
- # Album Title
- # Album Top
- # Album Track
- # [Aa]lbum [Vv]ersion
- # Topp? 40 [Aa]lbum
- # Artist Album
- # Best Album
- # Black Album
- # Christmas Album
- # [Dd]ebut [Aa]lbum
- # Family Album
- # First Album
- # Live Album
- # Love Album
- # Mini Album
- # Music Album
- # Next Album
- # [Nn]ew [Aa]lbum
- # Non-album
- # Oricon Album
- # Pop Album
- # Remix Album
- # Second Album
- # [Ss]olo [Aa]lbum
- # [Ss]tudio [Aa]lbum
- # [Tt]he [Aa]lbum
- # Top Album
- # Weekly Album
- # White Album
- # <L>+'s [Aa]lbum
- # No. 1 Album
- # (class|type)=album
-
- # # Albums
- # Albums Chart
- # Albums of
- # Canadian Albums
- # German Albums
- # Independent Albums
- # Irish Albums
- # Italian Albums
- # Latin Albums
- # Pop Albums
- # Rock Albums
- # Swiss Albums
- # Top Albums
- # UK Albums
- # World Albums
- # 100 Albums
- # 200 Albums
-
- # # alla
- # Introduzione alla
- # Teatro alla Scala
- # alla fine
- # Alla Kudryavtseva
- # alla prima
-
- # # am
- # <L>+ AM
- # <L>+ am
- # will\.i\.am
-
- # # America
- # All-America
- # Baseball America
- # BBC America
- # Captain America
- # Central America
- # Mid-America
- # Miss America
- # Good Morning America
- # Latin America
- # Native America
- # Naughty America
- # North America
- # Road America
- # Skate America
- # South America
- # Spanish America
- # UCI America Tour
- # Virgin America
- # America Awards?
- # America East
- # America Ferrera
- # America Football
- # America Line
- # America [Nn]orth
- # America Online
- # America Press
- # America West
- # America’s
- # America's
-
- # # Americas
- # the Americas
-
- # # Angel
- # Angel Dust
- # Angel Eyes
- # Angel Heart
- # Angel's
- # [Aa]n Angel
- # Blue Angel
- # Criss Angel
- # Dark Angel
- # Elegant Angel
- # Evil Angel
- # Fallen Angel
- # Galaxy Angel
- # Guardian Angel
- # Morbid Angel
- # My Angel
- # No Angel
- # [Tt]he Angel
- # <L>+'s Angel
-
- # Los Angeles (Angels|Clippers|County|Dodgers|Galaxy|Lakers|Memorial|Rams|Sparks|Times)
+ # Alex
+ Alex Barros
+ Alex Bogom[oó]lov
+ Alex Bolt
+ Alex [Dd]e Angelis
+ Alex Ferguson
+ Alex Kuznetsov
+ Alex O			# Para encontrar ocurrencias como Alex O'Connell
+ Alex Shelley
+ Alex Zülle
 
  # aun
+ # La mayoría de los casos considero que hay que revisarlos manualmente
  [Aa]un así
- # # aun + gerundio
- # [Aa]un (así|sin|<L>+?ndo)
+ [Aa]un cuando
 
  # aún
- aún\.
+ aún[\\.,]
  aún conserva
- aún después
  aún era
+ aún estaban
  aún estaba
  aún están
  aún está
  aún es
+ aún existen
  aún existe
- aún más
+ [Aa]ún hoy
+ [Aa]ún más
  aún mayor
  aún muy
+ [Aa]ún no
+ aún permanecen
+ aún permanece
+ aún por
+ aún pueden
+ aún puede
+ aún quedan
  [Aa]ún se
  aún sigue
  aún son
+ aún tenía
  aún tiene
- # La gran mayoría son correctas con tilde
- aún el
- [Aa]ún hoy
- aún la
- [Aa]ún no
+ aún una
  aún un
+
  aunque aún
+ cuales aún
+ cual aún
  cuando aún
  donde aún
  era aún
  estaba aún
  está aún
  es aún
+ fue aún
+ más aún cuando
  [Mm]ás aún
+ menos aún
+ mientras aún
  pero aún
  que aún
+ ser aún
+ sido aún
  siendo aún
+ si aún
  son aún
 
- # ([Dd]u|of) Canton
+ # Domingo
+ # Se encuentra también como inmutable en SurnameFinder y en PersonNameFinder
+ Domingo de Guzmán
+ Domingo de Ramos
+ Domingo de Resurrección
+ Domingo de Silos
+ Domingo de Pascua
+ Domingo de la Calzada
+ Domingo de los Tsáchilas
 
- # Circuit de (Barcelona\-)?Catalunya
- # (Biblioteca de|Caixa( de)?|Capella Reial de|Ciutadans de|Club Natació|Comunistes de|Democràtica de|Descobrir|El Periódico de|Esquerra Republicana de|Estaciones de Rodalies de|Generalitat de|Gran geografia comarcal de|Guia del Patrimoni Monumental i Artístic de|Guía de|Història de|Iniciativa per|Institut Cartogràfic de|Junts per|La Veu de|Museu Nacional d'Art de|Nacional de|Parlament de|Partit dels Socialistes de|Partit Socialista Unificat de|Plataforma per|Pobles de|Principat de|Rally|Revista de|Socialista de|Universitat (Oberta|Politècnica) de|Volta( Ciclista)? a) Catalunya
- # Catalunya (Banc|en (Comú|Miniatura)|Ràdio|[Rr]omànica|Sí|Televisió|Verds)
+ Plácido Domingo
+ Santo Domingo
 
- # Diego Comic
- # [Cc]omic(<Z>|\-)([Bb]ooks?|[Cc]on|Sans)
- # (Action|Adventure|DC|Detective|Horse|Image|Marvel|Panini) Comics
+ # éste (y derivados). Ídem con aquél (y derivados).
+ # Esta forma no es incorrecta (salvo en «ésto»), aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
+ # No se añade a esta lista puesto que hay usuarios que sí la revisan
+ # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
 
- # \[\[:?(m:)?commons:
+ # junior
+ Junior College
+ Junior Heavyweight
+ Junior High
+ Junior Team
+ Junior de Barranquilla
 
- # (José|Juan|Plácido|Santo) Domingo
+ Alajuela Junior
+ Atlético Junior 		# Se refiere también al equipo Junior de Barranquilla
+ Deportiva Junior		# Se refiere también al equipo Junior de Barranquilla
+ Disney Junior
+ Sauber Junior Team
+ Super Junior
+ Top Race Junior
+ World Junior
 
- # # El guion es separador de palabra así que encontramos "mail". Así que lo ignoramos.
- # [Ee]\-mails?
+ # Maria
+ # Añado aquí los casos que claramente se corresponden a italiano, catalán, portugués, etc.
+ Maria Anna
+ Maria Callas
+ Maria da
+ Maria della
+ Maria di
+ Maria do
+ Maria in
+ Maria Kanellis
+ Maria Kirilenko	# Aunque se romaniza como María Kirilenko
+ Maria Sakkari		# Aunque se romaniza como María Sákkari
+ Maria von
 
- # Elenco de Grandezas y Títulos Nobiliarios Españoles
+ Anna Maria
+ Carlo? Maria
+ Francesco Maria
+ Giovanni Maria
+ Giuseppe Maria
+ Josep Maria
+ Rainer Maria Rilke
+ Tatjana Maria
 
- # Lista de [Ee]spécies Flora
- # Brasileiro de Geografia
- # [Gg]lass
- # (Blind|The) Guardian
-
- # The Hindu
- # Hindu (Kush|Temple)
-
- # # index: casi todos son parte de URL
- # # Index: casi todos son en inglés o latín
- # Index
-
- # Torneo Invierno
- # (Campeonato|Guerra|Olímpicos|Paralímpicos|Torneo) de Invierno
-
- # (Carlos|Cayo|Estadio|Lucio|Nacional|Sexto) Julio
-
- # Jennifer Lopez
- # Ke$ha
-
- # Magazine
- # Manchester (City|Evening|United|University)
-
- # (Andrej|Aston|Billy|Chris|Daniel|David|Dean|Fabrice|George|John|Lockheed|Paul|Ricky|Saint|Steve|St|Todd|Tony) Martin
- # Saint\-Martin
- # Martin (Brundle|Damm|Emmrich|Fischer|Freeman|Garrix|Gore|Heidegger|Kližan|Luther|Racing|Scorsese|Sheen|Solveig|Vantage|Van)
- # Martin's
- # Martin\-d[eu]
- # martín pescador
-
- # (Artur|Emmanuel|Josep|Timun) Mas
-
- # Mason (City|Patriots|University)
- # (George|Harvey|James|John|Nick|Perry|Suárez|Tom) Mason
-
- # (AC|Calcio) Milan
-
- # (Carlos|Saúl) Menem
- # Missouri (Botanical|Valley)
-
- # # online: no acaba de convencerme la sustitución por «en línea»
- # [Oo]nline
-
- # Jet Propulsion
-
- # Ramon Llull
-
- # # reference(s): prácticamente todos los casos son en inglés
- # [Rr]eferences?
-
- # Records
+ # records
+ # Se encuentra también como inmutable en SurnameFinder
  [Rr]ecords of
- Maverick Records
- Casablanca Records
- Vertigo Records
- Rhino Records
- King Records
- Blast Records
- Chrysalis Records
- Napalm Records
- Sanctuary Records
- London Records
- Media Records
- Note Records
- Blade Records
- CBS Records
- Epitaph Records
- Disney Records
- Mute Records
- Universal Records
- Arista Records
- Sire Records
- Apple Records
- Jive Records
- Republic Records
- EMI Records
- M Records
- MCA Records
- Decca Records
- Hollywood Records
- Elektra Records
- World Records
- Geffen Records
- Reprise Records
- Polydor Records
- Roadrunner Records
- Mercury Records
- Interscope Records
- Virgin Records
- Island Records
- RCA Records
- Epic Records
- Atlantic Records
- Capitol Records
- Columbia Records
 
- # (Championship|[Ff]irst|Go|[Ss]econd)\-[Rr]ound
- # [Rr]ound\-(Lake|Midnight|pick|[Rr]obin|Rock|Table|[Uu]p)
+ # round
+ [Rr]ound [Rr]obin
 
- # ([Ii]slas|South|Sur y) Sandwich
- # Sandwich del Sur
+ # simon
+ Simon and Schuster
+ Simon Aspelin
+ Simon Cowell
+ Simon Fraser
+ Simon Gerrans
+ Simon Olofsson
+ Simon Pegg
+ Simon Phillips
+ Simon Rattle
+ Simon Yates
 
- # Corriere della [Ss]era
+ Anna Simon		# Simon no se acentúa en catalán
+ Carly Simon
+ Eugène Simon
+ Gilles Simon
+ G Simon
+ John Simon
+ Neil Simon
+ Paul Simon
 
- # the sky
- # Sky
+ # sky
+ # Se encuentra también como inmutable en PersonNameFinder y SurnameFinder
+ Sky 1
+ the [Ss]ky
 
  # sólo
- a sólo
- con sólo
- cual sólo
- cuales sólo
- cuando sólo
- de sólo
- donde sólo
- en sólo
- era sólo
- es sólo
- [Nn]o sólo
- por sólo
- que sólo
- sino sólo
- son sólo
- tenía sólo
- # Las siguientes pueden ser positivos pero las incluyo por ser la gran mayoría falsos positivos
- aunque sólo
- fue sólo
- o sólo
- pero sólo
- [Tt]an sólo
- y sólo
-
- # Superman
- # # [Tt]ropicos\.org Ya no hace falta porque la captura una excepción genérica
-
- # Torneo Verano
- # (Campeonato|Olímpicos|Paralímpicos|Teatro|Torneo) de Verano
-
- # ([Aa]coustic|Alternate|Cast|Deluxe|Demo|Electronic|English|Europaea|Extended|Florida|Instrumental|Japanese|List|Live|Long|LP|[Nn]ew|[Oo]nline|[Oo]riginal|Radio|[Ss]ingle|Spanish|Vector|Video|Vocal) [Vv]ersion
-
- # (RCA|Saint)(<Z>|\-)Victor
- # Victor Hugo
-
- # Led Zeppelin
-
- # # Topónimos o palabras en inglés precedidas o seguidas por otras palabras comunes en inglés
- # (and|for|from|[Ii]n|[Oo]f|to) (Africa|America|Los Angeles|Manchester|Missouri)
- # (Africa|[Aa]lbum|America|Angel) (and|[Ii]n|[Ii]s|of|on)
-
- # # Días señalados
- # (Lunes|Martes|Miércoles|Jueves|Viernes|Sábado|Domingo) de
-
- # # Verbos en tercera persona
- # (que|[Ss]e) (especifica|fabrica|practica|publica)
- # (publica|especifica|practica) (el|en|las?|los|sus?|un[ao]s?|un)
-
- # # Sustantivos que parecen verbos
- # ([Aa]l|[Dd]el?|[Ee]l|[Ee]n|[Ss]u|[Uu]n) (desempeño|disparo|logro|regreso|retiro)
-
- # # Verdaderos positivos que de momento no quiero corregir
- # [Aa]quél(l[ao]s?)?
- # [Éé]st?[aeo]s?
- # [Ff]ans
- # setiembre
+ # Esta forma no es incorrecta, aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
+ # No se añade a esta lista puesto que hay usuarios que sí la revisan
+ # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro

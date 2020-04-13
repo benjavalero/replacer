@@ -24,6 +24,7 @@ public class TemplateFinder implements ImmutableFinder {
     private static final List<String> TEMPLATE_NAMES = Arrays.asList(
         "ORDENAR",
         "DEFAULTSORT",
+        "\\#expr",
         "NF",
         "TA",
         "commonscat",
@@ -33,7 +34,9 @@ public class TemplateFinder implements ImmutableFinder {
         "cquote",
         "caja de cita",
         "galería de imágenes",
-        "traducido (de|ref)"
+        "sortname",
+        "traducido (de|ref)",
+        "versalita"
     );
     private static final RunAutomaton AUTOMATON_TEMPLATE;
 

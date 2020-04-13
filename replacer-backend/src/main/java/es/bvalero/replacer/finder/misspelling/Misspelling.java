@@ -1,8 +1,7 @@
 package es.bvalero.replacer.finder.misspelling;
 
 import es.bvalero.replacer.finder.Suggestion;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import lombok.Value;
@@ -23,9 +22,13 @@ class Misspelling {
 
     private static final Pattern PATTERN_SUGGESTION = Pattern.compile(REGEX_SUGGESTION);
 
-    private String word;
-    private boolean caseSensitive;
-    private List<Suggestion> suggestions;
+    // Forbid the superscript "o"
+    private static final Set<Character> FORBIDDEN_CHARS = Collections.singleton('º');
+    private static final Set<Character> ALLOWED_CHARS = new HashSet<>(Arrays.asList('\'', '-', ' '));
+
+    String word;
+    boolean caseSensitive;
+    List<Suggestion> suggestions;
 
     private Misspelling(String word, boolean caseSensitive, String comment) {
         // Validate the word
@@ -56,7 +59,11 @@ class Misspelling {
     }
 
     private boolean isMisspellingWordValid(String word) {
-        return word.chars().allMatch(c -> Character.isLetter(c) || c == '\'' || c == '-' || c == ' ');
+        return word.chars().allMatch(this::isValidMisspellingChar);
+    }
+
+    private boolean isValidMisspellingChar(int c) {
+        return !FORBIDDEN_CHARS.contains((char) c) && (Character.isLetter(c) || ALLOWED_CHARS.contains((char) c));
     }
 
     private List<Suggestion> parseSuggestionsFromComment(String comment) {

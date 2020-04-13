@@ -4,7 +4,6 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.*;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -54,19 +53,11 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
         LOGGER.info("START Build uppercase-after automaton");
 
         // Load the misspellings
-        misspellings.forEach(
-            misspelling -> {
-                String word = misspelling.getWord();
-                if (
-                    misspelling.isCaseSensitive() &&
-                    FinderUtils.startsWithUpperCase(word) &&
-                    misspelling.getSuggestions().size() == 1 &&
-                    misspelling.getSuggestions().get(0).getText().equalsIgnoreCase(word)
-                ) {
-                    this.uppercaseWords.add(word);
-                }
-            }
-        );
+        misspellings
+            .stream()
+            .filter(this::isUppercaseMisspelling)
+            .map(Misspelling::getWord)
+            .forEach(word -> this.uppercaseWords.add(word));
 
         String regexAlternations = String.format(
             REGEX_UPPERCASE_AFTER_PUNCTUATION,
@@ -78,6 +69,20 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
 
         LOGGER.info("END Build uppercase-after automaton");
         return automaton;
+    }
+
+    private boolean isUppercaseMisspelling(Misspelling misspelling) {
+        String word = misspelling.getWord();
+        // Any of the suggestions is the misspelling word in lowercase
+        return (
+            misspelling.isCaseSensitive() &&
+            FinderUtils.startsWithUpperCase(word) &&
+            misspelling
+                .getSuggestions()
+                .stream()
+                .map(Suggestion::getText)
+                .anyMatch(text -> text.equals(FinderUtils.toLowerCase(word)))
+        );
     }
 
     @Override

@@ -16,7 +16,14 @@ import org.apache.commons.lang3.StringUtils;
  */
 // @Component
 class ParameterValueFinder implements ImmutableFinder {
-    private static final List<String> PARAMS = Arrays.asList("cita", "index", "índice", "species");
+    private static final List<String> PARAMS = Arrays.asList(
+        "cita",
+        "imagen<N>?",
+        "index",
+        "índice",
+        "link",
+        "species"
+    );
     private static final String REGEX_PARAM_VALUE = String.format(
         "\\|<Z>*(%s)<Z>*=[^|}]+",
         StringUtils.join(PARAMS, "|")
