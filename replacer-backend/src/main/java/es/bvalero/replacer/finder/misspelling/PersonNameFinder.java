@@ -21,6 +21,8 @@ public class PersonNameFinder implements ImmutableFinder {
         "Domingo",
         "Frances",
         "Julio",
+        "Los Angeles",
+        "Manchester",
         "Sidney",
         "Sky"
     );

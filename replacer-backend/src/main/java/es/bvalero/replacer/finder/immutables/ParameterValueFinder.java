@@ -22,7 +22,8 @@ class ParameterValueFinder implements ImmutableFinder {
         "index",
         "índice",
         "link",
-        "species"
+        "species",
+        "var"
     );
     private static final String REGEX_PARAM_VALUE = String.format(
         "\\|<Z>*(%s)<Z>*=[^|}]+",

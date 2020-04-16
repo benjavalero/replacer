@@ -16,6 +16,25 @@
  Alex Shelley
  Alex Zülle
 
+ # america
+ # North America Editorial 	# Cubierto por North America
+ America Tour
+ Captain America
+ Central America
+ Latin America
+ Naughty America
+ North America
+ Road America
+ Skate America
+ South America
+ # UCI America Tour 		# Cubierto por America Tour
+ in America
+ of America
+
+ # angeles
+ # Se encuentra también como inmutable en PersonNameFinder
+ of Los Angeles
+
  # aun
  # La mayoría de los casos considero que hay que revisarlos manualmente
  [Aa]un así
@@ -107,6 +126,9 @@
  Top Race Junior
  World Junior
 
+ # Manchester
+ # Cubierto por PersonNameFinder
+
  # Maria
  # Añado aquí los casos que claramente se corresponden a italiano, catalán, portugués, etc.
  Maria Anna
@@ -130,9 +152,90 @@
  Rainer Maria Rilke
  Tatjana Maria
 
+ # masters
+ # La gran mayoría son falsos positivos correspondientes a los torneos de tenis
+ Masters 1000
+ Masters Cup
+ Masters de
+ Masters of
+ Masters Series
+ Geoff Masters
+
+ # Mayo
+ Alfredo Mayo
+ Clínica Mayo
+ Iban Mayo
+ [Rr]ío Mayo
+
+ # Hay varios casos de nombres propios, incluso ciudades, con el día y el mes.
+ # Las fechas completas son más largas y machacan estos falsos positivos
+ <N>+ de Mayo
+ 1º de Mayo 		# Habrá que "revisitarlo" cuando se empiece a corregir el estilo de los ordinales, incluidos títulos de artículos.
+ Avenida de Mayo
+ Campo de Mayo
+ Cruz de Mayo
+ Dos de Mayo
+ Plaza de Mayo
+ Primero de Mayo
+ Revolución de Mayo
+ San José de Mayo
+ Sol de Mayo
+ Veinticinco de Mayo
+
+ # Paris
+ Paris FC
+ Paris Hilton
+ Paris Saint 	 # Paris Saint-Germain
+ in Paris
+
+ # publica
+ publica artículos
+ publica el
+ publica en
+ publica la
+ publica los
+ publica sus?
+ publica una?
+
+ donde publica
+ que publica
+ [Ss]e publica
+ [Tt]ambién publica
+ y publica
+
  # records
  # Se encuentra también como inmutable en SurnameFinder
  [Rr]ecords of
+
+ # retiro
+ retiro definitivo
+ Retiro Belgrano
+ Retiro Mitre
+ Retiro San Martín
+
+ Buen Retiro
+ Estación Retiro
+ Ramal Retiro
+ al? retiro
+ del? [Rr]etiro
+ do Retiro
+ [Ee]l [Rr]etiro
+ en retiro
+ [Ss]u retiro
+ un retiro
+
+ # rio
+ Rio Ave 			# Aunque en español llevaría tilde, la mayoría son falsos positivos de los clubes de fútbol o en portugués.
+ Rio Branco 		# Ídem
+ Rio Grande do Sul
+ Rio Grande do Norte
+ Rio Grande Valley
+ Rio Haryanto
+ Rio Preto
+ Rio Verde
+ do Rio de Janeiro 	# Incluyo esta completa para machacar la entrada en composed-misspellings
+ do Rio
+ in Rio
 
  # round
  [Rr]ound [Rr]obin
@@ -167,3 +270,12 @@
  # Esta forma no es incorrecta, aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
  # No se añade a esta lista puesto que hay usuarios que sí la revisan
  # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
+
+ # Victor
+ Victor Amaya
+ Victor Entertainment
+ Victor Fleming
+ Victor Garber
+ Victor Hănescu
+ Victor Hugo
+ RCA Victor

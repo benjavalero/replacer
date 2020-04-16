@@ -1,3 +1,5 @@
+ Administración Publica|cs|Administración Pública
+ Alberto Del Río|cs|Alberto Del Rio (nombre comercial del luchador, sin tilde)
  aún así||aun así, aún así (todavía así)
  aún cuando||aun cuando (incluso), aún cuando (todavía)
  aún no siendo||aun no siendo (incluso), aún no siendo (todavía)
@@ -6,12 +8,38 @@
  aún siendo||aun siendo (incluso), aún siendo (todavía)
  aún teniendo||aun teniendo (incluso), aún teniendo (todavía)
  desarrollo un||desarrolló un (verbo)
+ Educación Publica|cs|Educación Pública
  el mas||el más
  el sólo||el solo (adjetivo), él solamente (para evitar ambigüedad)
  en el qué||en el que
  en la qué||en la que
  entorno a||en torno a (locución adverbial)
+ ésta área||esta área
+ ésta canción||esta canción
+ ésta ciudad||esta ciudad
+ ésta edición||esta edición
+ ésta época||esta época
+ ésta especie||esta especie
+ ésta estación||esta estación
+ ésta etapa||esta etapa
+ ésta línea||esta línea
+ ésta localidad||esta localidad
+ ésta manera||esta manera
+ ésta misma||esta misma
+ ésta obra||esta obra
+ ésta ocasión||esta ocasión
+ ésta parte||esta parte
+ ésta película||esta película
+ ésta producción||esta producción
+ ésta región||esta región
+ ésta serie||esta serie
+ ésta situación||esta situación
+ ésta técnica||esta técnica
+ ésta temporada||esta temporada
  ésta última|| esta última
+ ésta versión||esta versión
+ ésta vez||esta vez
+ ésta zona||esta zona
  éste álbum||este álbum
  éste año||este año
  éste caso||este caso
@@ -42,7 +70,16 @@
  mas importantes||más importantes
  mas que||más que
  mas tarde||más tarde
+ Metro de Paris|cs|Metro de París (en español), Métro de Paris (en francés)
+ opinión publica||opinión pública
  por que||por que (preposición + relativo o conjunción), porque (conjunción causal), por qué (interrogación o exclamación), porqué (sustantivo, causa)
+ Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
+ Rio Claro|cs|Río Claro (región o río en varios países de lengua española y Brasil), Rio Claro (en portugués)
+ Rio Negro|cs|Río Negro (región o río en varios países de lengua española, EE. UU. y Brasil), Rio Negro (en portugués e inglés)
+ Rio Tinto|cs|Río Tinto (río español), Rio Tinto (otros usos internacionales)
+ Rio 2016|cs|Río 2016 (Juegos Olímpicos de Verano)
+ Salud Publica|cs|Salud Pública
+ Seguridad Publica|cs|Seguridad Pública
  se cambio||se cambió
  se caso||se casó
  se continuo||se continuó
@@ -60,4 +97,9 @@
  si misma||sí misma
  si mismos||sí mismos
  si mismo||sí mismo
+ TV Publica|cs|TV Pública
  un sólo||un solo
+ Universidad de Paris|cs|Universidad de París
+ vía publica||vía pública
+ Victor Manuel|cs|Víctor Manuel (entre otros, nombre en español de varios monarcas italianos)
+ Victor Pecci|cs|Víctor Pecci (tenista paraguayo)
