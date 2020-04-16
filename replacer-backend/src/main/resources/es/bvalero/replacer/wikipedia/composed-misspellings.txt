@@ -54,7 +54,7 @@
  éste nuevo||este nuevo
  éste país||este país
  éste período||este período
- este periodo||este periodo
+ éste periodo||este periodo
  éste tema||este tema
  éste tipo||este tipo
  éste último|| este último
