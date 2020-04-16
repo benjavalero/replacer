@@ -1,5 +1,11 @@
 # Versiones
 
+## 2.5.0 (16 de abril de 2020)
+- Save replacement context to check of only the position has changed
+- Optimization of most immutable finders
+- Improve immutable finders to find more false positives
+- Review misspellings with more than 20K matches to find potential false positives
+
 ## 2.4.0 (31 de marzo de 2020)
 - Corrección crítica de configuración que escribía mensajes en consola en Producción
 - T238972: Adaptación al nuevo esquema de los dumps
