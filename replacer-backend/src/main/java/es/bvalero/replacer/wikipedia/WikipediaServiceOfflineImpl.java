@@ -64,7 +64,7 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public Optional<WikipediaPage> getPageById(int articleId) throws WikipediaException {
-        return getPageByIdAndSection(articleId, 0);
+        return Optional.of(buildFakePage(articleId));
     }
 
     @Override
