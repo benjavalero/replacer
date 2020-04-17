@@ -14,10 +14,10 @@ public class ParameterValueFinderTest {
 
     @Test
     public void testRegexParameterValue() {
-        String value1 = "A\nvalue";
-        String value2 = "Another value";
-        String image = "Archivo:xxx.jpg";
-        String text = String.format("{{Template|index=%s\n| índice = %s |imagen1=%s}}", value1, value2, image);
+        String value1 = "index=A\nvalue\n";
+        String value2 = " índice = Another value ";
+        String image = "imagen1=Archivo:xxx.jpg";
+        String text = String.format("{{Template|%s|%s|%s}}", value1, value2, image);
 
         ImmutableFinder parameterValueFinder = new ParameterValueFinder();
         List<Immutable> matches = parameterValueFinder.findList(text);

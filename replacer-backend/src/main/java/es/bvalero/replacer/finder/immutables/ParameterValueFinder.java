@@ -10,11 +10,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * Find the values of some parameters, e. g. `value` in `{{Template|index=value}}`
  */
-// @Component
+@Component
 class ParameterValueFinder implements ImmutableFinder {
     private static final List<String> PARAMS = Arrays.asList(
         "cita",
@@ -40,10 +41,6 @@ class ParameterValueFinder implements ImmutableFinder {
 
     @Override
     public Immutable convert(MatchResult match) {
-        String text = match.group();
-        int posEquals = match.group().indexOf('=');
-        String value = text.substring(posEquals + 1).trim();
-        int pos = text.indexOf(value);
-        return Immutable.of(match.start() + pos, value, this);
+        return Immutable.of(match.start() + 1, match.group().substring(1), this);
     }
 }
