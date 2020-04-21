@@ -184,7 +184,9 @@ In package _finder_ there are services (**finders**) to find all the relevant it
 
 When possible, the results will be returned as an _Iterable_. This way, we have the possibility to stop finding more results, improving the performance. For instance, when finding immutables to ignore found replacements, if there are no more replacements left in the text, there is no point on finding more immutables. The class **IterableOfIterable** helps traverse an iterable composed of iterables, e. g. a list of lists.
 
-Most finders are based on regular expressions. The class **RegexIterable**\<T\> provides a generic method to find all results from a given regular expression and return them as an iterable. The constructor needs a function to convert the generic _MatchResult_ into the desired item type _T_. Optionally, we can provide a function to validate the result against the text, e. g. to check if it is a complete word.
+Several finders are based on regular expressions. The class **RegexIterable**\<T\> provides a generic method to find all results from a given regular expression and return them as an iterable. The constructor needs a function to convert the generic _MatchResult_ into the desired item type _T_. Optionally, we can provide a function to validate the result against the text, e. g. to check if it is a complete word.
+
+The same way, several (optimized) finders are based in a linear strategy, finding results in the text with `indexOf` and similar.
 
 Finally, the helper class **FinderUtils** provides static methods to work with words and characters in a text.
 
@@ -192,13 +194,14 @@ Finally, the helper class **FinderUtils** provides static methods to work with w
 
 Generic immutable finders are placed in package _finder.immutable_ and implement the interface _ImmutableFinder_. They must have the Spring annotation _@Component_ in order to be found dynamically by the system.
 
-The tool implements the following generic immutable finders:
+The tool implements the following generic immutable finders. We can add a priority to the immutable finders, as some immutables are more _useful_ than others and we want them to be used before.
+- [x] **CompleteTagFinder** Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`. The list of tags is configured in `complete-tags.xml`. Even with several tags taken into account, the faster approach is the linear search in 1 pass.
+
 
 - [x] **UrlFinder** Find URLs, e. g. `https://www.google.es`
 - [ ] **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
 - [ ] **CommentFinder** Find XML comments, e. g. `<!-- A comment -->`
 - [ ] **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
-- [x] **CompleteTagFinder** Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`. In particular, the tags found are: `blockquote`, `cite`, `code`, `math`, `nowiki`, `poem`, `pre`, `ref`, `score`, `source` and `syntaxhighlight`.
 - [ ] **ParameterValueFinder** Find the values of some parameters, e. g. `value` in `{{Template|index=value}}`
 - [x] **DomainFinder** Find web domains, e. g. `www.acb.es` or `es.wikipedia.org`
 - [ ] **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
@@ -248,9 +251,9 @@ To work with regular expressions, the implementation included in Java is _regex-
 
 On the other hand, this tool uses also a _text-based_ implementation. It builds an automaton from the regex and gives impressive performance improvements of 1 to 2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking.
 
-Also, when using an automaton is not possible, we try a simpler approach finding strings in the text without regular expressions, char by char, which usually gives even better results, about 5 times faster.
+Also, if the complexity is not too high, we try a simpler _linear_ approach finding strings in the text without regular expressions, char by char, which usually gives even better results, about 5 times faster.
 
-In benchmarks, we usually compare a dot-plus with a negated character. In general, no big differences have been found between both, although the times with the negated character class are slightly better, so this last one is prefered.
+In benchmarks, we usually compare a dot-plus with a negated character. In general, no big differences have been found between both, although the times with the negated character class are slightly better, so this last one is preferred.
 
 In conclusion, as performance is critical, we try to use the faster implementation when possible, except if the complexity of the finder makes worth to use an automaton or a regular expression.
 

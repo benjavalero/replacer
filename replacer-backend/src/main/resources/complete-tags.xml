@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/util
+   		   http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <util:list id="completeTags" value-type="java.lang.String">
+        <value>ref</value>  <!-- 1,2M -->
+        <value>gallery</value>  <!-- 9K -->
+        <value>blockquote</value>   <!-- 3K -->
+        <value>nowiki</value>   <!-- 1K -->
+        <value>math</value> <!-- 1K -->
+        <value>cite</value> <!-- 900 -->
+        <value>source</value>   <!-- 700 -->
+        <value>code</value> <!-- 500 -->
+        <value>poem</value> <!-- 300 -->
+        <value>pre</value>  <!-- 130 -->
+        <value>tt</value>   <!-- 120 -->
+        <value>syntaxhighlight</value>  <!-- 100 -->
+        <value>score</value>    <!-- 70 -->
+    </util:list>
+
+    <!--
+1707 <sup
+ 455 <timeline
+ 315 <onlyinclude
+ 298 <noinclude
+ 250 <references
+ 164 <s
+ 155 <mapframe
+ 131 <br
+  86 <sub
+  63 <imagemap
+  51 <abbr
+  43 <bdi
+  41 <graph
+  10 <time
+    -->
+</beans>

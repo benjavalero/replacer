@@ -1,47 +1,40 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
+import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+import javax.annotation.Resource;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = XmlConfiguration.class)
 public class CompleteTagFinderBenchmark extends BaseFinderBenchmark {
     private static final int ITERATIONS = 1000;
 
+    @Resource
+    private List<String> completeTags;
+
     @Test
     public void testBenchmark() throws IOException, URISyntaxException {
-        List<String> words = Arrays.asList(
-            "blockquote",
-            "cite",
-            "code",
-            "math",
-            "nowiki",
-            "poem",
-            "pre",
-            "ref",
-            "score",
-            "source",
-            "syntaxhighlight"
-        );
-
         // Load the finders
         // In order to capture nested tags we can only use lazy regex
-        List<CompleteTagFinder> finders = new ArrayList<>();
-        finders.add(new CompleteTagRegexNegatedLazyFinder(words));
-        finders.add(new CompleteTagRegexAlternateNegatedFinder(words));
-        finders.add(new CompleteTagIndexOfFinder(words));
-        finders.add(new CompleteTagIndexOfLinearFinder(words));
+        List<BenchmarkFinder> finders = new ArrayList<>();
+        finders.add(new CompleteTagRegexIteratedFinder(completeTags));
+        finders.add(new CompleteTagRegexBackReferenceFinder(completeTags));
+        finders.add(new CompleteTagLinearIteratedFinder(completeTags));
+        finders.add(new CompleteTagLinearFinder(completeTags));
 
         System.out.println();
         System.out.println("FINDER\tTIME");
         findSampleContents()
             .forEach(
                 value -> {
-                    for (CompleteTagFinder finder : finders) {
+                    for (BenchmarkFinder finder : finders) {
                         long start = System.currentTimeMillis();
                         for (int i = 0; i < ITERATIONS; i++) {
                             finder.findMatches(value);
@@ -52,6 +45,6 @@ public class CompleteTagFinderBenchmark extends BaseFinderBenchmark {
                 }
             );
 
-        Assert.assertTrue(true);
+        Assertions.assertTrue(true);
     }
 }

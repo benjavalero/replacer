@@ -1,32 +1,27 @@
-package es.bvalero.replacer.finder.immutables;
+package es.bvalero.replacer.finder.benchmark.completetag;
 
-import es.bvalero.replacer.finder.*;
-import java.util.*;
+import es.bvalero.replacer.finder.FinderUtils;
+import es.bvalero.replacer.finder.LinearIterable;
+import es.bvalero.replacer.finder.LinearMatcher;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.FinderResult;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.MatchResult;
-import javax.annotation.Resource;
-import org.springframework.stereotype.Component;
+import org.apache.commons.collections4.IterableUtils;
 
-/**
- * Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`
- */
-@Component
-public class CompleteTagFinder implements ImmutableFinder {
-    @Resource
-    private List<String> completeTags;
+class CompleteTagLinearFinder implements BenchmarkFinder {
+    private final Set<String> tags;
 
-    @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.VERY_HIGH;
+    CompleteTagLinearFinder(List<String> tags) {
+        this.tags = new HashSet<>(tags);
     }
 
     @Override
-    public int getMaxLength() {
-        return 50000;
-    }
-
-    @Override
-    public Iterable<Immutable> find(String text) {
-        return new LinearIterable<>(text, this::findResult, this::convert);
+    public Set<FinderResult> findMatches(String text) {
+        return new HashSet<>(IterableUtils.toList(new LinearIterable<>(text, this::findResult, this::convert)));
     }
 
     public MatchResult findResult(String text, int start) {
@@ -78,7 +73,7 @@ public class CompleteTagFinder implements ImmutableFinder {
             }
         }
         String tag = tagBuilder.toString();
-        return completeTags.contains(tag) ? tag : null;
+        return tags.contains(tag) ? tag : null;
     }
 
     private int findEndTag(String text, int start) {

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.immutables;
 
+import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -9,8 +9,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = { CompleteTagFinder.class, XmlConfiguration.class })
 public class CompleteTagFinderTest {
+    @Autowired
+    private CompleteTagFinder completeTagFinder;
 
     @Test
     public void testRegexCompleteTag() {
@@ -19,11 +24,10 @@ public class CompleteTagFinderTest {
         String tag3 = "<source>Another example</source>";
         String tag4 = "<ref name=NH05/>";
         String tag5 = "<ref>Text</ref>";
-        String tag6 = "<unknown>Unknown</unkown>";
+        String tag6 = "<unknown>Unknown</unknown>";
         String tag7 = "<ref>Unclosed tag";
         String text = String.format("En %s %s %s %s %s %s %s", tag1, tag2, tag3, tag4, tag5, tag6, tag7);
 
-        ImmutableFinder completeTagFinder = new CompleteTagFinder();
         List<Immutable> matches = completeTagFinder.findList(text);
 
         Set<String> expected = new HashSet<>(Arrays.asList(tag1, tag2, tag3, tag5));
