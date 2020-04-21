@@ -280,7 +280,7 @@ public class WikipediaServiceTest {
         Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getComposedMisspellingListPageContent()));
         Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getFalsePositiveListPageContent()));
         Assert.assertEquals(Integer.valueOf(1), wikipediaServiceOffline.getPageByTitle("").map(WikipediaPage::getId).orElse(0));
-        Assert.assertEquals(Integer.valueOf(0), wikipediaServiceOffline.getPageById(1).map(WikipediaPage::getSection).orElse(1));
+        Assert.assertFalse(wikipediaServiceOffline.getPageById(1).map(WikipediaPage::getSection).isPresent());
         Assert.assertFalse(wikipediaServiceOffline.getPageIdsByStringMatch("").isEmpty());
         Assert.assertTrue(wikipediaServiceOffline.getPageSections(1).isEmpty());
         Assert.assertEquals(2, wikipediaServiceOffline.getPagesByIds(Arrays.asList(1, 2)).size());
