@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ public class CompleteTagFinderBenchmark extends BaseFinderBenchmark {
     private static final int ITERATIONS = 1000;
 
     @Resource
-    private List<String> completeTags;
+    private Set<String> completeTags;
 
     @Test
     public void testBenchmark() throws IOException, URISyntaxException {

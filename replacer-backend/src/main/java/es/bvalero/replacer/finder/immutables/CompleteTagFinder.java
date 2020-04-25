@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CompleteTagFinder implements ImmutableFinder {
     @Resource
-    private List<String> completeTags;
+    private Set<String> completeTags;
 
     @Override
     public ImmutableFinderPriority getPriority() {

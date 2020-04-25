@@ -13,7 +13,7 @@ import org.apache.commons.collections4.IterableUtils;
 class CompleteTagRegexIteratedFinder implements BenchmarkFinder {
     private List<Pattern> patterns = new ArrayList<>();
 
-    CompleteTagRegexIteratedFinder(List<String> tags) {
+    CompleteTagRegexIteratedFinder(Set<String> tags) {
         patterns.addAll(
             tags
                 .stream()

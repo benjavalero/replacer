@@ -15,7 +15,7 @@ import org.apache.commons.collections4.IterableUtils;
 class CompleteTagLinearFinder implements BenchmarkFinder {
     private final Set<String> tags;
 
-    CompleteTagLinearFinder(List<String> tags) {
+    CompleteTagLinearFinder(Set<String> tags) {
         this.tags = new HashSet<>(tags);
     }
 

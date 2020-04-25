@@ -7,7 +7,7 @@
            http://www.springframework.org/schema/util
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <util:set id="completeTags" value-type="java.lang.String">
+    <util:list id="completeTags" value-type="java.lang.String">
         <value>ref</value>  <!-- 1,2M -->
         <value>gallery</value>  <!-- 9K -->
         <value>blockquote</value>   <!-- 3K -->
@@ -21,7 +21,7 @@
         <value>tt</value>   <!-- 120 -->
         <value>syntaxhighlight</value>  <!-- 100 -->
         <value>score</value>    <!-- 70 -->
-    </util:set>
+    </util:list>
 
     <!--
 1707 <sup

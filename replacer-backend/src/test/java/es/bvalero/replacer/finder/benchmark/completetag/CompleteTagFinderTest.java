@@ -5,7 +5,6 @@ import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -17,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = XmlConfiguration.class)
 public class CompleteTagFinderTest {
     @Resource
-    private List<String> completeTags;
+    private Set<String> completeTags;
 
     private String text;
     private Set<String> expected;
