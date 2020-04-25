@@ -1,29 +1,21 @@
-package es.bvalero.replacer.finder.immutables;
+package es.bvalero.replacer.finder.benchmark.cursive;
 
-import es.bvalero.replacer.finder.*;
-import java.util.*;
+import es.bvalero.replacer.finder.LinearIterable;
+import es.bvalero.replacer.finder.LinearMatcher;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.FinderResult;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.MatchResult;
-import org.springframework.stereotype.Component;
+import org.apache.commons.collections4.IterableUtils;
 
-/**
- * Find text in cursive, e. g. `''cursive''` in `This is a ''cursive'' example`
- */
-@Component
-public class CursiveFinder implements ImmutableFinder {
+class CursiveLinearFinder implements BenchmarkFinder {
 
     @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.MEDIUM;
-    }
-
-    @Override
-    public int getMaxLength() {
-        return 5000;
-    }
-
-    @Override
-    public Iterable<Immutable> find(String text) {
-        return new LinearIterable<>(text, this::findResult, this::convert);
+    public Set<FinderResult> findMatches(String text) {
+        return new HashSet<>(IterableUtils.toList(new LinearIterable<>(text, this::findResult, this::convert)));
     }
 
     public MatchResult findResult(String text, int start) {
@@ -73,7 +65,7 @@ public class CursiveFinder implements ImmutableFinder {
         for (; i < text.length(); i++) {
             char ch = text.charAt(i);
             if (ch == '\n') {
-                return i;
+                return i + 1;   // To include the linebreak in the benchmark results
             } else if (ch == '\'') {
                 tagBuilder.append(ch);
             } else {

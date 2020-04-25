@@ -1,9 +1,13 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.cursive;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.cursive.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,19 +17,20 @@ public class CursiveFinderBenchmark extends BaseFinderBenchmark {
     @Test
     public void testBenchmark() throws IOException, URISyntaxException {
         // Load the finders
-        List<CursiveAbstractFinder> finders = new ArrayList<>();
+        List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new CursiveRegexDotLazyFinder());
         finders.add(new CursiveRegexFinder());
         finders.add(new CursiveRegexDotAllLookFinder());
         finders.add(new CursiveRegexLookFinder());
         finders.add(new CursiveAutomatonFinder());
+        finders.add(new CursiveLinearFinder());
 
         System.out.println();
         System.out.println("FINDER\tTIME");
         findSampleContents()
             .forEach(
                 value -> {
-                    for (CursiveAbstractFinder finder : finders) {
+                    for (BenchmarkFinder finder : finders) {
                         long start = System.currentTimeMillis();
                         for (int i = 0; i < ITERATIONS; i++) {
                             finder.findMatches(value);

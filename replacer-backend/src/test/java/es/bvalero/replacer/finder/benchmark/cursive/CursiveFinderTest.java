@@ -1,16 +1,17 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.cursive;
 
+import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class CursiveFinderTest {
     private String text;
     private Set<FinderResult> expected;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         String cursive1 = "''cursive1''";
         String cursive2 = "''cursive2''";
@@ -31,30 +32,36 @@ public class CursiveFinderTest {
     @Test
     public void testCursiveRegexDotLazyFinder() {
         CursiveRegexDotLazyFinder finder = new CursiveRegexDotLazyFinder();
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     public void testCursiveRegexFinder() {
         CursiveRegexFinder finder = new CursiveRegexFinder();
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     public void testCursiveRegexDotAllLookFinder() {
         CursiveRegexDotAllLookFinder finder = new CursiveRegexDotAllLookFinder();
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     public void testCursiveRegexLookFinder() {
         CursiveRegexLookFinder finder = new CursiveRegexLookFinder();
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     public void testCursiveAutomatonFinder() {
         CursiveAutomatonFinder finder = new CursiveAutomatonFinder();
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
+    public void testCursiveLinearFinder() {
+        CursiveLinearFinder finder = new CursiveLinearFinder();
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 }
