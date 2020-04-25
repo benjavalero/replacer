@@ -119,6 +119,7 @@ public class TemplateParamFinder implements ImmutableFinder {
 
     private boolean matchesFile(String value) {
         int dot = value.indexOf('.');
-        return dot >= 2 && dot <= 4;
+        int distanceToEnd = value.length() - dot;
+        return distanceToEnd >= 2 && distanceToEnd <= 4;
     }
 }

@@ -90,4 +90,16 @@ public class TemplateParamFinderTest {
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assertions.assertTrue(actual.isEmpty());
     }
+
+    @Test
+    public void testFileNameValue() {
+        String fileValueParam = "mapa = Parroquia san agustin - libertador.svg\n";
+        String text = String.format("{{Ficha de entidad subnacional\n" + "|%s" + "}}", fileValueParam);
+
+        List<Immutable> matches = templateParamFinder.findList(text);
+
+        Set<String> expected = Collections.singleton(fileValueParam);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assertions.assertEquals(expected, actual);
+    }
 }
