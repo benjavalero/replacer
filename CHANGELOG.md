@@ -1,4 +1,8 @@
-# Versiones
+# Versions
+
+## 2.5.1 (25 de abril de 2020)
+- Add more complete tags to ignore
+- Improve template parameter finder to ignore file values
 
 ## 2.5.0 (16 de abril de 2020)
 - Save replacement context to check of only the position has changed
