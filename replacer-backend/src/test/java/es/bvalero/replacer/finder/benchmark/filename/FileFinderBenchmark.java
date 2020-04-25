@@ -1,11 +1,14 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.filename;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+
+import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class FileFinderBenchmark extends BaseFinderBenchmark {
     private static final int ITERATIONS = 1000;
@@ -13,20 +16,18 @@ public class FileFinderBenchmark extends BaseFinderBenchmark {
     @Test
     public void testBenchmark() throws IOException, URISyntaxException {
         // Load the finders
-        List<FileAbstractFinder> finders = new ArrayList<>();
+        List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new FileRegexFinder());
-        finders.add(new FileRegexLazyFinder());
-        finders.add(new FileAutomatonFinder()); // WINNER
-        finders.add(new FileRegexNoStartFinder());
-        finders.add(new FileRegexNoStartLazyFinder());
-        finders.add(new FileAutomatonNoStartFinder());
+        finders.add(new FileRegexGroupFinder());
+        finders.add(new FileAutomatonFinder());
+        finders.add(new FileLinearFinder());
 
         System.out.println();
         System.out.println("FINDER\tTIME");
         findSampleContents()
             .forEach(
                 value -> {
-                    for (FileAbstractFinder finder : finders) {
+                    for (BenchmarkFinder finder : finders) {
                         long start = System.currentTimeMillis();
                         for (int i = 0; i < ITERATIONS; i++) {
                             finder.findMatches(value);
@@ -37,6 +38,6 @@ public class FileFinderBenchmark extends BaseFinderBenchmark {
                 }
             );
 
-        Assert.assertTrue(true);
+        Assertions.assertTrue(true);
     }
 }

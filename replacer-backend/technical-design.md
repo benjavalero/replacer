@@ -200,14 +200,14 @@ The tool implements the following generic immutable finders. We can add a priori
 - **LinkAliasedFinder** Find the first part of aliased links, e. g. `brasil` in `[[brasil|Brasil]]`
 - **CursiveFinder** Find text in cursive, e. g. `''cursive''` in `This is a ''cursive'' example`
 - **QuotesFinder**, **QuotesTypographicFinder** and **QuotesAngularFinder** Find text in quotes, e. g. `"text"`, `“text”` or `«text»`
+- **UrlFinder** Find URLs, e. g. `https://www.google.es`
+- **FileNameFinder** Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
 
-- [x] **UrlFinder** Find URLs, e. g. `https://www.google.es`
 - [ ] **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
 - [ ] **CommentFinder** Find XML comments, e. g. `<!-- A comment -->`
 - [ ] **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
 - [ ] **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
 - [ ] **TemplateFinder** Find some complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
-- [ ] **FileNameFinder** Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
 - [ ] **LinkSuffixedFinder** Find links with suffix, e. g. `[[brasil]]eño`
 - [ ] **InterLanguageLinkFinder** Find inter-language links, e. g. `[[:pt:Title]]`
 

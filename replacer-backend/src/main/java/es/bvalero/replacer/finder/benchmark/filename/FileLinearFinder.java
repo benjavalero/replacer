@@ -1,37 +1,19 @@
-package es.bvalero.replacer.finder.immutables;
+package es.bvalero.replacer.finder.benchmark.filename;
 
-import es.bvalero.replacer.finder.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import es.bvalero.replacer.finder.LinearIterable;
+import es.bvalero.replacer.finder.LinearMatcher;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.FinderResult;
+import java.util.*;
 import java.util.regex.MatchResult;
-import org.springframework.stereotype.Component;
+import org.apache.commons.collections4.IterableUtils;
 
-/**
- * Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
- */
-@Component
-public class FileNameFinder implements ImmutableFinder {
-    // Files are also found in:
-    // - Tag "gallery" ==> Managed in CompleteTagFinder
-    // - Template "Gallery" ==> Managed in CompleteTemplateFinder
-    // - Parameter values without File prefix ==> Managed in TemplateParamFinder
-
+class FileLinearFinder implements BenchmarkFinder {
     private static final List<String> ALLOWED_PREFIXES = Arrays.asList("Archivo", "File", "Imagen", "Image");
 
     @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.MEDIUM;
-    }
-
-    @Override
-    public int getMaxLength() {
-        return 250;
-    }
-
-    @Override
-    public Iterable<Immutable> find(String text) {
-        return new LinearIterable<>(text, this::findResult, this::convert);
+    public Set<FinderResult> findMatches(String text) {
+        return new HashSet<>(IterableUtils.toList(new LinearIterable<>(text, this::findResult, this::convert)));
     }
 
     public MatchResult findResult(String text, int start) {
