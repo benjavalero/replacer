@@ -1,16 +1,18 @@
 package es.bvalero.replacer.finder.immutables;
 
+import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = { TemplateParamFinder.class, XmlConfiguration.class })
 public class TemplateParamFinderTest {
+    @Autowired
+    private TemplateParamFinder templateParamFinder;
 
     @Test
     public void testRegexTemplateParam() {
@@ -20,7 +22,6 @@ public class TemplateParamFinderTest {
         String param4 = "param4";
         String text = String.format("{{Template|%s= value1 |%s= value2 |%s=|%s}}", param1, param2, param3, param4);
 
-        ImmutableFinder templateParamFinder = new TemplateParamFinder();
         List<Immutable> matches = templateParamFinder.findList(text);
 
         Set<String> expected = new HashSet<>(Arrays.asList(param1, param2, param3));
@@ -32,7 +33,6 @@ public class TemplateParamFinderTest {
     public void testLinkFollowedByHeader() {
         String text = "[[A|B]]\n==Section==";
 
-        ImmutableFinder templateParamFinder = new TemplateParamFinder();
         List<Immutable> matches = templateParamFinder.findList(text);
 
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -43,7 +43,6 @@ public class TemplateParamFinderTest {
     public void testTableRowWithReference() {
         String text = "{|\n" + "|-\n" + "| Text\n" + "| More text.<ref name=\"FDA1\">Reference</ref>\n" + "|}";
 
-        ImmutableFinder templateParamFinder = new TemplateParamFinder();
         List<Immutable> matches = templateParamFinder.findList(text);
 
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -51,10 +50,41 @@ public class TemplateParamFinderTest {
     }
 
     @Test
+    public void testTableRowWithStylesInQuotes() {
+        String text = "{| color=\"salmon\"\n" + "| Text |}";
+
+        List<Immutable> matches = templateParamFinder.findList(text);
+
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assertions.assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    public void testTableRowWithDash() {
+        String text = "{|- align=center\n" + "| Text |}";
+
+        List<Immutable> matches = templateParamFinder.findList(text);
+
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assertions.assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    public void testTableRowWithKnownAttribute() {
+        String param = "bgcolor=salmon\n";
+        String text = String.format("{|\n" + "|%s" + "| Text |}", param);
+
+        List<Immutable> matches = templateParamFinder.findList(text);
+
+        Set<String> expected = Collections.singleton(param);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
     public void testCiteTemplate() {
         String text = "{{cita|Text.<ref>[http://www.britannica.com/Elegy#ref=ref945156].</ref>}}";
 
-        ImmutableFinder templateParamFinder = new TemplateParamFinder();
         List<Immutable> matches = templateParamFinder.findList(text);
 
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());

@@ -195,8 +195,8 @@ Finally, the helper class **FinderUtils** provides static methods to work with w
 Generic immutable finders are placed in package _finder.immutable_ and implement the interface _ImmutableFinder_. They must have the Spring annotation _@Component_ in order to be found dynamically by the system.
 
 The tool implements the following generic immutable finders. We can add a priority to the immutable finders, as some immutables are more _useful_ than others and we want them to be used before.
-- [x] **CompleteTagFinder** Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`. The list of tags is configured in `complete-tags.xml`. Even with several tags taken into account, the faster approach is the linear search in 1 pass.
-
+- **CompleteTagFinder** Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`. The list of tags is configured in `complete-tags.xml`. Even with several tags taken into account, the faster approach is the linear search in 1 pass.
+- **TemplateParamFinder** Find template parameters, e. g. `param` in `{{Template|param=value}}`. For some specific parameters, we include in the result also the value, which is usually a taxonomy, a Commons category, etc. Finally, we include also the value if it seems like a file or a domain.
 
 - [x] **UrlFinder** Find URLs, e. g. `https://www.google.es`
 - [ ] **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
@@ -205,7 +205,6 @@ The tool implements the following generic immutable finders. We can add a priori
 - [ ] **ParameterValueFinder** Find the values of some parameters, e. g. `value` in `{{Template|index=value}}`
 - [x] **DomainFinder** Find web domains, e. g. `www.acb.es` or `es.wikipedia.org`
 - [ ] **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
-- [ ] **TemplateParamFinder** Find template parameters, e. g. `param` in `{{Template|param=value}}`
 - [ ] **TemplateFinder** Find some complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
 - [ ] **CursiveFinder** Find text in cursive, e. g. `''cursive''` in `This is a ''cursive'' example`
 - [x] **QuotesFinder**, **QuotesTypographicFinder** and **QuotesAngularFinder** Find text in quotes, e. g. `"text"`, `“text”` or `«text»`
