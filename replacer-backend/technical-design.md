@@ -202,10 +202,10 @@ The tool implements the following generic immutable finders. We can add a priori
 - **QuotesFinder**, **QuotesTypographicFinder** and **QuotesAngularFinder** Find text in quotes, e. g. `"text"`, `“text”` or `«text»`
 - **UrlFinder** Find URLs, e. g. `https://www.google.es`
 - **FileNameFinder** Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
+- **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
 
 - [ ] **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
 - [ ] **CommentFinder** Find XML comments, e. g. `<!-- A comment -->`
-- [ ] **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
 - [ ] **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
 - [ ] **TemplateFinder** Find some complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
 - [ ] **LinkSuffixedFinder** Find links with suffix, e. g. `[[brasil]]eño`

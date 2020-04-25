@@ -1,15 +1,20 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.category;
 
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.intellij.lang.annotations.RegExp;
 
-class CategoryRegexClassLazyFinder extends CategoryAbstractFinder {
-    private static final String REGEX_CATEGORY = "\\[\\[(Categoría|als):[^]]+?]]";
+class CategoryRegexFinder implements BenchmarkFinder {
+    @RegExp
+    private static final String REGEX_CATEGORY = "\\[\\[(Categoría|als):[^]]+]]";
+
     private static final Pattern PATTERN_CATEGORY = Pattern.compile(REGEX_CATEGORY);
 
-    Set<FinderResult> findMatches(String text) {
+    public Set<FinderResult> findMatches(String text) {
         Set<FinderResult> matches = new HashSet<>();
         Matcher m = PATTERN_CATEGORY.matcher(text);
         while (m.find()) {
