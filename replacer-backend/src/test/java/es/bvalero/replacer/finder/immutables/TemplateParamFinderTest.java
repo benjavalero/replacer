@@ -93,7 +93,7 @@ public class TemplateParamFinderTest {
 
     @Test
     public void testFileNameValue() {
-        String fileValueParam = "mapa = Parroquia san agustin - libertador.svg\n";
+        String fileValueParam = "mapa = Parroquia san agustin. - libertador.svg\n";
         String text = String.format("{{Ficha de entidad subnacional\n" + "|%s" + "}}", fileValueParam);
 
         List<Immutable> matches = templateParamFinder.findList(text);
