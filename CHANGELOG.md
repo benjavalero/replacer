@@ -1,5 +1,8 @@
 # Versions
 
+## 2.5.2 (25 de abril de 2020)
+- Fix finder of file names in template parameter values
+
 ## 2.5.1 (25 de abril de 2020)
 - Add more complete tags to ignore
 - Improve template parameter finder to ignore file values
