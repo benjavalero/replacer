@@ -11,12 +11,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.IterableUtils;
 
-class TemplateRegexFinder implements BenchmarkFinder {
+class TemplateRegexIteratedFinder implements BenchmarkFinder {
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
     private static final String REGEX_NESTED = "\\{\\{\\s*%s\\s*[|:](%s|[^}])+?}}";
     private static final List<Pattern> PATTERNS = new ArrayList<>();
 
-    TemplateRegexFinder(List<String> templateNames) {
+    TemplateRegexIteratedFinder(List<String> templateNames) {
         PATTERNS.addAll(
             toUpperCase(templateNames)
                 .stream()

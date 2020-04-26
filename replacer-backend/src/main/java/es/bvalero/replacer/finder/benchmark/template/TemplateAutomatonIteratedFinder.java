@@ -13,12 +13,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.IterableUtils;
 
-class TemplateAutomatonFinder implements BenchmarkFinder {
+class TemplateAutomatonIteratedFinder implements BenchmarkFinder {
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+}}";
     private static final String REGEX_NESTED = "\\{\\{<Z>*%s(<Z>|\n)*[|:](%s|[^}])+}}";
     private static final List<RunAutomaton> AUTOMATA = new ArrayList<>();
 
-    TemplateAutomatonFinder(List<String> templateNames) {
+    TemplateAutomatonIteratedFinder(List<String> templateNames) {
         AUTOMATA.addAll(
             toUpperCase(templateNames)
                 .stream()

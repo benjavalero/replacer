@@ -52,26 +52,26 @@ public class TemplateFinderTest {
     }
 
     @Test
-    public void testTemplateRegexFinder() {
-        TemplateRegexFinder finder = new TemplateRegexFinder(templateNames);
+    public void testTemplateRegexIteratedFinder() {
+        TemplateRegexIteratedFinder finder = new TemplateRegexIteratedFinder(templateNames);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testTemplateRegexAllFinder() {
-        TemplateRegexAllFinder finder = new TemplateRegexAllFinder(templateNames);
+    public void testTemplateRegexAlternateFinder() {
+        TemplateRegexAlternateFinder finder = new TemplateRegexAlternateFinder(templateNames);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testTemplateAutomatonFinder() {
-        TemplateAutomatonFinder finder = new TemplateAutomatonFinder(templateNames);
+    public void testTemplateAutomatonIteratedFinder() {
+        TemplateAutomatonIteratedFinder finder = new TemplateAutomatonIteratedFinder(templateNames);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testTemplateAutomatonAllFinder() {
-        TemplateAutomatonAllFinder finder = new TemplateAutomatonAllFinder(templateNames);
+    public void testTemplateAutomatonAlternateFinder() {
+        TemplateAutomatonAlternateFinder finder = new TemplateAutomatonAlternateFinder(templateNames);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 }

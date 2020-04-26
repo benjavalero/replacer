@@ -12,12 +12,12 @@ import java.util.Set;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 
-class TemplateAutomatonAllFinder implements BenchmarkFinder {
+class TemplateAutomatonAlternateFinder implements BenchmarkFinder {
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+}}";
     private static final String REGEX_NESTED = "\\{\\{<Z>*(%s)(<Z>|\n)*[|:](%s|[^}])+}}";
     private RunAutomaton automaton;
 
-    TemplateAutomatonAllFinder(List<String> words) {
+    TemplateAutomatonAlternateFinder(List<String> words) {
         this.automaton =
             new RunAutomaton(
                 new RegExp(String.format(REGEX_NESTED, StringUtils.join(toUpperCase(words), '|'), REGEX_TEMPLATE))

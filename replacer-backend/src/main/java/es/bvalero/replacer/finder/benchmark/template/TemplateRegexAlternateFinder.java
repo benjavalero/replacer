@@ -10,12 +10,12 @@ import java.util.regex.Pattern;
 import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 
-class TemplateRegexAllFinder implements BenchmarkFinder {
+class TemplateRegexAlternateFinder implements BenchmarkFinder {
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
     private static final String REGEX_NESTED = "\\{\\{\\s*(%s)\\s*[|:](%s|[^}])+?}}";
     private Pattern pattern;
 
-    TemplateRegexAllFinder(List<String> words) {
+    TemplateRegexAlternateFinder(List<String> words) {
         this.pattern =
             Pattern.compile(String.format(REGEX_NESTED, StringUtils.join(toUpperCase(words), '|'), REGEX_TEMPLATE));
     }

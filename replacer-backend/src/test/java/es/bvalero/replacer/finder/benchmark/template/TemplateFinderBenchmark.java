@@ -21,10 +21,10 @@ public class TemplateFinderBenchmark extends BaseFinderBenchmark {
     public void testBenchmark() throws IOException, URISyntaxException {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
-        finders.add(new TemplateRegexFinder(templateNames));
-        finders.add(new TemplateRegexAllFinder(templateNames));
-        finders.add(new TemplateAutomatonFinder(templateNames));
-        finders.add(new TemplateAutomatonAllFinder(templateNames));
+        finders.add(new TemplateRegexIteratedFinder(templateNames));
+        finders.add(new TemplateRegexAlternateFinder(templateNames));
+        finders.add(new TemplateAutomatonIteratedFinder(templateNames));
+        finders.add(new TemplateAutomatonAlternateFinder(templateNames));
 
         runBenchmark(finders);
 
