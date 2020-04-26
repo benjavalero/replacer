@@ -1,11 +1,12 @@
 package es.bvalero.replacer.finder.benchmark.cursive;
 
+import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.collections4.IterableUtils;
 
 class CursiveRegexDotAllLookFinder implements BenchmarkFinder {
     private static final String TWO_QUOTES_ONLY = "(?<!')''(?!')";
@@ -15,11 +16,6 @@ class CursiveRegexDotAllLookFinder implements BenchmarkFinder {
     );
 
     public Set<FinderResult> findMatches(String text) {
-        Set<FinderResult> matches = new HashSet<>();
-        Matcher m = CURSIVE_PATTERN.matcher(text);
-        while (m.find()) {
-            matches.add(FinderResult.of(m.start(), m.group()));
-        }
-        return matches;
+        return new HashSet<>(IterableUtils.toList(new RegexIterable<>(text, CURSIVE_PATTERN, this::convert)));
     }
 }

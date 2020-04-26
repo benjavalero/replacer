@@ -15,8 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
 public class CompleteTagFinderBenchmark extends BaseFinderBenchmark {
-    private static final int ITERATIONS = 1000;
-
     @Resource
     private Set<String> completeTags;
 
@@ -30,21 +28,7 @@ public class CompleteTagFinderBenchmark extends BaseFinderBenchmark {
         finders.add(new CompleteTagLinearIteratedFinder(completeTags));
         finders.add(new CompleteTagLinearFinder(completeTags));
 
-        System.out.println();
-        System.out.println("FINDER\tTIME");
-        findSampleContents()
-            .forEach(
-                value -> {
-                    for (BenchmarkFinder finder : finders) {
-                        long start = System.currentTimeMillis();
-                        for (int i = 0; i < ITERATIONS; i++) {
-                            finder.findMatches(value);
-                        }
-                        long end = System.currentTimeMillis() - start;
-                        System.out.println(finder.getClass().getSimpleName() + "\t" + end);
-                    }
-                }
-            );
+        runBenchmark(finders);
 
         Assertions.assertTrue(true);
     }

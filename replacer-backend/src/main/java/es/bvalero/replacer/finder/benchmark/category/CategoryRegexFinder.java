@@ -1,11 +1,12 @@
 package es.bvalero.replacer.finder.benchmark.category;
 
+import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.collections4.IterableUtils;
 import org.intellij.lang.annotations.RegExp;
 
 class CategoryRegexFinder implements BenchmarkFinder {
@@ -15,11 +16,6 @@ class CategoryRegexFinder implements BenchmarkFinder {
     private static final Pattern PATTERN_CATEGORY = Pattern.compile(REGEX_CATEGORY);
 
     public Set<FinderResult> findMatches(String text) {
-        Set<FinderResult> matches = new HashSet<>();
-        Matcher m = PATTERN_CATEGORY.matcher(text);
-        while (m.find()) {
-            matches.add(FinderResult.of(m.start(), m.group()));
-        }
-        return matches;
+        return new HashSet<>(IterableUtils.toList(new RegexIterable<>(text, PATTERN_CATEGORY, this::convert)));
     }
 }

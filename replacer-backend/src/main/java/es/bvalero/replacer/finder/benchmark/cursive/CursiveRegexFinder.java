@@ -1,11 +1,13 @@
 package es.bvalero.replacer.finder.benchmark.cursive;
 
+import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import org.apache.commons.collections4.IterableUtils;
 
 class CursiveRegexFinder implements BenchmarkFinder {
     private static final String TWO_QUOTES_ONLY = "[^']''[^']";
@@ -15,14 +17,14 @@ class CursiveRegexFinder implements BenchmarkFinder {
     );
 
     public Set<FinderResult> findMatches(String text) {
-        Set<FinderResult> matches = new HashSet<>();
-        Matcher m = CURSIVE_PATTERN.matcher(text);
-        while (m.find()) {
-            int start = m.start() + 1;
-            int end = m.group().endsWith("\n") ? m.group().length() : m.group().length() - 1;
-            String group = m.group().substring(1, end);
-            matches.add(FinderResult.of(start, group));
-        }
-        return matches;
+        return new HashSet<>(IterableUtils.toList(new RegexIterable<>(text, CURSIVE_PATTERN, this::convert)));
+    }
+
+    @Override
+    public FinderResult convert(MatchResult match) {
+        int start = match.start() + 1;
+        int end = match.group().endsWith("\n") ? match.group().length() : match.group().length() - 1;
+        String group = match.group().substring(1, end);
+        return FinderResult.of(start, group);
     }
 }

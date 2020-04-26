@@ -65,7 +65,7 @@ class CursiveLinearFinder implements BenchmarkFinder {
         for (; i < text.length(); i++) {
             char ch = text.charAt(i);
             if (ch == '\n') {
-                return i + 1;   // To include the linebreak in the benchmark results
+                return i + 1; // To include the linebreak in the benchmark results
             } else if (ch == '\'') {
                 tagBuilder.append(ch);
             } else {
