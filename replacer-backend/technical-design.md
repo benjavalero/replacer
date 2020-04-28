@@ -205,11 +205,10 @@ The tool implements the following generic immutable finders. We can add a priori
 - **CategoryFinder** Find categories, e. g. `[[Categoría:España]]`
 - **TemplateNameFinder** Find template names, e. g. `Bandera` in `{{Bandera|España}}`
 - **TemplateFinder** Find some complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
-
-- [ ] **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
-- [ ] **CommentFinder** Find XML comments, e. g. `<!-- A comment -->`
-- [ ] **LinkSuffixedFinder** Find links with suffix, e. g. `[[brasil]]eño`
-- [ ] **InterLanguageLinkFinder** Find inter-language links, e. g. `[[:pt:Title]]`
+- **XmlTagFinder** Find XML tags, e. g. `<span>` or `<br />`
+- **CommentFinder** Find XML comments, e. g. `<!-- A comment -->`
+- **LinkSuffixedFinder** Find links with suffix, e. g. `[[brasil]]eño`
+- **InterLanguageLinkFinder** Find inter-language links, e. g. `[[:pt:Title]]`
 
 ### Misspelling finders
 
