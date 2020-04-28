@@ -10,22 +10,40 @@
     <!-- These templates should be ignored -->
     <!-- Common template names must be included here in lowercase. Regex are allowed. -->
     <util:list id="templateNames" value-type="java.lang.String">
-        <value>ORDENAR</value>
-        <value>DEFAULTSORT</value>
-        <value>\#expr</value>
+        <value><![CDATA[cit[ae]( |<L>)*]]></value>
+        <!-- Enable only for benchmarks -->
+        <!-- <value><![CDATA[cit[ae][\s\w]*]]></value> -->
+        <value>ficha de taxón</value>
         <value>NF</value>
-        <value>TA</value>
-        <value>commonscat</value>
+        <value>\#expr</value>
+        <value>obra citada</value>
+        <value>enlace roto</value>
         <value>coord</value>
-        <value><![CDATA[cit[ae] ?<L>*]]></value>
-        <value><![CDATA[cit[ae] ?\w*]]></value>
-        <value>quote</value>
-        <value>cquote</value>
-        <value>caja de cita</value>
-        <value>galería de imágenes</value>
-        <value>sortname</value>
-        <value>traducido (de|ref)</value>
+        <value>ORDENAR</value>
+        <value><![CDATA[commons( |<L>)*]]></value>
+        <value><![CDATA[imdb( |<L>)*]]></value>
+        <value>wayback</value>
+        <value>twitter</value>
+        <value>sort(name)?</value>
+        <value>refn</value>
+        <value>link</value>
+        <value>facebook</value>
         <value>versalita</value>
+        <value>harvnp</value>
+        <value>\#tag</value>
+        <value>formatnum</value>
+        <value>sfn</value>
+        <value>nihongo</value>
+        <value>DEFAULTSORT</value>
+        <value>traducido ref</value>
+        <value>taxobox</value>
+        <value>youtube</value>
+        <value>lang</value>
+        <value>otros usos</value>
+        <value>\#invoke</value>
+        <value>quote</value>
+        <value>caja de cita</value>
+        <value>dead link</value>
     </util:list>
 
 </beans>
