@@ -4,11 +4,10 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.*;
-
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -19,39 +18,20 @@ import org.springframework.stereotype.Component;
 public class TemplateFinder implements ImmutableFinder {
     // The nested regex takes more but it is worth as it captures completely the templates with inner templates
     // A linear optimization, instead of regex, is too complex and it is not worth for the moment
-    private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
-    private static final String REGEX_NESTED_TEMPLATE = "\\{\\{ *(%s)[ |\n]*[|:](%s|[^}])+?}}";
-    private static final List<String> TEMPLATE_NAMES = Arrays.asList(
-        "ORDENAR",
-        "DEFAULTSORT",
-        "\\#expr",
-        "NF",
-        "TA",
-        "commonscat",
-        "coord",
-        "cit[ae] ?<L>*",
-        "quote",
-        "cquote",
-        "caja de cita",
-        "galería de imágenes",
-        "sortname",
-        "traducido (de|ref)",
-        "versalita"
-    );
-    private static final RunAutomaton AUTOMATON_TEMPLATE;
+    private static final String REGEX_TEMPLATE = "\\{\\{[^}]+}}";
+    private static final String REGEX_NESTED = "\\{\\{<Z>*(%s)(<Z>|\n)*[|:](%s|[^}])+}}";
+    private RunAutomaton automatonTemplate;
 
-    static {
-        Set<String> wordsToJoin = new HashSet<>();
-        for (String word : TEMPLATE_NAMES) {
-            if (FinderUtils.startsWithLowerCase(word)) {
-                wordsToJoin.add(FinderUtils.setFirstUpperCaseClass(word));
-            } else {
-                wordsToJoin.add(word);
-            }
-        }
-        AUTOMATON_TEMPLATE =
+    @Resource
+    private List<String> templateNames;
+
+    @PostConstruct
+    public void initAutomaton() {
+        automatonTemplate =
             new RunAutomaton(
-                new RegExp(String.format(REGEX_NESTED_TEMPLATE, StringUtils.join(wordsToJoin, "|"), REGEX_TEMPLATE))
+                new RegExp(
+                    String.format(REGEX_NESTED, StringUtils.join(toUpperCase(templateNames), '|'), REGEX_TEMPLATE)
+                )
                 .toAutomaton(new DatatypesAutomatonProvider())
             );
     }
@@ -69,6 +49,14 @@ public class TemplateFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text) {
-        return new RegexIterable<>(text, AUTOMATON_TEMPLATE, this::convert);
+        return new RegexIterable<>(text, automatonTemplate, this::convert);
+    }
+
+    private List<String> toUpperCase(List<String> names) {
+        return names.stream().map(this::toUpperCase).collect(Collectors.toList());
+    }
+
+    private String toUpperCase(String word) {
+        return FinderUtils.startsWithLowerCase(word) ? FinderUtils.setFirstUpperCaseClass(word) : word;
     }
 }
