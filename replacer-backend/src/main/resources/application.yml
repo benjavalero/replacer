@@ -32,7 +32,7 @@ replacer:
     batch:
       delay: 604800000 # Weekly
       delay.initial: 86400000 # 1 day
-      chunk.size: 10000
+      chunk.size: 5000
 
   admin.user: Benjavalero
   parse.file.delay: 3600000 # Every hour
