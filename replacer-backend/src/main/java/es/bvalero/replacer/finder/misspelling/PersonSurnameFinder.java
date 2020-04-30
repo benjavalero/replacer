@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.misspelling;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class PersonSurnameFinder implements ImmutableFinder {
     private static final Collection<String> SURNAMES = Arrays.asList("Domingo", "Records", "Sky");
 
     @Override
-    public Iterable<Immutable> find(String text) {
+    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
         List<Immutable> results = new ArrayList<>(100);
 
         // We loop over all the words and find them in the text with the indexOf function

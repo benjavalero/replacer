@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 /**
  * Independent service that finds all the immutables in a given text.
- *
+ * <p>
  * It is composed by several specific immutable finders: URL, quotes, etc. which
  * implement the same interface.
- *
+ * <p>
  * The service applies all these specific finders one by one, and returns an
  * iterator with the results.
  */
@@ -19,11 +20,11 @@ class ImmutableFindService {
     @Autowired
     private List<ImmutableFinder> immutableFinders;
 
-    Iterable<Immutable> findImmutables(String text) {
+    Iterable<Immutable> findImmutables(String text, WikipediaLanguage lang) {
         // Collect to a list which is already an iterable
         // Sort the finders by priority
         return new IterableOfIterable<>(
-            immutableFinders.stream().sorted().map(finder -> finder.find(text)).collect(Collectors.toList())
+            immutableFinders.stream().sorted().map(finder -> finder.find(text, lang)).collect(Collectors.toList())
         );
     }
 }

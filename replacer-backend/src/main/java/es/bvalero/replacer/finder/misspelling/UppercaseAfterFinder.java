@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -91,7 +93,7 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
     }
 
     @Override
-    public Iterable<Immutable> find(String text) {
+    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
         return new RegexIterable<>(text, this.uppercaseAfterAutomaton, this::convert);
     }
 

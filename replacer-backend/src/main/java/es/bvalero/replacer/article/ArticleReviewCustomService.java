@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +63,8 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
 
     @Override
     List<Replacement> findAllReplacements(WikipediaPage article, ArticleReviewOptions options) {
-        List<Replacement> replacements = replacementFindService.findCustomReplacements(article.getContent(), options.getSubtype(), options.getSuggestion());
+        // TODO: Receive the language as a parameter
+        List<Replacement> replacements = replacementFindService.findCustomReplacements(article.getContent(), options.getSubtype(), options.getSuggestion(), WikipediaLanguage.ALL);
 
         if (replacements.isEmpty()) {
             // We add the custom replacement to the database  as reviewed to skip it after the next search in the API

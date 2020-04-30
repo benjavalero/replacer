@@ -4,6 +4,8 @@ import es.bvalero.replacer.finder.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,7 +25,7 @@ public class LinkSuffixedFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(String text) {
+    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
         return new LinearIterable<>(text, this::findResult, this::convert);
     }
 

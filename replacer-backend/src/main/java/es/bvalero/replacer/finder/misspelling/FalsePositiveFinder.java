@@ -14,6 +14,8 @@ import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -68,7 +70,7 @@ public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListe
     }
 
     @Override
-    public Iterable<Immutable> find(String text) {
+    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
         return new RegexIterable<>(text, this.falsePositivesAutomaton, this::convert, this::isValidMatch);
     }
 

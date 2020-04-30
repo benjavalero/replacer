@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,7 +27,7 @@ public class TemplateNameFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(String text) {
+    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
         return new LinearIterable<>(text, this::findTemplateName, this::convert);
     }
 

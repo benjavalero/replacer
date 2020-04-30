@@ -3,10 +3,12 @@ package es.bvalero.replacer.finder.benchmark;
 import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.immutables.*;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +75,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
                 for (ImmutableFinder finder : finders) {
                     long start = System.currentTimeMillis();
                     for (int i = 0; i < numIterations; i++) {
-                        finder.findList(text);
+                        IterableUtils.toList(finder.findList(text));
                     }
                     long end = System.currentTimeMillis() - start;
                     if (print) {
@@ -108,7 +110,9 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
                 System.out.println("FINDER: " + finder.getClass().getSimpleName());
                 sampleContents.forEach(
                     content -> {
-                        finder.find(content).forEach(result -> System.out.println("==> " + result.getText()));
+                        finder
+                            .find(content, WikipediaLanguage.ALL)
+                            .forEach(result -> System.out.println("==> " + result.getText()));
                         System.out.println("----------");
                     }
                 );

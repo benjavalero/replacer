@@ -7,6 +7,7 @@ import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.RegexIterable;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,7 +28,7 @@ public class UrlFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(String text) {
+    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
         return new RegexIterable<>(text, AUTOMATON_URL, this::convert);
     }
 }

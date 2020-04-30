@@ -4,6 +4,8 @@ import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.LinearIterable;
 import es.bvalero.replacer.finder.LinearMatcher;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+
 import java.util.*;
 import java.util.regex.MatchResult;
 
@@ -15,7 +17,7 @@ abstract class QuotesAbstractFinder implements ImmutableFinder {
     abstract char getEndChar();
 
     @Override
-    public Iterable<Immutable> find(String text) {
+    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
         return new LinearIterable<>(text, this::findResult, this::convert);
     }
 

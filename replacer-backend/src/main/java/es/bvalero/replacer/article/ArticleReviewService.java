@@ -4,6 +4,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
@@ -132,7 +133,8 @@ abstract class ArticleReviewService {
     }
 
     List<Replacement> findAllReplacements(WikipediaPage article) {
-        List<Replacement> replacements = replacementFindService.findReplacements(article.getContent());
+        // TODO: Receive the language as a parameter
+        List<Replacement> replacements = replacementFindService.findReplacements(article.getContent(), WikipediaLanguage.ALL);
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.debug("Update article replacements in database");

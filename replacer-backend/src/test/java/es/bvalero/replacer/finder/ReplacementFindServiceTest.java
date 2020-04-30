@@ -1,14 +1,14 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.finder.immutables.QuotesFinder;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-
-import es.bvalero.replacer.finder.immutables.QuotesFinder;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -24,7 +24,7 @@ public class ReplacementFindServiceTest {
     @InjectMocks
     private ReplacementFindService replacementFindService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         replacementFindService = new ReplacementFindService();
         MockitoAnnotations.initMocks(this);
@@ -32,7 +32,7 @@ public class ReplacementFindServiceTest {
 
     @Test
     public void testFindReplacementsEmpty() {
-        Assert.assertTrue(replacementFindService.findReplacements("").isEmpty());
+        Assertions.assertTrue(replacementFindService.findReplacements("", WikipediaLanguage.ALL).isEmpty());
     }
 
     @Test
@@ -42,11 +42,11 @@ public class ReplacementFindServiceTest {
         Mockito.when(finder.findStream(Mockito.anyString())).thenReturn(Stream.of(replacement));
         Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
 
-        List<Replacement> replacements = replacementFindService.findReplacements(" ");
+        List<Replacement> replacements = replacementFindService.findReplacements(" ", WikipediaLanguage.ALL);
 
-        Assert.assertFalse(replacements.isEmpty());
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertTrue(replacements.contains(replacement));
+        Assertions.assertFalse(replacements.isEmpty());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertTrue(replacements.contains(replacement));
     }
 
     @Test
@@ -58,14 +58,14 @@ public class ReplacementFindServiceTest {
         Mockito.when(finder.findStream(Mockito.anyString())).thenReturn(Stream.of(replacement1, replacement2));
         Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
         Mockito
-            .when(immutableFindService.findImmutables(Mockito.anyString()))
+            .when(immutableFindService.findImmutables(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singleton(immutable1));
 
-        List<Replacement> replacements = replacementFindService.findReplacements(" ");
+        List<Replacement> replacements = replacementFindService.findReplacements(" ", WikipediaLanguage.ALL);
 
-        Assert.assertFalse(replacements.isEmpty());
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertTrue(replacements.contains(replacement2));
+        Assertions.assertFalse(replacements.isEmpty());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertTrue(replacements.contains(replacement2));
     }
 
     @Test
@@ -76,28 +76,38 @@ public class ReplacementFindServiceTest {
         Mockito.when(finder.findStream(Mockito.anyString())).thenReturn(Stream.of(replacement1));
         Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
         Mockito
-            .when(immutableFindService.findImmutables(Mockito.anyString()))
+            .when(immutableFindService.findImmutables(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singleton(immutable1));
 
-        List<Replacement> replacements = replacementFindService.findReplacements("");
+        List<Replacement> replacements = replacementFindService.findReplacements("", WikipediaLanguage.ALL);
 
-        Assert.assertTrue(replacements.isEmpty());
+        Assertions.assertTrue(replacements.isEmpty());
     }
 
     @Test
     public void testFindCustomReplacements() {
-        List<Replacement> replacements = replacementFindService.findCustomReplacements("A X C", "X", "Y");
+        List<Replacement> replacements = replacementFindService.findCustomReplacements(
+            "A X C",
+            "X",
+            "Y",
+            WikipediaLanguage.ALL
+        );
 
-        Assert.assertFalse(replacements.isEmpty());
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals("X", replacements.get(0).getText());
+        Assertions.assertFalse(replacements.isEmpty());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals("X", replacements.get(0).getText());
     }
 
     @Test
     public void testFindCustomReplacementsWithNoResults() {
-        List<Replacement> replacements = replacementFindService.findCustomReplacements("AXC", "X", "Y");
+        List<Replacement> replacements = replacementFindService.findCustomReplacements(
+            "AXC",
+            "X",
+            "Y",
+            WikipediaLanguage.ALL
+        );
 
-        Assert.assertTrue(replacements.isEmpty());
+        Assertions.assertTrue(replacements.isEmpty());
     }
 
     @Test
@@ -112,11 +122,11 @@ public class ReplacementFindServiceTest {
         Collections.sort(results);
 
         // Order descendant by start. If equals, the lower end.
-        Assert.assertEquals(result5, results.get(0));
-        Assert.assertEquals(result3, results.get(1));
-        Assert.assertEquals(result4, results.get(2));
-        Assert.assertEquals(result1, results.get(3));
-        Assert.assertEquals(result2, results.get(4));
+        Assertions.assertEquals(result5, results.get(0));
+        Assertions.assertEquals(result3, results.get(1));
+        Assertions.assertEquals(result4, results.get(2));
+        Assertions.assertEquals(result1, results.get(3));
+        Assertions.assertEquals(result2, results.get(4));
     }
 
     @Test
@@ -124,19 +134,19 @@ public class ReplacementFindServiceTest {
         Replacement result1 = Replacement.builder().start(0).text("A").build();
         Replacement result2 = Replacement.builder().start(1).text("BC").build();
 
-        Assert.assertFalse(result1.contains(result1));
-        Assert.assertFalse(result2.contains(result2));
+        Assertions.assertFalse(result1.contains(result1));
+        Assertions.assertFalse(result2.contains(result2));
         Replacement result3 = Replacement.builder().start(1).text("B").build();
-        Assert.assertFalse(result1.contains(result3));
-        Assert.assertTrue(result2.contains(result3));
+        Assertions.assertFalse(result1.contains(result3));
+        Assertions.assertTrue(result2.contains(result3));
         Replacement result4 = Replacement.builder().start(0).text("AB").build();
-        Assert.assertFalse(result1.contains(result4));
-        Assert.assertFalse(result2.contains(result4));
+        Assertions.assertFalse(result1.contains(result4));
+        Assertions.assertFalse(result2.contains(result4));
         Replacement result5 = Replacement.builder().start(0).text("ABC").build();
-        Assert.assertFalse(result1.contains(result5));
-        Assert.assertFalse(result2.contains(result5));
+        Assertions.assertFalse(result1.contains(result5));
+        Assertions.assertFalse(result2.contains(result5));
         Replacement result6 = Replacement.builder().start(2).text("C").build();
-        Assert.assertFalse(result1.contains(result6));
-        Assert.assertTrue(result2.contains(result6));
+        Assertions.assertFalse(result1.contains(result6));
+        Assertions.assertTrue(result2.contains(result6));
     }
 }

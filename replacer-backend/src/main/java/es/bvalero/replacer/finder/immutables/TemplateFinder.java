@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +50,7 @@ public class TemplateFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(String text) {
+    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
         return new RegexIterable<>(text, automatonTemplate, this::convert);
     }
 

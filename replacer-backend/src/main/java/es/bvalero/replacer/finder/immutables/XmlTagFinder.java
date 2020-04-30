@@ -6,6 +6,8 @@ import es.bvalero.replacer.finder.LinearIterable;
 import es.bvalero.replacer.finder.LinearMatcher;
 import java.util.*;
 import java.util.regex.MatchResult;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,7 +24,7 @@ public class XmlTagFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(String text) {
+    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
         return new LinearIterable<>(text, this::findResult, this::convert);
     }
 
