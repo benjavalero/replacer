@@ -1,5 +1,9 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.word;
 
+import static org.hamcrest.Matchers.is;
+
+import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.misspelling.FalsePositiveFinder;
 import es.bvalero.replacer.finder.misspelling.FalsePositiveManager;
 import java.io.IOException;
@@ -38,31 +42,21 @@ public class FalseFinderBenchmark extends BaseFinderBenchmark {
         Collection<String> words = falsePositiveFinder.getFalsePositives();
 
         // Load the finders
-        List<WordAbstractFinder> finders = new ArrayList<>();
+        List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new WordIndexOfFinder(words));
         finders.add(new WordRegexFinder(words));
-        finders.add(new WordAutomatonFinder(words));
+        finders.add(new WordAutomatonFinder(words)); // Discarded: we need to increase too much the heap size
         finders.add(new WordRegexCompleteFinder(words));
-        finders.add(new WordAlternateRegexFinder(words));
-        finders.add(new WordAlternateAutomatonFinder(words)); // WINNER
-        finders.add(new WordAlternateRegexCompleteFinder(words));
+        finders.add(new WordRegexAlternateFinder(words));
+        finders.add(new WordAutomatonAlternateFinder(words)); // Discarded: we need to increase too much the stack size
+        finders.add(new WordRegexAlternateCompleteFinder(words));
+        finders.add(new WordRegexAllFinder(words));
+        finders.add(new WordAutomatonAllFinder(words));
+        finders.add(new WordLinearAllFinder(words));
+        finders.add(new WordRegexAllCompleteFinder(words));
 
-        System.out.println();
-        System.out.println("FINDER\tTIME");
-        findSampleContents()
-            .forEach(
-                value -> {
-                    for (WordAbstractFinder finder : finders) {
-                        long start = System.currentTimeMillis();
-                        for (int i = 0; i < ITERATIONS; i++) {
-                            finder.findMatches(value);
-                        }
-                        long end = System.currentTimeMillis() - start;
-                        System.out.println(finder.getClass().getSimpleName() + "\t" + end);
-                    }
-                }
-            );
+        runBenchmark(finders);
 
-        Assert.assertTrue(true);
+        Assert.assertThat(true, is(true));
     }
 }

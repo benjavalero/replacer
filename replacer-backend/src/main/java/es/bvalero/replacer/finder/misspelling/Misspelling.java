@@ -11,7 +11,7 @@ import org.intellij.lang.annotations.RegExp;
  * Domain class corresponding to the lines in the Wikipedia article containing potential misspellings.
  */
 @Value
-class Misspelling {
+public class Misspelling {
     @RegExp
     private static final String REGEX_BRACKETS = "\\([^)]+\\)";
 

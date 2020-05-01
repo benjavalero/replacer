@@ -225,8 +225,8 @@ The tool implements the following generic immutable finders. We can add a priori
 ### Misspelling finders
 
 The sub-package _misspelling_ includes replacement and immutable finders related with misspellings.
+- **MisspellingSimpleFinder** Find misspellings with only word, e.g. `habia` in Spanish. The Spanish list contains about 20K items. The best approach is finding all the words in the text, and then which ones are in the misspelling list.
 
-- [ ] **MisspellingSimpleFinder** Find misspellings with only word, e.g. `habia` in Spanish
 - [ ] **MisspellingComposedFinder** Find misspellings with more than one word, e.g. `aún así` in Spanish
 
 - [ ] **PersonNameFinder** Find person names which are used also as nouns and thus are false positives, e.g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month to be written in lowercase.

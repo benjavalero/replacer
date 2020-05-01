@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * Find misspellings with only word, e.g. `habia` in Spanish
  */
 @Component
-class MisspellingSimpleFinder extends MisspellingFinder {
+public class MisspellingSimpleFinder extends MisspellingFinder {
     private static final RunAutomaton AUTOMATON_WORD = new RunAutomaton(
         new RegExp("(<L>|[-'])+").toAutomaton(new DatatypesAutomatonProvider())
     );

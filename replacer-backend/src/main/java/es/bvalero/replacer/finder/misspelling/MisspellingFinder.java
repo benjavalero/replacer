@@ -44,7 +44,7 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
         processMisspellingChange(misspellings);
     }
 
-    private Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
+    public Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
         LOGGER.info("START Build misspelling map");
 
         // Build a map to quick access the misspellings by word

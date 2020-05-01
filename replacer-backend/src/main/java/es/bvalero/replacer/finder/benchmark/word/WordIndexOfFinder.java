@@ -1,17 +1,21 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.word;
 
+import es.bvalero.replacer.finder.FinderUtils;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-class WordIndexOfFinder extends WordAbstractFinder {
-    private Collection<String> words;
+class WordIndexOfFinder implements BenchmarkFinder {
+    private final Collection<String> words;
 
     WordIndexOfFinder(Collection<String> words) {
         this.words = words;
     }
 
-    Set<FinderResult> findMatches(String text) {
+    @Override
+    public Set<FinderResult> findMatches(String text) {
         // We loop over all the words and find them in the text with the indexOf function
         Set<FinderResult> matches = new HashSet<>();
         for (String word : this.words) {
@@ -19,7 +23,7 @@ class WordIndexOfFinder extends WordAbstractFinder {
             while (start >= 0) {
                 start = text.indexOf(word, start);
                 if (start >= 0) {
-                    if (isWordCompleteInText(start, word, text)) {
+                    if (FinderUtils.isWordCompleteInText(start, word, text)) {
                         matches.add(FinderResult.of(start, word));
                     }
                     start++;

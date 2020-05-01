@@ -1,19 +1,20 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.word;
 
+import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class WordFinderTest {
     private Collection<String> words;
     private String text;
     private Set<FinderResult> expected;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         // Besides the common misspellings the list includes some terms
         // with numbers, dashes, quotes, super-indices and dots.
@@ -40,72 +41,66 @@ public class WordFinderTest {
     @Test
     public void testWordIndexOfFinder() {
         WordIndexOfFinder finder = new WordIndexOfFinder(this.words);
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     public void testWordRegexFinder() {
         WordRegexFinder finder = new WordRegexFinder(this.words);
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     public void testWordAutomatonFinder() {
         WordAutomatonFinder finder = new WordAutomatonFinder(this.words);
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     public void testWordRegexCompleteFinder() {
         WordRegexCompleteFinder finder = new WordRegexCompleteFinder(this.words);
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testWordAlternateRegexFinder() {
-        WordAlternateRegexFinder finder = new WordAlternateRegexFinder(this.words);
-        Assert.assertEquals(expected, finder.findMatches(text));
+    public void testWordRegexAlternateFinder() {
+        WordRegexAlternateFinder finder = new WordRegexAlternateFinder(this.words);
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testWordAlternateAutomatonFinder() {
-        WordAlternateAutomatonFinder finder = new WordAlternateAutomatonFinder(this.words);
-        Assert.assertEquals(expected, finder.findMatches(text));
+    public void testWordAutomatonAlternateFinder() {
+        WordAutomatonAlternateFinder finder = new WordAutomatonAlternateFinder(this.words);
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testWordAlternateRegexCompleteFinder() {
-        WordAlternateRegexCompleteFinder finder = new WordAlternateRegexCompleteFinder(this.words);
-        Assert.assertEquals(expected, finder.findMatches(text));
+    public void testWordRegexAlternateCompleteFinder() {
+        WordRegexAlternateCompleteFinder finder = new WordRegexAlternateCompleteFinder(this.words);
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     public void testWordRegexAllFinder() {
         WordRegexAllFinder finder = new WordRegexAllFinder(this.words);
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     public void testWordAutomatonAllFinder() {
         WordAutomatonAllFinder finder = new WordAutomatonAllFinder(this.words);
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testWordRegexAllPossessiveFinder() {
-        WordRegexAllPossessiveFinder finder = new WordRegexAllPossessiveFinder(this.words);
-        Assert.assertEquals(expected, finder.findMatches(text));
+    public void testWordLinearAllFinder() {
+        WordLinearAllFinder finder = new WordLinearAllFinder(this.words);
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     public void testWordRegexAllCompleteFinder() {
         WordRegexAllCompleteFinder finder = new WordRegexAllCompleteFinder(this.words);
-        Assert.assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    public void testWordRegexAllCompletePossessiveFinder() {
-        WordRegexAllCompletePossessiveFinder finder = new WordRegexAllCompletePossessiveFinder(this.words);
-        Assert.assertEquals(expected, finder.findMatches(text));
+        Assertions.assertEquals(expected, finder.findMatches(text));
     }
 }

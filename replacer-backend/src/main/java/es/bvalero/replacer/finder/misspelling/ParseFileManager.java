@@ -93,7 +93,7 @@ public abstract class ParseFileManager<T> {
     /**
      * Parse the text containing the items line by line.
      */
-    Set<T> parseItemsText(String text) {
+    public Set<T> parseItemsText(String text) {
         Set<T> itemSet = new HashSet<>();
 
         // We maintain a temporary set of item keys to find soft duplicates

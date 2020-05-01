@@ -17,7 +17,7 @@ import java.util.*;
 @Slf4j
 @Service
 @Profile("!default")
-class WikipediaServiceOfflineImpl implements WikipediaService {
+public class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public String getLoggedUserName(OAuth1AccessToken accessToken) {

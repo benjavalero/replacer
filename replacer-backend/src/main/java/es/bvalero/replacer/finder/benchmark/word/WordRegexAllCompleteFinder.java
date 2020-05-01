@@ -1,4 +1,7 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.word;
+
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.FinderResult;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -6,16 +9,17 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class WordRegexAllCompleteFinder extends WordAbstractFinder {
-    private Pattern wordPattern;
-    private Set<String> words;
+class WordRegexAllCompleteFinder implements BenchmarkFinder {
+    private final Pattern wordPattern;
+    private final Set<String> words;
 
     WordRegexAllCompleteFinder(Collection<String> words) {
         this.wordPattern = Pattern.compile("\\b[\\w\\-']+\\b", Pattern.UNICODE_CHARACTER_CLASS);
         this.words = new HashSet<>(words);
     }
 
-    Set<FinderResult> findMatches(String text) {
+    @Override
+    public Set<FinderResult> findMatches(String text) {
         // Find all complete words in the text with a regex and check if they are in the list
         Set<FinderResult> matches = new HashSet<>();
         Matcher m = this.wordPattern.matcher(text);
