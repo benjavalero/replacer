@@ -9,7 +9,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
- * Find some XML tags and all the content within, even other tags, e. g. `<code>An <span>example</span>.</code>`
+ * Find some XML tags and all the content within, even other tags, e.g. `<code>An <span>example</span>.</code>`
  */
 @Component
 public class CompleteTagFinder implements ImmutableFinder {

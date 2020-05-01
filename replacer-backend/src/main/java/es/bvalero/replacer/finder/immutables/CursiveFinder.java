@@ -8,7 +8,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
- * Find text in cursive, e. g. `''cursive''` in `This is a ''cursive'' example`
+ * Find text in cursive, e.g. `''cursive''` in `This is a ''cursive'' example`
  */
 @Component
 public class CursiveFinder implements ImmutableFinder {

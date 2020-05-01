@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Find person names which are used also as nouns and thus are false positives,
- * e. g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month
+ * e.g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month
  * to be written in lowercase.
  */
 @Component

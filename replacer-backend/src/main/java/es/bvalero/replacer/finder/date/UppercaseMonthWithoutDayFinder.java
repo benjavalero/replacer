@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * Find months in uppercase without day and after a common preposition, e. g. `desde Septiembre de 2019`
+ * Find months in uppercase without day and after a common preposition, e.g. `desde Septiembre de 2019`
  */
 @Component
 class UppercaseMonthWithoutDayFinder extends DateFinder implements ReplacementFinder {

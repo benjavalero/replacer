@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Find words in uppercase which are correct according to the punctuation,
- * e. g. `Enero` in `{{Cite|date=Enero de 2020}}`
+ * e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
  */
 // We make this implementation public to be used by the finder benchmarks
 @Slf4j

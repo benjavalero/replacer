@@ -10,7 +10,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
- * Find filenames, e. g. `xx.jpg` in `[[File:xx.jpg]]`
+ * Find filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`
  */
 @Component
 public class FileNameFinder implements ImmutableFinder {

@@ -11,7 +11,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
- * Find URLs, e. g. `https://www.google.es`
+ * Find URLs, e.g. `https://www.google.es`
  */
 @Component
 public class UrlFinder implements ImmutableFinder {

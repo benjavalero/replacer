@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Find person surnames. Also usual nouns preceded by a word starting in uppercase,
- * e. g. `RCA Records`
+ * e.g. `RCA Records`
  */
 @Component
 public class PersonSurnameFinder implements ImmutableFinder {

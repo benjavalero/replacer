@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * Find long dates starting with zero, e. g. `02 de septiembre de 2019`
+ * Find long dates starting with zero, e.g. `02 de septiembre de 2019`
  */
 @Component
 class LeadingZeroFinder extends DateFinder implements ReplacementFinder {

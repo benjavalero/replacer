@@ -9,7 +9,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
- * Find links with suffix, e. g. `[[brasil]]eño`
+ * Find links with suffix, e.g. `[[brasil]]eño`
  */
 @Component
 public class LinkSuffixedFinder implements ImmutableFinder {

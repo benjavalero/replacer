@@ -29,7 +29,7 @@ public class Replacement implements Comparable<Replacement> {
 
     /**
      * Optionally, the text in the section, especially for debugging purposes,
-     * i. e. the text between the start and end position of the section.
+     * i.e. the text between the start and end position of the section.
      */
     private String text;
 

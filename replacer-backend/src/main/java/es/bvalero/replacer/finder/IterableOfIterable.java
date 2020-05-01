@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder;
 import java.util.Iterator;
 
 /**
- * Helper class to iterate over an iterable of iterables, e. g. a list of lists.
+ * Helper class to iterate over an iterable of iterables, e.g. a list of lists.
  */
 public class IterableOfIterable<T> implements Iterable<T> {
     private final Iterable<Iterable<T>> iterables;

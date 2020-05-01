@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * Find dates with the month in uppercase, e. g. `2 de Septiembre de 2019`
+ * Find dates with the month in uppercase, e.g. `2 de Septiembre de 2019`
  */
 @Component
 class UppercaseMonthFinder extends DateFinder implements ReplacementFinder {

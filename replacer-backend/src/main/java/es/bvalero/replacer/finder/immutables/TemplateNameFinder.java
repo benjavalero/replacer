@@ -10,7 +10,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
- * Find template names, e. g. `Bandera` in `{{Bandera|España}}`
+ * Find template names, e.g. `Bandera` in `{{Bandera|España}}`
  */
 @Component
 public class TemplateNameFinder implements ImmutableFinder {

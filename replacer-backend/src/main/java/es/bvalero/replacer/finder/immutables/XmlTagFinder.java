@@ -11,7 +11,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
- * Find XML tags, e. g. `<span>` or `<br />`
+ * Find XML tags, e.g. `<span>` or `<br />`
  */
 @Component
 public class XmlTagFinder implements ImmutableFinder {

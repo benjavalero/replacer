@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Find misspellings with more than one word, e. g. `aún así` in Spanish
+ * Find misspellings with more than one word, e.g. `aún así` in Spanish
  */
 @Component
 class MisspellingComposedFinder extends MisspellingFinder {

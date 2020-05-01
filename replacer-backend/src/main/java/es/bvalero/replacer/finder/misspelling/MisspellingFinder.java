@@ -107,7 +107,7 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
         return Optional.ofNullable(this.misspellingMap.get(word));
     }
 
-    // Transform the case of the suggestion, e. g. "Habia" -> "Había"
+    // Transform the case of the suggestion, e.g. "Habia" -> "Había"
     private List<Suggestion> findSuggestions(String originalWord) {
         List<Suggestion> suggestions = new LinkedList<>();
 

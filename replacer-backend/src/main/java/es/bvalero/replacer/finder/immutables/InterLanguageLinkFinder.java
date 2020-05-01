@@ -9,7 +9,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
- * Find inter-language links, e. g. `[[:pt:Title]]`
+ * Find inter-language links, e.g. `[[:pt:Title]]`
  */
 @Component
 public class InterLanguageLinkFinder implements ImmutableFinder {

@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * Find complete templates, even with nested templates, e. g. `{{Cite|A cite}}`
+ * Find complete templates, even with nested templates, e.g. `{{Cite|A cite}}`
  */
 @Component
 public class TemplateFinder implements ImmutableFinder {

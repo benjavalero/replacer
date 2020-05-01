@@ -8,7 +8,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
- * Find the first part of aliased links, e. g. `brasil` in `[[brasil|Brasil]]`
+ * Find the first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`
  */
 @Component
 public class LinkAliasedFinder implements ImmutableFinder {

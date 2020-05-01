@@ -10,7 +10,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
- * Find categories, e. g. `[[Categoría:España]]`
+ * Find categories, e.g. `[[Categoría:España]]`
  */
 @Component
 public class CategoryFinder implements ImmutableFinder {

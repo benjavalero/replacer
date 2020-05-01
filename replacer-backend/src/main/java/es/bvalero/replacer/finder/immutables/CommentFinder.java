@@ -12,7 +12,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
- * Find XML comments, e. g. `<!-- A comment -->`
+ * Find XML comments, e.g. `<!-- A comment -->`
  */
 @Component
 public class CommentFinder implements ImmutableFinder {

@@ -3,7 +3,7 @@
         {
             "name": "replacer.cors.allowed.origins",
             "type": "java.lang.String",
-            "description": "Allowed origins for CORS e. g. for development"
+            "description": "Allowed origins for CORS e.g. for development"
         },
         {
             "name": "replacer.dump.path.base",
@@ -13,7 +13,7 @@
         {
             "name": "replacer.dump.path.project",
             "type": "java.lang.String",
-            "description": "Project name in the dump folder, e. g. `eswiki`"
+            "description": "Project name in the dump folder, e.g. `eswiki`"
         },
         {
             "name": "replacer.dump.batch.delay",

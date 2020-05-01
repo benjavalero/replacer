@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
  *
  * The dumps are generated monthly and placed in a shared folder in Wikipedia servers.
  * This dump base folder is structured in sub-folders corresponding to the different wiki-projects,
- * e. g. `eswiki`, which are also structured in sub-folders for each generation date, e. g. `20120120`,
+ * e.g. `eswiki`, which are also structured in sub-folders for each generation date, e.g. `20120120`,
  * containing finally the dump files.
  *
  * This component looks, for one project, into the date folders to find the last

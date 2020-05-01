@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Find links where the alias matches with the target link and thus the alias can be removed,
- * e. g. `[[Madrid|Madrid]]`
+ * e.g. `[[Madrid|Madrid]]`
  */
 @Component
 class SameLinkFinder implements CosmeticFinder {

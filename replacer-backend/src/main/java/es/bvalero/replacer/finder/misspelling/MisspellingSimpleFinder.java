@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Find misspellings with only word, e. g. `habia` in Spanish
+ * Find misspellings with only word, e.g. `habia` in Spanish
  */
 @Component
 class MisspellingSimpleFinder extends MisspellingFinder {
