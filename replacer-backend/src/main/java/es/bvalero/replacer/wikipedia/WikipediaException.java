@@ -1,6 +1,12 @@
 package es.bvalero.replacer.wikipedia;
 
-public class WikipediaException extends Exception {
+import es.bvalero.replacer.ReplacerException;
+
+/**
+ * @deprecated To be removed and replaced completely by @ReplacerException.
+ */
+@Deprecated(forRemoval = true)
+public class WikipediaException extends ReplacerException {
 
     private static final long serialVersionUID = 2871760157267387056L;
 

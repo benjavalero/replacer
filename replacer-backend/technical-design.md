@@ -233,6 +233,8 @@ The sub-package _misspelling_ includes replacement and immutable finders related
 - [ ] **FalsePositiveFinder** Find known expressions which are (almost) always false positives, e.g. in Spanish `aun así` which hides the potential replacement `aun`
 - [ ] **UppercaseAfterFinder** Find words in uppercase which are correct according to the punctuation, e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
 
+Some of these finders use a list of properties which are maintained in text files (or Wikipedia pages) that need to be parsed first. These finders retrieve the properties from a _Manager_ class which extends the generic `ParseFileManager`. All of these also implement the Observable pattern. The managers reload the properties periodically, and the observer finders are notified in case of changes.
+
 ### Date Finders
 
 The sub-package _date_ includes replacement finders related with dates.
@@ -243,7 +245,7 @@ The sub-package _date_ includes replacement finders related with dates.
 
 ### Cosmetic Finders
 
-The sub-package `cosmetic` contains the cosmetic finders. The tool implements the following generic cosmetic finders:
+The sub-package `cosmetics` contains the cosmetic finders. The tool implements the following generic cosmetic finders:
 
 - **SameLinkFinder** Find links where the alias matches with the target link and thus the alias can be removed, e.g. `[[Madrid|Madrid]]`
 
@@ -289,7 +291,6 @@ The sub-package `benchmark` contains sub-packages for several finders, with  dif
 
 ### Docs
 - [ ] Publish the rules of BenjaBot
-- [ ] Review the managers for misspellings and false-positives, and remark the Observable pattern.
 - [ ] Complete the rest of the technical design
 - [ ] The Java code is formatted with [Prettier Java](https://github.com/jhipster/prettier-java)
 - [ ] The Java code has been migrated Java 11. The only issue is the tests with @DataJpaTest so they have been disabled, but it seems a problem of Spring/JDK itself, so it is not worth to investigate more.

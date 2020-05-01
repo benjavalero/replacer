@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.misspelling;
 
-import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.ReplacerException;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
@@ -13,9 +13,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
 
+/**
+ * Abstract class, implementing the Observable pattern, to load periodically properties maintained externally
+ * and used by some finders.
+ */
 @Slf4j
 public abstract class ParseFileManager<T> {
-    private PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+    private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     // Set of misspellings found in the misspelling list
     private Set<T> items = new HashSet<>();
@@ -35,21 +39,24 @@ public abstract class ParseFileManager<T> {
     }
 
     /**
-     * Update the list of false positives or replacements from Wikipedia.
+     * Update periodically a list of items from Wikipedia.
      */
     @Scheduled(fixedDelayString = "${replacer.parse.file.delay}")
     public void update() {
         LOGGER.info("EXECUTE Scheduled daily update of {} set", getLabel());
         try {
             setItems(findItems());
-        } catch (WikipediaException e) {
+        } catch (ReplacerException e) {
             LOGGER.error("Error updating {} set", getLabel(), e);
         }
     }
 
+    /**
+     * The name of the item concept for logging purposes.
+     */
     abstract String getLabel();
 
-    private Set<T> findItems() throws WikipediaException {
+    private Set<T> findItems() throws ReplacerException {
         LOGGER.info("START Loading {} set from Wikipedia...", getLabel());
         String itemsText = findItemsText();
         Set<T> itemSet = parseItemsText(itemsText);
@@ -57,8 +64,14 @@ public abstract class ParseFileManager<T> {
         return itemSet;
     }
 
-    abstract String findItemsText() throws WikipediaException;
+    /**
+     * Retrieve from Wikipedia the text containing the items.
+     */
+    abstract String findItemsText() throws ReplacerException;
 
+    /**
+     * Parse the text containing the items line by line.
+     */
     Set<T> parseItemsText(String text) {
         Set<T> itemSet = new HashSet<>();
 
@@ -98,7 +111,13 @@ public abstract class ParseFileManager<T> {
         return idx != -1 ? line.substring(0, idx) : line;
     }
 
+    /**
+     * Parse a line in the text corresponding to an item.
+     */
     abstract @Nullable T parseItemLine(String itemLine);
 
+    /**
+     * In some cases the key string identifying the item.
+     */
     abstract String getItemKey(T item);
 }
