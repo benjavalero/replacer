@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Find misspellings with more than one word, e.g. `aún así` in Spanish
  */
 @Component
-class MisspellingComposedFinder extends MisspellingFinder {
+public class MisspellingComposedFinder extends MisspellingFinder {
     private static final String TYPE_MISSPELLING_COMPOSED = "Compuestos";
 
     @Autowired
