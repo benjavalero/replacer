@@ -20,7 +20,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Abstract class for the common fonctionality of the misspelling finders.
+ * Abstract class for the common functionality of the misspelling finders.
  */
 // We make this implementation public to be used by the finder benchmarks
 @Slf4j

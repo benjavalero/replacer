@@ -226,11 +226,10 @@ The tool implements the following generic immutable finders. We can add a priori
 
 The sub-package _misspelling_ includes replacement and immutable finders related with misspellings.
 - **MisspellingSimpleFinder** Find misspellings with only word, e.g. `habia` in Spanish. The Spanish list contains about 20K items. The best approach is finding all the words in the text, and then which ones are in the misspelling list.
+- **FalsePositiveFinder** Find known expressions which are (almost) always false positives, e.g. in Spanish `aun así` which hides the potential replacement `aun`. Currently there are about 300 items, and the best approach is a regex alternating all the items.
 
 - [ ] **MisspellingComposedFinder** Find misspellings with more than one word, e.g. `aún así` in Spanish
-
 - [ ] **PersonNameFinder** Find person names which are used also as nouns and thus are false positives, e.g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month to be written in lowercase.
-- [ ] **FalsePositiveFinder** Find known expressions which are (almost) always false positives, e.g. in Spanish `aun así` which hides the potential replacement `aun`
 - [ ] **UppercaseAfterFinder** Find words in uppercase which are correct according to the punctuation, e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
 
 Some of these finders use a list of properties which are maintained in text files (or Wikipedia pages) that need to be parsed first. These finders retrieve the properties from a _Manager_ class which extends the generic `ParseFileManager`. All of these also implement the Observable pattern. The managers reload the properties periodically, and the observer finders are notified in case of changes.

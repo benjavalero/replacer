@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
 import dk.brics.automaton.AutomatonMatcher;
+import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderUtils;
@@ -14,7 +15,7 @@ class WordAutomatonFinder implements BenchmarkFinder {
     WordAutomatonFinder(Collection<String> words) {
         this.words = new ArrayList<>();
         for (String word : words) {
-            this.words.add(new RunAutomaton(new RegExp(word).toAutomaton()));
+            this.words.add(new RunAutomaton(new RegExp(word).toAutomaton(new DatatypesAutomatonProvider())));
         }
     }
 

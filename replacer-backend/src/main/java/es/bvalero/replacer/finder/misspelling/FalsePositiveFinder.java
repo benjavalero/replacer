@@ -26,7 +26,6 @@ import org.springframework.stereotype.Component;
  * Find known expressions which are (almost) always false positives,
  * e.g. in Spanish `aun así` which hides the potential replacement `aun`
  */
-// We make this implementation public to be used by the finder benchmarks
 @Slf4j
 @Component
 public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
