@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 public class FinderUtils {
+    public static final String STRING_EMPTY = "";
     private static final Locale LOCALE_ES = Locale.forLanguageTag("es");
     private static final Set<Character> invalidSeparators = new HashSet<>(Arrays.asList('_', '/'));
 

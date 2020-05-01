@@ -1,30 +1,35 @@
 package es.bvalero.replacer.finder.misspelling;
 
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.SetValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
 
 /**
- * Abstract class, implementing the Observable pattern, to load periodically properties maintained externally
- * and used by some finders.
+ * Abstract class, implementing the Observable pattern, to load periodically properties
+ * maintained externally and used by some finders.
  */
 @Slf4j
 public abstract class ParseFileManager<T> {
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
-    // Set of misspellings found in the misspelling list
-    private Set<T> items = new HashSet<>();
+    private SetValuedMap<WikipediaLanguage, T> items = new HashSetValuedHashMap<>();
 
-    void setItems(Set<T> items) {
+    void setItems(SetValuedMap<WikipediaLanguage, T> items) {
         changeSupport.firePropertyChange("name", this.items, items);
 
         processRemovedItems(this.items, items);
@@ -32,7 +37,9 @@ public abstract class ParseFileManager<T> {
         this.items = items;
     }
 
-    abstract void processRemovedItems(Set<T> oldItems, Set<T> newItems);
+    void processRemovedItems(SetValuedMap<WikipediaLanguage, T> oldItems, SetValuedMap<WikipediaLanguage, T> newItems) {
+        // Nothing to do
+    }
 
     void addPropertyChangeListener(PropertyChangeListener listener) {
         changeSupport.addPropertyChangeListener(listener);
@@ -43,12 +50,8 @@ public abstract class ParseFileManager<T> {
      */
     @Scheduled(fixedDelayString = "${replacer.parse.file.delay}")
     public void update() {
-        LOGGER.info("EXECUTE Scheduled daily update of {} set", getLabel());
-        try {
-            setItems(findItems());
-        } catch (ReplacerException e) {
-            LOGGER.error("Error updating {} set", getLabel(), e);
-        }
+        LOGGER.info("EXECUTE Scheduled daily update of {} sets", getLabel());
+        setItems(findItems());
     }
 
     /**
@@ -56,18 +59,36 @@ public abstract class ParseFileManager<T> {
      */
     abstract String getLabel();
 
-    private Set<T> findItems() throws ReplacerException {
-        LOGGER.info("START Loading {} set from Wikipedia...", getLabel());
-        String itemsText = findItemsText();
-        Set<T> itemSet = parseItemsText(itemsText);
-        LOGGER.info("END Load {} set from Wikipedia. Items found: {}", getLabel(), itemSet.size());
-        return itemSet;
+    private SetValuedMap<WikipediaLanguage, T> findItems() {
+        LOGGER.info("START Loading {} sets from Wikipedia...", getLabel());
+        SetValuedMap<WikipediaLanguage, T> map = new HashSetValuedHashMap<>();
+        for (Map.Entry<WikipediaLanguage, String> entry : findItemsText().entrySet()) {
+            Set<T> itemSet = parseItemsText(entry.getValue());
+            items.putAll(entry.getKey(), itemSet);
+            LOGGER.info(
+                "END Load {} set from {} Wikipedia. Items found: {}",
+                getLabel(),
+                entry.getKey(),
+                itemSet.size()
+            );
+        }
+        return map;
     }
 
     /**
-     * Retrieve from Wikipedia the text containing the items.
+     * Retrieve from Wikipedia the text containing the items for all languages.
      */
-    abstract String findItemsText() throws ReplacerException;
+    private Map<WikipediaLanguage, String> findItemsText() {
+        return Arrays
+            .stream(WikipediaLanguage.values())
+            .filter(lang -> WikipediaLanguage.ALL != lang)
+            .collect(Collectors.toMap(Function.identity(), this::findItemsText));
+    }
+
+    /**
+     * Retrieve from Wikipedia the text containing the items for a specific language.
+     */
+    abstract String findItemsText(WikipediaLanguage lang);
 
     /**
      * Parse the text containing the items line by line.

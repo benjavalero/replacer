@@ -1,13 +1,14 @@
 package es.bvalero.replacer.finder.misspelling;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.replacement.ReplacementRepository;
-import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-
+import org.apache.commons.collections4.SetValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,18 +76,22 @@ public class MisspellingManagerTest {
     public void testDeleteObsoleteMisspellings() {
         Misspelling misspelling1 = Misspelling.ofCaseInsensitive("A", "B");
         Misspelling misspelling2 = Misspelling.ofCaseInsensitive("B", "C");
-        misspellingManager.setItems(new HashSet<>(Arrays.asList(misspelling1, misspelling2)));
+        SetValuedMap<WikipediaLanguage, Misspelling> map1 = new HashSetValuedHashMap<>();
+        map1.putAll(WikipediaLanguage.SPANISH, Arrays.asList(misspelling1, misspelling2));
+        misspellingManager.setItems(map1);
 
         Mockito.verify(replacementRepository, Mockito.times(0)).deleteBySubtypeIn(Mockito.anySet());
 
         Misspelling misspelling3 = Misspelling.ofCaseInsensitive("C", "D");
-        misspellingManager.setItems(new HashSet<>(Arrays.asList(misspelling2, misspelling3)));
+        SetValuedMap<WikipediaLanguage, Misspelling> map2 = new HashSetValuedHashMap<>();
+        map2.putAll(WikipediaLanguage.SPANISH, Arrays.asList(misspelling2, misspelling3));
+        misspellingManager.setItems(map2);
 
         Mockito.verify(replacementRepository, Mockito.times(1)).deleteBySubtypeIn(Collections.singleton("A"));
     }
 
     @Test
-    public void testUpdate() throws WikipediaException {
+    public void testUpdate() throws ReplacerException {
         Mockito.when(wikipediaService.getMisspellingListPageContent()).thenReturn("");
 
         misspellingManager.update();

@@ -1,12 +1,15 @@
 package es.bvalero.replacer.finder.misspelling;
 
+import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.replacement.ReplacementRepository;
-import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +28,22 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
     private ReplacementRepository replacementRepository;
 
     @Override
-    void processRemovedItems(Set<Misspelling> oldItems, Set<Misspelling> newItems) {
+    void processRemovedItems(
+        SetValuedMap<WikipediaLanguage, Misspelling> oldItems,
+        SetValuedMap<WikipediaLanguage, Misspelling> newItems
+    ) {
         // Find the misspellings removed from the list to remove them from the database
-        Set<String> oldWords = oldItems.stream().map(Misspelling::getWord).collect(Collectors.toSet());
-        Set<String> newWords = newItems.stream().map(Misspelling::getWord).collect(Collectors.toSet());
+        // TODO: Do for all languages
+        Set<String> oldWords = oldItems
+            .get(WikipediaLanguage.SPANISH)
+            .stream()
+            .map(Misspelling::getWord)
+            .collect(Collectors.toSet());
+        Set<String> newWords = newItems
+            .get(WikipediaLanguage.SPANISH)
+            .stream()
+            .map(Misspelling::getWord)
+            .collect(Collectors.toSet());
         oldWords.removeAll(newWords);
         if (!oldWords.isEmpty()) {
             LOGGER.warn("Deleting from database obsolete misspellings: {}", oldWords);
@@ -42,8 +57,17 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
     }
 
     @Override
-    String findItemsText() throws WikipediaException {
-        return wikipediaService.getMisspellingListPageContent();
+    String findItemsText(WikipediaLanguage lang) {
+        String text = FinderUtils.STRING_EMPTY;
+        // TODO: Support all languages
+        if (WikipediaLanguage.SPANISH == lang) {
+            try {
+                text = wikipediaService.getMisspellingListPageContent();
+            } catch (ReplacerException e) {
+                LOGGER.error("Error updating {} {} set", getLabel(), lang, e);
+            }
+        }
+        return text;
     }
 
     @Override
