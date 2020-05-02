@@ -4,6 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <import resource="languages.xml"/>
     <import resource="complete-tags.xml"/>
     <import resource="template-params.xml"/>
     <import resource="template-names.xml"/>

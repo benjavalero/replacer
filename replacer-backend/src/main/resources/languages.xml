@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/util
+   		   http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <util:map id="simpleMisspellingPages" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Wikipedia:Corrector ortográfico/Listado"/>
+        <entry key="gl" value="Wikipedia:Revisor ortográfico/Listaxe"/>
+    </util:map>
+
+    <util:map id="composedMisspellingPages" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Usuario:Benjavalero/ComposedMisspellings"/>
+        <entry key="gl" value="Usuario:Benjavalero/ComposedMisspellings/gl"/>
+    </util:map>
+
+    <util:map id="falsePositivePages" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Usuario:Benjavalero/FalsePositives"/>
+        <entry key="gl" value="Usuario:Benjavalero/FalsePositives/gl"/>
+    </util:map>
+
+</beans>

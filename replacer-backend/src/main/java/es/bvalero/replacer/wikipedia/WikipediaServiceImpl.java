@@ -5,6 +5,7 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.FinderUtils;
 import java.util.*;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,9 +19,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Profile("default")
 class WikipediaServiceImpl implements WikipediaService {
-    private static final String MISSPELLING_LIST_PAGE = "Wikipedia:Corrector ortográfico/Listado";
-    private static final String FALSE_POSITIVE_LIST_PAGE = "Usuario:Benjavalero/FalsePositives";
-    private static final String COMPOSED_MISSPELLING_LIST_PAGE = "Usuario:Benjavalero/ComposedMisspellings";
     private static final String EDIT_SUMMARY =
         "Correcciones ortográficas con [[Usuario:Benjavalero/Replacer|Replacer]] (herramienta en línea de revisión de errores)";
     private static final int MAX_PAGES_REQUESTED = 50;
@@ -35,6 +33,15 @@ class WikipediaServiceImpl implements WikipediaService {
     @Setter
     @Value("${replacer.admin.user}")
     private String adminUser;
+
+    @Resource
+    private Map<WikipediaLanguage, String> simpleMisspellingPages;
+
+    @Resource
+    private Map<WikipediaLanguage, String> composedMisspellingPages;
+
+    @Resource
+    private Map<WikipediaLanguage, String> falsePositivePages;
 
     @Override
     public String getLoggedUserName(OAuth1AccessToken accessToken, WikipediaLanguage lang) throws ReplacerException {
@@ -67,20 +74,19 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Override
     public String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        // TODO: Load the page title from properties
-        return getPageByTitle(MISSPELLING_LIST_PAGE, lang).orElseThrow(ReplacerException::new).getContent();
+        return getPageByTitle(simpleMisspellingPages.get(lang), lang).orElseThrow(ReplacerException::new).getContent();
     }
 
     @Override
     public String getFalsePositiveListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        // TODO: Load the page title from properties
-        return getPageByTitle(FALSE_POSITIVE_LIST_PAGE, lang).orElseThrow(ReplacerException::new).getContent();
+        return getPageByTitle(falsePositivePages.get(lang), lang).orElseThrow(ReplacerException::new).getContent();
     }
 
     @Override
     public String getComposedMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        // TODO: Load the page title from properties
-        return getPageByTitle(COMPOSED_MISSPELLING_LIST_PAGE, lang).orElseThrow(ReplacerException::new).getContent();
+        return getPageByTitle(composedMisspellingPages.get(lang), lang)
+            .orElseThrow(ReplacerException::new)
+            .getContent();
     }
 
     @Override
