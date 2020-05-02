@@ -1,11 +1,12 @@
 package es.bvalero.replacer.finder.misspelling;
 
-import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Collection;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -18,7 +19,7 @@ public class FalsePositiveManagerTest {
     @InjectMocks
     private FalsePositiveManager falsePositiveManager;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         falsePositiveManager = new FalsePositiveManager();
         MockitoAnnotations.initMocks(this);
@@ -38,18 +39,20 @@ public class FalsePositiveManagerTest {
             " c\n"; // Duplicated
 
         Collection<String> falsePositives = falsePositiveManager.parseItemsText(falsePositiveListText);
-        Assert.assertEquals(3, falsePositives.size());
-        Assert.assertTrue(falsePositives.contains("B"));
-        Assert.assertTrue(falsePositives.contains("b"));
-        Assert.assertTrue(falsePositives.contains("c"));
+        Assertions.assertEquals(3, falsePositives.size());
+        Assertions.assertTrue(falsePositives.contains("B"));
+        Assertions.assertTrue(falsePositives.contains("b"));
+        Assertions.assertTrue(falsePositives.contains("c"));
     }
 
     @Test
-    public void testUpdate() throws WikipediaException {
-        Mockito.when(wikipediaService.getFalsePositiveListPageContent()).thenReturn("");
+    public void testUpdate() throws ReplacerException {
+        Mockito
+            .when(wikipediaService.getFalsePositiveListPageContent(Mockito.any(WikipediaLanguage.class)))
+            .thenReturn("");
 
         falsePositiveManager.update();
 
-        Mockito.verify(wikipediaService).getFalsePositiveListPageContent();
+        Mockito.verify(wikipediaService).getFalsePositiveListPageContent(WikipediaLanguage.SPANISH);
     }
 }

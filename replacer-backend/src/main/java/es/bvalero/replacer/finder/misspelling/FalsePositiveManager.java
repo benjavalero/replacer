@@ -25,13 +25,10 @@ public class FalsePositiveManager extends ParseFileManager<String> {
     @Override
     String findItemsText(WikipediaLanguage lang) {
         String text = FinderUtils.STRING_EMPTY;
-        // TODO: Support all languages
-        if (WikipediaLanguage.SPANISH == lang) {
-            try {
-                text = wikipediaService.getFalsePositiveListPageContent();
-            } catch (ReplacerException e) {
-                LOGGER.error("Error updating {} {} set", getLabel(), lang, e);
-            }
+        try {
+            text = wikipediaService.getFalsePositiveListPageContent(lang);
+        } catch (ReplacerException e) {
+            LOGGER.error("Error updating {} {} set", getLabel(), lang, e);
         }
         return text;
     }

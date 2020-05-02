@@ -1,5 +1,6 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementCountService;
@@ -77,7 +78,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewTypeNotFiltered() throws WikipediaException {
+    public void testFindRandomArticleToReviewTypeNotFiltered() throws ReplacerException {
         // 1 result in DB
         Mockito
             .when(
@@ -91,10 +92,10 @@ public class ArticleReviewTypeSubtypeServiceTest {
             .thenReturn(Collections.emptyList());
 
         // The article exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId)).thenReturn(Optional.of(article));
+        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
 
         // The article contains replacements
-        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.ALL)).thenReturn(replacements);
+        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH)).thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options2);
 
@@ -106,7 +107,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewTypeFiltered() throws WikipediaException {
+    public void testFindRandomArticleToReviewTypeFiltered() throws ReplacerException {
         // 1 result in DB
         Mockito
             .when(
@@ -119,7 +120,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
 
         // The article exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId)).thenReturn(Optional.of(article));
+        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
 
         // The article contains replacements
         Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.ALL)).thenReturn(replacements);
@@ -135,7 +136,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewNoTypeAndThenFiltered() throws WikipediaException {
+    public void testFindRandomArticleToReviewNoTypeAndThenFiltered() throws ReplacerException {
         // 1. Find the random article 1 by type. In DB there exists also the article 2.
         // 2. Find the random article 2 by no type. The article 2 is supposed to be removed from all the caches.
         // 3. Find a random article by type. In DB there is no article.
@@ -157,8 +158,8 @@ public class ArticleReviewTypeSubtypeServiceTest {
             .thenReturn(new ArrayList<>(Collections.singletonList(randomId2)));
 
         // The articles exist in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId)).thenReturn(Optional.of(article));
-        Mockito.when(wikipediaService.getPageById(randomId2)).thenReturn(Optional.of(article2));
+        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
+        Mockito.when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article2));
 
         // The articles contains replacements
         Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.ALL)).thenReturn(replacements);
@@ -177,11 +178,11 @@ public class ArticleReviewTypeSubtypeServiceTest {
     }
 
     @Test
-    public void testArticleReviewWithSection() throws WikipediaException {
+    public void testArticleReviewWithSection() throws ReplacerException {
         final int sectionId = 1;
 
         // The article exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId)).thenReturn(Optional.of(article));
+        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
 
         // The article contains replacements
         Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.ALL)).thenReturn(replacements);
@@ -206,9 +207,9 @@ public class ArticleReviewTypeSubtypeServiceTest {
     }
 
     @Test
-    public void testArticleReviewWithNoSection() throws WikipediaException {
+    public void testArticleReviewWithNoSection() throws ReplacerException {
         // The article exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId)).thenReturn(Optional.of(article));
+        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
 
         // The article contains replacements
         Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.ALL)).thenReturn(replacements);

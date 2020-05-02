@@ -4,6 +4,7 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.misspelling.*;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaServiceOfflineImpl;
 import org.hamcrest.MatcherAssert;
@@ -22,7 +23,7 @@ public class ComposedFinderBenchmark extends BaseFinderBenchmark {
     @Test
     public void testWordFinderBenchmark() throws IOException, URISyntaxException, ReplacerException {
         WikipediaService wikipediaService = new WikipediaServiceOfflineImpl();
-        String text = wikipediaService.getComposedMisspellingListPageContent();
+        String text = wikipediaService.getComposedMisspellingListPageContent(WikipediaLanguage.SPANISH);
 
         // Load the misspellings
         MisspellingManager misspellingManager = new MisspellingComposedManager();

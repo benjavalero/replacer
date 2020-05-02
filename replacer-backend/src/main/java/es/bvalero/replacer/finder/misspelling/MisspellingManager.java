@@ -59,13 +59,10 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
     @Override
     String findItemsText(WikipediaLanguage lang) {
         String text = FinderUtils.STRING_EMPTY;
-        // TODO: Support all languages
-        if (WikipediaLanguage.SPANISH == lang) {
-            try {
-                text = wikipediaService.getMisspellingListPageContent();
-            } catch (ReplacerException e) {
-                LOGGER.error("Error updating {} {} set", getLabel(), lang, e);
-            }
+        try {
+            text = wikipediaService.getMisspellingListPageContent(lang);
+        } catch (ReplacerException e) {
+            LOGGER.error("Error updating {} {} set", getLabel(), lang, e);
         }
         return text;
     }

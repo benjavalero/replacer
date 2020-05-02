@@ -6,6 +6,7 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.misspelling.*;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaServiceOfflineImpl;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class UppercaseFinderBenchmark extends BaseFinderBenchmark {
     @Test
     public void testBenchmark() throws IOException, URISyntaxException, ReplacerException {
         WikipediaService wikipediaService = new WikipediaServiceOfflineImpl();
-        String text = wikipediaService.getMisspellingListPageContent();
+        String text = wikipediaService.getMisspellingListPageContent(WikipediaLanguage.SPANISH);
 
         // Load the misspellings
         MisspellingManager misspellingManager = new MisspellingManager();

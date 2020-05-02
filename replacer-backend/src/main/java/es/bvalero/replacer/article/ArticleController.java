@@ -1,10 +1,11 @@
 package es.bvalero.replacer.article;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.authentication.AccessToken;
 import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
-import es.bvalero.replacer.wikipedia.WikipediaException;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -84,14 +85,15 @@ public class ArticleController {
     /* SAVE CHANGES */
 
     @PostMapping
-    public void save(@RequestBody SaveArticle saveArticle) throws WikipediaException {
+    public void save(@RequestBody SaveArticle saveArticle) throws ReplacerException {
         boolean changed = StringUtils.isNotBlank(saveArticle.getContent());
         LOGGER.info("PUT Save article. ID: {} - Changed: {}", saveArticle.getArticleId(), changed);
         if (changed) {
             // Upload new content to Wikipedia
+            // TODO: Receive language as a parameter
             String textToSave = cosmeticFindService.applyCosmeticChanges(saveArticle.getContent());
             wikipediaService.savePageContent(saveArticle.getArticleId(), textToSave, saveArticle.getSection(),
-                    saveArticle.getTimestamp(), convertToEntity(saveArticle.getToken()));
+                    saveArticle.getTimestamp(), WikipediaLanguage.SPANISH, convertToEntity(saveArticle.getToken()));
         }
 
         // Mark article as reviewed in the database

@@ -92,10 +92,12 @@ public class MisspellingManagerTest {
 
     @Test
     public void testUpdate() throws ReplacerException {
-        Mockito.when(wikipediaService.getMisspellingListPageContent()).thenReturn("");
+        Mockito
+            .when(wikipediaService.getMisspellingListPageContent(Mockito.any(WikipediaLanguage.class)))
+            .thenReturn("");
 
         misspellingManager.update();
 
-        Mockito.verify(wikipediaService).getMisspellingListPageContent();
+        Mockito.verify(wikipediaService).getMisspellingListPageContent(WikipediaLanguage.SPANISH);
     }
 }

@@ -6,6 +6,7 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.misspelling.*;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaServiceOfflineImpl;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class FalseFinderBenchmark extends BaseFinderBenchmark {
     @Test
     public void testWordFinderBenchmark() throws IOException, URISyntaxException, ReplacerException {
         WikipediaService wikipediaService = new WikipediaServiceOfflineImpl();
-        String text = wikipediaService.getFalsePositiveListPageContent();
+        String text = wikipediaService.getFalsePositiveListPageContent(WikipediaLanguage.SPANISH);
 
         // Load the false positives
         FalsePositiveManager falsePositiveManager = new FalsePositiveManager();

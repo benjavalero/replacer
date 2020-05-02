@@ -1,21 +1,17 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Suggestion;
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaSection;
-import es.bvalero.replacer.wikipedia.WikipediaService;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import es.bvalero.replacer.wikipedia.*;
+import java.util.Collections;
+import java.util.Optional;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.modelmapper.ModelMapper;
 
-import java.util.Collections;
-import java.util.Optional;
-
 public class SectionReviewServiceTest {
-
     @Mock
     private WikipediaService wikipediaService;
 
@@ -25,24 +21,26 @@ public class SectionReviewServiceTest {
     @InjectMocks
     private SectionReviewService sectionReviewService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         sectionReviewService = new SectionReviewService();
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void findSectionReviewNoSections() throws WikipediaException {
-        Mockito.when(wikipediaService.getPageSections(Mockito.anyInt())).thenReturn(Collections.emptyList());
+    public void findSectionReviewNoSections() throws ReplacerException {
+        Mockito
+            .when(wikipediaService.getPageSections(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .thenReturn(Collections.emptyList());
 
         ArticleReview review = new ArticleReview();
         Optional<ArticleReview> sectionReview = sectionReviewService.findSectionReview(review);
 
-        Assert.assertFalse(sectionReview.isPresent());
+        Assertions.assertFalse(sectionReview.isPresent());
     }
 
     @Test
-    public void findSectionReview() throws WikipediaException {
+    public void findSectionReview() throws ReplacerException {
         int articleId = 1;
         String content = "This is an sample content.";
         Suggestion suggestion = Suggestion.ofNoComment("a");
@@ -55,30 +53,39 @@ public class SectionReviewServiceTest {
 
         int sectionId = 3;
         int offset = 5;
-        WikipediaSection section = WikipediaSection.builder()
-                .index(sectionId).level(2).byteOffset(offset)
-                .build();
-        Mockito.when(wikipediaService.getPageSections(Mockito.anyInt())).thenReturn(Collections.singletonList(section));
+        WikipediaSection section = WikipediaSection.builder().index(sectionId).level(2).byteOffset(offset).build();
+        Mockito
+            .when(wikipediaService.getPageSections(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .thenReturn(Collections.singletonList(section));
 
         String sectionContent = content.substring(offset, 10);
-        WikipediaPage pageSection = WikipediaPage.builder()
-                .id(articleId)
-                .content(sectionContent)
-                .section(sectionId)
-                .build();
-        Mockito.when(wikipediaService.getPageByIdAndSection(Mockito.eq(articleId), Mockito.eq(sectionId)))
-                .thenReturn(Optional.of(pageSection));
+        WikipediaPage pageSection = WikipediaPage
+            .builder()
+            .id(articleId)
+            .content(sectionContent)
+            .section(sectionId)
+            .build();
+        Mockito
+            .when(
+                wikipediaService.getPageByIdAndSection(
+                    Mockito.eq(articleId),
+                    Mockito.eq(sectionId),
+                    Mockito.any(WikipediaLanguage.class)
+                )
+            )
+            .thenReturn(Optional.of(pageSection));
 
         Optional<ArticleReview> sectionReview = sectionReviewService.findSectionReview(articleReview);
 
-        Assert.assertTrue(sectionReview.isPresent());
-        sectionReview.ifPresent(review -> {
-            Assert.assertEquals(articleId, review.getId());
-            Assert.assertEquals(Integer.valueOf(sectionId), review.getSection());
-            Assert.assertEquals(sectionContent, review.getContent());
-            Assert.assertEquals(1, review.getReplacements().size());
-            Assert.assertEquals(8 - offset, review.getReplacements().get(0).getStart());
-        });
+        Assertions.assertTrue(sectionReview.isPresent());
+        sectionReview.ifPresent(
+            review -> {
+                Assertions.assertEquals(articleId, review.getId());
+                Assertions.assertEquals(Integer.valueOf(sectionId), review.getSection());
+                Assertions.assertEquals(sectionContent, review.getContent());
+                Assertions.assertEquals(1, review.getReplacements().size());
+                Assertions.assertEquals(8 - offset, review.getReplacements().get(0).getStart());
+            }
+        );
     }
-
 }

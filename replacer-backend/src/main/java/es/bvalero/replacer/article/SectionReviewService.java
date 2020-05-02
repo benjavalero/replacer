@@ -1,9 +1,7 @@
 package es.bvalero.replacer.article;
 
-import es.bvalero.replacer.wikipedia.WikipediaException;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.WikipediaSection;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.wikipedia.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 import org.modelmapper.ModelMapper;
@@ -38,14 +36,16 @@ class SectionReviewService {
         // Get the sections from the Wikipedia API (better than calculating them by ourselves)
         LOGGER.info("START Find section for article: {}", review.getId());
         try {
-            List<WikipediaSection> sections = new ArrayList<>(wikipediaService.getPageSections(review.getId()));
+            // TODO: Receive language as a parameter
+            List<WikipediaSection> sections = new ArrayList<>(wikipediaService.getPageSections(review.getId(), WikipediaLanguage.SPANISH));
 
             // Find the smallest section containing all the replacements
             Optional<WikipediaSection> smallestSection =
                     getSmallestSectionContainingAllReplacements(sections, review.getReplacements());
             if (smallestSection.isPresent()) {
                 // Retrieve the section from Wikipedia API. Better than calculating it by ourselves, just in case.
-                Optional<WikipediaPage> pageSection = wikipediaService.getPageByIdAndSection(review.getId(), smallestSection.get().getIndex());
+                // TODO: Receive language as a parameter
+                Optional<WikipediaPage> pageSection = wikipediaService.getPageByIdAndSection(review.getId(), smallestSection.get().getIndex(), WikipediaLanguage.SPANISH);
                 if (pageSection.isPresent()) {
                     // Modify the start position of the replacements according to the section start
                     List<ArticleReplacement> sectionReplacements =
@@ -61,7 +61,7 @@ class SectionReviewService {
                     }
                 }
             }
-        } catch (WikipediaException e) {
+        } catch (ReplacerException e) {
             LOGGER.error("Error getting section review", e);
         }
 

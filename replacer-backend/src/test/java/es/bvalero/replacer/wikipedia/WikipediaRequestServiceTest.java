@@ -5,9 +5,10 @@ import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.oauth.OAuth10aService;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import es.bvalero.replacer.ReplacerException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class WikipediaRequestServiceTest {
     @InjectMocks
     private WikipediaRequestService wikipediaRequestService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         wikipediaRequestService = new WikipediaRequestService();
         MockitoAnnotations.initMocks(this);
@@ -41,9 +42,9 @@ public class WikipediaRequestServiceTest {
         Mockito.when(oAuthService.execute(Mockito.any(OAuthRequest.class))).thenReturn(response);
 
         try {
-            wikipediaRequestService.executeGetRequest(Collections.emptyMap());
-        } catch (WikipediaException e) {
-            Assert.assertTrue(e.getMessage().startsWith("too-many-pageids"));
+            wikipediaRequestService.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.ALL);
+        } catch (ReplacerException e) {
+            Assertions.assertTrue(e.getMessage().startsWith("too-many-pageids"));
         }
     }
 
@@ -56,9 +57,9 @@ public class WikipediaRequestServiceTest {
         Mockito.when(oAuthService.execute(Mockito.any(OAuthRequest.class))).thenReturn(response);
 
         try {
-            wikipediaRequestService.executeGetRequest(Collections.emptyMap());
-        } catch (WikipediaException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Call not successful"));
+            wikipediaRequestService.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.ALL);
+        } catch (ReplacerException e) {
+            Assertions.assertTrue(e.getMessage().startsWith("Call not successful"));
         }
     }
 
@@ -71,14 +72,14 @@ public class WikipediaRequestServiceTest {
         Mockito.when(oAuthService.execute(Mockito.any(OAuthRequest.class))).thenReturn(response);
 
         try {
-            wikipediaRequestService.executeGetRequest(Collections.emptyMap());
-        } catch (WikipediaException e) {
-            Assert.assertEquals("ERROR executing OAuth Request", e.getMessage());
+            wikipediaRequestService.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.ALL);
+        } catch (ReplacerException e) {
+            Assertions.assertEquals("ERROR executing OAuth Request", e.getMessage());
         }
     }
 
     @Test
-    public void testSignedRequest() throws WikipediaException, ExecutionException, InterruptedException, IOException {
+    public void testSignedRequest() throws ReplacerException, ExecutionException, InterruptedException, IOException {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
         Response response = Mockito.mock(Response.class);
@@ -86,8 +87,8 @@ public class WikipediaRequestServiceTest {
         Mockito.when(response.isSuccessful()).thenReturn(true);
         Mockito.when(oAuthService.execute(Mockito.any(OAuthRequest.class))).thenReturn(response);
 
-        Assert.assertNotNull(wikipediaRequestService.executeSignedPostRequest(
-                Collections.emptyMap(), new OAuth1AccessToken("A", "B")));
+        Assertions.assertNotNull(wikipediaRequestService.executeSignedPostRequest(
+                Collections.emptyMap(), WikipediaLanguage.ALL, new OAuth1AccessToken("A", "B")));
     }
 
 }

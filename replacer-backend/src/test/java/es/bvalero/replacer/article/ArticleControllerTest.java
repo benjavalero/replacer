@@ -6,6 +6,7 @@ import es.bvalero.replacer.authentication.AccessToken;
 import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -180,7 +181,7 @@ public class ArticleControllerTest {
 
         verify(cosmeticFindService, times(1)).applyCosmeticChanges(eq(content));
         verify(wikipediaService, times(1)).savePageContent(eq(articleId), eq("C"),
-                eq(section), eq(timestamp), eq(new OAuth1AccessToken("A", "B")));
+                eq(section), eq(timestamp), any(WikipediaLanguage.class), eq(new OAuth1AccessToken("A", "B")));
         verify(replacementIndexService, times(1)).reviewArticleReplacements(
                 eq(articleId), eq(type), eq(subtype), eq(reviewer));
     }
@@ -203,7 +204,7 @@ public class ArticleControllerTest {
 
         verify(cosmeticFindService, times(0)).applyCosmeticChanges(anyString());
         verify(wikipediaService, times(0)).savePageContent(anyInt(), anyString(),
-                anyInt(), anyString(), any(OAuth1AccessToken.class));
+                anyInt(), anyString(), any(WikipediaLanguage.class), any(OAuth1AccessToken.class));
         verify(replacementIndexService, times(1)).reviewArticleReplacements(
                 eq(articleId), eq(type), eq(subtype), eq(reviewer));
     }

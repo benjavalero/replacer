@@ -9,6 +9,7 @@ import es.bvalero.replacer.finder.misspelling.Misspelling;
 import es.bvalero.replacer.finder.misspelling.MisspellingFinder;
 import es.bvalero.replacer.finder.misspelling.MisspellingManager;
 import es.bvalero.replacer.finder.misspelling.MisspellingSimpleFinder;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaServiceOfflineImpl;
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class WordFinderBenchmark extends BaseFinderBenchmark {
     @Test
     public void testWordFinderBenchmark() throws IOException, URISyntaxException, ReplacerException {
         WikipediaService wikipediaService = new WikipediaServiceOfflineImpl();
-        String text = wikipediaService.getMisspellingListPageContent();
+        String text = wikipediaService.getMisspellingListPageContent(WikipediaLanguage.SPANISH);
 
         // Load the misspellings
         MisspellingManager misspellingManager = new MisspellingManager();

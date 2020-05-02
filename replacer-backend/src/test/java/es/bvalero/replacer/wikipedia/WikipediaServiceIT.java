@@ -1,6 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import es.bvalero.replacer.ReplacerException;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -23,10 +24,10 @@ public class WikipediaServiceIT {
     private WikipediaServiceImpl wikipediaService;
 
     @Test
-    public void testGetPageContent() throws WikipediaException {
+    public void testGetPageContent() throws ReplacerException {
         String title = "Usuario:Benjavalero";
-        WikipediaPage page = wikipediaService.getPageByTitle(title)
-                .orElseThrow(WikipediaException::new);
+        WikipediaPage page = wikipediaService.getPageByTitle(title, WikipediaLanguage.SPANISH)
+                .orElseThrow(ReplacerException::new);
         Assert.assertNotNull(page);
         Assert.assertEquals(6219990, page.getId());
         Assert.assertEquals(title, page.getTitle());
@@ -36,35 +37,35 @@ public class WikipediaServiceIT {
     }
 
     @Test
-    public void testGetPagesContent() throws WikipediaException {
+    public void testGetPagesContent() throws ReplacerException {
         // We pass a null access token to retrieve an anonymous edit token
-        List<WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884));
+        List<WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884), WikipediaLanguage.SPANISH);
         Assert.assertNotNull(pages);
         Assert.assertEquals(2, pages.size());
         Assert.assertTrue(pages.stream().anyMatch(page -> page.getId() == 6219990));
-        Assert.assertTrue(pages.stream().filter(page -> page.getId() == 6219990).findAny().orElseThrow(WikipediaException::new).getContent().contains("Orihuela"));
+        Assert.assertTrue(pages.stream().filter(page -> page.getId() == 6219990).findAny().orElseThrow(ReplacerException::new).getContent().contains("Orihuela"));
         Assert.assertTrue(pages.stream().anyMatch(page -> page.getId() == 6903884));
-        Assert.assertTrue(pages.stream().filter(page -> page.getId() == 6903884).findAny().orElseThrow(WikipediaException::new).getContent().contains("Pais Vasco"));
+        Assert.assertTrue(pages.stream().filter(page -> page.getId() == 6903884).findAny().orElseThrow(ReplacerException::new).getContent().contains("Pais Vasco"));
     }
 
     @Test
-    public void testGetPageContentUnavailable() throws WikipediaException {
-        Assert.assertFalse(wikipediaService.getPageByTitle("Usuario:Benjavaleroxx").isPresent());
+    public void testGetPageContentUnavailable() throws ReplacerException {
+        Assert.assertFalse(wikipediaService.getPageByTitle("Usuario:Benjavaleroxx", WikipediaLanguage.SPANISH).isPresent());
     }
 
     @Test
-    public void testGetEditToken() throws WikipediaException {
+    public void testGetEditToken() throws ReplacerException {
         // We pass a null access token to retrieve an anonymous edit token
-        EditToken editToken = wikipediaService.getEditToken(6903884, new OAuth1AccessToken("", ""));
+        EditToken editToken = wikipediaService.getEditToken(6903884, WikipediaLanguage.SPANISH, new OAuth1AccessToken("", ""));
         Assert.assertNotNull(editToken);
         Assert.assertTrue(editToken.getCsrfToken().endsWith("+\\"));
         Assert.assertNotNull(editToken.getTimestamp());
     }
 
-    @Test(expected = WikipediaException.class)
-    public void testSavePageWithConflicts() throws WikipediaException {
-        WikipediaPage page = wikipediaService.getPageByTitle("Wikipedia:Zona de pruebas/5")
-                .orElseThrow(WikipediaException::new);
+    @Test(expected = ReplacerException.class)
+    public void testSavePageWithConflicts() throws ReplacerException {
+        WikipediaPage page = wikipediaService.getPageByTitle("Wikipedia:Zona de pruebas/5", WikipediaLanguage.SPANISH)
+                .orElseThrow(ReplacerException::new);
 
         String originalContent = page.getContent();
         String newContent = originalContent + "\nEdición sencilla para probar conflictos de edición.";
@@ -75,6 +76,7 @@ public class WikipediaServiceIT {
                 newContent,
                 0,
                 page.getQueryTimestamp(),
+                WikipediaLanguage.SPANISH,
                 new OAuth1AccessToken("", ""));
 
         // Save the conflict content started 1 day before
@@ -85,6 +87,7 @@ public class WikipediaServiceIT {
                 conflictContent,
                 0,
                 before,
+                WikipediaLanguage.SPANISH,
                 new OAuth1AccessToken("", ""));
     }
 

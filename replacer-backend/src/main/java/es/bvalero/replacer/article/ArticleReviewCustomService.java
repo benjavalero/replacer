@@ -1,10 +1,10 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -36,14 +36,15 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
     @Override
     List<Integer> findArticleIdsToReview(ArticleReviewOptions options) {
         try {
-            List<Integer> articleIds = new ArrayList<>(wikipediaService.getPageIdsByStringMatch(options.getSubtype()));
+            // TODO: Receive language as a parameter
+            List<Integer> articleIds = new ArrayList<>(wikipediaService.getPageIdsByStringMatch(options.getSubtype(), WikipediaLanguage.SPANISH));
 
             // Check that the replacement has not already been reviewed
             articleIds.removeIf(id -> replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
                     id, options.getType(), options.getSubtype()) > 0);
 
             return articleIds;
-        } catch (WikipediaException e) {
+        } catch (ReplacerException e) {
             LOGGER.error("Error searching page IDs from Wikipedia", e);
             return Collections.emptyList();
         }

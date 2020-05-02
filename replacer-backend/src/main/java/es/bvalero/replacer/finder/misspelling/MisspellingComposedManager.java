@@ -22,13 +22,10 @@ public class MisspellingComposedManager extends MisspellingManager {
     @Override
     String findItemsText(WikipediaLanguage lang) {
         String text = FinderUtils.STRING_EMPTY;
-        // TODO: Support all languages
-        if (WikipediaLanguage.SPANISH == lang) {
-            try {
-                text = wikipediaService.getComposedMisspellingListPageContent();
-            } catch (ReplacerException e) {
-                LOGGER.error("Error updating {} {} set", getLabel(), lang, e);
-            }
+        try {
+            text = wikipediaService.getComposedMisspellingListPageContent(lang);
+        } catch (ReplacerException e) {
+            LOGGER.error("Error updating {} {} set", getLabel(), lang, e);
         }
         return text;
     }

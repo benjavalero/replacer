@@ -1,6 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.authentication.AccessToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,10 @@ public class WikipediaController {
     private WikipediaService wikipediaService;
 
     @PostMapping(value = "/username")
-    public WikipediaUser getUsername(@RequestBody AccessToken accessToken) throws WikipediaException {
+    public WikipediaUser getUsername(@RequestBody AccessToken accessToken) throws ReplacerException {
         LOGGER.info("GET Name of the logged user from Wikipedia API: {}", accessToken);
-        String userName = wikipediaService.getLoggedUserName(convertToEntity(accessToken));
+        // TODO: Receive language as a parameter
+        String userName = wikipediaService.getLoggedUserName(convertToEntity(accessToken), WikipediaLanguage.SPANISH);
         boolean admin = wikipediaService.isAdminUser(userName);
         WikipediaUser user = WikipediaUser.of(userName, admin);
         LOGGER.info("RETURN Name of the logged user: {}", user);

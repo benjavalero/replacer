@@ -36,7 +36,7 @@ public class WikipediaControllerTest {
     @Test
     public void testGetRequestToken() throws Exception {
         AccessToken accessToken = new AccessToken("X", "Y");
-        when(wikipediaService.getLoggedUserName(any())).thenReturn("A");
+        when(wikipediaService.getLoggedUserName(any(), any())).thenReturn("A");
         when(wikipediaService.isAdminUser("A")).thenReturn(true);
 
         mvc.perform(post("/api/wikipedia/username")

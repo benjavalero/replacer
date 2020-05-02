@@ -1,9 +1,9 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
-import es.bvalero.replacer.wikipedia.WikipediaException;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -74,7 +74,8 @@ abstract class ArticleReviewService {
         // The "options" parameter is used in implementations
         LOGGER.info("START Find Wikipedia article: {}", articleId);
         try {
-            Optional<WikipediaPage> page = wikipediaService.getPageById(articleId);
+            // TODO: Receive language as a parameter
+            Optional<WikipediaPage> page = wikipediaService.getPageById(articleId, WikipediaLanguage.SPANISH);
             if (page.isPresent()) {
                 // Check if the article is processable
                 if (page.get().isProcessable()) {
@@ -90,7 +91,7 @@ abstract class ArticleReviewService {
 
             // We get here if the article is not found or not processable
             replacementIndexService.reviewArticleReplacementsAsSystem(articleId);
-        } catch (WikipediaException e) {
+        } catch (ReplacerException e) {
             LOGGER.error("Error finding page from Wikipedia", e);
         }
 

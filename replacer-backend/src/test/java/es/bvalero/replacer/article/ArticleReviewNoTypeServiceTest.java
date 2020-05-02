@@ -1,5 +1,6 @@
 package es.bvalero.replacer.article;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
@@ -84,7 +85,7 @@ public class ArticleReviewNoTypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewNoTypeNotInWikipedia() throws WikipediaException {
+    public void testFindRandomArticleToReviewNoTypeNotInWikipedia() throws ReplacerException {
         // 1 result in DB
         Mockito
             .when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
@@ -92,7 +93,7 @@ public class ArticleReviewNoTypeServiceTest {
             .thenReturn(Collections.emptyList());
 
         // The article doesn't exist in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId)).thenReturn(Optional.empty());
+        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.empty());
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
@@ -100,14 +101,14 @@ public class ArticleReviewNoTypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewNoTypeWithReplacements() throws WikipediaException {
+    public void testFindRandomArticleToReviewNoTypeWithReplacements() throws ReplacerException {
         // 1 result in DB
         Mockito
             .when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
 
         // The article exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId)).thenReturn(Optional.of(article));
+        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
 
         // The article contains replacements
         Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.ALL)).thenReturn(replacements);
@@ -123,7 +124,7 @@ public class ArticleReviewNoTypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewNoTypeNoReplacements() throws WikipediaException {
+    public void testFindRandomArticleToReviewNoTypeNoReplacements() throws ReplacerException {
         // 1 result in DB
         Mockito
             .when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
@@ -131,7 +132,7 @@ public class ArticleReviewNoTypeServiceTest {
             .thenReturn(Collections.emptyList());
 
         // The article exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId)).thenReturn(Optional.of(article));
+        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
 
         // The article doesn't contain replacements
         List<Replacement> noArticleReplacements = Collections.emptyList();
@@ -149,15 +150,15 @@ public class ArticleReviewNoTypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewNoTypeSecondResult() throws WikipediaException {
+    public void testFindRandomArticleToReviewNoTypeSecondResult() throws ReplacerException {
         // 2 results in DB
         Mockito
             .when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
             .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)));
 
         // Only the article 2 exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId)).thenReturn(Optional.empty());
-        Mockito.when(wikipediaService.getPageById(randomId2)).thenReturn(Optional.of(article2));
+        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.empty());
+        Mockito.when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article2));
 
         // The article contains replacements
         Mockito.when(replacementFindService.findReplacements(content2, WikipediaLanguage.ALL)).thenReturn(replacements);

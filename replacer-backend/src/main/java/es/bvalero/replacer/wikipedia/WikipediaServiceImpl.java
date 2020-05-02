@@ -1,7 +1,10 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.FinderUtils;
+import java.util.*;
+import java.util.stream.Collectors;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -11,18 +14,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
 @Slf4j
 @Service
 @Profile("default")
 class WikipediaServiceImpl implements WikipediaService {
-
     private static final String MISSPELLING_LIST_PAGE = "Wikipedia:Corrector ortográfico/Listado";
     private static final String FALSE_POSITIVE_LIST_PAGE = "Usuario:Benjavalero/FalsePositives";
     private static final String COMPOSED_MISSPELLING_LIST_PAGE = "Usuario:Benjavalero/ComposedMisspellings";
-    private static final String EDIT_SUMMARY = "Correcciones ortográficas con [[Usuario:Benjavalero/Replacer|Replacer]] (herramienta en línea de revisión de errores)";
+    private static final String EDIT_SUMMARY =
+        "Correcciones ortográficas con [[Usuario:Benjavalero/Replacer|Replacer]] (herramienta en línea de revisión de errores)";
     private static final int MAX_PAGES_REQUESTED = 50;
     private static final String PARAM_ACTION = "action";
     private static final String VALUE_QUERY = "query";
@@ -37,9 +37,13 @@ class WikipediaServiceImpl implements WikipediaService {
     private String adminUser;
 
     @Override
-    public String getLoggedUserName(OAuth1AccessToken accessToken) throws WikipediaException {
+    public String getLoggedUserName(OAuth1AccessToken accessToken, WikipediaLanguage lang) throws ReplacerException {
         LOGGER.info("START Get name of the logged user from Wikipedia API. Token: {}", accessToken.getToken());
-        WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedGetRequest(buildUserNameRequestParams(), accessToken);
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedGetRequest(
+            buildUserNameRequestParams(),
+            lang,
+            accessToken
+        );
         String username = extractUserNameFromJson(apiResponse);
         LOGGER.info("END Get name of the logged user from Wikipedia API: {}", username);
         return username;
@@ -62,62 +66,66 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public String getMisspellingListPageContent() throws WikipediaException {
-        return getPageByTitle(MISSPELLING_LIST_PAGE)
-                .orElseThrow(WikipediaException::new)
-                .getContent();
+    public String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
+        // TODO: Load the page title from properties
+        return getPageByTitle(MISSPELLING_LIST_PAGE, lang).orElseThrow(ReplacerException::new).getContent();
     }
 
     @Override
-    public String getFalsePositiveListPageContent() throws WikipediaException {
-        return getPageByTitle(FALSE_POSITIVE_LIST_PAGE)
-                .orElseThrow(WikipediaException::new)
-                .getContent();
+    public String getFalsePositiveListPageContent(WikipediaLanguage lang) throws ReplacerException {
+        // TODO: Load the page title from properties
+        return getPageByTitle(FALSE_POSITIVE_LIST_PAGE, lang).orElseThrow(ReplacerException::new).getContent();
     }
 
     @Override
-    public String getComposedMisspellingListPageContent() throws WikipediaException {
-        return getPageByTitle(COMPOSED_MISSPELLING_LIST_PAGE)
-                .orElseThrow(WikipediaException::new)
-                .getContent();
+    public String getComposedMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
+        // TODO: Load the page title from properties
+        return getPageByTitle(COMPOSED_MISSPELLING_LIST_PAGE, lang).orElseThrow(ReplacerException::new).getContent();
     }
 
     @Override
-    public Optional<WikipediaPage> getPageByTitle(String pageTitle) throws WikipediaException {
+    public Optional<WikipediaPage> getPageByTitle(String pageTitle, WikipediaLanguage lang) throws ReplacerException {
         LOGGER.info("START Find Wikipedia page by title: {}", pageTitle);
         // Return the only value that should be in the map
-        Optional<WikipediaPage> page = getPagesByIds("titles", pageTitle).stream().findAny();
+        Optional<WikipediaPage> page = getPagesByIds("titles", pageTitle, lang).stream().findAny();
         LOGGER.info("END Find Wikipedia page by title: {}", pageTitle);
         return page;
     }
 
     @Override
-    public Optional<WikipediaPage> getPageById(int pageId) throws WikipediaException {
+    public Optional<WikipediaPage> getPageById(int pageId, WikipediaLanguage lang) throws ReplacerException {
         LOGGER.debug("START Get page by ID: {}", pageId);
         // Return the only value that should be in the map
-        Optional<WikipediaPage> page = getPagesByIds(Collections.singletonList(pageId)).stream().findAny();
+        Optional<WikipediaPage> page = getPagesByIds(Collections.singletonList(pageId), lang).stream().findAny();
         LOGGER.debug("END Get page by ID: {} - {}", pageId, page.map(WikipediaPage::getTitle).orElse(""));
         return page;
     }
 
     @Override
-    public List<WikipediaPage> getPagesByIds(List<Integer> pageIds) throws WikipediaException {
+    public List<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws ReplacerException {
         LOGGER.debug("START Get pages by a list of IDs: {}", pageIds);
         List<WikipediaPage> pages = new ArrayList<>(pageIds.size());
         // There is a maximum number of pages to request
         // We split the request in several sub-lists
         int start = 0;
         while (start < pageIds.size()) {
-            List<Integer> subList = pageIds.subList(start, start + Math.min(pageIds.size() - start, MAX_PAGES_REQUESTED));
-            pages.addAll(getPagesByIds(PARAM_PAGE_IDS, StringUtils.join(subList, "|")));
+            List<Integer> subList = pageIds.subList(
+                start,
+                start + Math.min(pageIds.size() - start, MAX_PAGES_REQUESTED)
+            );
+            pages.addAll(getPagesByIds(PARAM_PAGE_IDS, StringUtils.join(subList, "|"), lang));
             start += subList.size();
         }
         LOGGER.debug("END Get pages by a list of IDs: {}", pages.size());
         return pages;
     }
 
-    private List<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue) throws WikipediaException {
-        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(buildPageIdsRequestParams(pagesParam, pagesValue));
+    private List<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue, WikipediaLanguage lang)
+        throws ReplacerException {
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
+            buildPageIdsRequestParams(pagesParam, pagesValue),
+            lang
+        );
         return extractPagesFromJson(apiResponse);
     }
 
@@ -135,27 +143,34 @@ class WikipediaServiceImpl implements WikipediaService {
     private List<WikipediaPage> extractPagesFromJson(WikipediaApiResponse response) {
         // Query timestamp
         String queryTimestamp = response.getCurtimestamp();
-        return response.getQuery().getPages().stream()
-                .filter(page -> !page.isMissing())
-                .map(page -> convertToDto(page, queryTimestamp))
-                .collect(Collectors.toList());
+        return response
+            .getQuery()
+            .getPages()
+            .stream()
+            .filter(page -> !page.isMissing())
+            .map(page -> convertToDto(page, queryTimestamp))
+            .collect(Collectors.toList());
     }
 
     private WikipediaPage convertToDto(WikipediaApiResponse.Page page, String queryTimestamp) {
-        return WikipediaPage.builder()
-                .id(page.getPageid())
-                .title(page.getTitle())
-                .namespace(WikipediaNamespace.valueOf(page.getNs()))
-                .content(page.getRevisions().get(0).getSlots().getMain().getContent())
-                .lastUpdate(WikipediaPage.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
-                .queryTimestamp(queryTimestamp)
-                .build();
+        return WikipediaPage
+            .builder()
+            .id(page.getPageid())
+            .title(page.getTitle())
+            .namespace(WikipediaNamespace.valueOf(page.getNs()))
+            .content(page.getRevisions().get(0).getSlots().getMain().getContent())
+            .lastUpdate(WikipediaPage.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
+            .queryTimestamp(queryTimestamp)
+            .build();
     }
 
     @Override
-    public List<WikipediaSection> getPageSections(int pageId) throws WikipediaException {
+    public List<WikipediaSection> getPageSections(int pageId, WikipediaLanguage lang) throws ReplacerException {
         LOGGER.debug("START Get page sections. Page ID: {}", pageId);
-        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(buildPageSectionsRequestParams(pageId));
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
+            buildPageSectionsRequestParams(pageId),
+            lang
+        );
         List<WikipediaSection> sections = extractSectionsFromJson(apiResponse);
         LOGGER.debug("END Get page sections. Items found: {}", sections.size());
         return sections;
@@ -170,16 +185,18 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     private List<WikipediaSection> extractSectionsFromJson(WikipediaApiResponse response) {
-        return response.getParse().getSections().stream()
-                .filter(this::isSectionValid)
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+        return response
+            .getParse()
+            .getSections()
+            .stream()
+            .filter(this::isSectionValid)
+            .map(this::convertToDto)
+            .collect(Collectors.toList());
     }
 
     private boolean isSectionValid(WikipediaApiResponse.Section section) {
         try {
-            return Integer.parseInt(section.getIndex()) > 0
-                    && section.getByteoffset() != null;
+            return Integer.parseInt(section.getIndex()) > 0 && section.getByteoffset() != null;
         } catch (NumberFormatException nfe) {
             LOGGER.debug("Invalid page section: {}", section);
             return false;
@@ -187,21 +204,30 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     private WikipediaSection convertToDto(WikipediaApiResponse.Section section) {
-        return WikipediaSection.builder()
-                .level(Integer.parseInt(section.getLevel()))
-                .index(Integer.parseInt(section.getIndex()))
-                .byteOffset(section.getByteoffset())
-                .build();
+        return WikipediaSection
+            .builder()
+            .level(Integer.parseInt(section.getLevel()))
+            .index(Integer.parseInt(section.getIndex()))
+            .byteOffset(section.getByteoffset())
+            .build();
     }
 
     @Override
-    public Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section) throws WikipediaException {
+    public Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section, WikipediaLanguage lang)
+        throws ReplacerException {
         LOGGER.debug("START Get page by ID and section: {} - {}", pageId, section);
-        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(buildPageIdsAndSectionRequestParams(pageId, section));
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
+            buildPageIdsAndSectionRequestParams(pageId, section),
+            lang
+        );
         List<WikipediaPage> pages = extractPagesFromJson(apiResponse);
         Optional<WikipediaPage> page = pages.stream().findAny().map(p -> p.withSection(section));
-        LOGGER.debug("END Get page by ID and section: {} - {} - {}",
-                pageId, section, page.map(WikipediaPage::getTitle).orElse(""));
+        LOGGER.debug(
+            "END Get page by ID and section: {} - {} - {}",
+            pageId,
+            section,
+            page.map(WikipediaPage::getTitle).orElse("")
+        );
         return page;
     }
 
@@ -212,9 +238,12 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public Set<Integer> getPageIdsByStringMatch(String text) throws WikipediaException {
+    public Set<Integer> getPageIdsByStringMatch(String text, WikipediaLanguage lang) throws ReplacerException {
         LOGGER.info("START Get pages by string match: {}", text);
-        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(buildPageIdsByStringMatchRequestParams(text));
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
+            buildPageIdsByStringMatchRequestParams(text),
+            lang
+        );
         Set<Integer> pageIds = extractPageIdsFromSearchJson(apiResponse);
         LOGGER.info("END Get pages by string match. Items found: {}", pageIds.size());
         return pageIds;
@@ -227,8 +256,17 @@ class WikipediaServiceImpl implements WikipediaService {
         params.put("utf8", "1");
         params.put("srlimit", "100");
         params.put("srsearch", buildSearchExpression(text));
-        params.put("srnamespace", StringUtils.join(WikipediaNamespace.getProcessableNamespaces().stream()
-                .map(WikipediaNamespace::getValue).collect(Collectors.toList()), "|"));
+        params.put(
+            "srnamespace",
+            StringUtils.join(
+                WikipediaNamespace
+                    .getProcessableNamespaces()
+                    .stream()
+                    .map(WikipediaNamespace::getValue)
+                    .collect(Collectors.toList()),
+                "|"
+            )
+        );
         params.put("srwhat", "text");
         params.put("srinfo", "");
         params.put("srprop", "");
@@ -246,30 +284,49 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     private Set<Integer> extractPageIdsFromSearchJson(WikipediaApiResponse response) {
-        return response.getQuery().getSearch().stream()
-                .map(WikipediaApiResponse.Page::getPageid)
-                .collect(Collectors.toSet());
+        return response
+            .getQuery()
+            .getSearch()
+            .stream()
+            .map(WikipediaApiResponse.Page::getPageid)
+            .collect(Collectors.toSet());
     }
 
     @Override
-    public void savePageContent(int pageId, String pageContent, @Nullable Integer section, String currentTimestamp,
-                                OAuth1AccessToken accessToken) throws WikipediaException {
+    public void savePageContent(
+        int pageId,
+        String pageContent,
+        @Nullable Integer section,
+        String currentTimestamp,
+        WikipediaLanguage lang,
+        OAuth1AccessToken accessToken
+    )
+        throws ReplacerException {
         LOGGER.info("START Save page content into Wikipedia. Page ID: {}", pageId);
 
-        EditToken editToken = getEditToken(pageId, accessToken);
+        EditToken editToken = getEditToken(pageId, lang, accessToken);
         // Pre-check of edit conflicts
         if (currentTimestamp.compareTo(editToken.getTimestamp()) <= 0) {
-            throw new WikipediaException("El artículo ha sido editado por otra persona. Recargue la página para revisar el artículo de nuevo.");
+            throw new ReplacerException(
+                "El artículo ha sido editado por otra persona. Recargue la página para revisar el artículo de nuevo."
+            );
         }
 
         wikipediaRequestService.executeSignedPostRequest(
-                buildSavePageContentRequestParams(pageId, pageContent, section, currentTimestamp, editToken),
-                accessToken);
+            buildSavePageContentRequestParams(pageId, pageContent, section, currentTimestamp, editToken),
+            lang,
+            accessToken
+        );
         LOGGER.info("END Save page content into Wikipedia. Page ID: {}", pageId);
     }
 
-    private Map<String, String> buildSavePageContentRequestParams(int pageId, String pageContent, @Nullable Integer section,
-                                                                  String currentTimestamp, EditToken editToken) {
+    private Map<String, String> buildSavePageContentRequestParams(
+        int pageId,
+        String pageContent,
+        @Nullable Integer section,
+        String currentTimestamp,
+        EditToken editToken
+    ) {
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, "edit");
         params.put(PARAM_PAGE_ID, Integer.toString(pageId));
@@ -286,10 +343,13 @@ class WikipediaServiceImpl implements WikipediaService {
         return params;
     }
 
-    EditToken getEditToken(int pageId, OAuth1AccessToken accessToken) throws WikipediaException {
+    EditToken getEditToken(int pageId, WikipediaLanguage lang, OAuth1AccessToken accessToken) throws ReplacerException {
         LOGGER.debug("START Get edit token. Access Token: {}", accessToken.getToken());
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedPostRequest(
-                buildEditTokenRequestParams(pageId), accessToken);
+            buildEditTokenRequestParams(pageId),
+            lang,
+            accessToken
+        );
         EditToken editToken = extractEditTokenFromJson(apiResponse);
         LOGGER.debug("END Get edit token: {}", editToken);
         return editToken;
@@ -306,8 +366,9 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     private EditToken extractEditTokenFromJson(WikipediaApiResponse response) {
-        return EditToken.of(response.getQuery().getTokens().getCsrftoken(),
-                response.getQuery().getPages().get(0).getRevisions().get(0).getTimestamp());
+        return EditToken.of(
+            response.getQuery().getTokens().getCsrftoken(),
+            response.getQuery().getPages().get(0).getRevisions().get(0).getTimestamp()
+        );
     }
-
 }
