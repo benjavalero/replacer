@@ -1,0 +1,9 @@
+spring:
+  main:
+    banner-mode: 'off'
+  output:
+    ansi.enabled: ALWAYS
+
+logging:
+  level:
+    es.bvalero.replacer: WARN
