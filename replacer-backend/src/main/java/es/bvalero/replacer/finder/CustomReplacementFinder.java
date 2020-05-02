@@ -2,6 +2,8 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -18,7 +20,7 @@ public class CustomReplacementFinder implements ReplacementFinder {
     }
 
     @Override
-    public Iterable<Replacement> find(String text) {
+    public Iterable<Replacement> find(String text, WikipediaLanguage lang) {
         return new RegexIterable<>(text, automaton, this::convertMatch, this::isValidMatch);
     }
 

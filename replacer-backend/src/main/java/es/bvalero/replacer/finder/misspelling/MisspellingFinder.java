@@ -16,6 +16,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,7 +70,8 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
     abstract void processMisspellingChange(Set<Misspelling> misspellings);
 
     @Override
-    public Iterable<Replacement> find(String text) {
+    public Iterable<Replacement> find(String text, WikipediaLanguage lang) {
+        // TODO: Take into account the language
         return new RegexIterable<>(text, getAutomaton(), this::convertMatch, this::isValidMatch);
     }
 

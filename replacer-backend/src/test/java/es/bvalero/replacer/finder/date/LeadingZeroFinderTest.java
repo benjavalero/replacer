@@ -2,6 +2,8 @@ package es.bvalero.replacer.finder.date;
 
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +15,7 @@ public class LeadingZeroFinderTest {
         String date = "7 de Agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = leadingZeroFinder.findList(text);
+        List<Replacement> replacements = leadingZeroFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertTrue(replacements.isEmpty());
     }
@@ -23,7 +25,7 @@ public class LeadingZeroFinderTest {
         String date = "07 de Agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = leadingZeroFinder.findList(text);
+        List<Replacement> replacements = leadingZeroFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());
@@ -35,7 +37,7 @@ public class LeadingZeroFinderTest {
         String date = "07 de setiembre de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = leadingZeroFinder.findList(text);
+        List<Replacement> replacements = leadingZeroFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());
@@ -48,7 +50,7 @@ public class LeadingZeroFinderTest {
         String expected = "7 de agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = leadingZeroFinder.findList(text);
+        List<Replacement> replacements = leadingZeroFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());

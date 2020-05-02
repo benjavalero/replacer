@@ -5,6 +5,8 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinder;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import java.util.Collections;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +26,12 @@ class LeadingZeroFinder extends DateFinder implements ReplacementFinder {
     );
 
     @Override
-    public Iterable<Replacement> find(String text) {
-        return new RegexIterable<>(text, AUTOMATON_DATE_LEADING_ZERO, this::convertMatch, this::isValidMatch);
+    public Iterable<Replacement> find(String text, WikipediaLanguage lang) {
+        if (WikipediaLanguage.SPANISH == lang) {
+            return new RegexIterable<>(text, AUTOMATON_DATE_LEADING_ZERO, this::convertMatch, this::isValidMatch);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     @Override

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +68,7 @@ public class ReplacementFindService {
         WikipediaLanguage lang,
         List<ReplacementFinder> finders
     ) {
-        Stream<Replacement> all = finders.stream().map(finder -> finder.findStream(text)).flatMap(s -> s).sorted();
+        Stream<Replacement> all = finders.stream().flatMap(finder -> finder.findStream(text, lang)).sorted();
 
         Stream<Replacement> distinct = removeNestedReplacements(all);
 

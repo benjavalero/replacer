@@ -2,6 +2,8 @@ package es.bvalero.replacer.finder.date;
 
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +15,7 @@ public class UppercaseMonthFinderTest {
         String date = "15 de Agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = uppercaseMonthFinder.findList(text);
+        List<Replacement> replacements = uppercaseMonthFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());
@@ -25,7 +27,7 @@ public class UppercaseMonthFinderTest {
         String date = "15 de agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = uppercaseMonthFinder.findList(text);
+        List<Replacement> replacements = uppercaseMonthFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertTrue(replacements.isEmpty());
     }
@@ -35,7 +37,7 @@ public class UppercaseMonthFinderTest {
         String date = "17 de Setiembre de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = uppercaseMonthFinder.findList(text);
+        List<Replacement> replacements = uppercaseMonthFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());
@@ -47,7 +49,7 @@ public class UppercaseMonthFinderTest {
         String date = "17 de Septiembre de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = uppercaseMonthFinder.findList(text);
+        List<Replacement> replacements = uppercaseMonthFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());
@@ -60,7 +62,7 @@ public class UppercaseMonthFinderTest {
         String expected = "17 de agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = uppercaseMonthFinder.findList(text);
+        List<Replacement> replacements = uppercaseMonthFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());
@@ -73,7 +75,7 @@ public class UppercaseMonthFinderTest {
         String expected = "17 de agosto de 2019";
         String text = String.format("En %s.", date);
 
-        List<Replacement> replacements = uppercaseMonthFinder.findList(text);
+        List<Replacement> replacements = uppercaseMonthFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());

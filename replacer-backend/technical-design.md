@@ -242,6 +242,8 @@ The sub-package _date_ includes replacement finders related with dates.
 - **UppercaseMonthFinder** Find dates with the month in uppercase, e.g. `2 de Septiembre de 2019`
 - **UppercaseMonthWithoutDayFinder** Find months in uppercase without day and after a common preposition, e.g. `desde Septiembre de 2019`
 
+*Note*: For the moment, these finders only work for Spanish language.
+
 ### Cosmetic Finders
 
 The sub-package `cosmetics` contains the cosmetic finders. The tool implements the following generic cosmetic finders:

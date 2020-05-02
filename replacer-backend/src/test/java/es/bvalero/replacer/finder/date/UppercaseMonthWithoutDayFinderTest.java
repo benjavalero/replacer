@@ -2,6 +2,8 @@ package es.bvalero.replacer.finder.date;
 
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +16,7 @@ public class UppercaseMonthWithoutDayFinderTest {
         String expected = "Desde agosto de 2019";
         String text = String.format("- %s.", date);
 
-        List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text);
+        List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());
@@ -27,7 +29,7 @@ public class UppercaseMonthWithoutDayFinderTest {
         String expected = "hasta agosto de 2019";
         String text = String.format("- %s.", date);
 
-        List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text);
+        List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());
@@ -39,7 +41,7 @@ public class UppercaseMonthWithoutDayFinderTest {
         String date = "De agosto de 2019";
         String text = String.format("- %s.", date);
 
-        List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text);
+        List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertTrue(replacements.isEmpty());
     }
@@ -50,7 +52,7 @@ public class UppercaseMonthWithoutDayFinderTest {
         String expected = "En septiembre de 2019";
         String text = String.format("- %s.", date);
 
-        List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text);
+        List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());
@@ -63,7 +65,7 @@ public class UppercaseMonthWithoutDayFinderTest {
         String expected = "Desde agosto de 2019";
         String text = String.format("- %s.", date);
 
-        List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text);
+        List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());

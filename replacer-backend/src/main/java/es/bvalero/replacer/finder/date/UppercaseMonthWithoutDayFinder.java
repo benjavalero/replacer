@@ -6,7 +6,9 @@ import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFinder;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
@@ -48,13 +50,17 @@ class UppercaseMonthWithoutDayFinder extends DateFinder implements ReplacementFi
     );
 
     @Override
-    public Iterable<Replacement> find(String text) {
-        return new RegexIterable<>(
-            text,
-            AUTOMATON_DATE_UPPERCASE_MONTHS_WITHOUT_DAY,
-            this::convertMatch,
-            this::isValidMatch
-        );
+    public Iterable<Replacement> find(String text, WikipediaLanguage lang) {
+        if (WikipediaLanguage.SPANISH == lang) {
+            return new RegexIterable<>(
+                text,
+                AUTOMATON_DATE_UPPERCASE_MONTHS_WITHOUT_DAY,
+                this::convertMatch,
+                this::isValidMatch
+            );
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     @Override
