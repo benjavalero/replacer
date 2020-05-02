@@ -2,11 +2,11 @@ package es.bvalero.replacer.finder.date;
 
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class UppercaseMonthFinderTest {
-    private UppercaseMonthFinder uppercaseMonthFinder = new UppercaseMonthFinder();
+    private final UppercaseMonthFinder uppercaseMonthFinder = new UppercaseMonthFinder();
 
     @Test
     public void testUppercaseMonth() {
@@ -15,9 +15,9 @@ public class UppercaseMonthFinderTest {
 
         List<Replacement> replacements = uppercaseMonthFinder.findList(text);
 
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(date, replacements.get(0).getText());
-        Assert.assertEquals(date.toLowerCase(), replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(date, replacements.get(0).getText());
+        Assertions.assertEquals(date.toLowerCase(), replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -27,7 +27,7 @@ public class UppercaseMonthFinderTest {
 
         List<Replacement> replacements = uppercaseMonthFinder.findList(text);
 
-        Assert.assertTrue(replacements.isEmpty());
+        Assertions.assertTrue(replacements.isEmpty());
     }
 
     @Test
@@ -37,9 +37,9 @@ public class UppercaseMonthFinderTest {
 
         List<Replacement> replacements = uppercaseMonthFinder.findList(text);
 
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(date, replacements.get(0).getText());
-        Assert.assertEquals("17 de septiembre de 2019", replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(date, replacements.get(0).getText());
+        Assertions.assertEquals("17 de septiembre de 2019", replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -49,9 +49,9 @@ public class UppercaseMonthFinderTest {
 
         List<Replacement> replacements = uppercaseMonthFinder.findList(text);
 
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(date, replacements.get(0).getText());
-        Assert.assertEquals(date.toLowerCase(), replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(date, replacements.get(0).getText());
+        Assertions.assertEquals(date.toLowerCase(), replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -62,9 +62,9 @@ public class UppercaseMonthFinderTest {
 
         List<Replacement> replacements = uppercaseMonthFinder.findList(text);
 
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(date, replacements.get(0).getText());
-        Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(date, replacements.get(0).getText());
+        Assertions.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -75,8 +75,8 @@ public class UppercaseMonthFinderTest {
 
         List<Replacement> replacements = uppercaseMonthFinder.findList(text);
 
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(date, replacements.get(0).getText());
-        Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(date, replacements.get(0).getText());
+        Assertions.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
     }
 }

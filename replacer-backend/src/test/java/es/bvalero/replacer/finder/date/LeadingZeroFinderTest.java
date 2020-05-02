@@ -2,11 +2,11 @@ package es.bvalero.replacer.finder.date;
 
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class LeadingZeroFinderTest {
-    private LeadingZeroFinder leadingZeroFinder = new LeadingZeroFinder();
+    private final LeadingZeroFinder leadingZeroFinder = new LeadingZeroFinder();
 
     @Test
     public void testOneDigitDay() {
@@ -15,7 +15,7 @@ public class LeadingZeroFinderTest {
 
         List<Replacement> replacements = leadingZeroFinder.findList(text);
 
-        Assert.assertTrue(replacements.isEmpty());
+        Assertions.assertTrue(replacements.isEmpty());
     }
 
     @Test
@@ -25,9 +25,9 @@ public class LeadingZeroFinderTest {
 
         List<Replacement> replacements = leadingZeroFinder.findList(text);
 
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(date, replacements.get(0).getText());
-        Assert.assertEquals("7 de agosto de 2019", replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(date, replacements.get(0).getText());
+        Assertions.assertEquals("7 de agosto de 2019", replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -37,9 +37,9 @@ public class LeadingZeroFinderTest {
 
         List<Replacement> replacements = leadingZeroFinder.findList(text);
 
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(date, replacements.get(0).getText());
-        Assert.assertEquals("7 de septiembre de 2019", replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(date, replacements.get(0).getText());
+        Assertions.assertEquals("7 de septiembre de 2019", replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -50,8 +50,8 @@ public class LeadingZeroFinderTest {
 
         List<Replacement> replacements = leadingZeroFinder.findList(text);
 
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(date, replacements.get(0).getText());
-        Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(date, replacements.get(0).getText());
+        Assertions.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
     }
 }

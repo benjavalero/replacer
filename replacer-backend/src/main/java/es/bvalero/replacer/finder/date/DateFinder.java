@@ -10,7 +10,7 @@ import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 
 /**
- * Abstract class with the common fonctionality to find replacements of type Date Format
+ * Abstract class with the common functionality to find replacements of type Date Format
  */
 abstract class DateFinder {
     private static final String TYPE_DATE = "Fechas";

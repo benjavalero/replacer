@@ -238,9 +238,9 @@ Some of these finders use a list of properties which are maintained in text file
 
 The sub-package _date_ includes replacement finders related with dates.
 
-- [ ] **LeadingZeroFinder** Find long dates starting with zero, e.g. `02 de septiembre de 2019`
-- [ ] **UppercaseMonthFinder** Find dates with the month in uppercase, e.g. `2 de Septiembre de 2019`
-- [ ] **UppercaseMonthWithoutDayFinder** Find months in uppercase without day and after a common preposition, e.g. `desde Septiembre de 2019`
+- **LeadingZeroFinder** Find long dates starting with zero, e.g. `02 de septiembre de 2019`
+- **UppercaseMonthFinder** Find dates with the month in uppercase, e.g. `2 de Septiembre de 2019`
+- **UppercaseMonthWithoutDayFinder** Find months in uppercase without day and after a common preposition, e.g. `desde Septiembre de 2019`
 
 ### Cosmetic Finders
 

@@ -2,11 +2,11 @@ package es.bvalero.replacer.finder.date;
 
 import es.bvalero.replacer.finder.Replacement;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class UppercaseMonthWithoutDayFinderTest {
-    private UppercaseMonthWithoutDayFinder uppercaseMonthWithoutDayFinder = new UppercaseMonthWithoutDayFinder();
+    private final UppercaseMonthWithoutDayFinder uppercaseMonthWithoutDayFinder = new UppercaseMonthWithoutDayFinder();
 
     @Test
     public void testUppercaseMonthUppercaseWord() {
@@ -16,9 +16,9 @@ public class UppercaseMonthWithoutDayFinderTest {
 
         List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text);
 
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(date, replacements.get(0).getText());
-        Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(date, replacements.get(0).getText());
+        Assertions.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -29,9 +29,9 @@ public class UppercaseMonthWithoutDayFinderTest {
 
         List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text);
 
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(date, replacements.get(0).getText());
-        Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(date, replacements.get(0).getText());
+        Assertions.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class UppercaseMonthWithoutDayFinderTest {
 
         List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text);
 
-        Assert.assertTrue(replacements.isEmpty());
+        Assertions.assertTrue(replacements.isEmpty());
     }
 
     @Test
@@ -52,9 +52,9 @@ public class UppercaseMonthWithoutDayFinderTest {
 
         List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text);
 
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(date, replacements.get(0).getText());
-        Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(date, replacements.get(0).getText());
+        Assertions.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
@@ -65,8 +65,8 @@ public class UppercaseMonthWithoutDayFinderTest {
 
         List<Replacement> replacements = uppercaseMonthWithoutDayFinder.findList(text);
 
-        Assert.assertEquals(1, replacements.size());
-        Assert.assertEquals(date, replacements.get(0).getText());
-        Assert.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(date, replacements.get(0).getText());
+        Assertions.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
     }
 }

@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SameLinkFinderTest {
 
@@ -26,12 +26,12 @@ public class SameLinkFinderTest {
 
         Set<String> expectedMatches = new HashSet<>(Arrays.asList(link1, link2, link4));
         Set<String> actualMatches = matches.stream().map(Cosmetic::getText).collect(Collectors.toSet());
-        Assert.assertEquals(expectedMatches, actualMatches);
+        Assertions.assertEquals(expectedMatches, actualMatches);
 
         String fix1 = "[[test]]";
         String fix2 = "[[Test]]";
         Set<String> expectedFixes = new HashSet<>(Arrays.asList(fix1, fix2));
         Set<String> actualFixes = matches.stream().map(Cosmetic::getFix).collect(Collectors.toSet());
-        Assert.assertEquals(expectedFixes, actualFixes);
+        Assertions.assertEquals(expectedFixes, actualFixes);
     }
 }
