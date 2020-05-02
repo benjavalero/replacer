@@ -1,12 +1,14 @@
 package es.bvalero.replacer.finder.benchmark.filename;
 
+import static org.hamcrest.Matchers.is;
+
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
+import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
 public class FileFinderBenchmark extends BaseFinderBenchmark {
@@ -22,6 +24,6 @@ public class FileFinderBenchmark extends BaseFinderBenchmark {
 
         runBenchmark(finders);
 
-        Assertions.assertTrue(true);
+        MatcherAssert.assertThat(true, is(true));
     }
 }

@@ -2,12 +2,7 @@ package es.bvalero.replacer.finder.benchmark;
 
 import es.bvalero.replacer.finder.misspelling.MisspellingManager;
 import es.bvalero.replacer.finder.misspelling.UppercaseAfterFinder;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import org.junit.Assert;
+import org.hamcrest.MatcherAssert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +10,17 @@ import org.springframework.boot.test.context.ConfigFileApplicationContextInitial
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.hamcrest.Matchers.is;
+
 @RunWith(SpringRunner.class)
 @ContextConfiguration(
-    classes = { UppercaseAfterFinder.class, MisspellingManager.class },
+    classes = {UppercaseAfterFinder.class, MisspellingManager.class},
     initializers = ConfigFileApplicationContextInitializer.class
 )
 public class UppercaseFinderBenchmark extends BaseFinderBenchmark {
@@ -61,6 +64,6 @@ public class UppercaseFinderBenchmark extends BaseFinderBenchmark {
                 }
             );
 
-        Assert.assertTrue(true);
+        MatcherAssert.assertThat(true, is(true));
     }
 }

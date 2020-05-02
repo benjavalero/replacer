@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.benchmark;
 
+import static org.hamcrest.Matchers.is;
+
 import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.immutables.*;
@@ -9,7 +11,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
-import org.junit.jupiter.api.Assertions;
+import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,7 +53,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
 
         run(finders);
 
-        Assertions.assertTrue(true);
+        MatcherAssert.assertThat(true, is(true));
     }
 
     private void run(List<ImmutableFinder> finders) throws IOException, URISyntaxException {
@@ -119,6 +121,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
                 System.out.println();
             }
         );
-        Assertions.assertTrue(true);
+
+        MatcherAssert.assertThat(true, is(true));
     }
 }

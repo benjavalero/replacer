@@ -1,11 +1,14 @@
 package es.bvalero.replacer.finder.benchmark;
 
+import org.hamcrest.MatcherAssert;
+import org.junit.Test;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+
+import static org.hamcrest.Matchers.is;
 
 public class RedirectMatcherBenchmark extends BaseFinderBenchmark {
     private static final int ITERATIONS = 1000;
@@ -34,6 +37,6 @@ public class RedirectMatcherBenchmark extends BaseFinderBenchmark {
                 }
             );
 
-        Assert.assertTrue(true);
+        MatcherAssert.assertThat(true, is(true));
     }
 }

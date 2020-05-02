@@ -1,12 +1,14 @@
 package es.bvalero.replacer.finder.benchmark.cursive;
 
+import static org.hamcrest.Matchers.is;
+
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
+import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
 public class CursiveFinderBenchmark extends BaseFinderBenchmark {
@@ -24,6 +26,6 @@ public class CursiveFinderBenchmark extends BaseFinderBenchmark {
 
         runBenchmark(finders);
 
-        Assertions.assertTrue(true);
+        MatcherAssert.assertThat(true, is(true));
     }
 }
