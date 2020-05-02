@@ -17,4 +17,10 @@
         <value>Frances</value>
     </util:set>
 
+    <util:set id="personSurnames" value-type="java.lang.String">
+        <value>Domingo</value>
+        <value>Records</value>
+        <value>Sky</value>
+    </util:set>
+
 </beans>

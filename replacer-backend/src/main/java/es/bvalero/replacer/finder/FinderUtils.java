@@ -77,4 +77,19 @@ public class FinderUtils {
             Character.isUpperCase(text.charAt(upperCasePos))
         );
     }
+
+    public static boolean isWordPrecededByUppercase(int start, String word, String text) {
+        if (isWordCompleteInText(start, word, text) && start >= 2) {
+            char lastLetter = text.charAt(start - 1);
+            for (int i = start - 2; i >= 0; i--) {
+                char ch = text.charAt(i);
+                if (Character.isLetter(ch)) {
+                    lastLetter = ch;
+                } else {
+                    return Character.isUpperCase(lastLetter);
+                }
+            }
+        }
+        return false;
+    }
 }
