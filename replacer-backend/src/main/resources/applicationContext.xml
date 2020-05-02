@@ -7,5 +7,6 @@
     <import resource="complete-tags.xml"/>
     <import resource="template-params.xml"/>
     <import resource="template-names.xml"/>
+    <import resource="person-names.xml"/>
 
 </beans>

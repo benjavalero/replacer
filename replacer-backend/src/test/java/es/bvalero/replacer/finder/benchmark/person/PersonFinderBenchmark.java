@@ -1,35 +1,39 @@
 package es.bvalero.replacer.finder.benchmark.person;
 
+import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import javax.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = XmlConfiguration.class)
 public class PersonFinderBenchmark extends BaseFinderBenchmark {
+    @Resource
+    private Set<String> personNames;
 
     @Test
     public void testBenchmark() throws IOException, URISyntaxException {
-        List<String> words = Arrays.asList("Domingo", "Frances", "Julio", "Los Angeles", "Manchester", "Sidney", "Sky");
-
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
-        finders.add(new PersonIndexOfFinder(words));
-        finders.add(new PersonRegexFinder(words));
-        finders.add(new PersonAutomatonFinder(words));
-        finders.add(new PersonRegexCompleteFinder(words));
-        finders.add(new PersonAutomatonCompleteFinder(words));
-        finders.add(new PersonRegexAlternateFinder(words));
-        finders.add(new PersonAutomatonAlternateFinder(words));
-        finders.add(new PersonRegexAlternateCompleteFinder(words));
-        finders.add(new PersonAutomatonAlternateCompleteFinder(words));
-        finders.add(new PersonRegexAllFinder(words));
-        finders.add(new PersonAutomatonAllFinder(words));
-        finders.add(new PersonRegexAllCompleteFinder(words));
+        finders.add(new PersonIndexOfFinder(personNames));
+        finders.add(new PersonRegexFinder(personNames));
+        finders.add(new PersonAutomatonFinder(personNames));
+        finders.add(new PersonRegexCompleteFinder(personNames));
+        finders.add(new PersonAutomatonCompleteFinder(personNames));
+        finders.add(new PersonRegexAlternateFinder(personNames));
+        finders.add(new PersonAutomatonAlternateFinder(personNames));
+        finders.add(new PersonRegexAlternateCompleteFinder(personNames));
+        finders.add(new PersonAutomatonAlternateCompleteFinder(personNames));
+        finders.add(new PersonRegexAllFinder(personNames));
+        finders.add(new PersonAutomatonAllFinder(personNames));
+        finders.add(new PersonRegexAllCompleteFinder(personNames));
 
         runBenchmark(finders);
 

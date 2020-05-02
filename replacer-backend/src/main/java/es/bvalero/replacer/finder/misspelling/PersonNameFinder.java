@@ -5,10 +5,9 @@ import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.ImmutableFinderPriority;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,15 +17,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PersonNameFinder implements ImmutableFinder {
-    private static final Collection<String> PERSON_NAMES = Arrays.asList(
-        "Domingo",
-        "Frances",
-        "Julio",
-        "Los Angeles",
-        "Manchester",
-        "Sidney",
-        "Sky"
-    );
+    @Resource
+    private Set<String> personNames;
 
     @Override
     public ImmutableFinderPriority getPriority() {
@@ -35,22 +27,21 @@ public class PersonNameFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
-        List<Immutable> results = new ArrayList<>(100);
+        return personNames.stream().flatMap(name -> findResults(text, name).stream()).collect(Collectors.toList());
+    }
 
-        // We loop over all the words and find them in the text with the indexOf function
-        for (String word : PERSON_NAMES) {
-            int start = 0;
-            while (start >= 0) {
-                start = text.indexOf(word, start);
-                if (start >= 0) { // Word found
-                    if (FinderUtils.isWordFollowedByUppercase(start, word, text)) {
-                        results.add(Immutable.of(start, word, this));
-                    }
-                    start += word.length();
+    private List<Immutable> findResults(String text, String personName) {
+        List<Immutable> results = new ArrayList<>();
+        int start = 0;
+        while (start >= 0) {
+            start = text.indexOf(personName, start);
+            if (start >= 0) { // Word found
+                if (FinderUtils.isWordFollowedByUppercase(start, personName, text)) {
+                    results.add(Immutable.of(start, personName, this));
                 }
+                start += personName.length();
             }
         }
-
         return results;
     }
 }
