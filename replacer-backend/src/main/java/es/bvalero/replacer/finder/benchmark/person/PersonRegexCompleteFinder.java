@@ -1,11 +1,14 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.person;
+
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.FinderResult;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class PersonRegexCompleteFinder extends PersonAbstractFinder {
-    private List<Pattern> words;
+class PersonRegexCompleteFinder implements BenchmarkFinder {
+    private final List<Pattern> words;
 
     PersonRegexCompleteFinder(Collection<String> words) {
         this.words = new ArrayList<>();
@@ -14,7 +17,8 @@ class PersonRegexCompleteFinder extends PersonAbstractFinder {
         }
     }
 
-    Set<FinderResult> findMatches(String text) {
+    @Override
+    public Set<FinderResult> findMatches(String text) {
         // We loop over all the words and find them completely in the text with a regex
         Set<FinderResult> matches = new HashSet<>();
         for (Pattern word : this.words) {

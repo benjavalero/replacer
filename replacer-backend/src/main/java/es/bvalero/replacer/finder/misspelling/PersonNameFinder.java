@@ -4,12 +4,11 @@ import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.ImmutableFinderPriority;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,7 +43,7 @@ public class PersonNameFinder implements ImmutableFinder {
             while (start >= 0) {
                 start = text.indexOf(word, start);
                 if (start >= 0) { // Word found
-                    if (isWordFollowedByUppercase(start, word, text)) {
+                    if (FinderUtils.isWordFollowedByUppercase(start, word, text)) {
                         results.add(Immutable.of(start, word, this));
                     }
                     start += word.length();
@@ -53,14 +52,5 @@ public class PersonNameFinder implements ImmutableFinder {
         }
 
         return results;
-    }
-
-    private boolean isWordFollowedByUppercase(int start, String word, String text) {
-        int upperCasePos = start + word.length() + 1;
-        return (
-            upperCasePos < text.length() &&
-            FinderUtils.isWordCompleteInText(start, word, text) &&
-            Character.isUpperCase(text.charAt(upperCasePos))
-        );
     }
 }

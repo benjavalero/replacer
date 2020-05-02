@@ -1,12 +1,16 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.person;
 
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.FinderUtils;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.FinderResult;
+
 import java.util.*;
 
-class PersonAutomatonFinder extends PersonAbstractFinder {
-    private List<RunAutomaton> words;
+class PersonAutomatonFinder implements BenchmarkFinder {
+    private final List<RunAutomaton> words;
 
     PersonAutomatonFinder(Collection<String> words) {
         this.words = new ArrayList<>();
@@ -15,13 +19,14 @@ class PersonAutomatonFinder extends PersonAbstractFinder {
         }
     }
 
-    Set<FinderResult> findMatches(String text) {
+    @Override
+    public Set<FinderResult> findMatches(String text) {
         // We loop over all the words and find them in the text with an automaton
         Set<FinderResult> matches = new HashSet<>();
         for (RunAutomaton word : this.words) {
             AutomatonMatcher m = word.newMatcher(text);
             while (m.find()) {
-                if (isWordFollowedByUppercase(m.start(), m.group(), text)) {
+                if (FinderUtils.isWordFollowedByUppercase(m.start(), m.group(), text)) {
                     matches.add(FinderResult.of(m.start(), m.group()));
                 }
             }

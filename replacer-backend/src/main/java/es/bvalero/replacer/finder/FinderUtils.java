@@ -68,4 +68,13 @@ public class FinderUtils {
     public static boolean isAsciiLowercase(char ch) {
         return (ch >= 'a' && ch <= 'z');
     }
+
+    public static boolean isWordFollowedByUppercase(int start, String word, String text) {
+        int upperCasePos = start + word.length() + 1;
+        return (
+            upperCasePos < text.length() &&
+            isWordCompleteInText(start, word, text) &&
+            Character.isUpperCase(text.charAt(upperCasePos))
+        );
+    }
 }

@@ -1,13 +1,16 @@
-package es.bvalero.replacer.finder.benchmark;
+package es.bvalero.replacer.finder.benchmark.person;
 
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.FinderResult;
+
 import java.util.*;
 
-class PersonAutomatonCompleteFinder extends PersonAbstractFinder {
-    private List<RunAutomaton> words;
+class PersonAutomatonCompleteFinder implements BenchmarkFinder {
+    private final List<RunAutomaton> words;
 
     PersonAutomatonCompleteFinder(Collection<String> words) {
         this.words = new ArrayList<>();
@@ -16,7 +19,8 @@ class PersonAutomatonCompleteFinder extends PersonAbstractFinder {
         }
     }
 
-    Set<FinderResult> findMatches(String text) {
+    @Override
+    public Set<FinderResult> findMatches(String text) {
         // We loop over all the words and find them completely in the text with an automaton
         Set<FinderResult> matches = new HashSet<>();
         for (RunAutomaton word : this.words) {
