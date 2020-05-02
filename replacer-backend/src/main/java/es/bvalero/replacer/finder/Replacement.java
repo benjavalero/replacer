@@ -21,24 +21,27 @@ public class Replacement implements Comparable<Replacement> {
      * The category of the replacement: misspelling, date format, etc.
      * It may include a subtype, for instance the particular misspelling.
      */
-    private String type;
-    private String subtype;
+    String type;
+
+    @With
+    String subtype;
 
     /** The start position of the section in the text */
-    private int start;
+    int start;
 
     /**
      * Optionally, the text in the section, especially for debugging purposes,
      * i.e. the text between the start and end position of the section.
      */
-    private String text;
+    String text;
 
     /** At least one suggestion to replace the text */
-    private List<Suggestion> suggestions;
+    @With
+    List<Suggestion> suggestions;
 
     /** The snippet around the text to replace */
     @With
-    private String context;
+    String context;
 
     /** The end position of the section in the text */
     public int getEnd() {

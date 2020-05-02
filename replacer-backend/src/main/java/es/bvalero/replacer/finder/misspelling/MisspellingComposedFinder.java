@@ -2,8 +2,11 @@ package es.bvalero.replacer.finder.misspelling;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import java.util.Set;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +21,7 @@ public class MisspellingComposedFinder extends MisspellingFinder {
     @Autowired
     private MisspellingComposedManager composedManager;
 
-    private RunAutomaton automaton;
+    private Map<WikipediaLanguage, RunAutomaton> automata = new EnumMap<>(WikipediaLanguage.class);
 
     @Override
     MisspellingManager getMisspellingManager() {
@@ -26,17 +29,24 @@ public class MisspellingComposedFinder extends MisspellingFinder {
     }
 
     @Override
-    void processMisspellingChange(Set<Misspelling> misspellings) {
-        String alternations = String.format(
-            "(%s)",
-            StringUtils.join(misspellings.stream().map(Misspelling::getWord).collect(Collectors.toList()), "|")
-        );
-        this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
+    void processMisspellingChange(SetValuedMap<WikipediaLanguage, Misspelling> misspellings) {
+        Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
+        for (WikipediaLanguage lang : misspellings.keySet()) {
+            String alternations = String.format(
+                "(%s)",
+                StringUtils.join(
+                    misspellings.get(lang).stream().map(Misspelling::getWord).collect(Collectors.toList()),
+                    "|"
+                )
+            );
+            map.put(lang, new RunAutomaton(new RegExp(alternations).toAutomaton()));
+        }
+        this.automata = map;
     }
 
     @Override
-    RunAutomaton getAutomaton() {
-        return this.automaton;
+    RunAutomaton getAutomaton(WikipediaLanguage lang) {
+        return this.automata.get(lang);
     }
 
     @Override

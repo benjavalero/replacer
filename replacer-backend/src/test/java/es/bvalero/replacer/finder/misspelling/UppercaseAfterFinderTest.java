@@ -1,18 +1,22 @@
 package es.bvalero.replacer.finder.misspelling;
 
 import es.bvalero.replacer.finder.Immutable;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.SetValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class UppercaseAfterFinderTest {
+    private static final SetValuedMap<WikipediaLanguage, Misspelling> EMPTY_MAP = new HashSetValuedHashMap<>();
+
     private UppercaseAfterFinder uppercaseAfterFinder;
 
     @BeforeEach
@@ -35,18 +39,19 @@ public class UppercaseAfterFinderTest {
         Set<Misspelling> misspellingSet = new HashSet<>(
             Arrays.asList(misspelling1, misspelling2, misspelling3, misspelling4, misspelling5, misspelling6)
         );
+        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
+        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
 
-        // Fake the update of the misspelling list in the misspelling manager
-        uppercaseAfterFinder.propertyChange(
-            new PropertyChangeEvent(this, "name", Collections.EMPTY_SET, misspellingSet)
-        );
-
+        // Test the filtering of uppercase words
         Set<String> expectedWords = new HashSet<>(
             Arrays.asList(misspelling1.getWord(), misspelling2.getWord(), misspelling5.getWord())
         );
-        Assertions.assertEquals(expectedWords, new HashSet<>(uppercaseAfterFinder.getUppercaseWords()));
+        Assertions.assertEquals(expectedWords, new HashSet<>(uppercaseAfterFinder.getUppercaseWords(misspellingSet)));
 
-        List<Immutable> matches = uppercaseAfterFinder.findList(text);
+        // Fake the update of the misspelling list in the misspelling manager
+        uppercaseAfterFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+
+        List<Immutable> matches = uppercaseAfterFinder.findList(text, WikipediaLanguage.SPANISH);
 
         Set<String> expected = new HashSet<>(Arrays.asList(noun1, noun2));
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());

@@ -17,7 +17,11 @@ public interface ImmutableFinder extends Comparable<ImmutableFinder> {
 
     @TestOnly
     default List<Immutable> findList(String text) {
-        return IterableUtils.toList(find(text, WikipediaLanguage.ALL));
+        return findList(text, WikipediaLanguage.ALL);
+    }
+
+    default List<Immutable> findList(String text, WikipediaLanguage lang) {
+        return IterableUtils.toList(find(text, lang));
     }
 
     default Immutable convert(MatchResult match) {

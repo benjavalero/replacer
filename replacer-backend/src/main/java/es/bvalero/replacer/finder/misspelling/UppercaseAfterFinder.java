@@ -7,13 +7,15 @@ import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,13 +32,9 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
     @Autowired
     private MisspellingManager misspellingManager;
 
-    // Misspellings which start with uppercase and are case-sensitive
-    @Getter
-    private final List<String> uppercaseWords = new ArrayList<>();
-
     // Regex with the misspellings which start with uppercase and are case-sensitive
     // and starting with a special character which justifies the uppercase
-    private RunAutomaton uppercaseAfterAutomaton;
+    private Map<WikipediaLanguage, RunAutomaton> uppercaseAfterAutomata = new EnumMap<>(WikipediaLanguage.class);
 
     @PostConstruct
     public void init() {
@@ -46,29 +44,43 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        this.uppercaseAfterAutomaton = buildUppercaseAfterAutomaton((Set<Misspelling>) evt.getNewValue());
+        SetValuedMap<WikipediaLanguage, Misspelling> misspellings = (SetValuedMap<WikipediaLanguage, Misspelling>) evt.getNewValue();
+        this.uppercaseAfterAutomata = buildUppercaseAfterAutomata(misspellings);
     }
 
-    public RunAutomaton buildUppercaseAfterAutomaton(Set<Misspelling> misspellings) {
-        LOGGER.info("START Build uppercase-after automaton");
+    private Map<WikipediaLanguage, RunAutomaton> buildUppercaseAfterAutomata(
+        SetValuedMap<WikipediaLanguage, Misspelling> misspellings
+    ) {
+        LOGGER.info("START Build uppercase-after automata");
+        Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
+        for (WikipediaLanguage lang : misspellings.keySet()) {
+            map.put(lang, buildUppercaseAfterAutomaton(misspellings.get(lang)));
+        }
+        LOGGER.info("END Build uppercase-after automata");
+        return map;
+    }
 
-        // Load the misspellings
-        misspellings
+    private RunAutomaton buildUppercaseAfterAutomaton(Set<Misspelling> misspellings) {
+        if (misspellings != null) {
+            Set<String> words = getUppercaseWords(misspellings);
+
+            if (!words.isEmpty()) {
+                String alternations = String.format(REGEX_UPPERCASE_AFTER_PUNCTUATION, StringUtils.join(words, "|"));
+                return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Find the misspellings which start with uppercase and are case-sensitive
+     */
+    public Set<String> getUppercaseWords(Set<Misspelling> misspellings) {
+        return misspellings
             .stream()
             .filter(this::isUppercaseMisspelling)
             .map(Misspelling::getWord)
-            .forEach(this.uppercaseWords::add);
-
-        String regexAlternations = String.format(
-            REGEX_UPPERCASE_AFTER_PUNCTUATION,
-            StringUtils.join(this.uppercaseWords, "|")
-        );
-        RunAutomaton automaton = new RunAutomaton(
-            new RegExp(regexAlternations).toAutomaton(new DatatypesAutomatonProvider())
-        );
-
-        LOGGER.info("END Build uppercase-after automaton");
-        return automaton;
+            .collect(Collectors.toSet());
     }
 
     private boolean isUppercaseMisspelling(Misspelling misspelling) {
@@ -92,7 +104,12 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
 
     @Override
     public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
-        return new RegexIterable<>(text, this.uppercaseAfterAutomaton, this::convert);
+        RunAutomaton automaton = this.uppercaseAfterAutomata.get(lang);
+        if (automaton == null) {
+            return Collections.emptyList();
+        } else {
+            return new RegexIterable<>(text, automaton, this::convert);
+        }
     }
 
     @Override

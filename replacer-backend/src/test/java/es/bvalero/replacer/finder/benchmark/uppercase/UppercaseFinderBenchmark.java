@@ -27,8 +27,7 @@ public class UppercaseFinderBenchmark extends BaseFinderBenchmark {
         MisspellingManager misspellingManager = new MisspellingManager();
         Set<Misspelling> misspellings = misspellingManager.parseItemsText(text);
         UppercaseAfterFinder uppercaseAfterFinder = new UppercaseAfterFinder();
-        uppercaseAfterFinder.buildUppercaseAfterAutomaton(misspellings);
-        List<String> words = uppercaseAfterFinder.getUppercaseWords();
+        Set<String> words = uppercaseAfterFinder.getUppercaseWords(misspellings);
 
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();

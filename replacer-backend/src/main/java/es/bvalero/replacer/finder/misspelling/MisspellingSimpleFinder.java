@@ -3,7 +3,8 @@ package es.bvalero.replacer.finder.misspelling;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import java.util.Set;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,12 +27,12 @@ public class MisspellingSimpleFinder extends MisspellingFinder {
     }
 
     @Override
-    void processMisspellingChange(Set<Misspelling> misspellings) {
+    void processMisspellingChange(SetValuedMap<WikipediaLanguage, Misspelling> misspellings) {
         // Do nothing
     }
 
     @Override
-    RunAutomaton getAutomaton() {
+    RunAutomaton getAutomaton(WikipediaLanguage lang) {
         return AUTOMATON_WORD;
     }
 
