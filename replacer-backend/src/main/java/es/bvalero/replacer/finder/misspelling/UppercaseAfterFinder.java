@@ -4,6 +4,7 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -11,8 +12,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Component;
  * Find words in uppercase which are correct according to the punctuation,
  * e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
  */
-// We make this implementation public to be used by the finder benchmarks
 @Slf4j
 @Component
 public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
@@ -59,7 +57,7 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
             .stream()
             .filter(this::isUppercaseMisspelling)
             .map(Misspelling::getWord)
-            .forEach(word -> this.uppercaseWords.add(word));
+            .forEach(this.uppercaseWords::add);
 
         String regexAlternations = String.format(
             REGEX_UPPERCASE_AFTER_PUNCTUATION,

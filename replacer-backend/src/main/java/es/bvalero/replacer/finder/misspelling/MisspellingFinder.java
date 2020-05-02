@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Abstract class for the common functionality of the misspelling finders.
  */
-// We make this implementation public to be used by the finder benchmarks
 @Slf4j
 public abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeListener {
     // Derived from the misspelling set to access faster by word
