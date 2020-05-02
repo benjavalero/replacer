@@ -34,7 +34,7 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
 
     // Misspellings which start with uppercase and are case-sensitive
     @Getter
-    private List<String> uppercaseWords = new ArrayList<>();
+    private final List<String> uppercaseWords = new ArrayList<>();
 
     // Regex with the misspellings which start with uppercase and are case-sensitive
     // and starting with a special character which justifies the uppercase
@@ -51,7 +51,7 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
         this.uppercaseAfterAutomaton = buildUppercaseAfterAutomaton((Set<Misspelling>) evt.getNewValue());
     }
 
-    private RunAutomaton buildUppercaseAfterAutomaton(Set<Misspelling> misspellings) {
+    public RunAutomaton buildUppercaseAfterAutomaton(Set<Misspelling> misspellings) {
         LOGGER.info("START Build uppercase-after automaton");
 
         // Load the misspellings
