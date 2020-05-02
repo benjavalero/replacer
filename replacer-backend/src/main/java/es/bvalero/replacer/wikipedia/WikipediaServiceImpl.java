@@ -35,13 +35,13 @@ class WikipediaServiceImpl implements WikipediaService {
     private String adminUser;
 
     @Resource
-    private Map<WikipediaLanguage, String> simpleMisspellingPages;
+    private Map<String, String> simpleMisspellingPages;
 
     @Resource
-    private Map<WikipediaLanguage, String> composedMisspellingPages;
+    private Map<String, String> composedMisspellingPages;
 
     @Resource
-    private Map<WikipediaLanguage, String> falsePositivePages;
+    private Map<String, String> falsePositivePages;
 
     @Override
     public String getLoggedUserName(OAuth1AccessToken accessToken, WikipediaLanguage lang) throws ReplacerException {
@@ -74,17 +74,21 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Override
     public String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return getPageByTitle(simpleMisspellingPages.get(lang), lang).orElseThrow(ReplacerException::new).getContent();
+        return getPageByTitle(simpleMisspellingPages.get(lang.getCode()), lang)
+            .orElseThrow(ReplacerException::new)
+            .getContent();
     }
 
     @Override
     public String getFalsePositiveListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return getPageByTitle(falsePositivePages.get(lang), lang).orElseThrow(ReplacerException::new).getContent();
+        return getPageByTitle(falsePositivePages.get(lang.getCode()), lang)
+            .orElseThrow(ReplacerException::new)
+            .getContent();
     }
 
     @Override
     public String getComposedMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return getPageByTitle(composedMisspellingPages.get(lang), lang)
+        return getPageByTitle(composedMisspellingPages.get(lang.getCode()), lang)
             .orElseThrow(ReplacerException::new)
             .getContent();
     }

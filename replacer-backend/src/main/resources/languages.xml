@@ -16,13 +16,13 @@
     <util:map id="composedMisspellingPages" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.String">
         <entry key="es" value="Usuario:Benjavalero/ComposedMisspellings"/>
-        <entry key="gl" value="Usuario:Benjavalero/ComposedMisspellings/gl"/>
+        <entry key="gl" value="Usuario:Benjavalero/ComposedMisspellings"/>
     </util:map>
 
     <util:map id="falsePositivePages" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.String">
         <entry key="es" value="Usuario:Benjavalero/FalsePositives"/>
-        <entry key="gl" value="Usuario:Benjavalero/FalsePositives/gl"/>
+        <entry key="gl" value="Usuario:Benjavalero/FalsePositives"/>
     </util:map>
 
 </beans>

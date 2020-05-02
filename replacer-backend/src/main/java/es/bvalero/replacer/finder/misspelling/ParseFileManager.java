@@ -64,7 +64,7 @@ public abstract class ParseFileManager<T> {
         SetValuedMap<WikipediaLanguage, T> map = new HashSetValuedHashMap<>();
         for (Map.Entry<WikipediaLanguage, String> entry : findItemsText().entrySet()) {
             Set<T> itemSet = parseItemsText(entry.getValue());
-            items.putAll(entry.getKey(), itemSet);
+            map.putAll(entry.getKey(), itemSet);
             LOGGER.info(
                 "END Load {} set from {} Wikipedia. Items found: {}",
                 getLabel(),
