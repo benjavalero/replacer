@@ -71,7 +71,7 @@ public class ArticleControllerTest {
         Suggestion suggestion = Suggestion.of("a", "b");
         ArticleReplacement replacement = new ArticleReplacement(start, rep, Collections.singletonList(suggestion));
         List<ArticleReplacement> replacements = Collections.singletonList(replacement);
-        ArticleReview review = new ArticleReview(id, title, content, section, queryTimestamp, replacements);
+        ArticleReview review = new ArticleReview(id, WikipediaLanguage.SPANISH, title, content, section, queryTimestamp, replacements);
         ArticleReviewOptions options = ArticleReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
         when(articleReviewNoTypeService.findRandomArticleReview(options)).thenReturn(Optional.of(review));
 

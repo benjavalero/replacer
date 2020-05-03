@@ -48,6 +48,7 @@ public class SectionReviewServiceTest {
 
         ArticleReview articleReview = new ArticleReview();
         articleReview.setId(articleId);
+        articleReview.setLang(WikipediaLanguage.SPANISH);
         articleReview.setContent(content);
         articleReview.setReplacements(Collections.singletonList(replacement));
 
@@ -62,6 +63,7 @@ public class SectionReviewServiceTest {
         WikipediaPage pageSection = WikipediaPage
             .builder()
             .id(articleId)
+            .lang(WikipediaLanguage.SPANISH)
             .content(sectionContent)
             .section(sectionId)
             .build();

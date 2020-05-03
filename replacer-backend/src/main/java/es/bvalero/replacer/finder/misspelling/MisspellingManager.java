@@ -33,22 +33,14 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
         SetValuedMap<WikipediaLanguage, Misspelling> newItems
     ) {
         // Find the misspellings removed from the list to remove them from the database
-        // TODO: Do for all languages
-        Set<String> oldWords = oldItems
-            .get(WikipediaLanguage.SPANISH)
-            .stream()
-            .map(Misspelling::getWord)
-            .collect(Collectors.toSet());
-        Set<String> newWords = newItems
-            .get(WikipediaLanguage.SPANISH)
-            .stream()
-            .map(Misspelling::getWord)
-            .collect(Collectors.toSet());
-        oldWords.removeAll(newWords);
-        if (!oldWords.isEmpty()) {
-            LOGGER.warn("Deleting from database obsolete misspellings: {}", oldWords);
-            // TODO: Receive language as a parameter
-            replacementRepository.deleteByLangAndSubtypeIn(WikipediaLanguage.SPANISH.getCode(), new HashSet<>(oldWords));
+        for (WikipediaLanguage lang : WikipediaLanguage.values()) {
+            Set<String> oldWords = oldItems.get(lang).stream().map(Misspelling::getWord).collect(Collectors.toSet());
+            Set<String> newWords = newItems.get(lang).stream().map(Misspelling::getWord).collect(Collectors.toSet());
+            oldWords.removeAll(newWords);
+            if (!oldWords.isEmpty()) {
+                LOGGER.warn("Deleting from database obsolete misspellings: {}", oldWords);
+                replacementRepository.deleteByLangAndSubtypeIn(lang.getCode(), new HashSet<>(oldWords));
+            }
         }
     }
 
