@@ -40,10 +40,12 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
             );
 
             // Check that the replacement has not already been reviewed
+            // TODO: Receive language as a parameter
             articleIds.removeIf(
                 id ->
-                    replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
+                    replacementRepository.countByArticleIdAndLangAndTypeAndSubtypeAndReviewerNotNull(
                         id,
+                        WikipediaLanguage.SPANISH.getCode(),
                         options.getType(),
                         options.getSubtype()
                     ) >

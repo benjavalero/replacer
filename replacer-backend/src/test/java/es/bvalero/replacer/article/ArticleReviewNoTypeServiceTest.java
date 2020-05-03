@@ -78,7 +78,7 @@ public class ArticleReviewNoTypeServiceTest {
     public void testFindRandomArticleToReviewNoTypeNoResultInDb() {
         // No results in DB
         Mockito
-            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
+            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.anyString(), Mockito.any(PageRequest.class)))
             .thenReturn(Collections.emptyList());
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
@@ -90,7 +90,7 @@ public class ArticleReviewNoTypeServiceTest {
     public void testFindRandomArticleToReviewNoTypeNotInWikipedia() throws ReplacerException {
         // 1 result in DB
         Mockito
-            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
+            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.anyString(), Mockito.any(PageRequest.class)))
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
             .thenReturn(Collections.emptyList());
 
@@ -106,7 +106,7 @@ public class ArticleReviewNoTypeServiceTest {
     public void testFindRandomArticleToReviewNoTypeWithReplacements() throws ReplacerException {
         // 1 result in DB
         Mockito
-            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
+            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.anyString(), Mockito.any(PageRequest.class)))
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
 
         // The article exists in Wikipedia
@@ -133,7 +133,7 @@ public class ArticleReviewNoTypeServiceTest {
     public void testFindRandomArticleToReviewNoTypeNoReplacements() throws ReplacerException {
         // 1 result in DB
         Mockito
-            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
+            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.anyString(), Mockito.any(PageRequest.class)))
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
             .thenReturn(Collections.emptyList());
 
@@ -161,7 +161,7 @@ public class ArticleReviewNoTypeServiceTest {
     public void testFindRandomArticleToReviewNoTypeSecondResult() throws ReplacerException {
         // 2 results in DB
         Mockito
-            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
+            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.anyString(), Mockito.any(PageRequest.class)))
             .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)));
 
         // Only the article 2 exists in Wikipedia

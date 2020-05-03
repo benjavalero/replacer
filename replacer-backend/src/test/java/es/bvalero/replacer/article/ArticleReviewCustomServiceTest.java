@@ -83,8 +83,9 @@ public class ArticleReviewCustomServiceTest {
         // The result is not already reviewed
         Mockito
             .when(
-                replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
+                replacementRepository.countByArticleIdAndLangAndTypeAndSubtypeAndReviewerNotNull(
                     randomId,
+                    WikipediaLanguage.SPANISH.getCode(),
                     ReplacementFindService.CUSTOM_FINDER_TYPE,
                     replacement
                 )
@@ -119,8 +120,9 @@ public class ArticleReviewCustomServiceTest {
         // The result 2 is not reviewed the first time, but reviewed the second time.
         Mockito
             .when(
-                replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
+                replacementRepository.countByArticleIdAndLangAndTypeAndSubtypeAndReviewerNotNull(
                     randomId,
+                    WikipediaLanguage.SPANISH.getCode(),
                     ReplacementFindService.CUSTOM_FINDER_TYPE,
                     replacement
                 )
@@ -128,8 +130,9 @@ public class ArticleReviewCustomServiceTest {
             .thenReturn(1L);
         Mockito
             .when(
-                replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
+                replacementRepository.countByArticleIdAndLangAndTypeAndSubtypeAndReviewerNotNull(
                     randomId2,
+                    WikipediaLanguage.SPANISH.getCode(),
                     ReplacementFindService.CUSTOM_FINDER_TYPE,
                     replacement
                 )

@@ -47,7 +47,8 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
         oldWords.removeAll(newWords);
         if (!oldWords.isEmpty()) {
             LOGGER.warn("Deleting from database obsolete misspellings: {}", oldWords);
-            replacementRepository.deleteBySubtypeIn(new HashSet<>(oldWords));
+            // TODO: Receive language as a parameter
+            replacementRepository.deleteByLangAndSubtypeIn(WikipediaLanguage.SPANISH.getCode(), new HashSet<>(oldWords));
         }
     }
 

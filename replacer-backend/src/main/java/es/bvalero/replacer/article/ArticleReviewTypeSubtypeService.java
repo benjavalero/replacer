@@ -3,6 +3,7 @@ package es.bvalero.replacer.article;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,8 @@ class ArticleReviewTypeSubtypeService extends ArticleReviewCachedService {
     @Override
     List<Integer> findArticleIdsToReview(ArticleReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-        List<Integer> articleIds = replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(options.getType(), options.getSubtype(), pagination);
+        // TODO: Receive language as a parameter
+        List<Integer> articleIds = replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(WikipediaLanguage.SPANISH.getCode(), options.getType(), options.getSubtype(), pagination);
 
         if (articleIds.isEmpty()) {
             // If finally there are no results empty the cached count for the replacement

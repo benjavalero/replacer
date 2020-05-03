@@ -1,15 +1,19 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+
+import static org.hamcrest.Matchers.*;
 
 /*
  * This tests have been disabled after adapting the code to use Java 11 modules.
@@ -34,7 +38,7 @@ public class ReplacementRepositoryTest {
         error5.setReviewer("x");
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3, error4, error5));
 
-        Assert.assertEquals(3, replacementRepository.countGroupedByTypeAndSubtype().size());
+        Assert.assertThat(replacementRepository.countGroupedByTypeAndSubtype(Mockito.anyString()).size(), is(3));
     }
 
     @Test
@@ -44,13 +48,13 @@ public class ReplacementRepositoryTest {
         ReplacementEntity error3 = new ReplacementEntity(3, "X", "aber", 3);
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3));
 
-        Assert.assertTrue(replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
-                "xxx", "zzz", PageRequest.of(0, 1))
-                .isEmpty());
+        Assert.assertThat(replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
+            WikipediaLanguage.SPANISH.getCode(), "xxx", "zzz", PageRequest.of(0, 1))
+            .isEmpty(), is(true));
 
-        Assert.assertEquals(3, replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
-                "X", "aber", PageRequest.of(0, 3))
-                .size());
+        Assert.assertThat(replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
+            WikipediaLanguage.SPANISH.getCode(), "X", "aber", PageRequest.of(0, 3))
+            .size(), is(3));
     }
 
 }

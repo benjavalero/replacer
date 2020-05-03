@@ -1,5 +1,6 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class ReplacementCountService {
     private ReplacementRepository replacementRepository;
 
     // Cache the count of replacements. This list is updated every 10 minutes and modified when saving changes.
-    private Map<String, Map<String, Long>> cachedReplacementCount = new HashMap<>();
+    private final Map<String, Map<String, Long>> cachedReplacementCount = new HashMap<>();
 
     /* STATISTICS */
 
@@ -66,7 +67,8 @@ public class ReplacementCountService {
     void updateReplacementCount() {
         LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
         LOGGER.info("START Count grouped replacements by type and subtype");
-        List<TypeSubtypeCount> counts = replacementRepository.countGroupedByTypeAndSubtype();
+        // TODO: Receive the language as a parameter
+        List<TypeSubtypeCount> counts = replacementRepository.countGroupedByTypeAndSubtype(WikipediaLanguage.SPANISH.getCode());
         LOGGER.info("END Count grouped replacements. Size: {}", counts.size());
         loadCachedReplacementCount(counts);
     }

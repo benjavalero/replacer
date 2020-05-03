@@ -87,6 +87,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
                 replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
                     Mockito.anyString(),
                     Mockito.anyString(),
+                    Mockito.anyString(),
                     Mockito.any(PageRequest.class)
                 )
             )
@@ -118,6 +119,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
         Mockito
             .when(
                 replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
+                    Mockito.anyString(),
                     Mockito.anyString(),
                     Mockito.anyString(),
                     Mockito.any(PageRequest.class)
@@ -157,6 +159,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
                 replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
                     Mockito.anyString(),
                     Mockito.anyString(),
+                    Mockito.anyString(),
                     Mockito.any(PageRequest.class)
                 )
             )
@@ -164,7 +167,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
             .thenReturn(Collections.emptyList());
         // 1 result in DB by no type
         Mockito
-            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.any(PageRequest.class)))
+            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.anyString(), Mockito.any(PageRequest.class)))
             .thenReturn(new ArrayList<>(Collections.singletonList(randomId2)));
 
         // The articles exist in Wikipedia

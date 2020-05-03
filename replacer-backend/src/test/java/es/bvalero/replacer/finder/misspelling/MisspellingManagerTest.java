@@ -80,14 +80,14 @@ public class MisspellingManagerTest {
         map1.putAll(WikipediaLanguage.SPANISH, Arrays.asList(misspelling1, misspelling2));
         misspellingManager.setItems(map1);
 
-        Mockito.verify(replacementRepository, Mockito.times(0)).deleteBySubtypeIn(Mockito.anySet());
+        Mockito.verify(replacementRepository, Mockito.times(0)).deleteByLangAndSubtypeIn(Mockito.anyString(), Mockito.anySet());
 
         Misspelling misspelling3 = Misspelling.ofCaseInsensitive("C", "D");
         SetValuedMap<WikipediaLanguage, Misspelling> map2 = new HashSetValuedHashMap<>();
         map2.putAll(WikipediaLanguage.SPANISH, Arrays.asList(misspelling2, misspelling3));
         misspellingManager.setItems(map2);
 
-        Mockito.verify(replacementRepository, Mockito.times(1)).deleteBySubtypeIn(Collections.singleton("A"));
+        Mockito.verify(replacementRepository, Mockito.times(1)).deleteByLangAndSubtypeIn(WikipediaLanguage.SPANISH.getCode(), Collections.singleton("A"));
     }
 
     @Test
