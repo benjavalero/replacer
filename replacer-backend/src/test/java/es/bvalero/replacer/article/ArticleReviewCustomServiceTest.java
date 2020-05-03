@@ -153,7 +153,7 @@ public class ArticleReviewCustomServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .addCustomReviewedReplacement(Mockito.anyInt(), Mockito.anyString());
+            .addCustomReviewedReplacement(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class), Mockito.anyString());
 
         Assertions.assertFalse(review.isPresent());
     }

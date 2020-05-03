@@ -12,6 +12,7 @@ public class ReplacementRowMapper implements RowMapper<ReplacementEntity> {
         return new ReplacementEntity(
             result.getLong("ID"),
             result.getInt("ARTICLE_ID"),
+            result.getString("LANG"),
             result.getString("TYPE"),
             result.getString("SUBTYPE"),
             result.getInt("POSITION"),

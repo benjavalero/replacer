@@ -8,19 +8,17 @@ import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 class ArticleReviewCustomService extends ArticleReviewCachedService {
-
     @Autowired
     private WikipediaService wikipediaService;
 
@@ -37,11 +35,20 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
     List<Integer> findArticleIdsToReview(ArticleReviewOptions options) {
         try {
             // TODO: Receive language as a parameter
-            List<Integer> articleIds = new ArrayList<>(wikipediaService.getPageIdsByStringMatch(options.getSubtype(), WikipediaLanguage.SPANISH));
+            List<Integer> articleIds = new ArrayList<>(
+                wikipediaService.getPageIdsByStringMatch(options.getSubtype(), WikipediaLanguage.SPANISH)
+            );
 
             // Check that the replacement has not already been reviewed
-            articleIds.removeIf(id -> replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
-                    id, options.getType(), options.getSubtype()) > 0);
+            articleIds.removeIf(
+                id ->
+                    replacementRepository.countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(
+                        id,
+                        options.getType(),
+                        options.getSubtype()
+                    ) >
+                    0
+            );
 
             return articleIds;
         } catch (ReplacerException e) {
@@ -56,7 +63,12 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
 
         if (article.isEmpty()) {
             // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
-            replacementIndexService.addCustomReviewedReplacement(articleId, options.getSubtype());
+            // TODO: Receive the language as a parameter
+            replacementIndexService.addCustomReviewedReplacement(
+                articleId,
+                WikipediaLanguage.SPANISH,
+                options.getSubtype()
+            );
         }
 
         return article;
@@ -65,14 +77,23 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
     @Override
     List<Replacement> findAllReplacements(WikipediaPage article, ArticleReviewOptions options) {
         // TODO: Receive the language as a parameter
-        List<Replacement> replacements = replacementFindService.findCustomReplacements(article.getContent(), options.getSubtype(), options.getSuggestion(), WikipediaLanguage.SPANISH);
+        List<Replacement> replacements = replacementFindService.findCustomReplacements(
+            article.getContent(),
+            options.getSubtype(),
+            options.getSuggestion(),
+            WikipediaLanguage.SPANISH
+        );
 
         if (replacements.isEmpty()) {
             // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
-            replacementIndexService.addCustomReviewedReplacement(article.getId(), options.getSubtype());
+            // TODO: Receive the language as a parameter
+            replacementIndexService.addCustomReviewedReplacement(
+                article.getId(),
+                WikipediaLanguage.SPANISH,
+                options.getSubtype()
+            );
         }
 
         return replacements;
     }
-
 }

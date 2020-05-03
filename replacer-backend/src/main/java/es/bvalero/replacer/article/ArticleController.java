@@ -7,18 +7,16 @@ import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @Slf4j
 @RestController
 @RequestMapping("api/article")
 public class ArticleController {
-
     @Autowired
     private ArticleReviewNoTypeService articleReviewNoTypeService;
 
@@ -47,16 +45,24 @@ public class ArticleController {
 
     @GetMapping(value = "/random/{type}/{subtype}")
     public Optional<ArticleReview> findRandomArticleByTypeAndSubtype(
-            @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
+        @PathVariable("type") String type,
+        @PathVariable("subtype") String subtype
+    ) {
         LOGGER.info("GET Find random article. Type: {} - {}", type, subtype);
-        return articleReviewTypeSubtypeService.findRandomArticleReview(ArticleReviewOptions.ofTypeSubtype(type, subtype));
+        return articleReviewTypeSubtypeService.findRandomArticleReview(
+            ArticleReviewOptions.ofTypeSubtype(type, subtype)
+        );
     }
 
     @GetMapping(value = "/random/Personalizado/{subtype}/{suggestion}")
     public Optional<ArticleReview> findRandomArticleByCustomReplacement(
-            @PathVariable("subtype") String replacement, @PathVariable("suggestion") String suggestion) {
+        @PathVariable("subtype") String replacement,
+        @PathVariable("suggestion") String suggestion
+    ) {
         LOGGER.info("GET Find random article. Custom replacement: {} - {}", replacement, suggestion);
-        return articleReviewCustomService.findRandomArticleReview(ArticleReviewOptions.ofCustom(replacement, suggestion));
+        return articleReviewCustomService.findRandomArticleReview(
+            ArticleReviewOptions.ofCustom(replacement, suggestion)
+        );
     }
 
     /* FIND AN ARTICLE REVIEW */
@@ -69,17 +75,33 @@ public class ArticleController {
 
     @GetMapping(value = "/{id}/{type}/{subtype}")
     public Optional<ArticleReview> findArticleReviewByIdByTypeAndSubtype(
-            @PathVariable("id") int articleId, @PathVariable("type") String type, @PathVariable("subtype") String subtype) {
+        @PathVariable("id") int articleId,
+        @PathVariable("type") String type,
+        @PathVariable("subtype") String subtype
+    ) {
         LOGGER.info("GET Find review for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
-        return articleReviewTypeSubtypeService.getArticleReview(articleId, ArticleReviewOptions.ofTypeSubtype(type, subtype));
+        return articleReviewTypeSubtypeService.getArticleReview(
+            articleId,
+            ArticleReviewOptions.ofTypeSubtype(type, subtype)
+        );
     }
 
     @GetMapping(value = "/{id}/Personalizado/{subtype}/{suggestion}")
     public Optional<ArticleReview> findArticleReviewByIdAndCustomReplacement(
-            @PathVariable("id") int articleId, @PathVariable("subtype") String replacement, @PathVariable("suggestion") String suggestion) {
-        LOGGER.info("GET Find review for article by custom type. ID: {} - Replacement: {} - Suggestion: {}",
-                articleId, replacement, suggestion);
-        return articleReviewCustomService.getArticleReview(articleId, ArticleReviewOptions.ofCustom(replacement, suggestion));
+        @PathVariable("id") int articleId,
+        @PathVariable("subtype") String replacement,
+        @PathVariable("suggestion") String suggestion
+    ) {
+        LOGGER.info(
+            "GET Find review for article by custom type. ID: {} - Replacement: {} - Suggestion: {}",
+            articleId,
+            replacement,
+            suggestion
+        );
+        return articleReviewCustomService.getArticleReview(
+            articleId,
+            ArticleReviewOptions.ofCustom(replacement, suggestion)
+        );
     }
 
     /* SAVE CHANGES */
@@ -92,18 +114,28 @@ public class ArticleController {
             // Upload new content to Wikipedia
             // TODO: Receive language as a parameter
             String textToSave = cosmeticFindService.applyCosmeticChanges(saveArticle.getContent());
-            wikipediaService.savePageContent(saveArticle.getArticleId(), textToSave, saveArticle.getSection(),
-                    saveArticle.getTimestamp(), WikipediaLanguage.SPANISH, convertToEntity(saveArticle.getToken()));
+            wikipediaService.savePageContent(
+                saveArticle.getArticleId(),
+                textToSave,
+                saveArticle.getSection(),
+                saveArticle.getTimestamp(),
+                WikipediaLanguage.SPANISH,
+                convertToEntity(saveArticle.getToken())
+            );
         }
 
         // Mark article as reviewed in the database
-        replacementIndexService.reviewArticleReplacements(saveArticle.getArticleId(), saveArticle.getType(),
-                saveArticle.getSubtype(), saveArticle.getReviewer());
+        // TODO: Receive language as a parameter
+        replacementIndexService.reviewArticleReplacements(
+            saveArticle.getArticleId(),
+            WikipediaLanguage.SPANISH,
+            saveArticle.getType(),
+            saveArticle.getSubtype(),
+            saveArticle.getReviewer()
+        );
     }
 
     private OAuth1AccessToken convertToEntity(AccessToken accessToken) {
         return new OAuth1AccessToken(accessToken.getToken(), accessToken.getTokenSecret());
     }
-
-
 }

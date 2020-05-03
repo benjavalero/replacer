@@ -1,6 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,24 +36,21 @@ import org.springframework.stereotype.Component;
 public class DumpFinder {
     private static final String DUMP_FOLDER_REGEX = "\\d{8}";
     private static final Pattern DUMP_FOLDER_PATTERN = Pattern.compile(DUMP_FOLDER_REGEX);
+    private static final String DUMP_PATH_PROJECT_FORMAT = "%swiki";
     private static final String DUMP_FILE_NAME_FORMAT = "%s-%s-pages-articles.xml.bz2";
 
     @Setter
     @Value("${replacer.dump.path.base:}")
     private String dumpPathBase;
 
-    @Setter
-    @Value("${replacer.dump.path.project:}")
-    private String dumpPathProject;
-
-    public Path findLatestDumpFile() throws ReplacerException {
-        LOGGER.info("START Find latest dump");
-        Path dumPath = Paths.get(dumpPathBase, dumpPathProject);
+    public Path findLatestDumpFile(WikipediaLanguage lang) throws ReplacerException {
+        LOGGER.info("START Find latest dump for lang: {}", lang);
+        Path dumPath = Paths.get(dumpPathBase, getDumpPathProject(lang));
         LOGGER.info("Dump path: {}", dumPath);
 
         Path latestDumpFile = null;
         for (Path dumpFolder : findDumpFolders(dumPath)) {
-            Optional<Path> dumpFile = findDumpFile(dumpFolder);
+            Optional<Path> dumpFile = findDumpFile(dumpFolder, lang);
             if (dumpFile.isPresent()) {
                 latestDumpFile = dumpFile.get();
                 break;
@@ -78,10 +76,14 @@ public class DumpFinder {
         }
     }
 
-    private Optional<Path> findDumpFile(Path dumpFolder) {
+    private Optional<Path> findDumpFile(Path dumpFolder, WikipediaLanguage lang) {
         // Check if the dump folder contains a valid dump
-        String dumpFileName = String.format(DUMP_FILE_NAME_FORMAT, dumpPathProject, dumpFolder.getFileName());
+        String dumpFileName = String.format(DUMP_FILE_NAME_FORMAT, getDumpPathProject(lang), dumpFolder.getFileName());
         Path dumpFile = dumpFolder.resolve(dumpFileName);
         return dumpFile.toFile().exists() ? Optional.of(dumpFile) : Optional.empty();
+    }
+
+    private String getDumpPathProject(WikipediaLanguage lang) {
+        return String.format(DUMP_PATH_PROJECT_FORMAT, lang.getCode());
     }
 }

@@ -38,21 +38,36 @@ public class DumpArticleProcessorTest {
 
     @Test
     public void testProcessSimple() {
-        DumpArticle dumpArticle = DumpArticle.builder().namespace(WikipediaNamespace.ARTICLE).content("").build();
+        DumpArticle dumpArticle = DumpArticle
+            .builder()
+            .lang(WikipediaLanguage.SPANISH)
+            .namespace(WikipediaNamespace.ARTICLE)
+            .content("")
+            .build();
         dumpArticleProcessor.processArticle(dumpArticle);
 
-        Mockito.verify(replacementCache).findByArticleId(Mockito.anyInt());
+        Mockito.verify(replacementCache).findByArticleId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class));
         Mockito
             .verify(replacementFindService)
             .findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class));
         Mockito
             .verify(replacementIndexService)
-            .findIndexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.anyList());
+            .findIndexArticleReplacements(
+                Mockito.anyInt(),
+                Mockito.any(WikipediaLanguage.class),
+                Mockito.anyList(),
+                Mockito.anyList()
+            );
     }
 
     @Test
     public void testCheckNamespaces() {
-        DumpArticle dumpArticle = DumpArticle.builder().namespace(WikipediaNamespace.ARTICLE).content("").build();
+        DumpArticle dumpArticle = DumpArticle
+            .builder()
+            .lang(WikipediaLanguage.SPANISH)
+            .namespace(WikipediaNamespace.ARTICLE)
+            .content("")
+            .build();
         DumpArticle dumpAnnex = DumpArticle.builder().namespace(WikipediaNamespace.ANNEX).content("").build();
         DumpArticle dumpCategory = DumpArticle.builder().namespace(WikipediaNamespace.CATEGORY).build();
 
@@ -65,6 +80,7 @@ public class DumpArticleProcessorTest {
     public void testProcessRedirection() {
         DumpArticle dumpArticle = DumpArticle
             .builder()
+            .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
             .content("#Redirect")
             .build();
@@ -78,6 +94,7 @@ public class DumpArticleProcessorTest {
 
         DumpArticle dumpArticle = DumpArticle
             .builder()
+            .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
             .content("")
             .lastUpdate(yesterday)
@@ -86,7 +103,7 @@ public class DumpArticleProcessorTest {
         ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
         replacement.setLastUpdate(today);
         Mockito
-            .when(replacementCache.findByArticleId(Mockito.anyInt()))
+            .when(replacementCache.findByArticleId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
         Assertions.assertTrue(dumpArticleProcessor.processArticle(dumpArticle).isEmpty());
@@ -101,6 +118,7 @@ public class DumpArticleProcessorTest {
 
         DumpArticle dumpArticle = DumpArticle
             .builder()
+            .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
             .content("")
             .lastUpdate(today)
@@ -109,7 +127,7 @@ public class DumpArticleProcessorTest {
         ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
         replacement.setLastUpdate(today);
         Mockito
-            .when(replacementCache.findByArticleId(Mockito.anyInt()))
+            .when(replacementCache.findByArticleId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
         dumpArticleProcessor.processArticle(dumpArticle);
@@ -125,6 +143,7 @@ public class DumpArticleProcessorTest {
 
         DumpArticle dumpArticle = DumpArticle
             .builder()
+            .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
             .content("")
             .lastUpdate(today)
@@ -133,7 +152,7 @@ public class DumpArticleProcessorTest {
         ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
         replacement.setLastUpdate(yesterday);
         Mockito
-            .when(replacementCache.findByArticleId(Mockito.anyInt()))
+            .when(replacementCache.findByArticleId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
         dumpArticleProcessor.processArticle(dumpArticle);
@@ -146,13 +165,16 @@ public class DumpArticleProcessorTest {
     public void testProcessNewArticle() {
         DumpArticle dumpArticle = DumpArticle
             .builder()
+            .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
             .content("")
             .lastUpdate(LocalDate.now())
             .build();
 
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
-        Mockito.when(replacementCache.findByArticleId(Mockito.anyInt())).thenReturn(dbReplacements);
+        Mockito
+            .when(replacementCache.findByArticleId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .thenReturn(dbReplacements);
 
         Replacement replacement = Replacement.builder().build();
         List<Replacement> replacements = Collections.singletonList(replacement);
@@ -164,7 +186,12 @@ public class DumpArticleProcessorTest {
 
         Mockito
             .verify(replacementIndexService)
-            .findIndexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.eq(dbReplacements));
+            .findIndexArticleReplacements(
+                Mockito.anyInt(),
+                Mockito.any(WikipediaLanguage.class),
+                Mockito.anyList(),
+                Mockito.eq(dbReplacements)
+            );
     }
 
     @Test
@@ -174,6 +201,7 @@ public class DumpArticleProcessorTest {
 
         DumpArticle dumpArticle = DumpArticle
             .builder()
+            .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
             .content("")
             .lastUpdate(today)
@@ -182,7 +210,9 @@ public class DumpArticleProcessorTest {
         ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
         replacement.setLastUpdate(yesterday);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
-        Mockito.when(replacementCache.findByArticleId(Mockito.anyInt())).thenReturn(dbReplacements);
+        Mockito
+            .when(replacementCache.findByArticleId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .thenReturn(dbReplacements);
 
         List<Replacement> replacements = Collections.emptyList();
         Mockito
@@ -193,6 +223,11 @@ public class DumpArticleProcessorTest {
 
         Mockito
             .verify(replacementIndexService)
-            .findIndexArticleReplacements(Mockito.anyInt(), Mockito.anyList(), Mockito.eq(dbReplacements));
+            .findIndexArticleReplacements(
+                Mockito.anyInt(),
+                Mockito.any(WikipediaLanguage.class),
+                Mockito.anyList(),
+                Mockito.eq(dbReplacements)
+            );
     }
 }

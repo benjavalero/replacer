@@ -7,23 +7,25 @@ import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * Process an article found in a Wikipedia dump.
  */
 @Slf4j
+@StepScope
 @Component
 public class DumpArticleProcessor implements ItemProcessor<DumpPage, List<ReplacementEntity>> {
     @Autowired
@@ -34,6 +36,9 @@ public class DumpArticleProcessor implements ItemProcessor<DumpPage, List<Replac
 
     @Autowired
     private ReplacementFindService replacementFindService;
+
+    @Value("#{jobParameters[dumpLang]}")
+    private String dumpLang;
 
     @Override
     public List<ReplacementEntity> process(@NotNull DumpPage dumpPage) {
@@ -54,6 +59,7 @@ public class DumpArticleProcessor implements ItemProcessor<DumpPage, List<Replac
         return DumpArticle
             .builder()
             .id(dumpPage.id)
+            .lang(WikipediaLanguage.forValues(dumpLang))
             .title(dumpPage.title)
             .namespace(WikipediaNamespace.valueOf(dumpPage.ns))
             .lastUpdate(WikipediaPage.parseWikipediaTimestamp(dumpPage.revision.timestamp))
@@ -64,7 +70,10 @@ public class DumpArticleProcessor implements ItemProcessor<DumpPage, List<Replac
     List<ReplacementEntity> processArticle(DumpArticle dumpArticle) {
         LOGGER.debug("START Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
 
-        List<ReplacementEntity> dbReplacements = replacementCache.findByArticleId(dumpArticle.getId());
+        List<ReplacementEntity> dbReplacements = replacementCache.findByArticleId(
+            dumpArticle.getId(),
+            dumpArticle.getLang()
+        );
         Optional<LocalDate> dbLastUpdate = dbReplacements
             .stream()
             .map(ReplacementEntity::getLastUpdate)
@@ -79,10 +88,13 @@ public class DumpArticleProcessor implements ItemProcessor<DumpPage, List<Replac
             return Collections.emptyList();
         }
 
-        // TODO: Receive the language as a parameter
-        List<Replacement> replacements = replacementFindService.findReplacements(dumpArticle.getContent(), WikipediaLanguage.SPANISH);
+        List<Replacement> replacements = replacementFindService.findReplacements(
+            dumpArticle.getContent(),
+            dumpArticle.getLang()
+        );
         List<ReplacementEntity> toWrite = replacementIndexService.findIndexArticleReplacements(
             dumpArticle.getId(),
+            dumpArticle.getLang(),
             replacements.stream().map(dumpArticle::convertReplacementToIndexed).collect(Collectors.toList()),
             dbReplacements
         );

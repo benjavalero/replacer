@@ -1,6 +1,7 @@
 package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +31,11 @@ public class ReplacementIndexService {
 
     /* INDEX ARTICLES */
 
-    public void indexArticleReplacements(int articleId, List<IndexableReplacement> replacements) {
+    public void indexArticleReplacements(
+        int articleId,
+        WikipediaLanguage lang,
+        List<IndexableReplacement> replacements
+    ) {
         // All replacements correspond to the same article
         if (replacements.stream().anyMatch(r -> r.getArticleId() != articleId)) {
             throw new IllegalArgumentException("Indexable replacements from more than one article");
@@ -39,6 +44,7 @@ public class ReplacementIndexService {
         // We need the article ID because the replacement list to index might be empty
         List<ReplacementEntity> toSave = findIndexArticleReplacements(
             articleId,
+            lang,
             replacements,
             replacementRepository.findByArticleId(articleId)
         );
@@ -47,12 +53,14 @@ public class ReplacementIndexService {
 
     public List<ReplacementEntity> findIndexArticleReplacements(
         int articleId,
+        WikipediaLanguage lang,
         List<IndexableReplacement> replacements,
         List<ReplacementEntity> dbReplacements
     ) {
         LOGGER.debug(
-            "START Index list of replacements. ID: {}\n" + "New: {} - {}\n" + "Old: {} - {}",
+            "START Index list of replacements. ID: {} - {}\n" + "New: {} - {}\n" + "Old: {} - {}",
             articleId,
+            lang,
             replacements.size(),
             replacements,
             dbReplacements.size(),
@@ -62,7 +70,7 @@ public class ReplacementIndexService {
 
         // We need the article ID because the replacement list to index might be empty
         if (replacements.isEmpty() && dbReplacements.isEmpty()) {
-            result.add(createFakeReviewedReplacement(articleId));
+            result.add(createFakeReviewedReplacement(articleId, lang));
         }
 
         replacements.forEach(replacement -> handleReplacement(replacement, dbReplacements).ifPresent(result::add));
@@ -155,6 +163,7 @@ public class ReplacementIndexService {
         ReplacementEntity entity = modelMapper.map(replacement, ReplacementEntity.class);
         // It is mapping the articleId also to the entity Id
         entity.setId(null);
+        entity.setLang(replacement.getLang().getCode());
         return entity;
     }
 
@@ -168,14 +177,15 @@ public class ReplacementIndexService {
         return reviewReplacement(replacement, SYSTEM_REVIEWER);
     }
 
-    public void reviewArticleReplacementsAsSystem(int articleId) {
+    public void reviewArticleReplacementsAsSystem(int articleId, WikipediaLanguage lang) {
         replacementRepository
-            .findByArticleIdAndReviewerIsNull(articleId)
+            .findByArticleIdAndLangAndReviewerIsNull(articleId, lang.getCode())
             .forEach(r -> saveReplacement(reviewReplacementAsSystem(r)));
     }
 
     public void reviewArticleReplacements(
         int articleId,
+        WikipediaLanguage lang,
         @Nullable String type,
         @Nullable String subtype,
         String reviewer
@@ -185,20 +195,20 @@ public class ReplacementIndexService {
 
         if (ReplacementFindService.CUSTOM_FINDER_TYPE.equals(type)) {
             // Custom replacements don't exist in the database to be reviewed
-            toSave.add(createCustomReviewedReplacement(articleId, subtype, reviewer));
+            toSave.add(createCustomReviewedReplacement(articleId, lang, subtype, reviewer));
         } else if (StringUtils.isNotBlank(type)) {
-            toSave.addAll(reviewArticleTypedReplacements(articleId, type, subtype, reviewer));
+            toSave.addAll(reviewArticleTypedReplacements(articleId, lang, type, subtype, reviewer));
         } else {
-            toSave.addAll(reviewArticleReplacements(articleId, reviewer));
+            toSave.addAll(reviewArticleReplacements(articleId, lang, reviewer));
         }
 
         saveReplacements(toSave);
         LOGGER.info("END Mark article as reviewed. ID: {}", articleId);
     }
 
-    private List<ReplacementEntity> reviewArticleReplacements(int articleId, String reviewer) {
+    private List<ReplacementEntity> reviewArticleReplacements(int articleId, WikipediaLanguage lang, String reviewer) {
         return replacementRepository
-            .findByArticleIdAndReviewerIsNull(articleId)
+            .findByArticleIdAndLangAndReviewerIsNull(articleId, lang.getCode())
             .stream()
             .map(replacement -> reviewReplacement(replacement, reviewer))
             .collect(Collectors.toList());
@@ -206,12 +216,14 @@ public class ReplacementIndexService {
 
     private List<ReplacementEntity> reviewArticleTypedReplacements(
         int articleId,
+        WikipediaLanguage lang,
         String type,
         String subtype,
         String reviewer
     ) {
-        List<ReplacementEntity> toReview = replacementRepository.findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(
+        List<ReplacementEntity> toReview = replacementRepository.findByArticleIdAndLangAndTypeAndSubtypeAndReviewerIsNull(
             articleId,
+            lang.getCode(),
             type,
             subtype
         );
@@ -223,9 +235,15 @@ public class ReplacementIndexService {
         return toReview;
     }
 
-    private ReplacementEntity createCustomReviewedReplacement(int articleId, String replacement, String reviewer) {
+    private ReplacementEntity createCustomReviewedReplacement(
+        int articleId,
+        WikipediaLanguage lang,
+        String replacement,
+        String reviewer
+    ) {
         ReplacementEntity custom = new ReplacementEntity(
             articleId,
+            lang,
             ReplacementFindService.CUSTOM_FINDER_TYPE,
             replacement,
             0
@@ -233,9 +251,10 @@ public class ReplacementIndexService {
         return reviewReplacement(custom, reviewer);
     }
 
-    public void addCustomReviewedReplacement(int articleId, String replacement) {
+    public void addCustomReviewedReplacement(int articleId, WikipediaLanguage lang, String replacement) {
         ReplacementEntity customReplacement = new ReplacementEntity(
             articleId,
+            lang,
             ReplacementFindService.CUSTOM_FINDER_TYPE,
             replacement,
             0
@@ -243,8 +262,8 @@ public class ReplacementIndexService {
         saveReplacement(reviewReplacementAsSystem(customReplacement));
     }
 
-    ReplacementEntity createFakeReviewedReplacement(int articleId) {
-        ReplacementEntity fakeReplacement = new ReplacementEntity(articleId, "", "", 0);
+    ReplacementEntity createFakeReviewedReplacement(int articleId, WikipediaLanguage lang) {
+        ReplacementEntity fakeReplacement = new ReplacementEntity(articleId, lang, "", "", 0);
         return reviewReplacementAsSystem(fakeReplacement);
     }
 }

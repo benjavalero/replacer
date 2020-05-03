@@ -9,8 +9,8 @@ import org.springframework.batch.item.ItemWriter;
 
 @Slf4j
 public class DumpWriter implements ItemWriter<List<ReplacementEntity>> {
-    private ItemWriter<ReplacementEntity> insertWriter;
-    private ItemWriter<ReplacementEntity> updateWriter;
+    private final ItemWriter<ReplacementEntity> insertWriter;
+    private final ItemWriter<ReplacementEntity> updateWriter;
 
     public DumpWriter(ItemWriter<ReplacementEntity> insertWriter, ItemWriter<ReplacementEntity> updateWriter) {
         this.insertWriter = insertWriter;

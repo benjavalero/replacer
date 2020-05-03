@@ -23,6 +23,7 @@ public class ArticleReviewNoTypeServiceTest {
     private final WikipediaPage article = WikipediaPage
         .builder()
         .id(randomId)
+        .lang(WikipediaLanguage.SPANISH)
         .namespace(WikipediaNamespace.ARTICLE)
         .content(content)
         .lastUpdate(LocalDate.now())
@@ -30,6 +31,7 @@ public class ArticleReviewNoTypeServiceTest {
     private final WikipediaPage article2 = WikipediaPage
         .builder()
         .id(randomId2)
+        .lang(WikipediaLanguage.SPANISH)
         .namespace(WikipediaNamespace.ANNEX)
         .content(content2)
         .lastUpdate(LocalDate.now())
@@ -108,16 +110,20 @@ public class ArticleReviewNoTypeServiceTest {
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
 
         // The article exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
+        Mockito
+            .when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH))
+            .thenReturn(Optional.of(article));
 
         // The article contains replacements
-        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH)).thenReturn(replacements);
+        Mockito
+            .when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH))
+            .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexArticleReplacements(Mockito.eq(randomId), Mockito.anyList());
+            .indexArticleReplacements(Mockito.eq(randomId), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId, review.get().getId());
@@ -132,7 +138,9 @@ public class ArticleReviewNoTypeServiceTest {
             .thenReturn(Collections.emptyList());
 
         // The article exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
+        Mockito
+            .when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH))
+            .thenReturn(Optional.of(article));
 
         // The article doesn't contain replacements
         List<Replacement> noArticleReplacements = Collections.emptyList();
@@ -144,7 +152,7 @@ public class ArticleReviewNoTypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexArticleReplacements(randomId, Collections.emptyList());
+            .indexArticleReplacements(randomId, WikipediaLanguage.SPANISH, Collections.emptyList());
 
         Assertions.assertFalse(review.isPresent());
     }
@@ -158,16 +166,20 @@ public class ArticleReviewNoTypeServiceTest {
 
         // Only the article 2 exists in Wikipedia
         Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.empty());
-        Mockito.when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article2));
+        Mockito
+            .when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH))
+            .thenReturn(Optional.of(article2));
 
         // The article contains replacements
-        Mockito.when(replacementFindService.findReplacements(content2, WikipediaLanguage.SPANISH)).thenReturn(replacements);
+        Mockito
+            .when(replacementFindService.findReplacements(content2, WikipediaLanguage.SPANISH))
+            .thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexArticleReplacements(Mockito.eq(randomId2), Mockito.anyList());
+            .indexArticleReplacements(Mockito.eq(randomId2), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId2, review.get().getId());

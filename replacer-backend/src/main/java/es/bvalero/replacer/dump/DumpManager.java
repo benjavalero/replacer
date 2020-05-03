@@ -78,23 +78,25 @@ class DumpManager {
             return;
         }
 
-        try {
-            Path latestDumpFileFound = dumpFinder.findLatestDumpFile();
-            parseDumpFile(latestDumpFileFound);
-            LOGGER.info("END Indexation of latest dump file: {}", latestDumpFileFound);
-        } catch (ReplacerException e) {
-            LOGGER.error("Error indexing latest dump file", e);
+        for (WikipediaLanguage lang : WikipediaLanguage.values()) {
+            try {
+                Path latestDumpFileFound = dumpFinder.findLatestDumpFile(lang);
+                parseDumpFile(latestDumpFileFound, lang);
+                LOGGER.info("END Indexation of latest dump file: {}", latestDumpFileFound);
+            } catch (ReplacerException e) {
+                LOGGER.error("Error indexing latest dump file", e);
+            }
         }
     }
 
-    void parseDumpFile(Path dumpFile) throws ReplacerException {
+    void parseDumpFile(Path dumpFile, WikipediaLanguage lang) throws ReplacerException {
         LOGGER.info("START Parse dump file: {}", dumpFile);
 
         try {
             JobParameters jobParameters = new JobParametersBuilder()
                 .addString("source", "Dump Manager")
                 .addLong("time", System.currentTimeMillis()) // In order to run the job several times
-                .addString(DUMP_LANG_PARAMETER, WikipediaLanguage.SPANISH.getCode()) // TODO
+                .addString(DUMP_LANG_PARAMETER, lang.getCode())
                 .addString(DUMP_PATH_PARAMETER, dumpFile.toString())
                 .toJobParameters();
             jobLauncher.run(dumpJob, jobParameters);
@@ -125,7 +127,7 @@ class DumpManager {
                     jobExecution.getJobParameters().getString(DumpManager.DUMP_PATH_PARAMETER)
                 );
                 dumpIndexation.setNumArticlesEstimated(
-                    numArticlesEstimated.get(jobExecution.getJobParameters().getString(DumpManager.DUMP_PATH_PARAMETER))
+                    numArticlesEstimated.get(jobExecution.getJobParameters().getString(DumpManager.DUMP_LANG_PARAMETER))
                 );
 
                 addStepExecutions(dumpIndexation, jobExecution);

@@ -3,6 +3,8 @@ package es.bvalero.replacer.replacement;
 import java.io.Serializable;
 import java.time.LocalDate;
 import javax.persistence.*;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +27,9 @@ public class ReplacementEntity implements Serializable {
     @Column
     private int articleId;
 
+    @Column(length = 2)
+    private String lang;
+
     @Column(nullable = false, length = 25)
     private String type;
 
@@ -44,13 +49,23 @@ public class ReplacementEntity implements Serializable {
     @Column
     private String reviewer;
 
+    public ReplacementEntity(int articleId, WikipediaLanguage lang, String type, String subtype, int position) {
+        this.articleId = articleId;
+        this.lang = lang.getCode();
+        this.type = type;
+        this.subtype = subtype;
+        this.position = position;
+        this.lastUpdate = LocalDate.now();
+        this.reviewer = null;
+    }
+
+    @TestOnly
     public ReplacementEntity(int articleId, String type, String subtype, int position) {
         this.articleId = articleId;
         this.type = type;
         this.subtype = subtype;
         this.position = position;
         this.lastUpdate = LocalDate.now();
-        this.reviewer = null;
     }
 
     @TestOnly

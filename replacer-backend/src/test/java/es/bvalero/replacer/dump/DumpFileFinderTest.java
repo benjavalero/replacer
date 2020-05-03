@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -44,9 +46,8 @@ public class DumpFileFinderTest {
         Files.createFile(dumpFile3);
 
         dumpFinder.setDumpPathBase(dumpPathBase);
-        dumpFinder.setDumpPathProject(dumpPathProject);
 
-        Path latestDumpFile = dumpFinder.findLatestDumpFile();
+        Path latestDumpFile = dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
 
         Assert.assertNotNull(latestDumpFile);
         Assert.assertEquals(dumpFile2, latestDumpFile);
@@ -70,9 +71,8 @@ public class DumpFileFinderTest {
         Files.createFile(dumpFile1);
 
         dumpFinder.setDumpPathBase(dumpPathBase);
-        dumpFinder.setDumpPathProject(dumpPathProject);
 
-        Path latestDumpFile = dumpFinder.findLatestDumpFile();
+        Path latestDumpFile = dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
 
         Assert.assertNotNull(latestDumpFile);
         Assert.assertEquals(dumpFile1, latestDumpFile);
@@ -91,9 +91,8 @@ public class DumpFileFinderTest {
         Files.createDirectory(subFolder1);
 
         dumpFinder.setDumpPathBase(dumpPathBase);
-        dumpFinder.setDumpPathProject(dumpPathProject);
 
-        dumpFinder.findLatestDumpFile();
+        dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
     }
 
     @Test(expected = ReplacerException.class)
@@ -110,25 +109,22 @@ public class DumpFileFinderTest {
         Files.createFile(dumpFile1);
 
         dumpFinder.setDumpPathBase(dumpPathBase);
-        dumpFinder.setDumpPathProject(dumpPathProject);
 
-        dumpFinder.findLatestDumpFile();
+        dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
     }
 
     @Test(expected = ReplacerException.class)
     public void testNotExistingDumpProjectFolder() throws ReplacerException {
         dumpFinder.setDumpPathBase(dumpBaseFolder.getRoot().getPath());
-        dumpFinder.setDumpPathProject("eswiki");
 
         // Don't create the project sub-folder for the test
-        dumpFinder.findLatestDumpFile();
+        dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
     }
 
     @Test(expected = ReplacerException.class)
     public void testNotExistingDumpBaseFolder() throws ReplacerException {
         dumpFinder.setDumpPathBase("xxx");
-        dumpFinder.setDumpPathProject("eswiki");
 
-        dumpFinder.findLatestDumpFile();
+        dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
     }
 }

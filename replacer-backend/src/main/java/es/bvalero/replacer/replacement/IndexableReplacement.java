@@ -1,15 +1,16 @@
 package es.bvalero.replacer.replacement;
 
-import lombok.Value;
-
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.time.LocalDate;
+import lombok.Value;
 
 @Value(staticConstructor = "of")
 public class IndexableReplacement {
-    private int articleId;
-    private String type;
-    private String subtype;
-    private int position;
-    private String context;
-    private LocalDate lastUpdate;
+    int articleId;
+    WikipediaLanguage lang;
+    String type;
+    String subtype;
+    int position;
+    String context;
+    LocalDate lastUpdate;
 }

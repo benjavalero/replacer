@@ -7,18 +7,16 @@ import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 abstract class ArticleReviewService {
-
     @Autowired
     private WikipediaService wikipediaService;
 
@@ -82,15 +80,21 @@ abstract class ArticleReviewService {
                     LOGGER.info("END Found Wikipedia article: {} - {}", articleId, page.get().getTitle());
                     return page;
                 } else {
-                    LOGGER.warn(String.format("Found article is not processable by content: %s - %s",
-                            articleId, page.get().getTitle()));
+                    LOGGER.warn(
+                        String.format(
+                            "Found article is not processable by content: %s - %s",
+                            articleId,
+                            page.get().getTitle()
+                        )
+                    );
                 }
             } else {
                 LOGGER.warn(String.format("No article found. ID: %s", articleId));
             }
 
             // We get here if the article is not found or not processable
-            replacementIndexService.reviewArticleReplacementsAsSystem(articleId);
+            // TODO: Receive language as a parameter
+            replacementIndexService.reviewArticleReplacementsAsSystem(articleId, WikipediaLanguage.SPANISH);
         } catch (ReplacerException e) {
             LOGGER.error("Error finding page from Wikipedia", e);
         }
@@ -135,13 +139,19 @@ abstract class ArticleReviewService {
 
     List<Replacement> findAllReplacements(WikipediaPage article) {
         // TODO: Receive the language as a parameter
-        List<Replacement> replacements = replacementFindService.findReplacements(article.getContent(), WikipediaLanguage.SPANISH);
+        List<Replacement> replacements = replacementFindService.findReplacements(
+            article.getContent(),
+            WikipediaLanguage.SPANISH
+        );
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.debug("Update article replacements in database");
-        replacementIndexService.indexArticleReplacements(article.getId(),
-                replacements.stream().map(article::convertReplacementToIndexed)
-                        .collect(Collectors.toList()));
+        // TODO: Receive the language as a parameter
+        replacementIndexService.indexArticleReplacements(
+            article.getId(),
+            article.getLang(),
+            replacements.stream().map(article::convertReplacementToIndexed).collect(Collectors.toList())
+        );
 
         return replacements;
     }
@@ -155,5 +165,4 @@ abstract class ArticleReviewService {
     private ArticleReplacement convertToDto(Replacement replacement) {
         return modelMapper.map(replacement, ArticleReplacement.class);
     }
-
 }

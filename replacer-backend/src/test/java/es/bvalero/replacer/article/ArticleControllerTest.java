@@ -10,6 +10,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -183,7 +184,7 @@ public class ArticleControllerTest {
         verify(wikipediaService, times(1)).savePageContent(eq(articleId), eq("C"),
                 eq(section), eq(timestamp), any(WikipediaLanguage.class), eq(new OAuth1AccessToken("A", "B")));
         verify(replacementIndexService, times(1)).reviewArticleReplacements(
-                eq(articleId), eq(type), eq(subtype), eq(reviewer));
+                eq(articleId), Mockito.any(WikipediaLanguage.class), eq(type), eq(subtype), eq(reviewer));
     }
 
     @Test
@@ -206,7 +207,7 @@ public class ArticleControllerTest {
         verify(wikipediaService, times(0)).savePageContent(anyInt(), anyString(),
                 anyInt(), anyString(), any(WikipediaLanguage.class), any(OAuth1AccessToken.class));
         verify(replacementIndexService, times(1)).reviewArticleReplacements(
-                eq(articleId), eq(type), eq(subtype), eq(reviewer));
+                eq(articleId), Mockito.any(WikipediaLanguage.class), eq(type), eq(subtype), eq(reviewer));
     }
 
 }

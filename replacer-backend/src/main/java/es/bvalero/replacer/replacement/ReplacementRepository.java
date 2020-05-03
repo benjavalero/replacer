@@ -16,6 +16,7 @@ import java.util.Set;
 @Repository
 @Transactional
 public interface ReplacementRepository extends JpaRepository<ReplacementEntity, Long> {
+    // TODO: Review all the methods as most of them must receive the language as a parameter
 
     List<ReplacementEntity> findByArticleId(int articleId);
 
@@ -31,9 +32,9 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
 
     long countByArticleIdAndTypeAndSubtypeAndReviewerNotNull(int articleId, String type, String subtype);
 
-    List<ReplacementEntity> findByArticleIdAndTypeAndSubtypeAndReviewerIsNull(int articleId, String type, String subtype);
+    List<ReplacementEntity> findByArticleIdAndLangAndTypeAndSubtypeAndReviewerIsNull(int articleId, String lang, String type, String subtype);
 
-    List<ReplacementEntity> findByArticleIdAndReviewerIsNull(int articleId);
+    List<ReplacementEntity> findByArticleIdAndLangAndReviewerIsNull(int articleId, String lang);
 
     long countByReviewerIsNullOrReviewerIsNot(String reviewer);
 

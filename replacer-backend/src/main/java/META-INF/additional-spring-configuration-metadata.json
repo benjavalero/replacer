@@ -11,11 +11,6 @@
             "description": "Base path to find the dumps by project and date"
         },
         {
-            "name": "replacer.dump.path.project",
-            "type": "java.lang.String",
-            "description": "Project name in the dump folder, e.g. `eswiki`"
-        },
-        {
             "name": "replacer.dump.batch.delay",
             "type": "java.lang.String",
             "description": "Delay (in milliseconds) between executions of the dump batch"

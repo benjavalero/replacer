@@ -26,9 +26,7 @@ logging:
 replacer:
   cors.allowed.origins: http://localhost:8080
   dump:
-    path:
-      base: /public/dumps/public
-      project: eswiki
+    path.base: /public/dumps/public
     batch:
       delay: 604800000 # Weekly
       delay.initial: 86400000 # 1 day
