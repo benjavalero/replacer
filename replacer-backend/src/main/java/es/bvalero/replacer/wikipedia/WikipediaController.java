@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/wikipedia")
 public class WikipediaController {
-
     @Autowired
     private WikipediaService wikipediaService;
 
@@ -32,5 +31,4 @@ public class WikipediaController {
     private OAuth1AccessToken convertToEntity(AccessToken accessToken) {
         return new OAuth1AccessToken(accessToken.getToken(), accessToken.getTokenSecret());
     }
-
 }

@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value(staticConstructor = "of")
 class EditToken {
-    private String csrfToken;
-    private String timestamp;
+    String csrfToken;
+    String timestamp;
 }

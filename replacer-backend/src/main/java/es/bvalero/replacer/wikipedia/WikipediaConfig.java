@@ -11,19 +11,15 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class WikipediaConfig {
-
-    @Value("${wikipedia.api.key}")
+    @Value("${replacer.wikipedia.api.key}")
     private String apiKey;
 
-    @Value("${wikipedia.api.secret}")
+    @Value("${replacer.wikipedia.api.secret}")
     private String apiSecret;
 
     @Bean
     public OAuth10aService oAuthService() {
-        return new ServiceBuilder(apiKey)
-                .apiSecret(apiSecret)
-                .callback("oob")
-                .build(MediaWikiApi.instance());
+        return new ServiceBuilder(apiKey).apiSecret(apiSecret).callback("oob").build(MediaWikiApi.instance());
     }
 
     @Bean
@@ -32,5 +28,4 @@ public class WikipediaConfig {
         mapper.registerModule(new Jdk8Module());
         return mapper;
     }
-
 }

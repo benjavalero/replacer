@@ -1,12 +1,17 @@
 package es.bvalero.replacer.wikipedia;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Getter
+@AllArgsConstructor
 public enum WikipediaNamespace {
-
     // Odd numbers correspond to the Talk namespaces
     ARTICLE(0),
     USER(2),
@@ -21,14 +26,11 @@ public enum WikipediaNamespace {
     ANNEX(104),
     MODULE(828);
 
-    private static final Map<Integer, WikipediaNamespace> map =
-            Arrays.stream(WikipediaNamespace.values()).collect(Collectors.toMap(ns -> ns.value, ns -> ns));
+    private static final Map<Integer, WikipediaNamespace> map = Arrays
+        .stream(WikipediaNamespace.values())
+        .collect(Collectors.toMap(WikipediaNamespace::getValue, Function.identity()));
 
     private final int value;
-
-    WikipediaNamespace(int value) {
-        this.value = value;
-    }
 
     public static java.util.Collection<WikipediaNamespace> getProcessableNamespaces() {
         return EnumSet.of(ARTICLE, ANNEX);
@@ -37,9 +39,4 @@ public enum WikipediaNamespace {
     public static WikipediaNamespace valueOf(int namespace) {
         return map.get(namespace);
     }
-
-    int getValue() {
-        return value;
-    }
-
 }

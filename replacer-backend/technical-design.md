@@ -159,25 +159,6 @@ hide empty members
 @enduml
 ```
 
-## Package `dump`
-
-The dumps are generated monthly and placed in a shared folder in Wikipedia servers. This dump folder is structured in sub-folders corresponding to the different wiki-projects, e.g. `eswiki`, which are also structured in sub-folders for each generation date, e.g. `20120120`, containing finally the dump files. For instance:
-
-- `/public/dumps/public`
-  - `enwiki`
-  - `eswiki`
-    - `20200101`
-      - `eswiki-20200101-pages-articles-multistream.xml.bz2`
-      - `eswiki-20200101-pages-articles.xml.bz2`
-      - …
-    - `20191220`
-    - `20191201`
-    - …
-  - `eswikibooks`
-  - …
-
-The path of the shared folder and the wiki-project ares configured externally.
-
 ## Package `finder`
 
 The core functionality of the tool is to find all the potential _replacements_ in a text for a given language. We want also to find all the _immutables_ in this text, in order to be able to avoid as many false positives as possible. This operation will be performed millions of times when indexing a whole dump, therefore the performance is critical.
@@ -256,6 +237,37 @@ These finders are used after a user reviews a replacement. Thus, the performance
 
 The sub-package `benchmark` contains sub-packages for several finders, with  different implementations in order to test the results and performance, and choose the best one.
 
+
+## Package `dump`
+
+The dumps are generated monthly and placed in a shared folder in Wikipedia servers. This dump folder is structured in sub-folders corresponding to the different wiki-projects, e.g. `eswiki`, which are also structured in sub-folders for each generation date, e.g. `20120120`, containing finally the dump files. For instance:
+
+- `/public/dumps/public`
+  - `enwiki`
+  - `eswiki`
+    - `20200101`
+      - `eswiki-20200101-pages-articles-multistream.xml.bz2`
+      - `eswiki-20200101-pages-articles.xml.bz2`
+      - …
+    - `20191220`
+    - `20191201`
+    - …
+  - `eswikibooks`
+  - …
+
+The path of the shared folder and the wiki-project ares configured externally.
+
+
+## Package `wikipedia`
+
+This package contains helper classes to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page).
+
+The interface `WikipediaService` offers the methods used to request the Wikipedia: user logging, find a page by ID or title, and save page contents.
+This interface has two implementations, one of them an _offline_ one always returning the same values just for offline testing purposes.
+
+The requests to the API are done in `WikipediaRequestService`, receiving all the needed parameters, and the authentication token if needed. The responses are mapped into a `WikipediaApiResponse`. In case of page requests, the response is eventually mapped into a `WikipediaPage`.
+
+
 ## TODO: ROADMAP
 
 ### TODO: REVIEW COMPONENTS
@@ -289,6 +301,7 @@ The sub-package `benchmark` contains sub-packages for several finders, with  dif
 - [ ] Replace completely JPA with SpringJDBC
 - [ ] Review in the bot, in case they exist, possible cases of the template `dts` or `date_table_sorting` with English format, as this template also exists in Spanish. See <https://en.wikipedia.org/wiki/Template:Date_table_sorting>, <https://es.wikipedia.org/wiki/Plantilla:Dts>, <https://es.wikipedia.org/w/index.php?title=Compile_Heart&diff=prev&oldid=122078489>.
 - [ ] Make the tool more general in order to find replacements in other wiki-projects
+- [ ] Migrate to Wikipedia REST API, meant to be more appropriate for this kind of tools.
 
 ### Docs
 - [ ] Publish the rules of BenjaBot

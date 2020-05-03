@@ -29,6 +29,21 @@
             "name": "replacer.dump.batch.chunk.size",
             "type": "java.lang.Integer",
             "description": "Number of items to be processed in batch when indexing a dump"
+        },
+        {
+            "name": "replacer.parse.file.delay",
+            "type": "java.lang.String",
+            "description": "Delay (in milliseconds) between executions of the external properties reloading"
+        },
+        {
+            "name": "replacer.wikipedia.api.key",
+            "type": "java.lang.String",
+            "description": "Key token to authenticate against MediaWiki with OAuth"
+        },
+        {
+            "name": "replacer.wikipedia.api.secret",
+            "type": "java.lang.String",
+            "description": "Secret token to authenticate against MediaWiki with OAuth"
         }
     ]
 }

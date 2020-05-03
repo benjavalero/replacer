@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value(staticConstructor = "of")
 class WikipediaUser {
-    private String name;
-    private boolean admin;
+    String name;
+    boolean admin;
 }
