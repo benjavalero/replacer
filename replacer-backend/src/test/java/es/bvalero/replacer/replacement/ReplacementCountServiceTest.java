@@ -1,6 +1,10 @@
 package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,13 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
 public class ReplacementCountServiceTest {
-
     @Mock
     private ReplacementRepository replacementRepository;
 
@@ -32,8 +30,7 @@ public class ReplacementCountServiceTest {
     public void testCountReplacements() {
         long count = new Random().nextLong();
 
-        Mockito.when(replacementRepository.countByReviewerIsNullOrReviewerIsNot(Mockito.anyString()))
-                .thenReturn(count);
+        Mockito.when(replacementRepository.countByReviewerIsNullOrReviewerIsNot(Mockito.anyString())).thenReturn(count);
 
         Assertions.assertEquals(count, replacementCountService.countAllReplacements());
     }
@@ -42,8 +39,9 @@ public class ReplacementCountServiceTest {
     public void testCountReplacementsReviewed() {
         long count = new Random().nextLong();
 
-        Mockito.when(replacementRepository.countByReviewerIsNotNullAndReviewerIsNot(Mockito.anyString()))
-                .thenReturn(count);
+        Mockito
+            .when(replacementRepository.countByReviewerIsNotNullAndReviewerIsNot(Mockito.anyString()))
+            .thenReturn(count);
 
         Assertions.assertEquals(count, replacementCountService.countReplacementsReviewed());
     }
@@ -52,8 +50,7 @@ public class ReplacementCountServiceTest {
     public void testCountReplacementsToReview() {
         long count = new Random().nextLong();
 
-        Mockito.when(replacementRepository.countByReviewerIsNull())
-                .thenReturn(count);
+        Mockito.when(replacementRepository.countByReviewerIsNull()).thenReturn(count);
 
         Assertions.assertEquals(count, replacementCountService.countReplacementsToReview());
     }
@@ -62,63 +59,123 @@ public class ReplacementCountServiceTest {
     public void testCountReplacementsGroupedByReviewer() {
         List<ReviewerCount> result = new ArrayList<>();
 
-        Mockito.when(replacementRepository.countGroupedByReviewer(Mockito.anyString()))
-                .thenReturn(result);
+        Mockito.when(replacementRepository.countGroupedByReviewer(Mockito.anyString())).thenReturn(result);
 
         Assertions.assertEquals(result, replacementCountService.countReplacementsGroupedByReviewer());
     }
 
     @Test
     public void testGetCachedReplacementCount() {
-        // At start the count is zero
-        Assertions.assertTrue(replacementCountService.getCachedReplacementCount().isEmpty());
+        WikipediaLanguage lang = WikipediaLanguage.SPANISH;
+        String langCode = lang.getCode();
 
-        TypeSubtypeCount count1 = new TypeSubtypeCount("X", "Y", 2L);
-        TypeSubtypeCount count2 = new TypeSubtypeCount("X", "Z", 1L);
+        // At start the count is zero
+        Assertions.assertTrue(replacementCountService.findReplacementCount(lang).isEmpty());
+
+        TypeSubtypeCount count1 = new TypeSubtypeCount(langCode, "X", "Y", 2L);
+        TypeSubtypeCount count2 = new TypeSubtypeCount(langCode, "X", "Z", 1L);
         List<TypeSubtypeCount> counts = Arrays.asList(count1, count2);
-        Mockito.when(replacementRepository.countGroupedByTypeAndSubtype(Mockito.anyString()))
-                .thenReturn(counts);
+        Mockito.when(replacementRepository.countGroupedByTypeAndSubtype()).thenReturn(counts);
 
         replacementCountService.updateReplacementCount();
 
-        List<TypeCount> typeCounts = replacementCountService.findReplacementCount();
+        List<TypeCount> typeCounts = replacementCountService.findReplacementCount(lang);
         Assertions.assertEquals(1, typeCounts.size());
         Assertions.assertEquals("X", typeCounts.get(0).getType());
         Assertions.assertEquals(2, typeCounts.get(0).getSubtypeCounts().size());
-        Assertions.assertTrue(typeCounts.get(0).getSubtypeCounts().contains(SubtypeCount.of("Y", 2L)));
-        Assertions.assertTrue(typeCounts.get(0).getSubtypeCounts().contains(SubtypeCount.of("Z", 1L)));
+        Assertions.assertEquals(2L, typeCounts.get(0).get("Y").get().getCount());
+        Assertions.assertEquals(1L, typeCounts.get(0).get("Z").get().getCount());
 
-        Assertions.assertFalse(replacementCountService.getCachedReplacementCount().isEmpty());
-        Assertions.assertEquals(1, replacementCountService.getCachedReplacementCount().size());
-        Assertions.assertEquals(2, replacementCountService.getCachedReplacementCount().get("X").size());
+        Assertions.assertFalse(replacementCountService.findReplacementCount(lang).isEmpty());
+        Assertions.assertEquals(1, replacementCountService.findReplacementCount(lang).size());
+        Assertions.assertEquals(
+            2,
+            replacementCountService
+                .findReplacementCount(lang)
+                .stream()
+                .filter(t -> t.getType().equals("X"))
+                .findAny()
+                .get()
+                .getSubtypeCounts()
+                .size()
+        );
 
         // Decrease a replacement count
-        replacementCountService.decreaseCachedReplacementsCount("X", "Y", 1);
+        replacementCountService.decreaseCachedReplacementsCount(lang, "X", "Y", 1);
 
-        Assertions.assertFalse(replacementCountService.getCachedReplacementCount().isEmpty());
-        Assertions.assertEquals(1, replacementCountService.getCachedReplacementCount().size());
-        Assertions.assertEquals(2, replacementCountService.getCachedReplacementCount().get("X").size());
-        Assertions.assertEquals(Long.valueOf(1), replacementCountService.getCachedReplacementCount().get("X").get("Y"));
+        Assertions.assertFalse(replacementCountService.findReplacementCount(lang).isEmpty());
+        Assertions.assertEquals(1, replacementCountService.findReplacementCount(lang).size());
+        Assertions.assertEquals(
+            2,
+            replacementCountService
+                .findReplacementCount(lang)
+                .stream()
+                .filter(t -> t.getType().equals("X"))
+                .findAny()
+                .get()
+                .getSubtypeCounts()
+                .size()
+        );
+        Assertions.assertEquals(
+            1L,
+            replacementCountService
+                .findReplacementCount(lang)
+                .stream()
+                .filter(t -> t.getType().equals("X"))
+                .findAny()
+                .get()
+                .get("Y")
+                .get()
+                .getCount()
+        );
 
         // Decrease a replacement count emptying it
-        replacementCountService.decreaseCachedReplacementsCount("X", "Z", 1);
+        replacementCountService.decreaseCachedReplacementsCount(lang, "X", "Z", 1);
 
-        Assertions.assertFalse(replacementCountService.getCachedReplacementCount().isEmpty());
-        Assertions.assertEquals(1, replacementCountService.getCachedReplacementCount().size());
-        Assertions.assertEquals(1, replacementCountService.getCachedReplacementCount().get("X").size());
-        Assertions.assertFalse(replacementCountService.getCachedReplacementCount().get("X").containsKey("Z"));
+        Assertions.assertFalse(replacementCountService.findReplacementCount(lang).isEmpty());
+        Assertions.assertEquals(1, replacementCountService.findReplacementCount(lang).size());
+        Assertions.assertEquals(
+            1,
+            replacementCountService
+                .findReplacementCount(lang)
+                .stream()
+                .filter(t -> t.getType().equals("X"))
+                .findAny()
+                .get()
+                .getSubtypeCounts()
+                .size()
+        );
+        Assertions.assertFalse(
+            replacementCountService
+                .findReplacementCount(lang)
+                .stream()
+                .filter(t -> t.getType().equals("X"))
+                .findAny()
+                .get()
+                .get("Z")
+                .isPresent()
+        );
 
         // Remove a replacement count not existing in cache
-        replacementCountService.removeCachedReplacementCount("A", "B");
+        replacementCountService.removeCachedReplacementCount(lang, "A", "B");
 
-        Assertions.assertFalse(replacementCountService.getCachedReplacementCount().isEmpty());
-        Assertions.assertEquals(1, replacementCountService.getCachedReplacementCount().size());
-        Assertions.assertEquals(1, replacementCountService.getCachedReplacementCount().get("X").size());
+        Assertions.assertFalse(replacementCountService.findReplacementCount(lang).isEmpty());
+        Assertions.assertEquals(1, replacementCountService.findReplacementCount(lang).size());
+        Assertions.assertEquals(
+            1,
+            replacementCountService
+                .findReplacementCount(lang)
+                .stream()
+                .filter(t -> t.getType().equals("X"))
+                .findAny()
+                .get()
+                .getSubtypeCounts()
+                .size()
+        );
 
         // Remove a replacement count existing in cache
-        replacementCountService.removeCachedReplacementCount("X", "Y");
+        replacementCountService.removeCachedReplacementCount(lang, "X", "Y");
 
-        Assertions.assertTrue(replacementCountService.getCachedReplacementCount().isEmpty());
+        Assertions.assertTrue(replacementCountService.findReplacementCount(lang).isEmpty());
     }
-
 }

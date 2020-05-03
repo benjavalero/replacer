@@ -38,7 +38,7 @@ public class ReplacementRepositoryTest {
         error5.setReviewer("x");
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3, error4, error5));
 
-        Assert.assertThat(replacementRepository.countGroupedByTypeAndSubtype(Mockito.anyString()).size(), is(3));
+        Assert.assertThat(replacementRepository.countGroupedByTypeAndSubtype().size(), is(3));
     }
 
     @Test

@@ -230,7 +230,7 @@ public class ReplacementIndexService {
         toReview.forEach(replacement -> reviewReplacement(replacement, reviewer));
 
         // Decrease the cached count for the replacement
-        replacementCountService.decreaseCachedReplacementsCount(type, subtype, toReview.size());
+        replacementCountService.decreaseCachedReplacementsCount(lang, type, subtype, toReview.size());
 
         return toReview;
     }

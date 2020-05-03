@@ -1,26 +1,20 @@
 package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 @Slf4j
 @Service
 public class ReplacementCountService {
-
     @Autowired
     private ReplacementRepository replacementRepository;
 
     // Cache the count of replacements. This list is updated every 10 minutes and modified when saving changes.
-    private final Map<String, Map<String, Long>> cachedReplacementCount = new HashMap<>();
+    private Map<WikipediaLanguage, LanguageCount> languageCounts = new EnumMap<>(WikipediaLanguage.class);
 
     /* STATISTICS */
 
@@ -42,22 +36,12 @@ public class ReplacementCountService {
 
     /* LIST OF REPLACEMENTS */
 
-    List<TypeCount> findReplacementCount() {
-        return convertToDto(this.cachedReplacementCount);
-    }
-
-    @TestOnly
-    Map<String, Map<String, Long>> getCachedReplacementCount() {
-        return this.cachedReplacementCount;
-    }
-
-    private List<TypeCount> convertToDto(Map<String, Map<String, Long>> map) {
-        return map.entrySet().stream()
-                .map(t -> TypeCount.of(t.getKey(),
-                        t.getValue().entrySet().stream()
-                                .map(x -> SubtypeCount.of(x.getKey(), x.getValue()))
-                                .collect(Collectors.toList())))
-                .collect(Collectors.toList());
+    List<TypeCount> findReplacementCount(WikipediaLanguage lang) {
+        if (languageCounts.containsKey(lang)) {
+            return languageCounts.get(lang).getTypeCounts();
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     /**
@@ -67,41 +51,59 @@ public class ReplacementCountService {
     void updateReplacementCount() {
         LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
         LOGGER.info("START Count grouped replacements by type and subtype");
-        // TODO: Receive the language as a parameter
-        List<TypeSubtypeCount> counts = replacementRepository.countGroupedByTypeAndSubtype(WikipediaLanguage.SPANISH.getCode());
+        List<TypeSubtypeCount> counts = replacementRepository.countGroupedByTypeAndSubtype();
         LOGGER.info("END Count grouped replacements. Size: {}", counts.size());
-        loadCachedReplacementCount(counts);
+        this.languageCounts = loadCachedReplacementCount(counts);
     }
 
-    private void loadCachedReplacementCount(List<TypeSubtypeCount> counts) {
-        this.cachedReplacementCount.clear();
+    private Map<WikipediaLanguage, LanguageCount> loadCachedReplacementCount(List<TypeSubtypeCount> counts) {
+        final Map<WikipediaLanguage, LanguageCount> langCounts = new EnumMap<>(WikipediaLanguage.class);
         for (TypeSubtypeCount count : counts) {
-            if (!this.cachedReplacementCount.containsKey(count.getType())) {
-                this.cachedReplacementCount.put(count.getType(), new HashMap<>());
+            WikipediaLanguage lang = WikipediaLanguage.forValues(count.getLang());
+            if (!langCounts.containsKey(lang)) {
+                langCounts.put(lang, new LanguageCount(lang));
             }
-            this.cachedReplacementCount.get(count.getType()).put(count.getSubtype(), count.getCount());
+            LanguageCount languageCount = langCounts.get(lang);
+
+            String type = count.getType();
+            if (!languageCount.contains(type)) {
+                languageCount.add(new TypeCount(type));
+            }
+            TypeCount typeCount = languageCount.get(type);
+
+            typeCount.add(new SubtypeCount(count.getSubtype(), count.getCount()));
+        }
+        return langCounts;
+    }
+
+    public void removeCachedReplacementCount(WikipediaLanguage lang, String type, String subtype) {
+        if (languageCounts.containsKey(lang)) {
+            LanguageCount languageCount = languageCounts.get(lang);
+            if (languageCount.contains(type)) {
+                TypeCount typeCount = languageCount.get(type);
+                typeCount.remove(subtype);
+
+                // Empty parent if children are empty
+                if (typeCount.isEmpty()) {
+                    languageCount.remove(type);
+                }
+            }
         }
     }
 
-    public void removeCachedReplacementCount(String type, String subtype) {
-        if (this.cachedReplacementCount.containsKey(type)) {
-            this.cachedReplacementCount.get(type).remove(subtype);
-            if (this.cachedReplacementCount.get(type).isEmpty()) {
-                this.cachedReplacementCount.remove(type);
-            }
-        }
-    }
-
-    void decreaseCachedReplacementsCount(String type, String subtype, int size) {
-        if (this.cachedReplacementCount.containsKey(type)) {
-            Long currentCount = this.cachedReplacementCount.get(type).get(subtype);
-            if (currentCount != null) {
-                long newCount = currentCount - size;
-                if (newCount > 0) {
-                    this.cachedReplacementCount.get(type).put(subtype, newCount);
-                } else {
-                    // Clean the possible empty counts after decreasing
-                    removeCachedReplacementCount(type, subtype);
+    void decreaseCachedReplacementsCount(WikipediaLanguage lang, String type, String subtype, int size) {
+        if (languageCounts.containsKey(lang)) {
+            LanguageCount languageCount = languageCounts.get(lang);
+            if (languageCount.contains(type)) {
+                Optional<SubtypeCount> currentCount = languageCount.get(type).get(subtype);
+                if (currentCount.isPresent()) {
+                    long newCount = currentCount.get().getCount() - size;
+                    if (newCount > 0) {
+                        currentCount.get().setCount(newCount);
+                    } else {
+                        // Clean the possible empty counts after decreasing
+                        removeCachedReplacementCount(lang, type, subtype);
+                    }
                 }
             }
         }

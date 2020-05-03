@@ -198,7 +198,7 @@ public class ReplacementIndexServiceTest {
         replacementIndexService.reviewArticleReplacements(articleId, WikipediaLanguage.SPANISH, "A", "B", "X");
 
         Mockito.verify(replacementCountService, Mockito.times(1))
-                .decreaseCachedReplacementsCount("A", "B", 1);
+                .decreaseCachedReplacementsCount(WikipediaLanguage.SPANISH, "A", "B", 1);
         Mockito.verify(replacementRepository, Mockito.times(1))
                 .saveAll(Mockito.anyIterable());
     }
@@ -210,7 +210,7 @@ public class ReplacementIndexServiceTest {
         replacementIndexService.reviewArticleReplacements(articleId, WikipediaLanguage.SPANISH, ReplacementFindService.CUSTOM_FINDER_TYPE, "B", "X");
 
         Mockito.verify(replacementCountService, Mockito.times(0))
-                .decreaseCachedReplacementsCount(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
+                .decreaseCachedReplacementsCount(Mockito.any(WikipediaLanguage.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 
         ReplacementEntity toSave = new ReplacementEntity(articleId, ReplacementFindService.CUSTOM_FINDER_TYPE, "B", 0, "X");
         toSave.setLang(WikipediaLanguage.SPANISH.getCode());

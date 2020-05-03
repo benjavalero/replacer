@@ -1,14 +1,17 @@
 package es.bvalero.replacer.replacement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Value(staticConstructor = "of")
+@Getter
+@AllArgsConstructor
 class SubtypeCount {
-
     @JsonProperty("s")
-    private String subtype;
+    private final String subtype;
+
+    @Setter
     @JsonProperty("c")
     private long count;
-
 }

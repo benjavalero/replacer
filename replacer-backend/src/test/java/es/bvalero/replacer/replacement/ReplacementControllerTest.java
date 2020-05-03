@@ -1,6 +1,7 @@
 package es.bvalero.replacer.replacement;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,9 +89,10 @@ public class ReplacementControllerTest {
 
     @Test
     public void testFindReplacementCount() throws Exception {
-        SubtypeCount subCount = SubtypeCount.of("Y", 100);
-        TypeCount count = TypeCount.of("X", Collections.singletonList(subCount));
-        when(replacementCountService.findReplacementCount()).thenReturn(Collections.singletonList(count));
+        SubtypeCount subCount = new SubtypeCount("Y", 100);
+        TypeCount count = new TypeCount("X");
+        count.add(subCount);
+        when(replacementCountService.findReplacementCount(WikipediaLanguage.SPANISH)).thenReturn(Collections.singletonList(count));
 
         mvc.perform(get("/api/replacement/count/grouped")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -99,7 +101,7 @@ public class ReplacementControllerTest {
                 .andExpect(jsonPath("$[0].l[0].s", is("Y")))
                 .andExpect(jsonPath("$[0].l[0].c", is(100)));
 
-        verify(replacementCountService, times(1)).findReplacementCount();
+        verify(replacementCountService, times(1)).findReplacementCount(WikipediaLanguage.SPANISH);
     }
 
 }

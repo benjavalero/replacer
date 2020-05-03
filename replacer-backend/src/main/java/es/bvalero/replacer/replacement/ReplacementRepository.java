@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ReplacementRepository extends JpaRepository<ReplacementEntity, Long> {
     List<ReplacementEntity> findByArticleIdAndLang(int articleId, WikipediaLanguage lang);
 
-    @Query("SELECT new es.bvalero.replacer.replacement.TypeSubtypeCount(type, subtype, COUNT(*)) FROM ReplacementEntity WHERE lang = :lang AND reviewer IS NULL GROUP BY type, subtype")
-    List<TypeSubtypeCount> countGroupedByTypeAndSubtype(@Param("lang") String lang);
+    @Query("SELECT new es.bvalero.replacer.replacement.TypeSubtypeCount(lang, type, subtype, COUNT(*)) FROM ReplacementEntity WHERE reviewer IS NULL GROUP BY type, subtype")
+    List<TypeSubtypeCount> countGroupedByTypeAndSubtype();
 
     @Query("SELECT articleId FROM ReplacementEntity WHERE lang = :lang AND reviewer IS NULL ORDER BY RAND()")
     List<Integer> findRandomArticleIdsToReview(@Param("lang") String lang, Pageable pageable);

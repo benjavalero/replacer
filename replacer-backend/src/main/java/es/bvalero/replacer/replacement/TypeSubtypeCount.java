@@ -4,7 +4,8 @@ import lombok.Value;
 
 @Value
 class TypeSubtypeCount {
-    private String type;
-    private String subtype;
-    private long count;
+    String lang;
+    String type;
+    String subtype;
+    long count;
 }

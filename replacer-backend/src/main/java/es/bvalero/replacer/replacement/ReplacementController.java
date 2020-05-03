@@ -1,19 +1,19 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import java.util.Collections;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("api/replacement")
 public class ReplacementController {
-
     @Autowired
     private ReplacementCountService replacementCountService;
 
@@ -46,11 +46,14 @@ public class ReplacementController {
     }
 
     @GetMapping(value = "/count/grouped")
-    public List<TypeCount> findReplacementCount() {
-        List<TypeCount> list = replacementCountService.findReplacementCount();
+    public List<TypeCount> findReplacementCount(@RequestParam(required = false) WikipediaLanguage lang) {
+        if (lang == null) {
+            // Default value
+            lang = WikipediaLanguage.SPANISH;
+        }
+        List<TypeCount> list = replacementCountService.findReplacementCount(lang);
         LOGGER.info("GET Grouped replacement count. Result Size: {}", list.size());
         Collections.sort(list);
         return list;
     }
-
 }

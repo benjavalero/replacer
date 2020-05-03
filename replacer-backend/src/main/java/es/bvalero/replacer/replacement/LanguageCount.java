@@ -1,22 +1,36 @@
 package es.bvalero.replacer.replacement;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Value;
-import org.jetbrains.annotations.NotNull;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.Getter;
 
-import java.util.Collection;
+@Getter
+class LanguageCount {
+    private final WikipediaLanguage lang;
+    private final List<TypeCount> typeCounts = new ArrayList<>();
 
-@Value(staticConstructor = "of")
-class TypeCount implements Comparable<TypeCount> {
-
-    @JsonProperty("t")
-    private String type;
-    @JsonProperty("l")
-    private Collection<SubtypeCount> subtypeCounts;
-
-    @Override
-    public int compareTo(@NotNull TypeCount list) {
-        return this.type.compareTo(list.type);
+    LanguageCount(WikipediaLanguage lang) {
+        this.lang = lang;
     }
 
+    boolean contains(String type) {
+        return typeCounts.stream().anyMatch(t -> t.getType().equals(type));
+    }
+
+    void add(TypeCount typeCount) {
+        this.typeCounts.add(typeCount);
+    }
+
+    void remove(String type) {
+        this.typeCounts.removeIf(t -> t.getType().equals(type));
+    }
+
+    TypeCount get(String type) {
+        return typeCounts
+            .stream()
+            .filter(t -> t.getType().equals(type))
+            .findAny()
+            .orElseThrow(IllegalArgumentException::new);
+    }
 }

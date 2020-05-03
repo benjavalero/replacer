@@ -33,7 +33,7 @@ class ArticleReviewTypeSubtypeService extends ArticleReviewCachedService {
         if (articleIds.isEmpty()) {
             // If finally there are no results empty the cached count for the replacement
             // No need to check if there exists something cached
-            replacementCountService.removeCachedReplacementCount(options.getType(), options.getSubtype());
+            replacementCountService.removeCachedReplacementCount(options.getLang(), options.getType(), options.getSubtype());
         }
 
         return articleIds;
