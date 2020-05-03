@@ -1,23 +1,29 @@
 package es.bvalero.replacer.article;
 
 import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import lombok.Value;
 
 @Value
 public class ArticleReviewOptions {
+    WikipediaLanguage lang;
     String type;
     String subtype;
     String suggestion;
 
-    static ArticleReviewOptions ofNoType() {
-        return new ArticleReviewOptions(null, null, null);
+    WikipediaLanguage getLang() {
+        return lang == null ? WikipediaLanguage.SPANISH : lang;
     }
 
-    static ArticleReviewOptions ofTypeSubtype(String type, String subtype) {
-        return new ArticleReviewOptions(type, subtype, null);
+    static ArticleReviewOptions ofNoType(WikipediaLanguage lang) {
+        return new ArticleReviewOptions(lang, null, null, null);
     }
 
-    static ArticleReviewOptions ofCustom(String replacement, String suggestion) {
-        return new ArticleReviewOptions(ReplacementFindService.CUSTOM_FINDER_TYPE, replacement, suggestion);
+    static ArticleReviewOptions ofTypeSubtype(WikipediaLanguage lang, String type, String subtype) {
+        return new ArticleReviewOptions(lang, type, subtype, null);
+    }
+
+    static ArticleReviewOptions ofCustom(WikipediaLanguage lang, String replacement, String suggestion) {
+        return new ArticleReviewOptions(lang, ReplacementFindService.CUSTOM_FINDER_TYPE, replacement, suggestion);
     }
 }

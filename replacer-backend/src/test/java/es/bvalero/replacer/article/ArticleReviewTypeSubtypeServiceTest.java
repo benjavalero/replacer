@@ -46,8 +46,8 @@ public class ArticleReviewTypeSubtypeServiceTest {
         .text("Y")
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
-    private final ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype("X", "Y");
-    private final ArticleReviewOptions options2 = ArticleReviewOptions.ofTypeSubtype("A", "B");
+    private final ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
+    private final ArticleReviewOptions options2 = ArticleReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "A", "B");
 
     @Mock
     private ReplacementRepository replacementRepository;

@@ -1,21 +1,19 @@
 package es.bvalero.replacer.article;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
 @Slf4j
 abstract class ArticleReviewCachedService extends ArticleReviewService {
-
     static final int CACHE_SIZE = 100;
 
     // Cache the found articles candidates to be reviewed
     // to find faster the next one after the user reviews one
-    private SetValuedMap<String, Integer> cachedArticleIds = new HashSetValuedHashMap<>();
+    private final SetValuedMap<String, Integer> cachedArticleIds = new HashSetValuedHashMap<>();
 
     SetValuedMap<String, Integer> getCachedArticleIds() {
         return cachedArticleIds;
@@ -40,7 +38,7 @@ abstract class ArticleReviewCachedService extends ArticleReviewService {
     }
 
     String buildReplacementCacheKey(ArticleReviewOptions options) {
-        return String.format("%s-%s", options.getType(), options.getSubtype());
+        return String.format("%s-%s-%s", options.getLang().getCode(), options.getType(), options.getSubtype());
     }
 
     private Optional<Integer> getArticleIdFromCache(String key) {
@@ -65,5 +63,4 @@ abstract class ArticleReviewCachedService extends ArticleReviewService {
     }
 
     abstract List<Integer> findArticleIdsToReview(ArticleReviewOptions options);
-
 }

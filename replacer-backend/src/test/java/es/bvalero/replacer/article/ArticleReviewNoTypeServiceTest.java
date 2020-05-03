@@ -45,7 +45,7 @@ public class ArticleReviewNoTypeServiceTest {
         .text("Y")
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
-    private final ArticleReviewOptions options = ArticleReviewOptions.ofNoType();
+    private final ArticleReviewOptions options = ArticleReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
 
     @Mock
     private ReplacementRepository replacementRepository;

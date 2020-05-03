@@ -21,12 +21,14 @@ public class ArticleReviewCustomServiceTest {
     private final WikipediaPage article = WikipediaPage
         .builder()
         .id(randomId)
+        .lang(WikipediaLanguage.SPANISH)
         .namespace(WikipediaNamespace.ARTICLE)
         .content(content)
         .build();
     private final WikipediaPage article2 = WikipediaPage
         .builder()
         .id(randomId2)
+        .lang(WikipediaLanguage.SPANISH)
         .namespace(WikipediaNamespace.ANNEX)
         .content(content2)
         .build();
@@ -78,7 +80,9 @@ public class ArticleReviewCustomServiceTest {
             .thenReturn(Collections.singleton(randomId));
 
         // The article exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
+        Mockito
+            .when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH))
+            .thenReturn(Optional.of(article));
 
         // The result is not already reviewed
         Mockito
@@ -95,11 +99,20 @@ public class ArticleReviewCustomServiceTest {
         // The article contains replacements
         Mockito
             .when(
-                replacementFindService.findCustomReplacements(content, replacement, suggestion, WikipediaLanguage.SPANISH)
+                replacementFindService.findCustomReplacements(
+                    content,
+                    replacement,
+                    suggestion,
+                    WikipediaLanguage.SPANISH
+                )
             )
             .thenReturn(replacements);
 
-        ArticleReviewOptions options = ArticleReviewOptions.ofCustom(replacement, suggestion);
+        ArticleReviewOptions options = ArticleReviewOptions.ofCustom(
+            WikipediaLanguage.SPANISH,
+            replacement,
+            suggestion
+        );
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
         Assertions.assertTrue(review.isPresent());
@@ -141,17 +154,30 @@ public class ArticleReviewCustomServiceTest {
             .thenReturn(1L);
 
         // The articles exist in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
-        Mockito.when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article2));
+        Mockito
+            .when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH))
+            .thenReturn(Optional.of(article));
+        Mockito
+            .when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH))
+            .thenReturn(Optional.of(article2));
 
         // The article 2 contains no replacements
         Mockito
             .when(
-                replacementFindService.findCustomReplacements(content2, replacement, suggestion, WikipediaLanguage.SPANISH)
+                replacementFindService.findCustomReplacements(
+                    content2,
+                    replacement,
+                    suggestion,
+                    WikipediaLanguage.SPANISH
+                )
             )
             .thenReturn(Collections.emptyList());
 
-        ArticleReviewOptions options = ArticleReviewOptions.ofCustom(replacement, suggestion);
+        ArticleReviewOptions options = ArticleReviewOptions.ofCustom(
+            WikipediaLanguage.SPANISH,
+            replacement,
+            suggestion
+        );
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
         Mockito

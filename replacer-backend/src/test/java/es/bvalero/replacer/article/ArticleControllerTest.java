@@ -72,7 +72,7 @@ public class ArticleControllerTest {
         ArticleReplacement replacement = new ArticleReplacement(start, rep, Collections.singletonList(suggestion));
         List<ArticleReplacement> replacements = Collections.singletonList(replacement);
         ArticleReview review = new ArticleReview(id, title, content, section, queryTimestamp, replacements);
-        ArticleReviewOptions options = ArticleReviewOptions.ofNoType();
+        ArticleReviewOptions options = ArticleReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
         when(articleReviewNoTypeService.findRandomArticleReview(options)).thenReturn(Optional.of(review));
 
         mvc.perform(get("/api/article/random")
@@ -93,7 +93,7 @@ public class ArticleControllerTest {
 
     @Test
     public void testFindRandomArticleByTypeAndSubtype() throws Exception {
-        ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype("X", "Y");
+        ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
         when(articleReviewTypeSubtypeService.findRandomArticleReview(options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
@@ -107,7 +107,7 @@ public class ArticleControllerTest {
 
     @Test
     public void testFindRandomArticleByCustomReplacement() throws Exception {
-        ArticleReviewOptions options = ArticleReviewOptions.ofCustom("X", "Y");
+        ArticleReviewOptions options = ArticleReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
         when(articleReviewCustomService.findRandomArticleReview(options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
@@ -121,7 +121,7 @@ public class ArticleControllerTest {
 
     @Test
     public void testFindArticleReviewById() throws Exception {
-        ArticleReviewOptions options = ArticleReviewOptions.ofNoType();
+        ArticleReviewOptions options = ArticleReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
         when(articleReviewNoTypeService.getArticleReview(123, options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
@@ -135,7 +135,7 @@ public class ArticleControllerTest {
 
     @Test
     public void testFindArticleReviewByIdByTypeAndSubtype() throws Exception {
-        ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype("X", "Y");
+        ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
         when(articleReviewTypeSubtypeService.getArticleReview(123, options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
@@ -149,7 +149,7 @@ public class ArticleControllerTest {
 
     @Test
     public void testFindArticleReviewByIdAndCustomReplacement() throws Exception {
-        ArticleReviewOptions options = ArticleReviewOptions.ofCustom("X", "Y");
+        ArticleReviewOptions options = ArticleReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
         when(articleReviewCustomService.getArticleReview(123, options))
                 .thenReturn(Optional.of(new ArticleReview()));
 

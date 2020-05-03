@@ -5,7 +5,6 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.ArrayList;
@@ -34,18 +33,16 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
     @Override
     List<Integer> findArticleIdsToReview(ArticleReviewOptions options) {
         try {
-            // TODO: Receive language as a parameter
             List<Integer> articleIds = new ArrayList<>(
-                wikipediaService.getPageIdsByStringMatch(options.getSubtype(), WikipediaLanguage.SPANISH)
+                wikipediaService.getPageIdsByStringMatch(options.getSubtype(), options.getLang())
             );
 
             // Check that the replacement has not already been reviewed
-            // TODO: Receive language as a parameter
             articleIds.removeIf(
                 id ->
                     replacementRepository.countByArticleIdAndLangAndTypeAndSubtypeAndReviewerNotNull(
                         id,
-                        WikipediaLanguage.SPANISH.getCode(),
+                        options.getLang().getCode(),
                         options.getType(),
                         options.getSubtype()
                     ) >
@@ -65,12 +62,7 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
 
         if (article.isEmpty()) {
             // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
-            // TODO: Receive the language as a parameter
-            replacementIndexService.addCustomReviewedReplacement(
-                articleId,
-                WikipediaLanguage.SPANISH,
-                options.getSubtype()
-            );
+            replacementIndexService.addCustomReviewedReplacement(articleId, options.getLang(), options.getSubtype());
         }
 
         return article;
@@ -78,20 +70,18 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
 
     @Override
     List<Replacement> findAllReplacements(WikipediaPage article, ArticleReviewOptions options) {
-        // TODO: Receive the language as a parameter
         List<Replacement> replacements = replacementFindService.findCustomReplacements(
             article.getContent(),
             options.getSubtype(),
             options.getSuggestion(),
-            WikipediaLanguage.SPANISH
+            article.getLang()
         );
 
         if (replacements.isEmpty()) {
             // We add the custom replacement to the database  as reviewed to skip it after the next search in the API
-            // TODO: Receive the language as a parameter
             replacementIndexService.addCustomReviewedReplacement(
                 article.getId(),
-                WikipediaLanguage.SPANISH,
+                article.getLang(),
                 options.getSubtype()
             );
         }

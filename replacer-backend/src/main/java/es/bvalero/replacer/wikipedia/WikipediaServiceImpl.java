@@ -136,7 +136,7 @@ class WikipediaServiceImpl implements WikipediaService {
             buildPageIdsRequestParams(pagesParam, pagesValue),
             lang
         );
-        return extractPagesFromJson(apiResponse);
+        return extractPagesFromJson(apiResponse).stream().map(page -> page.withLang(lang)).collect(Collectors.toList());
     }
 
     private Map<String, String> buildPageIdsRequestParams(String pagesParam, String pagesValue) {

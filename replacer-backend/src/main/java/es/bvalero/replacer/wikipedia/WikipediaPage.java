@@ -17,7 +17,10 @@ public class WikipediaPage implements IndexableArticle {
     );
 
     int id;
+
+    @With
     WikipediaLanguage lang;
+
     String title;
     WikipediaNamespace namespace;
     LocalDate lastUpdate;

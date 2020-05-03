@@ -4,7 +4,6 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Collections;
@@ -72,8 +71,7 @@ abstract class ArticleReviewService {
         // The "options" parameter is used in implementations
         LOGGER.info("START Find Wikipedia article: {}", articleId);
         try {
-            // TODO: Receive language as a parameter
-            Optional<WikipediaPage> page = wikipediaService.getPageById(articleId, WikipediaLanguage.SPANISH);
+            Optional<WikipediaPage> page = wikipediaService.getPageById(articleId, options.getLang());
             if (page.isPresent()) {
                 // Check if the article is processable
                 if (page.get().isProcessable()) {
@@ -93,8 +91,7 @@ abstract class ArticleReviewService {
             }
 
             // We get here if the article is not found or not processable
-            // TODO: Receive language as a parameter
-            replacementIndexService.reviewArticleReplacementsAsSystem(articleId, WikipediaLanguage.SPANISH);
+            replacementIndexService.reviewArticleReplacementsAsSystem(articleId, options.getLang());
         } catch (ReplacerException e) {
             LOGGER.error("Error finding page from Wikipedia", e);
         }
@@ -138,15 +135,13 @@ abstract class ArticleReviewService {
     }
 
     List<Replacement> findAllReplacements(WikipediaPage article) {
-        // TODO: Receive the language as a parameter
         List<Replacement> replacements = replacementFindService.findReplacements(
             article.getContent(),
-            WikipediaLanguage.SPANISH
+            article.getLang()
         );
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.debug("Update article replacements in database");
-        // TODO: Receive the language as a parameter
         replacementIndexService.indexArticleReplacements(
             article.getId(),
             article.getLang(),

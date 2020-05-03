@@ -38,51 +38,59 @@ public class ArticleController {
     /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
 
     @GetMapping(value = "/random")
-    public Optional<ArticleReview> findRandomArticleWithReplacements() {
+    public Optional<ArticleReview> findRandomArticleWithReplacements(
+        @RequestParam(required = false) WikipediaLanguage lang
+    ) {
         LOGGER.info("GET Find random article");
-        return articleReviewNoTypeService.findRandomArticleReview(ArticleReviewOptions.ofNoType());
+        return articleReviewNoTypeService.findRandomArticleReview(ArticleReviewOptions.ofNoType(lang));
     }
 
     @GetMapping(value = "/random/{type}/{subtype}")
     public Optional<ArticleReview> findRandomArticleByTypeAndSubtype(
         @PathVariable("type") String type,
-        @PathVariable("subtype") String subtype
+        @PathVariable("subtype") String subtype,
+        @RequestParam(required = false) WikipediaLanguage lang
     ) {
         LOGGER.info("GET Find random article. Type: {} - {}", type, subtype);
         return articleReviewTypeSubtypeService.findRandomArticleReview(
-            ArticleReviewOptions.ofTypeSubtype(type, subtype)
+            ArticleReviewOptions.ofTypeSubtype(lang, type, subtype)
         );
     }
 
     @GetMapping(value = "/random/Personalizado/{subtype}/{suggestion}")
     public Optional<ArticleReview> findRandomArticleByCustomReplacement(
         @PathVariable("subtype") String replacement,
-        @PathVariable("suggestion") String suggestion
+        @PathVariable("suggestion") String suggestion,
+        @RequestParam(required = false) WikipediaLanguage lang
     ) {
         LOGGER.info("GET Find random article. Custom replacement: {} - {}", replacement, suggestion);
         return articleReviewCustomService.findRandomArticleReview(
-            ArticleReviewOptions.ofCustom(replacement, suggestion)
+            ArticleReviewOptions.ofCustom(lang, replacement, suggestion)
         );
     }
 
     /* FIND AN ARTICLE REVIEW */
 
     @GetMapping(value = "/{id}")
-    public Optional<ArticleReview> findArticleReviewById(@PathVariable("id") int articleId) {
+    public Optional<ArticleReview> findArticleReviewById(
+        @PathVariable("id") int articleId,
+        @RequestParam(required = false) WikipediaLanguage lang
+    ) {
         LOGGER.info("GET Find review for article. ID: {}", articleId);
-        return articleReviewNoTypeService.getArticleReview(articleId, ArticleReviewOptions.ofNoType());
+        return articleReviewNoTypeService.getArticleReview(articleId, ArticleReviewOptions.ofNoType(lang));
     }
 
     @GetMapping(value = "/{id}/{type}/{subtype}")
     public Optional<ArticleReview> findArticleReviewByIdByTypeAndSubtype(
         @PathVariable("id") int articleId,
         @PathVariable("type") String type,
-        @PathVariable("subtype") String subtype
+        @PathVariable("subtype") String subtype,
+        @RequestParam(required = false) WikipediaLanguage lang
     ) {
         LOGGER.info("GET Find review for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
         return articleReviewTypeSubtypeService.getArticleReview(
             articleId,
-            ArticleReviewOptions.ofTypeSubtype(type, subtype)
+            ArticleReviewOptions.ofTypeSubtype(lang, type, subtype)
         );
     }
 
@@ -90,7 +98,8 @@ public class ArticleController {
     public Optional<ArticleReview> findArticleReviewByIdAndCustomReplacement(
         @PathVariable("id") int articleId,
         @PathVariable("subtype") String replacement,
-        @PathVariable("suggestion") String suggestion
+        @PathVariable("suggestion") String suggestion,
+        @RequestParam(required = false) WikipediaLanguage lang
     ) {
         LOGGER.info(
             "GET Find review for article by custom type. ID: {} - Replacement: {} - Suggestion: {}",
@@ -100,35 +109,38 @@ public class ArticleController {
         );
         return articleReviewCustomService.getArticleReview(
             articleId,
-            ArticleReviewOptions.ofCustom(replacement, suggestion)
+            ArticleReviewOptions.ofCustom(lang, replacement, suggestion)
         );
     }
 
     /* SAVE CHANGES */
 
     @PostMapping
-    public void save(@RequestBody SaveArticle saveArticle) throws ReplacerException {
+    public void save(@RequestBody SaveArticle saveArticle, @RequestParam(required = false) WikipediaLanguage lang)
+        throws ReplacerException {
+        if (lang == null) {
+            // Default value
+            lang = WikipediaLanguage.SPANISH;
+        }
         boolean changed = StringUtils.isNotBlank(saveArticle.getContent());
         LOGGER.info("PUT Save article. ID: {} - Changed: {}", saveArticle.getArticleId(), changed);
         if (changed) {
             // Upload new content to Wikipedia
-            // TODO: Receive language as a parameter
             String textToSave = cosmeticFindService.applyCosmeticChanges(saveArticle.getContent());
             wikipediaService.savePageContent(
                 saveArticle.getArticleId(),
                 textToSave,
                 saveArticle.getSection(),
                 saveArticle.getTimestamp(),
-                WikipediaLanguage.SPANISH,
+                lang,
                 convertToEntity(saveArticle.getToken())
             );
         }
 
         // Mark article as reviewed in the database
-        // TODO: Receive language as a parameter
         replacementIndexService.reviewArticleReplacements(
             saveArticle.getArticleId(),
-            WikipediaLanguage.SPANISH,
+            lang,
             saveArticle.getType(),
             saveArticle.getSubtype(),
             saveArticle.getReviewer()

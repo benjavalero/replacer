@@ -8,12 +8,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 @Getter
 @AllArgsConstructor
 public enum WikipediaLanguage {
     SPANISH("es"),
-    GALICIAN("gl");
+    GALICIAN("gl"),;
 
     private static final Map<String, WikipediaLanguage> map = Arrays
         .stream(WikipediaLanguage.values())
@@ -24,6 +25,11 @@ public enum WikipediaLanguage {
 
     @JsonCreator
     public static WikipediaLanguage forValues(String code) {
-        return map.get(code);
+        // Default value just in case
+        if (StringUtils.isBlank(code)) {
+            return WikipediaLanguage.SPANISH;
+        } else {
+            return map.get(code);
+        }
     }
 }
