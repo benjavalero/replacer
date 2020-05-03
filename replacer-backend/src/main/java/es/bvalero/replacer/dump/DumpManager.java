@@ -1,9 +1,10 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.nio.file.Path;
 import java.util.Map;
-
+import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.explore.JobExplorer;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Component;
 class DumpManager {
     static final String DUMP_JOB_NAME = "dump-job";
     static final String DUMP_PATH_PARAMETER = "dumpPath";
+    static final String DUMP_LANG_PARAMETER = "dumpLang";
     static final String PARSE_XML_STEP_NAME = "parse-xml";
 
     @Autowired
@@ -45,6 +47,9 @@ class DumpManager {
 
     @Autowired
     private Job dumpJob;
+
+    @Resource
+    private Map<String, Integer> numArticlesEstimated;
 
     /**
      * Check if there is a new dump to process.
@@ -89,6 +94,7 @@ class DumpManager {
             JobParameters jobParameters = new JobParametersBuilder()
                 .addString("source", "Dump Manager")
                 .addLong("time", System.currentTimeMillis()) // In order to run the job several times
+                .addString(DUMP_LANG_PARAMETER, WikipediaLanguage.SPANISH.getCode()) // TODO
                 .addString(DUMP_PATH_PARAMETER, dumpFile.toString())
                 .toJobParameters();
             jobLauncher.run(dumpJob, jobParameters);
@@ -117,6 +123,9 @@ class DumpManager {
                 }
                 dumpIndexation.setDumpFileName(
                     jobExecution.getJobParameters().getString(DumpManager.DUMP_PATH_PARAMETER)
+                );
+                dumpIndexation.setNumArticlesEstimated(
+                    numArticlesEstimated.get(jobExecution.getJobParameters().getString(DumpManager.DUMP_PATH_PARAMETER))
                 );
 
                 addStepExecutions(dumpIndexation, jobExecution);

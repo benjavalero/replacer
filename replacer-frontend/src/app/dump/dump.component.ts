@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
 
-import { NUM_ARTICLES } from '../app-const';
 import { DumpService } from './dump.service';
 import { DumpStatus } from './dump-status.model';
 import { AlertService } from '../alert/alert.service';
@@ -75,7 +74,7 @@ export class DumpComponent implements OnInit, OnDestroy {
   private calculateProgress(): number {
     if (this.status.numArticlesRead) {
       // We might have more read articles than the estimation constant
-      return this.status.numArticlesRead * 100.0 / Math.max(NUM_ARTICLES, this.status.numArticlesRead);
+      return this.status.numArticlesRead * 100.0 / Math.max(this.status.numArticlesEstimated, this.status.numArticlesRead);
     } else {
       return 0;
     }
@@ -91,7 +90,7 @@ export class DumpComponent implements OnInit, OnDestroy {
 
   private calculateEta(): number {
     if (this.status.running) {
-      const toRead = Math.max(NUM_ARTICLES, this.status.numArticlesRead) - this.status.numArticlesRead;
+      const toRead = Math.max(this.status.numArticlesEstimated, this.status.numArticlesRead) - this.status.numArticlesRead;
       return toRead * this.calculateAverage();
     } else {
       return 0;

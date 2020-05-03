@@ -25,4 +25,10 @@
         <entry key="gl" value="Usuario:Benjavalero/FalsePositives"/>
     </util:map>
 
+    <util:map id="numArticlesEstimated" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.Integer">
+        <entry key="es" value="3880852"/>
+        <entry key="gl" value="368611"/>
+    </util:map>
+
 </beans>
