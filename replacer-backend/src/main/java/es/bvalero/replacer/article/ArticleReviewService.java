@@ -135,7 +135,7 @@ abstract class ArticleReviewService {
 
     List<Replacement> findAllReplacements(WikipediaPage article) {
         // TODO: Receive the language as a parameter
-        List<Replacement> replacements = replacementFindService.findReplacements(article.getContent(), WikipediaLanguage.ALL);
+        List<Replacement> replacements = replacementFindService.findReplacements(article.getContent(), WikipediaLanguage.SPANISH);
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.debug("Update article replacements in database");

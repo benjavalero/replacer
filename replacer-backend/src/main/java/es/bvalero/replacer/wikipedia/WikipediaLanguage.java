@@ -13,8 +13,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum WikipediaLanguage {
     SPANISH("es"),
-    GALICIAN("gl"),
-    ALL("");
+    GALICIAN("gl");
 
     private static final Map<String, WikipediaLanguage> map = Arrays
         .stream(WikipediaLanguage.values())

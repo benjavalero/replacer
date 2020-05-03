@@ -44,7 +44,7 @@ public class WikipediaServiceTest {
         Assert.assertTrue(response.isBatchcomplete());
 
         // We pass a null access token to retrieve an anonymous edit token
-        EditToken editToken = wikipediaService.getEditToken(2209245, WikipediaLanguage.ALL, new OAuth1AccessToken("", ""));
+        EditToken editToken = wikipediaService.getEditToken(2209245, WikipediaLanguage.SPANISH, new OAuth1AccessToken("", ""));
         Assert.assertNotNull(editToken.getCsrfToken());
         Assert.assertEquals("+\\", editToken.getCsrfToken());
         Assert.assertEquals("2019-06-24T21:24:09Z", editToken.getTimestamp());
@@ -59,7 +59,7 @@ public class WikipediaServiceTest {
 
         int pageId = 6219990;
         String title = "Usuario:Benjavalero";
-        WikipediaPage page = wikipediaService.getPageByTitle(title, WikipediaLanguage.ALL)
+        WikipediaPage page = wikipediaService.getPageByTitle(title, WikipediaLanguage.SPANISH)
                 .orElseThrow(ReplacerException::new);
         Assert.assertNotNull(page);
         Assert.assertEquals(pageId, page.getId());
@@ -78,7 +78,7 @@ public class WikipediaServiceTest {
 
         int pageId = 6219990;
         String title = "Usuario:Benjavalero";
-        WikipediaPage page = wikipediaService.getPageById(pageId, WikipediaLanguage.ALL)
+        WikipediaPage page = wikipediaService.getPageById(pageId, WikipediaLanguage.SPANISH)
                 .orElseThrow(ReplacerException::new);
         Assert.assertNotNull(page);
         Assert.assertEquals(pageId, page.getId());
@@ -95,7 +95,7 @@ public class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class))).thenReturn(response);
 
-        List<WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884), WikipediaLanguage.ALL);
+        List<WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884), WikipediaLanguage.SPANISH);
         Assert.assertNotNull(pages);
         Assert.assertEquals(2, pages.size());
         Assert.assertTrue(pages.stream().anyMatch(page -> page.getId() == 6219990));
@@ -111,7 +111,7 @@ public class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class))).thenReturn(response);
 
-        Assert.assertFalse(wikipediaService.getPageByTitle("Usuario:Benjavaleroxx", WikipediaLanguage.ALL).isPresent());
+        Assert.assertFalse(wikipediaService.getPageByTitle("Usuario:Benjavaleroxx", WikipediaLanguage.SPANISH).isPresent());
     }
 
     @Test
@@ -121,7 +121,7 @@ public class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class))).thenReturn(response);
 
-        Set<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("", WikipediaLanguage.ALL);
+        Set<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("", WikipediaLanguage.SPANISH);
         Assert.assertEquals(10, pageIds.size());
     }
 
@@ -132,7 +132,7 @@ public class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class))).thenReturn(response);
 
-        Set<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("", WikipediaLanguage.ALL);
+        Set<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("", WikipediaLanguage.SPANISH);
         Assert.assertTrue(pageIds.isEmpty());
     }
 
@@ -145,7 +145,7 @@ public class WikipediaServiceTest {
                 .thenReturn(response);
 
         OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
-        String username = wikipediaService.getLoggedUserName(accessToken, WikipediaLanguage.ALL);
+        String username = wikipediaService.getLoggedUserName(accessToken, WikipediaLanguage.SPANISH);
         Assert.assertEquals("Benjavalero", username);
     }
 
@@ -160,7 +160,7 @@ public class WikipediaServiceTest {
         OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
         // We use a timestamp BEFORE the timestamp of the last edition (from the edit token)
         String currentTimestamp = "2019-06-23T21:24:09Z";
-        wikipediaService.savePageContent(1, "", 0, currentTimestamp, WikipediaLanguage.ALL, accessToken);
+        wikipediaService.savePageContent(1, "", 0, currentTimestamp, WikipediaLanguage.SPANISH, accessToken);
 
         Mockito.verify(wikipediaRequestService, Mockito.times(0))
                 .executeSignedPostRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class), Mockito.any(OAuth1AccessToken.class));
@@ -177,7 +177,7 @@ public class WikipediaServiceTest {
         OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         String currentTimestamp = "2019-06-25T21:24:09Z";
-        wikipediaService.savePageContent(1, "", null, currentTimestamp, WikipediaLanguage.ALL, accessToken);
+        wikipediaService.savePageContent(1, "", null, currentTimestamp, WikipediaLanguage.SPANISH, accessToken);
 
         // Two calls: one for the EditToken and another to save the content
         Mockito.verify(wikipediaRequestService, Mockito.times(2))
@@ -186,7 +186,7 @@ public class WikipediaServiceTest {
         // Save a section
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         currentTimestamp = "2019-06-26T21:24:09Z";
-        wikipediaService.savePageContent(1, "", 2, currentTimestamp, WikipediaLanguage.ALL, accessToken);
+        wikipediaService.savePageContent(1, "", 2, currentTimestamp, WikipediaLanguage.SPANISH, accessToken);
 
         // Two calls: one for the EditToken and another to save the content (x2 save page and section in this test)
         Mockito.verify(wikipediaRequestService, Mockito.times(4))
@@ -214,7 +214,7 @@ public class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class))).thenReturn(response);
 
-        List<WikipediaSection> sections = wikipediaService.getPageSections(6903884, WikipediaLanguage.ALL);
+        List<WikipediaSection> sections = wikipediaService.getPageSections(6903884, WikipediaLanguage.SPANISH);
         Assert.assertNotNull(sections);
         Assert.assertEquals(3, sections.size());
         Assert.assertTrue(sections.stream().anyMatch(sec -> sec.getIndex() == 1));
@@ -240,7 +240,7 @@ public class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class))).thenReturn(response);
 
-        List<WikipediaSection> sections = wikipediaService.getPageSections(6633556, WikipediaLanguage.ALL);
+        List<WikipediaSection> sections = wikipediaService.getPageSections(6633556, WikipediaLanguage.SPANISH);
         Assert.assertNotNull(sections);
         Assert.assertTrue(sections.isEmpty());
     }
@@ -262,7 +262,7 @@ public class WikipediaServiceTest {
         int pageId = 6903884;
         int sectionId = 1;
         String title = "Usuario:Benjavalero/Taller";
-        WikipediaPage page = wikipediaService.getPageByIdAndSection(pageId, sectionId, WikipediaLanguage.ALL)
+        WikipediaPage page = wikipediaService.getPageByIdAndSection(pageId, sectionId, WikipediaLanguage.SPANISH)
                 .orElseThrow(ReplacerException::new);
         Assert.assertNotNull(page);
         Assert.assertEquals(pageId, page.getId());
@@ -277,14 +277,14 @@ public class WikipediaServiceTest {
     public void testWikipediaServiceOffline() throws ReplacerException {
         Assert.assertEquals("offline", wikipediaServiceOffline.getLoggedUserName(Mockito.mock(OAuth1AccessToken.class), WikipediaLanguage.SPANISH));
         Assert.assertTrue(wikipediaServiceOffline.isAdminUser(""));
-        Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getMisspellingListPageContent(WikipediaLanguage.ALL)));
-        Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getComposedMisspellingListPageContent(WikipediaLanguage.ALL)));
-        Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getFalsePositiveListPageContent(WikipediaLanguage.ALL)));
-        Assert.assertEquals(Integer.valueOf(1), wikipediaServiceOffline.getPageByTitle("", WikipediaLanguage.ALL).map(WikipediaPage::getId).orElse(0));
-        Assert.assertFalse(wikipediaServiceOffline.getPageById(1, WikipediaLanguage.ALL).map(WikipediaPage::getSection).isPresent());
-        Assert.assertFalse(wikipediaServiceOffline.getPageIdsByStringMatch("", WikipediaLanguage.ALL).isEmpty());
-        Assert.assertTrue(wikipediaServiceOffline.getPageSections(1, WikipediaLanguage.ALL).isEmpty());
-        Assert.assertEquals(2, wikipediaServiceOffline.getPagesByIds(Arrays.asList(1, 2), WikipediaLanguage.ALL).size());
+        Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getMisspellingListPageContent(WikipediaLanguage.SPANISH)));
+        Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getComposedMisspellingListPageContent(WikipediaLanguage.SPANISH)));
+        Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getFalsePositiveListPageContent(WikipediaLanguage.SPANISH)));
+        Assert.assertEquals(Integer.valueOf(1), wikipediaServiceOffline.getPageByTitle("", WikipediaLanguage.SPANISH).map(WikipediaPage::getId).orElse(0));
+        Assert.assertFalse(wikipediaServiceOffline.getPageById(1, WikipediaLanguage.SPANISH).map(WikipediaPage::getSection).isPresent());
+        Assert.assertFalse(wikipediaServiceOffline.getPageIdsByStringMatch("", WikipediaLanguage.SPANISH).isEmpty());
+        Assert.assertTrue(wikipediaServiceOffline.getPageSections(1, WikipediaLanguage.SPANISH).isEmpty());
+        Assert.assertEquals(2, wikipediaServiceOffline.getPagesByIds(Arrays.asList(1, 2), WikipediaLanguage.SPANISH).size());
     }
 
 }

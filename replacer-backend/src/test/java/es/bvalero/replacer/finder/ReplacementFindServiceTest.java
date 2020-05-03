@@ -32,7 +32,7 @@ public class ReplacementFindServiceTest {
 
     @Test
     public void testFindReplacementsEmpty() {
-        Assertions.assertTrue(replacementFindService.findReplacements("", WikipediaLanguage.ALL).isEmpty());
+        Assertions.assertTrue(replacementFindService.findReplacements("", WikipediaLanguage.SPANISH).isEmpty());
     }
 
     @Test
@@ -42,7 +42,7 @@ public class ReplacementFindServiceTest {
         Mockito.when(finder.findStream(Mockito.anyString(), Mockito.any(WikipediaLanguage.class))).thenReturn(Stream.of(replacement));
         Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
 
-        List<Replacement> replacements = replacementFindService.findReplacements(" ", WikipediaLanguage.ALL);
+        List<Replacement> replacements = replacementFindService.findReplacements(" ", WikipediaLanguage.SPANISH);
 
         Assertions.assertFalse(replacements.isEmpty());
         Assertions.assertEquals(1, replacements.size());
@@ -61,7 +61,7 @@ public class ReplacementFindServiceTest {
             .when(immutableFindService.findImmutables(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singleton(immutable1));
 
-        List<Replacement> replacements = replacementFindService.findReplacements(" ", WikipediaLanguage.ALL);
+        List<Replacement> replacements = replacementFindService.findReplacements(" ", WikipediaLanguage.SPANISH);
 
         Assertions.assertFalse(replacements.isEmpty());
         Assertions.assertEquals(1, replacements.size());
@@ -79,7 +79,7 @@ public class ReplacementFindServiceTest {
             .when(immutableFindService.findImmutables(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singleton(immutable1));
 
-        List<Replacement> replacements = replacementFindService.findReplacements("", WikipediaLanguage.ALL);
+        List<Replacement> replacements = replacementFindService.findReplacements("", WikipediaLanguage.SPANISH);
 
         Assertions.assertTrue(replacements.isEmpty());
     }
@@ -90,7 +90,7 @@ public class ReplacementFindServiceTest {
             "A X C",
             "X",
             "Y",
-            WikipediaLanguage.ALL
+            WikipediaLanguage.SPANISH
         );
 
         Assertions.assertFalse(replacements.isEmpty());
@@ -104,7 +104,7 @@ public class ReplacementFindServiceTest {
             "AXC",
             "X",
             "Y",
-            WikipediaLanguage.ALL
+            WikipediaLanguage.SPANISH
         );
 
         Assertions.assertTrue(replacements.isEmpty());

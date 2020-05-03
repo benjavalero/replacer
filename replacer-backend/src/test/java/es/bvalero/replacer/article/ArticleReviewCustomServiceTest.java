@@ -94,7 +94,7 @@ public class ArticleReviewCustomServiceTest {
         // The article contains replacements
         Mockito
             .when(
-                replacementFindService.findCustomReplacements(content, replacement, suggestion, WikipediaLanguage.ALL)
+                replacementFindService.findCustomReplacements(content, replacement, suggestion, WikipediaLanguage.SPANISH)
             )
             .thenReturn(replacements);
 
@@ -138,13 +138,13 @@ public class ArticleReviewCustomServiceTest {
             .thenReturn(1L);
 
         // The articles exist in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.ALL)).thenReturn(Optional.of(article));
-        Mockito.when(wikipediaService.getPageById(randomId2, WikipediaLanguage.ALL)).thenReturn(Optional.of(article2));
+        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
+        Mockito.when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article2));
 
         // The article 2 contains no replacements
         Mockito
             .when(
-                replacementFindService.findCustomReplacements(content2, replacement, suggestion, WikipediaLanguage.ALL)
+                replacementFindService.findCustomReplacements(content2, replacement, suggestion, WikipediaLanguage.SPANISH)
             )
             .thenReturn(Collections.emptyList());
 

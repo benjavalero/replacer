@@ -20,7 +20,7 @@ public interface ReplacementFinder {
 
     @TestOnly
     default List<Replacement> findList(String text) {
-        return IterableUtils.toList(find(text, WikipediaLanguage.ALL));
+        return IterableUtils.toList(find(text, WikipediaLanguage.SPANISH));
     }
 
     default List<Replacement> findList(String text, WikipediaLanguage lang) {

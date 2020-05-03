@@ -80,7 +80,7 @@ public class DumpArticleProcessor implements ItemProcessor<DumpPage, List<Replac
         }
 
         // TODO: Receive the language as a parameter
-        List<Replacement> replacements = replacementFindService.findReplacements(dumpArticle.getContent(), WikipediaLanguage.ALL);
+        List<Replacement> replacements = replacementFindService.findReplacements(dumpArticle.getContent(), WikipediaLanguage.SPANISH);
         List<ReplacementEntity> toWrite = replacementIndexService.findIndexArticleReplacements(
             dumpArticle.getId(),
             replacements.stream().map(dumpArticle::convertReplacementToIndexed).collect(Collectors.toList()),

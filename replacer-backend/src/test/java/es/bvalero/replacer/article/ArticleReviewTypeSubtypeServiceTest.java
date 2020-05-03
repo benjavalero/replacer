@@ -123,7 +123,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
         Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
 
         // The article contains replacements
-        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.ALL)).thenReturn(replacements);
+        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH)).thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
@@ -162,8 +162,8 @@ public class ArticleReviewTypeSubtypeServiceTest {
         Mockito.when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article2));
 
         // The articles contains replacements
-        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.ALL)).thenReturn(replacements);
-        Mockito.when(replacementFindService.findReplacements(content2, WikipediaLanguage.ALL)).thenReturn(replacements);
+        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH)).thenReturn(replacements);
+        Mockito.when(replacementFindService.findReplacements(content2, WikipediaLanguage.SPANISH)).thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
         Assertions.assertTrue(review.isPresent());
@@ -185,7 +185,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
         Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
 
         // The article contains replacements
-        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.ALL)).thenReturn(replacements);
+        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH)).thenReturn(replacements);
 
         // The article has sections
         ArticleReview sectionReview = articleService.buildArticleReview(article, replacements);
@@ -212,7 +212,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
         Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
 
         // The article contains replacements
-        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.ALL)).thenReturn(replacements);
+        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH)).thenReturn(replacements);
 
         // The article has no sections
         Mockito

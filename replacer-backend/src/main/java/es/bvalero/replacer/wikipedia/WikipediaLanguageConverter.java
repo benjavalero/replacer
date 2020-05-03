@@ -3,6 +3,7 @@ package es.bvalero.replacer.wikipedia;
 import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+import org.apache.commons.lang3.StringUtils;
 
 @Converter(autoApply = true)
 public class WikipediaLanguageConverter implements AttributeConverter<WikipediaLanguage, String> {
@@ -17,8 +18,9 @@ public class WikipediaLanguageConverter implements AttributeConverter<WikipediaL
 
     @Override
     public WikipediaLanguage convertToEntityAttribute(String code) {
-        if (code == null) {
-            return null;
+        // Default value just in case
+        if (StringUtils.isBlank(code)) {
+            return WikipediaLanguage.SPANISH;
         }
 
         return Stream

@@ -17,7 +17,7 @@ public interface ImmutableFinder extends Comparable<ImmutableFinder> {
 
     @TestOnly
     default List<Immutable> findList(String text) {
-        return findList(text, WikipediaLanguage.ALL);
+        return findList(text, WikipediaLanguage.SPANISH);
     }
 
     default List<Immutable> findList(String text, WikipediaLanguage lang) {

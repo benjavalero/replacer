@@ -81,7 +81,6 @@ public abstract class ParseFileManager<T> {
     private Map<WikipediaLanguage, String> findItemsText() {
         return Arrays
             .stream(WikipediaLanguage.values())
-            .filter(lang -> WikipediaLanguage.ALL != lang)
             .collect(Collectors.toMap(Function.identity(), this::findItemsText));
     }
 

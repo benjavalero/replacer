@@ -111,7 +111,7 @@ public class ArticleReviewNoTypeServiceTest {
         Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article));
 
         // The article contains replacements
-        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.ALL)).thenReturn(replacements);
+        Mockito.when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH)).thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 
@@ -137,7 +137,7 @@ public class ArticleReviewNoTypeServiceTest {
         // The article doesn't contain replacements
         List<Replacement> noArticleReplacements = Collections.emptyList();
         Mockito
-            .when(replacementFindService.findReplacements(content, WikipediaLanguage.ALL))
+            .when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH))
             .thenReturn(noArticleReplacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
@@ -161,7 +161,7 @@ public class ArticleReviewNoTypeServiceTest {
         Mockito.when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(article2));
 
         // The article contains replacements
-        Mockito.when(replacementFindService.findReplacements(content2, WikipediaLanguage.ALL)).thenReturn(replacements);
+        Mockito.when(replacementFindService.findReplacements(content2, WikipediaLanguage.SPANISH)).thenReturn(replacements);
 
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
 

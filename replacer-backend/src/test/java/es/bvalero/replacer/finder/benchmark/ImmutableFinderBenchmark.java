@@ -113,7 +113,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
                 sampleContents.forEach(
                     content -> {
                         finder
-                            .find(content, WikipediaLanguage.ALL)
+                            .find(content, WikipediaLanguage.SPANISH)
                             .forEach(result -> System.out.println("==> " + result.getText()));
                         System.out.println("----------");
                     }

@@ -65,7 +65,7 @@ class ArticleReviewCustomService extends ArticleReviewCachedService {
     @Override
     List<Replacement> findAllReplacements(WikipediaPage article, ArticleReviewOptions options) {
         // TODO: Receive the language as a parameter
-        List<Replacement> replacements = replacementFindService.findCustomReplacements(article.getContent(), options.getSubtype(), options.getSuggestion(), WikipediaLanguage.ALL);
+        List<Replacement> replacements = replacementFindService.findCustomReplacements(article.getContent(), options.getSubtype(), options.getSuggestion(), WikipediaLanguage.SPANISH);
 
         if (replacements.isEmpty()) {
             // We add the custom replacement to the database  as reviewed to skip it after the next search in the API

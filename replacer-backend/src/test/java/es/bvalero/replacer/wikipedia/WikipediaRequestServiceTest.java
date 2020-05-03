@@ -42,7 +42,7 @@ public class WikipediaRequestServiceTest {
         Mockito.when(oAuthService.execute(Mockito.any(OAuthRequest.class))).thenReturn(response);
 
         try {
-            wikipediaRequestService.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.ALL);
+            wikipediaRequestService.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.SPANISH);
         } catch (ReplacerException e) {
             Assertions.assertTrue(e.getMessage().startsWith("too-many-pageids"));
         }
@@ -57,7 +57,7 @@ public class WikipediaRequestServiceTest {
         Mockito.when(oAuthService.execute(Mockito.any(OAuthRequest.class))).thenReturn(response);
 
         try {
-            wikipediaRequestService.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.ALL);
+            wikipediaRequestService.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.SPANISH);
         } catch (ReplacerException e) {
             Assertions.assertTrue(e.getMessage().startsWith("Call not successful"));
         }
@@ -72,7 +72,7 @@ public class WikipediaRequestServiceTest {
         Mockito.when(oAuthService.execute(Mockito.any(OAuthRequest.class))).thenReturn(response);
 
         try {
-            wikipediaRequestService.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.ALL);
+            wikipediaRequestService.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.SPANISH);
         } catch (ReplacerException e) {
             Assertions.assertEquals("ERROR executing OAuth Request", e.getMessage());
         }
@@ -88,7 +88,7 @@ public class WikipediaRequestServiceTest {
         Mockito.when(oAuthService.execute(Mockito.any(OAuthRequest.class))).thenReturn(response);
 
         Assertions.assertNotNull(wikipediaRequestService.executeSignedPostRequest(
-                Collections.emptyMap(), WikipediaLanguage.ALL, new OAuth1AccessToken("A", "B")));
+                Collections.emptyMap(), WikipediaLanguage.SPANISH, new OAuth1AccessToken("A", "B")));
     }
 
 }
