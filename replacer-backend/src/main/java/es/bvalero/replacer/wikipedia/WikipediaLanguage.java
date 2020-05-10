@@ -13,8 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 @Getter
 @AllArgsConstructor
 public enum WikipediaLanguage {
-    SPANISH("es"),
-    GALICIAN("gl"),;
+    GALICIAN("gl"),
+    SPANISH("es");
 
     private static final Map<String, WikipediaLanguage> map = Arrays
         .stream(WikipediaLanguage.values())

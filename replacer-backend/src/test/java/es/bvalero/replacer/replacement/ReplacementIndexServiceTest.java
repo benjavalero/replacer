@@ -42,7 +42,7 @@ public class ReplacementIndexServiceTest {
 
         replacementIndexService.indexArticleReplacements(articleId, WikipediaLanguage.SPANISH, Collections.emptyList());
 
-        Mockito.verify(replacementRepository, Mockito.times(1)).findByArticleIdAndLang(Mockito.eq(articleId), Mockito.any(WikipediaLanguage.class));
+        Mockito.verify(replacementRepository, Mockito.times(1)).findByArticleIdAndLang(Mockito.eq(articleId), Mockito.anyString());
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -126,9 +126,12 @@ class DumpManager {
                 dumpIndexation.setDumpFileName(
                     jobExecution.getJobParameters().getString(DumpManager.DUMP_PATH_PARAMETER)
                 );
-                dumpIndexation.setNumArticlesEstimated(
-                    numArticlesEstimated.get(jobExecution.getJobParameters().getString(DumpManager.DUMP_LANG_PARAMETER))
-                );
+                String lang = jobExecution.getJobParameters().getString(DumpManager.DUMP_LANG_PARAMETER);
+                // TODO: The not-null check is only needed the first time we index with this new parameter
+                if (lang == null) {
+                    lang = WikipediaLanguage.SPANISH.getCode();
+                }
+                dumpIndexation.setNumArticlesEstimated(numArticlesEstimated.get(lang));
 
                 addStepExecutions(dumpIndexation, jobExecution);
             }

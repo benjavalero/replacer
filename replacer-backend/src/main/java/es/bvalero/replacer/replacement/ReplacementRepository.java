@@ -1,6 +1,5 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Pageable;
@@ -16,15 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface ReplacementRepository extends JpaRepository<ReplacementEntity, Long> {
-    List<ReplacementEntity> findByArticleIdAndLang(int articleId, WikipediaLanguage lang);
+    List<ReplacementEntity> findByArticleIdAndLang(int articleId, String lang);
 
-    @Query("SELECT new es.bvalero.replacer.replacement.TypeSubtypeCount(lang, type, subtype, COUNT(*)) FROM ReplacementEntity WHERE reviewer IS NULL GROUP BY type, subtype")
+    @Query(
+        "SELECT new es.bvalero.replacer.replacement.TypeSubtypeCount(lang, type, subtype, COUNT(*)) FROM ReplacementEntity WHERE reviewer IS NULL GROUP BY lang, type, subtype"
+    )
     List<TypeSubtypeCount> countGroupedByTypeAndSubtype();
 
     @Query("SELECT articleId FROM ReplacementEntity WHERE lang = :lang AND reviewer IS NULL ORDER BY RAND()")
     List<Integer> findRandomArticleIdsToReview(@Param("lang") String lang, Pageable pageable);
 
-    @Query("SELECT articleId FROM ReplacementEntity WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL ORDER BY RAND()")
+    @Query(
+        "SELECT articleId FROM ReplacementEntity WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL ORDER BY RAND()"
+    )
     List<Integer> findRandomArticleIdsToReviewByTypeAndSubtype(
         @Param("lang") String lang,
         @Param("type") String type,
@@ -32,7 +35,12 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
         Pageable pageable
     );
 
-    long countByArticleIdAndLangAndTypeAndSubtypeAndReviewerNotNull(int articleId, String lang, String type, String subtype);
+    long countByArticleIdAndLangAndTypeAndSubtypeAndReviewerNotNull(
+        int articleId,
+        String lang,
+        String type,
+        String subtype
+    );
 
     List<ReplacementEntity> findByArticleIdAndLangAndTypeAndSubtypeAndReviewerIsNull(
         int articleId,
@@ -52,5 +60,5 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
     @Query("SELECT new es.bvalero.replacer.replacement.ReviewerCount(reviewer, COUNT(*)) FROM ReplacementEntity WHERE reviewer IS NOT NULL AND reviewer <> :systemReviewer GROUP BY reviewer ORDER BY COUNT(*) DESC")
     List<ReviewerCount> countGroupedByReviewer(String systemReviewer);
 
-    void deleteByLangAndSubtypeIn(String lang, Set<String> subtypes);
+    void deleteByLangAndTypeAndSubtypeIn(String lang, String type, Set<String> subtypes);
 }

@@ -46,7 +46,7 @@ public class ReplacementIndexService {
             articleId,
             lang,
             replacements,
-            replacementRepository.findByArticleIdAndLang(articleId, lang)
+            replacementRepository.findByArticleIdAndLang(articleId, lang.getCode())
         );
         saveReplacements(toSave);
     }
