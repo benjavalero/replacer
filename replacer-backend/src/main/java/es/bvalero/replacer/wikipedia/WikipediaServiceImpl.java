@@ -231,7 +231,7 @@ class WikipediaServiceImpl implements WikipediaService {
             lang
         );
         List<WikipediaPage> pages = extractPagesFromJson(apiResponse);
-        Optional<WikipediaPage> page = pages.stream().findAny().map(p -> p.withSection(section));
+        Optional<WikipediaPage> page = pages.stream().findAny().map(p -> p.withSection(section).withLang(lang));
         LOGGER.debug(
             "END Get page by ID and section: {} - {} - {}",
             pageId,

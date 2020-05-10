@@ -30,10 +30,15 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
         "FROM ReplacementEntity " +
         "WHERE lang = :lang AND reviewer IS NULL"
     )
-    long findRandomStart(@Param("chunkSize") int chunkSize, @Param("lang") String lang);
+    long findRandomStart(@Param("chunkSize") long chunkSize, @Param("lang") String lang);
 
     // ORDER BY RAND() takes a lot when not filtering by type/subtype even using an index
-    @Query("SELECT articleId FROM ReplacementEntity WHERE lang = :lang AND reviewer IS NULL AND id > :start")
+    @Query(
+        "SELECT articleId " +
+        "FROM ReplacementEntity " +
+        "WHERE lang = :lang AND reviewer IS NULL AND id > :start " +
+        "ORDER BY id"
+    )
     List<Integer> findRandomArticleIdsToReview(
         @Param("lang") String lang,
         @Param("start") long randomStart,
