@@ -27,6 +27,7 @@ class ArticleReviewNoTypeService extends ArticleReviewCachedService {
     @Override
     List<Integer> findArticleIdsToReview(ArticleReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-        return replacementRepository.findRandomArticleIdsToReview(options.getLang().getCode(), pagination);
+        long randomStart = replacementRepository.findRandomStart(CACHE_SIZE, options.getLang().getCode());
+        return replacementRepository.findRandomArticleIdsToReview(options.getLang().getCode(), randomStart, pagination);
     }
 }

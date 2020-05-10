@@ -39,7 +39,7 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
             oldWords.removeAll(newWords);
             if (!oldWords.isEmpty()) {
                 LOGGER.warn("Deleting from database obsolete misspellings: {}", oldWords);
-                replacementRepository.deleteByLangAndTypeAndSubtypeIn(
+                replacementRepository.deleteByLangAndTypeAndSubtypeInAndReviewerIsNull(
                     lang.getCode(),
                     MisspellingSimpleFinder.TYPE_MISSPELLING_SIMPLE,
                     new HashSet<>(oldWords)

@@ -46,8 +46,16 @@ public class ArticleReviewTypeSubtypeServiceTest {
         .text("Y")
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
-    private final ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
-    private final ArticleReviewOptions options2 = ArticleReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "A", "B");
+    private final ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype(
+        WikipediaLanguage.SPANISH,
+        "X",
+        "Y"
+    );
+    private final ArticleReviewOptions options2 = ArticleReviewOptions.ofTypeSubtype(
+        WikipediaLanguage.SPANISH,
+        "A",
+        "B"
+    );
 
     @Mock
     private ReplacementRepository replacementRepository;
@@ -167,7 +175,13 @@ public class ArticleReviewTypeSubtypeServiceTest {
             .thenReturn(Collections.emptyList());
         // 1 result in DB by no type
         Mockito
-            .when(replacementRepository.findRandomArticleIdsToReview(Mockito.anyString(), Mockito.any(PageRequest.class)))
+            .when(
+                replacementRepository.findRandomArticleIdsToReview(
+                    Mockito.anyString(),
+                    Mockito.anyLong(),
+                    Mockito.any(PageRequest.class)
+                )
+            )
             .thenReturn(new ArrayList<>(Collections.singletonList(randomId2)));
 
         // The articles exist in Wikipedia
