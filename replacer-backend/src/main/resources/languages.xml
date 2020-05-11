@@ -27,8 +27,8 @@
 
     <util:map id="numArticlesEstimated" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.Integer">
-        <entry key="es" value="3905844"/>
-        <entry key="gl" value="368611"/>
+        <entry key="es" value="3913319"/>
+        <entry key="gl" value="369474"/>
     </util:map>
 
 </beans>
