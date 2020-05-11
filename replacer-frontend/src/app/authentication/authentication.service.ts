@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { RequestToken } from './request-token.model';
 import { AccessToken } from './access-token.model';
-import { WikipediaUser } from './wikipedia-user.model';
+import { WikipediaUser, Language } from './wikipedia-user.model';
 import { AlertService } from '../alert/alert.service';
 import { VerificationToken } from './verification-token.model';
 
@@ -96,6 +96,18 @@ export class AuthenticationService {
       localStorage.removeItem('user');
     }
     this.userEvent.emit(user);
+  }
+
+  get lang(): Language {
+    return this.user ? this.user.lang : Language.es;
+  }
+
+  set lang(lang: Language) {
+    if (this.user) {
+      const userAux: WikipediaUser = this.user;
+      userAux.lang = lang;
+      this.user = userAux;
+    }
   }
 
 }

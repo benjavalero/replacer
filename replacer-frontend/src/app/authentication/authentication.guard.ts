@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
+import { Language, LANG_PARAM } from './wikipedia-user.model';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -10,6 +11,12 @@ export class AuthenticationGuard implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> | Promise<boolean> {
+    // Enable language
+    const lang: Language = Language[route.queryParamMap.get(LANG_PARAM)];
+    if (lang) {
+      this.authenticationService.lang = lang;
+    }
+
     if (this.authenticationService.isAuthenticated()) {
       return true;
     } else {

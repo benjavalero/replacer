@@ -10,20 +10,17 @@ import { WikipediaUser } from '../authentication/wikipedia-user.model';
 })
 export class HeaderComponent implements OnInit {
   isNavCollapsed = true;
-  admin = false;
-  username: string;
+  user: WikipediaUser;
 
   constructor(private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
     if (this.authenticationService.user) {
-      this.username = this.authenticationService.user.name;
-      this.admin = this.authenticationService.user.admin;
+      this.user = this.authenticationService.user;
     }
 
     this.authenticationService.userEvent.subscribe((user: WikipediaUser) => {
-      this.username = user.name;
-      this.admin = user.admin;
+      this.user = user;
     });
   }
 }
