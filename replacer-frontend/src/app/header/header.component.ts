@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AuthenticationService } from '../authentication/authentication.service';
-import { WikipediaUser } from '../authentication/wikipedia-user.model';
+import { WikipediaUser, Language } from '../authentication/wikipedia-user.model';
 
 @Component({
   selector: 'app-header',
@@ -11,6 +11,7 @@ import { WikipediaUser } from '../authentication/wikipedia-user.model';
 export class HeaderComponent implements OnInit {
   isNavCollapsed = true;
   user: WikipediaUser;
+  defaultLang = Language.es;
 
   constructor(private authenticationService: AuthenticationService) { }
 

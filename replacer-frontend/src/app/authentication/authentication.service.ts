@@ -99,7 +99,7 @@ export class AuthenticationService {
   }
 
   get lang(): Language {
-    return this.user ? this.user.lang : Language.es;
+    return this.user ? this.user.lang || Language.es : Language.es;
   }
 
   set lang(lang: Language) {

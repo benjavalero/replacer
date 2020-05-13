@@ -7,6 +7,7 @@ import { AlertService } from '../alert/alert.service';
 import { ArticleService } from './article.service';
 import { ArticleReview } from './article-review.model';
 import { ArticleReplacement } from './article-replacement.model';
+import { Language, WikipediaUser } from '../authentication/wikipedia-user.model';
 
 @Component({
   selector: 'app-edit-article',
@@ -20,6 +21,8 @@ export class EditArticleComponent implements OnInit {
   filteredSubtype: string;
   suggestion: string; // Only for type 'custom'
 
+  defaultLang = Language.es;
+  lang: Language;
   title = '';
   content: string;
   section: number;
@@ -28,9 +31,17 @@ export class EditArticleComponent implements OnInit {
   currentTimestamp: string;
 
   constructor(private route: ActivatedRoute, private alertService: AlertService, private articleService: ArticleService,
-    private router: Router, private authenticationService: AuthenticationService, private titleService: Title) { }
+              private router: Router, private authenticationService: AuthenticationService, private titleService: Title) { }
 
   ngOnInit() {
+    // Subscribe to retrieve the lang
+    if (this.authenticationService.lang) {
+      this.lang = this.authenticationService.lang;
+    }
+    this.authenticationService.userEvent.subscribe((user: WikipediaUser) => {
+      this.lang = user.lang;
+    });
+
     this.articleId = +this.route.snapshot.paramMap.get('id');
     this.filteredType = this.route.snapshot.paramMap.get('type');
     this.filteredSubtype = this.route.snapshot.paramMap.get('subtype');

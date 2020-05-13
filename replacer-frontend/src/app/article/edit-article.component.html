@@ -1,7 +1,8 @@
 <div *ngIf="replacements.length" class="container">
 
   <h3>{{ title }}
-    <a href="https://es.wikipedia.org/wiki/{{ title }}" target="_blank" class="small">[Abrir en Wikipedia]</a>
+    <a href="https://{{ lang || defaultLang }}.wikipedia.org/wiki/{{ title }}" target="_blank" class="small">[Abrir en
+      Wikipedia]</a>
   </h3>
 
   <app-edit-snippet *ngFor="let replacement of replacements" [text]="content" [start]="replacement.start"

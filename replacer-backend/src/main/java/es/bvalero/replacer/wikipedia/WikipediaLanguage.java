@@ -8,7 +8,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 
 @Getter
 @AllArgsConstructor
@@ -25,11 +24,6 @@ public enum WikipediaLanguage {
 
     @JsonCreator
     public static WikipediaLanguage forValues(String code) {
-        // Default value just in case
-        if (StringUtils.isBlank(code)) {
-            return WikipediaLanguage.SPANISH;
-        } else {
-            return map.get(code);
-        }
+        return map.getOrDefault(code, WikipediaLanguage.SPANISH);
     }
 }
