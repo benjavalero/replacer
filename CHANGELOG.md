@@ -1,13 +1,19 @@
 # Versions
 
-## 2.5.2 (25 de abril de 2020)
+## 2.6.0 (14 May 2020)
+- Backend adaptation to use several Wikipedias. For the moment Spanish (es) and Galician (gl).
+- Fix finder of file names containing dots in the name
+- Internal improvements for configuration of finders
+- Upgrade to SpringBoot 2.2.7 and Angular 9.1.6.
+
+## 2.5.2 (25 April 2020)
 - Fix finder of file names in template parameter values
 
-## 2.5.1 (25 de abril de 2020)
+## 2.5.1 (25 April 2020)
 - Add more complete tags to ignore
 - Improve template parameter finder to ignore file values
 
-## 2.5.0 (16 de abril de 2020)
+## 2.5.0 (16 April 2020)
 - Save replacement context to check of only the position has changed
 - Optimization of most immutable finders
 - Improve immutable finders to find more false positives

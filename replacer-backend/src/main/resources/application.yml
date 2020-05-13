@@ -9,10 +9,10 @@ spring:
     job.enabled: false
     initialize-schema: always
     initializer.enabled: true
+  # jpa.show-sql: true
 
 server:
   port: 8000
-  # For SpringBoot 1.x the property is server.context-path
   servlet.context-path: /replacer/
   compression.enabled: true
 
