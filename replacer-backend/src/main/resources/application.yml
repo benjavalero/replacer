@@ -30,9 +30,9 @@ replacer:
     batch:
       delay: 604800000 # Weekly
       delay.initial: 86400000 # 1 day
-      chunk.size: 5000
+      chunk.size: 5000 # Externalized: in Prod we use 500 as higher values throw heap overflows
   parse.file.delay: 3600000 # Every hour
-  wikipedia.api: # These ones are for offline use
+  wikipedia.api: # Externalized: these ones are for offline use
     key: 88a04ea6ad93434f0fff31ac434960b3
     secret: 2e2bfb55301e030aa6bf8c2504624abdd12f2d04
   article.stats.delay: 600000 # Every 10 minutes
@@ -52,11 +52,10 @@ replacer.dump.path.base: /Users/benja/Developer
 
 spring:
   profiles: default
-  # Externalized
   datasource:
     url: jdbc:mariadb://localhost:3306/s52978__replacer?rewriteBatchedStatements=true
     username: s52978
-    password: xxxxxx
+    password: xxxxxx # Externalized
     driver-class-name: org.mariadb.jdbc.Driver
     hikari.max-lifetime: 580000
 
