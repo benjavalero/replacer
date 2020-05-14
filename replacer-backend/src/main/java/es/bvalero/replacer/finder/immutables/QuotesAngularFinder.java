@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class QuotesAngularFinder extends QuotesAbstractFinder implements ImmutableFinder {
     @Override
     public int getMaxLength() {
-        return 200;
+        return 500;
     }
 
     @Override
