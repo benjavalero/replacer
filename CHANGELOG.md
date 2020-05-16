@@ -1,5 +1,8 @@
 # Versions
 
+## 2.6.1. (16 May 2020)
+- Adapt to new ToolForge URL: https://replacer.toolforge.org
+
 ## 2.6.0 (14 May 2020)
 - Backend adaptation to use several Wikipedias. For the moment Spanish (es) and Galician (gl).
 - Fix finder of file names containing dots in the name
