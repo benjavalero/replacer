@@ -13,7 +13,6 @@ spring:
 
 server:
   port: 8000
-  servlet.context-path: /replacer/
   compression.enabled: true
 
 logging:
