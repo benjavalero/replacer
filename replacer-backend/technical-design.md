@@ -183,6 +183,16 @@ Note that, when using regular expressions, we usually compare a dot-plus with a 
 
 In conclusion, as performance is critical, we try to use the faster implementation when possible, except if the complexity of the finder makes worth to use an automaton or a regular expression.
 
+### Find replacements
+
+The main logic is done in `ReplacementFindService`:
+1. Iterate over all the replacement finders (implementing `ReplacementFinder`) to obtain a list of all potential replacements of several types in the text
+2. Discard nested replacements. Different finders could _collide_ in some results, so we discard the ones contained in others.
+3. Iterate over all the immutable finders (implementing `ImmutableFinder`) to obtain a stream of all potential immutables of several types in the text
+4. Discard replacements contained in any immutable.
+
+The number of immutables is meant to be quite higher than the number of replacements for a common text. Thus, we find all the replacements first. Then for each immutable we check if the replacement can be discarded or not. In case the list of replacements gets empty there is no need to keep on searching for immutables.
+
 ### Immutables
 
 The sub-package `immutables` contain the generic immutable finders, meant to be language-agnostic.
@@ -238,6 +248,18 @@ These finders are used after a user reviews a replacement. Thus, the performance
 The sub-package `benchmark` contains sub-packages for several finders, with  different implementations in order to test the results and performance, and choose the best one.
 
 
+## Package `replacement`
+
+This package contains the main logic to interact with the database.
+
+The database has a **huge** table, represented with `ReplacementEntity`, containing all the (valid) replacements found for all Wikipedia pages, along with the review status.
+
+Currently, we interact with this table in two different ways: `ReplacementDao` (JDBC) for bulk operations, and `ReplacementRepository` (JPA).
+
+An important tool feature is listing all the types and subtypes of the existing replacements along with the amount to be reviewed. This is a costly query, so we perform it periodically in `ReplacementCountService` and cache the results meanwhile.
+
+When a new page is indexed, or there have been any modifications, the replacements in the database must be updated. `ReplacementIndexService` offers a method, receiving the list of the new page replacements, which adds the new replacements and marks as obsolete the ones not found in the new list.
+
 ## Package `dump`
 
 The dumps are generated monthly and placed in a shared folder in Wikipedia servers. This dump folder is structured in sub-folders corresponding to the different wiki-projects, e.g. `eswiki`, which are also structured in sub-folders for each generation date, e.g. `20120120`, containing finally the dump files. For instance:
@@ -269,18 +291,6 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 
 
 ## TODO: ROADMAP
-
-### TODO: REVIEW COMPONENTS
-
-- [x] `dump.DumpFinder`
-- [x] `finder.ReplacementFindService`
-- [ ] Page Controller
-- [ ] Page Service
-- [ ] Replacement Repository
-- [ ] Wikipedia Façade
-- [ ] Dump Service
-- [ ] Dump Parser
-- [ ] Indexation Repository
 
 ### Optimization
 - [ ] Research to improve the database model

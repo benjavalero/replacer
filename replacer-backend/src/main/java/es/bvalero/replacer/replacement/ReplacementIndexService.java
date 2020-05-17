@@ -31,6 +31,11 @@ public class ReplacementIndexService {
 
     /* INDEX ARTICLES */
 
+    /**
+     * Add a list of replacements for a page to the database. In case the page is already indexed,
+     * the existing replacements in the database are updated. The ID is needed in case the list is empty
+     * so we can still update the existing replacements to mark them as obsolete.
+     */
     public void indexArticleReplacements(
         int articleId,
         WikipediaLanguage lang,
@@ -51,6 +56,13 @@ public class ReplacementIndexService {
         saveReplacements(toSave);
     }
 
+    /**
+     * Add a list of replacements for a page to the database, updating the existing replacements in the database,
+     * received also as a parameter. The ID is needed in case the list is empty
+     * so we can still update the existing replacements to mark them as obsolete.
+     *
+     * This method should be private but in cases like dump indexing it is worth to provide the DB replacements directly.
+     */
     public List<ReplacementEntity> findIndexArticleReplacements(
         int articleId,
         WikipediaLanguage lang,
