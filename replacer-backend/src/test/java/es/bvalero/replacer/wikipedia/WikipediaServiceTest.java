@@ -121,7 +121,7 @@ public class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class))).thenReturn(response);
 
-        Set<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("", WikipediaLanguage.SPANISH);
+        List<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("", 0, 100, WikipediaLanguage.SPANISH);
         Assert.assertEquals(10, pageIds.size());
     }
 
@@ -132,7 +132,7 @@ public class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class))).thenReturn(response);
 
-        Set<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("", WikipediaLanguage.SPANISH);
+        List<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("", 0, 100, WikipediaLanguage.SPANISH);
         Assert.assertTrue(pageIds.isEmpty());
     }
 
@@ -282,7 +282,7 @@ public class WikipediaServiceTest {
         Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getFalsePositiveListPageContent(WikipediaLanguage.SPANISH)));
         Assert.assertEquals(Integer.valueOf(1), wikipediaServiceOffline.getPageByTitle("", WikipediaLanguage.SPANISH).map(WikipediaPage::getId).orElse(0));
         Assert.assertFalse(wikipediaServiceOffline.getPageById(1, WikipediaLanguage.SPANISH).map(WikipediaPage::getSection).isPresent());
-        Assert.assertFalse(wikipediaServiceOffline.getPageIdsByStringMatch("", WikipediaLanguage.SPANISH).isEmpty());
+        Assert.assertFalse(wikipediaServiceOffline.getPageIdsByStringMatch("", 0, 100, WikipediaLanguage.SPANISH).isEmpty());
         Assert.assertTrue(wikipediaServiceOffline.getPageSections(1, WikipediaLanguage.SPANISH).isEmpty());
         Assert.assertEquals(2, wikipediaServiceOffline.getPagesByIds(Arrays.asList(1, 2), WikipediaLanguage.SPANISH).size());
     }

@@ -4,7 +4,6 @@ import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.ReplacerException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.jetbrains.annotations.Nullable;
 
 public interface WikipediaService {
@@ -29,7 +28,8 @@ public interface WikipediaService {
     Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section, WikipediaLanguage lang)
         throws ReplacerException;
 
-    Set<Integer> getPageIdsByStringMatch(String text, WikipediaLanguage lang) throws ReplacerException;
+    List<Integer> getPageIdsByStringMatch(String text, int offset, int limit, WikipediaLanguage lang)
+        throws ReplacerException;
 
     void savePageContent(
         int pageId,

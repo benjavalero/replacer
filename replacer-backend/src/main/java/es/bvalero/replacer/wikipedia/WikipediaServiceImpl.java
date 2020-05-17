@@ -248,23 +248,25 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public Set<Integer> getPageIdsByStringMatch(String text, WikipediaLanguage lang) throws ReplacerException {
+    public List<Integer> getPageIdsByStringMatch(String text, int offset, int limit, WikipediaLanguage lang)
+        throws ReplacerException {
         LOGGER.info("START Get pages by string match: {}", text);
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
-            buildPageIdsByStringMatchRequestParams(text),
+            buildPageIdsByStringMatchRequestParams(text, offset, limit),
             lang
         );
-        Set<Integer> pageIds = extractPageIdsFromSearchJson(apiResponse);
+        List<Integer> pageIds = extractPageIdsFromSearchJson(apiResponse);
         LOGGER.info("END Get pages by string match. Items found: {}", pageIds.size());
         return pageIds;
     }
 
-    private Map<String, String> buildPageIdsByStringMatchRequestParams(String text) {
+    private Map<String, String> buildPageIdsByStringMatchRequestParams(String text, int offset, int limit) {
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, VALUE_QUERY);
         params.put("list", "search");
         params.put("utf8", "1");
-        params.put("srlimit", "100");
+        params.put("srlimit", Integer.toString(limit));
+        params.put("sroffset", Integer.toString(offset));
         params.put("srsearch", buildSearchExpression(text));
         params.put(
             "srnamespace",
@@ -293,13 +295,13 @@ class WikipediaServiceImpl implements WikipediaService {
         }
     }
 
-    private Set<Integer> extractPageIdsFromSearchJson(WikipediaApiResponse response) {
+    private List<Integer> extractPageIdsFromSearchJson(WikipediaApiResponse response) {
         return response
             .getQuery()
             .getSearch()
             .stream()
             .map(WikipediaApiResponse.Page::getPageid)
-            .collect(Collectors.toSet());
+            .collect(Collectors.toList());
     }
 
     @Override

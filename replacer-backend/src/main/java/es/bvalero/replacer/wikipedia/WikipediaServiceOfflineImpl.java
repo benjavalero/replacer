@@ -88,8 +88,8 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     @Override
-    public Set<Integer> getPageIdsByStringMatch(String text, WikipediaLanguage lang) {
-        return Collections.singleton(1);
+    public List<Integer> getPageIdsByStringMatch(String text, int offset, int limit, WikipediaLanguage lang) {
+        return Collections.singletonList(1);
     }
 
     @Override

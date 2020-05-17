@@ -58,11 +58,15 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
         Pageable pageable
     );
 
-    long countByArticleIdAndLangAndTypeAndSubtypeAndReviewerNotNull(
-        int articleId,
-        String lang,
-        String type,
-        String subtype
+    @Query(
+        "SELECT articleId FROM ReplacementEntity " +
+        "WHERE articleId IN (:ids) AND lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NOT NULL"
+    )
+    List<Integer> findByArticleIdInAndLangAndTypeAndSubtypeAndReviewerNotNull(
+        @Param("ids") List<Integer> articleIds,
+        @Param("lang") String lang,
+        @Param("type") String type,
+        @Param("subtype") String subtype
     );
 
     List<ReplacementEntity> findByArticleIdAndLangAndTypeAndSubtypeAndReviewerIsNull(

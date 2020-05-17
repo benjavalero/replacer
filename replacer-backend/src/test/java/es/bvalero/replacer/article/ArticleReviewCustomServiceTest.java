@@ -75,9 +75,17 @@ public class ArticleReviewCustomServiceTest {
         final String suggestion = "S";
 
         // 1 result in Wikipedia
+        List<Integer> articleIds = Collections.singletonList(randomId);
         Mockito
-            .when(wikipediaService.getPageIdsByStringMatch(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
-            .thenReturn(Collections.singleton(randomId));
+            .when(
+                wikipediaService.getPageIdsByStringMatch(
+                    Mockito.anyString(),
+                    Mockito.anyInt(),
+                    Mockito.anyInt(),
+                    Mockito.any(WikipediaLanguage.class)
+                )
+            )
+            .thenReturn(articleIds);
 
         // The article exists in Wikipedia
         Mockito
@@ -87,14 +95,14 @@ public class ArticleReviewCustomServiceTest {
         // The result is not already reviewed
         Mockito
             .when(
-                replacementRepository.countByArticleIdAndLangAndTypeAndSubtypeAndReviewerNotNull(
-                    randomId,
+                replacementRepository.findByArticleIdInAndLangAndTypeAndSubtypeAndReviewerNotNull(
+                    articleIds,
                     WikipediaLanguage.SPANISH.getCode(),
                     ReplacementFindService.CUSTOM_FINDER_TYPE,
                     replacement
                 )
             )
-            .thenReturn(0L);
+            .thenReturn(Collections.emptyList());
 
         // The article contains replacements
         Mockito
@@ -125,38 +133,33 @@ public class ArticleReviewCustomServiceTest {
         final String suggestion = "S";
 
         // 2 results in Wikipedia
+        List<Integer> articleIds = new ArrayList<>(Arrays.asList(randomId, randomId2));
         Mockito
-            .when(wikipediaService.getPageIdsByStringMatch(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
-            .thenReturn(new HashSet<>(Arrays.asList(randomId, randomId2)));
+            .when(
+                wikipediaService.getPageIdsByStringMatch(
+                    Mockito.anyString(),
+                    Mockito.anyInt(),
+                    Mockito.anyInt(),
+                    Mockito.any(WikipediaLanguage.class)
+                )
+            )
+            .thenReturn(articleIds)
+            .thenReturn(Collections.emptyList());
 
         // The result 1 is already reviewed
         // The result 2 is not reviewed the first time, but reviewed the second time.
         Mockito
             .when(
-                replacementRepository.countByArticleIdAndLangAndTypeAndSubtypeAndReviewerNotNull(
-                    randomId,
+                replacementRepository.findByArticleIdInAndLangAndTypeAndSubtypeAndReviewerNotNull(
+                    articleIds,
                     WikipediaLanguage.SPANISH.getCode(),
                     ReplacementFindService.CUSTOM_FINDER_TYPE,
                     replacement
                 )
             )
-            .thenReturn(1L);
-        Mockito
-            .when(
-                replacementRepository.countByArticleIdAndLangAndTypeAndSubtypeAndReviewerNotNull(
-                    randomId2,
-                    WikipediaLanguage.SPANISH.getCode(),
-                    ReplacementFindService.CUSTOM_FINDER_TYPE,
-                    replacement
-                )
-            )
-            .thenReturn(0L)
-            .thenReturn(1L);
+            .thenReturn(Collections.singletonList(randomId));
 
         // The articles exist in Wikipedia
-        Mockito
-            .when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH))
-            .thenReturn(Optional.of(article));
         Mockito
             .when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH))
             .thenReturn(Optional.of(article2));
@@ -179,6 +182,15 @@ public class ArticleReviewCustomServiceTest {
             suggestion
         );
         Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
+
+        Mockito
+            .verify(wikipediaService, Mockito.times(2))
+            .getPageIdsByStringMatch(
+                Mockito.anyString(),
+                Mockito.anyInt(),
+                Mockito.anyInt(),
+                Mockito.any(WikipediaLanguage.class)
+            );
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))

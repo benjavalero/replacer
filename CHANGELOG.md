@@ -1,5 +1,8 @@
 # Versions
 
+## 2.6.2 (??)
+- Fix issue not loading more than 100 result for custom replacements
+
 ## 2.6.1. (16 May 2020)
 - Adapt to new ToolForge URL: https://replacer.toolforge.org
 
