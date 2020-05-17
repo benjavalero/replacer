@@ -47,29 +47,6 @@ For the first use case, the basic steps are:
 5. The user discards some replacements and accepts the suggestions for others
 6. The replacements accepted by the user are applied to the page contents and uploaded to Wikipedia
 
-```plantuml
-@startuml
-    actor U as "User"
-    participant C as "Page\nController"
-    participant S as "Page\nService"
-    participant R as "Replacement\nRepository"
-    participant W as "Wikipedia\nFaçade"
-    participant F as "Replacement\nFinder"
-    U -> C : Request random page
-    C -> S
-    S -> R : Find random page
-    S -> W : Retrieve page contents
-    S -> F : Find page replacements
-    S --> S : Start again if\nno replacements found
-    S --> C
-    C --> U : Page contents\nand replacements
-    U -> C : Review page
-    C -> S
-    S ->> W : Upload save contents\n(if needed)
-    S ->> R : Mark page and replacements\nas solved
-@enduml
-```
-
 For the second use case:
 
 1. Find latest dump
@@ -78,86 +55,6 @@ For the second use case:
     2. Save the page replacements in the database
 3. Save a summary of the process in the database
 
-```plantuml
-@startuml
-    actor U as "System"
-    participant S as "Dump\nService"
-    participant DF as "Dump\nFinder"
-    participant DP as "Dump\nParser"
-    participant RF as "Replacement\nFinder"
-    participant RR as "Replacement\nRepository"
-    participant IR as "Indexation\nRepository"
-    U -> S : Index last dump
-    S -> DF : Find last dump
-    S -> IR : Find last indexation
-    S -> DP : Parse last dump
-    DP --> S : Pages
-    S -> RF : Find replacements (for each page)
-    S -> RR : Save new replacements (for each page)
-    S -> IR : Save indexation summary
-@enduml
-```
-
-## Component Overview
-
-```plantuml
-@startuml
-package dump {
-    class DumpFinder << Component >> {
-        +findLatestDump(): Path
-    }
-}
-
-package finder {
-    +class ReplacementFindService << Component >> {
-        +findReplacements(text: string): Replacement[]
-    }
-
-    ~interface ReplacementFinder {
-        findReplacements(text: string): Replacement[]
-    }
-    +class Replacement << Domain >> {
-        text: string
-        start: number
-        end: number
-        type: string
-        subtype: string
-        suggestions: Suggestions[]
-    }
-    +class Suggestion << Domain >> {
-        suggestion: string
-        description: string
-    }
-
-    ~class ImmutableFindService << Component >> {
-        findImmutables(text: string): Immutable[]
-    }
-    ~interface ImmutableFinder {
-        findImmutables(text: string): Immutable[]
-    }
-    ~class Immutable << Domain >> {
-        start: number
-        end: number
-        text: string
-    }
-
-    ~interface RegexFinder {
-        find(text: string, regex: Pattern|Automaton): T[]
-    }
-}
-
-ReplacementFindService o-- ReplacementFinder
-ReplacementFindService .> ImmutableFindService
-ImmutableFindService o-- ImmutableFinder
-RegexFinder -left-|> ReplacementFinder
-RegexFinder -right-|> ImmutableFinder
-ReplacementFinder ..> Replacement
-Replacement *- Suggestion
-ImmutableFinder ..> Immutable
-
-hide empty members
-@enduml
-```
 
 ## Package `finder`
 
@@ -264,7 +161,7 @@ When a new page is indexed, or there have been any modifications, the replacemen
 
 The class `DumpFinder` is in charge of finding the latest dump available for a given project.
 
-The dumps are generated monthly and placed in a shared folder on Wikipedia servers. This dump folder is structured in sub-folders corresponding to the different wiki-projects, e.g. `eswiki`, which are also structured in sub-folders for each generation date, e.g. `20120120`, containing finally the dump files. For instance:
+The dumps are generated monthly and placed in a shared folder in Wikipedia servers. This dump folder is structured in sub-folders corresponding to the different wiki-projects, e.g. `eswiki`, which are also structured in sub-folders for each generation date, e.g. `20120120`, containing finally the dump files. For instance:
 
 - `/public/dumps/public`
   - `enwiki`
@@ -323,6 +220,7 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] Migrate to Wikipedia REST API, meant to be more appropriate for this kind of tools.
 - [ ] Set i18n in the frontend. Translate edition message according to the used language.
 - [ ] Improve webapp cache for assets or other files. Check results of PageSpeed Insights.
+- [ ] Review API and front-end routes
 
 ### Docs
 - [ ] Publish the rules of BenjaBot
