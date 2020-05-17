@@ -1,6 +1,5 @@
-package es.bvalero.replacer.dump;
+package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;

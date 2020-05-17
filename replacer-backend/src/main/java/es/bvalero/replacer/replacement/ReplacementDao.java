@@ -1,6 +1,5 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.dump.ReplacementRowMapper;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.List;

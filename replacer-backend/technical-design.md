@@ -254,7 +254,7 @@ This package contains the main logic to interact with the database.
 
 The database has a **huge** table, represented with `ReplacementEntity`, containing all the (valid) replacements found for all Wikipedia pages, along with the review status.
 
-Currently, we interact with this table in two different ways: `ReplacementDao` (JDBC) for bulk operations, and `ReplacementRepository` (JPA).
+Currently, we interact with this table in two different ways: `ReplacementDao` (JDBC) for bulk operations, and `ReplacementRepository` (JPA). For the DAO, `ReplacementRowMapper` is in charge of mapping the table and the entity.
 
 An important tool feature is listing all the types and subtypes of the existing replacements along with the amount to be reviewed. This is a costly query, so we perform it periodically in `ReplacementCountService` and cache the results meanwhile.
 
@@ -262,7 +262,9 @@ When a new page is indexed, or there have been any modifications, the replacemen
 
 ## Package `dump`
 
-The dumps are generated monthly and placed in a shared folder in Wikipedia servers. This dump folder is structured in sub-folders corresponding to the different wiki-projects, e.g. `eswiki`, which are also structured in sub-folders for each generation date, e.g. `20120120`, containing finally the dump files. For instance:
+The class `DumpFinder` is in charge of finding the latest dump available for a given project.
+
+The dumps are generated monthly and placed in a shared folder on Wikipedia servers. This dump folder is structured in sub-folders corresponding to the different wiki-projects, e.g. `eswiki`, which are also structured in sub-folders for each generation date, e.g. `20120120`, containing finally the dump files. For instance:
 
 - `/public/dumps/public`
   - `enwiki`
@@ -278,6 +280,14 @@ The dumps are generated monthly and placed in a shared folder in Wikipedia serve
   - …
 
 The path of the shared folder and the wiki-project ares configured externally.
+
+The class `DumpManager` checks periodically the latest available dump, and indexes it, by running the Spring Batch job `DumpExecutionJob`.
+
+The Spring Batch job has the typical steps:
+- A reader, which parses the dump and extract the pages into `DumpPage` (and `DumpRevision`).
+- A processor `DumpArticleProcessor`, which transforms each dump page into a list of replacements to be saved in the database.
+- A writer `DumpWriter`, which inserts or updates in the database the resulting replacements from the processor.
+- A listener `DumpJobListener`, which implements actions at the start and end of the job.
 
 
 ## Package `wikipedia`
