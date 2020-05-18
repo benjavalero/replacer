@@ -1,7 +1,8 @@
 # Versions
 
-## 2.6.2 (??)
+## 2.6.2 (18 May 2020)
 - Fix issue not loading more than 100 result for custom replacements
+- Add drop-down to select language
 
 ## 2.6.1. (16 May 2020)
 - Adapt to new ToolForge URL: https://replacer.toolforge.org
