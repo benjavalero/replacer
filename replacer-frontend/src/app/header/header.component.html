@@ -29,7 +29,19 @@
     </ul>
     <hr />
     <ul class="navbar-nav ml-auto justify-content-end">
-      <span class="navbar-text"><em>{{ user.name }} - {{ user.lang || defaultLang }}</em></span>
+      <li class="nav-item" ngbDropdown>
+        <a class="nav-link" style="cursor: pointer;" ngbDropdownToggle id="navbarDropdownUser" role="button">
+          <em>{{ user.name }} - {{ user.lang || defaultLang }}</em>
+        </a>
+        <div ngbDropdownMenu aria-labelledby="navbarDropdownUser" class="dropdown-menu dropdown-menu-right">
+          <button ngbDropdownItem (click)="onSelectLang('es')">
+            En español (es.wikipedia.org)
+          </button>
+          <button ngbDropdownItem (click)="onSelectLang('gl')">
+            En galego (gl.wikipedia.org)
+          </button>
+        </div>
+      </li>
     </ul>
   </div>
 </nav>

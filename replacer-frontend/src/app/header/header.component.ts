@@ -24,4 +24,12 @@ export class HeaderComponent implements OnInit {
       this.user = user;
     });
   }
+
+  onSelectLang(lang: string) {
+    // Enable language
+    const language: Language = Language[lang];
+    if (lang) {
+      this.authenticationService.lang = language;
+    }
+  }
 }

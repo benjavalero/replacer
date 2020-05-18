@@ -221,6 +221,7 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] Set i18n in the frontend. Translate edition message according to the used language.
 - [ ] Improve webapp cache for assets or other files. Check results of PageSpeed Insights.
 - [ ] Review API and front-end routes
+- [ ] Review occurrences in code and doc of _article_ and replace when needed by _page_
 
 ### Docs
 - [ ] Publish the rules of BenjaBot
