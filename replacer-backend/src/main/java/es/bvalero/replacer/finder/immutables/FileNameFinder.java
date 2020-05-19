@@ -2,12 +2,13 @@ package es.bvalero.replacer.finder.immutables;
 
 import es.bvalero.replacer.finder.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
 
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * Find filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`
@@ -19,7 +20,8 @@ public class FileNameFinder implements ImmutableFinder {
     // - Template "Gallery" ==> Managed in CompleteTemplateFinder
     // - Parameter values without File prefix ==> Managed in TemplateParamFinder
 
-    private static final List<String> ALLOWED_PREFIXES = Arrays.asList("Archivo", "File", "Imagen", "Image");
+    @Resource
+    private List<String> fileSpaces;
 
     @Override
     public ImmutableFinderPriority getPriority() {
@@ -77,7 +79,7 @@ public class FileNameFinder implements ImmutableFinder {
                 return -1;
             } else if (ch == ':') {
                 String prefix = prefixBuilder.toString();
-                return ALLOWED_PREFIXES.contains(prefix) && (i + 1 < text.length()) ? i + 1 : -1;
+                return fileSpaces.contains(prefix) && (i + 1 < text.length()) ? i + 1 : -1;
             } else {
                 prefixBuilder.append(ch);
             }

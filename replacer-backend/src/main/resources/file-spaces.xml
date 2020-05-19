@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/util
+   		   http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <util:list id="fileSpaces" value-type="java.lang.String">
+        <value>Archivo</value>
+        <value>File</value>
+        <value>Imagen</value>
+        <value>Image</value>
+        <value>Ficheiro</value>
+        <value>Arquivo</value>
+        <value>Imaxe</value>
+    </util:list>
+
+</beans>
