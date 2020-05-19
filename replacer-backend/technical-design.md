@@ -206,6 +206,7 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] Delete replacements reviewed by the system which are not needed to keep track of the reviewed articles. For the moment, I do it manually by running the query: `DELETE FROM replacement2 WHERE reviewer = 'system' AND position > 0;`
 
 ### Features
+- [ ] Add translations for file spaces, e.g. `Ficheiro` for Galician
 - [ ] \#102: Try to copy the fat-jar out of the project folder in order to package it while still running
 - [ ] \#111: Check if an article is blocked. Try to do it also in _pywikibot_.
 - [ ] Research in MediaWiki code to apply Spanish date format in references
@@ -218,10 +219,11 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] Review in the bot, in case they exist, possible cases of the template `dts` or `date_table_sorting` with English format, as this template also exists in Spanish. See <https://en.wikipedia.org/wiki/Template:Date_table_sorting>, <https://es.wikipedia.org/wiki/Plantilla:Dts>, <https://es.wikipedia.org/w/index.php?title=Compile_Heart&diff=prev&oldid=122078489>.
 - [ ] Make the tool more general in order to find replacements in other wiki-projects
 - [ ] Migrate to Wikipedia REST API, meant to be more appropriate for this kind of tools.
-- [ ] Set i18n in the frontend. Translate edition message according to the used language.
+- [ ] Set i18n in the frontend. Translate edition message according to the used language. Even try to make this message more specific about the replacements done.
 - [ ] Improve webapp cache for assets or other files. Check results of PageSpeed Insights.
 - [ ] Review API and front-end routes
 - [ ] Review occurrences in code and doc of _article_ and replace when needed by _page_
+- [ ] Add a new option to _skip_ a page for revision for a user, but keep it available for the rest.
 
 ### Docs
 - [ ] Publish the rules of BenjaBot
