@@ -1,16 +1,16 @@
 package es.bvalero.replacer.finder.immutables;
 
 import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TemplateParamFinder implements ImmutableFinder {
     private static final Set<Character> ALLOWED_CHARS = new HashSet<>(Arrays.asList('-', '_'));
+    private static final Set<Character> END_CHARS = new HashSet<>(Arrays.asList('|', '}', ']'));
 
     @Resource
     private List<String> paramNames;
@@ -80,7 +80,7 @@ public class TemplateParamFinder implements ImmutableFinder {
     private int findEndParam(String text, int start) {
         for (int i = start; i < text.length(); i++) {
             char ch = text.charAt(i);
-            if (ch == '|' || ch == '}') {
+            if (END_CHARS.contains(ch)) {
                 return i;
             } else if (ch == '"') {
                 // Forbidden value chars
@@ -116,7 +116,11 @@ public class TemplateParamFinder implements ImmutableFinder {
 
     private boolean matchesFile(String value) {
         int dot = value.lastIndexOf('.');
-        int distanceToEnd = value.length() - dot;
-        return distanceToEnd >= 2 && distanceToEnd <= 4;
+        if (dot >= 0) {
+            int distanceToEnd = value.length() - dot;
+            return distanceToEnd >= 2 && distanceToEnd <= 4;
+        } else {
+            return false;
+        }
     }
 }

@@ -102,4 +102,16 @@ public class TemplateParamFinderTest {
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assertions.assertEquals(expected, actual);
     }
+
+    @Test
+    public void testFileParameter() {
+        String fileParam = "link";
+        String text = String.format("[[File:x.jpg|%s=x]]", fileParam);
+
+        List<Immutable> matches = templateParamFinder.findList(text);
+
+        Set<String> expected = Collections.singleton(fileParam);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assertions.assertEquals(expected, actual);
+    }
 }
