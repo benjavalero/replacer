@@ -21,6 +21,9 @@
         <value>Domingo</value>
         <value>Records</value>
         <value>Sky</value>
+        <value>Carter</value>
+        <value>Union</value>
+        <value>Albums</value>
     </util:set>
 
 </beans>

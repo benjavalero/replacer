@@ -206,7 +206,6 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] Delete replacements reviewed by the system which are not needed to keep track of the reviewed articles. For the moment, I do it manually by running the query: `DELETE FROM replacement2 WHERE reviewer = 'system' AND position > 0;`
 
 ### Features
-- [ ] Add translations for file spaces, e.g. `Ficheiro` for Galician
 - [ ] \#102: Try to copy the fat-jar out of the project folder in order to package it while still running
 - [ ] \#111: Check if an article is blocked. Try to do it also in _pywikibot_.
 - [ ] Research in MediaWiki code to apply Spanish date format in references
@@ -224,6 +223,7 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] Review API and front-end routes
 - [ ] Review occurrences in code and doc of _article_ and replace when needed by _page_
 - [ ] Add a new option to _skip_ a page for revision for a user, but keep it available for the rest.
+- [ ] Try to show how many results are left to be reviewed, especially in Custom Replacement.
 
 ### Docs
 - [ ] Publish the rules of BenjaBot
@@ -232,3 +232,4 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] The TypeScript code should be formatted with Prettier too
 - [ ] The Java code has been migrated Java 11. The only issue is the tests with @DataJpaTest so they have been disabled, but it seems a problem of Spring/JDK itself, so it is not worth to investigate more.
 - [ ] Add Swagger for the API
+- [ ] Propose a standar format for the misspelling descriptions in Wikipedia list

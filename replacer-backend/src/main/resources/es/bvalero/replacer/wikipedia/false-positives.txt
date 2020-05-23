@@ -5,6 +5,17 @@
 * De momento uso una expresión regular (automaton) por lo que podemos incluir algo de sintaxis de estas.
 * Incluyo los casos con aproximadamente más de 400 ocurrencias
 
+ # Africa
+ South Africa
+ UCI Africa
+ of Africa
+ Africa Tour
+ Africa Cup
+ Africa Sports
+
+ # Albums
+ Albums Chart
+
  # Alex
  Alex Barros
  Alex Bogom[oó]lov
@@ -109,6 +120,13 @@
  # Esta forma no es incorrecta (salvo en «ésto»), aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
  # No se añade a esta lista puesto que hay usuarios que sí la revisan
  # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
+
+ # Ivan
+ Ivan Lendl
+ Ivan Dodig
+ Ivan Basso
+ Ivan Ljubi[čc]i[ćc]
+ Ivan Rakitić
 
  # junior
  Junior College
@@ -270,6 +288,15 @@
  # Esta forma no es incorrecta, aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
  # No se añade a esta lista puesto que hay usuarios que sí la revisan
  # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
+
+ # Union
+ # Se añade a la lista de "apellidos"
+ [Mm]unicipio de Union
+ [Cc]ondado de Union
+ Union Olimpija
+ Union Pacific
+ Union Station
+ Union of
 
  # Victor
  Victor Amaya
