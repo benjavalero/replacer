@@ -10,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = { TemplateParamFinder.class, XmlConfiguration.class })
-public class TemplateParamFinderTest {
+class TemplateParamFinderTest {
     @Autowired
     private TemplateParamFinder templateParamFinder;
 
     @Test
-    public void testRegexTemplateParam() {
+    void testRegexTemplateParam() {
         String param1 = " param 1 ";
         String param2 = "\tparám_2\t";
         String param3 = "param-3";
@@ -30,7 +30,7 @@ public class TemplateParamFinderTest {
     }
 
     @Test
-    public void testLinkFollowedByHeader() {
+    void testLinkFollowedByHeader() {
         String text = "[[A|B]]\n==Section==";
 
         List<Immutable> matches = templateParamFinder.findList(text);
@@ -40,7 +40,7 @@ public class TemplateParamFinderTest {
     }
 
     @Test
-    public void testTableRowWithReference() {
+    void testTableRowWithReference() {
         String text = "{|\n" + "|-\n" + "| Text\n" + "| More text.<ref name=\"FDA1\">Reference</ref>\n" + "|}";
 
         List<Immutable> matches = templateParamFinder.findList(text);
@@ -50,7 +50,7 @@ public class TemplateParamFinderTest {
     }
 
     @Test
-    public void testTableRowWithStylesInQuotes() {
+    void testTableRowWithStylesInQuotes() {
         String text = "{| color=\"salmon\"\n" + "| Text |}";
 
         List<Immutable> matches = templateParamFinder.findList(text);
@@ -60,7 +60,7 @@ public class TemplateParamFinderTest {
     }
 
     @Test
-    public void testTableRowWithDash() {
+    void testTableRowWithDash() {
         String text = "{|- align=center\n" + "| Text |}";
 
         List<Immutable> matches = templateParamFinder.findList(text);
@@ -70,7 +70,7 @@ public class TemplateParamFinderTest {
     }
 
     @Test
-    public void testTableRowWithKnownAttribute() {
+    void testTableRowWithKnownAttribute() {
         String param = "bgcolor=salmon\n";
         String text = String.format("{|\n" + "|%s" + "| Text |}", param);
 
@@ -82,7 +82,7 @@ public class TemplateParamFinderTest {
     }
 
     @Test
-    public void testCiteTemplate() {
+    void testCiteTemplate() {
         String text = "{{cita|Text.<ref>[http://www.britannica.com/Elegy#ref=ref945156].</ref>}}";
 
         List<Immutable> matches = templateParamFinder.findList(text);
@@ -92,7 +92,7 @@ public class TemplateParamFinderTest {
     }
 
     @Test
-    public void testFileNameValue() {
+    void testFileNameValue() {
         String fileValueParam = "mapa = Parroquia san agustin. - libertador.svg\n";
         String text = String.format("{{Ficha de entidad subnacional\n" + "|%s" + "}}", fileValueParam);
 
@@ -104,13 +104,25 @@ public class TemplateParamFinderTest {
     }
 
     @Test
-    public void testFileParameter() {
+    void testFileParameter() {
         String fileParam = "link";
         String text = String.format("[[File:x.jpg|%s=x]]", fileParam);
 
         List<Immutable> matches = templateParamFinder.findList(text);
 
         Set<String> expected = Collections.singleton(fileParam);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testValueWithComment() {
+        String completeParam = "image = x.jpg ";
+        String text = String.format("{{Template|%s<!-- A comment -->}}", completeParam);
+
+        List<Immutable> matches = templateParamFinder.findList(text);
+
+        Set<String> expected = Collections.singleton(completeParam);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assertions.assertEquals(expected, actual);
     }

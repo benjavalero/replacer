@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TemplateParamFinder implements ImmutableFinder {
     private static final Set<Character> ALLOWED_CHARS = new HashSet<>(Arrays.asList('-', '_'));
-    private static final Set<Character> END_CHARS = new HashSet<>(Arrays.asList('|', '}', ']'));
+    private static final Set<Character> END_CHARS = new HashSet<>(Arrays.asList('|', '}', ']', '<', '{'));
 
     @Resource
     private List<String> paramNames;
