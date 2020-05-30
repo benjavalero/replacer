@@ -1,5 +1,8 @@
 # Versions
 
+## 2.6.3 (30 May 2020)
+- Add more cases to detect false positives
+
 ## 2.6.2 (18 May 2020)
 - Fix issue not loading more than 100 result for custom replacements
 - Add drop-down to select language
