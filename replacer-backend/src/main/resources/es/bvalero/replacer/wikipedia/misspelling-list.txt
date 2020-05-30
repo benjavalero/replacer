@@ -40,7 +40,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  abietaceo||abietáceo
  abietaceos||abietáceos
  abion||avión
- abión||avión (aeronave), Abión (localidad y río de Soria)
+ abión||avión (aeronave), Abión (localidad y río de Soria), Avión (río de Palencia o localidad de Orense)
  abiotica||abiótica
  abioticas||abióticas
  abiotico||abiótico
@@ -1845,7 +1845,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  Aviñonesa|cs|aviñonesa
  Aviñonesas|cs|aviñonesas
  avio||avío
- avion||avión
+ avion|cs|avión
  aviónes||aviones
  avionica||aviónica
  avios||avíos

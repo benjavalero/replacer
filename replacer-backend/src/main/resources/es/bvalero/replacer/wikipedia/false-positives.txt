@@ -5,6 +5,15 @@
 * De momento uso una expresión regular (automaton) por lo que podemos incluir algo de sintaxis de estas.
 * Incluyo los casos con aproximadamente más de 400 ocurrencias
 
+ # Abril
+ Feria de Abril
+
+ # Adrian
+ Adrian Mannarino
+ Adrian Sutil
+ Adrian Smith
+ Adrian Ungur
+
  # Africa
  South Africa
  UCI Africa
@@ -41,6 +50,11 @@
  # UCI America Tour 		# Cubierto por America Tour
  in America
  of America
+
+ # angel
+ Evil Angel
+ Elegant Angel
+ Morbid Angel
 
  # angeles
  # Se encuentra también como inmutable en PersonNameFinder
@@ -103,6 +117,55 @@
  si aún
  son aún
 
+ # canada
+ of Canada
+ in Canada
+ and Canada
+ du Canada
+
+ # catalunya
+ Catalunya Verds
+ Catalunya Ràdio
+ Catalunya [Rr]omànica
+ Catalunya Sí
+ Catalunya Banc
+ Caixa Catalunya
+ Iniciativa per Catalunya
+ Junts per Catalunya
+ Volta a Catalunya
+
+ # disparo
+ # La inmensa mayoría se refieren al sustantivo y por tanto son correctos
+ [Uu]n (solo )?disparo
+ [Dd]el? disparo
+ [Ee]l disparo
+ primer disparo
+ [Ss]u disparo
+ potente disparo
+ cada disparo
+
+ # division
+ Division 1
+ Division 2
+ Division 3
+ Division of
+ Division I
+ Division II
+ Division III
+
+ First Division
+ Second Division
+ Third Division
+ Fourth Division
+ League Division
+ Joy Division
+ Premier Division
+ A Division
+ X Division
+ Racing Division
+ Administrative Division
+ Première Division
+
  # Domingo
  # Se encuentra también como inmutable en SurnameFinder y en PersonNameFinder
  Domingo de Guzmán
@@ -127,6 +190,14 @@
  Ivan Basso
  Ivan Ljubi[čc]i[ćc]
  Ivan Rakitić
+
+ # jose
+ San Jose Earthquakes
+ San Jose Sharks
+ San Jose State
+
+ # Julio
+ Nueve de Julio
 
  # junior
  Junior College
@@ -170,6 +241,14 @@
  Rainer Maria Rilke
  Tatjana Maria
 
+ # mas
+ mas no
+
+ # Master
+ Master of
+ Master and
+ Master in
+
  # masters
  # La gran mayoría son falsos positivos correspondientes a los torneos de tenis
  Masters 1000
@@ -199,6 +278,28 @@
  San José de Mayo
  Sol de Mayo
  Veinticinco de Mayo
+
+ # Milan
+ # La mayoría son del equipo de fútbol que se escribe sin tilde
+ Calcio Milan
+ AC Milan
+ el Milan
+
+ # Missouri
+ of Missouri
+
+ # Nicolas
+ Nicolas Mahut
+ Nicolas Cage
+ Nicolas Sarkozy
+ Nicolas Kiefer
+ Nicolas Prost
+ Nicolas Lapierre
+ Nicolas Poussin
+ Nicolas Roche
+ Nicolas Gilsoul
+ Nicolas Frantz
+ Nicolas Anelka
 
  # Paris
  Paris FC
@@ -258,6 +359,19 @@
  # round
  [Rr]ound [Rr]obin
 
+ # sebastian
+ Sebastian Bach
+ Sebastian Vettel
+ Sebastian Ingrosso
+
+ # secretaria
+ [Cc]omo [Ss]ecretaria
+ [Ss]u [Ss]ecretaria
+ [Dd]e [Ss]ecretaria
+ [Ff]ue [Ss]ecretaria
+ y [Ss]ecretaria
+ nombrada [Ss]ecretaria
+
  # simon
  Simon and Schuster
  Simon Aspelin
@@ -289,6 +403,10 @@
  # No se añade a esta lista puesto que hay usuarios que sí la revisan
  # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
 
+ # Tokyo
+ TV Tokyo
+ FC Tokyo
+
  # Union
  # Se añade a la lista de "apellidos"
  [Mm]unicipio de Union
@@ -297,6 +415,12 @@
  Union Pacific
  Union Station
  Union of
+
+ # version
+ version of
+ single version
+ album version
+ accoustic version
 
  # Victor
  Victor Amaya
