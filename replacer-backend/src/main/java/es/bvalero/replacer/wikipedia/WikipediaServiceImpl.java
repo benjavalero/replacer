@@ -280,7 +280,7 @@ class WikipediaServiceImpl implements WikipediaService {
             )
         );
         params.put("srwhat", "text");
-        params.put("srinfo", "");
+        params.put("srinfo", "totalhits");
         params.put("srprop", "");
         return params;
     }

@@ -24,6 +24,7 @@ public class WikipediaApiResponse {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Query {
         private UserInfo userinfo;
+        private SearchInfo searchinfo;
         private List<Page> search;
         private List<Page> pages;
         private Tokens tokens;
@@ -33,6 +34,11 @@ public class WikipediaApiResponse {
     static class UserInfo {
         private int id;
         private String name;
+    }
+
+    @Data
+    static class SearchInfo {
+        private int totalhits;
     }
 
     @Data

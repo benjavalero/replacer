@@ -222,6 +222,7 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] Improve webapp cache for assets or other files. Check results of PageSpeed Insights.
 - [ ] Review API and front-end routes
 - [ ] Review occurrences in code and doc of _article_ and replace when needed by _page_
+- [ ] Research option "srsort" when search directly in Wikipedia to try not to skip results on custom replacement when paginating
 - [ ] Add a new option to _skip_ a page for revision for a user, but keep it available for the rest.
 - [ ] Try to show how many results are left to be reviewed, especially in Custom Replacement.
 - [ ] Research how to _chain_ misspelling replacements, e.g. `Master` to `Máster` to `máster`.
