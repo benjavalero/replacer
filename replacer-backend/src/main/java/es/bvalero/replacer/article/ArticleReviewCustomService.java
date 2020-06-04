@@ -5,9 +5,9 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
+import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,29 +34,30 @@ class ArticleReviewCustomService extends ArticleReviewService {
     }
 
     @Override
-    List<Integer> findArticleIdsToReview(ArticleReviewOptions options) {
+    PageSearchResult findPageIdsToReview(ArticleReviewOptions options) {
         try {
             int offset = 0;
+            List<Integer> reviewedIds = replacementRepository.findByLangAndTypeAndSubtypeAndReviewerNotNull(
+                options.getLang().getCode(),
+                options.getType(),
+                options.getSubtype()
+            );
+
             // We need a List in order to use "removeIf"
-            List<Integer> articleIds = wikipediaService.getPageIdsByStringMatch(
+            PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
                 options.getSubtype(),
                 offset,
                 CACHE_SIZE,
                 options.getLang()
             );
-            while (!articleIds.isEmpty()) {
+            while (!pageIds.isEmpty()) {
                 // Discard the pages already reviewed
-                List<Integer> reviewedIds = replacementRepository.findByArticleIdInAndLangAndTypeAndSubtypeAndReviewerNotNull(
-                    articleIds,
-                    options.getLang().getCode(),
-                    options.getType(),
-                    options.getSubtype()
-                );
-                articleIds.removeAll(reviewedIds);
+                // TODO: We should only mark as reviewed a custom replacement if it has been reviewed without changes
+                pageIds.removePageIds(reviewedIds);
 
-                if (articleIds.isEmpty()) {
+                if (pageIds.isEmpty()) {
                     offset += CACHE_SIZE;
-                    articleIds =
+                    pageIds =
                         wikipediaService.getPageIdsByStringMatch(
                             options.getSubtype(),
                             offset,
@@ -64,14 +65,14 @@ class ArticleReviewCustomService extends ArticleReviewService {
                             options.getLang()
                         );
                 } else {
-                    return articleIds;
+                    return pageIds;
                 }
             }
         } catch (ReplacerException e) {
             LOGGER.error("Error searching page IDs from Wikipedia", e);
         }
 
-        return Collections.emptyList();
+        return PageSearchResult.ofEmpty();
     }
 
     @Override

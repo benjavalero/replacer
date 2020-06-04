@@ -51,8 +51,16 @@ class SectionReviewService {
                     // We need to check some rare cases where the byte-offset doesn't match with the section position
                     if (sectionReplacements.stream().allMatch(rep -> validateArticleReplacement(rep, pageSection.get().getContent()))) {
                         LOGGER.info("END Found section {} for article: {}", pageSection.get().getSection(), review.getId());
-                        return Optional.of(buildArticleReview(pageSection.get(),
-                                translateReplacementsByOffset(review.getReplacements(), smallestSection.get().getByteOffset())));
+                        return Optional.of(
+                            buildArticleReview(
+                                pageSection.get(),
+                                translateReplacementsByOffset(
+                                    review.getReplacements(),
+                                    smallestSection.get().getByteOffset()
+                                ),
+                                review
+                            )
+                        );
                     } else {
                         LOGGER.warn("Not valid byte-offset in section {} of article: {}",
                                 smallestSection.get().getIndex(), pageSection.get().getTitle());
@@ -115,10 +123,14 @@ class SectionReviewService {
         return replacement.getText().equals(text.substring(replacement.getStart(), replacement.getEnd()));
     }
 
-    private ArticleReview buildArticleReview(WikipediaPage article, List<ArticleReplacement> replacements) {
+    private ArticleReview buildArticleReview(
+        WikipediaPage article,
+        List<ArticleReplacement> replacements,
+        ArticleReview pageReview
+    ) {
         ArticleReview review = modelMapper.map(article, ArticleReview.class);
         review.setReplacements(replacements);
+        review.setNumPending(pageReview.getNumPending());
         return review;
     }
-
 }

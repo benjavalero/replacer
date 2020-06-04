@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.modelmapper.ModelMapper;
 
-public class ArticleReviewCustomServiceTest {
+class ArticleReviewCustomServiceTest {
     private final int randomId = 1;
     private final int randomId2 = 2;
     private final String content = "XYZ";
@@ -70,7 +70,7 @@ public class ArticleReviewCustomServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewCustom() throws ReplacerException {
+    void testFindRandomArticleToReviewCustom() throws ReplacerException {
         final String replacement = "R";
         final String suggestion = "S";
 
@@ -85,7 +85,7 @@ public class ArticleReviewCustomServiceTest {
                     Mockito.any(WikipediaLanguage.class)
                 )
             )
-            .thenReturn(articleIds);
+            .thenReturn(new PageSearchResult(1, articleIds));
 
         // The article exists in Wikipedia
         Mockito
@@ -95,8 +95,7 @@ public class ArticleReviewCustomServiceTest {
         // The result is not already reviewed
         Mockito
             .when(
-                replacementRepository.findByArticleIdInAndLangAndTypeAndSubtypeAndReviewerNotNull(
-                    articleIds,
+                replacementRepository.findByLangAndTypeAndSubtypeAndReviewerNotNull(
                     WikipediaLanguage.SPANISH.getCode(),
                     ReplacementFindService.CUSTOM_FINDER_TYPE,
                     replacement
@@ -128,7 +127,7 @@ public class ArticleReviewCustomServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewCustomNoResults() throws ReplacerException {
+    void testFindRandomArticleToReviewCustomNoResults() throws ReplacerException {
         final String replacement = "R";
         final String suggestion = "S";
 
@@ -143,15 +142,14 @@ public class ArticleReviewCustomServiceTest {
                     Mockito.any(WikipediaLanguage.class)
                 )
             )
-            .thenReturn(articleIds)
-            .thenReturn(Collections.emptyList());
+            .thenReturn(new PageSearchResult(articleIds.size(), articleIds))
+            .thenReturn(PageSearchResult.ofEmpty());
 
         // The result 1 is already reviewed
         // The result 2 is not reviewed the first time, but reviewed the second time.
         Mockito
             .when(
-                replacementRepository.findByArticleIdInAndLangAndTypeAndSubtypeAndReviewerNotNull(
-                    articleIds,
+                replacementRepository.findByLangAndTypeAndSubtypeAndReviewerNotNull(
                     WikipediaLanguage.SPANISH.getCode(),
                     ReplacementFindService.CUSTOM_FINDER_TYPE,
                     replacement

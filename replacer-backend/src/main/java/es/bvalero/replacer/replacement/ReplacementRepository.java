@@ -32,6 +32,8 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
     )
     long findRandomStart(@Param("chunkSize") long chunkSize, @Param("lang") String lang);
 
+    long countByLangAndReviewerIsNull(String lang);
+
     // ORDER BY RAND() takes a lot when not filtering by type/subtype even using an index
     @Query(
         "SELECT articleId " +
@@ -44,6 +46,8 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
         @Param("start") long randomStart,
         Pageable pageable
     );
+
+    long countByLangAndTypeAndSubtypeAndReviewerIsNull(String lang, String type, String subtype);
 
     // When filtering by type/subtype ORDER BY RAND() still takes a while but it is admissible
     @Query(
@@ -60,10 +64,9 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
 
     @Query(
         "SELECT articleId FROM ReplacementEntity " +
-        "WHERE articleId IN (:ids) AND lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NOT NULL"
+        "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NOT NULL"
     )
-    List<Integer> findByArticleIdInAndLangAndTypeAndSubtypeAndReviewerNotNull(
-        @Param("ids") List<Integer> articleIds,
+    List<Integer> findByLangAndTypeAndSubtypeAndReviewerNotNull(
         @Param("lang") String lang,
         @Param("type") String type,
         @Param("subtype") String subtype

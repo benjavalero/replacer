@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
+import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,16 +35,16 @@ class ArticleReviewTypeSubtypeService extends ArticleReviewService {
     }
 
     @Override
-    List<Integer> findArticleIdsToReview(ArticleReviewOptions options) {
+    PageSearchResult findPageIdsToReview(ArticleReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-        List<Integer> articleIds = replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
+        List<Integer> pageIds = replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
             options.getLang().getCode(),
             options.getType(),
             options.getSubtype(),
             pagination
         );
 
-        if (articleIds.isEmpty()) {
+        if (pageIds.isEmpty()) {
             // If finally there are no results empty the cached count for the replacement
             // No need to check if there exists something cached
             replacementCountService.removeCachedReplacementCount(
@@ -53,7 +54,12 @@ class ArticleReviewTypeSubtypeService extends ArticleReviewService {
             );
         }
 
-        return articleIds;
+        long totalResults = replacementRepository.countByLangAndTypeAndSubtypeAndReviewerIsNull(
+            options.getLang().getCode(),
+            options.getType(),
+            options.getSubtype()
+        );
+        return new PageSearchResult(totalResults, pageIds);
     }
 
     @Override

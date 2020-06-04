@@ -248,15 +248,19 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public List<Integer> getPageIdsByStringMatch(String text, int offset, int limit, WikipediaLanguage lang)
+    public PageSearchResult getPageIdsByStringMatch(String text, int offset, int limit, WikipediaLanguage lang)
         throws ReplacerException {
         LOGGER.info("START Get pages by string match: {}", text);
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
             buildPageIdsByStringMatchRequestParams(text, offset, limit),
             lang
         );
-        List<Integer> pageIds = extractPageIdsFromSearchJson(apiResponse);
-        LOGGER.info("END Get pages by string match. Items found: {}", pageIds.size());
+        PageSearchResult pageIds = extractPageIdsFromSearchJson(apiResponse);
+        LOGGER.info(
+            "END Get pages by string match. Items found: {}/{}",
+            pageIds.getPageIds().size(),
+            pageIds.getTotal()
+        );
         return pageIds;
     }
 
@@ -295,13 +299,16 @@ class WikipediaServiceImpl implements WikipediaService {
         }
     }
 
-    private List<Integer> extractPageIdsFromSearchJson(WikipediaApiResponse response) {
-        return response
-            .getQuery()
-            .getSearch()
-            .stream()
-            .map(WikipediaApiResponse.Page::getPageid)
-            .collect(Collectors.toList());
+    private PageSearchResult extractPageIdsFromSearchJson(WikipediaApiResponse response) {
+        return new PageSearchResult(
+            response.getQuery().getSearchinfo().getTotalhits(),
+            response
+                .getQuery()
+                .getSearch()
+                .stream()
+                .map(WikipediaApiResponse.Page::getPageid)
+                .collect(Collectors.toList())
+        );
     }
 
     @Override

@@ -3,25 +3,21 @@ package es.bvalero.replacer.article;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.SetValuedMap;
-import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 abstract class ArticleReviewService {
-    static final int CACHE_SIZE = 100;
-    // Cache the found articles candidates to be reviewed
+    static final int CACHE_SIZE = 100; // Maximum 500 as it is used as page size when searching in Wikipedia
+    // Cache the found pages candidates to be reviewed
     // to find faster the next one after the user reviews one
-    private final SetValuedMap<String, Integer> cachedArticleIds = new HashSetValuedHashMap<>();
+    private final Map<String, PageSearchResult> cachedPageIds = new HashMap<>();
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -65,7 +61,7 @@ abstract class ArticleReviewService {
         String key = buildReplacementCacheKey(options);
         if (cacheContainsKey(key)) {
             articleId = popArticleIdFromCache(key);
-        } else if (loadCache(key, options)) {
+        } else if (loadCache(options)) {
             articleId = popArticleIdFromCache(key);
         } else {
             articleId = Optional.empty();
@@ -78,27 +74,21 @@ abstract class ArticleReviewService {
     abstract String buildReplacementCacheKey(ArticleReviewOptions options);
 
     private boolean cacheContainsKey(String key) {
-        return cachedArticleIds.containsKey(key) && !cachedArticleIds.get(key).isEmpty();
+        return cachedPageIds.containsKey(key) && !cachedPageIds.get(key).isEmpty();
     }
 
     private Optional<Integer> popArticleIdFromCache(String key) {
-        Set<Integer> randomArticleIds = cachedArticleIds.get(key);
-        Optional<Integer> randomArticleId = randomArticleIds.stream().findFirst();
-        randomArticleId.ifPresent(id -> removeArticleFromCache(id, key));
-        return randomArticleId;
+        return cachedPageIds.get(key).popPageId();
     }
 
-    private void removeArticleFromCache(int articleId, String cacheKey) {
-        cachedArticleIds.removeMapping(cacheKey, articleId);
+    boolean loadCache(ArticleReviewOptions options) {
+        PageSearchResult pageIds = findPageIdsToReview(options);
+        String key = buildReplacementCacheKey(options);
+        cachedPageIds.put(key, pageIds);
+        return !pageIds.isEmpty();
     }
 
-    private boolean loadCache(String key, ArticleReviewOptions options) {
-        List<Integer> articleIds = findArticleIdsToReview(options);
-        cachedArticleIds.putAll(key, articleIds);
-        return !articleIds.isEmpty();
-    }
-
-    abstract List<Integer> findArticleIdsToReview(ArticleReviewOptions options);
+    abstract PageSearchResult findPageIdsToReview(ArticleReviewOptions options);
 
     Optional<ArticleReview> getArticleReview(int articleId, ArticleReviewOptions options) {
         LOGGER.info("START Build review for article: {}", articleId);
@@ -157,7 +147,7 @@ abstract class ArticleReviewService {
         if (replacements.isEmpty()) {
             return Optional.empty();
         } else {
-            ArticleReview articleReview = buildArticleReview(article, replacements);
+            ArticleReview articleReview = buildArticleReview(article, replacements, options);
 
             // Try to reduce the review size by returning just a section of the page
             Optional<ArticleReview> sectionReview = sectionReviewService.findSectionReview(articleReview);
@@ -181,10 +171,20 @@ abstract class ArticleReviewService {
 
     abstract List<Replacement> findAllReplacements(WikipediaPage article, ArticleReviewOptions options);
 
-    ArticleReview buildArticleReview(WikipediaPage article, List<Replacement> replacements) {
+    ArticleReview buildArticleReview(
+        WikipediaPage article,
+        List<Replacement> replacements,
+        ArticleReviewOptions options
+    ) {
         ArticleReview review = modelMapper.map(article, ArticleReview.class);
         review.setReplacements(replacements.stream().map(this::convertToDto).collect(Collectors.toList()));
+        review.setNumPending(findTotalResultsFromCache(options));
         return review;
+    }
+
+    private long findTotalResultsFromCache(ArticleReviewOptions options) {
+        String key = buildReplacementCacheKey(options);
+        return cachedPageIds.get(key).getTotal();
     }
 
     private ArticleReplacement convertToDto(Replacement replacement) {

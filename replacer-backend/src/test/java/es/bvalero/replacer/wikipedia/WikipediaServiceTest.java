@@ -12,7 +12,6 @@ import org.mockito.*;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class WikipediaServiceTest {
 
@@ -121,8 +120,8 @@ public class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class))).thenReturn(response);
 
-        List<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("", 0, 100, WikipediaLanguage.SPANISH);
-        Assert.assertEquals(10, pageIds.size());
+        PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch("", 0, 100, WikipediaLanguage.SPANISH);
+        Assert.assertEquals(10, pageIds.getTotal());
     }
 
     @Test
@@ -132,7 +131,7 @@ public class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class))).thenReturn(response);
 
-        List<Integer> pageIds = wikipediaService.getPageIdsByStringMatch("", 0, 100, WikipediaLanguage.SPANISH);
+        PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch("", 0, 100, WikipediaLanguage.SPANISH);
         Assert.assertTrue(pageIds.isEmpty());
     }
 

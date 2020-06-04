@@ -28,7 +28,7 @@ public interface WikipediaService {
     Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section, WikipediaLanguage lang)
         throws ReplacerException;
 
-    List<Integer> getPageIdsByStringMatch(String text, int offset, int limit, WikipediaLanguage lang)
+    PageSearchResult getPageIdsByStringMatch(String text, int offset, int limit, WikipediaLanguage lang)
         throws ReplacerException;
 
     void savePageContent(

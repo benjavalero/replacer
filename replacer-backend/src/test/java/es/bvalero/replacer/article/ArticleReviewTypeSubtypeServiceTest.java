@@ -16,7 +16,7 @@ import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 
-public class ArticleReviewTypeSubtypeServiceTest {
+class ArticleReviewTypeSubtypeServiceTest {
     private final int randomId = 1;
     private final int randomId2 = 2;
     private final String content = "XYZ";
@@ -88,7 +88,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewTypeNotFiltered() throws ReplacerException {
+    void testFindRandomArticleToReviewTypeNotFiltered() throws ReplacerException {
         // 1 result in DB
         Mockito
             .when(
@@ -122,7 +122,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewTypeFiltered() throws ReplacerException {
+    void testFindRandomArticleToReviewTypeFiltered() throws ReplacerException {
         // 1 result in DB
         Mockito
             .when(
@@ -156,7 +156,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewNoTypeAndThenFiltered() throws ReplacerException {
+    void testFindRandomArticleToReviewNoTypeAndThenFiltered() throws ReplacerException {
         // 1. Find the random article 1 by type. In DB there exists also the article 2.
         // 2. Find the random article 2 by no type. The article 2 is supposed to be removed from all the caches.
         // 3. Find a random article by type. In DB there is no article.
@@ -213,7 +213,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
     }
 
     @Test
-    public void testArticleReviewWithSection() throws ReplacerException {
+    void testArticleReviewWithSection() throws ReplacerException {
         final int sectionId = 1;
 
         // The article exists in Wikipedia
@@ -226,8 +226,11 @@ public class ArticleReviewTypeSubtypeServiceTest {
             .when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH))
             .thenReturn(replacements);
 
+        // Load the cache in order to find the total results
+        articleService.loadCache(options);
+
         // The article has sections
-        ArticleReview sectionReview = articleService.buildArticleReview(article, replacements);
+        ArticleReview sectionReview = articleService.buildArticleReview(article, replacements, options);
         sectionReview.setSection(sectionId);
         Mockito
             .when(sectionReviewService.findSectionReview(Mockito.any(ArticleReview.class)))
@@ -246,7 +249,7 @@ public class ArticleReviewTypeSubtypeServiceTest {
     }
 
     @Test
-    public void testArticleReviewWithNoSection() throws ReplacerException {
+    void testArticleReviewWithNoSection() throws ReplacerException {
         // The article exists in Wikipedia
         Mockito
             .when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH))
@@ -261,6 +264,9 @@ public class ArticleReviewTypeSubtypeServiceTest {
         Mockito
             .when(sectionReviewService.findSectionReview(Mockito.any(ArticleReview.class)))
             .thenReturn(Optional.empty());
+
+        // Load the cache in order to find the total results
+        articleService.loadCache(options);
 
         Optional<ArticleReview> review = articleService.getArticleReview(randomId, options);
 

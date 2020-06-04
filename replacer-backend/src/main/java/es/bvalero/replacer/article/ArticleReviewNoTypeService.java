@@ -4,6 +4,7 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
+import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,10 +31,16 @@ class ArticleReviewNoTypeService extends ArticleReviewService {
     }
 
     @Override
-    List<Integer> findArticleIdsToReview(ArticleReviewOptions options) {
+    PageSearchResult findPageIdsToReview(ArticleReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
         long randomStart = replacementRepository.findRandomStart(CACHE_SIZE, options.getLang().getCode());
-        return replacementRepository.findRandomArticleIdsToReview(options.getLang().getCode(), randomStart, pagination);
+        long totalResults = replacementRepository.countByLangAndReviewerIsNull(options.getLang().getCode());
+        List<Integer> pageIds = replacementRepository.findRandomArticleIdsToReview(
+            options.getLang().getCode(),
+            randomStart,
+            pagination
+        );
+        return new PageSearchResult(totalResults, pageIds);
     }
 
     @Override

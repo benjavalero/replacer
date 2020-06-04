@@ -71,7 +71,8 @@ public class ArticleControllerTest {
         Suggestion suggestion = Suggestion.of("a", "b");
         ArticleReplacement replacement = new ArticleReplacement(start, rep, Collections.singletonList(suggestion));
         List<ArticleReplacement> replacements = Collections.singletonList(replacement);
-        ArticleReview review = new ArticleReview(id, WikipediaLanguage.SPANISH, title, content, section, queryTimestamp, replacements);
+        long numPending = replacements.size();
+        ArticleReview review = new ArticleReview(id, WikipediaLanguage.SPANISH, title, content, section, queryTimestamp, replacements, numPending);
         ArticleReviewOptions options = ArticleReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
         when(articleReviewNoTypeService.findRandomArticleReview(options)).thenReturn(Optional.of(review));
 
@@ -86,7 +87,8 @@ public class ArticleControllerTest {
                 .andExpect(jsonPath("$.replacements[0].start", is(start)))
                 .andExpect(jsonPath("$.replacements[0].text", is(rep)))
                 .andExpect(jsonPath("$.replacements[0].suggestions[0].text", is("a")))
-                .andExpect(jsonPath("$.replacements[0].suggestions[0].comment", is("b")));
+                .andExpect(jsonPath("$.replacements[0].suggestions[0].comment", is("b")))
+                .andExpect(jsonPath("$.numPending", is(Long.valueOf(numPending).intValue())));
 
         verify(articleReviewNoTypeService, times(1)).findRandomArticleReview(options);
     }

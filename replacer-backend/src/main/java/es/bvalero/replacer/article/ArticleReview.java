@@ -20,4 +20,5 @@ class ArticleReview {
     private Integer section;
     private String queryTimestamp;
     private List<ArticleReplacement> replacements;
+    private long numPending;
 }
