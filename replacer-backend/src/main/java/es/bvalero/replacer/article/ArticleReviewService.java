@@ -104,13 +104,15 @@ abstract class ArticleReviewService {
         return review;
     }
 
+    abstract List<String> getIgnorableTemplates();
+
     private Optional<WikipediaPage> getArticleFromWikipedia(int articleId, ArticleReviewOptions options) {
         LOGGER.info("START Find Wikipedia article: {}", articleId);
         try {
             Optional<WikipediaPage> page = wikipediaService.getPageById(articleId, options.getLang());
             if (page.isPresent()) {
                 // Check if the article is processable
-                if (page.get().isProcessable()) {
+                if (page.get().isProcessable(getIgnorableTemplates())) {
                     LOGGER.info("END Found Wikipedia article: {} - {}", articleId, page.get().getTitle());
                     return page;
                 } else {

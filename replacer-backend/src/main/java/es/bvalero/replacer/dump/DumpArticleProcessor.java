@@ -13,6 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -40,13 +41,16 @@ public class DumpArticleProcessor implements ItemProcessor<DumpPage, List<Replac
     @Value("#{jobParameters[dumpLang]}")
     private String dumpLang;
 
+    @Resource
+    private List<String> ignorableTemplates;
+
     @Override
     public List<ReplacementEntity> process(@NotNull DumpPage dumpPage) {
         // 1. Convert to indexable article
         DumpArticle dumpArticle = mapDumpPageToDumpArticle(dumpPage);
 
         // 2. Check if it is processable
-        if (!dumpArticle.isProcessable()) {
+        if (!dumpArticle.isProcessable(ignorableTemplates)) {
             return null;
         }
 

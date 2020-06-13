@@ -1,5 +1,6 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementEntity;
@@ -9,6 +10,7 @@ import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +18,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = XmlConfiguration.class)
 public class DumpArticleProcessorTest {
+    @Resource
+    private List<String> ignorableTemplates;
+
     @Mock
     private ReplacementCache replacementCache;
 
@@ -71,9 +78,9 @@ public class DumpArticleProcessorTest {
         DumpArticle dumpAnnex = DumpArticle.builder().namespace(WikipediaNamespace.ANNEX).content("").build();
         DumpArticle dumpCategory = DumpArticle.builder().namespace(WikipediaNamespace.CATEGORY).build();
 
-        Assertions.assertTrue(dumpArticle.isProcessable());
-        Assertions.assertTrue(dumpAnnex.isProcessable());
-        Assertions.assertFalse(dumpCategory.isProcessable());
+        Assertions.assertTrue(dumpArticle.isProcessable(ignorableTemplates));
+        Assertions.assertTrue(dumpAnnex.isProcessable(ignorableTemplates));
+        Assertions.assertFalse(dumpCategory.isProcessable(ignorableTemplates));
     }
 
     @Test
@@ -84,7 +91,7 @@ public class DumpArticleProcessorTest {
             .namespace(WikipediaNamespace.ARTICLE)
             .content("#Redirect")
             .build();
-        Assertions.assertFalse(dumpArticle.isProcessable());
+        Assertions.assertFalse(dumpArticle.isProcessable(ignorableTemplates));
     }
 
     @Test

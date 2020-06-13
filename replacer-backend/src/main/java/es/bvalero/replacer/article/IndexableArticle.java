@@ -5,7 +5,6 @@ import es.bvalero.replacer.replacement.IndexableReplacement;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
 public interface IndexableArticle {
@@ -19,18 +18,17 @@ public interface IndexableArticle {
 
     LocalDate getLastUpdate();
 
-    default boolean isProcessable() {
-        return isProcessableByNamespace() && isProcessableByContent();
+    default boolean isProcessable(List<String> ignorableTemplates) {
+        return isProcessableByNamespace() && isProcessableByContent(ignorableTemplates);
     }
 
     default boolean isProcessableByNamespace() {
         return WikipediaNamespace.getProcessableNamespaces().contains(getNamespace());
     }
 
-    default boolean isProcessableByContent() {
+    default boolean isProcessableByContent(List<String> ignorableTemplates) {
         String lowerContent = getContent().toLowerCase();
-        List<String> templatesNotProcessable = Arrays.asList("#redirec", "{{destruir", "{{copyedit");
-        return templatesNotProcessable.stream().noneMatch(lowerContent::contains);
+        return ignorableTemplates.stream().noneMatch(lowerContent::contains);
     }
 
     default IndexableReplacement convertReplacementToIndexed(Replacement replacement) {

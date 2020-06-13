@@ -10,5 +10,6 @@
     <import resource="template-names.xml"/>
     <import resource="person-names.xml"/>
     <import resource="file-spaces.xml"/>
+    <import resource="ignorable-templates.xml"/>
 
 </beans>

@@ -9,6 +9,9 @@ import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +31,11 @@ class ArticleReviewTypeSubtypeService extends ArticleReviewService {
 
     @Autowired
     private ReplacementCountService replacementCountService;
+
+    @Getter
+    @Setter
+    @Resource
+    private List<String> ignorableTemplates;
 
     @Override
     String buildReplacementCacheKey(ArticleReviewOptions options) {

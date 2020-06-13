@@ -1,13 +1,21 @@
 package es.bvalero.replacer.wikipedia;
 
+import es.bvalero.replacer.XmlConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.List;
 
+@SpringBootTest(classes = XmlConfiguration.class)
 public class WikipediaPageTest {
+
+    @Resource
+    private List<String> ignorableTemplates;
 
     @Test
     public void testIsProcessableByNamespace() {
@@ -18,11 +26,11 @@ public class WikipediaPageTest {
 
     @Test
     public void testIsProcessableByContent() {
-        Assertions.assertFalse(WikipediaPage.builder().content("xxx #REDIRECCIÓN [[A]] yyy").build().isProcessableByContent());
-        Assertions.assertFalse(WikipediaPage.builder().content("xxx #redirección [[A]] yyy").build().isProcessableByContent());
-        Assertions.assertFalse(WikipediaPage.builder().content("xxx #REDIRECT [[A]] yyy").build().isProcessableByContent());
-        Assertions.assertTrue(WikipediaPage.builder().content("Otro contenido").build().isProcessableByContent());
-        Assertions.assertFalse(WikipediaPage.builder().content("xxx {{destruir|motivo}}").build().isProcessableByContent());
+        Assertions.assertFalse(WikipediaPage.builder().content("xxx #REDIRECCIÓN [[A]] yyy").build().isProcessableByContent(ignorableTemplates));
+        Assertions.assertFalse(WikipediaPage.builder().content("xxx #redirección [[A]] yyy").build().isProcessableByContent(ignorableTemplates));
+        Assertions.assertFalse(WikipediaPage.builder().content("xxx #REDIRECT [[A]] yyy").build().isProcessableByContent(ignorableTemplates));
+        Assertions.assertTrue(WikipediaPage.builder().content("Otro contenido").build().isProcessableByContent(ignorableTemplates));
+        Assertions.assertFalse(WikipediaPage.builder().content("xxx {{destruir|motivo}}").build().isProcessableByContent(ignorableTemplates));
     }
 
     @Test

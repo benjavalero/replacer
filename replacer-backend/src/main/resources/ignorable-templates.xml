@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/util
+   		   http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- Pages containing these templates should not be processed -->
+    <!-- The verification is done by a simple "contains" of the given text in lowercase -->
+    <util:list id="ignorableTemplates" value-type="java.lang.String">
+        <value>#redirec</value>
+        <value>{{destruir</value>
+        <value>{{copyedit</value>
+        <value>{{en uso</value>
+        <value>{{traducción</value>
+        <value>{{en tradución</value>
+    </util:list>
+
+</beans>
