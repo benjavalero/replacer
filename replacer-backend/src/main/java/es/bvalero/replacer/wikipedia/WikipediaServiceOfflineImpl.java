@@ -54,6 +54,7 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
         return WikipediaPage
             .builder()
             .id(pageId)
+            .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
             .title("América del Norte")
             .content(loadArticleContent("/es/bvalero/replacer/wikipedia/article-long.txt"))
