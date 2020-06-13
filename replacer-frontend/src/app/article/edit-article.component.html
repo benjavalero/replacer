@@ -1,4 +1,13 @@
 <div *ngIf="replacements.length" class="container">
+  <nav *ngIf="filteredType" aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">{{ filteredType }}</li>
+      <li class="breadcrumb-item active">{{ filteredSubtype }}
+        &nbsp;<span *ngIf="suggestion">&ndash;&nbsp;{{ suggestion }}</span>
+        &nbsp;<span class="badge badge-light"><span class="align-middle">{{ numPending }}</span></span>
+      </li>
+    </ol>
+  </nav>
 
   <h3>{{ title }}
     <a href="https://{{ lang || defaultLang }}.wikipedia.org/wiki/{{ title }}" target="_blank" class="small">[Abrir en

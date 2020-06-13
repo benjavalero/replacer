@@ -7,4 +7,5 @@ export interface ArticleReview {
   section?: number;
   queryTimestamp: string;
   replacements: ArticleReplacement[];
+  numPending: number;
 }

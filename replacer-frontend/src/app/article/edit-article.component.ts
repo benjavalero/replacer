@@ -27,6 +27,7 @@ export class EditArticleComponent implements OnInit {
   content: string;
   section: number;
   replacements: ArticleReplacement[] = [];
+  numPending: number;
   fixedCount = 0;
   currentTimestamp: string;
 
@@ -82,6 +83,7 @@ export class EditArticleComponent implements OnInit {
     this.section = review.section;
     this.currentTimestamp = review.queryTimestamp;
     this.replacements = review.replacements;
+    this.numPending = review.numPending;
   }
 
   onFixed(fixed: any) {

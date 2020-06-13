@@ -178,7 +178,7 @@ abstract class ArticleReviewService {
     ) {
         ArticleReview review = modelMapper.map(article, ArticleReview.class);
         review.setReplacements(replacements.stream().map(this::convertToDto).collect(Collectors.toList()));
-        review.setNumPending(findTotalResultsFromCache(options));
+        review.setNumPending(findTotalResultsFromCache(options) + 1); // Include the current one as pending
         return review;
     }
 
