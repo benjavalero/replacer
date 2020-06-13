@@ -20,8 +20,10 @@ import org.springframework.stereotype.Component;
 public class TemplateFinder implements ImmutableFinder {
     // The nested regex takes more but it is worth as it captures completely the templates with inner templates
     // A linear optimization, instead of regex, is too complex and it is not worth for the moment
+    @org.intellij.lang.annotations.RegExp
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+}}";
-    private static final String REGEX_NESTED = "\\{\\{<Z>*(%s)(<Z>|\n)*[|:](%s|[^}])+}}";
+    @org.intellij.lang.annotations.RegExp
+    private static final String REGEX_NESTED = "\\{\\{<Zs>*(%s)(<Zs>|<Cc>)*[|:](%s|[^}])+}}";
     private RunAutomaton automatonTemplate;
 
     @Resource

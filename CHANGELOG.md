@@ -2,6 +2,8 @@
 
 ## 2.7.0 (???)
 - Show the estimated amount of pending articles to review for the current replacement type
+- Improve list of templates whose presence makes a page not processable
+- Improve immutable finders containing tabs
 
 ## 2.6.3 (30 May 2020)
 - Add more cases to detect false positives

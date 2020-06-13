@@ -226,8 +226,6 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] Add a new option to _skip_ a page for revision for a user, but keep it available for the rest.
 - [ ] Research how to _chain_ misspelling replacements, e.g. `Master` to `Máster` to `máster`.
 - [ ] Add option to Close Session
-- [ ] Ignore pages using the templates `En uso`, `Traducción` o `En tradución`
-- [ ] Take into account whitespaces before the name of a template, e.g. `{{ cita libro`
 
 ### Docs
 - [ ] Publish the rules of BenjaBot

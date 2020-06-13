@@ -27,7 +27,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
-    private static final String REGEX_UPPERCASE_AFTER_PUNCTUATION = "[!#*|=.]<Z>*(%s)";
+    @org.intellij.lang.annotations.RegExp
+    private static final String REGEX_UPPERCASE_AFTER_PUNCTUATION = "[!#*|=.]<Zs>*(%s)";
 
     @Autowired
     private MisspellingManager misspellingManager;

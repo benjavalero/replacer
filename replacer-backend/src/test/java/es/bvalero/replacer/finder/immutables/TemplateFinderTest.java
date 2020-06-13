@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder.immutables;
 
 import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,17 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = { TemplateFinder.class, XmlConfiguration.class })
-public class TemplateFinderTest {
+class TemplateFinderTest {
     @Autowired
     private TemplateFinder templateFinder;
 
     @Test
-    public void testRegexCompleteTemplate() {
+    void testRegexCompleteTemplate() {
         String template1 = "{{Cita|Un texto con {{Fecha|2019}} dentro.}}";
         String template2 = "{{cita|Otro\ntexto}}";
         String template3 = "{{ORDENAR:Apellido, Nombre}}";
         String template4 = "{{ cita libro\n| Spaces around }}";
-        String template5 = "{{cite book | text}}";
+        String template5 = "{{cite book\t| text}}";
         String template6 = "{{Traducido ref|Text}}";
         String template7 = "{{#expr: -1/3 round 0 }}";
         String text = String.format(
