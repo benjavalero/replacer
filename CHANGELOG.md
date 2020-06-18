@@ -1,6 +1,6 @@
 # Versions
 
-## 2.7.0 (18 Jun 2020)
+## 2.6.4 (18 Jun 2020)
 - Show the estimated amount of pending articles to review for the current replacement type
 - Improve list of templates whose presence makes a page not processable
 - Improve immutable finders containing tabs
