@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../authentication/authentication.service';
 import { WikipediaUser, Language } from '../authentication/wikipedia-user.model';
@@ -13,7 +14,7 @@ export class HeaderComponent implements OnInit {
   user: WikipediaUser;
   defaultLang = Language.es;
 
-  constructor(private authenticationService: AuthenticationService) { }
+  constructor(private authenticationService: AuthenticationService, private router: Router) { }
 
   ngOnInit() {
     if (this.authenticationService.user) {
@@ -31,5 +32,11 @@ export class HeaderComponent implements OnInit {
     if (lang) {
       this.authenticationService.lang = language;
     }
+  }
+
+  onCloseSession() {
+      // Clear session and reload the page
+      this.authenticationService.clearSession();
+      this.router.navigate(['']);
   }
 }

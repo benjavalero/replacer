@@ -213,7 +213,6 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] Check if it is worth to store the replacement type as an enumerate
 - [ ] Research if it is possible to deploy independently the frontend and the backend in ToolLabs
 - [ ] Adapt all unit tests to JUnit5
-- [ ] Replace completely JPA with SpringJDBC
 - [ ] Use Flyway in order to execute DB scripts more easily in the future
 - [ ] Review in the bot, in case they exist, possible cases of the template `dts` or `date_table_sorting` with English format, as this template also exists in Spanish. See <https://en.wikipedia.org/wiki/Template:Date_table_sorting>, <https://es.wikipedia.org/wiki/Plantilla:Dts>, <https://es.wikipedia.org/w/index.php?title=Compile_Heart&diff=prev&oldid=122078489>.
 - [ ] Make the tool more general in order to find replacements in other wiki-projects
@@ -225,7 +224,7 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] Research option "srsort" when search directly in Wikipedia to try not to skip results on custom replacement when paginating
 - [ ] Add a new option to _skip_ a page for revision for a user, but keep it available for the rest.
 - [ ] Research how to _chain_ misspelling replacements, e.g. `Master` to `Máster` to `máster`.
-- [ ] Add option to Close Session
+- [ ] New feature to review a specific page
 
 ### Docs
 - [ ] Publish the rules of BenjaBot
@@ -234,4 +233,4 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] The TypeScript code should be formatted with Prettier too
 - [ ] The Java code has been migrated Java 11. The only issue is the tests with @DataJpaTest so they have been disabled, but it seems a problem of Spring/JDK itself, so it is not worth to investigate more.
 - [ ] Add Swagger for the API
-- [ ] Propose a standar format for the misspelling descriptions in Wikipedia list
+- [ ] Propose a standard format for the misspelling descriptions in Wikipedia list
