@@ -32,9 +32,11 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
     )
     long findRandomStart(@Param("chunkSize") long chunkSize, @Param("lang") String lang);
 
+    // Not worth to DISTINCT. Besides the count in case of no type is not displayed so far.
     long countByLangAndReviewerIsNull(String lang);
 
     // ORDER BY RAND() takes a lot when not filtering by type/subtype even using an index
+    // Not worth to DISTINCT as we add the results as a set later
     @Query(
         "SELECT articleId " +
         "FROM ReplacementEntity " +
@@ -47,9 +49,18 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
         Pageable pageable
     );
 
-    long countByLangAndTypeAndSubtypeAndReviewerIsNull(String lang, String type, String subtype);
+    @Query(
+        "SELECT COUNT (DISTINCT articleId) FROM ReplacementEntity " +
+        "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL"
+    )
+    long countByLangAndTypeAndSubtypeAndReviewerIsNull(
+        @Param("lang") String lang,
+        @Param("type") String type,
+        @Param("subtype") String subtype
+    );
 
     // When filtering by type/subtype ORDER BY RAND() still takes a while but it is admissible
+    // Not worth to DISTINCT as we add the results as a set later
     @Query(
         "SELECT articleId FROM ReplacementEntity " +
         "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL " +
