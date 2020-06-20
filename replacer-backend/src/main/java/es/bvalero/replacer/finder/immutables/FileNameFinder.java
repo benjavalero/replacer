@@ -78,7 +78,7 @@ public class FileNameFinder implements ImmutableFinder {
                 // Not a file but a hyperlink
                 return -1;
             } else if (ch == ':') {
-                String prefix = prefixBuilder.toString();
+                String prefix = FinderUtils.setFirstUpperCase(prefixBuilder.toString());
                 return fileSpaces.contains(prefix) && (i + 1 < text.length()) ? i + 1 : -1;
             } else {
                 prefixBuilder.append(ch);

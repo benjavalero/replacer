@@ -13,21 +13,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = { FileNameFinder.class, XmlConfiguration.class })
-public class FileNameFinderTest {
+class FileNameFinderTest {
     @Autowired
     private FileNameFinder fileNameFinder;
 
     @Test
-    public void testFileName() {
+    void testFileName() {
         String filename1 = " xx.jpg ";
-        String file1 = String.format("[[Archivo:%s|thumb|Description]]", filename1);
+        String file = String.format("[[Archivo:%s|thumb|Description]]", filename1);
         String filename2 = "a b.png";
-        String file2 = String.format("[[Imagen:%s]]", filename2);
-        String text = String.format("%s %s", file1, file2);
+        String image = String.format("[[Imagen:%s]]", filename2);
+        String filename3 = "Z.JPEG";
+        String fileLowercase = String.format("[[archivo:%s]]", filename3);
+        String text = String.format("%s %s %s", file, image, fileLowercase);
 
         List<Immutable> matches = fileNameFinder.findList(text);
 
-        Set<String> expected = new HashSet<>(Arrays.asList(filename1, filename2));
+        Set<String> expected = new HashSet<>(Arrays.asList(filename1, filename2, filename3));
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assertions.assertEquals(expected, actual);
     }

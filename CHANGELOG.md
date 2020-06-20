@@ -1,5 +1,8 @@
 # Versions
 
+## 2.6.6 (???)
+- Improve capture of file names
+
 ## 2.6.5 (20 Jun 2020)
 - Fix issue on estimation of pending articles to review
 
