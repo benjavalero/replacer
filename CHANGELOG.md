@@ -1,5 +1,8 @@
 # Versions
 
+## 2.6.5 (20 Jun 2020)
+- Fix issue on estimation of pending articles to review
+
 ## 2.6.4 (18 Jun 2020)
 - Show the estimated amount of pending articles to review for the current replacement type
 - Improve list of templates whose presence makes a page not processable
