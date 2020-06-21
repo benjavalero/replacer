@@ -7,11 +7,11 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class LeadingZeroFinderTest {
+class LeadingZeroFinderTest {
     private final LeadingZeroFinder leadingZeroFinder = new LeadingZeroFinder();
 
     @Test
-    public void testOneDigitDay() {
+    void testOneDigitDay() {
         String date = "7 de Agosto de 2019";
         String text = String.format("En %s.", date);
 
@@ -21,7 +21,7 @@ public class LeadingZeroFinderTest {
     }
 
     @Test
-    public void testLeadingZeroDayUppercaseMonth() {
+    void testLeadingZeroDayUppercaseMonth() {
         String date = "07 de Agosto de 2019";
         String text = String.format("En %s.", date);
 
@@ -33,7 +33,7 @@ public class LeadingZeroFinderTest {
     }
 
     @Test
-    public void testLeadingZeroDayLowercaseMonth() {
+    void testLeadingZeroDayLowercaseMonth() {
         String date = "07 de setiembre de 2019";
         String text = String.format("En %s.", date);
 
@@ -45,7 +45,7 @@ public class LeadingZeroFinderTest {
     }
 
     @Test
-    public void testDel() {
+    void testDel() {
         String date = "07 De Agosto Del 2019";
         String expected = "7 de agosto de 2019";
         String text = String.format("En %s.", date);

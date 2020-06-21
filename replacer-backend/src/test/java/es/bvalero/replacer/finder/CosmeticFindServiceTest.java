@@ -3,29 +3,29 @@ package es.bvalero.replacer.finder;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class CosmeticFindServiceTest {
+class CosmeticFindServiceTest {
     @Mock
     private List<CosmeticFinder> cosmeticFinders;
 
     @InjectMocks
     private CosmeticFindService cosmeticFindService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         cosmeticFindService = new CosmeticFindService();
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void testApplyCosmeticChanges() {
+    void testApplyCosmeticChanges() {
         Cosmetic cosmetic = Cosmetic.of(2, "[[Link|link]]", "[[link]]");
         CosmeticFinder finder = Mockito.mock(CosmeticFinder.class);
         Mockito.when(finder.findStream(Mockito.anyString())).thenReturn(Stream.of(cosmetic));
@@ -33,6 +33,6 @@ public class CosmeticFindServiceTest {
 
         String text = "A [[Link|link]] to simplify.";
         String expected = "A [[link]] to simplify.";
-        Assert.assertEquals(expected, cosmeticFindService.applyCosmeticChanges(text));
+        Assertions.assertEquals(expected, cosmeticFindService.applyCosmeticChanges(text));
     }
 }

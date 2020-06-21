@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class FalsePositiveFinderTest {
+class FalsePositiveFinderTest {
     private static final SetValuedMap<WikipediaLanguage, String> EMPTY_MAP = new HashSetValuedHashMap<>();
 
     private FalsePositiveFinder falsePositiveFinder;
@@ -21,7 +21,7 @@ public class FalsePositiveFinderTest {
     }
 
     @Test
-    public void testRegexFalsePositives() {
+    void testRegexFalsePositives() {
         String text = "Un sólo de éstos en el Index Online.";
         Set<String> falsePositives = new HashSet<>(Arrays.asList("sólo", "ést?[aeo]s?", "Index", "online"));
         SetValuedMap<WikipediaLanguage, String> map = new HashSetValuedHashMap<>();
@@ -41,7 +41,7 @@ public class FalsePositiveFinderTest {
     }
 
     @Test
-    public void testNestedFalsePositives() {
+    void testNestedFalsePositives() {
         String text1 = "A Top Album Chart.";
         Set<String> falsePositives = new HashSet<>(Arrays.asList("Top Album", "Album Chart"));
         SetValuedMap<WikipediaLanguage, String> map = new HashSetValuedHashMap<>();
@@ -68,7 +68,7 @@ public class FalsePositiveFinderTest {
     }
 
     @Test
-    public void testFalsePositivesListEmpty() {
+    void testFalsePositivesListEmpty() {
         // Fake the update of the list in the manager
         falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, EMPTY_MAP));
 
@@ -76,7 +76,7 @@ public class FalsePositiveFinderTest {
     }
 
     @Test
-    public void testFalsePositiveLowerCase() {
+    void testFalsePositiveLowerCase() {
         String text = "A Test test.";
         Set<String> falsePositives = new HashSet<>(Collections.singletonList("test"));
         SetValuedMap<WikipediaLanguage, String> map = new HashSetValuedHashMap<>();
@@ -94,7 +94,7 @@ public class FalsePositiveFinderTest {
     }
 
     @Test
-    public void testFalsePositiveUpperCase() {
+    void testFalsePositiveUpperCase() {
         String text = "A Test test.";
         Set<String> falsePositives = new HashSet<>(Collections.singletonList("Test"));
         SetValuedMap<WikipediaLanguage, String> map = new HashSetValuedHashMap<>();
@@ -111,7 +111,7 @@ public class FalsePositiveFinderTest {
     }
 
     @Test
-    public void testFalsePositiveRegex() {
+    void testFalsePositiveRegex() {
         String text = "A sample text.";
         Set<String> falsePositives = new HashSet<>(Collections.singletonList("(sample|text)"));
         SetValuedMap<WikipediaLanguage, String> map = new HashSetValuedHashMap<>();

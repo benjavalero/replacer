@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.List;
 
+// TODO: Adapt to Junit5
 @Ignore
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {WikipediaServiceImpl.class, WikipediaRequestService.class, WikipediaConfig.class},
@@ -24,7 +25,7 @@ public class WikipediaServiceIT {
     private WikipediaServiceImpl wikipediaService;
 
     @Test
-    public void testGetPageContent() throws ReplacerException {
+    void testGetPageContent() throws ReplacerException {
         String title = "Usuario:Benjavalero";
         WikipediaPage page = wikipediaService.getPageByTitle(title, WikipediaLanguage.SPANISH)
                 .orElseThrow(ReplacerException::new);
@@ -37,7 +38,7 @@ public class WikipediaServiceIT {
     }
 
     @Test
-    public void testGetPagesContent() throws ReplacerException {
+    void testGetPagesContent() throws ReplacerException {
         // We pass a null access token to retrieve an anonymous edit token
         List<WikipediaPage> pages = wikipediaService.getPagesByIds(Arrays.asList(6219990, 6903884), WikipediaLanguage.SPANISH);
         Assert.assertNotNull(pages);
@@ -49,12 +50,12 @@ public class WikipediaServiceIT {
     }
 
     @Test
-    public void testGetPageContentUnavailable() throws ReplacerException {
+    void testGetPageContentUnavailable() throws ReplacerException {
         Assert.assertFalse(wikipediaService.getPageByTitle("Usuario:Benjavaleroxx", WikipediaLanguage.SPANISH).isPresent());
     }
 
     @Test
-    public void testGetEditToken() throws ReplacerException {
+    void testGetEditToken() throws ReplacerException {
         // We pass a null access token to retrieve an anonymous edit token
         EditToken editToken = wikipediaService.getEditToken(6903884, WikipediaLanguage.SPANISH, new OAuth1AccessToken("", ""));
         Assert.assertNotNull(editToken);
@@ -63,7 +64,7 @@ public class WikipediaServiceIT {
     }
 
     @Test(expected = ReplacerException.class)
-    public void testSavePageWithConflicts() throws ReplacerException {
+    void testSavePageWithConflicts() throws ReplacerException {
         WikipediaPage page = wikipediaService.getPageByTitle("Wikipedia:Zona de pruebas/5", WikipediaLanguage.SPANISH)
                 .orElseThrow(ReplacerException::new);
 

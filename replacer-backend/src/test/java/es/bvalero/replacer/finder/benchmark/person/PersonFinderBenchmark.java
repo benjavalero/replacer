@@ -21,7 +21,7 @@ public class PersonFinderBenchmark extends BaseFinderBenchmark {
     private Set<String> personNames;
 
     @Test
-    public void testBenchmark() throws IOException, URISyntaxException {
+    void testBenchmark() throws IOException, URISyntaxException {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new PersonIndexOfFinder(personNames));

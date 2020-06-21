@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class CursiveFinderTest {
+class CursiveFinderTest {
 
     @Test
-    public void testCursiveSimple() {
+    void testCursiveSimple() {
         String cursive = "''cursive''";
         String text = String.format("A %s.", cursive);
 
@@ -25,7 +25,7 @@ public class CursiveFinderTest {
     }
 
     @Test
-    public void testCursiveSimpleFinishing() {
+    void testCursiveSimpleFinishing() {
         String cursive = "''cursive''";
         String text = String.format("%s", cursive);
 
@@ -37,7 +37,7 @@ public class CursiveFinderTest {
     }
 
     @Test
-    public void testCursiveDouble() {
+    void testCursiveDouble() {
         String cursive1 = "''cursive1''";
         String cursive2 = "''cursive2''";
         String text = String.format("A %s and %s.", cursive1, cursive2);
@@ -51,7 +51,7 @@ public class CursiveFinderTest {
     }
 
     @Test
-    public void testCursiveTruncated() {
+    void testCursiveTruncated() {
         String cursive1 = "''cursive1";
         String cursive2 = "''cursive2''";
         String text = String.format("A %s\n and %s.", cursive1, cursive2);
@@ -65,7 +65,7 @@ public class CursiveFinderTest {
     }
 
     @Test
-    public void testBoldSimple() {
+    void testBoldSimple() {
         String bold = "'''bold'''";
         String text = String.format("A %s.", bold);
 
@@ -77,7 +77,7 @@ public class CursiveFinderTest {
     }
 
     @Test
-    public void testBoldDouble() {
+    void testBoldDouble() {
         String bold1 = "'''bold1'''";
         String bold2 = "'''bold2'''";
         String text = String.format("A %s and %s.", bold1, bold2);
@@ -91,7 +91,7 @@ public class CursiveFinderTest {
     }
 
     @Test
-    public void testBoldTruncated() {
+    void testBoldTruncated() {
         String bold1 = "'''bold";
         String bold2 = "'''bold'''";
         String text = String.format("A %s\n and %s.", bold1, bold2);
@@ -105,7 +105,7 @@ public class CursiveFinderTest {
     }
 
     @Test
-    public void testCursiveWithQuote() {
+    void testCursiveWithQuote() {
         // We need to capture more than one character after the inner quote
         String cursive = "''Beefeater's cool''";
         String text = String.format("A %s.", cursive);
@@ -118,7 +118,7 @@ public class CursiveFinderTest {
     }
 
     @Test
-    public void testCursiveWithNestedQuotes() {
+    void testCursiveWithNestedQuotes() {
         String cursive =
             "La leyenda: ''Y \"será más terrorífica que 'La Mujer de Judas'\"''. La producción será ''[[Almas en Pena]]''.";
         String text = String.format("A %s.", cursive);
@@ -130,7 +130,7 @@ public class CursiveFinderTest {
     }
 
     @Test
-    public void testCursiveWithBold() {
+    void testCursiveWithBold() {
         String cursive = "''A '''Game''' of Thrones''";
         String text = String.format("A %s.", cursive);
 
@@ -142,7 +142,7 @@ public class CursiveFinderTest {
     }
 
     @Test
-    public void testCursiveWithOneCharacter() {
+    void testCursiveWithOneCharacter() {
         // We need to capture more than one character between the quotes
         String cursive = "''B''";
         String text = String.format("A %s.", cursive);
@@ -155,7 +155,7 @@ public class CursiveFinderTest {
     }
 
     @Test
-    public void testCursiveWithTwoCharacters() {
+    void testCursiveWithTwoCharacters() {
         String cursive = "''Be''";
         String text = String.format("A %s.", cursive);
 

@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class TemplateNameFinderTest {
+class TemplateNameFinderTest {
 
     @Test
-    public void testRegexTemplateName() {
+    void testRegexTemplateName() {
         String template1 = " Plantilla 1\n";
         String template2 = "Plantilla\n 2";
         String template3 = "Plantilla-3";

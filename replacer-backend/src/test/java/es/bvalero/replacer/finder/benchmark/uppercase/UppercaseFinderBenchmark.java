@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 public class UppercaseFinderBenchmark extends BaseFinderBenchmark {
 
     @Test
-    public void testBenchmark() throws IOException, URISyntaxException, ReplacerException {
+    void testBenchmark() throws IOException, URISyntaxException, ReplacerException {
         WikipediaService wikipediaService = new WikipediaServiceOfflineImpl();
         String text = wikipediaService.getMisspellingListPageContent(WikipediaLanguage.SPANISH);
 

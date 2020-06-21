@@ -10,18 +10,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class MisspellingSimpleFinderTest {
+class MisspellingSimpleFinderTest {
     private static final SetValuedMap<WikipediaLanguage, Misspelling> EMPTY_MAP = new HashSetValuedHashMap<>();
 
     private MisspellingSimpleFinder misspellingFinder;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         misspellingFinder = new MisspellingSimpleFinder();
     }
 
     @Test
-    public void testFindMisspellingsNoResults() {
+    void testFindMisspellingsNoResults() {
         String text = "Sample text";
         Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "b");
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
@@ -38,7 +38,7 @@ public class MisspellingSimpleFinderTest {
     }
 
     @Test
-    public void testFindMisspellingsWithResults() {
+    void testFindMisspellingsWithResults() {
         String text = "sample text.";
         Misspelling misspelling1 = Misspelling.ofCaseInsensitive("sample", "ejemplo");
         Misspelling misspelling2 = Misspelling.ofCaseInsensitive("text", "texto");
@@ -66,7 +66,7 @@ public class MisspellingSimpleFinderTest {
     }
 
     @Test
-    public void testFindMisspellingsWithResultCaseInsensitive() {
+    void testFindMisspellingsWithResultCaseInsensitive() {
         String text = "Sample Text";
         Misspelling misspelling = Misspelling.ofCaseInsensitive("text", "texto");
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
@@ -86,7 +86,7 @@ public class MisspellingSimpleFinderTest {
     }
 
     @Test
-    public void testFindMisspellingsWithResultCaseSensitive() {
+    void testFindMisspellingsWithResultCaseSensitive() {
         String text = "text Text";
         Misspelling misspelling = Misspelling.of("text", true, "texto");
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
@@ -107,7 +107,7 @@ public class MisspellingSimpleFinderTest {
     }
 
     @Test
-    public void testFindMisspellingsWithCompleteWord() {
+    void testFindMisspellingsWithCompleteWord() {
         String text = "Texto Text";
         Misspelling misspelling = Misspelling.ofCaseInsensitive("text", "texto");
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
@@ -128,7 +128,7 @@ public class MisspellingSimpleFinderTest {
     }
 
     @Test
-    public void testFindMisspellingsWithUppercase() {
+    void testFindMisspellingsWithUppercase() {
         String text = "SAMPLE TEXT";
         Misspelling misspelling1 = Misspelling.of("SAMPLE", true, "sample");
         Misspelling misspelling2 = Misspelling.of("text", false, "texto");
@@ -150,7 +150,7 @@ public class MisspellingSimpleFinderTest {
     }
 
     @Test
-    public void testFindMisspellingsBetweenUnderscores() {
+    void testFindMisspellingsBetweenUnderscores() {
         String text = "A _Text Text_ _Text_ Text.";
         Misspelling misspelling = Misspelling.ofCaseInsensitive("text", "texto");
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
@@ -171,7 +171,7 @@ public class MisspellingSimpleFinderTest {
     }
 
     @Test
-    public void testFindMisspellingSuggestion() {
+    void testFindMisspellingSuggestion() {
         // lowercase -> uppercase: españa -> España
         // uppercase -> lowercase: Domingo -> domingo
         // lowercase -> lowercase: aguila -> águila
@@ -197,7 +197,7 @@ public class MisspellingSimpleFinderTest {
     }
 
     @Test
-    public void testFindMisspellingSuggestionSameWordFirst() {
+    void testFindMisspellingSuggestionSameWordFirst() {
         String word = "entreno";
         String comment = "entrenó (verbo), entreno (sustantivo)";
         Misspelling misspelling = Misspelling.ofCaseInsensitive(word, comment);
@@ -220,7 +220,7 @@ public class MisspellingSimpleFinderTest {
     }
 
     @Test
-    public void testMisspellingListEmpty() {
+    void testMisspellingListEmpty() {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, EMPTY_MAP));
 

@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class SameLinkFinderTest {
+class SameLinkFinderTest {
 
     @Test
-    public void testSameLinkFinder() {
+    void testSameLinkFinder() {
         String link1 = "[[test|test]]";
         String link2 = "[[Test|test]]";
         String link3 = "[[test|Test]]";

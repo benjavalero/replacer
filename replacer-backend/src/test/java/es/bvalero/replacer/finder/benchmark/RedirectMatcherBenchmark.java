@@ -10,11 +10,12 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 
+// TODO: Adapt to Junit5
 public class RedirectMatcherBenchmark extends BaseFinderBenchmark {
     private static final int ITERATIONS = 1000;
 
     @Test
-    public void testRedirectMatcherBenchmark() throws IOException, URISyntaxException {
+    void testRedirectMatcherBenchmark() throws IOException, URISyntaxException {
         // Load the matchers
         List<RedirectAbstractMatcher> matchers = new ArrayList<>();
         matchers.add(new RedirectLowercaseContainsMatcher()); // WINNER

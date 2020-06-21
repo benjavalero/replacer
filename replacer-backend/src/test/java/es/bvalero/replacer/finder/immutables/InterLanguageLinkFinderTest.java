@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class InterLanguageLinkFinderTest {
+class InterLanguageLinkFinderTest {
 
     @Test
-    public void testRegexInterLanguageLink() {
+    void testRegexInterLanguageLink() {
         String link1 = "[[:pt:Title]]";
         String link2 = "[[:en:Title|Alias]]";
         String link3 = "[[Text]]";

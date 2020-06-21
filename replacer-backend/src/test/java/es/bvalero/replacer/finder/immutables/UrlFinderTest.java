@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class UrlFinderTest {
+class UrlFinderTest {
 
     @Test
-    public void testRegexUrl() {
+    void testRegexUrl() {
         String url1 = "https://google.es?u=aj&t2+rl=http://www.marca.com#!page~2,3";
         String url2 = "http://www.marca.com";
         String text = String.format("[%s Google] [%s Marca]", url1, url2);

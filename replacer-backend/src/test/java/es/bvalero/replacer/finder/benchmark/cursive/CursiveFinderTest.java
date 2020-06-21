@@ -30,37 +30,37 @@ public class CursiveFinderTest {
     }
 
     @Test
-    public void testCursiveRegexDotLazyFinder() {
+    void testCursiveRegexDotLazyFinder() {
         CursiveRegexDotLazyFinder finder = new CursiveRegexDotLazyFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testCursiveRegexFinder() {
+    void testCursiveRegexFinder() {
         CursiveRegexFinder finder = new CursiveRegexFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testCursiveRegexDotAllLookFinder() {
+    void testCursiveRegexDotAllLookFinder() {
         CursiveRegexDotAllLookFinder finder = new CursiveRegexDotAllLookFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testCursiveRegexLookFinder() {
+    void testCursiveRegexLookFinder() {
         CursiveRegexLookFinder finder = new CursiveRegexLookFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testCursiveAutomatonFinder() {
+    void testCursiveAutomatonFinder() {
         CursiveAutomatonFinder finder = new CursiveAutomatonFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testCursiveLinearFinder() {
+    void testCursiveLinearFinder() {
         CursiveLinearFinder finder = new CursiveLinearFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }

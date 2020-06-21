@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+// TODO: Adapt to Junit5
 public class CategoryFinderTest {
     private String text;
     private Set<FinderResult> expected;
@@ -25,19 +26,19 @@ public class CategoryFinderTest {
     }
 
     @Test
-    public void testCategoryRegexFinder() {
+    void testCategoryRegexFinder() {
         CategoryRegexFinder finder = new CategoryRegexFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testCategoryAutomatonFinder() {
+    void testCategoryAutomatonFinder() {
         CategoryAutomatonFinder finder = new CategoryAutomatonFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testCategoryLinearFinder() {
+    void testCategoryLinearFinder() {
         CategoryLinearFinder finder = new CategoryLinearFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }

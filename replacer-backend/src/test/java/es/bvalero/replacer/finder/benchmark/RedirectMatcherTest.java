@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+// TODO: Adapt to Junit5
 public class RedirectMatcherTest {
     private String text;
 
@@ -13,19 +14,19 @@ public class RedirectMatcherTest {
     }
 
     @Test
-    public void testRedirectLowercaseContainsMatcher() {
+    void testRedirectLowercaseContainsMatcher() {
         RedirectLowercaseContainsMatcher matcher = new RedirectLowercaseContainsMatcher();
         Assert.assertTrue(matcher.isRedirect(text));
     }
 
     @Test
-    public void testRedirectContainsIgnoreCaseMatcher() {
+    void testRedirectContainsIgnoreCaseMatcher() {
         RedirectContainsIgnoreCaseMatcher matcher = new RedirectContainsIgnoreCaseMatcher();
         Assert.assertTrue(matcher.isRedirect(text));
     }
 
     @Test
-    public void testRedirectRegexInsensitiveMatcher() {
+    void testRedirectRegexInsensitiveMatcher() {
         RedirectRegexInsensitiveMatcher matcher = new RedirectRegexInsensitiveMatcher();
         Assert.assertTrue(matcher.isRedirect(text));
     }

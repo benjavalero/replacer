@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class LinkAliasedFinderTest {
+class LinkAliasedFinderTest {
 
     @Test
-    public void testRegexUrl() {
+    void testRegexUrl() {
         String aliased1 = "brasil";
         String aliased2 = " reacción química ";
         String noAliased = "Text";

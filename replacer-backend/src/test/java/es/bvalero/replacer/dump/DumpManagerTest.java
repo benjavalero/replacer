@@ -2,8 +2,6 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,15 +19,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.JobOperator;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
-import org.springframework.batch.core.repository.JobRestartException;
 
-public class DumpManagerTest {
+class DumpManagerTest {
     @Mock
     public DumpFinder dumpFinder;
 
@@ -55,8 +49,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testParseDumpFile()
-        throws URISyntaxException, ReplacerException, JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+    void testParseDumpFile() throws Exception {
         // We need a real dump file to create the input stream
         Path dumpFile = Paths.get(
             getClass()
@@ -72,8 +65,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileWithException()
-        throws ReplacerException, JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+    void testProcessLatestDumpFileWithException() throws Exception {
         Mockito
             .when(dumpFinder.findLatestDumpFile(Mockito.any(WikipediaLanguage.class)))
             .thenThrow(ReplacerException.class);
@@ -84,8 +76,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessLatestDumpFileAlreadyRunning()
-        throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+    void testProcessLatestDumpFileAlreadyRunning() throws Exception {
         Mockito
             .when(jobExplorer.findRunningJobExecutions(Mockito.anyString()))
             .thenReturn(Collections.singleton(Mockito.mock(JobExecution.class)));
@@ -96,8 +87,7 @@ public class DumpManagerTest {
     }
 
     @Test
-    public void testProcessDumpScheduled()
-        throws URISyntaxException, IOException, ReplacerException, JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+    void testProcessDumpScheduled() throws Exception {
         Path dumpFile = Paths.get(
             getClass()
                 .getResource("/es/bvalero/replacer/dump/eswiki/20170101/eswiki-20170101-pages-articles.xml.bz2")

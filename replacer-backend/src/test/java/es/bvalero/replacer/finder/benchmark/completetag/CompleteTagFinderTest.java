@@ -35,7 +35,7 @@ public class CompleteTagFinderTest {
     }
 
     @Test
-    public void testCompleteTagRegexIteratedFinder() {
+    void testCompleteTagRegexIteratedFinder() {
         BenchmarkFinder finder = new CompleteTagRegexIteratedFinder(completeTags);
         Assertions.assertEquals(
             expected,
@@ -44,7 +44,7 @@ public class CompleteTagFinderTest {
     }
 
     @Test
-    public void testCompleteTagRegexBackReferenceFinder() {
+    void testCompleteTagRegexBackReferenceFinder() {
         BenchmarkFinder finder = new CompleteTagRegexBackReferenceFinder(completeTags);
         Assertions.assertEquals(
             expected,
@@ -53,7 +53,7 @@ public class CompleteTagFinderTest {
     }
 
     @Test
-    public void testCompleteTagLinearIteratedFinder() {
+    void testCompleteTagLinearIteratedFinder() {
         BenchmarkFinder finder = new CompleteTagLinearIteratedFinder(completeTags);
         Assertions.assertEquals(
             expected,
@@ -62,7 +62,7 @@ public class CompleteTagFinderTest {
     }
 
     @Test
-    public void testCompleteTagLinearFinder() {
+    void testCompleteTagLinearFinder() {
         BenchmarkFinder finder = new CompleteTagLinearFinder(completeTags);
         Assertions.assertEquals(
             expected,

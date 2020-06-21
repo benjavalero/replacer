@@ -21,7 +21,7 @@ public class CompleteTagFinderBenchmark extends BaseFinderBenchmark {
     private Set<String> completeTags;
 
     @Test
-    public void testBenchmark() throws IOException, URISyntaxException {
+    void testBenchmark() throws IOException, URISyntaxException {
         // Load the finders
         // In order to capture nested tags we can only use lazy regex
         List<BenchmarkFinder> finders = new ArrayList<>();

@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class QuotesAngularFinderTest {
+class QuotesAngularFinderTest {
 
     @Test
-    public void testRegexQuotesAngular() {
+    void testRegexQuotesAngular() {
         String quotes1 = "«yáy»";
         String quotes2 = "«z, zz»";
         String quotes3 = "«z\nz»";

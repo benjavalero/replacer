@@ -13,12 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = { CompleteTagFinder.class, XmlConfiguration.class })
-public class CompleteTagFinderTest {
+class CompleteTagFinderTest {
     @Autowired
     private CompleteTagFinder completeTagFinder;
 
     @Test
-    public void testRegexCompleteTag() {
+    void testRegexCompleteTag() {
         String tag1 = "<math class=\"latex\">An <i>example</i>\n in LaTeX</math>";
         String tag2 = "<math>To test repeated tags</math>";
         String tag3 = "<source>Another example</source>";

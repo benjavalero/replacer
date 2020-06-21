@@ -21,7 +21,7 @@ public class TemplateFinderBenchmark extends BaseFinderBenchmark {
     private List<String> templateNames;
 
     @Test
-    public void testBenchmark() throws IOException, URISyntaxException {
+    void testBenchmark() throws IOException, URISyntaxException {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new TemplateRegexIteratedFinder(templateNames));

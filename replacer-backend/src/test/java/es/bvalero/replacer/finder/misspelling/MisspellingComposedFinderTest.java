@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class MisspellingComposedFinderTest {
+class MisspellingComposedFinderTest {
     private static final SetValuedMap<WikipediaLanguage, Misspelling> EMPTY_MAP = new HashSetValuedHashMap<>();
 
     private MisspellingComposedFinder misspellingComposedFinder;
@@ -24,7 +24,7 @@ public class MisspellingComposedFinderTest {
     }
 
     @Test
-    public void testFindComposedMisspelling() {
+    void testFindComposedMisspelling() {
         String text = "Y aún así vino.";
         Misspelling simple = Misspelling.ofCaseInsensitive("aún", "aun");
         Misspelling composed = Misspelling.ofCaseInsensitive("aún así", "aun así");
@@ -47,7 +47,7 @@ public class MisspellingComposedFinderTest {
     }
 
     @Test
-    public void testComposedMisspellingListEmpty() {
+    void testComposedMisspellingListEmpty() {
         // Fake the update of the misspelling list in the misspelling manager
         misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, EMPTY_MAP));
 

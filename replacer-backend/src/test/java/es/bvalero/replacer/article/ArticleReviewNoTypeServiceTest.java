@@ -83,7 +83,7 @@ public class ArticleReviewNoTypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewNoTypeNoResultInDb() {
+    void testFindRandomArticleToReviewNoTypeNoResultInDb() {
         // No results in DB
         Mockito
             .when(
@@ -101,7 +101,7 @@ public class ArticleReviewNoTypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewNoTypeNotInWikipedia() throws ReplacerException {
+    void testFindRandomArticleToReviewNoTypeNotInWikipedia() throws ReplacerException {
         // 1 result in DB
         Mockito
             .when(
@@ -123,7 +123,7 @@ public class ArticleReviewNoTypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewNoTypeWithReplacements() throws ReplacerException {
+    void testFindRandomArticleToReviewNoTypeWithReplacements() throws ReplacerException {
         // 1 result in DB
         Mockito
             .when(
@@ -156,7 +156,7 @@ public class ArticleReviewNoTypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewNoTypeNoReplacements() throws ReplacerException {
+    void testFindRandomArticleToReviewNoTypeNoReplacements() throws ReplacerException {
         // 1 result in DB
         Mockito
             .when(
@@ -190,7 +190,7 @@ public class ArticleReviewNoTypeServiceTest {
     }
 
     @Test
-    public void testFindRandomArticleToReviewNoTypeSecondResult() throws ReplacerException {
+    void testFindRandomArticleToReviewNoTypeSecondResult() throws ReplacerException {
         // 2 results in DB
         Mockito
             .when(

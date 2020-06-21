@@ -27,43 +27,43 @@ public class UppercaseFinderTest {
     }
 
     @Test
-    public void testUppercaseIndexOfFinder() {
+    void testUppercaseIndexOfFinder() {
         UppercaseIndexOfFinder finder = new UppercaseIndexOfFinder(words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testUppercaseRegexIterateFinder() {
+    void testUppercaseRegexIterateFinder() {
         UppercaseRegexIterateFinder finder = new UppercaseRegexIterateFinder(words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testUppercaseAutomatonIterateFinder() {
+    void testUppercaseAutomatonIterateFinder() {
         UppercaseAutomatonIterateFinder finder = new UppercaseAutomatonIterateFinder(words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testUppercaseRegexLookBehindFinder() {
+    void testUppercaseRegexLookBehindFinder() {
         UppercaseRegexLookBehindFinder finder = new UppercaseRegexLookBehindFinder(words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testUppercaseRegexAlternateFinder() {
+    void testUppercaseRegexAlternateFinder() {
         UppercaseRegexAlternateFinder finder = new UppercaseRegexAlternateFinder(words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testUppercaseAutomatonAlternateFinder() {
+    void testUppercaseAutomatonAlternateFinder() {
         UppercaseAutomatonAlternateFinder finder = new UppercaseAutomatonAlternateFinder(words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testUppercaseRegexAlternateLookBehindFinder() {
+    void testUppercaseRegexAlternateLookBehindFinder() {
         UppercaseRegexAlternateLookBehindFinder finder = new UppercaseRegexAlternateLookBehindFinder(words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }

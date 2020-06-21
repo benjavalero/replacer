@@ -26,73 +26,73 @@ public class PersonFinderTest {
     }
 
     @Test
-    public void testPersonIndexOfFinder() {
+    void testPersonIndexOfFinder() {
         PersonIndexOfFinder finder = new PersonIndexOfFinder(words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testPersonRegexFinder() {
+    void testPersonRegexFinder() {
         PersonRegexFinder finder = new PersonRegexFinder(words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testPersonAutomatonFinder() {
+    void testPersonAutomatonFinder() {
         PersonAutomatonFinder finder = new PersonAutomatonFinder(words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testPersonRegexCompleteFinder() {
+    void testPersonRegexCompleteFinder() {
         PersonRegexCompleteFinder finder = new PersonRegexCompleteFinder(this.words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testPersonAutomatonCompleteFinder() {
+    void testPersonAutomatonCompleteFinder() {
         PersonAutomatonCompleteFinder finder = new PersonAutomatonCompleteFinder(this.words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testPersonRegexAlternateFinder() {
+    void testPersonRegexAlternateFinder() {
         PersonRegexAlternateFinder finder = new PersonRegexAlternateFinder(this.words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testPersonAutomatonAlternateFinder() {
+    void testPersonAutomatonAlternateFinder() {
         PersonAutomatonAlternateFinder finder = new PersonAutomatonAlternateFinder(this.words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testPersonRegexAlternateCompleteFinder() {
+    void testPersonRegexAlternateCompleteFinder() {
         PersonRegexAlternateCompleteFinder finder = new PersonRegexAlternateCompleteFinder(this.words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testPersonAutomatonAlternateCompleteFinder() {
+    void testPersonAutomatonAlternateCompleteFinder() {
         PersonAutomatonAlternateCompleteFinder finder = new PersonAutomatonAlternateCompleteFinder(this.words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testPersonRegexAllFinder() {
+    void testPersonRegexAllFinder() {
         PersonRegexAllFinder finder = new PersonRegexAllFinder(this.words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testPersonAutomatonAllFinder() {
+    void testPersonAutomatonAllFinder() {
         PersonAutomatonAllFinder finder = new PersonAutomatonAllFinder(this.words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testPersonRegexAllCompleteFinder() {
+    void testPersonRegexAllCompleteFinder() {
         PersonRegexAllCompleteFinder finder = new PersonRegexAllCompleteFinder(this.words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }

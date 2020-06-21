@@ -12,12 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = { PersonSurnameFinder.class, XmlConfiguration.class })
-public class PersonSurnameFinderTest {
+class PersonSurnameFinderTest {
     @Autowired
     private PersonSurnameFinder personSurnameFinder;
 
     @Test
-    public void testRegexPersonSurname() {
+    void testRegexPersonSurname() {
         String noun = "RCA";
         String surname = "Records";
         String text = String.format("A %s %s.", noun, surname);

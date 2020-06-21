@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.is;
 public class ComposedFinderBenchmark extends BaseFinderBenchmark {
 
     @Test
-    public void testWordFinderBenchmark() throws IOException, URISyntaxException, ReplacerException {
+    void testWordFinderBenchmark() throws IOException, URISyntaxException, ReplacerException {
         WikipediaService wikipediaService = new WikipediaServiceOfflineImpl();
         String text = wikipediaService.getComposedMisspellingListPageContent(WikipediaLanguage.SPANISH);
 

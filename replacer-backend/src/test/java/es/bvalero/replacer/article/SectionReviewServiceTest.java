@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.modelmapper.ModelMapper;
 
-public class SectionReviewServiceTest {
+class SectionReviewServiceTest {
     @Mock
     private WikipediaService wikipediaService;
 
@@ -28,7 +28,7 @@ public class SectionReviewServiceTest {
     }
 
     @Test
-    public void findSectionReviewNoSections() throws ReplacerException {
+    void testFindSectionReviewNoSections() throws ReplacerException {
         Mockito
             .when(wikipediaService.getPageSections(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.emptyList());
@@ -40,7 +40,7 @@ public class SectionReviewServiceTest {
     }
 
     @Test
-    public void findSectionReview() throws ReplacerException {
+    void testFindSectionReview() throws ReplacerException {
         int articleId = 1;
         String content = "This is an sample content.";
         Suggestion suggestion = Suggestion.ofNoComment("a");

@@ -26,25 +26,25 @@ public class FileFinderTest {
     }
 
     @Test
-    public void testFileRegexFinder() {
+    void testFileRegexFinder() {
         FileRegexFinder finder = new FileRegexFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testFileRegexGroupFinder() {
+    void testFileRegexGroupFinder() {
         FileRegexGroupFinder finder = new FileRegexGroupFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testFileAutomatonFinder() {
+    void testFileAutomatonFinder() {
         FileAutomatonFinder finder = new FileAutomatonFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
-    public void testFileLinearFinder() {
+    void testFileLinearFinder() {
         FileLinearFinder finder = new FileLinearFinder();
         Assertions.assertEquals(expected, finder.findMatches(text));
     }

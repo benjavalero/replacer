@@ -1,54 +1,54 @@
 package es.bvalero.replacer.finder;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class FinderUtilsTest {
+class FinderUtilsTest {
 
     @Test
-    public void testStartsWithUpperCase() {
-        Assert.assertTrue(FinderUtils.startsWithUpperCase("Álvaro"));
-        Assert.assertFalse(FinderUtils.startsWithUpperCase("úlcera"));
-        Assert.assertFalse(FinderUtils.startsWithUpperCase("1234"));
+    void testStartsWithUpperCase() {
+        Assertions.assertTrue(FinderUtils.startsWithUpperCase("Álvaro"));
+        Assertions.assertFalse(FinderUtils.startsWithUpperCase("úlcera"));
+        Assertions.assertFalse(FinderUtils.startsWithUpperCase("1234"));
     }
 
     @Test
-    public void testStartsWithLowerCase() {
-        Assert.assertFalse(FinderUtils.startsWithLowerCase("Álvaro"));
-        Assert.assertTrue(FinderUtils.startsWithLowerCase("úlcera"));
-        Assert.assertFalse(FinderUtils.startsWithLowerCase("1234"));
+    void testStartsWithLowerCase() {
+        Assertions.assertFalse(FinderUtils.startsWithLowerCase("Álvaro"));
+        Assertions.assertTrue(FinderUtils.startsWithLowerCase("úlcera"));
+        Assertions.assertFalse(FinderUtils.startsWithLowerCase("1234"));
     }
 
     @Test
-    public void testSetFirstUpperCase() {
-        Assert.assertEquals("Álvaro", FinderUtils.setFirstUpperCase("Álvaro"));
-        Assert.assertEquals("Úlcera", FinderUtils.setFirstUpperCase("úlcera"));
-        Assert.assertEquals("1234", FinderUtils.setFirstUpperCase("1234"));
+    void testSetFirstUpperCase() {
+        Assertions.assertEquals("Álvaro", FinderUtils.setFirstUpperCase("Álvaro"));
+        Assertions.assertEquals("Úlcera", FinderUtils.setFirstUpperCase("úlcera"));
+        Assertions.assertEquals("1234", FinderUtils.setFirstUpperCase("1234"));
     }
 
     @Test
-    public void testSetFirstUpperCaseClass() {
-        Assert.assertEquals("[Aa]migo", FinderUtils.setFirstUpperCaseClass("amigo"));
-        Assert.assertEquals("[Úú]lcera", FinderUtils.setFirstUpperCaseClass("úlcera"));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetFirstUpperCaseClassException() {
-        FinderUtils.setFirstUpperCaseClass("Álvaro");
+    void testSetFirstUpperCaseClass() {
+        Assertions.assertEquals("[Aa]migo", FinderUtils.setFirstUpperCaseClass("amigo"));
+        Assertions.assertEquals("[Úú]lcera", FinderUtils.setFirstUpperCaseClass("úlcera"));
     }
 
     @Test
-    public void testIsWordCompleteInText() {
+    void testSetFirstUpperCaseClassException() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> FinderUtils.setFirstUpperCaseClass("Álvaro"));
+    }
+
+    @Test
+    void testIsWordCompleteInText() {
         String text = "Y hay/un amigo en_mí mismo. X";
 
-        Assert.assertTrue(FinderUtils.isWordCompleteInText(0, "Y", text));
-        Assert.assertFalse(FinderUtils.isWordCompleteInText(2, "hay", text));
-        Assert.assertFalse(FinderUtils.isWordCompleteInText(5, "un", text));
-        Assert.assertTrue(FinderUtils.isWordCompleteInText(9, "amigo", text));
-        Assert.assertFalse(FinderUtils.isWordCompleteInText(10, "migo", text));
-        Assert.assertFalse(FinderUtils.isWordCompleteInText(15, "en", text));
-        Assert.assertFalse(FinderUtils.isWordCompleteInText(18, "mí", text));
-        Assert.assertTrue(FinderUtils.isWordCompleteInText(21, "mismo", text));
-        Assert.assertTrue(FinderUtils.isWordCompleteInText(28, "X", text));
+        Assertions.assertTrue(FinderUtils.isWordCompleteInText(0, "Y", text));
+        Assertions.assertFalse(FinderUtils.isWordCompleteInText(2, "hay", text));
+        Assertions.assertFalse(FinderUtils.isWordCompleteInText(5, "un", text));
+        Assertions.assertTrue(FinderUtils.isWordCompleteInText(9, "amigo", text));
+        Assertions.assertFalse(FinderUtils.isWordCompleteInText(10, "migo", text));
+        Assertions.assertFalse(FinderUtils.isWordCompleteInText(15, "en", text));
+        Assertions.assertFalse(FinderUtils.isWordCompleteInText(18, "mí", text));
+        Assertions.assertTrue(FinderUtils.isWordCompleteInText(21, "mismo", text));
+        Assertions.assertTrue(FinderUtils.isWordCompleteInText(28, "X", text));
     }
 }

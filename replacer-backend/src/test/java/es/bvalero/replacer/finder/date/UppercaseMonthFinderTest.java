@@ -7,11 +7,11 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class UppercaseMonthFinderTest {
+class UppercaseMonthFinderTest {
     private final UppercaseMonthFinder uppercaseMonthFinder = new UppercaseMonthFinder();
 
     @Test
-    public void testUppercaseMonth() {
+    void testUppercaseMonth() {
         String date = "15 de Agosto de 2019";
         String text = String.format("En %s.", date);
 
@@ -23,7 +23,7 @@ public class UppercaseMonthFinderTest {
     }
 
     @Test
-    public void testLowercaseMonth() {
+    void testLowercaseMonth() {
         String date = "15 de agosto de 2019";
         String text = String.format("En %s.", date);
 
@@ -33,7 +33,7 @@ public class UppercaseMonthFinderTest {
     }
 
     @Test
-    public void testSetiembre() {
+    void testSetiembre() {
         String date = "17 de Setiembre de 2019";
         String text = String.format("En %s.", date);
 
@@ -45,7 +45,7 @@ public class UppercaseMonthFinderTest {
     }
 
     @Test
-    public void testSeptiembre() {
+    void testSeptiembre() {
         String date = "17 de Septiembre de 2019";
         String text = String.format("En %s.", date);
 
@@ -57,7 +57,7 @@ public class UppercaseMonthFinderTest {
     }
 
     @Test
-    public void testDel() {
+    void testDel() {
         String date = "17 de Agosto Del 2019";
         String expected = "17 de agosto de 2019";
         String text = String.format("En %s.", date);
@@ -70,7 +70,7 @@ public class UppercaseMonthFinderTest {
     }
 
     @Test
-    public void testDe() {
+    void testDe() {
         String date = "17 De Agosto De 2019";
         String expected = "17 de agosto de 2019";
         String text = String.format("En %s.", date);

@@ -12,12 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = { PersonNameFinder.class, XmlConfiguration.class })
-public class PersonNameFinderTest {
+class PersonNameFinderTest {
     @Autowired
     private PersonNameFinder personNameFinder;
 
     @Test
-    public void testRegexPersonName() {
+    void testRegexPersonName() {
         String noun = "Julio";
         String surname = "Verne";
         String text = String.format("A %s %s %ss %s %s %s.", noun, surname, noun, noun, surname.toLowerCase(), noun);

@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class XmlTagFinderTest {
+class XmlTagFinderTest {
 
     @Test
-    public void testXmlTagFinder() {
+    void testXmlTagFinder() {
         String tag1 = "<span style=\"color:green;\">";
         String tag2 = "</span>";
         String tag3 = "<br />";
@@ -28,7 +28,7 @@ public class XmlTagFinderTest {
     }
 
     @Test
-    public void testRegexCommentNotMatched() {
+    void testRegexCommentNotMatched() {
         String comment = "<!-- Esto es un comentario -->";
         String text = "xxx " + comment + " zzz";
 

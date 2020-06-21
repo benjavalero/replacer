@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 public class CategoryFinderBenchmark extends BaseFinderBenchmark {
 
     @Test
-    public void testBenchmark() throws IOException, URISyntaxException {
+    void testBenchmark() throws IOException, URISyntaxException {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new CategoryRegexFinder());

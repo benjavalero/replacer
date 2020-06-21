@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class FalsePositiveManagerTest {
+class FalsePositiveManagerTest {
     @Mock
     private WikipediaService wikipediaService;
 
@@ -26,7 +26,7 @@ public class FalsePositiveManagerTest {
     }
 
     @Test
-    public void testParseFalsePositiveListText() {
+    void testParseFalsePositiveListText() {
         String falsePositiveListText =
             "Text\n" +
             "\n" + // Empty line
@@ -46,7 +46,7 @@ public class FalsePositiveManagerTest {
     }
 
     @Test
-    public void testUpdate() throws ReplacerException {
+    void testUpdate() throws ReplacerException {
         Mockito
             .when(wikipediaService.getFalsePositiveListPageContent(Mockito.any(WikipediaLanguage.class)))
             .thenReturn("");

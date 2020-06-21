@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class UppercaseAfterFinderTest {
+class UppercaseAfterFinderTest {
     private static final SetValuedMap<WikipediaLanguage, Misspelling> EMPTY_MAP = new HashSetValuedHashMap<>();
 
     private UppercaseAfterFinder uppercaseAfterFinder;
@@ -25,7 +25,7 @@ public class UppercaseAfterFinderTest {
     }
 
     @Test
-    public void testRegexUppercaseAfter() {
+    void testRegexUppercaseAfter() {
         String noun1 = "Enero";
         String noun2 = "Febrero";
         String text = "{{ param=" + noun1 + " | " + noun2 + " }} zzz";

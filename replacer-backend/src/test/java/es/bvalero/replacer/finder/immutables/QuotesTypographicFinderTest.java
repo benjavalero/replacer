@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class QuotesTypographicFinderTest {
+class QuotesTypographicFinderTest {
 
     @Test
-    public void testRegexQuotesTypographic() {
+    void testRegexQuotesTypographic() {
         String quotes1 = "“yáy”";
         String quotes2 = "“z, zz”";
         String quotes3 = "“z\nz”";

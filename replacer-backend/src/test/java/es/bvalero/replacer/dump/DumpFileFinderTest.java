@@ -13,6 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+// TODO: Adapt to Junit5
 public class DumpFileFinderTest {
     @Rule
     public TemporaryFolder dumpBaseFolder = new TemporaryFolder();

@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class MisspellingComposedManagerTest {
+class MisspellingComposedManagerTest {
     @Mock
     private WikipediaService wikipediaService;
 
@@ -24,7 +24,7 @@ public class MisspellingComposedManagerTest {
     }
 
     @Test
-    public void testUpdate() throws ReplacerException {
+    void testUpdate() throws ReplacerException {
         Mockito
             .when(wikipediaService.getComposedMisspellingListPageContent(Mockito.any(WikipediaLanguage.class)))
             .thenReturn("");

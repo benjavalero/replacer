@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class MisspellingManagerTest {
+class MisspellingManagerTest {
     @Mock
     private WikipediaService wikipediaService;
 
@@ -34,7 +34,7 @@ public class MisspellingManagerTest {
     }
 
     @Test
-    public void testParseMisspellingListText() {
+    void testParseMisspellingListText() {
         String misspellingListText =
             "Text\n\n" +
             "A||B\n" + // No starting whitespace
@@ -55,7 +55,7 @@ public class MisspellingManagerTest {
     }
 
     @Test
-    public void testParseValidMisspellingWords() {
+    void testParseValidMisspellingWords() {
         String misspellingListText =
             " aguila||águila\n" +
             " m2||m²\n" + // Not valid with numbers
@@ -73,7 +73,7 @@ public class MisspellingManagerTest {
     }
 
     @Test
-    public void testDeleteObsoleteMisspellings() {
+    void testDeleteObsoleteMisspellings() {
         Misspelling misspelling1 = Misspelling.ofCaseInsensitive("A", "B");
         Misspelling misspelling2 = Misspelling.ofCaseInsensitive("B", "C");
         SetValuedMap<WikipediaLanguage, Misspelling> map1 = new HashSetValuedHashMap<>();
@@ -103,7 +103,7 @@ public class MisspellingManagerTest {
     }
 
     @Test
-    public void testUpdate() throws ReplacerException {
+    void testUpdate() throws ReplacerException {
         Mockito
             .when(wikipediaService.getMisspellingListPageContent(Mockito.any(WikipediaLanguage.class)))
             .thenReturn("");

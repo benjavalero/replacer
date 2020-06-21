@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class LinkSuffixedFinderTest {
+class LinkSuffixedFinderTest {
 
     @Test
-    public void testLinkSuffixed() {
+    void testLinkSuffixed() {
         String suffixed1 = "[[brasil]]eño";
         String suffixed2 = "[[reacción química|reaccion]]es";
         String noSuffixed = "[[Text]]";

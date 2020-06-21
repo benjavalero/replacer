@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+// TODO: Adapt to Junit5
 public class WikipediaServiceTest {
 
     @Spy

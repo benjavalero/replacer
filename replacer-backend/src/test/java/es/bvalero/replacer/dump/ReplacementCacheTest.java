@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class ReplacementCacheTest {
+class ReplacementCacheTest {
     @Mock
     private ReplacementDao replacementDao;
 
@@ -30,7 +30,7 @@ public class ReplacementCacheTest {
     }
 
     @Test
-    public void testFindDatabaseReplacements() {
+    void testFindDatabaseReplacements() {
         // In DB: replacements for article 2 (first load) and 1001 (second load)
         // We ask for the article 1 and 1001, so the article 2 will be cleaned.
         ReplacementEntity replacement = new ReplacementEntity(2, "", "", 0);
@@ -51,7 +51,7 @@ public class ReplacementCacheTest {
     }
 
     @Test
-    public void testFindDatabaseReplacementsWithEmptyLoad() {
+    void testFindDatabaseReplacementsWithEmptyLoad() {
         // In DB: replacement for article 1001
         // So the first load is enlarged
         ReplacementEntity replacement = new ReplacementEntity(1001, "", "", 0);

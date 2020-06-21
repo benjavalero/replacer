@@ -7,10 +7,10 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class CategoryFinderTest {
+class CategoryFinderTest {
 
     @Test
-    public void testRegexComment() {
+    void testRegexComment() {
         String category1 = "[[Categoría:Países]]";
         String category2 = "[[Categoría:Obras españolas|Españolas, Obras]]";
         String text = String.format("%s %s", category1, category2);

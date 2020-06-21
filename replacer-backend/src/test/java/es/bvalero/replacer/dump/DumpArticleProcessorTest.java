@@ -21,7 +21,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
-public class DumpArticleProcessorTest {
+class DumpArticleProcessorTest {
     @Resource
     private List<String> ignorableTemplates;
 
@@ -44,7 +44,7 @@ public class DumpArticleProcessorTest {
     }
 
     @Test
-    public void testProcessSimple() {
+    void testProcessSimple() {
         DumpArticle dumpArticle = DumpArticle
             .builder()
             .lang(WikipediaLanguage.SPANISH)
@@ -68,7 +68,7 @@ public class DumpArticleProcessorTest {
     }
 
     @Test
-    public void testCheckNamespaces() {
+    void testCheckNamespaces() {
         DumpArticle dumpArticle = DumpArticle
             .builder()
             .lang(WikipediaLanguage.SPANISH)
@@ -84,7 +84,7 @@ public class DumpArticleProcessorTest {
     }
 
     @Test
-    public void testProcessRedirection() {
+    void testProcessRedirection() {
         DumpArticle dumpArticle = DumpArticle
             .builder()
             .lang(WikipediaLanguage.SPANISH)
@@ -95,7 +95,7 @@ public class DumpArticleProcessorTest {
     }
 
     @Test
-    public void testProcessLastUpdateAfterTimestamp() {
+    void testProcessLastUpdateAfterTimestamp() {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1L);
 
@@ -120,7 +120,7 @@ public class DumpArticleProcessorTest {
     }
 
     @Test
-    public void testProcessLastUpdateWhenTimestamp() {
+    void testProcessLastUpdateWhenTimestamp() {
         LocalDate today = LocalDate.now();
 
         DumpArticle dumpArticle = DumpArticle
@@ -144,7 +144,7 @@ public class DumpArticleProcessorTest {
     }
 
     @Test
-    public void testProcessLastUpdateBeforeTimestamp() {
+    void testProcessLastUpdateBeforeTimestamp() {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1L);
 
@@ -169,7 +169,7 @@ public class DumpArticleProcessorTest {
     }
 
     @Test
-    public void testProcessNewArticle() {
+    void testProcessNewArticle() {
         DumpArticle dumpArticle = DumpArticle
             .builder()
             .lang(WikipediaLanguage.SPANISH)
@@ -202,7 +202,7 @@ public class DumpArticleProcessorTest {
     }
 
     @Test
-    public void testProcessWithNoReplacementsFound() {
+    void testProcessWithNoReplacementsFound() {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1L);
 

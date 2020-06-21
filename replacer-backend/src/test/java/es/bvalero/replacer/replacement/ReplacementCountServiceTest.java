@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class ReplacementCountServiceTest {
+class ReplacementCountServiceTest {
     @Mock
     private ReplacementRepository replacementRepository;
 
@@ -27,7 +27,7 @@ public class ReplacementCountServiceTest {
     }
 
     @Test
-    public void testCountReplacements() {
+    void testCountReplacements() {
         long count = new Random().nextLong();
 
         Mockito.when(replacementRepository.countByReviewerIsNullOrReviewerIsNot(Mockito.anyString())).thenReturn(count);
@@ -36,7 +36,7 @@ public class ReplacementCountServiceTest {
     }
 
     @Test
-    public void testCountReplacementsReviewed() {
+    void testCountReplacementsReviewed() {
         long count = new Random().nextLong();
 
         Mockito
@@ -47,7 +47,7 @@ public class ReplacementCountServiceTest {
     }
 
     @Test
-    public void testCountReplacementsToReview() {
+    void testCountReplacementsToReview() {
         long count = new Random().nextLong();
 
         Mockito.when(replacementRepository.countByReviewerIsNull()).thenReturn(count);
@@ -56,7 +56,7 @@ public class ReplacementCountServiceTest {
     }
 
     @Test
-    public void testCountReplacementsGroupedByReviewer() {
+    void testCountReplacementsGroupedByReviewer() {
         List<ReviewerCount> result = new ArrayList<>();
 
         Mockito.when(replacementRepository.countGroupedByReviewer(Mockito.anyString())).thenReturn(result);
@@ -65,7 +65,7 @@ public class ReplacementCountServiceTest {
     }
 
     @Test
-    public void testGetCachedReplacementCount() {
+    void testGetCachedReplacementCount() {
         WikipediaLanguage lang = WikipediaLanguage.SPANISH;
         String langCode = lang.getCode();
 

@@ -14,7 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-public class ReplacementFindServiceTest {
+class ReplacementFindServiceTest {
     @Mock
     private List<ReplacementFinder> replacementFinders;
 
@@ -31,15 +31,17 @@ public class ReplacementFindServiceTest {
     }
 
     @Test
-    public void testFindReplacementsEmpty() {
+    void testFindReplacementsEmpty() {
         Assertions.assertTrue(replacementFindService.findReplacements("", WikipediaLanguage.SPANISH).isEmpty());
     }
 
     @Test
-    public void testFindReplacements() {
+    void testFindReplacements() {
         Replacement replacement = Replacement.builder().start(0).text("").build();
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
-        Mockito.when(finder.findStream(Mockito.anyString(), Mockito.any(WikipediaLanguage.class))).thenReturn(Stream.of(replacement));
+        Mockito
+            .when(finder.findStream(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
+            .thenReturn(Stream.of(replacement));
         Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
 
         List<Replacement> replacements = replacementFindService.findReplacements(" ", WikipediaLanguage.SPANISH);
@@ -50,12 +52,14 @@ public class ReplacementFindServiceTest {
     }
 
     @Test
-    public void testFindReplacementsIgnoringImmutables() {
+    void testFindReplacementsIgnoringImmutables() {
         Immutable immutable1 = Immutable.of(0, "AB", new QuotesFinder());
         Replacement replacement1 = Replacement.builder().start(1).text("B").build(); // Contained in immutable
         Replacement replacement2 = Replacement.builder().start(2).text("C").build(); // Not contained in immutable
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
-        Mockito.when(finder.findStream(Mockito.anyString(), Mockito.any(WikipediaLanguage.class))).thenReturn(Stream.of(replacement1, replacement2));
+        Mockito
+            .when(finder.findStream(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
+            .thenReturn(Stream.of(replacement1, replacement2));
         Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
         Mockito
             .when(immutableFindService.findImmutables(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
@@ -69,11 +73,13 @@ public class ReplacementFindServiceTest {
     }
 
     @Test
-    public void testFindReplacementsAllIgnored() {
+    void testFindReplacementsAllIgnored() {
         Immutable immutable1 = Immutable.of(0, "AB", new QuotesFinder());
         Replacement replacement1 = Replacement.builder().start(1).text("B").build();
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
-        Mockito.when(finder.findStream(Mockito.anyString(), Mockito.any(WikipediaLanguage.class))).thenReturn(Stream.of(replacement1));
+        Mockito
+            .when(finder.findStream(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
+            .thenReturn(Stream.of(replacement1));
         Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
         Mockito
             .when(immutableFindService.findImmutables(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
@@ -85,7 +91,7 @@ public class ReplacementFindServiceTest {
     }
 
     @Test
-    public void testFindCustomReplacements() {
+    void testFindCustomReplacements() {
         List<Replacement> replacements = replacementFindService.findCustomReplacements(
             "A X C",
             "X",
@@ -99,7 +105,7 @@ public class ReplacementFindServiceTest {
     }
 
     @Test
-    public void testFindCustomReplacementsWithNoResults() {
+    void testFindCustomReplacementsWithNoResults() {
         List<Replacement> replacements = replacementFindService.findCustomReplacements(
             "AXC",
             "X",
@@ -111,7 +117,7 @@ public class ReplacementFindServiceTest {
     }
 
     @Test
-    public void testCompareArticleReplacements() {
+    void testCompareArticleReplacements() {
         Replacement result1 = Replacement.builder().start(0).text("A").build();
         Replacement result2 = Replacement.builder().start(0).text("AB").build();
         Replacement result3 = Replacement.builder().start(1).text("BC").build();
@@ -130,7 +136,7 @@ public class ReplacementFindServiceTest {
     }
 
     @Test
-    public void testIsContained() {
+    void testIsContained() {
         Replacement result1 = Replacement.builder().start(0).text("A").build();
         Replacement result2 = Replacement.builder().start(1).text("BC").build();
 

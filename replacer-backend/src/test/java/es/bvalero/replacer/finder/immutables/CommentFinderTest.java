@@ -6,10 +6,10 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class CommentFinderTest {
+class CommentFinderTest {
 
     @Test
-    public void testRegexComment() {
+    void testRegexComment() {
         String comment1 = "<!-- Esto <span>es</span> un- \n comentario -->";
         String comment2 = "<!-- Otro comentario -->";
         String text = String.format("%s %s", comment1, comment2);

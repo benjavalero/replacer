@@ -15,6 +15,7 @@ import java.util.*;
 
 import static org.hamcrest.Matchers.*;
 
+// TODO: Adapt to Junit5
 public class ReplacementIndexServiceTest {
 
     @Mock

@@ -30,7 +30,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
     private TemplateFinder templateFinder;
 
     @Test
-    public void testBenchmark() throws IOException, URISyntaxException {
+    void testBenchmark() throws IOException, URISyntaxException {
         // Load the finders
         List<ImmutableFinder> finders = new ArrayList<>();
         finders.add(new CategoryFinder());
@@ -89,7 +89,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
     }
 
     @Test
-    public void testMatches() throws IOException, URISyntaxException {
+    void testMatches() throws IOException, URISyntaxException {
         // Load the finders
         List<ImmutableFinder> finders = new ArrayList<>();
         finders.add(new UrlFinder());
