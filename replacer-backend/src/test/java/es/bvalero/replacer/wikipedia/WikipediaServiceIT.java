@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 import java.util.List;
 
-// TODO: Adapt to Junit5
 @Ignore
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {WikipediaServiceImpl.class, WikipediaRequestService.class, WikipediaConfig.class},

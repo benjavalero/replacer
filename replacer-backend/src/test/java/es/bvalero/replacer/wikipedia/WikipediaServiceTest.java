@@ -9,11 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-// TODO: Adapt to Junit5
 public class WikipediaServiceTest {
 
     @Spy
@@ -35,7 +33,7 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testGetEditToken() throws ReplacerException, IOException {
+    public void testGetEditToken() throws Exception {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
@@ -51,7 +49,7 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testGetPageContentByTitle() throws ReplacerException, IOException {
+    public void testGetPageContentByTitle() throws Exception {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
@@ -70,7 +68,7 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testGetPageContentById() throws ReplacerException, IOException {
+    public void testGetPageContentById() throws Exception {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
@@ -89,7 +87,7 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testGetPagesContent() throws ReplacerException, IOException {
+    public void testGetPagesContent() throws Exception {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]},{\"pageid\":6903884,\"ns\":2,\"title\":\"Usuario:Benjavalero/Taller\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Enlace a [[Pais Vasco]].\"}}}]}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
@@ -105,7 +103,7 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testGetPageContentUnavailable() throws ReplacerException, IOException {
+    public void testGetPageContentUnavailable() throws Exception {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"ns\":2,\"title\":\"Usuario:Benjavaleroxx\",\"missing\":true}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
@@ -115,7 +113,7 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testGetPageIdsByStringMatch() throws ReplacerException, IOException {
+    public void testGetPageIdsByStringMatch() throws Exception {
         // API response
         String textResponse = "{\"batchcomplete\":\"\",\"continue\":{\"sroffset\":100,\"continue\":\"-||\"},\"query\":{\"searchinfo\":{\"totalhits\":10},\"search\":[{\"ns\":0,\"title\":\"Belanova\",\"pageid\":297896},{\"ns\":0,\"title\":\"Wil Hartog\",\"pageid\":7694956},{\"ns\":0,\"title\":\"Compuesto químico\",\"pageid\":10547},{\"ns\":0,\"title\":\"Aun así te vas\",\"pageid\":2460037},{\"ns\":0,\"title\":\"Educación\",\"pageid\":975},{\"ns\":0,\"title\":\"Abolicionismo\",\"pageid\":173068},{\"ns\":0,\"title\":\"Canaán\",\"pageid\":718871},{\"ns\":0,\"title\":\"Coahuila de Zaragoza\",\"pageid\":724588},{\"ns\":0,\"title\":\"Filosofía\",\"pageid\":689592},{\"ns\":0,\"title\":\"Cárites\",\"pageid\":71433}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
@@ -126,7 +124,7 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testGetPageIdsByStringMatchWithNoResults() throws ReplacerException, IOException {
+    public void testGetPageIdsByStringMatchWithNoResults() throws Exception {
         // API response
         String textResponse = "{\"batchcomplete\":\"\",\"query\":{\"searchinfo\":{\"totalhits\":0},\"search\":[]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
@@ -137,7 +135,7 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testLoggedUserName() throws ReplacerException, IOException {
+    public void testLoggedUserName() throws Exception {
         // API response
         String textResponse = "{\"batchcomplete\": \"\", \"query\": {\"userinfo\": {\"id\": 9620478, \"name\": \"Benjavalero\"}}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
@@ -150,7 +148,7 @@ public class WikipediaServiceTest {
     }
 
     @Test(expected = ReplacerException.class)
-    public void testSavePageContentWithConflict() throws ReplacerException, IOException {
+    public void testSavePageContentWithConflict() throws Exception {
         // API response for the EditToken request
         String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
@@ -167,7 +165,7 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testSavePageContent() throws ReplacerException, IOException {
+    public void testSavePageContent() throws Exception {
         // API response for the EditToken request
         String textResponse = "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
@@ -208,7 +206,7 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testGetPageSections() throws ReplacerException, IOException {
+    public void testGetPageSections() throws Exception {
         // API response
         String textResponse = "{\"parse\":{\"title\":\"Usuario:Benjavalero/Taller\",\"pageid\":6903884,\"sections\":[{\"toclevel\":1,\"level\":\"2\",\"line\":\"Pruebas con cursiva\",\"number\":\"1\",\"index\":\"1\",\"fromtitle\":\"Usuario:Benjavalero/Taller\",\"byteoffset\":1998,\"anchor\":\"Pruebas_con_cursiva\"},{\"toclevel\":1,\"level\":\"2\",\"line\":\"Pruebas de banderas de la Selección Española\",\"number\":\"2\",\"index\":\"2\",\"fromtitle\":\"Usuario:Benjavalero/Taller\",\"byteoffset\":2275,\"anchor\":\"Pruebas_de_banderas_de_la_Selección_Española\"},{\"toclevel\":1,\"level\":\"2\",\"line\":\"Referencias\",\"number\":\"3\",\"index\":\"3\",\"fromtitle\":\"Usuario:Benjavalero/Taller\",\"byteoffset\":2497,\"anchor\":\"Referencias\"}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
@@ -234,7 +232,7 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testGetPageInvalidSections() throws ReplacerException, IOException {
+    public void testGetPageInvalidSections() throws Exception {
         // API response
         String textResponse = "{\"parse\":{\"title\":\"Anexo:Asteroides (161001)\\u2013(162000)\",\"pageid\":6633556,\"sections\":[{\"toclevel\":1,\"level\":\"2\",\"line\":\"Asteroides del (161001) al (161100)\",\"number\":\"1\",\"index\":\"\",\"byteoffset\":null,\"anchor\":\"Asteroides_del_(161001)_al_(161100)\"},{\"toclevel\":1,\"level\":\"2\",\"line\":\"Asteroides del (161101) al (161200)\",\"number\":\"2\",\"index\":\"\",\"byteoffset\":null,\"anchor\":\"Asteroides_del_(161101)_al_(161200)\"}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
@@ -253,7 +251,7 @@ public class WikipediaServiceTest {
     }
 
     @Test
-    public void testGetPageContentByIdAndSection() throws ReplacerException, IOException {
+    public void testGetPageContentByIdAndSection() throws Exception {
         // API response
         String textResponse = "{\"batchcomplete\":true,\"curtimestamp\":\"2019-10-17T15:12:03Z\",\"query\":{\"pages\":[{\"pageid\":6903884,\"ns\":2,\"title\":\"Usuario:Benjavalero/Taller\",\"revisions\":[{\"timestamp\":\"2019-08-24T07:51:05Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"== Pruebas con cursiva ==\\n\\n* El libro ''La historia interminable''.\\n* Comillas sin cerrar: ''La historia interminable\\n* Con negrita ''La '''historia''' interminable''.\\n* Con cursiva ''La ''historia'' interminable''.\\n* Con negrita buena ''La '''''historia''''' interminable''.\\n\\n=== Pruebas de subsecciones ===\\n\\nEsta es una subsección tonta solo para probar la captura de secciones.\"}}}]}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);

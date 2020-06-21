@@ -1,19 +1,16 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.ReplacerException;
-import java.io.IOException;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-// TODO: Adapt to Junit5
 public class DumpFileFinderTest {
     @Rule
     public TemporaryFolder dumpBaseFolder = new TemporaryFolder();
@@ -26,7 +23,7 @@ public class DumpFileFinderTest {
     }
 
     @Test
-    public void testFindLatestDumpFile() throws IOException, ReplacerException {
+    public void testFindLatestDumpFile() throws Exception {
         // Two folders: 1 (old) and 2 (new). Each with one valid dump file.
         // The newer also contains a non-valid dump file.
         String dumpPathBase = dumpBaseFolder.getRoot().getPath();
@@ -55,7 +52,7 @@ public class DumpFileFinderTest {
     }
 
     @Test
-    public void testFindLatestDumpFileInOldSubFolder() throws IOException, ReplacerException {
+    public void testFindLatestDumpFileInOldSubFolder() throws Exception {
         // In case the latest dump folder has not a valid dump yet
         // (the generation is not done yet)
         String dumpPathBase = dumpBaseFolder.getRoot().getPath();
@@ -80,7 +77,7 @@ public class DumpFileFinderTest {
     }
 
     @Test(expected = ReplacerException.class)
-    public void testEmptyDumpFolders() throws IOException, ReplacerException {
+    public void testEmptyDumpFolders() throws Exception {
         // In case there is no dump folder with a dump yet
         String dumpPathBase = dumpBaseFolder.getRoot().getPath();
         String dumpPathProject = "eswiki";
@@ -97,7 +94,7 @@ public class DumpFileFinderTest {
     }
 
     @Test(expected = ReplacerException.class)
-    public void testDumpFolderWithoutValidSubFolders() throws IOException, ReplacerException {
+    public void testDumpFolderWithoutValidSubFolders() throws Exception {
         String dumpPathBase = dumpBaseFolder.getRoot().getPath();
         String dumpPathProject = "eswiki";
 

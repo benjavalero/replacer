@@ -3,6 +3,7 @@ package es.bvalero.replacer.authentication;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
+import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,12 +12,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-
-// TODO: Adapt to Junit5
 public class AuthenticationServiceTest {
-
     @Mock
     private OAuth10aService oAuthService;
 
@@ -33,8 +29,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void testGetRequestToken()
-            throws InterruptedException, ExecutionException, IOException, AuthenticationException {
+    public void testGetRequestToken() throws Exception {
         OAuth1RequestToken token = Mockito.mock(OAuth1RequestToken.class);
         Mockito.when(oAuthService.getRequestToken()).thenReturn(token);
 
@@ -43,8 +38,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test(expected = AuthenticationException.class)
-    public void testGetRequestTokenWithException()
-            throws InterruptedException, ExecutionException, IOException, AuthenticationException {
+    public void testGetRequestTokenWithException() throws Exception {
         Mockito.when(oAuthService.getRequestToken()).thenThrow(new IOException());
 
         authenticationService.getRequestToken();
@@ -60,8 +54,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test
-    public void testGetAccessToken()
-            throws InterruptedException, ExecutionException, IOException, AuthenticationException {
+    public void testGetAccessToken() throws Exception {
         OAuth1RequestToken requestToken = Mockito.mock(OAuth1RequestToken.class);
         OAuth1AccessToken accessToken = Mockito.mock(OAuth1AccessToken.class);
         Mockito.when(oAuthService.getAccessToken(requestToken, "")).thenReturn(accessToken);
@@ -71,8 +64,7 @@ public class AuthenticationServiceTest {
     }
 
     @Test(expected = AuthenticationException.class)
-    public void testGetAccessTokenWithException()
-            throws InterruptedException, ExecutionException, IOException, AuthenticationException {
+    public void testGetAccessTokenWithException() throws Exception {
         OAuth1RequestToken requestToken = Mockito.mock(OAuth1RequestToken.class);
         Mockito.when(oAuthService.getAccessToken(requestToken, "")).thenThrow(new IOException());
 
@@ -85,5 +77,4 @@ public class AuthenticationServiceTest {
         Assert.assertNotNull(authenticationServiceOffline.getAuthorizationUrl(Mockito.mock(OAuth1RequestToken.class)));
         Assert.assertNotNull(authenticationServiceOffline.getAccessToken(Mockito.mock(OAuth1RequestToken.class), ""));
     }
-
 }

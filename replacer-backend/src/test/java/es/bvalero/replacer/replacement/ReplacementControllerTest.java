@@ -20,7 +20,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-// TODO: Adapt to Junit5
 @RunWith(SpringRunner.class)
 @WebMvcTest
 @ContextConfiguration(classes = ReplacementController.class)

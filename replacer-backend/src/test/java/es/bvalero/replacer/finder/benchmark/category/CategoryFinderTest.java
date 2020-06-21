@@ -4,13 +4,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import es.bvalero.replacer.finder.benchmark.FinderResult;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-// TODO: Adapt to Junit5
-public class CategoryFinderTest {
+class CategoryFinderTest {
     private String text;
     private Set<FinderResult> expected;
 

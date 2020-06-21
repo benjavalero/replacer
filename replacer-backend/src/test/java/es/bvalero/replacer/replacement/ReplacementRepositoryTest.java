@@ -5,7 +5,6 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +14,6 @@ import java.util.Arrays;
 
 import static org.hamcrest.Matchers.*;
 
-// TODO: Adapt to Junit5
 /*
  * This tests have been disabled after adapting the code to use Java 11 modules.
  * I have found no way to make them run, and according to some issues opened in GitHub
@@ -30,7 +28,7 @@ public class ReplacementRepositoryTest {
     private ReplacementRepository replacementRepository;
 
     @Test
-    void testFindReplacementsGrouped() {
+    public void testFindReplacementsGrouped() {
         ReplacementEntity error1 = new ReplacementEntity(1, "X", "aber", 1);
         ReplacementEntity error2 = new ReplacementEntity(2, "X", "aber", 2);
         ReplacementEntity error3 = new ReplacementEntity(2, "X", "madrid", 3);
@@ -43,7 +41,7 @@ public class ReplacementRepositoryTest {
     }
 
     @Test
-    void testRandomArticleByWord() {
+    public void testRandomArticleByWord() {
         ReplacementEntity error1 = new ReplacementEntity(1, "X", "aber", 1);
         ReplacementEntity error2 = new ReplacementEntity(2, "X", "aber", 2);
         ReplacementEntity error3 = new ReplacementEntity(3, "X", "aber", 3);

@@ -1,21 +1,17 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import org.hamcrest.MatcherAssert;
-import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.hamcrest.Matchers.is;
 
-// TODO: Adapt to Junit5
-public class RedirectMatcherBenchmark extends BaseFinderBenchmark {
+import java.util.ArrayList;
+import java.util.List;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Test;
+
+class RedirectMatcherBenchmark extends BaseFinderBenchmark {
     private static final int ITERATIONS = 1000;
 
     @Test
-    void testRedirectMatcherBenchmark() throws IOException, URISyntaxException {
+    void testRedirectMatcherBenchmark() throws Exception {
         // Load the matchers
         List<RedirectAbstractMatcher> matchers = new ArrayList<>();
         matchers.add(new RedirectLowercaseContainsMatcher()); // WINNER

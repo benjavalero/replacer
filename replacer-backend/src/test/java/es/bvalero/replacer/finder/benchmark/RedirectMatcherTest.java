@@ -1,14 +1,13 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-// TODO: Adapt to Junit5
-public class RedirectMatcherTest {
+class RedirectMatcherTest {
     private String text;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.text = "#Redirección [[Julio]]";
     }
@@ -16,18 +15,18 @@ public class RedirectMatcherTest {
     @Test
     void testRedirectLowercaseContainsMatcher() {
         RedirectLowercaseContainsMatcher matcher = new RedirectLowercaseContainsMatcher();
-        Assert.assertTrue(matcher.isRedirect(text));
+        Assertions.assertTrue(matcher.isRedirect(text));
     }
 
     @Test
     void testRedirectContainsIgnoreCaseMatcher() {
         RedirectContainsIgnoreCaseMatcher matcher = new RedirectContainsIgnoreCaseMatcher();
-        Assert.assertTrue(matcher.isRedirect(text));
+        Assertions.assertTrue(matcher.isRedirect(text));
     }
 
     @Test
     void testRedirectRegexInsensitiveMatcher() {
         RedirectRegexInsensitiveMatcher matcher = new RedirectRegexInsensitiveMatcher();
-        Assert.assertTrue(matcher.isRedirect(text));
+        Assertions.assertTrue(matcher.isRedirect(text));
     }
 }
