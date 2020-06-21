@@ -13,29 +13,30 @@ Main use cases:
 
 The following concepts are used:
 
-- **Page** A page in Wikipedia. It is composed at least by the following properties:
-  - **Type** (or **namespace**) The category of the page in Wikipedia: articles, annexes, user pages, etc. Note that, as an article is a specific type of page, it should not be used as a synonym of page.
-  - **Title** The title of the page identifies it uniquely.
-  - **ID** The ID of the page is a number for internal use that can also be used to identify uniquely a page.
-  - **Contents** The current text contents of the page.
-  - **Timestamp** The date and time of the last update of the page.
-- **Dump** A huge XML file, generated monthly, containing all the current Wikipedia pages.
-- **Replacement** A potential issue to be checked and fixed (replaced). For instance, the word _aproximated_ is misspelled and therefore could be proposed to be replaced with _approximated_.
+- **Page**. A page in Wikipedia. It is composed at least by the following properties:
+  - **Type** (or **namespace**). The category of the page in Wikipedia: article, annex, user page, etc. Note that, as an article is a specific type of page, it should not be used as a synonym of page.
+  - **Language**. The language of the Wikipedia where the page exists.
+  - **Title**. The title of the page which identifies it uniquely.
+  - **ID**. The ID of the page, a number for internal use that can also be used to identify uniquely a page.
+  - **Contents**. The current text contents of the page.
+  - **Timestamp**. The date and time of the last update of the page.
+- **Dump**. A huge XML file, generated monthly, containing all the current Wikipedia pages.
+- **Replacement**. A potential issue to be checked and fixed (replaced). For instance, the word _aproximated_ is misspelled and therefore could be proposed to be replaced with _approximated_.
 
   Note the importance of the _potential_ adjective, as an issue could be just a false positive. For instance, in Spanish the word _Paris_ could be misspelled if it corresponds to the French city (written correctly as _París_), but it would be correct if it refers to the mythological Trojan prince.
 
   A replacement is composed by:
 
-  - **Text** The text to be checked and fixed. It can be a word or an expression.
-  - **Start** A number corresponding to the position in the page contents where the text is found. Take into account that the first position is 0.
-  - **Type** The category of the replacement: misspelling, date format, etc. It may include a **SubType**, for instance the particular misspelling.
-  - **Suggestions** A list with at least one suggestion to replace the text. Each suggestion is composed by:
-    - **Text** The new text after the replacement.
-    - **Comment** An optional description to explain the motivation of the fix.
-- **Immutable** A section in the page contents to be left untouched, for instance a literal quote, so any replacement found within it must be ignored and not offered to the user for revision. It is composed by:
-  - **Start** The start position of the section in the page contents
-  - **End** The end position of the section in the page contents
-  - **Text** Optionally, the text in the section, especially for debugging purposes, i.e. the text between the start and end position of the section.
+  - **Text**. The text to be checked and fixed. It can be a word or an expression.
+  - **Start**. A number corresponding to the position in the page contents where the text is found. Take into account that the first position is 0.
+  - **Type**. The category of the replacement: misspelling, date format, etc. It may include a **SubType**, for instance the particular misspelling.
+  - **Suggestions**. A list with at least one suggestion to replace the text. Each suggestion is composed by:
+    - **Text**. The new text after the replacement.
+    - **Comment**. An optional description to explain the motivation of the fix.
+- **Immutable**. A section in the page contents to be left untouched, for instance a literal quote, so any replacement found within it must be ignored and not offered to the user for revision. It is composed by:
+  - **Start**. The start position of the section in the page contents
+  - **End**. The end position of the section in the page contents
+  - **Text**. Optionally, the text in the section, especially for debugging purposes, i.e. the text between the start and end position of the section.
 - **Cosmetic** A special type of replacement which can be applied automatically, concerning cosmetic modifications, visible or not, e.g. replacing `[[Asia|Asia]]` by `[[Asia]]`.
 
 For the first use case, the basic steps are:
@@ -88,37 +89,37 @@ The main logic is done in `ReplacementFindService`:
 3. Iterate over all the immutable finders (implementing `ImmutableFinder`) to obtain a stream of all potential immutables of several types in the text
 4. Discard replacements contained in any immutable.
 
-The number of immutables is meant to be quite higher than the number of replacements for a common text. Thus, we find all the replacements first. Then for each immutable we check if the replacement can be discarded or not. In case the list of replacements gets empty there is no need to keep on searching for immutables.
+The number of immutables is expected to be quite higher than the number of replacements for a common text. Thus, we find all the replacements first. Then for each immutable we check if the replacement can be discarded or not. In case the list of replacements gets empty there is no need to keep on searching for immutables.
 
 ### Immutables
 
 The sub-package `immutables` contain the generic immutable finders, meant to be language-agnostic.
 
 The tool implements the following generic immutable finders. We can add a priority to the immutable finders, as some immutables are more _useful_ than others, and we want them to be used before.
-- **CompleteTagFinder** Find some XML tags and all the content within, even other tags, e.g. `<code>An <span>example</span>.</code>`. The list of tags is configured in `complete-tags.xml`. Even with several tags taken into account, the faster approach is the linear search in one-pass.
-- **TemplateParamFinder** Find template parameters, e.g. `param` in `{{Template|param=value}}`. For some specific parameters (see `template-param.xml`), we include in the result also the value, which is usually a taxonomy, a Commons category, etc. Finally, we include also the value if it seems like a file or a domain.
-- **LinkAliasedFinder** Find the first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`
-- **CursiveFinder** Find text in cursive, e.g. `''cursive''` in `This is a ''cursive'' example`
-- **QuotesFinder**, **QuotesTypographicFinder** and **QuotesAngularFinder** Find text in quotes, e.g. `"text"`, `“text”` or `«text»`
-- **UrlFinder** Find URLs, e.g. `https://www.google.es`
-- **FileNameFinder** Find filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`
-- **CategoryFinder** Find categories, e.g. `[[Categoría:España]]`
-- **TemplateNameFinder** Find template names, e.g. `Bandera` in `{{Bandera|España}}`
-- **TemplateFinder** Find some complete templates, even with nested templates, e.g. `{{Cite|A cite}}`. The list of template names is configured in `template-names.xml`.
-- **XmlTagFinder** Find XML tags, e.g. `<span>` or `<br />`
-- **CommentFinder** Find XML comments, e.g. `<!-- A comment -->`
-- **LinkSuffixedFinder** Find links with suffix, e.g. `[[brasil]]eño`
-- **InterLanguageLinkFinder** Find inter-language links, e.g. `[[:pt:Title]]`
+- **CompleteTagFinder**. Find some XML tags and all the content within, even other tags, e.g. `<code>An <span>example</span>.</code>`. The list of tags is configured in `complete-tags.xml`. Even with several tags taken into account, the faster approach is the linear search in one-pass.
+- **TemplateParamFinder**. Find template parameters, e.g. `param` in `{{Template|param=value}}`. For some specific parameters (see `template-param.xml`), we include in the result also the value, which is usually a taxonomy, a Commons category, etc. Finally, we include also the value if it seems like a file or a domain.
+- **LinkAliasedFinder**. Find the first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`
+- **CursiveFinder**. Find text in cursive, e.g. `''cursive''` in `This is a ''cursive'' example`
+- **QuotesFinder**, **QuotesTypographicFinder** and **QuotesAngularFinder**. Find text in quotes, e.g. `"text"`, `“text”` or `«text»`
+- **UrlFinder**. Find URLs, e.g. `https://www.google.es`
+- **FileNameFinder**. Find filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`
+- **CategoryFinder**. Find categories, e.g. `[[Categoría:España]]`
+- **TemplateNameFinder**. Find template names, e.g. `Bandera` in `{{Bandera|España}}`
+- **TemplateFinder**. Find some complete templates, even with nested templates, e.g. `{{Cite|A cite}}`. The list of template names is configured in `template-names.xml`.
+- **XmlTagFinder**. Find XML tags, e.g. `<span>` or `<br />`
+- **CommentFinder**. Find XML comments, e.g. `<!-- A comment -->`
+- **LinkSuffixedFinder**. Find links with suffix, e.g. `[[brasil]]eño`
+- **InterLanguageLinkFinder**. Find inter-language links, e.g. `[[:pt:Title]]`
 
 ### Misspelling finders
 
 The sub-package `misspelling` includes replacement and immutable finders related with misspellings.
-- **MisspellingSimpleFinder** Find misspellings with only word, e.g. `habia` in Spanish. The Spanish list contains about 20K items. The best approach is finding all the words in the text, and then which ones are in the misspelling list.
-- **MisspellingComposedFinder** Find misspellings with more than one word, e.g. `aún así` in Spanish. Currently, there are about 100 items, and the best approach is a regex alternating all the items.
-- **FalsePositiveFinder** Find known expressions which are (almost) always false positives, e.g. in Spanish `aun así` which hides the potential replacement `aun`. Currently, there are about 300 items, and the best approach is a regex alternating all the items.
-- **PersonNameFinder** Find person names which are used also as nouns and thus are false positives, e.g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month to be written in lowercase. The list of names is configured in `person-names.xml`.
-- **PersonSurnameFinder** Find person surnames which are used also as nouns and thus are false positives, e.g. in Spanish `Records` in `RCA Records`, as "records" is also a noun to be written with an accent. The list of surnames is configured in `person-names.xml`.
-- **UppercaseAfterFinder** Find words in uppercase which are correct according to the punctuation, e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
+- **MisspellingSimpleFinder**. Find misspellings with only word, e.g. `habia` in Spanish. The Spanish list contains about 20K items. The best approach is finding all the words in the text, and then which ones are in the misspelling list.
+- **MisspellingComposedFinder**. Find misspellings with more than one word, e.g. `aún así` in Spanish. Currently, there are about 100 items, and the best approach is a regex alternating all the items.
+- **FalsePositiveFinder**. Find known expressions which are (almost) always false positives, e.g. in Spanish `aun así` which hides the potential replacement `aun`. Currently, there are about 300 items, and the best approach is a regex alternating all the items.
+- **PersonNameFinder**. Find person names which are used also as nouns and thus are false positives, e.g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month to be written in lowercase. The list of names is configured in `person-names.xml`.
+- **PersonSurnameFinder**. Find person surnames which are used also as nouns and thus are false positives, e.g. in Spanish `Records` in `RCA Records`, as "records" is also a noun to be written with an accent. The list of surnames is configured in `person-names.xml`.
+- **UppercaseAfterFinder**. Find words in uppercase which are correct according to the punctuation, e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
 
 Some of these finders use a list of properties which are maintained in text files (or Wikipedia pages) that need to be parsed first. These finders retrieve the properties from a manager class which extends the generic `ParseFileManager`. All of these also implement the Observable pattern. The managers reload the properties periodically, and the observer finders are notified in case of changes.
 
@@ -126,9 +127,9 @@ Some of these finders use a list of properties which are maintained in text file
 
 The sub-package `date` includes replacement finders related with dates.
 
-- **LeadingZeroFinder** Find long dates starting with zero, e.g. `02 de septiembre de 2019`
-- **UppercaseMonthFinder** Find dates with the month in uppercase, e.g. `2 de Septiembre de 2019`
-- **UppercaseMonthWithoutDayFinder** Find months in uppercase without day and after a common preposition, e.g. `desde Septiembre de 2019`
+- **LeadingZeroFinder**. Find long dates starting with zero, e.g. `02 de septiembre de 2019`
+- **UppercaseMonthFinder**. Find dates with the month in uppercase, e.g. `2 de Septiembre de 2019`
+- **UppercaseMonthWithoutDayFinder**. Find months in uppercase without day and after a common preposition, e.g. `desde Septiembre de 2019`
 
 *Note*: For the moment, these finders only work for Spanish language.
 
@@ -136,7 +137,7 @@ The sub-package `date` includes replacement finders related with dates.
 
 The sub-package `cosmetics` contains the cosmetic finders. The tool implements the following generic cosmetic finders:
 
-- **SameLinkFinder** Find links where the alias matches with the target link and thus the alias can be removed, e.g. `[[Madrid|Madrid]]`
+- **SameLinkFinder**. Find links where the alias matches with the target link and thus the alias can be removed, e.g. `[[Madrid|Madrid]]`
 
 These finders are used after a user reviews a replacement. Thus, the performance is not so important as when finding replacements and immutables.
 
