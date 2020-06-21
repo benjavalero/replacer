@@ -13,25 +13,27 @@ import org.junit.jupiter.api.Test;
 class LinkAliasedFinderTest {
 
     @Test
-    void testRegexUrl() {
+    void testLinkAliased() {
         String aliased1 = "brasil";
         String aliased2 = " reacción química ";
         String noAliased = "Text";
         String withNewLine = "one\nexample";
-        String file = "[[File:file.jpg|thumb]]";
+        String file = "File:file.jpg";
+        String aliasedAnnex = "Anexo:Países";
         String text = String.format(
-            "[[%s|Brasil]] [[%s]] [[%s|reacción]] [[%s|example]] %s.",
+            "[[%s|Brasil]] [[%s]] [[%s|reacción]] [[%s|example]] [[%s|thumb]] [[%s|Países]].",
             aliased1,
             noAliased,
             aliased2,
             withNewLine,
-            file
+            file,
+            aliasedAnnex
         );
 
         ImmutableFinder linkAliasedFinder = new LinkAliasedFinder();
         List<Immutable> matches = linkAliasedFinder.findList(text);
 
-        Set<String> expected = new HashSet<>(Arrays.asList(aliased1, aliased2));
+        Set<String> expected = new HashSet<>(Arrays.asList(aliased1, aliased2, file, aliasedAnnex));
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assertions.assertEquals(expected, actual);
     }

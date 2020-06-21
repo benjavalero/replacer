@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class LinkAliasedFinder implements ImmutableFinder {
-    private static final Set<Character> FORBIDDEN_CHARS = new HashSet<>(Arrays.asList(']', '|', ':', '\n'));
+    private static final Set<Character> FORBIDDEN_CHARS = new HashSet<>(Arrays.asList(']', '|', '\n'));
 
     @Override
     public ImmutableFinderPriority getPriority() {

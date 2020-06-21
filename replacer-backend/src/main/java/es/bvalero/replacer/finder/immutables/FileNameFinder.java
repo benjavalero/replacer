@@ -19,6 +19,7 @@ public class FileNameFinder implements ImmutableFinder {
     // - Tag "gallery" ==> Managed in CompleteTagFinder
     // - Template "Gallery" ==> Managed in CompleteTemplateFinder
     // - Parameter values without File prefix ==> Managed in TemplateParamFinder
+    // - File template with additional parameters separated by pipes ==> Managed in LinkAliasedFinder
 
     @Resource
     private List<String> fileSpaces;
