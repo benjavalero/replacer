@@ -34,7 +34,7 @@ public class FinderUtils {
     }
 
     public static String setFirstUpperCase(String word) {
-        return toUpperCase(word.substring(0, 1)) + word.substring(1);
+        return StringUtils.isBlank(word) ? STRING_EMPTY : toUpperCase(word.substring(0, 1)) + word.substring(1);
     }
 
     public static String setFirstUpperCaseClass(String word) {
