@@ -12,11 +12,17 @@ import lombok.ToString;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@XmlRootElement(name = "revision", namespace = "http://www.mediawiki.org/xml/export-0.10/")
-public class DumpRevision implements Serializable {
+@XmlRootElement(name = "page", namespace = "http://www.mediawiki.org/xml/export-0.10/")
+public class DumpPageXml implements Serializable {
     @XmlElement(namespace = "http://www.mediawiki.org/xml/export-0.10/")
-    String timestamp;
+    String title;
 
     @XmlElement(namespace = "http://www.mediawiki.org/xml/export-0.10/")
-    String text;
+    int ns;
+
+    @XmlElement(namespace = "http://www.mediawiki.org/xml/export-0.10/")
+    int id;
+
+    @XmlElement(namespace = "http://www.mediawiki.org/xml/export-0.10/")
+    DumpRevisionXml revision;
 }

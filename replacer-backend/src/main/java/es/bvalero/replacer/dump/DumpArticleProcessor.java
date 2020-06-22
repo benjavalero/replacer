@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @StepScope
 @Component
-public class DumpArticleProcessor implements ItemProcessor<DumpPage, List<ReplacementEntity>> {
+public class DumpArticleProcessor implements ItemProcessor<DumpPageXml, List<ReplacementEntity>> {
     @Autowired
     private ReplacementCache replacementCache;
 
@@ -45,9 +45,9 @@ public class DumpArticleProcessor implements ItemProcessor<DumpPage, List<Replac
     private List<String> ignorableTemplates;
 
     @Override
-    public List<ReplacementEntity> process(@NotNull DumpPage dumpPage) {
+    public List<ReplacementEntity> process(@NotNull DumpPageXml dumpPageXml) {
         // 1. Convert to indexable article
-        DumpArticle dumpArticle = mapDumpPageToDumpArticle(dumpPage);
+        DumpArticle dumpArticle = mapDumpPageToDumpArticle(dumpPageXml);
 
         // 2. Check if it is processable
         if (!dumpArticle.isProcessable(ignorableTemplates)) {
@@ -59,15 +59,15 @@ public class DumpArticleProcessor implements ItemProcessor<DumpPage, List<Replac
         return replacements.isEmpty() ? null : replacements;
     }
 
-    private DumpArticle mapDumpPageToDumpArticle(DumpPage dumpPage) {
+    private DumpArticle mapDumpPageToDumpArticle(DumpPageXml dumpPageXml) {
         return DumpArticle
             .builder()
-            .id(dumpPage.id)
+            .id(dumpPageXml.id)
             .lang(WikipediaLanguage.forValues(dumpLang))
-            .title(dumpPage.title)
-            .namespace(WikipediaNamespace.valueOf(dumpPage.ns))
-            .lastUpdate(WikipediaPage.parseWikipediaTimestamp(dumpPage.revision.timestamp))
-            .content(dumpPage.revision.text)
+            .title(dumpPageXml.title)
+            .namespace(WikipediaNamespace.valueOf(dumpPageXml.ns))
+            .lastUpdate(WikipediaPage.parseWikipediaTimestamp(dumpPageXml.revision.timestamp))
+            .content(dumpPageXml.revision.text)
             .build();
     }
 

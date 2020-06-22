@@ -51,13 +51,13 @@ public class DumpExecutionJob {
 
     @Bean
     public Job dumpJob(
-        ItemReader<DumpPage> dumpReader,
+        ItemReader<DumpPageXml> dumpReader,
         ItemWriter<ReplacementEntity> jdbcInsertWriter,
         ItemWriter<ReplacementEntity> jdbcUpdateWriter
     ) {
         Step step = stepBuilderFactory
             .get(DumpManager.PARSE_XML_STEP_NAME)
-            .<DumpPage, List<ReplacementEntity>>chunk(chunkSize)
+            .<DumpPageXml, List<ReplacementEntity>>chunk(chunkSize)
             .reader(dumpReader)
             .processor(dumpArticleProcessor)
             .writer(new DumpWriter(jdbcInsertWriter, jdbcUpdateWriter))
@@ -73,16 +73,16 @@ public class DumpExecutionJob {
 
     @Bean
     @StepScope
-    public StaxEventItemReader<DumpPage> dumpReader(@Value("#{jobParameters[dumpPath]}") String dumpPath)
+    public StaxEventItemReader<DumpPageXml> dumpReader(@Value("#{jobParameters[dumpPath]}") String dumpPath)
         throws IOException {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        marshaller.setClassesToBeBound(DumpPage.class);
+        marshaller.setClassesToBeBound(DumpPageXml.class);
 
         Resource resource = new InputStreamResource(
             new BZip2CompressorInputStream(Files.newInputStream(Paths.get(dumpPath)), true)
         );
 
-        return new StaxEventItemReaderBuilder<DumpPage>()
+        return new StaxEventItemReaderBuilder<DumpPageXml>()
             .name("dump-reader")
             .resource(resource)
             .unmarshaller(marshaller)
