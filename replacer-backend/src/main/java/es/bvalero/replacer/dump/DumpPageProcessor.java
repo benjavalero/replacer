@@ -23,12 +23,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * Process an article found in a Wikipedia dump.
+ * Process a page found in a Wikipedia dump.
  */
 @Slf4j
 @StepScope
 @Component
-public class DumpArticleProcessor implements ItemProcessor<DumpPageXml, List<ReplacementEntity>> {
+public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<ReplacementEntity>> {
     @Autowired
     private ReplacementCache replacementCache;
 
@@ -46,21 +46,21 @@ public class DumpArticleProcessor implements ItemProcessor<DumpPageXml, List<Rep
 
     @Override
     public List<ReplacementEntity> process(@NotNull DumpPageXml dumpPageXml) {
-        // 1. Convert to indexable article
-        DumpArticle dumpArticle = mapDumpPageToDumpArticle(dumpPageXml);
+        // 1. Convert to indexable page
+        DumpPage dumpPage = mapDumpPageXmlToDumpPage(dumpPageXml);
 
         // 2. Check if it is processable
-        if (!dumpArticle.isProcessable(ignorableTemplates)) {
+        if (!dumpPage.isProcessable(ignorableTemplates)) {
             return null;
         }
 
         // 3. Find the replacements to index
-        List<ReplacementEntity> replacements = processArticle(dumpArticle);
+        List<ReplacementEntity> replacements = processArticle(dumpPage);
         return replacements.isEmpty() ? null : replacements;
     }
 
-    private DumpArticle mapDumpPageToDumpArticle(DumpPageXml dumpPageXml) {
-        return DumpArticle
+    private DumpPage mapDumpPageXmlToDumpPage(DumpPageXml dumpPageXml) {
+        return DumpPage
             .builder()
             .id(dumpPageXml.id)
             .lang(WikipediaLanguage.forValues(dumpLang))
@@ -71,39 +71,36 @@ public class DumpArticleProcessor implements ItemProcessor<DumpPageXml, List<Rep
             .build();
     }
 
-    List<ReplacementEntity> processArticle(DumpArticle dumpArticle) {
-        LOGGER.debug("START Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
+    List<ReplacementEntity> processArticle(DumpPage dumpPage) {
+        LOGGER.debug("START Process dump page: {} - {}", dumpPage.getId(), dumpPage.getTitle());
 
-        List<ReplacementEntity> dbReplacements = replacementCache.findByArticleId(
-            dumpArticle.getId(),
-            dumpArticle.getLang()
-        );
+        List<ReplacementEntity> dbReplacements = replacementCache.findByArticleId(dumpPage.getId(), dumpPage.getLang());
         Optional<LocalDate> dbLastUpdate = dbReplacements
             .stream()
             .map(ReplacementEntity::getLastUpdate)
             .max(Comparator.comparing(LocalDate::toEpochDay));
-        if (dbLastUpdate.isPresent() && !dumpArticle.isProcessableByTimestamp(dbLastUpdate.get())) {
+        if (dbLastUpdate.isPresent() && !dumpPage.isProcessableByTimestamp(dbLastUpdate.get())) {
             LOGGER.debug(
-                "END Process dump article. Not processable by date: {}. Dump date: {}. DB date: {}",
-                dumpArticle.getTitle(),
-                dumpArticle.getLastUpdate(),
+                "END Process dump page. Not processable by date: {}. Dump date: {}. DB date: {}",
+                dumpPage.getTitle(),
+                dumpPage.getLastUpdate(),
                 dbLastUpdate
             );
             return Collections.emptyList();
         }
 
         List<Replacement> replacements = replacementFindService.findReplacements(
-            dumpArticle.getContent(),
-            dumpArticle.getLang()
+            dumpPage.getContent(),
+            dumpPage.getLang()
         );
         List<ReplacementEntity> toWrite = replacementIndexService.findIndexArticleReplacements(
-            dumpArticle.getId(),
-            dumpArticle.getLang(),
-            replacements.stream().map(dumpArticle::convertReplacementToIndexed).collect(Collectors.toList()),
+            dumpPage.getId(),
+            dumpPage.getLang(),
+            replacements.stream().map(dumpPage::convertReplacementToIndexed).collect(Collectors.toList()),
             dbReplacements
         );
 
-        LOGGER.debug("END Process dump article: {} - {}", dumpArticle.getId(), dumpArticle.getTitle());
+        LOGGER.debug("END Process dump page: {} - {}", dumpPage.getId(), dumpPage.getTitle());
         return toWrite;
     }
 }

@@ -41,7 +41,7 @@ public class DumpExecutionJob {
     private int chunkSize;
 
     @Autowired
-    private DumpArticleProcessor dumpArticleProcessor;
+    private DumpPageProcessor dumpPageProcessor;
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -59,7 +59,7 @@ public class DumpExecutionJob {
             .get(DumpManager.PARSE_XML_STEP_NAME)
             .<DumpPageXml, List<ReplacementEntity>>chunk(chunkSize)
             .reader(dumpReader)
-            .processor(dumpArticleProcessor)
+            .processor(dumpPageProcessor)
             .writer(new DumpWriter(jdbcInsertWriter, jdbcUpdateWriter))
             .build();
 

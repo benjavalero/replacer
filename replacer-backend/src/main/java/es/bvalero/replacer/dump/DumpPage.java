@@ -1,6 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.IndexableArticle;
+import es.bvalero.replacer.article.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
@@ -9,7 +9,7 @@ import lombok.Value;
 
 @Value
 @Builder
-class DumpArticle implements IndexableArticle {
+class DumpPage implements IndexablePage {
     int id;
     WikipediaLanguage lang;
     String title;
@@ -18,9 +18,9 @@ class DumpArticle implements IndexableArticle {
     String content;
 
     boolean isProcessableByTimestamp(LocalDate dbDate) {
-        // If article modified in dump equals to the last indexing, reprocess always.
-        // If article modified in dump after last indexing, reprocess always.
-        // If article modified in dump before last indexing, do not reprocess even when forcing.
+        // If page modified in dump equals to the last indexing, reprocess always.
+        // If page modified in dump after last indexing, reprocess always.
+        // If page modified in dump before last indexing, do not reprocess even when forcing.
         return !this.getLastUpdate().isBefore(dbDate);
     }
 }

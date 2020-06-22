@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
  * Find the Wikipedia dumps in the filesystem where the application runs.
  * This indexing will be done periodically, or manually from @{@link DumpController}.
  * The dumps are parsed with @{@link DumpExecutionJob}.
- * Each article found in the dump is processed in @{@link DumpArticleProcessor}.
+ * Each page found in the dump is processed in @{@link DumpPageProcessor}.
  */
 @Slf4j
 @Component

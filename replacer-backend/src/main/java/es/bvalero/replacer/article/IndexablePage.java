@@ -7,7 +7,7 @@ import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface IndexableArticle {
+public interface IndexablePage {
     int getId();
 
     WikipediaLanguage getLang();
