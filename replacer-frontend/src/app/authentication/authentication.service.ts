@@ -10,28 +10,39 @@ import { AlertService } from '../alert/alert.service';
 import { VerificationToken } from './verification-token.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthenticationService {
-
   @Output() userEvent: EventEmitter<WikipediaUser> = new EventEmitter();
 
-  constructor(private httpClient: HttpClient, private alertService: AlertService) { }
+  baseUrl = `${environment.apiUrl}/authentication`;
+
+  constructor(
+    private httpClient: HttpClient,
+    private alertService: AlertService
+  ) {}
 
   isAuthenticated(): boolean {
     return this.accessToken !== null;
   }
 
-  generateRequestToken(): Observable<RequestToken> {
-    return this.httpClient.get<RequestToken>(`${environment.apiUrl}/authentication/requestToken`);
+  getRequestToken(): Observable<RequestToken> {
+    return this.httpClient.get<RequestToken>(`${this.baseUrl}/request-token`);
   }
 
-  generateAccessToken(verificationToken: string): Observable<AccessToken> {
+  getAccessToken(verificationToken: string): Observable<AccessToken> {
     const verificationTokenDto = new VerificationToken();
     verificationTokenDto.requestToken = this.requestToken;
     verificationTokenDto.token = verificationToken;
 
-    return this.httpClient.post<AccessToken>(`${environment.apiUrl}/authentication/accessToken`, verificationTokenDto);
+    const params = new HttpParams()
+      .append('requestToken', this.requestToken.token)
+      .append('requestTokenSecret', this.requestToken.tokenSecret)
+      .append('oauthVerifier', verificationToken);
+
+    return this.httpClient.get<AccessToken>(`${this.baseUrl}/access-token`, {
+      params,
+    });
   }
 
   clearSession(): void {
@@ -77,12 +88,22 @@ export class AuthenticationService {
   }
 
   private findUserName(): void {
-    this.httpClient.post<WikipediaUser>(`${environment.apiUrl}/wikipedia/username`, this.accessToken)
-      .subscribe((user: WikipediaUser) => {
-        this.user = user;
-      }, (err) => {
-        this.alertService.addErrorMessage('Error al buscar el nombre del usuario en sesión');
-      });
+    const params = new HttpParams()
+      .append('accessToken', this.accessToken.token)
+      .append('accessTokenSecret', this.accessToken.tokenSecret);
+
+    this.httpClient
+      .get<WikipediaUser>(`${this.baseUrl}/user`, { params })
+      .subscribe(
+        (user: WikipediaUser) => {
+          this.user = user;
+        },
+        (err) => {
+          this.alertService.addErrorMessage(
+            'Error al buscar el nombre del usuario en sesión'
+          );
+        }
+      );
   }
 
   get user(): WikipediaUser {
@@ -109,5 +130,4 @@ export class AuthenticationService {
       this.user = userAux;
     }
   }
-
 }

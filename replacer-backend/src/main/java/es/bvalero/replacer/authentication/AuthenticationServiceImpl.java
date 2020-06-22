@@ -3,19 +3,17 @@ package es.bvalero.replacer.authentication;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-
 @Slf4j
 @Service
 @Profile("default")
 class AuthenticationServiceImpl implements AuthenticationService {
-
     @Autowired
     private OAuth10aService oAuthService;
 
@@ -40,14 +38,14 @@ class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String getAuthorizationUrl(OAuth1RequestToken requestToken) {
         LOGGER.info("START Get Authorization URL from MediaWiki API. Request Token: {}", requestToken.getToken());
-        String url = oAuthService.getAuthorizationUrl(requestToken);
-        LOGGER.info("END Get Authorization URL from MediaWiki API: {}", url);
-        return url;
+        String authorizationUrl = oAuthService.getAuthorizationUrl(requestToken);
+        LOGGER.info("END Get Authorization URL from MediaWiki API: {}", authorizationUrl);
+        return authorizationUrl;
     }
 
     @Override
     public OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
-            throws AuthenticationException {
+        throws AuthenticationException {
         try {
             LOGGER.info("START Get Access Token from MediaWiki API. Request Token: {}", requestToken.getToken());
             OAuth1AccessToken token = oAuthService.getAccessToken(requestToken, oauthVerifier);
@@ -63,5 +61,4 @@ class AuthenticationServiceImpl implements AuthenticationService {
             throw new AuthenticationException();
         }
     }
-
 }

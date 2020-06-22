@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 class RequestToken {
     private String token;
     private String tokenSecret;
-    private String url;
+    private String authorizationUrl;
 }

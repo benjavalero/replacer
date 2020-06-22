@@ -3,12 +3,11 @@ package es.bvalero.replacer.wikipedia;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.authentication.AccessToken;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +33,15 @@ public class WikipediaControllerTest {
 
     @Test
     public void testGetRequestToken() throws Exception {
-        AccessToken accessToken = new AccessToken("X", "Y");
         when(wikipediaService.getLoggedUserName(any(), any())).thenReturn("A");
         when(wikipediaService.isAdminUser("A")).thenReturn(true);
 
         mvc
             .perform(
-                post("/api/wikipedia/username")
+                get("/api/authentication/user")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(accessToken))
+                    .param("accessToken", "X")
+                    .param("accessTokenSecret", "Y")
             )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name", is("A")))

@@ -2,37 +2,34 @@ package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.authentication.AccessToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("api/wikipedia")
+@RequestMapping("api")
 public class WikipediaController {
     @Autowired
     private WikipediaService wikipediaService;
 
-    @PostMapping(value = "/username")
+    @GetMapping(value = "/authentication/user")
     public WikipediaUser getUsername(
-        @RequestBody AccessToken accessToken,
+        @RequestParam String accessToken,
+        @RequestParam String accessTokenSecret,
         @RequestParam(required = false) WikipediaLanguage lang
     )
         throws ReplacerException {
-        LOGGER.info("GET Name of the logged user from Wikipedia API: {}", accessToken);
+        LOGGER.info("GET Logged user from Wikipedia API: {}", accessToken);
         if (lang == null) {
             // Default value
             lang = WikipediaLanguage.SPANISH;
         }
-        String userName = wikipediaService.getLoggedUserName(convertToEntity(accessToken), lang);
+        OAuth1AccessToken oAuth1AccessToken = new OAuth1AccessToken(accessToken, accessTokenSecret);
+        String userName = wikipediaService.getLoggedUserName(oAuth1AccessToken, lang);
         boolean admin = wikipediaService.isAdminUser(userName);
         WikipediaUser user = WikipediaUser.of(userName, admin);
-        LOGGER.info("RETURN Name of the logged user: {}", user);
+        LOGGER.info("RETURN Logged user: {}", user);
         return user;
-    }
-
-    private OAuth1AccessToken convertToEntity(AccessToken accessToken) {
-        return new OAuth1AccessToken(accessToken.getToken(), accessToken.getTokenSecret());
     }
 }

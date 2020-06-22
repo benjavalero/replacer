@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/authentication")
 public class AuthenticationController {
-
     @Autowired
     private AuthenticationService authenticationService;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping(value = "/requestToken")
+    @GetMapping(value = "/request-token")
     public RequestToken getRequestToken() throws AuthenticationException {
         LOGGER.info("GET Request Token from MediaWiki API");
         OAuth1RequestToken requestToken = authenticationService.getRequestToken();
@@ -26,27 +25,26 @@ public class AuthenticationController {
         return convertToDto(requestToken, authorizationUrl);
     }
 
-    @PostMapping(value = "/accessToken")
-    public AccessToken getAccessToken(@RequestBody VerificationToken verificationToken)
-            throws AuthenticationException {
-        LOGGER.info("GET Access Token from MediaWiki API: {}", verificationToken);
-        return convertToDto(authenticationService.getAccessToken(
-                convertToEntity(verificationToken.getRequestToken()),
-                verificationToken.getToken()));
+    @GetMapping(value = "/access-token")
+    public AccessToken getAccessToken(
+        @RequestParam String requestToken,
+        @RequestParam String requestTokenSecret,
+        @RequestParam String oauthVerifier
+    )
+        throws AuthenticationException {
+        LOGGER.info("GET Access Token from MediaWiki API");
+
+        OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken(requestToken, requestTokenSecret);
+        return convertToDto(authenticationService.getAccessToken(oAuth1RequestToken, oauthVerifier));
     }
 
     private RequestToken convertToDto(OAuth1RequestToken oAuth1RequestToken, String authorizationUrl) {
         RequestToken requestToken = modelMapper.map(oAuth1RequestToken, RequestToken.class);
-        requestToken.setUrl(authorizationUrl);
+        requestToken.setAuthorizationUrl(authorizationUrl);
         return requestToken;
-    }
-
-    private OAuth1RequestToken convertToEntity(RequestToken requestToken) {
-        return new OAuth1RequestToken(requestToken.getToken(), requestToken.getTokenSecret());
     }
 
     private AccessToken convertToDto(OAuth1AccessToken token) {
         return modelMapper.map(token, AccessToken.class);
     }
-
 }
