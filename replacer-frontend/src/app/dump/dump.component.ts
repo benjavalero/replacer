@@ -2,19 +2,19 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
 
-import { DumpService } from './dump.service';
-import { DumpStatus } from './dump-status.model';
+import { DumpIndexingService } from './dump-indexing.service';
+import { DumpIndexingStatus } from './dump-indexing-status.model';
 import { AlertService } from '../alert/alert.service';
 import { sleep } from '../sleep';
 
 @Component({
   selector: 'app-dump',
   templateUrl: './dump.component.html',
-  styleUrls: []
+  styleUrls: [],
 })
 export class DumpComponent implements OnInit, OnDestroy {
   // Status Details
-  status: DumpStatus;
+  status: DumpIndexingStatus;
   elapsed: string;
   progress: number;
   average: number;
@@ -23,31 +23,39 @@ export class DumpComponent implements OnInit, OnDestroy {
   // Check the status
   subscription: Subscription;
 
-  constructor(private dumpService: DumpService, private alertService: AlertService, private titleService: Title) { }
+  constructor(
+    private dumpService: DumpIndexingService,
+    private alertService: AlertService,
+    private titleService: Title
+  ) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Indexación');
     this.alertService.addInfoMessage('Cargando estado de la indexación…');
-    this.findDumpStatus();
+    this.getDumpIndexingStatus();
 
     // Refresh every 10 seconds
-    this.subscription = interval(10000).subscribe(() => this.findDumpStatus());
+    this.subscription = interval(10000).subscribe(() =>
+      this.getDumpIndexingStatus()
+    );
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
-  private findDumpStatus() {
-    this.dumpService.findDumpStatus().subscribe((status: DumpStatus) => {
-      this.status = status;
-      this.elapsed = this.formatMilliseconds(this.calculateElapsed());
-      this.progress = this.calculateProgress();
-      this.average = this.calculateAverage();
-      this.eta = this.formatMilliseconds(this.calculateEta());
+  private getDumpIndexingStatus() {
+    this.dumpService
+      .getDumpIndexingStatus()
+      .subscribe((status: DumpIndexingStatus) => {
+        this.status = status;
+        this.elapsed = this.formatMilliseconds(this.calculateElapsed());
+        this.progress = this.calculateProgress();
+        this.average = this.calculateAverage();
+        this.eta = this.formatMilliseconds(this.calculateEta());
 
-      this.alertService.clearAlertMessages();
-    });
+        this.alertService.clearAlertMessages();
+      });
   }
 
   private calculateElapsed(): number {
@@ -74,7 +82,10 @@ export class DumpComponent implements OnInit, OnDestroy {
   private calculateProgress(): number {
     if (this.status.numArticlesRead) {
       // We might have more read articles than the estimation constant
-      return this.status.numArticlesRead * 100.0 / Math.max(this.status.numArticlesEstimated, this.status.numArticlesRead);
+      return (
+        (this.status.numArticlesRead * 100.0) /
+        Math.max(this.status.numArticlesEstimated, this.status.numArticlesRead)
+      );
     } else {
       return 0;
     }
@@ -90,7 +101,11 @@ export class DumpComponent implements OnInit, OnDestroy {
 
   private calculateEta(): number {
     if (this.status.running) {
-      const toRead = Math.max(this.status.numArticlesEstimated, this.status.numArticlesRead) - this.status.numArticlesRead;
+      const toRead =
+        Math.max(
+          this.status.numArticlesEstimated,
+          this.status.numArticlesRead
+        ) - this.status.numArticlesRead;
       return toRead * this.calculateAverage();
     } else {
       return 0;
@@ -105,10 +120,9 @@ export class DumpComponent implements OnInit, OnDestroy {
     this.status = null;
     this.alertService.addInfoMessage('Iniciando indexación…');
 
-    this.dumpService.runIndexation().subscribe(() => {
+    this.dumpService.startDumpIndexing().subscribe(() => {
       // It takes a little for the back-end to set the running status
-      sleep(10000).then(() => this.findDumpStatus());
+      sleep(10000).then(() => this.getDumpIndexingStatus());
     });
   }
-
 }

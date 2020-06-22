@@ -1,4 +1,4 @@
-export interface DumpStatus {
+export interface DumpIndexingStatus {
   running: boolean;
   numArticlesRead: number;
   numArticlesProcessed: number;

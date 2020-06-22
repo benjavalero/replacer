@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Find the Wikipedia dumps in the filesystem where the application runs.
- * This indexation will be done periodically, or manually from @{@link DumpController}.
+ * This indexing will be done periodically, or manually from @{@link DumpController}.
  * The dumps are parsed with @{@link DumpExecutionJob}.
  * Each article found in the dump is processed in @{@link DumpArticleProcessor}.
  */
@@ -70,11 +70,11 @@ class DumpManager {
     // https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableAsync.html
     @Async
     public void processLatestDumpFile() {
-        LOGGER.info("START Indexation of latest dump file");
+        LOGGER.info("START Index latest dump file");
 
         // Check just in case the handler is already running
         if (!jobExplorer.findRunningJobExecutions(DUMP_JOB_NAME).isEmpty()) {
-            LOGGER.info("END Indexation of latest dump file. Dump indexation is already running.");
+            LOGGER.info("END Index latest dump file. Dump indexing is already running.");
             return;
         }
 
@@ -82,7 +82,7 @@ class DumpManager {
             try {
                 Path latestDumpFileFound = dumpFinder.findLatestDumpFile(lang);
                 parseDumpFile(latestDumpFileFound, lang);
-                LOGGER.info("END Indexation of latest dump file: {}", latestDumpFileFound);
+                LOGGER.info("END Index latest dump file: {}", latestDumpFileFound);
             } catch (ReplacerException e) {
                 LOGGER.error("Error indexing latest dump file", e);
             }
@@ -110,20 +110,20 @@ class DumpManager {
         }
     }
 
-    DumpIndexation getDumpIndexation() {
-        DumpIndexation dumpIndexation = new DumpIndexation();
+    DumpIndexingStatus getDumpIndexingStatus() {
+        DumpIndexingStatus dumpIndexingStatus = new DumpIndexingStatus();
 
         // Find job execution
         JobInstance jobInstance = jobExplorer.getLastJobInstance(DumpManager.DUMP_JOB_NAME);
         if (jobInstance != null) {
             JobExecution jobExecution = jobExplorer.getLastJobExecution(jobInstance);
             if (jobExecution != null) {
-                dumpIndexation.setRunning(jobExecution.isRunning());
-                dumpIndexation.setStart(jobExecution.getStartTime().getTime());
+                dumpIndexingStatus.setRunning(jobExecution.isRunning());
+                dumpIndexingStatus.setStart(jobExecution.getStartTime().getTime());
                 if (!jobExecution.isRunning()) {
-                    dumpIndexation.setEnd(jobExecution.getEndTime().getTime());
+                    dumpIndexingStatus.setEnd(jobExecution.getEndTime().getTime());
                 }
-                dumpIndexation.setDumpFileName(
+                dumpIndexingStatus.setDumpFileName(
                     jobExecution.getJobParameters().getString(DumpManager.DUMP_PATH_PARAMETER)
                 );
                 String lang = jobExecution.getJobParameters().getString(DumpManager.DUMP_LANG_PARAMETER);
@@ -131,24 +131,24 @@ class DumpManager {
                 if (lang == null) {
                     lang = WikipediaLanguage.SPANISH.getCode();
                 }
-                dumpIndexation.setNumArticlesEstimated(numArticlesEstimated.get(lang));
+                dumpIndexingStatus.setNumArticlesEstimated(numArticlesEstimated.get(lang));
 
-                addStepExecutions(dumpIndexation, jobExecution);
+                addStepExecutions(dumpIndexingStatus, jobExecution);
             }
         }
 
-        return dumpIndexation;
+        return dumpIndexingStatus;
     }
 
-    private void addStepExecutions(DumpIndexation dumpIndexation, JobExecution jobExecution) {
+    private void addStepExecutions(DumpIndexingStatus dumpIndexingStatus, JobExecution jobExecution) {
         try {
             Map<Long, String> map = jobOperator.getStepExecutionSummaries(jobExecution.getId());
             if (!map.isEmpty()) {
                 long stepId = map.keySet().stream().findAny().orElse(0L);
                 StepExecution stepExecution = jobExplorer.getStepExecution(jobExecution.getId(), stepId);
                 if (stepExecution != null) {
-                    dumpIndexation.setNumArticlesRead(stepExecution.getReadCount());
-                    dumpIndexation.setNumArticlesProcessed(stepExecution.getWriteCount());
+                    dumpIndexingStatus.setNumArticlesRead(stepExecution.getReadCount());
+                    dumpIndexingStatus.setNumArticlesProcessed(stepExecution.getWriteCount());
                 }
             }
         } catch (NoSuchJobExecutionException e) {

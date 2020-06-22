@@ -203,7 +203,7 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 ### Optimization
 - [ ] Research to improve the database model
 - [ ] \#71: Performance tests to run replacement finders in parallel
-- [ ] \#79: Add some kind of warning for heavy indexations in order to find issues in finder performance
+- [ ] \#79: Add some kind of warning for long indexing times in order to find issues in finder performance
 - [ ] Delete replacements reviewed by the system which are not needed to keep track of the reviewed articles. For the moment, I do it manually by running the query: `DELETE FROM replacement2 WHERE reviewer = 'system' AND position > 0;`
 
 ### Features
@@ -213,7 +213,6 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] \#45: Research exceptions for the most common replacements
 - [ ] Check if it is worth to store the replacement type as an enumerate
 - [ ] Research if it is possible to deploy independently the frontend and the backend in ToolLabs
-- [ ] Use Flyway in order to execute DB scripts more easily in the future
 - [ ] Review in the bot, in case they exist, possible cases of the template `dts` or `date_table_sorting` with English format, as this template also exists in Spanish. See <https://en.wikipedia.org/wiki/Template:Date_table_sorting>, <https://es.wikipedia.org/wiki/Plantilla:Dts>, <https://es.wikipedia.org/w/index.php?title=Compile_Heart&diff=prev&oldid=122078489>.
 - [ ] Make the tool more general in order to find replacements in other wiki-projects
 - [ ] Migrate to Wikipedia REST API, meant to be more appropriate for this kind of tools.

@@ -8,22 +8,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * REST actions to start the dump processing or find the current status.
+ * REST actions related to the dump indexing process.
  */
 @Slf4j
 @RestController
-@RequestMapping("api/dump")
+@RequestMapping("api/dump-indexing")
 public class DumpController {
     @Autowired
     private DumpManager dumpManager;
 
-    @GetMapping(value = "")
-    public DumpIndexation getDumpStatus() {
-        return dumpManager.getDumpIndexation();
+    @GetMapping(value = "/status")
+    public DumpIndexingStatus getDumpIndexingStatus() {
+        return dumpManager.getDumpIndexingStatus();
     }
 
-    @PostMapping(value = "")
-    public void processLatestDumpFileManually() {
+    @PostMapping(value = "/start")
+    public void postStart() {
         dumpManager.processLatestDumpFile();
     }
 }

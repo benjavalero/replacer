@@ -3,7 +3,7 @@ package es.bvalero.replacer.dump;
 import lombok.Data;
 
 @Data
-public class DumpIndexation {
+public class DumpIndexingStatus {
     private boolean running;
     private long numArticlesRead;
     private long numArticlesProcessed;
