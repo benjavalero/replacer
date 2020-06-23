@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.CosmeticFinder;
 import es.bvalero.replacer.finder.RegexIterable;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 class SameLinkFinder implements CosmeticFinder {
+    @RegExp
     private static final String REGEX_SAME_LINK = "\\[\\[([^]|]+)\\|(\\1)]]";
     private static final Pattern PATTERN_SAME_LINK = Pattern.compile(REGEX_SAME_LINK, Pattern.CASE_INSENSITIVE);
 
