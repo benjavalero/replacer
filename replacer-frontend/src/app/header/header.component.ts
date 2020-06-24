@@ -14,7 +14,7 @@ export class HeaderComponent implements OnInit {
   user: WikipediaUser;
   defaultLang = Language.es;
 
-  constructor(private authenticationService: AuthenticationService, private router: Router) { }
+  constructor(private authenticationService: AuthenticationService, private router: Router) {}
 
   ngOnInit() {
     if (this.authenticationService.user) {
@@ -29,14 +29,15 @@ export class HeaderComponent implements OnInit {
   onSelectLang(lang: string) {
     // Enable language
     const language: Language = Language[lang];
-    if (lang) {
+    if (language) {
       this.authenticationService.lang = language;
+      this.router.navigate(['']);
     }
   }
 
   onCloseSession() {
-      // Clear session and reload the page
-      this.authenticationService.clearSession();
-      this.router.navigate(['']);
+    // Clear session and reload the page
+    this.authenticationService.clearSession();
+    this.router.navigate(['']);
   }
 }
