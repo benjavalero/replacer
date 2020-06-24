@@ -18,20 +18,19 @@ public class ReplacementCountService {
 
     /* STATISTICS */
 
-    long countAllReplacements() {
-        return replacementRepository.countByReviewerIsNullOrReviewerIsNot(ReplacementIndexService.SYSTEM_REVIEWER);
+    long countReplacementsReviewed(WikipediaLanguage lang) {
+        return replacementRepository.countByLangAndReviewerIsNotNullAndReviewerIsNot(
+            lang.getCode(),
+            ReplacementIndexService.SYSTEM_REVIEWER
+        );
     }
 
-    long countReplacementsReviewed() {
-        return replacementRepository.countByReviewerIsNotNullAndReviewerIsNot(ReplacementIndexService.SYSTEM_REVIEWER);
+    long countReplacementsToReview(WikipediaLanguage lang) {
+        return replacementRepository.countByLangAndReviewerIsNull(lang.getCode());
     }
 
-    long countReplacementsToReview() {
-        return replacementRepository.countByReviewerIsNull();
-    }
-
-    List<ReviewerCount> countReplacementsGroupedByReviewer() {
-        return replacementRepository.countGroupedByReviewer(ReplacementIndexService.SYSTEM_REVIEWER);
+    List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
+        return replacementRepository.countGroupedByReviewer(lang.getCode(), ReplacementIndexService.SYSTEM_REVIEWER);
     }
 
     /* LIST OF REPLACEMENTS */

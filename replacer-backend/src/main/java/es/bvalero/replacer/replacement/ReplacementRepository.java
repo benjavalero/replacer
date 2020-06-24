@@ -32,7 +32,7 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
     )
     long findRandomStart(@Param("chunkSize") long chunkSize, @Param("lang") String lang);
 
-    // Not worth to DISTINCT. Besides the count in case of no type is not displayed so far.
+    // Not worth to DISTINCT. Besides this count is also used in statistics.
     long countByLangAndReviewerIsNull(String lang);
 
     // ORDER BY RAND() takes a lot when not filtering by type/subtype even using an index
@@ -92,20 +92,19 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
 
     List<ReplacementEntity> findByArticleIdAndLangAndReviewerIsNull(int articleId, String lang);
 
-    long countByReviewerIsNullOrReviewerIsNot(String reviewer);
-
-    long countByReviewerIsNull();
-
-    long countByReviewerIsNotNullAndReviewerIsNot(String reviewer);
+    long countByLangAndReviewerIsNotNullAndReviewerIsNot(String lang, String reviewer);
 
     @Query(
         "SELECT new es.bvalero.replacer.replacement.ReviewerCount(reviewer, COUNT(*)) " +
         "FROM ReplacementEntity " +
-        "WHERE reviewer IS NOT NULL AND reviewer <> :systemReviewer " +
+        "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :systemReviewer " +
         "GROUP BY reviewer " +
         "ORDER BY COUNT(*) DESC"
     )
-    List<ReviewerCount> countGroupedByReviewer(String systemReviewer);
+    List<ReviewerCount> countGroupedByReviewer(
+        @Param("lang") String lang,
+        @Param("systemReviewer") String systemReviewer
+    );
 
     void deleteByLangAndTypeAndSubtypeInAndReviewerIsNull(String lang, String type, Set<String> subtypes);
 }

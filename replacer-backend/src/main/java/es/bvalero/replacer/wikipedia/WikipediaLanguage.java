@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;
 import java.util.Map;
@@ -22,7 +21,6 @@ public enum WikipediaLanguage {
     @JsonValue
     private final String code;
 
-    @JsonCreator
     public static WikipediaLanguage forValues(String code) {
         return map.getOrDefault(code, WikipediaLanguage.SPANISH);
     }

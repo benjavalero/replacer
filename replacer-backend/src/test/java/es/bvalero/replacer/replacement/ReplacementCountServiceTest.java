@@ -27,41 +27,32 @@ class ReplacementCountServiceTest {
     }
 
     @Test
-    void testCountReplacements() {
-        long count = new Random().nextLong();
-
-        Mockito.when(replacementRepository.countByReviewerIsNullOrReviewerIsNot(Mockito.anyString())).thenReturn(count);
-
-        Assertions.assertEquals(count, replacementCountService.countAllReplacements());
-    }
-
-    @Test
     void testCountReplacementsReviewed() {
         long count = new Random().nextLong();
 
         Mockito
-            .when(replacementRepository.countByReviewerIsNotNullAndReviewerIsNot(Mockito.anyString()))
+            .when(replacementRepository.countByLangAndReviewerIsNotNullAndReviewerIsNot(Mockito.anyString(), Mockito.anyString()))
             .thenReturn(count);
 
-        Assertions.assertEquals(count, replacementCountService.countReplacementsReviewed());
+        Assertions.assertEquals(count, replacementCountService.countReplacementsReviewed(WikipediaLanguage.SPANISH));
     }
 
     @Test
     void testCountReplacementsToReview() {
         long count = new Random().nextLong();
 
-        Mockito.when(replacementRepository.countByReviewerIsNull()).thenReturn(count);
+        Mockito.when(replacementRepository.countByLangAndReviewerIsNull(Mockito.anyString())).thenReturn(count);
 
-        Assertions.assertEquals(count, replacementCountService.countReplacementsToReview());
+        Assertions.assertEquals(count, replacementCountService.countReplacementsToReview(WikipediaLanguage.SPANISH));
     }
 
     @Test
     void testCountReplacementsGroupedByReviewer() {
         List<ReviewerCount> result = new ArrayList<>();
 
-        Mockito.when(replacementRepository.countGroupedByReviewer(Mockito.anyString())).thenReturn(result);
+        Mockito.when(replacementRepository.countGroupedByReviewer(Mockito.anyString(), Mockito.anyString())).thenReturn(result);
 
-        Assertions.assertEquals(result, replacementCountService.countReplacementsGroupedByReviewer());
+        Assertions.assertEquals(result, replacementCountService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH));
     }
 
     @Test

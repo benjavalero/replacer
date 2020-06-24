@@ -1,26 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 import { ArticleReview } from './article-review.model';
 import { AuthenticationService } from '../authentication/authentication.service';
-import { ReviewerCount } from '../stats/reviewer-count.model';
 import { SaveArticle } from './save-article.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArticleService {
-
   private cachedArticleReviews = {};
 
-  constructor(private httpClient: HttpClient, private authenticationService: AuthenticationService) { }
+  constructor(private httpClient: HttpClient, private authenticationService: AuthenticationService) {}
 
   findRandomArticle(type: string, subtype: string, suggestion: string): Observable<ArticleReview> {
     if (type && subtype) {
       if (suggestion) {
-        return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/random/${type}/${subtype}/${suggestion}`);
+        return this.httpClient.get<ArticleReview>(
+          `${environment.apiUrl}/article/random/${type}/${subtype}/${suggestion}`
+        );
       } else {
         return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/random/${type}/${subtype}`);
       }
@@ -49,10 +49,17 @@ export class ArticleService {
     }
   }
 
-  findArticleReviewById(articleId: number, type: string, subtype: string, suggestion: string): Observable<ArticleReview> {
+  findArticleReviewById(
+    articleId: number,
+    type: string,
+    subtype: string,
+    suggestion: string
+  ): Observable<ArticleReview> {
     if (type && subtype) {
       if (suggestion) {
-        return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/${articleId}/${type}/${subtype}/${suggestion}`);
+        return this.httpClient.get<ArticleReview>(
+          `${environment.apiUrl}/article/${articleId}/${type}/${subtype}/${suggestion}`
+        );
       } else {
         return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/${articleId}/${type}/${subtype}`);
       }
@@ -61,7 +68,14 @@ export class ArticleService {
     }
   }
 
-  saveArticle(articleId: number, type: string, subtype: string, content: string, section: number, currentTimestamp: string): Observable<any> {
+  saveArticle(
+    articleId: number,
+    type: string,
+    subtype: string,
+    content: string,
+    section: number,
+    currentTimestamp: string
+  ): Observable<any> {
     if (!this.authenticationService.isAuthenticated()) {
       return throwError('El usuario no está autenticado. Recargue la página para retomar la sesión.');
     }
@@ -82,21 +96,4 @@ export class ArticleService {
 
     return this.httpClient.post<any>(`${environment.apiUrl}/article`, saveArticle);
   }
-
-  findNumReplacements(): Observable<number> {
-    return this.httpClient.get<number>(`${environment.apiUrl}/replacement/count`);
-  }
-
-  findNumNotReviewed(): Observable<number> {
-    return this.httpClient.get<number>(`${environment.apiUrl}/replacement/count/to-review`);
-  }
-
-  findNumReviewed(): Observable<number> {
-    return this.httpClient.get<number>(`${environment.apiUrl}/replacement/count/reviewed`);
-  }
-
-  findNumReviewedByReviewer(): Observable<ReviewerCount[]> {
-    return this.httpClient.get<ReviewerCount[]>(`${environment.apiUrl}/replacement/count/reviewed/grouped`);
-  }
-
 }

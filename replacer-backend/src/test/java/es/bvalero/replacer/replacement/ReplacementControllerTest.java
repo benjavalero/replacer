@@ -1,7 +1,15 @@
 package es.bvalero.replacer.replacement;
 
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaLanguageConverter;
+import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +20,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
-
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @RunWith(SpringRunner.class)
 @WebMvcTest
-@ContextConfiguration(classes = ReplacementController.class)
+@ContextConfiguration(classes = { ReplacementController.class, WikipediaLanguageConverter.class })
 public class ReplacementControllerTest {
-
     @Autowired
     private MockMvc mvc;
 
@@ -35,56 +34,46 @@ public class ReplacementControllerTest {
     private ReplacementCountService replacementCountService;
 
     @Test
-    public void testCountReplacements() throws Exception {
-        long count = 100;
-        when(replacementCountService.countAllReplacements()).thenReturn(count);
-
-        mvc.perform(get("/api/replacement/count")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is(Long.valueOf(count).intValue())));
-
-        verify(replacementCountService, times(1)).countAllReplacements();
-    }
-
-    @Test
     public void testCountReplacementsToReview() throws Exception {
         long count = 100;
-        when(replacementCountService.countReplacementsToReview()).thenReturn(count);
+        when(replacementCountService.countReplacementsToReview(WikipediaLanguage.SPANISH)).thenReturn(count);
 
-        mvc.perform(get("/api/replacement/count/to-review")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is(Long.valueOf(count).intValue())));
+        mvc
+            .perform(get("/api/replacements/count?reviewed=false&lang=es"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", is(Long.valueOf(count).intValue())));
 
-        verify(replacementCountService, times(1)).countReplacementsToReview();
+        verify(replacementCountService, times(1)).countReplacementsToReview(WikipediaLanguage.SPANISH);
     }
 
     @Test
     public void testCountReplacementsReviewed() throws Exception {
         long count = 100;
-        when(replacementCountService.countReplacementsReviewed()).thenReturn(count);
+        when(replacementCountService.countReplacementsReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
 
-        mvc.perform(get("/api/replacement/count/reviewed")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", is(Long.valueOf(count).intValue())));
+        mvc
+            .perform(get("/api/replacements/count?reviewed=true&lang=es").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", is(Long.valueOf(count).intValue())));
 
-        verify(replacementCountService, times(1)).countReplacementsReviewed();
+        verify(replacementCountService, times(1)).countReplacementsReviewed(WikipediaLanguage.SPANISH);
     }
 
     @Test
     public void testCountReplacementsGroupedByReviewer() throws Exception {
         ReviewerCount count = new ReviewerCount("X", 100);
-        when(replacementCountService.countReplacementsGroupedByReviewer()).thenReturn(Collections.singletonList(count));
+        when(replacementCountService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH))
+            .thenReturn(Collections.singletonList(count));
 
-        mvc.perform(get("/api/replacement/count/reviewed/grouped")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].reviewer", is("X")))
-                .andExpect(jsonPath("$[0].count", is(100)));
+        mvc
+            .perform(
+                get("/api/replacements/count?reviewed=true&grouped&lang=es").contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].reviewer", is("X")))
+            .andExpect(jsonPath("$[0].count", is(100)));
 
-        verify(replacementCountService, times(1)).countReplacementsGroupedByReviewer();
+        verify(replacementCountService, times(1)).countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH);
     }
 
     @Test
@@ -92,16 +81,18 @@ public class ReplacementControllerTest {
         SubtypeCount subCount = new SubtypeCount("Y", 100);
         TypeCount count = new TypeCount("X");
         count.add(subCount);
-        when(replacementCountService.findReplacementCount(WikipediaLanguage.SPANISH)).thenReturn(Collections.singletonList(count));
+        when(replacementCountService.findReplacementCount(WikipediaLanguage.SPANISH))
+            .thenReturn(Collections.singletonList(count));
 
-        mvc.perform(get("/api/replacement/count/grouped")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].t", is("X")))
-                .andExpect(jsonPath("$[0].l[0].s", is("Y")))
-                .andExpect(jsonPath("$[0].l[0].c", is(100)));
+        mvc
+            .perform(
+                get("/api/replacements/count?reviewed=false&grouped&lang=es").contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].t", is("X")))
+            .andExpect(jsonPath("$[0].l[0].s", is("Y")))
+            .andExpect(jsonPath("$[0].l[0].c", is(100)));
 
         verify(replacementCountService, times(1)).findReplacementCount(WikipediaLanguage.SPANISH);
     }
-
 }
