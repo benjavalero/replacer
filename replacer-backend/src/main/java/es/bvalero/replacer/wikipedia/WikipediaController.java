@@ -17,14 +17,10 @@ public class WikipediaController {
     public WikipediaUser getUsername(
         @RequestParam String accessToken,
         @RequestParam String accessTokenSecret,
-        @RequestParam(required = false) WikipediaLanguage lang
+        @RequestParam WikipediaLanguage lang
     )
         throws ReplacerException {
         LOGGER.info("GET Logged user from Wikipedia API: {}", accessToken);
-        if (lang == null) {
-            // Default value
-            lang = WikipediaLanguage.SPANISH;
-        }
         OAuth1AccessToken oAuth1AccessToken = new OAuth1AccessToken(accessToken, accessTokenSecret);
         String userName = wikipediaService.getLoggedUserName(oAuth1AccessToken, lang);
         boolean admin = wikipediaService.isAdminUser(userName);

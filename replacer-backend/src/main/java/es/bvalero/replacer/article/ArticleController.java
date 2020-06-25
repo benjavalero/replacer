@@ -38,9 +38,7 @@ public class ArticleController {
     /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
 
     @GetMapping(value = "/random")
-    public Optional<ArticleReview> findRandomArticleWithReplacements(
-        @RequestParam(required = false) WikipediaLanguage lang
-    ) {
+    public Optional<ArticleReview> findRandomArticleWithReplacements(@RequestParam WikipediaLanguage lang) {
         LOGGER.info("GET Find random article");
         return articleReviewNoTypeService.findRandomArticleReview(ArticleReviewOptions.ofNoType(lang));
     }
@@ -49,7 +47,7 @@ public class ArticleController {
     public Optional<ArticleReview> findRandomArticleByTypeAndSubtype(
         @PathVariable("type") String type,
         @PathVariable("subtype") String subtype,
-        @RequestParam(required = false) WikipediaLanguage lang
+        @RequestParam WikipediaLanguage lang
     ) {
         LOGGER.info("GET Find random article. Type: {} - {}", type, subtype);
         return articleReviewTypeSubtypeService.findRandomArticleReview(
@@ -61,7 +59,7 @@ public class ArticleController {
     public Optional<ArticleReview> findRandomArticleByCustomReplacement(
         @PathVariable("subtype") String replacement,
         @PathVariable("suggestion") String suggestion,
-        @RequestParam(required = false) WikipediaLanguage lang
+        @RequestParam WikipediaLanguage lang
     ) {
         LOGGER.info("GET Find random article. Custom replacement: {} - {}", replacement, suggestion);
         return articleReviewCustomService.findRandomArticleReview(
@@ -74,7 +72,7 @@ public class ArticleController {
     @GetMapping(value = "/{id}")
     public Optional<ArticleReview> findArticleReviewById(
         @PathVariable("id") int articleId,
-        @RequestParam(required = false) WikipediaLanguage lang
+        @RequestParam WikipediaLanguage lang
     ) {
         LOGGER.info("GET Find review for article. ID: {}", articleId);
         return articleReviewNoTypeService.getArticleReview(articleId, ArticleReviewOptions.ofNoType(lang));
@@ -85,7 +83,7 @@ public class ArticleController {
         @PathVariable("id") int articleId,
         @PathVariable("type") String type,
         @PathVariable("subtype") String subtype,
-        @RequestParam(required = false) WikipediaLanguage lang
+        @RequestParam WikipediaLanguage lang
     ) {
         LOGGER.info("GET Find review for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
         return articleReviewTypeSubtypeService.getArticleReview(
@@ -99,7 +97,7 @@ public class ArticleController {
         @PathVariable("id") int articleId,
         @PathVariable("subtype") String replacement,
         @PathVariable("suggestion") String suggestion,
-        @RequestParam(required = false) WikipediaLanguage lang
+        @RequestParam WikipediaLanguage lang
     ) {
         LOGGER.info(
             "GET Find review for article by custom type. ID: {} - Replacement: {} - Suggestion: {}",
@@ -116,12 +114,8 @@ public class ArticleController {
     /* SAVE CHANGES */
 
     @PostMapping
-    public void save(@RequestBody SaveArticle saveArticle, @RequestParam(required = false) WikipediaLanguage lang)
+    public void save(@RequestBody SaveArticle saveArticle, @RequestParam WikipediaLanguage lang)
         throws ReplacerException {
-        if (lang == null) {
-            // Default value
-            lang = WikipediaLanguage.SPANISH;
-        }
         boolean changed = StringUtils.isNotBlank(saveArticle.getContent());
         LOGGER.info("PUT Save article. ID: {} - Changed: {}", saveArticle.getArticleId(), changed);
         if (changed) {

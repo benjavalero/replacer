@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.scribejava.core.model.OAuth1AccessToken;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest
-@ContextConfiguration(classes = WikipediaController.class)
+@ContextConfiguration(classes = { WikipediaController.class, WikipediaLanguageConverter.class })
 public class WikipediaControllerTest {
     @Autowired
     private MockMvc mvc;
@@ -33,12 +34,13 @@ public class WikipediaControllerTest {
 
     @Test
     public void testGetRequestToken() throws Exception {
-        when(wikipediaService.getLoggedUserName(any(), any())).thenReturn("A");
+        when(wikipediaService.getLoggedUserName(any(OAuth1AccessToken.class), any(WikipediaLanguage.class)))
+            .thenReturn("A");
         when(wikipediaService.isAdminUser("A")).thenReturn(true);
 
         mvc
             .perform(
-                get("/api/authentication/user")
+                get("/api/authentication/user?lang=es")
                     .contentType(MediaType.APPLICATION_JSON)
                     .param("accessToken", "X")
                     .param("accessTokenSecret", "Y")
