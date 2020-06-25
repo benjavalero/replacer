@@ -5,6 +5,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,8 +44,13 @@ public class TemplateParamFinder implements ImmutableFinder {
             if (posEquals >= 0) {
                 int endParam = findEndParam(text, posEquals + 1);
                 if (endParam >= 0) {
-                    matches.add(createMatch(text, startParam + 1, posEquals, endParam));
-                    return endParam + 1;
+                    LinearMatcher matcher = createMatch(text, startParam + 1, posEquals, endParam);
+                    if (matcher == null) {
+                        return posEquals + 1;
+                    } else {
+                        matches.add(createMatch(text, startParam + 1, posEquals, endParam));
+                        return endParam + 1;
+                    }
                 } else {
                     return posEquals + 1;
                 }
@@ -82,9 +88,6 @@ public class TemplateParamFinder implements ImmutableFinder {
             char ch = text.charAt(i);
             if (END_CHARS.contains(ch)) {
                 return i;
-            } else if (ch == '"') {
-                // Forbidden value chars
-                return -1;
             }
         }
         return -1;
@@ -94,6 +97,7 @@ public class TemplateParamFinder implements ImmutableFinder {
         return Character.isLetterOrDigit(ch) || Character.isWhitespace(ch) || ALLOWED_CHARS.contains(ch);
     }
 
+    @Nullable
     private LinearMatcher createMatch(String text, int start, int posEquals, int end) {
         String paramName = text.substring(start, posEquals);
         if (paramNames.contains(paramName.trim())) {
@@ -107,6 +111,10 @@ public class TemplateParamFinder implements ImmutableFinder {
             } else if (matchesFile(paramValue)) {
                 // If the value matches a file or a domain, return the complete match
                 return LinearMatcher.of(start, text.substring(start, end));
+            } else if (matchesAttribute(paramValue)) {
+                // If the value is an XML attribute, return a null result
+                // Values with quotes inside are admitted
+                return null;
             } else {
                 // Else return only the param
                 return LinearMatcher.of(start, paramName);
@@ -122,5 +130,9 @@ public class TemplateParamFinder implements ImmutableFinder {
         } else {
             return false;
         }
+    }
+
+    private boolean matchesAttribute(String value) {
+        return value.startsWith("\"");
     }
 }

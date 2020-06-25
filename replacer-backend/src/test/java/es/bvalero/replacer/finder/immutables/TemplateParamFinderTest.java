@@ -60,6 +60,16 @@ class TemplateParamFinderTest {
     }
 
     @Test
+    void testParamValueWithQuotes() {
+        String text = "{{Template|param=Division \"A\"}}";
+
+        List<Immutable> matches = templateParamFinder.findList(text);
+
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assertions.assertFalse(actual.isEmpty());
+    }
+
+    @Test
     void testTableRowWithDash() {
         String text = "{|- align=center\n" + "| Text |}";
 
