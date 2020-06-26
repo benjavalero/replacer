@@ -1,4 +1,4 @@
-import { Injectable, Output, EventEmitter } from '@angular/core';
+import { Injectable, Output, EventEmitter, Directive } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -9,6 +9,7 @@ import { WikipediaUser, Language } from './wikipedia-user.model';
 import { AlertService } from '../alert/alert.service';
 import { VerificationToken } from './verification-token.model';
 
+@Directive()
 @Injectable({
   providedIn: 'root',
 })
