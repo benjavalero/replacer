@@ -11,6 +11,8 @@ import { SaveArticle } from './save-article.model';
   providedIn: 'root'
 })
 export class ArticleService {
+  baseUrl = `${environment.apiUrl}/pages`;
+
   private cachedArticleReviews = {};
 
   constructor(private httpClient: HttpClient, private authenticationService: AuthenticationService) {}
@@ -18,14 +20,12 @@ export class ArticleService {
   findRandomArticle(type: string, subtype: string, suggestion: string): Observable<ArticleReview> {
     if (type && subtype) {
       if (suggestion) {
-        return this.httpClient.get<ArticleReview>(
-          `${environment.apiUrl}/article/random/${type}/${subtype}/${suggestion}`
-        );
+        return this.httpClient.get<ArticleReview>(`${this.baseUrl}/random/${type}/${subtype}/${suggestion}`);
       } else {
-        return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/random/${type}/${subtype}`);
+        return this.httpClient.get<ArticleReview>(`${this.baseUrl}/random/${type}/${subtype}`);
       }
     } else {
-      return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/random`);
+      return this.httpClient.get<ArticleReview>(`${this.baseUrl}/random`);
     }
   }
 
@@ -57,14 +57,12 @@ export class ArticleService {
   ): Observable<ArticleReview> {
     if (type && subtype) {
       if (suggestion) {
-        return this.httpClient.get<ArticleReview>(
-          `${environment.apiUrl}/article/${articleId}/${type}/${subtype}/${suggestion}`
-        );
+        return this.httpClient.get<ArticleReview>(`${this.baseUrl}/${articleId}/${type}/${subtype}/${suggestion}`);
       } else {
-        return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/${articleId}/${type}/${subtype}`);
+        return this.httpClient.get<ArticleReview>(`${this.baseUrl}/${articleId}/${type}/${subtype}`);
       }
     } else {
-      return this.httpClient.get<ArticleReview>(`${environment.apiUrl}/article/${articleId}`);
+      return this.httpClient.get<ArticleReview>(`${this.baseUrl}/${articleId}`);
     }
   }
 
@@ -94,6 +92,6 @@ export class ArticleService {
       saveArticle.subtype = subtype;
     }
 
-    return this.httpClient.post<any>(`${environment.apiUrl}/article`, saveArticle);
+    return this.httpClient.post<any>(`${this.baseUrl}`, saveArticle);
   }
 }

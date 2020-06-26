@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("api/article")
-public class ArticleController {
+@RequestMapping("api/pages")
+public class PageController {
     @Autowired
     private ArticleReviewNoTypeService articleReviewNoTypeService;
 

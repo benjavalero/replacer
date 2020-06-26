@@ -33,8 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest
-@ContextConfiguration(classes = { ArticleController.class, WikipediaLanguageConverter.class })
-public class ArticleControllerTest {
+@ContextConfiguration(classes = { PageController.class, WikipediaLanguageConverter.class })
+public class PageControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -77,7 +77,7 @@ public class ArticleControllerTest {
         ArticleReviewOptions options = ArticleReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
         when(articleReviewNoTypeService.findRandomArticleReview(options)).thenReturn(Optional.of(review));
 
-        mvc.perform(get("/api/article/random?lang=es")
+        mvc.perform(get("/api/pages/random?lang=es")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(id)))
@@ -100,7 +100,7 @@ public class ArticleControllerTest {
         when(articleReviewTypeSubtypeService.findRandomArticleReview(options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
-        mvc.perform(get("/api/article/random/X/Y?lang=es")
+        mvc.perform(get("/api/pages/random/X/Y?lang=es")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -114,7 +114,7 @@ public class ArticleControllerTest {
         when(articleReviewCustomService.findRandomArticleReview(options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
-        mvc.perform(get("/api/article/random/Personalizado/X/Y?lang=es")
+        mvc.perform(get("/api/pages/random/Personalizado/X/Y?lang=es")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -128,7 +128,7 @@ public class ArticleControllerTest {
         when(articleReviewNoTypeService.getArticleReview(123, options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
-        mvc.perform(get("/api/article/123?lang=es")
+        mvc.perform(get("/api/pages/123?lang=es")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -142,7 +142,7 @@ public class ArticleControllerTest {
         when(articleReviewTypeSubtypeService.getArticleReview(123, options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
-        mvc.perform(get("/api/article/123/X/Y?lang=es")
+        mvc.perform(get("/api/pages/123/X/Y?lang=es")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -156,7 +156,7 @@ public class ArticleControllerTest {
         when(articleReviewCustomService.getArticleReview(123, options))
                 .thenReturn(Optional.of(new ArticleReview()));
 
-        mvc.perform(get("/api/article/123/Personalizado/X/Y?lang=es")
+        mvc.perform(get("/api/pages/123/Personalizado/X/Y?lang=es")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -178,7 +178,7 @@ public class ArticleControllerTest {
 
         when(cosmeticFindService.applyCosmeticChanges(anyString())).thenReturn("C");
 
-        mvc.perform(post("/api/article?lang=es")
+        mvc.perform(post("/api/pages?lang=es")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(saveArticle)))
                 .andExpect(status().isOk());
@@ -201,7 +201,7 @@ public class ArticleControllerTest {
         String subtype = "S";
         SaveArticle saveArticle = new SaveArticle(articleId, section, null, timestamp, reviewer, token, type, subtype);
 
-        mvc.perform(post("/api/article?lang=es")
+        mvc.perform(post("/api/pages?lang=es")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(saveArticle)))
                 .andExpect(status().isOk());
