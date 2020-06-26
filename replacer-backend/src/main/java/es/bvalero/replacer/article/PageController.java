@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/pages")
 public class PageController {
     @Autowired
-    private ArticleReviewNoTypeService articleReviewNoTypeService;
+    private PageReviewNoTypeService pageReviewNoTypeService;
 
     @Autowired
-    private ArticleReviewTypeSubtypeService articleReviewTypeSubtypeService;
+    private PageReviewTypeSubtypeService pageReviewTypeSubtypeService;
 
     @Autowired
-    private ArticleReviewCustomService articleReviewCustomService;
+    private PageReviewCustomService pageReviewCustomService;
 
     @Autowired
     private ReplacementIndexService replacementIndexService;
@@ -38,62 +38,58 @@ public class PageController {
     /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
 
     @GetMapping(value = "/random")
-    public Optional<ArticleReview> findRandomArticleWithReplacements(@RequestParam WikipediaLanguage lang) {
+    public Optional<PageReview> findRandomArticleWithReplacements(@RequestParam WikipediaLanguage lang) {
         LOGGER.info("GET Find random article");
-        return articleReviewNoTypeService.findRandomArticleReview(ArticleReviewOptions.ofNoType(lang));
+        return pageReviewNoTypeService.findRandomPageReview(PageReviewOptions.ofNoType(lang));
     }
 
     @GetMapping(value = "/random/{type}/{subtype}")
-    public Optional<ArticleReview> findRandomArticleByTypeAndSubtype(
+    public Optional<PageReview> findRandomArticleByTypeAndSubtype(
         @PathVariable("type") String type,
         @PathVariable("subtype") String subtype,
         @RequestParam WikipediaLanguage lang
     ) {
         LOGGER.info("GET Find random article. Type: {} - {}", type, subtype);
-        return articleReviewTypeSubtypeService.findRandomArticleReview(
-            ArticleReviewOptions.ofTypeSubtype(lang, type, subtype)
-        );
+        return pageReviewTypeSubtypeService.findRandomPageReview(PageReviewOptions.ofTypeSubtype(lang, type, subtype));
     }
 
     @GetMapping(value = "/random/Personalizado/{subtype}/{suggestion}")
-    public Optional<ArticleReview> findRandomArticleByCustomReplacement(
+    public Optional<PageReview> findRandomArticleByCustomReplacement(
         @PathVariable("subtype") String replacement,
         @PathVariable("suggestion") String suggestion,
         @RequestParam WikipediaLanguage lang
     ) {
         LOGGER.info("GET Find random article. Custom replacement: {} - {}", replacement, suggestion);
-        return articleReviewCustomService.findRandomArticleReview(
-            ArticleReviewOptions.ofCustom(lang, replacement, suggestion)
-        );
+        return pageReviewCustomService.findRandomPageReview(PageReviewOptions.ofCustom(lang, replacement, suggestion));
     }
 
     /* FIND AN ARTICLE REVIEW */
 
     @GetMapping(value = "/{id}")
-    public Optional<ArticleReview> findArticleReviewById(
+    public Optional<PageReview> findPageReviewById(
         @PathVariable("id") int articleId,
         @RequestParam WikipediaLanguage lang
     ) {
         LOGGER.info("GET Find review for article. ID: {}", articleId);
-        return articleReviewNoTypeService.getArticleReview(articleId, ArticleReviewOptions.ofNoType(lang));
+        return pageReviewNoTypeService.getPageReview(articleId, PageReviewOptions.ofNoType(lang));
     }
 
     @GetMapping(value = "/{id}/{type}/{subtype}")
-    public Optional<ArticleReview> findArticleReviewByIdByTypeAndSubtype(
+    public Optional<PageReview> findPageReviewByIdByTypeAndSubtype(
         @PathVariable("id") int articleId,
         @PathVariable("type") String type,
         @PathVariable("subtype") String subtype,
         @RequestParam WikipediaLanguage lang
     ) {
         LOGGER.info("GET Find review for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
-        return articleReviewTypeSubtypeService.getArticleReview(
+        return pageReviewTypeSubtypeService.getPageReview(
             articleId,
-            ArticleReviewOptions.ofTypeSubtype(lang, type, subtype)
+            PageReviewOptions.ofTypeSubtype(lang, type, subtype)
         );
     }
 
     @GetMapping(value = "/{id}/Personalizado/{subtype}/{suggestion}")
-    public Optional<ArticleReview> findArticleReviewByIdAndCustomReplacement(
+    public Optional<PageReview> findPageReviewByIdAndCustomReplacement(
         @PathVariable("id") int articleId,
         @PathVariable("subtype") String replacement,
         @PathVariable("suggestion") String suggestion,
@@ -105,9 +101,9 @@ public class PageController {
             replacement,
             suggestion
         );
-        return articleReviewCustomService.getArticleReview(
+        return pageReviewCustomService.getPageReview(
             articleId,
-            ArticleReviewOptions.ofCustom(lang, replacement, suggestion)
+            PageReviewOptions.ofCustom(lang, replacement, suggestion)
         );
     }
 

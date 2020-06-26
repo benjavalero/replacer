@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-class ArticleReviewNoTypeService extends ArticleReviewService {
+class PageReviewNoTypeService extends PageReviewService {
     @Autowired
     private ReplacementFindService replacementFindService;
 
@@ -34,12 +34,12 @@ class ArticleReviewNoTypeService extends ArticleReviewService {
     private List<String> ignorableTemplates;
 
     @Override
-    String buildReplacementCacheKey(ArticleReviewOptions options) {
+    String buildReplacementCacheKey(PageReviewOptions options) {
         return options.getLang().getCode();
     }
 
     @Override
-    PageSearchResult findPageIdsToReview(ArticleReviewOptions options) {
+    PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
         long randomStart = replacementRepository.findRandomStart(CACHE_SIZE, options.getLang().getCode());
         long totalResults = replacementRepository.countByLangAndReviewerIsNull(options.getLang().getCode());
@@ -52,7 +52,7 @@ class ArticleReviewNoTypeService extends ArticleReviewService {
     }
 
     @Override
-    List<Replacement> findAllReplacements(WikipediaPage article, ArticleReviewOptions options) {
+    List<Replacement> findAllReplacements(WikipediaPage article, PageReviewOptions options) {
         List<Replacement> replacements = replacementFindService.findReplacements(
             article.getContent(),
             article.getLang()

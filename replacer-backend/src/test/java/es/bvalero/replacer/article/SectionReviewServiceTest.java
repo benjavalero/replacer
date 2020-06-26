@@ -33,8 +33,8 @@ class SectionReviewServiceTest {
             .when(wikipediaService.getPageSections(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.emptyList());
 
-        ArticleReview review = new ArticleReview();
-        Optional<ArticleReview> sectionReview = sectionReviewService.findSectionReview(review);
+        PageReview review = new PageReview();
+        Optional<PageReview> sectionReview = sectionReviewService.findSectionReview(review);
 
         Assertions.assertFalse(sectionReview.isPresent());
     }
@@ -46,11 +46,11 @@ class SectionReviewServiceTest {
         Suggestion suggestion = Suggestion.ofNoComment("a");
         ArticleReplacement replacement = new ArticleReplacement(8, "an", Collections.singletonList(suggestion)); // "an"
 
-        ArticleReview articleReview = new ArticleReview();
-        articleReview.setId(articleId);
-        articleReview.setLang(WikipediaLanguage.SPANISH);
-        articleReview.setContent(content);
-        articleReview.setReplacements(Collections.singletonList(replacement));
+        PageReview pageReview = new PageReview();
+        pageReview.setId(articleId);
+        pageReview.setLang(WikipediaLanguage.SPANISH);
+        pageReview.setContent(content);
+        pageReview.setReplacements(Collections.singletonList(replacement));
 
         int sectionId = 3;
         int offset = 5;
@@ -77,7 +77,7 @@ class SectionReviewServiceTest {
             )
             .thenReturn(Optional.of(pageSection));
 
-        Optional<ArticleReview> sectionReview = sectionReviewService.findSectionReview(articleReview);
+        Optional<PageReview> sectionReview = sectionReviewService.findSectionReview(pageReview);
 
         Assertions.assertTrue(sectionReview.isPresent());
         sectionReview.ifPresent(

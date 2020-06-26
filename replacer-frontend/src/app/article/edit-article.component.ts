@@ -5,7 +5,7 @@ import { Title } from '@angular/platform-browser';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { AlertService } from '../alert/alert.service';
 import { ArticleService } from './article.service';
-import { ArticleReview } from './article-review.model';
+import { PageReview } from './page-review.model';
 import { ArticleReplacement } from './article-replacement.model';
 import { Language, WikipediaUser } from '../authentication/wikipedia-user.model';
 
@@ -63,7 +63,7 @@ export class EditArticleComponent implements OnInit {
       this.manageReview(cachedReview);
     } else {
       this.articleService.findArticleReviewById(this.articleId, this.filteredType, this.filteredSubtype, this.suggestion)
-        .subscribe((review: ArticleReview) => {
+        .subscribe((review: PageReview) => {
           if (review) {
             this.manageReview(review);
           } else {
@@ -76,7 +76,7 @@ export class EditArticleComponent implements OnInit {
     }
   }
 
-  private manageReview(review: ArticleReview) {
+  private manageReview(review: PageReview) {
     this.alertService.clearAlertMessages();
     this.title = review.title;
     this.content = review.content;

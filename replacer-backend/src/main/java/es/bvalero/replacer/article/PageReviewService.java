@@ -13,7 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
-abstract class ArticleReviewService {
+abstract class PageReviewService {
     static final int CACHE_SIZE = 100; // Maximum 500 as it is used as page size when searching in Wikipedia
     // Cache the found pages candidates to be reviewed
     // to find faster the next one after the user reviews one
@@ -31,22 +31,22 @@ abstract class ArticleReviewService {
     @Autowired
     private ModelMapper modelMapper;
 
-    Optional<ArticleReview> findRandomArticleReview(ArticleReviewOptions options) {
-        LOGGER.debug("START Find random article review");
+    Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
+        LOGGER.debug("START Find random page review");
 
         // Retrieve an ID of a potential page to be replaced
-        Optional<Integer> randomArticleId = findArticleIdToReview(options);
+        Optional<Integer> randomArticleId = findPageIdToReview(options);
         while (randomArticleId.isPresent()) {
             // Try to obtain the review from the found article
             // If not, find a new random article ID
             // We assume that in the review building, in case the article is not valid and review is eventually empty,
             // the article will be marked somehow in order not to be retrieved again.
-            Optional<ArticleReview> review = getArticleReview(randomArticleId.get(), options);
+            Optional<PageReview> review = getPageReview(randomArticleId.get(), options);
             if (review.isPresent()) {
                 return review;
             }
 
-            randomArticleId = findArticleIdToReview(options);
+            randomArticleId = findPageIdToReview(options);
         }
 
         // If we get here, there are no more articles to review
@@ -54,8 +54,8 @@ abstract class ArticleReviewService {
         return Optional.empty();
     }
 
-    private Optional<Integer> findArticleIdToReview(ArticleReviewOptions options) {
-        LOGGER.info("START Find random article ID...");
+    private Optional<Integer> findPageIdToReview(PageReviewOptions options) {
+        LOGGER.info("START Find random page ID...");
         // First we try to get the random replacement from the cache
         Optional<Integer> articleId;
         String key = buildReplacementCacheKey(options);
@@ -71,7 +71,7 @@ abstract class ArticleReviewService {
         return articleId;
     }
 
-    abstract String buildReplacementCacheKey(ArticleReviewOptions options);
+    abstract String buildReplacementCacheKey(PageReviewOptions options);
 
     private boolean cacheContainsKey(String key) {
         return cachedPageIds.containsKey(key) && !cachedPageIds.get(key).isEmpty();
@@ -81,23 +81,23 @@ abstract class ArticleReviewService {
         return cachedPageIds.get(key).popPageId();
     }
 
-    boolean loadCache(ArticleReviewOptions options) {
+    boolean loadCache(PageReviewOptions options) {
         PageSearchResult pageIds = findPageIdsToReview(options);
         String key = buildReplacementCacheKey(options);
         cachedPageIds.put(key, pageIds);
         return !pageIds.isEmpty();
     }
 
-    abstract PageSearchResult findPageIdsToReview(ArticleReviewOptions options);
+    abstract PageSearchResult findPageIdsToReview(PageReviewOptions options);
 
-    Optional<ArticleReview> getArticleReview(int articleId, ArticleReviewOptions options) {
-        LOGGER.info("START Build review for article: {}", articleId);
-        Optional<ArticleReview> review = Optional.empty();
+    Optional<PageReview> getPageReview(int articleId, PageReviewOptions options) {
+        LOGGER.info("START Build review for page: {}", articleId);
+        Optional<PageReview> review = Optional.empty();
 
         // Load article from Wikipedia
         Optional<WikipediaPage> article = getArticleFromWikipedia(articleId, options);
         if (article.isPresent()) {
-            review = buildArticleReview(article.get(), options);
+            review = buildPageReview(article.get(), options);
         }
 
         LOGGER.info("END Build review for article: {}", articleId);
@@ -106,7 +106,7 @@ abstract class ArticleReviewService {
 
     abstract List<String> getIgnorableTemplates();
 
-    private Optional<WikipediaPage> getArticleFromWikipedia(int articleId, ArticleReviewOptions options) {
+    private Optional<WikipediaPage> getArticleFromWikipedia(int articleId, PageReviewOptions options) {
         LOGGER.info("START Find Wikipedia article: {}", articleId);
         try {
             Optional<WikipediaPage> page = wikipediaService.getPageById(articleId, options.getLang());
@@ -138,30 +138,30 @@ abstract class ArticleReviewService {
         return Optional.empty();
     }
 
-    void setArticleAsReviewed(int articleId, ArticleReviewOptions options) {
+    void setArticleAsReviewed(int articleId, PageReviewOptions options) {
         replacementIndexService.reviewArticleReplacementsAsSystem(articleId, options.getLang());
     }
 
-    private Optional<ArticleReview> buildArticleReview(WikipediaPage article, ArticleReviewOptions options) {
-        // Find the replacements in the article
-        List<Replacement> replacements = findReplacements(article, options);
+    private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
+        // Find the replacements in the page
+        List<Replacement> replacements = findReplacements(page, options);
 
         if (replacements.isEmpty()) {
             return Optional.empty();
         } else {
-            ArticleReview articleReview = buildArticleReview(article, replacements, options);
+            PageReview pageReview = buildPageReview(page, replacements, options);
 
             // Try to reduce the review size by returning just a section of the page
-            Optional<ArticleReview> sectionReview = sectionReviewService.findSectionReview(articleReview);
+            Optional<PageReview> sectionReview = sectionReviewService.findSectionReview(pageReview);
             if (sectionReview.isPresent()) {
                 return sectionReview;
             } else {
-                return Optional.of(articleReview);
+                return Optional.of(pageReview);
             }
         }
     }
 
-    private List<Replacement> findReplacements(WikipediaPage article, ArticleReviewOptions options) {
+    private List<Replacement> findReplacements(WikipediaPage article, PageReviewOptions options) {
         LOGGER.info("START Find replacements for article: {}", article.getId());
         List<Replacement> replacements = findAllReplacements(article, options);
 
@@ -171,20 +171,16 @@ abstract class ArticleReviewService {
         return replacements;
     }
 
-    abstract List<Replacement> findAllReplacements(WikipediaPage article, ArticleReviewOptions options);
+    abstract List<Replacement> findAllReplacements(WikipediaPage article, PageReviewOptions options);
 
-    ArticleReview buildArticleReview(
-        WikipediaPage article,
-        List<Replacement> replacements,
-        ArticleReviewOptions options
-    ) {
-        ArticleReview review = modelMapper.map(article, ArticleReview.class);
+    PageReview buildPageReview(WikipediaPage article, List<Replacement> replacements, PageReviewOptions options) {
+        PageReview review = modelMapper.map(article, PageReview.class);
         review.setReplacements(replacements.stream().map(this::convertToDto).collect(Collectors.toList()));
         review.setNumPending(findTotalResultsFromCache(options) + 1); // Include the current one as pending
         return review;
     }
 
-    private long findTotalResultsFromCache(ArticleReviewOptions options) {
+    private long findTotalResultsFromCache(PageReviewOptions options) {
         String key = buildReplacementCacheKey(options);
         return cachedPageIds.get(key).getTotal();
     }

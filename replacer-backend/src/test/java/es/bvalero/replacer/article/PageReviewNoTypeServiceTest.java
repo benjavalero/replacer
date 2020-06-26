@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
-public class ArticleReviewNoTypeServiceTest {
+public class PageReviewNoTypeServiceTest {
     private final int randomId = 1;
     private final int randomId2 = 2;
     private final String content = "XYZ";
@@ -49,7 +49,7 @@ public class ArticleReviewNoTypeServiceTest {
         .text("Y")
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
-    private final ArticleReviewOptions options = ArticleReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
+    private final PageReviewOptions options = PageReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
 
     @Resource
     private List<String> ignorableTemplates;
@@ -73,11 +73,11 @@ public class ArticleReviewNoTypeServiceTest {
     private ModelMapper modelMapper;
 
     @InjectMocks
-    private ArticleReviewNoTypeService articleService;
+    private PageReviewNoTypeService articleService;
 
     @BeforeEach
     public void setUp() {
-        articleService = new ArticleReviewNoTypeService();
+        articleService = new PageReviewNoTypeService();
         articleService.setIgnorableTemplates(ignorableTemplates);
         MockitoAnnotations.initMocks(this);
     }
@@ -95,7 +95,7 @@ public class ArticleReviewNoTypeServiceTest {
             )
             .thenReturn(Collections.emptyList());
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
+        Optional<PageReview> review = articleService.findRandomPageReview(options);
 
         Assertions.assertFalse(review.isPresent());
     }
@@ -117,7 +117,7 @@ public class ArticleReviewNoTypeServiceTest {
         // The article doesn't exist in Wikipedia
         Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.empty());
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
+        Optional<PageReview> review = articleService.findRandomPageReview(options);
 
         Assertions.assertFalse(review.isPresent());
     }
@@ -145,7 +145,7 @@ public class ArticleReviewNoTypeServiceTest {
             .when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH))
             .thenReturn(replacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
+        Optional<PageReview> review = articleService.findRandomPageReview(options);
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
@@ -180,7 +180,7 @@ public class ArticleReviewNoTypeServiceTest {
             .when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH))
             .thenReturn(noArticleReplacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
+        Optional<PageReview> review = articleService.findRandomPageReview(options);
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
@@ -213,7 +213,7 @@ public class ArticleReviewNoTypeServiceTest {
             .when(replacementFindService.findReplacements(content2, WikipediaLanguage.SPANISH))
             .thenReturn(replacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
+        Optional<PageReview> review = articleService.findRandomPageReview(options);
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))

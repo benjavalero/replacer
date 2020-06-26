@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-class ArticleReviewCustomService extends ArticleReviewService {
+class PageReviewCustomService extends PageReviewService {
     @Autowired
     private WikipediaService wikipediaService;
 
@@ -37,12 +37,12 @@ class ArticleReviewCustomService extends ArticleReviewService {
     private List<String> ignorableTemplates;
 
     @Override
-    String buildReplacementCacheKey(ArticleReviewOptions options) {
+    String buildReplacementCacheKey(PageReviewOptions options) {
         return String.format("%s-%s-%s", options.getLang().getCode(), options.getSubtype(), options.getSuggestion());
     }
 
     @Override
-    PageSearchResult findPageIdsToReview(ArticleReviewOptions options) {
+    PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         try {
             int offset = 0;
             List<Integer> reviewedIds = replacementRepository.findByLangAndTypeAndSubtypeAndReviewerNotNull(
@@ -84,13 +84,13 @@ class ArticleReviewCustomService extends ArticleReviewService {
     }
 
     @Override
-    void setArticleAsReviewed(int articleId, ArticleReviewOptions options) {
+    void setArticleAsReviewed(int articleId, PageReviewOptions options) {
         // We add the custom replacement to the database as reviewed to skip it after the next search in the API
         replacementIndexService.addCustomReviewedReplacement(articleId, options.getLang(), options.getSubtype());
     }
 
     @Override
-    List<Replacement> findAllReplacements(WikipediaPage article, ArticleReviewOptions options) {
+    List<Replacement> findAllReplacements(WikipediaPage article, PageReviewOptions options) {
         List<Replacement> replacements = replacementFindService.findCustomReplacements(
             article.getContent(),
             options.getSubtype(),

@@ -1,6 +1,6 @@
 import { ArticleReplacement } from './article-replacement.model';
 
-export interface ArticleReview {
+export interface PageReview {
   id: number;
   title: string;
   content: string;

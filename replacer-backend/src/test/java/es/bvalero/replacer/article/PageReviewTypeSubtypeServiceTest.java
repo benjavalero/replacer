@@ -20,7 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
-class ArticleReviewTypeSubtypeServiceTest {
+class PageReviewTypeSubtypeServiceTest {
     private final int randomId = 1;
     private final int randomId2 = 2;
     private final String content = "XYZ";
@@ -50,16 +50,8 @@ class ArticleReviewTypeSubtypeServiceTest {
         .text("Y")
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
-    private final ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype(
-        WikipediaLanguage.SPANISH,
-        "X",
-        "Y"
-    );
-    private final ArticleReviewOptions options2 = ArticleReviewOptions.ofTypeSubtype(
-        WikipediaLanguage.SPANISH,
-        "A",
-        "B"
-    );
+    private final PageReviewOptions options = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
+    private final PageReviewOptions options2 = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "A", "B");
 
     @Resource
     private List<String> ignorableTemplates;
@@ -86,11 +78,11 @@ class ArticleReviewTypeSubtypeServiceTest {
     private ModelMapper modelMapper;
 
     @InjectMocks
-    private ArticleReviewTypeSubtypeService articleService;
+    private PageReviewTypeSubtypeService articleService;
 
     @BeforeEach
     public void setUp() {
-        articleService = new ArticleReviewTypeSubtypeService();
+        articleService = new PageReviewTypeSubtypeService();
         articleService.setIgnorableTemplates(ignorableTemplates);
         MockitoAnnotations.initMocks(this);
     }
@@ -120,7 +112,7 @@ class ArticleReviewTypeSubtypeServiceTest {
             .when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH))
             .thenReturn(replacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview(options2);
+        Optional<PageReview> review = articleService.findRandomPageReview(options2);
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
@@ -153,7 +145,7 @@ class ArticleReviewTypeSubtypeServiceTest {
             .when(replacementFindService.findReplacements(content, WikipediaLanguage.SPANISH))
             .thenReturn(replacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
+        Optional<PageReview> review = articleService.findRandomPageReview(options);
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
@@ -208,20 +200,20 @@ class ArticleReviewTypeSubtypeServiceTest {
             .when(replacementFindService.findReplacements(content2, WikipediaLanguage.SPANISH))
             .thenReturn(replacements);
 
-        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
+        Optional<PageReview> review = articleService.findRandomPageReview(options);
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId, review.get().getId());
 
-        review = articleService.findRandomArticleReview(options);
+        review = articleService.findRandomPageReview(options);
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId2, review.get().getId());
 
-        review = articleService.findRandomArticleReview(options);
+        review = articleService.findRandomPageReview(options);
         Assertions.assertFalse(review.isPresent());
     }
 
     @Test
-    void testArticleReviewWithSection() throws ReplacerException {
+    void testPageReviewWithSection() throws ReplacerException {
         final int sectionId = 1;
 
         // The article exists in Wikipedia
@@ -238,13 +230,13 @@ class ArticleReviewTypeSubtypeServiceTest {
         articleService.loadCache(options);
 
         // The article has sections
-        ArticleReview sectionReview = articleService.buildArticleReview(article, replacements, options);
+        PageReview sectionReview = articleService.buildPageReview(article, replacements, options);
         sectionReview.setSection(sectionId);
         Mockito
-            .when(sectionReviewService.findSectionReview(Mockito.any(ArticleReview.class)))
+            .when(sectionReviewService.findSectionReview(Mockito.any(PageReview.class)))
             .thenReturn(Optional.of(sectionReview));
 
-        Optional<ArticleReview> review = articleService.getArticleReview(randomId, options);
+        Optional<PageReview> review = articleService.getPageReview(randomId, options);
 
         Assertions.assertTrue(review.isPresent());
         review.ifPresent(
@@ -257,7 +249,7 @@ class ArticleReviewTypeSubtypeServiceTest {
     }
 
     @Test
-    void testArticleReviewWithNoSection() throws ReplacerException {
+    void testPageReviewWithNoSection() throws ReplacerException {
         // The article exists in Wikipedia
         Mockito
             .when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH))
@@ -270,13 +262,13 @@ class ArticleReviewTypeSubtypeServiceTest {
 
         // The article has no sections
         Mockito
-            .when(sectionReviewService.findSectionReview(Mockito.any(ArticleReview.class)))
+            .when(sectionReviewService.findSectionReview(Mockito.any(PageReview.class)))
             .thenReturn(Optional.empty());
 
         // Load the cache in order to find the total results
         articleService.loadCache(options);
 
-        Optional<ArticleReview> review = articleService.getArticleReview(randomId, options);
+        Optional<PageReview> review = articleService.getPageReview(randomId, options);
 
         Assertions.assertTrue(review.isPresent());
         review.ifPresent(

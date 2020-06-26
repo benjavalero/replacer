@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 
 import { environment } from '../../environments/environment';
-import { ArticleReview } from './article-review.model';
+import { PageReview } from './page-review.model';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { SaveArticle } from './save-article.model';
 
@@ -17,26 +17,26 @@ export class ArticleService {
 
   constructor(private httpClient: HttpClient, private authenticationService: AuthenticationService) {}
 
-  findRandomArticle(type: string, subtype: string, suggestion: string): Observable<ArticleReview> {
+  findRandomArticle(type: string, subtype: string, suggestion: string): Observable<PageReview> {
     if (type && subtype) {
       if (suggestion) {
-        return this.httpClient.get<ArticleReview>(`${this.baseUrl}/random/${type}/${subtype}/${suggestion}`);
+        return this.httpClient.get<PageReview>(`${this.baseUrl}/random/${type}/${subtype}/${suggestion}`);
       } else {
-        return this.httpClient.get<ArticleReview>(`${this.baseUrl}/random/${type}/${subtype}`);
+        return this.httpClient.get<PageReview>(`${this.baseUrl}/random/${type}/${subtype}`);
       }
     } else {
-      return this.httpClient.get<ArticleReview>(`${this.baseUrl}/random`);
+      return this.httpClient.get<PageReview>(`${this.baseUrl}/random`);
     }
   }
 
-  getArticleReviewFromCache(articleId: number, type: string, subtype: string): ArticleReview {
+  getArticleReviewFromCache(articleId: number, type: string, subtype: string): PageReview {
     const key = this.buildReviewCacheKey(articleId, type, subtype);
     const review = this.cachedArticleReviews[key];
     delete this.cachedArticleReviews[key];
     return review;
   }
 
-  putArticleReviewInCache(type: string, subtype: string, review: ArticleReview): void {
+  putArticleReviewInCache(type: string, subtype: string, review: PageReview): void {
     const key = this.buildReviewCacheKey(review.id, type, subtype);
     this.cachedArticleReviews[key] = review;
   }
@@ -49,20 +49,15 @@ export class ArticleService {
     }
   }
 
-  findArticleReviewById(
-    articleId: number,
-    type: string,
-    subtype: string,
-    suggestion: string
-  ): Observable<ArticleReview> {
+  findArticleReviewById(articleId: number, type: string, subtype: string, suggestion: string): Observable<PageReview> {
     if (type && subtype) {
       if (suggestion) {
-        return this.httpClient.get<ArticleReview>(`${this.baseUrl}/${articleId}/${type}/${subtype}/${suggestion}`);
+        return this.httpClient.get<PageReview>(`${this.baseUrl}/${articleId}/${type}/${subtype}/${suggestion}`);
       } else {
-        return this.httpClient.get<ArticleReview>(`${this.baseUrl}/${articleId}/${type}/${subtype}`);
+        return this.httpClient.get<PageReview>(`${this.baseUrl}/${articleId}/${type}/${subtype}`);
       }
     } else {
-      return this.httpClient.get<ArticleReview>(`${this.baseUrl}/${articleId}`);
+      return this.httpClient.get<PageReview>(`${this.baseUrl}/${articleId}`);
     }
   }
 

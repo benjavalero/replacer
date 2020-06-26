@@ -4,7 +4,7 @@ import { Title } from '@angular/platform-browser';
 
 import { AlertService } from '../alert/alert.service';
 import { ArticleService } from './article.service';
-import { ArticleReview } from './article-review.model';
+import { PageReview } from './page-review.model';
 
 @Component({
   selector: 'app-find-random',
@@ -31,7 +31,7 @@ export class FindRandomComponent implements OnInit {
     this.titleService.setTitle(`Replacer - ${msg}`);
     this.alertService.addInfoMessage(msg);
 
-    this.articleService.findRandomArticle(this.filteredType, this.filteredSubtype, this.suggestion).subscribe((review: ArticleReview) => {
+    this.articleService.findRandomArticle(this.filteredType, this.filteredSubtype, this.suggestion).subscribe((review: PageReview) => {
       if (review) {
         // Cache the review
         this.articleService.putArticleReviewInCache(this.filteredType, this.filteredSubtype, review);

@@ -43,13 +43,13 @@ public class PageControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private ArticleReviewNoTypeService articleReviewNoTypeService;
+    private PageReviewNoTypeService pageReviewNoTypeService;
 
     @MockBean
-    private ArticleReviewTypeSubtypeService articleReviewTypeSubtypeService;
+    private PageReviewTypeSubtypeService pageReviewTypeSubtypeService;
 
     @MockBean
-    private ArticleReviewCustomService articleReviewCustomService;
+    private PageReviewCustomService pageReviewCustomService;
 
     @MockBean
     private ReplacementIndexService replacementIndexService;
@@ -73,9 +73,9 @@ public class PageControllerTest {
         ArticleReplacement replacement = new ArticleReplacement(start, rep, Collections.singletonList(suggestion));
         List<ArticleReplacement> replacements = Collections.singletonList(replacement);
         long numPending = replacements.size();
-        ArticleReview review = new ArticleReview(id, WikipediaLanguage.SPANISH, title, content, section, queryTimestamp, replacements, numPending);
-        ArticleReviewOptions options = ArticleReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
-        when(articleReviewNoTypeService.findRandomArticleReview(options)).thenReturn(Optional.of(review));
+        PageReview review = new PageReview(id, WikipediaLanguage.SPANISH, title, content, section, queryTimestamp, replacements, numPending);
+        PageReviewOptions options = PageReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
+        when(pageReviewNoTypeService.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc.perform(get("/api/pages/random?lang=es")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -91,77 +91,77 @@ public class PageControllerTest {
                 .andExpect(jsonPath("$.replacements[0].suggestions[0].comment", is("b")))
                 .andExpect(jsonPath("$.numPending", is(Long.valueOf(numPending).intValue())));
 
-        verify(articleReviewNoTypeService, times(1)).findRandomArticleReview(options);
+        verify(pageReviewNoTypeService, times(1)).findRandomPageReview(options);
     }
 
     @Test
     public void testFindRandomArticleByTypeAndSubtype() throws Exception {
-        ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
-        when(articleReviewTypeSubtypeService.findRandomArticleReview(options))
-                .thenReturn(Optional.of(new ArticleReview()));
+        PageReviewOptions options = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
+        when(pageReviewTypeSubtypeService.findRandomPageReview(options))
+                .thenReturn(Optional.of(new PageReview()));
 
         mvc.perform(get("/api/pages/random/X/Y?lang=es")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(articleReviewTypeSubtypeService, times(1))
-                .findRandomArticleReview(eq(options));
+        verify(pageReviewTypeSubtypeService, times(1))
+                .findRandomPageReview(eq(options));
     }
 
     @Test
     public void testFindRandomArticleByCustomReplacement() throws Exception {
-        ArticleReviewOptions options = ArticleReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
-        when(articleReviewCustomService.findRandomArticleReview(options))
-                .thenReturn(Optional.of(new ArticleReview()));
+        PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
+        when(pageReviewCustomService.findRandomPageReview(options))
+                .thenReturn(Optional.of(new PageReview()));
 
         mvc.perform(get("/api/pages/random/Personalizado/X/Y?lang=es")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(articleReviewCustomService, times(1))
-                .findRandomArticleReview(eq(options));
+        verify(pageReviewCustomService, times(1))
+                .findRandomPageReview(eq(options));
     }
 
     @Test
-    public void testFindArticleReviewById() throws Exception {
-        ArticleReviewOptions options = ArticleReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
-        when(articleReviewNoTypeService.getArticleReview(123, options))
-                .thenReturn(Optional.of(new ArticleReview()));
+    public void testFindPageReviewById() throws Exception {
+        PageReviewOptions options = PageReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
+        when(pageReviewNoTypeService.getPageReview(123, options))
+                .thenReturn(Optional.of(new PageReview()));
 
         mvc.perform(get("/api/pages/123?lang=es")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(articleReviewNoTypeService, times(1))
-                .getArticleReview(123, options);
+        verify(pageReviewNoTypeService, times(1))
+                .getPageReview(123, options);
     }
 
     @Test
-    public void testFindArticleReviewByIdByTypeAndSubtype() throws Exception {
-        ArticleReviewOptions options = ArticleReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
-        when(articleReviewTypeSubtypeService.getArticleReview(123, options))
-                .thenReturn(Optional.of(new ArticleReview()));
+    public void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
+        PageReviewOptions options = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
+        when(pageReviewTypeSubtypeService.getPageReview(123, options))
+                .thenReturn(Optional.of(new PageReview()));
 
         mvc.perform(get("/api/pages/123/X/Y?lang=es")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(articleReviewTypeSubtypeService, times(1))
-                .getArticleReview(123, options);
+        verify(pageReviewTypeSubtypeService, times(1))
+                .getPageReview(123, options);
     }
 
     @Test
-    public void testFindArticleReviewByIdAndCustomReplacement() throws Exception {
-        ArticleReviewOptions options = ArticleReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
-        when(articleReviewCustomService.getArticleReview(123, options))
-                .thenReturn(Optional.of(new ArticleReview()));
+    public void testFindPageReviewByIdAndCustomReplacement() throws Exception {
+        PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
+        when(pageReviewCustomService.getPageReview(123, options))
+                .thenReturn(Optional.of(new PageReview()));
 
         mvc.perform(get("/api/pages/123/Personalizado/X/Y?lang=es")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        verify(articleReviewCustomService, times(1))
-                .getArticleReview(123, options);
+        verify(pageReviewCustomService, times(1))
+                .getPageReview(123, options);
     }
 
     @Test

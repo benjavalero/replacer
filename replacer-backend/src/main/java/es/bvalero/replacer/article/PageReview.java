@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class ArticleReview {
+class PageReview {
     private int id;
     private WikipediaLanguage lang;
     private String title;

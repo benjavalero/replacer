@@ -37,7 +37,8 @@ The following concepts are used:
   - **Start**. The start position of the section in the page contents
   - **End**. The end position of the section in the page contents
   - **Text**. Optionally, the text in the section, especially for debugging purposes, i.e. the text between the start and end position of the section.
-- **Cosmetic** A special type of replacement which can be applied automatically, concerning cosmetic modifications, visible or not, e.g. replacing `[[Asia|Asia]]` by `[[Asia]]`.
+- **Cosmetic**. A special type of replacement which can be applied automatically, concerning cosmetic modifications, visible or not, e.g. replacing `[[Asia|Asia]]` by `[[Asia]]`.
+- **PageReview**. A summary of a page (or page section) with replacements to be reviewed.
 
 For the first use case, the basic steps are:
 

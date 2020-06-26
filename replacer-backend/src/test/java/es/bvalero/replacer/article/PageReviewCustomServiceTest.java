@@ -17,7 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
-class ArticleReviewCustomServiceTest {
+class PageReviewCustomServiceTest {
     private final int randomId = 1;
     private final int randomId2 = 2;
     private final String content = "XYZ";
@@ -68,11 +68,11 @@ class ArticleReviewCustomServiceTest {
     private ModelMapper modelMapper;
 
     @InjectMocks
-    private ArticleReviewCustomService articleService;
+    private PageReviewCustomService articleService;
 
     @BeforeEach
     public void setUp() {
-        articleService = new ArticleReviewCustomService();
+        articleService = new PageReviewCustomService();
         articleService.setIgnorableTemplates(ignorableTemplates);
         MockitoAnnotations.initMocks(this);
     }
@@ -123,12 +123,8 @@ class ArticleReviewCustomServiceTest {
             )
             .thenReturn(replacements);
 
-        ArticleReviewOptions options = ArticleReviewOptions.ofCustom(
-            WikipediaLanguage.SPANISH,
-            replacement,
-            suggestion
-        );
-        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
+        PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, replacement, suggestion);
+        Optional<PageReview> review = articleService.findRandomPageReview(options);
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId, review.get().getId());
@@ -182,12 +178,8 @@ class ArticleReviewCustomServiceTest {
             )
             .thenReturn(Collections.emptyList());
 
-        ArticleReviewOptions options = ArticleReviewOptions.ofCustom(
-            WikipediaLanguage.SPANISH,
-            replacement,
-            suggestion
-        );
-        Optional<ArticleReview> review = articleService.findRandomArticleReview(options);
+        PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, replacement, suggestion);
+        Optional<PageReview> review = articleService.findRandomPageReview(options);
 
         Mockito
             .verify(wikipediaService, Mockito.times(2))
