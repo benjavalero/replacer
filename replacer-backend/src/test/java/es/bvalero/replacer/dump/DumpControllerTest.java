@@ -35,15 +35,15 @@ public class DumpControllerTest {
     @Test
     public void testGetDumpIndexingStatus() throws Exception {
         boolean running = true;
-        long numArticlesRead = 1000;
-        long numArticlesProcessed = 500;
+        long numPagesRead = 1000;
+        long numPagesProcessed = 500;
         String dumpFileName = "xxx.xml.bz2";
         long start = 1500;
         long end = 2000;
         DumpIndexingStatus indexation = new DumpIndexingStatus();
         indexation.setRunning(running);
-        indexation.setNumArticlesRead(numArticlesRead);
-        indexation.setNumArticlesProcessed(numArticlesProcessed);
+        indexation.setNumPagesRead(numPagesRead);
+        indexation.setNumPagesProcessed(numPagesProcessed);
         indexation.setDumpFileName(dumpFileName);
         indexation.setStart(start);
         indexation.setEnd(end);
@@ -53,8 +53,8 @@ public class DumpControllerTest {
             .perform(get("/api/dump-indexing/status").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.running", equalTo(running)))
-            .andExpect(jsonPath("$.numArticlesRead", is(Long.valueOf(numArticlesRead).intValue())))
-            .andExpect(jsonPath("$.numArticlesProcessed", is(Long.valueOf(numArticlesProcessed).intValue())))
+            .andExpect(jsonPath("$.numPagesRead", is(Long.valueOf(numPagesRead).intValue())))
+            .andExpect(jsonPath("$.numPagesProcessed", is(Long.valueOf(numPagesProcessed).intValue())))
             .andExpect(jsonPath("$.dumpFileName", is(dumpFileName)))
             .andExpect(jsonPath("$.start", is(Long.valueOf(start).intValue())))
             .andExpect(jsonPath("$.end", is(Long.valueOf(end).intValue())));

@@ -41,7 +41,7 @@
             "description": "Secret token to authenticate against MediaWiki with OAuth"
         },
         {
-            "name": "replacer.article.stats.delay",
+            "name": "replacer.page.stats.delay",
             "type": "java.lang.String",
             "description": "Delay (in milliseconds) between executions of the replacement count in database"
         }

@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class DumpIndexingStatus {
     private boolean running;
-    private long numArticlesRead;
-    private long numArticlesProcessed;
-    private long numArticlesEstimated;
+    private long numPagesRead;
+    private long numPagesProcessed;
+    private long numPagesEstimated;
     private String dumpFileName;
     private long start;
     private Long end;

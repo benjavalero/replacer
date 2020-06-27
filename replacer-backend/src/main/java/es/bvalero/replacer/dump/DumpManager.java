@@ -49,7 +49,7 @@ class DumpManager {
     private Job dumpJob;
 
     @Resource
-    private Map<String, Integer> numArticlesEstimated;
+    private Map<String, Integer> numPagesEstimated;
 
     /**
      * Check if there is a new dump to process.
@@ -131,7 +131,7 @@ class DumpManager {
                 if (lang == null) {
                     lang = WikipediaLanguage.SPANISH.getCode();
                 }
-                dumpIndexingStatus.setNumArticlesEstimated(numArticlesEstimated.get(lang));
+                dumpIndexingStatus.setNumPagesEstimated(numPagesEstimated.get(lang));
 
                 addStepExecutions(dumpIndexingStatus, jobExecution);
             }
@@ -147,8 +147,8 @@ class DumpManager {
                 long stepId = map.keySet().stream().findAny().orElse(0L);
                 StepExecution stepExecution = jobExplorer.getStepExecution(jobExecution.getId(), stepId);
                 if (stepExecution != null) {
-                    dumpIndexingStatus.setNumArticlesRead(stepExecution.getReadCount());
-                    dumpIndexingStatus.setNumArticlesProcessed(stepExecution.getWriteCount());
+                    dumpIndexingStatus.setNumPagesRead(stepExecution.getReadCount());
+                    dumpIndexingStatus.setNumPagesProcessed(stepExecution.getWriteCount());
                 }
             }
         } catch (NoSuchJobExecutionException e) {

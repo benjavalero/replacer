@@ -46,7 +46,7 @@ public class ReplacementCountService {
     /**
      * Update the count of misspellings from Wikipedia.
      */
-    @Scheduled(fixedDelayString = "${replacer.article.stats.delay}")
+    @Scheduled(fixedDelayString = "${replacer.page.stats.delay}")
     void updateReplacementCount() {
         LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
         LOGGER.info("START Count grouped replacements by type and subtype");

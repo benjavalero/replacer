@@ -1,16 +1,15 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { interval, Subscription } from 'rxjs';
-
-import { DumpIndexingService } from './dump-indexing.service';
-import { DumpIndexingStatus } from './dump-indexing-status.model';
 import { AlertService } from '../alert/alert.service';
 import { sleep } from '../sleep';
+import { DumpIndexingStatus } from './dump-indexing-status.model';
+import { DumpIndexingService } from './dump-indexing.service';
 
 @Component({
   selector: 'app-dump',
   templateUrl: './dump.component.html',
-  styleUrls: [],
+  styleUrls: []
 })
 export class DumpComponent implements OnInit, OnDestroy {
   // Status Details
@@ -35,9 +34,7 @@ export class DumpComponent implements OnInit, OnDestroy {
     this.getDumpIndexingStatus();
 
     // Refresh every 10 seconds
-    this.subscription = interval(10000).subscribe(() =>
-      this.getDumpIndexingStatus()
-    );
+    this.subscription = interval(10000).subscribe(() => this.getDumpIndexingStatus());
   }
 
   ngOnDestroy() {
@@ -45,17 +42,15 @@ export class DumpComponent implements OnInit, OnDestroy {
   }
 
   private getDumpIndexingStatus() {
-    this.dumpService
-      .getDumpIndexingStatus()
-      .subscribe((status: DumpIndexingStatus) => {
-        this.status = status;
-        this.elapsed = this.formatMilliseconds(this.calculateElapsed());
-        this.progress = this.calculateProgress();
-        this.average = this.calculateAverage();
-        this.eta = this.formatMilliseconds(this.calculateEta());
+    this.dumpService.getDumpIndexingStatus().subscribe((status: DumpIndexingStatus) => {
+      this.status = status;
+      this.elapsed = this.formatMilliseconds(this.calculateElapsed());
+      this.progress = this.calculateProgress();
+      this.average = this.calculateAverage();
+      this.eta = this.formatMilliseconds(this.calculateEta());
 
-        this.alertService.clearAlertMessages();
-      });
+      this.alertService.clearAlertMessages();
+    });
   }
 
   private calculateElapsed(): number {
@@ -80,20 +75,17 @@ export class DumpComponent implements OnInit, OnDestroy {
   }
 
   private calculateProgress(): number {
-    if (this.status.numArticlesRead) {
+    if (this.status.numPagesRead) {
       // We might have more read articles than the estimation constant
-      return (
-        (this.status.numArticlesRead * 100.0) /
-        Math.max(this.status.numArticlesEstimated, this.status.numArticlesRead)
-      );
+      return (this.status.numPagesRead * 100.0) / Math.max(this.status.numPagesEstimated, this.status.numPagesRead);
     } else {
       return 0;
     }
   }
 
   private calculateAverage(): number {
-    if (this.status.numArticlesRead) {
-      return this.calculateElapsed() / this.status.numArticlesRead;
+    if (this.status.numPagesRead) {
+      return this.calculateElapsed() / this.status.numPagesRead;
     } else {
       return 0;
     }
@@ -101,11 +93,7 @@ export class DumpComponent implements OnInit, OnDestroy {
 
   private calculateEta(): number {
     if (this.status.running) {
-      const toRead =
-        Math.max(
-          this.status.numArticlesEstimated,
-          this.status.numArticlesRead
-        ) - this.status.numArticlesRead;
+      const toRead = Math.max(this.status.numPagesEstimated, this.status.numPagesRead) - this.status.numPagesRead;
       return toRead * this.calculateAverage();
     } else {
       return 0;
