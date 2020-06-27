@@ -14,10 +14,10 @@ import { AlertContainerComponent } from './alert/alert-container.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
-import { FindRandomComponent } from './article/find-random.component';
-import { FindCustomComponent } from './article/find-custom.component';
-import { EditArticleComponent } from './article/edit-article.component';
-import { EditSnippetComponent } from './article/edit-snippet.component';
+import { FindRandomComponent } from './page/find-random.component';
+import { FindCustomComponent } from './page/find-custom.component';
+import { EditPageComponent } from './page/edit-page.component';
+import { EditSnippetComponent } from './page/edit-snippet.component';
 import { DumpComponent } from './dump/dump.component';
 import { FindReplacementComponent } from './replacement/find-replacement.component';
 import { ReplacementTableComponent } from './replacement/replacement-table.component';
@@ -33,7 +33,7 @@ import { StatsComponent } from './stats/stats.component';
     HeaderComponent,
     FindRandomComponent,
     FindCustomComponent,
-    EditArticleComponent,
+    EditPageComponent,
     EditSnippetComponent,
     DumpComponent,
     FindReplacementComponent,

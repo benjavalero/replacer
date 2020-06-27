@@ -6,15 +6,15 @@ import { AuthenticationService } from '../authentication/authentication.service'
 import { AlertService } from '../alert/alert.service';
 import { ArticleService } from './article.service';
 import { PageReview } from './page-review.model';
-import { ArticleReplacement } from './article-replacement.model';
+import { PageReplacement } from './page-replacement.model';
 import { Language, WikipediaUser } from '../authentication/wikipedia-user.model';
 
 @Component({
-  selector: 'app-edit-article',
-  templateUrl: './edit-article.component.html',
+  selector: 'app-edit-page',
+  templateUrl: './edit-page.component.html',
   styleUrls: []
 })
-export class EditArticleComponent implements OnInit {
+export class EditPageComponent implements OnInit {
 
   articleId: number;
   filteredType: string;
@@ -26,7 +26,7 @@ export class EditArticleComponent implements OnInit {
   title = '';
   content: string;
   section: number;
-  replacements: ArticleReplacement[] = [];
+  replacements: PageReplacement[] = [];
   numPending: number;
   fixedCount = 0;
   currentTimestamp: string;
@@ -91,7 +91,7 @@ export class EditArticleComponent implements OnInit {
     this.fixedCount = this.getFixedReplacements().length;
   }
 
-  private getFixedReplacements(): ArticleReplacement[] {
+  private getFixedReplacements(): PageReplacement[] {
     return this.replacements.filter(rep => rep.textFixed);
   }
 

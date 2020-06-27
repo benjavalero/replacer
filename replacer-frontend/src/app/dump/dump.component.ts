@@ -76,7 +76,7 @@ export class DumpComponent implements OnInit, OnDestroy {
 
   private calculateProgress(): number {
     if (this.status.numPagesRead) {
-      // We might have more read articles than the estimation constant
+      // We might have more read pages than the estimation constant
       return (this.status.numPagesRead * 100.0) / Math.max(this.status.numPagesEstimated, this.status.numPagesRead);
     } else {
       return 0;

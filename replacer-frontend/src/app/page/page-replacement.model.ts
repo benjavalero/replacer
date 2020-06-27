@@ -1,6 +1,6 @@
 import { Suggestion } from './suggestion.model';
 
-export interface ArticleReplacement {
+export interface PageReplacement {
   text: string;
   start: number;
   suggestions: Suggestion[];

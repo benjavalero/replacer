@@ -1,4 +1,4 @@
-import { ArticleReplacement } from './article-replacement.model';
+import { PageReplacement } from './page-replacement.model';
 
 export interface PageReview {
   id: number;
@@ -6,6 +6,6 @@ export interface PageReview {
   content: string;
   section?: number;
   queryTimestamp: string;
-  replacements: ArticleReplacement[];
+  replacements: PageReplacement[];
   numPending: number;
 }
