@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
-public class CompleteTagFinderTest {
+class CompleteTagFinderTest {
     @Resource
     private Set<String> completeTags;
 

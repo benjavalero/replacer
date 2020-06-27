@@ -4,17 +4,15 @@ import static org.hamcrest.Matchers.is;
 
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
-public class CursiveFinderBenchmark extends BaseFinderBenchmark {
+class CursiveFinderBenchmark extends BaseFinderBenchmark {
 
     @Test
-    void testBenchmark() throws IOException, URISyntaxException {
+    void testBenchmark() throws Exception {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new CursiveRegexDotLazyFinder());

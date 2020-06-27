@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
-public class PersonFinderTest {
+class PersonFinderTest {
     private Collection<String> words;
     private String text;
     private Set<FinderResult> expected;

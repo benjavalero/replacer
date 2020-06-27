@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
-public class TemplateFinderTest {
+class TemplateFinderTest {
     @Resource
     private List<String> templateNames;
 

@@ -19,7 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(
     classes = { XmlConfiguration.class, CompleteTagFinder.class, TemplateParamFinder.class, TemplateFinder.class }
 )
-public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
+class ImmutableFinderBenchmark extends BaseFinderBenchmark {
     @Autowired
     private CompleteTagFinder completeTagFinder;
 
@@ -30,7 +30,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
     private TemplateFinder templateFinder;
 
     @Test
-    void testBenchmark() throws IOException, URISyntaxException {
+    void testBenchmark() throws Exception {
         // Load the finders
         List<ImmutableFinder> finders = new ArrayList<>();
         finders.add(new CategoryFinder());
@@ -89,7 +89,7 @@ public class ImmutableFinderBenchmark extends BaseFinderBenchmark {
     }
 
     @Test
-    void testMatches() throws IOException, URISyntaxException {
+    void testMatches() throws Exception {
         // Load the finders
         List<ImmutableFinder> finders = new ArrayList<>();
         finders.add(new UrlFinder());

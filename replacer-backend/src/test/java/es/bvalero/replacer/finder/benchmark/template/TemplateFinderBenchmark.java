@@ -8,20 +8,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(classes = XmlConfiguration.class)
-public class TemplateFinderBenchmark extends BaseFinderBenchmark {
+class TemplateFinderBenchmark extends BaseFinderBenchmark {
     @Resource
     private List<String> templateNames;
 
     @Test
-    void testBenchmark() throws IOException, URISyntaxException {
+    void testBenchmark() throws Exception {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new TemplateRegexIteratedFinder(templateNames));

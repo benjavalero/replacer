@@ -16,12 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
-public class PersonFinderBenchmark extends BaseFinderBenchmark {
+class PersonFinderBenchmark extends BaseFinderBenchmark {
     @Resource
     private Set<String> personNames;
 
     @Test
-    void testBenchmark() throws IOException, URISyntaxException {
+    void testBenchmark() throws Exception {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new PersonIndexOfFinder(personNames));

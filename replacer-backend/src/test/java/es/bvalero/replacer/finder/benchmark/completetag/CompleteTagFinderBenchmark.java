@@ -5,8 +5,6 @@ import static org.hamcrest.Matchers.is;
 import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -16,12 +14,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
-public class CompleteTagFinderBenchmark extends BaseFinderBenchmark {
+class CompleteTagFinderBenchmark extends BaseFinderBenchmark {
     @Resource
     private Set<String> completeTags;
 
     @Test
-    void testBenchmark() throws IOException, URISyntaxException {
+    void testBenchmark() throws Exception {
         // Load the finders
         // In order to capture nested tags we can only use lazy regex
         List<BenchmarkFinder> finders = new ArrayList<>();

@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder;
 
 import lombok.Value;
-import org.jetbrains.annotations.TestOnly;
 
 /**
  * An <strong>immutable</strong> is a section in the page contents to be left untouched,
@@ -11,16 +10,16 @@ import org.jetbrains.annotations.TestOnly;
 @Value(staticConstructor = "of")
 public class Immutable {
     /** The start position of the section in the text */
-    private final int start;
+    int start;
 
     /**
      * Optionally, the text in the section, especially for debugging purposes,
      * i.e. the text between the start and end position of the section.
      */
-    private final String text;
+    String text;
 
     /** The finder which has found it. */
-    private final ImmutableFinder finder;
+    ImmutableFinder finder;
 
     /** The end position of the section in the text */
     public int getEnd() {

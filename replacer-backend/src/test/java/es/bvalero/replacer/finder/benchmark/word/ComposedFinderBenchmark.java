@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
-import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.misspelling.*;
@@ -10,18 +9,16 @@ import es.bvalero.replacer.wikipedia.WikipediaServiceOfflineImpl;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.Matchers.is;
 
-public class ComposedFinderBenchmark extends BaseFinderBenchmark {
+class ComposedFinderBenchmark extends BaseFinderBenchmark {
 
     @Test
-    void testWordFinderBenchmark() throws IOException, URISyntaxException, ReplacerException {
+    void testWordFinderBenchmark() throws Exception {
         WikipediaService wikipediaService = new WikipediaServiceOfflineImpl();
         String text = wikipediaService.getComposedMisspellingListPageContent(WikipediaLanguage.SPANISH);
 
