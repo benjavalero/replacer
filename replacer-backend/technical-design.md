@@ -219,7 +219,7 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] Migrate to Wikipedia REST API, meant to be more appropriate for this kind of tools.
 - [ ] Set i18n in the frontend. Translate edition message according to the used language. Even try to make this message more specific about the replacements done.
 - [ ] Improve webapp cache for assets or other files. Check results of PageSpeed Insights.
-- [ ] Review API and front-end routes
+- [ ] Review front-end routes
 - [ ] Review occurrences in code and doc of _article_ and replace when needed by _page_
 - [ ] Research option "srsort" when search directly in Wikipedia to try not to skip results on custom replacement when paginating
 - [ ] Add a new option to _skip_ a page for revision for a user, but keep it available for the rest.

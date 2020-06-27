@@ -1,11 +1,10 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-
 import { environment } from '../../environments/environment';
-import { PageReview } from './page-review.model';
 import { AuthenticationService } from '../authentication/authentication.service';
-import { SaveArticle } from './save-article.model';
+import { PageReview } from './page-review.model';
+import { SavePage } from './save-page.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,56 +12,56 @@ import { SaveArticle } from './save-article.model';
 export class ArticleService {
   baseUrl = `${environment.apiUrl}/pages`;
 
-  private cachedArticleReviews = {};
+  private cachedPageReviews = {};
 
   constructor(private httpClient: HttpClient, private authenticationService: AuthenticationService) {}
 
   findRandomArticle(type: string, subtype: string, suggestion: string): Observable<PageReview> {
+    let params: HttpParams = new HttpParams();
     if (type && subtype) {
       if (suggestion) {
-        return this.httpClient.get<PageReview>(`${this.baseUrl}/random/${type}/${subtype}/${suggestion}`);
+        params = params.append('replacement', subtype).append('suggestion', suggestion);
       } else {
-        return this.httpClient.get<PageReview>(`${this.baseUrl}/random/${type}/${subtype}`);
+        params = params.append('type', type).append('subtype', subtype);
       }
-    } else {
-      return this.httpClient.get<PageReview>(`${this.baseUrl}/random`);
     }
+    return this.httpClient.get<PageReview>(`${this.baseUrl}/random`, { params });
   }
 
-  getArticleReviewFromCache(articleId: number, type: string, subtype: string): PageReview {
-    const key = this.buildReviewCacheKey(articleId, type, subtype);
-    const review = this.cachedArticleReviews[key];
-    delete this.cachedArticleReviews[key];
+  getPageReviewFromCache(pageId: number, type: string, subtype: string): PageReview {
+    const key = this.buildReviewCacheKey(pageId, type, subtype);
+    const review = this.cachedPageReviews[key];
+    delete this.cachedPageReviews[key];
     return review;
   }
 
-  putArticleReviewInCache(type: string, subtype: string, review: PageReview): void {
+  putPageReviewInCache(type: string, subtype: string, review: PageReview): void {
     const key = this.buildReviewCacheKey(review.id, type, subtype);
-    this.cachedArticleReviews[key] = review;
+    this.cachedPageReviews[key] = review;
   }
 
-  private buildReviewCacheKey(articleId: number, type: string, subtype: string): string {
+  private buildReviewCacheKey(pageId: number, type: string, subtype: string): string {
     if (type && subtype) {
-      return `${articleId}-${type}-${subtype}`;
+      return `${pageId}-${type}-${subtype}`;
     } else {
-      return String(articleId);
+      return String(pageId);
     }
   }
 
-  findArticleReviewById(articleId: number, type: string, subtype: string, suggestion: string): Observable<PageReview> {
+  findPageReviewById(pageId: number, type: string, subtype: string, suggestion: string): Observable<PageReview> {
+    let params: HttpParams = new HttpParams();
     if (type && subtype) {
       if (suggestion) {
-        return this.httpClient.get<PageReview>(`${this.baseUrl}/${articleId}/${type}/${subtype}/${suggestion}`);
+        params = params.append('replacement', subtype).append('suggestion', suggestion);
       } else {
-        return this.httpClient.get<PageReview>(`${this.baseUrl}/${articleId}/${type}/${subtype}`);
+        params = params.append('type', type).append('subtype', subtype);
       }
-    } else {
-      return this.httpClient.get<PageReview>(`${this.baseUrl}/${articleId}`);
     }
+    return this.httpClient.get<PageReview>(`${this.baseUrl}/${pageId}`, { params });
   }
 
-  saveArticle(
-    articleId: number,
+  savePage(
+    pageId: number,
     type: string,
     subtype: string,
     content: string,
@@ -73,20 +72,19 @@ export class ArticleService {
       return throwError('El usuario no está autenticado. Recargue la página para retomar la sesión.');
     }
 
-    const saveArticle = new SaveArticle();
-    saveArticle.articleId = articleId;
+    const savePage = new SavePage();
     if (section) {
-      saveArticle.section = section;
+      savePage.section = section;
     }
-    saveArticle.content = content;
-    saveArticle.timestamp = currentTimestamp;
-    saveArticle.reviewer = this.authenticationService.user.name;
-    saveArticle.token = this.authenticationService.accessToken;
+    savePage.content = content;
+    savePage.timestamp = currentTimestamp;
+    savePage.reviewer = this.authenticationService.user.name;
+    savePage.token = this.authenticationService.accessToken;
     if (type && subtype) {
-      saveArticle.type = type;
-      saveArticle.subtype = subtype;
+      savePage.type = type;
+      savePage.subtype = subtype;
     }
 
-    return this.httpClient.post<any>(`${this.baseUrl}`, saveArticle);
+    return this.httpClient.post<any>(`${this.baseUrl}/${pageId}`, savePage);
   }
 }

@@ -39,27 +39,27 @@ public class PageController {
 
     @GetMapping(value = "/random")
     public Optional<PageReview> findRandomArticleWithReplacements(@RequestParam WikipediaLanguage lang) {
-        LOGGER.info("GET Find random article");
+        LOGGER.info("GET Find random page review");
         return pageReviewNoTypeService.findRandomPageReview(PageReviewOptions.ofNoType(lang));
     }
 
-    @GetMapping(value = "/random/{type}/{subtype}")
+    @GetMapping(value = "/random", params = { "type", "subtype" })
     public Optional<PageReview> findRandomArticleByTypeAndSubtype(
-        @PathVariable("type") String type,
-        @PathVariable("subtype") String subtype,
+        @RequestParam String type,
+        @RequestParam String subtype,
         @RequestParam WikipediaLanguage lang
     ) {
-        LOGGER.info("GET Find random article. Type: {} - {}", type, subtype);
+        LOGGER.info("GET Find random page review. Type: {} - {}", type, subtype);
         return pageReviewTypeSubtypeService.findRandomPageReview(PageReviewOptions.ofTypeSubtype(lang, type, subtype));
     }
 
-    @GetMapping(value = "/random/Personalizado/{subtype}/{suggestion}")
+    @GetMapping(value = "/random", params = { "replacement", "suggestion" })
     public Optional<PageReview> findRandomArticleByCustomReplacement(
-        @PathVariable("subtype") String replacement,
-        @PathVariable("suggestion") String suggestion,
+        @RequestParam String replacement,
+        @RequestParam String suggestion,
         @RequestParam WikipediaLanguage lang
     ) {
-        LOGGER.info("GET Find random article. Custom replacement: {} - {}", replacement, suggestion);
+        LOGGER.info("GET Find random page review. Custom replacement: {} - {}", replacement, suggestion);
         return pageReviewCustomService.findRandomPageReview(PageReviewOptions.ofCustom(lang, replacement, suggestion));
     }
 
@@ -67,58 +67,56 @@ public class PageController {
 
     @GetMapping(value = "/{id}")
     public Optional<PageReview> findPageReviewById(
-        @PathVariable("id") int articleId,
+        @PathVariable("id") int pageId,
         @RequestParam WikipediaLanguage lang
     ) {
-        LOGGER.info("GET Find review for article. ID: {}", articleId);
-        return pageReviewNoTypeService.getPageReview(articleId, PageReviewOptions.ofNoType(lang));
+        LOGGER.info("GET Find review by page ID: {}", pageId);
+        return pageReviewNoTypeService.getPageReview(pageId, PageReviewOptions.ofNoType(lang));
     }
 
-    @GetMapping(value = "/{id}/{type}/{subtype}")
+    @GetMapping(value = "/{id}", params = { "type", "subtype" })
     public Optional<PageReview> findPageReviewByIdByTypeAndSubtype(
-        @PathVariable("id") int articleId,
-        @PathVariable("type") String type,
-        @PathVariable("subtype") String subtype,
+        @PathVariable("id") int pageId,
+        @RequestParam String type,
+        @RequestParam String subtype,
         @RequestParam WikipediaLanguage lang
     ) {
-        LOGGER.info("GET Find review for article. ID: {} - Type: {} - Subtype: {}", articleId, type, subtype);
-        return pageReviewTypeSubtypeService.getPageReview(
-            articleId,
-            PageReviewOptions.ofTypeSubtype(lang, type, subtype)
-        );
+        LOGGER.info("GET Find review by page ID: {} - Type: {} - Subtype: {}", pageId, type, subtype);
+        return pageReviewTypeSubtypeService.getPageReview(pageId, PageReviewOptions.ofTypeSubtype(lang, type, subtype));
     }
 
-    @GetMapping(value = "/{id}/Personalizado/{subtype}/{suggestion}")
+    @GetMapping(value = "/{id}", params = { "replacement", "suggestion" })
     public Optional<PageReview> findPageReviewByIdAndCustomReplacement(
-        @PathVariable("id") int articleId,
-        @PathVariable("subtype") String replacement,
-        @PathVariable("suggestion") String suggestion,
+        @PathVariable("id") int pageId,
+        @RequestParam String replacement,
+        @RequestParam String suggestion,
         @RequestParam WikipediaLanguage lang
     ) {
         LOGGER.info(
-            "GET Find review for article by custom type. ID: {} - Replacement: {} - Suggestion: {}",
-            articleId,
+            "GET Find review by page ID: {} - Replacement: {} - Suggestion: {}",
+            pageId,
             replacement,
             suggestion
         );
-        return pageReviewCustomService.getPageReview(
-            articleId,
-            PageReviewOptions.ofCustom(lang, replacement, suggestion)
-        );
+        return pageReviewCustomService.getPageReview(pageId, PageReviewOptions.ofCustom(lang, replacement, suggestion));
     }
 
     /* SAVE CHANGES */
 
-    @PostMapping
-    public void save(@RequestBody SaveArticle saveArticle, @RequestParam WikipediaLanguage lang)
+    @PostMapping(value = "/{id}")
+    public void save(
+        @RequestBody SavePage saveArticle,
+        @PathVariable("id") int pageId,
+        @RequestParam WikipediaLanguage lang
+    )
         throws ReplacerException {
         boolean changed = StringUtils.isNotBlank(saveArticle.getContent());
-        LOGGER.info("PUT Save article. ID: {} - Changed: {}", saveArticle.getArticleId(), changed);
+        LOGGER.info("PUT Save page. ID: {} - Changed: {}", pageId, changed);
         if (changed) {
             // Upload new content to Wikipedia
             String textToSave = cosmeticFindService.applyCosmeticChanges(saveArticle.getContent());
             wikipediaService.savePageContent(
-                saveArticle.getArticleId(),
+                pageId,
                 textToSave,
                 saveArticle.getSection(),
                 saveArticle.getTimestamp(),
@@ -129,7 +127,7 @@ public class PageController {
 
         // Mark article as reviewed in the database
         replacementIndexService.reviewArticleReplacements(
-            saveArticle.getArticleId(),
+            pageId,
             lang,
             saveArticle.getType(),
             saveArticle.getSubtype(),

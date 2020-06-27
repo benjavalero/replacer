@@ -34,7 +34,7 @@ export class FindRandomComponent implements OnInit {
     this.articleService.findRandomArticle(this.filteredType, this.filteredSubtype, this.suggestion).subscribe((review: PageReview) => {
       if (review) {
         // Cache the review
-        this.articleService.putArticleReviewInCache(this.filteredType, this.filteredSubtype, review);
+        this.articleService.putPageReviewInCache(this.filteredType, this.filteredSubtype, review);
 
         const articleId = review.id;
         // TODO : Do something with the title

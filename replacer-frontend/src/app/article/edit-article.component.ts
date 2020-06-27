@@ -49,7 +49,7 @@ export class EditArticleComponent implements OnInit {
     this.suggestion = this.route.snapshot.paramMap.get('suggestion');
 
     // First try to get the review from the cache
-    const cachedReview = this.articleService.getArticleReviewFromCache(this.articleId, this.filteredType, this.filteredSubtype);
+    const cachedReview = this.articleService.getPageReviewFromCache(this.articleId, this.filteredType, this.filteredSubtype);
 
     let title = 'Replacer - ';
     if (this.filteredType && this.filteredSubtype) {
@@ -62,7 +62,7 @@ export class EditArticleComponent implements OnInit {
     if (cachedReview) {
       this.manageReview(cachedReview);
     } else {
-      this.articleService.findArticleReviewById(this.articleId, this.filteredType, this.filteredSubtype, this.suggestion)
+      this.articleService.findPageReviewById(this.articleId, this.filteredType, this.filteredSubtype, this.suggestion)
         .subscribe((review: PageReview) => {
           if (review) {
             this.manageReview(review);
@@ -127,7 +127,7 @@ export class EditArticleComponent implements OnInit {
     // Remove replacements as a trick to hide the article
     this.replacements = [];
 
-    this.articleService.saveArticle(this.articleId, this.filteredType, this.filteredSubtype, content, this.section, this.currentTimestamp)
+    this.articleService.savePage(this.articleId, this.filteredType, this.filteredSubtype, content, this.section, this.currentTimestamp)
       .subscribe(res => { }, err => {
         const errMsg = `Error al guardar el artículo: ${err.error.message}`;
         if (errMsg.includes('mwoauth-invalid-authorization')) {

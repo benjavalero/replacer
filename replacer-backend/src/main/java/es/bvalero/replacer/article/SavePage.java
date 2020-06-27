@@ -9,8 +9,7 @@ import org.jetbrains.annotations.Nullable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class SaveArticle {
-    private int articleId;
+class SavePage {
     private @Nullable Integer section;
     private String content;
     private String timestamp;

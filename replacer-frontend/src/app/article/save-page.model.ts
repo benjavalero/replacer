@@ -1,7 +1,6 @@
 import { AccessToken } from '../authentication/access-token.model';
 
-export class SaveArticle {
-  articleId: number;
+export class SavePage {
   section?: number;
   content: string;
   timestamp: string;
