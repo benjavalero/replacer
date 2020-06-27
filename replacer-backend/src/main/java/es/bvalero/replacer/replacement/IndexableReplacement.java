@@ -6,7 +6,7 @@ import lombok.Value;
 
 @Value(staticConstructor = "of")
 public class IndexableReplacement {
-    int articleId;
+    int pageId;
     WikipediaLanguage lang;
     String type;
     String subtype;

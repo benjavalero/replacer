@@ -47,11 +47,11 @@ public class ReplacementRepositoryTest {
         ReplacementEntity error3 = new ReplacementEntity(3, "X", "aber", 3);
         replacementRepository.saveAll(Arrays.asList(error1, error2, error3));
 
-        Assert.assertThat(replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
+        Assert.assertThat(replacementRepository.findRandomPageIdsToReviewByTypeAndSubtype(
             WikipediaLanguage.SPANISH.getCode(), "xxx", "zzz", PageRequest.of(0, 1))
             .isEmpty(), is(true));
 
-        Assert.assertThat(replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
+        Assert.assertThat(replacementRepository.findRandomPageIdsToReviewByTypeAndSubtype(
             WikipediaLanguage.SPANISH.getCode(), "X", "aber", PageRequest.of(0, 3))
             .size(), is(3));
     }

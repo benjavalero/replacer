@@ -93,7 +93,7 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
             dumpPage.getContent(),
             dumpPage.getLang()
         );
-        List<ReplacementEntity> toWrite = replacementIndexService.findIndexArticleReplacements(
+        List<ReplacementEntity> toWrite = replacementIndexService.findIndexPageReplacements(
             dumpPage.getId(),
             dumpPage.getLang(),
             replacements.stream().map(dumpPage::convertReplacementToIndexed).collect(Collectors.toList()),

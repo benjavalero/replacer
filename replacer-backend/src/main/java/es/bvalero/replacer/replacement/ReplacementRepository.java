@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public interface ReplacementRepository extends JpaRepository<ReplacementEntity, Long> {
-    List<ReplacementEntity> findByArticleIdAndLang(int articleId, String lang);
+    List<ReplacementEntity> findByPageIdAndLang(int pageId, String lang);
 
     @Query(
         "SELECT new es.bvalero.replacer.replacement.TypeSubtypeCount(lang, type, subtype, COUNT(*)) " +
@@ -38,19 +38,19 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
     // ORDER BY RAND() takes a lot when not filtering by type/subtype even using an index
     // Not worth to DISTINCT as we add the results as a set later
     @Query(
-        "SELECT articleId " +
+        "SELECT pageId " +
         "FROM ReplacementEntity " +
         "WHERE lang = :lang AND reviewer IS NULL AND id > :start " +
         "ORDER BY id"
     )
-    List<Integer> findRandomArticleIdsToReview(
+    List<Integer> findRandomPageIdsToReview(
         @Param("lang") String lang,
         @Param("start") long randomStart,
         Pageable pageable
     );
 
     @Query(
-        "SELECT COUNT (DISTINCT articleId) FROM ReplacementEntity " +
+        "SELECT COUNT (DISTINCT pageId) FROM ReplacementEntity " +
         "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL"
     )
     long countByLangAndTypeAndSubtypeAndReviewerIsNull(
@@ -62,11 +62,11 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
     // When filtering by type/subtype ORDER BY RAND() still takes a while but it is admissible
     // Not worth to DISTINCT as we add the results as a set later
     @Query(
-        "SELECT articleId FROM ReplacementEntity " +
+        "SELECT pageId FROM ReplacementEntity " +
         "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL " +
         "ORDER BY RAND()"
     )
-    List<Integer> findRandomArticleIdsToReviewByTypeAndSubtype(
+    List<Integer> findRandomPageIdsToReviewByTypeAndSubtype(
         @Param("lang") String lang,
         @Param("type") String type,
         @Param("subtype") String subtype,
@@ -74,7 +74,7 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
     );
 
     @Query(
-        "SELECT articleId FROM ReplacementEntity " +
+        "SELECT pageId FROM ReplacementEntity " +
         "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NOT NULL"
     )
     List<Integer> findByLangAndTypeAndSubtypeAndReviewerNotNull(
@@ -83,14 +83,14 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
         @Param("subtype") String subtype
     );
 
-    List<ReplacementEntity> findByArticleIdAndLangAndTypeAndSubtypeAndReviewerIsNull(
-        int articleId,
+    List<ReplacementEntity> findByPageIdAndLangAndTypeAndSubtypeAndReviewerIsNull(
+        int pageId,
         String lang,
         String type,
         String subtype
     );
 
-    List<ReplacementEntity> findByArticleIdAndLangAndReviewerIsNull(int articleId, String lang);
+    List<ReplacementEntity> findByPageIdAndLangAndReviewerIsNull(int pageId, String lang);
 
     long countByLangAndReviewerIsNotNullAndReviewerIsNot(String lang, String reviewer);
 

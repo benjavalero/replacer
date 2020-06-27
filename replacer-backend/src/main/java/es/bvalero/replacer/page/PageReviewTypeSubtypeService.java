@@ -45,7 +45,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-        List<Integer> pageIds = replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
+        List<Integer> pageIds = replacementRepository.findRandomPageIdsToReviewByTypeAndSubtype(
             options.getLang().getCode(),
             options.getType(),
             options.getSubtype(),
@@ -79,7 +79,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.debug("Update article replacements in database");
-        replacementIndexService.indexArticleReplacements(
+        replacementIndexService.indexPageReplacements(
             article.getId(),
             article.getLang(),
             replacements.stream().map(article::convertReplacementToIndexed).collect(Collectors.toList())

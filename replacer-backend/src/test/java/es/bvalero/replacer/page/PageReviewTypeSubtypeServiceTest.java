@@ -92,7 +92,7 @@ class PageReviewTypeSubtypeServiceTest {
         // 1 result in DB
         Mockito
             .when(
-                replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
+                replacementRepository.findRandomPageIdsToReviewByTypeAndSubtype(
                     Mockito.anyString(),
                     Mockito.anyString(),
                     Mockito.anyString(),
@@ -116,7 +116,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexArticleReplacements(Mockito.eq(randomId), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
+            .indexPageReplacements(Mockito.eq(randomId), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
 
         Assertions.assertFalse(review.isPresent());
     }
@@ -126,7 +126,7 @@ class PageReviewTypeSubtypeServiceTest {
         // 1 result in DB
         Mockito
             .when(
-                replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
+                replacementRepository.findRandomPageIdsToReviewByTypeAndSubtype(
                     Mockito.anyString(),
                     Mockito.anyString(),
                     Mockito.anyString(),
@@ -149,7 +149,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexArticleReplacements(Mockito.eq(randomId), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
+            .indexPageReplacements(Mockito.eq(randomId), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId, review.get().getId());
@@ -164,7 +164,7 @@ class PageReviewTypeSubtypeServiceTest {
         // 2 results in DB by type, no results the second time.
         Mockito
             .when(
-                replacementRepository.findRandomArticleIdsToReviewByTypeAndSubtype(
+                replacementRepository.findRandomPageIdsToReviewByTypeAndSubtype(
                     Mockito.anyString(),
                     Mockito.anyString(),
                     Mockito.anyString(),
@@ -176,7 +176,7 @@ class PageReviewTypeSubtypeServiceTest {
         // 1 result in DB by no type
         Mockito
             .when(
-                replacementRepository.findRandomArticleIdsToReview(
+                replacementRepository.findRandomPageIdsToReview(
                     Mockito.anyString(),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)

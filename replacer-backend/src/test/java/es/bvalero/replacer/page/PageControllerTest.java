@@ -194,7 +194,7 @@ public class PageControllerTest {
                 eq(new OAuth1AccessToken("A", "B"))
             );
         verify(replacementIndexService, times(1))
-            .reviewArticleReplacements(
+            .reviewPageReplacements(
                 eq(pageId),
                 Mockito.any(WikipediaLanguage.class),
                 eq(type),
@@ -233,7 +233,7 @@ public class PageControllerTest {
                 any(OAuth1AccessToken.class)
             );
         verify(replacementIndexService, times(1))
-            .reviewArticleReplacements(
+            .reviewPageReplacements(
                 eq(pageId),
                 Mockito.any(WikipediaLanguage.class),
                 eq(type),

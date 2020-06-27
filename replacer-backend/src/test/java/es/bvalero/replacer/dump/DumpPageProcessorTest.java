@@ -59,7 +59,7 @@ class DumpPageProcessorTest {
             .findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class));
         Mockito
             .verify(replacementIndexService)
-            .findIndexArticleReplacements(
+            .findIndexPageReplacements(
                 Mockito.anyInt(),
                 Mockito.any(WikipediaLanguage.class),
                 Mockito.anyList(),
@@ -193,7 +193,7 @@ class DumpPageProcessorTest {
 
         Mockito
             .verify(replacementIndexService)
-            .findIndexArticleReplacements(
+            .findIndexPageReplacements(
                 Mockito.anyInt(),
                 Mockito.any(WikipediaLanguage.class),
                 Mockito.anyList(),
@@ -230,7 +230,7 @@ class DumpPageProcessorTest {
 
         Mockito
             .verify(replacementIndexService)
-            .findIndexArticleReplacements(
+            .findIndexPageReplacements(
                 Mockito.anyInt(),
                 Mockito.any(WikipediaLanguage.class),
                 Mockito.anyList(),

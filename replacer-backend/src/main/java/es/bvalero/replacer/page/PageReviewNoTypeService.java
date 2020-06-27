@@ -43,7 +43,7 @@ class PageReviewNoTypeService extends PageReviewService {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
         long randomStart = replacementRepository.findRandomStart(CACHE_SIZE, options.getLang().getCode());
         long totalResults = replacementRepository.countByLangAndReviewerIsNull(options.getLang().getCode());
-        List<Integer> pageIds = replacementRepository.findRandomArticleIdsToReview(
+        List<Integer> pageIds = replacementRepository.findRandomPageIdsToReview(
             options.getLang().getCode(),
             randomStart,
             pagination
@@ -60,7 +60,7 @@ class PageReviewNoTypeService extends PageReviewService {
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.debug("Update article replacements in database");
-        replacementIndexService.indexArticleReplacements(
+        replacementIndexService.indexPageReplacements(
             article.getId(),
             article.getLang(),
             replacements.stream().map(article::convertReplacementToIndexed).collect(Collectors.toList())

@@ -139,7 +139,7 @@ abstract class PageReviewService {
     }
 
     void setArticleAsReviewed(int articleId, PageReviewOptions options) {
-        replacementIndexService.reviewArticleReplacementsAsSystem(articleId, options.getLang());
+        replacementIndexService.reviewPageReplacementsAsSystem(articleId, options.getLang());
     }
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {

@@ -1,10 +1,9 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.io.Serializable;
 import java.time.LocalDate;
 import javax.persistence.*;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.jetbrains.annotations.TestOnly;
 
 /**
- * A replacement in the database related to an article.
+ * A replacement in the database related to a page.
  */
 @Data
 @NoArgsConstructor // Needed by JPA
@@ -24,8 +23,8 @@ public class ReplacementEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private int articleId;
+    @Column(name = "article_id")
+    private int pageId;
 
     @Column(length = 2)
     private String lang;
@@ -49,8 +48,8 @@ public class ReplacementEntity implements Serializable {
     @Column
     private String reviewer;
 
-    public ReplacementEntity(int articleId, WikipediaLanguage lang, String type, String subtype, int position) {
-        this.articleId = articleId;
+    public ReplacementEntity(int pageId, WikipediaLanguage lang, String type, String subtype, int position) {
+        this.pageId = pageId;
         this.lang = lang.getCode();
         this.type = type;
         this.subtype = subtype;
@@ -60,8 +59,8 @@ public class ReplacementEntity implements Serializable {
     }
 
     @TestOnly
-    public ReplacementEntity(int articleId, String type, String subtype, int position) {
-        this.articleId = articleId;
+    public ReplacementEntity(int pageId, String type, String subtype, int position) {
+        this.pageId = pageId;
         this.type = type;
         this.subtype = subtype;
         this.position = position;
@@ -69,8 +68,8 @@ public class ReplacementEntity implements Serializable {
     }
 
     @TestOnly
-    ReplacementEntity(int articleId, String type, String subtype, int position, String reviewer) {
-        this.articleId = articleId;
+    ReplacementEntity(int pageId, String type, String subtype, int position, String reviewer) {
+        this.pageId = pageId;
         this.type = type;
         this.subtype = subtype;
         this.position = position;

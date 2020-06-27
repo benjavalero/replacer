@@ -126,7 +126,7 @@ public class PageController {
         }
 
         // Mark article as reviewed in the database
-        replacementIndexService.reviewArticleReplacements(
+        replacementIndexService.reviewPageReplacements(
             pageId,
             lang,
             saveArticle.getType(),

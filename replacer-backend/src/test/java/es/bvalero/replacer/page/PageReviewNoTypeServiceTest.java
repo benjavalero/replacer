@@ -87,7 +87,7 @@ public class PageReviewNoTypeServiceTest {
         // No results in DB
         Mockito
             .when(
-                replacementRepository.findRandomArticleIdsToReview(
+                replacementRepository.findRandomPageIdsToReview(
                     Mockito.anyString(),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)
@@ -105,7 +105,7 @@ public class PageReviewNoTypeServiceTest {
         // 1 result in DB
         Mockito
             .when(
-                replacementRepository.findRandomArticleIdsToReview(
+                replacementRepository.findRandomPageIdsToReview(
                     Mockito.anyString(),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)
@@ -127,7 +127,7 @@ public class PageReviewNoTypeServiceTest {
         // 1 result in DB
         Mockito
             .when(
-                replacementRepository.findRandomArticleIdsToReview(
+                replacementRepository.findRandomPageIdsToReview(
                     Mockito.anyString(),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)
@@ -149,7 +149,7 @@ public class PageReviewNoTypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexArticleReplacements(Mockito.eq(randomId), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
+            .indexPageReplacements(Mockito.eq(randomId), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId, review.get().getId());
@@ -160,7 +160,7 @@ public class PageReviewNoTypeServiceTest {
         // 1 result in DB
         Mockito
             .when(
-                replacementRepository.findRandomArticleIdsToReview(
+                replacementRepository.findRandomPageIdsToReview(
                     Mockito.anyString(),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)
@@ -184,7 +184,7 @@ public class PageReviewNoTypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexArticleReplacements(randomId, WikipediaLanguage.SPANISH, Collections.emptyList());
+            .indexPageReplacements(randomId, WikipediaLanguage.SPANISH, Collections.emptyList());
 
         Assertions.assertFalse(review.isPresent());
     }
@@ -194,7 +194,7 @@ public class PageReviewNoTypeServiceTest {
         // 2 results in DB
         Mockito
             .when(
-                replacementRepository.findRandomArticleIdsToReview(
+                replacementRepository.findRandomPageIdsToReview(
                     Mockito.anyString(),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)
@@ -217,7 +217,7 @@ public class PageReviewNoTypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexArticleReplacements(Mockito.eq(randomId2), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
+            .indexPageReplacements(Mockito.eq(randomId2), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId2, review.get().getId());

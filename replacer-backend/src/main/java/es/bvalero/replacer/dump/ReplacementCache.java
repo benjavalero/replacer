@@ -54,7 +54,7 @@ class ReplacementCache {
         LOGGER.debug("START Load replacements from database to cache. Article ID between {} and {}", minId, maxId);
         replacementDao
             .findByArticles(minId, maxId, lang)
-            .forEach(replacement -> replacementMap.put(replacement.getArticleId(), replacement));
+            .forEach(replacement -> replacementMap.put(replacement.getPageId(), replacement));
         LOGGER.debug("END Load replacements from database to cache. Articles cached: {}", replacementMap.size());
     }
 
