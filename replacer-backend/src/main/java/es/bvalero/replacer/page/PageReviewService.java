@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
@@ -185,7 +185,7 @@ abstract class PageReviewService {
         return cachedPageIds.get(key).getTotal();
     }
 
-    private ArticleReplacement convertToDto(Replacement replacement) {
-        return modelMapper.map(replacement, ArticleReplacement.class);
+    private PageReplacement convertToDto(Replacement replacement) {
+        return modelMapper.map(replacement, PageReplacement.class);
     }
 }

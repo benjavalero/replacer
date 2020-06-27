@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.XmlConfiguration;

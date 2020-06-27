@@ -1,6 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.article.IndexablePage;
+import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;

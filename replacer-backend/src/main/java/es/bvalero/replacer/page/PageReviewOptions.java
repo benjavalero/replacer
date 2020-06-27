@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;

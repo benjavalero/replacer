@@ -1,6 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
-import es.bvalero.replacer.article.IndexablePage;
+import es.bvalero.replacer.page.IndexablePage;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

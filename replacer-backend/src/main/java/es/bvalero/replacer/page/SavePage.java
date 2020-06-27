@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.authentication.AccessToken;
 import lombok.AllArgsConstructor;

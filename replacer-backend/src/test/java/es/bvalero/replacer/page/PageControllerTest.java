@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.page;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -68,8 +68,8 @@ public class PageControllerTest {
         int start = 5;
         String rep = "A";
         Suggestion suggestion = Suggestion.of("a", "b");
-        ArticleReplacement replacement = new ArticleReplacement(start, rep, Collections.singletonList(suggestion));
-        List<ArticleReplacement> replacements = Collections.singletonList(replacement);
+        PageReplacement replacement = new PageReplacement(start, rep, Collections.singletonList(suggestion));
+        List<PageReplacement> replacements = Collections.singletonList(replacement);
         long numPending = replacements.size();
         PageReview review = new PageReview(
             id,

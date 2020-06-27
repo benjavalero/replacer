@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
@@ -19,6 +19,6 @@ class PageReview {
     private String content;
     private Integer section;
     private String queryTimestamp;
-    private List<ArticleReplacement> replacements;
+    private List<PageReplacement> replacements;
     private long numPending;
 }

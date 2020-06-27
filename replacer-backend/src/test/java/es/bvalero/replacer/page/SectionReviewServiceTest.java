@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Suggestion;
@@ -44,7 +44,7 @@ class SectionReviewServiceTest {
         int articleId = 1;
         String content = "This is an sample content.";
         Suggestion suggestion = Suggestion.ofNoComment("a");
-        ArticleReplacement replacement = new ArticleReplacement(8, "an", Collections.singletonList(suggestion)); // "an"
+        PageReplacement replacement = new PageReplacement(8, "an", Collections.singletonList(suggestion)); // "an"
 
         PageReview pageReview = new PageReview();
         pageReview.setId(articleId);

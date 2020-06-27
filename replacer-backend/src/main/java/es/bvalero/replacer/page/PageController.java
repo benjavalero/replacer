@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.page;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.ReplacerException;

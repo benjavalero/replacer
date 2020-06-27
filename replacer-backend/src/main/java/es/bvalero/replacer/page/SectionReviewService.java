@@ -1,4 +1,4 @@
-package es.bvalero.replacer.article;
+package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.*;
@@ -52,7 +52,7 @@ class SectionReviewService {
                 );
                 if (pageSection.isPresent()) {
                     // Modify the start position of the replacements according to the section start
-                    List<ArticleReplacement> sectionReplacements = translateReplacementsByOffset(
+                    List<PageReplacement> sectionReplacements = translateReplacementsByOffset(
                         review.getReplacements(),
                         smallestSection.get().getByteOffset()
                     );
@@ -96,7 +96,7 @@ class SectionReviewService {
 
     private Optional<WikipediaSection> getSmallestSectionContainingAllReplacements(
         List<WikipediaSection> sections,
-        List<ArticleReplacement> replacements
+        List<PageReplacement> replacements
     ) {
         Collections.sort(sections); // Although in theory they are already sorted as returned from Wikipedia API
         WikipediaSection smallest = null;
@@ -119,7 +119,7 @@ class SectionReviewService {
     }
 
     private boolean areAllReplacementsContainedInInterval(
-        List<ArticleReplacement> replacements,
+        List<PageReplacement> replacements,
         Integer start,
         @Nullable Integer end
     ) {
@@ -127,7 +127,7 @@ class SectionReviewService {
     }
 
     private boolean isReplacementContainedInInterval(
-        ArticleReplacement replacement,
+        PageReplacement replacement,
         Integer start,
         @Nullable Integer end
     ) {
@@ -142,17 +142,17 @@ class SectionReviewService {
         }
     }
 
-    private List<ArticleReplacement> translateReplacementsByOffset(List<ArticleReplacement> replacements, int offset) {
+    private List<PageReplacement> translateReplacementsByOffset(List<PageReplacement> replacements, int offset) {
         return replacements.stream().map(rep -> rep.withStart(rep.getStart() - offset)).collect(Collectors.toList());
     }
 
-    private boolean validateArticleReplacement(ArticleReplacement replacement, String text) {
+    private boolean validateArticleReplacement(PageReplacement replacement, String text) {
         return replacement.getText().equals(text.substring(replacement.getStart(), replacement.getEnd()));
     }
 
     private PageReview buildPageReview(
         WikipediaPage article,
-        List<ArticleReplacement> replacements,
+        List<PageReplacement> replacements,
         PageReview pageReview
     ) {
         PageReview review = modelMapper.map(article, PageReview.class);
