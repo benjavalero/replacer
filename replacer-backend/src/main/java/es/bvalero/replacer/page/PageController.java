@@ -35,16 +35,16 @@ public class PageController {
     @Autowired
     private CosmeticFindService cosmeticFindService;
 
-    /* FIND RANDOM ARTICLES WITH REPLACEMENTS */
+    /* FIND RANDOM PAGES WITH REPLACEMENTS */
 
     @GetMapping(value = "/random")
-    public Optional<PageReview> findRandomArticleWithReplacements(@RequestParam WikipediaLanguage lang) {
+    public Optional<PageReview> findRandomPageWithReplacements(@RequestParam WikipediaLanguage lang) {
         LOGGER.info("GET Find random page review");
         return pageReviewNoTypeService.findRandomPageReview(PageReviewOptions.ofNoType(lang));
     }
 
     @GetMapping(value = "/random", params = { "type", "subtype" })
-    public Optional<PageReview> findRandomArticleByTypeAndSubtype(
+    public Optional<PageReview> findRandomPageByTypeAndSubtype(
         @RequestParam String type,
         @RequestParam String subtype,
         @RequestParam WikipediaLanguage lang
@@ -54,7 +54,7 @@ public class PageController {
     }
 
     @GetMapping(value = "/random", params = { "replacement", "suggestion" })
-    public Optional<PageReview> findRandomArticleByCustomReplacement(
+    public Optional<PageReview> findRandomPageByCustomReplacement(
         @RequestParam String replacement,
         @RequestParam String suggestion,
         @RequestParam WikipediaLanguage lang
@@ -63,7 +63,7 @@ public class PageController {
         return pageReviewCustomService.findRandomPageReview(PageReviewOptions.ofCustom(lang, replacement, suggestion));
     }
 
-    /* FIND AN ARTICLE REVIEW */
+    /* FIND A PAGE REVIEW */
 
     @GetMapping(value = "/{id}")
     public Optional<PageReview> findPageReviewById(
@@ -105,33 +105,33 @@ public class PageController {
 
     @PostMapping(value = "/{id}")
     public void save(
-        @RequestBody SavePage saveArticle,
+        @RequestBody SavePage savePage,
         @PathVariable("id") int pageId,
         @RequestParam WikipediaLanguage lang
     )
         throws ReplacerException {
-        boolean changed = StringUtils.isNotBlank(saveArticle.getContent());
+        boolean changed = StringUtils.isNotBlank(savePage.getContent());
         LOGGER.info("PUT Save page. ID: {} - Changed: {}", pageId, changed);
         if (changed) {
             // Upload new content to Wikipedia
-            String textToSave = cosmeticFindService.applyCosmeticChanges(saveArticle.getContent());
+            String textToSave = cosmeticFindService.applyCosmeticChanges(savePage.getContent());
             wikipediaService.savePageContent(
                 pageId,
                 textToSave,
-                saveArticle.getSection(),
-                saveArticle.getTimestamp(),
+                savePage.getSection(),
+                savePage.getTimestamp(),
                 lang,
-                convertToEntity(saveArticle.getToken())
+                convertToEntity(savePage.getToken())
             );
         }
 
-        // Mark article as reviewed in the database
+        // Mark page as reviewed in the database
         replacementIndexService.reviewPageReplacements(
             pageId,
             lang,
-            saveArticle.getType(),
-            saveArticle.getSubtype(),
-            saveArticle.getReviewer()
+            savePage.getType(),
+            savePage.getSubtype(),
+            savePage.getReviewer()
         );
     }
 

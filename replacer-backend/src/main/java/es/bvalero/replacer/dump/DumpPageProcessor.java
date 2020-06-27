@@ -55,7 +55,7 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
         }
 
         // 3. Find the replacements to index
-        List<ReplacementEntity> replacements = processArticle(dumpPage);
+        List<ReplacementEntity> replacements = processPage(dumpPage);
         return replacements.isEmpty() ? null : replacements;
     }
 
@@ -71,10 +71,10 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
             .build();
     }
 
-    List<ReplacementEntity> processArticle(DumpPage dumpPage) {
+    List<ReplacementEntity> processPage(DumpPage dumpPage) {
         LOGGER.debug("START Process dump page: {} - {}", dumpPage.getId(), dumpPage.getTitle());
 
-        List<ReplacementEntity> dbReplacements = replacementCache.findByArticleId(dumpPage.getId(), dumpPage.getLang());
+        List<ReplacementEntity> dbReplacements = replacementCache.findByPageId(dumpPage.getId(), dumpPage.getLang());
         Optional<LocalDate> dbLastUpdate = dbReplacements
             .stream()
             .map(ReplacementEntity::getLastUpdate)

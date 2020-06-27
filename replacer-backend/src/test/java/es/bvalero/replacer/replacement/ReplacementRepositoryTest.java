@@ -41,7 +41,7 @@ public class ReplacementRepositoryTest {
     }
 
     @Test
-    public void testRandomArticleByWord() {
+    public void testRandomPageByWord() {
         ReplacementEntity error1 = new ReplacementEntity(1, "X", "aber", 1);
         ReplacementEntity error2 = new ReplacementEntity(2, "X", "aber", 2);
         ReplacementEntity error3 = new ReplacementEntity(3, "X", "aber", 3);

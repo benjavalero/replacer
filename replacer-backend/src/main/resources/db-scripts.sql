@@ -13,7 +13,7 @@ CREATE TABLE replacement2 (
     PRIMARY KEY (id)
 );
 
--- To find random articles and count the group replacements
+-- To find random pages and count the group replacements
 CREATE INDEX idx_count ON replacement2 (lang, reviewer, type, subtype);
 
 -- Statistics

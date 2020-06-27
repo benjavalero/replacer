@@ -30,17 +30,17 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return loadArticleContent("/es/bvalero/replacer/wikipedia/misspelling-list.txt");
+        return loadPageContent("/es/bvalero/replacer/wikipedia/misspelling-list.txt");
     }
 
     @Override
     public String getFalsePositiveListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return loadArticleContent("/es/bvalero/replacer/wikipedia/false-positives.txt");
+        return loadPageContent("/es/bvalero/replacer/wikipedia/false-positives.txt");
     }
 
     @Override
     public String getComposedMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return loadArticleContent("/es/bvalero/replacer/wikipedia/composed-misspellings.txt");
+        return loadPageContent("/es/bvalero/replacer/wikipedia/composed-misspellings.txt");
     }
 
     @Override
@@ -57,15 +57,15 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
             .title("América del Norte")
-            .content(loadArticleContent("/es/bvalero/replacer/wikipedia/article-long.txt"))
+            .content(loadPageContent("/es/bvalero/replacer/wikipedia/article-long.txt"))
             .lastUpdate(nowDate.toLocalDate())
             .queryTimestamp(now)
             .build();
     }
 
     @Override
-    public Optional<WikipediaPage> getPageById(int articleId, WikipediaLanguage lang) throws ReplacerException {
-        return Optional.of(buildFakePage(articleId));
+    public Optional<WikipediaPage> getPageById(int pageId, WikipediaLanguage lang) throws ReplacerException {
+        return Optional.of(buildFakePage(pageId));
     }
 
     @Override
@@ -105,7 +105,7 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
         // Do nothing
     }
 
-    private String loadArticleContent(String fileName) throws ReplacerException {
+    private String loadPageContent(String fileName) throws ReplacerException {
         LOGGER.info("Load fake content from file: {}", fileName);
         try {
             return Files.readString(Paths.get(getClass().getResource(fileName).toURI()));

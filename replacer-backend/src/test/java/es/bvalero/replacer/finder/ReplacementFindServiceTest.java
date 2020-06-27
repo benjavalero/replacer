@@ -117,7 +117,7 @@ class ReplacementFindServiceTest {
     }
 
     @Test
-    void testCompareArticleReplacements() {
+    void testComparePageReplacements() {
         Replacement result1 = Replacement.builder().start(0).text("A").build();
         Replacement result2 = Replacement.builder().start(0).text("AB").build();
         Replacement result3 = Replacement.builder().start(1).text("BC").build();

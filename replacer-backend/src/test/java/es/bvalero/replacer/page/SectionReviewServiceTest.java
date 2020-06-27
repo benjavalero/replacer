@@ -41,13 +41,13 @@ class SectionReviewServiceTest {
 
     @Test
     void testFindSectionReview() throws ReplacerException {
-        int articleId = 1;
+        int pageId = 1;
         String content = "This is an sample content.";
         Suggestion suggestion = Suggestion.ofNoComment("a");
         PageReplacement replacement = new PageReplacement(8, "an", Collections.singletonList(suggestion)); // "an"
 
         PageReview pageReview = new PageReview();
-        pageReview.setId(articleId);
+        pageReview.setId(pageId);
         pageReview.setLang(WikipediaLanguage.SPANISH);
         pageReview.setContent(content);
         pageReview.setReplacements(Collections.singletonList(replacement));
@@ -62,7 +62,7 @@ class SectionReviewServiceTest {
         String sectionContent = content.substring(offset, 10);
         WikipediaPage pageSection = WikipediaPage
             .builder()
-            .id(articleId)
+            .id(pageId)
             .lang(WikipediaLanguage.SPANISH)
             .content(sectionContent)
             .section(sectionId)
@@ -70,7 +70,7 @@ class SectionReviewServiceTest {
         Mockito
             .when(
                 wikipediaService.getPageByIdAndSection(
-                    Mockito.eq(articleId),
+                    Mockito.eq(pageId),
                     Mockito.eq(sectionId),
                     Mockito.any(WikipediaLanguage.class)
                 )
@@ -82,7 +82,7 @@ class SectionReviewServiceTest {
         Assertions.assertTrue(sectionReview.isPresent());
         sectionReview.ifPresent(
             review -> {
-                Assertions.assertEquals(articleId, review.getId());
+                Assertions.assertEquals(pageId, review.getId());
                 Assertions.assertEquals(Integer.valueOf(sectionId), review.getSection());
                 Assertions.assertEquals(sectionContent, review.getContent());
                 Assertions.assertEquals(1, review.getReplacements().size());

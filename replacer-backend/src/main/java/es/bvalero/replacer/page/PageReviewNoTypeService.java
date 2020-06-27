@@ -52,18 +52,15 @@ class PageReviewNoTypeService extends PageReviewService {
     }
 
     @Override
-    List<Replacement> findAllReplacements(WikipediaPage article, PageReviewOptions options) {
-        List<Replacement> replacements = replacementFindService.findReplacements(
-            article.getContent(),
-            article.getLang()
-        );
+    List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
+        List<Replacement> replacements = replacementFindService.findReplacements(page.getContent(), page.getLang());
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
-        LOGGER.debug("Update article replacements in database");
+        LOGGER.debug("Update page replacements in database");
         replacementIndexService.indexPageReplacements(
-            article.getId(),
-            article.getLang(),
-            replacements.stream().map(article::convertReplacementToIndexed).collect(Collectors.toList())
+            page.getId(),
+            page.getLang(),
+            replacements.stream().map(page::convertReplacementToIndexed).collect(Collectors.toList())
         );
 
         return replacements;

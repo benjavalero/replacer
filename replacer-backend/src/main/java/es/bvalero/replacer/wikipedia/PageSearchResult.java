@@ -10,7 +10,7 @@ public class PageSearchResult {
 
     public PageSearchResult(long total, Collection<Integer> pageIds) {
         this.total = total;
-        // Add a set to remove duplicated article ids
+        // Add a set to remove duplicated page ids
         this.pageIds.addAll(new HashSet<>(pageIds));
     }
 

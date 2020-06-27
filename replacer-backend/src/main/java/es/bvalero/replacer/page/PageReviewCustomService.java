@@ -84,27 +84,23 @@ class PageReviewCustomService extends PageReviewService {
     }
 
     @Override
-    void setArticleAsReviewed(int articleId, PageReviewOptions options) {
+    void setPageAsReviewed(int pageId, PageReviewOptions options) {
         // We add the custom replacement to the database as reviewed to skip it after the next search in the API
-        replacementIndexService.addCustomReviewedReplacement(articleId, options.getLang(), options.getSubtype());
+        replacementIndexService.addCustomReviewedReplacement(pageId, options.getLang(), options.getSubtype());
     }
 
     @Override
-    List<Replacement> findAllReplacements(WikipediaPage article, PageReviewOptions options) {
+    List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         List<Replacement> replacements = replacementFindService.findCustomReplacements(
-            article.getContent(),
+            page.getContent(),
             options.getSubtype(),
             options.getSuggestion(),
-            article.getLang()
+            page.getLang()
         );
 
         if (replacements.isEmpty()) {
             // We add the custom replacement to the database as reviewed to skip it after the next search in the API
-            replacementIndexService.addCustomReviewedReplacement(
-                article.getId(),
-                article.getLang(),
-                options.getSubtype()
-            );
+            replacementIndexService.addCustomReviewedReplacement(page.getId(), page.getLang(), options.getSubtype());
         }
 
         return replacements;

@@ -45,15 +45,15 @@ class DumpPageProcessorTest {
 
     @Test
     void testProcessSimple() {
-        DumpPage dumpArticle = DumpPage
+        DumpPage dumpPage = DumpPage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
             .content("")
             .build();
-        dumpPageProcessor.processArticle(dumpArticle);
+        dumpPageProcessor.processPage(dumpPage);
 
-        Mockito.verify(replacementCache).findByArticleId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class));
+        Mockito.verify(replacementCache).findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class));
         Mockito
             .verify(replacementFindService)
             .findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class));
@@ -69,7 +69,7 @@ class DumpPageProcessorTest {
 
     @Test
     void testCheckNamespaces() {
-        DumpPage dumpArticle = DumpPage
+        DumpPage dumpPage = DumpPage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
@@ -78,20 +78,20 @@ class DumpPageProcessorTest {
         DumpPage dumpAnnex = DumpPage.builder().namespace(WikipediaNamespace.ANNEX).content("").build();
         DumpPage dumpCategory = DumpPage.builder().namespace(WikipediaNamespace.CATEGORY).build();
 
-        Assertions.assertTrue(dumpArticle.isProcessable(ignorableTemplates));
+        Assertions.assertTrue(dumpPage.isProcessable(ignorableTemplates));
         Assertions.assertTrue(dumpAnnex.isProcessable(ignorableTemplates));
         Assertions.assertFalse(dumpCategory.isProcessable(ignorableTemplates));
     }
 
     @Test
     void testProcessRedirection() {
-        DumpPage dumpArticle = DumpPage
+        DumpPage dumpPage = DumpPage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
             .content("#Redirect")
             .build();
-        Assertions.assertFalse(dumpArticle.isProcessable(ignorableTemplates));
+        Assertions.assertFalse(dumpPage.isProcessable(ignorableTemplates));
     }
 
     @Test
@@ -99,7 +99,7 @@ class DumpPageProcessorTest {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1L);
 
-        DumpPage dumpArticle = DumpPage
+        DumpPage dumpPage = DumpPage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
@@ -110,10 +110,10 @@ class DumpPageProcessorTest {
         ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
         replacement.setLastUpdate(today);
         Mockito
-            .when(replacementCache.findByArticleId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
-        Assertions.assertTrue(dumpPageProcessor.processArticle(dumpArticle).isEmpty());
+        Assertions.assertTrue(dumpPageProcessor.processPage(dumpPage).isEmpty());
         Mockito
             .verify(replacementFindService, Mockito.times(0))
             .findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class));
@@ -123,7 +123,7 @@ class DumpPageProcessorTest {
     void testProcessLastUpdateWhenTimestamp() {
         LocalDate today = LocalDate.now();
 
-        DumpPage dumpArticle = DumpPage
+        DumpPage dumpPage = DumpPage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
@@ -134,10 +134,10 @@ class DumpPageProcessorTest {
         ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
         replacement.setLastUpdate(today);
         Mockito
-            .when(replacementCache.findByArticleId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
-        dumpPageProcessor.processArticle(dumpArticle);
+        dumpPageProcessor.processPage(dumpPage);
         Mockito
             .verify(replacementFindService)
             .findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class));
@@ -148,7 +148,7 @@ class DumpPageProcessorTest {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1L);
 
-        DumpPage dumpArticle = DumpPage
+        DumpPage dumpPage = DumpPage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
@@ -159,18 +159,18 @@ class DumpPageProcessorTest {
         ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
         replacement.setLastUpdate(yesterday);
         Mockito
-            .when(replacementCache.findByArticleId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
-        dumpPageProcessor.processArticle(dumpArticle);
+        dumpPageProcessor.processPage(dumpPage);
         Mockito
             .verify(replacementFindService)
             .findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class));
     }
 
     @Test
-    void testProcessNewArticle() {
-        DumpPage dumpArticle = DumpPage
+    void testProcessNewPage() {
+        DumpPage dumpPage = DumpPage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
@@ -180,7 +180,7 @@ class DumpPageProcessorTest {
 
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
         Mockito
-            .when(replacementCache.findByArticleId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(dbReplacements);
 
         Replacement replacement = Replacement.builder().build();
@@ -189,7 +189,7 @@ class DumpPageProcessorTest {
             .when(replacementFindService.findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(replacements);
 
-        dumpPageProcessor.processArticle(dumpArticle);
+        dumpPageProcessor.processPage(dumpPage);
 
         Mockito
             .verify(replacementIndexService)
@@ -206,7 +206,7 @@ class DumpPageProcessorTest {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1L);
 
-        DumpPage dumpArticle = DumpPage
+        DumpPage dumpPage = DumpPage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
@@ -218,7 +218,7 @@ class DumpPageProcessorTest {
         replacement.setLastUpdate(yesterday);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
         Mockito
-            .when(replacementCache.findByArticleId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(dbReplacements);
 
         List<Replacement> replacements = Collections.emptyList();
@@ -226,7 +226,7 @@ class DumpPageProcessorTest {
             .when(replacementFindService.findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(replacements);
 
-        dumpPageProcessor.processArticle(dumpArticle);
+        dumpPageProcessor.processPage(dumpPage);
 
         Mockito
             .verify(replacementIndexService)

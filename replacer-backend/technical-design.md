@@ -184,7 +184,7 @@ The class `DumpManager` checks periodically the latest available dump, and index
 
 The Spring Batch job has the typical steps:
 - A reader, which parses the dump and extract the pages into `DumpPage` (and `DumpRevision`).
-- A processor `DumpArticleProcessor`, which transforms each dump page into a list of replacements to be saved in the database.
+- A processor `DumpPageProcessor`, which transforms each dump page into a list of replacements to be saved in the database.
 - A writer `DumpWriter`, which inserts or updates in the database the resulting replacements from the processor.
 - A listener `DumpJobListener`, which implements actions at the start and end of the job.
 
@@ -205,11 +205,11 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 - [ ] Research to improve the database model
 - [ ] \#71: Performance tests to run replacement finders in parallel
 - [ ] \#79: Add some kind of warning for long indexing times in order to find issues in finder performance
-- [ ] Delete replacements reviewed by the system which are not needed to keep track of the reviewed articles. For the moment, I do it manually by running the query: `DELETE FROM replacement2 WHERE reviewer = 'system' AND position > 0;`
+- [ ] Delete replacements reviewed by the system which are not needed to keep track of the reviewed pages. For the moment, I do it manually by running the query: `DELETE FROM replacement2 WHERE reviewer = 'system' AND position > 0;`
 
 ### Features
 - [ ] \#102: Try to copy the fat-jar out of the project folder in order to package it while still running
-- [ ] \#111: Check if an article is blocked. Try to do it also in _pywikibot_.
+- [ ] \#111: Check if a page is blocked. Try to do it also in _pywikibot_.
 - [ ] Research in MediaWiki code to apply Spanish date format in references
 - [ ] \#45: Research exceptions for the most common replacements
 - [ ] Check if it is worth to store the replacement type as an enumerate

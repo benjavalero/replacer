@@ -8,7 +8,7 @@ import lombok.Value;
 import org.intellij.lang.annotations.RegExp;
 
 /**
- * Domain class corresponding to the lines in the Wikipedia article containing potential misspellings.
+ * Domain class corresponding to the lines in the Wikipedia page containing potential misspellings.
  */
 @Value
 public class Misspelling {

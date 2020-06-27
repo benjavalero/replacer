@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Domain class of an article to review to be used in the front-end.
+ * Domain class of a page to review to be used in the front-end.
  */
 @Data
 @NoArgsConstructor

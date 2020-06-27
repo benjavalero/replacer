@@ -17,7 +17,7 @@ public class ReplacementDao {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
-    public List<ReplacementEntity> findByArticles(int minId, int maxId, WikipediaLanguage lang) {
+    public List<ReplacementEntity> findByPages(int minId, int maxId, WikipediaLanguage lang) {
         String sql = "SELECT * FROM replacement2 WHERE lang = :lang AND article_id BETWEEN :minId AND :maxId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
@@ -26,15 +26,15 @@ public class ReplacementDao {
         return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
-    public void reviewArticlesReplacementsAsSystem(Set<Integer> articleIds, WikipediaLanguage lang) {
+    public void reviewPagesReplacementsAsSystem(Set<Integer> pageIds, WikipediaLanguage lang) {
         String sql =
             "UPDATE replacement2 SET reviewer=:system, last_update=:now " +
-            "WHERE lang = :lang AND article_id IN (:articleIds) AND reviewer IS NULL";
+            "WHERE lang = :lang AND article_id IN (:pageIds) AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("system", ReplacementIndexService.SYSTEM_REVIEWER)
             .addValue("now", LocalDate.now())
             .addValue("lang", lang.getCode())
-            .addValue("articleIds", articleIds);
+            .addValue("pageIds", pageIds);
         jdbcTemplate.update(sql, namedParameters);
     }
 }

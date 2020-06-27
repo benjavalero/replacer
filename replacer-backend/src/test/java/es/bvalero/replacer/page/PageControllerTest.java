@@ -59,7 +59,7 @@ public class PageControllerTest {
     private CosmeticFindService cosmeticFindService;
 
     @Test
-    public void testFindRandomArticleWithReplacements() throws Exception {
+    public void testFindRandomPageWithReplacements() throws Exception {
         int id = 3;
         String title = "X";
         String content = "Y";
@@ -102,7 +102,7 @@ public class PageControllerTest {
     }
 
     @Test
-    public void testFindRandomArticleByTypeAndSubtype() throws Exception {
+    public void testFindRandomPageByTypeAndSubtype() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
         when(pageReviewTypeSubtypeService.findRandomPageReview(options)).thenReturn(Optional.of(new PageReview()));
 
@@ -114,7 +114,7 @@ public class PageControllerTest {
     }
 
     @Test
-    public void testFindRandomArticleByCustomReplacement() throws Exception {
+    public void testFindRandomPageByCustomReplacement() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
         when(pageReviewCustomService.findRandomPageReview(options)).thenReturn(Optional.of(new PageReview()));
 

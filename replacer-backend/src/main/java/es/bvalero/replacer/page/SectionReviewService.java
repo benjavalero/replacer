@@ -23,16 +23,16 @@ class SectionReviewService {
     private ModelMapper modelMapper;
 
     /**
-     * @param review The review of the complete article.
-     * @return The review of a section of the article, or empty if there is no such section.
+     * @param review The review of the complete page.
+     * @return The review of a section of the page, or empty if there is no such section.
      */
     Optional<PageReview> findSectionReview(PageReview review) {
         if (review.getSection() != null) {
-            throw new IllegalArgumentException("The article review already contains a section");
+            throw new IllegalArgumentException("The page review already contains a section");
         }
 
         // Get the sections from the Wikipedia API (better than calculating them by ourselves)
-        LOGGER.info("START Find section for article: {}", review.getId());
+        LOGGER.info("START Find section for page: {}", review.getId());
         try {
             List<WikipediaSection> sections = new ArrayList<>(
                 wikipediaService.getPageSections(review.getId(), review.getLang())
@@ -60,10 +60,10 @@ class SectionReviewService {
                     if (
                         sectionReplacements
                             .stream()
-                            .allMatch(rep -> validateArticleReplacement(rep, pageSection.get().getContent()))
+                            .allMatch(rep -> validatePageReplacement(rep, pageSection.get().getContent()))
                     ) {
                         LOGGER.info(
-                            "END Found section {} for article: {}",
+                            "END Found section {} for page: {}",
                             pageSection.get().getSection(),
                             review.getId()
                         );
@@ -79,7 +79,7 @@ class SectionReviewService {
                         );
                     } else {
                         LOGGER.warn(
-                            "Not valid byte-offset in section {} of article: {}",
+                            "Not valid byte-offset in section {} of page: {}",
                             smallestSection.get().getIndex(),
                             pageSection.get().getTitle()
                         );
@@ -90,7 +90,7 @@ class SectionReviewService {
             LOGGER.error("Error getting section review", e);
         }
 
-        LOGGER.info("END Found no section for article: {}", review.getId());
+        LOGGER.info("END Found no section for page: {}", review.getId());
         return Optional.empty();
     }
 
@@ -146,16 +146,12 @@ class SectionReviewService {
         return replacements.stream().map(rep -> rep.withStart(rep.getStart() - offset)).collect(Collectors.toList());
     }
 
-    private boolean validateArticleReplacement(PageReplacement replacement, String text) {
+    private boolean validatePageReplacement(PageReplacement replacement, String text) {
         return replacement.getText().equals(text.substring(replacement.getStart(), replacement.getEnd()));
     }
 
-    private PageReview buildPageReview(
-        WikipediaPage article,
-        List<PageReplacement> replacements,
-        PageReview pageReview
-    ) {
-        PageReview review = modelMapper.map(article, PageReview.class);
+    private PageReview buildPageReview(WikipediaPage page, List<PageReplacement> replacements, PageReview pageReview) {
+        PageReview review = modelMapper.map(page, PageReview.class);
         review.setReplacements(replacements);
         review.setNumPending(pageReview.getNumPending());
         return review;
