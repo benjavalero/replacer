@@ -40,8 +40,8 @@ public class ReplacementController {
 
     @GetMapping(value = "/count", params = { "reviewed=false", "grouped" })
     public List<TypeCount> findReplacementCount(@RequestParam WikipediaLanguage lang) {
+        LOGGER.info("GET Grouped replacement count ({})", lang);
         List<TypeCount> list = replacementCountService.findReplacementCount(lang);
-        LOGGER.info("GET Grouped replacement count ({}). Result Size: {}", lang, list.size());
         Collections.sort(list);
         return list;
     }

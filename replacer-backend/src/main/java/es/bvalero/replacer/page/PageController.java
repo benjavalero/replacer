@@ -111,7 +111,7 @@ public class PageController {
     )
         throws ReplacerException {
         boolean changed = StringUtils.isNotBlank(savePage.getContent());
-        LOGGER.info("PUT Save page. ID: {} - Changed: {}", pageId, changed);
+        LOGGER.info("POST Save page. ID: {} - Changed: {}", pageId, changed);
         if (changed) {
             // Upload new content to Wikipedia
             String textToSave = cosmeticFindService.applyCosmeticChanges(savePage.getContent());

@@ -13,7 +13,8 @@ public class ReplacementCountService {
     @Autowired
     private ReplacementRepository replacementRepository;
 
-    // Cache the count of replacements. This list is updated every 10 minutes and modified when saving changes.
+    // Cache the count of PAGES with replacements
+    // This list is updated every 10 minutes and modified when saving changes
     private Map<WikipediaLanguage, LanguageCount> languageCounts = new EnumMap<>(WikipediaLanguage.class);
 
     /* STATISTICS */

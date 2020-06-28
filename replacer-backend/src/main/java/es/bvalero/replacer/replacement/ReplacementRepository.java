@@ -18,7 +18,7 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
     List<ReplacementEntity> findByPageIdAndLang(int pageId, String lang);
 
     @Query(
-        "SELECT new es.bvalero.replacer.replacement.TypeSubtypeCount(lang, type, subtype, COUNT(*)) " +
+        "SELECT new es.bvalero.replacer.replacement.TypeSubtypeCount(lang, type, subtype, COUNT(DISTINCT pageId)) " +
         "FROM ReplacementEntity " +
         "WHERE reviewer IS NULL " +
         "GROUP BY lang, type, subtype"
