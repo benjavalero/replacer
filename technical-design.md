@@ -2,7 +2,15 @@
 
 The purpose of this project is to provide a web tool in order to find and fix common orthography and style issues in Wikipedia pages.
 
-The project started to work with Spanish Wikipedia, but it is meant to be extended to work with other languages or Wikimedia projects.
+The project started to work with Spanish Wikipedia, but it has been extended to work with other languages as Galician, and it is meant to work with other Wikimedia projects.
+
+## Architecture
+
+The tool is composed by two independent modules, both in the same repository: the frontend in Angular, and the backend in Java (with SpringBoot), besides a MariaDB database hosted in the ToolForge servers.
+
+## Deployment
+
+TODO
 
 ## Nomenclature and use cases
 
@@ -20,7 +28,7 @@ The following concepts are used:
   - **ID**. The ID of the page, a number for internal use that can also be used to identify uniquely a page.
   - **Contents**. The current text contents of the page.
   - **Timestamp**. The date and time of the last update of the page.
-- **Dump**. A huge XML file, generated monthly, containing all the current Wikipedia pages.
+- **Dump**. A huge XML file, generated monthly, containing all the current Wikipedia pages for a language.
 - **Replacement**. A potential issue to be checked and fixed (replaced). For instance, the word _aproximated_ is misspelled and therefore could be proposed to be replaced with _approximated_.
 
   Note the importance of the _potential_ adjective, as an issue could be just a false positive. For instance, in Spanish the word _Paris_ could be misspelled if it corresponds to the French city (written correctly as _París_), but it would be correct if it refers to the mythological Trojan prince.
@@ -198,6 +206,11 @@ This interface has two implementations, one of them an _offline_ one always retu
 
 The requests to the API are done in `WikipediaRequestService`, receiving all the needed parameters, and the authentication token if needed. The responses are mapped into a `WikipediaApiResponse`. In case of page requests, the response is eventually mapped into a `WikipediaPage`.
 
+### Package `authentication`
+
+The authentication is performed by the Oauth 1.0a protocol against the WikiMedia API, which allows the tool to work with the same usernames that are used to edit in Wikipedia. The authentication is implemented in the backend, and the frontend only contains the last access token.
+
+Note that there are different in case we want to develop locally. The Production ones, once logged in, redirect to https://replacer.toolforge.org. However the Development ones redirect to http://localhost:8080.
 
 ## TODO: ROADMAP
 
