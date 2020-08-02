@@ -33,8 +33,8 @@
                 <artifactId>frontend-maven-plugin</artifactId>
                 <version>1.10.0</version>
                 <configuration>
-                    <nodeVersion>v12.18.2</nodeVersion>
-                    <npmVersion>6.14.5</npmVersion>
+                    <nodeVersion>v12.18.3</nodeVersion>
+                    <npmVersion>6.14.6</npmVersion>
                 </configuration>
                 <executions>
                     <!-- default phase is "generate-resources" -->
