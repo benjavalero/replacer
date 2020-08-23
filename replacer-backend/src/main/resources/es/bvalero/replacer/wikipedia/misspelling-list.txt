@@ -29,9 +29,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  abánicos||abanicos
  abducció||abdujo
  abduccion||abducción
- abdució||abdujo
- abducio||abdujo
  abducieron||abdujeron
+ abducio||abdujo
+ abdució||abdujo
  abece||abecé
  aber||a ver, haber, aber («pero» en alemán)
  aberracion||aberración
@@ -127,7 +127,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  accecibilidad||accesibilidad
  accecible||accesible
  accecibles||accesibles
- acesibilidad||accesibilidad
  acceptacion||aceptación
  acceptación||aceptación
  accesit||accésit
@@ -162,6 +161,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  acerrimas||acérrimas
  acerrimo||acérrimo
  acerrimos||acérrimos
+ acesibilidad||accesibilidad
  acesor||asesor
  acesora||asesora
  acesoras||asesoras
@@ -342,11 +342,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  adjudicarselas||adjudicárselas
  adjudicarselo||adjudicárselo
  adjudicarselos||adjudicárselos
- administación||administración
  admimistrativa||administrativa
  admimistrativas||administrativas
  admimistrativo||administrativo
  admimistrativos||administrativos
+ administación||administración
  administracion||administración
  admitio||admitió
  admnistración||administración
@@ -542,8 +542,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  alalimon||alalimón
  alamo||álamo
  alamos||álamos
- Alavi-Von-Va||Alaví-Von-Va
  Alavi-Alava||Alaví-Alavá
+ Alavi-Von-Va||Alaví-Von-Va
  albanes||albanés
  albania|cs|Albania
  albañileria||albañilería
@@ -632,9 +632,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  alergenico||alergénico
  alergenicos||alergénicos
  alevi||aleví
- alevis||alevís
  alevies||alevíes
  alevin||alevín
+ alevis||alevís
  Alex||Álex (nombre español), Àlex (nombre catalán), Alex (nombre en otros idiomas)
  alfabega||alfábega, albahaca
  alfabegas||alfábegas, albahacas
@@ -777,6 +777,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  amazonicas||amazónicas
  amazonico||amazónico
  amazonicos||amazónicos
+ ámbas||ambas
  ambicion||ambición
  ambigüa||ambigua
  ambigüas||ambiguas
@@ -786,7 +787,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  ambigüos||ambiguos
  ambito||ámbito
  ambitos||ámbitos
- ámbas||ambas
  ámbos||ambos
  amenaze||amenace
  amenazen||amenacen
@@ -1020,10 +1020,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  antecedores||antecesores
  antecendente||antecedente
  antecendentes||antecedentes
- ántes||antes
- antés||antes
- antesesor||antecesor
- antesesores||antecesores
  antencion||atención
  antención||atención
  antepenultima||antepenúltima
@@ -1036,6 +1032,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  anterioramente||anteriormente
  anterióres||anteriores
  anteriorizacion||anteriorización
+ antés||antes
+ ántes||antes
+ antesesor||antecesor
+ antesesores||antecesores
  anteultima||anteúltima
  anteultimas||anteúltimas
  anteultimo||anteúltimo
@@ -1144,8 +1144,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  antropomorficas||antropomórficas
  antropomorfico||antropomórfico
  antropomorficos||antropomórficos
- anunciacion||anunciación
  anució||anunció
+ anunciacion||anunciación
  anunción||anunció
  añadiendola||añadiéndola
  añadiendolas||añadiéndolas
@@ -1236,8 +1236,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  aprarecer||aparecer
  aprareces||apareces
  aprendio||aprendió
- aprendíz||aprendiz
  aprendis||aprendiz
+ aprendíz||aprendiz
  aprobacion||aprobación
  aprobechar||aprovechar
  apropiacion||apropiación
@@ -1252,11 +1252,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  aproximabamos||aproximábamos
  aproximacion||aproximación
  apróximada||aproximada
+ aproximádamente||aproximadamente
+ apróximadamente||aproximadamente
  apróximadas||aproximadas
  apróximado||aproximado
  apróximados||aproximados
- aproximádamente||aproximadamente
- apróximadamente||aproximadamente
  aproximandose||aproximándose
  aproximaramos||aproximáramos
  aproximare||aproximaré
@@ -1457,8 +1457,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  articulacion||articulación
  articulo||artículo (sustantivo), articulo (verbo, 1.ª persona), articuló (verbo, 3.ª persona)
  articulos||artículos
- artítulo||artículo
- artítulos||artículos
  artifice||artífice
  artifício||artificio
  artifícios||artificios
@@ -1470,6 +1468,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  artisticas||artísticas
  artistico||artístico
  artisticos||artísticos
+ artítulo||artículo
+ artítulos||artículos
  artropodo||artrópodo
  artropodos||artrópodos
  arturo|cs|Arturo
@@ -1692,8 +1692,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  aún||aun (incluso, aunque), aún (todavía)
  aun||aún (todavía), aun (incluso, aunque)
  aúnque||aunque
- auque||aunque
  auqnue||aunque
+ auque||aunque
  aurea||áurea
  aureas||áureas
  aureo||áureo
@@ -1742,10 +1742,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  autoctonas||autóctonas
  autoctono||autóctono
  autoctonos||autóctonos
- autoinduccion||autoinducción
- autoinducieron||autoindujeron
- autoindució||autoindujo
- autoinducio||autoindujo
  autoestereo||autoestéreo
  autoestereos||autoestéreos
  autogena||autógena
@@ -1756,6 +1752,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  autografas||autógrafas
  autografo||autógrafo
  autografos||autógrafos
+ autoinduccion||autoinducción
+ autoinducieron||autoindujeron
+ autoinducio||autoindujo
+ autoindució||autoindujo
  automata||autómata
  automatas||autómatas
  automatica||automática
@@ -2061,14 +2061,14 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  basilica||basílica
  basilicas||basílicas
  basilicon||basilicón
- basori||basorí
- basories||basoríes
- basquebolista||baloncestista
- basquebolistas||baloncestistas
  basket||básquet
  básket||básquet
  basofia||bazofia
  basofias||bazofias
+ basori||basorí
+ basories||basoríes
+ basquebolista||baloncestista
+ basquebolistas||baloncestistas
  basquet||básquet, baloncesto
  baston||bastón
  batallon||batallón
@@ -2300,10 +2300,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  biográfia||biografía
  biografias||biografías
  biográfias||biografías
- biografico||biográfico
- biograficos||biográficos
  biografica||biográfica
  biograficas||biográficas
+ biografico||biográfico
+ biograficos||biográficos
  biologa||bióloga
  biologas||biólogas
  biologia||biología
@@ -2333,6 +2333,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  biraro||biraró
  biraros||birarós
  biseccion||bisección
+ Bishkek||Biskek
  bisilaba||bisílaba
  bisilabas||bisílabas
  bisilabica||bisilábica
@@ -2341,7 +2342,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  bisilabicos||bisilábicos
  bisilabo||bisílabo
  bisilabos||bisílabos
- Bishkek||Biskek
  biskek|cs|Biskek
  bisoñe||bisoñé
  biste||bisté, bife o bistec
@@ -3004,8 +3004,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  caracteriticas||características
  caracteríticas||características
  caracterizo||caracterizó (3.ª persona), caracterizo (1.ª persona)
- caraterística||característica
- caraterísticas||características
  caracu||caracú
  caracues||caracúes
  caracus||caracús
@@ -3035,8 +3033,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  caraterísicos||característicos
  caraterisó||caracterizó
  carateristica||característica
+ caraterística||característica
  caraterìstica||característica
  carateristicas||características
+ caraterísticas||características
  caraterìsticas||características
  carateristico||característico
  carateristicos||característicos
@@ -3105,9 +3105,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  cardon||cardón
  carerra||carrera
  carerras||carreras
- carrara||carrera
- carraras||carreras
- carretara||carretera
  careys||careyes
  caribe|cs|Caribe (topónimo), caribe (lengua o pueblo)
  caribu||caribú
@@ -3148,8 +3145,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  carpínterias||carpinterías
  carpologia||carpología
  carpologias||carpologías
+ carrara||carrera
+ carraras||carreras
  Carreon||Carreón
  carreón|cs|Carreón
+ carretara||carretera
  carreton||carretón
  carroceria||carrocería
  carrocerias||carrocerías
@@ -3502,9 +3502,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  charter||chárter
  charteres||chárteres
  charters||chárteres
- chassis||chasis, chasís
  chásis||chasis, chasís
  chasises||chasis
+ chassis||chasis, chasís
  Chavez||Chávez
  chávez|cs|Chávez
  checoslovaquia|cs|Checoslovaquia
@@ -3741,6 +3741,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  ciuad||ciudad
  ciuda||ciudad
  ciudada||ciudad
+ ciudadad||ciudad
+ ciudadades||ciudades
  ciudadania||ciudadanía
  ciudadanias||ciudadanías
  civica||cívica
@@ -4223,11 +4225,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  conducia||conducía
  conducian||conducían
  conducias||conducías
+ conducieron||condujeron
  conducio||condujo
  condució||condujo
  conducion||conducción
  condución||conducción
- conducieron||condujeron
  condujó||condujo
  coneccion||conexión
  conección||conexión
@@ -4314,9 +4316,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  conjutos||conjuntos
  conla||con la
  conlinda||colinda
- conlindan||colindan
  conlindaba||colindaba
  conlindaban||colindaban
+ conlindan||colindan
  conlindar||colindar
  conmemoracion||conmemoración
  conmiceracion||conmiseración
@@ -4374,9 +4376,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  conseguría||conseguía, conseguiría
  consegurían||conseguían, conseguirían
  consejal||concejal
+ consejales||concejales
  consejeria||consejería
  consejerias||consejerías
- consejales||concejales
  consencuencia||consecuencia
  consencuencias||consecuencias
  conservacion||conservación
@@ -4441,11 +4443,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  construccion||construcción
  construcion||construcción
  construción||construcción
+ construian||construían
  construída||construida
  construídas||construidas
  construído||construido
  construídos||construidos
- construian||construían
  construír||construir
  construiria||construiría
  construirian||construirían
@@ -4664,8 +4666,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  convinarse||combinarse
  conviritio||convirtió
  conviritió||convirtió
- conviritrse||convertirse
  conviritó||convirtió
+ conviritrse||convertirse
  convirte||convierte
  convirténdose||convertiéndose
  convirtiendola||convirtiéndola
@@ -4729,8 +4731,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  cordenado||coordenado
  cordenados||coordenados
  cordina||coordina
- cordinado||coordinado
  cordinada||coordinada
+ cordinado||coordinado
  cordinador||coordinador
  cordinadora||coordinadora
  cordinadoras||coordinadoras
@@ -4741,8 +4743,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  cordobas||córdobas
  cordobes||cordobés
  cordon||cordón
- correcional||correccional
- correcionales||correccionales
  coregencia||corregencia
  coregente||corregente
  coriacea||coriácea, corácea
@@ -4778,19 +4778,21 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  corpusculos||corpúsculos
  correccion||corrección
  correción||corrección
+ correcional||correccional
+ correcionales||correccionales
  correciones||correcciones
  correjimiento||corregimiento
  correlacion||correlación
  correponde||corresponde
  correponden||corresponden
- correspodiente||correspondiente
- correspondente||correspondiente
- correspondentes||correspondientes
  correpondiente||correspondiente
  correpondientes||correspondientes
  correposndieron||correspondieron
+ correspodiente||correspondiente
  correspondecia||correspondencia
  correspondecias||correspondencias
+ correspondente||correspondiente
+ correspondentes||correspondientes
  correspondera||corresponderá
  corresponderan||corresponderán
  corresponderas||corresponderás
@@ -4909,8 +4911,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  crateres||cráteres
  crawl||crol
  crayon||crayón
- creacion||creación
  creacción||creación
+ creacion||creación
  crearón||crearon
  creci||crecí
  crecio||creció
@@ -5123,8 +5125,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  cuentame||cuéntame
  cuestion||cuestión
  cuidad||ciudad (sustantivo), cuidad (verbo)
- ciudadad||ciudad
- ciudadades||ciudades
  cuidadana||ciudadana
  cuidadanas||ciudadanas
  cuidadano||ciudadano
@@ -5295,10 +5295,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  decea||desea
  deceas||deseas
  decembre||diciembre
- dicembre||diciembre
  decembro||diciembre
- decender||descender
  decendencia||descendencia
+ decender||descender
  decenderia||descendería
  decendería||descendería
  decenderias||descenderías
@@ -5415,11 +5414,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  decimononicas||decimonónicas
  decimononico||decimonónico
  decimononicos||decimonónicos
- decimos||décimos (adjetivo o sustantivo, plural), decimos (verbo)
  decimooctavo||decimoctavo
  decimooctavos||decimoctavos
  décimoprimer||decimoprimer
  décimoprimera||decimoprimera
+ decimos||décimos (adjetivo o sustantivo, plural), decimos (verbo)
  décimotercer||decimotercer
  décimotercera||decimotercera
  decision||decisión
@@ -5628,11 +5627,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  derretian||derretían
  derretias||derretías
  derritio||derritió
+ derroco||derrocó (3.ª persona), derroco (1.ª persona)
  derruída||derruida
  derruídas||derruidas
  derruído||derruido
  derruídos||derruidos
- derroco||derrocó (3.ª persona), derroco (1.ª persona)
  dés||des
  desace||deshace
  desacer||deshacer
@@ -5642,8 +5641,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  desaciéndose||deshaciéndose
  desacieron||desasieron (conjugación de desasir, 'soltar, desprender lo asido'), deshicieron (conjugación de deshacer)
  desafia||desafía
- desafio||desafío (sustantivo o verbo, 1.ª persona), desafió (verbo, 3.ª persona)
  desafias||desafías
+ desafio||desafío (sustantivo o verbo, 1.ª persona), desafió (verbo, 3.ª persona)
  desafios||desafíos
  desague||desagüe
  desagues||desagües
@@ -5757,14 +5756,14 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  descripcíon||descripción
  descripsion||descripción
  descripsión||descripción
- descubrio||descubrió
  descubrimento||descubrimiento
+ descubrio||descubrió
  descuentada||descontada
  descuentadas||descontadas
  descuentado||descontado
  descuentados||descontados
- desdes||desde
  desden||desdén (sustantivo o adverbio), Dresde (localidad)
+ desdes||desde
  desecacion||desecación
  desencadenaria||desencadenaría
  desencadenarias||desencadenarías
@@ -6056,6 +6055,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  dicarboxilico||dicarboxílico
  dicarboxilicos||dicarboxílicos
  diceimbre||diciembre
+ dicembre||diciembre
  dicernimiento||discernimiento
  dicernimientos||discernimientos
  dicernir||discernir
@@ -6130,10 +6130,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  diéz||diez
  díez|cs|Díez (apellido), diez (número)
  difamacion||difamación
- diferencía||diferencia
- diferencías||diferencias
  difente||diferente
  difentes||diferentes
+ diferencía||diferencia
+ diferencías||diferencias
  differente||diferente
  differentes||diferentes
  dificil||difícil
@@ -6217,8 +6217,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  dirgió||dirigió
  dirgir||dirigir
  dirgue||dirige
- dirigia||dirigía
  dirigda||dirigida
+ dirigia||dirigía
  dirigiendose||dirigiéndose
  dirigio||dirigió
  dirigío||dirigió
@@ -6377,8 +6377,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  divergemos||divergimos
  diverger||divergir
  divergería||divergiría
- diversion||diversión
  diveros||diversos
+ diversion||diversión
  divicion||división
  divición||división
  diviciones||divisiones
@@ -6623,11 +6623,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  econonicas||económicas
  econonico||económico
  econonicos||económicos
+ econtra||encuentra
  econtraba||encontraba
  econtraban||encontraban
- econtrar||encontrar
- econtra||encuentra
  econtran||encuentran
+ econtrar||encontrar
  ecuacion||ecuación
  ecumenica||ecuménica
  ecumenicas||ecuménicas
@@ -6651,8 +6651,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  edificiós||edificios
  edifico||edificio (sustantivo), edifico (verbo, 1.ª persona), edificó (verbo, 3.ª persona)
  edificos||edificios
- eduardo|cs|Eduardo
  eduación||educación
+ eduardo|cs|Eduardo
  educacion||educación
  EEUU||EE. UU. (con espacio duro), EUA o Estados Unidos
  efectauda||efectuada
@@ -7021,9 +7021,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  enfrentandose||enfrentándose
  enfrento||enfrento (1.ª persona), enfrentó (3.ª persona)
  enfreta||enfrenta
- enfretandose||enfrentándose
  enfretamiento||enfrentamiento
  enfretamientos||enfrentamientos
+ enfretandose||enfrentándose
  enfurenciendo||enfureciendo
  engreida||engreída
  engreidas||engreídas
@@ -7031,11 +7031,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  engreidos||engreídos
  engreir||engreír
  enlas||en las
- enlos||en los
  enlase||enlace
  enlases||enlaces
  enlaze||enlace
  enlazes||enlaces
+ enlos||en los
  enologa||enóloga
  enologas||enólogas
  enologia||enología
@@ -7604,6 +7604,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  esqui||esquí
  esquies||esquíes
  esquis||esquís (o esquíes)
+ ésta||esta (determinante y pronombre, forma recomendada desde 2010), ésta (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
  estába||estaba
  estabán||estaban
  estableciendose||estableciéndose
@@ -7629,7 +7630,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  Estadounidense|cs|estadounidense
  estadounidénses||estadounidenses
  Estadounidenses|cs|estadounidenses
- ésta||esta (determinante y pronombre, forma recomendada desde 2010), ésta (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
  estallo||estalló (3.ª persona), estallo (1.ª persona)
  estampacion||estampación
  estan||están
@@ -7750,13 +7750,13 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  estranjeras||extranjeras
  estranjero||extranjero
  estranjeros||extranjeros
- estraodinario||extraordinario
  estraodinaria||extraordinaria
- estraodinarios||extraordinarios
  estraodinarias||extraordinarias
+ estraodinario||extraordinario
+ estraodinarios||extraordinarios
  estrategía||estrategia
- estrategías||estrategias
  estratégia||estrategia
+ estrategías||estrategias
  estratégias||estrategias
  estrategica||estratégica
  estrategicas||estratégicas
@@ -7984,10 +7984,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  exedencia||excedencia
  exedencias||excedencias
  exeder||exceder
- exedido||excedido
  exedida||excedida
- exedidos||excedidos
  exedidas||excedidas
+ exedido||excedido
+ exedidos||excedidos
  exelencia||excelencia
  exelencias||excelencias
  exelente||excelente
@@ -8306,10 +8306,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  famelicas||famélicas
  famelico||famélico
  famelicos||famélicos
+ famias||familias
  Famicon||Famicom (Family Computer)
  famila||familia
  familas||familias
- famias||familias
  família||familia
  famílias||familias
  famula||fámula
@@ -8443,9 +8443,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  fermentacion||fermentación
  Fermin||Fermín
  fermín|cs|Fermín
+ fernándes||Fernández
  fernandez||Fernández
  fernández|cs|Fernández
- fernándes||Fernández
  fernando|cs|Fernando
  feroes||feroés
  ferrari|cs|Ferrari
@@ -8832,8 +8832,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  frequencia||frecuencia
  frequencias||frecuencias
  fria||fría
- frias||frías
  friáis||friais
+ frias||frías
  friatica||friática
  friaticas||friáticas
  friatico||friático
@@ -8917,10 +8917,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  fusíble||fusible
  fusíbles||fusibles
  fusion||fusión
- fusionandolo||fusionándolo
  fusionandola||fusionándola
- fusionandolos||fusionándolos
  fusionandolas||fusionándolas
+ fusionandolo||fusionándolo
+ fusionandolos||fusionándolos
  futból||fútbol
  futbolin||futbolín
  fútbolin||futbolín
@@ -9126,6 +9126,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  genealogico||genealógico
  genealogicos||genealógicos
  generacion||generación
+ generalemente||generalmente
  generica||genérica
  genericas||genéricas
  generico||genérico
@@ -9135,7 +9136,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  génerico||genérico
  génericos||genéricos
  generlamente||generalmente
- generalemente||generalmente
  genero||género (sustantivo), genero (verbo, 1.ª persona), generó (verbo, 3.ª persona)
  genéro||género (sustantivo), genero (verbo, 1.ª persona), generó (verbo, 3.ª persona)
  generos||géneros
@@ -9150,13 +9150,13 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  genetico||genético
  geneticos||genéticos
  gengibre||jengibre
- genjibre||jengibre
  gengivre||jengibre
- genjivre||jengibre
  genica||génica
  genicas||génicas
  genico||génico
  genicos||génicos
+ genjibre||jengibre
+ genjivre||jengibre
  genotipica||genotípica
  genotipicas||genotípicas
  genotipico||genotípico
@@ -9221,10 +9221,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  geoquimicas||geoquímicas
  geoquimico||geoquímico
  geoquimicos||geoquímicos
- geotermico||geotérmico
  geotermica||geotérmica
- geotermicos||geotérmicos
  geotermicas||geotérmicas
+ geotermico||geotérmico
+ geotermicos||geotérmicos
  geotica||geótica
  geoticas||geóticas
  geotico||geótico
@@ -10362,8 +10362,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  iatrogenicas||iatrogénicas
  iatrogenico||iatrogénico
  iatrogenicos||iatrogénicos
- ibamos||íbamos
  íba||iba
+ ibamos||íbamos
  íban||iban
  Ibañez||Ibáñez
  ibáñez|cs|Ibáñez
@@ -10474,9 +10474,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  ilustados||ilustrados
  ilustarcion||ilustración
  ilustarciones||ilustraciones
- ilustracion||ilustración
  ilustracción||ilustración
  ilustracciones||ilustraciones
+ ilustracion||ilustración
  ilustrasion||ilustración
  ilustrasión||ilustración
  imagén||imagen
@@ -10568,8 +10568,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  inalambricas||inalámbricas
  inalambrico||inalámbrico
  inalambricos||inalámbricos
- inalineable||inalienable
  inalinaeble||inalienable
+ inalineable||inalienable
  inanime||inánime
  inanimes||inánimes
  inaugracion||inauguración
@@ -10664,10 +10664,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  incoporado||incorporado
  incoporados||incorporados
  incoporan||incorporan
+ incoporar||incorporar
  incoporara||incorporara
  incoporaran||incorporaran
  incoporaron||incorporaron
- incoporar||incorporar
  incoporarse||incorporarse
  incoporó||incorporó
  incorporacion||incorporación
@@ -10711,8 +10711,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  indemnizacion||indemnización
  indentidad||identidad
  indentidades||identidades
- indentificar||identificar
  indentifican||identifican
+ indentificar||identificar
  independiencia||independencia
  independiencias||independencias
  independientista||independentista
@@ -11011,7 +11011,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  intéprete||intérprete (sustantivo), interprete (verbo)
  intepretes||intérpretes (sustantivo, plural), interpretes (verbo)
  intépretes||intérpretes (sustantivo, plural), interpretes (verbo)
- interpreto||interpretó (3.ª persona), interpreto (1.ª persona)
  interaccion||interacción
  interacion||interacción
  interación||interacción
@@ -11042,6 +11041,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  interpretarón||interpretaron
  interprete||intérprete (sustantivo), interprete (verbo)
  interpretes||intérpretes (sustantivo, plural), interpretes (verbo)
+ interpreto||interpretó (3.ª persona), interpreto (1.ª persona)
  interrelacion||interrelación
  interrumpio||interrumpió
  interrupcion||interrupción
@@ -11237,7 +11237,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  jabali||jabalí
  jabalies||jabalíes
  jabalis||jabalís
- jacarilla|cs|Jacarilla
  jabon||jabón
  jaboneria||jabonería
  jabonerias||jabonerías
@@ -11245,6 +11244,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  jacarandaes||jacarandás, jacarandas
  jacarandáes||jacarandás, jacarandas
  jacaras||jácaras
+ jacarilla|cs|Jacarilla
  jacaro||jácaro
  jacaros||jácaros
  Jaen||Jaén
@@ -11272,12 +11272,12 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  javián|cs|Javián
  jehova||Jehová
  jehová|cs|Jehová
- jenjibre||jengibre
- jenjivre||jengibre
- jengivre||jengibre
  jeneral||general
  jenerales||generales
+ jengivre||jengibre
  jenin||Yenín
+ jenjibre||jengibre
+ jenjivre||jengibre
  jente||gente
  jentes||gentes
  jeográfico||geográfico
@@ -11380,8 +11380,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  juegaran||jugaran
  juegaron||jugaron
  juege||juegue
- juegó||jugó (verbo), juego (sustantivo)
  juegen||jueguen
+ juegó||jugó (verbo), juego (sustantivo)
  Jueves|cs|jueves
  jugan||juegan
  jugete||juguete
@@ -11579,7 +11579,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  languidas||lánguidas
  languido||lánguido
  languidos||lánguidos
- llanten||llantén
  lanus||Lanús
  lanús|cs|Lanús
  lanzadó||lanzado
@@ -11887,6 +11886,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  llamdas||llamadas
  llamdo||llamado
  llamdos||llamados
+ llanten||llantén
  lleba||lleva
  llebaba||llevaba
  llebaban||llevaban
@@ -12267,11 +12267,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  marruecos|cs|Marruecos
  Martes|cs|martes
  mártes||martes
+ martil||mártir
+ mártil||mártir
  martín|cs|Martín (excepto si se refiere al ave)
  martinez||Martínez
  martínez|cs|Martínez
- martil||mártir
- mártil||mártir
  martir||mártir
  martires||mártires
  Marzo|cs|marzo
@@ -12365,20 +12365,20 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  mécanico||mecánico
  mecanicos||mecánicos
  mécanicos||mecánicos
- mecionar||mencionar
  meciona||menciona
  mecionada||mencionada
  mecionadas||mencionadas
  mecionado||mencionado
  mecionados||mencionados
  mecionan||mencionan
+ mecionar||mencionar
  medallon||medallón
  medano||médano
  medanos||médanos
  Medellin||Medellín
  medellín|cs|Medellín
- mediambiental||medioambiental
  mediadios||mediados
+ mediambiental||medioambiental
  mediantes||mediante
  mediantre||mediante
  mediatica||mediática
@@ -12575,11 +12575,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  metamorficas||metamórficas
  metamorfico||metamórfico
  metamorficos||metamórficos
+ meteorizacion||meteorización
  meteorıtica||meteorítica
  meteorıticas||meteoríticas
  meteorıtico||meteorítico
  meteorıticos||meteoríticos
- meteorizacion||meteorización
  meteorologa||meteoróloga
  meteórologa||meteoróloga
  meteorologas||meteorólogas
@@ -12643,11 +12643,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  mexcla||mezcla
  mexclar||mezclar
  mexclas||mezclas
- mexico||México
  méxicana||mexicana
  méxicanas||mexicanas
  méxicano||mexicano
  méxicanos||mexicanos
+ mexico||México
  mèxico||México
  méxico|cs|México
  meztiza||mestiza
@@ -12707,11 +12707,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  milimetros||milímetros
  milliones||millones
  millon||millón
- milones||millones
  millonesima||millonésima
  millonesimas||millonésimas
  millonesimo||millonésimo
  millonesimos||millonésimos
+ milones||millones
  milonnes||millones
  mimbro||miembro
  mimbros||miembros
@@ -13023,6 +13023,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  moustro||monstruo
  moustros||monstruos
  movicion||movición
+ moviemiento||movimiento
+ moviemientos||movimientos
  moviento||movimiento, moviendo
  moviles||móviles
  movilizacion||movilización
@@ -13030,8 +13032,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  movilizaos||movilizados
  movimento||movimiento
  movimentos||movimientos
- moviemiento||movimiento
- moviemientos||movimientos
  moyoría||mayoría
  moyorías||mayorías
  mozarabe||mozárabe
@@ -13113,12 +13113,12 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  muscilar||muscular
  musculo||músculo (sustantivo), musculo (verbo, 1.ª persona), musculó (verbo, 3.ª persona)
  musculos||músculos
- museografia||museografía
- museografias||museografías
  museistica||museística
  museisticas||museísticas
  museistico||museístico
  museisticos||museísticos
+ museografia||museografía
+ museografias||museografías
  museologa||museóloga
  museologas||museólogas
  museologia||museología
@@ -13195,9 +13195,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  narigon||narigón
  naris||nariz
  naríz||nariz
- narracion||narración
  narraccion||narración
  narracción||narración
+ narracion||narración
  nartex||nártex
  Narvaez||Narváez
  narváez|cs|Narváez
@@ -13349,9 +13349,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  Niger||Níger
  níger|cs|Níger
  nigeria|cs|Nigeria
- niguno||ninguno
  nigún||ningún
  niguna||ninguna
+ niguno||ninguno
  nilista||nihilista
  nilon||nilón, nailon
  ninfeacea||ninfeácea
@@ -13385,8 +13385,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  nitrogeno||nitrógeno
  nitrogenos||nitrógenos
  nível||nivel
- níveles||niveles
  nivelacion||nivelación
+ níveles||niveles
  Nóbel||Nobel
  nocáut||nocaut
  nocáuts||nocauts
@@ -13422,8 +13422,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  nombro||nombró (3.ª persona), nombro (1.ª persona)
  nomenclator||nomenclátor
  nomina||nómina (sustantivo), nomina (verbo)
- nominas||nóminas (sustantivo), nominas (verbo)
  nominacion||nominación
+ nominas||nóminas (sustantivo), nominas (verbo)
  nonagesima||nonagésima
  nonagesimas||nonagésimas
  nonagesimo||nonagésimo
@@ -13437,11 +13437,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  norafricano||norteafricano
  norafricanos||norteafricanos
  norays||norayes
- nordoeste||noroeste
  nordica||nórdica
  nordicas||nórdicas
  nordico||nórdico
  nordicos||nórdicos
+ nordoeste||noroeste
  normacion||normación
  normalizacion||normalización
  nororeste||noreste
@@ -13822,8 +13822,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  optimas||óptimas
  optimizacion||optimización
  optimo||óptimo
- opusó||opuso
  optimos||óptimos
+ opusó||opuso
  oracion||oración
  oraculo||oráculo
  oraculos||oráculos
@@ -14220,18 +14220,18 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  paradiastole||paradiástole
  paradogica||paradójica
  paradógica||paradójica
- paradojica||paradójica
- paradogicas||paradójicas
- paradógicas||paradójicas
- paradojicas||paradójicas
  paradogicamente||paradójicamente
  paradógicamente||paradójicamente
- paradojicamente||paradójicamente
+ paradogicas||paradójicas
+ paradógicas||paradójicas
  paradogico||paradójico
  paradógico||paradójico
- paradojico||paradójico
  paradogicos||paradójicos
  paradógicos||paradójicos
+ paradojica||paradójica
+ paradojicamente||paradójicamente
+ paradojicas||paradójicas
+ paradojico||paradójico
  paradojicos||paradójicos
  parafinica||parafínica
  parafinicas||parafínicas
@@ -14345,21 +14345,21 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  parrocos||párrocos
  parroquía||parroquia
  parroquías||parroquias
+ partcipacion||participación
+ partcipación||participación
  partede||parte de
  parteneire||partenaire
  parteneires||partenaires
- partcipacion||participación
- partcipación||participación
- participarón||participaron
- particípó||participó, participo
  particion||partición
  participacion||participación
  participaciónes||participaciones
+ participarón||participaron
  participió||participio, participó
  participo||participó (3.ª persona), participo (1.ª persona)
+ particípó||participó, participo
  particula||partícula
- particulas||partículas
  particulamente ||particularmente
+ particulas||partículas
  partidiario||partidario
  partidiarios||partidarios
  partído||partido
@@ -14371,12 +14371,12 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  pasandola||pasándola
  pasandolas||pasándolas
  pasandole||pasándole
- pasandome||pasándome
- pasandose||pasándose
- pasandote||pasándote
  pasandoles||pasándoles
  pasandolo||pasándolo
  pasandolos||pasándolos
+ pasandome||pasándome
+ pasandose||pasándose
+ pasandote||pasándote
  pasapure||pasapuré, pasapurés, prensapuré, prensapurés
  pasapures||pasapurés, pasapuré, prensapuré, prensapurés
  pasapureses||pasapurés, pasapuré, prensapuré, prensapurés
@@ -14537,8 +14537,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  penísula||península
  penísulas||penínsulas
  penitencionaria||penitenciaria
- penitencionario||penitenciario
  penitencionarias||penitenciarias
+ penitencionario||penitenciario
  penitencionarios||penitenciarios
  Pennsylvania||Pensilvania
  pensilvania|cs|Pensilvania
@@ -14655,11 +14655,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  peripateticos||peripatéticos
  perisodactilo||perisodáctilo
  perisodactilos||perisodáctilos
+ permanecia||permanecía, permanencia
+ permanecian||permanecían
  permanecio||permaneció
  permaneción||permaneció
  permanencen||permanecen
- permanecia||permanecía, permanencia
- permanecian||permanecían
  permansion||permansión
  permica||pérmica
  permicas||pérmicas
@@ -15030,8 +15030,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  poliarquico||poliárquico
  poliarquicos||poliárquicos
  policia||policía
- policias||policías
  policíal||policial
+ policias||policías
  policiclica||policíclica
  policiclicas||policíclicas
  policiclico||policíclico
@@ -15146,10 +15146,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  porciento||por ciento (excepto el sinónimo de «porcentaje»)
  porcion||porción
  porel||por el
+ porfin||por fin
  porgrama||programa
  porgramas||programas
  pornografa||pornógrafa
- porfin||por fin
  pornografas||pornógrafas
  pornografia||pornografía
  pornografias||pornografías
@@ -15170,8 +15170,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  portavión||portaviones, portaaviones
  porteria||portería
  porterias||porterías
- porterirmente ||posteriormente
  porteriormente ||posteriormente
+ porterirmente ||posteriormente
  pórticado||porticado
  portico||pórtico
  porticos||pórticos
@@ -15409,11 +15409,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  preteritas||pretéritas
  preterito||pretérito
  preteritos||pretéritos
- pretorado||pretura
  pretigiosa||prestigiosa
  pretigiosas||prestigiosas
  pretigioso||prestigioso
  pretigiosos||prestigiosos
+ pretorado||pretura
  prevee||prevé
  prevée||prevé
  preveer||prever
@@ -15430,10 +15430,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  pricioneras||prisioneras
  pricionero||prisionero
  pricioneros||prisioneros
- princpio||principio
- princpios||principios
- princiapl||principal
- princiaples||principales
  pricipado||principado
  pricipados||principados
  pricipal||principal
@@ -15467,6 +15463,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  primulaceos||primuláceos
  primulas||prímulas
  príncesa||princesa
+ princiapl||principal
+ princiaples||principales
  príncipal||principal
  principalemente||principalmente
  príncipales||principales
@@ -15480,6 +15478,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  princpal||principal
  princpales||principales
  princpalmente||principalmente
+ princpio||principio
+ princpios||principios
  prinicipal||principal
  prinicipio||principio
  prinicipios||principios
@@ -15547,11 +15547,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  producian||producían
  produciendose||produciéndose
  producieron||produjeron
+ producio||produjo
+ produció||produjo
  producion||producción
  produción||producción
  produciones||producciones
- producio||produjo
- produció||produjo
  produjó||produjo
  profecia||profecía
  profecias||profecías
@@ -15612,9 +15612,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  promulgo||promulgo (1.ª persona), promulgó (3.ª persona)
  proncipalmente||principalmente
  proninció||pronunció
+ prontó||pronto
  pronunciacion||pronunciación
  pronunción||pronunció, pronunciación
- prontó||pronto
  propagacion||propagación
  proparoxitona||proparoxítona
  proparoxitonas||proparoxítonas
@@ -15680,14 +15680,14 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  protagonistico||protagonístico
  protagonisticos||protagonísticos
  protagonizacion||protagonización
- protagonizo||protagonizó (3.ª persona), protagonizo (1.ª persona)
- protagosnismo||protagonismo
- protagosnista||protagonista
- protagosnistas||protagonistas
  protagónizada||protagonizada
  protagónizadas||protagonizadas
  protagónizado||protagonizado
  protagónizados||protagonizados
+ protagonizo||protagonizó (3.ª persona), protagonizo (1.ª persona)
+ protagosnismo||protagonismo
+ protagosnista||protagonista
+ protagosnistas||protagonistas
  proteccion||protección
  protecion||protección
  proteción||protección
@@ -15849,11 +15849,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  publico||público (adjetivo o sustantivo), publico (verbo, 1.ª persona), publicó (verbo, 3.ª persona)
  pùblico||público (adjetivo o sustantivo), publico (verbo, 1.ª persona), publicó (verbo, 3.ª persona)
  publicos||públicos
+ pudiéndo||pudiendo
  pudó||pudo
  pudricion||pudrición
- puediese||pudiese
- pudiéndo||pudiendo
  puediendo||pudiendo
+ puediese||pudiese
  puercoespin||puercoespín
  puertoriqueña||puertorriqueña
  puertoriqueñas||puertorriqueñas
@@ -16207,11 +16207,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  reconditos||recónditos
  reconduccion||reconducción
  reconducieron||recondujeron
- recondució||recondujo
  reconducio||recondujo
- reconocio||reconoció
+ recondució||recondujo
  reconocimento||reconocimiento
  reconocimentos||reconocimientos
+ reconocio||reconoció
  reconquisto||reconquistó (3.ª persona), reconquisto (1.ª persona)
  reconstruia||reconstruía
  reconstruian||reconstruían
@@ -16390,9 +16390,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  regresarian||regresarían
  reguee||reggae
  regueton||reguetón
- rh|cs|Rh (Med. factor Rh)
- rH|cs|Rh (Med. factor Rh)
- RH|cs|Rh (Med. factor Rh)
  rehabilitacion||rehabilitación
  rehen||rehén
  rehénes||rehenes
@@ -16549,13 +16546,13 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  requeire||requiere
  requeiren||requieren
  requeires||requieres
- requiería||requería
  requeria||requería
  requerian||requerían
  requerias||requerías
  requeson||requesón, ricota
  requiem||réquiem
  requiems||réquiems
+ requiería||requería
  requrida||requerida
  requridas||requeridas
  requrido||requerido
@@ -16678,8 +16675,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  revelandolos||revelándolos
  revelandose||revelándose
  revelo||revelo (1.ª persona), reveló (3.ª persona)
- revertió||revirtió
  revertiendo||revirtiendo
+ revertió||revirtió
  reves||revés
  réves||revés
  revestimento||revestimiento
@@ -16699,6 +16696,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  revuleta||revuelta
  revuletas||revueltas
  reys||reyes
+ rh|cs|Rh (Med. factor Rh)
+ rH|cs|Rh (Med. factor Rh)
+ RH|cs|Rh (Med. factor Rh)
  riad|cs|Riad
  riáis||riais
  ribonucleotido||ribonucleótido
@@ -17050,7 +17050,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  secondarias||secundarias (adjetivo), secundarías (verbo)
  secondario||secundario
  secondarios||secundarios
- secretaria||secretaria (cargo, oficio), secretaría (oficina)
  secreatria||secretaria
  secreatrias||secretarias
  secreatrio||secretario
@@ -17062,15 +17061,16 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  secresion||secreción
  secresión||secreción
  secresiones||secreciones
+ secretaria||secretaria (cargo, oficio), secretaría (oficina)
  secuana||sécuana
  secuanas||sécuanas
  secuano||sécuano
  secuanos||sécuanos
+ sedacion||sedación
  seduccion||seducción
  seducieron||sedujeron
- sedució||sedujo
  seducio||sedujo
- sedacion||sedación
+ sedució||sedujo
  sefaradies||sefardíes
  sefardies||sefardíes
  segazon||segazón
@@ -17501,11 +17501,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  sítio||sitio
  sítios||sitios
  situa||sitúa
- situasion||situación
  situacion||situación
  situan||sitúan
  situán||sitúan
  situas||sitúas
+ situasion||situación
  siutada||situada
  siutadas||situadas
  siutado||situado
@@ -17624,10 +17624,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  sonambulas||sonámbulas
  sonambulo||sonámbulo
  sonambulos||sonámbulos
- soñare||soñaré (futuro simple del indicativo), soñare (futuro simple del subjuntivo)
- soñaria||soñaría
  sónido||sonido
  sónidos||sonidos
+ soñare||soñaré (futuro simple del indicativo), soñare (futuro simple del subjuntivo)
+ soñaria||soñaría
  sopie||sopié
  sopies||sopiés
  soprendente||sorprendente
@@ -17703,6 +17703,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  subespcies||subespecies
  subfmilia||subfamilia
  subfmilias||subfamilias
+ subgenero||subgénero
+ subgeneros||subgéneros
  subiendolo||subiéndolo
  subio||subió
  subita||súbita
@@ -17713,8 +17715,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  sublebaciones||sublevaciones
  sublevacion||sublevación
  sublimacion||sublimación
- subgenero||subgénero
- subgeneros||subgéneros
  subrgupo||subgrupo
  subrgupos||subgrupos
  subrraya||subraya
@@ -17884,10 +17884,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  suponiamos||suponíamos
  suponian||suponían
  suponias||suponías
- supusó||supuso
  suprecion||supresión
  supreción||supresión
  supresion||supresión
+ supusó||supuso
  surafrica||Sudáfrica
  suráfrica||Sudáfrica
  suramerica||Suramérica
@@ -18865,9 +18865,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  triadicos||triádicos
  triáis||triais
  triangulacion||triangulación
+ triángular||triangular
  triangulo||triángulo
  triangulos||triángulos
- triángular||triangular
  triasica||triásica
  triasicas||triásicas
  triasico||triásico
@@ -18891,8 +18891,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  triglicerido||triglicérido
  trigliceridos||triglicéridos
  trigono||trígono
- trigonos||trígonos
  trigonometria||trigonometría
+ trigonos||trígonos
  trillon||trillón
  trilogia||trilogía
  trilogias||trilogías
@@ -19165,11 +19165,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  utilisara||utilizara
  utilisarse||utilizarse
  utilise||utilice (presente del subjuntivo), utilicé (pretérito perfecto simple del indicativo)
- utilize||utilice
  utilizaicon||utilización
  utilizaicón||utilización
  utilizán||utilizan
  utilizarón||utilizaron
+ utilize||utilice
  utilizo||utilizó (3.ª persona), utilizo (1.ª persona)
  utilziando||utilizando
  utima||última
@@ -19403,9 +19403,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  vermifugo||vermífugo
  vermifugos||vermífugos
  vermout||vermú, vermut
- vermouts||vermús, vermuts
  vermouth||vermú, vermut
  vermouths||vermús, vermuts
+ vermouts||vermús, vermuts
  vernacula||vernácula
  vernaculas||vernáculas
  vernaculo||vernáculo
@@ -19885,11 +19885,11 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  zoologicos||zoológicos
  zoologo||zoólogo
  zoologos||zoólogos
+ zoom||zum
  zoomorfica||zoomórfica
  zoomorficas||zoomórficas
  zoomorfico||zoomórfico
  zoomorficos||zoomórficos
- zoom||zum
  zooms||zums
  zoster||zóster
  zosteres||zósteres

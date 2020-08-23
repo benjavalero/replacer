@@ -3,9 +3,9 @@
  Angel Nieto|cs|Ángel Nieto (piloto español)
  aún así||aun así, aún así (todavía así)
  aún cuando||aun cuando (incluso), aún cuando (todavía)
+ aún estando||aun estando (incluso), aún estando (todavía)
  aún no siendo||aun no siendo (incluso), aún no siendo (todavía)
  aún no teniendo||aun no teniendo (incluso), aún no teniendo (todavía)
- aún estando||aun estando (incluso), aún estando (todavía)
  aún siendo||aun siendo (incluso), aún siendo (todavía)
  aún teniendo||aun teniendo (incluso), aún teniendo (todavía)
  con mas||con más
@@ -18,8 +18,6 @@
  en la qué||en la que
  entorno a||en torno a (locución adverbial)
  es mas||es más
- éstas dos||estas dos
- éstas últimas||estas últimas
  ésta área||esta área
  ésta canción||esta canción
  ésta ciudad||esta ciudad
@@ -46,6 +44,8 @@
  ésta versión||esta versión
  ésta vez||esta vez
  ésta zona||esta zona
+ éstas dos||estas dos
+ éstas últimas||estas últimas
  éste álbum||este álbum
  éste año||este año
  éste caso||este caso
@@ -59,13 +59,13 @@
  éste modo||este modo
  éste nuevo||este nuevo
  éste país||este país
- éste período||este período
  éste periodo||este periodo
+ éste período||este período
  éste tema||este tema
  éste tipo||este tipo
  éste último|| este último
- éstos últimos||estos últimos
  éstos dos||estos dos
+ éstos últimos||estos últimos
  hay mas||hay más
  Jose Antonio|cs|José Antonio (nombre propio español)
  Jose Manuel|cs|José Manuel (nombre propio español y portugués)
@@ -78,13 +78,13 @@
  lo mas||lo más
  los mas||los más
  mal entendido||mal entendido (adjetivo), malentendido (sustantivo)
- mas alta||más alta
  mas allá||más allá
+ mas alta||más alta
  mas bien||más bien
  mas conocida||más conocida
  mas conocido||más conocido
- mas del||más del
  mas de||más de
+ mas del||más del
  mas destacados||más destacados
  mas fuerte||más fuerte
  mas grande||más grande
@@ -106,14 +106,12 @@
  por que||por que (preposición + relativo o conjunción), porque (conjunción causal), por qué (interrogación o exclamación), porqué (sustantivo, causa)
  Primera Division|cs|Primera División
  que mas||que más
- Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
+ Rio 2016|cs|Río 2016 (Juegos Olímpicos de Verano)
  Rio Claro|cs|Río Claro (región o río en varios países de lengua española y Brasil), Rio Claro (en portugués)
+ Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
  Rio Negro|cs|Río Negro (región o río en varios países de lengua española, EE. UU. y Brasil), Rio Negro (en portugués e inglés)
  Rio Tinto|cs|Río Tinto (río español), Rio Tinto (otros usos internacionales)
- Rio 2016|cs|Río 2016 (Juegos Olímpicos de Verano)
  Salud Publica|cs|Salud Pública
- Segunda Division|cs|Segunda División
- Seguridad Publica|cs|Seguridad Pública
  se cambio||se cambió
  se caso||se casó
  se continuo||se continuó
@@ -127,11 +125,13 @@
  se puedo||se puede (presente), se pudo (pretérito)
  se registro||se registró
  se uso||se usó
+ Segunda Division|cs|Segunda División
+ Seguridad Publica|cs|Seguridad Pública
  ser mas||ser más
- si mismas||sí mismas
  si misma||sí misma
- si mismos||sí mismos
+ si mismas||sí mismas
  si mismo||sí mismo
+ si mismos||sí mismos
  tener mas||tener más
  Tercera Division|cs|Tercera División
  TV Publica|cs|TV Pública
