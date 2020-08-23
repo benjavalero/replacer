@@ -31,7 +31,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  abduccion||abducción
  abdució||abdujo
  abducio||abdujo
- abducieron||abdujeron 
+ abducieron||abdujeron
  abece||abecé
  aber||a ver, haber, aber («pero» en alemán)
  aberracion||aberración
@@ -159,7 +159,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  aceria||acería
  acerias||acerías
  acerrima||acérrima
- acerrimas||acérrimas 
+ acerrimas||acérrimas
  acerrimo||acérrimo
  acerrimos||acérrimos
  acesor||asesor
@@ -359,7 +359,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  adptación||adaptación
  adquicisión||adquisición
  adquicision||adquisición
- adquierió||adquirió 
+ adquierió||adquirió
  adquiriendose||adquiriéndose
  adquirio||adquirió
  adquisicion||adquisición
@@ -1270,8 +1270,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  aquárium||acuario
  aquariums||acuarios
  aquáriums||acuarios
- aquél||aquel (determinante y pronombre, forma recomendada desde 2010), aquél (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos) 
- aquélla||aquella (determinante y pronombre, forma recomendada desde 2010), aquélla (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos) 
+ aquél||aquel (determinante y pronombre, forma recomendada desde 2010), aquél (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
+ aquélla||aquella (determinante y pronombre, forma recomendada desde 2010), aquélla (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
  aquéllas||aquellas (determinante y pronombre, forma recomendada desde 2010), aquéllas (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
  aquéllo||aquello
  aquéllos||aquellos (determinante y pronombre, forma recomendada desde 2010), aquéllos (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
@@ -1743,7 +1743,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  autoctono||autóctono
  autoctonos||autóctonos
  autoinduccion||autoinducción
- autoinducieron||autoindujeron 
+ autoinducieron||autoindujeron
  autoindució||autoindujo
  autoinducio||autoindujo
  autoestereo||autoestéreo
@@ -4371,7 +4371,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  consedio||concedió
  conseguiendo||consiguiendo
  conseguió||consiguió
- conseguría||conseguía, conseguiría 
+ conseguría||conseguía, conseguiría
  consegurían||conseguían, conseguirían
  consejal||concejal
  consejeria||consejería
@@ -6848,7 +6848,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  embolías||embolias
  embolo||émbolo
  embolos||émbolos
- embrago||embargo (sustantivo), embragó (verbo, 3.ª persona), embrago (verbo, 1.ª persona) 
+ embrago||embargo (sustantivo), embragó (verbo, 3.ª persona), embrago (verbo, 1.ª persona)
  embrazada||embarazada
  embrazadas||embarazadas
  embriago||embriagó (3.ª persona), embriago (1.ª persona)
@@ -9410,8 +9410,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  graffitis||grafitis
  grafia||grafía
  grafias||grafías
- grafica||gráfica (adjetivo o sustantivo), grafica (verbo, presente del indicativo, e imperativo: tú), graficá (verbo, imperativo: vos) 
- graficas||gráficas (adjetivo o sustantivo, plural), graficas (verbo, 2.ª persona: tú), graficás (verbo, 2.ª persona: vos) 
+ grafica||gráfica (adjetivo o sustantivo), grafica (verbo, presente del indicativo, e imperativo: tú), graficá (verbo, imperativo: vos)
+ graficas||gráficas (adjetivo o sustantivo, plural), graficas (verbo, 2.ª persona: tú), graficás (verbo, 2.ª persona: vos)
  grafico||gráfico (adjetivo o sustantivo), grafico (verbo, 1.ª persona), graficó (verbo, 3.ª persona)
  graficos||gráficos
  grafitacion||grafitación
@@ -9482,10 +9482,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  gravisimos||gravísimos
  gravitacion||gravitación
  grecia|cs|Grecia
-grecoromana||grecorromana
-grecoromanas||grecorromanas
-grecoromano||grecorromano
-grecoromanos||grecorromanos
+ grecoromana||grecorromana
+ grecoromanas||grecorromanas
+ grecoromano||grecorromano
+ grecoromanos||grecorromanos
  gregueria||greguería
  greguerias||greguerías
  greguesco||gregüesco
@@ -9801,7 +9801,7 @@ grecoromanos||grecorromanos
  helvetico||helvético
  helveticos||helvéticos
  hemana||hermana (sustantivo), emana (verbo)
- hemanada||hermanada (adjetivo), emanada (verbo) 
+ hemanada||hermanada (adjetivo), emanada (verbo)
  hemanadas||hermanadas (adjetivo), emanadas (verbo)
  hemanado||hermanado (adjetivo), emanado (verbo)
  hemanados||hermanados (adjetivo), emanados (verbo)
@@ -10439,8 +10439,8 @@ grecoromanos||grecorromanos
  iglu||iglú
  iglues||iglúes
  iglus||iglús
- ignauguro||inauguró  (3.ª persona), inauguro (1.ª persona)
- ignauguró||inauguró  (3.ª persona), inauguro (1.ª persona)
+ ignauguro||inauguró (3.ª persona), inauguro (1.ª persona)
+ ignauguró||inauguró (3.ª persona), inauguro (1.ª persona)
  ignifuga||ignífuga
  ignifugas||ignífugas
  ignifugo||ignífugo
@@ -11782,7 +11782,7 @@ grecoromanos||grecorromanos
  liéis||lieis
  liezo||lienzo
  liezos||lienzos
- ligéramente ||ligeramente 
+ ligéramente ||ligeramente
  liliacea||liliácea
  liliaceas||liliáceas
  liliaceo||liliáceo
@@ -12285,8 +12285,6 @@ grecoromanos||grecorromanos
  masia||masía
  masica||másica
  masicas||másicas
- masico||másico
- masicos||másicos
  máslarga||más larga
  masmorra||mazmorra
  masmorras||mazmorras
@@ -13675,7 +13673,7 @@ grecoromanos||grecorromanos
  ocultita||ocultista
  ocultitas||ocultistas
  ocupacion||ocupación
- ocupo||ocupó  (3.ª persona), ocupo (1.ª persona)
+ ocupo||ocupó (3.ª persona), ocupo (1.ª persona)
  ocurrio||ocurrió
  Odin||Odín
  odín|cs|Odín
@@ -13881,7 +13879,7 @@ grecoromanos||grecorromanos
  orgiasticos||orgiásticos
  orginal||original
  orginales||originales
- orginalmente ||originalmente 
+ orginalmente ||originalmente
  orientacion||orientación
  origén||origen
  orígen||origen
@@ -14361,7 +14359,7 @@ grecoromanos||grecorromanos
  participo||participó (3.ª persona), participo (1.ª persona)
  particula||partícula
  particulas||partículas
- particulamente ||particularmente 
+ particulamente ||particularmente
  partidiario||partidario
  partidiarios||partidarios
  partído||partido
@@ -15172,8 +15170,8 @@ grecoromanos||grecorromanos
  portavión||portaviones, portaaviones
  porteria||portería
  porterias||porterías
- porterirmente ||posteriormente 
- porteriormente ||posteriormente 
+ porterirmente ||posteriormente
+ porteriormente ||posteriormente
  pórticado||porticado
  portico||pórtico
  porticos||pórticos
@@ -15551,7 +15549,7 @@ grecoromanos||grecorromanos
  producieron||produjeron
  producion||producción
  produción||producción
- produciones||producciones 
+ produciones||producciones
  producio||produjo
  produció||produjo
  produjó||produjo
@@ -16370,7 +16368,7 @@ grecoromanos||grecorromanos
  Regensburgo||Ratisbona
  regeton||reguetón
  regetón||reguetón
-  reggaetón||reguetón 
+ reggaetón||reguetón
  reggeton||reguetón
  reggetón||reguetón
  regiduria||regiduría
@@ -16680,7 +16678,7 @@ grecoromanos||grecorromanos
  revelandolos||revelándolos
  revelandose||revelándose
  revelo||revelo (1.ª persona), reveló (3.ª persona)
- revertió||revirtió 
+ revertió||revirtió
  revertiendo||revirtiendo
  reves||revés
  réves||revés
@@ -16857,10 +16855,10 @@ grecoromanos||grecorromanos
  ruó||ruo
  rusia|cs|Rusia
  Russia||Rusia
- rustica||rústica (adjetivo),  rustica (verbo)
+ rustica||rústica (adjetivo), rustica (verbo)
  rusticamente||rústicamente
- rusticas||rústicas (adjetivo, plural),  rusticas (verbo)
- rustico||rústico (adjetivo o sustantivo),  rustico (verbo)
+ rusticas||rústicas (adjetivo, plural), rusticas (verbo)
+ rustico||rústico (adjetivo o sustantivo), rustico (verbo)
  rusticos||rústicos
  rwanda||Ruanda
 
@@ -17393,7 +17391,7 @@ grecoromanos||grecorromanos
  símple||simple
  símplemente||simplemente
  simplimente||simplemente
- simultanea||simultánea
+ simultanea||simultanea (verbo), simultánea (adjetivo)
  simultaneamente||simultáneamente
  simultaneas||simultáneas
  simultanemante||simultáneamente
@@ -17597,7 +17595,7 @@ grecoromanos||grecorromanos
  solia||solía
  solian||solían
  solias||solías
- solicito||solicitó (verbo, 3.ª persona), solicito (verbo, 1.ª persona), solícito (adjetivo) 
+ solicito||solicitó (verbo, 3.ª persona), solicito (verbo, 1.ª persona), solícito (adjetivo)
  solida||sólida (adjetivo), solida (verbo)
  solidas||sólidas (adjetivo, plural), solidas (verbo)
  solidiariamente||solidariamente
@@ -18130,7 +18128,7 @@ grecoromanos||grecorromanos
  teleespectadora||telespectadora
  teleespectadoras||telespectadoras
  teleespectadores||telespectadores
- teleferico||teleférico 
+ teleferico||teleférico
  telefericos||teleféricos
  telefonia||telefonía
  telefonias||telefonías
@@ -19574,7 +19572,7 @@ grecoromanos||grecorromanos
  vivenda||vivienda
  vivendas||viviendas
  vivia||vivía
- vivian||vivían (verbo, 3.ª persona), Vivian (nombre propio) 
+ vivian||vivían (verbo, 3.ª persona), Vivian (nombre propio)
  vivias||vivías
  vivio||vivió
  vivipara||vivípara

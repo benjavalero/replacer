@@ -101,6 +101,8 @@
  Nicolas Maduro|cs|Nicolás Maduro
  o mas||o más
  opinión publica||opinión pública
+ Parque Nacional|cs|parque nacional
+ Parque Natural|cs|parque natural
  por que||por que (preposición + relativo o conjunción), porque (conjunción causal), por qué (interrogación o exclamación), porqué (sustantivo, causa)
  Primera Division|cs|Primera División
  que mas||que más
@@ -131,6 +133,7 @@
  si mismos||sí mismos
  si mismo||sí mismo
  tener mas||tener más
+ Tercera Division|cs|Tercera División
  TV Publica|cs|TV Pública
  un sólo||un solo
  una version||una versión
