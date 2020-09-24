@@ -1,3 +1,5 @@
+ 1 sólo||un solo
+ a mas||a más
  Administración Publica|cs|Administración Pública
  Alberto Del Río|cs|Alberto Del Rio (nombre comercial del luchador, sin tilde)
  Angel Nieto|cs|Ángel Nieto (piloto español)
@@ -97,6 +99,7 @@
  Metro de Paris|cs|Metro de París (en español), Métro de Paris (en francés)
  Miguel Angel|cs|Miguel Ángel (nombre propio, en particular castellanización del artista italiano)
  mucho mas||mucho más
+ nada mas||nada más
  Nicolas de Bari|cs|Nicolás de Bari
  Nicolas Maduro|cs|Nicolás Maduro
  o mas||o más
@@ -132,6 +135,7 @@
  si mismas||sí mismas
  si mismo||sí mismo
  si mismos||sí mismos
+ son mas||son más
  tener mas||tener más
  Tercera Division|cs|Tercera División
  TV Publica|cs|TV Pública
