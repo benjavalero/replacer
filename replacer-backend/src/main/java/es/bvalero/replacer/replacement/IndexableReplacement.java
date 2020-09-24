@@ -13,4 +13,5 @@ public class IndexableReplacement {
     int position;
     String context;
     LocalDate lastUpdate;
+    String title;
 }

@@ -93,8 +93,8 @@ public class DumpExecutionJob {
     @Bean
     public JdbcBatchItemWriter<ReplacementEntity> jdbcInsertWriter() {
         final String insertSql =
-            "INSERT INTO replacement2 (article_id, lang, type, subtype, position, context, last_update, reviewer) " +
-            "VALUES (:articleId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer)";
+            "INSERT INTO replacement2 (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +
+            "VALUES (:articleId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer, :title)";
 
         return new JdbcBatchItemWriterBuilder<ReplacementEntity>()
             .namedParametersJdbcTemplate(jdbcTemplate)
@@ -107,7 +107,7 @@ public class DumpExecutionJob {
     public JdbcBatchItemWriter<ReplacementEntity> jdbcUpdateWriter() {
         final String updateSql =
             "UPDATE replacement2 " +
-            "SET position=:position, context=:context, last_update=:lastUpdate, reviewer=:reviewer " +
+            "SET position=:position, context=:context, last_update=:lastUpdate, reviewer=:reviewer, title=:title " +
             "WHERE id=:id";
 
         return new JdbcBatchItemWriterBuilder<ReplacementEntity>()

@@ -48,6 +48,9 @@ public class ReplacementEntity implements Serializable {
     @Column
     private String reviewer;
 
+    @Column
+    private String title;
+
     public ReplacementEntity(int pageId, WikipediaLanguage lang, String type, String subtype, int position) {
         this.pageId = pageId;
         this.lang = lang.getCode();

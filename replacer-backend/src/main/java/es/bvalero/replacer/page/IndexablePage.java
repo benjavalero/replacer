@@ -12,6 +12,8 @@ public interface IndexablePage {
 
     WikipediaLanguage getLang();
 
+    String getTitle();
+
     WikipediaNamespace getNamespace();
 
     String getContent();
@@ -39,7 +41,8 @@ public interface IndexablePage {
             replacement.getSubtype(),
             replacement.getStart(),
             replacement.getContext(),
-            this.getLastUpdate()
+            this.getLastUpdate(),
+            this.getTitle()
         );
     }
 }

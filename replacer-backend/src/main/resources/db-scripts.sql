@@ -10,6 +10,7 @@ CREATE TABLE replacement2 (
     context VARCHAR(255) COLLATE utf8mb4_bin,
     last_update DATE NOT NULL,
     reviewer VARCHAR(100), -- In order to make the index work
+    title VARCHAR(255) COLLATE utf8mb4_bin, -- For the sake of simplicity even if it breaks schema normality
     PRIMARY KEY (id)
 );
 

@@ -141,16 +141,17 @@ public class ReplacementIndexService {
                 // DB older than Dump
                 dbReplacement.setLastUpdate(replacement.getLastUpdate());
 
-                // Also update position and context in case any of them has changed
+                // Also update other values in case any of them has changed
                 dbReplacement.setPosition(replacement.getPosition());
                 dbReplacement.setContext(replacement.getContext());
 
                 result = Optional.of(dbReplacement);
             } else if (
                 replacement.getPosition() != dbReplacement.getPosition() ||
-                !replacement.getContext().equals(dbReplacement.getContext())
+                !replacement.getContext().equals(dbReplacement.getContext()) ||
+                !replacement.getTitle().equals(dbReplacement.getTitle())
             ) {
-                // Also update position and context in case any of them has changed
+                // Also update other values in case any of them has changed
                 dbReplacement.setPosition(replacement.getPosition());
                 dbReplacement.setContext(replacement.getContext());
 

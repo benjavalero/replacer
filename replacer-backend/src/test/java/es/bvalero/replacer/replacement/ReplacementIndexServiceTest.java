@@ -50,7 +50,7 @@ public class ReplacementIndexServiceTest {
         int pageId = new Random().nextInt();
         int wrongId = pageId + 1;
 
-        IndexableReplacement indexableReplacement = IndexableReplacement.of(wrongId, WikipediaLanguage.SPANISH, "", "", 0, "", LocalDate.now());
+        IndexableReplacement indexableReplacement = IndexableReplacement.of(wrongId, WikipediaLanguage.SPANISH, "", "", 0, "", LocalDate.now(), "");
         replacementIndexService.indexPageReplacements(pageId, WikipediaLanguage.SPANISH, Collections.singletonList(indexableReplacement));
     }
 
@@ -111,16 +111,17 @@ public class ReplacementIndexServiceTest {
         // R7 : Only in DB reviewed => Do nothing
 
         // Replacements found to index
-        IndexableReplacement r1 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "1", "1", 1, "", same);
-        IndexableReplacement r2 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "2", "2", 2, "", same);
-        IndexableReplacement r3 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "3", "3", 3, "", same);
-        IndexableReplacement r4 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "4", "4", 4, "", same);
-        IndexableReplacement r5 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "5", "5", 5, "", same);
+        IndexableReplacement r1 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "1", "1", 1, "", same, "1");
+        IndexableReplacement r2 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "2", "2", 2, "", same, "1");
+        IndexableReplacement r3 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "3", "3", 3, "", same, "1");
+        IndexableReplacement r4 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "4", "4", 4, "", same, "1");
+        IndexableReplacement r5 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "5", "5", 5, "", same, "1");
         List<IndexableReplacement> newReplacements = Arrays.asList(r1, r2, r3, r4, r5);
 
         // Existing replacements in DB
         ReplacementEntity r1db = new ReplacementEntity(1, "1", "1", 1);
         r1db.setContext(""); // To match with the one found to index
+        r1db.setTitle("1");
         ReplacementEntity r2db = new ReplacementEntity(1, "2", "2", 2, "");
         ReplacementEntity r3db = new ReplacementEntity(1, "3", "3", 3);
         r3db.setLastUpdate(before);
@@ -147,9 +148,9 @@ public class ReplacementIndexServiceTest {
         // R7 : Only in DB reviewed => Do nothing
 
         // Replacements found to index
-        IndexableReplacement r1 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "1", "1", 1, "", same);
-        IndexableReplacement r2 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "2", "2", 2, "", same);
-        IndexableReplacement r3 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "3", "3", 3, "", same);
+        IndexableReplacement r1 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "1", "1", 1, "", same, "1");
+        IndexableReplacement r2 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "2", "2", 2, "", same, "1");
+        IndexableReplacement r3 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "3", "3", 3, "", same, "1");
         List<IndexableReplacement> newReplacements = Arrays.asList(r1, r2, r3);
 
         // Existing replacements in DB
