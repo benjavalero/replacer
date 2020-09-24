@@ -1,6 +1,6 @@
 # Versions
 
-## 2.6.6 (???)
+## 2.6.6 (24 Sep 2020)
 - Improve capture of file names
 - Improve capture of aliased links to annexes
 - Improve breadcrumb to display pending articles count
