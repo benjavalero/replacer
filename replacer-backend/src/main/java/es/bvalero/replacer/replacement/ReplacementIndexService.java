@@ -144,6 +144,7 @@ public class ReplacementIndexService {
                 // Also update other values in case any of them has changed
                 dbReplacement.setPosition(replacement.getPosition());
                 dbReplacement.setContext(replacement.getContext());
+                dbReplacement.setTitle(replacement.getTitle());
 
                 result = Optional.of(dbReplacement);
             } else if (
@@ -154,6 +155,7 @@ public class ReplacementIndexService {
                 // Also update other values in case any of them has changed
                 dbReplacement.setPosition(replacement.getPosition());
                 dbReplacement.setContext(replacement.getContext());
+                dbReplacement.setTitle(replacement.getTitle());
 
                 result = Optional.of(dbReplacement);
             }
