@@ -120,6 +120,7 @@ public class ReplacementIndexServiceTest {
 
         // Existing replacements in DB
         ReplacementEntity r1db = new ReplacementEntity(1, "1", "1", 1);
+        r1db.setContext(""); // To match with the one found to index
         ReplacementEntity r2db = new ReplacementEntity(1, "2", "2", 2, "");
         ReplacementEntity r3db = new ReplacementEntity(1, "3", "3", 3);
         r3db.setLastUpdate(before);

@@ -135,18 +135,27 @@ public class ReplacementIndexService {
         IndexableReplacement replacement,
         ReplacementEntity dbReplacement
     ) {
-        Optional<ReplacementEntity> result;
-        if (dbReplacement.getLastUpdate().isBefore(replacement.getLastUpdate()) && dbReplacement.isToBeReviewed()) { // DB older than Dump
-            dbReplacement.setLastUpdate(replacement.getLastUpdate());
+        Optional<ReplacementEntity> result = Optional.empty();
+        if (dbReplacement.isToBeReviewed()) {
+            if (dbReplacement.getLastUpdate().isBefore(replacement.getLastUpdate())) {
+                // DB older than Dump
+                dbReplacement.setLastUpdate(replacement.getLastUpdate());
 
-            // Also update position and context in case any of them has changed
-            dbReplacement.setPosition(replacement.getPosition());
-            dbReplacement.setContext(replacement.getContext());
-            LOGGER.debug("Replacement updated in DB: {}", dbReplacement);
-            result = Optional.of(dbReplacement);
-        } else {
-            LOGGER.debug("Replacement existing in DB: {}", dbReplacement);
-            result = Optional.empty();
+                // Also update position and context in case any of them has changed
+                dbReplacement.setPosition(replacement.getPosition());
+                dbReplacement.setContext(replacement.getContext());
+
+                result = Optional.of(dbReplacement);
+            } else if (
+                replacement.getPosition() != dbReplacement.getPosition() ||
+                !replacement.getContext().equals(dbReplacement.getContext())
+            ) {
+                // Also update position and context in case any of them has changed
+                dbReplacement.setPosition(replacement.getPosition());
+                dbReplacement.setContext(replacement.getContext());
+
+                result = Optional.of(dbReplacement);
+            }
         }
         return result;
     }
