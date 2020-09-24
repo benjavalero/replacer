@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
@@ -12,7 +12,8 @@ class DumpHandler(xml.sax.ContentHandler):
         self.CurrentData = ""
         self.ns = ""
         self.text = ""
-        self.regex = re.compile("\\|([^=|]+?)=\\s*\\d{2} de (?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre) de \\d{4}")
+        # WARNING: If using groups the group number must be indicated when printing
+        self.regex = re.compile('[Hh]ab\\.?/[Kk]m\\.?([2²]|<sup>2</sup>|&sup2;)') # The ending \\b fails to find the squared 2
 
     # Call when an element starts
     def startElement(self, tag, attributes):
