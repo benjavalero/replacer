@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,6 +30,9 @@ public class ReplacementFindService {
 
     @Autowired
     private ImmutableFindService immutableFindService;
+
+    @Value("${replacer.show.long.immutables}")
+    private boolean showLongImmutables;
 
     public List<Replacement> findReplacements(String text, WikipediaLanguage lang) {
         // The replacement finder ignores in the response all the found replacements which are contained
@@ -100,7 +104,7 @@ public class ReplacementFindService {
 
         for (Immutable immutable : immutableFindService.findImmutables(text, lang)) {
             // Detect too long immutables likely to be errors in the text or in the finder
-            if (immutable.getText().length() > immutable.getFinder().getMaxLength()) {
+            if (showLongImmutables && immutable.getText().length() > immutable.getFinder().getMaxLength()) {
                 LOGGER.warn(
                     "Immutable too long: {}\t{}\t{}",
                     immutable.getFinder().getClass().getSimpleName(),

@@ -44,6 +44,11 @@
             "name": "replacer.page.stats.delay",
             "type": "java.lang.String",
             "description": "Delay (in milliseconds) between executions of the replacement count in database"
+        },
+        {
+            "name": "replacer.show.long.immutables",
+            "type": "java.lang.Boolean",
+            "description": "To include in the logs the warnings for the too long immutables found"
         }
     ]
 }
