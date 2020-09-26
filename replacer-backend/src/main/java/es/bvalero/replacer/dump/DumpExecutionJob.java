@@ -94,7 +94,7 @@ public class DumpExecutionJob {
     public JdbcBatchItemWriter<ReplacementEntity> jdbcInsertWriter() {
         final String insertSql =
             "INSERT INTO replacement2 (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +
-            "VALUES (:articleId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer, :title)";
+            "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer, :title)";
 
         return new JdbcBatchItemWriterBuilder<ReplacementEntity>()
             .namedParametersJdbcTemplate(jdbcTemplate)
