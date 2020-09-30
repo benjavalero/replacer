@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
@@ -77,6 +78,7 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
         List<ReplacementEntity> dbReplacements = replacementCache.findByPageId(dumpPage.getId(), dumpPage.getLang());
         Optional<LocalDate> dbLastUpdate = dbReplacements
             .stream()
+            .filter(r -> StringUtils.isEmpty(r.getReviewer()))
             .map(ReplacementEntity::getLastUpdate)
             .max(Comparator.comparing(LocalDate::toEpochDay));
         if (dbLastUpdate.isPresent() && !dumpPage.isProcessableByTimestamp(dbLastUpdate.get())) {
