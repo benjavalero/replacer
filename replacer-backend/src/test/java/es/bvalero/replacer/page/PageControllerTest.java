@@ -58,6 +58,9 @@ public class PageControllerTest {
     @MockBean
     private CosmeticFindService cosmeticFindService;
 
+    @MockBean
+    private PageListService pageListService;
+
     @Test
     public void testFindRandomPageWithReplacements() throws Exception {
         int id = 3;
