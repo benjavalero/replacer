@@ -1,5 +1,8 @@
 # Versions
 
+## 2.7.0 (5 Oct 2020)
+- New feature: list of pages containing a specific replacement type especially to be used by bots.
+
 ## 2.6.6 (24 Sep 2020)
 - Improve capture of file names
 - Improve capture of aliased links to annexes
