@@ -26,6 +26,16 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
     List<TypeSubtypeCount> countGroupedByTypeAndSubtype();
 
     @Query(
+        "SELECT DISTINCT(title) FROM ReplacementEntity " +
+        "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL"
+    )
+    List<String> findPageTitlesByTypeAndSubtype(
+        @Param("lang") String lang,
+        @Param("type") String type,
+        @Param("subtype") String subtype
+    );
+
+    @Query(
         "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) " +
         "FROM ReplacementEntity " +
         "WHERE lang = :lang AND reviewer IS NULL"

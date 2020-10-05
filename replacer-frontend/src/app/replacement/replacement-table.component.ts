@@ -1,9 +1,12 @@
 import { Component, OnInit, QueryList, ViewChildren, Input } from '@angular/core';
 
 import { PAGE_SIZE } from '../app-const';
+import { environment } from '../../environments/environment';
 import { ReplacementCount } from './replacement-count-list.model';
 import { ColumnSortableDirective, SortEvent, compare, compareLocale, SortDirection } from './column-sortable.directive';
 import { sleep } from '../sleep';
+import { AuthenticationService } from '../authentication/authentication.service';
+import { ArticleService } from '../page/article.service';
 
 @Component({
   selector: 'app-replacement-table',
@@ -29,7 +32,9 @@ export class ReplacementTableComponent implements OnInit {
   pageValue: number;
   pageSize: number;
 
-  constructor() {
+  pageListUrl: string;
+
+  constructor(private authenticationService: AuthenticationService, private articleService: ArticleService) {
     this.replacementCounts = [];
     this.filteredItems = this.replacementCounts;
     this.filtrable = false;
@@ -38,6 +43,7 @@ export class ReplacementTableComponent implements OnInit {
     this.collectionSize = 0;
     this.pageValue = 1;
     this.pageSize = PAGE_SIZE;
+    this.pageListUrl = `${environment.apiUrl}/pages/list?lang=${this.authenticationService.lang}`;
   }
 
   ngOnInit() {

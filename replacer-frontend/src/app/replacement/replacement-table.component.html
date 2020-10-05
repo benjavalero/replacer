@@ -13,6 +13,9 @@
         <tr>
           <th scope="col" appColumnSortable="s" (sort)="onSort($event)">Subtipo</th>
           <th scope="col" appColumnSortable="c" (sort)="onSort($event)">N.º</th>
+          <th scope="col" class="d-none d-sm-table-cell">
+            Lista de páginas
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -21,6 +24,9 @@
             <a routerLink="/random/{{ type }}/{{ item.s }}">{{ item.s }}</a>
           </td>
           <td class="w-25">{{ item.c }}</td>
+          <td class="d-none d-sm-table-cell">
+            <a href="{{ pageListUrl }}&type={{ type }}&subtype={{ item.s }}" target="_blank">[Lista]</a>
+          </td>
         </tr>
       </tbody>
     </table>

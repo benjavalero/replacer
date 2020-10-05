@@ -11,6 +11,8 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -34,6 +36,9 @@ public class PageController {
 
     @Autowired
     private CosmeticFindService cosmeticFindService;
+
+    @Autowired
+    private PageListService pageListService;
 
     /* FIND RANDOM PAGES WITH REPLACEMENTS */
 
@@ -133,6 +138,19 @@ public class PageController {
             savePage.getSubtype(),
             savePage.getReviewer()
         );
+    }
+
+    /* PAGE LIST FOR ROBOTS */
+
+    @GetMapping(value = "/list", params = { "type", "subtype" }, produces = "text/plain")
+    public ResponseEntity<String> findPageListByTypeAndSubtype(
+        @RequestParam String type,
+        @RequestParam String subtype,
+        @RequestParam WikipediaLanguage lang
+    ) {
+        LOGGER.info("GET Find page list. Type: {} - {}", type, subtype);
+        String titleList = StringUtils.join(pageListService.findPageList(lang, type, subtype), "\n");
+        return new ResponseEntity<>(titleList, HttpStatus.OK);
     }
 
     private OAuth1AccessToken convertToEntity(AccessToken accessToken) {
