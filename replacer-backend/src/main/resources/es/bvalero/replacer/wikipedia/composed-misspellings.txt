@@ -115,6 +115,7 @@
  Rio Negro|cs|Río Negro (región o río en varios países de lengua española, EE. UU. y Brasil), Rio Negro (en portugués e inglés)
  Rio Tinto|cs|Río Tinto (río español), Rio Tinto (otros usos internacionales)
  Salud Publica|cs|Salud Pública
+ se anuncio||se anunció
  se cambio||se cambió
  se caso||se casó
  se continuo||se continuó

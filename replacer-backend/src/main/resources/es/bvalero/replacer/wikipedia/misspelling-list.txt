@@ -5065,7 +5065,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  cruzes||cruces
  cruzo||cruzó (3.ª persona), cruzo (1.ª persona)
  cuadno||cuando
- cuado||cuando, cuadro (excepto singular de cuados, tribu)
+ cuado||cuando, cuadro, cuado (tribu germánica)
  cuadragesima||cuadragésima
  cuadragesimas||cuadragésimas
  cuadragesimo||cuadragésimo
@@ -17276,9 +17276,9 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  shampú||champú
  shampus||champús
  shampús||champús
- Shangai||Shanghái
+ Shangai||Shanghái (romanización en español), Shanghai (romanización en inglés)
  Shangái||Shanghái
- Shanghai||Shanghái
+ Shanghai||Shanghái (romanización en español), Shanghai (romanización en inglés)
  shanghái|cs|Shanghái
  share||cuota de audiencia, porcentaje de audiencia, cuota de pantalla
  shares||cuotas de audiencia, porcentajes de audiencia, cuotas de pantalla
@@ -19674,8 +19674,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  watio||vatio
  watios||vatios
  welter||wélter
- whiskeria||whiskería, güisquería
- whiskerias||whiskerías, güisquerías
+ whiskeria||wiskería, güisquería
+ whiskerias||wiskerías, güisquerías
  wikipedia|cs|Wikipedia
  windhoek|cs|Windhoek
 
