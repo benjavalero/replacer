@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgbCollapseModule, NgbDropdownModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCollapseModule, NgbDropdownModule, NgbModalModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,6 +21,7 @@ import { EditSnippetComponent } from './page/edit-snippet.component';
 import { DumpComponent } from './dump/dump.component';
 import { FindReplacementComponent } from './replacement/find-replacement.component';
 import { ReplacementTableComponent } from './replacement/replacement-table.component';
+import { ReviewSubtypeComponent } from './replacement/review-subtype.component';
 import { ColumnSortableDirective } from './replacement/column-sortable.directive';
 import { StatsComponent } from './stats/stats.component';
 
@@ -38,6 +39,7 @@ import { StatsComponent } from './stats/stats.component';
     DumpComponent,
     FindReplacementComponent,
     ReplacementTableComponent,
+    ReviewSubtypeComponent,
     ColumnSortableDirective,
     StatsComponent
   ],
@@ -48,6 +50,7 @@ import { StatsComponent } from './stats/stats.component';
     AppRoutingModule,
     NgbCollapseModule,
     NgbDropdownModule,
+    NgbModalModule,
     NgbPaginationModule
   ],
   providers: [

@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.finder.FinderUtils;
+import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.text.Collator;
@@ -13,9 +14,16 @@ class PageListService {
     @Autowired
     private ReplacementRepository replacementRepository;
 
+    @Autowired
+    private ReplacementDao replacementDao;
+
     List<String> findPageList(WikipediaLanguage lang, String type, String subtype) {
         List<String> titles = replacementRepository.findPageTitlesByTypeAndSubtype(lang.getCode(), type, subtype);
         titles.sort(Collator.getInstance(FinderUtils.LOCALE_ES));
         return titles;
+    }
+
+    void reviewPagesByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype) {
+        replacementDao.reviewPagesReplacementsAsSystem(lang, type, subtype);
     }
 }

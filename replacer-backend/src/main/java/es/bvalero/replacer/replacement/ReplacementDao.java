@@ -37,4 +37,17 @@ public class ReplacementDao {
             .addValue("pageIds", pageIds);
         jdbcTemplate.update(sql, namedParameters);
     }
+
+    public void reviewPagesReplacementsAsSystem(WikipediaLanguage lang, String type, String subtype) {
+        String sql =
+            "UPDATE replacement2 SET reviewer=:system, last_update=:now " +
+            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("system", ReplacementIndexService.SYSTEM_REVIEWER)
+            .addValue("now", LocalDate.now())
+            .addValue("lang", lang.getCode())
+            .addValue("type", type)
+            .addValue("subtype", subtype);
+        jdbcTemplate.update(sql, namedParameters);
+    }
 }

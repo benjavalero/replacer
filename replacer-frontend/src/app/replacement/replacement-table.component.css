@@ -9,3 +9,8 @@ th[appColumnSortable].asc::after {
 th[appColumnSortable].desc::after {
   content: ' ▼';
 }
+
+a.btn {
+  padding: 0 3px;
+  line-height: normal;
+}

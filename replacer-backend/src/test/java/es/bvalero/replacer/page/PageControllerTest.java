@@ -12,6 +12,7 @@ import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.authentication.AccessToken;
 import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.finder.Suggestion;
+import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguageConverter;
@@ -60,6 +61,9 @@ public class PageControllerTest {
 
     @MockBean
     private PageListService pageListService;
+
+    @MockBean
+    private ReplacementCountService replacementCountService;
 
     @Test
     public void testFindRandomPageWithReplacements() throws Exception {

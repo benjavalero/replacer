@@ -1,12 +1,13 @@
-import { Component, OnInit, QueryList, ViewChildren, Input } from '@angular/core';
-
-import { PAGE_SIZE } from '../app-const';
+import { Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
-import { ReplacementCount } from './replacement-count-list.model';
-import { ColumnSortableDirective, SortEvent, compare, compareLocale, SortDirection } from './column-sortable.directive';
-import { sleep } from '../sleep';
+import { PAGE_SIZE } from '../app-const';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { ArticleService } from '../page/article.service';
+import { sleep } from '../sleep';
+import { ColumnSortableDirective, compare, compareLocale, SortDirection, SortEvent } from './column-sortable.directive';
+import { ReplacementCount } from './replacement-count-list.model';
+import { ReviewSubtypeComponent } from './review-subtype.component';
 
 @Component({
   selector: 'app-replacement-table',
@@ -34,7 +35,11 @@ export class ReplacementTableComponent implements OnInit {
 
   pageListUrl: string;
 
-  constructor(private authenticationService: AuthenticationService, private articleService: ArticleService) {
+  constructor(
+    private authenticationService: AuthenticationService,
+    private articleService: ArticleService,
+    private modalService: NgbModal
+  ) {
     this.replacementCounts = [];
     this.filteredItems = this.replacementCounts;
     this.filtrable = false;
@@ -56,25 +61,31 @@ export class ReplacementTableComponent implements OnInit {
     this.refreshFilteredItems();
 
     // Mark the column Subtype as sorted. It takes a little for the headers to be loaded.
-    sleep(500).then(() => this.headers.find(header => header.appColumnSortable === 's').direction = 'asc');
+    sleep(500).then(() => (this.headers.find((header) => header.appColumnSortable === 's').direction = 'asc'));
   }
 
   private refreshFilteredItems() {
     // Apply filter (empty filter is like applying no filter)
-    this.filteredItems = this.replacementCounts.filter(item =>
-      this.removeDiacritics(item.s).includes(this.removeDiacritics(this.filterValue)));
+    this.filteredItems = this.replacementCounts.filter((item) =>
+      this.removeDiacritics(item.s).includes(this.removeDiacritics(this.filterValue))
+    );
     this.collectionSize = this.filteredItems.length;
 
     // Paginate
     if (this.paginable) {
       this.filteredItems = this.filteredItems.slice(
         (this.pageValue - 1) * this.pageSize,
-        (this.pageValue - 1) * this.pageSize + this.pageSize);
+        (this.pageValue - 1) * this.pageSize + this.pageSize
+      );
     }
   }
 
   private removeDiacritics(word: string): string {
-    return word.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    return word
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
   }
 
   get filter(): string {
@@ -98,7 +109,7 @@ export class ReplacementTableComponent implements OnInit {
 
   onSort({ column, direction }: SortEvent) {
     // Resetting other headers
-    this.headers.forEach(header => {
+    this.headers.forEach((header) => {
       if (header.appColumnSortable !== column) {
         header.direction = '';
       }
@@ -112,11 +123,30 @@ export class ReplacementTableComponent implements OnInit {
 
   private sort(items: ReplacementCount[], column: string, direction: SortDirection) {
     return [...items].sort((a, b) => {
-      const res = (column === 's'
-        ? compareLocale(a[column], b[column])
-        : compare(a[column], b[column]));
+      const res = column === 's' ? compareLocale(a[column], b[column]) : compare(a[column], b[column]);
       return direction === 'asc' ? res : -res;
     });
   }
 
+  reviewPages(subtype: string) {
+    const modalRef = this.modalService.open(ReviewSubtypeComponent);
+    modalRef.componentInstance.type = this.type;
+    modalRef.componentInstance.subtype = subtype;
+    modalRef.result.then(
+      (result) => {
+        this.articleService.reviewPages(this.type, subtype).subscribe(() => {
+          // Remove the type/subtype from the cache
+          for (let i = 0; i < this.replacementCounts.length; i++) {
+            if (this.replacementCounts[i].s === subtype) {
+              this.replacementCounts.splice(i, 1);
+            }
+          }
+          this.refreshFilteredItems();
+        });
+      },
+      (reason) => {
+        // Nothing to do
+      }
+    );
+  }
 }

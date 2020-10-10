@@ -4,6 +4,7 @@ import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.authentication.AccessToken;
 import es.bvalero.replacer.finder.CosmeticFindService;
+import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -39,6 +40,9 @@ public class PageController {
 
     @Autowired
     private PageListService pageListService;
+
+    @Autowired
+    private ReplacementCountService replacementCountService;
 
     /* FIND RANDOM PAGES WITH REPLACEMENTS */
 
@@ -151,6 +155,17 @@ public class PageController {
         LOGGER.info("GET Find page list. Type: {} - {}", type, subtype);
         String titleList = StringUtils.join(pageListService.findPageList(lang, type, subtype), "\n");
         return new ResponseEntity<>(titleList, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/review", params = { "type", "subtype" })
+    public void reviewPagesByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype) {
+        LOGGER.info("POST Review pages. Type: {} - {}", type, subtype);
+
+        // Set as reviewed in the database
+        pageListService.reviewPagesByTypeAndSubtype(lang, type, subtype);
+
+        // Remove from the replacement count cache
+        replacementCountService.removeCachedReplacementCount(lang, type, subtype);
     }
 
     private OAuth1AccessToken convertToEntity(AccessToken accessToken) {
