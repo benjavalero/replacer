@@ -10,6 +10,7 @@
  aún no teniendo||aun no teniendo (incluso), aún no teniendo (todavía)
  aún siendo||aun siendo (incluso), aún siendo (todavía)
  aún teniendo||aun teniendo (incluso), aún teniendo (todavía)
+ Carlos Ménem|cs|Carlos Menem
  con mas||con más
  de mas||de más
  desarrollo un||desarrolló un (verbo)
@@ -109,12 +110,16 @@
  por que||por que (preposición + relativo o conjunción), porque (conjunción causal), por qué (interrogación o exclamación), porqué (sustantivo, causa)
  Primera Division|cs|Primera División
  que mas||que más
+ Ramón Llull|cs|Ramon Llull
  Rio 2016|cs|Río 2016 (Juegos Olímpicos de Verano)
  Rio Claro|cs|Río Claro (región o río en varios países de lengua española y Brasil), Rio Claro (en portugués)
  Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
  Rio Negro|cs|Río Negro (región o río en varios países de lengua española, EE. UU. y Brasil), Rio Negro (en portugués e inglés)
  Rio Tinto|cs|Río Tinto (río español), Rio Tinto (otros usos internacionales)
  Salud Publica|cs|Salud Pública
+ SD Éibar|cs|SD Eibar
+ S. D. Éibar|cs|S. D. Eibar
+ S.D.Éibar|cs|S. D. Eibar
  se anuncio||se anunció
  se cambio||se cambió
  se caso||se casó
@@ -136,6 +141,7 @@
  si mismas||sí mismas
  si mismo||sí mismo
  si mismos||sí mismos
+ Sociedad Deportiva Éibar|cs|Sociedad Deportiva Eibar
  son mas||son más
  tener mas||tener más
  Tercera Division|cs|Tercera División

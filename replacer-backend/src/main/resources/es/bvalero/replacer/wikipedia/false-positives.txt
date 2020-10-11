@@ -2,7 +2,7 @@
 
 * La idea general es incluir los términos o conjunto de términos que son falsos positivos, o lo son en la gran mayoría de casos, por lo que no compensa tener que revisar por ejemplo mil ocurrencias para detectar un solo verdadero positivo.
 * Si es posible intentamos que no se solapen con otras excepciones
-* De momento uso una expresión regular (automaton) por lo que podemos incluir algo de sintaxis de estas.
+* De momento uso una expresión regular (automaton) por lo que podemos incluir algo de sintaxis de estas
 * Incluyo los casos con aproximadamente más de 400 ocurrencias
 
  # Abril
@@ -179,6 +179,11 @@
  Plácido Domingo
  Santo Domingo
 
+ # Eibar: la ciudad es con tilde y el equipo sin ella.
+ SD Eibar
+ S. ?D. Eibar
+ Sociedad Deportiva Eibar
+
  # éste (y derivados). Ídem con aquél (y derivados).
  # Esta forma no es incorrecta (salvo en «ésto»), aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
  # No se añade a esta lista puesto que hay usuarios que sí la revisan
@@ -321,6 +326,9 @@
  [Ss]e publica
  [Tt]ambién publica
  y publica
+
+ # Ramon
+ Ramon Llull
 
  # records
  # Se encuentra también como inmutable en SurnameFinder
