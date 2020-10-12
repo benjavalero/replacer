@@ -1,5 +1,8 @@
 # Versions
 
+## 2.7.1 (12 Oct 2020)
+- New feature: mark as reviewed all pages containing a specific replacement type.
+
 ## 2.7.0 (5 Oct 2020)
 - New feature: list of pages containing a specific replacement type especially to be used by bots.
 
