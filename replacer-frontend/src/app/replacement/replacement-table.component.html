@@ -2,7 +2,7 @@
 
 <div *ngIf="replacementCounts.length">
   <div *ngIf="filtrable" class="form-group mt-4">
-    <input class="form-control" type="text" [(ngModel)]="filter"
+    <input class="form-control" type="text" [(ngModel)]="filter" autocomplete="off"
       placeholder="Filtrar por subtipo (ignora mayúsculas y acentos)" />
   </div>
 
