@@ -117,6 +117,16 @@
  si aún
  son aún
 
+ # barbara
+ Barbara Schett
+ Barbara Gordon
+ Barbara Stanwyck
+ Barbara Potter
+ Barbara Hershey
+ Barbara Ann
+ Barbara Rittner
+ Barbara Hendricks
+
  # canada
  of Canada
  in Canada

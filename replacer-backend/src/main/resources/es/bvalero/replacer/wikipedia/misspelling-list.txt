@@ -768,6 +768,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  alvarez||Álvarez
  álvarez|cs|Álvarez
  alvaro||Álvaro
+ alveólo||alvéolo (forma recomendada), alveolo
+ alveólos||alvéolos (forma recomendada), alveolos
  alvergar||albergar
  alzo||alzo (1.ª persona), alzó (3.ª persona)
  am|cs|AM (sigla del ingl. Amplitude Modulation 'modulación de amplitud'), a. m. (ante merídiem), am (código ISO 639-1 del idioma amhárico)
@@ -1994,7 +1996,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  baratros||báratros
  baraunda||baraúnda, barahúnda
  baraundas||baraúndas, barahúndas
- barbara||bárbara (adjetivo), Barbara o Bárbara (nombre propio), barbara (verbo, pretérito imperfecto del subjuntivo), barbará (verbo, futuro simple del indicativo)
+ barbara||bárbara (adjetivo), Barbara (nombre propio en español o portugués), Bárbara (nombre propio en otros idiomas), barbara (verbo, pretérito imperfecto del subjuntivo), barbará (verbo, futuro simple del indicativo)
  barbaramente||bárbaramente
  barbaras||bárbaras (adjetivo), barbaras (verbo, pretérito imperfecto del subjuntivo), barbarás (verbo, futuro simple del indicativo)
  barbaro||bárbaro

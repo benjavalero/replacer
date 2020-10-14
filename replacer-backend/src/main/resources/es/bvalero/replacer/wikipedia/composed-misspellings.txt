@@ -117,6 +117,7 @@
  Rio Negro|cs|Río Negro (región o río en varios países de lengua española, EE. UU. y Brasil), Rio Negro (en portugués e inglés)
  Rio Tinto|cs|Río Tinto (río español), Rio Tinto (otros usos internacionales)
  Salud Publica|cs|Salud Pública
+ Santa Barbara|cs|Santa Bárbara (localida o región en varios países de lengua española y EE. UU.), Santa Barbara (en inglés)
  SD Éibar|cs|SD Eibar
  S. D. Éibar|cs|S. D. Eibar
  S.D.Éibar|cs|S. D. Eibar
