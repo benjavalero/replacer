@@ -1,5 +1,8 @@
 # Versions
 
+## 2.7.2 (14 Oct 2020)
+- Improve date finders to detect incomplete dates with missing prepositions
+
 ## 2.7.1 (12 Oct 2020)
 - New feature: mark as reviewed all pages containing a specific replacement type.
 
