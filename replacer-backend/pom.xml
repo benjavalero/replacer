@@ -17,7 +17,13 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <asm.version>7.3.1</asm.version>
         <lombok.version>1.18.12</lombok.version>
-        <sonar.exclusions>**/benchmark/**/*.*, **/*.sql, **/*.txt</sonar.exclusions>
+
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>benjavalero-github</sonar.organization>
+        <!-- Don't analyze unit tests -->
+        <sonar.sources>src/main/java</sonar.sources>
+        <sonar.java.source>11</sonar.java.source>
+        <sonar.exclusions>**/benchmark/**/*.*</sonar.exclusions>
     </properties>
 
     <dependencies>
@@ -224,6 +230,24 @@
                         <version>${asm.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
