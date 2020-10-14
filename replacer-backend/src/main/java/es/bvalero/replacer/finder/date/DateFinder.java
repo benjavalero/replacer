@@ -14,7 +14,11 @@ import java.util.stream.Collectors;
  */
 abstract class DateFinder {
     private static final String TYPE_DATE = "Fechas";
-    private static final List<String> MONTHS = Arrays.asList(
+    private static final String SUBTYPE_DATE_UPPERCASE_MONTHS = "Mes en mayúscula";
+    private static final String SUBTYPE_DATE_LEADING_ZERO = "Día con cero";
+    private static final String SUBTYPE_DATE_YEAR_WITH_ARTICLE = "Año con artículo";
+    private static final String SUBTYPE_DATE_INCOMPLETE = "Fecha incompleta";
+    static final List<String> MONTHS = Arrays.asList(
         "enero",
         "febrero",
         "marzo",
@@ -28,10 +32,6 @@ abstract class DateFinder {
         "noviembre",
         "diciembre"
     );
-    static final List<String> MONTHS_UPPERCASE = MONTHS
-        .stream()
-        .map(FinderUtils::setFirstUpperCase)
-        .collect(Collectors.toList());
     static final List<String> MONTHS_UPPERCASE_CLASS = MONTHS
         .stream()
         .map(FinderUtils::setFirstUpperCaseClass)
@@ -43,37 +43,33 @@ abstract class DateFinder {
         return Replacement
             .builder()
             .type(TYPE_DATE)
-            .subtype(getSubtype())
+            .subtype(getSubtype(text))
             .start(start)
             .text(text)
-            .suggestions(findSuggestions(text))
+            .suggestions(findSuggestions(matcher))
             .build();
     }
 
-    abstract String getSubtype();
-
-    private List<Suggestion> findSuggestions(String date) {
-        return Collections.singletonList(Suggestion.ofNoComment(fixDate(date)));
+    public String getSubtype(String text) {
+        if (FinderUtils.containsUppercase(text)) {
+            return SUBTYPE_DATE_UPPERCASE_MONTHS;
+        } else if (text.startsWith("0")) {
+            return SUBTYPE_DATE_LEADING_ZERO;
+        } else if (text.toLowerCase().contains("del")) {
+            return SUBTYPE_DATE_YEAR_WITH_ARTICLE;
+        } else {
+            return SUBTYPE_DATE_INCOMPLETE;
+        }
     }
 
-    private String fixDate(String date) {
-        // Replace the uppercase months
-        String fixedDate = date.replaceAll("[Ss]ep?tiembre", "septiembre");
-        for (String month : MONTHS_UPPERCASE) {
-            fixedDate = fixedDate.replaceAll(month, FinderUtils.toLowerCase(month));
-        }
+    private List<Suggestion> findSuggestions(MatchResult matcher) {
+        return Collections.singletonList(Suggestion.ofNoComment(fixDate(matcher)));
+    }
 
-        // Replace "Del?" before year
-        fixedDate = fixedDate.replaceAll("[Dd]el?(?= \\d)", "de");
+    abstract String fixDate(MatchResult matcher);
 
-        // Replace "De" after day
-        fixedDate = fixedDate.replaceAll("(?<=\\d )De", "de");
-
-        // Replace the leading zero
-        if (fixedDate.startsWith("0")) {
-            fixedDate = fixedDate.substring(1);
-        }
-
-        return fixedDate;
+    String fixMonth(String month) {
+        String lower = FinderUtils.toLowerCase(month);
+        return lower.replace("setiembre", "septiembre");
     }
 }
