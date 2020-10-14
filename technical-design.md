@@ -136,8 +136,9 @@ Some of these finders use a list of properties which are maintained in text file
 
 The sub-package `date` includes replacement finders related with dates.
 
-- **LongDateFinder**. Find non-valid long dates, e.g. `02 de septiembre de 2019` or `2 de Septiembre de 2019`
-- **MonthYearFinder**. Find non-valid dates without day and after a common preposition, e.g. `desde Septiembre de 2019`
+- **LeadingZeroFinder**. Find long dates starting with zero, e.g. `02 de septiembre de 2019`
+- **UppercaseMonthFinder**. Find dates with the month in uppercase, e.g. `2 de Septiembre de 2019`
+- **UppercaseMonthWithoutDayFinder**. Find months in uppercase without day and after a common preposition, e.g. `desde Septiembre de 2019`
 
 *Note*: For the moment, these finders only work for Spanish language.
 
