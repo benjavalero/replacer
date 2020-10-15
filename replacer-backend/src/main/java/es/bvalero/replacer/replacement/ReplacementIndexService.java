@@ -76,23 +76,25 @@ public class ReplacementIndexService {
         );
         List<ReplacementEntity> result = new ArrayList<>();
 
-        // We need the page ID because the replacement list to index might be empty
-        if (replacements.isEmpty() && dbReplacements.isEmpty()) {
+        replacements.forEach(replacement -> handleReplacement(replacement, dbReplacements).ifPresent(result::add));
+
+        // Remove the remaining replacements not reviewed
+        List<ReplacementEntity> toRemove = dbReplacements
+            .stream()
+            .filter(rep -> !ReplacementFindService.CUSTOM_FINDER_TYPE.equals(rep.getType()))
+            .filter(rep -> rep.getReviewer() == null || SYSTEM_REVIEWER.equals(rep.getReviewer()))
+            .collect(Collectors.toList());
+        replacementRepository.deleteInBatch(toRemove);
+
+        dbReplacements.removeAll(toRemove);
+
+        // In case there are no replacements to be added to the DB,
+        // the page would be parsed again in the next indexation even if it is not needed
+        // so we add a fake row for the page to set the date of the last update
+        if (result.isEmpty() && dbReplacements.isEmpty()) {
             result.add(createFakeReviewedReplacement(pageId, lang));
         }
 
-        replacements.forEach(replacement -> handleReplacement(replacement, dbReplacements).ifPresent(result::add));
-
-        // Remove the remaining replacements
-        dbReplacements
-            .stream()
-            .filter(ReplacementEntity::isToBeReviewed)
-            .forEach(
-                rep -> {
-                    result.add(reviewReplacementAsSystem(rep));
-                    LOGGER.debug("Replacement reviewed in DB with system: {}", rep);
-                }
-            );
         LOGGER.debug("END Index list of replacements");
 
         return result;
@@ -149,9 +151,9 @@ public class ReplacementIndexService {
                 result = Optional.of(dbReplacement);
             } else if (
                 replacement.getPosition() != dbReplacement.getPosition() ||
-                !replacement.getContext().equals(dbReplacement.getContext()) ||
-                !replacement.getTitle().equals(dbReplacement.getTitle())
+                !replacement.getContext().equals(dbReplacement.getContext())
             ) {
+                // There is no need to check the title as we don't retrieve it and it never changes
                 // Also update other values in case any of them has changed
                 dbReplacement.setPosition(replacement.getPosition());
                 dbReplacement.setContext(replacement.getContext());

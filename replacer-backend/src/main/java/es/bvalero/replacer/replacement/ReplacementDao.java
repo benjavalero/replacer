@@ -18,7 +18,10 @@ public class ReplacementDao {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     public List<ReplacementEntity> findByPages(int minId, int maxId, WikipediaLanguage lang) {
-        String sql = "SELECT * FROM replacement2 WHERE lang = :lang AND article_id BETWEEN :minId AND :maxId";
+        // We need all the fields but the title so we don't select it to improve performance
+        String sql =
+            "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL as title " +
+            "FROM replacement2 WHERE lang = :lang AND article_id BETWEEN :minId AND :maxId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", lang.getCode())
             .addValue("minId", minId)

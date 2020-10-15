@@ -139,6 +139,7 @@ abstract class PageReviewService {
     }
 
     void setPageAsReviewed(int pageId, PageReviewOptions options) {
+        // These reviewed replacements will be cleaned up in the next dump indexation
         replacementIndexService.reviewPageReplacementsAsSystem(pageId, options.getLang());
     }
 

@@ -73,15 +73,18 @@ public class ReplacementIndexServiceTest {
     public void testIndexObsoletePage() {
         List<IndexableReplacement> newReplacements = Collections.emptyList();
 
-        ReplacementEntity rep2 = new ReplacementEntity(1, "", "", 2); // Obsolete To review => REVIEW
-        ReplacementEntity rep3 = new ReplacementEntity(1, "", "", 3);
-        rep3.setReviewer("x"); // Obsolete Reviewed => DO NOTHING
+        // Both obsolete to review or reviewed by system ==> Delete
+        // A fake replacement will be created instead
+        ReplacementEntity rep2 = new ReplacementEntity(1, "", "", 2);
+        ReplacementEntity rep3 = new ReplacementEntity(1, "", "", 3, "system");
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(rep2, rep3));
 
         List<ReplacementEntity> toIndex =
             replacementIndexService.findIndexPageReplacements(1, WikipediaLanguage.SPANISH, newReplacements, dbReplacements);
 
-        Assert.assertThat(toIndex, is(Collections.singletonList(rep2)));
+        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(List.of(rep2, rep3));
+
+        Assert.assertThat(toIndex, is(Collections.singletonList(replacementIndexService.createFakeReviewedReplacement(1, WikipediaLanguage.SPANISH))));
     }
 
     @Test
@@ -107,8 +110,9 @@ public class ReplacementIndexServiceTest {
         // R3 : In DB older not reviewed => Update timestamp
         // R4 : In DB older reviewed => Do nothing
         // R5 : Not in DB => Add
-        // R6 : Only in DB not reviewed => Review
-        // R7 : Only in DB reviewed => Do nothing
+        // R6 : Only in DB not reviewed => Delete
+        // R7 : Only in DB reviewed by user => Do nothing
+        // R8 : Only in DB reviewed by system => Delete
 
         // Replacements found to index
         IndexableReplacement r1 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "1", "1", 1, "", same, "1");
@@ -121,19 +125,22 @@ public class ReplacementIndexServiceTest {
         // Existing replacements in DB
         ReplacementEntity r1db = new ReplacementEntity(1, "1", "1", 1);
         r1db.setContext(""); // To match with the one found to index
-        r1db.setTitle("1");
         ReplacementEntity r2db = new ReplacementEntity(1, "2", "2", 2, "");
         ReplacementEntity r3db = new ReplacementEntity(1, "3", "3", 3);
         r3db.setLastUpdate(before);
         ReplacementEntity r4db = new ReplacementEntity(1, "4", "4", 4, "");
+        r4db.setLastUpdate(before);
         ReplacementEntity r6db = new ReplacementEntity(1, "6", "6", 6);
         ReplacementEntity r7db = new ReplacementEntity(1, "7", "7", 7, "");
-        List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db, r3db, r4db, r6db, r7db));
+        ReplacementEntity r8db = new ReplacementEntity(1, "8", "8", 2, "system");
+        List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db, r3db, r4db, r6db, r7db, r8db));
 
         List<ReplacementEntity> toIndex =
             replacementIndexService.findIndexPageReplacements(1, WikipediaLanguage.SPANISH, newReplacements, dbReplacements);
 
-        Assert.assertThat(toIndex, is(Arrays.asList(r3db, replacementIndexService.convertToEntity(r5), r6db)));
+        Assert.assertThat(toIndex, is(Arrays.asList(r3db, replacementIndexService.convertToEntity(r5))));
+
+        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(List.of(r6db, r8db));
     }
 
     @Test
@@ -144,8 +151,9 @@ public class ReplacementIndexServiceTest {
         // R1 : In DB older not reviewed => Update timestamp
         // R2 : In DB older reviewed => Do nothing
         // R3 : Not in DB => Add
-        // R6 : Only in DB not reviewed => Review
-        // R7 : Only in DB reviewed => Do nothing
+        // R4 : Only in DB not reviewed => Delete
+        // R5 : Only in DB reviewed by user => Do nothing
+        // R6 : Only in DB reviewed by system => Delete
 
         // Replacements found to index
         IndexableReplacement r1 = IndexableReplacement.of(1, WikipediaLanguage.SPANISH, "1", "1", 1, "", same, "1");
@@ -162,12 +170,16 @@ public class ReplacementIndexServiceTest {
         r4db.setLastUpdate(before);
         ReplacementEntity r5db = new ReplacementEntity(1, "5", "5", 5, "");
         r5db.setLastUpdate(before);
-        List<ReplacementEntity> dbReplacements2 = new ArrayList<>(Arrays.asList(r1db, r2db, r4db, r5db));
+        ReplacementEntity r6db = new ReplacementEntity(1, "6", "6", 6, "system");
+        r6db.setLastUpdate(before);
+        List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db, r4db, r5db, r6db));
 
         List<ReplacementEntity> toIndex =
-            replacementIndexService.findIndexPageReplacements(1, WikipediaLanguage.SPANISH, newReplacements, dbReplacements2);
+            replacementIndexService.findIndexPageReplacements(1, WikipediaLanguage.SPANISH, newReplacements, dbReplacements);
 
-        Assert.assertThat(toIndex, is(Arrays.asList(r1db, replacementIndexService.convertToEntity(r3), r4db)));
+        Assert.assertThat(toIndex, is(Arrays.asList(r1db, replacementIndexService.convertToEntity(r3))));
+
+        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(List.of(r4db, r6db));
     }
 
     @Test
