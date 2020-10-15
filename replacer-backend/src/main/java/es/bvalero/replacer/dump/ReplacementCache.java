@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.ListValuedMap;
@@ -59,24 +58,20 @@ class ReplacementCache {
 
     private void clean(WikipediaLanguage lang) {
         // Clear the cache if obsolete (we assume the dump pages are in order)
-        // The remaining cached pages are not in the dump so we "remove" them from DB
+        // The remaining cached pages are not in the dump so we remove them from DB
         Set<Integer> obsoleteIds = new HashSet<>(replacementMap.keySet());
-        // If all the replacements of a page are already reviewed by the system
-        // there is no need to do it again
-        Set<Integer> notReviewedIds = obsoleteIds
-            .stream()
-            .filter(id -> anyReplacementNotReviewed(replacementMap.get(id)))
-            .collect(Collectors.toSet());
-        LOGGER.debug("START Delete obsolete and not reviewed pages in DB: {}", notReviewedIds);
-        if (!notReviewedIds.isEmpty()) {
-            replacementDao.reviewPagesReplacementsAsSystem(notReviewedIds, lang);
+
+        // We can assume the article in DB doesn't exist anymore
+        // In case the article is new (and thus more recent than the dump)
+        // we can simplify and also remove it as it will be indexed in the next dump
+
+        // We keep the rows reviewed by any user for the sake of statistics
+        LOGGER.debug("START Delete obsolete and not reviewed pages in DB: {}", obsoleteIds);
+        if (!obsoleteIds.isEmpty()) {
+            replacementDao.deleteObsoleteReplacements(lang, obsoleteIds);
         }
         replacementMap.clear();
         LOGGER.debug("END Delete obsolete and not reviewed pages in DB");
-    }
-
-    private boolean anyReplacementNotReviewed(List<ReplacementEntity> list) {
-        return list.stream().anyMatch(item -> item.getReviewer() == null);
     }
 
     public void finish(WikipediaLanguage lang) {

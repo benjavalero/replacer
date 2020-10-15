@@ -26,13 +26,12 @@ public class ReplacementDao {
         return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
-    public void reviewPagesReplacementsAsSystem(Set<Integer> pageIds, WikipediaLanguage lang) {
+    public void deleteObsoleteReplacements(WikipediaLanguage lang, Set<Integer> pageIds) {
         String sql =
-            "UPDATE replacement2 SET reviewer=:system, last_update=:now " +
-            "WHERE lang = :lang AND article_id IN (:pageIds) AND reviewer IS NULL";
+            "DELETE FROM replacement2 " +
+            "WHERE lang = :lang AND article_id IN (:pageIds) AND (reviewer IS NULL OR reviewer = :system)";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("system", ReplacementIndexService.SYSTEM_REVIEWER)
-            .addValue("now", LocalDate.now())
             .addValue("lang", lang.getCode())
             .addValue("pageIds", pageIds);
         jdbcTemplate.update(sql, namedParameters);

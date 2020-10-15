@@ -47,7 +47,7 @@ class ReplacementCacheTest {
         // Check that the page 2 has been cleaned
         Mockito
             .verify(replacementDao)
-            .reviewPagesReplacementsAsSystem(Collections.singleton(2), WikipediaLanguage.SPANISH);
+            .deleteObsoleteReplacements(WikipediaLanguage.SPANISH, Collections.singleton(2));
     }
 
     @Test
