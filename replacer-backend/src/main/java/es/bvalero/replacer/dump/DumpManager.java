@@ -147,7 +147,10 @@ class DumpManager {
                 long stepId = map.keySet().stream().findAny().orElse(0L);
                 StepExecution stepExecution = jobExplorer.getStepExecution(jobExecution.getId(), stepId);
                 if (stepExecution != null) {
-                    dumpIndexingStatus.setNumPagesRead(stepExecution.getReadCount());
+                    // Read - Skip = Write + Filter
+                    dumpIndexingStatus.setNumPagesRead(
+                        (long) stepExecution.getReadCount() - stepExecution.getSkipCount()
+                    );
                     dumpIndexingStatus.setNumPagesProcessed(stepExecution.getWriteCount());
                 }
             }

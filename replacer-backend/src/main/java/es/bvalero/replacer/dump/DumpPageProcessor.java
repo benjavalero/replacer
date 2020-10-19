@@ -1,5 +1,6 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementEntity;
@@ -46,17 +47,19 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
     private List<String> ignorableTemplates;
 
     @Override
-    public List<ReplacementEntity> process(@NotNull DumpPageXml dumpPageXml) {
+    public List<ReplacementEntity> process(@NotNull DumpPageXml dumpPageXml) throws ReplacerException {
         // 1. Convert to indexable page
         DumpPage dumpPage = mapDumpPageXmlToDumpPage(dumpPageXml);
 
         // 2. Check if it is processable
         if (!dumpPage.isProcessable(ignorableTemplates)) {
-            return null;
+            // We "skip" the item by throwing an exception
+            throw new ReplacerException("Page not processable by namespace or content");
         }
 
         // 3. Find the replacements to index
         List<ReplacementEntity> replacements = processPage(dumpPage);
+        // We "filter" the item by returning NULL
         return replacements.isEmpty() ? null : replacements;
     }
 

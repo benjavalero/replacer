@@ -1,5 +1,6 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -61,6 +62,10 @@ public class DumpExecutionJob {
             .reader(dumpReader)
             .processor(dumpPageProcessor)
             .writer(new DumpWriter(jdbcInsertWriter, jdbcUpdateWriter))
+            .faultTolerant()
+            .skipLimit(Integer.MAX_VALUE) // No skip limit
+            .skip(ReplacerException.class)
+            .processorNonTransactional()
             .build();
 
         return jobBuilderFactory
