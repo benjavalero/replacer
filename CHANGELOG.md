@@ -1,5 +1,9 @@
 # Versions
 
+## 2.7.3 (19 Oct 2020)
+- Revert the last date finders as they are given wrong descriptions and suggestions
+- Improve indexation performance and estimation accuracy
+
 ## 2.7.2 (14 Oct 2020)
 - Improve date finders to detect incomplete dates with missing prepositions
 
