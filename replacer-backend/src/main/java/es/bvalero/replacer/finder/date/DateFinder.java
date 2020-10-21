@@ -5,16 +5,17 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.Suggestion;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 
 /**
- * Abstract class with the common functionality to find replacements of type Date Format
+ * Abstract class with the common functionality to find replacements of type Date
  */
 abstract class DateFinder {
-    private static final String TYPE_DATE = "Fechas";
-    private static final List<String> MONTHS = Arrays.asList(
+    static final List<String> MONTHS_LOWERCASE = Arrays.asList(
         "enero",
         "febrero",
         "marzo",
@@ -28,16 +29,32 @@ abstract class DateFinder {
         "noviembre",
         "diciembre"
     );
-    static final List<String> MONTHS_UPPERCASE = MONTHS
+    static final List<String> MONTHS_UPPERCASE = MONTHS_LOWERCASE
         .stream()
         .map(FinderUtils::setFirstUpperCase)
         .collect(Collectors.toList());
-    static final List<String> MONTHS_UPPERCASE_CLASS = MONTHS
+
+    private static final String TYPE_DATE = "Fechas";
+
+    private static final List<String> CONNECTORS = Arrays.asList(
+        "a",
+        "desde",
+        "de",
+        "durante",
+        "el",
+        "entre",
+        "en",
+        "hacia",
+        "hasta",
+        "para",
+        "y"
+    );
+    static final List<String> CONNECTORS_UPPERCASE_CLASS = CONNECTORS
         .stream()
         .map(FinderUtils::setFirstUpperCaseClass)
         .collect(Collectors.toList());
 
-    Replacement convertMatch(MatchResult matcher) {
+    Replacement convertLongDate(MatchResult matcher) {
         int start = matcher.start();
         String text = matcher.group();
         return Replacement
@@ -46,34 +63,95 @@ abstract class DateFinder {
             .subtype(getSubtype())
             .start(start)
             .text(text)
-            .suggestions(findSuggestions(text))
+            .suggestions(findLongDateSuggestions(text))
+            .build();
+    }
+
+    Replacement convertMonthYear(MatchResult matcher) {
+        int start = matcher.start();
+        String text = matcher.group();
+        return Replacement
+            .builder()
+            .type(TYPE_DATE)
+            .subtype(getSubtype())
+            .start(start)
+            .text(text)
+            .suggestions(findMonthYearSuggestions(text))
             .build();
     }
 
     abstract String getSubtype();
 
-    private List<Suggestion> findSuggestions(String date) {
-        return Collections.singletonList(Suggestion.ofNoComment(fixDate(date)));
+    private List<Suggestion> findLongDateSuggestions(String date) {
+        return Collections.singletonList(Suggestion.ofNoComment(fixLongDate(date)));
     }
 
-    private String fixDate(String date) {
-        // Replace the uppercase months
-        String fixedDate = date.replaceAll("[Ss]ep?tiembre", "septiembre");
-        for (String month : MONTHS_UPPERCASE) {
-            fixedDate = fixedDate.replaceAll(month, FinderUtils.toLowerCase(month));
-        }
+    private List<Suggestion> findMonthYearSuggestions(String date) {
+        return Collections.singletonList(Suggestion.ofNoComment(fixMonthYear(date)));
+    }
 
-        // Replace "Del?" before year
-        fixedDate = fixedDate.replaceAll("[Dd]el?(?= \\d)", "de");
-
-        // Replace "De" after day
-        fixedDate = fixedDate.replaceAll("(?<=\\d )De", "de");
-
-        // Replace the leading zero
-        if (fixedDate.startsWith("0")) {
-            fixedDate = fixedDate.substring(1);
-        }
-
+    private String fixLongDate(String date) {
+        String fixedDate = fixUppercaseLongDate(date);
+        fixedDate = fixSeptember(fixedDate);
+        fixedDate = fixLeadingZero(fixedDate);
+        fixedDate = fixYearWithDot(fixedDate);
+        fixedDate = fixYearWithArticle(fixedDate);
+        fixedDate = fixIncompleteLongDate(fixedDate);
         return fixedDate;
+    }
+
+    private String fixUppercaseLongDate(String date) {
+        return FinderUtils.toLowerCase(date);
+    }
+
+    private String fixMonthYear(String date) {
+        String fixedDate = fixUppercaseMonthYear(date);
+        fixedDate = fixSeptember(fixedDate);
+        fixedDate = fixYearWithDot(fixedDate);
+        fixedDate = fixYearWithArticle(fixedDate);
+        fixedDate = fixIncompleteMonthYear(fixedDate);
+        return fixedDate;
+    }
+
+    private String fixUppercaseMonthYear(String date) {
+        int posSpace = date.indexOf(' ');
+        return date.substring(0, posSpace) + FinderUtils.toLowerCase(date.substring(posSpace));
+    }
+
+    private String fixSeptember(String date) {
+        return date.replace("setiembre", "septiembre");
+    }
+
+    private String fixLeadingZero(String date) {
+        return date.startsWith("0") ? date.substring(1) : date;
+    }
+
+    private String fixYearWithDot(String date) {
+        return date.charAt(date.length() - 4) == '.'
+            ? date.substring(0, date.length() - 4) + date.substring(date.length() - 3)
+            : date;
+    }
+
+    private String fixYearWithArticle(String date) {
+        return date.replace("del", "de");
+    }
+
+    private String fixIncompleteLongDate(String date) {
+        List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
+        if (!tokens.get(1).equals("de")) {
+            tokens.add(1, "de");
+        }
+        if (!tokens.get(3).equals("de")) {
+            tokens.add(3, "de");
+        }
+        return StringUtils.join(tokens, " ");
+    }
+
+    private String fixIncompleteMonthYear(String date) {
+        List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
+        if (!tokens.get(2).equals("de")) {
+            tokens.add(2, "de");
+        }
+        return StringUtils.join(tokens, " ");
     }
 }

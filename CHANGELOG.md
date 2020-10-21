@@ -1,5 +1,8 @@
 # Versions
 
+## 2.7.4 (??)
+- Improve date finders to fix years with dots and complete missing prepositions
+
 ## 2.7.3 (19 Oct 2020)
 - Revert the last date finders as they are given wrong descriptions and suggestions
 - Improve indexation performance and estimation accuracy

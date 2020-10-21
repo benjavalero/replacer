@@ -41,7 +41,7 @@ public class FinderUtils {
         if (!startsWithLowerCase(word)) {
             throw new IllegalArgumentException(String.format("Word not starting with lowercase: %s", word));
         }
-        return String.format("[%s%s]%s", toUpperCase(word.substring(0, 1)), word.substring(0, 1), word.substring(1));
+        return String.format("[%s%s]%s", toUpperCase(word.substring(0, 1)), word.charAt(0), word.substring(1));
     }
 
     public static boolean isWordCompleteInText(int start, String word, String text) {
@@ -50,11 +50,13 @@ public class FinderUtils {
         }
 
         int end = start + word.length();
-        return (
-            start == 0 ||
-            end == text.length() ||
-            (isValidSeparator(text.charAt(start - 1)) && isValidSeparator(text.charAt(end)))
-        );
+        if (start == 0) {
+            return end == text.length() || isValidSeparator(text.charAt(end));
+        } else if (end == text.length()) {
+            return isValidSeparator(text.charAt(start - 1));
+        } else {
+            return isValidSeparator(text.charAt(start - 1)) && isValidSeparator(text.charAt(end));
+        }
     }
 
     private static boolean isValidSeparator(char separator) {

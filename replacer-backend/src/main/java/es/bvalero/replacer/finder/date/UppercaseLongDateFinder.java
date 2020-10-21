@@ -12,24 +12,24 @@ import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
 /**
- * Find long dates starting with zero, e.g. `02 de septiembre de 2019`
+ * Find dates with the month in uppercase, e.g. `2 de Septiembre de 2019`
  */
 @Component
-public class LeadingZeroFinder extends DateFinder implements ReplacementFinder {
-    static final String SUBTYPE_LEADING_ZERO = "Día con cero";
+public class UppercaseLongDateFinder extends DateFinder implements ReplacementFinder {
+    static final String SUBTYPE_UPPERCASE_LONG_DATE = "Mes en mayúscula";
 
     @RegExp
-    private static final String REGEX_LEADING_ZERO = "0<N> ([Dd]e )?(%s) ([Dd]el? )?[12]\\.?<N>{3}";
+    private static final String REGEX_UPPERCASE_LONG_DATE = "(3[01]|[012]?<N>) ([Dd]e )?(%s) ([Dd]el? )?[12]\\.?<N>{3}";
 
-    private static final RunAutomaton AUTOMATON_LEADING_ZERO = new RunAutomaton(
-        new dk.brics.automaton.RegExp(String.format(REGEX_LEADING_ZERO, StringUtils.join(MONTHS_LOWERCASE, "|")))
+    private static final RunAutomaton AUTOMATON_UPPERCASE_LONG_DATE = new RunAutomaton(
+        new dk.brics.automaton.RegExp(String.format(REGEX_UPPERCASE_LONG_DATE, StringUtils.join(MONTHS_UPPERCASE, "|")))
         .toAutomaton(new DatatypesAutomatonProvider())
     );
 
     @Override
     public Iterable<Replacement> find(String text, WikipediaLanguage lang) {
         if (WikipediaLanguage.SPANISH == lang) {
-            return new RegexIterable<>(text, AUTOMATON_LEADING_ZERO, this::convertLongDate, this::isValidMatch);
+            return new RegexIterable<>(text, AUTOMATON_UPPERCASE_LONG_DATE, this::convertLongDate, this::isValidMatch);
         } else {
             return Collections.emptyList();
         }
@@ -37,6 +37,6 @@ public class LeadingZeroFinder extends DateFinder implements ReplacementFinder {
 
     @Override
     public String getSubtype() {
-        return SUBTYPE_LEADING_ZERO;
+        return SUBTYPE_UPPERCASE_LONG_DATE;
     }
 }
