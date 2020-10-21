@@ -1,6 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.ReplacementIndexService;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,10 +12,16 @@ import org.springframework.batch.item.ItemWriter;
 public class DumpWriter implements ItemWriter<List<ReplacementEntity>> {
     private final ItemWriter<ReplacementEntity> insertWriter;
     private final ItemWriter<ReplacementEntity> updateWriter;
+    private final ItemWriter<ReplacementEntity> deleteWriter;
 
-    public DumpWriter(ItemWriter<ReplacementEntity> insertWriter, ItemWriter<ReplacementEntity> updateWriter) {
+    public DumpWriter(
+        ItemWriter<ReplacementEntity> insertWriter,
+        ItemWriter<ReplacementEntity> updateWriter,
+        ItemWriter<ReplacementEntity> deleteWriter
+    ) {
         this.insertWriter = insertWriter;
         this.updateWriter = updateWriter;
+        this.deleteWriter = deleteWriter;
     }
 
     @Override
@@ -35,6 +42,14 @@ public class DumpWriter implements ItemWriter<List<ReplacementEntity>> {
             .collect(Collectors.toList());
         if (!toUpdate.isEmpty()) {
             updateWriter.write(toUpdate);
+        }
+
+        List<ReplacementEntity> toDelete = flatList
+            .stream()
+            .filter(r -> ReplacementIndexService.TO_DELETE.equals(r.getType()))
+            .collect(Collectors.toList());
+        if (!toDelete.isEmpty()) {
+            deleteWriter.write(toDelete);
         }
     }
 }

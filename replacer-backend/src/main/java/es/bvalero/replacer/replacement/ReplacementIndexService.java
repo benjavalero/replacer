@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReplacementIndexService {
     public static final String SYSTEM_REVIEWER = "system";
+    public static final String TO_DELETE = "delete";
 
     @Autowired
     private ReplacementRepository replacementRepository;
@@ -84,8 +85,6 @@ public class ReplacementIndexService {
             .filter(rep -> !ReplacementFindService.CUSTOM_FINDER_TYPE.equals(rep.getType()))
             .filter(rep -> rep.getReviewer() == null || SYSTEM_REVIEWER.equals(rep.getReviewer()))
             .collect(Collectors.toList());
-        replacementRepository.deleteInBatch(toRemove);
-
         dbReplacements.removeAll(toRemove);
 
         // In case there are no replacements to be added to the DB,
@@ -95,6 +94,7 @@ public class ReplacementIndexService {
             result.add(createFakeReviewedReplacement(pageId, lang));
         }
 
+        result.addAll(setToDelete(toRemove));
         LOGGER.debug("END Index list of replacements");
 
         return result;
@@ -175,6 +175,15 @@ public class ReplacementIndexService {
 
     private void saveReplacements(List<ReplacementEntity> replacements) {
         try {
+            List<ReplacementEntity> toRemove = replacements
+                .stream()
+                .filter(r -> TO_DELETE.equals(r.getType()))
+                .collect(Collectors.toList());
+            if (!toRemove.isEmpty()) {
+                replacementRepository.deleteInBatch(toRemove);
+            }
+
+            replacements.removeAll(toRemove);
             replacementRepository.saveAll(replacements);
         } catch (Exception e) {
             LOGGER.error("Error when saving replacements: {}", replacements, e);
@@ -287,5 +296,14 @@ public class ReplacementIndexService {
     ReplacementEntity createFakeReviewedReplacement(int pageId, WikipediaLanguage lang) {
         ReplacementEntity fakeReplacement = new ReplacementEntity(pageId, lang, "", "", 0);
         return reviewReplacementAsSystem(fakeReplacement);
+    }
+
+    private List<ReplacementEntity> setToDelete(List<ReplacementEntity> replacements) {
+        return replacements.stream().map(this::setToDelete).collect(Collectors.toList());
+    }
+
+    ReplacementEntity setToDelete(ReplacementEntity replacement) {
+        replacement.setType(TO_DELETE);
+        return replacement;
     }
 }

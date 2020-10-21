@@ -82,9 +82,11 @@ public class ReplacementIndexServiceTest {
         List<ReplacementEntity> toIndex =
             replacementIndexService.findIndexPageReplacements(1, WikipediaLanguage.SPANISH, newReplacements, dbReplacements);
 
-        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(List.of(rep2, rep3));
-
-        Assert.assertThat(toIndex, is(Collections.singletonList(replacementIndexService.createFakeReviewedReplacement(1, WikipediaLanguage.SPANISH))));
+        Assert.assertThat(toIndex, is(List.of(
+            replacementIndexService.createFakeReviewedReplacement(1, WikipediaLanguage.SPANISH),
+            replacementIndexService.setToDelete(rep2),
+            replacementIndexService.setToDelete(rep3)
+        )));
     }
 
     @Test
@@ -138,9 +140,11 @@ public class ReplacementIndexServiceTest {
         List<ReplacementEntity> toIndex =
             replacementIndexService.findIndexPageReplacements(1, WikipediaLanguage.SPANISH, newReplacements, dbReplacements);
 
-        Assert.assertThat(toIndex, is(Arrays.asList(r3db, replacementIndexService.convertToEntity(r5))));
-
-        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(List.of(r6db, r8db));
+        Assert.assertThat(toIndex, is(Arrays.asList(
+            r3db,
+            replacementIndexService.convertToEntity(r5),
+            replacementIndexService.setToDelete(r6db),
+            replacementIndexService.setToDelete(r8db))));
     }
 
     @Test
@@ -177,9 +181,11 @@ public class ReplacementIndexServiceTest {
         List<ReplacementEntity> toIndex =
             replacementIndexService.findIndexPageReplacements(1, WikipediaLanguage.SPANISH, newReplacements, dbReplacements);
 
-        Assert.assertThat(toIndex, is(Arrays.asList(r1db, replacementIndexService.convertToEntity(r3))));
-
-        Mockito.verify(replacementRepository, Mockito.times(1)).deleteInBatch(List.of(r4db, r6db));
+        Assert.assertThat(toIndex, is(Arrays.asList(
+            r1db,
+            replacementIndexService.convertToEntity(r3),
+            replacementIndexService.setToDelete(r4db),
+            replacementIndexService.setToDelete(r6db))));
     }
 
     @Test
