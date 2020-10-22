@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@Profile("!default")
+@Profile("offline")
 public class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override

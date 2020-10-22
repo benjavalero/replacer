@@ -49,6 +49,11 @@
             "name": "replacer.show.long.immutables",
             "type": "java.lang.Boolean",
             "description": "To include in the logs the warnings for the too long immutables found"
+        },
+        {
+            "name": "replacer.admin.user",
+            "type": "java.lang.String",
+            "description": "User allowed to perform administrative actions like manual indexation"
         }
     ]
 }

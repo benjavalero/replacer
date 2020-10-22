@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@Profile("default")
+@Profile("!offline")
 class WikipediaServiceImpl implements WikipediaService {
     private static final String EDIT_SUMMARY =
         "Correcciones ortográficas con [[Usuario:Benjavalero/Replacer|Replacer]] (herramienta en línea de revisión de errores)";

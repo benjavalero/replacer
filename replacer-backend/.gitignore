@@ -39,3 +39,4 @@ bin
 *.log
 *.swp
 *.bak
+*.db

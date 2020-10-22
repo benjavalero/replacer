@@ -25,37 +25,28 @@ logging:
 replacer:
   cors.allowed.origins: http://localhost:8080
   dump:
-    path.base: /public/dumps/public
+    path.base: /Users/benja/Developer
     batch:
       delay: 604800000 # Weekly
       delay.initial: 86400000 # 1 day
-      chunk.size: 5000 # Externalized: in Prod we use 500 as higher values throw heap overflows
+      chunk.size: 5000
   parse.file.delay: 3600000 # Every hour
-  wikipedia.api: # Externalized: these ones are for offline use
+  wikipedia.api:
     key: 88a04ea6ad93434f0fff31ac434960b3
     secret: 2e2bfb55301e030aa6bf8c2504624abdd12f2d04
   page.stats.delay: 600000 # Every 10 minutes
   show.long.immutables: false
-
   admin.user: Benjavalero
 
 ---
 
-spring:
-  profiles: offline
-  datasource:
-    platform: h2
-
-replacer.dump.path.base: /Users/benja/Developer
-
----
-
+# Profile for Production
 spring:
   profiles: default
   datasource:
-    url: jdbc:mariadb://localhost:3306/s52978__replacer?rewriteBatchedStatements=true
+    url: jdbc:mariadb://tools-db:3306/s52978__replacer?rewriteBatchedStatements=true
     username: s52978
-    password: xxxxxx # Externalized
+    password: xxxxxx
     driver-class-name: org.mariadb.jdbc.Driver
     hikari.max-lifetime: 580000
 
@@ -64,3 +55,44 @@ logging:
   file: logs/replacer.log
   # Disable console logging
   pattern.console:
+
+replacer:
+  dump:
+    path.base: /public/dumps/public
+    # Externalized to be tweaked easily. Higher values throw heap overflows.
+    batch.chunk.size: 500
+  wikipedia.api:
+    key: xxxxxx
+    secret: xxxxxx
+
+---
+
+# Local access to production database via SSH tunnel
+spring:
+  profiles: dev-db-prod
+  datasource:
+    url: jdbc:mariadb://localhost:3306/s52978__replacer?rewriteBatchedStatements=true
+    username: s52978
+    password: xxxxxx
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari.max-lifetime: 580000
+
+---
+
+# Local persistent database
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:h2:./replacer-h2;MODE=MySQL
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+  jpa.database-platform: org.hibernate.dialect.H2Dialect
+
+---
+
+# Local in-memory database and mocked calls to Wikipedia API
+spring:
+  profiles: offline
+  datasource:
+    platform: h2
