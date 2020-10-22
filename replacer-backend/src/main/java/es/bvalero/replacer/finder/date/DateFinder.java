@@ -95,7 +95,6 @@ abstract class DateFinder {
         fixedDate = fixSeptember(fixedDate);
         fixedDate = fixLeadingZero(fixedDate);
         fixedDate = fixYearWithDot(fixedDate);
-        fixedDate = fixYearWithArticle(fixedDate);
         fixedDate = fixIncompleteLongDate(fixedDate);
         return fixedDate;
     }
@@ -108,7 +107,6 @@ abstract class DateFinder {
         String fixedDate = fixUppercaseMonthYear(date);
         fixedDate = fixSeptember(fixedDate);
         fixedDate = fixYearWithDot(fixedDate);
-        fixedDate = fixYearWithArticle(fixedDate);
         fixedDate = fixIncompleteMonthYear(fixedDate);
         return fixedDate;
     }
@@ -132,16 +130,12 @@ abstract class DateFinder {
             : date;
     }
 
-    private String fixYearWithArticle(String date) {
-        return date.replace("del", "de");
-    }
-
     private String fixIncompleteLongDate(String date) {
         List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
         if (!tokens.get(1).equals("de")) {
             tokens.add(1, "de");
         }
-        if (!tokens.get(3).equals("de")) {
+        if (!tokens.get(3).startsWith("de")) {
             tokens.add(3, "de");
         }
         return StringUtils.join(tokens, " ");
@@ -149,7 +143,7 @@ abstract class DateFinder {
 
     private String fixIncompleteMonthYear(String date) {
         List<String> tokens = new LinkedList<>(Arrays.asList(date.split(" ")));
-        if (!tokens.get(2).equals("de")) {
+        if (!tokens.get(2).startsWith("de")) {
             tokens.add(2, "de");
         }
         return StringUtils.join(tokens, " ");
