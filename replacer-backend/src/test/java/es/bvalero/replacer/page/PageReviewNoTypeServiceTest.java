@@ -4,6 +4,7 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.*;
@@ -56,6 +57,9 @@ class PageReviewNoTypeServiceTest {
 
     @Mock
     private ReplacementRepository replacementRepository;
+
+    @Mock
+    private ReplacementDao replacementDao;
 
     @Mock
     private WikipediaService wikipediaService;

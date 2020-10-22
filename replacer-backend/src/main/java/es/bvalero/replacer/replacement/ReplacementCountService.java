@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReplacementCountService {
     @Autowired
-    private ReplacementRepository replacementRepository;
+    private ReplacementDao replacementDao;
 
     // Cache the count of PAGES with replacements
     // This list is updated every 10 minutes and modified when saving changes
@@ -20,18 +20,15 @@ public class ReplacementCountService {
     /* STATISTICS */
 
     long countReplacementsReviewed(WikipediaLanguage lang) {
-        return replacementRepository.countByLangAndReviewerIsNotNullAndReviewerIsNot(
-            lang.getCode(),
-            ReplacementIndexService.SYSTEM_REVIEWER
-        );
+        return replacementDao.countByLangAndReviewed(lang);
     }
 
     long countReplacementsToReview(WikipediaLanguage lang) {
-        return replacementRepository.countByLangAndReviewerIsNull(lang.getCode());
+        return replacementDao.countByLangAndReviewerIsNull(lang);
     }
 
     List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
-        return replacementRepository.countGroupedByReviewer(lang.getCode(), ReplacementIndexService.SYSTEM_REVIEWER);
+        return replacementDao.countGroupedByReviewer(lang);
     }
 
     /* LIST OF REPLACEMENTS */
@@ -51,7 +48,7 @@ public class ReplacementCountService {
     void updateReplacementCount() {
         LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
         LOGGER.info("START Count grouped replacements by type and subtype");
-        List<TypeSubtypeCount> counts = replacementRepository.countGroupedByTypeAndSubtype();
+        List<TypeSubtypeCount> counts = replacementDao.countGroupedByTypeAndSubtype();
         LOGGER.info("END Count grouped replacements. Size: {}", counts.size());
         this.languageCounts = loadCachedReplacementCount(counts);
     }

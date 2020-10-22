@@ -2,6 +2,7 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
@@ -28,6 +29,9 @@ class PageReviewNoTypeService extends PageReviewService {
     @Autowired
     private ReplacementRepository replacementRepository;
 
+    @Autowired
+    private ReplacementDao replacementDao;
+
     @Getter
     @Setter
     @Resource
@@ -42,7 +46,7 @@ class PageReviewNoTypeService extends PageReviewService {
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
         long randomStart = replacementRepository.findRandomStart(CACHE_SIZE, options.getLang().getCode());
-        long totalResults = replacementRepository.countByLangAndReviewerIsNull(options.getLang().getCode());
+        long totalResults = replacementDao.countByLangAndReviewerIsNull(options.getLang());
         List<Integer> pageIds = replacementRepository.findRandomPageIdsToReview(
             options.getLang().getCode(),
             randomStart,

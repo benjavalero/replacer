@@ -18,14 +18,6 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
     List<ReplacementEntity> findByPageIdAndLang(int pageId, String lang);
 
     @Query(
-        "SELECT new es.bvalero.replacer.replacement.TypeSubtypeCount(lang, type, subtype, COUNT(DISTINCT pageId)) " +
-        "FROM ReplacementEntity " +
-        "WHERE reviewer IS NULL " +
-        "GROUP BY lang, type, subtype"
-    )
-    List<TypeSubtypeCount> countGroupedByTypeAndSubtype();
-
-    @Query(
         "SELECT DISTINCT(title) FROM ReplacementEntity " +
         "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL"
     )
@@ -41,9 +33,6 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
         "WHERE lang = :lang AND reviewer IS NULL"
     )
     long findRandomStart(@Param("chunkSize") long chunkSize, @Param("lang") String lang);
-
-    // Not worth to DISTINCT. Besides this count is also used in statistics.
-    long countByLangAndReviewerIsNull(String lang);
 
     // ORDER BY RAND() takes a lot when not filtering by type/subtype even using an index
     // Not worth to DISTINCT as we add the results as a set later
@@ -101,20 +90,6 @@ public interface ReplacementRepository extends JpaRepository<ReplacementEntity, 
     );
 
     List<ReplacementEntity> findByPageIdAndLangAndReviewerIsNull(int pageId, String lang);
-
-    long countByLangAndReviewerIsNotNullAndReviewerIsNot(String lang, String reviewer);
-
-    @Query(
-        "SELECT new es.bvalero.replacer.replacement.ReviewerCount(reviewer, COUNT(*)) " +
-        "FROM ReplacementEntity " +
-        "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :systemReviewer " +
-        "GROUP BY reviewer " +
-        "ORDER BY COUNT(*) DESC"
-    )
-    List<ReviewerCount> countGroupedByReviewer(
-        @Param("lang") String lang,
-        @Param("systemReviewer") String systemReviewer
-    );
 
     void deleteByLangAndTypeAndSubtypeInAndReviewerIsNull(String lang, String type, Set<String> subtypes);
 }

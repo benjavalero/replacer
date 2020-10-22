@@ -15,7 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 class ReplacementCountServiceTest {
     @Mock
-    private ReplacementRepository replacementRepository;
+    private ReplacementDao replacementDao;
 
     @InjectMocks
     private ReplacementCountService replacementCountService;
@@ -31,7 +31,7 @@ class ReplacementCountServiceTest {
         long count = new Random().nextLong();
 
         Mockito
-            .when(replacementRepository.countByLangAndReviewerIsNotNullAndReviewerIsNot(Mockito.anyString(), Mockito.anyString()))
+            .when(replacementDao.countByLangAndReviewed(Mockito.any(WikipediaLanguage.class)))
             .thenReturn(count);
 
         Assertions.assertEquals(count, replacementCountService.countReplacementsReviewed(WikipediaLanguage.SPANISH));
@@ -41,7 +41,7 @@ class ReplacementCountServiceTest {
     void testCountReplacementsToReview() {
         long count = new Random().nextLong();
 
-        Mockito.when(replacementRepository.countByLangAndReviewerIsNull(Mockito.anyString())).thenReturn(count);
+        Mockito.when(replacementDao.countByLangAndReviewerIsNull(Mockito.any(WikipediaLanguage.class))).thenReturn(count);
 
         Assertions.assertEquals(count, replacementCountService.countReplacementsToReview(WikipediaLanguage.SPANISH));
     }
@@ -50,7 +50,7 @@ class ReplacementCountServiceTest {
     void testCountReplacementsGroupedByReviewer() {
         List<ReviewerCount> result = new ArrayList<>();
 
-        Mockito.when(replacementRepository.countGroupedByReviewer(Mockito.anyString(), Mockito.anyString())).thenReturn(result);
+        Mockito.when(replacementDao.countGroupedByReviewer(Mockito.any(WikipediaLanguage.class))).thenReturn(result);
 
         Assertions.assertEquals(result, replacementCountService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH));
     }
@@ -66,7 +66,7 @@ class ReplacementCountServiceTest {
         TypeSubtypeCount count1 = new TypeSubtypeCount(langCode, "X", "Y", 2L);
         TypeSubtypeCount count2 = new TypeSubtypeCount(langCode, "X", "Z", 1L);
         List<TypeSubtypeCount> counts = Arrays.asList(count1, count2);
-        Mockito.when(replacementRepository.countGroupedByTypeAndSubtype()).thenReturn(counts);
+        Mockito.when(replacementDao.countGroupedByTypeAndSubtype()).thenReturn(counts);
 
         replacementCountService.updateReplacementCount();
 
