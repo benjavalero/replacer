@@ -4,7 +4,6 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
-import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
@@ -27,9 +26,6 @@ class PageReviewNoTypeService extends PageReviewService {
     private ReplacementIndexService replacementIndexService;
 
     @Autowired
-    private ReplacementRepository replacementRepository;
-
-    @Autowired
     private ReplacementDao replacementDao;
 
     @Getter
@@ -45,13 +41,9 @@ class PageReviewNoTypeService extends PageReviewService {
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-        long randomStart = replacementRepository.findRandomStart(CACHE_SIZE, options.getLang().getCode());
+        long randomStart = replacementDao.findRandomStart(CACHE_SIZE, options.getLang());
         long totalResults = replacementDao.countByLangAndReviewerIsNull(options.getLang());
-        List<Integer> pageIds = replacementRepository.findRandomPageIdsToReview(
-            options.getLang().getCode(),
-            randomStart,
-            pagination
-        );
+        List<Integer> pageIds = replacementDao.findRandomPageIdsToReview(options.getLang(), randomStart, pagination);
         return new PageSearchResult(totalResults, pageIds);
     }
 

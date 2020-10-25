@@ -3,10 +3,7 @@ package es.bvalero.replacer.replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +19,7 @@ public class ReplacementIndexService {
     public static final String TO_DELETE = "delete";
 
     @Autowired
-    private ReplacementRepository replacementRepository;
+    private ReplacementDao replacementDao;
 
     @Autowired
     private ReplacementCountService replacementCountService;
@@ -48,7 +45,7 @@ public class ReplacementIndexService {
             pageId,
             lang,
             replacements,
-            replacementRepository.findByPageIdAndLang(pageId, lang.getCode())
+            replacementDao.findByPageIdAndLang(pageId, lang)
         );
         saveReplacements(toSave);
     }
@@ -167,7 +164,7 @@ public class ReplacementIndexService {
 
     private void saveReplacement(ReplacementEntity replacement) {
         try {
-            replacementRepository.save(replacement);
+            replacementDao.insert(replacement);
         } catch (Exception e) {
             LOGGER.error("Error when saving replacement: {}", replacement, e);
         }
@@ -175,16 +172,25 @@ public class ReplacementIndexService {
 
     private void saveReplacements(List<ReplacementEntity> replacements) {
         try {
+            List<ReplacementEntity> toInsert = replacements
+                .stream()
+                .filter(r -> r.getId() == null)
+                .collect(Collectors.toList());
+            toInsert.forEach(r -> replacementDao.insert(r));
+
+            List<ReplacementEntity> toUpdate = replacements
+                .stream()
+                .filter(r -> r.getId() != null)
+                .collect(Collectors.toList());
+            toUpdate.forEach(r -> replacementDao.update(r));
+
             List<ReplacementEntity> toRemove = replacements
                 .stream()
-                .filter(r -> TO_DELETE.equals(r.getType()))
+                .filter(r -> ReplacementIndexService.TO_DELETE.equals(r.getType()))
                 .collect(Collectors.toList());
             if (!toRemove.isEmpty()) {
-                replacementRepository.deleteInBatch(toRemove);
+                replacementDao.deleteAll(toRemove);
             }
-
-            replacements.removeAll(toRemove);
-            replacementRepository.saveAll(replacements);
         } catch (Exception e) {
             LOGGER.error("Error when saving replacements: {}", replacements, e);
         }
@@ -209,9 +215,7 @@ public class ReplacementIndexService {
     }
 
     public void reviewPageReplacementsAsSystem(int pageId, WikipediaLanguage lang) {
-        replacementRepository
-            .findByPageIdAndLangAndReviewerIsNull(pageId, lang.getCode())
-            .forEach(r -> saveReplacement(reviewReplacementAsSystem(r)));
+        replacementDao.reviewPageReplacements(lang, pageId, null, null, SYSTEM_REVIEWER);
     }
 
     public void reviewPageReplacements(
@@ -222,51 +226,24 @@ public class ReplacementIndexService {
         String reviewer
     ) {
         LOGGER.info("START Mark page as reviewed. ID: {}", pageId);
-        List<ReplacementEntity> toSave = new ArrayList<>();
 
         if (ReplacementFindService.CUSTOM_FINDER_TYPE.equals(type)) {
             // Custom replacements don't exist in the database to be reviewed
-            toSave.add(createCustomReviewedReplacement(pageId, lang, subtype, reviewer));
+            ReplacementEntity customReviewed = createCustomReviewedReplacement(pageId, lang, subtype, reviewer);
+            saveReplacement(customReviewed);
         } else if (StringUtils.isNotBlank(type)) {
-            toSave.addAll(reviewPageTypedReplacements(pageId, lang, type, subtype, reviewer));
+            replacementDao.reviewPageReplacements(lang, pageId, type, subtype, reviewer);
+
+            // Decrease the cached count (one page)
+            replacementCountService.decreaseCachedReplacementsCount(lang, type, subtype, 1);
         } else {
-            toSave.addAll(reviewPageReplacements(pageId, lang, reviewer));
+            replacementDao.reviewPageReplacements(lang, pageId, null, null, reviewer);
         }
 
-        saveReplacements(toSave);
         LOGGER.info("END Mark page as reviewed. ID: {}", pageId);
     }
 
-    private List<ReplacementEntity> reviewPageReplacements(int pageId, WikipediaLanguage lang, String reviewer) {
-        return replacementRepository
-            .findByPageIdAndLangAndReviewerIsNull(pageId, lang.getCode())
-            .stream()
-            .map(replacement -> reviewReplacement(replacement, reviewer))
-            .collect(Collectors.toList());
-    }
-
-    private List<ReplacementEntity> reviewPageTypedReplacements(
-        int pageId,
-        WikipediaLanguage lang,
-        String type,
-        String subtype,
-        String reviewer
-    ) {
-        List<ReplacementEntity> toReview = replacementRepository.findByPageIdAndLangAndTypeAndSubtypeAndReviewerIsNull(
-            pageId,
-            lang.getCode(),
-            type,
-            subtype
-        );
-        toReview.forEach(replacement -> reviewReplacement(replacement, reviewer));
-
-        // Decrease the cached count (one page)
-        replacementCountService.decreaseCachedReplacementsCount(lang, type, subtype, 1);
-
-        return toReview;
-    }
-
-    private ReplacementEntity createCustomReviewedReplacement(
+    ReplacementEntity createCustomReviewedReplacement(
         int pageId,
         WikipediaLanguage lang,
         String replacement,

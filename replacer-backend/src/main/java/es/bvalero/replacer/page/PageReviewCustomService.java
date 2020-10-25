@@ -3,18 +3,19 @@ package es.bvalero.replacer.page;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
-import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import java.util.List;
-import javax.annotation.Resource;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -23,7 +24,7 @@ class PageReviewCustomService extends PageReviewService {
     private WikipediaService wikipediaService;
 
     @Autowired
-    private ReplacementRepository replacementRepository;
+    private ReplacementDao replacementDao;
 
     @Autowired
     private ReplacementFindService replacementFindService;
@@ -45,8 +46,8 @@ class PageReviewCustomService extends PageReviewService {
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         try {
             int offset = 0;
-            List<Integer> reviewedIds = replacementRepository.findByLangAndTypeAndSubtypeAndReviewerNotNull(
-                options.getLang().getCode(),
+            List<Integer> reviewedIds = replacementDao.findByLangAndTypeAndSubtypeAndReviewerNotNull(
+                options.getLang(),
                 options.getType(),
                 options.getSubtype()
             );

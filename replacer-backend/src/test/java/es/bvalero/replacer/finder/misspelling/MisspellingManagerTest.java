@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.misspelling;
 
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.replacement.ReplacementRepository;
+import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Arrays;
@@ -22,7 +22,7 @@ class MisspellingManagerTest {
     private WikipediaService wikipediaService;
 
     @Mock
-    private ReplacementRepository replacementRepository;
+    private ReplacementDao replacementDao;
 
     @InjectMocks
     private MisspellingManager misspellingManager;
@@ -81,9 +81,9 @@ class MisspellingManagerTest {
         misspellingManager.setItems(map1);
 
         Mockito
-            .verify(replacementRepository, Mockito.times(0))
+            .verify(replacementDao, Mockito.times(0))
             .deleteByLangAndTypeAndSubtypeInAndReviewerIsNull(
-                Mockito.anyString(),
+                Mockito.any(WikipediaLanguage.class),
                 Mockito.anyString(),
                 Mockito.anySet()
             );
@@ -94,9 +94,9 @@ class MisspellingManagerTest {
         misspellingManager.setItems(map2);
 
         Mockito
-            .verify(replacementRepository, Mockito.times(1))
+            .verify(replacementDao, Mockito.times(1))
             .deleteByLangAndTypeAndSubtypeInAndReviewerIsNull(
-                WikipediaLanguage.SPANISH.getCode(),
+                WikipediaLanguage.SPANISH,
                 MisspellingSimpleFinder.TYPE_MISSPELLING_SIMPLE,
                 Collections.singleton("A")
             );

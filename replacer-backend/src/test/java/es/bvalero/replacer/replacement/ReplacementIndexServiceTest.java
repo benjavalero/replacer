@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.*;
 public class ReplacementIndexServiceTest {
 
     @Mock
-    private ReplacementRepository replacementRepository;
+    private ReplacementDao replacementDao;
 
     @Mock
     private ReplacementCountService replacementCountService;
@@ -42,7 +42,7 @@ public class ReplacementIndexServiceTest {
 
         replacementIndexService.indexPageReplacements(pageId, WikipediaLanguage.SPANISH, Collections.emptyList());
 
-        Mockito.verify(replacementRepository, Mockito.times(1)).findByPageIdAndLang(Mockito.eq(pageId), Mockito.anyString());
+        Mockito.verify(replacementDao, Mockito.times(1)).findByPageIdAndLang(Mockito.eq(pageId), Mockito.any(WikipediaLanguage.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -192,35 +192,22 @@ public class ReplacementIndexServiceTest {
     public void testReviewPageNoType() {
         int pageId = new Random().nextInt();
 
-        // There are several replacements for the page
-        ReplacementEntity rep1 = new ReplacementEntity(pageId, "A", "B", 0);
-        ReplacementEntity rep2 = new ReplacementEntity(pageId, "C", "D", 1);
-        List<ReplacementEntity> reps = Arrays.asList(rep1, rep2);
-        Mockito.when(replacementRepository.findByPageIdAndLangAndReviewerIsNull(pageId, WikipediaLanguage.SPANISH.getCode()))
-                .thenReturn(reps);
-
         replacementIndexService.reviewPageReplacements(pageId, WikipediaLanguage.SPANISH, null, null, "X");
 
-        Mockito.verify(replacementRepository, Mockito.times(1))
-                .saveAll(Mockito.anyIterable());
+        Mockito.verify(replacementDao, Mockito.times(1))
+            .reviewPageReplacements(WikipediaLanguage.SPANISH, pageId, null, null, "X");
     }
 
     @Test
     public void testReviewPageWithType() {
         int pageId = new Random().nextInt();
 
-        // There are several replacements for the page
-        ReplacementEntity rep1 = new ReplacementEntity(pageId, "A", "B", 0);
-        List<ReplacementEntity> reps = Collections.singletonList(rep1);
-        Mockito.when(replacementRepository.findByPageIdAndLangAndTypeAndSubtypeAndReviewerIsNull(pageId, WikipediaLanguage.SPANISH.getCode(), "A", "B"))
-                .thenReturn(reps);
-
         replacementIndexService.reviewPageReplacements(pageId, WikipediaLanguage.SPANISH, "A", "B", "X");
 
         Mockito.verify(replacementCountService, Mockito.times(1))
                 .decreaseCachedReplacementsCount(WikipediaLanguage.SPANISH, "A", "B", 1);
-        Mockito.verify(replacementRepository, Mockito.times(1))
-                .saveAll(Mockito.anyIterable());
+        Mockito.verify(replacementDao, Mockito.times(1))
+                .reviewPageReplacements(WikipediaLanguage.SPANISH, pageId, "A", "B", "X");
     }
 
     @Test
@@ -231,10 +218,11 @@ public class ReplacementIndexServiceTest {
 
         Mockito.verify(replacementCountService, Mockito.times(0))
                 .decreaseCachedReplacementsCount(Mockito.any(WikipediaLanguage.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
+        Mockito.verify(replacementDao, Mockito.times(0))
+            .reviewPageReplacements(WikipediaLanguage.SPANISH, pageId, ReplacementFindService.CUSTOM_FINDER_TYPE, "B", "X");
 
-        ReplacementEntity toSave = new ReplacementEntity(pageId, ReplacementFindService.CUSTOM_FINDER_TYPE, "B", 0, "X");
-        toSave.setLang(WikipediaLanguage.SPANISH.getCode());
-        Mockito.verify(replacementRepository, Mockito.times(1)).saveAll(Collections.singletonList(toSave));
+        ReplacementEntity toSave = replacementIndexService.createCustomReviewedReplacement(pageId, WikipediaLanguage.SPANISH, "B", "X");
+        Mockito.verify(replacementDao, Mockito.times(1)).insert(toSave);
     }
 
 }

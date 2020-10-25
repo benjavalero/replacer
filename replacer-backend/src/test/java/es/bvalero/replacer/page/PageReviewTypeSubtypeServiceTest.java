@@ -5,8 +5,8 @@ import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementCountService;
+import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
-import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDate;
 import java.util.*;
@@ -57,7 +57,7 @@ class PageReviewTypeSubtypeServiceTest {
     private List<String> ignorableTemplates;
 
     @Mock
-    private ReplacementRepository replacementRepository;
+    private ReplacementDao replacementDao;
 
     @Mock
     private WikipediaService wikipediaService;
@@ -92,8 +92,8 @@ class PageReviewTypeSubtypeServiceTest {
         // 1 result in DB
         Mockito
             .when(
-                replacementRepository.findRandomPageIdsToReviewByTypeAndSubtype(
-                    Mockito.anyString(),
+                replacementDao.findRandomPageIdsToReviewByTypeAndSubtype(
+                    Mockito.any(WikipediaLanguage.class),
                     Mockito.anyString(),
                     Mockito.anyString(),
                     Mockito.any(PageRequest.class)
@@ -124,8 +124,8 @@ class PageReviewTypeSubtypeServiceTest {
         // 1 result in DB
         Mockito
             .when(
-                replacementRepository.findRandomPageIdsToReviewByTypeAndSubtype(
-                    Mockito.anyString(),
+                replacementDao.findRandomPageIdsToReviewByTypeAndSubtype(
+                    Mockito.any(WikipediaLanguage.class),
                     Mockito.anyString(),
                     Mockito.anyString(),
                     Mockito.any(PageRequest.class)
@@ -160,8 +160,8 @@ class PageReviewTypeSubtypeServiceTest {
         // 2 results in DB by type, no results the second time.
         Mockito
             .when(
-                replacementRepository.findRandomPageIdsToReviewByTypeAndSubtype(
-                    Mockito.anyString(),
+                replacementDao.findRandomPageIdsToReviewByTypeAndSubtype(
+                    Mockito.any(WikipediaLanguage.class),
                     Mockito.anyString(),
                     Mockito.anyString(),
                     Mockito.any(PageRequest.class)
@@ -172,8 +172,8 @@ class PageReviewTypeSubtypeServiceTest {
         // 1 result in DB by no type
         Mockito
             .when(
-                replacementRepository.findRandomPageIdsToReview(
-                    Mockito.anyString(),
+                replacementDao.findRandomPageIdsToReview(
+                    Mockito.any(WikipediaLanguage.class),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)
                 )

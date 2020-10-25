@@ -4,17 +4,18 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
-import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.*;
-import java.util.*;
-import javax.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.annotation.Resource;
+import java.util.*;
 
 @SpringBootTest(classes = XmlConfiguration.class)
 class PageReviewCustomServiceTest {
@@ -50,7 +51,7 @@ class PageReviewCustomServiceTest {
     private List<String> ignorableTemplates;
 
     @Mock
-    private ReplacementRepository replacementRepository;
+    private ReplacementDao replacementDao;
 
     @Mock
     private WikipediaService wikipediaService;
@@ -103,8 +104,8 @@ class PageReviewCustomServiceTest {
         // The result is not already reviewed
         Mockito
             .when(
-                replacementRepository.findByLangAndTypeAndSubtypeAndReviewerNotNull(
-                    WikipediaLanguage.SPANISH.getCode(),
+                replacementDao.findByLangAndTypeAndSubtypeAndReviewerNotNull(
+                    WikipediaLanguage.SPANISH,
                     ReplacementFindService.CUSTOM_FINDER_TYPE,
                     replacement
                 )
@@ -153,8 +154,8 @@ class PageReviewCustomServiceTest {
         // The result 2 is not reviewed the first time, but reviewed the second time.
         Mockito
             .when(
-                replacementRepository.findByLangAndTypeAndSubtypeAndReviewerNotNull(
-                    WikipediaLanguage.SPANISH.getCode(),
+                replacementDao.findByLangAndTypeAndSubtypeAndReviewerNotNull(
+                    WikipediaLanguage.SPANISH,
                     ReplacementFindService.CUSTOM_FINDER_TYPE,
                     replacement
                 )

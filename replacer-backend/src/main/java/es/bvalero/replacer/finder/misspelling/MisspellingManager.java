@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.misspelling;
 
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.replacement.ReplacementRepository;
+import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
     private WikipediaService wikipediaService;
 
     @Autowired
-    private ReplacementRepository replacementRepository;
+    private ReplacementDao replacementDao;
 
     @Override
     void processRemovedItems(
@@ -39,8 +39,8 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
             oldWords.removeAll(newWords);
             if (!oldWords.isEmpty()) {
                 LOGGER.warn("Deleting from database obsolete misspellings: {}", oldWords);
-                replacementRepository.deleteByLangAndTypeAndSubtypeInAndReviewerIsNull(
-                    lang.getCode(),
+                replacementDao.deleteByLangAndTypeAndSubtypeInAndReviewerIsNull(
+                    lang,
                     MisspellingSimpleFinder.TYPE_MISSPELLING_SIMPLE,
                     new HashSet<>(oldWords)
                 );

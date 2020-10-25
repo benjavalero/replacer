@@ -3,8 +3,8 @@ package es.bvalero.replacer.page;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementCountService;
+import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
-import es.bvalero.replacer.replacement.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
@@ -27,7 +27,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
     private ReplacementIndexService replacementIndexService;
 
     @Autowired
-    private ReplacementRepository replacementRepository;
+    private ReplacementDao replacementDao;
 
     @Autowired
     private ReplacementCountService replacementCountService;
@@ -45,8 +45,8 @@ class PageReviewTypeSubtypeService extends PageReviewService {
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-        List<Integer> pageIds = replacementRepository.findRandomPageIdsToReviewByTypeAndSubtype(
-            options.getLang().getCode(),
+        List<Integer> pageIds = replacementDao.findRandomPageIdsToReviewByTypeAndSubtype(
+            options.getLang(),
             options.getType(),
             options.getSubtype(),
             pagination
@@ -62,8 +62,8 @@ class PageReviewTypeSubtypeService extends PageReviewService {
             );
         }
 
-        long totalResults = replacementRepository.countByLangAndTypeAndSubtypeAndReviewerIsNull(
-            options.getLang().getCode(),
+        long totalResults = replacementDao.countByLangAndTypeAndSubtypeAndReviewerIsNull(
+            options.getLang(),
             options.getType(),
             options.getSubtype()
         );
