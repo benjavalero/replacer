@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@Profile("default")
+@Profile("!offline")
 class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private OAuth10aService oAuthService;
