@@ -9,7 +9,6 @@ spring:
     job.enabled: false
     initialize-schema: always
     initializer.enabled: true
-  # jpa.show-sql: true
 
 server:
   port: 8000
@@ -90,10 +89,6 @@ spring:
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    # The first time this property must be commented so the schema is created
-    hibernate.ddl-auto: update
 
 server:
   port: 8080
