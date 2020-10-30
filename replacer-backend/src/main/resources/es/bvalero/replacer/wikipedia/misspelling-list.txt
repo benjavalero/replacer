@@ -1865,6 +1865,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  azacan||azacán
  azadon||azadón
  azafran||azafrán
+ Azerbaiján|cs|Azerbaiyán
  azerbaiyan||Azerbaiyán
  azerbaiyán|cs|Azerbaiyán
  azima||ázima
@@ -1980,6 +1981,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  bandoneon||bandoneón
  banear||restringir, prohibir, excluir, vetar, denegar
  bangkok|cs|Bangkok
+ Bangladesh|cs|Bangladés
  barahunda||barahúnda, baraúnda
  barahundas||barahúndas, baraúndas
  barajais||barajáis
@@ -9617,6 +9619,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  habitiual||habitual
  habitiuales||habituales
  habitiualmente||habitualmente
+ habito||habito (verbo, presente), habitó (verbo, pretérito), hábito (sustantivo)
  habladuria||habladuría
  habladurias||habladurías
  habria||habría
@@ -11714,6 +11717,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  lesgilador||legislador
  lesgiladores||legisladores
  lesion||lesión
+ Lesotho|cs|Lesoto
  lesoto|cs|Lesoto
  leticia|cs|Leticia
  letizia|cs|Letizia
@@ -17993,6 +17997,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  taipei||Taipéi
  taiwan||Taiwán
  taiwán|cs|Taiwán
+ Tajikistán|cs|Tayikistán
  talabarteria||talabartería
  talabarterias||talabarterías
  talaiot||talayot
