@@ -1,7 +1,8 @@
 # Versions
 
-## 2.7.4 (??)
+## 2.7.4 (30 Oct 2020)
 - Improve date finders to fix years with dots and complete missing prepositions
+- Improve indexation memory footprint by replacing JPA repository by DAO
 
 ## 2.7.3 (19 Oct 2020)
 - Revert the last date finders as they are given wrong descriptions and suggestions
