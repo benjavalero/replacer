@@ -2,56 +2,60 @@
   <div class="card-body">
     <h3 class="card-title">Reemplazador de la Wikipedia en español</h3>
     <p class="card-text pt-3">
-      <strong>Replacer</strong> ayuda a corregir los errores ortográficos y de
-      estilo más comunes en la Wikipedia en español.
+      <strong>Replacer</strong>
+      ayuda a corregir los errores ortográficos y de estilo más comunes en la Wikipedia en español.
     </p>
   </div>
 </div>
 
-<div class="card-deck">
-  <div class="card bg-light">
-    <div class="card-body">
-      <h4 class="card-title">Artículo aleatorio</h4>
-      <p class="card-text">
-        Revisa todos los posibles reemplazos de un artículo aleatorio.
-      </p>
-      <a routerLink="/random" class="stretched-link"></a>
-    </div>
-  </div>
-  <div class="card bg-light">
-    <div class="card-body">
-      <h4 class="card-title">Lista de reemplazos</h4>
-      <p class="card-text">
-        Revisa todos los artículos que contienen un reemplazo en concreto.
-      </p>
-      <a routerLink="/replacement" class="stretched-link"></a>
-    </div>
-  </div>
-  <div class="card bg-light">
-    <div class="card-body">
-      <h4 class="card-title">Reemplazo personalizado</h4>
-      <p class="card-text">
-        Revisa todos los artículos que contienen un reemplazo personalizado.
-      </p>
-      <a routerLink="/custom" class="stretched-link"></a>
+<div class="row">
+  <div class="col-md-6 col-lg-4 col-xl py-1">
+    <div class="card h-100 bg-light">
+      <div class="card-body">
+        <h4 class="card-title">Artículo aleatorio</h4>
+        <p class="card-text">Revisa todos los posibles reemplazos de un artículo aleatorio.</p>
+        <a routerLink="/random" class="stretched-link"></a>
+      </div>
     </div>
   </div>
 
-  <div class="card bg-light" *ngIf="admin">
-    <div class="card-body">
-      <h4 class="card-title">Estadísticas [ADMIN]</h4>
-      <p class="card-text">
-        Muestra, entre otras estadísticas, el número de reemplazos indexados y revisados.
-      </p>
-      <a routerLink="/stats" class="stretched-link"></a>
+  <div class="col-md-6 col-lg-4 col-xl py-1">
+    <div class="card h-100 bg-light">
+      <div class="card-body">
+        <h4 class="card-title">Lista de reemplazos</h4>
+        <p class="card-text">Revisa todos los artículos que contienen un reemplazo en concreto.</p>
+        <a routerLink="/replacement" class="stretched-link"></a>
+      </div>
     </div>
   </div>
 
-  <div class="card bg-light" *ngIf="admin">
-    <div class="card-body">
-      <h4 class="card-title">Indexación [ADMIN]</h4>
-      <p class="card-text">Muestra el estado de la indexación.</p>
-      <a routerLink="/dump" class="stretched-link"></a>
+  <div class="col-md-6 col-lg-4 col-xl py-1">
+    <div class="card h-100 bg-light">
+      <div class="card-body">
+        <h4 class="card-title">Reemplazo personalizado</h4>
+        <p class="card-text">Revisa todos los artículos que contienen un reemplazo personalizado.</p>
+        <a routerLink="/custom" class="stretched-link"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 col-xl py-1">
+    <div class="card h-100 bg-light" *ngIf="admin">
+      <div class="card-body">
+        <h4 class="card-title">Estadísticas [ADMIN]</h4>
+        <p class="card-text">Muestra, entre otras estadísticas, el número de reemplazos indexados y revisados.</p>
+        <a routerLink="/stats" class="stretched-link"></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-4 col-xl py-1">
+    <div class="card h-100 bg-light" *ngIf="admin">
+      <div class="card-body">
+        <h4 class="card-title">Indexación [ADMIN]</h4>
+        <p class="card-text">Muestra el estado de la indexación.</p>
+        <a routerLink="/dump" class="stretched-link"></a>
+      </div>
     </div>
   </div>
 </div>
