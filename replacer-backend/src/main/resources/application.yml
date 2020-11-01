@@ -9,6 +9,7 @@ spring:
     job.enabled: false
     initialize-schema: always
     initializer.enabled: true
+  profiles.include: @includeSpringProfile@
 
 server:
   port: 8080 # Default port for local deployment

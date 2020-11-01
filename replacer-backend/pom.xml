@@ -24,6 +24,9 @@
         <sonar.sources>src/main/java</sonar.sources>
         <sonar.java.source>11</sonar.java.source>
         <sonar.exclusions>**/benchmark/**/*.*</sonar.exclusions>
+
+        <!-- https://stackoverflow.com/questions/51556593/multiple-maven-profiles-activate-multiple-spring-profiles -->
+        <includeSpringProfile/>
     </properties>
 
     <dependencies>
@@ -222,24 +225,20 @@
         </profile>
         <profile>
             <id>backend</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <configuration>
-                            <profiles>
-                                <profile>backend</profile>
-                            </profiles>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
+            <properties>
+                <includeSpringProfile>backend</includeSpringProfile>
+            </properties>
         </profile>
     </profiles>
 
     <build>
         <finalName>replacer</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
