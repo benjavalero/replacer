@@ -1,5 +1,8 @@
 # Versions
 
+## 2.7.5 (??)
+- Link to edit Wikipedia page section instead of link to open in read mode
+
 ## 2.7.4 (30 Oct 2020)
 - Improve date finders to fix years with dots and complete missing prepositions
 - Improve indexation memory footprint by replacing JPA repository by DAO
