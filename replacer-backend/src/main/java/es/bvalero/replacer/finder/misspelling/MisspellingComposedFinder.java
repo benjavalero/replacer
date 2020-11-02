@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MisspellingComposedFinder extends MisspellingFinder {
-    private static final String TYPE_MISSPELLING_COMPOSED = "Compuestos";
+    public static final String TYPE_MISSPELLING_COMPOSED = "Compuestos";
 
     @Autowired
     private MisspellingComposedManager composedManager;
