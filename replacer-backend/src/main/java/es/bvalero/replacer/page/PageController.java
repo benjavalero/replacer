@@ -147,22 +147,22 @@ public class PageController {
     /* PAGE LIST FOR ROBOTS */
 
     @GetMapping(value = "/list", params = { "type", "subtype" }, produces = "text/plain")
-    public ResponseEntity<String> findPageListByTypeAndSubtype(
+    public ResponseEntity<String> findPageTitlesToReviewBySubtype(
         @RequestParam String type,
         @RequestParam String subtype,
         @RequestParam WikipediaLanguage lang
     ) {
         LOGGER.info("GET Find page list. Type: {} - {}", type, subtype);
-        String titleList = StringUtils.join(pageListService.findPageList(lang, type, subtype), "\n");
+        String titleList = StringUtils.join(pageListService.findPageTitlesToReviewBySubtype(lang, type, subtype), "\n");
         return new ResponseEntity<>(titleList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/review", params = { "type", "subtype" })
-    public void reviewPagesByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype) {
+    public void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
         LOGGER.info("POST Review pages. Type: {} - {}", type, subtype);
 
         // Set as reviewed in the database
-        pageListService.reviewPagesByTypeAndSubtype(lang, type, subtype);
+        pageListService.reviewAsSystemBySubtype(lang, type, subtype);
 
         // Remove from the replacement count cache
         replacementCountService.removeCachedReplacementCount(lang, type, subtype);

@@ -82,7 +82,7 @@ class MisspellingManagerTest {
 
         Mockito
             .verify(replacementDao, Mockito.times(0))
-            .deleteByLangAndTypeAndSubtypeInAndReviewerIsNull(
+            .deleteToBeReviewedBySubtype(
                 Mockito.any(WikipediaLanguage.class),
                 Mockito.anyString(),
                 Mockito.anySet()
@@ -95,7 +95,7 @@ class MisspellingManagerTest {
 
         Mockito
             .verify(replacementDao, Mockito.times(1))
-            .deleteByLangAndTypeAndSubtypeInAndReviewerIsNull(
+            .deleteToBeReviewedBySubtype(
                 WikipediaLanguage.SPANISH,
                 MisspellingSimpleFinder.TYPE_MISSPELLING_SIMPLE,
                 Collections.singleton("A")

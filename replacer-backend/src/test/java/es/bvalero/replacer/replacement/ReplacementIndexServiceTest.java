@@ -41,7 +41,7 @@ public class ReplacementIndexServiceTest {
 
         replacementIndexService.indexPageReplacements(pageId, WikipediaLanguage.SPANISH, Collections.emptyList());
 
-        Mockito.verify(replacementDao, Mockito.times(1)).findByPageIdAndLang(Mockito.eq(pageId), Mockito.any(WikipediaLanguage.class));
+        Mockito.verify(replacementDao, Mockito.times(1)).findByPageId(Mockito.eq(pageId), Mockito.any(WikipediaLanguage.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -194,7 +194,7 @@ public class ReplacementIndexServiceTest {
         replacementIndexService.reviewPageReplacements(pageId, WikipediaLanguage.SPANISH, null, null, "X");
 
         Mockito.verify(replacementDao, Mockito.times(1))
-            .reviewPageReplacements(WikipediaLanguage.SPANISH, pageId, null, null, "X");
+            .reviewByPageId(WikipediaLanguage.SPANISH, pageId, null, null, "X");
     }
 
     @Test
@@ -206,7 +206,7 @@ public class ReplacementIndexServiceTest {
         Mockito.verify(replacementCountService, Mockito.times(1))
                 .decreaseCachedReplacementsCount(WikipediaLanguage.SPANISH, "A", "B", 1);
         Mockito.verify(replacementDao, Mockito.times(1))
-                .reviewPageReplacements(WikipediaLanguage.SPANISH, pageId, "A", "B", "X");
+                .reviewByPageId(WikipediaLanguage.SPANISH, pageId, "A", "B", "X");
     }
 
     @Test
@@ -218,7 +218,7 @@ public class ReplacementIndexServiceTest {
         Mockito.verify(replacementCountService, Mockito.times(0))
                 .decreaseCachedReplacementsCount(Mockito.any(WikipediaLanguage.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
         Mockito.verify(replacementDao, Mockito.times(0))
-            .reviewPageReplacements(WikipediaLanguage.SPANISH, pageId, ReplacementEntity.TYPE_CUSTOM, "B", "X");
+            .reviewByPageId(WikipediaLanguage.SPANISH, pageId, ReplacementEntity.TYPE_CUSTOM, "B", "X");
 
         ReplacementEntity toSave = replacementIndexService.createCustomReviewedReplacement(pageId, WikipediaLanguage.SPANISH, "B", "X");
         Mockito.verify(replacementDao, Mockito.times(1)).insert(toSave);

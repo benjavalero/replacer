@@ -92,7 +92,7 @@ class PageReviewTypeSubtypeServiceTest {
         // 1 result in DB
         Mockito
             .when(
-                replacementDao.findRandomPageIdsToReviewByTypeAndSubtype(
+                replacementDao.findRandomPageIdsToBeReviewedBySubtype(
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.anyString(),
                     Mockito.anyString(),
@@ -124,7 +124,7 @@ class PageReviewTypeSubtypeServiceTest {
         // 1 result in DB
         Mockito
             .when(
-                replacementDao.findRandomPageIdsToReviewByTypeAndSubtype(
+                replacementDao.findRandomPageIdsToBeReviewedBySubtype(
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.anyString(),
                     Mockito.anyString(),
@@ -160,7 +160,7 @@ class PageReviewTypeSubtypeServiceTest {
         // 2 results in DB by type, no results the second time.
         Mockito
             .when(
-                replacementDao.findRandomPageIdsToReviewByTypeAndSubtype(
+                replacementDao.findRandomPageIdsToBeReviewedBySubtype(
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.anyString(),
                     Mockito.anyString(),
@@ -172,7 +172,7 @@ class PageReviewTypeSubtypeServiceTest {
         // 1 result in DB by no type
         Mockito
             .when(
-                replacementDao.findRandomPageIdsToReview(
+                replacementDao.findPageIdsToBeReviewed(
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)

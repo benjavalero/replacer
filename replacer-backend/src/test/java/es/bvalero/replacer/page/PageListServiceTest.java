@@ -33,7 +33,7 @@ class PageListServiceTest {
 
         Mockito
             .when(
-                replacementDao.findPageTitlesByTypeAndSubtype(
+                replacementDao.findPageTitlesToReviewBySubtype(
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.anyString(),
                     Mockito.anyString()
@@ -41,7 +41,7 @@ class PageListServiceTest {
             )
             .thenReturn(list);
 
-        List<String> result = pageListService.findPageList(WikipediaLanguage.SPANISH, "X", "Y");
+        List<String> result = pageListService.findPageTitlesToReviewBySubtype(WikipediaLanguage.SPANISH, "X", "Y");
         Assertions.assertEquals(sorted, result);
     }
 }

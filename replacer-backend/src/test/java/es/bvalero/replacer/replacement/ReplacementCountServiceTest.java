@@ -31,7 +31,7 @@ class ReplacementCountServiceTest {
         long count = new Random().nextLong();
 
         Mockito
-            .when(replacementDao.countByLangAndReviewed(Mockito.any(WikipediaLanguage.class)))
+            .when(replacementDao.countUserReviewed(Mockito.any(WikipediaLanguage.class)))
             .thenReturn(count);
 
         Assertions.assertEquals(count, replacementCountService.countReplacementsReviewed(WikipediaLanguage.SPANISH));
@@ -41,7 +41,7 @@ class ReplacementCountServiceTest {
     void testCountReplacementsToReview() {
         long count = new Random().nextLong();
 
-        Mockito.when(replacementDao.countByLangAndReviewerIsNull(Mockito.any(WikipediaLanguage.class))).thenReturn(count);
+        Mockito.when(replacementDao.countToBeReviewed(Mockito.any(WikipediaLanguage.class))).thenReturn(count);
 
         Assertions.assertEquals(count, replacementCountService.countReplacementsToReview(WikipediaLanguage.SPANISH));
     }
@@ -66,7 +66,7 @@ class ReplacementCountServiceTest {
         TypeSubtypeCount count1 = new TypeSubtypeCount(langCode, "X", "Y", 2L);
         TypeSubtypeCount count2 = new TypeSubtypeCount(langCode, "X", "Z", 1L);
         List<TypeSubtypeCount> counts = Arrays.asList(count1, count2);
-        Mockito.when(replacementDao.countGroupedByTypeAndSubtype()).thenReturn(counts);
+        Mockito.when(replacementDao.countPagesGroupedByTypeAndSubtype()).thenReturn(counts);
 
         replacementCountService.updateReplacementCount();
 

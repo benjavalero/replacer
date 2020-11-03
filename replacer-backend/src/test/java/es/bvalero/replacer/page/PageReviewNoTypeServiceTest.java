@@ -87,7 +87,7 @@ class PageReviewNoTypeServiceTest {
         // No results in DB
         Mockito
             .when(
-                replacementDao.findRandomPageIdsToReview(
+                replacementDao.findPageIdsToBeReviewed(
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)
@@ -105,7 +105,7 @@ class PageReviewNoTypeServiceTest {
         // 1 result in DB
         Mockito
             .when(
-                replacementDao.findRandomPageIdsToReview(
+                replacementDao.findPageIdsToBeReviewed(
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)
@@ -127,7 +127,7 @@ class PageReviewNoTypeServiceTest {
         // 1 result in DB
         Mockito
             .when(
-                replacementDao.findRandomPageIdsToReview(
+                replacementDao.findPageIdsToBeReviewed(
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)
@@ -158,7 +158,7 @@ class PageReviewNoTypeServiceTest {
         // 1 result in DB
         Mockito
             .when(
-                replacementDao.findRandomPageIdsToReview(
+                replacementDao.findPageIdsToBeReviewed(
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)
@@ -190,7 +190,7 @@ class PageReviewNoTypeServiceTest {
         // 2 results in DB
         Mockito
             .when(
-                replacementDao.findRandomPageIdsToReview(
+                replacementDao.findPageIdsToBeReviewed(
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.anyLong(),
                     Mockito.any(PageRequest.class)

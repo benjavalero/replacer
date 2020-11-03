@@ -41,7 +41,7 @@ public class ReplacementIndexService {
             pageId,
             lang,
             replacements,
-            replacementDao.findByPageIdAndLang(pageId, lang)
+            replacementDao.findByPageId(pageId, lang)
         );
         saveReplacements(toSave);
     }
@@ -211,7 +211,7 @@ public class ReplacementIndexService {
     }
 
     public void reviewPageReplacementsAsSystem(int pageId, WikipediaLanguage lang) {
-        replacementDao.reviewPageReplacements(lang, pageId, null, null, ReplacementEntity.REVIEWER_SYSTEM);
+        replacementDao.reviewByPageId(lang, pageId, null, null, ReplacementEntity.REVIEWER_SYSTEM);
     }
 
     public void reviewPageReplacements(
@@ -228,12 +228,12 @@ public class ReplacementIndexService {
             ReplacementEntity customReviewed = createCustomReviewedReplacement(pageId, lang, subtype, reviewer);
             saveReplacement(customReviewed);
         } else if (StringUtils.isNotBlank(type)) {
-            replacementDao.reviewPageReplacements(lang, pageId, type, subtype, reviewer);
+            replacementDao.reviewByPageId(lang, pageId, type, subtype, reviewer);
 
             // Decrease the cached count (one page)
             replacementCountService.decreaseCachedReplacementsCount(lang, type, subtype, 1);
         } else {
-            replacementDao.reviewPageReplacements(lang, pageId, null, null, reviewer);
+            replacementDao.reviewByPageId(lang, pageId, null, null, reviewer);
         }
 
         LOGGER.info("END Mark page as reviewed. ID: {}", pageId);

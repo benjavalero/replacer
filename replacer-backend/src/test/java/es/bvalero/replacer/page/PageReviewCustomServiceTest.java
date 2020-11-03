@@ -8,15 +8,14 @@ import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.*;
+import java.util.*;
+import javax.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.annotation.Resource;
-import java.util.*;
 
 @SpringBootTest(classes = XmlConfiguration.class)
 class PageReviewCustomServiceTest {
@@ -98,19 +97,11 @@ class PageReviewCustomServiceTest {
             .thenReturn(new PageSearchResult(1, pageIds));
 
         // The page exists in Wikipedia
-        Mockito
-            .when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH))
-            .thenReturn(Optional.of(page));
+        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(page));
 
         // The result is not already reviewed
         Mockito
-            .when(
-                replacementDao.findByLangAndTypeAndSubtypeAndReviewerNotNull(
-                    WikipediaLanguage.SPANISH,
-                    ReplacementEntity.TYPE_CUSTOM,
-                    replacement
-                )
-            )
+            .when(replacementDao.findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage.SPANISH, replacement))
             .thenReturn(Collections.emptyList());
 
         // The page contains replacements
@@ -154,19 +145,11 @@ class PageReviewCustomServiceTest {
         // The result 1 is already reviewed
         // The result 2 is not reviewed the first time, but reviewed the second time.
         Mockito
-            .when(
-                replacementDao.findByLangAndTypeAndSubtypeAndReviewerNotNull(
-                    WikipediaLanguage.SPANISH,
-                    ReplacementEntity.TYPE_CUSTOM,
-                    replacement
-                )
-            )
+            .when(replacementDao.findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage.SPANISH, replacement))
             .thenReturn(Collections.singletonList(randomId));
 
         // The pages exist in Wikipedia
-        Mockito
-            .when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH))
-            .thenReturn(Optional.of(page2));
+        Mockito.when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(page2));
 
         // The page 2 contains no replacements
         Mockito

@@ -45,7 +45,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-        List<Integer> pageIds = replacementDao.findRandomPageIdsToReviewByTypeAndSubtype(
+        List<Integer> pageIds = replacementDao.findRandomPageIdsToBeReviewedBySubtype(
             options.getLang(),
             options.getType(),
             options.getSubtype(),
@@ -62,7 +62,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
             );
         }
 
-        long totalResults = replacementDao.countByLangAndTypeAndSubtypeAndReviewerIsNull(
+        long totalResults = replacementDao.countPagesToBeReviewedBySubtype(
             options.getLang(),
             options.getType(),
             options.getSubtype()

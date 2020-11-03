@@ -51,7 +51,7 @@ class ReplacementCache {
     private void load(int minId, int maxId, WikipediaLanguage lang) {
         LOGGER.debug("START Load replacements from database to cache. Page ID between {} and {}", minId, maxId);
         replacementDao
-            .findByPages(minId, maxId, lang)
+            .findByPageInterval(minId, maxId, lang)
             .forEach(replacement -> replacementMap.put(replacement.getPageId(), replacement));
         LOGGER.debug("END Load replacements from database to cache. Pages cached: {}", replacementMap.size());
     }
@@ -68,7 +68,7 @@ class ReplacementCache {
         // We keep the rows reviewed by any user for the sake of statistics
         LOGGER.debug("START Delete obsolete and not reviewed pages in DB: {}", obsoleteIds);
         if (!obsoleteIds.isEmpty()) {
-            replacementDao.deleteObsoleteReplacements(lang, obsoleteIds);
+            replacementDao.deleteObsoleteByPageId(lang, obsoleteIds);
         }
         replacementMap.clear();
         LOGGER.debug("END Delete obsolete and not reviewed pages in DB");

@@ -13,13 +13,13 @@ class PageListService {
     @Autowired
     private ReplacementDao replacementDao;
 
-    List<String> findPageList(WikipediaLanguage lang, String type, String subtype) {
-        List<String> titles = replacementDao.findPageTitlesByTypeAndSubtype(lang, type, subtype);
+    List<String> findPageTitlesToReviewBySubtype(WikipediaLanguage lang, String type, String subtype) {
+        List<String> titles = replacementDao.findPageTitlesToReviewBySubtype(lang, type, subtype);
         titles.sort(Collator.getInstance(FinderUtils.LOCALE_ES));
         return titles;
     }
 
-    void reviewPagesByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype) {
-        replacementDao.reviewTypeReplacementsAsSystem(lang, type, subtype);
+    void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
+        replacementDao.reviewAsSystemBySubtype(lang, type, subtype);
     }
 }

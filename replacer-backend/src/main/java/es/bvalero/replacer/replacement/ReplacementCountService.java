@@ -20,11 +20,11 @@ public class ReplacementCountService {
     /* STATISTICS */
 
     long countReplacementsReviewed(WikipediaLanguage lang) {
-        return replacementDao.countByLangAndReviewed(lang);
+        return replacementDao.countUserReviewed(lang);
     }
 
     long countReplacementsToReview(WikipediaLanguage lang) {
-        return replacementDao.countByLangAndReviewerIsNull(lang);
+        return replacementDao.countToBeReviewed(lang);
     }
 
     List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
@@ -48,7 +48,7 @@ public class ReplacementCountService {
     void updateReplacementCount() {
         LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
         LOGGER.info("START Count grouped replacements by type and subtype");
-        List<TypeSubtypeCount> counts = replacementDao.countGroupedByTypeAndSubtype();
+        List<TypeSubtypeCount> counts = replacementDao.countPagesGroupedByTypeAndSubtype();
         LOGGER.info("END Count grouped replacements. Size: {}", counts.size());
         this.languageCounts = loadCachedReplacementCount(counts);
     }

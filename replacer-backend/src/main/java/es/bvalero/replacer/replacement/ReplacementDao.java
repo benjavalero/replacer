@@ -28,6 +28,8 @@ public class ReplacementDao {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
+    ///// CRUD
+
     public void insert(ReplacementEntity entity) {
         final String sql =
             "INSERT INTO replacement2 (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +
@@ -67,43 +69,45 @@ public class ReplacementDao {
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    public List<ReplacementEntity> findByPages(int minId, int maxId, WikipediaLanguage lang) {
+    ///// INDEXATION
+
+    public List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang) {
         // We need all the fields but the title so we don't select it to improve performance
         String sql =
             "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
-            "FROM replacement2 WHERE lang = :lang AND article_id BETWEEN :minId AND :maxId";
+            "FROM replacement2 WHERE lang = :lang AND article_id BETWEEN :minPageId AND :maxPageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue("minId", minId)
-            .addValue("maxId", maxId);
+            .addValue("minPageId", minPageId)
+            .addValue("maxPageId", maxPageId);
         return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
-    public void deleteObsoleteReplacements(WikipediaLanguage lang, Set<Integer> pageIds) {
+    public void deleteObsoleteByPageId(WikipediaLanguage lang, Set<Integer> pageIds) {
         String sql =
             "DELETE FROM replacement2 " +
             "WHERE lang = :lang AND article_id IN (:pageIds) AND (reviewer IS NULL OR reviewer = :system)";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM)
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue("pageIds", pageIds);
+            .addValue("pageIds", pageIds)
+            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    public void reviewTypeReplacementsAsSystem(WikipediaLanguage lang, String type, String subtype) {
+    public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
+        // We need all the fields but the title so we don't select it to improve performance
         String sql =
-            "UPDATE replacement2 SET reviewer=:system, last_update=:now " +
-            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
+            "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
+            "FROM replacement2 WHERE lang = :lang AND article_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM)
-            .addValue("now", LocalDate.now())
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_TYPE, type)
-            .addValue(PARAM_SUBTYPE, subtype);
-        jdbcTemplate.update(sql, namedParameters);
+            .addValue(PARAM_PAGE_ID, pageId);
+        return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
-    public Long findRandomStart(long chunkSize, WikipediaLanguage lang) {
+    ///// PAGE REVIEW
+
+    public Long findRandomIdToBeReviewed(long chunkSize, WikipediaLanguage lang) {
         String sql =
             "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) FROM replacement2 " +
             "WHERE lang = :lang AND reviewer IS NULL";
@@ -113,9 +117,8 @@ public class ReplacementDao {
         return jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
     }
 
-    // ORDER BY RAND() takes a lot when not filtering by type/subtype even using an index
     // Not worth to DISTINCT as we add the results as a set later
-    public List<Integer> findRandomPageIdsToReview(WikipediaLanguage lang, long randomStart, Pageable pageable) {
+    public List<Integer> findPageIdsToBeReviewed(WikipediaLanguage lang, long start, Pageable pageable) {
         String sql =
             "SELECT article_id FROM replacement2 " +
             "WHERE lang = :lang AND reviewer IS NULL AND id > :start " +
@@ -127,28 +130,13 @@ public class ReplacementDao {
             pageable.getOffset();
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue("start", randomStart);
-        return jdbcTemplate.queryForList(sql, namedParameters, Integer.class);
-    }
-
-    public List<Integer> findByLangAndTypeAndSubtypeAndReviewerNotNull(
-        WikipediaLanguage lang,
-        String type,
-        String subtype
-    ) {
-        String sql =
-            "SELECT article_id FROM replacement2 " +
-            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NOT NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_TYPE, type)
-            .addValue(PARAM_SUBTYPE, subtype);
+            .addValue("start", start);
         return jdbcTemplate.queryForList(sql, namedParameters, Integer.class);
     }
 
     // When filtering by type/subtype ORDER BY RAND() still takes a while but it is admissible
     // Not worth to DISTINCT as we add the results as a set later
-    public List<Integer> findRandomPageIdsToReviewByTypeAndSubtype(
+    public List<Integer> findRandomPageIdsToBeReviewedBySubtype(
         WikipediaLanguage lang,
         String type,
         String subtype,
@@ -170,7 +158,7 @@ public class ReplacementDao {
         return jdbcTemplate.queryForList(sql, namedParameters, Integer.class);
     }
 
-    public Long countByLangAndTypeAndSubtypeAndReviewerIsNull(WikipediaLanguage lang, String type, String subtype) {
+    public Long countPagesToBeReviewedBySubtype(WikipediaLanguage lang, String type, String subtype) {
         String sql =
             "SELECT COUNT (DISTINCT article_id) FROM replacement2 " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
@@ -181,66 +169,18 @@ public class ReplacementDao {
         return jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
     }
 
-    public Long countByLangAndReviewed(WikipediaLanguage lang) {
+    public List<Integer> findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage lang, String subtype) {
         String sql =
-            "SELECT COUNT(*) FROM replacement2 " +
-            "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
+            "SELECT DISTINCT(article_id) FROM replacement2 " +
+            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NOT NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
-        return jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-    }
-
-    // Not worth to DISTINCT. Besides this count is also used in statistics.
-    public Long countByLangAndReviewerIsNull(WikipediaLanguage lang) {
-        String sql = "SELECT COUNT(*) FROM replacement2 " + "WHERE lang = :lang AND reviewer IS NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue(PARAM_LANG, lang.getCode());
-        return jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-    }
-
-    public List<ReviewerCount> countGroupedByReviewer(WikipediaLanguage lang) {
-        String sql =
-            "SELECT reviewer, COUNT(*) AS num FROM replacement2 " +
-            "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system " +
-            "GROUP BY reviewer " +
-            "ORDER BY COUNT(*) DESC";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
-        return jdbcTemplate.query(sql, namedParameters, new ReviewerCountRowMapper());
-    }
-
-    public List<TypeSubtypeCount> countGroupedByTypeAndSubtype() {
-        String sql =
-            "SELECT lang, type, subtype, COUNT(DISTINCT article_id) AS num FROM replacement2 " +
-            "WHERE reviewer IS NULL " +
-            "GROUP BY lang, type, subtype";
-        return jdbcTemplate.query(sql, new TypeSubtypeCountRowMapper());
-    }
-
-    public List<String> findPageTitlesByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype) {
-        String sql =
-            "SELECT DISTINCT(title) FROM replacement2 " +
-            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_TYPE, type)
+            .addValue(PARAM_TYPE, ReplacementEntity.TYPE_CUSTOM)
             .addValue(PARAM_SUBTYPE, subtype);
-        return jdbcTemplate.queryForList(sql, namedParameters, String.class);
+        return jdbcTemplate.queryForList(sql, namedParameters, Integer.class);
     }
 
-    public List<ReplacementEntity> findByPageIdAndLang(int pageId, WikipediaLanguage lang) {
-        // We need all the fields but the title so we don't select it to improve performance
-        String sql =
-            "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
-            "FROM replacement2 WHERE lang = :lang AND article_id = :pageId";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_PAGE_ID, pageId);
-        return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
-    }
-
-    public void reviewPageReplacements(
+    public void reviewByPageId(
         WikipediaLanguage lang,
         int pageId,
         @Nullable String type,
@@ -262,11 +202,74 @@ public class ReplacementDao {
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    public void deleteByLangAndTypeAndSubtypeInAndReviewerIsNull(
-        WikipediaLanguage lang,
-        String type,
-        Set<String> subtypes
-    ) {
+    ///// STATISTICS
+
+    public Long countUserReviewed(WikipediaLanguage lang) {
+        String sql =
+            "SELECT COUNT(*) FROM replacement2 " +
+            "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue(PARAM_LANG, lang.getCode())
+            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
+        return jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+    }
+
+    // This count is also used to guess the total for the review without type. Not worth to DISTINCT.
+    public Long countToBeReviewed(WikipediaLanguage lang) {
+        String sql = "SELECT COUNT(*) FROM replacement2 WHERE lang = :lang AND reviewer IS NULL";
+        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue(PARAM_LANG, lang.getCode());
+        return jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+    }
+
+    public List<ReviewerCount> countGroupedByReviewer(WikipediaLanguage lang) {
+        String sql =
+            "SELECT reviewer, COUNT(*) AS num FROM replacement2 " +
+            "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system " +
+            "GROUP BY reviewer " +
+            "ORDER BY COUNT(*) DESC";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue(PARAM_LANG, lang.getCode())
+            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
+        return jdbcTemplate.query(sql, namedParameters, new ReviewerCountRowMapper());
+    }
+
+    public List<TypeSubtypeCount> countPagesGroupedByTypeAndSubtype() {
+        String sql =
+            "SELECT lang, type, subtype, COUNT(DISTINCT article_id) AS num FROM replacement2 " +
+            "WHERE reviewer IS NULL " +
+            "GROUP BY lang, type, subtype";
+        return jdbcTemplate.query(sql, new TypeSubtypeCountRowMapper());
+    }
+
+    ///// PAGE LISTS
+
+    public List<String> findPageTitlesToReviewBySubtype(WikipediaLanguage lang, String type, String subtype) {
+        String sql =
+            "SELECT DISTINCT(title) FROM replacement2 " +
+            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue(PARAM_LANG, lang.getCode())
+            .addValue(PARAM_TYPE, type)
+            .addValue(PARAM_SUBTYPE, subtype);
+        return jdbcTemplate.queryForList(sql, namedParameters, String.class);
+    }
+
+    public void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
+        String sql =
+            "UPDATE replacement2 SET reviewer=:system, last_update=:now " +
+            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM)
+            .addValue("now", LocalDate.now())
+            .addValue(PARAM_LANG, lang.getCode())
+            .addValue(PARAM_TYPE, type)
+            .addValue(PARAM_SUBTYPE, subtype);
+        jdbcTemplate.update(sql, namedParameters);
+    }
+
+    ///// OTHER
+
+    public void deleteToBeReviewedBySubtype(WikipediaLanguage lang, String type, Set<String> subtypes) {
         String sql =
             "DELETE FROM replacement2 " +
             "WHERE lang = :lang AND type = :type AND subtype IN (:subtypes) AND reviewer IS NULL";
