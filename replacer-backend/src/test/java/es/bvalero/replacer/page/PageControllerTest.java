@@ -13,7 +13,6 @@ import es.bvalero.replacer.authentication.AccessToken;
 import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.replacement.ReplacementCountService;
-import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguageConverter;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -49,9 +48,6 @@ public class PageControllerTest {
 
     @MockBean
     private PageReviewCustomService pageReviewCustomService;
-
-    @MockBean
-    private ReplacementIndexService replacementIndexService;
 
     @MockBean
     private WikipediaService wikipediaService;
@@ -200,14 +196,6 @@ public class PageControllerTest {
                 any(WikipediaLanguage.class),
                 eq(new OAuth1AccessToken("A", "B"))
             );
-        verify(replacementIndexService, times(1))
-            .reviewPageReplacements(
-                eq(pageId),
-                Mockito.any(WikipediaLanguage.class),
-                eq(type),
-                eq(subtype),
-                eq(reviewer)
-            );
     }
 
     @Test
@@ -238,14 +226,6 @@ public class PageControllerTest {
                 anyString(),
                 any(WikipediaLanguage.class),
                 any(OAuth1AccessToken.class)
-            );
-        verify(replacementIndexService, times(1))
-            .reviewPageReplacements(
-                eq(pageId),
-                Mockito.any(WikipediaLanguage.class),
-                eq(type),
-                eq(subtype),
-                eq(reviewer)
             );
     }
 }

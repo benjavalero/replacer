@@ -6,6 +6,7 @@ import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,8 +78,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.debug("Update page replacements in database");
         replacementIndexService.indexPageReplacements(
-            page.getId(),
-            page.getLang(),
+            page,
             replacements.stream().map(page::convertReplacementToIndexed).collect(Collectors.toList())
         );
 
@@ -88,6 +88,13 @@ class PageReviewTypeSubtypeService extends PageReviewService {
         LOGGER.debug("Final replacements found in text after filtering: {}", replacements.size());
 
         return replacements;
+    }
+
+    void reviewPageReplacements(int pageId, WikipediaLanguage lang, String type, String subtype, String reviewer) {
+        replacementDao.reviewByPageId(lang, pageId, type, subtype, reviewer);
+
+        // Decrease the cached count (one page)
+        replacementCountService.decreaseCachedReplacementsCount(lang, type, subtype, 1);
     }
 
     private List<Replacement> filterReplacementsByTypeAndSubtype(

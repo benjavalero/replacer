@@ -114,7 +114,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexPageReplacements(Mockito.eq(randomId), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
+            .indexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList());
 
         Assertions.assertFalse(review.isPresent());
     }
@@ -145,7 +145,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexPageReplacements(Mockito.eq(randomId), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
+            .indexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId, review.get().getId());

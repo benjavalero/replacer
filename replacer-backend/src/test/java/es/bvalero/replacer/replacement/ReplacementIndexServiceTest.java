@@ -19,13 +19,9 @@ public class ReplacementIndexServiceTest {
     @Mock
     private ReplacementDao replacementDao;
 
-    @Mock
-    private ReplacementCountService replacementCountService;
-
     @Spy
     private ModelMapper modelMapper;
 
-    @Spy // To verify the calls to methods
     @InjectMocks
     private ReplacementIndexService replacementIndexService;
 
@@ -38,8 +34,9 @@ public class ReplacementIndexServiceTest {
     @Test
     public void testIndexNewPageReplacements() {
         int pageId = new Random().nextInt();
+        WikipediaPage page = WikipediaPage.builder().id(pageId).lang(WikipediaLanguage.SPANISH).build();
 
-        replacementIndexService.indexPageReplacements(pageId, WikipediaLanguage.SPANISH, Collections.emptyList());
+        replacementIndexService.indexPageReplacements(page, Collections.emptyList());
 
         Mockito.verify(replacementDao, Mockito.times(1)).findByPageId(Mockito.eq(pageId), Mockito.any(WikipediaLanguage.class));
     }
@@ -48,9 +45,10 @@ public class ReplacementIndexServiceTest {
     public void testIndexNewPageInvalidReplacements() {
         int pageId = new Random().nextInt();
         int wrongId = pageId + 1;
+        WikipediaPage page = WikipediaPage.builder().id(pageId).lang(WikipediaLanguage.SPANISH).build();
 
         IndexableReplacement indexableReplacement = IndexableReplacement.of(wrongId, WikipediaLanguage.SPANISH, "", "", 0, "", LocalDate.now(), "");
-        replacementIndexService.indexPageReplacements(pageId, WikipediaLanguage.SPANISH, Collections.singletonList(indexableReplacement));
+        replacementIndexService.indexPageReplacements(page, Collections.singletonList(indexableReplacement));
     }
 
     @Test
@@ -60,10 +58,10 @@ public class ReplacementIndexServiceTest {
         IndexableReplacement idx1 = page.convertReplacementToIndexed(rep1);
         List<IndexableReplacement> newReplacements = Collections.singletonList(idx1);
 
-        List<ReplacementEntity> dbReplacements = Collections.emptyList();
+        List<ReplacementEntity> dbReplacements = new ArrayList<>();
 
         List<ReplacementEntity> toIndex =
-            replacementIndexService.findIndexPageReplacements(page.getId(), WikipediaLanguage.SPANISH, newReplacements, dbReplacements);
+            replacementIndexService.findIndexPageReplacements(page, newReplacements, dbReplacements);
 
         Assert.assertThat(toIndex, is(Collections.singletonList(replacementIndexService.convertToEntity(idx1))));
     }
@@ -71,21 +69,23 @@ public class ReplacementIndexServiceTest {
     @Test
     public void testIndexObsoletePage() {
         List<IndexableReplacement> newReplacements = Collections.emptyList();
+        int pageId = new Random().nextInt();
+        WikipediaPage page = WikipediaPage.builder().id(pageId).lang(WikipediaLanguage.SPANISH).lastUpdate(LocalDate.now()).build();
 
         // Both obsolete to review or reviewed by system ==> Delete
-        // A fake replacement will be created instead
+        // A dummy replacement will be created instead
         ReplacementEntity rep2 = new ReplacementEntity(1, "", "", 2);
         ReplacementEntity rep3 = new ReplacementEntity(1, "", "", 3, "system");
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(rep2, rep3));
 
         List<ReplacementEntity> toIndex =
-            replacementIndexService.findIndexPageReplacements(1, WikipediaLanguage.SPANISH, newReplacements, dbReplacements);
+            replacementIndexService.findIndexPageReplacements(page, newReplacements, dbReplacements);
 
-        Assert.assertThat(toIndex, is(List.of(
-            replacementIndexService.createFakeReviewedReplacement(1, WikipediaLanguage.SPANISH),
-            replacementIndexService.setToDelete(rep2),
-            replacementIndexService.setToDelete(rep3)
-        )));
+        Assert.assertEquals(new HashSet<>(toIndex), Set.of(
+            ReplacementEntity.createDummy(pageId, WikipediaLanguage.SPANISH, LocalDate.now()),
+            rep2.withToDelete(),
+            rep3.withToDelete()
+        ));
     }
 
     @Test
@@ -93,12 +93,13 @@ public class ReplacementIndexServiceTest {
         List<IndexableReplacement> newReplacements = Collections.emptyList();
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
 
-        int pageId = 1;
-        replacementIndexService.findIndexPageReplacements(pageId, WikipediaLanguage.SPANISH, newReplacements, dbReplacements);
+        WikipediaPage page = WikipediaPage.builder().lang(WikipediaLanguage.SPANISH).build();
+        List<ReplacementEntity> result = replacementIndexService.findIndexPageReplacements(
+            page, newReplacements, dbReplacements);
 
-        // Save the fake replacement
-        Mockito.verify(replacementIndexService, Mockito.times(1))
-            .createFakeReviewedReplacement(Mockito.eq(pageId), Mockito.any(WikipediaLanguage.class));
+        // Save the dummy replacement
+        Assert.assertEquals(1, result.size());
+        Assert.assertTrue(result.get(0).isDummy());
     }
 
     @Test
@@ -136,14 +137,15 @@ public class ReplacementIndexServiceTest {
         ReplacementEntity r8db = new ReplacementEntity(1, "8", "8", 2, "system");
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db, r3db, r4db, r6db, r7db, r8db));
 
+        WikipediaPage page = WikipediaPage.builder().id(1).lang(WikipediaLanguage.SPANISH).build();
         List<ReplacementEntity> toIndex =
-            replacementIndexService.findIndexPageReplacements(1, WikipediaLanguage.SPANISH, newReplacements, dbReplacements);
+            replacementIndexService.findIndexPageReplacements(page, newReplacements, dbReplacements);
 
-        Assert.assertThat(toIndex, is(Arrays.asList(
+        Assert.assertEquals(new HashSet<>(toIndex), Set.of(
             r3db,
             replacementIndexService.convertToEntity(r5),
-            replacementIndexService.setToDelete(r6db),
-            replacementIndexService.setToDelete(r8db))));
+            r6db.withToDelete(),
+            r8db.withToDelete()));
     }
 
     @Test
@@ -177,51 +179,14 @@ public class ReplacementIndexServiceTest {
         r6db.setLastUpdate(before);
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db, r4db, r5db, r6db));
 
+        WikipediaPage page = WikipediaPage.builder().id(1).lang(WikipediaLanguage.SPANISH).build();
         List<ReplacementEntity> toIndex =
-            replacementIndexService.findIndexPageReplacements(1, WikipediaLanguage.SPANISH, newReplacements, dbReplacements);
+            replacementIndexService.findIndexPageReplacements(page, newReplacements, dbReplacements);
 
-        Assert.assertThat(toIndex, is(Arrays.asList(
+        Assert.assertEquals(new HashSet<>(toIndex), Set.of(
             r1db,
             replacementIndexService.convertToEntity(r3),
-            replacementIndexService.setToDelete(r4db),
-            replacementIndexService.setToDelete(r6db))));
+            r4db.withToDelete(),
+            r6db.withToDelete()));
     }
-
-    @Test
-    public void testReviewPageNoType() {
-        int pageId = new Random().nextInt();
-
-        replacementIndexService.reviewPageReplacements(pageId, WikipediaLanguage.SPANISH, null, null, "X");
-
-        Mockito.verify(replacementDao, Mockito.times(1))
-            .reviewByPageId(WikipediaLanguage.SPANISH, pageId, null, null, "X");
-    }
-
-    @Test
-    public void testReviewPageWithType() {
-        int pageId = new Random().nextInt();
-
-        replacementIndexService.reviewPageReplacements(pageId, WikipediaLanguage.SPANISH, "A", "B", "X");
-
-        Mockito.verify(replacementCountService, Mockito.times(1))
-                .decreaseCachedReplacementsCount(WikipediaLanguage.SPANISH, "A", "B", 1);
-        Mockito.verify(replacementDao, Mockito.times(1))
-                .reviewByPageId(WikipediaLanguage.SPANISH, pageId, "A", "B", "X");
-    }
-
-    @Test
-    public void testReviewPageWithCustom() {
-        int pageId = new Random().nextInt();
-
-        replacementIndexService.reviewPageReplacements(pageId, WikipediaLanguage.SPANISH, ReplacementEntity.TYPE_CUSTOM, "B", "X");
-
-        Mockito.verify(replacementCountService, Mockito.times(0))
-                .decreaseCachedReplacementsCount(Mockito.any(WikipediaLanguage.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
-        Mockito.verify(replacementDao, Mockito.times(0))
-            .reviewByPageId(WikipediaLanguage.SPANISH, pageId, ReplacementEntity.TYPE_CUSTOM, "B", "X");
-
-        ReplacementEntity toSave = replacementIndexService.createCustomReviewedReplacement(pageId, WikipediaLanguage.SPANISH, "B", "X");
-        Mockito.verify(replacementDao, Mockito.times(1)).insert(toSave);
-    }
-
 }

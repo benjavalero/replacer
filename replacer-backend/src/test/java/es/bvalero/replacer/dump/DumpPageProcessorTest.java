@@ -3,6 +3,7 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
@@ -60,8 +61,7 @@ class DumpPageProcessorTest {
         Mockito
             .verify(replacementIndexService)
             .findIndexPageReplacements(
-                Mockito.anyInt(),
-                Mockito.any(WikipediaLanguage.class),
+                Mockito.any(IndexablePage.class),
                 Mockito.anyList(),
                 Mockito.anyList()
             );
@@ -194,8 +194,7 @@ class DumpPageProcessorTest {
         Mockito
             .verify(replacementIndexService)
             .findIndexPageReplacements(
-                Mockito.anyInt(),
-                Mockito.any(WikipediaLanguage.class),
+                Mockito.any(IndexablePage.class),
                 Mockito.anyList(),
                 Mockito.eq(dbReplacements)
             );
@@ -231,8 +230,7 @@ class DumpPageProcessorTest {
         Mockito
             .verify(replacementIndexService)
             .findIndexPageReplacements(
-                Mockito.anyInt(),
-                Mockito.any(WikipediaLanguage.class),
+                Mockito.any(IndexablePage.class),
                 Mockito.anyList(),
                 Mockito.eq(dbReplacements)
             );

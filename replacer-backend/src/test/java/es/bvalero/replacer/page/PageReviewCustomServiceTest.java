@@ -6,7 +6,6 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.*;
 import javax.annotation.Resource;
@@ -58,9 +57,6 @@ class PageReviewCustomServiceTest {
 
     @Mock
     private ReplacementFindService replacementFindService;
-
-    @Mock
-    private ReplacementIndexService replacementIndexService;
 
     @Mock
     private SectionReviewService sectionReviewService;
@@ -176,8 +172,8 @@ class PageReviewCustomServiceTest {
             );
 
         Mockito
-            .verify(replacementIndexService, Mockito.times(1))
-            .addCustomReviewedReplacement(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class), Mockito.anyString());
+            .verify(replacementDao, Mockito.times(1))
+            .insert(Mockito.any(ReplacementEntity.class));
 
         Assertions.assertFalse(review.isPresent());
     }

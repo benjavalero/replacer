@@ -20,6 +20,7 @@ class PageListService {
     }
 
     void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
+        // These reviewed replacements will be cleaned up in the next dump indexation
         replacementDao.reviewAsSystemBySubtype(lang, type, subtype);
     }
 }

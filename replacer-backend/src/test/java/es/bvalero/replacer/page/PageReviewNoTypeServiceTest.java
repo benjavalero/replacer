@@ -147,7 +147,7 @@ class PageReviewNoTypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexPageReplacements(Mockito.eq(randomId), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
+            .indexPageReplacements(Mockito.eq(page), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId, review.get().getId());
@@ -180,7 +180,7 @@ class PageReviewNoTypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexPageReplacements(randomId, WikipediaLanguage.SPANISH, Collections.emptyList());
+            .indexPageReplacements(page, Collections.emptyList());
 
         Assertions.assertFalse(review.isPresent());
     }
@@ -211,7 +211,7 @@ class PageReviewNoTypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexPageReplacements(Mockito.eq(randomId2), Mockito.any(WikipediaLanguage.class), Mockito.anyList());
+            .indexPageReplacements(Mockito.eq(page2), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId2, review.get().getId());

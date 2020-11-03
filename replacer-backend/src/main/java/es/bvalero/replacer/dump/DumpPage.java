@@ -20,7 +20,7 @@ class DumpPage implements IndexablePage {
     boolean isProcessableByTimestamp(LocalDate dbDate) {
         // If page modified in dump equals to the last indexing, reprocess always.
         // If page modified in dump after last indexing, reprocess always.
-        // If page modified in dump before last indexing, do not reprocess even when forcing.
+        // If page modified in dump before last indexing, do not reprocess.
         return !this.getLastUpdate().isBefore(dbDate);
     }
 }

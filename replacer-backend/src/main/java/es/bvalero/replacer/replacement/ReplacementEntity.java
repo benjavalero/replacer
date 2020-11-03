@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.With;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 
 /**
@@ -16,7 +18,6 @@ import org.jetbrains.annotations.TestOnly;
 @AllArgsConstructor
 public class ReplacementEntity implements Serializable {
     public static final String TYPE_CUSTOM = "Personalizado";
-    static final String TYPE_DELETE = "delete";
     public static final String REVIEWER_SYSTEM = "system";
 
     private Long id;
@@ -30,15 +31,10 @@ public class ReplacementEntity implements Serializable {
     private String reviewer;
     private String title;
 
-    public ReplacementEntity(int pageId, WikipediaLanguage lang, String type, String subtype, int position) {
-        this.pageId = pageId;
-        this.lang = lang.getCode();
-        this.type = type;
-        this.subtype = subtype;
-        this.position = position;
-        this.lastUpdate = LocalDate.now();
-        this.reviewer = null;
-    }
+    // Temporary field not in database to know the status of the replacement while indexing
+    // Values: C - Create, U - Update, D - Delete, K - Keep
+    @With
+    private transient String cudAction;
 
     @TestOnly
     public ReplacementEntity(int pageId, String type, String subtype, int position) {
@@ -63,27 +59,94 @@ public class ReplacementEntity implements Serializable {
         return this.reviewer == null;
     }
 
-    private boolean isSystemReviewed() {
+    boolean isOlderThan(LocalDate date) {
+        return this.lastUpdate.isBefore(date);
+    }
+
+    boolean isSystemReviewed() {
         return REVIEWER_SYSTEM.equals(this.reviewer);
     }
 
-    boolean isUserReviewed() {
-        return !isToBeReviewed() && !isSystemReviewed();
+    void setToCreate() {
+        this.cudAction = "C";
     }
 
-    boolean isCustom() {
-        return TYPE_CUSTOM.equals(this.type);
+    public boolean isToCreate() {
+        return "C".equals(this.cudAction);
     }
 
-    public boolean isToInsert() {
-        return this.id == null;
+    void setToDelete() {
+        this.cudAction = "D";
+    }
+
+    @TestOnly
+    ReplacementEntity withToDelete() {
+        return this.withCudAction("D");
     }
 
     public boolean isToDelete() {
-        return TYPE_DELETE.equals(this.type);
+        return "D".equals(this.cudAction);
+    }
+
+    void setToUpdate() {
+        this.cudAction = "U";
     }
 
     public boolean isToUpdate() {
-        return !isToInsert() && !isToDelete();
+        return "U".equals(this.cudAction);
+    }
+
+    void setToKeep() {
+        this.cudAction = "K";
+    }
+
+    static ReplacementEntity createDummy(int pageId, WikipediaLanguage lang, LocalDate lastUpdate) {
+        return new ReplacementEntity(
+            null,
+            pageId,
+            lang.getCode(),
+            "",
+            "",
+            0,
+            null,
+            lastUpdate,
+            REVIEWER_SYSTEM,
+            null,
+            "C"
+        );
+    }
+
+    boolean isDummy() {
+        return (
+            StringUtils.isEmpty(this.type) &&
+            StringUtils.isEmpty(this.subtype) &&
+            this.position == 0 &&
+            REVIEWER_SYSTEM.equals(this.reviewer)
+        );
+    }
+
+    public static ReplacementEntity createCustomSystemReviewed(int pageId, WikipediaLanguage lang, String subtype) {
+        return createCustomReviewed(pageId, lang, subtype, REVIEWER_SYSTEM);
+    }
+
+    public static ReplacementEntity createCustomReviewed(
+        int pageId,
+        WikipediaLanguage lang,
+        String subtype,
+        String reviewer
+    ) {
+        return new ReplacementEntity(
+            null,
+            pageId,
+            lang.getCode(),
+            TYPE_CUSTOM,
+            subtype,
+            0,
+            null,
+            LocalDate.now(),
+            reviewer,
+            null,
+            "C"
+        );
     }
 }

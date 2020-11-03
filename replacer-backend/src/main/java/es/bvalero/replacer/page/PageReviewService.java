@@ -2,7 +2,8 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.replacement.ReplacementDao;
+import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -23,7 +24,7 @@ abstract class PageReviewService {
     private WikipediaService wikipediaService;
 
     @Autowired
-    private ReplacementIndexService replacementIndexService;
+    private ReplacementDao replacementDao;
 
     @Autowired
     private SectionReviewService sectionReviewService;
@@ -139,8 +140,8 @@ abstract class PageReviewService {
     }
 
     void setPageAsReviewed(int pageId, PageReviewOptions options) {
-        // TODO: These reviewed replacements will be cleaned up in the next dump indexation
-        replacementIndexService.reviewPageReplacementsAsSystem(pageId, options.getLang());
+        // These reviewed replacements will be cleaned up in the next dump indexation
+        replacementDao.reviewByPageId(options.getLang(), pageId, null, null, ReplacementEntity.REVIEWER_SYSTEM);
     }
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {

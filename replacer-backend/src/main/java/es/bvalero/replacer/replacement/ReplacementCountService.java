@@ -88,7 +88,7 @@ public class ReplacementCountService {
         }
     }
 
-    void decreaseCachedReplacementsCount(WikipediaLanguage lang, String type, String subtype, int size) {
+    public void decreaseCachedReplacementsCount(WikipediaLanguage lang, String type, String subtype, int size) {
         if (languageCounts.containsKey(lang)) {
             LanguageCount languageCount = languageCounts.get(lang);
             if (languageCount.contains(type)) {

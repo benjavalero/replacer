@@ -1,12 +1,10 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import java.time.LocalDate;
+import es.bvalero.replacer.page.IndexablePage;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,51 +16,37 @@ public class ReplacementIndexService {
     private ReplacementDao replacementDao;
 
     @Autowired
-    private ReplacementCountService replacementCountService;
-
-    @Autowired
     private ModelMapper modelMapper;
 
-    /* INDEX PAGES */
-
-    /**
-     * Add a list of replacements for a page to the database. In case the page is already indexed,
-     * the existing replacements in the database are updated. The ID is needed in case the list is empty
-     * so we can still update the existing replacements to mark them as obsolete.
-     */
-    public void indexPageReplacements(int pageId, WikipediaLanguage lang, List<IndexableReplacement> replacements) {
+    /** Update the replacements of a page in DB with the found ones */
+    public void indexPageReplacements(IndexablePage page, List<IndexableReplacement> replacements) {
         // All replacements correspond to the same page
-        if (replacements.stream().anyMatch(r -> r.getPageId() != pageId)) {
+        if (replacements.stream().anyMatch(r -> r.getPageId() != page.getId())) {
             throw new IllegalArgumentException("Indexable replacements from more than one page");
         }
 
         // We need the page ID because the replacement list to index might be empty
         List<ReplacementEntity> toSave = findIndexPageReplacements(
-            pageId,
-            lang,
+            page,
             replacements,
-            replacementDao.findByPageId(pageId, lang)
+            replacementDao.findByPageId(page.getId(), page.getLang())
         );
         saveReplacements(toSave);
     }
 
     /**
-     * Add a list of replacements for a page to the database, updating the existing replacements in the database,
-     * received also as a parameter. The ID is needed in case the list is empty
-     * so we can still update the existing replacements to mark them as obsolete.
+     * Compare the given found replacements in a page with the given ones in the database.
      *
-     * This method should be private but in cases like dump indexing it is worth to provide the DB replacements directly.
+     * @return A list of replacements to be inserted, updated or deleted in database.
      */
     public List<ReplacementEntity> findIndexPageReplacements(
-        int pageId,
-        WikipediaLanguage lang,
+        IndexablePage page,
         List<IndexableReplacement> replacements,
         List<ReplacementEntity> dbReplacements
     ) {
         LOGGER.debug(
-            "START Index list of replacements. ID: {} - {}\n" + "New: {} - {}\n" + "Old: {} - {}",
-            pageId,
-            lang,
+            "START Index list of replacements. Page: {}\n" + "New: {} - {}\n" + "Old: {} - {}",
+            page,
             replacements.size(),
             replacements,
             dbReplacements.size(),
@@ -72,27 +56,17 @@ public class ReplacementIndexService {
 
         replacements.forEach(replacement -> handleReplacement(replacement, dbReplacements).ifPresent(result::add));
 
-        // Remove the remaining replacements not reviewed
-        List<ReplacementEntity> toRemove = dbReplacements
-            .stream()
-            .filter(rep -> !rep.isCustom())
-            .filter(rep -> !rep.isUserReviewed())
-            .collect(Collectors.toList());
-        dbReplacements.removeAll(toRemove);
+        result.addAll(cleanUpPageReplacements(page, dbReplacements));
 
-        // In case there are no replacements to be added to the DB,
-        // the page would be parsed again in the next indexation even if it is not needed
-        // so we add a fake row for the page to set the date of the last update
-        if (result.isEmpty() && dbReplacements.isEmpty()) {
-            result.add(createFakeReviewedReplacement(pageId, lang));
-        }
-
-        result.addAll(setToDelete(toRemove));
         LOGGER.debug("END Index list of replacements");
 
         return result;
     }
 
+    /**
+     * Check the given replacement with the ones in DB. Update the given DB list if needed.
+     * @return The updated replacement to be managed in DB if needed.
+     */
     private Optional<ReplacementEntity> handleReplacement(
         IndexableReplacement replacement,
         List<ReplacementEntity> dbPageReplacements
@@ -101,10 +75,11 @@ public class ReplacementIndexService {
         Optional<ReplacementEntity> existing = findSameReplacementInCollection(replacement, dbPageReplacements);
         if (existing.isPresent()) {
             result = handleExistingReplacement(replacement, existing.get());
-            dbPageReplacements.remove(existing.get());
         } else {
             // New replacement
-            result = Optional.of(convertToEntity(replacement));
+            ReplacementEntity newReplacement = convertToEntity(replacement);
+            dbPageReplacements.add(newReplacement);
+            result = Optional.of(newReplacement);
             LOGGER.debug("Replacement inserted in DB: {}", replacement);
         }
         return result;
@@ -126,51 +101,36 @@ public class ReplacementIndexService {
         );
     }
 
+    /**
+     * Check the given replacement with the counterpart in DB.
+     * @return The updated replacement to be managed in DB if needed, or empty if not.
+     */
     private Optional<ReplacementEntity> handleExistingReplacement(
         IndexableReplacement replacement,
         ReplacementEntity dbReplacement
     ) {
         Optional<ReplacementEntity> result = Optional.empty();
-        if (dbReplacement.isToBeReviewed()) {
-            if (dbReplacement.getLastUpdate().isBefore(replacement.getLastUpdate())) {
-                // DB older than Dump
-                dbReplacement.setLastUpdate(replacement.getLastUpdate());
+        if (dbReplacement.isToBeReviewed() && dbReplacement.isOlderThan(replacement.getLastUpdate())) {
+            dbReplacement.setToUpdate();
+            dbReplacement.setLastUpdate(replacement.getLastUpdate());
 
-                // Also update other values in case any of them has changed
-                dbReplacement.setPosition(replacement.getPosition());
-                dbReplacement.setContext(replacement.getContext());
-                dbReplacement.setTitle(replacement.getTitle());
+            // Also update other values just in case any of them has changed
+            dbReplacement.setPosition(replacement.getPosition());
+            dbReplacement.setContext(replacement.getContext());
+            dbReplacement.setTitle(replacement.getTitle());
 
-                result = Optional.of(dbReplacement);
-            } else if (
-                replacement.getPosition() != dbReplacement.getPosition() ||
-                !replacement.getContext().equals(dbReplacement.getContext())
-            ) {
-                // There is no need to check the title as we don't retrieve it and it never changes
-                // Also update other values in case any of them has changed
-                dbReplacement.setPosition(replacement.getPosition());
-                dbReplacement.setContext(replacement.getContext());
-                dbReplacement.setTitle(replacement.getTitle());
-
-                result = Optional.of(dbReplacement);
-            }
+            result = Optional.of(dbReplacement);
+        } else {
+            dbReplacement.setToKeep();
         }
         return result;
-    }
-
-    private void saveReplacement(ReplacementEntity replacement) {
-        try {
-            replacementDao.insert(replacement);
-        } catch (Exception e) {
-            LOGGER.error("Error when saving replacement: {}", replacement, e);
-        }
     }
 
     private void saveReplacements(List<ReplacementEntity> replacements) {
         try {
             List<ReplacementEntity> toInsert = replacements
                 .stream()
-                .filter(ReplacementEntity::isToInsert)
+                .filter(ReplacementEntity::isToCreate)
                 .collect(Collectors.toList());
             toInsert.forEach(r -> replacementDao.insert(r));
 
@@ -197,80 +157,62 @@ public class ReplacementIndexService {
         // It is mapping the page ID also to the entity Id
         entity.setId(null);
         entity.setLang(replacement.getLang().getCode());
+        entity.setToCreate();
         return entity;
     }
 
-    private ReplacementEntity reviewReplacement(ReplacementEntity replacement, String reviewer) {
-        replacement.setReviewer(reviewer);
-        replacement.setLastUpdate(LocalDate.now());
-        return replacement;
-    }
+    /**
+     * Find obsolete replacements and add a dummy one if needed.
+     *
+     * @return A list of replacements to be managed in DB.
+     */
+    List<ReplacementEntity> cleanUpPageReplacements(IndexablePage page, List<ReplacementEntity> dbReplacements) {
+        // We assume there are no custom replacements in the list
+        List<ReplacementEntity> result = new ArrayList<>();
 
-    private ReplacementEntity reviewReplacementAsSystem(ReplacementEntity replacement) {
-        return reviewReplacement(replacement, ReplacementEntity.REVIEWER_SYSTEM);
-    }
+        // Find just in case the system-reviewed replacements and delete them
+        List<ReplacementEntity> systemReviewed = dbReplacements
+            .stream()
+            .filter(rep -> rep.isSystemReviewed() && !rep.isDummy())
+            .collect(Collectors.toList());
+        systemReviewed.forEach(ReplacementEntity::setToDelete);
+        result.addAll(systemReviewed);
+        dbReplacements.removeAll(systemReviewed);
 
-    public void reviewPageReplacementsAsSystem(int pageId, WikipediaLanguage lang) {
-        replacementDao.reviewByPageId(lang, pageId, null, null, ReplacementEntity.REVIEWER_SYSTEM);
-    }
+        // All remaining replacements to review and not checked so far are obsolete and thus to be deleted
+        List<ReplacementEntity> obsolete = dbReplacements
+            .stream()
+            .filter(rep -> rep.isToBeReviewed() && StringUtils.isEmpty(rep.getCudAction()))
+            .collect(Collectors.toList());
+        obsolete.forEach(ReplacementEntity::setToDelete);
+        result.addAll(obsolete);
+        dbReplacements.removeAll(obsolete);
 
-    public void reviewPageReplacements(
-        int pageId,
-        WikipediaLanguage lang,
-        @Nullable String type,
-        @Nullable String subtype,
-        String reviewer
-    ) {
-        LOGGER.info("START Mark page as reviewed. ID: {}", pageId);
+        // We use a dummy replacement to store in some place the last update of the page
+        // in case there are no replacements to review to store it instead.
+        // The user-reviewed replacements can't be used as they are only kept for the sake of statistics
+        // and have the date of the user review action.
 
-        if (ReplacementEntity.TYPE_CUSTOM.equals(type)) {
-            // Custom replacements don't exist in the database to be reviewed
-            ReplacementEntity customReviewed = createCustomReviewedReplacement(pageId, lang, subtype, reviewer);
-            saveReplacement(customReviewed);
-        } else if (StringUtils.isNotBlank(type)) {
-            replacementDao.reviewByPageId(lang, pageId, type, subtype, reviewer);
-
-            // Decrease the cached count (one page)
-            replacementCountService.decreaseCachedReplacementsCount(lang, type, subtype, 1);
+        // If there remain replacements to review there is no need of dummy replacement
+        // If not a dummy replacement must be created or updated
+        // As this is the last step there is no need to update the DB list
+        boolean existReplacementsToReview = dbReplacements.stream().anyMatch(ReplacementEntity::isToBeReviewed);
+        Optional<ReplacementEntity> dummy = dbReplacements.stream().filter(ReplacementEntity::isDummy).findAny();
+        if (existReplacementsToReview) {
+            if (dummy.isPresent()) {
+                dummy.get().setToDelete();
+                result.add(dummy.get());
+            }
         } else {
-            replacementDao.reviewByPageId(lang, pageId, null, null, reviewer);
+            if (dummy.isPresent()) {
+                dummy.get().setToUpdate();
+                dummy.get().setLastUpdate(page.getLastUpdate());
+                result.add(dummy.get());
+            } else {
+                result.add(ReplacementEntity.createDummy(page.getId(), page.getLang(), page.getLastUpdate()));
+            }
         }
 
-        LOGGER.info("END Mark page as reviewed. ID: {}", pageId);
-    }
-
-    ReplacementEntity createCustomReviewedReplacement(
-        int pageId,
-        WikipediaLanguage lang,
-        String replacement,
-        String reviewer
-    ) {
-        ReplacementEntity custom = new ReplacementEntity(pageId, lang, ReplacementEntity.TYPE_CUSTOM, replacement, 0);
-        return reviewReplacement(custom, reviewer);
-    }
-
-    public void addCustomReviewedReplacement(int pageId, WikipediaLanguage lang, String replacement) {
-        ReplacementEntity customReplacement = new ReplacementEntity(
-            pageId,
-            lang,
-            ReplacementEntity.TYPE_CUSTOM,
-            replacement,
-            0
-        );
-        saveReplacement(reviewReplacementAsSystem(customReplacement));
-    }
-
-    ReplacementEntity createFakeReviewedReplacement(int pageId, WikipediaLanguage lang) {
-        ReplacementEntity fakeReplacement = new ReplacementEntity(pageId, lang, "", "", 0);
-        return reviewReplacementAsSystem(fakeReplacement);
-    }
-
-    private List<ReplacementEntity> setToDelete(List<ReplacementEntity> replacements) {
-        return replacements.stream().map(this::setToDelete).collect(Collectors.toList());
-    }
-
-    ReplacementEntity setToDelete(ReplacementEntity replacement) {
-        replacement.setType(ReplacementEntity.TYPE_DELETE);
-        return replacement;
+        return result;
     }
 }

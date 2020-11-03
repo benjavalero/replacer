@@ -5,7 +5,7 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.authentication.AccessToken;
 import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.replacement.ReplacementCountService;
-import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Optional;
@@ -28,9 +28,6 @@ public class PageController {
 
     @Autowired
     private PageReviewCustomService pageReviewCustomService;
-
-    @Autowired
-    private ReplacementIndexService replacementIndexService;
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -135,13 +132,19 @@ public class PageController {
         }
 
         // Mark page as reviewed in the database
-        replacementIndexService.reviewPageReplacements(
-            pageId,
-            lang,
-            savePage.getType(),
-            savePage.getSubtype(),
-            savePage.getReviewer()
-        );
+        if (ReplacementEntity.TYPE_CUSTOM.equals(savePage.getType())) {
+            pageReviewCustomService.reviewPageReplacements(pageId, lang, savePage.getSubtype(), savePage.getReviewer());
+        } else if (StringUtils.isNotBlank(savePage.getType())) {
+            pageReviewTypeSubtypeService.reviewPageReplacements(
+                pageId,
+                lang,
+                savePage.getType(),
+                savePage.getSubtype(),
+                savePage.getReviewer()
+            );
+        } else {
+            pageReviewNoTypeService.reviewPageReplacements(pageId, lang, savePage.getReviewer());
+        }
     }
 
     /* PAGE LIST FOR ROBOTS */

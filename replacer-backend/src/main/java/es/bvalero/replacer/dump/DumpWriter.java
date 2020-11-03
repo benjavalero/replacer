@@ -29,7 +29,7 @@ public class DumpWriter implements ItemWriter<List<ReplacementEntity>> {
 
         List<ReplacementEntity> toInsert = flatList
             .stream()
-            .filter(ReplacementEntity::isToInsert)
+            .filter(ReplacementEntity::isToCreate)
             .collect(Collectors.toList());
         if (!toInsert.isEmpty()) {
             insertWriter.write(toInsert);

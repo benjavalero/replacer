@@ -100,10 +100,11 @@ public class ReplacementDao {
         // We need all the fields but the title so we don't select it to improve performance
         String sql =
             "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
-            "FROM replacement2 WHERE lang = :lang AND article_id = :pageId";
+            "FROM replacement2 WHERE lang = :lang AND article_id = :pageId AND type <> :type";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_PAGE_ID, pageId);
+            .addValue(PARAM_PAGE_ID, pageId)
+            .addValue(PARAM_TYPE, ReplacementEntity.TYPE_CUSTOM);
         return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
