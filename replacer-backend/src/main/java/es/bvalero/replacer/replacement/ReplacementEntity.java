@@ -15,6 +15,10 @@ import org.jetbrains.annotations.TestOnly;
 @NoArgsConstructor // Needed by ModelMapper
 @AllArgsConstructor
 public class ReplacementEntity implements Serializable {
+    public static final String TYPE_CUSTOM = "Personalizado";
+    public static final String TYPE_DELETE = "delete";
+    public static final String REVIEWER_SYSTEM = "system";
+
     private Long id;
     private int pageId;
     private String lang;

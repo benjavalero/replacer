@@ -1,7 +1,6 @@
 package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.junit.Assert;
@@ -214,12 +213,12 @@ public class ReplacementIndexServiceTest {
     public void testReviewPageWithCustom() {
         int pageId = new Random().nextInt();
 
-        replacementIndexService.reviewPageReplacements(pageId, WikipediaLanguage.SPANISH, ReplacementFindService.CUSTOM_FINDER_TYPE, "B", "X");
+        replacementIndexService.reviewPageReplacements(pageId, WikipediaLanguage.SPANISH, ReplacementEntity.TYPE_CUSTOM, "B", "X");
 
         Mockito.verify(replacementCountService, Mockito.times(0))
                 .decreaseCachedReplacementsCount(Mockito.any(WikipediaLanguage.class), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
         Mockito.verify(replacementDao, Mockito.times(0))
-            .reviewPageReplacements(WikipediaLanguage.SPANISH, pageId, ReplacementFindService.CUSTOM_FINDER_TYPE, "B", "X");
+            .reviewPageReplacements(WikipediaLanguage.SPANISH, pageId, ReplacementEntity.TYPE_CUSTOM, "B", "X");
 
         ReplacementEntity toSave = replacementIndexService.createCustomReviewedReplacement(pageId, WikipediaLanguage.SPANISH, "B", "X");
         Mockito.verify(replacementDao, Mockito.times(1)).insert(toSave);

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import lombok.Value;
 
@@ -24,6 +24,6 @@ public class PageReviewOptions {
     }
 
     static PageReviewOptions ofCustom(WikipediaLanguage lang, String replacement, String suggestion) {
-        return new PageReviewOptions(lang, ReplacementFindService.CUSTOM_FINDER_TYPE, replacement, suggestion);
+        return new PageReviewOptions(lang, ReplacementEntity.TYPE_CUSTOM, replacement, suggestion);
     }
 }

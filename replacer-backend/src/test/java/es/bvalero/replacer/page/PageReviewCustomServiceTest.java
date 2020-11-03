@@ -5,6 +5,7 @@ import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementDao;
+import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.*;
 import org.junit.jupiter.api.Assertions;
@@ -106,7 +107,7 @@ class PageReviewCustomServiceTest {
             .when(
                 replacementDao.findByLangAndTypeAndSubtypeAndReviewerNotNull(
                     WikipediaLanguage.SPANISH,
-                    ReplacementFindService.CUSTOM_FINDER_TYPE,
+                    ReplacementEntity.TYPE_CUSTOM,
                     replacement
                 )
             )
@@ -156,7 +157,7 @@ class PageReviewCustomServiceTest {
             .when(
                 replacementDao.findByLangAndTypeAndSubtypeAndReviewerNotNull(
                     WikipediaLanguage.SPANISH,
-                    ReplacementFindService.CUSTOM_FINDER_TYPE,
+                    ReplacementEntity.TYPE_CUSTOM,
                     replacement
                 )
             )

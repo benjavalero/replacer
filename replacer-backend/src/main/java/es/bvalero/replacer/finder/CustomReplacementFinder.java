@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 
 import java.util.Collections;
@@ -36,7 +37,7 @@ public class CustomReplacementFinder implements ReplacementFinder {
         String text = matcher.group();
         return Replacement
             .builder()
-            .type(ReplacementFindService.CUSTOM_FINDER_TYPE)
+            .type(ReplacementEntity.TYPE_CUSTOM)
             .subtype(this.replacement)
             .start(start)
             .text(text)

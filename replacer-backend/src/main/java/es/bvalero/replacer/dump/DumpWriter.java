@@ -1,7 +1,6 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.replacement.ReplacementIndexService;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,7 +45,7 @@ public class DumpWriter implements ItemWriter<List<ReplacementEntity>> {
 
         List<ReplacementEntity> toDelete = flatList
             .stream()
-            .filter(r -> ReplacementIndexService.TO_DELETE.equals(r.getType()))
+            .filter(r -> ReplacementEntity.TYPE_DELETE.equals(r.getType()))
             .collect(Collectors.toList());
         if (!toDelete.isEmpty()) {
             deleteWriter.write(toDelete);

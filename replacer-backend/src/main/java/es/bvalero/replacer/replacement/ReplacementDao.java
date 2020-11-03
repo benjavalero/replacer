@@ -84,7 +84,7 @@ public class ReplacementDao {
             "DELETE FROM replacement2 " +
             "WHERE lang = :lang AND article_id IN (:pageIds) AND (reviewer IS NULL OR reviewer = :system)";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_SYSTEM, ReplacementIndexService.SYSTEM_REVIEWER)
+            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM)
             .addValue(PARAM_LANG, lang.getCode())
             .addValue("pageIds", pageIds);
         jdbcTemplate.update(sql, namedParameters);
@@ -95,7 +95,7 @@ public class ReplacementDao {
             "UPDATE replacement2 SET reviewer=:system, last_update=:now " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_SYSTEM, ReplacementIndexService.SYSTEM_REVIEWER)
+            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM)
             .addValue("now", LocalDate.now())
             .addValue(PARAM_LANG, lang.getCode())
             .addValue(PARAM_TYPE, type)
@@ -187,7 +187,7 @@ public class ReplacementDao {
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_SYSTEM, ReplacementIndexService.SYSTEM_REVIEWER);
+            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
         return jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
     }
 
@@ -206,7 +206,7 @@ public class ReplacementDao {
             "ORDER BY COUNT(*) DESC";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_SYSTEM, ReplacementIndexService.SYSTEM_REVIEWER);
+            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
         return jdbcTemplate.query(sql, namedParameters, new ReviewerCountRowMapper());
     }
 

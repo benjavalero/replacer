@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ReplacementFindService {
-    public static final String CUSTOM_FINDER_TYPE = "Personalizado";
     private static final int CONTEXT_THRESHOLD = 20;
 
     @Autowired

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.*;
@@ -15,9 +14,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ReplacementIndexService {
-    public static final String SYSTEM_REVIEWER = "system";
-    public static final String TO_DELETE = "delete";
-
     @Autowired
     private ReplacementDao replacementDao;
 
@@ -79,8 +75,8 @@ public class ReplacementIndexService {
         // Remove the remaining replacements not reviewed
         List<ReplacementEntity> toRemove = dbReplacements
             .stream()
-            .filter(rep -> !ReplacementFindService.CUSTOM_FINDER_TYPE.equals(rep.getType()))
-            .filter(rep -> rep.getReviewer() == null || SYSTEM_REVIEWER.equals(rep.getReviewer()))
+            .filter(rep -> !ReplacementEntity.TYPE_CUSTOM.equals(rep.getType()))
+            .filter(rep -> rep.getReviewer() == null || ReplacementEntity.REVIEWER_SYSTEM.equals(rep.getReviewer()))
             .collect(Collectors.toList());
         dbReplacements.removeAll(toRemove);
 
@@ -186,7 +182,7 @@ public class ReplacementIndexService {
 
             List<ReplacementEntity> toRemove = replacements
                 .stream()
-                .filter(r -> ReplacementIndexService.TO_DELETE.equals(r.getType()))
+                .filter(r -> ReplacementEntity.TYPE_DELETE.equals(r.getType()))
                 .collect(Collectors.toList());
             if (!toRemove.isEmpty()) {
                 replacementDao.deleteAll(toRemove);
@@ -211,11 +207,11 @@ public class ReplacementIndexService {
     }
 
     private ReplacementEntity reviewReplacementAsSystem(ReplacementEntity replacement) {
-        return reviewReplacement(replacement, SYSTEM_REVIEWER);
+        return reviewReplacement(replacement, ReplacementEntity.REVIEWER_SYSTEM);
     }
 
     public void reviewPageReplacementsAsSystem(int pageId, WikipediaLanguage lang) {
-        replacementDao.reviewPageReplacements(lang, pageId, null, null, SYSTEM_REVIEWER);
+        replacementDao.reviewPageReplacements(lang, pageId, null, null, ReplacementEntity.REVIEWER_SYSTEM);
     }
 
     public void reviewPageReplacements(
@@ -227,7 +223,7 @@ public class ReplacementIndexService {
     ) {
         LOGGER.info("START Mark page as reviewed. ID: {}", pageId);
 
-        if (ReplacementFindService.CUSTOM_FINDER_TYPE.equals(type)) {
+        if (ReplacementEntity.TYPE_CUSTOM.equals(type)) {
             // Custom replacements don't exist in the database to be reviewed
             ReplacementEntity customReviewed = createCustomReviewedReplacement(pageId, lang, subtype, reviewer);
             saveReplacement(customReviewed);
@@ -249,13 +245,7 @@ public class ReplacementIndexService {
         String replacement,
         String reviewer
     ) {
-        ReplacementEntity custom = new ReplacementEntity(
-            pageId,
-            lang,
-            ReplacementFindService.CUSTOM_FINDER_TYPE,
-            replacement,
-            0
-        );
+        ReplacementEntity custom = new ReplacementEntity(pageId, lang, ReplacementEntity.TYPE_CUSTOM, replacement, 0);
         return reviewReplacement(custom, reviewer);
     }
 
@@ -263,7 +253,7 @@ public class ReplacementIndexService {
         ReplacementEntity customReplacement = new ReplacementEntity(
             pageId,
             lang,
-            ReplacementFindService.CUSTOM_FINDER_TYPE,
+            ReplacementEntity.TYPE_CUSTOM,
             replacement,
             0
         );
@@ -280,7 +270,7 @@ public class ReplacementIndexService {
     }
 
     ReplacementEntity setToDelete(ReplacementEntity replacement) {
-        replacement.setType(TO_DELETE);
+        replacement.setType(ReplacementEntity.TYPE_DELETE);
         return replacement;
     }
 }
