@@ -16,7 +16,7 @@ import org.jetbrains.annotations.TestOnly;
 @AllArgsConstructor
 public class ReplacementEntity implements Serializable {
     public static final String TYPE_CUSTOM = "Personalizado";
-    public static final String TYPE_DELETE = "delete";
+    static final String TYPE_DELETE = "delete";
     public static final String REVIEWER_SYSTEM = "system";
 
     private Long id;
@@ -61,5 +61,29 @@ public class ReplacementEntity implements Serializable {
 
     boolean isToBeReviewed() {
         return this.reviewer == null;
+    }
+
+    private boolean isSystemReviewed() {
+        return REVIEWER_SYSTEM.equals(this.reviewer);
+    }
+
+    boolean isUserReviewed() {
+        return !isToBeReviewed() && !isSystemReviewed();
+    }
+
+    boolean isCustom() {
+        return TYPE_CUSTOM.equals(this.type);
+    }
+
+    public boolean isToInsert() {
+        return this.id == null;
+    }
+
+    public boolean isToDelete() {
+        return TYPE_DELETE.equals(this.type);
+    }
+
+    public boolean isToUpdate() {
+        return !isToInsert() && !isToDelete();
     }
 }

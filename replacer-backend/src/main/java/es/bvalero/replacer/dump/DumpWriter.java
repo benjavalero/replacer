@@ -29,7 +29,7 @@ public class DumpWriter implements ItemWriter<List<ReplacementEntity>> {
 
         List<ReplacementEntity> toInsert = flatList
             .stream()
-            .filter(r -> r.getId() == null)
+            .filter(ReplacementEntity::isToInsert)
             .collect(Collectors.toList());
         if (!toInsert.isEmpty()) {
             insertWriter.write(toInsert);
@@ -37,7 +37,7 @@ public class DumpWriter implements ItemWriter<List<ReplacementEntity>> {
 
         List<ReplacementEntity> toUpdate = flatList
             .stream()
-            .filter(r -> r.getId() != null)
+            .filter(ReplacementEntity::isToUpdate)
             .collect(Collectors.toList());
         if (!toUpdate.isEmpty()) {
             updateWriter.write(toUpdate);
@@ -45,7 +45,7 @@ public class DumpWriter implements ItemWriter<List<ReplacementEntity>> {
 
         List<ReplacementEntity> toDelete = flatList
             .stream()
-            .filter(r -> ReplacementEntity.TYPE_DELETE.equals(r.getType()))
+            .filter(ReplacementEntity::isToDelete)
             .collect(Collectors.toList());
         if (!toDelete.isEmpty()) {
             deleteWriter.write(toDelete);

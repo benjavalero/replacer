@@ -75,8 +75,8 @@ public class ReplacementIndexService {
         // Remove the remaining replacements not reviewed
         List<ReplacementEntity> toRemove = dbReplacements
             .stream()
-            .filter(rep -> !ReplacementEntity.TYPE_CUSTOM.equals(rep.getType()))
-            .filter(rep -> rep.getReviewer() == null || ReplacementEntity.REVIEWER_SYSTEM.equals(rep.getReviewer()))
+            .filter(rep -> !rep.isCustom())
+            .filter(rep -> !rep.isUserReviewed())
             .collect(Collectors.toList());
         dbReplacements.removeAll(toRemove);
 
@@ -170,19 +170,19 @@ public class ReplacementIndexService {
         try {
             List<ReplacementEntity> toInsert = replacements
                 .stream()
-                .filter(r -> r.getId() == null)
+                .filter(ReplacementEntity::isToInsert)
                 .collect(Collectors.toList());
             toInsert.forEach(r -> replacementDao.insert(r));
 
             List<ReplacementEntity> toUpdate = replacements
                 .stream()
-                .filter(r -> r.getId() != null)
+                .filter(ReplacementEntity::isToUpdate)
                 .collect(Collectors.toList());
             toUpdate.forEach(r -> replacementDao.update(r));
 
             List<ReplacementEntity> toRemove = replacements
                 .stream()
-                .filter(r -> ReplacementEntity.TYPE_DELETE.equals(r.getType()))
+                .filter(ReplacementEntity::isToDelete)
                 .collect(Collectors.toList());
             if (!toRemove.isEmpty()) {
                 replacementDao.deleteAll(toRemove);
