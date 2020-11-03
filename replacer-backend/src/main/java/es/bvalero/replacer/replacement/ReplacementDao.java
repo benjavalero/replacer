@@ -73,13 +73,15 @@ public class ReplacementDao {
 
     public List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang) {
         // We need all the fields but the title so we don't select it to improve performance
+        // We are not interested in the custom replacements when reindexing
         String sql =
             "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
-            "FROM replacement2 WHERE lang = :lang AND article_id BETWEEN :minPageId AND :maxPageId";
+            "FROM replacement2 WHERE lang = :lang AND article_id BETWEEN :minPageId AND :maxPageId AND type <> :type";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
             .addValue("minPageId", minPageId)
-            .addValue("maxPageId", maxPageId);
+            .addValue("maxPageId", maxPageId)
+            .addValue(PARAM_TYPE, ReplacementEntity.TYPE_CUSTOM);
         return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
