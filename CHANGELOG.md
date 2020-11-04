@@ -1,9 +1,10 @@
 # Versions
 
-## 2.7.5 (??)
+## 2.7.5 (4 Nov 2020)
 - Link to edit Wikipedia page section instead of link to open in read mode
 - New finder: "ó" between numbers (Spanish)
 - Fix uppercase composed misspellings not found when case-insensitive
+- Fix issues on dump indexation affecting performance
 
 ## 2.7.4 (30 Oct 2020)
 - Improve date finders to fix years with dots and complete missing prepositions
