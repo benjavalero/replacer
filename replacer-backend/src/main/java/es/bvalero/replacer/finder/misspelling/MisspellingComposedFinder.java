@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.misspelling;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.EnumMap;
 import java.util.Map;
@@ -35,13 +36,18 @@ public class MisspellingComposedFinder extends MisspellingFinder {
             String alternations = String.format(
                 "(%s)",
                 StringUtils.join(
-                    misspellings.get(lang).stream().map(Misspelling::getWord).collect(Collectors.toList()),
+                    misspellings.get(lang).stream().map(this::processComposedMisspelling).collect(Collectors.toList()),
                     "|"
                 )
             );
             map.put(lang, new RunAutomaton(new RegExp(alternations).toAutomaton()));
         }
         this.automata = map;
+    }
+
+    private String processComposedMisspelling(Misspelling misspelling) {
+        String words = misspelling.getWord();
+        return misspelling.isCaseSensitive() ? words : FinderUtils.setFirstUpperCaseClass(words);
     }
 
     @Override

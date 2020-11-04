@@ -33,11 +33,6 @@ class FinderUtilsTest {
     }
 
     @Test
-    void testSetFirstUpperCaseClassException() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> FinderUtils.setFirstUpperCaseClass("Álvaro"));
-    }
-
-    @Test
     void testIsWordCompleteInText() {
         String text = "Y hay/un amigo en_mí mismo. X";
 

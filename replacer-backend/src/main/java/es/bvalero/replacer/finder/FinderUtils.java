@@ -4,8 +4,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+@Slf4j
 public class FinderUtils {
     public static final String STRING_EMPTY = "";
     public static final Locale LOCALE_ES = Locale.forLanguageTag("es");
@@ -39,9 +41,10 @@ public class FinderUtils {
 
     public static String setFirstUpperCaseClass(String word) {
         if (!startsWithLowerCase(word)) {
-            throw new IllegalArgumentException(String.format("Word not starting with lowercase: %s", word));
+            LOGGER.warn("Word not starting with lowercase: {}", word);
         }
-        return String.format("[%s%s]%s", toUpperCase(word.substring(0, 1)), word.charAt(0), word.substring(1));
+        String first = word.substring(0, 1);
+        return String.format("[%s%s]%s", toUpperCase(first), toLowerCase(first), word.substring(1));
     }
 
     public static boolean isWordCompleteInText(int start, String word, String text) {

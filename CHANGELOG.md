@@ -3,6 +3,7 @@
 ## 2.7.5 (??)
 - Link to edit Wikipedia page section instead of link to open in read mode
 - New finder: "ó" between numbers (Spanish)
+- Fix uppercase composed misspellings not found when case-insensitive
 
 ## 2.7.4 (30 Oct 2020)
 - Improve date finders to fix years with dots and complete missing prepositions
