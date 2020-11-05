@@ -2,10 +2,7 @@ package es.bvalero.replacer.finder.composed;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.RegexIterable;
-import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFinder;
-import es.bvalero.replacer.finder.Suggestion;
+import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.finder.misspelling.MisspellingComposedFinder;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.Collections;
@@ -19,12 +16,13 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AcuteOFinder implements ReplacementFinder {
-    static final String SUBTYPE_ACUTE_O = "ó entre números";
+    static final String SUBTYPE_ACUTE_O_NUMBERS = "ó entre números";
+    static final String SUBTYPE_ACUTE_O_WORDS = "ó entre palabras";
     static final String ACUTE_O = "ó";
     static final String FIX_ACUTE_O = "o";
 
     @RegExp
-    private static final String REGEX_ACUTE_O = "<N>+ ó <N>+";
+    private static final String REGEX_ACUTE_O = "(<L>|<N>)+ ó (<L>|<N>)+";
 
     private static final RunAutomaton AUTOMATON_ACUTE_O = new RunAutomaton(
         new dk.brics.automaton.RegExp(REGEX_ACUTE_O).toAutomaton(new DatatypesAutomatonProvider())
@@ -40,16 +38,23 @@ public class AcuteOFinder implements ReplacementFinder {
     }
 
     private Replacement convert(MatchResult match) {
-        int posSpace = match.group().indexOf(' ');
-        int start = match.start() + posSpace + 1;
+        int pos = match.group().indexOf('ó');
+        int start = match.start() + pos;
         return Replacement
             .builder()
             .type(MisspellingComposedFinder.TYPE_MISSPELLING_COMPOSED)
-            .subtype(SUBTYPE_ACUTE_O)
+            .subtype(findSubtype(match.group()))
             .start(start)
             .text(ACUTE_O)
             .suggestions(findSuggestions())
             .build();
+    }
+
+    private String findSubtype(String text) {
+        int pos = text.indexOf('ó');
+        return FinderUtils.isNumber(text.charAt(pos - 2)) && FinderUtils.isNumber(text.charAt(pos + 2))
+            ? SUBTYPE_ACUTE_O_NUMBERS
+            : SUBTYPE_ACUTE_O_WORDS;
     }
 
     private List<Suggestion> findSuggestions() {
