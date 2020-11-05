@@ -21,11 +21,11 @@ export class EditPageComponent implements OnInit {
   filteredSubtype: string;
   suggestion: string; // Only for type 'custom'
 
-  defaultLang = Language.es;
   lang: Language;
   title = '';
   content: string;
   section: number;
+  anchor: string;
   replacements: PageReplacement[] = [];
   numPending: number;
   fixedCount = 0;
@@ -81,6 +81,7 @@ export class EditPageComponent implements OnInit {
     this.title = review.title;
     this.content = review.content;
     this.section = review.section;
+    this.anchor = review.anchor;
     this.currentTimestamp = review.queryTimestamp;
     this.replacements = review.replacements;
     this.numPending = review.numPending;
@@ -163,4 +164,11 @@ export class EditPageComponent implements OnInit {
     );
   }
 
+  get url(): string {
+    let url = `https://${this.lang || Language.es}.wikipedia.org/wiki/${this.title}`;
+    if (this.section && this.anchor) {
+      url += `#${this.anchor}`;
+    }
+    return url;
+  }
 }

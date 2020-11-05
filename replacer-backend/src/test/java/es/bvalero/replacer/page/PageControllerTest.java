@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -67,6 +66,7 @@ public class PageControllerTest {
         String title = "X";
         String content = "Y";
         Integer section = 2;
+        String anchor = "S";
         String queryTimestamp = "Z";
         int start = 5;
         String rep = "A";
@@ -80,6 +80,7 @@ public class PageControllerTest {
             title,
             content,
             section,
+            anchor,
             queryTimestamp,
             replacements,
             numPending
@@ -94,6 +95,7 @@ public class PageControllerTest {
             .andExpect(jsonPath("$.title", is(title)))
             .andExpect(jsonPath("$.content", is(content)))
             .andExpect(jsonPath("$.section", is(section)))
+            .andExpect(jsonPath("$.anchor", is(anchor)))
             .andExpect(jsonPath("$.queryTimestamp", is(queryTimestamp)))
             .andExpect(jsonPath("$.replacements[0].start", is(start)))
             .andExpect(jsonPath("$.replacements[0].text", is(rep)))

@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -29,6 +30,9 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Autowired
     private WikipediaRequestService wikipediaRequestService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Setter
     @Value("${replacer.admin.user}")
@@ -214,24 +218,22 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     private WikipediaSection convertToDto(WikipediaApiResponse.Section section) {
-        return WikipediaSection
-            .builder()
-            .level(Integer.parseInt(section.getLevel()))
-            .index(Integer.parseInt(section.getIndex()))
-            .byteOffset(section.getByteoffset())
-            .build();
+        return modelMapper.map(section, WikipediaSection.class);
     }
 
     @Override
-    public Optional<WikipediaPage> getPageByIdAndSection(int pageId, int section, WikipediaLanguage lang)
+    public Optional<WikipediaPage> getPageByIdAndSection(int pageId, WikipediaSection section, WikipediaLanguage lang)
         throws ReplacerException {
         LOGGER.debug("START Get page by ID and section: {} - {}", pageId, section);
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
-            buildPageIdsAndSectionRequestParams(pageId, section),
+            buildPageIdsAndSectionRequestParams(pageId, section.getIndex()),
             lang
         );
         List<WikipediaPage> pages = extractPagesFromJson(apiResponse);
-        Optional<WikipediaPage> page = pages.stream().findAny().map(p -> p.withSection(section).withLang(lang));
+        Optional<WikipediaPage> page = pages
+            .stream()
+            .findAny()
+            .map(p -> p.withLang(lang).withSection(section.getIndex()).withAnchor(section.getAnchor()));
         LOGGER.debug(
             "END Get page by ID and section: {} - {} - {}",
             pageId,

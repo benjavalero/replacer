@@ -47,7 +47,7 @@ class SectionReviewService {
                 // Retrieve the section from Wikipedia API. Better than calculating it by ourselves, just in case.
                 Optional<WikipediaPage> pageSection = wikipediaService.getPageByIdAndSection(
                     review.getId(),
-                    smallestSection.get().getIndex(),
+                    smallestSection.get(),
                     review.getLang()
                 );
                 if (pageSection.isPresent()) {

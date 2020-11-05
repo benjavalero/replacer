@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
+import org.modelmapper.ModelMapper;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +17,9 @@ public class WikipediaServiceTest {
 
     @Spy
     private ObjectMapper jsonMapper;
+
+    @Spy
+    private ModelMapper modelMapper;
 
     @Mock
     private WikipediaRequestService wikipediaRequestService;
@@ -215,6 +219,7 @@ public class WikipediaServiceTest {
         List<WikipediaSection> sections = wikipediaService.getPageSections(6903884, WikipediaLanguage.SPANISH);
         Assert.assertNotNull(sections);
         Assert.assertEquals(3, sections.size());
+
         Assert.assertTrue(sections.stream().anyMatch(sec -> sec.getIndex() == 1));
         Assert.assertEquals(1998, sections.stream()
                 .filter(sec -> sec.getIndex() == 1)
@@ -229,6 +234,8 @@ public class WikipediaServiceTest {
         Assert.assertEquals(2497, sections.stream()
                 .filter(sec -> sec.getIndex() == 3)
                 .findAny().orElseThrow(ReplacerException::new).getByteOffset());
+
+        Assert.assertTrue(sections.stream().allMatch(sec -> StringUtils.isNotEmpty(sec.getAnchor())));
     }
 
     @Test
@@ -259,8 +266,10 @@ public class WikipediaServiceTest {
 
         int pageId = 6903884;
         int sectionId = 1;
+        WikipediaSection section = new WikipediaSection();
+        section.setIndex(sectionId);
         String title = "Usuario:Benjavalero/Taller";
-        WikipediaPage page = wikipediaService.getPageByIdAndSection(pageId, sectionId, WikipediaLanguage.SPANISH)
+        WikipediaPage page = wikipediaService.getPageByIdAndSection(pageId, section, WikipediaLanguage.SPANISH)
                 .orElseThrow(ReplacerException::new);
         Assert.assertNotNull(page);
         Assert.assertEquals(pageId, page.getId());

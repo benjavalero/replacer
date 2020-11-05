@@ -18,6 +18,7 @@ class PageReview {
     private String title;
     private String content;
     private Integer section;
+    private String anchor;
     private String queryTimestamp;
     private List<PageReplacement> replacements;
     private long numPending;

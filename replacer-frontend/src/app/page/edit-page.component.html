@@ -17,8 +17,7 @@
   </nav>
 
   <h3>{{ title }}
-    <a href="https://{{ lang || defaultLang }}.wikipedia.org/w/index.php?title={{ title }}&action=edit&section={{ section }}"
-     target="_blank" class="small">[Editar en Wikipedia]</a>
+    <a href="{{ url }}" target="_blank" class="small">[Abrir en Wikipedia]</a>
   </h3>
 
   <app-edit-snippet *ngFor="let replacement of replacements" [text]="content" [start]="replacement.start"

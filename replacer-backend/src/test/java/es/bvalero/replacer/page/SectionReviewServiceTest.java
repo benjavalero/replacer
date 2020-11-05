@@ -54,7 +54,7 @@ class SectionReviewServiceTest {
 
         int sectionId = 3;
         int offset = 5;
-        WikipediaSection section = WikipediaSection.builder().index(sectionId).level(2).byteOffset(offset).build();
+        WikipediaSection section = new WikipediaSection(2, sectionId, offset, null);
         Mockito
             .when(wikipediaService.getPageSections(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(section));
@@ -71,7 +71,7 @@ class SectionReviewServiceTest {
             .when(
                 wikipediaService.getPageByIdAndSection(
                     Mockito.eq(pageId),
-                    Mockito.eq(sectionId),
+                    Mockito.eq(section),
                     Mockito.any(WikipediaLanguage.class)
                 )
             )

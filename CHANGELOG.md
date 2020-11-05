@@ -1,5 +1,8 @@
 # Versions
 
+## 2.7.6 (5 Nov 2020)
+- Revert link to open Wikipedia page section instead of edit
+
 ## 2.7.5 (4 Nov 2020)
 - Link to edit Wikipedia page section instead of link to open in read mode
 - New finder: "ó" between numbers (Spanish)

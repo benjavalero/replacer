@@ -5,6 +5,7 @@ export interface PageReview {
   title: string;
   content: string;
   section?: number;
+  anchor?: string;
   queryTimestamp: string;
   replacements: PageReplacement[];
   numPending: number;

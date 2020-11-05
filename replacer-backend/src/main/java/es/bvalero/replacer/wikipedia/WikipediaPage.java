@@ -29,6 +29,9 @@ public class WikipediaPage implements IndexablePage {
     @With
     Integer section;
 
+    @With
+    String anchor;
+
     // Store the timestamp when the page was queried. No need to convert it to Date format.
     String queryTimestamp;
 
