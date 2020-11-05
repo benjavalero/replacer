@@ -11,3 +11,7 @@ CREATE TABLE IF NOT EXISTS REPLACEMENT2 (
 	"TYPE" VARCHAR(25) NOT NULL,
 	CONSTRAINT CONSTRAINT_A PRIMARY KEY (ID)
 );
+
+CREATE INDEX IF NOT EXISTS idx_count ON replacement2 (lang, reviewer, type, subtype);
+CREATE INDEX IF NOT EXISTS idx_reviewer ON replacement2 (reviewer);
+CREATE INDEX IF NOT EXISTS idx_dump ON replacement2 (lang, article_id, reviewer);
