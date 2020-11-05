@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -34,31 +35,16 @@ public class ReplacementDao {
         final String sql =
             "INSERT INTO replacement2 (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +
             "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer, :title)";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_PAGE_ID, entity.getPageId())
-            .addValue(PARAM_LANG, entity.getLang())
-            .addValue(PARAM_TYPE, entity.getType())
-            .addValue(PARAM_SUBTYPE, entity.getSubtype())
-            .addValue("position", entity.getPosition())
-            .addValue("context", entity.getContext())
-            .addValue("lastUpdate", entity.getLastUpdate())
-            .addValue(PARAM_REVIEWER, entity.getReviewer())
-            .addValue("title", entity.getTitle());
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
         jdbcTemplate.update(sql, namedParameters);
     }
 
     public void update(ReplacementEntity entity) {
         final String sql =
             "UPDATE replacement2 " +
-            "SET position=:position, context=:context, last_update=:lastUpdate, reviewer=:reviewer, title=:title " +
+            "SET position=:position, context=:context, last_update=:lastUpdate " +
             "WHERE id=:id";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("id", entity.getId())
-            .addValue("position", entity.getPosition())
-            .addValue("context", entity.getContext())
-            .addValue("lastUpdate", entity.getLastUpdate())
-            .addValue(PARAM_REVIEWER, entity.getReviewer())
-            .addValue("title", entity.getTitle());
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
         jdbcTemplate.update(sql, namedParameters);
     }
 

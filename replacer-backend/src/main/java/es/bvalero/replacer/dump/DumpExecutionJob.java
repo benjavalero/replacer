@@ -113,7 +113,7 @@ public class DumpExecutionJob {
     public JdbcBatchItemWriter<ReplacementEntity> jdbcUpdateWriter() {
         final String updateSql =
             "UPDATE replacement2 " +
-            "SET position=:position, context=:context, last_update=:lastUpdate, reviewer=:reviewer, title=:title " +
+            "SET position=:position, context=:context, last_update=:lastUpdate " +
             "WHERE id=:id";
 
         return new JdbcBatchItemWriterBuilder<ReplacementEntity>()
