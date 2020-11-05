@@ -95,7 +95,7 @@ spring:
 spring:
   profiles: db-local
   datasource:
-    url: jdbc:h2:./replacer-h2;MODE=MySQL
+    url: jdbc:h2:./replacer-h2
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
