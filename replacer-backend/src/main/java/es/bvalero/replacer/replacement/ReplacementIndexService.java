@@ -193,7 +193,7 @@ public class ReplacementIndexService {
         // and have the date of the user review action.
 
         // If there remain replacements to review there is no need of dummy replacement
-        // If not a dummy replacement must be created or updated
+        // If not a dummy replacement must be created or updated (if older)
         // As this is the last step there is no need to update the DB list
         boolean existReplacementsToReview = dbReplacements.stream().anyMatch(ReplacementEntity::isToBeReviewed);
         Optional<ReplacementEntity> dummy = dbReplacements.stream().filter(ReplacementEntity::isDummy).findAny();
@@ -204,9 +204,11 @@ public class ReplacementIndexService {
             }
         } else {
             if (dummy.isPresent()) {
-                dummy.get().setToUpdate();
-                dummy.get().setLastUpdate(page.getLastUpdate());
-                result.add(dummy.get());
+                if (dummy.get().isOlderThan(page.getLastUpdate())) {
+                    dummy.get().setToUpdate();
+                    dummy.get().setLastUpdate(page.getLastUpdate());
+                    result.add(dummy.get());
+                }
             } else {
                 result.add(ReplacementEntity.createDummy(page.getId(), page.getLang(), page.getLastUpdate()));
             }
