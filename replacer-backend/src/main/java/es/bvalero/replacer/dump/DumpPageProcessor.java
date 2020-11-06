@@ -57,9 +57,16 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
         }
 
         // 3. Find the replacements to index
-        List<ReplacementEntity> replacements = processPage(dumpPage);
-        // We "filter" the item by returning NULL
-        return replacements.isEmpty() ? null : replacements;
+        try {
+            List<ReplacementEntity> replacements = processPage(dumpPage);
+
+            // We "filter" the item by returning NULL
+            return replacements.isEmpty() ? null : replacements;
+        } catch (Exception e) {
+            // Just in case capture possible exceptions to continue processing other pages
+            LOGGER.error("Page not processed: {}", dumpPage, e);
+            throw new ReplacerException("Page not processable by exception", e);
+        }
     }
 
     private DumpPage mapDumpPageXmlToDumpPage(DumpPageXml dumpPageXml) {
