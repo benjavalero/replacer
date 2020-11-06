@@ -1,5 +1,8 @@
 # Versions
 
+## 2.7.7 (6 Nov 2020)
+- Fix issue finding "ó" between words containing "ó"
+
 ## 2.7.6 (5 Nov 2020)
 - Revert link to open Wikipedia page section instead of edit
 - New finder: "ó" between words (Spanish)

@@ -20,6 +20,8 @@ class AcuteOFinderTest {
             "uno ó 2," + AcuteOFinder.SUBTYPE_ACUTE_O_WORDS,
             "1 ó dos," + AcuteOFinder.SUBTYPE_ACUTE_O_WORDS,
             "uno ó dos," + AcuteOFinder.SUBTYPE_ACUTE_O_WORDS,
+            "dós ó tres," + AcuteOFinder.SUBTYPE_ACUTE_O_WORDS,
+            "m2 ó 23," + AcuteOFinder.SUBTYPE_ACUTE_O_WORDS,
         }
     )
     void testAcuteO(String text, String subtype) {

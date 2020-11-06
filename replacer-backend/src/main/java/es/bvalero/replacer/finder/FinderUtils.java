@@ -74,8 +74,8 @@ public class FinderUtils {
         return (ch >= 'a' && ch <= 'z');
     }
 
-    public static boolean isNumber(char ch) {
-        return Character.isDigit(ch);
+    public static boolean isNumber(String text) {
+        return text.chars().allMatch(Character::isDigit);
     }
 
     public static boolean isWordFollowedByUppercase(int start, String word, String text) {

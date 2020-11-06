@@ -51,8 +51,12 @@ public class AcuteOFinder implements ReplacementFinder {
     }
 
     private String findSubtype(String text) {
-        int pos = text.indexOf('ó');
-        return FinderUtils.isNumber(text.charAt(pos - 2)) && FinderUtils.isNumber(text.charAt(pos + 2))
+        final String middle = " ó ";
+        int pos = text.indexOf(middle);
+        return (
+                FinderUtils.isNumber(text.substring(0, pos)) &&
+                FinderUtils.isNumber(text.substring(pos + middle.length()))
+            )
             ? SUBTYPE_ACUTE_O_NUMBERS
             : SUBTYPE_ACUTE_O_WORDS;
     }
