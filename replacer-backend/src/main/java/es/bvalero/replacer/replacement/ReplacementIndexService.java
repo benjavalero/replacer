@@ -54,7 +54,13 @@ public class ReplacementIndexService {
         );
         List<ReplacementEntity> result = new ArrayList<>();
 
-        replacements.forEach(replacement -> handleReplacement(replacement, dbReplacements).ifPresent(result::add));
+        // Ignore context when comparing replacements in case there are cases with the same context
+        boolean ignoreContext =
+            (replacements.size() != replacements.stream().map(IndexableReplacement::getContext).distinct().count()) ||
+            (dbReplacements.size() != dbReplacements.stream().map(ReplacementEntity::getContext).distinct().count());
+        replacements.forEach(
+            replacement -> handleReplacement(replacement, dbReplacements, ignoreContext).ifPresent(result::add)
+        );
 
         result.addAll(cleanUpPageReplacements(page, dbReplacements));
 
@@ -69,10 +75,15 @@ public class ReplacementIndexService {
      */
     private Optional<ReplacementEntity> handleReplacement(
         IndexableReplacement replacement,
-        List<ReplacementEntity> dbPageReplacements
+        List<ReplacementEntity> dbPageReplacements,
+        boolean ignoreContext
     ) {
         Optional<ReplacementEntity> result;
-        Optional<ReplacementEntity> existing = findSameReplacementInCollection(replacement, dbPageReplacements);
+        Optional<ReplacementEntity> existing = findSameReplacementInCollection(
+            replacement,
+            dbPageReplacements,
+            ignoreContext
+        );
         if (existing.isPresent()) {
             result = handleExistingReplacement(replacement, existing.get());
         } else {
@@ -87,18 +98,33 @@ public class ReplacementIndexService {
 
     private Optional<ReplacementEntity> findSameReplacementInCollection(
         IndexableReplacement replacement,
-        Collection<ReplacementEntity> entities
+        Collection<ReplacementEntity> entities,
+        boolean ignoreContext
     ) {
-        return entities.stream().filter(entity -> isSameReplacement(replacement, entity)).findAny();
+        return entities.stream().filter(entity -> isSameReplacement(replacement, entity, ignoreContext)).findAny();
     }
 
-    private boolean isSameReplacement(IndexableReplacement replacement, ReplacementEntity entity) {
-        return (
+    private boolean isSameReplacement(
+        IndexableReplacement replacement,
+        ReplacementEntity entity,
+        boolean ignoreContext
+    ) {
+        if (
             replacement.getPageId() == entity.getPageId() &&
             replacement.getType().equals(entity.getType()) &&
-            replacement.getSubtype().equals(entity.getSubtype()) &&
-            (replacement.getPosition() == entity.getPosition() || replacement.getContext().equals(entity.getContext()))
-        );
+            replacement.getSubtype().equals(entity.getSubtype())
+        ) {
+            if (ignoreContext) {
+                return replacement.getPosition() == entity.getPosition();
+            } else {
+                return (
+                    replacement.getPosition() == entity.getPosition() ||
+                    replacement.getContext().equals(entity.getContext())
+                );
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
