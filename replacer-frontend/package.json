@@ -1,6 +1,6 @@
 {
   "name": "replacer-frontend",
-  "version": "2.7.6",
+  "version": "2.7.7",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 8080",
