@@ -60,6 +60,12 @@ public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListe
     }
 
     private RunAutomaton buildFalsePositivesAutomaton(Set<String> falsePositives) {
+        // Currently there are about 300 false positives so the best approach is a simple alternation
+        // It gives the best performance with big difference but it is not perfect though
+        // As we check later if the match is a complete word, we could match an incomplete word
+        // that overlaps with the following word which is actually a good match.
+        // For instance, in "ratones aún son", the false positive "es aún" is matched but not valid,
+        // and it makes that the next one "aún son" is not matched.
         if (falsePositives != null && !falsePositives.isEmpty()) {
             String alternations = String.format(
                 "(%s)",
