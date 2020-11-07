@@ -212,38 +212,3 @@ The requests to the API are done in `WikipediaRequestService`, receiving all the
 The authentication is performed by the Oauth 1.0a protocol against the WikiMedia API, which allows the tool to work with the same usernames that are used to edit in Wikipedia. The authentication is implemented in the backend, and the frontend only contains the last access token.
 
 Note that there are different in case we want to develop locally. The Production ones, once logged in, redirect to https://replacer.toolforge.org. However the Development ones redirect to http://localhost:8080.
-
-## TODO: ROADMAP
-
-### Optimization
-- [ ] Research to improve the database model
-- [ ] \#71: Performance tests to run replacement finders in parallel
-- [ ] \#79: Add some kind of warning for long indexing times in order to find issues in finder performance
-- [ ] Delete replacements reviewed by the system which are not needed to keep track of the reviewed pages. For the moment, I do it manually by running the query: `DELETE FROM replacement2 WHERE reviewer = 'system' AND position > 0;`
-
-### Features
-- [ ] \#102: Try to copy the fat-jar out of the project folder in order to package it while still running
-- [ ] \#111: Check if a page is blocked. Try to do it also in _pywikibot_.
-- [ ] Research in MediaWiki code to apply Spanish date format in references
-- [ ] \#45: Research exceptions for the most common replacements
-- [ ] Check if it is worth to store the replacement type as an enumerate
-- [ ] Research if it is possible to deploy independently the frontend and the backend in ToolLabs
-- [ ] Review in the bot, in case they exist, possible cases of the template `dts` or `date_table_sorting` with English format, as this template also exists in Spanish. See <https://en.wikipedia.org/wiki/Template:Date_table_sorting>, <https://es.wikipedia.org/wiki/Plantilla:Dts>, <https://es.wikipedia.org/w/index.php?title=Compile_Heart&diff=prev&oldid=122078489>.
-- [ ] Make the tool more general in order to find replacements in other wiki-projects
-- [ ] Migrate to Wikipedia REST API, meant to be more appropriate for this kind of tools.
-- [ ] Set i18n in the frontend. Translate edition message according to the used language. Even try to make this message more specific about the replacements done.
-- [ ] Improve webapp cache for assets or other files. Check results of PageSpeed Insights.
-- [ ] Review front-end routes
-- [ ] Research option "srsort" when search directly in Wikipedia to try not to skip results on custom replacement when paginating
-- [ ] Add a new option to _skip_ a page for revision for a user, but keep it available for the rest.
-- [ ] Research how to _chain_ misspelling replacements, e.g. `Master` to `Máster` to `máster`.
-- [ ] \#114: New feature to review a specific page
-
-### Docs
-- [ ] Publish the rules of BenjaBot
-- [ ] Complete the rest of the technical design
-- [ ] The Java code is formatted with [Prettier Java](https://github.com/jhipster/prettier-java)
-- [ ] The TypeScript code should be formatted with Prettier too
-- [ ] The Java code has been migrated Java 11. The only issue is the tests with @DataJpaTest so they have been disabled, but it seems a problem of Spring/JDK itself, so it is not worth to investigate more. Also the @WebMvcTest ones have not been migrated to Junit5 yet.
-- [ ] Add Swagger for the API
-- [ ] Propose a standard format for the misspelling descriptions in Wikipedia list
