@@ -10,6 +10,8 @@
  aún no teniendo||aun no teniendo (incluso), aún no teniendo (todavía)
  aún siendo||aun siendo (incluso), aún siendo (todavía)
  aún teniendo||aun teniendo (incluso), aún teniendo (todavía)
+ aun.|cs|aún.
+ aun,|cs|aún,
  Carlos Ménem|cs|Carlos Menem
  con mas||con más
  de mas||de más
@@ -99,6 +101,7 @@
  mas que||más que
  mas tarde||más tarde
  mas y|cs|más y
+ mas.|cs|más.
  Metro de Paris|cs|Metro de París (en español), Métro de Paris (en francés)
  Miguel Angel|cs|Miguel Ángel (nombre propio, en particular castellanización del artista italiano)
  mucho mas||mucho más

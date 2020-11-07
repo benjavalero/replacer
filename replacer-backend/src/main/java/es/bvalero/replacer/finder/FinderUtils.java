@@ -74,6 +74,10 @@ public class FinderUtils {
         return (ch >= 'a' && ch <= 'z');
     }
 
+    public static boolean isWord(String text) {
+        return text.chars().allMatch(Character::isLetter);
+    }
+
     public static boolean isNumber(String text) {
         return text.chars().allMatch(Character::isDigit);
     }

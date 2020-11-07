@@ -242,4 +242,20 @@ class MisspellingSimpleFinderTest {
 
         Assertions.assertTrue(results.isEmpty());
     }
+
+    @Test
+    void testFindMisspellingWithNumber() {
+        String text = "De 23 m2 de extensión";
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("m2", "m²");
+        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
+        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
+        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
+
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+
+        List<Replacement> results = misspellingFinder.findList(text, WikipediaLanguage.SPANISH);
+
+        Assertions.assertTrue(results.isEmpty());
+    }
 }

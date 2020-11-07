@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.misspelling;
 
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Suggestion;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -26,7 +27,7 @@ public class Misspelling {
     private static final Set<Character> FORBIDDEN_CHARS = Collections.singleton('º');
     // Some of the allowed chars will be found in composed misspellings
     // but not in simple misspellings where we only match letters
-    private static final Set<Character> ALLOWED_CHARS = new HashSet<>(Arrays.asList('\'', '-', ' ', '.'));
+    private static final Set<Character> ALLOWED_CHARS = new HashSet<>(Arrays.asList('\'', '-', ' ', '.', ','));
 
     String word;
     boolean caseSensitive;
@@ -65,11 +66,19 @@ public class Misspelling {
     }
 
     private boolean isValidMisspellingChar(int c) {
-        return !FORBIDDEN_CHARS.contains((char) c) && (Character.isLetter(c) || ALLOWED_CHARS.contains((char) c));
+        return (
+            !FORBIDDEN_CHARS.contains((char) c) && (Character.isLetterOrDigit(c) || ALLOWED_CHARS.contains((char) c))
+        );
     }
 
     private List<Suggestion> parseSuggestionsFromComment(String comment) {
         List<Suggestion> suggestionList = new ArrayList<>(5);
+
+        // EXCEPTION: Composed misspellings with one word finished with comma, e.g. "mas."
+        if (comment.endsWith(",") && FinderUtils.isWord(comment.substring(0, comment.length() - 2))) {
+            suggestionList.add(Suggestion.of(comment, null));
+            return suggestionList;
+        }
 
         Matcher m = PATTERN_SUGGESTION.matcher(comment);
         while (m.find()) {

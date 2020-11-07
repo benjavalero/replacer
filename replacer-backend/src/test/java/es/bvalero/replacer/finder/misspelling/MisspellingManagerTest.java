@@ -58,7 +58,7 @@ class MisspellingManagerTest {
     void testParseValidMisspellingWords() {
         String misspellingListText =
             " aguila||águila\n" +
-            " m2||m²\n" + // Not valid with numbers
+            " m2|cs|m²\n" + // Valid with numbers
             " Castilla-León||Castilla y León\n" + // Valid with dashes
             " CD's||CD\n" + // Valid with single quotes
             " n°||n.º\n" + // Not valid with degree symbol
@@ -66,8 +66,9 @@ class MisspellingManagerTest {
             " cm.||cm\n"; // Valid with dots
 
         Collection<Misspelling> misspellings = misspellingManager.parseItemsText(misspellingListText);
-        Assertions.assertEquals(4, misspellings.size());
+        Assertions.assertEquals(5, misspellings.size());
         Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("aguila", "águila")));
+        Assertions.assertTrue(misspellings.contains(Misspelling.of("m2", true, "m²")));
         Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("Castilla-León", "Castilla y León")));
         Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("CD's", "CD")));
         Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("cm.", "cm")));

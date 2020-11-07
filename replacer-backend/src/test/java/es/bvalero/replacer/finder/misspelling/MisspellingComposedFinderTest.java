@@ -54,8 +54,8 @@ class MisspellingComposedFinderTest {
 
     @Test
     void testFindMisspellingWithDot() {
-        String text = "Más aun. Dos.";
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("aun.", "aún.");
+        String text = "Aún mas. Masa.";
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("mas.", "más.");
         Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
         SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
         map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
@@ -69,8 +69,52 @@ class MisspellingComposedFinderTest {
         Assertions.assertEquals(1, results.size());
 
         Replacement result1 = results.get(0);
-        Assertions.assertEquals("aun.", result1.getText());
-        Assertions.assertEquals("aun.", result1.getSubtype());
-        Assertions.assertEquals("aún.", result1.getSuggestions().get(0).getText());
+        Assertions.assertEquals("mas.", result1.getText());
+        Assertions.assertEquals("mas.", result1.getSubtype());
+        Assertions.assertEquals("más.", result1.getSuggestions().get(0).getText());
+    }
+
+    @Test
+    void testFindMisspellingWithComma() {
+        String text = "Más aun, dos.";
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("aun,", "aún,");
+        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
+        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
+        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
+
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text, WikipediaLanguage.SPANISH);
+
+        Assertions.assertNotNull(results);
+        Assertions.assertEquals(1, results.size());
+
+        Replacement result1 = results.get(0);
+        Assertions.assertEquals("aun,", result1.getText());
+        Assertions.assertEquals("aun,", result1.getSubtype());
+        Assertions.assertEquals("aún,", result1.getSuggestions().get(0).getText());
+    }
+
+    @Test
+    void testFindMisspellingWithNumber() {
+        String text = "En Rio 2016.";
+        Misspelling misspelling = Misspelling.of("Rio 2016", true, "Río 2016");
+        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
+        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
+        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
+
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text, WikipediaLanguage.SPANISH);
+
+        Assertions.assertNotNull(results);
+        Assertions.assertEquals(1, results.size());
+
+        Replacement result1 = results.get(0);
+        Assertions.assertEquals("Rio 2016", result1.getText());
+        Assertions.assertEquals("Rio 2016", result1.getSubtype());
+        Assertions.assertEquals("Río 2016", result1.getSuggestions().get(0).getText());
     }
 }
