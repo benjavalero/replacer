@@ -3,10 +3,8 @@ package es.bvalero.replacer.finder.misspelling;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.beans.PropertyChangeEvent;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.Assertions;
@@ -52,5 +50,27 @@ class MisspellingComposedFinderTest {
         misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, EMPTY_MAP));
 
         Assertions.assertTrue(misspellingComposedFinder.findList("A sample text", WikipediaLanguage.SPANISH).isEmpty());
+    }
+
+    @Test
+    void testFindMisspellingWithDot() {
+        String text = "Más aun. Dos.";
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("aun.", "aún.");
+        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
+        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
+        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
+
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text, WikipediaLanguage.SPANISH);
+
+        Assertions.assertNotNull(results);
+        Assertions.assertEquals(1, results.size());
+
+        Replacement result1 = results.get(0);
+        Assertions.assertEquals("aun.", result1.getText());
+        Assertions.assertEquals("aun.", result1.getSubtype());
+        Assertions.assertEquals("aún.", result1.getSuggestions().get(0).getText());
     }
 }

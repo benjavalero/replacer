@@ -226,4 +226,20 @@ class MisspellingSimpleFinderTest {
 
         Assertions.assertTrue(misspellingFinder.findList("A sample text", WikipediaLanguage.SPANISH).isEmpty());
     }
+
+    @Test
+    void testFindMisspellingWithDot() {
+        String text = "De 23 cms. de altura";
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("cms.", "cm");
+        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
+        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
+        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
+
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+
+        List<Replacement> results = misspellingFinder.findList(text, WikipediaLanguage.SPANISH);
+
+        Assertions.assertTrue(results.isEmpty());
+    }
 }

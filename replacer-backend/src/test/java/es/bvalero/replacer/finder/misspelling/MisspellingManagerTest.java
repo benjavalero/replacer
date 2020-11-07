@@ -63,13 +63,14 @@ class MisspellingManagerTest {
             " CD's||CD\n" + // Valid with single quotes
             " n°||n.º\n" + // Not valid with degree symbol
             " nº||n.º\n" + // Not valid with superscript
-            " cm.||cm\n"; // Not valid with dots
+            " cm.||cm\n"; // Valid with dots
 
         Collection<Misspelling> misspellings = misspellingManager.parseItemsText(misspellingListText);
-        Assertions.assertEquals(3, misspellings.size());
+        Assertions.assertEquals(4, misspellings.size());
         Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("aguila", "águila")));
         Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("Castilla-León", "Castilla y León")));
         Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("CD's", "CD")));
+        Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("cm.", "cm")));
     }
 
     @Test

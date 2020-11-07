@@ -24,7 +24,9 @@ public class Misspelling {
 
     // Forbid the superscript "o"
     private static final Set<Character> FORBIDDEN_CHARS = Collections.singleton('º');
-    private static final Set<Character> ALLOWED_CHARS = new HashSet<>(Arrays.asList('\'', '-', ' '));
+    // Some of the allowed chars will be found in composed misspellings
+    // but not in simple misspellings where we only match letters
+    private static final Set<Character> ALLOWED_CHARS = new HashSet<>(Arrays.asList('\'', '-', ' ', '.'));
 
     String word;
     boolean caseSensitive;
