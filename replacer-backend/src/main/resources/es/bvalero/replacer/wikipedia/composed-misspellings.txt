@@ -48,6 +48,7 @@
  ésta vez||esta vez
  ésta zona||esta zona
  éstas dos||estas dos
+ éstas tierras||estas tierras
  éstas últimas||estas últimas
  éste álbum||este álbum
  éste año||este año
@@ -56,6 +57,7 @@
  éste equipo||este equipo
  éste género||este género
  éste grupo||este grupo
+ éste hecho||este hecho
  éste lugar||este lugar
  éste mismo||este mismo
  éste modelo||este modelo
@@ -96,7 +98,7 @@
  mas populares||más populares
  mas que||más que
  mas tarde||más tarde
- mas y||más y
+ mas y|cs|más y
  Metro de Paris|cs|Metro de París (en español), Métro de Paris (en francés)
  Miguel Angel|cs|Miguel Ángel (nombre propio, en particular castellanización del artista italiano)
  mucho mas||mucho más

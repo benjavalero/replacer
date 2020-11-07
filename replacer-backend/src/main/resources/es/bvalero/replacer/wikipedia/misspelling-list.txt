@@ -16116,7 +16116,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  ràpidas||rápidas
  rapidemente||rápidamente
  rápidemente||rápidamente
- rapides||rapidez
+ rapides|cs|rapidez
  rápidez||rapidez
  rapido||rápido
  ràpido||rápido
@@ -16919,7 +16919,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  salicilicos||salicílicos
  salico||sálico
  salicos||sálicos
- salio||salió
+ salio||salió (verbo), Salio (pueblo de León), salio (tribu germánica)
  salío||salió
  salír||salir
  salmon||salmón
