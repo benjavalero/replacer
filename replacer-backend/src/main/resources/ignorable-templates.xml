@@ -11,11 +11,47 @@
     <!-- The verification is done by a simple "contains" of the given text in lowercase -->
     <util:list id="ignorableTemplates" value-type="java.lang.String">
         <value>#redirec</value>
+
+        <!-- Spanish -->
         <value>{{destruir</value>
+        <value>{{delete</value>
+        <value>{{borrar</value>
+        <value>{{eliminar</value>
+
         <value>{{copyedit</value>
+        <value>{{ortografía</value>
+
+        <value>{{problemas artículo</value>
+        <value>{{problemas</value>
+        <value>{{pa</value>
+
+        <value>{{nobots</value>
+
         <value>{{en uso</value>
+        <value>{{enuso</value>
+        <value>{{en desarrollo</value>
+        <value>{{endesarrollo</value>
+        <value>{{en obras</value>
+        <value>{{enobras</value>
+        <value>{{en construcción</value>
+
         <value>{{traducción</value>
+        <value>{{mal traducido</value>
+        <value>{{maltraducido</value>
+        <value>{{mala traducción</value>
+        <value>{{malatraducción</value>
+        <value>{{traducción defectuosa</value>
+        <value>{{traducción incompleta</value>
+        <value>{{traducción inconclusa</value>
+        <value>{{autotrad</value>
+        <value>{{revisar traducción</value>
+
+        <!-- Galician -->
         <value>{{en tradución</value>
+        <value>{{non galego</value>
+        <value>{{lixo</value>
+        <value>{{lixoporque</value>
+        <value>{{pendente artigo</value>
     </util:list>
 
 </beans>
