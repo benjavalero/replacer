@@ -38,8 +38,8 @@ public class AcuteOFinder implements ReplacementFinder {
     }
 
     private Replacement convert(MatchResult match) {
-        int pos = match.group().indexOf('ó');
-        int start = match.start() + pos;
+        int pos = match.group().indexOf(" ó ");
+        int start = match.start() + pos + 1;
         return Replacement
             .builder()
             .type(MisspellingComposedFinder.TYPE_MISSPELLING_COMPOSED)
