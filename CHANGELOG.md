@@ -1,10 +1,11 @@
 # Versions
 
-## 2.7.8 (??)
+## 2.7.8 (9 Nov 2020)
 - Improve indexation not to perform unnecessary database updates
 - Allow dots, commas and numbers in composed misspellings (not in simple)
 - Add more ignorable templates
 - Fix another issue finding "ó" between words containing "ó"
+- Improve responsive layout in dashboard for normal users
 
 ## 2.7.7 (6 Nov 2020)
 - Fix issue finding "ó" between words containing "ó"
