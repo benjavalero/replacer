@@ -61,7 +61,7 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
                     map.put(word, misspelling);
                 } else {
                     // If case-insensitive, we add to the map "word" and "Word".
-                    map.put(word, misspelling);
+                    map.put(FinderUtils.setFirstLowerCase(word), misspelling);
                     map.put(FinderUtils.setFirstUpperCase(word), misspelling);
                 }
             }

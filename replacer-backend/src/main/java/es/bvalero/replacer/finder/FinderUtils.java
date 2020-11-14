@@ -35,6 +35,10 @@ public class FinderUtils {
         return text.chars().anyMatch(Character::isUpperCase);
     }
 
+    public static String setFirstLowerCase(String word) {
+        return StringUtils.isBlank(word) ? STRING_EMPTY : toLowerCase(word.substring(0, 1)) + word.substring(1);
+    }
+
     public static String setFirstUpperCase(String word) {
         return StringUtils.isBlank(word) ? STRING_EMPTY : toUpperCase(word.substring(0, 1)) + word.substring(1);
     }
