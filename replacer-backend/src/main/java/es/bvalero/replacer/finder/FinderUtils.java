@@ -44,11 +44,10 @@ public class FinderUtils {
     }
 
     public static String setFirstUpperCaseClass(String word) {
-        if (!startsWithLowerCase(word)) {
-            LOGGER.warn("Word not starting with lowercase: {}", word);
-        }
         String first = word.substring(0, 1);
-        return String.format("[%s%s]%s", toUpperCase(first), toLowerCase(first), word.substring(1));
+        return Character.isLetter(first.charAt(0))
+            ? String.format("[%s%s]%s", toUpperCase(first), toLowerCase(first), word.substring(1))
+            : word;
     }
 
     public static boolean isWordCompleteInText(int start, String word, String text) {
