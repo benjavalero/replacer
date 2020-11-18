@@ -4,7 +4,6 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
 import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 
 /**
@@ -32,7 +31,7 @@ public interface ImmutableFinder extends Comparable<ImmutableFinder> {
         return ImmutableFinderPriority.NONE;
     }
 
-    default int compareTo(@NotNull ImmutableFinder finder) {
+    default int compareTo(ImmutableFinder finder) {
         return Integer.compare(finder.getPriority().getValue(), this.getPriority().getValue());
     }
 

@@ -16,7 +16,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
     private List<String> ignorableTemplates;
 
     @Override
-    public List<ReplacementEntity> process(@NotNull DumpPageXml dumpPageXml) throws ReplacerException {
+    public List<ReplacementEntity> process(DumpPageXml dumpPageXml) throws ReplacerException {
         // 1. Convert to indexable page
         DumpPage dumpPage = mapDumpPageXmlToDumpPage(dumpPageXml);
 

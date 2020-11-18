@@ -7,7 +7,6 @@ import java.util.function.Function;
 import java.util.regex.MatchResult;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 
 @Slf4j
 public class LinearIterable<T> implements Iterable<T> {
@@ -25,7 +24,6 @@ public class LinearIterable<T> implements Iterable<T> {
         this.convert = convert;
     }
 
-    @NotNull
     @Override
     public Iterator<T> iterator() {
         return new LinearIterator<>(convert);

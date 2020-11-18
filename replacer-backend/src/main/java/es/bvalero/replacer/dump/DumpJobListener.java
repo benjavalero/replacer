@@ -2,7 +2,6 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +14,12 @@ public class DumpJobListener implements JobExecutionListener {
     private ReplacementCache replacementCache;
 
     @Override
-    public void beforeJob(@NotNull JobExecution jobExecution) {
+    public void beforeJob(JobExecution jobExecution) {
         LOGGER.debug("START Dump Job Execution");
     }
 
     @Override
-    public void afterJob(@NotNull JobExecution jobExecution) {
+    public void afterJob(JobExecution jobExecution) {
         LOGGER.debug("END Dump Job Execution");
         WikipediaLanguage lang = WikipediaLanguage.forValues(
             jobExecution.getJobParameters().getString(DumpManager.DUMP_LANG_PARAMETER)
