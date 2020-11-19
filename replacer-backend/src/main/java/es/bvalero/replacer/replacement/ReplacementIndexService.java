@@ -5,6 +5,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -177,6 +178,7 @@ public class ReplacementIndexService {
         }
     }
 
+    @VisibleForTesting
     ReplacementEntity convertToEntity(IndexableReplacement replacement) {
         ReplacementEntity entity = modelMapper.map(replacement, ReplacementEntity.class);
         // It is mapping the page ID also to the entity Id
@@ -191,7 +193,7 @@ public class ReplacementIndexService {
      *
      * @return A list of replacements to be managed in DB.
      */
-    List<ReplacementEntity> cleanUpPageReplacements(IndexablePage page, List<ReplacementEntity> dbReplacements) {
+    private List<ReplacementEntity> cleanUpPageReplacements(IndexablePage page, List<ReplacementEntity> dbReplacements) {
         // We assume there are no custom replacements in the list
         List<ReplacementEntity> result = new ArrayList<>();
 

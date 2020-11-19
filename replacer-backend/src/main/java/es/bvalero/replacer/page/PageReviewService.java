@@ -10,6 +10,7 @@ import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -175,6 +176,7 @@ abstract class PageReviewService {
 
     abstract List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
 
+    @VisibleForTesting
     PageReview buildPageReview(WikipediaPage page, List<Replacement> replacements, PageReviewOptions options) {
         PageReview review = modelMapper.map(page, PageReview.class);
         review.setReplacements(replacements.stream().map(this::convertToDto).collect(Collectors.toList()));

@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.Map;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -89,6 +90,7 @@ class DumpManager {
         }
     }
 
+    @VisibleForTesting
     void parseDumpFile(Path dumpFile, WikipediaLanguage lang) throws ReplacerException {
         LOGGER.info("START Parse dump file: {}", dumpFile);
 

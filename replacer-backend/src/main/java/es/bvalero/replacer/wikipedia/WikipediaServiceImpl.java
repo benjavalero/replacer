@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -291,6 +292,7 @@ class WikipediaServiceImpl implements WikipediaService {
         return params;
     }
 
+    @VisibleForTesting
     String buildSearchExpression(String text) {
         String quoted = String.format("\"%s\"", text);
         if (FinderUtils.containsUppercase(text)) {
@@ -364,6 +366,7 @@ class WikipediaServiceImpl implements WikipediaService {
         return params;
     }
 
+    @VisibleForTesting
     EditToken getEditToken(int pageId, WikipediaLanguage lang, OAuth1AccessToken accessToken) throws ReplacerException {
         LOGGER.debug("START Get edit token. Access Token: {}", accessToken.getToken());
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedPostRequest(
