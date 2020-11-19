@@ -5,7 +5,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
-import org.jetbrains.annotations.Nullable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component

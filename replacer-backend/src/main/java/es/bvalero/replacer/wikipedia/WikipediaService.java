@@ -4,7 +4,7 @@ import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.ReplacerException;
 import java.util.List;
 import java.util.Optional;
-import org.jetbrains.annotations.Nullable;
+import org.springframework.lang.Nullable;
 
 public interface WikipediaService {
     String getLoggedUserName(OAuth1AccessToken accessToken, WikipediaLanguage lang) throws ReplacerException;

@@ -12,6 +12,12 @@ The tool is composed by two independent modules, both in the same repository: th
 
 TODO
 
+## Code Conventions
+
+This project uses some of the JetBrains annotations: `@TestOnly`, `@VisibleForTesting` and `@RegExp`.
+
+On the other hand, all packages are annotated with Spring annotation `@NonNullApi` which forces all method parameters and returns to be non-null. Nullable exceptions will be annotated explicitly.
+
 ## Nomenclature and use cases
 
 Main use cases:

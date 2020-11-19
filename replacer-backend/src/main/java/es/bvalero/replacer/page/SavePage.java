@@ -4,17 +4,23 @@ import es.bvalero.replacer.authentication.AccessToken;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.jetbrains.annotations.Nullable;
+import org.springframework.lang.Nullable;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 class SavePage {
-    private @Nullable Integer section;
+    @Nullable
+    private Integer section;
+
     private String content;
     private String timestamp;
     private String reviewer;
     private AccessToken token;
-    private @Nullable String type;
-    private @Nullable String subtype;
+
+    @Nullable
+    private String type;
+
+    @Nullable
+    private String subtype;
 }
