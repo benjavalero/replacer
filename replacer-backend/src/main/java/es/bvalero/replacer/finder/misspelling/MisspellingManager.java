@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -65,6 +66,7 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
     }
 
     @Override
+    @Nullable
     Misspelling parseItemLine(String misspellingLine) {
         Misspelling misspelling = null;
 

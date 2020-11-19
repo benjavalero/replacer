@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.With;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
+import org.springframework.lang.Nullable;
 
 /**
  * A replacement in the database related to a page.
@@ -20,7 +21,9 @@ public class ReplacementEntity implements Serializable {
     public static final String TYPE_CUSTOM = "Personalizado";
     public static final String REVIEWER_SYSTEM = "system";
 
-    private Long id;
+    @Nullable
+    private Long id; // Nullable when still to be created in database
+
     private int pageId;
     private String lang;
     private String type;
@@ -28,11 +31,15 @@ public class ReplacementEntity implements Serializable {
     private int position;
     private String context;
     private LocalDate lastUpdate;
+
+    @Nullable
     private String reviewer;
+
     private String title;
 
     // Temporary field not in database to know the status of the replacement while indexing
     // Values: C - Create, U - Update, D - Delete, K - Keep
+    @Nullable
     @With
     private transient String cudAction;
 

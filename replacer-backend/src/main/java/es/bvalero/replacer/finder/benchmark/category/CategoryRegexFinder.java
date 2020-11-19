@@ -13,7 +13,7 @@ class CategoryRegexFinder implements BenchmarkFinder {
     @RegExp
     private static final String REGEX_CATEGORY = "\\[\\[(Categoría|als):[^]]+]]";
 
-    private static final Pattern PATTERN_CATEGORY = Pattern.compile(REGEX_CATEGORY);
+    private static final Pattern PATTERN_CATEGORY = Pattern.compile(REGEX_CATEGORY, Pattern.CANON_EQ);
 
     public Set<FinderResult> findMatches(String text) {
         return new HashSet<>(IterableUtils.toList(new RegexIterable<>(text, PATTERN_CATEGORY, this::convert)));

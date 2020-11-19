@@ -105,8 +105,8 @@ class WikipediaRequestService {
 
     private void validateApiResponse(WikipediaApiResponse response) throws ReplacerException {
         if (response.getError() != null) {
-            String code = response.getError().getCode();
-            String info = response.getError().getInfo();
+            String code = response.getError().getCode(); // NOSONAR
+            String info = response.getError().getInfo(); // NOSONAR
             throw new ReplacerException(String.format("%s: %s", code, info));
         }
     }

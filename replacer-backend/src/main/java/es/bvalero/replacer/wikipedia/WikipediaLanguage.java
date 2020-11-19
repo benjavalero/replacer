@@ -7,6 +7,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.lang.Nullable;
 
 @Getter
 @AllArgsConstructor
@@ -21,7 +22,11 @@ public enum WikipediaLanguage {
     @JsonValue
     private final String code;
 
-    public static WikipediaLanguage forValues(String code) {
-        return map.getOrDefault(code, WikipediaLanguage.SPANISH);
+    public static WikipediaLanguage getDefault() {
+        return SPANISH;
+    }
+
+    public static WikipediaLanguage forValues(@Nullable String code) {
+        return map.getOrDefault(code, getDefault());
     }
 }

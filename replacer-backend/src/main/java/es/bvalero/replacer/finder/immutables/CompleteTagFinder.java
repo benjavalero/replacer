@@ -6,6 +6,7 @@ import java.util.regex.MatchResult;
 import javax.annotation.Resource;
 
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,6 +32,7 @@ public class CompleteTagFinder implements ImmutableFinder {
         return new LinearIterable<>(text, this::findResult, this::convert);
     }
 
+    @Nullable
     public MatchResult findResult(String text, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && matches.isEmpty()) {
@@ -69,6 +71,7 @@ public class CompleteTagFinder implements ImmutableFinder {
         return text.indexOf('<', start);
     }
 
+    @Nullable
     private String findSupportedTag(String text, int start) {
         StringBuilder tagBuilder = new StringBuilder();
         for (int i = start; i < text.length(); i++) {

@@ -96,14 +96,15 @@ public class ReplacementDao {
 
     ///// PAGE REVIEW
 
-    public Long findRandomIdToBeReviewed(long chunkSize, WikipediaLanguage lang) {
+    public long findRandomIdToBeReviewed(long chunkSize, WikipediaLanguage lang) {
         String sql =
             "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) FROM replacement2 " +
             "WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("chunkSize", chunkSize)
             .addValue(PARAM_LANG, lang.getCode());
-        return jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+        return result == null ? 0L : result;
     }
 
     // Not worth to DISTINCT as we add the results as a set later
@@ -147,7 +148,7 @@ public class ReplacementDao {
         return jdbcTemplate.queryForList(sql, namedParameters, Integer.class);
     }
 
-    public Long countPagesToBeReviewedBySubtype(WikipediaLanguage lang, String type, String subtype) {
+    public long countPagesToBeReviewedBySubtype(WikipediaLanguage lang, String type, String subtype) {
         String sql =
             "SELECT COUNT (DISTINCT article_id) FROM replacement2 " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
@@ -155,7 +156,8 @@ public class ReplacementDao {
             .addValue(PARAM_LANG, lang.getCode())
             .addValue(PARAM_TYPE, type)
             .addValue(PARAM_SUBTYPE, subtype);
-        return jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+        return result == null ? 0L : result;
     }
 
     public List<Integer> findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage lang, String subtype) {
@@ -193,21 +195,23 @@ public class ReplacementDao {
 
     ///// STATISTICS
 
-    public Long countUserReviewed(WikipediaLanguage lang) {
+    public long countUserReviewed(WikipediaLanguage lang) {
         String sql =
             "SELECT COUNT(*) FROM replacement2 " +
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
             .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
-        return jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+        return result == null ? 0L : result;
     }
 
     // This count is also used to guess the total for the review without type. Not worth to DISTINCT.
-    public Long countToBeReviewed(WikipediaLanguage lang) {
+    public long countToBeReviewed(WikipediaLanguage lang) {
         String sql = "SELECT COUNT(*) FROM replacement2 WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue(PARAM_LANG, lang.getCode());
-        return jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+        return result == null ? 0L : result;
     }
 
     public List<ReviewerCount> countGroupedByReviewer(WikipediaLanguage lang) {

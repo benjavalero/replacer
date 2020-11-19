@@ -12,6 +12,7 @@ import java.util.stream.StreamSupport;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
+import org.springframework.lang.Nullable;
 
 /**
  * Abstract class for the common functionality of the misspelling finders.
@@ -94,6 +95,7 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
         return findMisspellingByWord(word, lang).isPresent();
     }
 
+    @Nullable
     abstract RunAutomaton getAutomaton(WikipediaLanguage lang);
 
     private Replacement convertMatch(MatchResult matcher) {

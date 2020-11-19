@@ -133,9 +133,11 @@ public class PageController {
 
         // Mark page as reviewed in the database
         if (ReplacementEntity.TYPE_CUSTOM.equals(savePage.getType())) {
-            pageReviewCustomService.reviewPageReplacements(pageId, lang, savePage.getSubtype(), savePage.getReviewer());
+            if (StringUtils.isBlank(savePage.getSubtype())) throw new AssertionError();
+            pageReviewCustomService.reviewPageReplacements(pageId, lang, savePage.getSubtype(), savePage.getReviewer()); // NOSONAR
         } else if (StringUtils.isNotBlank(savePage.getType())) {
-            pageReviewTypeSubtypeService.reviewPageReplacements(
+            if (StringUtils.isBlank(savePage.getSubtype())) throw new AssertionError();
+            pageReviewTypeSubtypeService.reviewPageReplacements( // NOSONAR
                 pageId,
                 lang,
                 savePage.getType(),
@@ -143,6 +145,7 @@ public class PageController {
                 savePage.getReviewer()
             );
         } else {
+            if (StringUtils.isNotBlank(savePage.getSubtype())) throw new AssertionError();
             pageReviewNoTypeService.reviewPageReplacements(pageId, lang, savePage.getReviewer());
         }
     }

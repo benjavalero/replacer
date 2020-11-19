@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.regex.MatchResult;
 
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,6 +32,7 @@ public class TemplateNameFinder implements ImmutableFinder {
         return new LinearIterable<>(text, this::findTemplateName, this::convert);
     }
 
+    @Nullable
     private MatchResult findTemplateName(String text, int start) {
         int startTemplate = findStartTemplate(text, start);
         if (startTemplate >= 0) {

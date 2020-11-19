@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -59,7 +60,8 @@ public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListe
         return map;
     }
 
-    private RunAutomaton buildFalsePositivesAutomaton(Set<String> falsePositives) {
+    @Nullable
+    private RunAutomaton buildFalsePositivesAutomaton(@Nullable Set<String> falsePositives) {
         // Currently there are about 300 false positives so the best approach is a simple alternation
         // It gives the best performance with big difference but it is not perfect though
         // As we check later if the match is a complete word, we could match an incomplete word

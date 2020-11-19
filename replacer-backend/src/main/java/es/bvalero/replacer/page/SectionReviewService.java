@@ -27,9 +27,7 @@ class SectionReviewService {
      * @return The review of a section of the page, or empty if there is no such section.
      */
     Optional<PageReview> findSectionReview(PageReview review) {
-        if (review.getSection() != null) {
-            throw new IllegalArgumentException("The page review already contains a section");
-        }
+        assert review.getSection() == null;
 
         // Get the sections from the Wikipedia API (better than calculating them by ourselves)
         LOGGER.info("START Find section for page: {}", review.getId());

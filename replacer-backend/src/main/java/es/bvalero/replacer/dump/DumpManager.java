@@ -123,13 +123,13 @@ class DumpManager {
                 if (!jobExecution.isRunning()) {
                     dumpIndexingStatus.setEnd(jobExecution.getEndTime().getTime());
                 }
-                dumpIndexingStatus.setDumpFileName(
-                    jobExecution.getJobParameters().getString(DumpManager.DUMP_PATH_PARAMETER)
-                );
+                String fileName = jobExecution.getJobParameters().getString(DumpManager.DUMP_PATH_PARAMETER);
+                if (fileName != null) {
+                    dumpIndexingStatus.setDumpFileName(fileName);
+                }
                 String lang = jobExecution.getJobParameters().getString(DumpManager.DUMP_LANG_PARAMETER);
-                // TODO: The not-null check is only needed the first time we index with this new parameter
                 if (lang == null) {
-                    lang = WikipediaLanguage.SPANISH.getCode();
+                    lang = WikipediaLanguage.getDefault().getCode();
                 }
                 dumpIndexingStatus.setNumPagesEstimated(numPagesEstimated.get(lang));
 

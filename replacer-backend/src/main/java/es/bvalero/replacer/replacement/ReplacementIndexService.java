@@ -201,6 +201,7 @@ public class ReplacementIndexService {
             .filter(rep -> rep.isSystemReviewed() && !rep.isDummy())
             .collect(Collectors.toList());
         systemReviewed.forEach(ReplacementEntity::setToDelete);
+        //noinspection CollectionAddAllCanBeReplacedWithConstructor
         result.addAll(systemReviewed);
         dbReplacements.removeAll(systemReviewed);
 

@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.LinearIterable;
 import es.bvalero.replacer.finder.LinearMatcher;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import org.springframework.lang.Nullable;
 
 import java.util.*;
 import java.util.regex.MatchResult;
@@ -21,6 +22,7 @@ abstract class QuotesAbstractFinder implements ImmutableFinder {
         return new LinearIterable<>(text, this::findResult, this::convert);
     }
 
+    @Nullable
     public MatchResult findResult(String text, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && matches.isEmpty()) {

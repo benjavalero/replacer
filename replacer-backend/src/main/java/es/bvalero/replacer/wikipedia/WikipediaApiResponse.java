@@ -3,11 +3,14 @@ package es.bvalero.replacer.wikipedia;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WikipediaApiResponse {
+    @Nullable
     private Error error;
+
     private boolean batchcomplete;
     private String curtimestamp;
     private Query query;

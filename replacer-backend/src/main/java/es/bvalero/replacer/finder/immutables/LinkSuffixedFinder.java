@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.MatchResult;
 
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,6 +30,7 @@ public class LinkSuffixedFinder implements ImmutableFinder {
         return new LinearIterable<>(text, this::findResult, this::convert);
     }
 
+    @Nullable
     public MatchResult findResult(String text, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && matches.isEmpty()) {

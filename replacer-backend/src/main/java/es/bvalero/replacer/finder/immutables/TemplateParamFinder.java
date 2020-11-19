@@ -29,6 +29,7 @@ public class TemplateParamFinder implements ImmutableFinder {
         return new LinearIterable<>(text, this::findResult, this::convert);
     }
 
+    @Nullable
     public MatchResult findResult(String text, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && matches.isEmpty()) {

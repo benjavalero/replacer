@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -61,7 +62,8 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
         return map;
     }
 
-    private RunAutomaton buildUppercaseAfterAutomaton(Set<Misspelling> misspellings) {
+    @Nullable
+    private RunAutomaton buildUppercaseAfterAutomaton(@Nullable Set<Misspelling> misspellings) {
         if (misspellings != null) {
             Set<String> words = getUppercaseWords(misspellings);
 
