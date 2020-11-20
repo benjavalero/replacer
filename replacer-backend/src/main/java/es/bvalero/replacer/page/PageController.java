@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.authentication.AccessToken;
 import es.bvalero.replacer.finder.CosmeticFindService;
@@ -9,14 +10,13 @@ import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
+@Loggable(prepend = true)
 @RestController
 @RequestMapping("api/pages")
 public class PageController {
@@ -45,7 +45,6 @@ public class PageController {
 
     @GetMapping(value = "/random")
     public Optional<PageReview> findRandomPageWithReplacements(@RequestParam WikipediaLanguage lang) {
-        LOGGER.info("GET Find random page review");
         return pageReviewNoTypeService.findRandomPageReview(PageReviewOptions.ofNoType(lang));
     }
 
@@ -55,7 +54,6 @@ public class PageController {
         @RequestParam String subtype,
         @RequestParam WikipediaLanguage lang
     ) {
-        LOGGER.info("GET Find random page review. Type: {} - {}", type, subtype);
         return pageReviewTypeSubtypeService.findRandomPageReview(PageReviewOptions.ofTypeSubtype(lang, type, subtype));
     }
 
@@ -65,7 +63,6 @@ public class PageController {
         @RequestParam String suggestion,
         @RequestParam WikipediaLanguage lang
     ) {
-        LOGGER.info("GET Find random page review. Custom replacement: {} - {}", replacement, suggestion);
         return pageReviewCustomService.findRandomPageReview(PageReviewOptions.ofCustom(lang, replacement, suggestion));
     }
 
@@ -76,7 +73,6 @@ public class PageController {
         @PathVariable("id") int pageId,
         @RequestParam WikipediaLanguage lang
     ) {
-        LOGGER.info("GET Find review by page ID: {}", pageId);
         return pageReviewNoTypeService.getPageReview(pageId, PageReviewOptions.ofNoType(lang));
     }
 
@@ -87,7 +83,6 @@ public class PageController {
         @RequestParam String subtype,
         @RequestParam WikipediaLanguage lang
     ) {
-        LOGGER.info("GET Find review by page ID: {} - Type: {} - Subtype: {}", pageId, type, subtype);
         return pageReviewTypeSubtypeService.getPageReview(pageId, PageReviewOptions.ofTypeSubtype(lang, type, subtype));
     }
 
@@ -98,12 +93,6 @@ public class PageController {
         @RequestParam String suggestion,
         @RequestParam WikipediaLanguage lang
     ) {
-        LOGGER.info(
-            "GET Find review by page ID: {} - Replacement: {} - Suggestion: {}",
-            pageId,
-            replacement,
-            suggestion
-        );
         return pageReviewCustomService.getPageReview(pageId, PageReviewOptions.ofCustom(lang, replacement, suggestion));
     }
 
@@ -117,7 +106,6 @@ public class PageController {
     )
         throws ReplacerException {
         boolean changed = StringUtils.isNotBlank(savePage.getContent());
-        LOGGER.info("POST Save page. ID: {} - Changed: {}", pageId, changed);
         if (changed) {
             // Upload new content to Wikipedia
             String textToSave = cosmeticFindService.applyCosmeticChanges(savePage.getContent());
@@ -158,15 +146,12 @@ public class PageController {
         @RequestParam String subtype,
         @RequestParam WikipediaLanguage lang
     ) {
-        LOGGER.info("GET Find page list. Type: {} - {}", type, subtype);
         String titleList = StringUtils.join(pageListService.findPageTitlesToReviewBySubtype(lang, type, subtype), "\n");
         return new ResponseEntity<>(titleList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/review", params = { "type", "subtype" })
     public void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
-        LOGGER.info("POST Review pages. Type: {} - {}", type, subtype);
-
         // Set as reviewed in the database
         pageListService.reviewAsSystemBySubtype(lang, type, subtype);
 

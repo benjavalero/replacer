@@ -15,7 +15,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -75,7 +74,7 @@ class PageReviewCustomService extends PageReviewService {
                 }
             }
         } catch (ReplacerException e) {
-            LOGGER.error("Error searching page IDs from Wikipedia", e);
+            LOGGER.error("Error finding page IDs in Wikipedia", e);
         }
 
         return PageSearchResult.ofEmpty();

@@ -7,7 +7,10 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.lang.Nullable;
@@ -106,7 +109,7 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
     }
 
     private String loadPageContent(String fileName) throws ReplacerException {
-        LOGGER.info("Load fake content from file: {}", fileName);
+        LOGGER.debug("Load fake content from file: {}", fileName);
         try {
             return Files.readString(Paths.get(getClass().getResource(fileName).toURI()));
         } catch (IOException | URISyntaxException e) {

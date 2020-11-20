@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.regex.MatchResult;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -49,7 +48,7 @@ public class LinearIterable<T> implements Iterable<T> {
             try {
                 result = find.apply(text, start);
             } catch (Exception e) {
-                LOGGER.error("Error finding immutable. Start: {} - Method: {} - Text: {} - Exception: ", start, find, text, e);
+                LOGGER.error("Error finding match result. Start: {} - Method: {} - Text: {}", start, find, text, e);
             }
             if (result == null) {
                 next = null;

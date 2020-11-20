@@ -6,6 +6,7 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth10aService;
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
 import java.io.IOException;
 import java.util.Map;
@@ -50,6 +51,7 @@ class WikipediaRequestService {
         return executeRequest(params, Verb.POST, lang, accessToken);
     }
 
+    @Loggable(prepend = true, value = Loggable.TRACE)
     private WikipediaApiResponse executeRequest(
         Map<String, String> params,
         Verb verb,
@@ -58,7 +60,7 @@ class WikipediaRequestService {
     )
         throws ReplacerException {
         boolean isSigned = accessToken != null && StringUtils.isNotBlank(accessToken.getToken());
-        LOGGER.debug("START Execute OAuth Request. Params: {} - Verb: {} - Signed: {}", params, verb, isSigned);
+        LOGGER.trace("OAuth request is signed: {}", isSigned);
         OAuthRequest request = createOAuthRequestWithParams(params, verb, lang);
 
         if (isSigned) {
@@ -73,7 +75,7 @@ class WikipediaRequestService {
                 );
             }
 
-            LOGGER.debug("END Execute OAuth Request. Response Body: {}", response.getBody());
+            LOGGER.trace("OAuth response body: {}", response.getBody());
             WikipediaApiResponse apiResponse = jsonMapper.readValue(response.getBody(), WikipediaApiResponse.class);
             validateApiResponse(apiResponse);
             return apiResponse;

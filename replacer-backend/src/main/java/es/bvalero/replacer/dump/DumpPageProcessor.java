@@ -1,5 +1,6 @@
 package es.bvalero.replacer.dump;
 
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
@@ -82,17 +83,16 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
             .build();
     }
 
+    @Loggable(prepend = true, value = Loggable.TRACE)
     List<ReplacementEntity> processPage(DumpPage dumpPage) {
-        LOGGER.debug("START Process dump page: {} - {}", dumpPage.getId(), dumpPage.getTitle());
-
         List<ReplacementEntity> dbReplacements = replacementCache.findByPageId(dumpPage.getId(), dumpPage.getLang());
         Optional<LocalDate> dbLastUpdate = dbReplacements
             .stream()
             .map(ReplacementEntity::getLastUpdate)
             .max(Comparator.comparing(LocalDate::toEpochDay));
         if (dbLastUpdate.isPresent() && !dumpPage.isProcessableByTimestamp(dbLastUpdate.get())) {
-            LOGGER.debug(
-                "END Process dump page. Not processable by date: {}. Dump date: {}. DB date: {}",
+            LOGGER.trace(
+                "Page not processable by date: {}. Dump date: {}. DB date: {}",
                 dumpPage.getTitle(),
                 dumpPage.getLastUpdate(),
                 dbLastUpdate
@@ -104,13 +104,10 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
             dumpPage.getContent(),
             dumpPage.getLang()
         );
-        List<ReplacementEntity> toWrite = replacementIndexService.findIndexPageReplacements(
+        return replacementIndexService.findIndexPageReplacements(
             dumpPage,
             replacements.stream().map(dumpPage::convertReplacementToIndexed).collect(Collectors.toList()),
             dbReplacements
         );
-
-        LOGGER.debug("END Process dump page: {} - {}", dumpPage.getId(), dumpPage.getTitle());
-        return toWrite;
     }
 }

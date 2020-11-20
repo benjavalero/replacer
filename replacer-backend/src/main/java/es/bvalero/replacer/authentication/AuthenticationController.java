@@ -2,12 +2,15 @@ package es.bvalero.replacer.authentication;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
-import lombok.extern.slf4j.Slf4j;
+import com.jcabi.aspects.Loggable;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@Slf4j
+@Loggable(prepend = true)
 @RestController
 @RequestMapping("api/authentication")
 public class AuthenticationController {
@@ -19,7 +22,6 @@ public class AuthenticationController {
 
     @GetMapping(value = "/request-token")
     public RequestToken getRequestToken() throws AuthenticationException {
-        LOGGER.info("GET Request Token from MediaWiki API");
         OAuth1RequestToken requestToken = authenticationService.getRequestToken();
         String authorizationUrl = authenticationService.getAuthorizationUrl(requestToken);
         return convertToDto(requestToken, authorizationUrl);
@@ -32,8 +34,6 @@ public class AuthenticationController {
         @RequestParam String oauthVerifier
     )
         throws AuthenticationException {
-        LOGGER.info("GET Access Token from MediaWiki API");
-
         OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken(requestToken, requestTokenSecret);
         return convertToDto(authenticationService.getAccessToken(oAuth1RequestToken, oauthVerifier));
     }

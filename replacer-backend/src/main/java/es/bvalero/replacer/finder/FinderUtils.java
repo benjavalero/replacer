@@ -4,10 +4,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-@Slf4j
 public class FinderUtils {
     public static final String STRING_EMPTY = "";
     public static final Locale LOCALE_ES = Locale.forLanguageTag("es");

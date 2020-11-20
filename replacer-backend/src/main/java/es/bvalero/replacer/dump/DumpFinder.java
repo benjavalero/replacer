@@ -1,5 +1,6 @@
 package es.bvalero.replacer.dump;
 
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.io.IOException;
@@ -19,16 +20,16 @@ import org.springframework.stereotype.Component;
 
 /**
  * Find the latest Wikipedia dump in the filesystem where the application runs.
- *
+ * <p>
  * The dumps are generated monthly and placed in a shared folder in Wikipedia servers.
  * This dump base folder is structured in sub-folders corresponding to the different wiki-projects,
  * e.g. `eswiki`, which are also structured in sub-folders for each generation date, e.g. `20120120`,
  * containing finally the dump files.
- *
+ * <p>
  * This component looks, for one project, into the date folders to find the last
  * one containing a generated dump with the pages to be indexed. It is possible
  * that the last date folder exists but not all dumps are generated within it yet.
- *
+ * <p>
  * The path of the shared folder and the wiki-project are configured externally.
  */
 @Slf4j
@@ -43,10 +44,10 @@ public class DumpFinder {
     @Value("${replacer.dump.path.base:}")
     private String dumpPathBase;
 
+    @Loggable(value = Loggable.DEBUG)
     public Path findLatestDumpFile(WikipediaLanguage lang) throws ReplacerException {
-        LOGGER.info("START Find latest dump for lang: {}", lang);
         Path dumPath = Paths.get(dumpPathBase, getDumpPathProject(lang));
-        LOGGER.info("Dump path: {}", dumPath);
+        LOGGER.trace("Dump path: {}", dumPath);
 
         Path latestDumpFile = null;
         for (Path dumpFolder : findDumpFolders(dumPath)) {
@@ -60,7 +61,6 @@ public class DumpFinder {
             throw new ReplacerException("No dump file has been found");
         }
 
-        LOGGER.info("END Find latest dump: {}", latestDumpFile);
         return latestDumpFile;
     }
 

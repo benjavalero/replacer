@@ -1,5 +1,6 @@
 package es.bvalero.replacer.replacement;
 
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+@Loggable(Loggable.TRACE) // To warn about performance issues
 @Repository
 @Transactional
 public class ReplacementDao {
@@ -195,7 +197,7 @@ public class ReplacementDao {
 
     ///// STATISTICS
 
-    public long countUserReviewed(WikipediaLanguage lang) {
+    public long countReplacementsReviewed(WikipediaLanguage lang) {
         String sql =
             "SELECT COUNT(*) FROM replacement2 " +
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
@@ -207,14 +209,14 @@ public class ReplacementDao {
     }
 
     // This count is also used to guess the total for the review without type. Not worth to DISTINCT.
-    public long countToBeReviewed(WikipediaLanguage lang) {
+    public long countReplacementsNotReviewed(WikipediaLanguage lang) {
         String sql = "SELECT COUNT(*) FROM replacement2 WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue(PARAM_LANG, lang.getCode());
         Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
         return result == null ? 0L : result;
     }
 
-    public List<ReviewerCount> countGroupedByReviewer(WikipediaLanguage lang) {
+    public List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
         String sql =
             "SELECT reviewer, COUNT(*) AS num FROM replacement2 " +
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system " +

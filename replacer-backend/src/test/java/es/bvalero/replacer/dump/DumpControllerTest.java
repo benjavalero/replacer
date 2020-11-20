@@ -68,6 +68,6 @@ public class DumpControllerTest {
             .perform(post("/api/dump-indexing/start").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(dumpManager, times(1)).processLatestDumpFile();
+        verify(dumpManager, times(1)).processLatestDumpFiles();
     }
 }

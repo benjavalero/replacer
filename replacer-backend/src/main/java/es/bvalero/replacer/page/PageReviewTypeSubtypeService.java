@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page;
 
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementCountService;
@@ -16,7 +17,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -77,7 +77,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
         List<Replacement> replacements = replacementFindService.findReplacements(page.getContent(), page.getLang());
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
-        LOGGER.debug("Update page replacements in database");
+        LOGGER.trace("Update page replacements in database");
         replacementIndexService.indexPageReplacements(
             page,
             replacements.stream().map(page::convertReplacementToIndexed).collect(Collectors.toList())
@@ -85,10 +85,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
 
         // To build the review we are only interested in the replacements of the given type and subtype
         // We can run the filter even with an empty list
-        replacements = filterReplacementsByTypeAndSubtype(replacements, options.getType(), options.getSubtype());
-        LOGGER.debug("Final replacements found in text after filtering: {}", replacements.size());
-
-        return replacements;
+        return filterReplacementsByTypeAndSubtype(replacements, options.getType(), options.getSubtype());
     }
 
     void reviewPageReplacements(int pageId, WikipediaLanguage lang, String type, String subtype, String reviewer) {
@@ -98,6 +95,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
         replacementCountService.decreaseCachedReplacementsCount(lang, type, subtype, 1);
     }
 
+    @Loggable(prepend = true, value = Loggable.TRACE)
     private List<Replacement> filterReplacementsByTypeAndSubtype(
         List<Replacement> replacements,
         String type,

@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.misspelling;
 
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -55,14 +54,8 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
     }
 
     @Override
-    String findItemsText(WikipediaLanguage lang) {
-        String text = FinderUtils.STRING_EMPTY;
-        try {
-            text = wikipediaService.getMisspellingListPageContent(lang);
-        } catch (ReplacerException e) {
-            LOGGER.error("Error updating {} {} set", getLabel(), lang, e);
-        }
-        return text;
+    String findItemsTextInWikipedia(WikipediaLanguage lang) throws ReplacerException {
+        return wikipediaService.getMisspellingListPageContent(lang);
     }
 
     @Override

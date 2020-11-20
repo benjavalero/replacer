@@ -1,6 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.FinderUtils;
 import java.util.*;
@@ -50,15 +51,12 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Override
     public String getLoggedUserName(OAuth1AccessToken accessToken, WikipediaLanguage lang) throws ReplacerException {
-        LOGGER.info("START Get name of the logged user from Wikipedia API. Token: {}", accessToken.getToken());
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedGetRequest(
             buildUserNameRequestParams(),
             lang,
             accessToken
         );
-        String username = extractUserNameFromJson(apiResponse);
-        LOGGER.info("END Get name of the logged user from Wikipedia API: {}", username);
-        return username;
+        return extractUserNameFromJson(apiResponse);
     }
 
     private Map<String, String> buildUserNameRequestParams() {
@@ -98,27 +96,23 @@ class WikipediaServiceImpl implements WikipediaService {
             .getContent();
     }
 
+    @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
     public Optional<WikipediaPage> getPageByTitle(String pageTitle, WikipediaLanguage lang) throws ReplacerException {
-        LOGGER.info("START Find Wikipedia page by title: {}", pageTitle);
         // Return the only value that should be in the map
-        Optional<WikipediaPage> page = getPagesByIds("titles", pageTitle, lang).stream().findAny();
-        LOGGER.info("END Find Wikipedia page by title: {}", pageTitle);
-        return page;
+        return getPagesByIds("titles", pageTitle, lang).stream().findAny();
     }
 
+    @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
     public Optional<WikipediaPage> getPageById(int pageId, WikipediaLanguage lang) throws ReplacerException {
-        LOGGER.debug("START Get page by ID: {}", pageId);
         // Return the only value that should be in the map
-        Optional<WikipediaPage> page = getPagesByIds(Collections.singletonList(pageId), lang).stream().findAny();
-        LOGGER.debug("END Get page by ID: {} - {}", pageId, page.map(WikipediaPage::getTitle).orElse(""));
-        return page;
+        return getPagesByIds(Collections.singletonList(pageId), lang).stream().findAny();
     }
 
+    @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
     public List<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws ReplacerException {
-        LOGGER.debug("START Get pages by a list of IDs: {}", pageIds);
         List<WikipediaPage> pages = new ArrayList<>(pageIds.size());
         // There is a maximum number of pages to request
         // We split the request in several sub-lists
@@ -131,7 +125,6 @@ class WikipediaServiceImpl implements WikipediaService {
             pages.addAll(getPagesByIds(PARAM_PAGE_IDS, StringUtils.join(subList, "|"), lang));
             start += subList.size();
         }
-        LOGGER.debug("END Get pages by a list of IDs: {}", pages.size());
         return pages;
     }
 
@@ -179,16 +172,14 @@ class WikipediaServiceImpl implements WikipediaService {
             .build();
     }
 
+    @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
     public List<WikipediaSection> getPageSections(int pageId, WikipediaLanguage lang) throws ReplacerException {
-        LOGGER.debug("START Get page sections. Page ID: {}", pageId);
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
             buildPageSectionsRequestParams(pageId),
             lang
         );
-        List<WikipediaSection> sections = extractSectionsFromJson(apiResponse);
-        LOGGER.debug("END Get page sections. Items found: {}", sections.size());
-        return sections;
+        return extractSectionsFromJson(apiResponse);
     }
 
     private Map<String, String> buildPageSectionsRequestParams(int pageId) {
@@ -213,7 +204,7 @@ class WikipediaServiceImpl implements WikipediaService {
         try {
             return Integer.parseInt(section.getIndex()) > 0 && section.getByteoffset() != null;
         } catch (NumberFormatException nfe) {
-            LOGGER.debug("Invalid page section: {}", section);
+            LOGGER.warn("Invalid page section: {}", section);
             return false;
         }
     }
@@ -222,26 +213,19 @@ class WikipediaServiceImpl implements WikipediaService {
         return modelMapper.map(section, WikipediaSection.class);
     }
 
+    @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
     public Optional<WikipediaPage> getPageByIdAndSection(int pageId, WikipediaSection section, WikipediaLanguage lang)
         throws ReplacerException {
-        LOGGER.debug("START Get page by ID and section: {} - {}", pageId, section);
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
             buildPageIdsAndSectionRequestParams(pageId, section.getIndex()),
             lang
         );
         List<WikipediaPage> pages = extractPagesFromJson(apiResponse);
-        Optional<WikipediaPage> page = pages
+        return pages
             .stream()
             .findAny()
             .map(p -> p.withLang(lang).withSection(section.getIndex()).withAnchor(section.getAnchor()));
-        LOGGER.debug(
-            "END Get page by ID and section: {} - {} - {}",
-            pageId,
-            section,
-            page.map(WikipediaPage::getTitle).orElse("")
-        );
-        return page;
     }
 
     private Map<String, String> buildPageIdsAndSectionRequestParams(int pageId, int section) {
@@ -251,20 +235,14 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
+    @Loggable(value = Loggable.DEBUG)
     public PageSearchResult getPageIdsByStringMatch(String text, int offset, int limit, WikipediaLanguage lang)
         throws ReplacerException {
-        LOGGER.info("START Get pages by string match: {}", text);
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
             buildPageIdsByStringMatchRequestParams(text, offset, limit),
             lang
         );
-        PageSearchResult pageIds = extractPageIdsFromSearchJson(apiResponse);
-        LOGGER.info(
-            "END Get pages by string match. Items found: {}/{}",
-            pageIds.getPageIds().size(),
-            pageIds.getTotal()
-        );
-        return pageIds;
+        return extractPageIdsFromSearchJson(apiResponse);
     }
 
     private Map<String, String> buildPageIdsByStringMatchRequestParams(String text, int offset, int limit) {
@@ -292,15 +270,15 @@ class WikipediaServiceImpl implements WikipediaService {
         return params;
     }
 
+    @Loggable(value = Loggable.DEBUG)
     @VisibleForTesting
     String buildSearchExpression(String text) {
         String quoted = String.format("\"%s\"", text);
         if (FinderUtils.containsUppercase(text)) {
             // Case-sensitive search with a regex
-            return String.format("%s insource:/%s/", quoted, quoted);
-        } else {
-            return quoted;
+            quoted = String.format("%s insource:/%s/", quoted, quoted);
         }
+        return quoted;
     }
 
     private PageSearchResult extractPageIdsFromSearchJson(WikipediaApiResponse response) {
@@ -315,6 +293,7 @@ class WikipediaServiceImpl implements WikipediaService {
         );
     }
 
+    @Loggable(value = Loggable.DEBUG)
     @Override
     public void savePageContent(
         int pageId,
@@ -325,8 +304,6 @@ class WikipediaServiceImpl implements WikipediaService {
         OAuth1AccessToken accessToken
     )
         throws ReplacerException {
-        LOGGER.info("START Save page content into Wikipedia. Page ID: {}", pageId);
-
         EditToken editToken = getEditToken(pageId, lang, accessToken);
         // Pre-check of edit conflicts
         if (currentTimestamp.compareTo(editToken.getTimestamp()) <= 0) {
@@ -340,7 +317,6 @@ class WikipediaServiceImpl implements WikipediaService {
             lang,
             accessToken
         );
-        LOGGER.info("END Save page content into Wikipedia. Page ID: {}", pageId);
     }
 
     private Map<String, String> buildSavePageContentRequestParams(
@@ -366,17 +342,15 @@ class WikipediaServiceImpl implements WikipediaService {
         return params;
     }
 
+    @Loggable(prepend = true, value = Loggable.TRACE)
     @VisibleForTesting
     EditToken getEditToken(int pageId, WikipediaLanguage lang, OAuth1AccessToken accessToken) throws ReplacerException {
-        LOGGER.debug("START Get edit token. Access Token: {}", accessToken.getToken());
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedPostRequest(
             buildEditTokenRequestParams(pageId),
             lang,
             accessToken
         );
-        EditToken editToken = extractEditTokenFromJson(apiResponse);
-        LOGGER.debug("END Get edit token: {}", editToken);
-        return editToken;
+        return extractEditTokenFromJson(apiResponse);
     }
 
     private Map<String, String> buildEditTokenRequestParams(int pageId) {

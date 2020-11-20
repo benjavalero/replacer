@@ -17,10 +17,10 @@ server:
 
 logging:
   level:
-    es.bvalero.replacer: INFO
-    org.hibernate: ERROR
-    org.springframework: ERROR
-    org.springframework.batch: INFO
+    es.bvalero.replacer: DEBUG
+  pattern:
+    console: '%clr(%d){faint} %clr(%5p) %clr([%-6.6t]){faint} %clr(%-30.30logger{29}){cyan} %clr(:){faint} %m%n%wEx'
+    file: '%d %5p [%-6.6t] %-30.30logger{29} : %m%n%wEx'
 
 replacer:
   cors.allowed.origins: http://localhost:8080

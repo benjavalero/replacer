@@ -34,8 +34,6 @@ abstract class PageReviewService {
     private ModelMapper modelMapper;
 
     Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
-        LOGGER.debug("START Find random page review");
-
         // Retrieve an ID of a potential page to be replaced
         Optional<Integer> randomPageId = findPageIdToReview(options);
         while (randomPageId.isPresent()) {
@@ -52,12 +50,10 @@ abstract class PageReviewService {
         }
 
         // If we get here, there are no more pages to review
-        LOGGER.info("END Find random page review. No page found.");
         return Optional.empty();
     }
 
     private Optional<Integer> findPageIdToReview(PageReviewOptions options) {
-        LOGGER.info("START Find random page ID...");
         // First we try to get the random replacement from the cache
         Optional<Integer> pageId;
         String key = buildReplacementCacheKey(options);
@@ -68,8 +64,7 @@ abstract class PageReviewService {
         } else {
             pageId = Optional.empty();
         }
-
-        LOGGER.info("END Found random page: {}", pageId.orElse(null));
+        LOGGER.debug("Found page ID to review: {}", pageId);
         return pageId;
     }
 
@@ -83,6 +78,7 @@ abstract class PageReviewService {
         return cachedPageIds.get(key).popPageId();
     }
 
+    @VisibleForTesting
     boolean loadCache(PageReviewOptions options) {
         PageSearchResult pageIds = findPageIdsToReview(options);
         String key = buildReplacementCacheKey(options);
@@ -93,7 +89,6 @@ abstract class PageReviewService {
     abstract PageSearchResult findPageIdsToReview(PageReviewOptions options);
 
     Optional<PageReview> getPageReview(int pageId, PageReviewOptions options) {
-        LOGGER.info("START Build review for page: {}", pageId);
         Optional<PageReview> review = Optional.empty();
 
         // Load page from Wikipedia
@@ -102,41 +97,33 @@ abstract class PageReviewService {
             review = buildPageReview(page.get(), options);
         }
 
-        LOGGER.info("END Build review for page: {}", pageId);
         return review;
     }
 
     abstract List<String> getIgnorableTemplates();
 
     private Optional<WikipediaPage> getPageFromWikipedia(int pageId, PageReviewOptions options) {
-        LOGGER.info("START Find Wikipedia page: {}", pageId);
         try {
             Optional<WikipediaPage> page = wikipediaService.getPageById(pageId, options.getLang());
             if (page.isPresent()) {
                 // Check if the page is processable
                 if (page.get().isProcessable(getIgnorableTemplates())) {
-                    LOGGER.info("END Found Wikipedia page: {} - {}", pageId, page.get().getTitle());
+                    LOGGER.debug("Found Wikipedia page: {} - {}", page.get().getId(), page.get().getTitle());
                     return page;
                 } else {
-                    LOGGER.warn(
-                        String.format(
-                            "Found page is not processable by content: %s - %s",
-                            pageId,
-                            page.get().getTitle()
-                        )
-                    );
+                    // TODO: Trace the detail reason: template, redirection, etc.
+                    LOGGER.warn("Found page not processable by content: {} - {}", pageId, page.get().getTitle());
                 }
             } else {
-                LOGGER.warn(String.format("No page found. ID: %s", pageId));
+                LOGGER.warn("No page found in Wikipedia: {}", pageId);
             }
 
             // We get here if the page is not found or not processable
             setPageAsReviewed(pageId, options);
         } catch (ReplacerException e) {
-            LOGGER.error("Error finding page from Wikipedia", e);
+            LOGGER.error("Error finding page in Wikipedia", e);
         }
 
-        LOGGER.info("Found no Wikipedia page: {}", pageId);
         return Optional.empty();
     }
 
@@ -165,12 +152,12 @@ abstract class PageReviewService {
     }
 
     private List<Replacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
-        LOGGER.info("START Find replacements for page: {}", page.getId());
+        // TODO: Add low-level traces on finders to detect performance issues
         List<Replacement> replacements = findAllReplacements(page, options);
 
         // Return the replacements sorted as they appear in the text
         replacements.sort(Collections.reverseOrder());
-        LOGGER.info("END Found {} replacements for page: {}", replacements.size(), page.getId());
+        LOGGER.debug("Found page replacements for page {}: {}", page.getId(), replacements.size());
         return replacements;
     }
 

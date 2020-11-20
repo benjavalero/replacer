@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.misspelling;
 
+import com.jcabi.aspects.Loggable;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
@@ -14,7 +15,6 @@ import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Component;
  * Find words in uppercase which are correct according to the punctuation,
  * e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
  */
-@Slf4j
 @Component
 public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
     @org.intellij.lang.annotations.RegExp
@@ -50,15 +49,14 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
         this.uppercaseAfterAutomata = buildUppercaseAfterAutomata(misspellings);
     }
 
+    @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)
     private Map<WikipediaLanguage, RunAutomaton> buildUppercaseAfterAutomata(
         SetValuedMap<WikipediaLanguage, Misspelling> misspellings
     ) {
-        LOGGER.info("START Build uppercase-after automata");
         Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : misspellings.keySet()) {
             map.put(lang, buildUppercaseAfterAutomaton(misspellings.get(lang)));
         }
-        LOGGER.info("END Build uppercase-after automata");
         return map;
     }
 

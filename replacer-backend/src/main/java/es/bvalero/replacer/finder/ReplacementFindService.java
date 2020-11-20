@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder;
 
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -33,37 +34,24 @@ public class ReplacementFindService {
     @Value("${replacer.show.long.immutables}")
     private boolean showLongImmutables;
 
+    @Loggable(prepend = true, value = Loggable.TRACE)
     public List<Replacement> findReplacements(String text, WikipediaLanguage lang) {
         // The replacement finder ignores in the response all the found replacements which are contained
         // in the found immutables. Usually there will be much more immutables found than replacements.
         // Thus it is better to obtain first all the replacements, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
-        LOGGER.debug("START Find replacements in text: {}", text);
-
-        List<Replacement> replacements = findAllReplacements(text, lang, replacementFinders);
-
-        LOGGER.debug("END Find replacements in text: {}", replacements);
-        return replacements;
+        return findAllReplacements(text, lang, replacementFinders);
     }
 
+    @Loggable(prepend = true, value = Loggable.TRACE)
     public List<Replacement> findCustomReplacements(
         String text,
         String replacement,
         String suggestion,
         WikipediaLanguage lang
     ) {
-        LOGGER.debug(
-            "START Find custom replacements. Text: {} - Replacement: {} - Suggestion: {}",
-            text,
-            replacement,
-            suggestion
-        );
-
         CustomReplacementFinder finder = new CustomReplacementFinder(replacement, suggestion);
-        List<Replacement> replacements = findAllReplacements(text, lang, Collections.singletonList(finder));
-
-        LOGGER.debug("END Find custom replacements in text: {}", replacements);
-        return replacements;
+        return findAllReplacements(text, lang, Collections.singletonList(finder));
     }
 
     private List<Replacement> findAllReplacements(

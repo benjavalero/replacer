@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.misspelling;
 
+import com.jcabi.aspects.Loggable;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
@@ -10,14 +11,12 @@ import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import javax.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.lang.Nullable;
 
 /**
  * Abstract class for the common functionality of the misspelling finders.
  */
-@Slf4j
 public abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeListener {
     // Derived from the misspelling set to access faster by word
     private Map<WikipediaLanguage, Map<String, Misspelling>> misspellingMap = new EnumMap<>(WikipediaLanguage.class);
@@ -37,18 +36,15 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
         processMisspellingChange(misspellings);
     }
 
-    public Map<WikipediaLanguage, Map<String, Misspelling>> buildMisspellingMaps(
+    @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)
+    private Map<WikipediaLanguage, Map<String, Misspelling>> buildMisspellingMaps(
         SetValuedMap<WikipediaLanguage, Misspelling> misspellings
     ) {
-        LOGGER.info("START Build misspelling maps");
-
         // Build a map to quick access the misspellings by word
         Map<WikipediaLanguage, Map<String, Misspelling>> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : misspellings.keySet()) {
             map.put(lang, buildMisspellingMap(misspellings.get(lang)));
         }
-
-        LOGGER.info("END Build misspelling maps");
         return map;
     }
 

@@ -29,7 +29,7 @@ class MisspellingComposedManagerTest {
             .when(wikipediaService.getComposedMisspellingListPageContent(Mockito.any(WikipediaLanguage.class)))
             .thenReturn("");
 
-        misspellingComposedManager.update();
+        misspellingComposedManager.scheduledItemListUpdate();
 
         Mockito.verify(wikipediaService).getComposedMisspellingListPageContent(WikipediaLanguage.SPANISH);
     }

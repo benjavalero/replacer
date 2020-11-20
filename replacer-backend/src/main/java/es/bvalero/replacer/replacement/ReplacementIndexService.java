@@ -1,7 +1,11 @@
 package es.bvalero.replacer.replacement;
 
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.page.IndexablePage;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +23,9 @@ public class ReplacementIndexService {
     @Autowired
     private ModelMapper modelMapper;
 
-    /** Update the replacements of a page in DB with the found ones */
+    /**
+     * Update the replacements of a page in DB with the found ones
+     */
     public void indexPageReplacements(IndexablePage page, List<IndexableReplacement> replacements) {
         // All replacements correspond to the same page
         if (replacements.stream().anyMatch(r -> r.getPageId() != page.getId())) {
@@ -40,19 +46,12 @@ public class ReplacementIndexService {
      *
      * @return A list of replacements to be inserted, updated or deleted in database.
      */
+    @Loggable(prepend = true, value = Loggable.TRACE)
     public List<ReplacementEntity> findIndexPageReplacements(
         IndexablePage page,
         List<IndexableReplacement> replacements,
         List<ReplacementEntity> dbReplacements
     ) {
-        LOGGER.debug(
-            "START Index list of replacements. Page: {}\n" + "New: {} - {}\n" + "Old: {} - {}",
-            page,
-            replacements.size(),
-            replacements,
-            dbReplacements.size(),
-            dbReplacements
-        );
         List<ReplacementEntity> result = new ArrayList<>();
 
         // Ignore context when comparing replacements in case there are cases with the same context
@@ -64,14 +63,12 @@ public class ReplacementIndexService {
         );
 
         result.addAll(cleanUpPageReplacements(page, dbReplacements));
-
-        LOGGER.debug("END Index list of replacements");
-
         return result;
     }
 
     /**
      * Check the given replacement with the ones in DB. Update the given DB list if needed.
+     *
      * @return The updated replacement to be managed in DB if needed.
      */
     private Optional<ReplacementEntity> handleReplacement(
@@ -92,7 +89,7 @@ public class ReplacementIndexService {
             ReplacementEntity newReplacement = convertToEntity(replacement);
             dbPageReplacements.add(newReplacement);
             result = Optional.of(newReplacement);
-            LOGGER.debug("Replacement inserted in DB: {}", replacement);
+            LOGGER.trace("Replacement inserted in DB: {}", replacement);
         }
         return result;
     }
@@ -130,6 +127,7 @@ public class ReplacementIndexService {
 
     /**
      * Check the given replacement with the counterpart in DB.
+     *
      * @return The updated replacement to be managed in DB if needed, or empty if not.
      */
     private Optional<ReplacementEntity> handleExistingReplacement(
@@ -174,7 +172,7 @@ public class ReplacementIndexService {
                 replacementDao.deleteAll(toRemove);
             }
         } catch (Exception e) {
-            LOGGER.error("Error when saving replacements: {}", replacements, e);
+            LOGGER.error("Error saving replacements: {}", replacements, e);
         }
     }
 
@@ -193,7 +191,10 @@ public class ReplacementIndexService {
      *
      * @return A list of replacements to be managed in DB.
      */
-    private List<ReplacementEntity> cleanUpPageReplacements(IndexablePage page, List<ReplacementEntity> dbReplacements) {
+    private List<ReplacementEntity> cleanUpPageReplacements(
+        IndexablePage page,
+        List<ReplacementEntity> dbReplacements
+    ) {
         // We assume there are no custom replacements in the list
         List<ReplacementEntity> result = new ArrayList<>();
 

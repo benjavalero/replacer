@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @Getter
 public class PageSearchResult {
-    private long total;
     private final List<Integer> pageIds = new LinkedList<>();
+    private long total;
 
     public PageSearchResult(long total, Collection<Integer> pageIds) {
         this.total = total;
@@ -39,5 +39,9 @@ public class PageSearchResult {
                 }
             }
         );
+    }
+
+    public String toString() {
+        return "PageSearchResult(total=" + this.getTotal() + ", pageIds=" + this.getPageIds().size() + ")";
     }
 }

@@ -70,7 +70,7 @@ class DumpManagerTest {
             .when(dumpFinder.findLatestDumpFile(Mockito.any(WikipediaLanguage.class)))
             .thenThrow(ReplacerException.class);
 
-        dumpManager.processLatestDumpFile();
+        dumpManager.processLatestDumpFiles();
 
         Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(Job.class), Mockito.any(JobParameters.class));
     }
@@ -81,7 +81,7 @@ class DumpManagerTest {
             .when(jobExplorer.findRunningJobExecutions(Mockito.anyString()))
             .thenReturn(Collections.singleton(Mockito.mock(JobExecution.class)));
 
-        dumpManager.processLatestDumpFile();
+        dumpManager.processLatestDumpFiles();
 
         Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(Job.class), Mockito.any(JobParameters.class));
     }
@@ -98,7 +98,7 @@ class DumpManagerTest {
         // Make the dump file old enough
         Files.setLastModifiedTime(dumpFile, FileTime.from(LocalDateTime.now().minusDays(2).toInstant(ZoneOffset.UTC)));
 
-        dumpManager.processDumpScheduled();
+        dumpManager.scheduledStartDumpIndexing();
 
         // Run twice (for Spanish and Galician)
         Mockito.verify(jobLauncher, Mockito.times(2)).run(Mockito.any(Job.class), Mockito.any(JobParameters.class));

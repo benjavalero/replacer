@@ -51,7 +51,7 @@ class FalsePositiveManagerTest {
             .when(wikipediaService.getFalsePositiveListPageContent(Mockito.any(WikipediaLanguage.class)))
             .thenReturn("");
 
-        falsePositiveManager.update();
+        falsePositiveManager.scheduledItemListUpdate();
 
         Mockito.verify(wikipediaService).getFalsePositiveListPageContent(WikipediaLanguage.SPANISH);
     }

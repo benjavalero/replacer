@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.misspelling;
 
+import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -49,8 +51,8 @@ public abstract class ParseFileManager<T> {
      * Update periodically a list of items from Wikipedia.
      */
     @Scheduled(fixedDelayString = "${replacer.parse.file.delay}")
-    public void update() {
-        LOGGER.info("EXECUTE Scheduled daily update of {} sets", getLabel());
+    public void scheduledItemListUpdate() {
+        LOGGER.info("Scheduled {} list update", getLabel());
         setItems(findItems());
     }
 
@@ -60,17 +62,11 @@ public abstract class ParseFileManager<T> {
     abstract String getLabel();
 
     private SetValuedMap<WikipediaLanguage, T> findItems() {
-        LOGGER.info("START Loading {} sets from Wikipedia...", getLabel());
         SetValuedMap<WikipediaLanguage, T> map = new HashSetValuedHashMap<>();
         for (Map.Entry<WikipediaLanguage, String> entry : findItemsText().entrySet()) {
             Set<T> itemSet = parseItemsText(entry.getValue());
             map.putAll(entry.getKey(), itemSet);
-            LOGGER.info(
-                "END Load {} set from {} Wikipedia. Items found: {}",
-                getLabel(),
-                entry.getKey(),
-                itemSet.size()
-            );
+            LOGGER.debug("Found {} items in {} Wikipedia: {}", getLabel(), entry.getKey(), itemSet.size());
         }
         return map;
     }
@@ -87,7 +83,17 @@ public abstract class ParseFileManager<T> {
     /**
      * Retrieve from Wikipedia the text containing the items for a specific language.
      */
-    abstract String findItemsText(WikipediaLanguage lang);
+    String findItemsText(WikipediaLanguage lang) {
+        String text = FinderUtils.STRING_EMPTY;
+        try {
+            text = findItemsTextInWikipedia(lang);
+        } catch (ReplacerException e) {
+            LOGGER.error("Error finding {} items in {} Wikipedia", getLabel(), lang, e);
+        }
+        return text;
+    }
+
+    abstract String findItemsTextInWikipedia(WikipediaLanguage lang) throws ReplacerException;
 
     /**
      * Parse the text containing the items line by line.

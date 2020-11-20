@@ -110,7 +110,7 @@ class MisspellingManagerTest {
             .when(wikipediaService.getMisspellingListPageContent(Mockito.any(WikipediaLanguage.class)))
             .thenReturn("");
 
-        misspellingManager.update();
+        misspellingManager.scheduledItemListUpdate();
 
         Mockito.verify(wikipediaService).getMisspellingListPageContent(WikipediaLanguage.SPANISH);
     }

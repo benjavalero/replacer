@@ -4,6 +4,6 @@ import lombok.Value;
 
 @Value
 class ReviewerCount {
-    private String reviewer;
-    private long count;
+    String reviewer;
+    long count;
 }

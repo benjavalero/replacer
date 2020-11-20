@@ -15,12 +15,12 @@ public class DumpJobListener implements JobExecutionListener {
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
-        LOGGER.debug("START Dump Job Execution");
+        LOGGER.trace("START Dump Job Execution");
     }
 
     @Override
     public void afterJob(JobExecution jobExecution) {
-        LOGGER.debug("END Dump Job Execution");
+        LOGGER.trace("END Dump Job Execution");
         WikipediaLanguage lang = WikipediaLanguage.forValues(
             jobExecution.getJobParameters().getString(DumpManager.DUMP_LANG_PARAMETER)
         );

@@ -3,6 +3,7 @@ package es.bvalero.replacer.replacement;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -13,29 +14,31 @@ public class ReplacementCountService {
     @Autowired
     private ReplacementDao replacementDao;
 
-    // Cache the count of PAGES with replacements
+    // Cache the count of PAGES containing replacements by type/subtype
     // This list is updated every 10 minutes and modified when saving changes
     private Map<WikipediaLanguage, LanguageCount> languageCounts = new EnumMap<>(WikipediaLanguage.class);
 
     /* STATISTICS */
 
     long countReplacementsReviewed(WikipediaLanguage lang) {
-        return replacementDao.countUserReviewed(lang);
+        return replacementDao.countReplacementsReviewed(lang);
     }
 
-    long countReplacementsToReview(WikipediaLanguage lang) {
-        return replacementDao.countToBeReviewed(lang);
+    long countReplacementsNotReviewed(WikipediaLanguage lang) {
+        return replacementDao.countReplacementsNotReviewed(lang);
     }
 
     List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
-        return replacementDao.countGroupedByReviewer(lang);
+        return replacementDao.countReplacementsGroupedByReviewer(lang);
     }
 
     /* LIST OF REPLACEMENTS */
 
-    List<TypeCount> findReplacementCount(WikipediaLanguage lang) {
+    List<TypeCount> getCachedReplacementTypeCounts(WikipediaLanguage lang) {
         if (languageCounts.containsKey(lang)) {
-            return languageCounts.get(lang).getTypeCounts();
+            List<TypeCount> list = languageCounts.get(lang).getTypeCounts();
+            Collections.sort(list);
+            return list;
         } else {
             return Collections.emptyList();
         }
@@ -44,16 +47,15 @@ public class ReplacementCountService {
     /**
      * Update the count of misspellings from Wikipedia.
      */
+    @VisibleForTesting
     @Scheduled(fixedDelayString = "${replacer.page.stats.delay}")
-    void updateReplacementCount() {
-        LOGGER.info("EXECUTE Scheduled update of grouped replacements count");
-        LOGGER.info("START Count grouped replacements by type and subtype");
+    public void scheduledUpdateReplacementTypeCounts() {
+        LOGGER.info("Scheduled replacement type counts update");
         List<TypeSubtypeCount> counts = replacementDao.countPagesGroupedByTypeAndSubtype();
-        LOGGER.info("END Count grouped replacements. Size: {}", counts.size());
-        this.languageCounts = loadCachedReplacementCount(counts);
+        this.languageCounts = buildReplacementTypeCounts(counts);
     }
 
-    private Map<WikipediaLanguage, LanguageCount> loadCachedReplacementCount(List<TypeSubtypeCount> counts) {
+    private Map<WikipediaLanguage, LanguageCount> buildReplacementTypeCounts(List<TypeSubtypeCount> counts) {
         final Map<WikipediaLanguage, LanguageCount> langCounts = new EnumMap<>(WikipediaLanguage.class);
         for (TypeSubtypeCount count : counts) {
             WikipediaLanguage lang = WikipediaLanguage.forValues(count.getLang());

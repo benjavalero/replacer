@@ -45,7 +45,7 @@ class PageReviewNoTypeService extends PageReviewService {
         // Instead find a random replacement and then the following pages
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
         long randomStart = replacementDao.findRandomIdToBeReviewed(CACHE_SIZE, options.getLang());
-        long totalResults = replacementDao.countToBeReviewed(options.getLang());
+        long totalResults = replacementDao.countReplacementsNotReviewed(options.getLang());
         List<Integer> pageIds = replacementDao.findPageIdsToBeReviewed(options.getLang(), randomStart, pagination);
         return new PageSearchResult(totalResults, pageIds);
     }
@@ -55,7 +55,7 @@ class PageReviewNoTypeService extends PageReviewService {
         List<Replacement> replacements = replacementFindService.findReplacements(page.getContent(), page.getLang());
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
-        LOGGER.debug("Update page replacements in database");
+        LOGGER.trace("Update page replacements in database");
         replacementIndexService.indexPageReplacements(
             page,
             replacements.stream().map(page::convertReplacementToIndexed).collect(Collectors.toList())

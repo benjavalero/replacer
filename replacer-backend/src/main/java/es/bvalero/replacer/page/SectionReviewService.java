@@ -1,7 +1,9 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.wikipedia.*;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaSection;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +32,6 @@ class SectionReviewService {
         assert review.getSection() == null;
 
         // Get the sections from the Wikipedia API (better than calculating them by ourselves)
-        LOGGER.info("START Find section for page: {}", review.getId());
         try {
             List<WikipediaSection> sections = new ArrayList<>(
                 wikipediaService.getPageSections(review.getId(), review.getLang())
@@ -60,10 +61,11 @@ class SectionReviewService {
                             .stream()
                             .allMatch(rep -> validatePageReplacement(rep, pageSection.get().getContent()))
                     ) {
-                        LOGGER.info(
-                            "END Found section {} for page: {}",
+                        LOGGER.debug(
+                            "Found section for page {}: {} - {}",
+                            pageSection.get().getId(),
                             pageSection.get().getSection(),
-                            review.getId()
+                            pageSection.get().getAnchor()
                         );
                         return Optional.of(
                             buildPageReview(
@@ -77,18 +79,19 @@ class SectionReviewService {
                         );
                     } else {
                         LOGGER.warn(
-                            "Not valid byte-offset in section {} of page: {}",
-                            smallestSection.get().getIndex(),
-                            pageSection.get().getTitle()
+                            "Not valid byte-offset in page section: {} - {} - {}",
+                            pageSection.get().getId(),
+                            smallestSection.get().getAnchor(),
+                            smallestSection.get().getByteOffset()
                         );
                     }
                 }
             }
         } catch (ReplacerException e) {
-            LOGGER.error("Error getting section review", e);
+            LOGGER.error("Error finding page section: {}", review.getId(), e);
         }
 
-        LOGGER.info("END Found no section for page: {}", review.getId());
+        LOGGER.debug("No section found for page: {}", review.getId());
         return Optional.empty();
     }
 

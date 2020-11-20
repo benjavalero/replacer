@@ -4,10 +4,8 @@ import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemWriter;
 
-@Slf4j
 public class DumpWriter implements ItemWriter<List<ReplacementEntity>> {
     private final ItemWriter<ReplacementEntity> insertWriter;
     private final ItemWriter<ReplacementEntity> updateWriter;

@@ -1,5 +1,6 @@
 package es.bvalero.replacer.dump;
 
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.nio.file.Path;
@@ -55,13 +56,13 @@ class DumpManager {
     /**
      * Check if there is a new dump to process.
      */
+    @Loggable(prepend = true)
     @Scheduled(
         initialDelayString = "${replacer.dump.batch.delay.initial}",
         fixedDelayString = "${replacer.dump.batch.delay}"
     )
-    public void processDumpScheduled() {
-        LOGGER.info("EXECUTE Scheduled index of the last dump");
-        processLatestDumpFile();
+    public void scheduledStartDumpIndexing() {
+        processLatestDumpFiles();
     }
 
     /**
@@ -69,13 +70,12 @@ class DumpManager {
      */
     // In order to be asynchronous it must be public and called externally:
     // https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableAsync.html
+    @Loggable(value = Loggable.DEBUG)
     @Async
-    public void processLatestDumpFile() {
-        LOGGER.info("START Index latest dump file");
-
+    public void processLatestDumpFiles() {
         // Check just in case the handler is already running
         if (!jobExplorer.findRunningJobExecutions(DUMP_JOB_NAME).isEmpty()) {
-            LOGGER.info("END Index latest dump file. Dump indexing is already running.");
+            LOGGER.warn("Dump indexing is already running.");
             return;
         }
 
@@ -83,17 +83,15 @@ class DumpManager {
             try {
                 Path latestDumpFileFound = dumpFinder.findLatestDumpFile(lang);
                 parseDumpFile(latestDumpFileFound, lang);
-                LOGGER.info("END Index latest dump file: {}", latestDumpFileFound);
             } catch (ReplacerException e) {
-                LOGGER.error("Error indexing latest dump file", e);
+                LOGGER.error("Error indexing latest dump file for lang {}", lang, e);
             }
         }
     }
 
+    @Loggable(prepend = true, value = Loggable.DEBUG)
     @VisibleForTesting
     void parseDumpFile(Path dumpFile, WikipediaLanguage lang) throws ReplacerException {
-        LOGGER.info("START Parse dump file: {}", dumpFile);
-
         try {
             JobParameters jobParameters = new JobParametersBuilder()
                 .addString("source", "Dump Manager")

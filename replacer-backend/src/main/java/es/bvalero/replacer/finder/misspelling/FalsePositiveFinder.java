@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.misspelling;
 
+import com.jcabi.aspects.Loggable;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
@@ -17,7 +18,6 @@ import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,6 @@ import org.springframework.stereotype.Component;
  * Find known expressions which are (almost) always false positives,
  * e.g. in Spanish `aun así` which hides the potential replacement `aun`
  */
-@Slf4j
 @Component
 public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
     @Autowired
@@ -48,15 +47,14 @@ public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListe
         this.falsePositivesAutomata = buildFalsePositivesAutomata(falsePositives);
     }
 
+    @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)
     private Map<WikipediaLanguage, RunAutomaton> buildFalsePositivesAutomata(
         SetValuedMap<WikipediaLanguage, String> falsePositives
     ) {
-        LOGGER.info("START Build false positive automata");
         Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : falsePositives.keySet()) {
             map.put(lang, buildFalsePositivesAutomaton(falsePositives.get(lang)));
         }
-        LOGGER.info("END Build false positive automata");
         return map;
     }
 
