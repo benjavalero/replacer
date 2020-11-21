@@ -25,6 +25,7 @@ open module es.bvalero.replacer {
     requires org.slf4j;
 
     requires automaton;
+    requires jcabi.aspects;
     requires lombok;
     requires modelmapper;
     requires org.apache.commons.collections4;
