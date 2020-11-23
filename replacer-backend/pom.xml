@@ -16,7 +16,6 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <asm.version>7.3.1</asm.version>
-        <lombok.version>1.18.12</lombok.version>
 
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>benjavalero-github</sonar.organization>
@@ -87,7 +86,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
             <scope>compile</scope>
         </dependency>
         <!-- Likely to be unnecessary in next Lombok version: https://github.com/rzwitserloot/lombok/issues/2125 -->
