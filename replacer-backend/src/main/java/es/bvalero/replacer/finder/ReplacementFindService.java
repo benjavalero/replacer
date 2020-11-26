@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -91,6 +92,11 @@ public class ReplacementFindService {
         }
 
         for (Immutable immutable : immutableFindService.findImmutables(text, lang)) {
+            // Detect empty immutables
+            if (StringUtils.isBlank(immutable.getText())) {
+                LOGGER.warn("Empty immutable: {} - {}", immutable, text);
+            }
+
             // Detect too long immutables likely to be errors in the text or in the finder
             if (showLongImmutables && immutable.getText().length() > immutable.getFinder().getMaxLength()) {
                 LOGGER.warn(
