@@ -105,6 +105,12 @@
             <version>0.22.6</version>
         </dependency>
         <dependency>
+            <groupId>io.logz.logback</groupId>
+            <artifactId>logzio-logback-appender</artifactId>
+            <!-- https://github.com/logzio/logzio-logback-appender/issues/76 -->
+            <version>1.0.23</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-oxm</artifactId>
         </dependency>

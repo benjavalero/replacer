@@ -15,13 +15,6 @@ server:
   port: 8080 # Default port for local deployment
   compression.enabled: true
 
-logging:
-  level:
-    es.bvalero.replacer: DEBUG
-  pattern:
-    console: '%clr(%d){faint} %clr(%5p) %clr([%-6.6t]){faint} %clr(%-30.30logger{29}){cyan} %clr(:){faint} %m%n%wEx'
-    file: '%d %5p [%-6.6t] %-30.30logger{29} : %m%n%wEx'
-
 replacer:
   cors.allowed.origins: http://localhost:8080
   dump:
@@ -52,12 +45,6 @@ spring:
 
 server:
   port: 8000
-
-logging:
-  # Rolling after 10M after the documentation
-  file: logs/replacer.log
-  # Disable console logging
-  pattern.console:
 
 replacer:
   dump:

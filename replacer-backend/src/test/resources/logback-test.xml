@@ -2,7 +2,7 @@
 <!-- This is needed because configuration in YAML is not caught for all unit tests -->
 <!-- https://stackoverflow.com/questions/35232827/spring-boot-test-ignores-logging-level -->
 <configuration>
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <logger name="org.springframework" level="ERROR"/>
     <logger name="org.hibernate" level="ERROR"/>
     <logger name="es.bvalero.replacer" level="ERROR"/>
