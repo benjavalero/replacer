@@ -46,12 +46,15 @@
         <value>{{autotrad</value>
         <value>{{revisar traducción</value>
 
+        <value>{{wikificar</value>
+
         <!-- Galician -->
         <value>{{en tradución</value>
         <value>{{non galego</value>
         <value>{{lixo</value>
         <value>{{lixoporque</value>
         <value>{{pendente artigo</value>
+        <value>{{formatowiki</value>
     </util:list>
 
 </beans>
