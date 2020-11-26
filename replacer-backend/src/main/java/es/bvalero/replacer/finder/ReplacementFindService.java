@@ -5,6 +5,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class ReplacementFindService {
     @Value("${replacer.show.long.immutables}")
     private boolean showLongImmutables;
 
-    @Loggable(prepend = true, value = Loggable.TRACE)
+    @Loggable(prepend = true, value = Loggable.TRACE, unit = TimeUnit.SECONDS)
     public List<Replacement> findReplacements(String text, WikipediaLanguage lang) {
         // The replacement finder ignores in the response all the found replacements which are contained
         // in the found immutables. Usually there will be much more immutables found than replacements.
@@ -43,7 +44,7 @@ public class ReplacementFindService {
         return findAllReplacements(text, lang, replacementFinders);
     }
 
-    @Loggable(prepend = true, value = Loggable.TRACE)
+    @Loggable(prepend = true, value = Loggable.TRACE, unit = TimeUnit.SECONDS)
     public List<Replacement> findCustomReplacements(
         String text,
         String replacement,
