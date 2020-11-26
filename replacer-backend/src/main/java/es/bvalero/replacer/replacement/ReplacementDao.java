@@ -162,9 +162,10 @@ public class ReplacementDao {
         return result == null ? 0L : result;
     }
 
+    // Using DISTINCT makes the query not to use to wanted index "idx_count"
     public List<Integer> findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage lang, String subtype) {
         String sql =
-            "SELECT DISTINCT(article_id) FROM replacement2 " +
+            "SELECT article_id FROM replacement2 " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NOT NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
