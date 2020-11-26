@@ -1,11 +1,10 @@
 package es.bvalero.replacer.finder.immutables;
 
 import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +23,7 @@ public class CompleteTagFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 50000;
+        return 5000;
     }
 
     @Override

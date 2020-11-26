@@ -99,12 +99,7 @@ public class ReplacementFindService {
 
             // Detect too long immutables likely to be errors in the text or in the finder
             if (showLongImmutables && immutable.getText().length() > immutable.getFinder().getMaxLength()) {
-                LOGGER.warn(
-                    "Immutable too long: {}\t{}\t{}",
-                    immutable.getFinder().getClass().getSimpleName(),
-                    immutable.getText().length(),
-                    immutable.getText()
-                );
+                LOGGER.warn("Too long immutable: {}", immutable);
             }
 
             replacementList.removeIf(immutable::contains);

@@ -4,12 +4,11 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +21,10 @@ public class TemplateFinder implements ImmutableFinder {
     // A linear optimization, instead of regex, is too complex and it is not worth for the moment
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+}}";
+
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_NESTED = "\\{\\{<Zs>*(%s)(<Zs>|<Cc>)*[|:](%s|[^}])+}}";
+
     private RunAutomaton automatonTemplate;
 
     @Resource
@@ -45,11 +46,7 @@ public class TemplateFinder implements ImmutableFinder {
         return ImmutableFinderPriority.MEDIUM;
     }
 
-    @Override
-    public int getMaxLength() {
-        // There may be really long cites
-        return 100000;
-    }
+    // We don't override the max length. There may be really long cites.
 
     @Override
     public Iterable<Immutable> find(String text, WikipediaLanguage lang) {

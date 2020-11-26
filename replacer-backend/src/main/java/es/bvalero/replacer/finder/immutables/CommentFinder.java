@@ -19,7 +19,7 @@ public class CommentFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 100000;
+        return 10000;
     }
 
     @Override

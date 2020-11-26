@@ -1,10 +1,9 @@
 package es.bvalero.replacer.finder.immutables;
 
 import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.*;
 import java.util.regex.MatchResult;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +20,7 @@ public class CursiveFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 5000;
+        return 500;
     }
 
     @Override

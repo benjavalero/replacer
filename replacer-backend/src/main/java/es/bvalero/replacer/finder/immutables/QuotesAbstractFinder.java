@@ -5,13 +5,17 @@ import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.LinearIterable;
 import es.bvalero.replacer.finder.LinearMatcher;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import org.springframework.lang.Nullable;
-
 import java.util.*;
 import java.util.regex.MatchResult;
+import org.springframework.lang.Nullable;
 
 abstract class QuotesAbstractFinder implements ImmutableFinder {
     private static final Set<Character> FORBIDDEN_CHARS = new HashSet<>(Arrays.asList('\n', '#', '{', '}', '<', '>'));
+
+    @Override
+    public int getMaxLength() {
+        return 500;
+    }
 
     abstract char getStartChar();
 
