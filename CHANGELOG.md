@@ -1,5 +1,11 @@
 # Versions
 
+## 2.7.9 (27 Nov 2020)
+- Internal feature: add logging by aspects. Add warnings to some methods when taking too long. New appender to send the traces to a log cloud server. Simplify traces.
+- Fix issue when finding custom replacements making the start too slow
+- Internal feature: Enable warnings when found immutables are empty or too long.
+- Add more ignorable templates
+
 ## 2.7.8 (9 Nov 2020)
 - Improve indexation not to perform unnecessary database updates
 - Allow dots, commas and numbers in composed misspellings (not in simple)
