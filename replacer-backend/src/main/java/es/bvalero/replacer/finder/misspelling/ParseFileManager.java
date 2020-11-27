@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -31,7 +32,8 @@ public abstract class ParseFileManager<T> {
 
     private SetValuedMap<WikipediaLanguage, T> items = new HashSetValuedHashMap<>();
 
-    void setItems(SetValuedMap<WikipediaLanguage, T> items) {
+    @VisibleForTesting
+    public void setItems(SetValuedMap<WikipediaLanguage, T> items) {
         changeSupport.firePropertyChange("name", this.items, items);
 
         processRemovedItems(this.items, items);
