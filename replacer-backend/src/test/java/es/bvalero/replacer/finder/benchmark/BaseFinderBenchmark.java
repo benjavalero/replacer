@@ -32,11 +32,11 @@ public class BaseFinderBenchmark {
         sampleContents.forEach(
             text -> {
                 for (BenchmarkFinder finder : finders) {
-                    long start = System.currentTimeMillis();
+                    long start = System.nanoTime();
                     for (int i = 0; i < numIterations; i++) {
                         finder.findMatches(text);
                     }
-                    long end = System.currentTimeMillis() - start;
+                    double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                     if (print) {
                         System.out.println(finder.getClass().getSimpleName() + "\t" + end);
                     }
