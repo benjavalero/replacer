@@ -1,18 +1,17 @@
 package es.bvalero.replacer.finder.misspelling;
 
 import com.jcabi.aspects.Loggable;
-import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.finder.FinderUtils;
+import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.finder.ReplacementFinder;
+import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
-import org.springframework.lang.Nullable;
 
 /**
  * Abstract class for the common functionality of the misspelling finders.
@@ -68,33 +67,11 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
 
     abstract void processMisspellingChange(SetValuedMap<WikipediaLanguage, Misspelling> misspellings);
 
-    @Override
-    public Iterable<Replacement> find(String text, WikipediaLanguage lang) {
-        RunAutomaton automaton = getAutomaton(lang);
-        if (automaton == null) {
-            return Collections.emptyList();
-        } else {
-            // We need to perform additional transformations according to the language
-            return StreamSupport
-                .stream(
-                    new RegexIterable<>(text, automaton, this::convertMatch, this::isValidMatch).spliterator(),
-                    false
-                )
-                .filter(r -> isExistingWord(r.getText(), lang))
-                .map(r -> r.withSubtype(getSubtype(r.getText(), lang)))
-                .map(r -> r.withSuggestions(findSuggestions(r.getText(), lang)))
-                .collect(Collectors.toList());
-        }
-    }
-
-    private boolean isExistingWord(String word, WikipediaLanguage lang) {
+    boolean isExistingWord(String word, WikipediaLanguage lang) {
         return findMisspellingByWord(word, lang).isPresent();
     }
 
-    @Nullable
-    abstract RunAutomaton getAutomaton(WikipediaLanguage lang);
-
-    private Replacement convertMatch(MatchResult matcher) {
+    Replacement convertMatch(MatchResult matcher) {
         int start = matcher.start();
         String text = matcher.group();
         return Replacement
@@ -109,7 +86,7 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
 
     abstract String getType();
 
-    private String getSubtype(String text, WikipediaLanguage lang) {
+    String getSubtype(String text, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
         return findMisspellingByWord(text, lang).map(Misspelling::getWord).orElseThrow(IllegalArgumentException::new);
     }
@@ -120,7 +97,7 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
     }
 
     // Transform the case of the suggestion, e.g. "Habia" -> "Había"
-    private List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
+    List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
         List<Suggestion> suggestions = new LinkedList<>();
 
         // We are sure in this point that the Misspelling exists

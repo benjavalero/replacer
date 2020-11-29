@@ -3,10 +3,14 @@ package es.bvalero.replacer.finder.misspelling;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderUtils;
+import es.bvalero.replacer.finder.RegexIterable;
+import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +55,22 @@ public class MisspellingComposedFinder extends MisspellingFinder {
     }
 
     @Override
-    RunAutomaton getAutomaton(WikipediaLanguage lang) {
-        return this.automata.get(lang);
+    public Iterable<Replacement> find(String text, WikipediaLanguage lang) {
+        RunAutomaton automaton = this.automata.get(lang);
+        if (automaton == null) {
+            return Collections.emptyList();
+        } else {
+            // We need to perform additional transformations according to the language
+            return StreamSupport
+                .stream(
+                    new RegexIterable<>(text, automaton, this::convertMatch, this::isValidMatch).spliterator(),
+                    false
+                )
+                .filter(r -> isExistingWord(r.getText(), lang))
+                .map(r -> r.withSubtype(getSubtype(r.getText(), lang)))
+                .map(r -> r.withSuggestions(findSuggestions(r.getText(), lang)))
+                .collect(Collectors.toList());
+        }
     }
 
     @Override
