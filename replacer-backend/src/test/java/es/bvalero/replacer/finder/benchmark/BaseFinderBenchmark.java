@@ -14,14 +14,18 @@ public class BaseFinderBenchmark {
     public static final int ITERATIONS = 1000;
 
     public void runBenchmark(List<BenchmarkFinder> finders) throws IOException, URISyntaxException {
+        runBenchmark(finders, WARM_UP, ITERATIONS);
+    }
+
+    public void runBenchmark(List<BenchmarkFinder> finders, int warmUp, int iterations) throws IOException, URISyntaxException {
         List<String> sampleContents = findSampleContents();
 
         // Warm-up
         System.out.println("WARM-UP...");
-        run(finders, WARM_UP, sampleContents, false);
+        run(finders, warmUp, sampleContents, false);
 
         // Real run
-        run(finders, ITERATIONS, sampleContents, true);
+        run(finders, iterations, sampleContents, true);
     }
 
     private void run(List<BenchmarkFinder> finders, int numIterations, List<String> sampleContents, boolean print) {
