@@ -4,7 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import es.bvalero.replacer.finder.ReplacementFinder;
 import es.bvalero.replacer.finder.composed.AcuteOFinder;
-import es.bvalero.replacer.finder.date.*;
+import es.bvalero.replacer.finder.date.DateFinder;
 import es.bvalero.replacer.finder.misspelling.*;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
@@ -27,17 +27,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
     classes = {
         ReplacementFinder.class,
         AcuteOFinder.class,
-        DotLongDateFinder.class,
-        DotMonthYearFinder.class,
-        IncompleteLongDateFinder.class,
-        IncompleteMonthYearFinder.class,
-        LeadingZeroFinder.class,
+        DateFinder.class,
         MisspellingComposedManager.class,
         MisspellingComposedFinder.class,
         MisspellingManager.class,
         MisspellingSimpleFinder.class,
-        UppercaseLongDateFinder.class,
-        UppercaseMonthYearFinder.class,
     }
 )
 class ReplacementFinderBenchmark extends BaseFinderBenchmark {

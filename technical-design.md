@@ -141,11 +141,13 @@ Some of these finders use a list of properties which are maintained in text file
 
 ### Date Finders
 
-The sub-package `date` includes replacement finders related with dates.
+The sub-package `date` includes a finder related with dates with several subtypes:
 
-- **LeadingZeroFinder**. Find long dates starting with zero, e.g. `02 de septiembre de 2019`
-- **UppercaseMonthFinder**. Find dates with the month in uppercase, e.g. `2 de Septiembre de 2019`
-- **UppercaseMonthWithoutDayFinder**. Find months in uppercase without day and after a common preposition, e.g. `desde Septiembre de 2019`
+- Find long dates starting with zero, e.g. `02 de septiembre de 2019`
+- Find dates with the month in uppercase, e.g. `2 de Septiembre de 2019` or `desde Septiembre de 2019`
+- Find dates with the year containing dot, e.g. `2 de septiembre de 2.010`
+
+Regarding performance, it is worth to find potential matches with only one regex and then check if the found dates are to be corrected and how.
 
 *Note*: For the moment, these finders only work for Spanish language.
 
