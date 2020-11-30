@@ -96,16 +96,23 @@ public class ReplacementFindService {
             if (StringUtils.isBlank(immutable.getText())) {
                 // As we don't have the page title we trace a snippet of text around the immutable
                 LOGGER.warn(
-                    "Empty immutable: {} - {} - {}",
+                    "Empty immutable: {} - {} - {} - {}",
                     immutable.getFinder().getClass().getSimpleName(),
                     immutable.getStart(),
+                    lang,
                     FinderUtils.getContextAroundWord(text, immutable.getStart(), immutable.getEnd(), 100)
                 );
             }
 
             // Detect too long immutables likely to be errors in the text or in the finder
             if (showLongImmutables && immutable.getText().length() > immutable.getFinder().getMaxLength()) {
-                LOGGER.warn("Too long immutable: {}", immutable);
+                LOGGER.warn(
+                    "Too long immutable: {} - {} - {} - {}",
+                    immutable.getFinder().getClass().getSimpleName(),
+                    immutable.getText().length(),
+                    lang,
+                    immutable.getText()
+                );
             }
 
             replacementList.removeIf(immutable::contains);
