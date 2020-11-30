@@ -4,7 +4,6 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -29,7 +28,8 @@ public class CustomReplacementFinder implements ReplacementFinder {
         String regex = FinderUtils.startsWithLowerCase(replacement) && FinderUtils.startsWithLowerCase(suggestion)
             ? FinderUtils.setFirstUpperCaseClass(replacement)
             : replacement;
-        return new RunAutomaton(new RegExp(regex).toAutomaton());
+        String escapedRegex = FinderUtils.escapeRegexCharacters(regex);
+        return new RunAutomaton(new RegExp(escapedRegex).toAutomaton());
     }
 
     private Replacement convertMatch(MatchResult matcher) {
@@ -45,7 +45,7 @@ public class CustomReplacementFinder implements ReplacementFinder {
             .build();
     }
 
-    public List<Suggestion> findSuggestions(String text) {
+    private List<Suggestion> findSuggestions(String text) {
         return Collections.singletonList(
             Suggestion.ofNoComment(getNewSuggestion(text, this.replacement, this.suggestion))
         );

@@ -87,4 +87,17 @@ class CustomReplacementFinderTest {
             replacements.get(1).getSuggestions().get(0).getText()
         );
     }
+
+    @Test
+    void testCustomReplacementWithDot() {
+        String replacement = "Washington D.C.";
+        String suggestion = "Washington, D.C.";
+        String text = "En Washington D.CX. y Washington D.C. y Madrid";
+
+        CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
+        List<Replacement> replacements = customReplacementFinder.findList(text);
+
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(replacement, replacements.get(0).getText());
+    }
 }
