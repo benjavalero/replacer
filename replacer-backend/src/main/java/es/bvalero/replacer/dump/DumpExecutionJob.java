@@ -62,7 +62,7 @@ public class DumpExecutionJob {
             .<DumpPageXml, List<ReplacementEntity>>chunk(chunkSize)
             .reader(dumpReader)
             .processor(dumpPageProcessor)
-            .writer(new DumpWriter(jdbcInsertWriter, jdbcUpdateWriter, jdbcDeleteWriter))
+            .writer(new DumpWriter(jdbcInsertWriter, jdbcUpdateWriter))
             .faultTolerant()
             .skipLimit(Integer.MAX_VALUE) // No skip limit
             .skip(ReplacerException.class)
@@ -120,17 +120,6 @@ public class DumpExecutionJob {
             .namedParametersJdbcTemplate(jdbcTemplate)
             .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
             .sql(updateSql)
-            .build();
-    }
-
-    @Bean
-    public JdbcBatchItemWriter<ReplacementEntity> jdbcDeleteWriter() {
-        final String deleteSql = "DELETE FROM replacement2 WHERE id=:id";
-
-        return new JdbcBatchItemWriterBuilder<ReplacementEntity>()
-            .namedParametersJdbcTemplate(jdbcTemplate)
-            .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-            .sql(deleteSql)
             .build();
     }
 
