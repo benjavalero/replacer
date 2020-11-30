@@ -94,7 +94,13 @@ public class ReplacementFindService {
         for (Immutable immutable : immutableFindService.findImmutables(text, lang)) {
             // Detect empty immutables
             if (StringUtils.isBlank(immutable.getText())) {
-                LOGGER.warn("Empty immutable: {} - {}", immutable, text);
+                // As we don't have the page title we trace a snippet of text around the immutable
+                LOGGER.warn(
+                    "Empty immutable: {} - {} - {}",
+                    immutable.getFinder().getClass().getSimpleName(),
+                    immutable.getStart(),
+                    FinderUtils.getContextAroundWord(text, immutable.getStart(), immutable.getEnd(), 100)
+                );
             }
 
             // Detect too long immutables likely to be errors in the text or in the finder
@@ -118,9 +124,8 @@ public class ReplacementFindService {
     }
 
     private Replacement addContextToReplacement(Replacement replacement, String text) {
-        int limitLeft = Math.max(0, replacement.getStart() - CONTEXT_THRESHOLD);
-        int limitRight = Math.min(text.length() - 1, replacement.getEnd() + CONTEXT_THRESHOLD);
-        String context = text.substring(limitLeft, limitRight);
-        return replacement.withContext(context);
+        return replacement.withContext(
+            FinderUtils.getContextAroundWord(text, replacement.getStart(), replacement.getEnd(), CONTEXT_THRESHOLD)
+        );
     }
 }
