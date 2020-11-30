@@ -152,7 +152,6 @@ abstract class PageReviewService {
     }
 
     private List<Replacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
-        // TODO: Add low-level traces on finders to detect performance issues
         List<Replacement> replacements = findAllReplacements(page, options);
 
         // Return the replacements sorted as they appear in the text
