@@ -293,7 +293,7 @@ class WikipediaServiceImpl implements WikipediaService {
         );
     }
 
-    @Loggable(value = Loggable.DEBUG)
+    @Loggable(value = Loggable.DEBUG, ignore = ReplacerException.class)
     @Override
     public void savePageContent(
         int pageId,
@@ -307,8 +307,16 @@ class WikipediaServiceImpl implements WikipediaService {
         EditToken editToken = getEditToken(pageId, lang, accessToken);
         // Pre-check of edit conflicts
         if (currentTimestamp.compareTo(editToken.getTimestamp()) <= 0) {
+            LOGGER.warn(
+                "Page edited at the same time: {} - {} - {} - {} - {}",
+                pageId,
+                currentTimestamp,
+                editToken.getTimestamp(),
+                lang,
+                pageContent
+            );
             throw new ReplacerException(
-                "El artículo ha sido editado por otra persona. Recargue la página para revisar el artículo de nuevo."
+                "Esta página de Wikipedia ha sido editada por otra persona. Recargue para revisarla de nuevo."
             );
         }
 

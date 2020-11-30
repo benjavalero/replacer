@@ -98,6 +98,7 @@ public class PageController {
 
     /* SAVE CHANGES */
 
+    @Loggable(prepend = true, ignore = ReplacerException.class)
     @PostMapping(value = "/{id}")
     public void save(
         @RequestBody SavePage savePage,
