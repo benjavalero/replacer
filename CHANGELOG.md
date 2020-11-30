@@ -1,5 +1,10 @@
 # Versions
 
+## 2.7.10 (30 Nov 2020)
+- Improve performance of several finders reducing indexation times
+- Improve queries to delete and update replacements when indexing
+- Allow dots in custom replacements
+
 ## 2.7.9 (27 Nov 2020)
 - Internal feature: add logging by aspects. Add warnings to some methods when taking too long. New appender to send the traces to a log cloud server. Simplify traces.
 - Fix issue when finding custom replacements making the start too slow
