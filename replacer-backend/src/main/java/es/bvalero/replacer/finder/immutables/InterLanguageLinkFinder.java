@@ -17,7 +17,7 @@ public class InterLanguageLinkFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 200;
+        return 250;
     }
 
     @Override

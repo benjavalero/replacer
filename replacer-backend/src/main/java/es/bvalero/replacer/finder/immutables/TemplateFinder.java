@@ -46,7 +46,10 @@ public class TemplateFinder implements ImmutableFinder {
         return ImmutableFinderPriority.MEDIUM;
     }
 
-    // We don't override the max length. There may be really long cites.
+    @Override
+    public int getMaxLength() {
+        return 5000;
+    }
 
     @Override
     public Iterable<Immutable> find(String text, WikipediaLanguage lang) {

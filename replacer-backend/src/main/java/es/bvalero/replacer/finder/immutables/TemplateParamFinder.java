@@ -26,6 +26,7 @@ public class TemplateParamFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
+        // There can actually be really long param values, e.g. quotes or URLs
         return 200;
     }
 
