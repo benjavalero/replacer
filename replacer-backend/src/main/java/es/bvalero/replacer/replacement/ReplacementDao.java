@@ -9,10 +9,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +38,14 @@ public class ReplacementDao {
         jdbcTemplate.update(sql, namedParameters);
     }
 
+    public void insert(List<ReplacementEntity> entityList) {
+        final String sql =
+            "INSERT INTO replacement2 (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +
+            "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer, :title)";
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(entityList.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
     public void update(ReplacementEntity entity) {
         final String sql =
             "UPDATE replacement2 " +
@@ -48,6 +53,21 @@ public class ReplacementDao {
             "WHERE id=:id";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
         jdbcTemplate.update(sql, namedParameters);
+    }
+
+    public void update(List<ReplacementEntity> entityList) {
+        final String sql =
+            "UPDATE replacement2 " +
+            "SET position=:position, context=:context, last_update=:lastUpdate " +
+            "WHERE id=:id";
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(entityList.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
+    public void updateDate(List<ReplacementEntity> entityList) {
+        final String sql = "UPDATE replacement2 SET last_update=:lastUpdate WHERE id=:id";
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(entityList.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     public void deleteAll(List<ReplacementEntity> entityList) {

@@ -15,10 +15,6 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
-import org.springframework.batch.item.database.JdbcBatchItemWriter;
-import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.xml.StaxEventItemReader;
 import org.springframework.batch.item.xml.builder.StaxEventItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.stereotype.Component;
 
@@ -45,24 +40,19 @@ public class DumpExecutionJob {
     private DumpPageProcessor dumpPageProcessor;
 
     @Autowired
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private DumpWriter dumpWriter;
 
     @Autowired
     private DumpJobListener dumpJobListener;
 
     @Bean
-    public Job dumpJob(
-        ItemReader<DumpPageXml> dumpReader,
-        ItemWriter<ReplacementEntity> jdbcInsertWriter,
-        ItemWriter<ReplacementEntity> jdbcUpdateWriter,
-        ItemWriter<ReplacementEntity> jdbcDeleteWriter
-    ) {
+    public Job dumpJob(ItemReader<DumpPageXml> dumpReader) {
         Step step = stepBuilderFactory
             .get(DumpManager.PARSE_XML_STEP_NAME)
             .<DumpPageXml, List<ReplacementEntity>>chunk(chunkSize)
             .reader(dumpReader)
             .processor(dumpPageProcessor)
-            .writer(new DumpWriter(jdbcInsertWriter, jdbcUpdateWriter))
+            .writer(dumpWriter)
             .faultTolerant()
             .skipLimit(Integer.MAX_VALUE) // No skip limit
             .skip(ReplacerException.class)
@@ -93,33 +83,6 @@ public class DumpExecutionJob {
             .resource(resource)
             .unmarshaller(marshaller)
             .addFragmentRootElements("{http://www.mediawiki.org/xml/export-0.10/}page")
-            .build();
-    }
-
-    @Bean
-    public JdbcBatchItemWriter<ReplacementEntity> jdbcInsertWriter() {
-        final String insertSql =
-            "INSERT INTO replacement2 (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +
-            "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer, :title)";
-
-        return new JdbcBatchItemWriterBuilder<ReplacementEntity>()
-            .namedParametersJdbcTemplate(jdbcTemplate)
-            .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-            .sql(insertSql)
-            .build();
-    }
-
-    @Bean
-    public JdbcBatchItemWriter<ReplacementEntity> jdbcUpdateWriter() {
-        final String updateSql =
-            "UPDATE replacement2 " +
-            "SET position=:position, context=:context, last_update=:lastUpdate " +
-            "WHERE id=:id";
-
-        return new JdbcBatchItemWriterBuilder<ReplacementEntity>()
-            .namedParametersJdbcTemplate(jdbcTemplate)
-            .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-            .sql(updateSql)
             .build();
     }
 

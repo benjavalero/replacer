@@ -136,12 +136,18 @@ public class ReplacementIndexService {
     ) {
         Optional<ReplacementEntity> result = Optional.empty();
         if (dbReplacement.isToBeReviewed() && dbReplacement.isOlderThan(replacement.getLastUpdate())) {
-            dbReplacement.setToUpdate();
+            dbReplacement.setToUpdateDate();
             dbReplacement.setLastUpdate(replacement.getLastUpdate());
 
             // Also update other values just in case any of them has changed
-            dbReplacement.setPosition(replacement.getPosition());
-            dbReplacement.setContext(replacement.getContext());
+            if (replacement.getPosition() != dbReplacement.getPosition()) {
+                dbReplacement.setToUpdateContext();
+                dbReplacement.setPosition(replacement.getPosition());
+            }
+            if (!replacement.getContext().equals(dbReplacement.getContext())) {
+                dbReplacement.setToUpdateContext();
+                dbReplacement.setContext(replacement.getContext());
+            }
 
             result = Optional.of(dbReplacement);
         } else {
@@ -235,7 +241,7 @@ public class ReplacementIndexService {
         } else {
             if (dummy.isPresent()) {
                 if (dummy.get().isOlderThan(page.getLastUpdate())) {
-                    dummy.get().setToUpdate();
+                    dummy.get().setToUpdateDate();
                     dummy.get().setLastUpdate(page.getLastUpdate());
                     result.add(dummy.get());
                 }

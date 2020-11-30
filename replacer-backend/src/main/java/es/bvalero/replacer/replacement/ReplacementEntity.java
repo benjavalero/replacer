@@ -95,12 +95,24 @@ public class ReplacementEntity implements Serializable {
         return "D".equals(this.cudAction);
     }
 
-    void setToUpdate() {
-        this.cudAction = "U";
+    void setToUpdateDate() {
+        this.cudAction = "UD";
     }
 
-    public boolean isToUpdate() {
-        return "U".equals(this.cudAction);
+    public boolean isToUpdateDate() {
+        return "UD".equals(this.cudAction);
+    }
+
+    void setToUpdateContext() {
+        this.cudAction = "UC";
+    }
+
+    public boolean isToUpdateContext() {
+        return "UC".equals(this.cudAction);
+    }
+
+    boolean isToUpdate() {
+        return this.cudAction != null && this.cudAction.contains("U");
     }
 
     void setToKeep() {

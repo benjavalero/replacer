@@ -16,16 +16,8 @@ public class DumpWriter implements ItemWriter<List<ReplacementEntity>> {
     @Autowired
     private ReplacementDao replacementDao;
 
-    private final ItemWriter<ReplacementEntity> insertWriter;
-    private final ItemWriter<ReplacementEntity> updateWriter;
-
-    public DumpWriter(ItemWriter<ReplacementEntity> insertWriter, ItemWriter<ReplacementEntity> updateWriter) {
-        this.insertWriter = insertWriter;
-        this.updateWriter = updateWriter;
-    }
-
     @Override
-    public void write(List<? extends List<ReplacementEntity>> items) throws Exception {
+    public void write(List<? extends List<ReplacementEntity>> items) {
         List<ReplacementEntity> flatList = items.stream().flatMap(Collection::stream).collect(Collectors.toList());
 
         List<ReplacementEntity> toInsert = flatList
@@ -33,15 +25,23 @@ public class DumpWriter implements ItemWriter<List<ReplacementEntity>> {
             .filter(ReplacementEntity::isToCreate)
             .collect(Collectors.toList());
         if (!toInsert.isEmpty()) {
-            insertWriter.write(toInsert);
+            replacementDao.insert(toInsert);
         }
 
-        List<ReplacementEntity> toUpdate = flatList
+        List<ReplacementEntity> toUpdateContext = flatList
             .stream()
-            .filter(ReplacementEntity::isToUpdate)
+            .filter(ReplacementEntity::isToUpdateContext)
             .collect(Collectors.toList());
-        if (!toUpdate.isEmpty()) {
-            updateWriter.write(toUpdate);
+        if (!toUpdateContext.isEmpty()) {
+            replacementDao.update(toUpdateContext);
+        }
+
+        List<ReplacementEntity> toUpdateDate = flatList
+            .stream()
+            .filter(ReplacementEntity::isToUpdateDate)
+            .collect(Collectors.toList());
+        if (!toUpdateDate.isEmpty()) {
+            replacementDao.updateDate(toUpdateDate);
         }
 
         List<ReplacementEntity> toDelete = flatList
