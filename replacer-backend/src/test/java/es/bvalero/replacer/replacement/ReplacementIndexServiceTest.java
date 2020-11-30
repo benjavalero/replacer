@@ -1,21 +1,19 @@
 package es.bvalero.replacer.replacement;
 
+import static org.hamcrest.Matchers.*;
+
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import java.time.LocalDate;
+import java.util.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;
 import org.modelmapper.ModelMapper;
 
-import java.time.LocalDate;
-import java.util.*;
-
-import static org.hamcrest.Matchers.*;
-
 public class ReplacementIndexServiceTest {
-
     @Mock
     private ReplacementDao replacementDao;
 
@@ -38,7 +36,9 @@ public class ReplacementIndexServiceTest {
 
         replacementIndexService.indexPageReplacements(page, Collections.emptyList());
 
-        Mockito.verify(replacementDao, Mockito.times(1)).findByPageId(Mockito.eq(pageId), Mockito.any(WikipediaLanguage.class));
+        Mockito
+            .verify(replacementDao, Mockito.times(1))
+            .findByPageId(Mockito.eq(pageId), Mockito.any(WikipediaLanguage.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -47,30 +47,51 @@ public class ReplacementIndexServiceTest {
         int wrongId = pageId + 1;
         WikipediaPage page = WikipediaPage.builder().id(pageId).lang(WikipediaLanguage.SPANISH).build();
 
-        IndexableReplacement indexableReplacement = IndexableReplacement.of(wrongId, WikipediaLanguage.SPANISH, "", "", 0, "", LocalDate.now(), "");
+        IndexableReplacement indexableReplacement = IndexableReplacement.of(
+            wrongId,
+            WikipediaLanguage.SPANISH,
+            "",
+            "",
+            0,
+            "",
+            LocalDate.now(),
+            ""
+        );
         replacementIndexService.indexPageReplacements(page, Collections.singletonList(indexableReplacement));
     }
 
     @Test
     public void testIndexNewPage() {
-        Replacement rep1 = Replacement.builder().build();  // New => ADD
-        WikipediaPage page = WikipediaPage.builder().lang(WikipediaLanguage.SPANISH).lastUpdate(LocalDate.now()).build();
+        Replacement rep1 = Replacement.builder().build(); // New => ADD
+        WikipediaPage page = WikipediaPage
+            .builder()
+            .lang(WikipediaLanguage.SPANISH)
+            .lastUpdate(LocalDate.now())
+            .build();
         IndexableReplacement idx1 = page.convertReplacementToIndexed(rep1);
         List<IndexableReplacement> newReplacements = Collections.singletonList(idx1);
 
         List<ReplacementEntity> dbReplacements = new ArrayList<>();
 
-        List<ReplacementEntity> toIndex =
-            replacementIndexService.findIndexPageReplacements(page, newReplacements, dbReplacements);
+        List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(
+            page,
+            newReplacements,
+            dbReplacements
+        );
 
-        Assert.assertThat(toIndex, is(Collections.singletonList(replacementIndexService.convertToEntity(idx1))));
+        Assert.assertThat(Collections.singletonList(replacementIndexService.convertToEntity(idx1)), is(toIndex));
     }
 
     @Test
     public void testIndexObsoletePage() {
         List<IndexableReplacement> newReplacements = Collections.emptyList();
         int pageId = new Random().nextInt();
-        WikipediaPage page = WikipediaPage.builder().id(pageId).lang(WikipediaLanguage.SPANISH).lastUpdate(LocalDate.now()).build();
+        WikipediaPage page = WikipediaPage
+            .builder()
+            .id(pageId)
+            .lang(WikipediaLanguage.SPANISH)
+            .lastUpdate(LocalDate.now())
+            .build();
 
         // Both obsolete to review or reviewed by system ==> Delete
         // A dummy replacement will be created instead
@@ -78,14 +99,20 @@ public class ReplacementIndexServiceTest {
         ReplacementEntity rep3 = new ReplacementEntity(1, "", "", 3, "system");
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(rep2, rep3));
 
-        List<ReplacementEntity> toIndex =
-            replacementIndexService.findIndexPageReplacements(page, newReplacements, dbReplacements);
+        List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(
+            page,
+            newReplacements,
+            dbReplacements
+        );
 
-        Assert.assertEquals(new HashSet<>(toIndex), Set.of(
-            ReplacementEntity.createDummy(pageId, WikipediaLanguage.SPANISH, LocalDate.now()),
-            rep2.withToDelete(),
-            rep3.withToDelete()
-        ));
+        Assert.assertEquals(
+            Set.of(
+                ReplacementEntity.createDummy(pageId, WikipediaLanguage.SPANISH, LocalDate.now()),
+                rep2.withToDelete(),
+                rep3.withToDelete()
+            ),
+            new HashSet<>(toIndex)
+        );
     }
 
     @Test
@@ -95,7 +122,10 @@ public class ReplacementIndexServiceTest {
 
         WikipediaPage page = WikipediaPage.builder().lang(WikipediaLanguage.SPANISH).build();
         List<ReplacementEntity> result = replacementIndexService.findIndexPageReplacements(
-            page, newReplacements, dbReplacements);
+            page,
+            newReplacements,
+            dbReplacements
+        );
 
         // Save the dummy replacement
         Assert.assertEquals(1, result.size());
@@ -135,17 +165,21 @@ public class ReplacementIndexServiceTest {
         ReplacementEntity r6db = new ReplacementEntity(1, "6", "6", 6);
         ReplacementEntity r7db = new ReplacementEntity(1, "7", "7", 7, "");
         ReplacementEntity r8db = new ReplacementEntity(1, "8", "8", 2, "system");
-        List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db, r3db, r4db, r6db, r7db, r8db));
+        List<ReplacementEntity> dbReplacements = new ArrayList<>(
+            Arrays.asList(r1db, r2db, r3db, r4db, r6db, r7db, r8db)
+        );
 
         WikipediaPage page = WikipediaPage.builder().id(1).lang(WikipediaLanguage.SPANISH).build();
-        List<ReplacementEntity> toIndex =
-            replacementIndexService.findIndexPageReplacements(page, newReplacements, dbReplacements);
+        List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(
+            page,
+            newReplacements,
+            dbReplacements
+        );
 
-        Assert.assertEquals(new HashSet<>(toIndex), Set.of(
-            r3db,
-            replacementIndexService.convertToEntity(r5),
-            r6db.withToDelete(),
-            r8db.withToDelete()));
+        Assert.assertEquals(
+            Set.of(r3db, replacementIndexService.convertToEntity(r5), r6db.withToDelete(), r8db.withToDelete()),
+            new HashSet<>(toIndex)
+        );
     }
 
     @Test
@@ -180,13 +214,15 @@ public class ReplacementIndexServiceTest {
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db, r4db, r5db, r6db));
 
         WikipediaPage page = WikipediaPage.builder().id(1).lang(WikipediaLanguage.SPANISH).build();
-        List<ReplacementEntity> toIndex =
-            replacementIndexService.findIndexPageReplacements(page, newReplacements, dbReplacements);
+        List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(
+            page,
+            newReplacements,
+            dbReplacements
+        );
 
-        Assert.assertEquals(new HashSet<>(toIndex), Set.of(
-            r1db,
-            replacementIndexService.convertToEntity(r3),
-            r4db.withToDelete(),
-            r6db.withToDelete()));
+        Assert.assertEquals(
+            Set.of(r1db, replacementIndexService.convertToEntity(r3), r4db.withToDelete(), r6db.withToDelete()),
+            new HashSet<>(toIndex)
+        );
     }
 }
