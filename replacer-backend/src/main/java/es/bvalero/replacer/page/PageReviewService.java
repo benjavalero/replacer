@@ -172,7 +172,8 @@ abstract class PageReviewService {
 
     private long findTotalResultsFromCache(PageReviewOptions options) {
         String key = buildReplacementCacheKey(options);
-        return cachedPageIds.get(key).getTotal();
+        // If a review is requested directly it is possible the cache doesn't exist
+        return cachedPageIds.containsKey(key) ? cachedPageIds.get(key).getTotal() : 0L;
     }
 
     private PageReplacement convertToDto(Replacement replacement) {
