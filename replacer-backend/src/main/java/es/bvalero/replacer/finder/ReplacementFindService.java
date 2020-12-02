@@ -2,9 +2,7 @@ package es.bvalero.replacer.finder;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -42,7 +40,7 @@ public class ReplacementFindService {
         // in the found immutables. Usually there will be much more immutables found than replacements.
         // Thus it is better to obtain first all the replacements, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
-        return findAllReplacements(text, lang, replacementFinders);
+        return findFilteredReplacements(text, lang, replacementFinders);
     }
 
     @Loggable(prepend = true, value = Loggable.TRACE, unit = TimeUnit.SECONDS)
@@ -53,37 +51,53 @@ public class ReplacementFindService {
         WikipediaLanguage lang
     ) {
         CustomReplacementFinder finder = new CustomReplacementFinder(replacement, suggestion);
-        return findAllReplacements(text, lang, Collections.singletonList(finder));
+        return findFilteredReplacements(text, lang, Collections.singletonList(finder));
     }
 
-    private List<Replacement> findAllReplacements(
+    /* Find all the replacements in the text but return only the necessary */
+    private List<Replacement> findFilteredReplacements(
         String text,
         WikipediaLanguage lang,
         List<ReplacementFinder> finders
     ) {
-        Stream<Replacement> all = finders.stream().flatMap(finder -> finder.findStream(text, lang)).sorted();
+        Set<Replacement> all = findSortedReplacements(text, lang, finders);
 
-        Stream<Replacement> distinct = removeNestedReplacements(all);
+        Stream<Replacement> notNested = removeNestedReplacements(all);
 
         // Ignore the replacements contained in immutables
-        List<Replacement> noIgnored = removeImmutables(distinct, text, lang);
+        List<Replacement> noIgnored = removeImmutables(notNested, text, lang);
 
         return addContextToReplacements(noIgnored, text);
     }
 
-    private Stream<Replacement> removeNestedReplacements(Stream<Replacement> replacements) {
-        // We need to filter the stream items against the stream itself so it is not a stateless predicate
+    /* Find all the replacements in the text sorted and without duplicates */
+    private Set<Replacement> findSortedReplacements(
+        String text,
+        WikipediaLanguage lang,
+        List<ReplacementFinder> finders
+    ) {
+        // TreeSet to distinct and sort
+        Set<Replacement> all = new TreeSet<>();
+        // For loop to mock easily with an iterator
+        for (ReplacementFinder finder : finders) {
+            all.addAll(finder.findList(text, lang));
+        }
+        return all;
+    }
+
+    /* Return a stream of sorted replacements */
+    private Stream<Replacement> removeNestedReplacements(Set<Replacement> replacements) {
+        // We need to filter the stream items against the stream itself so it is not a stateless predicate.
         // We assume all the replacements in the stream are distinct, in this case,
         // this means there are not two replacements with the same start and end,
         // so the contain function is strict.
-        List<Replacement> distinctList = replacements.distinct().collect(Collectors.toList());
 
         // Filter to return the replacements which are NOT strictly contained in any other
-        return distinctList.stream().filter(r -> distinctList.stream().noneMatch(r2 -> r2.contains(r)));
+        return replacements.stream().filter(r -> replacements.stream().noneMatch(r2 -> r2.contains(r)));
     }
 
     private List<Replacement> removeImmutables(Stream<Replacement> replacements, String text, WikipediaLanguage lang) {
-        // Build a list from the stream and remove the items contained in any immutable
+        // LinkedList to remove items. Order is kept.
         List<Replacement> replacementList = replacements.collect(Collectors.toCollection(LinkedList::new));
 
         // No need to find the immutables if there are no replacements

@@ -3,8 +3,6 @@ package es.bvalero.replacer.finder;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
 import java.util.regex.MatchResult;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 import org.apache.commons.collections4.IterableUtils;
 import org.jetbrains.annotations.TestOnly;
 
@@ -13,10 +11,6 @@ import org.jetbrains.annotations.TestOnly;
  */
 public interface ReplacementFinder {
     Iterable<Replacement> find(String text, WikipediaLanguage lang);
-
-    default Stream<Replacement> findStream(String text, WikipediaLanguage lang) {
-        return StreamSupport.stream(find(text, lang).spliterator(), false);
-    }
 
     @TestOnly
     default List<Replacement> findList(String text) {

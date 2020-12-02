@@ -32,6 +32,7 @@ class ReplacementFindServiceTest {
 
     @Test
     void testFindReplacementsEmpty() {
+        Mockito.when(replacementFinders.iterator()).thenReturn(Collections.emptyIterator());
         Assertions.assertTrue(replacementFindService.findReplacements("", WikipediaLanguage.SPANISH).isEmpty());
     }
 
@@ -40,9 +41,9 @@ class ReplacementFindServiceTest {
         Replacement replacement = Replacement.builder().start(0).text("").build();
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
         Mockito
-            .when(finder.findStream(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
-            .thenReturn(Stream.of(replacement));
-        Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
+            .when(finder.findList(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
+            .thenReturn(List.of(replacement));
+        Mockito.when(replacementFinders.iterator()).thenReturn(Stream.of(finder).iterator());
 
         List<Replacement> replacements = replacementFindService.findReplacements(" ", WikipediaLanguage.SPANISH);
 
@@ -58,9 +59,9 @@ class ReplacementFindServiceTest {
         Replacement replacement2 = Replacement.builder().start(2).text("C").build(); // Not contained in immutable
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
         Mockito
-            .when(finder.findStream(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
-            .thenReturn(Stream.of(replacement1, replacement2));
-        Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
+            .when(finder.findList(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
+            .thenReturn(List.of(replacement1, replacement2));
+        Mockito.when(replacementFinders.iterator()).thenReturn(Stream.of(finder).iterator());
         Mockito
             .when(immutableFindService.findImmutables(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singleton(immutable1));
@@ -78,9 +79,9 @@ class ReplacementFindServiceTest {
         Replacement replacement1 = Replacement.builder().start(1).text("B").build();
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
         Mockito
-            .when(finder.findStream(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
-            .thenReturn(Stream.of(replacement1));
-        Mockito.when(replacementFinders.stream()).thenReturn(Stream.of(finder));
+            .when(finder.findList(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
+            .thenReturn(List.of(replacement1));
+        Mockito.when(replacementFinders.iterator()).thenReturn(Stream.of(finder).iterator());
         Mockito
             .when(immutableFindService.findImmutables(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singleton(immutable1));
