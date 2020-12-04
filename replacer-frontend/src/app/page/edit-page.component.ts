@@ -130,7 +130,7 @@ export class EditPageComponent implements OnInit {
 
     this.articleService.savePage(this.articleId, this.filteredType, this.filteredSubtype, content, this.section, this.currentTimestamp)
       .subscribe(res => { }, err => {
-        const errMsg = `Error al guardar el artículo: ${err.error.message}`;
+        const errMsg = `Error al guardar el artículo: ${err.error}`;
         if (errMsg.includes('mwoauth-invalid-authorization')) {
           // Clear session and reload the page
           this.authenticationService.clearSession();

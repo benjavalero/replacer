@@ -85,7 +85,7 @@ export class ArticleService {
       savePage.subtype = subtype;
     }
 
-    return this.httpClient.post<any>(`${this.baseUrl}/${pageId}`, savePage);
+    return this.httpClient.post<string>(`${this.baseUrl}/${pageId}`, savePage);
   }
 
   reviewPages(type: string, subtype: string): Observable<any> {

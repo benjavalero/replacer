@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -98,26 +99,29 @@ public class PageController {
 
     /* SAVE CHANGES */
 
-    @Loggable(prepend = true, ignore = ReplacerException.class)
+    @Loggable(prepend = true)
     @PostMapping(value = "/{id}")
-    public void save(
+    public ResponseEntity<String> save(
         @RequestBody SavePage savePage,
         @PathVariable("id") int pageId,
         @RequestParam WikipediaLanguage lang
-    )
-        throws ReplacerException {
+    ) {
         boolean changed = StringUtils.isNotBlank(savePage.getContent());
         if (changed) {
             // Upload new content to Wikipedia
-            String textToSave = cosmeticFindService.applyCosmeticChanges(savePage.getContent());
-            wikipediaService.savePageContent(
-                pageId,
-                textToSave,
-                savePage.getSection(),
-                savePage.getTimestamp(),
-                lang,
-                convertToEntity(savePage.getToken())
-            );
+            try {
+                String textToSave = cosmeticFindService.applyCosmeticChanges(savePage.getContent());
+                wikipediaService.savePageContent(
+                    pageId,
+                    textToSave,
+                    savePage.getSection(),
+                    savePage.getTimestamp(),
+                    lang,
+                    convertToEntity(savePage.getToken())
+                );
+            } catch (ReplacerException e) {
+                return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            }
         }
 
         // Mark page as reviewed in the database
@@ -137,11 +141,13 @@ public class PageController {
             if (StringUtils.isNotBlank(savePage.getSubtype())) throw new AssertionError();
             pageReviewNoTypeService.reviewPageReplacements(pageId, lang, savePage.getReviewer());
         }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /* PAGE LIST FOR ROBOTS */
 
-    @GetMapping(value = "/list", params = { "type", "subtype" }, produces = "text/plain")
+    @GetMapping(value = "/list", params = { "type", "subtype" }, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> findPageTitlesToReviewBySubtype(
         @RequestParam String type,
         @RequestParam String subtype,
