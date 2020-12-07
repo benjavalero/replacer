@@ -1,5 +1,8 @@
 # Versions
 
+## 2.7.11 (7 Dec 2020)
+- Internal improvements in log traces
+
 ## 2.7.10 (30 Nov 2020)
 - Improve performance of several finders reducing indexation times
 - Improve queries to delete and update replacements when indexing
