@@ -64,7 +64,7 @@ public class AcuteOFinder implements ReplacementFinder {
             .builder()
             .type(MisspellingComposedFinder.TYPE_MISSPELLING_COMPOSED)
             .subtype(findSubtype(match.group()))
-            .start(match.group().indexOf(SEARCH_ACUTE_O) + 1)
+            .start(match.start() + match.group().indexOf(SEARCH_ACUTE_O) + 1)
             .text(ACUTE_O)
             .suggestions(findSuggestions())
             .build();
@@ -89,7 +89,7 @@ public class AcuteOFinder implements ReplacementFinder {
         int end;
         for (end = start; end < text.length(); end++) {
             char ch = text.charAt(end);
-            if (!Character.isLetterOrDigit(ch) && !Character.isSpaceChar(ch)) {
+            if (!Character.isLetterOrDigit(ch)) {
                 break;
             }
         }
@@ -100,9 +100,9 @@ public class AcuteOFinder implements ReplacementFinder {
     @Nullable
     private String findWordBefore(String text, int start) {
         int end;
-        for (end = start; end >= 0; end--) {
+        for (end = start - 1; end >= 0; end--) {
             char ch = text.charAt(end);
-            if (!Character.isLetterOrDigit(ch) && !Character.isSpaceChar(ch)) {
+            if (!Character.isLetterOrDigit(ch)) {
                 break;
             }
         }

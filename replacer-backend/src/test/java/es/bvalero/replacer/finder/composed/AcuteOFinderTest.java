@@ -38,7 +38,7 @@ class AcuteOFinderTest {
 
     @Test
     void testDoubleAcuteO() {
-        final String text = "dós ó tres";
+        final String text = "En dós ó tres veces.";
 
         List<Replacement> replacements = acuteOFinder.findList(text);
         Assertions.assertEquals(1, replacements.size());
@@ -47,7 +47,7 @@ class AcuteOFinderTest {
         Assertions.assertEquals(MisspellingComposedFinder.TYPE_MISSPELLING_COMPOSED, rep.getType());
         Assertions.assertEquals(AcuteOFinder.SUBTYPE_ACUTE_O_WORDS, rep.getSubtype());
         Assertions.assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
-        Assertions.assertEquals(4, rep.getStart());
+        Assertions.assertEquals(7, rep.getStart());
         Assertions.assertEquals(AcuteOFinder.FIX_ACUTE_O, rep.getSuggestions().get(0).getText());
     }
 
