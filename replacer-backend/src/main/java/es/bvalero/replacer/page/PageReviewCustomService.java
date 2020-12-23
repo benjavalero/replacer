@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 class PageReviewCustomService extends PageReviewService {
+
     @Autowired
     private WikipediaService wikipediaService;
 
@@ -89,10 +90,9 @@ class PageReviewCustomService extends PageReviewService {
     @Override
     List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         List<Replacement> replacements = replacementFindService.findCustomReplacements(
-            page.getContent(),
+            page,
             options.getSubtype(),
-            options.getSuggestion(),
-            page.getLang()
+            options.getSuggestion()
         );
 
         if (replacements.isEmpty()) {

@@ -4,6 +4,7 @@ import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.LinearIterable;
 import es.bvalero.replacer.finder.LinearMatcher;
 import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MisspellingSimpleFinder extends MisspellingFinder {
+
     static final String TYPE_MISSPELLING_SIMPLE = "Ortografía";
 
     @Autowired
@@ -36,22 +38,22 @@ public class MisspellingSimpleFinder extends MisspellingFinder {
     }
 
     @Override
-    public Iterable<Replacement> find(String text, WikipediaLanguage lang) {
+    public Iterable<Replacement> find(IndexablePage page) {
         // We need to perform additional transformations according to the language
         return StreamSupport
-            .stream(new LinearIterable<>(text, this::findResult, this::convertMatch).spliterator(), false)
-            .filter(r -> isExistingWord(r.getText(), lang))
-            .filter(r -> FinderUtils.isWordCompleteInText(r.getStart(), r.getText(), text))
-            .map(r -> r.withSubtype(getSubtype(r.getText(), lang)))
-            .map(r -> r.withSuggestions(findSuggestions(r.getText(), lang)))
+            .stream(new LinearIterable<>(page, this::findResult, this::convertMatch).spliterator(), false)
+            .filter(r -> isExistingWord(r.getText(), page.getLang()))
+            .filter(r -> FinderUtils.isWordCompleteInText(r.getStart(), r.getText(), page.getContent()))
+            .map(r -> r.withSubtype(getSubtype(r.getText(), page.getLang())))
+            .map(r -> r.withSuggestions(findSuggestions(r.getText(), page.getLang())))
             .collect(Collectors.toList());
     }
 
     @Nullable
-    public MatchResult findResult(String text, int start) {
+    public MatchResult findResult(IndexablePage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
-        while (start >= 0 && matches.isEmpty()) {
-            start = findWord(text, start, matches);
+        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
+            start = findWord(page.getContent(), start, matches);
         }
         return matches.isEmpty() ? null : matches.get(0);
     }

@@ -5,6 +5,7 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -24,9 +25,12 @@ import org.springframework.stereotype.Component;
 /**
  * Find words in uppercase which are correct according to the punctuation,
  * e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
+ *
+ * The considered punctuations are: `!`, `#`, `*`, `|`, `=` and `.`
  */
 @Component
 public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
+
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_UPPERCASE_AFTER_PUNCTUATION = "[!#*|=.]<Zs>*(%s)";
 
@@ -62,6 +66,7 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
 
     @Nullable
     private RunAutomaton buildUppercaseAfterAutomaton(@Nullable Set<Misspelling> misspellings) {
+        // There are hundreds of only uppercase words so the best approach is a simple alternation
         if (misspellings != null) {
             Set<String> words = getUppercaseWords(misspellings);
 
@@ -104,20 +109,26 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
     }
 
     @Override
-    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
-        RunAutomaton automaton = this.uppercaseAfterAutomata.get(lang);
+    public Iterable<Immutable> find(IndexablePage page) {
+        RunAutomaton automaton = this.uppercaseAfterAutomata.get(page.getLang());
         if (automaton == null) {
             return Collections.emptyList();
         } else {
-            return new RegexIterable<>(text, automaton, this::convert);
+            // Benchmarks show similar performance with and without validation
+            return new RegexIterable<>(page, automaton, this::convert, this::isValidMatch);
         }
     }
 
     @Override
     public Immutable convert(MatchResult match) {
-        String text = match.group();
-        String word = text.substring(1).trim();
-        int startPos = match.start() + text.indexOf(word);
+        String word = match.group().substring(1).trim();
+        int startPos = match.start() + match.group().indexOf(word);
         return Immutable.of(startPos, word, this);
+    }
+
+    private boolean isValidMatch(MatchResult match, IndexablePage page) {
+        String word = match.group().substring(1).trim();
+        int startPos = match.start() + match.group().indexOf(word);
+        return FinderUtils.isWordCompleteInText(startPos, word, page.getContent());
     }
 }

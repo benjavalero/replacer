@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder;
 
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class CosmeticFindServiceTest {
+
     @Mock
     private List<CosmeticFinder> cosmeticFinders;
 
@@ -28,7 +29,9 @@ class CosmeticFindServiceTest {
     void testApplyCosmeticChanges() {
         Cosmetic cosmetic = Cosmetic.of(2, "[[Link|link]]", "[[link]]");
         CosmeticFinder finder = Mockito.mock(CosmeticFinder.class);
-        Mockito.when(finder.findStream(Mockito.anyString())).thenReturn(Stream.of(cosmetic));
+        List<Cosmetic> cosmetics = new LinkedList<>(); // To be able to sort it
+        cosmetics.add(cosmetic);
+        Mockito.when(finder.findList(Mockito.anyString())).thenReturn(cosmetics);
         Mockito.when(cosmeticFinders.iterator()).thenReturn(Collections.singletonList(finder).iterator());
 
         String text = "A [[Link|link]] to simplify.";

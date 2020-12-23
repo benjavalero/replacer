@@ -113,18 +113,18 @@ The sub-package `immutables` contain the generic immutable finders, meant to be 
 The tool implements the following generic immutable finders. We can add a priority to the immutable finders, as some immutables are more _useful_ than others, and we want them to be used before.
 - **CompleteTagFinder**. Find some XML tags and all the content within, even other tags, e.g. `<code>An <span>example</span>.</code>`. The list of tags is configured in `complete-tags.xml`. Even with several tags taken into account, the faster approach is the linear search in one-pass.
 - **TemplateParamFinder**. Find template parameters, e.g. `param` in `{{Template|param=value}}`. For some specific parameters (see `template-param.xml`), we include in the result also the value, which is usually a taxonomy, a Commons category, etc. Finally, we include also the value if it seems like a file or a domain.
-- **LinkAliasedFinder**. Find the first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`
-- **CursiveFinder**. Find text in cursive, e.g. `''cursive''` in `This is a ''cursive'' example`
-- **QuotesFinder**, **QuotesTypographicFinder** and **QuotesAngularFinder**. Find text in quotes, e.g. `"text"`, `“text”` or `«text»`
+- **LinkAliasedFinder**. Find the first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`. It also finds categories, files, etc.
+- **CursiveFinder**.  * Find text in cursive and bold, e.g. `''cursive''` in `This is a ''cursive'' example`. It also finds text starting with the simple quotes and ending with a new line.
+- **QuotesFinder**, **QuotesTypographicFinder** and **QuotesAngularFinder**. Find text in quotes, e.g. `"text"`, `“text”` or `«text»`. The text may include new lines.
 - **UrlFinder**. Find URLs, e.g. `https://www.google.es`
 - **FileNameFinder**. Find filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`
 - **CategoryFinder**. Find categories, e.g. `[[Categoría:España]]`
 - **TemplateNameFinder**. Find template names, e.g. `Bandera` in `{{Bandera|España}}`
-- **TemplateFinder**. Find some complete templates, even with nested templates, e.g. `{{Cite|A cite}}`. The list of template names is configured in `template-names.xml`.
+- **TemplateFinder**. Find some complete templates, even with (one-level) nested templates, e.g. `{{Cite|A cite}}`. The list of template names is configured in `template-names.xml`.
 - **XmlTagFinder**. Find XML tags, e.g. `<span>` or `<br />`
 - **CommentFinder**. Find XML comments, e.g. `<!-- A comment -->`
 - **LinkSuffixedFinder**. Find links with suffix, e.g. `[[brasil]]eño`
-- **InterLanguageLinkFinder**. Find inter-language links, e.g. `[[:pt:Title]]`
+- **InterLanguageLinkFinder**. Find inter-language links, e.g. `[[pt:Title]]`
 
 ### Misspelling finders
 
@@ -133,9 +133,9 @@ The sub-package `misspelling` includes replacement and immutable finders related
 - **MisspellingComposedFinder**. Find misspellings with more than one word, e.g. `aún así` in Spanish. Currently, there are about 100 items, and the best approach is a regex alternating all the items.
 - **FalsePositiveFinder**. Find known expressions which are (almost) always false positives, e.g. in Spanish `aun así` which hides the potential replacement `aun`. Currently, there are about 300 items, and the best approach is a regex alternating all the items. This approach gives the best performance with big difference, but it has flaws. As we check later if the match is a complete word in the text, we could match an incomplete word overlapping the following one which is actually a good match. E.g. in `ratones aún son`, the false positive `es aún` is matched, but it is not valid, and it makes the next one `aún son` not to be matched.
 
-- **PersonNameFinder**. Find person names which are used also as nouns and thus are false positives, e.g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month to be written in lowercase. The list of names is configured in `person-names.xml`.
-- **PersonSurnameFinder**. Find person surnames which are used also as nouns and thus are false positives, e.g. in Spanish `Records` in `RCA Records`, as "records" is also a noun to be written with an accent. The list of surnames is configured in `person-names.xml`.
-- **UppercaseAfterFinder**. Find words in uppercase which are correct according to the punctuation, e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
+- **PersonNameFinder**. Find person names which are used also as nouns and thus are false positives, e.g. in Spanish `Julio` in `Julio Verne`, as "julio" is also the name of a month to be written in lowercase. It also finds words used commonly in titles, as `Sky` in `Sky News`. Or compound words, as `Los Angeles`. The list of names is configured in `person-names.xml`. The list will keep on growing. For the moment the best approach is to iterate the list of words and find them in the text with `String.indexOf`.
+- **PersonSurnameFinder**. Find person surnames. Also usual nouns preceded by a word starting in uppercase, e. g. in Spanish `RCA Records`, as "records" is also a noun to be written with an accent. The list of surnames is configured in `person-names.xml`. The list will keep on growing. For the moment the best approach is to iterate the list of words and find them in the text with `String.indexOf`.
+- **UppercaseAfterFinder**. Find words in uppercase which are correct according to the punctuation, e.g. `Enero` in `{{Cite|date=Enero de 2020}}`. The considered punctuations are: `!`, `#`, `*`, `|`, `=` and `.`. There are hundreds of only uppercase words so the best approach is a simple alternation.
 
 Some of these finders use a list of properties which are maintained in text files (or Wikipedia pages) that need to be parsed first. These finders retrieve the properties from a manager class which extends the generic `ParseFileManager`. All of these also implement the Observable pattern. The managers reload the properties periodically, and the observer finders are notified in case of changes.
 

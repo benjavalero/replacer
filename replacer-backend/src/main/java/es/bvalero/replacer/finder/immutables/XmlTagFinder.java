@@ -4,10 +4,9 @@ import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.LinearIterable;
 import es.bvalero.replacer.finder.LinearMatcher;
+import es.bvalero.replacer.page.IndexablePage;
 import java.util.*;
 import java.util.regex.MatchResult;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -16,24 +15,25 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class XmlTagFinder implements ImmutableFinder {
+
     // We want to avoid the XML comments to be captured by this
     private static final Set<Character> FORBIDDEN_CHARS = new HashSet<>(Arrays.asList('#', '{', '}', '<', '>'));
 
     @Override
     public int getMaxLength() {
-        return 300;
+        return 500;
     }
 
     @Override
-    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
-        return new LinearIterable<>(text, this::findResult, this::convert);
+    public Iterable<Immutable> find(IndexablePage page) {
+        return new LinearIterable<>(page, this::findResult, this::convert);
     }
 
     @Nullable
-    public MatchResult findResult(String text, int start) {
+    public MatchResult findResult(IndexablePage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
-        while (start >= 0 && matches.isEmpty()) {
-            start = findTag(text, start, matches);
+        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
+            start = findTag(page.getContent(), start, matches);
         }
         return matches.isEmpty() ? null : matches.get(0);
     }
@@ -45,7 +45,10 @@ public class XmlTagFinder implements ImmutableFinder {
             if (Character.isLetter(first) || first == '/') {
                 int endTag = findEndTag(text, startTag + 1);
                 if (endTag >= 0) {
-                    matches.add(LinearMatcher.of(startTag, text.substring(startTag, endTag + 1)));
+                    String tag = text.substring(startTag + 1, endTag);
+                    if (validateTagChars(tag)) {
+                        matches.add(LinearMatcher.of(startTag, text.substring(startTag, endTag + 1)));
+                    }
                     return endTag + 1;
                 } else {
                     return startTag + 1;
@@ -63,16 +66,15 @@ public class XmlTagFinder implements ImmutableFinder {
     }
 
     private int findEndTag(String text, int start) {
-        int endQuote = text.indexOf('>', start);
-        if (endQuote >= 0) {
-            // Check if the found text contains any forbidden char
-            for (int i = start; i < endQuote; i++) {
-                char ch = text.charAt(i);
-                if (FORBIDDEN_CHARS.contains(ch)) {
-                    return -1;
-                }
+        return text.indexOf('>', start);
+    }
+
+    private boolean validateTagChars(String tag) {
+        for (int i = 0; i < tag.length(); i++) {
+            if (FORBIDDEN_CHARS.contains(tag.charAt(i))) {
+                return false;
             }
         }
-        return endQuote;
+        return true;
     }
 }

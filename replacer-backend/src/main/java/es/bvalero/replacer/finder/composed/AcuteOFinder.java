@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.composed;
 
 import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.finder.misspelling.MisspellingComposedFinder;
+import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AcuteOFinder implements ReplacementFinder {
+
     static final String SUBTYPE_ACUTE_O_NUMBERS = "ó entre números";
     static final String SUBTYPE_ACUTE_O_WORDS = "ó entre palabras";
     static final String SEARCH_ACUTE_O = " ó ";
@@ -23,19 +25,19 @@ public class AcuteOFinder implements ReplacementFinder {
     static final String FIX_ACUTE_O = "o";
 
     @Override
-    public Iterable<Replacement> find(String text, WikipediaLanguage lang) {
-        if (WikipediaLanguage.SPANISH == lang) {
-            return new LinearIterable<>(text, this::findResult, this::convert);
+    public Iterable<Replacement> find(IndexablePage page) {
+        if (WikipediaLanguage.SPANISH == page.getLang()) {
+            return new LinearIterable<>(page, this::findResult, this::convert);
         } else {
             return Collections.emptyList();
         }
     }
 
     @Nullable
-    public MatchResult findResult(String text, int start) {
+    public MatchResult findResult(IndexablePage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
-        while (start >= 0 && matches.isEmpty()) {
-            start = findAcuteO(text, start, matches);
+        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
+            start = findAcuteO(page.getContent(), start, matches);
         }
         return matches.isEmpty() ? null : matches.get(0);
     }

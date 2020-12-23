@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 public class FinderUtils {
+
     public static final String STRING_EMPTY = "";
     public static final Locale LOCALE_ES = Locale.forLanguageTag("es");
     private static final Set<Character> invalidSeparators = new HashSet<>(Arrays.asList('_', '/'));
@@ -71,7 +72,11 @@ public class FinderUtils {
         return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
     }
 
-    public static boolean isAsciiLowercase(char ch) {
+    public static boolean isAsciiLowercase(String text) {
+        return text.chars().allMatch(FinderUtils::isAsciiLowercase);
+    }
+
+    private static boolean isAsciiLowercase(int ch) {
         return (ch >= 'a' && ch <= 'z');
     }
 

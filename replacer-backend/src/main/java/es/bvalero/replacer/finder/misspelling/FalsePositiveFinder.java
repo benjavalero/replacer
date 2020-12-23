@@ -8,6 +8,7 @@ import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.RegexIterable;
+import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -16,7 +17,6 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
+
     @Autowired
     private FalsePositiveManager falsePositiveManager;
 
@@ -67,34 +68,23 @@ public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListe
         // For instance, in "ratones aún son", the false positive "es aún" is matched but not valid,
         // and it makes that the next one "aún son" is not matched.
         if (falsePositives != null && !falsePositives.isEmpty()) {
-            String alternations = String.format(
-                "(%s)",
-                StringUtils.join(
-                    falsePositives.stream().map(this::processFalsePositive).collect(Collectors.toList()),
-                    "|"
-                )
-            );
+            String alternations = String.format("(%s)", StringUtils.join(falsePositives, "|"));
             return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
         } else {
             return null;
         }
     }
 
-    private String processFalsePositive(String falsePositive) {
-        return FinderUtils.startsWithLowerCase(falsePositive)
-            ? FinderUtils.setFirstUpperCaseClass(falsePositive)
-            : falsePositive;
-    }
-
     @Override
-    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
-        RunAutomaton automaton = this.falsePositivesAutomata.get(lang);
+    public Iterable<Immutable> find(IndexablePage page) {
+        RunAutomaton automaton = this.falsePositivesAutomata.get(page.getLang());
         return automaton == null
             ? Collections.emptyList()
-            : new RegexIterable<>(text, automaton, this::convert, this::isValidMatch);
+            // Benchmarks show similar performance with and without validation
+            : new RegexIterable<>(page, automaton, this::convert, this::isValidMatch);
     }
 
-    private boolean isValidMatch(MatchResult match, String text) {
-        return FinderUtils.isWordCompleteInText(match.start(), match.group(), text);
+    private boolean isValidMatch(MatchResult match, IndexablePage page) {
+        return FinderUtils.isWordCompleteInText(match.start(), match.group(), page.getContent());
     }
 }

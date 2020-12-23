@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder;
 
 import es.bvalero.replacer.finder.immutables.QuotesFinder;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class ReplacementFindServiceTest {
+
     @Mock
     private List<ReplacementFinder> replacementFinders;
 
@@ -33,19 +35,19 @@ class ReplacementFindServiceTest {
     @Test
     void testFindReplacementsEmpty() {
         Mockito.when(replacementFinders.iterator()).thenReturn(Collections.emptyIterator());
-        Assertions.assertTrue(replacementFindService.findReplacements("", WikipediaLanguage.SPANISH).isEmpty());
+        WikipediaPage page = WikipediaPage.builder().content("").lang(WikipediaLanguage.SPANISH).build();
+        Assertions.assertTrue(replacementFindService.findReplacements(page).isEmpty());
     }
 
     @Test
     void testFindReplacements() {
         Replacement replacement = Replacement.builder().start(0).text("").build();
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
-        Mockito
-            .when(finder.findList(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
-            .thenReturn(List.of(replacement));
+        Mockito.when(finder.findList(Mockito.any(WikipediaPage.class))).thenReturn(List.of(replacement));
         Mockito.when(replacementFinders.iterator()).thenReturn(Stream.of(finder).iterator());
 
-        List<Replacement> replacements = replacementFindService.findReplacements(" ", WikipediaLanguage.SPANISH);
+        WikipediaPage page = WikipediaPage.builder().content(" ").lang(WikipediaLanguage.SPANISH).build();
+        List<Replacement> replacements = replacementFindService.findReplacements(page);
 
         Assertions.assertFalse(replacements.isEmpty());
         Assertions.assertEquals(1, replacements.size());
@@ -58,15 +60,14 @@ class ReplacementFindServiceTest {
         Replacement replacement1 = Replacement.builder().start(1).text("B").build(); // Contained in immutable
         Replacement replacement2 = Replacement.builder().start(2).text("C").build(); // Not contained in immutable
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
-        Mockito
-            .when(finder.findList(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
-            .thenReturn(List.of(replacement1, replacement2));
+        Mockito.when(finder.findList(Mockito.any(WikipediaPage.class))).thenReturn(List.of(replacement1, replacement2));
         Mockito.when(replacementFinders.iterator()).thenReturn(Stream.of(finder).iterator());
         Mockito
-            .when(immutableFindService.findImmutables(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
+            .when(immutableFindService.findImmutables(Mockito.any(WikipediaPage.class)))
             .thenReturn(Collections.singleton(immutable1));
 
-        List<Replacement> replacements = replacementFindService.findReplacements(" ", WikipediaLanguage.SPANISH);
+        WikipediaPage page = WikipediaPage.builder().content(" ").lang(WikipediaLanguage.SPANISH).build();
+        List<Replacement> replacements = replacementFindService.findReplacements(page);
 
         Assertions.assertFalse(replacements.isEmpty());
         Assertions.assertEquals(1, replacements.size());
@@ -83,22 +84,19 @@ class ReplacementFindServiceTest {
             .thenReturn(List.of(replacement1));
         Mockito.when(replacementFinders.iterator()).thenReturn(Stream.of(finder).iterator());
         Mockito
-            .when(immutableFindService.findImmutables(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
+            .when(immutableFindService.findImmutables(Mockito.any(WikipediaPage.class)))
             .thenReturn(Collections.singleton(immutable1));
 
-        List<Replacement> replacements = replacementFindService.findReplacements("", WikipediaLanguage.SPANISH);
+        WikipediaPage page = WikipediaPage.builder().content("").lang(WikipediaLanguage.SPANISH).build();
+        List<Replacement> replacements = replacementFindService.findReplacements(page);
 
         Assertions.assertTrue(replacements.isEmpty());
     }
 
     @Test
     void testFindCustomReplacements() {
-        List<Replacement> replacements = replacementFindService.findCustomReplacements(
-            "A X C",
-            "X",
-            "Y",
-            WikipediaLanguage.SPANISH
-        );
+        WikipediaPage page = WikipediaPage.builder().content("A X C").lang(WikipediaLanguage.SPANISH).build();
+        List<Replacement> replacements = replacementFindService.findCustomReplacements(page, "X", "Y");
 
         Assertions.assertFalse(replacements.isEmpty());
         Assertions.assertEquals(1, replacements.size());
@@ -107,12 +105,8 @@ class ReplacementFindServiceTest {
 
     @Test
     void testFindCustomReplacementsWithNoResults() {
-        List<Replacement> replacements = replacementFindService.findCustomReplacements(
-            "AXC",
-            "X",
-            "Y",
-            WikipediaLanguage.SPANISH
-        );
+        WikipediaPage page = WikipediaPage.builder().content("AXC").lang(WikipediaLanguage.SPANISH).build();
+        List<Replacement> replacements = replacementFindService.findCustomReplacements(page, "X", "Y");
 
         Assertions.assertTrue(replacements.isEmpty());
     }

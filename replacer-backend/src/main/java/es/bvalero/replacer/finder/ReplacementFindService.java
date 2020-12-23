@@ -1,13 +1,12 @@
 package es.bvalero.replacer.finder;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.page.IndexablePage;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +22,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ReplacementFindService {
+
     private static final int CONTEXT_THRESHOLD = 20;
 
     @Autowired
@@ -35,52 +35,39 @@ public class ReplacementFindService {
     private boolean showLongImmutables;
 
     @Loggable(prepend = true, value = Loggable.TRACE, unit = TimeUnit.SECONDS)
-    public List<Replacement> findReplacements(String text, WikipediaLanguage lang) {
+    public List<Replacement> findReplacements(IndexablePage page) {
         // The replacement finder ignores in the response all the found replacements which are contained
         // in the found immutables. Usually there will be much more immutables found than replacements.
         // Thus it is better to obtain first all the replacements, and then obtain the immutables one by one,
         // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
-        return findFilteredReplacements(text, lang, replacementFinders);
+        return findFilteredReplacements(page, replacementFinders);
     }
 
     @Loggable(prepend = true, value = Loggable.TRACE, unit = TimeUnit.SECONDS)
-    public List<Replacement> findCustomReplacements(
-        String text,
-        String replacement,
-        String suggestion,
-        WikipediaLanguage lang
-    ) {
+    public List<Replacement> findCustomReplacements(IndexablePage page, String replacement, String suggestion) {
         CustomReplacementFinder finder = new CustomReplacementFinder(replacement, suggestion);
-        return findFilteredReplacements(text, lang, Collections.singletonList(finder));
+        return findFilteredReplacements(page, Collections.singletonList(finder));
     }
 
     /* Find all the replacements in the text but return only the necessary */
-    private List<Replacement> findFilteredReplacements(
-        String text,
-        WikipediaLanguage lang,
-        List<ReplacementFinder> finders
-    ) {
-        Set<Replacement> all = findSortedReplacements(text, lang, finders);
+    private List<Replacement> findFilteredReplacements(IndexablePage page, List<ReplacementFinder> finders) {
+        Set<Replacement> all = findSortedReplacements(page, finders);
 
         Stream<Replacement> notNested = removeNestedReplacements(all);
 
         // Ignore the replacements contained in immutables
-        List<Replacement> noIgnored = removeImmutables(notNested, text, lang);
+        List<Replacement> noIgnored = removeImmutables(notNested, page);
 
-        return addContextToReplacements(noIgnored, text);
+        return addContextToReplacements(noIgnored, page.getContent());
     }
 
     /* Find all the replacements in the text sorted and without duplicates */
-    private Set<Replacement> findSortedReplacements(
-        String text,
-        WikipediaLanguage lang,
-        List<ReplacementFinder> finders
-    ) {
+    private Set<Replacement> findSortedReplacements(IndexablePage page, List<ReplacementFinder> finders) {
         // TreeSet to distinct and sort
         Set<Replacement> all = new TreeSet<>();
         // For loop to mock easily with an iterator
         for (ReplacementFinder finder : finders) {
-            all.addAll(finder.findList(text, lang));
+            all.addAll(finder.findList(page));
         }
         return all;
     }
@@ -96,7 +83,7 @@ public class ReplacementFindService {
         return replacements.stream().filter(r -> replacements.stream().noneMatch(r2 -> r2.contains(r)));
     }
 
-    private List<Replacement> removeImmutables(Stream<Replacement> replacements, String text, WikipediaLanguage lang) {
+    private List<Replacement> removeImmutables(Stream<Replacement> replacements, IndexablePage page) {
         // LinkedList to remove items. Order is kept.
         List<Replacement> replacementList = replacements.collect(Collectors.toCollection(LinkedList::new));
 
@@ -105,28 +92,9 @@ public class ReplacementFindService {
             return Collections.emptyList();
         }
 
-        for (Immutable immutable : immutableFindService.findImmutables(text, lang)) {
-            // Detect empty immutables
-            if (StringUtils.isBlank(immutable.getText())) {
-                // As we don't have the page title we trace a snippet of text around the immutable
-                LOGGER.warn(
-                    "Empty immutable: {} - {} - {} - {}",
-                    immutable.getFinder().getClass().getSimpleName(),
-                    immutable.getStart(),
-                    lang,
-                    FinderUtils.getContextAroundWord(text, immutable.getStart(), immutable.getEnd(), 100)
-                );
-            }
-
-            // Detect too long immutables likely to be errors in the text or in the finder
-            if (showLongImmutables && immutable.getText().length() > immutable.getFinder().getMaxLength()) {
-                LOGGER.warn(
-                    "Too long immutable: {} - {} - {} - {}",
-                    immutable.getFinder().getClass().getSimpleName(),
-                    immutable.getText().length(),
-                    lang,
-                    immutable.getText()
-                );
+        for (Immutable immutable : immutableFindService.findImmutables(page)) {
+            if (showLongImmutables) {
+                immutable.check(page);
             }
 
             replacementList.removeIf(immutable::contains);

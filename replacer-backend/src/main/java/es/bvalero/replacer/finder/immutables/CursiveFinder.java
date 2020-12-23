@@ -1,15 +1,20 @@
 package es.bvalero.replacer.finder.immutables;
 
 import es.bvalero.replacer.finder.*;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import java.util.*;
+import es.bvalero.replacer.page.IndexablePage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.MatchResult;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
- * Find text in cursive, e.g. `''cursive''` in `This is a ''cursive'' example`
+ * Find text in cursive and bold, e.g. `''cursive''` in `This is a ''cursive'' example`
+ * It also finds text starting with the simple quotes and ending with a new line.
  */
+@Slf4j
 @Component
 public class CursiveFinder implements ImmutableFinder {
 
@@ -20,30 +25,36 @@ public class CursiveFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 500;
+        return 2000;
     }
 
     @Override
-    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
-        return new LinearIterable<>(text, this::findResult, this::convert);
+    public Iterable<Immutable> find(IndexablePage page) {
+        return new LinearIterable<>(page, this::findResult, this::convert);
     }
 
     @Nullable
-    public MatchResult findResult(String text, int start) {
+    public MatchResult findResult(IndexablePage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
-        while (start >= 0 && matches.isEmpty()) {
-            start = findCursive(text, start, matches);
+        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
+            start = findCursive(page, start, matches);
         }
         return matches.isEmpty() ? null : matches.get(0);
     }
 
-    private int findCursive(String text, int start, List<MatchResult> matches) {
+    private int findCursive(IndexablePage page, int start, List<MatchResult> matches) {
+        String text = page.getContent();
         int startCursive = findStartCursive(text, start);
         if (startCursive >= 0) {
             int numQuotes = findNumQuotes(text, startCursive);
             int endQuotes = findEndQuotes(text, startCursive + numQuotes, numQuotes);
             if (endQuotes >= 0) {
-                matches.add(LinearMatcher.of(startCursive, text.substring(startCursive, endQuotes)));
+                if (StringUtils.isBlank(text.substring(startCursive + numQuotes, endQuotes))) {
+                    Immutable immutable = Immutable.of(startCursive, text.substring(startCursive, endQuotes), this);
+                    logWarning(immutable, page, LOGGER, "Empty cursive");
+                } else {
+                    matches.add(LinearMatcher.of(startCursive, text.substring(startCursive, endQuotes)));
+                }
                 return endQuotes;
             } else {
                 return startCursive + numQuotes;

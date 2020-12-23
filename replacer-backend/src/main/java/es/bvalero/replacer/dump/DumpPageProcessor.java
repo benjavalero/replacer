@@ -100,10 +100,7 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
             return Collections.emptyList();
         }
 
-        List<Replacement> replacements = replacementFindService.findReplacements(
-            dumpPage.getContent(),
-            dumpPage.getLang()
-        );
+        List<Replacement> replacements = replacementFindService.findReplacements(dumpPage);
         return replacementIndexService.findIndexPageReplacements(
             dumpPage,
             replacements.stream().map(dumpPage::convertReplacementToIndexed).collect(Collectors.toList()),

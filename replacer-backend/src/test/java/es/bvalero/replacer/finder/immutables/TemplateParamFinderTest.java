@@ -136,4 +136,16 @@ class TemplateParamFinderTest {
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assertions.assertEquals(expected, actual);
     }
+
+    @Test
+    void testCiteValue() {
+        String param = "ps";
+        String text = "{{P|ps= «Libro Nº 34, año 1825, f. 145).»x}}";
+
+        List<Immutable> matches = templateParamFinder.findList(text);
+
+        Set<String> expected = Collections.singleton(param);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assertions.assertEquals(expected, actual);
+    }
 }

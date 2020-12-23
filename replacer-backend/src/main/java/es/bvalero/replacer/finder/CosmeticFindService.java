@@ -1,19 +1,21 @@
 package es.bvalero.replacer.finder;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CosmeticFindService {
+
     @Autowired
     private List<CosmeticFinder> cosmeticFinders;
 
     public String applyCosmeticChanges(String text) {
         String fixedTest = text;
         for (CosmeticFinder finder : cosmeticFinders) {
-            List<Cosmetic> cosmetics = finder.findStream(fixedTest).sorted().collect(Collectors.toList());
+            List<Cosmetic> cosmetics = finder.findList(fixedTest);
+            Collections.sort(cosmetics);
 
             // By default the results are sorted in descending order by the start
             for (Cosmetic cosmetic : cosmetics) {

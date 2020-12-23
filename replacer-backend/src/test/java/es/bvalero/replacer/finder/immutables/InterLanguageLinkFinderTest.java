@@ -1,30 +1,31 @@
 package es.bvalero.replacer.finder.immutables;
 
 import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class InterLanguageLinkFinderTest {
 
-    @Test
-    void testRegexInterLanguageLink() {
-        String link1 = "[[:pt:Title]]";
-        String link2 = "[[:en:Title|Alias]]";
-        String link3 = "[[Text]]";
-        String link4 = "[[fr:Title]]";
-        String text = String.format("En %s %s %s %s.", link1, link2, link3, link4);
+    private final InterLanguageLinkFinder interLanguageLinkFinder = new InterLanguageLinkFinder();
 
-        ImmutableFinder interLanguageLinkFinder = new InterLanguageLinkFinder();
+    @ParameterizedTest
+    @ValueSource(
+        strings = { "[[sv:Renkavle]]", "[[fr:Compression de données#Compression avec pertes]]", "[[zh:浮游生物]]" }
+    )
+    void testRegexInterLanguageLink(String text) {
         List<Immutable> matches = interLanguageLinkFinder.findList(text);
 
-        Set<String> expected = new HashSet<>(Arrays.asList(link1, link2, link4));
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(1, matches.size());
+        Assertions.assertEquals(text, matches.get(0).getText());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "[[s:es:Corán|Corán]]", "[[:en:Constitution of Virginia]]", "[[dc:Tierra Uno|Tierra- 1]]" })
+    void testInterLanguageNonValid(String text) {
+        List<Immutable> matches = interLanguageLinkFinder.findList(text);
+
+        Assertions.assertTrue(matches.isEmpty());
     }
 }

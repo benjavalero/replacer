@@ -13,7 +13,7 @@ class PersonRegexCompleteFinder implements BenchmarkFinder {
     PersonRegexCompleteFinder(Collection<String> words) {
         this.words = new ArrayList<>();
         for (String word : words) {
-            this.words.add(Pattern.compile(word + ".[A-Z]"));
+            this.words.add(Pattern.compile(word + "\\s\\p{Lu}"));
         }
     }
 

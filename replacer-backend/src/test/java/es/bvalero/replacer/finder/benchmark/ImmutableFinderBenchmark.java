@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 
 @SpringBootTest(
     classes = {
@@ -55,6 +54,7 @@ import org.springframework.context.annotation.Import;
     }
 )
 class ImmutableFinderBenchmark extends BaseFinderBenchmark {
+
     @Autowired
     private List<ImmutableFinder> immutableFinders;
 
@@ -116,7 +116,7 @@ class ImmutableFinderBenchmark extends BaseFinderBenchmark {
                     for (int i = 0; i < numIterations; i++) {
                         IterableUtils.toList(finder.findList(text));
                     }
-                    double end = (double)(System.nanoTime() - start)/1000.0; // In µs
+                    double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                     if (print) {
                         System.out.println(finder.getClass().getSimpleName() + "\t" + end);
                     }
@@ -149,9 +149,7 @@ class ImmutableFinderBenchmark extends BaseFinderBenchmark {
                 System.out.println("FINDER: " + finder.getClass().getSimpleName());
                 sampleContents.forEach(
                     content -> {
-                        finder
-                            .find(content, WikipediaLanguage.SPANISH)
-                            .forEach(result -> System.out.println("==> " + result.getText()));
+                        finder.findList(content).forEach(result -> System.out.println("==> " + result.getText()));
                         System.out.println("----------");
                     }
                 );

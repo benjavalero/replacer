@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
 class PageReviewCustomServiceTest {
+
     private final int randomId = 1;
     private final int randomId2 = 2;
     private final String content = "XYZ";
@@ -102,14 +103,7 @@ class PageReviewCustomServiceTest {
 
         // The page contains replacements
         Mockito
-            .when(
-                replacementFindService.findCustomReplacements(
-                    content,
-                    replacement,
-                    suggestion,
-                    WikipediaLanguage.SPANISH
-                )
-            )
+            .when(replacementFindService.findCustomReplacements(page, replacement, suggestion))
             .thenReturn(replacements);
 
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, replacement, suggestion);
@@ -149,14 +143,7 @@ class PageReviewCustomServiceTest {
 
         // The page 2 contains no replacements
         Mockito
-            .when(
-                replacementFindService.findCustomReplacements(
-                    content2,
-                    replacement,
-                    suggestion,
-                    WikipediaLanguage.SPANISH
-                )
-            )
+            .when(replacementFindService.findCustomReplacements(page2, replacement, suggestion))
             .thenReturn(Collections.emptyList());
 
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, replacement, suggestion);
@@ -171,9 +158,7 @@ class PageReviewCustomServiceTest {
                 Mockito.any(WikipediaLanguage.class)
             );
 
-        Mockito
-            .verify(replacementDao, Mockito.times(1))
-            .insert(Mockito.any(ReplacementEntity.class));
+        Mockito.verify(replacementDao, Mockito.times(1)).insert(Mockito.any(ReplacementEntity.class));
 
         Assertions.assertFalse(review.isPresent());
     }

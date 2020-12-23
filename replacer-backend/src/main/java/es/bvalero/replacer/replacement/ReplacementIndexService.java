@@ -52,7 +52,7 @@ public class ReplacementIndexService {
         List<IndexableReplacement> replacements,
         List<ReplacementEntity> dbReplacements
     ) {
-        List<ReplacementEntity> result = new ArrayList<>();
+        List<ReplacementEntity> result = new ArrayList<>(100);
 
         // Ignore context when comparing replacements in case there are cases with the same context
         boolean ignoreContext =
@@ -202,7 +202,7 @@ public class ReplacementIndexService {
         List<ReplacementEntity> dbReplacements
     ) {
         // We assume there are no custom replacements in the list
-        List<ReplacementEntity> result = new ArrayList<>();
+        List<ReplacementEntity> result = new ArrayList<>(100);
 
         // Find just in case the system-reviewed replacements and delete them
         List<ReplacementEntity> systemReviewed = dbReplacements
@@ -210,7 +210,6 @@ public class ReplacementIndexService {
             .filter(rep -> rep.isSystemReviewed() && !rep.isDummy())
             .collect(Collectors.toList());
         systemReviewed.forEach(ReplacementEntity::setToDelete);
-        //noinspection CollectionAddAllCanBeReplacedWithConstructor
         result.addAll(systemReviewed);
         dbReplacements.removeAll(systemReviewed);
 

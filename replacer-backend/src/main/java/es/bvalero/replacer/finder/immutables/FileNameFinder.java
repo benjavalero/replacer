@@ -1,25 +1,26 @@
 package es.bvalero.replacer.finder.immutables;
 
 import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.page.IndexablePage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import javax.annotation.Resource;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * Find filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`
  */
 @Component
 public class FileNameFinder implements ImmutableFinder {
+
+    private static final String START_FILE = "[[";
+
     // Files are also found in:
     // - Tag "gallery" ==> Managed in CompleteTagFinder
     // - Template "Gallery" ==> Managed in CompleteTemplateFinder
-    // - Parameter values without File prefix ==> Managed in TemplateParamFinder
+    // - Parameter values ==> Managed in TemplateParamFinder
     // - File template with additional parameters separated by pipes ==> Managed in LinkAliasedFinder
 
     @Resource
@@ -32,19 +33,19 @@ public class FileNameFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 250;
+        return 200;
     }
 
     @Override
-    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
-        return new LinearIterable<>(text, this::findResult, this::convert);
+    public Iterable<Immutable> find(IndexablePage page) {
+        return new LinearIterable<>(page, this::findResult, this::convert);
     }
 
     @Nullable
-    public MatchResult findResult(String text, int start) {
+    public MatchResult findResult(IndexablePage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
-        while (start >= 0 && matches.isEmpty()) {
-            start = findFileName(text, start, matches);
+        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
+            start = findFileName(page.getContent(), start, matches);
         }
         return matches.isEmpty() ? null : matches.get(0);
     }
@@ -52,7 +53,7 @@ public class FileNameFinder implements ImmutableFinder {
     private int findFileName(String text, int start, List<MatchResult> matches) {
         int startFile = findStartFile(text, start);
         if (startFile >= 0) {
-            int startFileName = findStartFileName(text, startFile + 2);
+            int startFileName = findStartFileName(text, startFile + START_FILE.length());
             if (startFileName >= 0) {
                 int endFileName = findEndFile(text, startFileName);
                 if (endFileName >= 0) {
@@ -62,7 +63,7 @@ public class FileNameFinder implements ImmutableFinder {
                     return startFileName;
                 }
             } else {
-                return startFile + 2;
+                return startFile + START_FILE.length();
             }
         } else {
             return -1;
@@ -70,7 +71,7 @@ public class FileNameFinder implements ImmutableFinder {
     }
 
     private int findStartFile(String text, int start) {
-        return text.indexOf("[[", start);
+        return text.indexOf(START_FILE, start);
     }
 
     private int findStartFileName(String text, int start) {
@@ -93,8 +94,10 @@ public class FileNameFinder implements ImmutableFinder {
     private int findEndFile(String text, int start) {
         for (int i = start; i < text.length(); i++) {
             char ch = text.charAt(i);
-            if (ch == '|' || ch == ']') {
+            if (ch == ']') {
                 return i;
+            } else if (ch == '|') {
+                return -1;
             }
         }
         return -1;

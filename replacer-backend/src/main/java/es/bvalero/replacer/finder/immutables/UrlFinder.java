@@ -7,7 +7,7 @@ import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.RegexIterable;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.page.IndexablePage;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,7 +15,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class UrlFinder implements ImmutableFinder {
-    // The regex works quite well and provides support for complex URLs so it is worth to keep using it
+
+    // The automaton works quite well and provides support for complex URLs so it is worth
+    // to use it even if it doesn't give the best performance
     private static final String REGEX_URL = "https?://<URI>";
 
     private static final RunAutomaton AUTOMATON_URL = new RunAutomaton(
@@ -28,7 +30,7 @@ public class UrlFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
-        return new RegexIterable<>(text, AUTOMATON_URL, this::convert);
+    public Iterable<Immutable> find(IndexablePage page) {
+        return new RegexIterable<>(page, AUTOMATON_URL, this::convert);
     }
 }

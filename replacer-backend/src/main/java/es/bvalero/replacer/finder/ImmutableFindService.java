@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder;
 
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.page.IndexablePage;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +17,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 class ImmutableFindService {
+
     @Autowired
     private List<ImmutableFinder> immutableFinders;
 
-    Iterable<Immutable> findImmutables(String text, WikipediaLanguage lang) {
+    Iterable<Immutable> findImmutables(IndexablePage page) {
         // Collect to a list which is already an iterable
         // Sort the finders by priority
         return new IterableOfIterable<>(
-            immutableFinders.stream().sorted().map(finder -> finder.find(text, lang)).collect(Collectors.toList())
+            immutableFinders.stream().sorted().map(finder -> finder.find(page)).collect(Collectors.toList())
         );
     }
 }

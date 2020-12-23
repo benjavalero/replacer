@@ -15,7 +15,7 @@ class PersonAutomatonCompleteFinder implements BenchmarkFinder {
     PersonAutomatonCompleteFinder(Collection<String> words) {
         this.words = new ArrayList<>();
         for (String word : words) {
-            this.words.add(new RunAutomaton(new RegExp(word + ".<Lu>").toAutomaton(new DatatypesAutomatonProvider())));
+            this.words.add(new RunAutomaton(new RegExp(word + "<Z><Lu>").toAutomaton(new DatatypesAutomatonProvider())));
         }
     }
 

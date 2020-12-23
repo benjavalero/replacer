@@ -1,21 +1,23 @@
 package es.bvalero.replacer.finder.immutables;
 
 import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.page.IndexablePage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
  * Find categories, e.g. `[[Categoría:España]]`
  */
+@Slf4j
 @Component
 public class CategoryFinder implements ImmutableFinder {
-    private static final List<String> SPACES = Arrays.asList("Categoría", "als");
+
+    private static final String CATEGORY_START = "[[Categoría:";
+    private static final String CATEGORY_END = "]]";
 
     @Override
     public ImmutableFinderPriority getPriority() {
@@ -23,61 +25,51 @@ public class CategoryFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
-        return new LinearIterable<>(text, this::findResult, this::convert);
+    public int getMaxLength() {
+        return 250;
+    }
+
+    @Override
+    public Iterable<Immutable> find(IndexablePage page) {
+        return new LinearIterable<>(page, this::findResult, this::convert);
     }
 
     @Nullable
-    public MatchResult findResult(String text, int start) {
+    public MatchResult findResult(IndexablePage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
-        while (start >= 0 && matches.isEmpty()) {
-            start = findCategory(text, start, matches);
+        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
+            start = findCategory(page, start, matches);
         }
         return matches.isEmpty() ? null : matches.get(0);
     }
 
-    private int findCategory(String text, int start, List<MatchResult> matches) {
+    private int findCategory(IndexablePage page, int start, List<MatchResult> matches) {
+        String text = page.getContent();
         int startCategory = findStartCategory(text, start);
         if (startCategory >= 0) {
-            int startCategoryName = findStartCategoryName(text, startCategory + 2);
-            if (startCategoryName >= 0) {
-                int endCategory = findEndCategory(text, startCategoryName);
-                if (endCategory >= 0) {
-                    matches.add(LinearMatcher.of(startCategory, text.substring(startCategory, endCategory + 2)));
-                    return endCategory + 2;
-                } else {
-                    return startCategoryName;
-                }
+            int startCategoryName = startCategory + CATEGORY_START.length();
+            int endCategory = findEndCategory(text, startCategoryName);
+            if (endCategory >= 0) {
+                int endMatch = endCategory + CATEGORY_END.length();
+                matches.add(LinearMatcher.of(startCategory, text.substring(startCategory, endMatch)));
+                return endMatch;
             } else {
-                return startCategory + 2;
+                // Category not closed. Not worth keep on searching.
+                Immutable immutable = Immutable.of(startCategory, text.substring(startCategory, startCategory + 100), this);
+                logWarning(immutable, page, LOGGER, "Category not closed");
+                return -1;
             }
         } else {
+            // No more categories
             return -1;
         }
     }
 
     private int findStartCategory(String text, int start) {
-        return text.indexOf("[[", start);
-    }
-
-    private int findStartCategoryName(String text, int start) {
-        StringBuilder prefixBuilder = new StringBuilder();
-        for (int i = start; i < text.length(); i++) {
-            char ch = text.charAt(i);
-            if (ch == '|' || ch == ']') {
-                // Not a file but a hyperlink
-                return -1;
-            } else if (ch == ':') {
-                String prefix = prefixBuilder.toString();
-                return SPACES.contains(prefix) && (i + 1 < text.length()) ? i + 1 : -1;
-            } else {
-                prefixBuilder.append(ch);
-            }
-        }
-        return -1;
+        return text.indexOf(CATEGORY_START, start);
     }
 
     private int findEndCategory(String text, int start) {
-        return text.indexOf("]]", start);
+        return text.indexOf(CATEGORY_END, start);
     }
 }

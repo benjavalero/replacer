@@ -4,6 +4,9 @@ import es.bvalero.replacer.finder.LinearIterable;
 import es.bvalero.replacer.finder.LinearMatcher;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.page.IndexablePage;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,13 +18,14 @@ class CursiveLinearFinder implements BenchmarkFinder {
 
     @Override
     public Set<FinderResult> findMatches(String text) {
-        return new HashSet<>(IterableUtils.toList(new LinearIterable<>(text, this::findResult, this::convert)));
+        WikipediaPage page = WikipediaPage.builder().content(text).lang(WikipediaLanguage.getDefault()).build();
+        return new HashSet<>(IterableUtils.toList(new LinearIterable<>(page, this::findResult, this::convert)));
     }
 
-    public MatchResult findResult(String text, int start) {
+    public MatchResult findResult(IndexablePage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
-        while (start >= 0 && matches.isEmpty()) {
-            start = findCursive(text, start, matches);
+        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
+            start = findCursive(page.getContent(), start, matches);
         }
         return matches.isEmpty() ? null : matches.get(0);
     }

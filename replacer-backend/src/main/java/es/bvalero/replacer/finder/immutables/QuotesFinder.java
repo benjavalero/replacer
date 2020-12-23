@@ -5,7 +5,7 @@ import es.bvalero.replacer.finder.ImmutableFinderPriority;
 import org.springframework.stereotype.Component;
 
 /**
- * Find text in double quotes, e.g. `"text"`
+ * Find text in double quotes, e.g. `"text"`. The text may include new lines.
  */
 @Component
 public class QuotesFinder extends QuotesAbstractFinder implements ImmutableFinder {

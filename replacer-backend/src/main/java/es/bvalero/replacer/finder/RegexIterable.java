@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder;
 
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.page.IndexablePage;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.BiPredicate;
@@ -17,50 +18,51 @@ import java.util.regex.Pattern;
  * We overload the constructors with an optional predicate to validate the result against the text.
  */
 public class RegexIterable<T> implements Iterable<T> {
+
     private final Pattern pattern;
     private final RunAutomaton automaton;
-    private final String text;
+    private final IndexablePage page;
     private final Function<MatchResult, T> convert;
-    private final BiPredicate<MatchResult, String> isValid;
+    private final BiPredicate<MatchResult, IndexablePage> isValid;
 
-    public RegexIterable(String text, Pattern pattern, Function<MatchResult, T> convert) {
+    public RegexIterable(IndexablePage page, Pattern pattern, Function<MatchResult, T> convert) {
         this.pattern = pattern;
         this.automaton = null;
-        this.text = text;
+        this.page = page;
         this.convert = convert;
         this.isValid = null;
     }
 
     public RegexIterable(
-        String text,
+        IndexablePage page,
         Pattern pattern,
         Function<MatchResult, T> convert,
-        BiPredicate<MatchResult, String> isValid
+        BiPredicate<MatchResult, IndexablePage> isValid
     ) {
         this.pattern = pattern;
         this.automaton = null;
-        this.text = text;
+        this.page = page;
         this.convert = convert;
         this.isValid = isValid;
     }
 
-    public RegexIterable(String text, RunAutomaton automaton, Function<MatchResult, T> convert) {
+    public RegexIterable(IndexablePage page, RunAutomaton automaton, Function<MatchResult, T> convert) {
         this.pattern = null;
         this.automaton = automaton;
-        this.text = text;
+        this.page = page;
         this.convert = convert;
         this.isValid = null;
     }
 
     public RegexIterable(
-        String text,
+        IndexablePage page,
         RunAutomaton automaton,
         Function<MatchResult, T> convert,
-        BiPredicate<MatchResult, String> isValid
+        BiPredicate<MatchResult, IndexablePage> isValid
     ) {
         this.pattern = null;
         this.automaton = automaton;
-        this.text = text;
+        this.page = page;
         this.convert = convert;
         this.isValid = isValid;
     }
@@ -77,11 +79,12 @@ public class RegexIterable<T> implements Iterable<T> {
     }
 
     private class RegexPatternIterator<R> implements Iterator<R> {
+
         private final Matcher matcher;
         private final Function<MatchResult, R> convert;
 
         RegexPatternIterator(Function<MatchResult, R> convert) {
-            this.matcher = pattern.matcher(text);
+            this.matcher = pattern.matcher(page.getContent());
             this.convert = convert;
         }
 
@@ -98,7 +101,7 @@ public class RegexIterable<T> implements Iterable<T> {
             if (isValid == null) {
                 return true;
             } else {
-                return isValid.test(match, text);
+                return isValid.test(match, page);
             }
         }
 
@@ -112,11 +115,12 @@ public class RegexIterable<T> implements Iterable<T> {
     }
 
     private class RegexAutomatonIterator<R> implements Iterator<R> {
+
         private final AutomatonMatcher matcher;
         private final Function<MatchResult, R> convert;
 
         RegexAutomatonIterator(Function<MatchResult, R> convert) {
-            this.matcher = automaton.newMatcher(text);
+            this.matcher = automaton.newMatcher(page.getContent());
             this.convert = convert;
         }
 
@@ -133,7 +137,7 @@ public class RegexIterable<T> implements Iterable<T> {
             if (isValid == null) {
                 return true;
             } else {
-                return isValid.test(match, text);
+                return isValid.test(match, page);
             }
         }
 

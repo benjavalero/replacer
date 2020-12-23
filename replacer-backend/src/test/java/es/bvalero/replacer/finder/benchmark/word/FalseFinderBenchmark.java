@@ -30,18 +30,18 @@ class FalseFinderBenchmark extends BaseFinderBenchmark {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new WordIndexOfFinder(words));
-        // finders.add(new WordRegexFinder(words)); // Discarded: about 100 times slower
-        // finders.add(new WordAutomatonFinder(words)); // Discarded: about 200 times slower
-        // finders.add(new WordRegexCompleteFinder(words)); // Discarded: about 1000 times slower
-        // finders.add(new WordRegexAlternateFinder(words)); // Discarded: about 500 times slower
+        finders.add(new WordRegexFinder(words));
+        finders.add(new WordAutomatonFinder(words));
+        // finders.add(new WordRegexCompleteFinder(words)); // Very long
+        // finders.add(new WordRegexAlternateFinder(words)); // Long
         finders.add(new WordAutomatonAlternateFinder(words));
-        // finders.add(new WordRegexAlternateCompleteFinder(words)); // Discarded: about 100 times slower
+        finders.add(new WordRegexAlternateCompleteFinder(words));
         // finders.add(new WordRegexAllFinder(words)); // Don't work with composed
         // finders.add(new WordAutomatonAllFinder(words)); // Don't work with composed
         // finders.add(new WordLinearAllFinder(words)); // Don't work with composed
         // finders.add(new WordRegexAllCompleteFinder(words)); // Don't work with composed
 
-        runBenchmark(finders);
+        runBenchmark(finders, WARM_UP / 10, ITERATIONS / 10);
 
         MatcherAssert.assertThat(true, is(true));
     }

@@ -16,7 +16,7 @@ class PersonAutomatonAlternateCompleteFinder implements BenchmarkFinder {
     private final RunAutomaton words;
 
     PersonAutomatonAlternateCompleteFinder(Collection<String> words) {
-        String alternations = "(" + StringUtils.join(words, "|") + ").<Lu>";
+        String alternations = "(" + StringUtils.join(words, "|") + ")<Z><Lu>";
         this.words = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
     }
 

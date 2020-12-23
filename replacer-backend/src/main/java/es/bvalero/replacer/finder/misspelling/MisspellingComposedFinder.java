@@ -5,6 +5,7 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MisspellingComposedFinder extends MisspellingFinder {
+
     public static final String TYPE_MISSPELLING_COMPOSED = "Compuestos";
 
     @Autowired
@@ -55,20 +57,21 @@ public class MisspellingComposedFinder extends MisspellingFinder {
     }
 
     @Override
-    public Iterable<Replacement> find(String text, WikipediaLanguage lang) {
-        RunAutomaton automaton = this.automata.get(lang);
+    public Iterable<Replacement> find(IndexablePage page) {
+        RunAutomaton automaton = this.automata.get(page.getLang());
         if (automaton == null) {
             return Collections.emptyList();
         } else {
             // We need to perform additional transformations according to the language
             return StreamSupport
                 .stream(
-                    new RegexIterable<>(text, automaton, this::convertMatch, this::isValidMatch).spliterator(),
+                    new RegexIterable<>(page, automaton, this::convertMatch, this::isValidMatch)
+                        .spliterator(),
                     false
                 )
-                .filter(r -> isExistingWord(r.getText(), lang))
-                .map(r -> r.withSubtype(getSubtype(r.getText(), lang)))
-                .map(r -> r.withSuggestions(findSuggestions(r.getText(), lang)))
+                .filter(r -> isExistingWord(r.getText(), page.getLang()))
+                .map(r -> r.withSubtype(getSubtype(r.getText(), page.getLang())))
+                .map(r -> r.withSuggestions(findSuggestions(r.getText(), page.getLang())))
                 .collect(Collectors.toList());
         }
     }

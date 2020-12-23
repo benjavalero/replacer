@@ -29,8 +29,17 @@ class FileNameFinderTest {
 
         List<Immutable> matches = fileNameFinder.findList(text);
 
-        Set<String> expected = new HashSet<>(Arrays.asList(filename1, filename2, filename3));
+        Set<String> expected = new HashSet<>(Arrays.asList(filename2, filename3));
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testFileNameAliased() {
+        String text = "[[Archivo:xxx.jpg|thumb|Description]]";
+
+        List<Immutable> matches = fileNameFinder.findList(text);
+
+        Assertions.assertTrue(matches.isEmpty());
     }
 }

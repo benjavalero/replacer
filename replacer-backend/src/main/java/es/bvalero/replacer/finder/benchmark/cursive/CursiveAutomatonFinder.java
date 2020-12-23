@@ -8,6 +8,9 @@ import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.apache.commons.collections4.IterableUtils;
 
 class CursiveAutomatonFinder implements BenchmarkFinder {
@@ -18,7 +21,8 @@ class CursiveAutomatonFinder implements BenchmarkFinder {
     );
 
     public Set<FinderResult> findMatches(String text) {
-        return new HashSet<>(IterableUtils.toList(new RegexIterable<>(text, CURSIVE_AUTOMATON, this::convert)));
+        WikipediaPage page = WikipediaPage.builder().content(text).lang(WikipediaLanguage.getDefault()).build();
+        return new HashSet<>(IterableUtils.toList(new RegexIterable<>(page, CURSIVE_AUTOMATON, this::convert)));
     }
 
     @Override

@@ -1,28 +1,29 @@
 package es.bvalero.replacer.finder.benchmark.person;
 
-import java.util.*;
-
 import es.bvalero.replacer.finder.benchmark.FinderResult;
+import java.util.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
 
 class PersonFinderTest {
+
     private Collection<String> words;
     private String text;
     private Set<FinderResult> expected;
 
     @BeforeEach
     public void setUp() {
-        this.words = Arrays.asList("Domingo", "Frances", "Julio", "Sidney");
+        this.words = Arrays.asList("Sky", "Julio", "Los Angeles", "Tokyo");
 
-        String noun = "Julio";
-        String surname = "Verne";
-
-        this.text = String.format("A %s %s %ss %s %s %s.", noun, surname, noun, noun, surname.toLowerCase(), noun);
+        this.text = "En Sky News, Julio Álvarez, Los Angeles Lakers, Tokyo TV, José Julio García.";
 
         this.expected = new HashSet<>();
-        this.expected.add(FinderResult.of(2, "Julio"));
+        this.expected.add(FinderResult.of(3, "Sky"));
+        this.expected.add(FinderResult.of(13, "Julio"));
+        this.expected.add(FinderResult.of(28, "Los Angeles"));
+        this.expected.add(FinderResult.of(48, "Tokyo"));
+        this.expected.add(FinderResult.of(63, "Julio"));
     }
 
     @Test
@@ -76,24 +77,6 @@ class PersonFinderTest {
     @Test
     void testPersonAutomatonAlternateCompleteFinder() {
         PersonAutomatonAlternateCompleteFinder finder = new PersonAutomatonAlternateCompleteFinder(this.words);
-        Assertions.assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    void testPersonRegexAllFinder() {
-        PersonRegexAllFinder finder = new PersonRegexAllFinder(this.words);
-        Assertions.assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    void testPersonAutomatonAllFinder() {
-        PersonAutomatonAllFinder finder = new PersonAutomatonAllFinder(this.words);
-        Assertions.assertEquals(expected, finder.findMatches(text));
-    }
-
-    @Test
-    void testPersonRegexAllCompleteFinder() {
-        PersonRegexAllCompleteFinder finder = new PersonRegexAllCompleteFinder(this.words);
         Assertions.assertEquals(expected, finder.findMatches(text));
     }
 }

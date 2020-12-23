@@ -14,7 +14,7 @@ class PersonRegexAlternateCompleteFinder implements BenchmarkFinder {
     private final Pattern words;
 
     PersonRegexAlternateCompleteFinder(Collection<String> words) {
-        String alternations = "(" + StringUtils.join(words, "|") + ").[A-Z]";
+        String alternations = "(" + StringUtils.join(words, "|") + ")\\s\\p{Lu}";
         this.words = Pattern.compile(alternations);
     }
 

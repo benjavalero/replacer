@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
 class DumpPageProcessorTest {
+
     @Resource
     private List<String> ignorableTemplates;
 
@@ -55,16 +56,10 @@ class DumpPageProcessorTest {
         dumpPageProcessor.processPage(dumpPage);
 
         Mockito.verify(replacementCache).findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class));
-        Mockito
-            .verify(replacementFindService)
-            .findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class));
+        Mockito.verify(replacementFindService).findReplacements(Mockito.any(DumpPage.class));
         Mockito
             .verify(replacementIndexService)
-            .findIndexPageReplacements(
-                Mockito.any(IndexablePage.class),
-                Mockito.anyList(),
-                Mockito.anyList()
-            );
+            .findIndexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList(), Mockito.anyList());
     }
 
     @Test
@@ -114,9 +109,7 @@ class DumpPageProcessorTest {
             .thenReturn(Collections.singletonList(replacement));
 
         Assertions.assertTrue(dumpPageProcessor.processPage(dumpPage).isEmpty());
-        Mockito
-            .verify(replacementFindService, Mockito.times(0))
-            .findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class));
+        Mockito.verify(replacementFindService, Mockito.times(0)).findReplacements(Mockito.any(DumpPage.class));
     }
 
     @Test
@@ -138,9 +131,7 @@ class DumpPageProcessorTest {
             .thenReturn(Collections.singletonList(replacement));
 
         dumpPageProcessor.processPage(dumpPage);
-        Mockito
-            .verify(replacementFindService)
-            .findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class));
+        Mockito.verify(replacementFindService).findReplacements(Mockito.any(DumpPage.class));
     }
 
     @Test
@@ -163,9 +154,7 @@ class DumpPageProcessorTest {
             .thenReturn(Collections.singletonList(replacement));
 
         dumpPageProcessor.processPage(dumpPage);
-        Mockito
-            .verify(replacementFindService)
-            .findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class));
+        Mockito.verify(replacementFindService).findReplacements(Mockito.any(DumpPage.class));
     }
 
     @Test
@@ -185,19 +174,13 @@ class DumpPageProcessorTest {
 
         Replacement replacement = Replacement.builder().build();
         List<Replacement> replacements = Collections.singletonList(replacement);
-        Mockito
-            .when(replacementFindService.findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
-            .thenReturn(replacements);
+        Mockito.when(replacementFindService.findReplacements(Mockito.any(DumpPage.class))).thenReturn(replacements);
 
         dumpPageProcessor.processPage(dumpPage);
 
         Mockito
             .verify(replacementIndexService)
-            .findIndexPageReplacements(
-                Mockito.any(IndexablePage.class),
-                Mockito.anyList(),
-                Mockito.eq(dbReplacements)
-            );
+            .findIndexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList(), Mockito.eq(dbReplacements));
     }
 
     @Test
@@ -221,18 +204,12 @@ class DumpPageProcessorTest {
             .thenReturn(dbReplacements);
 
         List<Replacement> replacements = Collections.emptyList();
-        Mockito
-            .when(replacementFindService.findReplacements(Mockito.anyString(), Mockito.any(WikipediaLanguage.class)))
-            .thenReturn(replacements);
+        Mockito.when(replacementFindService.findReplacements(Mockito.any(DumpPage.class))).thenReturn(replacements);
 
         dumpPageProcessor.processPage(dumpPage);
 
         Mockito
             .verify(replacementIndexService)
-            .findIndexPageReplacements(
-                Mockito.any(IndexablePage.class),
-                Mockito.anyList(),
-                Mockito.eq(dbReplacements)
-            );
+            .findIndexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList(), Mockito.eq(dbReplacements));
     }
 }

@@ -1,18 +1,19 @@
 package es.bvalero.replacer.finder.immutables;
 
 import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.page.IndexablePage;
 import java.util.*;
 import java.util.regex.MatchResult;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
- * Find the first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`
+ * Find the first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`.
+ * It also finds categories, files, etc.
  */
 @Component
 public class LinkAliasedFinder implements ImmutableFinder {
+
     private static final Set<Character> FORBIDDEN_CHARS = new HashSet<>(Arrays.asList(']', '|', '\n'));
 
     @Override
@@ -22,19 +23,19 @@ public class LinkAliasedFinder implements ImmutableFinder {
 
     @Override
     public int getMaxLength() {
-        return 200;
+        return 250;
     }
 
     @Override
-    public Iterable<Immutable> find(String text, WikipediaLanguage lang) {
-        return new LinearIterable<>(text, this::findResult, this::convert);
+    public Iterable<Immutable> find(IndexablePage page) {
+        return new LinearIterable<>(page, this::findResult, this::convert);
     }
 
     @Nullable
-    public MatchResult findResult(String text, int start) {
+    public MatchResult findResult(IndexablePage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
-        while (start >= 0 && matches.isEmpty()) {
-            start = findLinkAliased(text, start, matches);
+        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
+            start = findLinkAliased(page.getContent(), start, matches);
         }
         return matches.isEmpty() ? null : matches.get(0);
     }

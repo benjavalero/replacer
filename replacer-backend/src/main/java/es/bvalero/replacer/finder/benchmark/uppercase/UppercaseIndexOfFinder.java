@@ -1,14 +1,15 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 class UppercaseIndexOfFinder implements BenchmarkFinder {
-    private static final Collection<Character> PUNCTUATIONS = Arrays.asList('!', '#', '*', '|', '=', '.');
+
+    private static final Set<Character> PUNCTUATIONS = Set.of('!', '#', '*', '|', '=', '.');
 
     private final Collection<String> words;
 
@@ -25,10 +26,12 @@ class UppercaseIndexOfFinder implements BenchmarkFinder {
             while (start >= 0) {
                 start = text.indexOf(word, start);
                 if (start >= 0) {
-                    if (isWordPrecededByPunctuation(start, text)) {
+                    if (
+                        FinderUtils.isWordCompleteInText(start, word, text) && isWordPrecededByPunctuation(start, text)
+                    ) {
                         matches.add(FinderResult.of(start, word));
                     }
-                    start++;
+                    start += word.length();
                 }
             }
         }

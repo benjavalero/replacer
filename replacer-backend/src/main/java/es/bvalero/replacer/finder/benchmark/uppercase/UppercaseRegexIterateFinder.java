@@ -7,12 +7,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class UppercaseRegexIterateFinder implements BenchmarkFinder {
+
     private final List<Pattern> words;
 
     UppercaseRegexIterateFinder(Collection<String> words) {
         this.words = new ArrayList<>();
         for (String word : words) {
-            this.words.add(Pattern.compile("[!#*|=.]\\s*(" + word + ")"));
+            this.words.add(Pattern.compile("[!#*|=.]\\s*" + word));
         }
     }
 
@@ -23,7 +24,7 @@ class UppercaseRegexIterateFinder implements BenchmarkFinder {
         for (Pattern word : this.words) {
             Matcher m = word.matcher(text);
             while (m.find()) {
-                String w = m.group(1);
+                String w = m.group().substring(1).trim();
                 int pos = m.group().indexOf(w);
                 matches.add(FinderResult.of(m.start() + pos, w));
             }

@@ -1,6 +1,6 @@
 == Lista de falsos positivos ==
 
-* La idea general es incluir los términos o conjunto de términos que son falsos positivos, o lo son en la gran mayoría de casos, por lo que no compensa tener que revisar por ejemplo mil ocurrencias para detectar un solo verdadero positivo.
+* Este listado incluye términos o conjunto de términos que son (casi siempre) falsos positivos, p. ej «aun así» que ocultará el potencial reemplazo de «aun».
 * Si es posible intentamos que no se solapen con otras excepciones
 * De momento uso una expresión regular (automaton) por lo que podemos incluir algo de sintaxis de estas
 * Incluyo los casos con aproximadamente más de 400 ocurrencias
@@ -27,9 +27,9 @@
 
  # Alex
  Alex Barros
- Alex Bogom[oó]lov
+ Alex Bogomolov
  Alex Bolt
- Alex [Dd]e Angelis
+ Alex de Angelis
  Alex Ferguson
  Alex Kuznetsov
  Alex O			# Para encontrar ocurrencias como Alex O'Connell
@@ -42,19 +42,16 @@
  Captain America
  Central America
  Latin America
- Naughty America
  North America
  Road America
  Skate America
  South America
  # UCI America Tour 		# Cubierto por America Tour
- in America
+ [Ii]n America
  of America
 
  # angel
  Evil Angel
- Elegant Angel
- Morbid Angel
 
  # angeles
  # Se encuentra también como inmutable en PersonNameFinder
@@ -69,35 +66,19 @@
  aún[\\.,]
  aún conserva
  aún era
- aún estaban
  aún estaba
- aún están
  aún está
  aún es
- aún existen
- aún existe
  [Aa]ún hoy
  [Aa]ún más
  aún mayor
- aún muy
  [Aa]ún no
- aún permanecen
- aún permanece
  aún por
- aún pueden
- aún puede
- aún quedan
  [Aa]ún se
  aún sigue
  aún son
- aún tenía
- aún tiene
- aún una
- aún un
 
  aunque aún
- cuales aún
- cual aún
  cuando aún
  donde aún
  era aún
@@ -106,25 +87,16 @@
  es aún
  fue aún
  [Mm]ás aún
- menos aún
  mientras aún
  pero aún
  que aún
- ser aún
- sido aún
  siendo aún
- si aún
  son aún
 
  # barbara
  Barbara Schett
- Barbara Gordon
- Barbara Stanwyck
  Barbara Potter
- Barbara Hershey
- Barbara Ann
  Barbara Rittner
- Barbara Hendricks
 
  # canada
  of Canada
@@ -133,57 +105,37 @@
  du Canada
 
  # catalunya
- Catalunya Verds
  Catalunya Ràdio
  Catalunya [Rr]omànica
  Catalunya Sí
- Catalunya Banc
- Caixa Catalunya
  Iniciativa per Catalunya
  Junts per Catalunya
- Volta a Catalunya
 
  # disparo
  # La inmensa mayoría se refieren al sustantivo y por tanto son correctos
- [Uu]n (solo )?disparo
- [Dd]el? disparo
- [Ee]l disparo
- primer disparo
- [Ss]u disparo
- potente disparo
- cada disparo
+ un disparo
+ del? disparo
+ el disparo
 
  # division
  Division 1
  Division 2
- Division 3
  Division of
  Division I
- Division II
- Division III
 
  First Division
  Second Division
  Third Division
- Fourth Division
  League Division
  Joy Division
  Premier Division
- A Division
  X Division
- Racing Division
- Administrative Division
- Première Division
 
  # Domingo
  # Se encuentra también como inmutable en SurnameFinder y en PersonNameFinder
  Domingo de Guzmán
  Domingo de Ramos
  Domingo de Resurrección
- Domingo de Silos
- Domingo de Pascua
- Domingo de la Calzada
- Domingo de los Tsáchilas
 
  Plácido Domingo
  Santo Domingo
@@ -203,12 +155,9 @@
  Ivan Dodig
  Ivan Basso
  Ivan Ljubi[čc]i[ćc]
- Ivan Rakitić
 
  # jose
  San Jose Earthquakes
- San Jose Sharks
- San Jose State
 
  # Julio
  Nueve de Julio
@@ -216,15 +165,12 @@
  # junior
  Junior College
  Junior Heavyweight
- Junior High
  Junior Team
  Junior de Barranquilla
 
- Alajuela Junior
  Atlético Junior 		# Se refiere también al equipo Junior de Barranquilla
  Deportiva Junior		# Se refiere también al equipo Junior de Barranquilla
  Disney Junior
- Sauber Junior Team
  Super Junior
  Top Race Junior
  World Junior
@@ -241,10 +187,8 @@
  Maria di
  Maria do
  Maria in
- Maria Kanellis
  Maria Kirilenko	# Aunque se romaniza como María Kirilenko
  Maria Sakkari		# Aunque se romaniza como María Sákkari
- Maria von
 
  Anna Maria
  Carlo? Maria
@@ -261,7 +205,6 @@
  # Master
  Master of
  Master and
- Master in
 
  # masters
  # La gran mayoría son falsos positivos correspondientes a los torneos de tenis
@@ -273,15 +216,14 @@
  Geoff Masters
 
  # Mayo
- Alfredo Mayo
- Clínica Mayo
- Iban Mayo
  [Rr]ío Mayo
 
  # Hay varios casos de nombres propios, incluso ciudades, con el día y el mes.
  # Las fechas completas son más largas y machacan estos falsos positivos
- <N>+ de Mayo
  1º de Mayo 		# Habrá que "revisitarlo" cuando se empiece a corregir el estilo de los ordinales, incluidos títulos de artículos.
+ 2 de Mayo
+ 9 de Mayo
+ 25 de Mayo
  Avenida de Mayo
  Campo de Mayo
  Cruz de Mayo
@@ -310,27 +252,19 @@
  Nicolas Prost
  Nicolas Lapierre
  Nicolas Poussin
- Nicolas Roche
- Nicolas Gilsoul
- Nicolas Frantz
- Nicolas Anelka
 
  # Paris
- Paris FC
  Paris Hilton
  Paris Saint 	 # Paris Saint-Germain
  in Paris
 
  # publica
- publica artículos
  publica el
  publica en
  publica la
- publica los
- publica sus?
+ publica su
  publica una?
 
- donde publica
  que publica
  [Ss]e publica
  [Tt]ambién publica
@@ -344,20 +278,14 @@
  [Rr]ecords of
 
  # retiro
- retiro definitivo
- Retiro Belgrano
- Retiro Mitre
- Retiro San Martín
-
  Buen Retiro
  Estación Retiro
- Ramal Retiro
  al? retiro
  del? [Rr]etiro
  do Retiro
  [Ee]l [Rr]etiro
  en retiro
- [Ss]u retiro
+ su retiro
  un retiro
 
  # rio
@@ -366,9 +294,6 @@
  Rio Grande do Sul
  Rio Grande do Norte
  Rio Grande Valley
- Rio Haryanto
- Rio Preto
- Rio Verde
  do Rio de Janeiro 	# Incluyo esta completa para machacar la entrada en composed-misspellings
  do Rio
  in Rio
@@ -382,27 +307,18 @@
  Sebastian Ingrosso
 
  # secretaria
- [Cc]omo [Ss]ecretaria
- [Ss]u [Ss]ecretaria
- [Dd]e [Ss]ecretaria
+ como [Ss]ecretaria
+ su secretaria
+ de [Ss]ecretaria
  [Ff]ue [Ss]ecretaria
  y [Ss]ecretaria
- nombrada [Ss]ecretaria
 
  # simon
  Simon and Schuster
  Simon Aspelin
  Simon Cowell
  Simon Fraser
- Simon Gerrans
- Simon Olofsson
- Simon Pegg
- Simon Phillips
- Simon Rattle
- Simon Yates
 
- Anna Simon		# Simon no se acentúa en catalán
- Carly Simon
  Eugène Simon
  Gilles Simon
  G Simon
@@ -412,8 +328,7 @@
 
  # sky
  # Se encuentra también como inmutable en PersonNameFinder y SurnameFinder
- Sky 1
- the [Ss]ky
+ [Tt]he [Ss]ky
 
  # sólo
  # Esta forma no es incorrecta, aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
@@ -434,16 +349,11 @@
  Union of
 
  # version
- version of
- single version
- album version
- accoustic version
+ [Vv]ersion of
 
  # Victor
  Victor Amaya
  Victor Entertainment
- Victor Fleming
- Victor Garber
  Victor Hănescu
  Victor Hugo
  RCA Victor

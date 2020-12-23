@@ -1,29 +1,51 @@
 package es.bvalero.replacer.finder.immutables;
 
 import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class TemplateNameFinderTest {
 
-    @Test
-    void testRegexTemplateName() {
-        String template1 = " Plantilla 1\n";
-        String template2 = "Plantilla\n 2";
-        String template3 = "Plantilla-3";
-        String text = String.format("{{%s| 1 }} {{%s}} {{%s:3}}", template1, template2, template3);
+    private final TemplateNameFinder templateNameFinder = new TemplateNameFinder();
 
-        ImmutableFinder templateNameFinder = new TemplateNameFinder();
+    @ParameterizedTest
+    @CsvSource(
+        value = {
+            "{{ESP}}, ESP",
+            "{{Cita|, Cita",
+            "{{ Cita|, Cita",
+            "'{{Cita\n|', Cita",
+            "'{{\tCita|', Cita",
+            "{{Cita web|, Cita web",
+            "{{Cita_web|, Cita_web",
+        }
+    )
+    void testFindTemplateNames(String text, String name) {
         List<Immutable> matches = templateNameFinder.findList(text);
 
-        Set<String> expected = new HashSet<>(Arrays.asList(template1, template2, template3));
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertEquals(1, matches.size());
+        Assertions.assertEquals(name, matches.get(0).getText());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "{{!}}", "{{=}}", "{{#expr:xxx}}" })
+    void testFindTemplateNamesNonValid(String text) {
+        List<Immutable> matches = templateNameFinder.findList(text);
+
+        Assertions.assertTrue(matches.isEmpty());
+    }
+
+    @Test
+    void testSeveralTemplateNames() {
+        String text = "En {{ESP}}, {{Cita|title=x}} y {{FRA}}.";
+
+        TemplateNameFinder templateNameFinder = new TemplateNameFinder();
+        List<Immutable> matches = templateNameFinder.findList(text);
+
+        Assertions.assertEquals(3, matches.size());
     }
 }

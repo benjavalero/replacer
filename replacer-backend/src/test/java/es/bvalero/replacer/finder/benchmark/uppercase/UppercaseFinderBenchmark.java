@@ -4,7 +4,9 @@ import static org.hamcrest.Matchers.is;
 
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.misspelling.*;
+import es.bvalero.replacer.finder.misspelling.Misspelling;
+import es.bvalero.replacer.finder.misspelling.MisspellingManager;
+import es.bvalero.replacer.finder.misspelling.UppercaseAfterFinder;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaServiceOfflineImpl;
@@ -30,9 +32,9 @@ class UppercaseFinderBenchmark extends BaseFinderBenchmark {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new UppercaseIndexOfFinder(words));
-        finders.add(new UppercaseRegexIterateFinder(words));
-        finders.add(new UppercaseAutomatonIterateFinder(words));
-        finders.add(new UppercaseRegexLookBehindFinder(words));
+        // finders.add(new UppercaseRegexIterateFinder(words)); // Long
+        // finders.add(new UppercaseAutomatonIterateFinder(words)); // Medium
+        // finders.add(new UppercaseRegexLookBehindFinder(words)); // Very long
         finders.add(new UppercaseRegexAlternateFinder(words));
         finders.add(new UppercaseAutomatonAlternateFinder(words));
         finders.add(new UppercaseRegexAlternateLookBehindFinder(words));

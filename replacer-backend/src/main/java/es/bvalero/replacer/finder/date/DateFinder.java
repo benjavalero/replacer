@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.date;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.*;
+import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DateFinder implements ReplacementFinder {
+
     private static final String TYPE_DATE = "Fechas";
     static final String SUBTYPE_DOT_YEAR = "Año con punto";
     static final String SUBTYPE_INCOMPLETE = "Fecha incompleta";
@@ -79,17 +81,17 @@ public class DateFinder implements ReplacementFinder {
     );
 
     @Override
-    public Iterable<Replacement> find(String text, WikipediaLanguage lang) {
-        if (WikipediaLanguage.SPANISH == lang) {
-            return new RegexIterable<>(text, AUTOMATON_UPPERCASE_LONG_DATE, this::convert, this::isValidMatch);
+    public Iterable<Replacement> find(IndexablePage page) {
+        if (WikipediaLanguage.SPANISH == page.getLang()) {
+            return new RegexIterable<>(page, AUTOMATON_UPPERCASE_LONG_DATE, this::convert, this::isValidMatch);
         } else {
             return Collections.emptyList();
         }
     }
 
     @Override
-    public boolean isValidMatch(MatchResult match, String text) {
-        return ReplacementFinder.super.isValidMatch(match, text) && !isValidDate(match.group());
+    public boolean isValidMatch(MatchResult match, IndexablePage page) {
+        return ReplacementFinder.super.isValidMatch(match, page) && !isValidDate(match.group());
     }
 
     private boolean isValidDate(String date) {

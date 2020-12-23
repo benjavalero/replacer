@@ -23,6 +23,7 @@
         <value>twitter</value>
         <value>species</value>  <!-- taxonomy -->
         <value>genus</value>    <!-- taxonomy -->
+        <value>cita</value>
     </util:set>
 
     <!-- These param values should be ignored -->

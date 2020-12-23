@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.apache.commons.collections4.IterableUtils;
 
 class TemplateRegexIteratedFinder implements BenchmarkFinder {
@@ -28,8 +31,9 @@ class TemplateRegexIteratedFinder implements BenchmarkFinder {
     @Override
     public Set<FinderResult> findMatches(String text) {
         Set<FinderResult> matches = new HashSet<>();
+        WikipediaPage page = WikipediaPage.builder().content(text).lang(WikipediaLanguage.getDefault()).build();
         for (Pattern pattern : PATTERNS) {
-            matches.addAll(IterableUtils.toList(new RegexIterable<>(text, pattern, this::convert)));
+            matches.addAll(IterableUtils.toList(new RegexIterable<>(page, pattern, this::convert)));
         }
         return matches;
     }
