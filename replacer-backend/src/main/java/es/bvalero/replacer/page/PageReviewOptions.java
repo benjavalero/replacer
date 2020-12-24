@@ -12,7 +12,7 @@ public class PageReviewOptions {
     String suggestion;
 
     WikipediaLanguage getLang() {
-        return lang == null ? WikipediaLanguage.SPANISH : lang;
+        return lang == null ? WikipediaLanguage.getDefault() : lang;
     }
 
     static PageReviewOptions ofNoType(WikipediaLanguage lang) {
