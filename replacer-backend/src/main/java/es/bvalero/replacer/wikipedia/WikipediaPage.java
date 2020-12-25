@@ -11,6 +11,7 @@ import lombok.With;
 @Value
 @Builder
 public class WikipediaPage implements IndexablePage {
+
     private static final String WIKIPEDIA_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     private static final DateTimeFormatter WIKIPEDIA_DATE_FORMATTER = DateTimeFormatter.ofPattern(
         WIKIPEDIA_DATE_PATTERN
@@ -41,5 +42,10 @@ public class WikipediaPage implements IndexablePage {
 
     static String formatWikipediaTimestamp(LocalDateTime localDateTime) {
         return WIKIPEDIA_DATE_FORMATTER.format(localDateTime);
+    }
+
+    @Override
+    public String toString() {
+        return "WikipediaPage{" + "id=" + id + ", lang=" + lang.getCode() + ", title='" + title + '\'' + '}';
     }
 }
