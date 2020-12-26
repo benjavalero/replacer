@@ -129,7 +129,7 @@ public class TemplateParamFinder implements ImmutableFinder {
         int dot = value.lastIndexOf('.');
         if (dot >= 0) {
             String extension = value.substring(dot + 1);
-            return extension.length() >= 2 && extension.length() <= 4 && FinderUtils.isAsciiLowercase(extension);
+            return extension.length() >= 2 && extension.length() <= 4;
         } else {
             return false;
         }
