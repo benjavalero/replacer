@@ -92,7 +92,7 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
     }
 
     // Return the misspelling related to the given word, or empty if there is no such misspelling.
-    private Optional<Misspelling> findMisspellingByWord(String word, WikipediaLanguage lang) {
+    public Optional<Misspelling> findMisspellingByWord(String word, WikipediaLanguage lang) {
         return Optional.ofNullable(this.misspellingMap.getOrDefault(lang, Collections.emptyMap()).get(word));
     }
 

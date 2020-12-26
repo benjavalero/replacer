@@ -48,6 +48,12 @@ export class ArticleService {
     }
   }
 
+  validateCustomReplacement(replacement: string): Observable<string> {
+    let params: HttpParams = new HttpParams();
+    params = params.append('replacement', replacement);
+    return this.httpClient.get<string>(`${this.baseUrl}/validate`, { params });
+  }
+
   findPageReviewById(pageId: number, type: string, subtype: string, suggestion: string): Observable<PageReview> {
     let params: HttpParams = new HttpParams();
     if (type && subtype) {

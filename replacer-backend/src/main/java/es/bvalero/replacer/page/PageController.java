@@ -67,6 +67,14 @@ public class PageController {
         return pageReviewCustomService.findRandomPageReview(PageReviewOptions.ofCustom(lang, replacement, suggestion));
     }
 
+    @GetMapping(value = "/validate", params = { "replacement" })
+    public Optional<String> validateCustomReplacement(
+        @RequestParam String replacement,
+        @RequestParam WikipediaLanguage lang
+    ) {
+        return pageReviewCustomService.validateCustomReplacement(replacement, lang);
+    }
+
     /* FIND A PAGE REVIEW */
 
     @GetMapping(value = "/{id}")

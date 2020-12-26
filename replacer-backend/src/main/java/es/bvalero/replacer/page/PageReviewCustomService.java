@@ -4,6 +4,8 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.finder.misspelling.MisspellingComposedFinder;
+import es.bvalero.replacer.finder.misspelling.MisspellingSimpleFinder;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
@@ -11,6 +13,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.List;
+import java.util.Optional;
 import javax.annotation.Resource;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +33,12 @@ class PageReviewCustomService extends PageReviewService {
 
     @Autowired
     private ReplacementFindService replacementFindService;
+
+    @Autowired
+    private MisspellingSimpleFinder misspellingSimpleFinder;
+
+    @Autowired
+    private MisspellingComposedFinder misspellingComposedFinder;
 
     @Getter
     @Setter
@@ -117,5 +126,15 @@ class PageReviewCustomService extends PageReviewService {
     void reviewPageReplacements(int pageId, WikipediaLanguage lang, String subtype, String reviewer) {
         // Custom replacements don't exist in the database to be reviewed
         replacementDao.insert(ReplacementEntity.createCustomReviewed(pageId, lang, subtype, reviewer));
+    }
+
+    Optional<String> validateCustomReplacement(String replacement, WikipediaLanguage lang) {
+        if (misspellingSimpleFinder.findMisspellingByWord(replacement, lang).isPresent()) {
+            return Optional.of(misspellingSimpleFinder.getType());
+        } else if (misspellingComposedFinder.findMisspellingByWord(replacement, lang).isPresent()) {
+            return Optional.of(misspellingComposedFinder.getType());
+        } else {
+            return Optional.empty();
+        }
     }
 }

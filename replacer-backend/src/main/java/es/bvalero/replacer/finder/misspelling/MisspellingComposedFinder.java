@@ -65,8 +65,7 @@ public class MisspellingComposedFinder extends MisspellingFinder {
             // We need to perform additional transformations according to the language
             return StreamSupport
                 .stream(
-                    new RegexIterable<>(page, automaton, this::convertMatch, this::isValidMatch)
-                        .spliterator(),
+                    new RegexIterable<>(page, automaton, this::convertMatch, this::isValidMatch).spliterator(),
                     false
                 )
                 .filter(r -> isExistingWord(r.getText(), page.getLang()))
@@ -77,7 +76,7 @@ public class MisspellingComposedFinder extends MisspellingFinder {
     }
 
     @Override
-    String getType() {
+    public String getType() {
         return TYPE_MISSPELLING_COMPOSED;
     }
 }
