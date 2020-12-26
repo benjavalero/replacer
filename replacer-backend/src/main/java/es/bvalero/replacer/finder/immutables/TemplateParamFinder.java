@@ -76,7 +76,7 @@ public class TemplateParamFinder implements ImmutableFinder {
                         return posEquals + 1;
                     }
                 } else {
-                    return startParam;
+                    return posEquals + 1;
                 }
             } else {
                 return startParam;
@@ -91,7 +91,15 @@ public class TemplateParamFinder implements ImmutableFinder {
     }
 
     private int findPosEquals(String text, int start) {
-        return text.indexOf('=', start);
+        for (int i = start; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch == '=') {
+                return i;
+            } else if (!isParamChar(ch)) {
+                return -1;
+            }
+        }
+        return -1;
     }
 
     private int findEndParam(String text, int start) {
@@ -108,17 +116,8 @@ public class TemplateParamFinder implements ImmutableFinder {
             return false;
         }
 
-        // The start of the parameter '|' could be followed by a dash '-' in tables
-        if (param.startsWith("-")) {
-            return false;
-        }
-
-        for (int i = 0; i < param.length(); i++) {
-            if (!isParamChar(param.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
+        // The start of the parameter '|' could be followed by a dash or pipe in tables
+        return !param.startsWith("-") && !param.startsWith("|");
     }
 
     private boolean isParamChar(char ch) {
