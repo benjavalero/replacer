@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.immutables;
 
 import es.bvalero.replacer.finder.ImmutableFinder;
-import es.bvalero.replacer.finder.ImmutableFinderPriority;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,11 +8,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class QuotesFinder extends QuotesAbstractFinder implements ImmutableFinder {
-
-    @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.LOW;
-    }
 
     @Override
     char getStartChar() {

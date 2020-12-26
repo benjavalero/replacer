@@ -4,10 +4,7 @@ import com.jcabi.aspects.Loggable;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
-import es.bvalero.replacer.finder.RegexIterable;
+import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.beans.PropertyChangeEvent;
@@ -73,6 +70,11 @@ public class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListe
         } else {
             return null;
         }
+    }
+
+    @Override
+    public ImmutableFinderPriority getPriority() {
+        return ImmutableFinderPriority.HIGH;
     }
 
     @Override

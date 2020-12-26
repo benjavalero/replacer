@@ -20,7 +20,7 @@ public class CursiveFinder implements ImmutableFinder {
 
     @Override
     public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.MEDIUM;
+        return ImmutableFinderPriority.LOW;
     }
 
     @Override

@@ -105,7 +105,7 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
 
     @Override
     public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.LOW;
+        return ImmutableFinderPriority.MEDIUM;
     }
 
     @Override

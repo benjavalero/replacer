@@ -28,11 +28,6 @@ public class TemplateParamFinder implements ImmutableFinder {
     private List<String> paramValues;
 
     @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.HIGH;
-    }
-
-    @Override
     public int getMaxLength() {
         return 1000;
     }

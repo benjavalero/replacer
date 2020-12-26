@@ -45,7 +45,7 @@ public class TemplateFinder implements ImmutableFinder {
 
     @Override
     public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.MEDIUM;
+        return ImmutableFinderPriority.VERY_HIGH;
     }
 
     @Override

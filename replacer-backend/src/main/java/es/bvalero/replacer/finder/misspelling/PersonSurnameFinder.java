@@ -26,7 +26,7 @@ public class PersonSurnameFinder implements ImmutableFinder {
 
     @Override
     public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.LOW;
+        return ImmutableFinderPriority.HIGH;
     }
 
     @Override

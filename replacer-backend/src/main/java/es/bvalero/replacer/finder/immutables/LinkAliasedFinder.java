@@ -18,7 +18,7 @@ public class LinkAliasedFinder implements ImmutableFinder {
 
     @Override
     public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.HIGH;
+        return ImmutableFinderPriority.LOW;
     }
 
     @Override

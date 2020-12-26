@@ -1,9 +1,6 @@
 package es.bvalero.replacer.finder.immutables;
 
-import es.bvalero.replacer.finder.Immutable;
-import es.bvalero.replacer.finder.ImmutableFinder;
-import es.bvalero.replacer.finder.LinearIterable;
-import es.bvalero.replacer.finder.LinearMatcher;
+import es.bvalero.replacer.finder.*;
 import es.bvalero.replacer.page.IndexablePage;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +18,11 @@ public class CommentFinder implements ImmutableFinder {
 
     private static final String START_COMMENT = "<!--";
     private static final String END_COMMENT = "-->";
+
+    @Override
+    public ImmutableFinderPriority getPriority() {
+        return ImmutableFinderPriority.LOW;
+    }
 
     @Override
     public int getMaxLength() {

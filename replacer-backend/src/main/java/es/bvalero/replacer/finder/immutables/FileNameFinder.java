@@ -27,11 +27,6 @@ public class FileNameFinder implements ImmutableFinder {
     private List<String> fileSpaces;
 
     @Override
-    public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.MEDIUM;
-    }
-
-    @Override
     public int getMaxLength() {
         return 200;
     }

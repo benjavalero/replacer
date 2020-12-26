@@ -30,7 +30,7 @@ public class PersonNameFinder implements ImmutableFinder {
 
     @Override
     public ImmutableFinderPriority getPriority() {
-        return ImmutableFinderPriority.LOW;
+        return ImmutableFinderPriority.HIGH;
     }
 
     @Override
