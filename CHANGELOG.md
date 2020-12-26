@@ -1,5 +1,11 @@
 # Versions
 
+## 2.7.12 (26 Dec 2020)
+- Improve performance of several immutable finders
+- Support custom replacements with replacement in uppercase and suggestion in lowercase
+- Simplify custom replacement form
+- Redirect from custom replacement if the replacement is of a known type
+
 ## 2.7.11 (7 Dec 2020)
 - Internal improvements in log traces
 
