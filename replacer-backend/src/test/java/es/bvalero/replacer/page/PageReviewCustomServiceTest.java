@@ -86,6 +86,7 @@ class PageReviewCustomServiceTest {
             .when(
                 wikipediaService.getPageIdsByStringMatch(
                     Mockito.anyString(),
+                    Mockito.anyBoolean(),
                     Mockito.anyInt(),
                     Mockito.anyInt(),
                     Mockito.any(WikipediaLanguage.class)
@@ -124,6 +125,7 @@ class PageReviewCustomServiceTest {
             .when(
                 wikipediaService.getPageIdsByStringMatch(
                     Mockito.anyString(),
+                    Mockito.anyBoolean(),
                     Mockito.anyInt(),
                     Mockito.anyInt(),
                     Mockito.any(WikipediaLanguage.class)
@@ -153,6 +155,7 @@ class PageReviewCustomServiceTest {
             .verify(wikipediaService, Mockito.times(2))
             .getPageIdsByStringMatch(
                 Mockito.anyString(),
+                Mockito.anyBoolean(),
                 Mockito.anyInt(),
                 Mockito.anyInt(),
                 Mockito.any(WikipediaLanguage.class)

@@ -123,7 +123,7 @@ public class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class))).thenReturn(response);
 
-        PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch("", 0, 100, WikipediaLanguage.SPANISH);
+        PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch("", false, 0, 100, WikipediaLanguage.SPANISH);
         Assert.assertEquals(10, pageIds.getTotal());
     }
 
@@ -134,7 +134,7 @@ public class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito.when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class))).thenReturn(response);
 
-        PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch("", 0, 100, WikipediaLanguage.SPANISH);
+        PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch("", false, 0, 100, WikipediaLanguage.SPANISH);
         Assert.assertTrue(pageIds.isEmpty());
     }
 
@@ -199,14 +199,14 @@ public class WikipediaServiceTest {
     public void testBuildSearchExpressionCaseSensitive() {
         String text = "en Abril";
         String expected = "\"en Abril\" insource:/\"en Abril\"/";
-        Assert.assertEquals(expected, wikipediaService.buildSearchExpression(text));
+        Assert.assertEquals(expected, wikipediaService.buildSearchExpression(text, true));
     }
 
     @Test
     public void testBuildSearchExpressionCaseInsensitive() {
         String text = "en abril";
         String expected = "\"en abril\"";
-        Assert.assertEquals(expected, wikipediaService.buildSearchExpression(text));
+        Assert.assertEquals(expected, wikipediaService.buildSearchExpression(text, false));
     }
 
     @Test
@@ -289,7 +289,7 @@ public class WikipediaServiceTest {
         Assert.assertTrue(StringUtils.isNotBlank(wikipediaServiceOffline.getFalsePositiveListPageContent(WikipediaLanguage.SPANISH)));
         Assert.assertEquals(Integer.valueOf(1), wikipediaServiceOffline.getPageByTitle("", WikipediaLanguage.SPANISH).map(WikipediaPage::getId).orElse(0));
         Assert.assertFalse(wikipediaServiceOffline.getPageById(1, WikipediaLanguage.SPANISH).map(WikipediaPage::getSection).isPresent());
-        Assert.assertFalse(wikipediaServiceOffline.getPageIdsByStringMatch("", 0, 100, WikipediaLanguage.SPANISH).isEmpty());
+        Assert.assertFalse(wikipediaServiceOffline.getPageIdsByStringMatch("", false, 0, 100, WikipediaLanguage.SPANISH).isEmpty());
         Assert.assertTrue(wikipediaServiceOffline.getPageSections(1, WikipediaLanguage.SPANISH).isEmpty());
         Assert.assertEquals(2, wikipediaServiceOffline.getPagesByIds(Arrays.asList(1, 2), WikipediaLanguage.SPANISH).size());
     }

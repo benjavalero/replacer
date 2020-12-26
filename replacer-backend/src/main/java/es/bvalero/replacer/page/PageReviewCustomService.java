@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementDao;
@@ -43,6 +44,10 @@ class PageReviewCustomService extends PageReviewService {
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         try {
+            boolean caseSensitive =
+                FinderUtils.containsUppercase(options.getSubtype()) ||
+                FinderUtils.containsUppercase(options.getSuggestion());
+
             int offset = 0;
             List<Integer> reviewedIds = replacementDao.findPageIdsReviewedByCustomTypeAndSubtype(
                 options.getLang(),
@@ -52,6 +57,7 @@ class PageReviewCustomService extends PageReviewService {
             // We need a List in order to use "removeIf"
             PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
                 options.getSubtype(),
+                caseSensitive,
                 offset,
                 CACHE_SIZE,
                 options.getLang()
@@ -66,6 +72,7 @@ class PageReviewCustomService extends PageReviewService {
                     pageIds =
                         wikipediaService.getPageIdsByStringMatch(
                             options.getSubtype(),
+                            caseSensitive,
                             offset,
                             CACHE_SIZE,
                             options.getLang()

@@ -3,7 +3,6 @@ package es.bvalero.replacer.wikipedia;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.finder.FinderUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Profile("!offline")
 class WikipediaServiceImpl implements WikipediaService {
+
     private static final String EDIT_SUMMARY =
         "Correcciones ortográficas con [[Usuario:Benjavalero/Replacer|Replacer]] (herramienta en línea de revisión de errores)";
     private static final int MAX_PAGES_REQUESTED = 50;
@@ -236,23 +236,33 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Override
     @Loggable(value = Loggable.DEBUG)
-    public PageSearchResult getPageIdsByStringMatch(String text, int offset, int limit, WikipediaLanguage lang)
-        throws ReplacerException {
+    public PageSearchResult getPageIdsByStringMatch(
+        String text,
+        boolean caseSensitive,
+        int offset,
+        int limit,
+        WikipediaLanguage lang
+    ) throws ReplacerException {
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
-            buildPageIdsByStringMatchRequestParams(text, offset, limit),
+            buildPageIdsByStringMatchRequestParams(text, caseSensitive, offset, limit),
             lang
         );
         return extractPageIdsFromSearchJson(apiResponse);
     }
 
-    private Map<String, String> buildPageIdsByStringMatchRequestParams(String text, int offset, int limit) {
+    private Map<String, String> buildPageIdsByStringMatchRequestParams(
+        String text,
+        boolean caseSensitive,
+        int offset,
+        int limit
+    ) {
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, VALUE_QUERY);
         params.put("list", "search");
         params.put("utf8", "1");
         params.put("srlimit", Integer.toString(limit));
         params.put("sroffset", Integer.toString(offset));
-        params.put("srsearch", buildSearchExpression(text));
+        params.put("srsearch", buildSearchExpression(text, caseSensitive));
         params.put(
             "srnamespace",
             StringUtils.join(
@@ -272,9 +282,9 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Loggable(value = Loggable.DEBUG)
     @VisibleForTesting
-    String buildSearchExpression(String text) {
+    String buildSearchExpression(String text, boolean caseSensitive) {
         String quoted = String.format("\"%s\"", text);
-        if (FinderUtils.containsUppercase(text)) {
+        if (caseSensitive) {
             // Case-sensitive search with a regex
             quoted = String.format("%s insource:/%s/", quoted, quoted);
         }
@@ -302,8 +312,7 @@ class WikipediaServiceImpl implements WikipediaService {
         String currentTimestamp,
         WikipediaLanguage lang,
         OAuth1AccessToken accessToken
-    )
-        throws ReplacerException {
+    ) throws ReplacerException {
         EditToken editToken = getEditToken(pageId, lang, accessToken);
         // Pre-check of edit conflicts
         if (currentTimestamp.compareTo(editToken.getTimestamp()) <= 0) {

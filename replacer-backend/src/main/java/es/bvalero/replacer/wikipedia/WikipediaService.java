@@ -28,8 +28,13 @@ public interface WikipediaService {
     Optional<WikipediaPage> getPageByIdAndSection(int pageId, WikipediaSection section, WikipediaLanguage lang)
         throws ReplacerException;
 
-    PageSearchResult getPageIdsByStringMatch(String text, int offset, int limit, WikipediaLanguage lang)
-        throws ReplacerException;
+    PageSearchResult getPageIdsByStringMatch(
+        String text,
+        boolean caseSensitive,
+        int offset,
+        int limit,
+        WikipediaLanguage lang
+    ) throws ReplacerException;
 
     void savePageContent(
         int pageId,
@@ -38,6 +43,5 @@ public interface WikipediaService {
         String currentTimestamp,
         WikipediaLanguage lang,
         OAuth1AccessToken accessToken
-    )
-        throws ReplacerException;
+    ) throws ReplacerException;
 }

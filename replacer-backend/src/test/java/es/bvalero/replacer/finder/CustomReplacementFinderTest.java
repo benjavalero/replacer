@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 class CustomReplacementFinderTest {
 
     @Test
-    void testCustomReplacement() {
+    void testCompleteWord() {
         String replacement = "x";
         String suggestion = "y";
-        String text = String.format("Ax %s.", replacement);
+        String text = "Ax x.";
 
         CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
         List<Replacement> replacements = customReplacementFinder.findList(text);
@@ -18,10 +18,11 @@ class CustomReplacementFinderTest {
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(3, replacements.get(0).getStart());
         Assertions.assertEquals(replacement, replacements.get(0).getText());
+        Assertions.assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
-    void testCustomReplacementLowerCaseToUpperCase() {
+    void testLowerToUpperCase() {
         String replacement = "parís";
         String suggestion = "París";
         String text = "En parís París.";
@@ -30,57 +31,51 @@ class CustomReplacementFinderTest {
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assertions.assertEquals(1, replacements.size());
-        Assertions.assertEquals(3, replacements.get(0).getStart());
         Assertions.assertEquals(replacement, replacements.get(0).getText());
         Assertions.assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
-    void testCustomReplacementUpperCaseToLowerCase() {
+    void testUpperToLowerCase() {
         String replacement = "Enero";
         String suggestion = "enero";
-        String text = "En Enero enero.";
+        String text = "En enero Enero.";
 
         CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assertions.assertEquals(1, replacements.size());
-        Assertions.assertEquals(3, replacements.get(0).getStart());
         Assertions.assertEquals(replacement, replacements.get(0).getText());
         Assertions.assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
-    void testCustomReplacementUpperCaseToUpperCase() {
-        String replacement = "Mas";
-        String suggestion = "Más";
-        String text = "En Mas Más mas más.";
+    void testUpperToUpperCase() {
+        String replacement = "Taiwan";
+        String suggestion = "Taiwán";
+        String text = "En taiwan Taiwan taiwán Taiwán.";
 
         CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assertions.assertEquals(1, replacements.size());
-        Assertions.assertEquals(3, replacements.get(0).getStart());
         Assertions.assertEquals(replacement, replacements.get(0).getText());
         Assertions.assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
     }
 
     @Test
-    void testCustomReplacementLowerCaseToLowerCase() {
+    void testLowerToLowerCase() {
         String replacement = "mas";
         String suggestion = "más";
-        String text = "En mas más Mas Más.";
+        String text = "En mas Mas más Más.";
 
         CustomReplacementFinder customReplacementFinder = new CustomReplacementFinder(replacement, suggestion);
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assertions.assertEquals(2, replacements.size());
 
-        Assertions.assertEquals(3, replacements.get(0).getStart());
         Assertions.assertEquals(replacement, replacements.get(0).getText());
         Assertions.assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
-
-        Assertions.assertEquals(11, replacements.get(1).getStart());
         Assertions.assertEquals(FinderUtils.setFirstUpperCase(replacement), replacements.get(1).getText());
         Assertions.assertEquals(
             FinderUtils.setFirstUpperCase(suggestion),
