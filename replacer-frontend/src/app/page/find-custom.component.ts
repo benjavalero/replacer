@@ -10,11 +10,11 @@ import { AlertService } from '../alert/alert.service';
   styleUrls: []
 })
 export class FindCustomComponent implements OnInit {
-
   replacement: string;
   suggestion: string;
+  caseSensitive: boolean;
 
-  constructor(private router: Router, private alertService: AlertService, private titleService: Title) { }
+  constructor(private router: Router, private alertService: AlertService, private titleService: Title) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Reemplazo personalizado');
@@ -22,7 +22,18 @@ export class FindCustomComponent implements OnInit {
   }
 
   onSubmit() {
-    this.router.navigate([`random/Personalizado/${this.replacement.trim()}/${this.suggestion.trim()}`]);
-  }
+    var r = this.replacement.trim();
+    var s = this.suggestion.trim();
+    if (!this.caseSensitive) {
+      r = r.toLocaleLowerCase('es');
+      s = s.toLocaleLowerCase('es');
+    }
 
+    this.alertService.clearAlertMessages();
+    if (r == s) {
+      this.alertService.addErrorMessage('El texto a reemplazar y el sugerido son iguales');
+    } else {
+      this.router.navigate([`random/Personalizado/${r}/${s}`]);
+    }
+  }
 }

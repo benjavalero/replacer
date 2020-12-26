@@ -1,12 +1,5 @@
 <h3>Reemplazo personalizado</h3>
 
-<div class="container mb-3">
-  <div class="alert alert-warning text-center" role="alert">
-    <strong>Nota</strong>: Si el texto a reemplazar comienza por mayúscula, se buscará tal cual.
-    Si comienza por minúscula, esto no se tendrá en cuenta.
-  </div>
-</div>
-
 <form (ngSubmit)="onSubmit()" class="mt-2">
   <div class="form-group row">
     <label for="text-replacement" class="col-sm-2 col-form-label">Texto a reemplazar:</label>
@@ -22,8 +15,14 @@
         [(ngModel)]="suggestion" autocomplete="off" />
     </div>
   </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" [(ngModel)]="caseSensitive" id="case-sensitive" name="case-sensitive">
+    <label class="form-check-label" for="case-sensitive">
+      Respetar mayúsculas
+    </label>
+  </div>
 
-  <button type="submit" class="btn btn-primary" id="button-search">
+  <button type="submit" class="btn btn-primary mt-2" id="button-search">
     Buscar
   </button>
 </form>
