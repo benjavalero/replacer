@@ -16,6 +16,7 @@ CREATE TABLE replacement2 (
 
 -- To find random pages and count the group replacements
 CREATE INDEX idx_count ON replacement2 (lang, reviewer, type, subtype);
+CREATE INDEX idx_count_no_type ON replacement2 (lang, reviewer);
 
 -- Statistics
 CREATE INDEX idx_reviewer ON replacement2 (reviewer);
