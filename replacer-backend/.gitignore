@@ -40,3 +40,4 @@ bin
 *.swp
 *.bak
 *.db
+*.sql
