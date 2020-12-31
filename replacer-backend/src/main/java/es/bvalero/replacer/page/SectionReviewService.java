@@ -148,6 +148,9 @@ class SectionReviewService {
     }
 
     private boolean validatePageReplacement(PageReplacement replacement, String text) {
+        if (replacement.getEnd() > text.length()) {
+            return false;
+        }
         return replacement.getText().equals(text.substring(replacement.getStart(), replacement.getEnd()));
     }
 
