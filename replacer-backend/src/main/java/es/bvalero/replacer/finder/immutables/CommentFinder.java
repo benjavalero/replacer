@@ -54,11 +54,8 @@ public class CommentFinder implements ImmutableFinder {
                 return endCommentComplete;
             } else {
                 // Comment not closed. Not worth keep on searching.
-                Immutable immutable = Immutable.of(
-                    startComment,
-                    text.substring(startComment, startComment + 100),
-                    this
-                );
+                int end = Math.min(startComment + 100, text.length());
+                Immutable immutable = Immutable.of(startComment, text.substring(startComment, end), this);
                 logWarning(immutable, page, LOGGER, "Comment not closed");
                 return -1;
             }

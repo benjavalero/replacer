@@ -55,7 +55,8 @@ public class CategoryFinder implements ImmutableFinder {
                 return endMatch;
             } else {
                 // Category not closed. Not worth keep on searching.
-                Immutable immutable = Immutable.of(startCategory, text.substring(startCategory, startCategory + 100), this);
+                int end = Math.min(startCategory + 100, text.length());
+                Immutable immutable = Immutable.of(startCategory, text.substring(startCategory, end), this);
                 logWarning(immutable, page, LOGGER, "Category not closed");
                 return -1;
             }
