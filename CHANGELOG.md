@@ -1,5 +1,8 @@
 # Versions
 
+## 2.7.13 (1 Jann 2021)
+- Escape characters in custom replacements
+
 ## 2.7.12 (26 Dec 2020)
 - Improve performance of several immutable finders
 - Support custom replacements with replacement in uppercase and suggestion in lowercase
