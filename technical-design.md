@@ -112,15 +112,16 @@ The sub-package `immutables` contain the generic immutable finders, meant to be 
 
 The tool implements the following generic immutable finders. We can add a priority to the immutable finders, as some immutables are more _useful_ than others, and we want them to be used before.
 - **CompleteTagFinder**. Find some XML tags and all the content within, even other tags, e.g. `<code>An <span>example</span>.</code>`. The list of tags is configured in `complete-tags.xml`. Even with several tags taken into account, the faster approach is the linear search in one-pass.
-- **TemplateParamFinder**. Find template parameters, e.g. `param` in `{{Template|param=value}}`. For some specific parameters (see `template-param.xml`), we include in the result also the value, which is usually a taxonomy, a Commons category, etc. Finally, we include also the value if it seems like a file or a domain.
+- **CompleteTemplateFinder**. Find template-related immutables.
+  - Find template names, e.g. `Bandera` in `{{Bandera|España}}`
+  - Find some complete templates, even with nested templates, e.g. `{{Cite|A cite}}`. The list of template names is configured in `template-names.xml`.
+  - Find template parameters, e.g. `param` in `{{Template|param=value}}`. For some specific parameters (see `template-param.xml`), we include in the result also the value, which is usually a taxonomy, a Commons category, etc. Finally, we include also the value if it seems like a file or a domain.
 - **LinkAliasedFinder**. Find the first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`. It also finds categories, files, etc.
 - **CursiveFinder**.  * Find text in cursive and bold, e.g. `''cursive''` in `This is a ''cursive'' example`. It also finds text starting with the simple quotes and ending with a new line.
 - **QuotesFinder**, **QuotesTypographicFinder** and **QuotesAngularFinder**. Find text in quotes, e.g. `"text"`, `“text”` or `«text»`. The text may include new lines.
 - **UrlFinder**. Find URLs, e.g. `https://www.google.es`
 - **FileNameFinder**. Find filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`
 - **CategoryFinder**. Find categories, e.g. `[[Categoría:España]]`
-- **TemplateNameFinder**. Find template names, e.g. `Bandera` in `{{Bandera|España}}`
-- **TemplateFinder**. Find some complete templates, even with (one-level) nested templates, e.g. `{{Cite|A cite}}`. The list of template names is configured in `template-names.xml`.
 - **XmlTagFinder**. Find XML tags, e.g. `<span>` or `<br />`
 - **CommentFinder**. Find XML comments, e.g. `<!-- A comment -->`
 - **LinkSuffixedFinder**. Find links with suffix, e.g. `[[brasil]]eño`

@@ -1,12 +1,18 @@
 package es.bvalero.replacer.finder;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.MatchResult;
 import lombok.ToString;
 
 @ToString
 public class LinearMatcher implements MatchResult {
-    private String text;
-    private int start;
+
+    private final String text;
+    private final int start;
+
+    // Use groups to implement nested matches
+    private final List<LinearMatcher> groups = new ArrayList<>();
 
     private LinearMatcher(String text, int start) {
         this.text = text;
@@ -17,6 +23,10 @@ public class LinearMatcher implements MatchResult {
         return new LinearMatcher(text, start);
     }
 
+    public void addGroups(List<LinearMatcher> groups) {
+        this.groups.addAll(groups);
+    }
+
     @Override
     public int start() {
         return this.start;
@@ -24,7 +34,7 @@ public class LinearMatcher implements MatchResult {
 
     @Override
     public int start(int group) {
-        return this.start();
+        return this.groups.get(group).start();
     }
 
     @Override
@@ -34,7 +44,7 @@ public class LinearMatcher implements MatchResult {
 
     @Override
     public int end(int group) {
-        return this.end();
+        return this.groups.get(group).end();
     }
 
     @Override
@@ -44,11 +54,11 @@ public class LinearMatcher implements MatchResult {
 
     @Override
     public String group(int group) {
-        return this.group();
+        return this.groups.get(group).group();
     }
 
     @Override
     public int groupCount() {
-        return 0;
+        return this.groups.size();
     }
 }

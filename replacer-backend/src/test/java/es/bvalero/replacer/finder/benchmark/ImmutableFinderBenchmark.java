@@ -43,10 +43,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
         QuotesAngularFinder.class,
         QuotesFinder.class,
         QuotesTypographicFinder.class,
-        TemplateFinder.class,
-        TemplateNameFinder.class,
-        TemplateParamFinder.class,
-        TemplateFinder.class,
+        CompleteTemplateFinder.class,
         MisspellingManager.class,
         UppercaseAfterFinder.class,
         UrlFinder.class,
@@ -132,8 +129,6 @@ class ImmutableFinderBenchmark extends BaseFinderBenchmark {
         finders.add(new UrlFinder());
         finders.add(new XmlTagFinder());
         finders.add(new CompleteTagFinder());
-        finders.add(new TemplateNameFinder());
-        finders.add(new TemplateParamFinder());
         finders.add(new QuotesFinder());
         finders.add(new QuotesTypographicFinder());
         finders.add(new QuotesAngularFinder());
