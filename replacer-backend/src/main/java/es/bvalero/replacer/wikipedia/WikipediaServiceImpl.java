@@ -283,6 +283,9 @@ class WikipediaServiceImpl implements WikipediaService {
     @Loggable(value = Loggable.DEBUG)
     @VisibleForTesting
     String buildSearchExpression(String text, boolean caseSensitive) {
+        // Search directly in the source is very expensive
+        // Wikipedia recommends searching the term as usual
+        // and then narrow the results with "insource"
         String quoted = String.format("\"%s\"", text);
         if (caseSensitive) {
             // Case-sensitive search with a regex
