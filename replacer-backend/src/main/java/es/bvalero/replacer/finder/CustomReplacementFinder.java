@@ -1,36 +1,39 @@
 package es.bvalero.replacer.finder;
 
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
 
 public class CustomReplacementFinder implements ReplacementFinder {
 
     private final String replacement;
     private final String suggestion;
-    private final RunAutomaton automaton;
+    private final Pattern pattern;
 
     public CustomReplacementFinder(String replacement, String suggestion) {
         this.replacement = replacement;
         this.suggestion = suggestion;
-        this.automaton = buildCustomRegex(this.replacement, this.suggestion);
+        this.pattern = buildCustomRegex(this.replacement, this.suggestion);
     }
 
     @Override
     public Iterable<Replacement> find(IndexablePage page) {
-        return new RegexIterable<>(page, automaton, this::convertMatch, this::isValidMatch);
+        return new RegexIterable<>(page, pattern, this::convertMatch, this::isValidMatch);
     }
 
-    private RunAutomaton buildCustomRegex(String replacement, String suggestion) {
-        String regex = FinderUtils.startsWithLowerCase(replacement) && FinderUtils.startsWithLowerCase(suggestion)
-            ? FinderUtils.setFirstUpperCaseClass(replacement)
-            : replacement;
-        String escapedRegex = FinderUtils.escapeRegexCharacters(regex);
-        return new RunAutomaton(new RegExp(escapedRegex).toAutomaton());
+    private Pattern buildCustomRegex(String replacement, String suggestion) {
+        // If both the replacement and the suggestion start with lowercase
+        // we consider the regex to be case-insensitive
+        boolean caseInsensitive =
+            FinderUtils.startsWithLowerCase(replacement) && FinderUtils.startsWithLowerCase(suggestion);
+        if (caseInsensitive) {
+            return Pattern.compile(Pattern.quote(replacement), Pattern.CASE_INSENSITIVE);
+        } else {
+            return Pattern.compile(Pattern.quote(replacement));
+        }
     }
 
     private Replacement convertMatch(MatchResult matcher) {

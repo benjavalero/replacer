@@ -117,8 +117,4 @@ public class FinderUtils {
         int limitRight = Math.min(text.length() - 1, end + threshold);
         return text.substring(limitLeft, limitRight);
     }
-
-    static String escapeRegexCharacters(String regex) {
-        return regex.replace(".", "\\.");
-    }
 }
