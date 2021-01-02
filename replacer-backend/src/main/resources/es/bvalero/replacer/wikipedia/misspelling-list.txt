@@ -131,6 +131,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  acceptación||aceptación
  accesit||accésit
  accion||acción
+ acciónes||acciones
  accra||Acra (capital de Ghana)
  accsesorio||accesorio
  accsesorios||accesorios
@@ -741,6 +742,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  alrdedor||alrededor
  alredededor||alrededor
  alredededores||alrededores
+ alredor||alrededor
  alrrededor||alrededor
  alrrededores||alrededores
  als||las, alas
@@ -3404,6 +3406,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  centripetos||centrípetos
  centroamerica||Centroamérica
  centroamérica|cs|Centroamérica
+ centroaméricana||centroamericana
+ centroaméricanas||centroamericanas
+ centroaméricano||centroamericano
+ centroaméricanos||centroamericanos
  centroeuropa|cs|Centroeuropa
  centupla||céntupla
  centuplas||céntuplas
@@ -6174,8 +6180,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  dígital||digital
  digito||dígito (sustantivo), digito (verbo, 1.ª persona), digitó (verbo, 3.ª persona)
  digitos||dígitos
- digrafo||dígrafo
- digrafos||dígrafos
+ digrafo||dígrafo (secuencia de dos letras), digrafo (grafo dirigido)
+ digrafos||dígrafos (secuencia de dos letras), digrafos (grafo dirigido)
  digresion||digresión
  dijistes||dijiste
  dijó||dijo
@@ -6208,9 +6214,13 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  dioxido||dióxido
  dioxidos||dióxidos
  diplomatica||diplomática
+ diplómatica||diplomática
  diplomaticas||diplomáticas
+ diplómaticas||diplomáticas
  diplomatico||diplomático
+ diplómatico||diplomático
  diplomaticos||diplomáticos
+ diplómaticos||diplomáticos
  diponible||disponible
  diponibles||disponibles
  diptera|cs|díptera
@@ -10447,6 +10457,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  ideologicas||ideológicas
  ideologico||ideológico
  ideologicos||ideológicos
+ ideosincracia||idiosincrasia
+ ideosincracias||idiosincrasias
+ ideosincrasia||idiosincrasia
+ ideosincrasias||idiosincrasias
  idetnificada||identificada
  idetnificadas||identificadas
  idetnificado||identificado
@@ -10455,6 +10469,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  idiología||ideología
  idiologias||ideologías
  idiologías||ideologías
+ idiosincracia||idiosincrasia
+ idiosincracias||idiosincrasias
  idolatria||idolatría
  idolatrias||idolatrías
  idolatrica||idolátrica
@@ -14656,6 +14672,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  perdon||perdón
  perdónes||perdones
  peregrinacion||peregrinación
+ perenifolia||perennifolia
+ perenifolias||perennifolias
+ perenifolio||perennifolio
+ perenifolios||perennifolios
  Perez||Pérez
  pérez|cs|Pérez
  perfecciono||perfeccionó (3.ª persona), perfecciono (1.ª persona)
@@ -16714,7 +16734,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  reusaron||rehusaron
  reuso||rehúso
  reusó||rehusó
- reúso||rehúso
+ reúso||reúso (sustantivo, reutilización), rehúso (verbo)
  reval|cs|Reval
  revaluacion||revaluación
  revaluandola||revaluándola
@@ -17326,8 +17346,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  sextagesimo||sextagésimo
  sextagesimos||sextagésimos
  sextupla||séxtupla
- sextuple||séxtuplo, séxtupla
- séxtuple||séxtuplo, séxtupla
+ sextuple||séxtuple
  sextuplo||séxtuplo
  sg||s (símbolo del segundo en el Sistema Internacional; «sg» o «seg» no son abreviaturas oficiales)
  sguiente||siguiente
@@ -17778,6 +17797,10 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  sublebaciones||sublevaciones
  sublevacion||sublevación
  sublimacion||sublimación
+ subperenifolia||subperennifolia
+ subperenifolias||subperennifolias
+ subperenifolio||subperennifolio
+ subperenifolios||subperennifolios
  subrgupo||subgrupo
  subrgupos||subgrupos
  subrraya||subraya

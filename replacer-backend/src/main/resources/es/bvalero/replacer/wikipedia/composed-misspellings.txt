@@ -1,5 +1,8 @@
- 1 sólo||un solo
+ 1 sólo||un solo, Un solo
+ a demás||además (adverbio)
+ a el||al, a él, a El
  a mas||a más
+ a parte||a parte (locución), aparte (adjetivo, sustantivo, adverbio o verbo)
  Administración Publica|cs|Administración Pública
  Alberto Del Río|cs|Alberto Del Rio (nombre comercial del luchador, sin tilde)
  Angel Nieto|cs|Ángel Nieto (piloto español)
@@ -14,6 +17,8 @@
  aun,|cs|aún,
  Carlos Ménem|cs|Carlos Menem
  con mas||con más
+ darse cuenta que||darse cuenta de que
+ de el||del, de él, de El, dé el, dé él
  de mas||de más
  desarrollo un||desarrolló un (verbo)
  Educación Publica|cs|Educación Pública
@@ -22,6 +27,7 @@
  en el qué||en el que
  en la qué||en la que
  entorno a||en torno a (locución adverbial)
+ entre si||entre sí (pronombre), entre si (conjunción)
  es mas||es más
  ésta área||esta área
  ésta canción||esta canción
@@ -31,6 +37,7 @@
  ésta especie||esta especie
  ésta estación||esta estación
  ésta etapa||esta etapa
+ ésta información||esta información
  ésta línea||esta línea
  ésta localidad||esta localidad
  ésta manera||esta manera
@@ -39,6 +46,7 @@
  ésta ocasión||esta ocasión
  ésta parte||esta parte
  ésta película||esta película
+ ésta población||esta población
  ésta producción||esta producción
  ésta región||esta región
  ésta serie||esta serie
@@ -79,19 +87,21 @@
  Jose Maria|cs|José María (nombre propio español)
  Jose María|cs|José María (nombre propio español)
  la mas||la más
+ la practica||la practica (verbo), la práctica (sustantivo)
  la primer||la primera, el primero, lo primero
  la version||la versión
  las mas||las más
  lo mas||lo más
  los mas||los más
  mal entendido||mal entendido (adjetivo), malentendido (sustantivo)
+ mas adelante||más adelante
  mas allá||más allá
  mas alta||más alta
  mas bien||más bien
  mas conocida||más conocida
  mas conocido||más conocido
- mas de||más de
- mas del||más del
+ mas de|cs|más de
+ mas del|cs|más del
  mas destacados||más destacados
  mas fuerte||más fuerte
  mas grande||más grande
@@ -109,6 +119,7 @@
  Nicolas de Bari|cs|Nicolás de Bari
  Nicolas Maduro|cs|Nicolás Maduro
  o mas||o más
+ opera prima|cs|ópera prima (en español)
  opinión publica||opinión pública
  Parque Nacional|cs|parque nacional
  Parque Natural|cs|parque natural
@@ -116,6 +127,10 @@
  Primera Division|cs|Primera División
  que mas||que más
  Ramón Llull|cs|Ramon Llull
+ relacionada a||relacionada con
+ relacionadas a||relacionadas con
+ relacionado a||relacionado con
+ relacionados a||relacionados con
  Rio 2016|cs|Río 2016 (Juegos Olímpicos de Verano)
  Rio Claro|cs|Río Claro (región o río en varios países de lengua española y Brasil), Rio Claro (en portugués)
  Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
@@ -125,13 +140,17 @@
  Santa Barbara|cs|Santa Bárbara (localidad o región en varios países de lengua española y EE. UU.), Santa Barbara (en inglés)
  SD Éibar|cs|SD Eibar
  S. D. Éibar|cs|S. D. Eibar
- S.D.Éibar|cs|S. D. Eibar
+ S.D. Éibar|cs|S. D. Eibar
  se anuncio||se anunció
  se cambio||se cambió
  se caso||se casó
  se continuo||se continuó
  se desarrollo||se desarrolló
  se desempeño||se desempeñó
+ se da cuenta que||se da cuenta de que
+ se dan cuenta que||se dan cuenta de que
+ se dieron cuenta que||se dieron cuenta de que
+ se dio cuenta que||se dio cuenta de que
  se encuentro||se encuentra (presente), se encontró (pretérito)
  se fundo||se fundó
  se jugo||se jugó
