@@ -67,7 +67,7 @@ abstract class QuotesAbstractFinder implements ImmutableFinder {
                 }
 
                 if (
-                    QUOTE_CHARS.contains(innerText.charAt(0)) ||
+                    QUOTE_CHARS.contains(innerText.charAt(0)) &&
                     QUOTE_CHARS.contains(innerText.charAt(innerText.length() - 1))
                 ) {
                     logWarning(convert(linearMatcher), page, LOGGER, "Redundant quotes");
