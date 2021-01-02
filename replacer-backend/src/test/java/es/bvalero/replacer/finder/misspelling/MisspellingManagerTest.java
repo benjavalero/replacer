@@ -18,6 +18,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class MisspellingManagerTest {
+
     @Mock
     private WikipediaService wikipediaService;
 
@@ -55,26 +56,6 @@ class MisspellingManagerTest {
     }
 
     @Test
-    void testParseValidMisspellingWords() {
-        String misspellingListText =
-            " aguila||águila\n" +
-            " m2|cs|m²\n" + // Valid with numbers
-            " Castilla-León||Castilla y León\n" + // Valid with dashes
-            " CD's||CD\n" + // Valid with single quotes
-            " n°||n.º\n" + // Not valid with degree symbol
-            " nº||n.º\n" + // Not valid with superscript
-            " cm.||cm\n"; // Valid with dots
-
-        Collection<Misspelling> misspellings = misspellingManager.parseItemsText(misspellingListText);
-        Assertions.assertEquals(5, misspellings.size());
-        Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("aguila", "águila")));
-        Assertions.assertTrue(misspellings.contains(Misspelling.of("m2", true, "m²")));
-        Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("Castilla-León", "Castilla y León")));
-        Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("CD's", "CD")));
-        Assertions.assertTrue(misspellings.contains(Misspelling.ofCaseInsensitive("cm.", "cm")));
-    }
-
-    @Test
     void testDeleteObsoleteMisspellings() {
         Misspelling misspelling1 = Misspelling.ofCaseInsensitive("A", "B");
         Misspelling misspelling2 = Misspelling.ofCaseInsensitive("B", "C");
@@ -84,11 +65,7 @@ class MisspellingManagerTest {
 
         Mockito
             .verify(replacementDao, Mockito.times(0))
-            .deleteToBeReviewedBySubtype(
-                Mockito.any(WikipediaLanguage.class),
-                Mockito.anyString(),
-                Mockito.anySet()
-            );
+            .deleteToBeReviewedBySubtype(Mockito.any(WikipediaLanguage.class), Mockito.anyString(), Mockito.anySet());
 
         Misspelling misspelling3 = Misspelling.ofCaseInsensitive("C", "D");
         SetValuedMap<WikipediaLanguage, Misspelling> map2 = new HashSetValuedHashMap<>();

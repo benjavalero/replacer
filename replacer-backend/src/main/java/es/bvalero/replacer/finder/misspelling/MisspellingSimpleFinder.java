@@ -81,14 +81,12 @@ public class MisspellingSimpleFinder extends MisspellingFinder {
             // In case of getting here the text ends with a word
             String word = text.substring(startWord);
             matches.add(LinearMatcher.of(startWord, word));
-            return -1;
-        } else {
-            return -1;
         }
+        return -1;
     }
 
     private boolean isLetter(char ch) {
-        return Character.isLetter(ch) || ch == '-' || ch == '\'';
+        return Character.isLetter(ch);
     }
 
     @Override

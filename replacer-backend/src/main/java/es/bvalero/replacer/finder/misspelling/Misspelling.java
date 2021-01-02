@@ -13,6 +13,7 @@ import org.intellij.lang.annotations.RegExp;
  */
 @Value
 public class Misspelling {
+
     @RegExp
     private static final String REGEX_BRACKETS = "\\([^)]+\\)";
 
@@ -23,21 +24,11 @@ public class Misspelling {
 
     private static final Pattern PATTERN_SUGGESTION = Pattern.compile(REGEX_SUGGESTION);
 
-    // Forbid the superscript "o"
-    private static final Set<Character> FORBIDDEN_CHARS = Collections.singleton('º');
-    // Some of the allowed chars will be found in composed misspellings
-    // but not in simple misspellings where we only match letters
-    private static final Set<Character> ALLOWED_CHARS = new HashSet<>(Arrays.asList('\'', '-', ' ', '.', ','));
-
     String word;
     boolean caseSensitive;
     List<Suggestion> suggestions;
 
     private Misspelling(String word, boolean caseSensitive, String comment) {
-        // Validate the word
-        if (!isMisspellingWordValid(word)) {
-            throw new IllegalArgumentException("Not valid misspelling word: " + word);
-        }
         this.word = word;
         this.caseSensitive = caseSensitive;
 
@@ -59,16 +50,6 @@ public class Misspelling {
 
     static Misspelling ofCaseInsensitive(String word, String comment) {
         return Misspelling.of(word, false, comment);
-    }
-
-    private boolean isMisspellingWordValid(String word) {
-        return word.chars().allMatch(this::isValidMisspellingChar);
-    }
-
-    private boolean isValidMisspellingChar(int c) {
-        return (
-            !FORBIDDEN_CHARS.contains((char) c) && (Character.isLetterOrDigit(c) || ALLOWED_CHARS.contains((char) c))
-        );
     }
 
     private List<Suggestion> parseSuggestionsFromComment(String comment) {
