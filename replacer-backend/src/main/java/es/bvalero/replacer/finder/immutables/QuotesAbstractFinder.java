@@ -59,9 +59,9 @@ abstract class QuotesAbstractFinder implements ImmutableFinder {
 
                 LinearMatcher linearMatcher = LinearMatcher.of(startQuote, quotedText);
 
-                // Check the quoted text is not empty and is not quoted again
+                // Check the quoted text is not empty and is not an attribute
                 String innerText = quotedText.substring(1, quotedText.length() - 1);
-                if (StringUtils.isBlank(innerText)) {
+                if (StringUtils.isBlank(innerText) && text.charAt(startQuote - 1) != '=') {
                     Immutable immutable = Immutable.of(
                         startQuote,
                         FinderUtils.getContextAroundWord(text, startQuote, endQuote, getContextThreshold()),
@@ -71,6 +71,7 @@ abstract class QuotesAbstractFinder implements ImmutableFinder {
                     return endQuote + 1;
                 }
 
+                // Check the quoted text is not quoted again
                 if (
                     QUOTE_CHARS.contains(innerText.charAt(0)) &&
                     QUOTE_CHARS.contains(innerText.charAt(innerText.length() - 1))
