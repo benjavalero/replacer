@@ -62,7 +62,12 @@ abstract class QuotesAbstractFinder implements ImmutableFinder {
                 // Check the quoted text is not empty and is not quoted again
                 String innerText = quotedText.substring(1, quotedText.length() - 1);
                 if (StringUtils.isBlank(innerText)) {
-                    logWarning(convert(linearMatcher), page, LOGGER, "Empty quoted text");
+                    Immutable immutable = Immutable.of(
+                        startQuote,
+                        FinderUtils.getContextAroundWord(text, startQuote, endQuote, getContextThreshold()),
+                        this
+                    );
+                    logWarning(immutable, page, LOGGER, "Empty quoted text");
                     return endQuote + 1;
                 }
 

@@ -91,8 +91,11 @@ public class CompleteTemplateFinder implements ImmutableFinder {
                 return completeMatch.end();
             } else {
                 // Template not closed. Not worth keep on searching.
-                int end = Math.min(startTemplate + 100, text.length());
-                Immutable immutable = Immutable.of(startTemplate, text.substring(startTemplate, end), this);
+                Immutable immutable = Immutable.of(
+                    startTemplate,
+                    FinderUtils.getContextAroundWord(text, startTemplate, startTemplate, getContextThreshold()),
+                    this
+                );
                 logWarning(immutable, page, LOGGER, "Category not closed");
                 return -1;
             }

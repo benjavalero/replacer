@@ -60,4 +60,8 @@ public interface ImmutableFinder extends Comparable<ImmutableFinder> {
             immutable.getStart()
         );
     }
+
+    default int getContextThreshold() {
+        return 50;
+    }
 }

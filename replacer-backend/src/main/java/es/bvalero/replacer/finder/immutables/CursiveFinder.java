@@ -50,7 +50,11 @@ public class CursiveFinder implements ImmutableFinder {
             int endQuotes = findEndQuotes(text, startCursive + numQuotes, numQuotes);
             if (endQuotes >= 0) {
                 if (StringUtils.isBlank(text.substring(startCursive + numQuotes, endQuotes))) {
-                    Immutable immutable = Immutable.of(startCursive, text.substring(startCursive, endQuotes), this);
+                    Immutable immutable = Immutable.of(
+                        startCursive,
+                        FinderUtils.getContextAroundWord(text, startCursive, endQuotes, getContextThreshold()),
+                        this
+                    );
                     logWarning(immutable, page, LOGGER, "Empty cursive");
                 } else {
                     matches.add(LinearMatcher.of(startCursive, text.substring(startCursive, endQuotes)));
