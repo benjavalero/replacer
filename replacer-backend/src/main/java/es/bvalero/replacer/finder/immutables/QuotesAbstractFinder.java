@@ -73,6 +73,7 @@ abstract class QuotesAbstractFinder implements ImmutableFinder {
 
                 // Check the quoted text is not quoted again
                 if (
+                    StringUtils.isNotBlank(innerText) &&
                     QUOTE_CHARS.contains(innerText.charAt(0)) &&
                     QUOTE_CHARS.contains(innerText.charAt(innerText.length() - 1))
                 ) {
