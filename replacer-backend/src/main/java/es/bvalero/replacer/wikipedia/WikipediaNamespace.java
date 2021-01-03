@@ -1,13 +1,13 @@
 package es.bvalero.replacer.wikipedia;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
@@ -32,7 +32,7 @@ public enum WikipediaNamespace {
 
     private final int value;
 
-    public static java.util.Collection<WikipediaNamespace> getProcessableNamespaces() {
+    public static Set<WikipediaNamespace> getProcessableNamespaces() {
         return EnumSet.of(ARTICLE, ANNEX);
     }
 

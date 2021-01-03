@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.replacement.IndexableReplacement;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
@@ -20,17 +21,24 @@ public interface IndexablePage {
 
     LocalDate getLastUpdate();
 
-    default boolean isProcessable(List<String> ignorableTemplates) {
-        return isProcessableByNamespace() && isProcessableByContent(ignorableTemplates);
+    default void validateProcessable(List<String> ignorableTemplates) throws ReplacerException {
+        validateProcessableByNamespace();
+        validateProcessableByContent(ignorableTemplates);
     }
 
-    default boolean isProcessableByNamespace() {
-        return WikipediaNamespace.getProcessableNamespaces().contains(getNamespace());
+    default void validateProcessableByNamespace() throws ReplacerException {
+        if (!WikipediaNamespace.getProcessableNamespaces().contains(getNamespace())) {
+            throw new ReplacerException("Page not processable by namespace: " + getNamespace());
+        }
     }
 
-    default boolean isProcessableByContent(List<String> ignorableTemplates) {
+    default void validateProcessableByContent(List<String> ignorableTemplates) throws ReplacerException {
         String lowerContent = getContent().toLowerCase();
-        return ignorableTemplates.stream().noneMatch(lowerContent::contains);
+        for (String template : ignorableTemplates) {
+            if (lowerContent.contains(template)) {
+                throw new ReplacerException("Page not processable by content: " + template);
+            }
+        }
     }
 
     default IndexableReplacement convertReplacementToIndexed(Replacement replacement) {

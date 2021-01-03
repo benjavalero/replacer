@@ -1,5 +1,6 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
@@ -63,7 +64,7 @@ class DumpPageProcessorTest {
     }
 
     @Test
-    void testCheckNamespaces() {
+    void testCheckNamespaces() throws ReplacerException {
         DumpPage dumpPage = DumpPage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
@@ -73,9 +74,9 @@ class DumpPageProcessorTest {
         DumpPage dumpAnnex = DumpPage.builder().namespace(WikipediaNamespace.ANNEX).content("").build();
         DumpPage dumpCategory = DumpPage.builder().namespace(WikipediaNamespace.CATEGORY).build();
 
-        Assertions.assertTrue(dumpPage.isProcessable(ignorableTemplates));
-        Assertions.assertTrue(dumpAnnex.isProcessable(ignorableTemplates));
-        Assertions.assertFalse(dumpCategory.isProcessable(ignorableTemplates));
+        dumpPage.validateProcessable(ignorableTemplates);
+        dumpAnnex.validateProcessable(ignorableTemplates);
+        Assertions.assertThrows(ReplacerException.class, () -> dumpCategory.validateProcessable(ignorableTemplates));
     }
 
     @Test
@@ -86,7 +87,7 @@ class DumpPageProcessorTest {
             .namespace(WikipediaNamespace.ARTICLE)
             .content("#Redirect")
             .build();
-        Assertions.assertFalse(dumpPage.isProcessable(ignorableTemplates));
+        Assertions.assertThrows(ReplacerException.class, () -> dumpPage.validateProcessable(ignorableTemplates));
     }
 
     @Test

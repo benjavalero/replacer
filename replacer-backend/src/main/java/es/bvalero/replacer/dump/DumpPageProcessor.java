@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 @StepScope
 @Component
 public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<ReplacementEntity>> {
+
     @Autowired
     private ReplacementCache replacementCache;
 
@@ -53,10 +54,8 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
         DumpPage dumpPage = mapDumpPageXmlToDumpPage(dumpPageXml);
 
         // 2. Check if it is processable
-        if (!dumpPage.isProcessable(ignorableTemplates)) {
-            // We "skip" the item by throwing an exception
-            throw new ReplacerException("Page not processable by namespace or content");
-        }
+        // We "skip" the item by throwing an exception
+        dumpPage.validateProcessable(ignorableTemplates);
 
         // 3. Find the replacements to index
         try {

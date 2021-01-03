@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 abstract class PageReviewService {
+
     static final int CACHE_SIZE = 100; // Maximum 500 as it is used as page size when searching in Wikipedia
     // Cache the found pages candidates to be reviewed
     // to find faster the next one after the user reviews one
@@ -106,13 +107,9 @@ abstract class PageReviewService {
         try {
             Optional<WikipediaPage> page = wikipediaService.getPageById(pageId, options.getLang());
             if (page.isPresent()) {
-                // Check if the page is processable
-                if (page.get().isProcessable(getIgnorableTemplates())) {
+                if (validatePage(page.get())) {
                     LOGGER.debug("Found Wikipedia page: {} - {}", page.get().getId(), page.get().getTitle());
                     return page;
-                } else {
-                    // TODO: Trace the detail reason: template, redirection, etc.
-                    LOGGER.warn("Found page not processable by content: {} - {}", pageId, page.get().getTitle());
                 }
             } else {
                 LOGGER.warn("No page found in Wikipedia: {}", pageId);
@@ -125,6 +122,16 @@ abstract class PageReviewService {
         }
 
         return Optional.empty();
+    }
+
+    private boolean validatePage(WikipediaPage page) {
+        try {
+            page.validateProcessable(getIgnorableTemplates());
+            return true;
+        } catch (ReplacerException e) {
+            LOGGER.warn("{} - {} - {}", e.getMessage(), page.getId(), page.getTitle());
+            return false;
+        }
     }
 
     void setPageAsReviewed(int pageId, PageReviewOptions options) {
