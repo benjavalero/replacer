@@ -28,16 +28,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
     classes = {
         ImmutableFinder.class,
         XmlConfiguration.class,
-        CategoryFinder.class,
         CommentFinder.class,
         CompleteTagFinder.class,
         CursiveFinder.class,
         FalsePositiveManager.class,
         FalsePositiveFinder.class,
-        FileNameFinder.class,
-        InterLanguageLinkFinder.class,
-        LinkAliasedFinder.class,
-        LinkSuffixedFinder.class,
+        LinkFinder.class,
         PersonNameFinder.class,
         PersonSurnameFinder.class,
         QuotesAngularFinder.class,
@@ -132,10 +128,6 @@ class ImmutableFinderBenchmark extends BaseFinderBenchmark {
         finders.add(new QuotesFinder());
         finders.add(new QuotesTypographicFinder());
         finders.add(new QuotesAngularFinder());
-        finders.add(new FileNameFinder());
-        finders.add(new LinkSuffixedFinder());
-        finders.add(new LinkAliasedFinder());
-        finders.add(new InterLanguageLinkFinder());
 
         List<String> sampleContents = findSampleContents();
 

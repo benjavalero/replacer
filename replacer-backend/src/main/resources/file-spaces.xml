@@ -7,14 +7,14 @@
            http://www.springframework.org/schema/util
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <util:list id="fileSpaces" value-type="java.lang.String">
-        <value>Archivo</value>
-        <value>File</value>
-        <value>Imagen</value>
-        <value>Image</value>
-        <value>Ficheiro</value>
-        <value>Arquivo</value>
-        <value>Imaxe</value>
-    </util:list>
+    <util:set id="fileSpaces" value-type="java.lang.String">
+        <value>archivo</value>
+        <value>file</value>
+        <value>imagen</value>
+        <value>image</value>
+        <value>ficheiro</value>
+        <value>arquivo</value>
+        <value>imaxe</value>
+    </util:set>
 
 </beans>

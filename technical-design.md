@@ -116,16 +116,17 @@ The tool implements the following generic immutable finders. We can add a priori
   - Find template names, e.g. `Bandera` in `{{Bandera|España}}`
   - Find some complete templates, even with nested templates, e.g. `{{Cite|A cite}}`. The list of template names is configured in `template-names.xml`.
   - Find template parameters, e.g. `param` in `{{Template|param=value}}`. For some specific parameters (see `template-param.xml`), we include in the result also the value, which is usually a taxonomy, a Commons category, etc. Finally, we include also the value if it seems like a file or a domain.
-- **LinkAliasedFinder**. Find the first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`. It also finds categories, files, etc.
 - **CursiveFinder**.  * Find text in cursive and bold, e.g. `''cursive''` in `This is a ''cursive'' example`. It also finds text starting with the simple quotes and ending with a new line.
 - **QuotesFinder**, **QuotesTypographicFinder** and **QuotesAngularFinder**. Find text in quotes, e.g. `"text"`, `“text”` or `«text»`. The text may include new lines.
 - **UrlFinder**. Find URLs, e.g. `https://www.google.es`
-- **FileNameFinder**. Find filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`
-- **CategoryFinder**. Find categories, e.g. `[[Categoría:España]]`
 - **XmlTagFinder**. Find XML tags, e.g. `<span>` or `<br />`
 - **CommentFinder**. Find XML comments, e.g. `<!-- A comment -->`
-- **LinkSuffixedFinder**. Find links with suffix, e.g. `[[brasil]]eño`
-- **InterLanguageLinkFinder**. Find inter-language links, e.g. `[[pt:Title]]`
+- **LinkFinder** Find link-related immutables.
+  - Find categories, e.g. `[[Categoría:España]]`
+  - Find links with suffix, e.g. `[[brasil]]eño`
+  - Find the first part of aliased links, e.g. `brasil` in `[[brasil|Brasil]]`. It also finds files.
+  - Find inter-language links, e.g. `[[pt:Title]]`
+  - Find filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`
 
 ### Misspelling finders
 
