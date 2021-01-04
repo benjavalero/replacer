@@ -104,11 +104,11 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public void savePageContent(
-        int pageId,
-        String pageContent,
-        @Nullable Integer section,
-        String currentTimestamp,
         WikipediaLanguage lang,
+        int pageId,
+        @Nullable Integer section,
+        String pageContent,
+        String currentTimestamp,
         OAuth1AccessToken accessToken
     ) {
         // Do nothing

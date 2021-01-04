@@ -309,11 +309,11 @@ class WikipediaServiceImpl implements WikipediaService {
     @Loggable(value = Loggable.DEBUG, ignore = ReplacerException.class)
     @Override
     public void savePageContent(
-        int pageId,
-        String pageContent,
-        @Nullable Integer section,
-        String currentTimestamp,
         WikipediaLanguage lang,
+        int pageId,
+        @Nullable Integer section,
+        String pageContent,
+        String currentTimestamp,
         OAuth1AccessToken accessToken
     ) throws ReplacerException {
         EditToken editToken = getEditToken(pageId, lang, accessToken);
@@ -321,10 +321,10 @@ class WikipediaServiceImpl implements WikipediaService {
         if (currentTimestamp.compareTo(editToken.getTimestamp()) <= 0) {
             LOGGER.warn(
                 "Page edited at the same time: {} - {} - {} - {} - {}",
-                pageId,
                 currentTimestamp,
                 editToken.getTimestamp(),
                 lang,
+                pageId,
                 pageContent
             );
             throw new ReplacerException(

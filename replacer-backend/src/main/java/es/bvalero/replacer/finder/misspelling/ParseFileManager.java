@@ -54,7 +54,7 @@ public abstract class ParseFileManager<T> {
      */
     @Scheduled(fixedDelayString = "${replacer.parse.file.delay}")
     public void scheduledItemListUpdate() {
-        LOGGER.info("Scheduled {} list update", getLabel());
+        LOGGER.info("Scheduled {} lists update", getLabel());
         setItems(findItems());
     }
 

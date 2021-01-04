@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/pages")
 public class PageController {
+
     @Autowired
     private PageReviewNoTypeService pageReviewNoTypeService;
 
@@ -120,11 +121,11 @@ public class PageController {
             try {
                 String textToSave = cosmeticFindService.applyCosmeticChanges(savePage.getContent());
                 wikipediaService.savePageContent(
-                    pageId,
-                    textToSave,
-                    savePage.getSection(),
-                    savePage.getTimestamp(),
                     lang,
+                    pageId,
+                    savePage.getSection(),
+                    textToSave,
+                    savePage.getTimestamp(),
                     convertToEntity(savePage.getToken())
                 );
             } catch (ReplacerException e) {

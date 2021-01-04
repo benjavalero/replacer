@@ -16,6 +16,10 @@ public class MisspellingComposedManager extends MisspellingManager {
         return "Composed Misspelling";
     }
 
+    String getType() {
+        return MisspellingComposedFinder.TYPE_MISSPELLING_COMPOSED;
+    }
+
     @Override
     String findItemsTextInWikipedia(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaService.getComposedMisspellingListPageContent(lang);

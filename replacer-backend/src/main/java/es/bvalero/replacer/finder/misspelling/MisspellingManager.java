@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class MisspellingManager extends ParseFileManager<Misspelling> {
+
     private static final String CASE_SENSITIVE_VALUE = "cs";
 
     @Autowired
@@ -38,12 +39,8 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
             Set<String> newWords = newItems.get(lang).stream().map(Misspelling::getWord).collect(Collectors.toSet());
             oldWords.removeAll(newWords);
             if (!oldWords.isEmpty()) {
-                LOGGER.warn("Deleting from database obsolete misspellings: {}", oldWords);
-                replacementDao.deleteToBeReviewedBySubtype(
-                    lang,
-                    MisspellingSimpleFinder.TYPE_MISSPELLING_SIMPLE,
-                    new HashSet<>(oldWords)
-                );
+                LOGGER.warn("Deleting from database obsolete misspellings: {} - {}", lang, oldWords);
+                replacementDao.deleteToBeReviewedBySubtype(lang, getType(), new HashSet<>(oldWords));
             }
         }
     }
@@ -51,6 +48,10 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
     @Override
     String getLabel() {
         return "Misspelling";
+    }
+
+    String getType() {
+        return MisspellingSimpleFinder.TYPE_MISSPELLING_SIMPLE;
     }
 
     @Override

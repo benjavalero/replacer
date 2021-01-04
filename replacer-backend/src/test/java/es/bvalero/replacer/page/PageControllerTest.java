@@ -33,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest
 @ContextConfiguration(classes = { PageController.class, WikipediaLanguageConverter.class })
 public class PageControllerTest {
+
     @Autowired
     private MockMvc mvc;
 
@@ -191,11 +192,11 @@ public class PageControllerTest {
         verify(cosmeticFindService, times(1)).applyCosmeticChanges(eq(content));
         verify(wikipediaService, times(1))
             .savePageContent(
-                eq(pageId),
-                eq("C"),
-                eq(section),
-                eq(timestamp),
                 any(WikipediaLanguage.class),
+                eq(pageId),
+                eq(section),
+                eq("C"),
+                eq(timestamp),
                 eq(new OAuth1AccessToken("A", "B"))
             );
     }
@@ -222,11 +223,11 @@ public class PageControllerTest {
         verify(cosmeticFindService, times(0)).applyCosmeticChanges(anyString());
         verify(wikipediaService, times(0))
             .savePageContent(
+                any(WikipediaLanguage.class),
                 eq(pageId),
-                anyString(),
                 anyInt(),
                 anyString(),
-                any(WikipediaLanguage.class),
+                anyString(),
                 any(OAuth1AccessToken.class)
             );
     }

@@ -37,11 +37,11 @@ public interface WikipediaService {
     ) throws ReplacerException;
 
     void savePageContent(
-        int pageId,
-        String pageContent,
-        @Nullable Integer section,
-        String currentTimestamp,
         WikipediaLanguage lang,
+        int pageId,
+        @Nullable Integer section,
+        String pageContent,
+        String currentTimestamp,
         OAuth1AccessToken accessToken
     ) throws ReplacerException;
 }

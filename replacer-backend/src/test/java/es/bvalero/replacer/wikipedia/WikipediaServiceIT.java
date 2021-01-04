@@ -72,23 +72,26 @@ public class WikipediaServiceIT {
         String conflictContent = originalContent + "\nOtra edición sencilla para probar conflictos de edición.";
 
         // Save the new content
-        wikipediaService.savePageContent(page.getId(),
-                newContent,
-                0,
-                page.getQueryTimestamp(),
-                WikipediaLanguage.SPANISH,
-                new OAuth1AccessToken("", ""));
+        wikipediaService.savePageContent(
+            WikipediaLanguage.SPANISH,
+            page.getId(),
+            0,
+            newContent,
+            page.getQueryTimestamp(),
+            new OAuth1AccessToken("", "")
+        );
 
         // Save the conflict content started 1 day before
         String before = WikipediaPage.formatWikipediaTimestamp(
-                WikipediaPage.parseWikipediaTimestamp(
-                        page.getQueryTimestamp()).atTime(0, 0).minusDays(1));
-        wikipediaService.savePageContent(page.getId(),
-                conflictContent,
-                0,
-                before,
-                WikipediaLanguage.SPANISH,
-                new OAuth1AccessToken("", ""));
+            WikipediaPage.parseWikipediaTimestamp(page.getQueryTimestamp()).atTime(0, 0).minusDays(1)
+        );
+        wikipediaService.savePageContent(
+            WikipediaLanguage.SPANISH,
+            page.getId(),
+            0,
+            conflictContent,
+            before,
+            new OAuth1AccessToken("", "")
+        );
     }
-
 }

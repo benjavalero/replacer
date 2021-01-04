@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 class SectionReviewService {
+
     @Autowired
     private WikipediaService wikipediaService;
 
@@ -62,8 +63,10 @@ class SectionReviewService {
                             .allMatch(rep -> validatePageReplacement(rep, pageSection.get().getContent()))
                     ) {
                         LOGGER.debug(
-                            "Found section for page {}: {} - {}",
+                            "Found section for page {} - {} - {}: {} - {}",
+                            pageSection.get().getLang(),
                             pageSection.get().getId(),
+                            pageSection.get().getTitle(),
                             pageSection.get().getSection(),
                             pageSection.get().getAnchor()
                         );
@@ -79,8 +82,10 @@ class SectionReviewService {
                         );
                     } else {
                         LOGGER.warn(
-                            "Not valid byte-offset in page section: {} - {} - {}",
+                            "Not valid byte-offset in page section: {} - {} - {} - {} - {}",
+                            pageSection.get().getLang(),
                             pageSection.get().getId(),
+                            pageSection.get().getTitle(),
                             smallestSection.get().getAnchor(),
                             smallestSection.get().getByteOffset()
                         );

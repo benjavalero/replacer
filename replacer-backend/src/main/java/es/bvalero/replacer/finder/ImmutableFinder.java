@@ -52,10 +52,11 @@ public interface ImmutableFinder extends Comparable<ImmutableFinder> {
 
     default void logWarning(Immutable immutable, IndexablePage page, Logger logger, String message) {
         logger.warn(
-            "{}: {} - {} - {} - {}",
+            "{}: {} - {} - {} - {} - {}",
             message,
             this.getClass().getSimpleName(),
             immutable.getText(),
+            page.getLang(),
             page.getTitle(),
             immutable.getStart()
         );

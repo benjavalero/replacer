@@ -65,7 +65,7 @@ abstract class PageReviewService {
         } else {
             pageId = Optional.empty();
         }
-        LOGGER.debug("Found page ID to review: {}", pageId);
+        LOGGER.debug("Found page ID to review: {} - {}", options.getLang(), pageId.orElse(null));
         return pageId;
     }
 
@@ -108,11 +108,16 @@ abstract class PageReviewService {
             Optional<WikipediaPage> page = wikipediaService.getPageById(pageId, options.getLang());
             if (page.isPresent()) {
                 if (validatePage(page.get())) {
-                    LOGGER.debug("Found Wikipedia page: {} - {}", page.get().getId(), page.get().getTitle());
+                    LOGGER.debug(
+                        "Found Wikipedia page: {} - {} - {}",
+                        options.getLang(),
+                        page.get().getId(),
+                        page.get().getTitle()
+                    );
                     return page;
                 }
             } else {
-                LOGGER.warn("No page found in Wikipedia: {}", pageId);
+                LOGGER.warn("No page found in Wikipedia: {} - {}", options.getLang(), pageId);
             }
 
             // We get here if the page is not found or not processable
@@ -163,7 +168,13 @@ abstract class PageReviewService {
 
         // Return the replacements sorted as they appear in the text
         replacements.sort(Collections.reverseOrder());
-        LOGGER.debug("Found page replacements for page {}: {}", page.getId(), replacements.size());
+        LOGGER.debug(
+            "Found page replacements for page {} - {} - {}: {}",
+            page.getLang(),
+            page.getId(),
+            page.getTitle(),
+            replacements.size()
+        );
         return replacements;
     }
 
