@@ -5,19 +5,16 @@ import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@StepScope
 @Component
-public class DumpWriter implements ItemWriter<List<ReplacementEntity>> {
+class DumpWriter {
+
     @Autowired
     private ReplacementDao replacementDao;
 
-    @Override
-    public void write(List<? extends List<ReplacementEntity>> items) {
+    void write(List<? extends List<ReplacementEntity>> items) {
         List<ReplacementEntity> flatList = items.stream().flatMap(Collection::stream).collect(Collectors.toList());
 
         List<ReplacementEntity> toInsert = flatList

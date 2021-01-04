@@ -6,9 +6,6 @@ import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.finder.ReplacementFindService;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
@@ -17,10 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -28,9 +22,8 @@ import org.springframework.stereotype.Component;
  * Process a page found in a Wikipedia dump.
  */
 @Slf4j
-@StepScope
 @Component
-public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<ReplacementEntity>> {
+class DumpPageProcessor {
 
     @Autowired
     private ReplacementCache replacementCache;
@@ -41,23 +34,16 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
     @Autowired
     private ReplacementFindService replacementFindService;
 
-    @Value("#{jobParameters[dumpLang]}")
-    private String dumpLang;
-
     @Resource
     private List<String> ignorableTemplates;
 
-    @Override
     @Nullable
-    public List<ReplacementEntity> process(DumpPageXml dumpPageXml) throws ReplacerException {
-        // 1. Convert to indexable page
-        DumpPage dumpPage = mapDumpPageXmlToDumpPage(dumpPageXml);
-
-        // 2. Check if it is processable
+    public List<ReplacementEntity> process(DumpPage dumpPage) throws ReplacerException {
+        // 1. Check if it is processable
         // We "skip" the item by throwing an exception
         dumpPage.validateProcessable(ignorableTemplates);
 
-        // 3. Find the replacements to index
+        // 2. Find the replacements to index
         try {
             List<ReplacementEntity> replacements = processPage(dumpPage);
 
@@ -68,18 +54,6 @@ public class DumpPageProcessor implements ItemProcessor<DumpPageXml, List<Replac
             LOGGER.error("Page not processed: {}", dumpPage, e);
             throw new ReplacerException("Page not processable by exception", e);
         }
-    }
-
-    private DumpPage mapDumpPageXmlToDumpPage(DumpPageXml dumpPageXml) {
-        return DumpPage
-            .builder()
-            .id(dumpPageXml.id)
-            .lang(WikipediaLanguage.forValues(dumpLang))
-            .title(dumpPageXml.title)
-            .namespace(WikipediaNamespace.valueOf(dumpPageXml.ns))
-            .lastUpdate(WikipediaPage.parseWikipediaTimestamp(dumpPageXml.revision.timestamp))
-            .content(dumpPageXml.revision.text)
-            .build();
     }
 
     @Loggable(prepend = true, value = Loggable.TRACE)

@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Collections;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,36 +15,27 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.explore.JobExplorer;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.launch.JobOperator;
 
 class DumpManagerTest {
-    @Mock
-    public DumpFinder dumpFinder;
 
     @Mock
-    private JobExplorer jobExplorer;
-
-    @Mock
-    private JobLauncher jobLauncher;
-
-    @Mock
-    private JobOperator jobOperator;
-
-    @Mock
-    private Job dumpJob;
+    private DumpFinder dumpFinder;
 
     @InjectMocks
     private DumpManager dumpManager;
 
+    @Mock
+    private DumpHandler dumpHandler;
+
+    @InjectMocks
+    private DumpJobSaxImpl dumpJob;
+
     @BeforeEach
     public void setUp() {
+        dumpJob = new DumpJobSaxImpl();
         dumpManager = new DumpManager();
         MockitoAnnotations.initMocks(this);
+        dumpManager.setDumpJob(dumpJob);
     }
 
     @Test
@@ -59,9 +49,9 @@ class DumpManagerTest {
         Assertions.assertNotNull(dumpFile);
         Assertions.assertTrue(Files.exists(dumpFile));
 
-        dumpManager.parseDumpFile(dumpFile, WikipediaLanguage.SPANISH);
+        dumpJob.parseDumpFile(dumpFile, WikipediaLanguage.SPANISH);
 
-        Mockito.verify(jobLauncher).run(Mockito.any(Job.class), Mockito.any(JobParameters.class));
+        Mockito.verify(dumpHandler).startDocument();
     }
 
     @Test
@@ -69,21 +59,22 @@ class DumpManagerTest {
         Mockito
             .when(dumpFinder.findLatestDumpFile(Mockito.any(WikipediaLanguage.class)))
             .thenThrow(ReplacerException.class);
+        Mockito.when(dumpHandler.getDumpIndexingStatus()).thenReturn(new DumpIndexingStatus());
 
         dumpManager.processLatestDumpFiles();
 
-        Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(Job.class), Mockito.any(JobParameters.class));
+        Mockito.verify(dumpHandler, Mockito.never()).startDocument();
     }
 
     @Test
     void testProcessLatestDumpFileAlreadyRunning() throws Exception {
-        Mockito
-            .when(jobExplorer.findRunningJobExecutions(Mockito.anyString()))
-            .thenReturn(Collections.singleton(Mockito.mock(JobExecution.class)));
+        // Constructor with arguments to fake the start
+        DumpIndexingStatus status = new DumpIndexingStatus("File", 1);
+        Mockito.when(dumpHandler.getDumpIndexingStatus()).thenReturn(status);
 
         dumpManager.processLatestDumpFiles();
 
-        Mockito.verify(jobLauncher, Mockito.never()).run(Mockito.any(Job.class), Mockito.any(JobParameters.class));
+        Mockito.verify(dumpHandler, Mockito.never()).startDocument();
     }
 
     @Test
@@ -98,9 +89,11 @@ class DumpManagerTest {
         // Make the dump file old enough
         Files.setLastModifiedTime(dumpFile, FileTime.from(LocalDateTime.now().minusDays(2).toInstant(ZoneOffset.UTC)));
 
+        Mockito.when(dumpHandler.getDumpIndexingStatus()).thenReturn(new DumpIndexingStatus());
+
         dumpManager.scheduledStartDumpIndexing();
 
         // Run twice (for Spanish and Galician)
-        Mockito.verify(jobLauncher, Mockito.times(2)).run(Mockito.any(Job.class), Mockito.any(JobParameters.class));
+        Mockito.verify(dumpHandler, Mockito.times(2)).startDocument();
     }
 }

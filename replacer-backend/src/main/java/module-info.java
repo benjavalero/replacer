@@ -1,12 +1,8 @@
 open module es.bvalero.replacer {
-    requires java.activation;
     requires java.annotation;
     requires java.desktop;
     requires java.sql;
-    requires java.xml.bind;
 
-    requires spring.batch.core;
-    requires spring.batch.infrastructure;
     requires spring.beans;
     requires spring.boot;
     requires spring.boot.autoconfigure;
@@ -14,7 +10,6 @@ open module es.bvalero.replacer {
     requires spring.core;
     requires spring.data.commons;
     requires spring.jdbc;
-    requires spring.oxm;
     requires spring.tx;
     requires spring.web;
     requires spring.webmvc;

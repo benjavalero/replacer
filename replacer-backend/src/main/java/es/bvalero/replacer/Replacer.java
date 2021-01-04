@@ -1,7 +1,6 @@
 package es.bvalero.replacer;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -12,8 +11,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @SpringBootApplication
 @EnableScheduling
 @EnableAsync
-@EnableBatchProcessing
 public class Replacer {
+
     private static final int THREADS_COUNT = 4;
 
     public static void main(String[] args) {
