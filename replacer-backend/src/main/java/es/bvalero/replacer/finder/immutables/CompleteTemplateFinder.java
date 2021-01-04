@@ -165,6 +165,11 @@ public class CompleteTemplateFinder implements ImmutableFinder {
             .group()
             .substring(START_TEMPLATE.length(), template.group().length() - END_TEMPLATE.length());
 
+        // Special case "{{|}}"
+        if ("|".equals(content)) {
+            return Collections.emptyList();
+        }
+
         // Remove the content of the nested templates
         for (int i = 0; i < template.groupCount(); i++) {
             content = content.replace(template.group(i), "");

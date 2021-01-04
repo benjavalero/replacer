@@ -196,4 +196,13 @@ class CompleteTemplateFinderTest {
         Assertions.assertEquals(31, matches.stream().filter(m -> m.getText().equals("índice")).findAny().get().getStart());
         Assertions.assertEquals(38, matches.stream().filter(m -> m.getText().equals("value2")).findAny().get().getStart());
     }
+
+    @Test
+    void testSpecialCharacter() {
+        String text = "{{|}}";
+
+        List<Immutable> matches = completeTemplateFinder.findList(text);
+
+        Assertions.assertTrue(matches.isEmpty());
+    }
 }
