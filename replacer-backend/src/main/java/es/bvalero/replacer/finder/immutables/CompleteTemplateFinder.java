@@ -96,7 +96,7 @@ public class CompleteTemplateFinder implements ImmutableFinder {
                     FinderUtils.getContextAroundWord(text, startTemplate, startTemplate, getContextThreshold()),
                     this
                 );
-                logWarning(immutable, page, LOGGER, "Category not closed");
+                logWarning(immutable, page, LOGGER, "Template not closed");
                 return -1;
             }
         } else {
