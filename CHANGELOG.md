@@ -1,6 +1,11 @@
 # Versions
 
-## 2.7.13 (1 Jann 2021)
+## 2.7.14 (5 Jan 2021)
+- Improve performance on template and link finders
+- Improve warnings for wrong immutables
+- Improve indexation performance by returning to the SAX handler
+
+## 2.7.13 (1 Jan 2021)
 - Escape characters in custom replacements
 
 ## 2.7.12 (26 Dec 2020)
