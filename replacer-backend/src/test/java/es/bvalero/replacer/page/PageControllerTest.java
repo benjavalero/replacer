@@ -14,25 +14,22 @@ import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaLanguageConverter;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest
-@ContextConfiguration(classes = { PageController.class, WikipediaLanguageConverter.class })
-public class PageControllerTest {
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = PageController.class)
+class PageControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -62,7 +59,7 @@ public class PageControllerTest {
     private ReplacementCountService replacementCountService;
 
     @Test
-    public void testFindRandomPageWithReplacements() throws Exception {
+    void testFindRandomPageWithReplacements() throws Exception {
         int id = 3;
         String title = "X";
         String content = "Y";
@@ -108,7 +105,7 @@ public class PageControllerTest {
     }
 
     @Test
-    public void testFindRandomPageByTypeAndSubtype() throws Exception {
+    void testFindRandomPageByTypeAndSubtype() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
         when(pageReviewTypeSubtypeService.findRandomPageReview(options)).thenReturn(Optional.of(new PageReview()));
 
@@ -120,7 +117,7 @@ public class PageControllerTest {
     }
 
     @Test
-    public void testFindRandomPageByCustomReplacement() throws Exception {
+    void testFindRandomPageByCustomReplacement() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
         when(pageReviewCustomService.findRandomPageReview(options)).thenReturn(Optional.of(new PageReview()));
 
@@ -134,7 +131,7 @@ public class PageControllerTest {
     }
 
     @Test
-    public void testFindPageReviewById() throws Exception {
+    void testFindPageReviewById() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
         when(pageReviewNoTypeService.getPageReview(123, options)).thenReturn(Optional.of(new PageReview()));
 
@@ -144,7 +141,7 @@ public class PageControllerTest {
     }
 
     @Test
-    public void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
+    void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
         when(pageReviewTypeSubtypeService.getPageReview(123, options)).thenReturn(Optional.of(new PageReview()));
 
@@ -156,7 +153,7 @@ public class PageControllerTest {
     }
 
     @Test
-    public void testFindPageReviewByIdAndCustomReplacement() throws Exception {
+    void testFindPageReviewByIdAndCustomReplacement() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
         when(pageReviewCustomService.getPageReview(123, options)).thenReturn(Optional.of(new PageReview()));
 
@@ -168,7 +165,7 @@ public class PageControllerTest {
     }
 
     @Test
-    public void testSaveWithChanges() throws Exception {
+    void testSaveWithChanges() throws Exception {
         int pageId = 123;
         int section = 3;
         String content = "X";
@@ -202,7 +199,7 @@ public class PageControllerTest {
     }
 
     @Test
-    public void testSaveWithNoChanges() throws Exception {
+    void testSaveWithNoChanges() throws Exception {
         int pageId = 123;
         int section = 3;
         String timestamp = "Y";

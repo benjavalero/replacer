@@ -6,35 +6,29 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaLanguageConverter;
 import java.util.Collections;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest
-@ContextConfiguration(classes = { ReplacementController.class, WikipediaLanguageConverter.class })
-public class ReplacementControllerTest {
-    @Autowired
-    private MockMvc mvc;
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = ReplacementController.class)
+class ReplacementControllerTest {
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private MockMvc mvc;
 
     @MockBean
     private ReplacementCountService replacementCountService;
 
     @Test
-    public void testCountReplacementsToReview() throws Exception {
+    void testCountReplacementsToReview() throws Exception {
         long count = 100;
         when(replacementCountService.countReplacementsNotReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
 
@@ -47,7 +41,7 @@ public class ReplacementControllerTest {
     }
 
     @Test
-    public void testCountReplacementsReviewed() throws Exception {
+    void testCountReplacementsReviewed() throws Exception {
         long count = 100;
         when(replacementCountService.countReplacementsReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
 
@@ -60,7 +54,7 @@ public class ReplacementControllerTest {
     }
 
     @Test
-    public void testCountReplacementsGroupedByReviewer() throws Exception {
+    void testCountReplacementsGroupedByReviewer() throws Exception {
         ReviewerCount count = new ReviewerCount("X", 100);
         when(replacementCountService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH))
             .thenReturn(Collections.singletonList(count));
@@ -77,7 +71,7 @@ public class ReplacementControllerTest {
     }
 
     @Test
-    public void testFindReplacementCount() throws Exception {
+    void testFindReplacementCount() throws Exception {
         SubtypeCount subCount = new SubtypeCount("Y", 100);
         TypeCount count = new TypeCount("X");
         count.add(subCount);

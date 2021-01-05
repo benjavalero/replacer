@@ -7,35 +7,29 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.modelmapper.ModelMapper;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-@RunWith(SpringRunner.class)
-@WebMvcTest
-@ContextConfiguration(classes = { AuthenticationController.class, ModelMapper.class })
-public class AuthenticationControllerTest {
-    @Autowired
-    private MockMvc mvc;
+@ExtendWith(SpringExtension.class)
+@WebMvcTest(controllers = AuthenticationController.class)
+class AuthenticationControllerTest {
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private MockMvc mvc;
 
     @MockBean
     private AuthenticationService authenticationService;
 
     @Test
-    public void testGetRequestToken() throws Exception {
+    void testGetRequestToken() throws Exception {
         when(authenticationService.getRequestToken()).thenReturn(new OAuth1RequestToken("X", "Y"));
         when(authenticationService.getAuthorizationUrl(any())).thenReturn("Z");
 
@@ -51,7 +45,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void testGetAccessToken() throws Exception {
+    void testGetAccessToken() throws Exception {
         when(authenticationService.getAccessToken(any(OAuth1RequestToken.class), anyString()))
             .thenReturn(new OAuth1AccessToken("A", "B"));
 

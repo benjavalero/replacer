@@ -1,19 +1,18 @@
 package es.bvalero.replacer.replacement;
 
-import static org.hamcrest.Matchers.*;
-
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.time.LocalDate;
 import java.util.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.modelmapper.ModelMapper;
 
-public class ReplacementIndexServiceTest {
+class ReplacementIndexServiceTest {
+
     @Mock
     private ReplacementDao replacementDao;
 
@@ -23,14 +22,14 @@ public class ReplacementIndexServiceTest {
     @InjectMocks
     private ReplacementIndexService replacementIndexService;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         replacementIndexService = new ReplacementIndexService();
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void testIndexNewPageReplacements() {
+    void testIndexNewPageReplacements() {
         int pageId = new Random().nextInt();
         WikipediaPage page = WikipediaPage.builder().id(pageId).lang(WikipediaLanguage.SPANISH).build();
 
@@ -41,8 +40,8 @@ public class ReplacementIndexServiceTest {
             .findByPageId(Mockito.eq(pageId), Mockito.any(WikipediaLanguage.class));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testIndexNewPageInvalidReplacements() {
+    @Test
+    void testIndexNewPageInvalidReplacements() {
         int pageId = new Random().nextInt();
         int wrongId = pageId + 1;
         WikipediaPage page = WikipediaPage.builder().id(pageId).lang(WikipediaLanguage.SPANISH).build();
@@ -57,11 +56,16 @@ public class ReplacementIndexServiceTest {
             LocalDate.now(),
             ""
         );
-        replacementIndexService.indexPageReplacements(page, Collections.singletonList(indexableReplacement));
+
+        List<IndexableReplacement> replacements = Collections.singletonList(indexableReplacement);
+        Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> replacementIndexService.indexPageReplacements(page, replacements)
+        );
     }
 
     @Test
-    public void testIndexNewPage() {
+    void testIndexNewPage() {
         Replacement rep1 = Replacement.builder().build(); // New => ADD
         WikipediaPage page = WikipediaPage
             .builder()
@@ -79,11 +83,11 @@ public class ReplacementIndexServiceTest {
             dbReplacements
         );
 
-        Assert.assertThat(Collections.singletonList(replacementIndexService.convertToEntity(idx1)), is(toIndex));
+        Assertions.assertEquals(Collections.singletonList(replacementIndexService.convertToEntity(idx1)), toIndex);
     }
 
     @Test
-    public void testIndexObsoletePage() {
+    void testIndexObsoletePage() {
         List<IndexableReplacement> newReplacements = Collections.emptyList();
         int pageId = new Random().nextInt();
         WikipediaPage page = WikipediaPage
@@ -105,7 +109,7 @@ public class ReplacementIndexServiceTest {
             dbReplacements
         );
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
             Set.of(
                 ReplacementEntity.createDummy(pageId, WikipediaLanguage.SPANISH, LocalDate.now()),
                 rep2.withToDelete(),
@@ -116,7 +120,7 @@ public class ReplacementIndexServiceTest {
     }
 
     @Test
-    public void testIndexPageWithoutReplacements() {
+    void testIndexPageWithoutReplacements() {
         List<IndexableReplacement> newReplacements = Collections.emptyList();
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
 
@@ -128,12 +132,12 @@ public class ReplacementIndexServiceTest {
         );
 
         // Save the dummy replacement
-        Assert.assertEquals(1, result.size());
-        Assert.assertTrue(result.get(0).isDummy());
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertTrue(result.get(0).isDummy());
     }
 
     @Test
-    public void testIndexExistingPageSameDate() {
+    void testIndexExistingPageSameDate() {
         LocalDate same = LocalDate.now();
         LocalDate before = same.minusDays(1);
 
@@ -176,14 +180,14 @@ public class ReplacementIndexServiceTest {
             dbReplacements
         );
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
             Set.of(r3db, replacementIndexService.convertToEntity(r5), r6db.withToDelete(), r8db.withToDelete()),
             new HashSet<>(toIndex)
         );
     }
 
     @Test
-    public void testIndexExistingPageDateAfter() {
+    void testIndexExistingPageDateAfter() {
         LocalDate same = LocalDate.now();
         LocalDate before = same.minusDays(1);
 
@@ -220,7 +224,7 @@ public class ReplacementIndexServiceTest {
             dbReplacements
         );
 
-        Assert.assertEquals(
+        Assertions.assertEquals(
             Set.of(r1db, replacementIndexService.convertToEntity(r3), r4db.withToDelete(), r6db.withToDelete()),
             new HashSet<>(toIndex)
         );
