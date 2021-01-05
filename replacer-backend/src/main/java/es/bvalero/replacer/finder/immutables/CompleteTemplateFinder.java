@@ -161,19 +161,22 @@ public class CompleteTemplateFinder implements ImmutableFinder {
     }
 
     private List<Immutable> findImmutables(LinearMatcher template) {
-        String content = template
-            .group()
-            .substring(START_TEMPLATE.length(), template.group().length() - END_TEMPLATE.length());
+        String content = template.group();
 
         // Special case "{{|}}"
-        if ("|".equals(content)) {
+        if ("{{|}}".equals(content)) {
             return Collections.emptyList();
         }
 
         // Remove the content of the nested templates
-        for (int i = 0; i < template.groupCount(); i++) {
-            content = content.replace(template.group(i), "");
+        for (int i = template.groupCount() - 1; i >= 0; i--) {
+            content =
+                content.substring(0, template.start(i) - template.start()) +
+                content.substring(template.end(i) - template.start());
         }
+
+        // Remove the start end end of the template
+        content = content.substring(START_TEMPLATE.length(), content.length() - END_TEMPLATE.length());
 
         String[] parameters = content.split("\\|");
 
