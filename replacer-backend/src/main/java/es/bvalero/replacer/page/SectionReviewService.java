@@ -63,7 +63,7 @@ class SectionReviewService {
                             .allMatch(rep -> validatePageReplacement(rep, pageSection.get().getContent()))
                     ) {
                         LOGGER.debug(
-                            "Found section for page {} - {} - {}: {} - {}",
+                            "Found section for page {} - {} - {} => {} - {}",
                             pageSection.get().getLang(),
                             pageSection.get().getId(),
                             pageSection.get().getTitle(),
@@ -93,10 +93,16 @@ class SectionReviewService {
                 }
             }
         } catch (ReplacerException e) {
-            LOGGER.error("Error finding page section: {}", review.getId(), e);
+            LOGGER.error(
+                "Error finding section in page {} - {} - {}",
+                review.getLang(),
+                review.getId(),
+                review.getTitle(),
+                e
+            );
         }
 
-        LOGGER.debug("No section found for page: {}", review.getId());
+        LOGGER.debug("No section found in page: {} - {} - {}", review.getLang(), review.getId(), review.getTitle());
         return Optional.empty();
     }
 

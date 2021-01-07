@@ -2,10 +2,14 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Value;
+import org.apache.commons.lang3.StringUtils;
 
 @Value
 public class PageReviewOptions {
+
     WikipediaLanguage lang;
     String type;
     String subtype;
@@ -25,5 +29,20 @@ public class PageReviewOptions {
 
     static PageReviewOptions ofCustom(WikipediaLanguage lang, String replacement, String suggestion) {
         return new PageReviewOptions(lang, ReplacementEntity.TYPE_CUSTOM, replacement, suggestion);
+    }
+
+    @Override
+    public String toString() {
+        List<String> list = new ArrayList<>();
+        list.add(lang.toString());
+
+        if (type == null) {
+            list.add("NO TYPE");
+        } else {
+            list.add(type);
+            list.add(subtype);
+        }
+
+        return StringUtils.join(list, " - ");
     }
 }
