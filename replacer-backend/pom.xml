@@ -307,6 +307,26 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <plugin>
+                <groupId>com.hubspot.maven.plugins</groupId>
+                <artifactId>prettier-maven-plugin</artifactId>
+                <version>0.12</version>
+                <configuration>
+                    <!--
+                    Available values:
+                    https://github.com/HubSpot/prettier-maven-plugin/tree/master/src/main/binaries/prettier-java
+                    -->
+                    <prettierJavaVersion>1.0.1</prettierJavaVersion>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>write</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
