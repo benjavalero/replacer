@@ -26,7 +26,6 @@ export class LoginComponent implements OnInit {
 
     // Manage return from authorization URL
     this.route.queryParams.subscribe((params) => {
-      /* tslint:disable: no-string-literal */
       const oauthVerifier: string = params['oauth_verifier'];
       if (oauthVerifier) {
         this.authenticationService.getAccessToken(oauthVerifier).subscribe(

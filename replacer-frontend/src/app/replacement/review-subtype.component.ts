@@ -6,11 +6,9 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './review-subtype.component.html',
   styles: []
 })
-export class ReviewSubtypeComponent implements OnInit {
+export class ReviewSubtypeComponent {
   @Input() type: string;
   @Input() subtype: string;
 
   constructor(public activeModal: NgbActiveModal) {}
-
-  ngOnInit(): void {}
 }
