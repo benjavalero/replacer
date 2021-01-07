@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class ReplacementCountServiceTest {
+
     @Mock
     private ReplacementDao replacementDao;
 

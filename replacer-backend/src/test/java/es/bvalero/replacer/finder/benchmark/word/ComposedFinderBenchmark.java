@@ -1,19 +1,18 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
+import static org.hamcrest.Matchers.is;
+
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.misspelling.*;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaServiceOfflineImpl;
-import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import static org.hamcrest.Matchers.is;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Test;
 
 class ComposedFinderBenchmark extends BaseFinderBenchmark {
 

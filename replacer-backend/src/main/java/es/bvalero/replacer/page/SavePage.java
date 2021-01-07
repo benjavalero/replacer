@@ -10,6 +10,7 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 class SavePage {
+
     @Nullable
     private Integer section;
 

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 class PageReviewTypeSubtypeService extends PageReviewService {
+
     @Autowired
     private ReplacementFindService replacementFindService;
 

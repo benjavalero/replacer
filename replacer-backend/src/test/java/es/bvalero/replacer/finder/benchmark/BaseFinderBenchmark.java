@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BaseFinderBenchmark {
+
     public static final int WARM_UP = 100;
     public static final int ITERATIONS = 1000;
 
@@ -17,7 +18,8 @@ public class BaseFinderBenchmark {
         runBenchmark(finders, WARM_UP, ITERATIONS);
     }
 
-    public void runBenchmark(List<BenchmarkFinder> finders, int warmUp, int iterations) throws IOException, URISyntaxException {
+    public void runBenchmark(List<BenchmarkFinder> finders, int warmUp, int iterations)
+        throws IOException, URISyntaxException {
         List<String> sampleContents = findSampleContents();
 
         // Warm-up

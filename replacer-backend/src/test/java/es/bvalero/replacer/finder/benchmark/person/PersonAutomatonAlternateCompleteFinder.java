@@ -4,15 +4,15 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
 import org.apache.commons.lang3.StringUtils;
 
 class PersonAutomatonAlternateCompleteFinder implements BenchmarkFinder {
+
     private final RunAutomaton words;
 
     PersonAutomatonAlternateCompleteFinder(Collection<String> words) {

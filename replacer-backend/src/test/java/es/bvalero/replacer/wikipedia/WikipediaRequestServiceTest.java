@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 class WikipediaRequestServiceTest {
+
     @Mock
     private OAuth10aService oAuthService;
 

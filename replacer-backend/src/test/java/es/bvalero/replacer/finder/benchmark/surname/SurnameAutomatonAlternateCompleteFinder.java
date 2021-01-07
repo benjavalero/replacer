@@ -6,13 +6,13 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 
 class SurnameAutomatonAlternateCompleteFinder implements BenchmarkFinder {
+
     private final RunAutomaton words;
 
     SurnameAutomatonAlternateCompleteFinder(Collection<String> words) {

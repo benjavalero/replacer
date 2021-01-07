@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/dump-indexing")
 public class DumpController {
+
     @Autowired
     private DumpManager dumpManager;
 

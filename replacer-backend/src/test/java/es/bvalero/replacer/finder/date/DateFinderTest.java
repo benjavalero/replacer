@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class DateFinderTest {
+
     private final DateFinder date2Finder = new DateFinder();
 
     @ParameterizedTest

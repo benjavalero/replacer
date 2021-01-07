@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class PageListServiceTest {
+
     @Mock
     private ReplacementDao replacementDao;
 

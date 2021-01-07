@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class MisspellingComposedManagerTest {
+
     @Mock
     private WikipediaService wikipediaService;
 

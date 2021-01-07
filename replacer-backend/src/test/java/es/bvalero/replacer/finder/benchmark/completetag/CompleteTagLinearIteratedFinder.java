@@ -2,11 +2,11 @@ package es.bvalero.replacer.finder.benchmark.completetag;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
-
 import java.util.HashSet;
 import java.util.Set;
 
 class CompleteTagLinearIteratedFinder implements BenchmarkFinder {
+
     private final Set<String> tags;
 
     CompleteTagLinearIteratedFinder(Set<String> tags) {

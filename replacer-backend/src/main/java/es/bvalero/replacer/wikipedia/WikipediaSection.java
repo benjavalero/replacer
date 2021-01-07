@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WikipediaSection implements Comparable<WikipediaSection> {
+
     int level;
     int index;
     int byteOffset;

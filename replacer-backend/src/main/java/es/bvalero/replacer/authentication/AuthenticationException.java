@@ -7,5 +7,4 @@ class AuthenticationException extends Exception {
     AuthenticationException() {
         super();
     }
-
 }

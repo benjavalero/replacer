@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/authentication")
 public class AuthenticationController {
+
     @Autowired
     private AuthenticationService authenticationService;
 
@@ -32,8 +33,7 @@ public class AuthenticationController {
         @RequestParam String requestToken,
         @RequestParam String requestTokenSecret,
         @RequestParam String oauthVerifier
-    )
-        throws AuthenticationException {
+    ) throws AuthenticationException {
         OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken(requestToken, requestTokenSecret);
         return convertToDto(authenticationService.getAccessToken(oAuth1RequestToken, oauthVerifier));
     }

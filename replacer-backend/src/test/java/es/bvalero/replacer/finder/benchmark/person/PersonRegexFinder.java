@@ -3,12 +3,12 @@ package es.bvalero.replacer.finder.benchmark.person;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class PersonRegexFinder implements BenchmarkFinder {
+
     private final List<Pattern> words;
 
     PersonRegexFinder(Collection<String> words) {

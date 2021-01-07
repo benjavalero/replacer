@@ -8,6 +8,7 @@ import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
 class RedirectMatcherBenchmark extends BaseFinderBenchmark {
+
     private static final int ITERATIONS = 1000;
 
     @Test

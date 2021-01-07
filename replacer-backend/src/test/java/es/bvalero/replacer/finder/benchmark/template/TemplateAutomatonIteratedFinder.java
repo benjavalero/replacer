@@ -6,17 +6,17 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.apache.commons.collections4.IterableUtils;
 
 class TemplateAutomatonIteratedFinder implements BenchmarkFinder {
+
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+}}";
     private static final String REGEX_NESTED = "\\{\\{<Z>*%s(<Z>|\n)*[|:](%s|[^}])+}}";
     private static final List<RunAutomaton> AUTOMATA = new ArrayList<>();

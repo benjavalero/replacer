@@ -1,16 +1,16 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
+import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import es.bvalero.replacer.finder.benchmark.FinderResult;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class UppercaseFinderTest {
+
     private Collection<String> words;
     private String text;
     private Set<FinderResult> expected;

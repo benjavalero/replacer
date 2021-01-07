@@ -10,6 +10,7 @@ import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.*;
 
 class WordAutomatonFinder implements BenchmarkFinder {
+
     private final List<RunAutomaton> words;
 
     WordAutomatonFinder(Collection<String> words) {

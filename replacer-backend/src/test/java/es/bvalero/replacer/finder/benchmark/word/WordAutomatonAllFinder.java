@@ -6,12 +6,12 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 class WordAutomatonAllFinder implements BenchmarkFinder {
+
     private final RunAutomaton wordPattern;
     private final Set<String> words;
 

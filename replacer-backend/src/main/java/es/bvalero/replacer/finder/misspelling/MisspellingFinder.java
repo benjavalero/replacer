@@ -17,6 +17,7 @@ import org.apache.commons.collections4.SetValuedMap;
  * Abstract class for the common functionality of the misspelling finders.
  */
 public abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeListener {
+
     // Derived from the misspelling set to access faster by word
     private Map<WikipediaLanguage, Map<String, Misspelling>> misspellingMap = new EnumMap<>(WikipediaLanguage.class);
 

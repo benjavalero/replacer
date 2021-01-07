@@ -23,5 +23,4 @@ class AuthenticationServiceOfflineImpl implements AuthenticationService {
     public OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier) {
         return new OAuth1AccessToken("", "", "");
     }
-
 }

@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @Transactional
 public class ReplacementDao {
+
     private static final String PARAM_PAGE_ID = "pageId";
     private static final String PARAM_LANG = "lang";
     private static final String PARAM_TYPE = "type";

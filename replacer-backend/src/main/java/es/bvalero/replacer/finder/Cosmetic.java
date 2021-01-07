@@ -7,6 +7,7 @@ import lombok.Value;
  */
 @Value(staticConstructor = "of")
 public class Cosmetic implements Comparable<Cosmetic> {
+
     /** The start position of the section in the text */
     private final int start;
 

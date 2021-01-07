@@ -17,6 +17,7 @@ import lombok.With;
 @Value
 @Builder
 public class Replacement implements Comparable<Replacement> {
+
     /**
      * The category of the replacement: misspelling, date format, etc.
      * It may include a subtype, for instance the particular misspelling.

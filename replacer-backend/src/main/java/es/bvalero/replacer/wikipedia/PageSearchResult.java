@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class PageSearchResult {
+
     private final List<Integer> pageIds = new LinkedList<>();
     private long total;
 

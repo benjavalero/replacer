@@ -28,6 +28,7 @@ import org.springframework.scheduling.annotation.Scheduled;
  */
 @Slf4j
 public abstract class ParseFileManager<T> {
+
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     private SetValuedMap<WikipediaLanguage, T> items = new HashSetValuedHashMap<>();

@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class AcuteOFinderTest {
+
     private final AcuteOFinder acuteOFinder = new AcuteOFinder();
 
     @ParameterizedTest

@@ -1,17 +1,17 @@
 package es.bvalero.replacer.finder.benchmark.person;
 
+import es.bvalero.replacer.finder.FinderUtils;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
 import org.apache.commons.lang3.StringUtils;
 
 class PersonRegexAlternateFinder implements BenchmarkFinder {
+
     private final Pattern words;
 
     PersonRegexAlternateFinder(Collection<String> words) {

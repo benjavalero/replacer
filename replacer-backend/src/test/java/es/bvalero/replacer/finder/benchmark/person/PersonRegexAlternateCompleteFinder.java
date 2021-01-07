@@ -1,16 +1,16 @@
 package es.bvalero.replacer.finder.benchmark.person;
 
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
 import org.apache.commons.lang3.StringUtils;
 
 class PersonRegexAlternateCompleteFinder implements BenchmarkFinder {
+
     private final Pattern words;
 
     PersonRegexAlternateCompleteFinder(Collection<String> words) {

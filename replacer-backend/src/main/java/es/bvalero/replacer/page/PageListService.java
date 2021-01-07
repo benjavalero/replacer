@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 class PageListService {
+
     @Autowired
     private ReplacementDao replacementDao;
 

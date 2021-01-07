@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 class SubtypeCount {
+
     @JsonProperty("s")
     private final String subtype;
 

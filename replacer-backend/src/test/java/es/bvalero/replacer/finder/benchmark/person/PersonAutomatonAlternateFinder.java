@@ -3,16 +3,16 @@ package es.bvalero.replacer.finder.benchmark.person;
 import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 class PersonAutomatonAlternateFinder implements BenchmarkFinder {
+
     private final RunAutomaton words;
 
     PersonAutomatonAlternateFinder(Collection<String> words) {

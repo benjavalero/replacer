@@ -3,15 +3,15 @@ package es.bvalero.replacer.finder.benchmark.surname;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
 class SurnameRegexAlternateFinder implements BenchmarkFinder {
+
     private final Pattern words;
 
     SurnameRegexAlternateFinder(Collection<String> words) {

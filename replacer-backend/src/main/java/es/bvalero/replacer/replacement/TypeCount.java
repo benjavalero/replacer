@@ -10,6 +10,7 @@ import lombok.Getter;
 @EqualsAndHashCode
 @Getter
 class TypeCount implements Comparable<TypeCount> {
+
     @JsonProperty("t")
     private final String type;
 

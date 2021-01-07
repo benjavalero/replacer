@@ -1,7 +1,6 @@
 package es.bvalero.replacer.dump;
 
 import java.time.Instant;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

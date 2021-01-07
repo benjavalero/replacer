@@ -8,6 +8,7 @@ import org.springframework.lang.Nullable;
  */
 @Value(staticConstructor = "of")
 public class Suggestion {
+
     /** The new text after the replacement */
     String text;
 

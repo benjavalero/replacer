@@ -2,12 +2,12 @@ package es.bvalero.replacer.finder.benchmark.uppercase;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class UppercaseRegexLookBehindFinder implements BenchmarkFinder {
+
     private final List<Pattern> words;
 
     UppercaseRegexLookBehindFinder(Collection<String> words) {

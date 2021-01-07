@@ -12,6 +12,7 @@ import org.mockito.*;
 import org.modelmapper.ModelMapper;
 
 class SectionReviewServiceTest {
+
     @Mock
     private WikipediaService wikipediaService;
 

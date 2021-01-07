@@ -18,6 +18,7 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor // Needed by ModelMapper
 @AllArgsConstructor
 public class ReplacementEntity implements Serializable {
+
     public static final String TYPE_CUSTOM = "Personalizado";
     public static final String REVIEWER_SYSTEM = "system";
 

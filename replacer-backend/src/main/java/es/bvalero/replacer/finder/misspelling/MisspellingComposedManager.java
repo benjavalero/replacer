@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MisspellingComposedManager extends MisspellingManager {
+
     @Autowired
     private WikipediaService wikipediaService;
 

@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 class LanguageCount {
+
     private final WikipediaLanguage lang;
     private final List<TypeCount> typeCounts = new ArrayList<>();
 

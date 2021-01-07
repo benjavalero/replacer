@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class ReplacementCacheTest {
+
     @Mock
     private ReplacementDao replacementDao;
 
@@ -36,7 +37,9 @@ class ReplacementCacheTest {
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
         List<ReplacementEntity> dbReplacements2 = Collections.singletonList(replacement2);
         Mockito.when(replacementDao.findByPageInterval(1, 1000, WikipediaLanguage.SPANISH)).thenReturn(dbReplacements);
-        Mockito.when(replacementDao.findByPageInterval(1001, 2000, WikipediaLanguage.SPANISH)).thenReturn(dbReplacements2);
+        Mockito
+            .when(replacementDao.findByPageInterval(1001, 2000, WikipediaLanguage.SPANISH))
+            .thenReturn(dbReplacements2);
 
         List<ReplacementEntity> replacements = replacementCache.findByPageId(1, WikipediaLanguage.SPANISH);
         Assertions.assertTrue(replacements.isEmpty());
@@ -45,9 +48,7 @@ class ReplacementCacheTest {
         Assertions.assertEquals(dbReplacements2, replacements);
 
         // Check that the page 2 has been cleaned
-        Mockito
-            .verify(replacementDao)
-            .deleteObsoleteByPageId(WikipediaLanguage.SPANISH, Collections.singleton(2));
+        Mockito.verify(replacementDao).deleteObsoleteByPageId(WikipediaLanguage.SPANISH, Collections.singleton(2));
     }
 
     @Test

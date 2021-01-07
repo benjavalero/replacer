@@ -6,16 +6,18 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
-
 import java.util.*;
 
 class PersonAutomatonCompleteFinder implements BenchmarkFinder {
+
     private final List<RunAutomaton> words;
 
     PersonAutomatonCompleteFinder(Collection<String> words) {
         this.words = new ArrayList<>();
         for (String word : words) {
-            this.words.add(new RunAutomaton(new RegExp(word + "<Z><Lu>").toAutomaton(new DatatypesAutomatonProvider())));
+            this.words.add(
+                    new RunAutomaton(new RegExp(word + "<Z><Lu>").toAutomaton(new DatatypesAutomatonProvider()))
+                );
         }
     }
 

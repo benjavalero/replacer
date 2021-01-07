@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class FileFinderTest {
+
     private String text;
     private Set<FinderResult> expected;
 

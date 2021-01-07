@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 class VerificationToken {
+
     private RequestToken requestToken;
     private String token;
 }

@@ -1,20 +1,20 @@
 package es.bvalero.replacer.finder.benchmark.template;
 
+import static org.hamcrest.Matchers.is;
+
 import es.bvalero.replacer.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Resource;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.hamcrest.Matchers.is;
-
 @SpringBootTest(classes = XmlConfiguration.class)
 class TemplateFinderBenchmark extends BaseFinderBenchmark {
+
     @Resource
     private List<String> templateNames;
 

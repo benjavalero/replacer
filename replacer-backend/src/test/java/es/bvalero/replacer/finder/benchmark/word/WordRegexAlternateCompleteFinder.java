@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 class WordRegexAlternateCompleteFinder implements BenchmarkFinder {
+
     private final Pattern words;
 
     WordRegexAlternateCompleteFinder(Collection<String> words) {

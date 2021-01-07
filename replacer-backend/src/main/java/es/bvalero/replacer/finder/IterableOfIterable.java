@@ -6,6 +6,7 @@ import java.util.Iterator;
  * Helper class to iterate over an iterable of iterables, e.g. a list of lists.
  */
 public class IterableOfIterable<T> implements Iterable<T> {
+
     private final Iterable<Iterable<T>> iterables;
 
     public IterableOfIterable(Iterable<Iterable<T>> iterables) {
@@ -18,6 +19,7 @@ public class IterableOfIterable<T> implements Iterable<T> {
     }
 
     private static class IteratorOfIterable<R> implements Iterator<R> {
+
         private final Iterator<Iterable<R>> iteratorOfIterators;
         private Iterator<R> currentIterator;
 

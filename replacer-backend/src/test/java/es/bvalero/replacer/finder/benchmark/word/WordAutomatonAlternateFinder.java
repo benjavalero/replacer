@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 class WordAutomatonAlternateFinder implements BenchmarkFinder {
+
     private final RunAutomaton words;
 
     WordAutomatonAlternateFinder(Collection<String> words) {

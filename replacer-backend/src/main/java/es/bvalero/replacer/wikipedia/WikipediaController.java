@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api")
 public class WikipediaController {
+
     @Autowired
     private WikipediaService wikipediaService;
 
@@ -21,8 +22,7 @@ public class WikipediaController {
         @RequestParam String accessToken,
         @RequestParam String accessTokenSecret,
         @RequestParam WikipediaLanguage lang
-    )
-        throws ReplacerException {
+    ) throws ReplacerException {
         OAuth1AccessToken oAuth1AccessToken = new OAuth1AccessToken(accessToken, accessTokenSecret);
         String userName = wikipediaService.getLoggedUserName(oAuth1AccessToken, lang);
         boolean admin = wikipediaService.isAdminUser(userName);

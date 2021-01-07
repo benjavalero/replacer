@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ReplacementIndexService {
+
     @Autowired
     private ReplacementDao replacementDao;
 

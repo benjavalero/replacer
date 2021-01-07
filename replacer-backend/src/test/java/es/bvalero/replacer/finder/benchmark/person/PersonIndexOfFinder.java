@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 class PersonIndexOfFinder implements BenchmarkFinder {
+
     private final Collection<String> words;
 
     PersonIndexOfFinder(Collection<String> words) {

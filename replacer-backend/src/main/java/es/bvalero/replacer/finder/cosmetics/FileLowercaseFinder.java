@@ -4,19 +4,19 @@ import es.bvalero.replacer.finder.Cosmetic;
 import es.bvalero.replacer.finder.CosmeticFinder;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.RegexIterable;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FileLowercaseFinder implements CosmeticFinder {
+
     @Resource
     private List<String> fileSpaces;
 

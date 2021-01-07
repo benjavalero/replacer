@@ -14,6 +14,7 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 class PageReview {
+
     private int id;
     private WikipediaLanguage lang;
     private String title;

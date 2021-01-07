@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class FalseFinderTest {
+
     private Collection<String> words;
     private String text;
     private Set<FinderResult> expected;

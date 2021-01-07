@@ -190,11 +190,26 @@ class CompleteTemplateFinderTest {
         Assertions.assertEquals(expected, actual);
 
         // Check positions
-        Assertions.assertEquals(2, matches.stream().filter(m -> m.getText().equals("Template1")).findAny().get().getStart());
-        Assertions.assertEquals(12, matches.stream().filter(m -> m.getText().equals("param1")).findAny().get().getStart());
-        Assertions.assertEquals(21, matches.stream().filter(m -> m.getText().equals("Template2")).findAny().get().getStart());
-        Assertions.assertEquals(31, matches.stream().filter(m -> m.getText().equals("índice")).findAny().get().getStart());
-        Assertions.assertEquals(38, matches.stream().filter(m -> m.getText().equals("value2")).findAny().get().getStart());
+        Assertions.assertEquals(
+            2,
+            matches.stream().filter(m -> m.getText().equals("Template1")).findAny().get().getStart()
+        );
+        Assertions.assertEquals(
+            12,
+            matches.stream().filter(m -> m.getText().equals("param1")).findAny().get().getStart()
+        );
+        Assertions.assertEquals(
+            21,
+            matches.stream().filter(m -> m.getText().equals("Template2")).findAny().get().getStart()
+        );
+        Assertions.assertEquals(
+            31,
+            matches.stream().filter(m -> m.getText().equals("índice")).findAny().get().getStart()
+        );
+        Assertions.assertEquals(
+            38,
+            matches.stream().filter(m -> m.getText().equals("value2")).findAny().get().getStart()
+        );
     }
 
     @Test

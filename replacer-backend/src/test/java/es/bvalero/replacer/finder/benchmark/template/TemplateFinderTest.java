@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
 class TemplateFinderTest {
+
     @Resource
     private List<String> templateNames;
 

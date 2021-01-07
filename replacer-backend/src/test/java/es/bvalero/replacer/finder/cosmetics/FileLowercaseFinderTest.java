@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = { FileLowercaseFinder.class, XmlConfiguration.class })
 class FileLowercaseFinderTest {
+
     @Autowired
     private FileLowercaseFinder fileLowercaseFinder;
 

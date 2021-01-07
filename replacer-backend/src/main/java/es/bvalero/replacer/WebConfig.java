@@ -17,13 +17,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Profile("!default")
 @Configuration
 public class WebConfig {
+
     @Value("${replacer.cors.allowed.origins}")
     private String corsAllowedOrigins;
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
-
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**").allowedOrigins(corsAllowedOrigins).allowedMethods("GET", "POST");

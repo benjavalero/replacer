@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FalsePositiveManager extends ParseFileManager<String> {
+
     @Autowired
     private WikipediaService wikipediaService;
 

@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class DumpFinder {
+
     private static final String DUMP_FOLDER_REGEX = "\\d{8}";
     private static final Pattern DUMP_FOLDER_PATTERN = Pattern.compile(DUMP_FOLDER_REGEX);
     private static final String DUMP_PATH_PROJECT_FORMAT = "%swiki";

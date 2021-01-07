@@ -5,15 +5,15 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.MatchResult;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.apache.commons.collections4.IterableUtils;
 
 class FileAutomatonFinder implements BenchmarkFinder {
+
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX = "\\[\\[(Archivo|File|Imagen?):[^]|]+";
 

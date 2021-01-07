@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 class WikipediaRequestService {
+
     private static final String WIKIPEDIA_API_URL = "https://%s.wikipedia.org/w/api.php";
 
     @Autowired
@@ -37,8 +38,7 @@ class WikipediaRequestService {
         Map<String, String> params,
         WikipediaLanguage lang,
         @Nullable OAuth1AccessToken accessToken
-    )
-        throws ReplacerException {
+    ) throws ReplacerException {
         return executeRequest(params, Verb.GET, lang, accessToken);
     }
 
@@ -46,8 +46,7 @@ class WikipediaRequestService {
         Map<String, String> params,
         WikipediaLanguage lang,
         @Nullable OAuth1AccessToken accessToken
-    )
-        throws ReplacerException {
+    ) throws ReplacerException {
         return executeRequest(params, Verb.POST, lang, accessToken);
     }
 
@@ -57,8 +56,7 @@ class WikipediaRequestService {
         Verb verb,
         WikipediaLanguage lang,
         @Nullable OAuth1AccessToken accessToken
-    )
-        throws ReplacerException {
+    ) throws ReplacerException {
         boolean isSigned = accessToken != null && StringUtils.isNotBlank(accessToken.getToken());
         LOGGER.trace("OAuth request is signed: {}", isSigned);
         OAuthRequest request = createOAuthRequestWithParams(params, verb, lang);

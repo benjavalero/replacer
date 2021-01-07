@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class RedirectMatcherTest {
+
     private String text;
 
     @BeforeEach

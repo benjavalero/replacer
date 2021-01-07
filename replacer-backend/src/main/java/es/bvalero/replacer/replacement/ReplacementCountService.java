@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ReplacementCountService {
+
     @Autowired
     private ReplacementDao replacementDao;
 

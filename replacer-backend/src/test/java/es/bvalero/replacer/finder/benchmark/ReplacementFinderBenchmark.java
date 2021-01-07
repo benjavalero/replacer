@@ -35,6 +35,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
     }
 )
 class ReplacementFinderBenchmark extends BaseFinderBenchmark {
+
     @Autowired
     private List<ReplacementFinder> replacementFinders;
 

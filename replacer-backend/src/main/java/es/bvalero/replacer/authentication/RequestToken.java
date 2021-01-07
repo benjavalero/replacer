@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 class RequestToken {
+
     private String token;
     private String tokenSecret;
     private String authorizationUrl;

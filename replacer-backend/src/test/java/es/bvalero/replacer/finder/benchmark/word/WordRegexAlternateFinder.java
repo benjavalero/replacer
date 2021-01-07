@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 class WordRegexAlternateFinder implements BenchmarkFinder {
+
     private final Pattern words;
 
     WordRegexAlternateFinder(Collection<String> words) {

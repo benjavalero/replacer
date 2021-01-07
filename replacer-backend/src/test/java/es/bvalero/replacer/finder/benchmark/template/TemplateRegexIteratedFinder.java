@@ -3,18 +3,18 @@ package es.bvalero.replacer.finder.benchmark.template;
 import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import org.apache.commons.collections4.IterableUtils;
 
 class TemplateRegexIteratedFinder implements BenchmarkFinder {
+
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
     private static final String REGEX_NESTED = "\\{\\{\\s*%s\\s*[|:](%s|[^}])+?}}";
     private static final List<Pattern> PATTERNS = new ArrayList<>();

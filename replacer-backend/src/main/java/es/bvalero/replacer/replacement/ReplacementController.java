@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/replacements")
 public class ReplacementController {
+
     @Autowired
     private ReplacementCountService replacementCountService;
 

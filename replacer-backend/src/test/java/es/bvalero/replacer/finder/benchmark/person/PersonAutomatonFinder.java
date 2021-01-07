@@ -6,10 +6,10 @@ import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
-
 import java.util.*;
 
 class PersonAutomatonFinder implements BenchmarkFinder {
+
     private final List<RunAutomaton> words;
 
     PersonAutomatonFinder(Collection<String> words) {

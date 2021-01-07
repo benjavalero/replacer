@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class FalsePositiveManagerTest {
+
     @Mock
     private WikipediaService wikipediaService;
 

@@ -8,6 +8,7 @@ import org.springframework.lang.Nullable;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WikipediaApiResponse {
+
     @Nullable
     private Error error;
 
@@ -19,6 +20,7 @@ public class WikipediaApiResponse {
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     static class Error {
+
         private String code;
         private String info;
     }
@@ -26,6 +28,7 @@ public class WikipediaApiResponse {
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Query {
+
         private UserInfo userinfo;
         private SearchInfo searchinfo;
         private List<Page> search;
@@ -35,17 +38,20 @@ public class WikipediaApiResponse {
 
     @Data
     static class UserInfo {
+
         private int id;
         private String name;
     }
 
     @Data
     static class SearchInfo {
+
         private int totalhits;
     }
 
     @Data
     public static class Page {
+
         private int pageid;
         private int ns;
         private String title;
@@ -56,28 +62,33 @@ public class WikipediaApiResponse {
 
     @Data
     public static class Revision {
+
         private String timestamp;
         private Slots slots;
     }
 
     @Data
     static class Tokens {
+
         private String csrftoken;
     }
 
     @Data
     public static class Slots {
+
         private Main main;
     }
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Main {
+
         private String content;
     }
 
     @Data
     static class Section {
+
         private int toclevel;
         private String level;
         private String line;

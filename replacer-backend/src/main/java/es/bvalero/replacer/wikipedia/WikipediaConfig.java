@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class WikipediaConfig {
+
     @Value("${replacer.wikipedia.api.key}")
     private String apiKey;
 

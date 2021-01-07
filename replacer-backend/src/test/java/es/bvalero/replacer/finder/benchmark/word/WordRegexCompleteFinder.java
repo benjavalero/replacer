@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class WordRegexCompleteFinder implements BenchmarkFinder {
+
     private final List<Pattern> words;
 
     WordRegexCompleteFinder(Collection<String> words) {

@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class WordRegexFinder implements BenchmarkFinder {
+
     private final List<Pattern> words;
 
     WordRegexFinder(Collection<String> words) {

@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
 class CompleteTagFinderTest {
+
     @Resource
     private Set<String> completeTags;
 

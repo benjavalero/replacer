@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CursiveFinderTest {
+
     private String text;
     private Set<FinderResult> expected;
 
