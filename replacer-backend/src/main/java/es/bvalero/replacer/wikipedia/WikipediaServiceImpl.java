@@ -262,6 +262,7 @@ class WikipediaServiceImpl implements WikipediaService {
         params.put("utf8", "1");
         params.put("srlimit", Integer.toString(limit));
         params.put("sroffset", Integer.toString(offset));
+        params.put("srsort", "create_timestamp_asc"); // So the order is invariable after editing
         params.put("srsearch", buildSearchExpression(text, caseSensitive));
         params.put(
             "srnamespace",
