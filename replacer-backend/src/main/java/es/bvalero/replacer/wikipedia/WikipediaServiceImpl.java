@@ -29,6 +29,7 @@ class WikipediaServiceImpl implements WikipediaService {
     private static final String VALUE_QUERY = "query";
     private static final String PARAM_PAGE_ID = "pageid";
     private static final String PARAM_PAGE_IDS = "pageids";
+    private static final int MAX_OFFSET_LIMIT = 10000;
 
     @Autowired
     private WikipediaRequestService wikipediaRequestService;
@@ -237,12 +238,18 @@ class WikipediaServiceImpl implements WikipediaService {
     @Override
     @Loggable(value = Loggable.DEBUG)
     public PageSearchResult getPageIdsByStringMatch(
+        WikipediaLanguage lang,
         String text,
         boolean caseSensitive,
         int offset,
-        int limit,
-        WikipediaLanguage lang
+        int limit
     ) throws ReplacerException {
+        // Avoid exception when reaching the maximum offset limit
+        if (offset + limit >= MAX_OFFSET_LIMIT) {
+            LOGGER.warn("Maximum offset reached: {} - {} - {}", lang, text, caseSensitive);
+            return PageSearchResult.ofEmpty();
+        }
+
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
             buildPageIdsByStringMatchRequestParams(text, caseSensitive, offset, limit),
             lang

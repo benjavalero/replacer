@@ -74,11 +74,11 @@ class PageReviewCustomService extends PageReviewService {
             );
 
             PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
+                options.getLang(),
                 options.getSubtype(),
                 caseSensitive,
                 offset,
-                CACHE_SIZE,
-                options.getLang()
+                CACHE_SIZE
             );
             while (!pageIds.isEmpty()) {
                 // Discard the pages already reviewed
@@ -89,11 +89,11 @@ class PageReviewCustomService extends PageReviewService {
                     cachedOffsets.put(cacheKey, offset);
                     pageIds =
                         wikipediaService.getPageIdsByStringMatch(
+                            options.getLang(),
                             options.getSubtype(),
                             caseSensitive,
                             offset,
-                            CACHE_SIZE,
-                            options.getLang()
+                            CACHE_SIZE
                         );
                 } else {
                     return pageIds;

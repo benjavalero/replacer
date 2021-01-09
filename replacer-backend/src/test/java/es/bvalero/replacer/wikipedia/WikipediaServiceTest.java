@@ -173,11 +173,11 @@ class WikipediaServiceTest {
             .thenReturn(response);
 
         PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
+            WikipediaLanguage.SPANISH,
             "",
             false,
             0,
-            100,
-            WikipediaLanguage.SPANISH
+            100
         );
         Assertions.assertEquals(10, pageIds.getTotal());
     }
@@ -192,11 +192,11 @@ class WikipediaServiceTest {
             .thenReturn(response);
 
         PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
+            WikipediaLanguage.SPANISH,
             "",
             false,
             0,
-            100,
-            WikipediaLanguage.SPANISH
+            100
         );
         Assertions.assertTrue(pageIds.isEmpty());
     }
@@ -432,7 +432,7 @@ class WikipediaServiceTest {
             wikipediaServiceOffline.getPageById(1, WikipediaLanguage.SPANISH).map(WikipediaPage::getSection).isPresent()
         );
         Assertions.assertFalse(
-            wikipediaServiceOffline.getPageIdsByStringMatch("", false, 0, 100, WikipediaLanguage.SPANISH).isEmpty()
+            wikipediaServiceOffline.getPageIdsByStringMatch(WikipediaLanguage.SPANISH, "", false, 0, 100).isEmpty()
         );
         Assertions.assertTrue(wikipediaServiceOffline.getPageSections(1, WikipediaLanguage.SPANISH).isEmpty());
         Assertions.assertEquals(

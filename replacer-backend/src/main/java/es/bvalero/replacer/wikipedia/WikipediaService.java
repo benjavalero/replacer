@@ -29,11 +29,11 @@ public interface WikipediaService {
         throws ReplacerException;
 
     PageSearchResult getPageIdsByStringMatch(
+        WikipediaLanguage lang,
         String text,
         boolean caseSensitive,
         int offset,
-        int limit,
-        WikipediaLanguage lang
+        int limit
     ) throws ReplacerException;
 
     void savePageContent(

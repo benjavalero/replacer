@@ -85,11 +85,11 @@ class PageReviewCustomServiceTest {
         Mockito
             .when(
                 wikipediaService.getPageIdsByStringMatch(
+                    Mockito.any(WikipediaLanguage.class),
                     Mockito.anyString(),
                     Mockito.anyBoolean(),
                     Mockito.anyInt(),
-                    Mockito.anyInt(),
-                    Mockito.any(WikipediaLanguage.class)
+                    Mockito.anyInt()
                 )
             )
             .thenReturn(new PageSearchResult(1, pageIds));
@@ -124,11 +124,11 @@ class PageReviewCustomServiceTest {
         Mockito
             .when(
                 wikipediaService.getPageIdsByStringMatch(
+                    Mockito.any(WikipediaLanguage.class),
                     Mockito.anyString(),
                     Mockito.anyBoolean(),
                     Mockito.anyInt(),
-                    Mockito.anyInt(),
-                    Mockito.any(WikipediaLanguage.class)
+                    Mockito.anyInt()
                 )
             )
             .thenReturn(new PageSearchResult(pageIds.size(), pageIds))
@@ -154,11 +154,11 @@ class PageReviewCustomServiceTest {
         Mockito
             .verify(wikipediaService, Mockito.times(2))
             .getPageIdsByStringMatch(
+                Mockito.any(WikipediaLanguage.class),
                 Mockito.anyString(),
                 Mockito.anyBoolean(),
                 Mockito.anyInt(),
-                Mockito.anyInt(),
-                Mockito.any(WikipediaLanguage.class)
+                Mockito.anyInt()
             );
 
         // We add nothing to database
