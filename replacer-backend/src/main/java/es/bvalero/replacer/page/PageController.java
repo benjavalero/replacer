@@ -10,6 +10,7 @@ import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Optional;
+import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,7 +62,7 @@ public class PageController {
 
     @GetMapping(value = "/random", params = { "replacement", "suggestion" })
     public Optional<PageReview> findRandomPageByCustomReplacement(
-        @RequestParam String replacement,
+        @RequestParam @Size(max = 300) String replacement,
         @RequestParam String suggestion,
         @RequestParam WikipediaLanguage lang
     ) {
@@ -70,7 +71,7 @@ public class PageController {
 
     @GetMapping(value = "/validate", params = { "replacement" })
     public Optional<String> validateCustomReplacement(
-        @RequestParam String replacement,
+        @RequestParam @Size(max = 300) String replacement,
         @RequestParam WikipediaLanguage lang
     ) {
         return pageReviewCustomService.validateCustomReplacement(replacement, lang);
