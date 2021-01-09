@@ -12,8 +12,7 @@ import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import javax.annotation.Resource;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +23,9 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 class PageReviewCustomService extends PageReviewService {
+
+    // Cache the offsets to find custom replacements with Wikipedia Search API
+    private final Map<String, Integer> cachedOffsets = new HashMap<>();
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -47,7 +49,7 @@ class PageReviewCustomService extends PageReviewService {
 
     @Override
     String buildReplacementCacheKey(PageReviewOptions options) {
-        return String.format("%s-%s-%s", options.getLang().getCode(), options.getSubtype(), options.getSuggestion());
+        return String.format("%s-%s", options.getLang().getCode(), options.getSubtype());
     }
 
     @Override
@@ -57,13 +59,20 @@ class PageReviewCustomService extends PageReviewService {
                 FinderUtils.containsUppercase(options.getSubtype()) ||
                 FinderUtils.containsUppercase(options.getSuggestion());
 
+            // Find cached offset
             int offset = 0;
+            String cacheKey = buildReplacementCacheKey(options);
+            if (cachedOffsets.containsKey(cacheKey)) {
+                offset = cachedOffsets.get(cacheKey);
+            } else {
+                cachedOffsets.put(cacheKey, offset);
+            }
+
             List<Integer> reviewedIds = replacementDao.findPageIdsReviewedByCustomTypeAndSubtype(
                 options.getLang(),
                 options.getSubtype()
             );
 
-            // We need a List in order to use "removeIf"
             PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
                 options.getSubtype(),
                 caseSensitive,
@@ -73,11 +82,11 @@ class PageReviewCustomService extends PageReviewService {
             );
             while (!pageIds.isEmpty()) {
                 // Discard the pages already reviewed
-                // TODO: We should only mark as reviewed a custom replacement if it has been reviewed without changes
                 pageIds.removePageIds(reviewedIds);
 
                 if (pageIds.isEmpty()) {
                     offset += CACHE_SIZE;
+                    cachedOffsets.put(cacheKey, offset);
                     pageIds =
                         wikipediaService.getPageIdsByStringMatch(
                             options.getSubtype(),
@@ -91,7 +100,7 @@ class PageReviewCustomService extends PageReviewService {
                 }
             }
         } catch (ReplacerException e) {
-            LOGGER.error("Error finding page IDs in Wikipedia", e);
+            LOGGER.error("Error finding page IDs in Wikipedia for options: {}", options, e);
         }
 
         return PageSearchResult.ofEmpty();
@@ -99,28 +108,14 @@ class PageReviewCustomService extends PageReviewService {
 
     @Override
     void setPageAsReviewed(int pageId, PageReviewOptions options) {
-        // We add the custom replacement to the database as reviewed to skip it after the next search in the API
-        addCustomSystemReviewedReplacement(pageId, options.getLang(), options.getSubtype());
+        // Do nothing
     }
 
     @Override
     List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
-        List<Replacement> replacements = replacementFindService.findCustomReplacements(
-            page,
-            options.getSubtype(),
-            options.getSuggestion()
-        );
-
-        if (replacements.isEmpty()) {
-            // We add the custom replacement to the database as reviewed to skip it after the next search in the API
-            addCustomSystemReviewedReplacement(page.getId(), page.getLang(), options.getSubtype());
-        }
-
-        return replacements;
-    }
-
-    private void addCustomSystemReviewedReplacement(int pageId, WikipediaLanguage lang, String replacement) {
-        replacementDao.insert(ReplacementEntity.createCustomSystemReviewed(pageId, lang, replacement));
+        // We do nothing in the database in case the list is empty
+        // We want to review the page every time in case anything has changed
+        return replacementFindService.findCustomReplacements(page, options.getSubtype(), options.getSuggestion());
     }
 
     void reviewPageReplacements(int pageId, WikipediaLanguage lang, String subtype, String reviewer) {

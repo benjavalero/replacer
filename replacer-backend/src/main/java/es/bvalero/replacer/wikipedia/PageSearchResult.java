@@ -6,6 +6,7 @@ import lombok.Getter;
 @Getter
 public class PageSearchResult {
 
+    // We need a List in order to use "removeIf"
     private final List<Integer> pageIds = new LinkedList<>();
     private long total;
 

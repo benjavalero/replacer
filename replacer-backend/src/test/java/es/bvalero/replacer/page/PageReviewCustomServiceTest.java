@@ -161,7 +161,8 @@ class PageReviewCustomServiceTest {
                 Mockito.any(WikipediaLanguage.class)
             );
 
-        Mockito.verify(replacementDao, Mockito.times(1)).insert(Mockito.any(ReplacementEntity.class));
+        // We add nothing to database
+        Mockito.verify(replacementDao, Mockito.never()).insert(Mockito.any(ReplacementEntity.class));
 
         Assertions.assertFalse(review.isPresent());
     }

@@ -145,10 +145,6 @@ public class ReplacementEntity implements Serializable {
         );
     }
 
-    public static ReplacementEntity createCustomSystemReviewed(int pageId, WikipediaLanguage lang, String subtype) {
-        return createCustomReviewed(pageId, lang, subtype, REVIEWER_SYSTEM);
-    }
-
     public static ReplacementEntity createCustomReviewed(
         int pageId,
         WikipediaLanguage lang,
