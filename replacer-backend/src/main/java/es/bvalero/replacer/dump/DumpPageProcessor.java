@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -39,9 +40,19 @@ class DumpPageProcessor {
 
     @Nullable
     public List<ReplacementEntity> process(DumpPage dumpPage) throws ReplacerException {
-        // 1. Check if it is processable
+        // 1. Check if it is processable by content
         // We "skip" the item by throwing an exception
-        dumpPage.validateProcessable(ignorableTemplates);
+        try {
+            dumpPage.validateProcessable(ignorableTemplates);
+        } catch (ReplacerException e) {
+            // Remove possible existing (not reviewed) replacements
+            List<ReplacementEntity> toDelete = notProcessPage(dumpPage);
+            if (toDelete.isEmpty()) {
+                throw e;
+            } else {
+                return toDelete;
+            }
+        }
 
         // 2. Find the replacements to index
         try {
@@ -57,6 +68,7 @@ class DumpPageProcessor {
     }
 
     @Loggable(prepend = true, value = Loggable.TRACE)
+    @VisibleForTesting
     List<ReplacementEntity> processPage(DumpPage dumpPage) {
         List<ReplacementEntity> dbReplacements = replacementCache.findByPageId(dumpPage.getId(), dumpPage.getLang());
         Optional<LocalDate> dbLastUpdate = dbReplacements
@@ -79,5 +91,18 @@ class DumpPageProcessor {
             replacements.stream().map(dumpPage::convertReplacementToIndexed).collect(Collectors.toList()),
             dbReplacements
         );
+    }
+
+    private List<ReplacementEntity> notProcessPage(DumpPage dumpPage) {
+        List<ReplacementEntity> dbReplacements = replacementCache.findByPageId(dumpPage.getId(), dumpPage.getLang());
+
+        // Return the DB replacements not reviewed in order to delete them
+        List<ReplacementEntity> toDelete = dbReplacements
+            .stream()
+            .filter(ReplacementEntity::isToBeReviewed)
+            .filter(ReplacementEntity::isSystemReviewed)
+            .collect(Collectors.toList());
+        toDelete.forEach(ReplacementEntity::setToDelete);
+        return toDelete;
     }
 }

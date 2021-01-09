@@ -63,7 +63,7 @@ public class ReplacementEntity implements Serializable {
         this.reviewer = reviewer;
     }
 
-    boolean isToBeReviewed() {
+    public boolean isToBeReviewed() {
         return this.reviewer == null;
     }
 
@@ -71,7 +71,7 @@ public class ReplacementEntity implements Serializable {
         return this.lastUpdate.isBefore(date);
     }
 
-    boolean isSystemReviewed() {
+    public boolean isSystemReviewed() {
         return REVIEWER_SYSTEM.equals(this.reviewer);
     }
 
@@ -83,7 +83,7 @@ public class ReplacementEntity implements Serializable {
         return "C".equals(this.cudAction);
     }
 
-    void setToDelete() {
+    public void setToDelete() {
         this.cudAction = "D";
     }
 
