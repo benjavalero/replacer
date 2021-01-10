@@ -12,17 +12,17 @@ public class CosmeticFindService {
     private List<CosmeticFinder> cosmeticFinders;
 
     public String applyCosmeticChanges(String text) {
-        String fixedTest = text;
+        String fixedText = text;
         for (CosmeticFinder finder : cosmeticFinders) {
-            List<Cosmetic> cosmetics = finder.findList(fixedTest);
+            List<Cosmetic> cosmetics = finder.findList(fixedText);
             Collections.sort(cosmetics);
 
             // By default the results are sorted in descending order by the start
             for (Cosmetic cosmetic : cosmetics) {
-                fixedTest = replaceInText(cosmetic, fixedTest);
+                fixedText = replaceInText(cosmetic, fixedText);
             }
         }
-        return fixedTest;
+        return fixedText;
     }
 
     private String replaceInText(Cosmetic cosmetic, String text) {
