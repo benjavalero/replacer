@@ -80,13 +80,14 @@ class PageReviewCustomService extends PageReviewService {
                 offset,
                 CACHE_SIZE
             );
+            offset += CACHE_SIZE;
+            cachedOffsets.put(cacheKey, offset);
+
             while (!pageIds.isEmpty()) {
                 // Discard the pages already reviewed
                 pageIds.removePageIds(reviewedIds);
 
                 if (pageIds.isEmpty()) {
-                    offset += CACHE_SIZE;
-                    cachedOffsets.put(cacheKey, offset);
                     pageIds =
                         wikipediaService.getPageIdsByStringMatch(
                             options.getLang(),
@@ -95,6 +96,8 @@ class PageReviewCustomService extends PageReviewService {
                             offset,
                             CACHE_SIZE
                         );
+                    offset += CACHE_SIZE;
+                    cachedOffsets.put(cacheKey, offset);
                 } else {
                     return pageIds;
                 }
