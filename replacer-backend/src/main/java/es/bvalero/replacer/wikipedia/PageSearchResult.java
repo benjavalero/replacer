@@ -6,14 +6,14 @@ import lombok.Getter;
 @Getter
 public class PageSearchResult {
 
-    // We need a List in order to use "removeIf"
-    private final List<Integer> pageIds = new LinkedList<>();
+    private final List<Integer> pageIds;
     private long total;
 
     public PageSearchResult(long total, Collection<Integer> pageIds) {
         this.total = total;
         // Add a set to remove duplicated page ids
-        this.pageIds.addAll(new HashSet<>(pageIds));
+        // We need a List in order to use "removeIf"
+        this.pageIds = new LinkedList<>(new HashSet<>(pageIds));
     }
 
     public static PageSearchResult ofEmpty() {

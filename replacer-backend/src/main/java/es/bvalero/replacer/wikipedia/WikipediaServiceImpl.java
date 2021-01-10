@@ -303,15 +303,19 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     private PageSearchResult extractPageIdsFromSearchJson(WikipediaApiResponse response) {
-        return new PageSearchResult(
-            response.getQuery().getSearchinfo().getTotalhits(),
-            response
-                .getQuery()
-                .getSearch()
-                .stream()
-                .map(WikipediaApiResponse.Page::getPageid)
-                .collect(Collectors.toList())
-        );
+        List<Integer> pageIds = response
+            .getQuery()
+            .getSearch()
+            .stream()
+            .map(WikipediaApiResponse.Page::getPageid)
+            .collect(Collectors.toList());
+
+        // Check nullity of IDs just in case to try to reproduce a strange bug
+        if (pageIds.stream().anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("Null page ID in API response: " + response);
+        }
+
+        return new PageSearchResult(response.getQuery().getSearchinfo().getTotalhits(), pageIds);
     }
 
     @Loggable(value = Loggable.DEBUG, ignore = ReplacerException.class)
