@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.replacement.IndexableReplacement;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
@@ -35,7 +36,8 @@ public interface IndexablePage {
     default void validateProcessableByContent(List<String> ignorableTemplates) throws ReplacerException {
         String lowerContent = getContent().toLowerCase();
         for (String template : ignorableTemplates) {
-            if (lowerContent.contains(template)) {
+            int start = lowerContent.indexOf(template);
+            if (start >= 0 && FinderUtils.isWordCompleteInText(start, template, lowerContent)) {
                 throw new ReplacerException("Page not processable by content: " + template);
             }
         }

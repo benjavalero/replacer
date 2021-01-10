@@ -67,6 +67,13 @@ class WikipediaPageTest {
                     .build()
                     .validateProcessableByContent(ignorableTemplates)
         );
+
+        // Test it is not ignored by containing "{{pa}}
+        WikipediaPage
+            .builder()
+            .content("Text {{Partial|Co-Director}} Text")
+            .build()
+            .validateProcessableByContent(ignorableTemplates);
     }
 
     @Test

@@ -10,7 +10,8 @@
     <!-- Pages containing these templates should not be processed -->
     <!-- The verification is done by a simple "contains" of the given text in lowercase -->
     <util:list id="ignorableTemplates" value-type="java.lang.String">
-        <value>#redirec</value>
+        <value>#redirect</value>
+        <value>#redirección</value>
 
         <!-- Spanish -->
         <value>{{destruir</value>
