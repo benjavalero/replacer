@@ -168,13 +168,14 @@ class PageControllerTest {
     void testSaveWithChanges() throws Exception {
         int pageId = 123;
         int section = 3;
+        String title = "Q";
         String content = "X";
         String timestamp = "Y";
         String reviewer = "Z";
         AccessToken token = new AccessToken("A", "B");
         String type = "T";
         String subtype = "S";
-        SavePage savePage = new SavePage(section, content, timestamp, reviewer, token, type, subtype);
+        SavePage savePage = new SavePage(section, title, content, timestamp, reviewer, token, type, subtype);
 
         when(cosmeticFindService.applyCosmeticChanges(anyString())).thenReturn("C");
 
@@ -202,12 +203,13 @@ class PageControllerTest {
     void testSaveWithNoChanges() throws Exception {
         int pageId = 123;
         int section = 3;
+        String title = "Q";
         String timestamp = "Y";
         String reviewer = "Z";
         AccessToken token = new AccessToken("A", "B");
         String type = "T";
         String subtype = "S";
-        SavePage savePage = new SavePage(section, null, timestamp, reviewer, token, type, subtype);
+        SavePage savePage = new SavePage(section, title, null, timestamp, reviewer, token, type, subtype);
 
         mvc
             .perform(

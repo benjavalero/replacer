@@ -15,14 +15,13 @@ import { Language, WikipediaUser } from '../authentication/wikipedia-user.model'
   styleUrls: []
 })
 export class EditPageComponent implements OnInit {
-
   articleId: number;
   filteredType: string;
   filteredSubtype: string;
   suggestion: string; // Only for type 'custom'
 
   lang: Language;
-  title = '';
+  title: string;
   content: string;
   section: number;
   anchor: string;
@@ -31,8 +30,14 @@ export class EditPageComponent implements OnInit {
   fixedCount = 0;
   currentTimestamp: string;
 
-  constructor(private route: ActivatedRoute, private alertService: AlertService, private articleService: ArticleService,
-              private router: Router, private authenticationService: AuthenticationService, private titleService: Title) { }
+  constructor(
+    private route: ActivatedRoute,
+    private alertService: AlertService,
+    private articleService: ArticleService,
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private titleService: Title
+  ) {}
 
   ngOnInit() {
     // Subscribe to retrieve the lang
@@ -49,30 +54,40 @@ export class EditPageComponent implements OnInit {
     this.suggestion = this.route.snapshot.paramMap.get('suggestion');
 
     // First try to get the review from the cache
-    const cachedReview = this.articleService.getPageReviewFromCache(this.articleId, this.filteredType, this.filteredSubtype);
+    const cachedReview = this.articleService.getPageReviewFromCache(
+      this.articleId,
+      this.filteredType,
+      this.filteredSubtype
+    );
 
-    let title = 'Replacer - ';
+    let htmlTitle = 'Replacer - ';
     if (this.filteredType && this.filteredSubtype) {
-      title += `${this.filteredSubtype} - `;
+      htmlTitle += `${this.filteredSubtype} - `;
     }
-    title += cachedReview ? cachedReview.title : this.articleId;
-    this.titleService.setTitle(title);
+    htmlTitle += cachedReview ? cachedReview.title : this.articleId;
+    this.titleService.setTitle(htmlTitle);
     this.alertService.addInfoMessage('Buscando potenciales reemplazos del artículo…');
 
     if (cachedReview) {
       this.manageReview(cachedReview);
     } else {
-      this.articleService.findPageReviewById(this.articleId, this.filteredType, this.filteredSubtype, this.suggestion)
-        .subscribe((review: PageReview) => {
-          if (review) {
-            this.manageReview(review);
-          } else {
-            this.alertService.addWarningMessage('No se ha encontrado ningún reemplazo en la versión más actualizada del artículo');
-            this.redirectToNextArticle();
+      this.articleService
+        .findPageReviewById(this.articleId, this.filteredType, this.filteredSubtype, this.suggestion)
+        .subscribe(
+          (review: PageReview) => {
+            if (review) {
+              this.manageReview(review);
+            } else {
+              this.alertService.addWarningMessage(
+                'No se ha encontrado ningún reemplazo en la versión más actualizada del artículo'
+              );
+              this.redirectToNextArticle();
+            }
+          },
+          (err) => {
+            this.alertService.addErrorMessage('Error al buscar los reemplazos en el artículo: ' + err.error.message);
           }
-        }, (err) => {
-          this.alertService.addErrorMessage('Error al buscar los reemplazos en el artículo: ' + err.error.message);
-        });
+        );
     }
   }
 
@@ -88,12 +103,12 @@ export class EditPageComponent implements OnInit {
   }
 
   onFixed(fixed: any) {
-    this.replacements.find(rep => rep.start === fixed.position).textFixed = fixed.newText;
+    this.replacements.find((rep) => rep.start === fixed.position).textFixed = fixed.newText;
     this.fixedCount = this.getFixedReplacements().length;
   }
 
   private getFixedReplacements(): PageReplacement[] {
-    return this.replacements.filter(rep => rep.textFixed);
+    return this.replacements.filter((rep) => rep.textFixed);
   }
 
   onSaveChanges() {
@@ -102,7 +117,7 @@ export class EditPageComponent implements OnInit {
     if (fixedReplacements) {
       // Apply the fixes in the original text
       let contentToSave = this.content;
-      fixedReplacements.forEach(rep => {
+      fixedReplacements.forEach((rep) => {
         contentToSave = this.replaceText(contentToSave, rep.start, rep.text, rep.textFixed);
       });
 
@@ -128,20 +143,33 @@ export class EditPageComponent implements OnInit {
     // Remove replacements as a trick to hide the article
     this.replacements = [];
 
-    this.articleService.savePage(this.articleId, this.filteredType, this.filteredSubtype, content, this.section, this.currentTimestamp)
-      .subscribe(res => { }, err => {
-        const errMsg = `Error al guardar el artículo: ${err.error}`;
-        if (errMsg.includes('mwoauth-invalid-authorization')) {
-          // Clear session and reload the page
-          this.authenticationService.clearSession();
-          window.location.reload();
-        } else {
-          this.alertService.addErrorMessage(errMsg);
+    this.articleService
+      .savePage(
+        this.articleId,
+        this.filteredType,
+        this.filteredSubtype,
+        this.title,
+        content,
+        this.section,
+        this.currentTimestamp
+      )
+      .subscribe(
+        (res) => {},
+        (err) => {
+          const errMsg = `Error al guardar el artículo: ${err.error}`;
+          if (errMsg.includes('mwoauth-invalid-authorization')) {
+            // Clear session and reload the page
+            this.authenticationService.clearSession();
+            window.location.reload();
+          } else {
+            this.alertService.addErrorMessage(errMsg);
+          }
+        },
+        () => {
+          this.alertService.addSuccessMessage('Cambios guardados con éxito');
+          this.redirectToNextArticle();
         }
-      }, () => {
-        this.alertService.addSuccessMessage('Cambios guardados con éxito');
-        this.redirectToNextArticle();
-      });
+      );
   }
 
   private redirectToNextArticle() {
@@ -157,11 +185,7 @@ export class EditPageComponent implements OnInit {
   }
 
   private replaceText(fullText: string, position: number, currentText: string, newText: string): string {
-    return (
-      fullText.slice(0, position) +
-      newText +
-      fullText.slice(position + currentText.length)
-    );
+    return fullText.slice(0, position) + newText + fullText.slice(position + currentText.length);
   }
 
   get url(): string {

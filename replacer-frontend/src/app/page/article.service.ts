@@ -70,6 +70,7 @@ export class ArticleService {
     pageId: number,
     type: string,
     subtype: string,
+    title: string,
     content: string,
     section: number,
     currentTimestamp: string
@@ -82,6 +83,7 @@ export class ArticleService {
     if (section) {
       savePage.section = section;
     }
+    savePage.title = title;
     savePage.content = content;
     savePage.timestamp = currentTimestamp;
     savePage.reviewer = this.authenticationService.user.name;

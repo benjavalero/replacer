@@ -14,6 +14,7 @@ class SavePage {
     @Nullable
     private Integer section;
 
+    private String title;
     private String content;
     private String timestamp;
     private String reviewer;
