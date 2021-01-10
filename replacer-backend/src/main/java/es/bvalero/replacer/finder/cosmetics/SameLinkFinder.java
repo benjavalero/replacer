@@ -6,6 +6,8 @@ import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+
+import java.util.Optional;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
@@ -39,6 +41,11 @@ class SameLinkFinder implements CosmeticFinder {
     public String getFix(MatchResult matcher) {
         String linkTitle = matcher.group(2);
         return String.format("[[%s]]", linkTitle);
+    }
+
+    @Override
+    public Optional<Integer> getFixId() {
+        return Optional.of(64);
     }
 
     private boolean isSameLink(String link, String title) {

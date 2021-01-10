@@ -8,6 +8,7 @@ import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Optional;
 import javax.validation.constraints.Size;
@@ -120,7 +121,14 @@ public class PageController {
         if (changed) {
             // Upload new content to Wikipedia
             try {
-                String textToSave = cosmeticFindService.applyCosmeticChanges(savePage.getContent());
+                // Apply cosmetic changes
+                WikipediaPage page = WikipediaPage
+                    .builder()
+                    .lang(lang)
+                    .content(savePage.getContent())
+                    .title(savePage.getTitle())
+                    .build();
+                String textToSave = cosmeticFindService.applyCosmeticChanges(page);
                 wikipediaService.savePageContent(
                     lang,
                     pageId,

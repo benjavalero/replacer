@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
 
@@ -21,5 +22,9 @@ public interface CosmeticFinder {
     // To be always overwritten
     default String getFix(MatchResult match) {
         return match.group();
+    }
+
+    default Optional<Integer> getFixId() {
+        return Optional.empty();
     }
 }

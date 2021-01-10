@@ -14,6 +14,7 @@ import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Collections;
 import java.util.List;
@@ -177,7 +178,7 @@ class PageControllerTest {
         String subtype = "S";
         SavePage savePage = new SavePage(section, title, content, timestamp, reviewer, token, type, subtype);
 
-        when(cosmeticFindService.applyCosmeticChanges(anyString())).thenReturn("C");
+        when(cosmeticFindService.applyCosmeticChanges(any(WikipediaPage.class))).thenReturn("C");
 
         mvc
             .perform(
@@ -187,7 +188,13 @@ class PageControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(cosmeticFindService, times(1)).applyCosmeticChanges(eq(content));
+        WikipediaPage page = WikipediaPage
+            .builder()
+            .lang(WikipediaLanguage.SPANISH)
+            .content(savePage.getContent())
+            .title(savePage.getTitle())
+            .build();
+        verify(cosmeticFindService, times(1)).applyCosmeticChanges(eq(page));
         verify(wikipediaService, times(1))
             .savePageContent(
                 any(WikipediaLanguage.class),
@@ -219,7 +226,7 @@ class PageControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(cosmeticFindService, times(0)).applyCosmeticChanges(anyString());
+        verify(cosmeticFindService, times(0)).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaService, times(0))
             .savePageContent(
                 any(WikipediaLanguage.class),

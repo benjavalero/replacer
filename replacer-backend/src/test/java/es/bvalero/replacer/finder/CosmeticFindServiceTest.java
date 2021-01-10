@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +37,7 @@ class CosmeticFindServiceTest {
 
         String text = "A [[Link|link]] to simplify.";
         String expected = "A [[link]] to simplify.";
-        Assertions.assertEquals(expected, cosmeticFindService.applyCosmeticChanges(text));
+        WikipediaPage page = WikipediaPage.builder().content(text).build();
+        Assertions.assertEquals(expected, cosmeticFindService.applyCosmeticChanges(page));
     }
 }
