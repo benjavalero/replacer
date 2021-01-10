@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import org.apache.commons.collections4.IterableUtils;
-import org.jetbrains.annotations.Nullable;
+import org.springframework.lang.Nullable;
 
 class CategoryLinearFinder implements BenchmarkFinder {
 
