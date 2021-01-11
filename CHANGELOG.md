@@ -1,5 +1,12 @@
 # Versions
 
+## 2.8.0 (11 Jan 2021)
+- Upgrade backend and frontend dependencies
+- Improve custom finder performance when calling Wikipedia search API
+- Control exceptions on custom finder when text too long or too much results
+- Call Check-Wikipedia when a cosmetic change is applied
+- Fix cosmetic finder for links with the same link and title
+
 ## 2.7.14 (5 Jan 2021)
 - Improve performance on template and link finders
 - Improve warnings for wrong immutables
