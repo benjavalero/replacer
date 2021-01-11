@@ -1,37 +1,39 @@
 package es.bvalero.replacer.finder.cosmetics;
 
 import es.bvalero.replacer.finder.Cosmetic;
-import es.bvalero.replacer.finder.CosmeticFinder;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class SameLinkFinderTest {
 
-    @Test
-    void testSameLinkFinder() {
-        String link1 = "[[test|test]]";
-        String link2 = "[[Test|test]]";
-        String link3 = "[[test|Test]]";
-        String link4 = "[[Test|Test]]";
-        String link5 = "[[Test|Mock]]";
-        String text = String.format("En %s %s %s %s %s.", link1, link2, link3, link4, link5);
+    private final SameLinkFinder sameLinkFinder = new SameLinkFinder();
 
-        CosmeticFinder sameLinkFinder = new SameLinkFinder();
-        List<Cosmetic> matches = sameLinkFinder.findList(text);
+    @ParameterizedTest
+    @CsvSource(value = { "[[test|test]], [[test]]", "[[Test|test]], [[test]]", "[[Test|Test]], [[Test]]" })
+    void testSameLinkFinder(String text, String fix) {
+        List<Cosmetic> cosmetics = sameLinkFinder.findList(text);
 
-        Set<String> expectedMatches = new HashSet<>(Arrays.asList(link1, link2, link4));
-        Set<String> actualMatches = matches.stream().map(Cosmetic::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expectedMatches, actualMatches);
+        Assertions.assertEquals(1, cosmetics.size());
+        Assertions.assertEquals(text, cosmetics.get(0).getText());
+        Assertions.assertEquals(fix, cosmetics.get(0).getFix());
+    }
 
-        String fix1 = "[[test]]";
-        String fix2 = "[[Test]]";
-        Set<String> expectedFixes = new HashSet<>(Arrays.asList(fix1, fix2));
-        Set<String> actualFixes = matches.stream().map(Cosmetic::getFix).collect(Collectors.toSet());
-        Assertions.assertEquals(expectedFixes, actualFixes);
+    @ParameterizedTest
+    @ValueSource(
+        strings = {
+            "[[test|Test]]",
+            "[[Test|Mock]]",
+            "[[Guerra polaco-soviética|Guerra Polaco-Soviética]]",
+            "[[Uff Móvil|UFF móvil]]",
+            "[[PetroChina|Petrochina]]",
+        }
+    )
+    void testSameLinkNotValid(String text) {
+        List<Cosmetic> cosmetics = sameLinkFinder.findList(text);
+
+        Assertions.assertTrue(cosmetics.isEmpty());
     }
 }

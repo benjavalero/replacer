@@ -6,7 +6,6 @@ import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-
 import java.util.Optional;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -49,7 +48,11 @@ class SameLinkFinder implements CosmeticFinder {
     }
 
     private boolean isSameLink(String link, String title) {
-        // Both parameters are equal ignoring the case
-        return Character.isUpperCase(link.charAt(0)) || Character.isLowerCase(title.charAt(0));
+        // Both parameters are equal in case-sensitive
+        // The first letter can be different if link is uppercase and the title is lowercase
+        return (
+            link.substring(1).equals(title.substring(1)) &&
+            (Character.isLowerCase(title.charAt(0)) || Character.isUpperCase(link.charAt(0)))
+        );
     }
 }
