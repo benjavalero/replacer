@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.finder.misspelling.MisspellingComposedFinder;
 import es.bvalero.replacer.page.IndexablePage;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -36,9 +37,25 @@ public class Immutable {
         return this.start + this.text.length();
     }
 
-    boolean contains(Replacement r) {
+    private boolean contains(Replacement r) {
         // i (this) contains r if: startI <= startR < endR <= endI
         return this.getStart() <= r.getStart() && r.getEnd() <= this.getEnd();
+    }
+
+    private boolean intersects(Replacement r) {
+        // i (this) intersect r on the left  if: startI <= startR < endI
+        // i (this) intersect r on the right if: startI < endR <= endI
+        return (
+            (this.getStart() <= r.getStart() && r.getStart() < this.getEnd()) ||
+            (this.getStart() < r.getEnd() && r.getEnd() <= this.getEnd())
+        );
+    }
+
+    boolean containsOrIntersects(Replacement r) {
+        // For type Ortografía we just check a simple contains
+        return MisspellingComposedFinder.TYPE_MISSPELLING_COMPOSED.equals(r.getType())
+            ? this.intersects(r)
+            : this.contains(r);
     }
 
     void check(IndexablePage page) {

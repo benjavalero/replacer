@@ -97,7 +97,7 @@ public class ReplacementFindService {
                 immutable.check(page);
             }
 
-            replacementList.removeIf(immutable::contains);
+            replacementList.removeIf(immutable::containsOrIntersects);
 
             // No need to continue finding the immutables if there are no replacements
             if (replacementList.isEmpty()) {
