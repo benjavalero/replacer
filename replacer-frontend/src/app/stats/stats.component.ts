@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-
 import { AlertService } from '../alert/alert.service';
-import { ReviewerCount } from './reviewer-count.model';
+import { AuthenticationService } from '../authentication/authentication.service';
 import { ReplacementService } from '../replacement/replacement.service';
+import { ReviewerCount } from './reviewer-count.model';
 
 @Component({
   selector: 'app-stats',
@@ -11,6 +11,7 @@ import { ReplacementService } from '../replacement/replacement.service';
   styleUrls: []
 })
 export class StatsComponent implements OnInit {
+  lang: string;
   numNotReviewed: number;
   numReviewed: number;
   numReviewedGrouped: ReviewerCount[] = [];
@@ -18,12 +19,15 @@ export class StatsComponent implements OnInit {
   constructor(
     private replacementService: ReplacementService,
     private alertService: AlertService,
-    private titleService: Title
+    private titleService: Title,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Estadísticas');
     this.alertService.clearAlertMessages();
+
+    this.lang = this.authenticationService.lang;
 
     this.findNumNotReviewed();
     this.findNumReviewed();
