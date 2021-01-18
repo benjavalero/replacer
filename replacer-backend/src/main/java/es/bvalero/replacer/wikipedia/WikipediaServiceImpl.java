@@ -367,6 +367,7 @@ class WikipediaServiceImpl implements WikipediaService {
         }
         params.put("summary", EDIT_SUMMARY);
         params.put("watchlist", "nochange");
+        params.put("bot", "true");
         params.put("minor", "true");
         params.put("token", editToken.getCsrfToken());
         params.put("starttimestamp", currentTimestamp); // Timestamp when the editing process began
