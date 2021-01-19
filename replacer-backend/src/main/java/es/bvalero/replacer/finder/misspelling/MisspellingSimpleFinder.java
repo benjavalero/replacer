@@ -50,7 +50,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder {
     }
 
     @Nullable
-    public MatchResult findResult(IndexablePage page, int start) {
+    private MatchResult findResult(IndexablePage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findWord(page.getContent(), start, matches);

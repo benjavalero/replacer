@@ -86,7 +86,7 @@ public abstract class ParseFileManager<T> {
     /**
      * Retrieve from Wikipedia the text containing the items for a specific language.
      */
-    String findItemsText(WikipediaLanguage lang) {
+    private String findItemsText(WikipediaLanguage lang) {
         String text = FinderUtils.STRING_EMPTY;
         try {
             text = findItemsTextInWikipedia(lang);
@@ -101,6 +101,7 @@ public abstract class ParseFileManager<T> {
     /**
      * Parse the text containing the items line by line.
      */
+    @VisibleForTesting
     public Set<T> parseItemsText(String text) {
         Set<T> itemSet = new HashSet<>();
 

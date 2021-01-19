@@ -17,6 +17,7 @@ public class MisspellingComposedManager extends MisspellingManager {
         return "Composed Misspelling";
     }
 
+    @Override
     String getType() {
         return MisspellingComposedFinder.TYPE_MISSPELLING_COMPOSED;
     }

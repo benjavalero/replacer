@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -81,6 +82,7 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
     /**
      * Find the misspellings which start with uppercase and are case-sensitive
      */
+    @VisibleForTesting
     public Set<String> getUppercaseWords(Set<Misspelling> misspellings) {
         return misspellings
             .stream()
