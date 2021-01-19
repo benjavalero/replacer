@@ -1,5 +1,7 @@
 package es.bvalero.replacer.page;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.Replacement;
 import es.bvalero.replacer.replacement.ReplacementDao;
@@ -8,6 +10,7 @@ import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -20,7 +23,10 @@ abstract class PageReviewService {
     static final int CACHE_SIZE = 100; // Maximum 500 as it is used as page size when searching in Wikipedia
     // Cache the found pages candidates to be reviewed
     // to find faster the next one after the user reviews one
-    private final Map<String, PageSearchResult> cachedPageIds = new HashMap<>();
+    private final Cache<String, PageSearchResult> cachedPageIds = Caffeine
+        .newBuilder()
+        .expireAfterWrite(1, TimeUnit.DAYS)
+        .build();
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -72,11 +78,14 @@ abstract class PageReviewService {
     abstract String buildReplacementCacheKey(PageReviewOptions options);
 
     private boolean cacheContainsKey(String key) {
-        return cachedPageIds.containsKey(key) && !cachedPageIds.get(key).isEmpty();
+        PageSearchResult result = cachedPageIds.getIfPresent(key);
+        return result != null && !result.isEmpty();
     }
 
     private Optional<Integer> popPageIdFromCache(String key) {
-        return cachedPageIds.get(key).popPageId();
+        PageSearchResult result = cachedPageIds.getIfPresent(key);
+        assert result != null;
+        return result.popPageId();
     }
 
     @VisibleForTesting
@@ -191,7 +200,8 @@ abstract class PageReviewService {
     private long findTotalResultsFromCache(PageReviewOptions options) {
         String key = buildReplacementCacheKey(options);
         // If a review is requested directly it is possible the cache doesn't exist
-        return cachedPageIds.containsKey(key) ? cachedPageIds.get(key).getTotal() : 0L;
+        PageSearchResult result = cachedPageIds.getIfPresent(key);
+        return result != null ? result.getTotal() : 0L;
     }
 
     private PageReplacement convertToDto(Replacement replacement) {
