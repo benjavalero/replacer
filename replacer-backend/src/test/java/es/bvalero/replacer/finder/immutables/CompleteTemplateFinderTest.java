@@ -220,4 +220,16 @@ class CompleteTemplateFinderTest {
 
         Assertions.assertTrue(matches.isEmpty());
     }
+
+    @Test
+    void testContiguousTemplates() {
+        String text = "{{T|x={{A}}{{B}} |y}}";
+
+        List<Immutable> matches = completeTemplateFinder.findList(text);
+
+        Set<String> expected = Set.of("T", "x", "A", "B", "y");
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assertions.assertEquals(expected, actual);
+        Assertions.assertTrue(matches.stream().allMatch(m -> m.getStart() >= 0));
+    }
 }

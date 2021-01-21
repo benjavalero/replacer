@@ -118,10 +118,10 @@ public class CompleteTemplateFinder implements ImmutableFinder {
     private LinearMatcher findNestedTemplate(String text, int startTemplate, List<LinearMatcher> matches) {
         List<LinearMatcher> nestedMatches = new ArrayList<>();
         int start = startTemplate;
+        if (text.startsWith(START_TEMPLATE, start)) {
+            start += START_TEMPLATE.length();
+        }
         while (true) {
-            if (text.startsWith(START_TEMPLATE, start)) {
-                start += START_TEMPLATE.length();
-            }
             int end = findEndTemplate(text, start);
             if (end < 0) {
                 return null;
@@ -200,7 +200,6 @@ public class CompleteTemplateFinder implements ImmutableFinder {
         // Process the rest of parameters
         for (int i = 1; i < parameters.length; i++) {
             String parameter = parameters[i];
-            int startParameter = template.start() + template.group().indexOf(parameter);
             String param = parameter;
             String value = null;
             int posEquals = parameter.indexOf('=');
@@ -210,6 +209,7 @@ public class CompleteTemplateFinder implements ImmutableFinder {
             }
 
             // Always return the parameter
+            int startParameter = template.start() + template.group().indexOf("|" + param) + 1;
             immutables.add(Immutable.of(startParameter, param, this));
 
             if (StringUtils.isNotEmpty(value)) {
