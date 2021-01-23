@@ -56,7 +56,7 @@ export class AuthenticationService {
 
   set redirectPath(path: string) {
     if (path) {
-      localStorage.setItem('redirectPath', path);
+      localStorage.setItem('redirectPath', decodeURIComponent(path));
     } else {
       localStorage.removeItem('redirectPath');
     }
