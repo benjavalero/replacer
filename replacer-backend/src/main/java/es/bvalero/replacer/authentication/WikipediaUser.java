@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.authentication;
 
 import lombok.Value;
 
@@ -7,4 +7,5 @@ class WikipediaUser {
 
     String name;
     boolean admin;
+    AccessToken accessToken;
 }

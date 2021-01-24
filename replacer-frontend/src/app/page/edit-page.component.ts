@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-
-import { AuthenticationService } from '../authentication/authentication.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../alert/alert.service';
+import { AuthenticationService } from '../authentication/authentication.service';
+import { Language } from '../authentication/wikipedia-user.model';
 import { ArticleService } from './article.service';
-import { PageReview } from './page-review.model';
 import { PageReplacement } from './page-replacement.model';
-import { Language, WikipediaUser } from '../authentication/wikipedia-user.model';
+import { PageReview } from './page-review.model';
 
 @Component({
   selector: 'app-edit-page',
@@ -15,20 +14,20 @@ import { Language, WikipediaUser } from '../authentication/wikipedia-user.model'
   styleUrls: []
 })
 export class EditPageComponent implements OnInit {
-  articleId: number;
+  private articleId: number;
   filteredType: string;
   filteredSubtype: string;
   suggestion: string; // Only for type 'custom'
 
-  lang: Language;
+  private lang: Language;
   title: string;
   content: string;
-  section: number;
-  anchor: string;
+  private section: number;
+  private anchor: string;
   replacements: PageReplacement[] = [];
   numPending: number;
   fixedCount = 0;
-  currentTimestamp: string;
+  private currentTimestamp: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,12 +39,8 @@ export class EditPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Subscribe to retrieve the lang
-    if (this.authenticationService.lang) {
-      this.lang = this.authenticationService.lang;
-    }
-    this.authenticationService.userEvent.subscribe((user: WikipediaUser) => {
-      this.lang = user.lang;
+    this.authenticationService.lang$.subscribe((lang: Language) => {
+      this.lang = lang;
     });
 
     this.articleId = +this.route.snapshot.paramMap.get('id');

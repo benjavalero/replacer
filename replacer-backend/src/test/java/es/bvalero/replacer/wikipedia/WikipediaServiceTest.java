@@ -218,7 +218,7 @@ class WikipediaServiceTest {
             .thenReturn(response);
 
         OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
-        String username = wikipediaService.getLoggedUserName(accessToken, WikipediaLanguage.SPANISH);
+        String username = wikipediaService.getLoggedUserName(accessToken);
         Assertions.assertEquals("Benjavalero", username);
     }
 
@@ -410,7 +410,7 @@ class WikipediaServiceTest {
     void testWikipediaServiceOffline() throws ReplacerException {
         Assertions.assertEquals(
             "offline",
-            wikipediaServiceOffline.getLoggedUserName(Mockito.mock(OAuth1AccessToken.class), WikipediaLanguage.SPANISH)
+            wikipediaServiceOffline.getLoggedUserName(Mockito.mock(OAuth1AccessToken.class))
         );
         Assertions.assertTrue(wikipediaServiceOffline.isAdminUser(""));
         Assertions.assertTrue(

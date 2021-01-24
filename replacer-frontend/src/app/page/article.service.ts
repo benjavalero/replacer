@@ -87,7 +87,7 @@ export class ArticleService {
     savePage.content = content;
     savePage.timestamp = currentTimestamp;
     savePage.reviewer = this.authenticationService.user.name;
-    savePage.token = this.authenticationService.accessToken;
+    savePage.token = this.authenticationService.user.accessToken;
     if (type && subtype) {
       savePage.type = type;
       savePage.subtype = subtype;

@@ -23,15 +23,16 @@
           title="Muestra el número de reemplazos indexados y revisados">Estadísticas</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLinkActive="active" routerLink="/dump" [ngbCollapse]="!user.admin"
+        <a class="nav-link" routerLinkActive="active" routerLink="/dump" [ngbCollapse]="!user || !user.admin"
           (click)="isNavCollapsed = true" title="Muestra el estado de la indexación">Indexación</a>
       </li>
     </ul>
     <hr />
     <ul class="navbar-nav ml-auto justify-content-end">
       <li class="nav-item" ngbDropdown>
-        <a class="nav-link" style="cursor: pointer;" ngbDropdownToggle id="navbarDropdownUser" role="button">
-          <em>{{ user.name }} - {{ user.lang || defaultLang }}</em>
+        <a class="nav-link" style="cursor: pointer;" ngbDropdownToggle id="navbarDropdownUser" role="button"
+          *ngIf="user">
+          <em>{{ user.name }} - {{ lang }}</em>
         </a>
         <div ngbDropdownMenu aria-labelledby="navbarDropdownUser" class="dropdown-menu dropdown-menu-right">
           <button ngbDropdownItem (click)="onSelectLang('es')">

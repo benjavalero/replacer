@@ -1,7 +1,9 @@
+import { AccessToken } from './access-token.model';
+
 export interface WikipediaUser {
   name: string;
   admin: boolean;
-  lang: Language;
+  accessToken: AccessToken;
 }
 
 export enum Language {
@@ -10,3 +12,4 @@ export enum Language {
 }
 
 export const LANG_PARAM = 'lang';
+export const LANG_DEFAULT = Language.es;

@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { AuthenticationService } from '../authentication/authentication.service';
-import { WikipediaUser, Language } from '../authentication/wikipedia-user.model';
+import { Language, WikipediaUser } from '../authentication/wikipedia-user.model';
 
 @Component({
   selector: 'app-header',
@@ -12,17 +11,17 @@ import { WikipediaUser, Language } from '../authentication/wikipedia-user.model'
 export class HeaderComponent implements OnInit {
   isNavCollapsed = true;
   user: WikipediaUser;
-  defaultLang = Language.es;
+  lang: Language;
 
   constructor(private authenticationService: AuthenticationService, private router: Router) {}
 
-  ngOnInit() {
-    if (this.authenticationService.user) {
-      this.user = this.authenticationService.user;
-    }
-
-    this.authenticationService.userEvent.subscribe((user: WikipediaUser) => {
+  ngOnInit(): void {
+    this.authenticationService.user$.subscribe((user: WikipediaUser) => {
       this.user = user;
+    });
+
+    this.authenticationService.lang$.subscribe((lang: Language) => {
+      this.lang = lang;
     });
   }
 

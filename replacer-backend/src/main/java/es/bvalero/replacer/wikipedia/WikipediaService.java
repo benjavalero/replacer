@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.lang.Nullable;
 
 public interface WikipediaService {
-    String getLoggedUserName(OAuth1AccessToken accessToken, WikipediaLanguage lang) throws ReplacerException;
+    String getLoggedUserName(OAuth1AccessToken accessToken) throws ReplacerException;
 
     boolean isAdminUser(String username);
 

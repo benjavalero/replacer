@@ -1,52 +1,70 @@
-import { Injectable, Output, EventEmitter } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { RequestToken } from './request-token.model';
-import { AccessToken } from './access-token.model';
-import { WikipediaUser, Language } from './wikipedia-user.model';
-import { AlertService } from '../alert/alert.service';
-import { VerificationToken } from './verification-token.model';
+import { Language, LANG_DEFAULT, WikipediaUser } from './wikipedia-user.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthenticationService {
-  @Output() userEvent: EventEmitter<WikipediaUser> = new EventEmitter();
+  readonly baseUrl = `${environment.apiUrl}/authentication`;
 
-  baseUrl = `${environment.apiUrl}/authentication`;
+  private readonly _user = new BehaviorSubject<WikipediaUser>(this.getLocalUser());
+  readonly user$ = this._user.asObservable();
 
-  constructor(
-    private httpClient: HttpClient,
-    private alertService: AlertService
-  ) {}
+  private readonly _lang = new BehaviorSubject<Language>(this.getLocalLang());
+  readonly lang$ = this._lang.asObservable();
+
+  constructor(private httpClient: HttpClient) {}
 
   isAuthenticated(): boolean {
-    return this.accessToken !== null;
+    return this.user !== null;
   }
 
-  getRequestToken(): Observable<RequestToken> {
+  getAuthenticationUrl$(): Observable<string> {
+    return this.getRequestToken$().pipe(
+      map((token: RequestToken) => {
+        // We keep the request token for further use on verification
+        this.requestToken = token;
+
+        return token.authorizationUrl;
+      })
+    );
+  }
+
+  private getRequestToken$(): Observable<RequestToken> {
     return this.httpClient.get<RequestToken>(`${this.baseUrl}/request-token`);
   }
 
-  getAccessToken(verificationToken: string): Observable<AccessToken> {
-    const verificationTokenDto = new VerificationToken();
-    verificationTokenDto.requestToken = this.requestToken;
-    verificationTokenDto.token = verificationToken;
+  loginUser$(oauthVerifier: string): Observable<WikipediaUser> {
+    return this.getAccessToken$(oauthVerifier).pipe(
+      map((wikipediaUser: WikipediaUser) => {
+        // Remove request token as it is no longer needed
+        this.requestToken = null;
 
+        // Save user and access token to further use in Wikipedia requests
+        this.user = wikipediaUser;
+
+        return wikipediaUser;
+      })
+    );
+  }
+
+  private getAccessToken$(verificationToken: string): Observable<WikipediaUser> {
     const params = new HttpParams()
       .append('requestToken', this.requestToken.token)
       .append('requestTokenSecret', this.requestToken.tokenSecret)
       .append('oauthVerifier', verificationToken);
 
-    return this.httpClient.get<AccessToken>(`${this.baseUrl}/access-token`, {
-      params,
+    return this.httpClient.get<WikipediaUser>(`${this.baseUrl}/access-token`, {
+      params
     });
   }
 
   clearSession(): void {
-    this.accessToken = null;
     this.user = null;
   }
 
@@ -74,40 +92,12 @@ export class AuthenticationService {
     }
   }
 
-  get accessToken(): AccessToken {
-    return JSON.parse(localStorage.getItem('accessToken'));
-  }
-
-  set accessToken(token: AccessToken) {
-    if (token) {
-      localStorage.setItem('accessToken', JSON.stringify(token));
-      this.findUserName();
-    } else {
-      localStorage.removeItem('accessToken');
-    }
-  }
-
-  private findUserName(): void {
-    const params = new HttpParams()
-      .append('accessToken', this.accessToken.token)
-      .append('accessTokenSecret', this.accessToken.tokenSecret);
-
-    this.httpClient
-      .get<WikipediaUser>(`${this.baseUrl}/user`, { params })
-      .subscribe(
-        (user: WikipediaUser) => {
-          this.user = user;
-        },
-        (err) => {
-          this.alertService.addErrorMessage(
-            'Error al buscar el nombre del usuario en sesión'
-          );
-        }
-      );
+  private getLocalUser(): WikipediaUser {
+    return JSON.parse(localStorage.getItem('user'));
   }
 
   get user(): WikipediaUser {
-    return JSON.parse(localStorage.getItem('user'));
+    return this._user.getValue();
   }
 
   set user(user: WikipediaUser) {
@@ -116,18 +106,23 @@ export class AuthenticationService {
     } else {
       localStorage.removeItem('user');
     }
-    this.userEvent.emit(user);
+    this._user.next(user);
+  }
+
+  private getLocalLang(): Language {
+    return JSON.parse(localStorage.getItem('lang')) || LANG_DEFAULT;
   }
 
   get lang(): Language {
-    return this.user ? this.user.lang || Language.es : Language.es;
+    return this._lang.getValue();
   }
 
   set lang(lang: Language) {
-    if (this.user) {
-      const userAux: WikipediaUser = this.user;
-      userAux.lang = lang;
-      this.user = userAux;
+    if (lang) {
+      localStorage.setItem('lang', JSON.stringify(lang));
+    } else {
+      localStorage.removeItem('lang');
     }
+    this._lang.next(lang);
   }
 }

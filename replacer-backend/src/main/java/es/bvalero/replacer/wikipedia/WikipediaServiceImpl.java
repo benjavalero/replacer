@@ -51,10 +51,10 @@ class WikipediaServiceImpl implements WikipediaService {
     private Map<String, String> falsePositivePages;
 
     @Override
-    public String getLoggedUserName(OAuth1AccessToken accessToken, WikipediaLanguage lang) throws ReplacerException {
+    public String getLoggedUserName(OAuth1AccessToken accessToken) throws ReplacerException {
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedGetRequest(
             buildUserNameRequestParams(),
-            lang,
+            WikipediaLanguage.getDefault(),
             accessToken
         );
         return extractUserNameFromJson(apiResponse);

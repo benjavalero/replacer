@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 public class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
-    public String getLoggedUserName(OAuth1AccessToken accessToken, WikipediaLanguage lang) {
+    public String getLoggedUserName(OAuth1AccessToken accessToken) {
         return "offline";
     }
 

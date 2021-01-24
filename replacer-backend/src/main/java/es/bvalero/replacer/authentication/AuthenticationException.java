@@ -7,4 +7,8 @@ class AuthenticationException extends Exception {
     AuthenticationException() {
         super();
     }
+
+    AuthenticationException(Throwable th) {
+        super(th);
+    }
 }
