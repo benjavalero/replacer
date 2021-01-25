@@ -12,12 +12,6 @@ The tool is composed by two independent modules, both in the same repository: th
 
 TODO
 
-## Code Conventions
-
-This project uses some of the JetBrains annotations: `@TestOnly`, `@VisibleForTesting` and `@RegExp`.
-
-On the other hand, all packages are annotated with Spring annotation `@NonNullApi` which forces all method parameters and returns to be non-null. Nullable exceptions will be annotated explicitly.
-
 ## Nomenclature and use cases
 
 Main use cases:
@@ -217,8 +211,25 @@ This interface has two implementations, one of them an _offline_ one always retu
 
 The requests to the API are done in `WikipediaRequestService`, receiving all the needed parameters, and the authentication token if needed. The responses are mapped into a `WikipediaApiResponse`. In case of page requests, the response is eventually mapped into a `WikipediaPage`.
 
-### Package `authentication`
+## Package `authentication`
 
 The authentication is performed by the Oauth 1.0a protocol against the WikiMedia API, which allows the tool to work with the same usernames that are used to edit in Wikipedia. The authentication is implemented in the backend, and the frontend only contains the last access token.
 
 Note that there are different in case we want to develop locally. The Production ones, once logged in, redirect to https://replacer.toolforge.org. However the Development ones redirect to http://localhost:8080.
+
+### Annotations
+
+This project uses some of the JetBrains annotations: `@TestOnly`, `@VisibleForTesting` and `@RegExp`.
+
+On the other hand, all packages are annotated with Spring annotation `@NonNullApi` which forces all method parameters and returns to be non-null. Nullable exceptions will be annotated explicitly.
+
+### Logging
+
+Replacer uses Logback logging, the default in Spring Boot. To initialize the loggers, we use the Lombok annotation `@Slf4j` in each class.
+
+A custom `logback-spring.xml` exists to simplify the log pattern, and include a special appender to Logz.io for Production.
+
+The default logging level is DEBUG, using INFO for calls in controllers and WARNING for suspicious replacements or immutables.
+
+Finally, we use the annotation `@Loggable` provided by dependency `jcabi-annotations`. It _wraps_ the annotated methods by aspects logging the start and the end of the method, displaying the elapsed time, warning about too long time, parameters, etc. In order to work, we need to _weave_ the compiled classes adding the annotated functionality by using the `aspectj-maven-plugin`. Note that Spring provides a limited AspectJ solution which adds the functionality in runtime, but as it works proxying the classes, it can only be applied in public methods and in calls from different classes.
+
