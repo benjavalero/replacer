@@ -1,24 +1,30 @@
-import { Injectable, Output, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { AlertMessage } from './alert-message.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlertService {
+  private readonly _alerts = new BehaviorSubject<AlertMessage[]>([]);
+  readonly alerts$ = this._alerts.asObservable();
 
-  private alerts: AlertMessage[] = [];
-  @Output() alertEvent: EventEmitter<AlertMessage[]> = new EventEmitter();
+  constructor() {}
 
-  constructor() { }
+  private get alerts(): AlertMessage[] {
+    return this._alerts.getValue();
+  }
+
+  private set alerts(alerts: AlertMessage[]) {
+    this._alerts.next(alerts);
+  }
 
   private addAlertMessage(alert: AlertMessage) {
-    this.alerts.push(alert);
-    this.alertEvent.emit(this.alerts);
+    this.alerts = [...this.alerts, alert];
   }
 
   clearAlertMessages() {
     this.alerts = [];
-    this.alertEvent.emit(this.alerts);
   }
 
   addInfoMessage(msg: string) {
@@ -48,5 +54,4 @@ export class AlertService {
       message: msg
     });
   }
-
 }

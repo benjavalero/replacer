@@ -1,4 +1,4 @@
 export class AlertMessage {
-    type: string;
-    message: string;
+  type: string;
+  message: string;
 }
