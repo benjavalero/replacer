@@ -1,10 +1,8 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,12 +60,9 @@ class ReplacementCountServiceTest {
     }
 
     @Test
-    void testGetCachedReplacementCount() {
+    void testGetCachedReplacementCount() throws ReplacerException {
         WikipediaLanguage lang = WikipediaLanguage.SPANISH;
         String langCode = lang.getCode();
-
-        // At start the count is zero
-        Assertions.assertTrue(replacementCountService.getCachedReplacementTypeCounts(lang).isEmpty());
 
         TypeSubtypeCount count1 = new TypeSubtypeCount(langCode, "X", "Y", 2L);
         TypeSubtypeCount count2 = new TypeSubtypeCount(langCode, "X", "Z", 1L);

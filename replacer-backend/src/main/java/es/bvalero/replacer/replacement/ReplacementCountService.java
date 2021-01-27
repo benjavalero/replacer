@@ -1,5 +1,7 @@
 package es.bvalero.replacer.replacement;
 
+import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +19,7 @@ public class ReplacementCountService {
 
     // Cache the count of PAGES containing replacements by type/subtype
     // This list is updated every 10 minutes and modified when saving changes
-    private Map<WikipediaLanguage, LanguageCount> languageCounts = new EnumMap<>(WikipediaLanguage.class);
+    private Map<WikipediaLanguage, LanguageCount> languageCounts;
 
     /* STATISTICS */
 
@@ -35,14 +37,20 @@ public class ReplacementCountService {
 
     /* LIST OF REPLACEMENTS */
 
-    List<TypeCount> getCachedReplacementTypeCounts(WikipediaLanguage lang) {
-        if (languageCounts.containsKey(lang)) {
-            List<TypeCount> list = languageCounts.get(lang).getTypeCounts();
-            Collections.sort(list);
-            return list;
-        } else {
-            return Collections.emptyList();
+    List<TypeCount> getCachedReplacementTypeCounts(WikipediaLanguage lang) throws ReplacerException {
+        return this.getLanguageCounts().getOrDefault(lang, LanguageCount.ofEmpty()).getTypeCounts();
+    }
+
+    private synchronized Map<WikipediaLanguage, LanguageCount> getLanguageCounts() throws ReplacerException {
+        while (this.languageCounts == null) {
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new ReplacerException(e);
+            }
         }
+        return this.languageCounts;
     }
 
     /**
@@ -52,8 +60,14 @@ public class ReplacementCountService {
     @Scheduled(fixedDelayString = "${replacer.page.stats.delay}")
     public void scheduledUpdateReplacementTypeCounts() {
         LOGGER.info("Scheduled replacement type counts update");
+        this.loadReplacementTypeCounts();
+    }
+
+    @Loggable(value = Loggable.TRACE)
+    private synchronized void loadReplacementTypeCounts() {
         List<TypeSubtypeCount> counts = replacementDao.countPagesGroupedByTypeAndSubtype();
         this.languageCounts = buildReplacementTypeCounts(counts);
+        this.notifyAll();
     }
 
     private Map<WikipediaLanguage, LanguageCount> buildReplacementTypeCounts(List<TypeSubtypeCount> counts) {
@@ -73,6 +87,10 @@ public class ReplacementCountService {
 
             typeCount.add(new SubtypeCount(count.getSubtype(), count.getCount()));
         }
+
+        // Sort
+        langCounts.values().forEach(langCount -> Collections.sort(langCount.getTypeCounts()));
+
         return langCounts;
     }
 

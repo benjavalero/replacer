@@ -15,6 +15,10 @@ class LanguageCount {
         this.lang = lang;
     }
 
+    static LanguageCount ofEmpty() {
+        return new LanguageCount(WikipediaLanguage.getDefault());
+    }
+
     boolean contains(String type) {
         return typeCounts.stream().anyMatch(t -> t.getType().equals(type));
     }

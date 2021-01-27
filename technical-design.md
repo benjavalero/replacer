@@ -233,3 +233,16 @@ The default logging level is DEBUG, using INFO for calls in controllers and WARN
 
 Finally, we use the annotation `@Loggable` provided by dependency `jcabi-annotations`. It _wraps_ the annotated methods by aspects logging the start and the end of the method, displaying the elapsed time, warning about too long time, parameters, etc. In order to work, we need to _weave_ the compiled classes adding the annotated functionality by using the `aspectj-maven-plugin`. Note that Spring provides a limited AspectJ solution which adds the functionality in runtime, but as it works proxying the classes, it can only be applied in public methods and in calls from different classes.
 
+### Cache
+
+There are several places where some cache policy could be useful.
+
+- Load of misspellings, false positives, build automata, etc. This is done at the start of the application and it takes few seconds, so there is a little chance that, when using the application just started, some of them is not loaded yet. Just in case we check this possibility and return no results if so.
+
+- List of replacement type and subtype counts. It's a heavy query in database so we preload the counts on start and refresh them periodically. We add synchronization just in case the list is requested when still loading on start.
+
+- List of page IDs to be reviewed. We use a map to store the lists of articles to be reviewed by type and subtype. However this map can grow a lot. We use Caffeine cache to clean periodically the old or obsolete lists.
+
+
+
+

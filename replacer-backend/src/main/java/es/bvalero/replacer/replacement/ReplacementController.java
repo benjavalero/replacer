@@ -1,6 +1,7 @@
 package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,8 @@ public class ReplacementController {
     }
 
     @GetMapping(value = "/count", params = { "reviewed=false", "grouped" })
-    public List<TypeCount> countReplacementsGroupedByType(@RequestParam WikipediaLanguage lang) {
+    public List<TypeCount> countReplacementsGroupedByType(@RequestParam WikipediaLanguage lang)
+        throws ReplacerException {
         return replacementCountService.getCachedReplacementTypeCounts(lang);
     }
 }
