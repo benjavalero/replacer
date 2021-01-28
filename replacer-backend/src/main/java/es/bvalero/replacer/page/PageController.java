@@ -63,7 +63,7 @@ public class PageController {
 
     @GetMapping(value = "/random", params = { "replacement", "suggestion" })
     public Optional<PageReview> findRandomPageByCustomReplacement(
-        @RequestParam @Size(max = 300) String replacement,
+        @RequestParam @Size(max = 100) String replacement,
         @RequestParam String suggestion,
         @RequestParam WikipediaLanguage lang
     ) {
@@ -72,7 +72,7 @@ public class PageController {
 
     @GetMapping(value = "/validate", params = { "replacement" })
     public Optional<String> validateCustomReplacement(
-        @RequestParam @Size(max = 300) String replacement,
+        @RequestParam @Size(max = 100) String replacement,
         @RequestParam WikipediaLanguage lang
     ) {
         return pageReviewCustomService.validateCustomReplacement(replacement, lang);
@@ -101,7 +101,7 @@ public class PageController {
     @GetMapping(value = "/{id}", params = { "replacement", "suggestion" })
     public Optional<PageReview> findPageReviewByIdAndCustomReplacement(
         @PathVariable("id") int pageId,
-        @RequestParam String replacement,
+        @RequestParam @Size(max = 100) String replacement,
         @RequestParam String suggestion,
         @RequestParam WikipediaLanguage lang
     ) {
