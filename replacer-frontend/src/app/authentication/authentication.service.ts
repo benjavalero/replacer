@@ -11,6 +11,7 @@ import { Language, LANG_DEFAULT, WikipediaUser } from './wikipedia-user.model';
 })
 export class AuthenticationService {
   readonly baseUrl = `${environment.apiUrl}/authentication`;
+  readonly wikipediaUserKey = 'wikipediaUser';
 
   private readonly _user = new BehaviorSubject<WikipediaUser>(this.getLocalUser());
   readonly user$ = this._user.asObservable();
@@ -93,7 +94,7 @@ export class AuthenticationService {
   }
 
   private getLocalUser(): WikipediaUser {
-    return JSON.parse(localStorage.getItem('user'));
+    return JSON.parse(localStorage.getItem(this.wikipediaUserKey));
   }
 
   get user(): WikipediaUser {
@@ -102,9 +103,9 @@ export class AuthenticationService {
 
   set user(user: WikipediaUser) {
     if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem(this.wikipediaUserKey, JSON.stringify(user));
     } else {
-      localStorage.removeItem('user');
+      localStorage.removeItem(this.wikipediaUserKey);
     }
     this._user.next(user);
   }
