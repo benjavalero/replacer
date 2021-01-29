@@ -1,5 +1,11 @@
 # Versions
 
+## 2.8.2 (29 Jan 2021)
+- Improve finder for template immutables
+- Fix encoding when redirecting to previous page after session login
+- Limit custom replacement size
+- Add rotate to pagination
+
 ## 2.8.1 (17 Jan 2021)
 - Statistics page is again public (not admin)
 - Fix option so the edited page is not added to watchlist
