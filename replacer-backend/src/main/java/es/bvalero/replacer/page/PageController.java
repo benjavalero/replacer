@@ -3,11 +3,11 @@ package es.bvalero.replacer.page;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.UserParameters;
 import es.bvalero.replacer.authentication.AccessToken;
 import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Optional;
@@ -19,10 +19,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Loggable(prepend = true)
+@Loggable(prepend = true, trim = false)
 @RestController
 @RequestMapping("api/pages")
 public class PageController {
+
+    static final int CONTENT_SIZE = 50;
 
     @Autowired
     private PageReviewNoTypeService pageReviewNoTypeService;
@@ -48,44 +50,45 @@ public class PageController {
     /* FIND RANDOM PAGES WITH REPLACEMENTS */
 
     @GetMapping(value = "/random")
-    public Optional<PageReview> findRandomPageWithReplacements(@RequestParam WikipediaLanguage lang) {
-        return pageReviewNoTypeService.findRandomPageReview(PageReviewOptions.ofNoType(lang));
+    public Optional<PageReview> findRandomPageWithReplacements(UserParameters params) {
+        return pageReviewNoTypeService.findRandomPageReview(PageReviewOptions.ofNoType(params.getLang()));
     }
 
     @GetMapping(value = "/random", params = { "type", "subtype" })
     public Optional<PageReview> findRandomPageByTypeAndSubtype(
         @RequestParam String type,
         @RequestParam String subtype,
-        @RequestParam WikipediaLanguage lang
+        UserParameters params
     ) {
-        return pageReviewTypeSubtypeService.findRandomPageReview(PageReviewOptions.ofTypeSubtype(lang, type, subtype));
+        return pageReviewTypeSubtypeService.findRandomPageReview(
+            PageReviewOptions.ofTypeSubtype(params.getLang(), type, subtype)
+        );
     }
 
     @GetMapping(value = "/random", params = { "replacement", "suggestion" })
     public Optional<PageReview> findRandomPageByCustomReplacement(
         @RequestParam @Size(max = 100) String replacement,
         @RequestParam String suggestion,
-        @RequestParam WikipediaLanguage lang
+        UserParameters params
     ) {
-        return pageReviewCustomService.findRandomPageReview(PageReviewOptions.ofCustom(lang, replacement, suggestion));
+        return pageReviewCustomService.findRandomPageReview(
+            PageReviewOptions.ofCustom(params.getLang(), replacement, suggestion)
+        );
     }
 
     @GetMapping(value = "/validate", params = { "replacement" })
     public Optional<String> validateCustomReplacement(
         @RequestParam @Size(max = 100) String replacement,
-        @RequestParam WikipediaLanguage lang
+        UserParameters params
     ) {
-        return pageReviewCustomService.validateCustomReplacement(replacement, lang);
+        return pageReviewCustomService.validateCustomReplacement(replacement, params.getLang());
     }
 
     /* FIND A PAGE REVIEW */
 
     @GetMapping(value = "/{id}")
-    public Optional<PageReview> findPageReviewById(
-        @PathVariable("id") int pageId,
-        @RequestParam WikipediaLanguage lang
-    ) {
-        return pageReviewNoTypeService.getPageReview(pageId, PageReviewOptions.ofNoType(lang));
+    public Optional<PageReview> findPageReviewById(@PathVariable("id") int pageId, UserParameters params) {
+        return pageReviewNoTypeService.getPageReview(pageId, PageReviewOptions.ofNoType(params.getLang()));
     }
 
     @GetMapping(value = "/{id}", params = { "type", "subtype" })
@@ -93,9 +96,12 @@ public class PageController {
         @PathVariable("id") int pageId,
         @RequestParam String type,
         @RequestParam String subtype,
-        @RequestParam WikipediaLanguage lang
+        UserParameters params
     ) {
-        return pageReviewTypeSubtypeService.getPageReview(pageId, PageReviewOptions.ofTypeSubtype(lang, type, subtype));
+        return pageReviewTypeSubtypeService.getPageReview(
+            pageId,
+            PageReviewOptions.ofTypeSubtype(params.getLang(), type, subtype)
+        );
     }
 
     @GetMapping(value = "/{id}", params = { "replacement", "suggestion" })
@@ -103,19 +109,21 @@ public class PageController {
         @PathVariable("id") int pageId,
         @RequestParam @Size(max = 100) String replacement,
         @RequestParam String suggestion,
-        @RequestParam WikipediaLanguage lang
+        UserParameters params
     ) {
-        return pageReviewCustomService.getPageReview(pageId, PageReviewOptions.ofCustom(lang, replacement, suggestion));
+        return pageReviewCustomService.getPageReview(
+            pageId,
+            PageReviewOptions.ofCustom(params.getLang(), replacement, suggestion)
+        );
     }
 
     /* SAVE CHANGES */
 
-    @Loggable(prepend = true)
     @PostMapping(value = "/{id}")
     public ResponseEntity<String> save(
         @RequestBody SavePage savePage,
         @PathVariable("id") int pageId,
-        @RequestParam WikipediaLanguage lang
+        UserParameters params
     ) {
         boolean changed = StringUtils.isNotBlank(savePage.getContent());
         if (changed) {
@@ -124,13 +132,13 @@ public class PageController {
                 // Apply cosmetic changes
                 WikipediaPage page = WikipediaPage
                     .builder()
-                    .lang(lang)
+                    .lang(params.getLang())
                     .content(savePage.getContent())
                     .title(savePage.getTitle())
                     .build();
                 String textToSave = cosmeticFindService.applyCosmeticChanges(page);
                 wikipediaService.savePageContent(
-                    lang,
+                    params.getLang(),
                     pageId,
                     savePage.getSection(),
                     textToSave,
@@ -145,19 +153,24 @@ public class PageController {
         // Mark page as reviewed in the database
         if (ReplacementEntity.TYPE_CUSTOM.equals(savePage.getType())) {
             if (StringUtils.isBlank(savePage.getSubtype())) throw new AssertionError();
-            pageReviewCustomService.reviewPageReplacements(pageId, lang, savePage.getSubtype(), savePage.getReviewer()); // NOSONAR
+            pageReviewCustomService.reviewPageReplacements( // NOSONAR
+                pageId,
+                params.getLang(),
+                savePage.getSubtype(),
+                params.getUser()
+            );
         } else if (StringUtils.isNotBlank(savePage.getType())) {
             if (StringUtils.isBlank(savePage.getSubtype())) throw new AssertionError();
             pageReviewTypeSubtypeService.reviewPageReplacements( // NOSONAR
                 pageId,
-                lang,
+                params.getLang(),
                 savePage.getType(),
                 savePage.getSubtype(),
-                savePage.getReviewer()
+                params.getUser()
             );
         } else {
             if (StringUtils.isNotBlank(savePage.getSubtype())) throw new AssertionError();
-            pageReviewNoTypeService.reviewPageReplacements(pageId, lang, savePage.getReviewer());
+            pageReviewNoTypeService.reviewPageReplacements(pageId, params.getLang(), params.getUser());
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -169,19 +182,22 @@ public class PageController {
     public ResponseEntity<String> findPageTitlesToReviewBySubtype(
         @RequestParam String type,
         @RequestParam String subtype,
-        @RequestParam WikipediaLanguage lang
+        UserParameters params
     ) {
-        String titleList = StringUtils.join(pageListService.findPageTitlesToReviewBySubtype(lang, type, subtype), "\n");
+        String titleList = StringUtils.join(
+            pageListService.findPageTitlesToReviewBySubtype(params.getLang(), type, subtype),
+            "\n"
+        );
         return new ResponseEntity<>(titleList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/review", params = { "type", "subtype" })
-    public void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
+    public void reviewAsSystemBySubtype(UserParameters params, String type, String subtype) {
         // Set as reviewed in the database
-        pageListService.reviewAsSystemBySubtype(lang, type, subtype);
+        pageListService.reviewAsSystemBySubtype(params.getLang(), type, subtype);
 
         // Remove from the replacement count cache
-        replacementCountService.removeCachedReplacementCount(lang, type, subtype);
+        replacementCountService.removeCachedReplacementCount(params.getLang(), type, subtype);
     }
 
     private OAuth1AccessToken convertToEntity(AccessToken accessToken) {

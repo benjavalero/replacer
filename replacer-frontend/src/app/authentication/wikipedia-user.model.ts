@@ -13,3 +13,4 @@ export enum Language {
 
 export const LANG_PARAM = 'lang';
 export const LANG_DEFAULT = Language.es;
+export const USER_PARAM = 'user';

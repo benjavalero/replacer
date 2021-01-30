@@ -5,7 +5,6 @@ export class SavePage {
   title: string;
   content: string;
   timestamp: string;
-  reviewer: string;
   token: AccessToken;
   type?: string;
   subtype?: string;

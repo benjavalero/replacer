@@ -2,15 +2,15 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from './authentication.service';
-import { LANG_PARAM } from './wikipedia-user.model';
+import { USER_PARAM } from './wikipedia-user.model';
 
 @Injectable()
-export class LangInterceptor implements HttpInterceptor {
+export class UserInterceptor implements HttpInterceptor {
   constructor(private authenticationService: AuthenticationService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!req.params.has(LANG_PARAM)) {
-      return next.handle(req.clone({ params: req.params.append(LANG_PARAM, this.authenticationService.lang) }));
+    if (!req.params.has(USER_PARAM)) {
+      return next.handle(req.clone({ params: req.params.append(USER_PARAM, this.authenticationService.user.name) }));
     } else {
       return next.handle(req);
     }

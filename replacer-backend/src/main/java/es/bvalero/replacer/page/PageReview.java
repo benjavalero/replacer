@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
 /**
@@ -27,4 +28,29 @@ class PageReview {
     private String queryTimestamp;
     private List<PageReplacement> replacements;
     private long numPending;
+
+    @Override
+    public String toString() {
+        return (
+            "PageReview(id=" +
+            this.getId() +
+            ", lang=" +
+            this.getLang() +
+            ", title=" +
+            this.getTitle() +
+            ", content=" +
+            StringUtils.abbreviate(this.getContent(), PageController.CONTENT_SIZE) +
+            ", section=" +
+            this.getSection() +
+            ", anchor=" +
+            this.getAnchor() +
+            ", queryTimestamp=" +
+            this.getQueryTimestamp() +
+            ", replacements=" +
+            this.getReplacements() +
+            ", numPending=" +
+            this.getNumPending() +
+            ")"
+        );
+    }
 }

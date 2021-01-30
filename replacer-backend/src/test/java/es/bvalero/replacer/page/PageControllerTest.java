@@ -114,7 +114,7 @@ class PageControllerTest {
             .perform(get("/api/pages/random?type=X&subtype=Y&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(pageReviewTypeSubtypeService, times(1)).findRandomPageReview(eq(options));
+        verify(pageReviewTypeSubtypeService, times(1)).findRandomPageReview(options);
     }
 
     @Test
@@ -128,7 +128,7 @@ class PageControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(pageReviewCustomService, times(1)).findRandomPageReview(eq(options));
+        verify(pageReviewCustomService, times(1)).findRandomPageReview(options);
     }
 
     @Test
@@ -172,11 +172,10 @@ class PageControllerTest {
         String title = "Q";
         String content = "X";
         String timestamp = "Y";
-        String reviewer = "Z";
         AccessToken token = new AccessToken("A", "B");
         String type = "T";
         String subtype = "S";
-        SavePage savePage = new SavePage(section, title, content, timestamp, reviewer, token, type, subtype);
+        SavePage savePage = new SavePage(section, title, content, timestamp, token, type, subtype);
 
         when(cosmeticFindService.applyCosmeticChanges(any(WikipediaPage.class))).thenReturn("C");
 
@@ -194,7 +193,7 @@ class PageControllerTest {
             .content(savePage.getContent())
             .title(savePage.getTitle())
             .build();
-        verify(cosmeticFindService, times(1)).applyCosmeticChanges(eq(page));
+        verify(cosmeticFindService, times(1)).applyCosmeticChanges(page);
         verify(wikipediaService, times(1))
             .savePageContent(
                 any(WikipediaLanguage.class),
@@ -212,11 +211,10 @@ class PageControllerTest {
         int section = 3;
         String title = "Q";
         String timestamp = "Y";
-        String reviewer = "Z";
         AccessToken token = new AccessToken("A", "B");
         String type = "T";
         String subtype = "S";
-        SavePage savePage = new SavePage(section, title, null, timestamp, reviewer, token, type, subtype);
+        SavePage savePage = new SavePage(section, title, null, timestamp, token, type, subtype);
 
         mvc
             .perform(

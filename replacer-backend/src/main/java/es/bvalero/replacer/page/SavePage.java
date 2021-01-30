@@ -4,6 +4,7 @@ import es.bvalero.replacer.authentication.AccessToken;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
 @Data
@@ -17,7 +18,6 @@ class SavePage {
     private String title;
     private String content;
     private String timestamp;
-    private String reviewer;
     private AccessToken token;
 
     @Nullable
@@ -25,4 +25,21 @@ class SavePage {
 
     @Nullable
     private String subtype;
+
+    @Override
+    public String toString() {
+        return (
+            "SavePage(section=" +
+            this.getSection() +
+            ", title=" +
+            this.getTitle() +
+            ", content=" +
+            StringUtils.abbreviate(this.getContent(), PageController.CONTENT_SIZE) +
+            ", type=" +
+            this.getType() +
+            ", subtype=" +
+            this.getSubtype() +
+            ")"
+        );
+    }
 }

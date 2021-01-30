@@ -9,6 +9,7 @@ import { AppComponent } from './app.component';
 
 import { AuthenticationGuard } from './authentication/authentication.guard';
 import { LangInterceptor } from './authentication/lang-interceptor';
+import { UserInterceptor } from './authentication/user-interceptor';
 
 import { AlertContainerComponent } from './alert/alert-container.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -59,8 +60,13 @@ import { StatsComponent } from './stats/stats.component';
       provide: HTTP_INTERCEPTORS,
       useClass: LangInterceptor,
       multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: UserInterceptor,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
