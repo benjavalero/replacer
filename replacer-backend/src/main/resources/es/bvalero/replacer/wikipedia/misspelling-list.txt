@@ -17,7 +17,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  aarón|cs|Aarón
  abaco||ábaco (herramienta, Islas Ábaco)
  abacos||ábacos
- abadia||abadía
+ abadia||abadía (en español), abadia (en catalán o portugués)
  abadias||abadías
  abadonar||abandonar
  abadonó||abandonó
@@ -78,7 +78,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  abrebiatura||abreviatura
  abrebiaturas||abreviaturas
  abrefacil||abrefácil
- Abril|cs|abril
+ Abril|cs|abril (mes), Abril (nombre)
  abrio||abrió
  abrío||abrió
  abrogacion||abrogación
@@ -782,6 +782,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  amazonicas||amazónicas
  amazonico||amazónico
  amazonicos||amazónicos
+ ambar||ámbar
  ámbas||ambas
  ambicion||ambición
  ambigüa||ambigua
@@ -2714,7 +2715,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  calcamonía||calcomanía
  calcamonias||calcomanías
  calcamonías||calcomanías
- calcarea||calcárea
+ calcarea||calcárea (adjetivo), calcarea (clase de esponjas)
  calcareas||calcáreas
  calcareo||calcáreo
  calcareos||calcáreos
@@ -6680,7 +6681,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  eduación||educación
  eduardo|cs|Eduardo
  educacion||educación
- EEUU||EE. UU. (con espacio duro), EUA o Estados Unidos
+ EEUU||EE.{{esd}}UU. (con espacio duro), EUA, Estados Unidos
  efectauda||efectuada
  efectaudas||efectuadas
  efectaudo||efectuado
@@ -10597,10 +10598,6 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  impudico||impúdico
  impudicos||impúdicos
  impugnacion||impugnación
- impulsador||impulsor
- impulsadora||impulsora
- impulsadoras||impulsoras
- impulsadores||impulsores
  impurificacion||impurificación
  impusó||impuso
  inabilitada||inhabilitada
@@ -15449,6 +15446,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  preservacion||preservación
  presicion||precisión
  presición||precisión
+ presidia||presidía
  presididia||presidida
  presididias||presididas
  presididio||presidido
@@ -16810,7 +16808,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  rímmeles||rímeles
  rindio||rindió
  riñon||riñón
- rió||rio
+ rió||rio (verbo, 3.ª persona), río (sustantivo o verbo, 1.ª persona)
  rio||río (sustantivo o verbo, 1.ª persona), rio (verbo, 3.ª persona)
  rios||ríos
  rision||risión
@@ -17299,6 +17297,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  seras||serás
  seràs||serás
  sere||seré
+ seria||seria (adejtivo), sería (verbo)
  seriacion||seriación
  serian||serían (conjugación del verbo ser), serian (conjugación del verbo seriar)
  sericicola||sericícola
@@ -18043,7 +18042,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  Swazilandia||Suazilandia
  sweater||suéter
  sweaters||suéteres
- Sydney||Sídney
+ Sydney||Sídney (ciudad), Sydney (nombre)
 
 == T ==
  tabaja||trabaja
@@ -18946,8 +18945,8 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  tremulo||trémulo
  tremulos||trémulos
  trés||tres
- triada||tríada, tríade
- triadas||tríadas, tríades
+ triada||tríada, tríade (conjunto de tres cosas), triada (participio del verbo triar)
+ triadas||tríadas, tríades (conjuntos de tres cosas), triadas (participio del verbo triar)
  triade||tríade, tríada
  triades||tríades, tríadas
  triadica||triádica
@@ -19002,6 +19001,7 @@ En esta lista se detallan los términos que el [[Wikipedia:Corrector ortográfic
  trípoli|cs|Trípoli
  triptico||tríptico
  tripticos||trípticos
+ tripulacion||tripulación
  triseccion||trisección
  tristan||Tristán
  tristán|cs|Tristán

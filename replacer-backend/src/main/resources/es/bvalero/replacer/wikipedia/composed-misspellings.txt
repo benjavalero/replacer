@@ -87,6 +87,7 @@
  Jose Maria|cs|José María (nombre propio español)
  Jose María|cs|José María (nombre propio español)
  la mas||la más
+ la perdida de||la pérdida de
  la practica||la practica (verbo), la práctica (sustantivo)
  la primer||la primera, el primero, lo primero
  la version||la versión
@@ -97,6 +98,7 @@
  mas adelante||más adelante
  mas allá||más allá
  mas alta||más alta
+ más aun||más aún
  mas bien||más bien
  mas conocida||más conocida
  mas conocido||más conocido
@@ -135,8 +137,8 @@
  Rio Claro|cs|Río Claro (región o río en varios países de lengua española y Brasil), Rio Claro (en portugués)
  Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
  Rio Negro|cs|Río Negro (región o río en varios países de lengua española, EE. UU. y Brasil), Rio Negro (en portugués e inglés)
- Rio Tinto|cs|Río Tinto (río español), Rio Tinto (otros usos internacionales)
  Salud Publica|cs|Salud Pública
+ salud publica|cs|salud pública
  Santa Barbara|cs|Santa Bárbara (localidad o región en varios países de lengua española y EE. UU.), Santa Barbara (en inglés)
  SD Éibar|cs|SD Eibar
  S. D. Éibar|cs|S. D. Eibar
