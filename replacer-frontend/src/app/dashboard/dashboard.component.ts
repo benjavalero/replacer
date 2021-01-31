@@ -14,7 +14,7 @@ export class DashboardComponent implements OnInit {
   constructor(private authenticationService: AuthenticationService, private titleService: Title) {}
 
   ngOnInit() {
-    this.titleService.setTitle('Replacer - Reemplazador de la Wikipedia en español');
+    this.titleService.setTitle('Replacer - Reemplazador de la Wikipedia');
 
     this.authenticationService.user$.subscribe((user: WikipediaUser) => {
       this.admin = user.admin;
