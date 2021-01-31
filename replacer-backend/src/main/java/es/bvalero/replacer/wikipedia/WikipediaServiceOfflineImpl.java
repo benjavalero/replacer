@@ -60,7 +60,7 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
             .lang(WikipediaLanguage.getDefault())
             .namespace(WikipediaNamespace.ARTICLE)
             .title("América del Norte")
-            .content(loadPageContent("/es/bvalero/replacer/wikipedia/article-long.txt"))
+            .content(loadPageContent("/es/bvalero/replacer/wikipedia/sample-article.txt"))
             .lastUpdate(nowDate.toLocalDate())
             .queryTimestamp(now)
             .build();
