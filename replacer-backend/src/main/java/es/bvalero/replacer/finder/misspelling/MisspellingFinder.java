@@ -99,28 +99,47 @@ public abstract class MisspellingFinder implements ReplacementFinder, PropertyCh
 
     // Transform the case of the suggestion, e.g. "Habia" -> "Había"
     List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
-        List<Suggestion> suggestions = new LinkedList<>();
-
         // We are sure in this point that the Misspelling exists
         Misspelling misspelling = findMisspellingByWord(originalWord, lang).orElseThrow(IllegalArgumentException::new);
-        misspelling
-            .getSuggestions()
-            .forEach(
-                suggestion -> {
-                    Suggestion newSuggestion = FinderUtils.startsWithUpperCase(originalWord) &&
-                        !misspelling.isCaseSensitive()
-                        ? Suggestion.of(FinderUtils.setFirstUpperCase(suggestion.getText()), suggestion.getComment())
-                        : suggestion;
+        return applyMisspellingSuggestions(originalWord, misspelling);
+    }
 
-                    // If the suggested word matches the original then add it as the first suggestion
-                    if (originalWord.equals(newSuggestion.getText())) {
-                        suggestions.add(0, newSuggestion);
-                    } else {
-                        suggestions.add(newSuggestion);
-                    }
-                }
+    private List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
+        List<Suggestion> suggestions = new LinkedList<>();
+        for (Suggestion misspellingSuggestion : misspelling.getSuggestions()) {
+            List<Suggestion> toAdd = applyMisspellingSuggestion(
+                word,
+                misspelling.isCaseSensitive(),
+                misspellingSuggestion
             );
 
+            // If the suggested word matches the original then add it as the first suggestion
+            boolean containsOriginal = toAdd.stream().anyMatch(s -> s.getText().equals(word));
+            if (containsOriginal) {
+                suggestions.addAll(0, toAdd);
+            } else {
+                suggestions.addAll(toAdd);
+            }
+        }
         return suggestions;
+    }
+
+    private List<Suggestion> applyMisspellingSuggestion(String word, boolean caseSensitive, Suggestion suggestion) {
+        if (caseSensitive) {
+            // Try to provide also a suggestion for sentence start
+            Suggestion uppercase = suggestion.toUppercase();
+            if (uppercase.equals(suggestion)) {
+                return Collections.singletonList(suggestion);
+            } else {
+                return List.of(suggestion, uppercase);
+            }
+        } else {
+            // Try to keep the uppercase of the original text
+            if (FinderUtils.startsWithUpperCase(word)) {
+                return Collections.singletonList(suggestion.toUppercase());
+            } else {
+                return Collections.singletonList(suggestion);
+            }
+        }
     }
 }

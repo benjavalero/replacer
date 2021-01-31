@@ -117,4 +117,30 @@ class MisspellingComposedFinderTest {
         Assertions.assertEquals("Rio 2016", result1.getSubtype());
         Assertions.assertEquals("Río 2016", result1.getSuggestions().get(0).getText());
     }
+
+    @Test
+    void testFindUpperToLowerCase() {
+        String text = "Parque Nacional de Doñana";
+        Misspelling misspelling = Misspelling.of("Parque Nacional", true, "parque nacional");
+        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
+        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
+        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
+
+        // Fake the update of the misspelling list in the misspelling manager
+        misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+
+        List<Replacement> results = misspellingComposedFinder.findList(text, WikipediaLanguage.SPANISH);
+
+        Assertions.assertNotNull(results);
+        Assertions.assertEquals(1, results.size());
+
+        Replacement result1 = results.get(0);
+        Assertions.assertEquals("Parque Nacional", result1.getText());
+        Assertions.assertEquals("Parque Nacional", result1.getSubtype());
+
+        // We want also a suggestion with the first letter in uppercase just in case of start of sentence
+        Assertions.assertEquals(2, result1.getSuggestions().size());
+        Assertions.assertEquals("parque nacional", result1.getSuggestions().get(0).getText());
+        Assertions.assertEquals("Parque nacional", result1.getSuggestions().get(1).getText());
+    }
 }

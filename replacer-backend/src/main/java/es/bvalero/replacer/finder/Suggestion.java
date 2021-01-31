@@ -19,4 +19,8 @@ public class Suggestion {
     public static Suggestion ofNoComment(String text) {
         return of(text, null);
     }
+
+    public Suggestion toUppercase() {
+        return of(FinderUtils.setFirstUpperCase(text), comment);
+    }
 }
