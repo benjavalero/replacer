@@ -1,7 +1,5 @@
 # Technical Design
 
-The purpose of this project is to provide a web tool in order to find and fix common orthography and style issues in Wikipedia pages.
-
 The project started to work with Spanish Wikipedia, but it has been extended to work with other languages as Galician, and it is meant to work with other Wikimedia projects.
 
 ## Architecture
