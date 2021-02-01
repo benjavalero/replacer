@@ -53,9 +53,7 @@ public class AuthenticationController {
     }
 
     private RequestToken convertToDto(OAuth1RequestToken oAuth1RequestToken, String authorizationUrl) {
-        RequestToken requestToken = modelMapper.map(oAuth1RequestToken, RequestToken.class);
-        requestToken.setAuthorizationUrl(authorizationUrl);
-        return requestToken;
+        return RequestToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret(), authorizationUrl);
     }
 
     private AccessToken convertToDto(OAuth1AccessToken token) {

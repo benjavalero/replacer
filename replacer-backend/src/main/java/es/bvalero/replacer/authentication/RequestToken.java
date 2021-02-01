@@ -1,15 +1,11 @@
 package es.bvalero.replacer.authentication;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value(staticConstructor = "of")
 class RequestToken {
 
-    private String token;
-    private String tokenSecret;
-    private String authorizationUrl;
+    String token;
+    String tokenSecret;
+    String authorizationUrl;
 }
