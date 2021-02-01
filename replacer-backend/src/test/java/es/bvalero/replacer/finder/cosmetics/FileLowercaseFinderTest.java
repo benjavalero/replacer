@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetics;
 
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.Cosmetic;
 import java.util.List;
 import java.util.Set;

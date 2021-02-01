@@ -2,8 +2,8 @@ package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.TestConfiguration;
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.config.TestConfiguration;
+import es.bvalero.replacer.config.XmlConfiguration;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;

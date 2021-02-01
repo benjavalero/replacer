@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.template;
 
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.FinderResult;
 import java.util.HashSet;
 import java.util.List;

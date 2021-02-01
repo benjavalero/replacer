@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
+import es.bvalero.replacer.config.TestConfiguration;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = AuthenticationController.class)
+@WebMvcTest(value = { AuthenticationController.class, TestConfiguration.class })
 class AuthenticationControllerTest {
 
     @Autowired
@@ -53,7 +54,7 @@ class AuthenticationControllerTest {
         when(authenticationService.getAccessToken(any(OAuth1RequestToken.class), anyString()))
             .thenReturn(new OAuth1AccessToken("A", "B"));
         when(wikipediaService.getLoggedUserName(any(OAuth1AccessToken.class))).thenReturn("C");
-        when(wikipediaService.isAdminUser(eq("C"))).thenReturn(true);
+        when(wikipediaService.isAdminUser("C")).thenReturn(true);
 
         mvc
             .perform(
@@ -71,6 +72,6 @@ class AuthenticationControllerTest {
 
         verify(authenticationService, times(1)).getAccessToken(any(), anyString());
         verify(wikipediaService, times(1)).getLoggedUserName(any());
-        verify(wikipediaService, times(1)).isAdminUser(eq("C"));
+        verify(wikipediaService, times(1)).isAdminUser("C");
     }
 }

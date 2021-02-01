@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutables;
 
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.Immutable;
 import es.bvalero.replacer.finder.LinearMatcher;
 import es.bvalero.replacer.wikipedia.WikipediaPage;

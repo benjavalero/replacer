@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.benchmark.completetag;
 
 import static org.hamcrest.Matchers.is;
 
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.util.ArrayList;

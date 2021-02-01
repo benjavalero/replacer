@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.benchmark;
 
 import static org.hamcrest.Matchers.is;
 
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.ImmutableFinder;
 import es.bvalero.replacer.finder.immutables.*;
 import es.bvalero.replacer.finder.misspelling.*;

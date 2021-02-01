@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.misspelling;
 
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.Immutable;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.XmlConfiguration;
+import es.bvalero.replacer.config.XmlConfiguration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;

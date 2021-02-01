@@ -1,4 +1,4 @@
-package es.bvalero.replacer;
+package es.bvalero.replacer.config;
 
 import es.bvalero.replacer.wikipedia.StringToWikipediaLanguageConverter;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,9 +10,8 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * This configuration will only be applied with profile "offline",
- * in order to perform calls from frontend without getting CORS warnings
- * from certain browsers.
+ * This configuration will be applied with non-production profiles, in order to perform calls
+ * from frontend without getting CORS warnings from certain browsers.
  */
 @Profile("!default")
 @Configuration
