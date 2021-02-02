@@ -62,10 +62,9 @@ class ReplacementCountServiceTest {
     @Test
     void testGetCachedReplacementCount() throws ReplacerException {
         WikipediaLanguage lang = WikipediaLanguage.SPANISH;
-        String langCode = lang.getCode();
 
-        TypeSubtypeCount count1 = new TypeSubtypeCount(langCode, "X", "Y", 2L);
-        TypeSubtypeCount count2 = new TypeSubtypeCount(langCode, "X", "Z", 1L);
+        TypeSubtypeCount count1 = new TypeSubtypeCount(lang, "X", "Y", 2L);
+        TypeSubtypeCount count2 = new TypeSubtypeCount(lang, "X", "Z", 1L);
         List<TypeSubtypeCount> counts = Arrays.asList(count1, count2);
         Mockito.when(replacementDao.countPagesGroupedByTypeAndSubtype()).thenReturn(counts);
 

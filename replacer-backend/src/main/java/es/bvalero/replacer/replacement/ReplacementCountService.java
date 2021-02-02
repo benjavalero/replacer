@@ -73,7 +73,7 @@ public class ReplacementCountService {
     private Map<WikipediaLanguage, LanguageCount> buildReplacementTypeCounts(List<TypeSubtypeCount> counts) {
         final Map<WikipediaLanguage, LanguageCount> langCounts = new EnumMap<>(WikipediaLanguage.class);
         for (TypeSubtypeCount count : counts) {
-            WikipediaLanguage lang = WikipediaLanguage.forValues(count.getLang());
+            WikipediaLanguage lang = count.getLang();
             if (!langCounts.containsKey(lang)) {
                 langCounts.put(lang, new LanguageCount(lang));
             }
