@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -315,7 +314,7 @@ class WikipediaServiceImpl implements WikipediaService {
             throw new IllegalArgumentException("Null page ID in API response: " + response);
         }
 
-        return new PageSearchResult(response.getQuery().getSearchinfo().getTotalhits(), pageIds);
+        return PageSearchResult.of(response.getQuery().getSearchinfo().getTotalhits(), pageIds);
     }
 
     @Loggable(value = Loggable.DEBUG, ignore = ReplacerException.class)

@@ -4,16 +4,20 @@ import java.util.*;
 import lombok.Getter;
 
 @Getter
-public class PageSearchResult {
+public final class PageSearchResult {
 
-    private final List<Integer> pageIds;
+    private final List<Integer> pageIds = new LinkedList<>();
     private long total;
 
-    public PageSearchResult(long total, Collection<Integer> pageIds) {
+    private PageSearchResult(long total, List<Integer> pageIds) {
         this.total = total;
         // Add a set to remove duplicated page ids
         // We need a List in order to use "removeIf"
-        this.pageIds = new LinkedList<>(new HashSet<>(pageIds));
+        this.pageIds.addAll(new HashSet<>(pageIds));
+    }
+
+    public static PageSearchResult of(long total, List<Integer> pageIds) {
+        return new PageSearchResult(total, pageIds);
     }
 
     public static PageSearchResult ofEmpty() {
@@ -21,28 +25,29 @@ public class PageSearchResult {
     }
 
     public boolean isEmpty() {
-        return pageIds.isEmpty();
+        return this.getPageIds().isEmpty();
     }
 
     public Optional<Integer> popPageId() {
         if (isEmpty()) {
             return Optional.empty();
         } else {
-            total--;
-            return Optional.of(pageIds.remove(0));
+            this.total--;
+            return Optional.of(this.pageIds.remove(0));
         }
     }
 
     public void removePageIds(List<Integer> toRemove) {
         toRemove.forEach(
             id -> {
-                if (pageIds.remove(id)) {
-                    total--;
+                if (this.pageIds.remove(id)) {
+                    this.total--;
                 }
             }
         );
     }
 
+    @Override
     public String toString() {
         return "PageSearchResult(total=" + this.getTotal() + ", pageIds=" + this.getPageIds().size() + ")";
     }

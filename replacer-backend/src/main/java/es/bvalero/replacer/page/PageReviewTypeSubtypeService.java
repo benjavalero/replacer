@@ -70,7 +70,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
             options.getType(),
             options.getSubtype()
         );
-        return new PageSearchResult(totalResults, pageIds);
+        return PageSearchResult.of(totalResults, pageIds);
     }
 
     @Override

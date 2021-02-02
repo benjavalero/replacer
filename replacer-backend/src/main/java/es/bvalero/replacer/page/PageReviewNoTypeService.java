@@ -48,7 +48,7 @@ class PageReviewNoTypeService extends PageReviewService {
         long randomStart = replacementDao.findRandomIdToBeReviewed(CACHE_SIZE, options.getLang());
         long totalResults = replacementDao.countReplacementsNotReviewed(options.getLang());
         List<Integer> pageIds = replacementDao.findPageIdsToBeReviewed(options.getLang(), randomStart, pagination);
-        return new PageSearchResult(totalResults, pageIds);
+        return PageSearchResult.of(totalResults, pageIds);
     }
 
     @Override

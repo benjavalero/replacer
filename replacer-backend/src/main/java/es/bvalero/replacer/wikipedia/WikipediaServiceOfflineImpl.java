@@ -98,7 +98,7 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
         int offset,
         int limit
     ) {
-        return new PageSearchResult(1, Collections.singletonList(1));
+        return PageSearchResult.of(1, Collections.singletonList(1));
     }
 
     @Override
