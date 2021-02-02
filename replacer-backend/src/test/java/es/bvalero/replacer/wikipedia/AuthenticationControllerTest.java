@@ -1,4 +1,4 @@
-package es.bvalero.replacer.authentication;
+package es.bvalero.replacer.wikipedia;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -9,6 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
+import es.bvalero.replacer.wikipedia.AuthenticationController;
+import es.bvalero.replacer.wikipedia.AuthenticationService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

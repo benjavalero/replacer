@@ -1,4 +1,4 @@
-package es.bvalero.replacer.authentication;
+package es.bvalero.replacer.wikipedia;
 
 import lombok.Value;
 

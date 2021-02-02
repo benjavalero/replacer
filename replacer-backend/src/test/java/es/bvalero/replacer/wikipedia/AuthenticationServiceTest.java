@@ -1,8 +1,12 @@
-package es.bvalero.replacer.authentication;
+package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
+import es.bvalero.replacer.wikipedia.AuthenticationException;
+import es.bvalero.replacer.wikipedia.AuthenticationService;
+import es.bvalero.replacer.wikipedia.AuthenticationServiceImpl;
+import es.bvalero.replacer.wikipedia.AuthenticationServiceOfflineImpl;
 import java.io.IOException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

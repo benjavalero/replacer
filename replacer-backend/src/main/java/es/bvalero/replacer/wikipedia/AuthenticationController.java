@@ -1,10 +1,9 @@
-package es.bvalero.replacer.authentication;
+package es.bvalero.replacer.wikipedia;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
