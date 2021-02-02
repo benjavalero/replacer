@@ -1,7 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.github.scribejava.apis.MediaWikiApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.oauth.OAuth10aService;
@@ -21,12 +19,5 @@ public class WikipediaConfig {
     @Bean
     public OAuth10aService oAuthService() {
         return new ServiceBuilder(apiKey).apiSecret(apiSecret).callback("oob").build(MediaWikiApi.instance());
-    }
-
-    @Bean
-    public ObjectMapper jsonMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new Jdk8Module());
-        return mapper;
     }
 }
