@@ -18,13 +18,18 @@ class SavePage {
     private String title;
     private String content;
     private String timestamp;
-    private AccessToken token;
+    private String token;
+    private String tokenSecret;
 
     @Nullable
     private String type;
 
     @Nullable
     private String subtype;
+
+    AccessToken getAccessToken() {
+        return new AccessToken(token, tokenSecret);
+    }
 
     @Override
     public String toString() {

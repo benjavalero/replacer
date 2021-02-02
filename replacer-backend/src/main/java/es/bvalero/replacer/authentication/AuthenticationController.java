@@ -5,7 +5,6 @@ import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,9 +21,6 @@ public class AuthenticationController {
 
     @Autowired
     private WikipediaService wikipediaService;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     @GetMapping(value = "/request-token")
     public RequestToken getRequestToken() throws AuthenticationException {
@@ -56,7 +52,7 @@ public class AuthenticationController {
         return RequestToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret(), authorizationUrl);
     }
 
-    private AccessToken convertToDto(OAuth1AccessToken token) {
-        return modelMapper.map(token, AccessToken.class);
+    private AccessToken convertToDto(OAuth1AccessToken oAuth1AccessToken) {
+        return new AccessToken(oAuth1AccessToken.getToken(), oAuth1AccessToken.getTokenSecret());
     }
 }

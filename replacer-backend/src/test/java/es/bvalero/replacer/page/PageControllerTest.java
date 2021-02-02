@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuth1AccessToken;
-import es.bvalero.replacer.authentication.AccessToken;
 import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.replacement.ReplacementCountService;
@@ -172,10 +171,11 @@ class PageControllerTest {
         String title = "Q";
         String content = "X";
         String timestamp = "Y";
-        AccessToken token = new AccessToken("A", "B");
+        String token = "A";
+        String tokenSecret = "B";
         String type = "T";
         String subtype = "S";
-        SavePage savePage = new SavePage(section, title, content, timestamp, token, type, subtype);
+        SavePage savePage = new SavePage(section, title, content, timestamp, token, tokenSecret, type, subtype);
 
         when(cosmeticFindService.applyCosmeticChanges(any(WikipediaPage.class))).thenReturn("C");
 
@@ -211,10 +211,11 @@ class PageControllerTest {
         int section = 3;
         String title = "Q";
         String timestamp = "Y";
-        AccessToken token = new AccessToken("A", "B");
+        String token = "A";
+        String tokenSecret = "B";
         String type = "T";
         String subtype = "S";
-        SavePage savePage = new SavePage(section, title, null, timestamp, token, type, subtype);
+        SavePage savePage = new SavePage(section, title, null, timestamp, token, tokenSecret, type, subtype);
 
         mvc
             .perform(

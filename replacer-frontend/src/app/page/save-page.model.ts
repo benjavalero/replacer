@@ -1,11 +1,10 @@
-import { AccessToken } from '../authentication/access-token.model';
-
 export class SavePage {
   section?: number;
   title: string;
   content: string;
   timestamp: string;
-  token: AccessToken;
+  token: string;
+  tokenSecret: string;
   type?: string;
   subtype?: string;
 }

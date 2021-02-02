@@ -143,7 +143,7 @@ public class PageController {
                     savePage.getSection(),
                     textToSave,
                     savePage.getTimestamp(),
-                    convertToEntity(savePage.getToken())
+                    convertToEntity(savePage.getAccessToken())
                 );
             } catch (ReplacerException e) {
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
