@@ -1,7 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.oauth.OAuth10aService;
@@ -90,7 +89,7 @@ class WikipediaRequestServiceTest {
             wikipediaRequestService.executeSignedPostRequest(
                 Collections.emptyMap(),
                 WikipediaLanguage.SPANISH,
-                new OAuth1AccessToken("A", "B")
+                AccessToken.of("A", "B")
             )
         );
     }

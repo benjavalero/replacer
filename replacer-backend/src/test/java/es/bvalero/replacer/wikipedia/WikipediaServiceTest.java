@@ -1,7 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.ReplacerException;
 import java.util.Arrays;
 import java.util.List;
@@ -46,18 +45,14 @@ class WikipediaServiceTest {
                 wikipediaRequestService.executeSignedPostRequest(
                     Mockito.anyMap(),
                     Mockito.any(WikipediaLanguage.class),
-                    Mockito.any(OAuth1AccessToken.class)
+                    Mockito.any(AccessToken.class)
                 )
             )
             .thenReturn(response);
         Assertions.assertTrue(response.isBatchcomplete());
 
         // We pass a null access token to retrieve an anonymous edit token
-        EditToken editToken = wikipediaService.getEditToken(
-            2209245,
-            WikipediaLanguage.SPANISH,
-            new OAuth1AccessToken("", "")
-        );
+        EditToken editToken = wikipediaService.getEditToken(2209245, WikipediaLanguage.SPANISH, AccessToken.ofEmpty());
         Assertions.assertNotNull(editToken.getCsrfToken());
         Assertions.assertEquals("+\\", editToken.getCsrfToken());
         Assertions.assertEquals("2019-06-24T21:24:09Z", editToken.getTimestamp());
@@ -212,12 +207,12 @@ class WikipediaServiceTest {
                 wikipediaRequestService.executeSignedGetRequest(
                     Mockito.anyMap(),
                     Mockito.any(WikipediaLanguage.class),
-                    Mockito.any(OAuth1AccessToken.class)
+                    Mockito.any(AccessToken.class)
                 )
             )
             .thenReturn(response);
 
-        OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
+        AccessToken accessToken = AccessToken.ofEmpty();
         String username = wikipediaService.getLoggedUserName(accessToken);
         Assertions.assertEquals("Benjavalero", username);
     }
@@ -233,12 +228,12 @@ class WikipediaServiceTest {
                 wikipediaRequestService.executeSignedPostRequest(
                     Mockito.anyMap(),
                     Mockito.any(WikipediaLanguage.class),
-                    Mockito.any(OAuth1AccessToken.class)
+                    Mockito.any(AccessToken.class)
                 )
             )
             .thenReturn(response);
 
-        OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
+        AccessToken accessToken = AccessToken.ofEmpty();
         // We use a timestamp BEFORE the timestamp of the last edition (from the edit token)
         String currentTimestamp = "2019-06-23T21:24:09Z";
 
@@ -259,12 +254,12 @@ class WikipediaServiceTest {
                 wikipediaRequestService.executeSignedPostRequest(
                     Mockito.anyMap(),
                     Mockito.any(WikipediaLanguage.class),
-                    Mockito.any(OAuth1AccessToken.class)
+                    Mockito.any(AccessToken.class)
                 )
             )
             .thenReturn(response);
 
-        OAuth1AccessToken accessToken = new OAuth1AccessToken("", "");
+        AccessToken accessToken = AccessToken.ofEmpty();
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         String currentTimestamp = "2019-06-25T21:24:09Z";
         wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, null, "", currentTimestamp, accessToken);
@@ -275,7 +270,7 @@ class WikipediaServiceTest {
             .executeSignedPostRequest(
                 Mockito.anyMap(),
                 Mockito.any(WikipediaLanguage.class),
-                Mockito.any(OAuth1AccessToken.class)
+                Mockito.any(AccessToken.class)
             );
 
         // Save a section
@@ -289,7 +284,7 @@ class WikipediaServiceTest {
             .executeSignedPostRequest(
                 Mockito.anyMap(),
                 Mockito.any(WikipediaLanguage.class),
-                Mockito.any(OAuth1AccessToken.class)
+                Mockito.any(AccessToken.class)
             );
     }
 
@@ -408,10 +403,8 @@ class WikipediaServiceTest {
 
     @Test
     void testWikipediaServiceOffline() throws ReplacerException {
-        Assertions.assertEquals(
-            "offline",
-            wikipediaServiceOffline.getLoggedUserName(Mockito.mock(OAuth1AccessToken.class))
-        );
+        AccessToken accessToken = AccessToken.ofEmpty();
+        Assertions.assertEquals("offline", wikipediaServiceOffline.getLoggedUserName(accessToken));
         Assertions.assertTrue(wikipediaServiceOffline.isAdminUser(""));
         Assertions.assertTrue(
             StringUtils.isNotBlank(wikipediaServiceOffline.getMisspellingListPageContent(WikipediaLanguage.SPANISH))

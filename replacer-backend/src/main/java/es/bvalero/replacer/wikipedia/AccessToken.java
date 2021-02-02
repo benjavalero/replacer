@@ -1,12 +1,16 @@
 package es.bvalero.replacer.wikipedia;
 
-import lombok.AllArgsConstructor;
 import lombok.Value;
+import org.jetbrains.annotations.TestOnly;
 
-@AllArgsConstructor
-@Value
+@Value(staticConstructor = "of")
 public class AccessToken {
 
     String token;
     String tokenSecret;
+
+    @TestOnly
+    static AccessToken ofEmpty() {
+        return AccessToken.of("", "");
+    }
 }

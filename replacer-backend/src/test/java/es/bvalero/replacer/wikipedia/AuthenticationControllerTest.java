@@ -9,9 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
-import es.bvalero.replacer.wikipedia.AuthenticationController;
-import es.bvalero.replacer.wikipedia.AuthenticationService;
-import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +51,7 @@ class AuthenticationControllerTest {
     void testGetAccessToken() throws Exception {
         when(authenticationService.getAccessToken(any(OAuth1RequestToken.class), anyString()))
             .thenReturn(new OAuth1AccessToken("A", "B"));
-        when(wikipediaService.getLoggedUserName(any(OAuth1AccessToken.class))).thenReturn("C");
+        when(wikipediaService.getLoggedUserName(any(AccessToken.class))).thenReturn("C");
         when(wikipediaService.isAdminUser("C")).thenReturn(true);
 
         mvc

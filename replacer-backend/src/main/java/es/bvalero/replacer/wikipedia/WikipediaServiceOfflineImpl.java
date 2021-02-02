@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.ReplacerException;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
-    public String getLoggedUserName(OAuth1AccessToken accessToken) {
+    public String getLoggedUserName(AccessToken accessToken) {
         return "offline";
     }
 
@@ -109,7 +108,7 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
         @Nullable Integer section,
         String pageContent,
         String currentTimestamp,
-        OAuth1AccessToken accessToken
+        AccessToken accessToken
     ) {
         // Do nothing
     }

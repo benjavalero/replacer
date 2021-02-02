@@ -1,13 +1,12 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.ReplacerException;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.lang.Nullable;
 
 public interface WikipediaService {
-    String getLoggedUserName(OAuth1AccessToken accessToken) throws ReplacerException;
+    String getLoggedUserName(AccessToken accessToken) throws ReplacerException;
 
     boolean isAdminUser(String username);
 
@@ -42,6 +41,6 @@ public interface WikipediaService {
         @Nullable Integer section,
         String pageContent,
         String currentTimestamp,
-        OAuth1AccessToken accessToken
+        AccessToken accessToken
     ) throws ReplacerException;
 }

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
 import java.util.*;
@@ -51,7 +50,7 @@ class WikipediaServiceImpl implements WikipediaService {
     private Map<String, String> falsePositivePages;
 
     @Override
-    public String getLoggedUserName(OAuth1AccessToken accessToken) throws ReplacerException {
+    public String getLoggedUserName(AccessToken accessToken) throws ReplacerException {
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedGetRequest(
             buildUserNameRequestParams(),
             WikipediaLanguage.getDefault(),
@@ -326,7 +325,7 @@ class WikipediaServiceImpl implements WikipediaService {
         @Nullable Integer section,
         String pageContent,
         String currentTimestamp,
-        OAuth1AccessToken accessToken
+        AccessToken accessToken
     ) throws ReplacerException {
         EditToken editToken = getEditToken(pageId, lang, accessToken);
         // Pre-check of edit conflicts
@@ -377,7 +376,7 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @VisibleForTesting
-    EditToken getEditToken(int pageId, WikipediaLanguage lang, OAuth1AccessToken accessToken) throws ReplacerException {
+    EditToken getEditToken(int pageId, WikipediaLanguage lang, AccessToken accessToken) throws ReplacerException {
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedPostRequest(
             buildEditTokenRequestParams(pageId),
             lang,

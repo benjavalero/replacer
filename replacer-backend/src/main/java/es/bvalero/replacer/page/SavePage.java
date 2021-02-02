@@ -28,7 +28,7 @@ class SavePage {
     private String subtype;
 
     AccessToken getAccessToken() {
-        return new AccessToken(token, tokenSecret);
+        return AccessToken.of(token, tokenSecret);
     }
 
     @Override

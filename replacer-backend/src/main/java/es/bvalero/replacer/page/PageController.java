@@ -1,13 +1,11 @@
 package es.bvalero.replacer.page;
 
-import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.UserParameters;
 import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.wikipedia.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Optional;
@@ -143,7 +141,7 @@ public class PageController {
                     savePage.getSection(),
                     textToSave,
                     savePage.getTimestamp(),
-                    convertToEntity(savePage.getAccessToken())
+                    savePage.getAccessToken()
                 );
             } catch (ReplacerException e) {
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -198,9 +196,5 @@ public class PageController {
 
         // Remove from the replacement count cache
         replacementCountService.removeCachedReplacementCount(params.getLang(), type, subtype);
-    }
-
-    private OAuth1AccessToken convertToEntity(AccessToken accessToken) {
-        return new OAuth1AccessToken(accessToken.getToken(), accessToken.getTokenSecret());
     }
 }

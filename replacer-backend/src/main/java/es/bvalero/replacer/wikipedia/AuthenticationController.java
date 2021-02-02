@@ -38,9 +38,9 @@ public class AuthenticationController {
         OAuth1AccessToken oAuth1AccessToken = authenticationService.getAccessToken(oAuth1RequestToken, oauthVerifier);
 
         try {
-            String userName = wikipediaService.getLoggedUserName(oAuth1AccessToken);
-            boolean admin = wikipediaService.isAdminUser(userName);
             AccessToken accessToken = convertToDto(oAuth1AccessToken);
+            String userName = wikipediaService.getLoggedUserName(accessToken);
+            boolean admin = wikipediaService.isAdminUser(userName);
             return WikipediaUser.of(userName, admin, accessToken);
         } catch (ReplacerException e) {
             throw new AuthenticationException(e);
@@ -52,6 +52,6 @@ public class AuthenticationController {
     }
 
     private AccessToken convertToDto(OAuth1AccessToken oAuth1AccessToken) {
-        return new AccessToken(oAuth1AccessToken.getToken(), oAuth1AccessToken.getTokenSecret());
+        return AccessToken.of(oAuth1AccessToken.getToken(), oAuth1AccessToken.getTokenSecret());
     }
 }

@@ -8,10 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.finder.CosmeticFindService;
 import es.bvalero.replacer.finder.Suggestion;
 import es.bvalero.replacer.replacement.ReplacementCountService;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -201,7 +201,7 @@ class PageControllerTest {
                 eq(section),
                 eq("C"),
                 eq(timestamp),
-                eq(new OAuth1AccessToken("A", "B"))
+                eq(AccessToken.of("A", "B"))
             );
     }
 
@@ -233,7 +233,7 @@ class PageControllerTest {
                 anyInt(),
                 anyString(),
                 anyString(),
-                any(OAuth1AccessToken.class)
+                any(AccessToken.class)
             );
     }
 }

@@ -37,7 +37,7 @@ class WikipediaRequestService {
     WikipediaApiResponse executeSignedGetRequest(
         Map<String, String> params,
         WikipediaLanguage lang,
-        @Nullable OAuth1AccessToken accessToken
+        @Nullable AccessToken accessToken
     ) throws ReplacerException {
         return executeRequest(params, Verb.GET, lang, accessToken);
     }
@@ -45,7 +45,7 @@ class WikipediaRequestService {
     WikipediaApiResponse executeSignedPostRequest(
         Map<String, String> params,
         WikipediaLanguage lang,
-        @Nullable OAuth1AccessToken accessToken
+        @Nullable AccessToken accessToken
     ) throws ReplacerException {
         return executeRequest(params, Verb.POST, lang, accessToken);
     }
@@ -55,14 +55,15 @@ class WikipediaRequestService {
         Map<String, String> params,
         Verb verb,
         WikipediaLanguage lang,
-        @Nullable OAuth1AccessToken accessToken
+        @Nullable AccessToken accessToken
     ) throws ReplacerException {
+        // Access token may be an empty string in tests
         boolean isSigned = accessToken != null && StringUtils.isNotBlank(accessToken.getToken());
         LOGGER.trace("OAuth request is signed: {}", isSigned);
         OAuthRequest request = createOAuthRequestWithParams(params, verb, lang);
 
         if (isSigned) {
-            signOAuthRequest(request, accessToken);
+            signOAuthRequest(request, convertToEntity(accessToken));
         }
 
         try {
@@ -97,6 +98,10 @@ class WikipediaRequestService {
         request.addParameter("formatversion", "2");
 
         return request;
+    }
+
+    private OAuth1AccessToken convertToEntity(AccessToken accessToken) {
+        return new OAuth1AccessToken(accessToken.getToken(), accessToken.getTokenSecret());
     }
 
     private void signOAuthRequest(OAuthRequest request, OAuth1AccessToken accessToken) {

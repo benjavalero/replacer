@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.github.scribejava.core.model.OAuth1AccessToken;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.config.TestConfiguration;
 import es.bvalero.replacer.config.XmlConfiguration;
@@ -80,11 +79,7 @@ class WikipediaServiceIT {
     @Test
     void testGetEditToken() throws ReplacerException {
         // We pass a null access token to retrieve an anonymous edit token
-        EditToken editToken = wikipediaService.getEditToken(
-            6903884,
-            WikipediaLanguage.SPANISH,
-            new OAuth1AccessToken("", "")
-        );
+        EditToken editToken = wikipediaService.getEditToken(6903884, WikipediaLanguage.SPANISH, AccessToken.ofEmpty());
         Assertions.assertNotNull(editToken);
         Assertions.assertTrue(editToken.getCsrfToken().endsWith("+\\"));
         Assertions.assertNotNull(editToken.getTimestamp());
@@ -107,7 +102,7 @@ class WikipediaServiceIT {
             0,
             newContent,
             page.getQueryTimestamp(),
-            new OAuth1AccessToken("", "")
+            AccessToken.ofEmpty()
         );
 
         // Save the conflict content started 1 day before
@@ -124,7 +119,7 @@ class WikipediaServiceIT {
                     0,
                     conflictContent,
                     before,
-                    new OAuth1AccessToken("", "")
+                    AccessToken.ofEmpty()
                 )
         );
     }
