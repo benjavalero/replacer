@@ -33,10 +33,7 @@ class WikipediaServiceImpl implements WikipediaService {
     @Autowired
     private WikipediaRequestService wikipediaRequestService;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Setter
+    @Setter // For testing
     @Value("${replacer.admin.user}")
     private String adminUser;
 
@@ -134,7 +131,7 @@ class WikipediaServiceImpl implements WikipediaService {
             buildPageIdsRequestParams(pagesParam, pagesValue),
             lang
         );
-        return extractPagesFromJson(apiResponse).stream().map(page -> page.withLang(lang)).collect(Collectors.toList());
+        return extractPagesFromJson(apiResponse, lang);
     }
 
     private Map<String, String> buildPageIdsRequestParams(String pagesParam, String pagesValue) {
@@ -148,7 +145,7 @@ class WikipediaServiceImpl implements WikipediaService {
         return params;
     }
 
-    private List<WikipediaPage> extractPagesFromJson(WikipediaApiResponse response) {
+    private List<WikipediaPage> extractPagesFromJson(WikipediaApiResponse response, WikipediaLanguage lang) {
         // Query timestamp
         String queryTimestamp = response.getCurtimestamp();
         return response
@@ -156,14 +153,15 @@ class WikipediaServiceImpl implements WikipediaService {
             .getPages()
             .stream()
             .filter(page -> !page.isMissing())
-            .map(page -> convertToDto(page, queryTimestamp))
+            .map(page -> convertToDto(page, queryTimestamp, lang))
             .collect(Collectors.toList());
     }
 
-    private WikipediaPage convertToDto(WikipediaApiResponse.Page page, String queryTimestamp) {
+    private WikipediaPage convertToDto(WikipediaApiResponse.Page page, String queryTimestamp, WikipediaLanguage lang) {
         return WikipediaPage
             .builder()
             .id(page.getPageid())
+            .lang(lang)
             .title(page.getTitle())
             .namespace(WikipediaNamespace.valueOf(page.getNs()))
             .content(page.getRevisions().get(0).getSlots().getMain().getContent())
@@ -210,7 +208,13 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     private WikipediaSection convertToDto(WikipediaApiResponse.Section section) {
-        return modelMapper.map(section, WikipediaSection.class);
+        return WikipediaSection
+            .builder()
+            .level(Integer.parseInt(section.getLevel()))
+            .index(Integer.parseInt(section.getIndex()))
+            .byteOffset(section.getByteoffset())
+            .anchor(section.getAnchor())
+            .build();
     }
 
     @Loggable(prepend = true, value = Loggable.TRACE)
@@ -221,11 +225,8 @@ class WikipediaServiceImpl implements WikipediaService {
             buildPageIdsAndSectionRequestParams(pageId, section.getIndex()),
             lang
         );
-        List<WikipediaPage> pages = extractPagesFromJson(apiResponse);
-        return pages
-            .stream()
-            .findAny()
-            .map(p -> p.withLang(lang).withSection(section.getIndex()).withAnchor(section.getAnchor()));
+        List<WikipediaPage> pages = extractPagesFromJson(apiResponse, lang);
+        return pages.stream().findAny().map(p -> p.withSection(section.getIndex()).withAnchor(section.getAnchor()));
     }
 
     private Map<String, String> buildPageIdsAndSectionRequestParams(int pageId, int section) {

@@ -1,12 +1,10 @@
 package es.bvalero.replacer.wikipedia;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
+@Builder
 public class WikipediaSection implements Comparable<WikipediaSection> {
 
     int level;

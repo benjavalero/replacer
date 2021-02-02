@@ -4,9 +4,11 @@ import es.bvalero.replacer.page.IndexablePage;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
+import org.springframework.lang.Nullable;
 
 @Value
 @Builder
@@ -18,19 +20,18 @@ public class WikipediaPage implements IndexablePage {
     );
 
     int id;
-
-    @With
     WikipediaLanguage lang;
-
     String title;
     WikipediaNamespace namespace;
     LocalDate lastUpdate;
     String content;
 
-    @With
+    @With(AccessLevel.PACKAGE)
+    @Nullable
     Integer section;
 
-    @With
+    @With(AccessLevel.PACKAGE)
+    @Nullable
     String anchor;
 
     // Store the timestamp when the page was queried. No need to convert it to Date format.

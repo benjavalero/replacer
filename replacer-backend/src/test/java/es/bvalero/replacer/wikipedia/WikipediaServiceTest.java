@@ -9,15 +9,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.modelmapper.ModelMapper;
 
 class WikipediaServiceTest {
 
     @Spy
     private ObjectMapper jsonMapper;
-
-    @Spy
-    private ModelMapper modelMapper;
 
     @Mock
     private WikipediaRequestService wikipediaRequestService;
@@ -386,8 +382,7 @@ class WikipediaServiceTest {
 
         int pageId = 6903884;
         int sectionId = 1;
-        WikipediaSection section = new WikipediaSection();
-        section.setIndex(sectionId);
+        WikipediaSection section = WikipediaSection.builder().index(sectionId).build();
         String title = "Usuario:Benjavalero/Taller";
         WikipediaPage page = wikipediaService
             .getPageByIdAndSection(pageId, section, WikipediaLanguage.SPANISH)
