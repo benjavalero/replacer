@@ -191,13 +191,16 @@ The dumps are generated monthly and placed in a shared folder in Wikipedia serve
 
 The path of the shared folder and the wiki-project ares configured externally.
 
-The class `DumpManager` checks periodically the latest available dump, and indexes it, by running the Spring Batch job `DumpExecutionJob`.
+The class `DumpManager` checks periodically the latest available dump, and indexes it, by running the job implementing `DumpJob`.
 
-The Spring Batch job has the typical steps:
-- A reader, which parses the dump and extract the pages into `DumpPage` (and `DumpRevision`).
-- A processor `DumpPageProcessor`, which transforms each dump page into a list of replacements to be saved in the database.
-- A writer `DumpWriter`, which inserts or updates in the database the resulting replacements from the processor.
-- A listener `DumpJobListener`, which implements actions at the start and end of the job.
+Note that in the past there were two implementations: one in Spring Batch and another with SAX. Currently there is only the last one which give better performance results.
+
+We have anyway the typical steps:
+- Read: the dump is read and parsed in `DumpHandler`, extracting the pages into `DumpPage`.
+- Process: the processor `DumpPageProcessor` transforms each dump page into a list of replacements to be saved in the database.
+- Write: the writer `DumpWriter` inserts or updates in the database the resulting replacements from the processor.
+
+There is also a `ReplacementCache` helper to retrieve the replacements in database in chunks in order to compare them to the ones obtained in the processing.
 
 ## Package `wikipedia`
 
