@@ -199,21 +199,28 @@ The Spring Batch job has the typical steps:
 - A writer `DumpWriter`, which inserts or updates in the database the resulting replacements from the processor.
 - A listener `DumpJobListener`, which implements actions at the start and end of the job.
 
-
 ## Package `wikipedia`
 
-This package contains helper classes to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page).
+This package contains helper classes to authenticate in Wikipedia to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page).
 
 The interface `WikipediaService` offers the methods used to request the Wikipedia: user logging, find a page by ID or title, and save page contents.
 This interface has two implementations, one of them an _offline_ one always returning the same values just for offline testing purposes.
 
 The requests to the API are done in `WikipediaRequestService`, receiving all the needed parameters, and the authentication token if needed. The responses are mapped into a `WikipediaApiResponse`. In case of page requests, the response is eventually mapped into a `WikipediaPage`.
 
-## Package `authentication`
+The authentication is performed by the Oauth 1.0a protocol against the WikiMedia API, which allows the tool to work with the same users that are used to edit in Wikipedia. The authentication is implemented in the backend, and the frontend only contains the last access token.
 
-The authentication is performed by the Oauth 1.0a protocol against the WikiMedia API, which allows the tool to work with the same usernames that are used to edit in Wikipedia. The authentication is implemented in the backend, and the frontend only contains the last access token.
+Note that there are different OAuth tokens in case we want to develop locally (see `replacer.wikipedia.api.*` properties). The Production ones, once logged in, redirect to https://replacer.toolforge.org. However the Development ones redirect to http://localhost:8080.
 
-Note that there are different in case we want to develop locally. The Production ones, once logged in, redirect to https://replacer.toolforge.org. However the Development ones redirect to http://localhost:8080.
+## Package `config`
+
+It contains Spring configuration classes with beans used in several packages.
+
+### Immutability
+
+When possible all domain objects are defined as immutables, with Lombok annotations, except the ones used as Spring request parameters.
+
+When possible all structures which may be accessed by several threads are synchronized.
 
 ### Annotations
 
