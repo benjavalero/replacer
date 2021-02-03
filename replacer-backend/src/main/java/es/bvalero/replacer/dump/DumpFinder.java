@@ -34,19 +34,19 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class DumpFinder {
+class DumpFinder {
 
     private static final String DUMP_FOLDER_REGEX = "\\d{8}";
     private static final Pattern DUMP_FOLDER_PATTERN = Pattern.compile(DUMP_FOLDER_REGEX);
     private static final String DUMP_PATH_PROJECT_FORMAT = "%swiki";
     private static final String DUMP_FILE_NAME_FORMAT = "%s-%s-pages-articles.xml.bz2";
 
-    @Setter
+    @Setter // For testing
     @Value("${replacer.dump.path.base:}")
     private String dumpPathBase;
 
     @Loggable(value = Loggable.DEBUG)
-    public Path findLatestDumpFile(WikipediaLanguage lang) throws ReplacerException {
+    Path findLatestDumpFile(WikipediaLanguage lang) throws ReplacerException {
         Path dumPath = Paths.get(dumpPathBase, getDumpPathProject(lang));
         LOGGER.trace("Dump path: {}", dumPath);
 

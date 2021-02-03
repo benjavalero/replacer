@@ -39,7 +39,7 @@ class DumpPageProcessor {
     private List<String> ignorableTemplates;
 
     @Nullable
-    public List<ReplacementEntity> process(DumpPage dumpPage) throws ReplacerException {
+    List<ReplacementEntity> process(DumpPage dumpPage) throws ReplacerException {
         // 1. Check if it is processable by content
         // We "skip" the item by throwing an exception
         try {

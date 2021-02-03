@@ -27,6 +27,8 @@ class DumpPage implements IndexablePage {
 
     @Override
     public String toString() {
-        return "DumpPage{" + "id=" + id + ", lang=" + lang.getCode() + ", title='" + title + '\'' + '}';
+        return (
+            "DumpPage(id=" + this.getId() + ", lang=" + this.getLang().getCode() + ", title=" + this.getTitle() + ")"
+        );
     }
 }

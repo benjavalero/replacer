@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+// Test DumpManager and DumpJobSaxImpl at a time
 class DumpManagerTest {
 
     @Mock

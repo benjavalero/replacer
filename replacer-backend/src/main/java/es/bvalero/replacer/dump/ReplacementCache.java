@@ -73,7 +73,7 @@ class ReplacementCache {
     }
 
     @Loggable(value = Loggable.TRACE)
-    public void finish(WikipediaLanguage lang) {
+    void finish(WikipediaLanguage lang) {
         this.clean(lang);
         this.maxCachedId = 0;
     }

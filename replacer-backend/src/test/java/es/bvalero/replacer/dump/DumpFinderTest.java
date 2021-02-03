@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-class DumpFileFinderTest {
+class DumpFinderTest {
 
     @TempDir
     Path dumpBaseFolder;
