@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.github.scribejava.core.model.OAuth1RequestToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +31,7 @@ class AuthenticationControllerTest {
 
     @Test
     void testGetRequestToken() throws Exception {
-        when(authenticationService.getRequestToken()).thenReturn(new OAuth1RequestToken("X", "Y"));
-        when(authenticationService.getAuthorizationUrl(any())).thenReturn("Z");
+        when(authenticationService.getRequestToken()).thenReturn(RequestToken.of("X", "Y", "Z"));
 
         mvc
             .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
@@ -43,12 +41,11 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.authorizationUrl", is("Z")));
 
         verify(authenticationService, times(1)).getRequestToken();
-        verify(authenticationService, times(1)).getAuthorizationUrl(any());
     }
 
     @Test
     void testGetAccessToken() throws Exception {
-        when(authenticationService.getAccessToken(any(OAuth1RequestToken.class), anyString()))
+        when(authenticationService.getAccessToken(anyString(), anyString(), anyString()))
             .thenReturn(AccessToken.of("A", "B"));
         when(wikipediaService.getLoggedUserName(any(AccessToken.class))).thenReturn("C");
         when(wikipediaService.isAdminUser("C")).thenReturn(true);
@@ -67,7 +64,7 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.accessToken.token", is("A")))
             .andExpect(jsonPath("$.accessToken.tokenSecret", is("B")));
 
-        verify(authenticationService, times(1)).getAccessToken(any(), anyString());
+        verify(authenticationService, times(1)).getAccessToken(anyString(), anyString(), anyString());
         verify(wikipediaService, times(1)).getLoggedUserName(any());
         verify(wikipediaService, times(1)).isAdminUser("C");
     }

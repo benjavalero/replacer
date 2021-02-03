@@ -17,9 +17,11 @@ class AuthenticationServiceImpl implements AuthenticationService {
     private OAuth10aService oAuthService;
 
     @Override
-    public OAuth1RequestToken getRequestToken() throws AuthenticationException {
+    public RequestToken getRequestToken() throws AuthenticationException {
         try {
-            return oAuthService.getRequestToken();
+            OAuth1RequestToken requestToken = oAuthService.getRequestToken();
+            String authorizationUrl = this.getAuthorizationUrl(requestToken);
+            return convertToDto(requestToken, authorizationUrl);
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             Thread.currentThread().interrupt();
@@ -29,16 +31,16 @@ class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
-    @Override
-    public String getAuthorizationUrl(OAuth1RequestToken requestToken) {
+    private String getAuthorizationUrl(OAuth1RequestToken requestToken) {
         return oAuthService.getAuthorizationUrl(requestToken);
     }
 
     @Override
-    public AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
+    public AccessToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier)
         throws AuthenticationException {
         try {
-            return convertToDto(oAuthService.getAccessToken(requestToken, oauthVerifier));
+            OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken(requestToken, requestTokenSecret);
+            return convertToDto(oAuthService.getAccessToken(oAuth1RequestToken, oauthVerifier));
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             Thread.currentThread().interrupt();
@@ -46,6 +48,10 @@ class AuthenticationServiceImpl implements AuthenticationService {
         } catch (ExecutionException | IOException e) {
             throw new AuthenticationException();
         }
+    }
+
+    private RequestToken convertToDto(OAuth1RequestToken oAuth1RequestToken, String authorizationUrl) {
+        return RequestToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret(), authorizationUrl);
     }
 
     private AccessToken convertToDto(OAuth1AccessToken oAuth1AccessToken) {

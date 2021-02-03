@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.github.scribejava.core.model.OAuth1RequestToken;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -8,18 +7,15 @@ import org.springframework.stereotype.Service;
 @Profile("offline")
 class AuthenticationServiceOfflineImpl implements AuthenticationService {
 
+    private static final String AUTHORIZATION_URL = "/?oauth_verifier=x";
+
     @Override
-    public OAuth1RequestToken getRequestToken() {
-        return new OAuth1RequestToken("", "", "");
+    public RequestToken getRequestToken() {
+        return RequestToken.of("", "", AUTHORIZATION_URL);
     }
 
     @Override
-    public String getAuthorizationUrl(OAuth1RequestToken requestToken) {
-        return "/?oauth_verifier=x";
-    }
-
-    @Override
-    public AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier) {
+    public AccessToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier) {
         return AccessToken.ofEmpty();
     }
 }
