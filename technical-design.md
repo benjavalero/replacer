@@ -64,7 +64,9 @@ For the second use case:
 3. Save a summary of the process in the database
 
 
-## Package `finder`
+## Packages
+
+### Package `finder`
 
 The core functionality of the tool is to find all the potential **replacements** in a text for a given language. We want also to find all the **immutables** in this text, for the given language, in order to be able to avoid as many false positives as possible. This operation will be performed millions of times when indexing a whole dump, therefore the performance is critical.
 
@@ -88,7 +90,7 @@ Note that, when using regular expressions, we usually compare a dot-plus with a 
 
 In conclusion, as performance is critical, we try to use the faster implementation when possible, except if the complexity of the finder makes worth to use an automaton or a regular expression.
 
-### Find replacements
+#### Find replacements
 
 The main logic is done in `ReplacementFindService`:
 1. Iterate over all the replacement finders (implementing `ReplacementFinder`) to obtain a list of all potential replacements of several types in the text
@@ -98,7 +100,7 @@ The main logic is done in `ReplacementFindService`:
 
 The number of immutables is expected to be quite higher than the number of replacements for a common text. Thus, we find all the replacements first. Then for each immutable we check if the replacement can be discarded or not. In case the list of replacements gets empty there is no need to keep on searching for immutables.
 
-### Immutables
+#### Immutables
 
 The sub-package `immutables` contain the generic immutable finders, meant to be language-agnostic.
 
@@ -120,7 +122,7 @@ The tool implements the following generic immutable finders. We can add a priori
   - Find inter-language links, e.g. `[[pt:Title]]`
   - Find filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`
 
-### Misspelling finders
+#### Misspelling finders
 
 The sub-package `misspelling` includes replacement and immutable finders related with misspellings.
 - **MisspellingSimpleFinder**. Find misspellings with only word, e.g. `habia` in Spanish. The Spanish list contains about 20K items. The best approach is finding all the words in the text, and then which ones are in the misspelling list.
@@ -133,7 +135,7 @@ The sub-package `misspelling` includes replacement and immutable finders related
 
 Some of these finders use a list of properties which are maintained in text files (or Wikipedia pages) that need to be parsed first. These finders retrieve the properties from a manager class which extends the generic `ParseFileManager`. All of these also implement the Observable pattern. The managers reload the properties periodically, and the observer finders are notified in case of changes.
 
-### Date Finders
+#### Date Finders
 
 The sub-package `date` includes a finder related with dates with several subtypes:
 
@@ -145,7 +147,7 @@ Regarding performance, it is worth to find potential matches with only one regex
 
 *Note*: For the moment, these finders only work for Spanish language.
 
-### Cosmetic Finders
+#### Cosmetic Finders
 
 The sub-package `cosmetics` contains the cosmetic finders. The tool implements the following generic cosmetic finders:
 
@@ -153,12 +155,12 @@ The sub-package `cosmetics` contains the cosmetic finders. The tool implements t
 
 These finders are used after a user reviews a replacement. Thus, the performance is not so important as when finding replacements and immutables.
 
-### Benchmarks
+#### Benchmarks
 
 The sub-package `benchmark` contains sub-packages for several finders, with  different implementations in order to test the results and performance, and choose the best one.
 
 
-## Package `replacement`
+### Package `replacement`
 
 This package contains the main logic to interact with the database.
 
@@ -170,7 +172,7 @@ An important tool feature is listing all the types and subtypes of the existing 
 
 When a new page is indexed, or there have been any modifications, the replacements in the database must be updated. `ReplacementIndexService` offers a method, receiving the list of the new page replacements, which adds the new replacements and marks as obsolete the ones not found in the new list.
 
-## Package `dump`
+### Package `dump`
 
 The class `DumpFinder` is in charge of finding the latest dump available for a given project.
 
@@ -202,7 +204,7 @@ We have anyway the typical steps:
 
 There is also a `ReplacementCache` helper to retrieve the replacements in database in chunks in order to compare them to the ones obtained in the processing.
 
-## Package `wikipedia`
+### Package `wikipedia`
 
 This package contains helper classes to authenticate in Wikipedia to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page).
 
@@ -215,23 +217,23 @@ The authentication is performed by the Oauth 1.0a protocol against the WikiMedia
 
 Note that there are different OAuth tokens in case we want to develop locally (see `replacer.wikipedia.api.*` properties). The Production ones, once logged in, redirect to https://replacer.toolforge.org. However the Development ones redirect to http://localhost:8080.
 
-## Package `config`
+### Package `config`
 
 It contains Spring configuration classes with beans used in several packages.
 
-### Immutability
+## Immutability
 
 When possible all domain objects are defined as immutables, with Lombok annotations, except the ones used as Spring request parameters.
 
 When possible all structures which may be accessed by several threads are synchronized.
 
-### Annotations
+## Annotations
 
 This project uses some of the JetBrains annotations: `@TestOnly`, `@VisibleForTesting` and `@RegExp`.
 
 On the other hand, all packages are annotated with Spring annotation `@NonNullApi` which forces all method parameters and returns to be non-null. Nullable exceptions will be annotated explicitly.
 
-### Logging
+## Logging
 
 Replacer uses Logback logging, the default in Spring Boot. To initialize the loggers, we use the Lombok annotation `@Slf4j` in each class.
 
@@ -241,7 +243,7 @@ The default logging level is DEBUG, using INFO for calls in controllers and WARN
 
 Finally, we use the annotation `@Loggable` provided by dependency `jcabi-annotations`. It _wraps_ the annotated methods by aspects logging the start and the end of the method, displaying the elapsed time, warning about too long time, parameters, etc. In order to work, we need to _weave_ the compiled classes adding the annotated functionality by using the `aspectj-maven-plugin`. Note that Spring provides a limited AspectJ solution which adds the functionality in runtime, but as it works proxying the classes, it can only be applied in public methods and in calls from different classes.
 
-### Cache
+## Cache
 
 There are several places where some cache policy could be useful.
 
@@ -250,7 +252,4 @@ There are several places where some cache policy could be useful.
 - List of replacement type and subtype counts. It's a heavy query in database so we preload the counts on start and refresh them periodically. We add synchronization just in case the list is requested when still loading on start.
 
 - List of page IDs to be reviewed. We use a map to store the lists of articles to be reviewed by type and subtype. However this map can grow a lot. We use Caffeine cache to clean periodically the old or obsolete lists.
-
-
-
 
