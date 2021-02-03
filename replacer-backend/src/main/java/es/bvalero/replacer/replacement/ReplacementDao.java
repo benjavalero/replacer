@@ -47,7 +47,7 @@ public class ReplacementDao {
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
-    public void update(ReplacementEntity entity) {
+    void update(ReplacementEntity entity) {
         final String sql =
             "UPDATE replacement2 " +
             "SET position=:position, context=:context, last_update=:lastUpdate " +
@@ -105,7 +105,7 @@ public class ReplacementDao {
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
+    List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
         // We need all the fields but the title so we don't select it to improve performance
         String sql =
             "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
@@ -219,7 +219,7 @@ public class ReplacementDao {
 
     ///// STATISTICS
 
-    public long countReplacementsReviewed(WikipediaLanguage lang) {
+    long countReplacementsReviewed(WikipediaLanguage lang) {
         String sql =
             "SELECT COUNT(*) FROM replacement2 " +
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
@@ -238,7 +238,7 @@ public class ReplacementDao {
         return result == null ? 0L : result;
     }
 
-    public List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
+    List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
         String sql =
             "SELECT reviewer, COUNT(*) AS num FROM replacement2 " +
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system " +
@@ -250,7 +250,7 @@ public class ReplacementDao {
         return jdbcTemplate.query(sql, namedParameters, new ReviewerCountRowMapper());
     }
 
-    public List<TypeSubtypeCount> countPagesGroupedByTypeAndSubtype() {
+    List<TypeSubtypeCount> countPagesGroupedByTypeAndSubtype() {
         String sql =
             "SELECT lang, type, subtype, COUNT(DISTINCT article_id) AS num FROM replacement2 " +
             "WHERE reviewer IS NULL " +

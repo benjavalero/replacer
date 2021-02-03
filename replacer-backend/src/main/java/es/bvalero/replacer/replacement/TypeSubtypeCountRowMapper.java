@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
-public class TypeSubtypeCountRowMapper implements RowMapper<TypeSubtypeCount> {
+class TypeSubtypeCountRowMapper implements RowMapper<TypeSubtypeCount> {
 
     @Override
     public TypeSubtypeCount mapRow(ResultSet result, int rowNum) throws SQLException {
