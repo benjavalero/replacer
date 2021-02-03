@@ -35,10 +35,10 @@ class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
+    public AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
         throws AuthenticationException {
         try {
-            return oAuthService.getAccessToken(requestToken, oauthVerifier);
+            return convertToDto(oAuthService.getAccessToken(requestToken, oauthVerifier));
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             Thread.currentThread().interrupt();
@@ -46,5 +46,9 @@ class AuthenticationServiceImpl implements AuthenticationService {
         } catch (ExecutionException | IOException e) {
             throw new AuthenticationException();
         }
+    }
+
+    private AccessToken convertToDto(OAuth1AccessToken oAuth1AccessToken) {
+        return AccessToken.of(oAuth1AccessToken.getToken(), oAuth1AccessToken.getTokenSecret());
     }
 }

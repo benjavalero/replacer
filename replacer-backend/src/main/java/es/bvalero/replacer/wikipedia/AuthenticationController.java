@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
@@ -35,10 +34,9 @@ public class AuthenticationController {
         @RequestParam String oauthVerifier
     ) throws AuthenticationException {
         OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken(requestToken, requestTokenSecret);
-        OAuth1AccessToken oAuth1AccessToken = authenticationService.getAccessToken(oAuth1RequestToken, oauthVerifier);
+        AccessToken accessToken = authenticationService.getAccessToken(oAuth1RequestToken, oauthVerifier);
 
         try {
-            AccessToken accessToken = convertToDto(oAuth1AccessToken);
             String userName = wikipediaService.getLoggedUserName(accessToken);
             boolean admin = wikipediaService.isAdminUser(userName);
             return WikipediaUser.of(userName, admin, accessToken);
@@ -49,9 +47,5 @@ public class AuthenticationController {
 
     private RequestToken convertToDto(OAuth1RequestToken oAuth1RequestToken, String authorizationUrl) {
         return RequestToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret(), authorizationUrl);
-    }
-
-    private AccessToken convertToDto(OAuth1AccessToken oAuth1AccessToken) {
-        return AccessToken.of(oAuth1AccessToken.getToken(), oAuth1AccessToken.getTokenSecret());
     }
 }

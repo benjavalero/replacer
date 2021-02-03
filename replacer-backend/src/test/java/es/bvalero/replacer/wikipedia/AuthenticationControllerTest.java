@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +49,7 @@ class AuthenticationControllerTest {
     @Test
     void testGetAccessToken() throws Exception {
         when(authenticationService.getAccessToken(any(OAuth1RequestToken.class), anyString()))
-            .thenReturn(new OAuth1AccessToken("A", "B"));
+            .thenReturn(AccessToken.of("A", "B"));
         when(wikipediaService.getLoggedUserName(any(AccessToken.class))).thenReturn("C");
         when(wikipediaService.isAdminUser("C")).thenReturn(true);
 

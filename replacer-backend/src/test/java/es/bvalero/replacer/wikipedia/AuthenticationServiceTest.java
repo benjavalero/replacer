@@ -57,11 +57,13 @@ class AuthenticationServiceTest {
     @Test
     void testGetAccessToken() throws Exception {
         OAuth1RequestToken requestToken = Mockito.mock(OAuth1RequestToken.class);
-        OAuth1AccessToken accessToken = Mockito.mock(OAuth1AccessToken.class);
-        Mockito.when(oAuthService.getAccessToken(requestToken, "")).thenReturn(accessToken);
+        OAuth1AccessToken oAuth1AccessToken = new OAuth1AccessToken("A", "B");
+        String oauthVerifier = "C";
+        Mockito.when(oAuthService.getAccessToken(requestToken, oauthVerifier)).thenReturn(oAuth1AccessToken);
 
-        Assertions.assertEquals(accessToken, authenticationService.getAccessToken(requestToken, ""));
-        Mockito.verify(oAuthService).getAccessToken(requestToken, "");
+        AccessToken accessToken = AccessToken.of("A", "B");
+        Assertions.assertEquals(accessToken, authenticationService.getAccessToken(requestToken, oauthVerifier));
+        Mockito.verify(oAuthService).getAccessToken(requestToken, oauthVerifier);
     }
 
     @Test

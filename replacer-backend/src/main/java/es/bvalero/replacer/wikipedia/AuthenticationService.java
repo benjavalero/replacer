@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 
 interface AuthenticationService {
@@ -8,6 +7,5 @@ interface AuthenticationService {
 
     String getAuthorizationUrl(OAuth1RequestToken requestToken);
 
-    OAuth1AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier)
-        throws AuthenticationException;
+    AccessToken getAccessToken(OAuth1RequestToken requestToken, String oauthVerifier) throws AuthenticationException;
 }
