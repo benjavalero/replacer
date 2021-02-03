@@ -3,16 +3,22 @@ package es.bvalero.replacer.replacement;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Value;
 
-@Getter
+@Value
 class LanguageCount {
 
-    private final WikipediaLanguage lang;
-    private final List<TypeCount> typeCounts = new ArrayList<>();
+    WikipediaLanguage lang;
 
-    LanguageCount(WikipediaLanguage lang) {
-        this.lang = lang;
+    @Getter(AccessLevel.NONE)
+    Map<String, TypeCount> typeCounts = new TreeMap<>();
+
+    List<TypeCount> getTypeCounts() {
+        return new ArrayList<>(this.typeCounts.values());
     }
 
     static LanguageCount ofEmpty() {
@@ -20,22 +26,18 @@ class LanguageCount {
     }
 
     boolean contains(String type) {
-        return typeCounts.stream().anyMatch(t -> t.getType().equals(type));
+        return typeCounts.containsKey(type);
     }
 
     void add(TypeCount typeCount) {
-        this.typeCounts.add(typeCount);
+        this.typeCounts.put(typeCount.getType(), typeCount);
     }
 
     void remove(String type) {
-        this.typeCounts.removeIf(t -> t.getType().equals(type));
+        this.typeCounts.remove(type);
     }
 
     TypeCount get(String type) {
-        return typeCounts
-            .stream()
-            .filter(t -> t.getType().equals(type))
-            .findAny()
-            .orElseThrow(IllegalArgumentException::new);
+        return typeCounts.get(type);
     }
 }

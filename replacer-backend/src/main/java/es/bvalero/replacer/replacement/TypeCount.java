@@ -1,32 +1,31 @@
 package es.bvalero.replacer.replacement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import lombok.EqualsAndHashCode;
+import java.util.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Value;
 
-@EqualsAndHashCode
-@Getter
+@Value
 class TypeCount implements Comparable<TypeCount> {
 
     @JsonProperty("t")
-    private final String type;
+    String type;
+
+    @Getter(AccessLevel.NONE)
+    Map<String, SubtypeCount> subtypeCounts = new TreeMap<>();
 
     @JsonProperty("l")
-    private final List<SubtypeCount> subtypeCounts = new LinkedList<>();
-
-    TypeCount(String type) {
-        this.type = type;
+    List<SubtypeCount> getSubtypeCounts() {
+        return new ArrayList<>(this.subtypeCounts.values());
     }
 
     void add(SubtypeCount subtypeCount) {
-        this.subtypeCounts.add(subtypeCount);
+        this.subtypeCounts.put(subtypeCount.getSubtype(), subtypeCount);
     }
 
     void remove(String subtype) {
-        this.subtypeCounts.removeIf(st -> st.getSubtype().equals(subtype));
+        this.subtypeCounts.remove(subtype);
     }
 
     boolean isEmpty() {
@@ -34,7 +33,7 @@ class TypeCount implements Comparable<TypeCount> {
     }
 
     Optional<SubtypeCount> get(String subtype) {
-        return subtypeCounts.stream().filter(st -> st.getSubtype().equals(subtype)).findAny();
+        return Optional.ofNullable(subtypeCounts.get(subtype));
     }
 
     @Override

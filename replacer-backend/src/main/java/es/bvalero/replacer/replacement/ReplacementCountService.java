@@ -74,10 +74,7 @@ public class ReplacementCountService {
         final Map<WikipediaLanguage, LanguageCount> langCounts = new EnumMap<>(WikipediaLanguage.class);
         for (TypeSubtypeCount count : counts) {
             WikipediaLanguage lang = count.getLang();
-            if (!langCounts.containsKey(lang)) {
-                langCounts.put(lang, new LanguageCount(lang));
-            }
-            LanguageCount languageCount = langCounts.get(lang);
+            LanguageCount languageCount = langCounts.computeIfAbsent(lang, LanguageCount::new);
 
             String type = count.getType();
             if (!languageCount.contains(type)) {
@@ -87,9 +84,6 @@ public class ReplacementCountService {
 
             typeCount.add(new SubtypeCount(count.getSubtype(), count.getCount()));
         }
-
-        // Sort
-        langCounts.values().forEach(langCount -> Collections.sort(langCount.getTypeCounts()));
 
         return langCounts;
     }
@@ -113,16 +107,26 @@ public class ReplacementCountService {
         if (languageCounts.containsKey(lang)) {
             LanguageCount languageCount = languageCounts.get(lang);
             if (languageCount.contains(type)) {
-                Optional<SubtypeCount> currentCount = languageCount.get(type).get(subtype);
-                if (currentCount.isPresent()) {
-                    long newCount = currentCount.get().getCount() - size;
-                    if (newCount > 0) {
-                        currentCount.get().setCount(newCount);
-                    } else {
-                        // Clean the possible empty counts after decreasing
-                        removeCachedReplacementCount(lang, type, subtype);
-                    }
-                }
+                TypeCount typeCount = languageCount.get(type);
+                typeCount
+                    .get(subtype)
+                    .ifPresent(
+                        subtypeCount -> {
+                            long newCount = subtypeCount.getCount() - size;
+                            if (newCount > 0) {
+                                // Update the subtype with the new count
+                                typeCount.add(subtypeCount.withCount(newCount));
+                            } else {
+                                // Remove the subtype count as in method "removeCachedReplacementCount"
+                                typeCount.remove(subtype);
+
+                                // Empty parent if children are empty
+                                if (typeCount.isEmpty()) {
+                                    languageCount.remove(type);
+                                }
+                            }
+                        }
+                    );
             }
         }
     }
