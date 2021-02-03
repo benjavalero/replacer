@@ -6,6 +6,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.nio.file.Path;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ class DumpHandler extends DefaultHandler {
     private ReplacementCache replacementCache;
 
     @Resource
-    private Map<String, Integer> numPagesEstimated;
+    private Map<String, Long> numPagesEstimated;
 
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
@@ -56,7 +57,12 @@ class DumpHandler extends DefaultHandler {
     private String currentTimestamp;
     private String currentContent;
 
-    private DumpIndexingStatus dumpIndexingStatus = DumpIndexingStatus.ofEmpty();
+    // Indexation status
+    private boolean running = false;
+    private long numPagesRead = 0L;
+    private long numPagesProcessed = 0L;
+    private Long start = null;
+    private Long end = null;
 
     @Setter
     private WikipediaLanguage lang;
@@ -74,20 +80,25 @@ class DumpHandler extends DefaultHandler {
     @Override
     public void startDocument() {
         LOGGER.trace("START Dump Job Execution");
-        this.dumpIndexingStatus =
-            DumpIndexingStatus.of(
-                this.latestDumpFile.getFileName().toString(),
-                numPagesEstimated.get(this.lang.getCode())
-            );
+
+        // Reset indexing status
+        this.running = true;
+        this.numPagesRead = 0L;
+        this.numPagesProcessed = 0L;
+        this.start = Instant.now().toEpochMilli();
+        this.end = null;
     }
 
     @Override
     public void endDocument() {
-        this.dumpIndexingStatus.finish();
+        // Finish indexing status
+        this.running = false;
+        this.end = Instant.now().toEpochMilli();
+
         dumpWriter.write(toWrite);
         replacementCache.finish(lang);
 
-        LOGGER.warn("END Dump Job Execution: {}", this.dumpIndexingStatus);
+        LOGGER.warn("END Dump Job Execution: {}", this.getDumpIndexingStatus());
     }
 
     @Override
@@ -152,14 +163,22 @@ class DumpHandler extends DefaultHandler {
         try {
             List<ReplacementEntity> replacementEntities = dumpPageProcessor.process(dumpPage);
 
-            this.dumpIndexingStatus.incrementNumPagesRead();
+            this.incrementNumPagesRead();
             if (replacementEntities != null) {
-                this.dumpIndexingStatus.incrementNumPagesProcessed();
+                this.incrementNumPagesProcessed();
                 addToWrite(replacementEntities);
             }
         } catch (ReplacerException e) {
             // Page not processable
         }
+    }
+
+    private void incrementNumPagesRead() {
+        this.numPagesRead++;
+    }
+
+    private void incrementNumPagesProcessed() {
+        this.numPagesProcessed++;
     }
 
     private void addToWrite(List<ReplacementEntity> replacementEntities) {
@@ -171,6 +190,19 @@ class DumpHandler extends DefaultHandler {
     }
 
     DumpIndexingStatus getDumpIndexingStatus() {
-        return this.dumpIndexingStatus;
+        if (this.start == null) {
+            return DumpIndexingStatus.ofEmpty();
+        } else {
+            return DumpIndexingStatus
+                .builder()
+                .running(this.running)
+                .numPagesRead(this.numPagesRead)
+                .numPagesProcessed(this.numPagesProcessed)
+                .numPagesEstimated(numPagesEstimated.get(this.lang.getCode()))
+                .dumpFileName(this.latestDumpFile.getFileName().toString())
+                .start(this.start)
+                .end(this.end)
+                .build();
+        }
     }
 }

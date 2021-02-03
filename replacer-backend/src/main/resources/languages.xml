@@ -26,7 +26,7 @@
     </util:map>
 
     <util:map id="numPagesEstimated" map-class="java.util.HashMap"
-              key-type="java.lang.String" value-type="java.lang.Integer">
+              key-type="java.lang.String" value-type="java.lang.Long">
         <entry key="es" value="1585492"/>
         <entry key="gl" value="158290"/>
     </util:map>

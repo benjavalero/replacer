@@ -69,8 +69,8 @@ class DumpManagerTest {
 
     @Test
     void testProcessLatestDumpFileAlreadyRunning() {
-        // Constructor with arguments to fake the start
-        DumpIndexingStatus status = DumpIndexingStatus.of("File", 1);
+        // Fake the indexation is running
+        DumpIndexingStatus status = DumpIndexingStatus.builder().running(true).build();
         Mockito.when(dumpHandler.getDumpIndexingStatus()).thenReturn(status);
 
         dumpManager.processLatestDumpFiles();
