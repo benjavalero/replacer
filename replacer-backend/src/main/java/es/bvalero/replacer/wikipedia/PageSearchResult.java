@@ -3,6 +3,8 @@ package es.bvalero.replacer.wikipedia;
 import java.util.*;
 import lombok.Getter;
 
+// It's not worth to make this class immutable.
+// At least we encapsulate the logic to manage the internal list.
 @Getter
 public final class PageSearchResult {
 
