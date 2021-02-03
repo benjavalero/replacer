@@ -56,7 +56,7 @@ class DumpHandler extends DefaultHandler {
     private String currentTimestamp;
     private String currentContent;
 
-    private DumpIndexingStatus dumpIndexingStatus = new DumpIndexingStatus();
+    private DumpIndexingStatus dumpIndexingStatus = DumpIndexingStatus.ofEmpty();
 
     @Setter
     private WikipediaLanguage lang;
@@ -75,7 +75,7 @@ class DumpHandler extends DefaultHandler {
     public void startDocument() {
         LOGGER.trace("START Dump Job Execution");
         this.dumpIndexingStatus =
-            new DumpIndexingStatus(
+            DumpIndexingStatus.of(
                 this.latestDumpFile.getFileName().toString(),
                 numPagesEstimated.get(this.lang.getCode())
             );

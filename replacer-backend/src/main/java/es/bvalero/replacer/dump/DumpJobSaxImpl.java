@@ -18,13 +18,13 @@ import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 @Component
-public class DumpJobSaxImpl implements DumpJob {
+class DumpJobSaxImpl implements DumpJob {
 
     @Autowired
     private DumpHandler dumpHandler;
 
     @PostConstruct
-    public void setProperty() {
+    void setProperty() {
         System.setProperty("jdk.xml.totalEntitySizeLimit", Integer.toString(0));
     }
 

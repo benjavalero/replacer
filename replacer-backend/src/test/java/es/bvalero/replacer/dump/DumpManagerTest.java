@@ -59,7 +59,7 @@ class DumpManagerTest {
         Mockito
             .when(dumpFinder.findLatestDumpFile(Mockito.any(WikipediaLanguage.class)))
             .thenThrow(ReplacerException.class);
-        Mockito.when(dumpHandler.getDumpIndexingStatus()).thenReturn(new DumpIndexingStatus());
+        Mockito.when(dumpHandler.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.ofEmpty());
 
         dumpManager.processLatestDumpFiles();
 
@@ -67,9 +67,9 @@ class DumpManagerTest {
     }
 
     @Test
-    void testProcessLatestDumpFileAlreadyRunning() throws Exception {
+    void testProcessLatestDumpFileAlreadyRunning() {
         // Constructor with arguments to fake the start
-        DumpIndexingStatus status = new DumpIndexingStatus("File", 1);
+        DumpIndexingStatus status = DumpIndexingStatus.of("File", 1);
         Mockito.when(dumpHandler.getDumpIndexingStatus()).thenReturn(status);
 
         dumpManager.processLatestDumpFiles();
@@ -89,7 +89,7 @@ class DumpManagerTest {
         // Make the dump file old enough
         Files.setLastModifiedTime(dumpFile, FileTime.from(LocalDateTime.now().minusDays(2).toInstant(ZoneOffset.UTC)));
 
-        Mockito.when(dumpHandler.getDumpIndexingStatus()).thenReturn(new DumpIndexingStatus());
+        Mockito.when(dumpHandler.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.ofEmpty());
 
         dumpManager.scheduledStartDumpIndexing();
 

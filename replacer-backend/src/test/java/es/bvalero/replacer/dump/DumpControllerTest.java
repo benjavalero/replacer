@@ -32,16 +32,19 @@ class DumpControllerTest {
         boolean running = true;
         long numPagesRead = 1000;
         long numPagesProcessed = 500;
+        long numPagesEstimated = 200000;
         String dumpFileName = "xxx.xml.bz2";
         long start = 1500;
         long end = 2000;
-        DumpIndexingStatus indexation = new DumpIndexingStatus();
-        indexation.setRunning(running);
-        indexation.setNumPagesRead(numPagesRead);
-        indexation.setNumPagesProcessed(numPagesProcessed);
-        indexation.setDumpFileName(dumpFileName);
-        indexation.setStart(start);
-        indexation.setEnd(end);
+        DumpIndexingStatus indexation = new DumpIndexingStatus(
+            running,
+            numPagesRead,
+            numPagesProcessed,
+            numPagesEstimated,
+            dumpFileName,
+            start,
+            end
+        );
         when(dumpManager.getDumpIndexingStatus()).thenReturn(indexation);
 
         mvc
@@ -50,6 +53,7 @@ class DumpControllerTest {
             .andExpect(jsonPath("$.running", equalTo(running)))
             .andExpect(jsonPath("$.numPagesRead", is(Long.valueOf(numPagesRead).intValue())))
             .andExpect(jsonPath("$.numPagesProcessed", is(Long.valueOf(numPagesProcessed).intValue())))
+            .andExpect(jsonPath("$.numPagesEstimated", is(Long.valueOf(numPagesEstimated).intValue())))
             .andExpect(jsonPath("$.dumpFileName", is(dumpFileName)))
             .andExpect(jsonPath("$.start", is(Long.valueOf(start).intValue())))
             .andExpect(jsonPath("$.end", is(Long.valueOf(end).intValue())));
