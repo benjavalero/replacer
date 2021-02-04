@@ -1,15 +1,5 @@
 # Technical Design
 
-The project started to work with Spanish Wikipedia, but it has been extended to work with other languages as Galician, and it is meant to work with other Wikimedia projects.
-
-## Architecture
-
-The tool is composed by two independent modules, both in the same repository: the frontend in Angular, and the backend in Java (with SpringBoot), besides a MariaDB database hosted in the ToolForge servers.
-
-## Deployment
-
-TODO
-
 ## Nomenclature and use cases
 
 Main use cases:
@@ -20,11 +10,11 @@ Main use cases:
 The following concepts are used:
 
 - **Page**. A page in Wikipedia. It is composed at least by the following properties:
-  - **Type** (or **namespace**). The category of the page in Wikipedia: article, annex, user page, etc. Note that, as an article is a specific type of page, it should not be used as a synonym of page.
+  - **Namespace**. The category of the page in Wikipedia: article, annex, user page, etc. Note that, although an article is a specific type of page, it is usually used as a synonym of page, but in this application we try not to do it.
   - **Language**. The language of the Wikipedia where the page exists.
   - **Title**. The title of the page which identifies it uniquely.
-  - **ID**. The ID of the page, a number for internal use that can also be used to identify uniquely a page.
-  - **Contents**. The current text contents of the page.
+  - **ID**. The identifier of the page, a number for internal use that can also be used to identify it uniquely in a specific Wikipedia.
+  - **Contents**. The current text contents of the page, also known as _wiki-text_.
   - **Timestamp**. The date and time of the last update of the page.
 - **Dump**. A huge XML file, generated monthly, containing all the current Wikipedia pages for a language.
 - **Replacement**. A potential issue to be checked and fixed (replaced). For instance, the word _aproximated_ is misspelled and therefore could be proposed to be replaced with _approximated_.
@@ -35,7 +25,7 @@ The following concepts are used:
 
   - **Text**. The text to be checked and fixed. It can be a word or an expression.
   - **Start**. A number corresponding to the position in the page contents where the text is found. Take into account that the first position is 0.
-  - **Type**. The category of the replacement: misspelling, date format, etc. It may include a **SubType**, for instance the particular misspelling.
+  - **Type**. The category of the replacement: misspelling, date format, etc. It may include several **subtypes**.
   - **Suggestions**. A list with at least one suggestion to replace the text. Each suggestion is composed by:
     - **Text**. The new text after the replacement.
     - **Comment**. An optional description to explain the motivation of the fix.
@@ -62,6 +52,16 @@ For the second use case:
     1. Parse the page to find the replacements
     2. Save the page replacements in the database
 3. Save a summary of the process in the database
+
+
+## Architecture
+
+The tool is composed by two independent modules, both in the same repository: the frontend in Angular, and the backend in Java (with SpringBoot), besides a MariaDB database hosted in the ToolForge servers.
+
+
+## Deployment
+
+TODO
 
 
 ## Packages
