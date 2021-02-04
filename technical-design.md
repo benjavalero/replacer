@@ -60,12 +60,11 @@ The tool is composed by two independent modules, both in the same repository: th
 
 ### Code Organization
 
-In both modules the code is organized by feature.
-
 Files are usually suffixed: service, controller, entity, etc.
 
+In both modules the code is organized by feature.
 
-### Package `finder`
+#### Package `finder`
 
 The core functionality of the tool is to find all the potential **replacements** in a text for a given language. We want also to find all the **immutables** in this text, for the given language, in order to be able to avoid as many false positives as possible. This operation will be performed millions of times when indexing a whole dump, therefore the performance is critical.
 
@@ -89,7 +88,7 @@ Note that, when using regular expressions, we usually compare a dot-plus with a 
 
 In conclusion, as performance is critical, we try to use the faster implementation when possible, except if the complexity of the finder makes worth to use an automaton or a regular expression.
 
-#### Find replacements
+##### Find replacements
 
 The main logic is done in `ReplacementFindService`:
 1. Iterate over all the replacement finders (implementing `ReplacementFinder`) to obtain a list of all potential replacements of several types in the text
@@ -99,7 +98,7 @@ The main logic is done in `ReplacementFindService`:
 
 The number of immutables is expected to be quite higher than the number of replacements for a common text. Thus, we find all the replacements first. Then for each immutable we check if the replacement can be discarded or not. In case the list of replacements gets empty there is no need to keep on searching for immutables.
 
-#### Immutables
+##### Immutables
 
 The sub-package `immutables` contain the generic immutable finders, meant to be language-agnostic.
 
@@ -121,7 +120,7 @@ The tool implements the following generic immutable finders. We can add a priori
   - Find inter-language links, e.g. `[[pt:Title]]`
   - Find filenames, e.g. `xx.jpg` in `[[File:xx.jpg]]`
 
-#### Misspelling finders
+##### Misspelling finders
 
 The sub-package `misspelling` includes replacement and immutable finders related with misspellings.
 - **MisspellingSimpleFinder**. Find misspellings with only word, e.g. `habia` in Spanish. The Spanish list contains about 20K items. The best approach is finding all the words in the text, and then which ones are in the misspelling list.
@@ -134,7 +133,7 @@ The sub-package `misspelling` includes replacement and immutable finders related
 
 Some of these finders use a list of properties which are maintained in text files (or Wikipedia pages) that need to be parsed first. These finders retrieve the properties from a manager class which extends the generic `ParseFileManager`. All of these also implement the Observable pattern. The managers reload the properties periodically, and the observer finders are notified in case of changes.
 
-#### Date Finders
+##### Date Finders
 
 The sub-package `date` includes a finder related with dates with several subtypes:
 
@@ -146,7 +145,7 @@ Regarding performance, it is worth to find potential matches with only one regex
 
 *Note*: For the moment, these finders only work for Spanish language.
 
-#### Cosmetic Finders
+##### Cosmetic Finders
 
 The sub-package `cosmetics` contains the cosmetic finders. The tool implements the following generic cosmetic finders:
 
@@ -154,12 +153,12 @@ The sub-package `cosmetics` contains the cosmetic finders. The tool implements t
 
 These finders are used after a user reviews a replacement. Thus, the performance is not so important as when finding replacements and immutables.
 
-#### Benchmarks
+##### Benchmarks
 
 The sub-package `benchmark` contains sub-packages for several finders, with  different implementations in order to test the results and performance, and choose the best one.
 
 
-### Package `replacement`
+#### Package `replacement`
 
 This package contains the main logic to interact with the database.
 
@@ -171,7 +170,7 @@ An important tool feature is listing all the types and subtypes of the existing 
 
 When a new page is indexed, or there have been any modifications, the replacements in the database must be updated. `ReplacementIndexService` offers a method, receiving the list of the new page replacements, which adds the new replacements and marks as obsolete the ones not found in the new list.
 
-### Package `dump`
+#### Package `dump`
 
 The class `DumpFinder` is in charge of finding the latest dump available for a given project.
 
@@ -203,7 +202,7 @@ We have anyway the typical steps:
 
 There is also a `ReplacementCache` helper to retrieve the replacements in database in chunks in order to compare them to the ones obtained in the processing.
 
-### Package `wikipedia`
+#### Package `wikipedia`
 
 This package contains helper classes to authenticate in Wikipedia to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page).
 
@@ -216,7 +215,7 @@ The authentication is performed by the Oauth 1.0a protocol against the WikiMedia
 
 Note that there are different OAuth tokens in case we want to develop locally (see `replacer.wikipedia.api.*` properties). The Production ones, once logged in, redirect to https://replacer.toolforge.org. However the Development ones redirect to http://localhost:8080.
 
-### Package `config`
+#### Package `config`
 
 It contains Spring configuration classes with beans used in several packages.
 
