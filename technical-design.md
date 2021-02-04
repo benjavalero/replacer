@@ -54,17 +54,16 @@ For the second use case:
 3. Save a summary of the process in the database
 
 
-## Architecture
+## Code Conventions
 
-The tool is composed by two independent modules, both in the same repository: the frontend in Angular, and the backend in Java (with SpringBoot), besides a MariaDB database hosted in the ToolForge servers.
+The tool is composed by two independent modules, both in the same repository: the frontend ( Angular), and the backend (Java with SpringBoot). Most of the tips below refer to the Java backend.
 
+### Code Organization
 
-## Deployment
+In both modules the code is organized by feature.
 
-TODO
+Files are usually suffixed: service, controller, entity, etc.
 
-
-## Packages
 
 ### Package `finder`
 
@@ -221,17 +220,27 @@ Note that there are different OAuth tokens in case we want to develop locally (s
 
 It contains Spring configuration classes with beans used in several packages.
 
-## Immutability
 
-When possible all domain objects are defined as immutables, with Lombok annotations, except the ones used as Spring request parameters.
 
-When possible all structures which may be accessed by several threads are synchronized.
+### Formatting
 
-## Annotations
+Code in TypeScript and Java is formatted with Prettier.
 
-This project uses some of the JetBrains annotations: `@TestOnly`, `@VisibleForTesting` and `@RegExp`.
+In case of Java code, this is automatically done when compiling by a Maven plugin.
 
-On the other hand, all packages are annotated with Spring annotation `@NonNullApi` which forces all method parameters and returns to be non-null. Nullable exceptions will be annotated explicitly.
+In case of TypeScript code, Prettier configuration is automatically found by VS Code, and formatting can be done easilly from the IDE.
+
+### Annotations
+
+The backend uses some of the JetBrains (IntelliJ) annotations: `@TestOnly`, `@VisibleForTesting` and `@RegExp`, but this IDE is not mandatory to build or maintain the tool.
+
+On the other hand, all packages are annotated with Spring annotation `@NonNullApi` which forces all method parameters and return values to be non-null. When some parameter or return value is nullable, it will be annotated explicitly.
+
+### Immutability
+
+In backend most domain objects are defined as immutables, with Lombok annotations, except the ones used as Spring request parameters.
+
+As a webapp, Replacer may be used by several users at a time. All data structures which may be accessed by several threads should be thread-safe.
 
 ## Logging
 
