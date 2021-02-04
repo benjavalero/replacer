@@ -1,10 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.scribejava.core.model.OAuth1AccessToken;
-import com.github.scribejava.core.model.OAuthRequest;
-import com.github.scribejava.core.model.Response;
-import com.github.scribejava.core.model.Verb;
+import com.github.scribejava.core.model.*;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
@@ -17,9 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+/**
+ * Facade for Wikipedia API for common operations: authentication and requests.
+ */
 @Slf4j
 @Service
-class WikipediaRequestService {
+class WikipediaApiFacade {
 
     private static final String WIKIPEDIA_API_URL = "https://%s.wikipedia.org/w/api.php";
 
@@ -29,6 +29,35 @@ class WikipediaRequestService {
     @Autowired
     private ObjectMapper jsonMapper;
 
+    RequestToken getRequestToken() throws ReplacerException {
+        try {
+            OAuth1RequestToken requestToken = oAuthService.getRequestToken();
+            String authorizationUrl = oAuthService.getAuthorizationUrl(requestToken);
+            return RequestToken.of(requestToken.getToken(), requestToken.getTokenSecret(), authorizationUrl);
+        } catch (InterruptedException e) {
+            // This cannot be unit-tested because the mocked InterruptedException make other tests fail
+            Thread.currentThread().interrupt();
+            throw new ReplacerException(e);
+        } catch (ExecutionException | IOException e) {
+            throw new ReplacerException(e);
+        }
+    }
+
+    AccessToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier)
+        throws ReplacerException {
+        try {
+            OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken(requestToken, requestTokenSecret);
+            OAuth1AccessToken oAuth1AccessToken = oAuthService.getAccessToken(oAuth1RequestToken, oauthVerifier);
+            return AccessToken.of(oAuth1AccessToken.getToken(), oAuth1AccessToken.getTokenSecret());
+        } catch (InterruptedException e) {
+            // This cannot be unit-tested because the mocked InterruptedException make other tests fail
+            Thread.currentThread().interrupt();
+            throw new ReplacerException(e);
+        } catch (ExecutionException | IOException e) {
+            throw new ReplacerException(e);
+        }
+    }
+
     WikipediaApiResponse executeGetRequest(Map<String, String> params, WikipediaLanguage lang)
         throws ReplacerException {
         return executeRequest(params, Verb.GET, lang, null);
@@ -37,7 +66,7 @@ class WikipediaRequestService {
     WikipediaApiResponse executeSignedGetRequest(
         Map<String, String> params,
         WikipediaLanguage lang,
-        @Nullable AccessToken accessToken
+        AccessToken accessToken
     ) throws ReplacerException {
         return executeRequest(params, Verb.GET, lang, accessToken);
     }
@@ -45,7 +74,7 @@ class WikipediaRequestService {
     WikipediaApiResponse executeSignedPostRequest(
         Map<String, String> params,
         WikipediaLanguage lang,
-        @Nullable AccessToken accessToken
+        AccessToken accessToken
     ) throws ReplacerException {
         return executeRequest(params, Verb.POST, lang, accessToken);
     }
@@ -76,7 +105,7 @@ class WikipediaRequestService {
 
             LOGGER.trace("OAuth response body: {}", response.getBody());
             WikipediaApiResponse apiResponse = jsonMapper.readValue(response.getBody(), WikipediaApiResponse.class);
-            validateApiResponse(apiResponse);
+            apiResponse.validate();
             return apiResponse;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
@@ -106,13 +135,5 @@ class WikipediaRequestService {
 
     private void signOAuthRequest(OAuthRequest request, OAuth1AccessToken accessToken) {
         oAuthService.signRequest(accessToken, request);
-    }
-
-    private void validateApiResponse(WikipediaApiResponse response) throws ReplacerException {
-        if (response.getError() != null) {
-            String code = response.getError().getCode(); // NOSONAR
-            String info = response.getError().getInfo(); // NOSONAR
-            throw new ReplacerException(String.format("%s: %s", code, info));
-        }
     }
 }

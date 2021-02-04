@@ -9,6 +9,7 @@ import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.List;
 
+// TODO: Move to common package
 public interface IndexablePage {
     int getId();
 

@@ -6,9 +6,10 @@ import java.util.Optional;
 import org.springframework.lang.Nullable;
 
 public interface WikipediaService {
-    String getLoggedUserName(AccessToken accessToken) throws ReplacerException;
+    RequestToken getRequestToken() throws ReplacerException;
 
-    boolean isAdminUser(String username);
+    WikipediaUser getLoggedUser(String requestToken, String requestTokenSecret, String oauthVerifier)
+        throws ReplacerException;
 
     String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException;
 

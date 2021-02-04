@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class OAuthConfig {
+class WikipediaApiConfiguration {
 
     @Value("${replacer.wikipedia.api.key}")
     private String apiKey;

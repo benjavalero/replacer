@@ -41,7 +41,7 @@ export class AuthenticationService {
   }
 
   loginUser$(oauthVerifier: string): Observable<WikipediaUser> {
-    return this.getAccessToken$(oauthVerifier).pipe(
+    return this.getLoggedUser$(oauthVerifier).pipe(
       map((wikipediaUser: WikipediaUser) => {
         // Remove request token as it is no longer needed
         this.requestToken = null;
@@ -54,13 +54,13 @@ export class AuthenticationService {
     );
   }
 
-  private getAccessToken$(verificationToken: string): Observable<WikipediaUser> {
+  private getLoggedUser$(verificationToken: string): Observable<WikipediaUser> {
     const params = new HttpParams()
       .append('requestToken', this.requestToken.token)
       .append('requestTokenSecret', this.requestToken.tokenSecret)
       .append('oauthVerifier', verificationToken);
 
-    return this.httpClient.get<WikipediaUser>(`${this.baseUrl}/access-token`, {
+    return this.httpClient.get<WikipediaUser>(`${this.baseUrl}/logged-user`, {
       params
     });
   }

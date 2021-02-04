@@ -8,6 +8,8 @@ import lombok.Getter;
 @Getter
 public final class PageSearchResult {
 
+    // TODO: Move to common package
+
     private final List<Integer> pageIds = new LinkedList<>();
     private long total;
 

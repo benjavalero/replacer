@@ -64,6 +64,14 @@ Files are usually suffixed: service, controller, entity, etc.
 
 In both modules the code is organized by feature.
 
+In backend we have the following packages:
+
+- `config` Spring configuration classes with beans used in several packages.
+- `wikipedia` Helper class `WikipediaService` to authenticate in Wikipedia to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page).
+
+  The authentication is performed by the Oauth 1.0a protocol, the authentication is implemented in the backend, and the frontend only contains the last access token. Note there are different OAuth tokens to develop locally (see `replacer.wikipedia.api.*` properties). The Production ones, once logged in, redirect to https://replacer.toolforge.org, while the Development ones redirect to http://localhost:8080.
+
+
 #### Package `finder`
 
 The core functionality of the tool is to find all the potential **replacements** in a text for a given language. We want also to find all the **immutables** in this text, for the given language, in order to be able to avoid as many false positives as possible. This operation will be performed millions of times when indexing a whole dump, therefore the performance is critical.
@@ -201,24 +209,6 @@ We have anyway the typical steps:
 - Write: the writer `DumpWriter` inserts or updates in the database the resulting replacements from the processor.
 
 There is also a `ReplacementCache` helper to retrieve the replacements in database in chunks in order to compare them to the ones obtained in the processing.
-
-#### Package `wikipedia`
-
-This package contains helper classes to authenticate in Wikipedia to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page).
-
-The interface `WikipediaService` offers the methods used to request the Wikipedia: user logging, find a page by ID or title, and save page contents.
-This interface has two implementations, one of them an _offline_ one always returning the same values just for offline testing purposes.
-
-The requests to the API are done in `WikipediaRequestService`, receiving all the needed parameters, and the authentication token if needed. The responses are mapped into a `WikipediaApiResponse`. In case of page requests, the response is eventually mapped into a `WikipediaPage`.
-
-The authentication is performed by the Oauth 1.0a protocol against the WikiMedia API, which allows the tool to work with the same users that are used to edit in Wikipedia. The authentication is implemented in the backend, and the frontend only contains the last access token.
-
-Note that there are different OAuth tokens in case we want to develop locally (see `replacer.wikipedia.api.*` properties). The Production ones, once logged in, redirect to https://replacer.toolforge.org. However the Development ones redirect to http://localhost:8080.
-
-#### Package `config`
-
-It contains Spring configuration classes with beans used in several packages.
-
 
 
 ### Formatting

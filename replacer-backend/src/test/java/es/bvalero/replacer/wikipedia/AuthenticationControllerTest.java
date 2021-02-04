@@ -1,7 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -24,14 +23,11 @@ class AuthenticationControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private AuthenticationService authenticationService;
-
-    @MockBean
     private WikipediaService wikipediaService;
 
     @Test
     void testGetRequestToken() throws Exception {
-        when(authenticationService.getRequestToken()).thenReturn(RequestToken.of("X", "Y", "Z"));
+        when(wikipediaService.getRequestToken()).thenReturn(RequestToken.of("X", "Y", "Z"));
 
         mvc
             .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
@@ -40,19 +36,20 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.tokenSecret", is("Y")))
             .andExpect(jsonPath("$.authorizationUrl", is("Z")));
 
-        verify(authenticationService, times(1)).getRequestToken();
+        verify(wikipediaService, times(1)).getRequestToken();
     }
 
     @Test
-    void testGetAccessToken() throws Exception {
-        when(authenticationService.getAccessToken(anyString(), anyString(), anyString()))
-            .thenReturn(AccessToken.of("A", "B"));
-        when(wikipediaService.getLoggedUserName(any(AccessToken.class))).thenReturn("C");
-        when(wikipediaService.isAdminUser("C")).thenReturn(true);
+    void testGetLoggedUser() throws Exception {
+        AccessToken accessToken = AccessToken.of("A", "B");
+        String userName = "C";
+
+        when(wikipediaService.getLoggedUser(anyString(), anyString(), anyString()))
+            .thenReturn(WikipediaUser.of(userName, true, accessToken));
 
         mvc
             .perform(
-                get("/api/authentication/access-token")
+                get("/api/authentication/logged-user")
                     .contentType(MediaType.APPLICATION_JSON)
                     .param("requestToken", "X")
                     .param("requestTokenSecret", "Y")
@@ -64,8 +61,6 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.accessToken.token", is("A")))
             .andExpect(jsonPath("$.accessToken.tokenSecret", is("B")));
 
-        verify(authenticationService, times(1)).getAccessToken(anyString(), anyString(), anyString());
-        verify(wikipediaService, times(1)).getLoggedUserName(any());
-        verify(wikipediaService, times(1)).isAdminUser("C");
+        verify(wikipediaService, times(1)).getLoggedUser(anyString(), anyString(), anyString());
     }
 }

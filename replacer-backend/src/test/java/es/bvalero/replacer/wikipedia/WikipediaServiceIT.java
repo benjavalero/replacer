@@ -13,8 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(
     classes = {
         WikipediaServiceImpl.class,
-        WikipediaRequestService.class,
-        OAuthConfig.class,
+        WikipediaApiFacade.class,
+        WikipediaApiConfiguration.class,
         XmlConfiguration.class,
         TestConfiguration.class,
     }

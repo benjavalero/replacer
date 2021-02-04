@@ -30,7 +30,7 @@ class WikipediaServiceImpl implements WikipediaService {
     private static final int MAX_OFFSET_LIMIT = 10000;
 
     @Autowired
-    private WikipediaRequestService wikipediaRequestService;
+    private WikipediaApiFacade wikipediaApiFacade;
 
     @Setter // For testing
     @Value("${replacer.admin.user}")
@@ -46,8 +46,27 @@ class WikipediaServiceImpl implements WikipediaService {
     private Map<String, String> falsePositivePages;
 
     @Override
-    public String getLoggedUserName(AccessToken accessToken) throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedGetRequest(
+    public RequestToken getRequestToken() throws ReplacerException {
+        return wikipediaApiFacade.getRequestToken();
+    }
+
+    @Override
+    public WikipediaUser getLoggedUser(String requestToken, String requestTokenSecret, String oauthVerifier)
+        throws ReplacerException {
+        AccessToken accessToken = this.getAccessToken(requestToken, requestTokenSecret, oauthVerifier);
+        String userName = this.getLoggedUserName(accessToken);
+        boolean admin = this.isAdminUser(userName);
+        return WikipediaUser.of(userName, admin, accessToken);
+    }
+
+    private AccessToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier)
+        throws ReplacerException {
+        return wikipediaApiFacade.getAccessToken(requestToken, requestTokenSecret, oauthVerifier);
+    }
+
+    @VisibleForTesting
+    String getLoggedUserName(AccessToken accessToken) throws ReplacerException {
+        WikipediaApiResponse apiResponse = wikipediaApiFacade.executeSignedGetRequest(
             buildUserNameRequestParams(),
             WikipediaLanguage.getDefault(),
             accessToken
@@ -66,8 +85,8 @@ class WikipediaServiceImpl implements WikipediaService {
         return response.getQuery().getUserinfo().getName();
     }
 
-    @Override
-    public boolean isAdminUser(String username) {
+    @VisibleForTesting
+    boolean isAdminUser(String username) {
         return this.adminUser.equals(username);
     }
 
@@ -126,7 +145,7 @@ class WikipediaServiceImpl implements WikipediaService {
 
     private List<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue, WikipediaLanguage lang)
         throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
+        WikipediaApiResponse apiResponse = wikipediaApiFacade.executeGetRequest(
             buildPageIdsRequestParams(pagesParam, pagesValue),
             lang
         );
@@ -172,7 +191,7 @@ class WikipediaServiceImpl implements WikipediaService {
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
     public List<WikipediaSection> getPageSections(int pageId, WikipediaLanguage lang) throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
+        WikipediaApiResponse apiResponse = wikipediaApiFacade.executeGetRequest(
             buildPageSectionsRequestParams(pageId),
             lang
         );
@@ -220,7 +239,7 @@ class WikipediaServiceImpl implements WikipediaService {
     @Override
     public Optional<WikipediaPage> getPageByIdAndSection(int pageId, WikipediaSection section, WikipediaLanguage lang)
         throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
+        WikipediaApiResponse apiResponse = wikipediaApiFacade.executeGetRequest(
             buildPageIdsAndSectionRequestParams(pageId, section.getIndex()),
             lang
         );
@@ -249,7 +268,7 @@ class WikipediaServiceImpl implements WikipediaService {
             return PageSearchResult.ofEmpty();
         }
 
-        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
+        WikipediaApiResponse apiResponse = wikipediaApiFacade.executeGetRequest(
             buildPageIdsByStringMatchRequestParams(text, caseSensitive, offset, limit),
             lang
         );
@@ -343,7 +362,7 @@ class WikipediaServiceImpl implements WikipediaService {
             );
         }
 
-        wikipediaRequestService.executeSignedPostRequest(
+        wikipediaApiFacade.executeSignedPostRequest(
             buildSavePageContentRequestParams(pageId, pageContent, section, currentTimestamp, editToken),
             lang,
             accessToken
@@ -377,7 +396,7 @@ class WikipediaServiceImpl implements WikipediaService {
     @Loggable(prepend = true, value = Loggable.TRACE)
     @VisibleForTesting
     EditToken getEditToken(int pageId, WikipediaLanguage lang, AccessToken accessToken) throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedPostRequest(
+        WikipediaApiResponse apiResponse = wikipediaApiFacade.executeSignedPostRequest(
             buildEditTokenRequestParams(pageId),
             lang,
             accessToken

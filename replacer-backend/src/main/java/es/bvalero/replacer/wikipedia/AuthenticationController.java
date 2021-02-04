@@ -14,33 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     @Autowired
-    private AuthenticationService authenticationService;
-
-    @Autowired
     private WikipediaService wikipediaService;
 
     @GetMapping(value = "/request-token")
-    public RequestToken getRequestToken() throws AuthenticationException {
-        return authenticationService.getRequestToken();
+    public RequestToken getRequestToken() throws ReplacerException {
+        return wikipediaService.getRequestToken();
     }
 
-    @GetMapping(value = "/access-token")
-    public WikipediaUser getAccessToken(
+    @GetMapping(value = "/logged-user")
+    public WikipediaUser getLoggedUser(
         @RequestParam String requestToken,
         @RequestParam String requestTokenSecret,
         @RequestParam String oauthVerifier
-    ) throws AuthenticationException {
-        try {
-            AccessToken accessToken = authenticationService.getAccessToken(
-                requestToken,
-                requestTokenSecret,
-                oauthVerifier
-            );
-            String userName = wikipediaService.getLoggedUserName(accessToken);
-            boolean admin = wikipediaService.isAdminUser(userName);
-            return WikipediaUser.of(userName, admin, accessToken);
-        } catch (ReplacerException e) {
-            throw new AuthenticationException(e);
-        }
+    ) throws ReplacerException {
+        return wikipediaService.getLoggedUser(requestToken, requestTokenSecret, oauthVerifier);
     }
 }

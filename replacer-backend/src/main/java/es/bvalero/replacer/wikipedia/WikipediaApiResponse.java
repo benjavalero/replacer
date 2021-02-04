@@ -1,6 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import es.bvalero.replacer.ReplacerException;
 import java.util.List;
 import lombok.Data;
 import org.springframework.lang.Nullable;
@@ -9,6 +10,8 @@ import org.springframework.lang.Nullable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WikipediaApiResponse {
 
+    // TODO: It is public to be accessible by benchmarks
+
     @Nullable
     private Error error;
 
@@ -16,6 +19,17 @@ public class WikipediaApiResponse {
     private String curtimestamp;
     private Query query;
     private Page parse;
+
+    /**
+     * @throws ReplacerException if the response contains an error.
+     */
+    void validate() throws ReplacerException {
+        if (this.error != null) {
+            String code = this.error.getCode();
+            String info = this.error.getInfo();
+            throw new ReplacerException(String.format("%s: %s", code, info));
+        }
+    }
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
