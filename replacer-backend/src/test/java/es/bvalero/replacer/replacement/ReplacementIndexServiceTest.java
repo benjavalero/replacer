@@ -9,15 +9,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.modelmapper.ModelMapper;
 
 class ReplacementIndexServiceTest {
 
     @Mock
     private ReplacementDao replacementDao;
-
-    @Spy
-    private ModelMapper modelMapper;
 
     @InjectMocks
     private ReplacementIndexService replacementIndexService;
@@ -99,8 +95,8 @@ class ReplacementIndexServiceTest {
 
         // Both obsolete to review or reviewed by system ==> Delete
         // A dummy replacement will be created instead
-        ReplacementEntity rep2 = new ReplacementEntity(1, "", "", 2);
-        ReplacementEntity rep3 = new ReplacementEntity(1, "", "", 3, "system");
+        ReplacementEntity rep2 = ReplacementEntity.of(1, "", "", 2);
+        ReplacementEntity rep3 = ReplacementEntity.of(1, "", "", 3).withReviewer(ReplacementEntity.REVIEWER_SYSTEM);
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(rep2, rep3));
 
         List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(
@@ -111,9 +107,9 @@ class ReplacementIndexServiceTest {
 
         Assertions.assertEquals(
             Set.of(
-                ReplacementEntity.createDummy(pageId, WikipediaLanguage.SPANISH, LocalDate.now()),
-                rep2.withToDelete(),
-                rep3.withToDelete()
+                ReplacementEntity.ofDummy(pageId, WikipediaLanguage.SPANISH, LocalDate.now()),
+                rep2.setToDelete(),
+                rep3.setToDelete()
             ),
             new HashSet<>(toIndex)
         );
@@ -159,16 +155,13 @@ class ReplacementIndexServiceTest {
         List<IndexableReplacement> newReplacements = Arrays.asList(r1, r2, r3, r4, r5);
 
         // Existing replacements in DB
-        ReplacementEntity r1db = new ReplacementEntity(1, "1", "1", 1);
-        r1db.setContext(""); // To match with the one found to index
-        ReplacementEntity r2db = new ReplacementEntity(1, "2", "2", 2, "");
-        ReplacementEntity r3db = new ReplacementEntity(1, "3", "3", 3);
-        r3db.setLastUpdate(before);
-        ReplacementEntity r4db = new ReplacementEntity(1, "4", "4", 4, "");
-        r4db.setLastUpdate(before);
-        ReplacementEntity r6db = new ReplacementEntity(1, "6", "6", 6);
-        ReplacementEntity r7db = new ReplacementEntity(1, "7", "7", 7, "");
-        ReplacementEntity r8db = new ReplacementEntity(1, "8", "8", 2, "system");
+        ReplacementEntity r1db = ReplacementEntity.of(1, "1", "1", 1).withContext(""); // To match with the one found to index
+        ReplacementEntity r2db = ReplacementEntity.of(1, "2", "2", 2).withReviewer("");
+        ReplacementEntity r3db = ReplacementEntity.of(1, "3", "3", 3).withContext("").withLastUpdate(before);
+        ReplacementEntity r4db = ReplacementEntity.of(1, "4", "4", 4).withReviewer("").withLastUpdate(before);
+        ReplacementEntity r6db = ReplacementEntity.of(1, "6", "6", 6);
+        ReplacementEntity r7db = ReplacementEntity.of(1, "7", "7", 7).withReviewer("");
+        ReplacementEntity r8db = ReplacementEntity.of(1, "8", "8", 2).withReviewer(ReplacementEntity.REVIEWER_SYSTEM);
         List<ReplacementEntity> dbReplacements = new ArrayList<>(
             Arrays.asList(r1db, r2db, r3db, r4db, r6db, r7db, r8db)
         );
@@ -181,7 +174,12 @@ class ReplacementIndexServiceTest {
         );
 
         Assertions.assertEquals(
-            Set.of(r3db, replacementIndexService.convertToEntity(r5), r6db.withToDelete(), r8db.withToDelete()),
+            Set.of(
+                r3db.updateLastUpdate(same),
+                replacementIndexService.convertToEntity(r5),
+                r6db.setToDelete(),
+                r8db.setToDelete()
+            ),
             new HashSet<>(toIndex)
         );
     }
@@ -205,16 +203,14 @@ class ReplacementIndexServiceTest {
         List<IndexableReplacement> newReplacements = Arrays.asList(r1, r2, r3);
 
         // Existing replacements in DB
-        ReplacementEntity r1db = new ReplacementEntity(1, "1", "1", 1);
-        r1db.setLastUpdate(before);
-        ReplacementEntity r2db = new ReplacementEntity(1, "2", "2", 2, "");
-        r2db.setLastUpdate(before);
-        ReplacementEntity r4db = new ReplacementEntity(1, "4", "4", 4);
-        r4db.setLastUpdate(before);
-        ReplacementEntity r5db = new ReplacementEntity(1, "5", "5", 5, "");
-        r5db.setLastUpdate(before);
-        ReplacementEntity r6db = new ReplacementEntity(1, "6", "6", 6, "system");
-        r6db.setLastUpdate(before);
+        ReplacementEntity r1db = ReplacementEntity.of(1, "1", "1", 1).withContext("").withLastUpdate(before);
+        ReplacementEntity r2db = ReplacementEntity.of(1, "2", "2", 2).withReviewer("").withLastUpdate(before);
+        ReplacementEntity r4db = ReplacementEntity.of(1, "4", "4", 4).withLastUpdate(before);
+        ReplacementEntity r5db = ReplacementEntity.of(1, "5", "5", 5).withReviewer("").withLastUpdate(before);
+        ReplacementEntity r6db = ReplacementEntity
+            .of(1, "6", "6", 6)
+            .withReviewer(ReplacementEntity.REVIEWER_SYSTEM)
+            .withLastUpdate(before);
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db, r4db, r5db, r6db));
 
         WikipediaPage page = WikipediaPage.builder().id(1).lang(WikipediaLanguage.SPANISH).build();
@@ -225,7 +221,12 @@ class ReplacementIndexServiceTest {
         );
 
         Assertions.assertEquals(
-            Set.of(r1db, replacementIndexService.convertToEntity(r3), r4db.withToDelete(), r6db.withToDelete()),
+            Set.of(
+                r1db.updateLastUpdate(same),
+                replacementIndexService.convertToEntity(r3),
+                r4db.setToDelete(),
+                r6db.setToDelete()
+            ),
             new HashSet<>(toIndex)
         );
     }

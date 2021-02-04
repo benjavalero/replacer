@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +19,6 @@ public class ReplacementIndexService {
 
     @Autowired
     private ReplacementDao replacementDao;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     /**
      * Update the replacements of a page in DB with the found ones
@@ -70,7 +66,7 @@ public class ReplacementIndexService {
     /**
      * Check the given replacement with the ones in DB. Update the given DB list if needed.
      *
-     * @return The updated replacement to be managed in DB if needed.
+     * @return The updated replacement to be managed in DB if needed, or the new one to be created.
      */
     private Optional<ReplacementEntity> handleReplacement(
         IndexableReplacement replacement,
@@ -84,7 +80,10 @@ public class ReplacementIndexService {
             ignoreContext
         );
         if (existing.isPresent()) {
-            result = handleExistingReplacement(replacement, existing.get());
+            ReplacementEntity withAction = handleExistingReplacement(replacement, existing.get());
+            dbPageReplacements.remove(existing.get());
+            dbPageReplacements.add(withAction);
+            result = withAction.isToUpdate() ? Optional.of(withAction) : Optional.empty();
         } else {
             // New replacement
             ReplacementEntity newReplacement = convertToEntity(replacement);
@@ -129,30 +128,23 @@ public class ReplacementIndexService {
     /**
      * Check the given replacement with the counterpart in DB.
      *
-     * @return The updated replacement to be managed in DB if needed, or empty if not.
+     * @return The original DB replacement update plus the action to do.
      */
-    private Optional<ReplacementEntity> handleExistingReplacement(
+    private ReplacementEntity handleExistingReplacement(
         IndexableReplacement replacement,
         ReplacementEntity dbReplacement
     ) {
-        Optional<ReplacementEntity> result = Optional.empty();
+        ReplacementEntity result = dbReplacement.setToKeep(); // Initially we mark it to be kept
         if (dbReplacement.isToBeReviewed() && dbReplacement.isOlderThan(replacement.getLastUpdate())) {
-            dbReplacement.setToUpdateDate();
-            dbReplacement.setLastUpdate(replacement.getLastUpdate());
+            result = result.updateLastUpdate(replacement.getLastUpdate());
 
             // Also update other values just in case any of them has changed
             if (replacement.getPosition() != dbReplacement.getPosition()) {
-                dbReplacement.setToUpdateContext();
-                dbReplacement.setPosition(replacement.getPosition());
+                result = result.updatePosition(replacement.getPosition());
             }
             if (!replacement.getContext().equals(dbReplacement.getContext())) {
-                dbReplacement.setToUpdateContext();
-                dbReplacement.setContext(replacement.getContext());
+                result = result.updateContext(replacement.getContext());
             }
-
-            result = Optional.of(dbReplacement);
-        } else {
-            dbReplacement.setToKeep();
         }
         return result;
     }
@@ -185,12 +177,18 @@ public class ReplacementIndexService {
 
     @VisibleForTesting
     ReplacementEntity convertToEntity(IndexableReplacement replacement) {
-        ReplacementEntity entity = modelMapper.map(replacement, ReplacementEntity.class);
-        // It is mapping the page ID also to the entity Id
-        entity.setId(null);
-        entity.setLang(replacement.getLang().getCode());
-        entity.setToCreate();
-        return entity;
+        return ReplacementEntity
+            .builder()
+            .pageId(replacement.getPageId())
+            .lang(replacement.getLang().getCode())
+            .type(replacement.getType())
+            .subtype(replacement.getSubtype())
+            .position(replacement.getPosition())
+            .context(replacement.getContext())
+            .lastUpdate(replacement.getLastUpdate())
+            .title(replacement.getTitle())
+            .build()
+            .setToCreate();
     }
 
     /**
@@ -210,18 +208,16 @@ public class ReplacementIndexService {
             .stream()
             .filter(rep -> rep.isSystemReviewed() && !rep.isDummy())
             .collect(Collectors.toList());
-        systemReviewed.forEach(ReplacementEntity::setToDelete);
-        result.addAll(systemReviewed);
         dbReplacements.removeAll(systemReviewed);
+        result.addAll(systemReviewed.stream().map(ReplacementEntity::setToDelete).collect(Collectors.toList()));
 
         // All remaining replacements to review and not checked so far are obsolete and thus to be deleted
         List<ReplacementEntity> obsolete = dbReplacements
             .stream()
             .filter(rep -> rep.isToBeReviewed() && StringUtils.isEmpty(rep.getCudAction()))
             .collect(Collectors.toList());
-        obsolete.forEach(ReplacementEntity::setToDelete);
-        result.addAll(obsolete);
         dbReplacements.removeAll(obsolete);
+        result.addAll(obsolete.stream().map(ReplacementEntity::setToDelete).collect(Collectors.toList()));
 
         // We use a dummy replacement to store in some place the last update of the page
         // in case there are no replacements to review to store it instead.
@@ -234,19 +230,14 @@ public class ReplacementIndexService {
         boolean existReplacementsToReview = dbReplacements.stream().anyMatch(ReplacementEntity::isToBeReviewed);
         Optional<ReplacementEntity> dummy = dbReplacements.stream().filter(ReplacementEntity::isDummy).findAny();
         if (existReplacementsToReview) {
-            if (dummy.isPresent()) {
-                dummy.get().setToDelete();
-                result.add(dummy.get());
-            }
+            dummy.ifPresent(d -> result.add(d.setToDelete()));
         } else {
             if (dummy.isPresent()) {
                 if (dummy.get().isOlderThan(page.getLastUpdate())) {
-                    dummy.get().setToUpdateDate();
-                    dummy.get().setLastUpdate(page.getLastUpdate());
-                    result.add(dummy.get());
+                    result.add(dummy.get().updateLastUpdate(page.getLastUpdate()));
                 }
             } else {
-                result.add(ReplacementEntity.createDummy(page.getId(), page.getLang(), page.getLastUpdate()));
+                result.add(ReplacementEntity.ofDummy(page.getId(), page.getLang(), page.getLastUpdate()));
             }
         }
 

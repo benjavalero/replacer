@@ -32,8 +32,8 @@ class ReplacementCacheTest {
     void testFindDatabaseReplacements() {
         // In DB: replacements for page 2 (first load) and 1001 (second load)
         // We ask for the page 1 and 1001, so the page 2 will be cleaned.
-        ReplacementEntity replacement = new ReplacementEntity(2, "", "", 0);
-        ReplacementEntity replacement2 = new ReplacementEntity(1001, "", "", 0);
+        ReplacementEntity replacement = ReplacementEntity.of(2, "", "", 0);
+        ReplacementEntity replacement2 = ReplacementEntity.of(1001, "", "", 0);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
         List<ReplacementEntity> dbReplacements2 = Collections.singletonList(replacement2);
         Mockito.when(replacementDao.findByPageInterval(1, 1000, WikipediaLanguage.SPANISH)).thenReturn(dbReplacements);
@@ -55,7 +55,7 @@ class ReplacementCacheTest {
     void testFindDatabaseReplacementsWithEmptyLoad() {
         // In DB: replacement for page 1001
         // So the first load is enlarged
-        ReplacementEntity replacement = new ReplacementEntity(1001, "", "", 0);
+        ReplacementEntity replacement = ReplacementEntity.of(1001, "", "", 0);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
         Mockito.when(replacementDao.findByPageInterval(1, 2000, WikipediaLanguage.SPANISH)).thenReturn(dbReplacements);
 

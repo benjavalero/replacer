@@ -1,66 +1,63 @@
 package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import java.io.Serializable;
 import java.time.LocalDate;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.With;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.Nullable;
 
 /**
  * A replacement in the database related to a page.
  */
-@Data
-@NoArgsConstructor // Needed by ModelMapper
-@AllArgsConstructor
-public class ReplacementEntity implements Serializable {
+@Value
+@Builder
+public class ReplacementEntity {
 
     public static final String TYPE_CUSTOM = "Personalizado";
     public static final String REVIEWER_SYSTEM = "system";
 
     @Nullable
-    private Long id; // Nullable when still to be created in database
+    Long id; // Nullable when still to be created in database
 
-    private int pageId;
-    private String lang;
-    private String type;
-    private String subtype;
-    private int position;
-    private String context;
-    private LocalDate lastUpdate;
+    int pageId;
+    String lang;
+    String type;
+    String subtype;
+
+    @With(AccessLevel.PRIVATE)
+    int position;
+
+    @With(AccessLevel.PACKAGE)
+    String context;
+
+    @VisibleForTesting
+    @With
+    LocalDate lastUpdate;
 
     @Nullable
-    private String reviewer;
+    @With(AccessLevel.PACKAGE)
+    String reviewer;
 
-    private String title;
+    String title;
 
     // Temporary field not in database to know the status of the replacement while indexing
     // Values: C - Create, U - Update, D - Delete, K - Keep
     @Nullable
-    @With
-    private transient String cudAction;
+    @With(AccessLevel.PRIVATE)
+    String cudAction;
 
     @TestOnly
-    public ReplacementEntity(int pageId, String type, String subtype, int position) {
-        this.pageId = pageId;
-        this.type = type;
-        this.subtype = subtype;
-        this.position = position;
-        this.lastUpdate = LocalDate.now();
-    }
-
-    @TestOnly
-    ReplacementEntity(int pageId, String type, String subtype, int position, String reviewer) {
-        this.pageId = pageId;
-        this.type = type;
-        this.subtype = subtype;
-        this.position = position;
-        this.lastUpdate = LocalDate.now();
-        this.reviewer = reviewer;
+    public static ReplacementEntity of(int pageId, String type, String subtype, int position) {
+        return ReplacementEntity
+            .builder()
+            .pageId(pageId)
+            .type(type)
+            .subtype(subtype)
+            .position(position)
+            .lastUpdate(LocalDate.now())
+            .build();
     }
 
     public boolean isToBeReviewed() {
@@ -75,65 +72,63 @@ public class ReplacementEntity implements Serializable {
         return REVIEWER_SYSTEM.equals(this.reviewer);
     }
 
-    void setToCreate() {
-        this.cudAction = "C";
+    ReplacementEntity setToCreate() {
+        return withCudAction("C");
     }
 
     public boolean isToCreate() {
         return "C".equals(this.cudAction);
     }
 
-    public void setToDelete() {
-        this.cudAction = "D";
-    }
-
-    @TestOnly
-    ReplacementEntity withToDelete() {
-        return this.withCudAction("D");
+    public ReplacementEntity setToDelete() {
+        return withCudAction("D");
     }
 
     public boolean isToDelete() {
         return "D".equals(this.cudAction);
     }
 
-    void setToUpdateDate() {
-        this.cudAction = "UD";
+    ReplacementEntity updateLastUpdate(LocalDate lastUpdate) {
+        return withLastUpdate(lastUpdate).withCudAction("UD");
     }
 
     public boolean isToUpdateDate() {
         return "UD".equals(this.cudAction);
     }
 
-    void setToUpdateContext() {
-        this.cudAction = "UC";
+    ReplacementEntity updateContext(String context) {
+        return withContext(context).withCudAction("UC");
     }
 
     public boolean isToUpdateContext() {
         return "UC".equals(this.cudAction);
     }
 
+    ReplacementEntity updatePosition(int position) {
+        // Action for position and context is the same
+        return withPosition(position).withCudAction("UC");
+    }
+
     boolean isToUpdate() {
         return this.cudAction != null && this.cudAction.contains("U");
     }
 
-    void setToKeep() {
-        this.cudAction = "K";
+    ReplacementEntity setToKeep() {
+        return withCudAction("K");
     }
 
-    static ReplacementEntity createDummy(int pageId, WikipediaLanguage lang, LocalDate lastUpdate) {
-        return new ReplacementEntity(
-            null,
-            pageId,
-            lang.getCode(),
-            "",
-            "",
-            0,
-            null,
-            lastUpdate,
-            REVIEWER_SYSTEM,
-            null,
-            "C"
-        );
+    static ReplacementEntity ofDummy(int pageId, WikipediaLanguage lang, LocalDate lastUpdate) {
+        return ReplacementEntity
+            .builder()
+            .pageId(pageId)
+            .lang(lang.getCode())
+            .type("")
+            .subtype("")
+            .position(0)
+            .lastUpdate(lastUpdate)
+            .reviewer(REVIEWER_SYSTEM)
+            .build()
+            .setToCreate();
     }
 
     boolean isDummy() {
@@ -145,24 +140,22 @@ public class ReplacementEntity implements Serializable {
         );
     }
 
-    public static ReplacementEntity createCustomReviewed(
+    public static ReplacementEntity ofCustomReviewed(
         int pageId,
         WikipediaLanguage lang,
         String subtype,
         String reviewer
     ) {
-        return new ReplacementEntity(
-            null,
-            pageId,
-            lang.getCode(),
-            TYPE_CUSTOM,
-            subtype,
-            0,
-            null,
-            LocalDate.now(),
-            reviewer,
-            null,
-            "C"
-        );
+        return ReplacementEntity
+            .builder()
+            .pageId(pageId)
+            .lang(lang.getCode())
+            .type(TYPE_CUSTOM)
+            .subtype(subtype)
+            .position(0)
+            .lastUpdate(LocalDate.now())
+            .reviewer(reviewer)
+            .build()
+            .setToCreate();
     }
 }

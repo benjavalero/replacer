@@ -103,8 +103,7 @@ class DumpPageProcessorTest {
             .lastUpdate(yesterday)
             .build();
 
-        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
-        replacement.setLastUpdate(today);
+        ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(today);
         Mockito
             .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
@@ -125,8 +124,7 @@ class DumpPageProcessorTest {
             .lastUpdate(today)
             .build();
 
-        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
-        replacement.setLastUpdate(today);
+        ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(today);
         Mockito
             .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
@@ -148,8 +146,7 @@ class DumpPageProcessorTest {
             .lastUpdate(today)
             .build();
 
-        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
-        replacement.setLastUpdate(yesterday);
+        ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(yesterday);
         Mockito
             .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
@@ -197,8 +194,7 @@ class DumpPageProcessorTest {
             .lastUpdate(today)
             .build();
 
-        ReplacementEntity replacement = new ReplacementEntity(1, "", "", 1);
-        replacement.setLastUpdate(yesterday);
+        ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(yesterday);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
         Mockito
             .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))

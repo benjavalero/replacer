@@ -123,7 +123,7 @@ class PageReviewCustomService extends PageReviewService {
 
     void reviewPageReplacements(int pageId, WikipediaLanguage lang, String subtype, String reviewer) {
         // Custom replacements don't exist in the database to be reviewed
-        replacementDao.insert(ReplacementEntity.createCustomReviewed(pageId, lang, subtype, reviewer));
+        replacementDao.insert(ReplacementEntity.ofCustomReviewed(pageId, lang, subtype, reviewer));
     }
 
     Optional<String> validateCustomReplacement(String replacement, WikipediaLanguage lang) {

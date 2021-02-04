@@ -97,12 +97,11 @@ class DumpPageProcessor {
         List<ReplacementEntity> dbReplacements = replacementCache.findByPageId(dumpPage.getId(), dumpPage.getLang());
 
         // Return the DB replacements not reviewed in order to delete them
-        List<ReplacementEntity> toDelete = dbReplacements
+        return dbReplacements
             .stream()
             .filter(ReplacementEntity::isToBeReviewed)
             .filter(ReplacementEntity::isSystemReviewed)
+            .map(ReplacementEntity::setToDelete)
             .collect(Collectors.toList());
-        toDelete.forEach(ReplacementEntity::setToDelete);
-        return toDelete;
     }
 }
