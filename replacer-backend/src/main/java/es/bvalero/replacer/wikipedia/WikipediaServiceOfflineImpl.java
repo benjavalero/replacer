@@ -32,17 +32,17 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return loadPageContent("/es/bvalero/replacer/wikipedia/misspelling-list.txt");
+        return loadPageContent("/offline/misspelling-list.txt");
     }
 
     @Override
     public String getFalsePositiveListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return loadPageContent("/es/bvalero/replacer/wikipedia/false-positives.txt");
+        return loadPageContent("/offline/false-positives.txt");
     }
 
     @Override
     public String getComposedMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return loadPageContent("/es/bvalero/replacer/wikipedia/composed-misspellings.txt");
+        return loadPageContent("/offline/composed-misspellings.txt");
     }
 
     @Override
@@ -59,7 +59,7 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
             .lang(WikipediaLanguage.getDefault())
             .namespace(WikipediaNamespace.ARTICLE)
             .title("América del Norte")
-            .content(loadPageContent("/es/bvalero/replacer/wikipedia/sample-article.txt"))
+            .content(loadPageContent("/offline/sample-article.txt"))
             .lastUpdate(nowDate.toLocalDate())
             .queryTimestamp(now)
             .build();
