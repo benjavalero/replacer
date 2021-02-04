@@ -18,7 +18,7 @@ public class ReplacementCountService {
     private ReplacementDao replacementDao;
 
     // Cache the count of PAGES containing replacements by type/subtype
-    // This list is updated every 10 minutes and modified when saving changes
+    // This map is modified when saving changes and updated every 10 minutes
     private Map<WikipediaLanguage, LanguageCount> languageCounts;
 
     /* STATISTICS */
@@ -85,7 +85,10 @@ public class ReplacementCountService {
             typeCount.add(new SubtypeCount(count.getSubtype(), count.getCount()));
         }
 
-        return langCounts;
+        // This map is used by several threads as the users review replacements.
+        // For the moment there is not heavy concurrency so we prefer to use the
+        // Collections.synchronizedMap (which locks the whole map) to ConcurrentHashMap.
+        return Collections.synchronizedMap(langCounts);
     }
 
     public void removeCachedReplacementCount(WikipediaLanguage lang, String type, String subtype) {
