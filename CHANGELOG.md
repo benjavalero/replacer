@@ -1,5 +1,10 @@
 # Versions
 
+## 2.8.3 (??)
+- Improve texts in dashboard, removing references to Spanish language and adding a warning.
+- Improve suggestions for composed misspellings
+- Improve technical documentation and organization of the code for easier maintenance
+
 ## 2.8.2 (29 Jan 2021)
 - Improve finder for template immutables
 - Fix encoding when redirecting to previous page after session login
