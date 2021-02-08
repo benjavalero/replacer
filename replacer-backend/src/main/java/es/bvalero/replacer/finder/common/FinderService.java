@@ -1,9 +1,8 @@
 package es.bvalero.replacer.finder.common;
 
-import com.google.common.collect.Iterables;
 import es.bvalero.replacer.page.IndexablePage;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.apache.commons.collections4.IterableUtils;
 import org.jetbrains.annotations.TestOnly;
 
@@ -13,9 +12,11 @@ public interface FinderService<T extends FinderResult> {
     default Iterable<T> find(IndexablePage page) {
         // We include a default implementation that just creates an iterable
         // from all the results for each associated finder.
-        Iterable<Iterable<T>> iterableList =
-            this.getFinders().stream().map(finder -> finder.find(page)).collect(Collectors.toUnmodifiableList());
-        return Iterables.concat(iterableList);
+        return () ->
+            this.getFinders()
+                .stream()
+                .flatMap(finder -> StreamSupport.stream(finder.find(page).spliterator(), false))
+                .iterator();
     }
 
     List<Finder<T>> getFinders();

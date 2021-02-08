@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.common;
 
-import com.google.common.collect.Range;
+import org.apache.commons.lang3.Range;
 
 public interface FinderResult extends Comparable<FinderResult> {
     int getStart();
@@ -16,15 +16,15 @@ public interface FinderResult extends Comparable<FinderResult> {
     }
 
     private Range<Integer> getRange() {
-        return Range.closedOpen(this.getStart(), this.getEnd());
+        return Range.between(this.getStart(), this.getEnd() - 1);
     }
 
     default boolean intersects(FinderResult r) {
-        return !this.getRange().intersection(r.getRange()).isEmpty();
+        return this.getRange().isOverlappedBy(r.getRange());
     }
 
     default boolean contains(FinderResult r) {
         // We don't want an item to contain itself
-        return this.getRange().encloses(r.getRange()) && !this.getRange().equals(r.getRange());
+        return this.getRange().containsRange(r.getRange()) && !this.getRange().equals(r.getRange());
     }
 }
