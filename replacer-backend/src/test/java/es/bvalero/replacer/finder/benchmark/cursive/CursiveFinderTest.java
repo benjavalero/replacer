@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.cursive;
 
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class CursiveFinderTest {
 
     private String text;
-    private Set<FinderResult> expected;
+    private Set<BenchmarkResult> expected;
 
     @BeforeEach
     public void setUp() {
@@ -23,11 +23,11 @@ class CursiveFinderTest {
         this.text = String.format("A %s - %s - %s - %s - %s.", cursive1, cursive2, cursive3, cursive4, cursive5);
 
         this.expected = new HashSet<>();
-        this.expected.add(FinderResult.of(2, cursive1));
-        this.expected.add(FinderResult.of(17, cursive2));
-        this.expected.add(FinderResult.of(32, cursive3));
-        this.expected.add(FinderResult.of(46, cursive4));
-        this.expected.add(FinderResult.of(76, cursive5));
+        this.expected.add(BenchmarkResult.of(2, cursive1));
+        this.expected.add(BenchmarkResult.of(17, cursive2));
+        this.expected.add(BenchmarkResult.of(32, cursive3));
+        this.expected.add(BenchmarkResult.of(46, cursive4));
+        this.expected.add(BenchmarkResult.of(76, cursive5));
     }
 
     @Test

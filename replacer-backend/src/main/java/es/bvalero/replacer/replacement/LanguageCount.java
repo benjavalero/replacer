@@ -12,6 +12,9 @@ import lombok.Value;
 @Value
 class LanguageCount {
 
+    // TODO: Include TypeCount and SubtypeCount as private nested classes
+    // and manage here the complete building of the language count
+
     WikipediaLanguage lang;
 
     @Getter(AccessLevel.NONE)

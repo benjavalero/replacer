@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
-import es.bvalero.replacer.finder.FinderUtils;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,9 +18,9 @@ class UppercaseIndexOfFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(String text) {
         // We loop over all the words and find them in the text with the indexOf function
-        Set<FinderResult> matches = new HashSet<>();
+        Set<BenchmarkResult> matches = new HashSet<>();
         for (String word : this.words) {
             int start = 0;
             while (start >= 0) {
@@ -29,7 +29,7 @@ class UppercaseIndexOfFinder implements BenchmarkFinder {
                     if (
                         FinderUtils.isWordCompleteInText(start, word, text) && isWordPrecededByPunctuation(start, text)
                     ) {
-                        matches.add(FinderResult.of(start, word));
+                        matches.add(BenchmarkResult.of(start, word));
                     }
                     start += word.length();
                 }

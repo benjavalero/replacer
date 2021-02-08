@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class PageReviewOptions {
     }
 
     static PageReviewOptions ofCustom(WikipediaLanguage lang, String replacement, String suggestion) {
-        return new PageReviewOptions(lang, ReplacementEntity.TYPE_CUSTOM, replacement, suggestion);
+        return new PageReviewOptions(lang, ReplacementType.CUSTOM, replacement, suggestion);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ class WordFinderTest {
 
     private Collection<String> words;
     private String text;
-    private Set<FinderResult> expected;
+    private Set<BenchmarkResult> expected;
 
     @BeforeEach
     public void setUp() {
@@ -31,12 +31,12 @@ class WordFinderTest {
         this.text = "Um suma um, españa um m2 España y Castilla-León + cd's.";
 
         this.expected = new HashSet<>();
-        this.expected.add(FinderResult.of(0, "Um"));
-        this.expected.add(FinderResult.of(8, "um"));
-        this.expected.add(FinderResult.of(12, "españa"));
-        this.expected.add(FinderResult.of(19, "um"));
-        this.expected.add(FinderResult.of(34, "Castilla-León"));
-        this.expected.add(FinderResult.of(50, "cd's"));
+        this.expected.add(BenchmarkResult.of(0, "Um"));
+        this.expected.add(BenchmarkResult.of(8, "um"));
+        this.expected.add(BenchmarkResult.of(12, "españa"));
+        this.expected.add(BenchmarkResult.of(19, "um"));
+        this.expected.add(BenchmarkResult.of(34, "Castilla-León"));
+        this.expected.add(BenchmarkResult.of(50, "cd's"));
     }
 
     @Test

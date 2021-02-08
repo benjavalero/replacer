@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ class UppercaseFinderTest {
 
     private Collection<String> words;
     private String text;
-    private Set<FinderResult> expected;
+    private Set<BenchmarkResult> expected;
 
     @BeforeEach
     public void setUp() {
@@ -21,9 +21,9 @@ class UppercaseFinderTest {
         this.text = "=Enero. Febrero, Lunes #  Martes.";
 
         this.expected = new HashSet<>();
-        this.expected.add(FinderResult.of(1, "Enero"));
-        this.expected.add(FinderResult.of(8, "Febrero"));
-        this.expected.add(FinderResult.of(26, "Martes"));
+        this.expected.add(BenchmarkResult.of(1, "Enero"));
+        this.expected.add(BenchmarkResult.of(8, "Febrero"));
+        this.expected.add(BenchmarkResult.of(26, "Martes"));
     }
 
     @Test

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.surname;
 
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ class SurnameFinderTest {
 
     private Collection<String> words;
     private String text;
-    private Set<FinderResult> expected;
+    private Set<BenchmarkResult> expected;
 
     @BeforeEach
     public void setUp() {
@@ -22,10 +22,10 @@ class SurnameFinderTest {
         this.text = "En News Online, Álvaro Pinto, Victor Records, Juegos Olímpicos de Verano.";
 
         this.expected = new HashSet<>();
-        this.expected.add(FinderResult.of(8, "Online"));
-        this.expected.add(FinderResult.of(23, "Pinto"));
-        this.expected.add(FinderResult.of(37, "Records"));
-        this.expected.add(FinderResult.of(63, "de Verano"));
+        this.expected.add(BenchmarkResult.of(8, "Online"));
+        this.expected.add(BenchmarkResult.of(23, "Pinto"));
+        this.expected.add(BenchmarkResult.of(37, "Records"));
+        this.expected.add(BenchmarkResult.of(63, "de Verano"));
     }
 
     @Test

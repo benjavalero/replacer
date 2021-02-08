@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.benchmark.completetag;
 
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,7 +40,7 @@ class CompleteTagFinderTest {
         BenchmarkFinder finder = new CompleteTagRegexIteratedFinder(completeTags);
         Assertions.assertEquals(
             expected,
-            finder.findMatches(text).stream().map(FinderResult::getText).collect(Collectors.toSet())
+            finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
         );
     }
 
@@ -49,7 +49,7 @@ class CompleteTagFinderTest {
         BenchmarkFinder finder = new CompleteTagRegexBackReferenceFinder(completeTags);
         Assertions.assertEquals(
             expected,
-            finder.findMatches(text).stream().map(FinderResult::getText).collect(Collectors.toSet())
+            finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
         );
     }
 
@@ -58,7 +58,7 @@ class CompleteTagFinderTest {
         BenchmarkFinder finder = new CompleteTagLinearIteratedFinder(completeTags);
         Assertions.assertEquals(
             expected,
-            finder.findMatches(text).stream().map(FinderResult::getText).collect(Collectors.toSet())
+            finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
         );
     }
 
@@ -67,7 +67,7 @@ class CompleteTagFinderTest {
         BenchmarkFinder finder = new CompleteTagLinearFinder(completeTags);
         Assertions.assertEquals(
             expected,
-            finder.findMatches(text).stream().map(FinderResult::getText).collect(Collectors.toSet())
+            finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
         );
     }
 }

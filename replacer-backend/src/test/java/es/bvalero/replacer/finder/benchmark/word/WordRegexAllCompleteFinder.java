@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,13 +19,13 @@ class WordRegexAllCompleteFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(String text) {
         // Find all complete words in the text with a regex and check if they are in the list
-        Set<FinderResult> matches = new HashSet<>();
+        Set<BenchmarkResult> matches = new HashSet<>();
         Matcher m = this.wordPattern.matcher(text);
         while (m.find()) {
             if (this.words.contains(m.group())) {
-                matches.add(FinderResult.of(m.start(), m.group()));
+                matches.add(BenchmarkResult.of(m.start(), m.group()));
             }
         }
         return matches;

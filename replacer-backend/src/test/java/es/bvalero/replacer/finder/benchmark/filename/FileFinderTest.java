@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.filename;
 
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class FileFinderTest {
 
     private String text;
-    private Set<FinderResult> expected;
+    private Set<BenchmarkResult> expected;
 
     @BeforeEach
     public void setUp() {
@@ -22,8 +22,8 @@ class FileFinderTest {
         this.text = String.format("%s %s", file1, file2);
 
         this.expected = new HashSet<>();
-        this.expected.add(FinderResult.of(10, filename1));
-        this.expected.add(FinderResult.of(48, filename2));
+        this.expected.add(BenchmarkResult.of(10, filename1));
+        this.expected.add(BenchmarkResult.of(48, filename2));
     }
 
     @Test

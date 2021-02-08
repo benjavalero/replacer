@@ -1,11 +1,9 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFindService;
-import es.bvalero.replacer.finder.misspelling.MisspellingComposedFinder;
-import es.bvalero.replacer.finder.misspelling.MisspellingSimpleFinder;
+import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
@@ -34,13 +32,7 @@ class PageReviewCustomService extends PageReviewService {
     private ReplacementDao replacementDao;
 
     @Autowired
-    private ReplacementFindService replacementFindService;
-
-    @Autowired
-    private MisspellingSimpleFinder misspellingSimpleFinder;
-
-    @Autowired
-    private MisspellingComposedFinder misspellingComposedFinder;
+    private ReplacementFinderService replacementFinderService;
 
     @Getter
     @Setter
@@ -118,7 +110,7 @@ class PageReviewCustomService extends PageReviewService {
     List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We do nothing in the database in case the list is empty
         // We want to review the page every time in case anything has changed
-        return replacementFindService.findCustomReplacements(page, options.getSubtype(), options.getSuggestion());
+        return replacementFinderService.findCustomReplacements(page, options.getSubtype(), options.getSuggestion());
     }
 
     void reviewPageReplacements(int pageId, WikipediaLanguage lang, String subtype, String reviewer) {
@@ -127,12 +119,6 @@ class PageReviewCustomService extends PageReviewService {
     }
 
     Optional<String> validateCustomReplacement(String replacement, WikipediaLanguage lang) {
-        if (misspellingSimpleFinder.findMisspellingByWord(replacement, lang).isPresent()) {
-            return Optional.of(misspellingSimpleFinder.getType());
-        } else if (misspellingComposedFinder.findMisspellingByWord(replacement, lang).isPresent()) {
-            return Optional.of(misspellingComposedFinder.getType());
-        } else {
-            return Optional.empty();
-        }
+        return replacementFinderService.findExistingMisspelling(replacement, lang);
     }
 }

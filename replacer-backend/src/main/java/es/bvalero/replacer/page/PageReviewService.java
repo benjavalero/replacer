@@ -3,7 +3,7 @@ package es.bvalero.replacer.page;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
@@ -191,6 +191,7 @@ abstract class PageReviewService {
 
     @VisibleForTesting
     PageReview buildPageReview(WikipediaPage page, List<Replacement> replacements, PageReviewOptions options) {
+        // TODO: remove ModelMapper use and make PageReview immutable
         PageReview review = modelMapper.map(page, PageReview.class);
         review.setReplacements(replacements.stream().map(this::convertToDto).collect(Collectors.toList()));
         review.setNumPending(findTotalResultsFromCache(options) + 1); // Include the current one as pending
@@ -205,6 +206,7 @@ abstract class PageReviewService {
     }
 
     private PageReplacement convertToDto(Replacement replacement) {
+        // TODO: remove ModelMapper use and make PageReplacement immutable
         return modelMapper.map(replacement, PageReplacement.class);
     }
 }

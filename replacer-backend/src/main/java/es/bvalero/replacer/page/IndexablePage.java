@@ -1,15 +1,14 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.replacement.IndexableReplacement;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.List;
 
-// TODO: Move to common package
 public interface IndexablePage {
     int getId();
 
@@ -51,9 +50,13 @@ public interface IndexablePage {
             replacement.getType(),
             replacement.getSubtype(),
             replacement.getStart(),
-            replacement.getContext(),
+            this.getContext(replacement),
             this.getLastUpdate(),
             this.getTitle()
         );
+    }
+
+    private String getContext(Replacement replacement) {
+        return FinderUtils.getContextAroundWord(this.getContent(), replacement.getStart(), replacement.getEnd(), 20);
     }
 }

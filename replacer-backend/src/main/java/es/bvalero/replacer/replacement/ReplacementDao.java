@@ -1,6 +1,7 @@
 package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.List;
@@ -90,7 +91,7 @@ public class ReplacementDao {
             .addValue(PARAM_LANG, lang.getCode())
             .addValue("minPageId", minPageId)
             .addValue("maxPageId", maxPageId)
-            .addValue(PARAM_TYPE, ReplacementEntity.TYPE_CUSTOM);
+            .addValue(PARAM_TYPE, ReplacementType.CUSTOM);
         return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
@@ -113,7 +114,7 @@ public class ReplacementDao {
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
             .addValue(PARAM_PAGE_ID, pageId)
-            .addValue(PARAM_TYPE, ReplacementEntity.TYPE_CUSTOM);
+            .addValue(PARAM_TYPE, ReplacementType.CUSTOM);
         return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
@@ -190,7 +191,7 @@ public class ReplacementDao {
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NOT NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_TYPE, ReplacementEntity.TYPE_CUSTOM)
+            .addValue(PARAM_TYPE, ReplacementType.CUSTOM)
             .addValue(PARAM_SUBTYPE, subtype);
         return jdbcTemplate.queryForList(sql, namedParameters, Integer.class);
     }

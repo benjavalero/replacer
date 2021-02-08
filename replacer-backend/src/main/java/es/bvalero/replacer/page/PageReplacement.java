@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.finder.Suggestion;
+import es.bvalero.replacer.finder.replacement.Suggestion;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;

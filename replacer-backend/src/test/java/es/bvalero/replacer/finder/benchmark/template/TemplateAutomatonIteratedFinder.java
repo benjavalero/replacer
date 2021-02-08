@@ -3,11 +3,9 @@ package es.bvalero.replacer.finder.benchmark.template;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
+import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -37,11 +35,16 @@ class TemplateAutomatonIteratedFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
-        Set<FinderResult> matches = new HashSet<>();
-        WikipediaPage page = WikipediaPage.builder().content(text).lang(WikipediaLanguage.getDefault()).build();
+    public Set<BenchmarkResult> findMatches(String text) {
+        Set<BenchmarkResult> matches = new HashSet<>();
         for (RunAutomaton automaton : AUTOMATA) {
-            matches.addAll(IterableUtils.toList(new RegexIterable<>(page, automaton, this::convert)));
+            matches.addAll(
+                IterableUtils
+                    .toList(AutomatonMatchFinder.find(text, automaton))
+                    .stream()
+                    .map(this::convert)
+                    .collect(Collectors.toList())
+            );
         }
         return matches;
     }

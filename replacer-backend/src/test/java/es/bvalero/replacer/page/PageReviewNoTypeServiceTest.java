@@ -2,8 +2,8 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.*;
@@ -65,7 +65,7 @@ class PageReviewNoTypeServiceTest {
     private ReplacementIndexService replacementIndexService;
 
     @Mock
-    private ReplacementFindService replacementFindService;
+    private ReplacementFinderService replacementFinderService;
 
     @Mock
     private SectionReviewService sectionReviewService;
@@ -140,7 +140,7 @@ class PageReviewNoTypeServiceTest {
         Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(page));
 
         // The page contains replacements
-        Mockito.when(replacementFindService.findReplacements(page)).thenReturn(replacements);
+        Mockito.when(replacementFinderService.find(page)).thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
@@ -171,7 +171,7 @@ class PageReviewNoTypeServiceTest {
 
         // The page doesn't contain replacements
         List<Replacement> noPageReplacements = Collections.emptyList();
-        Mockito.when(replacementFindService.findReplacements(page)).thenReturn(noPageReplacements);
+        Mockito.when(replacementFinderService.find(page)).thenReturn(noPageReplacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
@@ -198,7 +198,7 @@ class PageReviewNoTypeServiceTest {
         Mockito.when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(page2));
 
         // The page contains replacements
-        Mockito.when(replacementFindService.findReplacements(page2)).thenReturn(replacements);
+        Mockito.when(replacementFinderService.find(page2)).thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 

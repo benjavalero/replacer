@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,8 +15,8 @@ class WordLinearAllFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
-        Set<FinderResult> matches = new HashSet<>();
+    public Set<BenchmarkResult> findMatches(String text) {
+        Set<BenchmarkResult> matches = new HashSet<>();
         int start = 0;
         while (start >= 0) {
             // Find next letter
@@ -34,7 +34,7 @@ class WordLinearAllFinder implements BenchmarkFinder {
                     if (!isLetter(text.charAt(j))) {
                         String word = text.substring(startWord, j);
                         if (words.contains(word)) {
-                            matches.add(FinderResult.of(startWord, word));
+                            matches.add(BenchmarkResult.of(startWord, word));
                         }
                         start = j;
                         break;

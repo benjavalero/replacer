@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,16 +14,16 @@ class CompleteTagLinearIteratedFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
-        Set<FinderResult> matches = new HashSet<>();
+    public Set<BenchmarkResult> findMatches(String text) {
+        Set<BenchmarkResult> matches = new HashSet<>();
         for (String tag : tags) {
             matches.addAll(findResults(text, tag));
         }
         return matches;
     }
 
-    private Set<FinderResult> findResults(String text, String tag) {
-        Set<FinderResult> matches = new HashSet<>();
+    private Set<BenchmarkResult> findResults(String text, String tag) {
+        Set<BenchmarkResult> matches = new HashSet<>();
         String openTag = String.format("<%s", tag);
         String closeTag = String.format("</%s>", tag);
         int start = 0;
@@ -39,7 +39,7 @@ class CompleteTagLinearIteratedFinder implements BenchmarkFinder {
                         int startCloseTag = text.indexOf(closeTag, start + openTag.length());
                         if (startCloseTag >= 0) {
                             int endCloseTag = startCloseTag + closeTag.length();
-                            matches.add(FinderResult.of(start, text.substring(start, endCloseTag)));
+                            matches.add(BenchmarkResult.of(start, text.substring(start, endCloseTag)));
                             start = endCloseTag + 1;
                         } else {
                             start += openTag.length();

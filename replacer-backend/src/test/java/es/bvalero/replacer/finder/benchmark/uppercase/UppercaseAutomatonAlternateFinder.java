@@ -5,7 +5,7 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,14 +21,14 @@ class UppercaseAutomatonAlternateFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(String text) {
         // Build an alternate automaton with all the words and match it against the text
-        Set<FinderResult> matches = new HashSet<>();
+        Set<BenchmarkResult> matches = new HashSet<>();
         AutomatonMatcher m = this.words.newMatcher(text);
         while (m.find()) {
             String word = m.group().substring(1).trim();
             int pos = m.group().indexOf(word);
-            matches.add(FinderResult.of(m.start() + pos, word));
+            matches.add(BenchmarkResult.of(m.start() + pos, word));
         }
         return matches;
     }

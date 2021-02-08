@@ -8,8 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.finder.CosmeticFindService;
-import es.bvalero.replacer.finder.Suggestion;
+import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
+import es.bvalero.replacer.finder.replacement.Suggestion;
 import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.wikipedia.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
@@ -50,7 +50,7 @@ class PageControllerTest {
     private WikipediaService wikipediaService;
 
     @MockBean
-    private CosmeticFindService cosmeticFindService;
+    private CosmeticFinderService cosmeticFinderService;
 
     @MockBean
     private PageListService pageListService;
@@ -177,7 +177,7 @@ class PageControllerTest {
         String subtype = "S";
         SavePage savePage = new SavePage(section, title, content, timestamp, token, tokenSecret, type, subtype);
 
-        when(cosmeticFindService.applyCosmeticChanges(any(WikipediaPage.class))).thenReturn("C");
+        when(cosmeticFinderService.applyCosmeticChanges(any(WikipediaPage.class))).thenReturn("C");
 
         mvc
             .perform(
@@ -193,7 +193,7 @@ class PageControllerTest {
             .content(savePage.getContent())
             .title(savePage.getTitle())
             .build();
-        verify(cosmeticFindService, times(1)).applyCosmeticChanges(page);
+        verify(cosmeticFinderService, times(1)).applyCosmeticChanges(page);
         verify(wikipediaService, times(1))
             .savePageContent(
                 any(WikipediaLanguage.class),
@@ -225,7 +225,7 @@ class PageControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(cosmeticFindService, times(0)).applyCosmeticChanges(any(WikipediaPage.class));
+        verify(cosmeticFinderService, times(0)).applyCosmeticChanges(any(WikipediaPage.class));
         verify(wikipediaService, times(0))
             .savePageContent(
                 any(WikipediaLanguage.class),

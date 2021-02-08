@@ -1,10 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.ReplacerException;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @Profile("offline")
-public class WikipediaServiceOfflineImpl implements WikipediaService {
+class WikipediaServiceOfflineImpl implements WikipediaService {
 
     private static final String AUTHORIZATION_URL = "/?oauth_verifier=x";
 
@@ -34,17 +30,17 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return loadPageContent("/offline/misspelling-list.txt");
+        return WikipediaUtils.getFileContent("/offline/misspelling-list.txt");
     }
 
     @Override
     public String getFalsePositiveListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return loadPageContent("/offline/false-positives.txt");
+        return WikipediaUtils.getFileContent("/offline/false-positives.txt");
     }
 
     @Override
     public String getComposedMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return loadPageContent("/offline/composed-misspellings.txt");
+        return WikipediaUtils.getFileContent("/offline/composed-misspellings.txt");
     }
 
     @Override
@@ -54,14 +50,14 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
 
     private WikipediaPage buildFakePage(int pageId) throws ReplacerException {
         LocalDateTime nowDate = LocalDateTime.now();
-        String now = WikipediaPage.formatWikipediaTimestamp(nowDate);
+        String now = WikipediaUtils.formatWikipediaTimestamp(nowDate);
         return WikipediaPage
             .builder()
             .id(pageId)
             .lang(WikipediaLanguage.getDefault())
             .namespace(WikipediaNamespace.ARTICLE)
             .title("América del Norte")
-            .content(loadPageContent("/offline/sample-article.txt"))
+            .content(WikipediaUtils.getFileContent("/offline/sample-article.txt"))
             .lastUpdate(nowDate.toLocalDate())
             .queryTimestamp(now)
             .build();
@@ -113,14 +109,5 @@ public class WikipediaServiceOfflineImpl implements WikipediaService {
         AccessToken accessToken
     ) {
         // Do nothing
-    }
-
-    private String loadPageContent(String fileName) throws ReplacerException {
-        LOGGER.debug("Load fake content from file: {}", fileName);
-        try {
-            return Files.readString(Paths.get(getClass().getResource(fileName).toURI()));
-        } catch (IOException | URISyntaxException e) {
-            throw new ReplacerException(e);
-        }
     }
 }

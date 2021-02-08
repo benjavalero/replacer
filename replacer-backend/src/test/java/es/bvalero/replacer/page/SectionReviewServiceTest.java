@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.finder.Suggestion;
+import es.bvalero.replacer.finder.replacement.Suggestion;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.Collections;
 import java.util.Optional;

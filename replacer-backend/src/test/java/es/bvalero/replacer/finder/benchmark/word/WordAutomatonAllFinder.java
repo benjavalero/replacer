@@ -5,7 +5,7 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,13 +21,13 @@ class WordAutomatonAllFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(String text) {
         // Find all words in the text with an automaton and check if they are in the list
-        Set<FinderResult> matches = new HashSet<>();
+        Set<BenchmarkResult> matches = new HashSet<>();
         AutomatonMatcher m = this.wordPattern.newMatcher(text);
         while (m.find()) {
             if (this.words.contains(m.group())) {
-                matches.add(FinderResult.of(m.start(), m.group()));
+                matches.add(BenchmarkResult.of(m.start(), m.group()));
             }
         }
         return matches;

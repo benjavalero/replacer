@@ -1,5 +1,6 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.time.LocalDate;
 import lombok.*;
@@ -15,8 +16,7 @@ import org.springframework.lang.Nullable;
 @Builder
 public class ReplacementEntity {
 
-    public static final String TYPE_CUSTOM = "Personalizado";
-    public static final String REVIEWER_SYSTEM = "system";
+    public static final String REVIEWER_SYSTEM = "system"; // TODO: Reduce visibility
 
     @Nullable
     Long id; // Nullable when still to be created in database
@@ -150,7 +150,7 @@ public class ReplacementEntity {
             .builder()
             .pageId(pageId)
             .lang(lang.getCode())
-            .type(TYPE_CUSTOM)
+            .type(ReplacementType.CUSTOM)
             .subtype(subtype)
             .position(0)
             .lastUpdate(LocalDate.now())

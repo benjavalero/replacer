@@ -2,8 +2,8 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
@@ -35,7 +35,7 @@ class DumpPageProcessorTest {
     private ReplacementIndexService replacementIndexService;
 
     @Mock
-    private ReplacementFindService replacementFindService;
+    private ReplacementFinderService replacementFinderService;
 
     @InjectMocks
     private DumpPageProcessor dumpPageProcessor;
@@ -57,7 +57,7 @@ class DumpPageProcessorTest {
         dumpPageProcessor.processPage(dumpPage);
 
         Mockito.verify(replacementCache).findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class));
-        Mockito.verify(replacementFindService).findReplacements(Mockito.any(DumpPage.class));
+        Mockito.verify(replacementFinderService).find(Mockito.any(DumpPage.class));
         Mockito
             .verify(replacementIndexService)
             .findIndexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList(), Mockito.anyList());
@@ -109,7 +109,7 @@ class DumpPageProcessorTest {
             .thenReturn(Collections.singletonList(replacement));
 
         Assertions.assertTrue(dumpPageProcessor.processPage(dumpPage).isEmpty());
-        Mockito.verify(replacementFindService, Mockito.times(0)).findReplacements(Mockito.any(DumpPage.class));
+        Mockito.verify(replacementFinderService, Mockito.times(0)).find(Mockito.any(DumpPage.class));
     }
 
     @Test
@@ -130,7 +130,7 @@ class DumpPageProcessorTest {
             .thenReturn(Collections.singletonList(replacement));
 
         dumpPageProcessor.processPage(dumpPage);
-        Mockito.verify(replacementFindService).findReplacements(Mockito.any(DumpPage.class));
+        Mockito.verify(replacementFinderService).find(Mockito.any(DumpPage.class));
     }
 
     @Test
@@ -152,7 +152,7 @@ class DumpPageProcessorTest {
             .thenReturn(Collections.singletonList(replacement));
 
         dumpPageProcessor.processPage(dumpPage);
-        Mockito.verify(replacementFindService).findReplacements(Mockito.any(DumpPage.class));
+        Mockito.verify(replacementFinderService).find(Mockito.any(DumpPage.class));
     }
 
     @Test
@@ -161,7 +161,7 @@ class DumpPageProcessorTest {
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
-            .content("")
+            .content("X")
             .lastUpdate(LocalDate.now())
             .build();
 
@@ -170,9 +170,9 @@ class DumpPageProcessorTest {
             .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(dbReplacements);
 
-        Replacement replacement = Replacement.builder().build();
+        Replacement replacement = Replacement.builder().start(0).text("X").build();
         List<Replacement> replacements = Collections.singletonList(replacement);
-        Mockito.when(replacementFindService.findReplacements(Mockito.any(DumpPage.class))).thenReturn(replacements);
+        Mockito.when(replacementFinderService.find(Mockito.any(DumpPage.class))).thenReturn(replacements);
 
         dumpPageProcessor.processPage(dumpPage);
 
@@ -201,7 +201,7 @@ class DumpPageProcessorTest {
             .thenReturn(dbReplacements);
 
         List<Replacement> replacements = Collections.emptyList();
-        Mockito.when(replacementFindService.findReplacements(Mockito.any(DumpPage.class))).thenReturn(replacements);
+        Mockito.when(replacementFinderService.find(Mockito.any(DumpPage.class))).thenReturn(replacements);
 
         dumpPageProcessor.processPage(dumpPage);
 

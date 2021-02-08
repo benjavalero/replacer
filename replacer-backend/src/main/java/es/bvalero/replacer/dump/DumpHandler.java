@@ -4,7 +4,7 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -154,7 +154,7 @@ class DumpHandler extends DefaultHandler {
             .lang(this.lang)
             .title(this.currentTitle)
             .namespace(WikipediaNamespace.valueOf(this.currentNamespace))
-            .lastUpdate(WikipediaPage.parseWikipediaTimestamp(this.currentTimestamp))
+            .lastUpdate(WikipediaUtils.parseWikipediaTimestamp(this.currentTimestamp))
             .content(this.currentContent)
             .build();
 

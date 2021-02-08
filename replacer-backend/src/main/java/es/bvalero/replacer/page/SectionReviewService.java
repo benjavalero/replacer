@@ -166,6 +166,7 @@ class SectionReviewService {
     }
 
     private PageReview buildPageReview(WikipediaPage page, List<PageReplacement> replacements, PageReview pageReview) {
+        // TODO: remove ModelMapper use and make PageReview immutable
         PageReview review = modelMapper.map(page, PageReview.class);
         review.setReplacements(replacements);
         review.setNumPending(pageReview.getNumPending());

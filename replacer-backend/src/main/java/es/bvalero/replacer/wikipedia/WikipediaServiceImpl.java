@@ -183,7 +183,7 @@ class WikipediaServiceImpl implements WikipediaService {
             .title(page.getTitle())
             .namespace(WikipediaNamespace.valueOf(page.getNs()))
             .content(page.getRevisions().get(0).getSlots().getMain().getContent())
-            .lastUpdate(WikipediaPage.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
+            .lastUpdate(WikipediaUtils.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
             .queryTimestamp(queryTimestamp)
             .build();
     }

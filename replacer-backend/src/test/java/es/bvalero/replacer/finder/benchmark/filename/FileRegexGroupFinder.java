@@ -1,15 +1,11 @@
 package es.bvalero.replacer.finder.benchmark.filename;
 
-import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import java.util.HashSet;
-import java.util.Set;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
+import es.bvalero.replacer.finder.util.RegexMatchFinder;
+import es.bvalero.replacer.page.IndexablePage;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
-import org.apache.commons.collections4.IterableUtils;
 import org.intellij.lang.annotations.RegExp;
 
 class FileRegexGroupFinder implements BenchmarkFinder {
@@ -19,13 +15,13 @@ class FileRegexGroupFinder implements BenchmarkFinder {
 
     private static final Pattern PATTERN = Pattern.compile(REGEX);
 
-    public Set<FinderResult> findMatches(String text) {
-        WikipediaPage page = WikipediaPage.builder().content(text).lang(WikipediaLanguage.getDefault()).build();
-        return new HashSet<>(IterableUtils.toList(new RegexIterable<>(page, PATTERN, this::convert)));
+    @Override
+    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+        return RegexMatchFinder.find(page.getContent(), PATTERN);
     }
 
     @Override
-    public FinderResult convert(MatchResult match) {
-        return FinderResult.of(match.start(1), match.group(1));
+    public BenchmarkResult convert(MatchResult match) {
+        return BenchmarkResult.of(match.start(1), match.group(1));
     }
 }

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.finder.Replacement;
+import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.time.LocalDate;
@@ -62,10 +62,11 @@ class ReplacementIndexServiceTest {
 
     @Test
     void testIndexNewPage() {
-        Replacement rep1 = Replacement.builder().build(); // New => ADD
+        Replacement rep1 = Replacement.builder().start(0).text("X").build(); // New => ADD
         WikipediaPage page = WikipediaPage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
+            .content("X")
             .lastUpdate(LocalDate.now())
             .build();
         IndexableReplacement idx1 = page.convertReplacementToIndexed(rep1);

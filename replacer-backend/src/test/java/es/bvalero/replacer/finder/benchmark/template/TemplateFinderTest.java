@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark.template;
 
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +18,7 @@ class TemplateFinderTest {
     private List<String> templateNames;
 
     private String text;
-    private Set<FinderResult> expected;
+    private Set<BenchmarkResult> expected;
 
     @BeforeEach
     public void setUp() {
@@ -43,13 +43,13 @@ class TemplateFinderTest {
             );
 
         this.expected = new HashSet<>();
-        this.expected.add(FinderResult.of(3, template1));
-        this.expected.add(FinderResult.of(48, template2));
-        this.expected.add(FinderResult.of(68, template3));
-        this.expected.add(FinderResult.of(97, template4));
-        this.expected.add(FinderResult.of(130, template5));
-        this.expected.add(FinderResult.of(151, template6));
-        this.expected.add(FinderResult.of(174, template7));
+        this.expected.add(BenchmarkResult.of(3, template1));
+        this.expected.add(BenchmarkResult.of(48, template2));
+        this.expected.add(BenchmarkResult.of(68, template3));
+        this.expected.add(BenchmarkResult.of(97, template4));
+        this.expected.add(BenchmarkResult.of(130, template5));
+        this.expected.add(BenchmarkResult.of(151, template6));
+        this.expected.add(BenchmarkResult.of(174, template7));
     }
 
     @Test

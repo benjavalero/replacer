@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ import org.springframework.stereotype.Service;
 class PageReviewNoTypeService extends PageReviewService {
 
     @Autowired
-    private ReplacementFindService replacementFindService;
+    private ReplacementFinderService replacementFinderService;
 
     @Autowired
     private ReplacementIndexService replacementIndexService;
@@ -53,7 +54,7 @@ class PageReviewNoTypeService extends PageReviewService {
 
     @Override
     List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
-        List<Replacement> replacements = replacementFindService.findReplacements(page);
+        List<Replacement> replacements = IterableUtils.toList(replacementFinderService.find(page));
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.trace("Update page replacements in database");

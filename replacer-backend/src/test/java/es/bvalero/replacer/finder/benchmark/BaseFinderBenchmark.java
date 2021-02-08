@@ -1,26 +1,20 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.wikipedia.WikipediaApiResponse;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class BaseFinderBenchmark {
+public abstract class BaseFinderBenchmark {
 
     public static final int WARM_UP = 100;
     public static final int ITERATIONS = 1000;
 
-    public void runBenchmark(List<BenchmarkFinder> finders) throws IOException, URISyntaxException {
+    protected void runBenchmark(List<BenchmarkFinder> finders) throws ReplacerException {
         runBenchmark(finders, WARM_UP, ITERATIONS);
     }
 
-    public void runBenchmark(List<BenchmarkFinder> finders, int warmUp, int iterations)
-        throws IOException, URISyntaxException {
-        List<String> sampleContents = findSampleContents();
+    protected void runBenchmark(List<BenchmarkFinder> finders, int warmUp, int iterations) throws ReplacerException {
+        List<String> sampleContents = WikipediaUtils.findSampleContents();
 
         // Warm-up
         System.out.println("WARM-UP...");
@@ -51,16 +45,7 @@ public class BaseFinderBenchmark {
         );
     }
 
-    List<String> findSampleContents() throws IOException, URISyntaxException {
-        String fileName = "/es/bvalero/replacer/finder/benchmark/page-samples.json";
-        String jsonResponse = Files.readString(Paths.get(getClass().getResource(fileName).toURI()));
-        ObjectMapper jsonMapper = new ObjectMapper();
-        WikipediaApiResponse apiResponse = jsonMapper.readValue(jsonResponse, WikipediaApiResponse.class);
-        return apiResponse
-            .getQuery()
-            .getPages()
-            .stream()
-            .map(page -> page.getRevisions().get(0).getSlots().getMain().getContent())
-            .collect(Collectors.toList());
+    protected List<String> findSampleContents() throws ReplacerException {
+        return WikipediaUtils.findSampleContents();
     }
 }

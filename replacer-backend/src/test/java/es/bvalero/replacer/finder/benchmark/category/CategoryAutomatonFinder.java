@@ -2,14 +2,10 @@ package es.bvalero.replacer.finder.benchmark.category;
 
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import java.util.HashSet;
-import java.util.Set;
-import org.apache.commons.collections4.IterableUtils;
+import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
+import es.bvalero.replacer.page.IndexablePage;
+import java.util.regex.MatchResult;
 
 class CategoryAutomatonFinder implements BenchmarkFinder {
 
@@ -18,8 +14,8 @@ class CategoryAutomatonFinder implements BenchmarkFinder {
 
     private static final RunAutomaton AUTOMATON_CATEGORY = new RunAutomaton(new RegExp(REGEX_CATEGORY).toAutomaton());
 
-    public Set<FinderResult> findMatches(String text) {
-        WikipediaPage page = WikipediaPage.builder().content(text).lang(WikipediaLanguage.getDefault()).build();
-        return new HashSet<>(IterableUtils.toList(new RegexIterable<>(page, AUTOMATON_CATEGORY, this::convert)));
+    @Override
+    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+        return AutomatonMatchFinder.find(page.getContent(), AUTOMATON_CATEGORY);
     }
 }

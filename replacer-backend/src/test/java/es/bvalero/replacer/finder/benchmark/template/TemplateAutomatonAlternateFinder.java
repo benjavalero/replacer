@@ -3,22 +3,18 @@ package es.bvalero.replacer.finder.benchmark.template;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import java.util.HashSet;
+import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
+import es.bvalero.replacer.page.IndexablePage;
 import java.util.List;
-import java.util.Set;
-import org.apache.commons.collections4.IterableUtils;
+import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
 
 class TemplateAutomatonAlternateFinder implements BenchmarkFinder {
 
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+}}";
     private static final String REGEX_NESTED = "\\{\\{<Z>*(%s)(<Z>|\n)*[|:](%s|[^}])+}}";
-    private RunAutomaton automaton;
+    private final RunAutomaton automaton;
 
     TemplateAutomatonAlternateFinder(List<String> words) {
         this.automaton =
@@ -29,8 +25,7 @@ class TemplateAutomatonAlternateFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
-        WikipediaPage page = WikipediaPage.builder().content(text).lang(WikipediaLanguage.getDefault()).build();
-        return new HashSet<>(IterableUtils.toList(new RegexIterable<>(page, automaton, this::convert)));
+    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+        return AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 }

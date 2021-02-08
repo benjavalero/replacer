@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
-import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
+import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import org.apache.commons.collections4.IterableUtils;
 
 class CompleteTagRegexIteratedFinder implements BenchmarkFinder {
 
-    private List<Pattern> patterns = new ArrayList<>();
+    private final List<Pattern> patterns = new ArrayList<>();
 
     CompleteTagRegexIteratedFinder(Set<String> tags) {
         patterns.addAll(
@@ -26,11 +26,12 @@ class CompleteTagRegexIteratedFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
+    public Set<BenchmarkResult> findMatches(String text) {
         WikipediaPage page = WikipediaPage.builder().content(text).lang(WikipediaLanguage.getDefault()).build();
         return patterns
             .stream()
-            .flatMap(pattern -> IterableUtils.toList(new RegexIterable<>(page, pattern, this::convert)).stream())
+            .flatMap(pattern -> IterableUtils.toList(RegexMatchFinder.find(page.getContent(), pattern)).stream())
+            .map(this::convert)
             .collect(Collectors.toSet());
     }
 }

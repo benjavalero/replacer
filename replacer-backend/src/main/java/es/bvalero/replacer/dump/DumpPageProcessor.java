@@ -2,8 +2,8 @@ package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import java.time.LocalDate;
@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.IterableUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -33,7 +34,7 @@ class DumpPageProcessor {
     private ReplacementIndexService replacementIndexService;
 
     @Autowired
-    private ReplacementFindService replacementFindService;
+    private ReplacementFinderService replacementFinderService;
 
     @Resource
     private List<String> ignorableTemplates;
@@ -85,7 +86,7 @@ class DumpPageProcessor {
             return Collections.emptyList();
         }
 
-        List<Replacement> replacements = replacementFindService.findReplacements(dumpPage);
+        List<Replacement> replacements = IterableUtils.toList(replacementFinderService.find(dumpPage));
         return replacementIndexService.findIndexPageReplacements(
             dumpPage,
             replacements.stream().map(dumpPage::convertReplacementToIndexed).collect(Collectors.toList()),

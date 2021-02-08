@@ -1,19 +1,15 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
-import es.bvalero.replacer.finder.FinderUtils;
-import es.bvalero.replacer.finder.LinearIterable;
-import es.bvalero.replacer.finder.LinearMatcher;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.util.LinearMatchFinder;
+import es.bvalero.replacer.finder.util.LinearMatchResult;
 import es.bvalero.replacer.page.IndexablePage;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
-import org.apache.commons.collections4.IterableUtils;
 
 class CompleteTagLinearFinder implements BenchmarkFinder {
 
@@ -24,12 +20,11 @@ class CompleteTagLinearFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
-        WikipediaPage page = WikipediaPage.builder().content(text).lang(WikipediaLanguage.getDefault()).build();
-        return new HashSet<>(IterableUtils.toList(new LinearIterable<>(page, this::findResult, this::convert)));
+    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+        return LinearMatchFinder.find(page, this::findResult);
     }
 
-    public MatchResult findResult(IndexablePage page, int start) {
+    private MatchResult findResult(IndexablePage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findCompleteTag(page.getContent(), start, matches);
@@ -47,7 +42,7 @@ class CompleteTagLinearFinder implements BenchmarkFinder {
                     int endCompleteTag = findEndCompleteTag(text, endOpenTag + 1, tag);
                     if (endCompleteTag >= 0) {
                         matches.add(
-                            LinearMatcher.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag))
+                            LinearMatchResult.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag))
                         );
                         return endCompleteTag;
                     } else {

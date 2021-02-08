@@ -1,19 +1,16 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
-import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import java.util.HashSet;
+import es.bvalero.replacer.finder.util.RegexMatchFinder;
+import es.bvalero.replacer.page.IndexablePage;
 import java.util.Set;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
-import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 
 class CompleteTagRegexBackReferenceFinder implements BenchmarkFinder {
 
-    private Pattern pattern;
+    private final Pattern pattern;
 
     CompleteTagRegexBackReferenceFinder(Set<String> tags) {
         String regex = String.format("<(%s)[^>/]*?>.+?</\\1>", StringUtils.join(tags, "|"));
@@ -21,8 +18,7 @@ class CompleteTagRegexBackReferenceFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
-        WikipediaPage page = WikipediaPage.builder().content(text).lang(WikipediaLanguage.getDefault()).build();
-        return new HashSet<>(IterableUtils.toList(new RegexIterable<>(page, pattern, this::convert)));
+    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+        return RegexMatchFinder.find(page.getContent(), pattern);
     }
 }

@@ -1,22 +1,18 @@
 package es.bvalero.replacer.finder.benchmark.template;
 
-import es.bvalero.replacer.finder.RegexIterable;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
-import java.util.HashSet;
+import es.bvalero.replacer.finder.util.RegexMatchFinder;
+import es.bvalero.replacer.page.IndexablePage;
 import java.util.List;
-import java.util.Set;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
-import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 
 class TemplateRegexAlternateFinder implements BenchmarkFinder {
 
     private static final String REGEX_TEMPLATE = "\\{\\{[^}]+?}}";
     private static final String REGEX_NESTED = "\\{\\{\\s*(%s)\\s*[|:](%s|[^}])+?}}";
-    private Pattern pattern;
+    private final Pattern pattern;
 
     TemplateRegexAlternateFinder(List<String> words) {
         this.pattern =
@@ -24,8 +20,7 @@ class TemplateRegexAlternateFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
-        WikipediaPage page = WikipediaPage.builder().content(text).lang(WikipediaLanguage.getDefault()).build();
-        return new HashSet<>(IterableUtils.toList(new RegexIterable<>(page, pattern, this::convert)));
+    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+        return RegexMatchFinder.find(page.getContent(), pattern);
     }
 }

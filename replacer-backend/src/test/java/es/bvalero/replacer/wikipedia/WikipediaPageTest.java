@@ -79,7 +79,7 @@ class WikipediaPageTest {
     @Test
     void testParseWikipediaDate() {
         LocalDate expected = LocalDate.of(2018, Month.AUGUST, 31);
-        Assertions.assertEquals(expected, WikipediaPage.parseWikipediaTimestamp("2018-08-31T05:17:28Z"));
+        Assertions.assertEquals(expected, WikipediaUtils.parseWikipediaTimestamp("2018-08-31T05:17:28Z"));
     }
 
     @Test
@@ -87,7 +87,7 @@ class WikipediaPageTest {
         String expected = "2018-08-31T05:17:28Z";
         Assertions.assertEquals(
             expected,
-            WikipediaPage.formatWikipediaTimestamp(LocalDateTime.of(2018, Month.AUGUST, 31, 5, 17, 28))
+            WikipediaUtils.formatWikipediaTimestamp(LocalDateTime.of(2018, Month.AUGUST, 31, 5, 17, 28))
         );
     }
 }

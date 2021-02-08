@@ -1,28 +1,21 @@
 package es.bvalero.replacer.finder.benchmark.cursive;
 
-import es.bvalero.replacer.finder.LinearIterable;
-import es.bvalero.replacer.finder.LinearMatcher;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.benchmark.FinderResult;
+import es.bvalero.replacer.finder.util.LinearMatchFinder;
+import es.bvalero.replacer.finder.util.LinearMatchResult;
 import es.bvalero.replacer.page.IndexablePage;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.MatchResult;
-import org.apache.commons.collections4.IterableUtils;
 
 class CursiveLinearFinder implements BenchmarkFinder {
 
     @Override
-    public Set<FinderResult> findMatches(String text) {
-        WikipediaPage page = WikipediaPage.builder().content(text).lang(WikipediaLanguage.getDefault()).build();
-        return new HashSet<>(IterableUtils.toList(new LinearIterable<>(page, this::findResult, this::convert)));
+    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+        return LinearMatchFinder.find(page, this::findResult);
     }
 
-    public MatchResult findResult(IndexablePage page, int start) {
+    private MatchResult findResult(IndexablePage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findCursive(page.getContent(), start, matches);
@@ -36,7 +29,7 @@ class CursiveLinearFinder implements BenchmarkFinder {
             int numQuotes = findNumQuotes(text, startCursive);
             int endQuotes = findEndQuotes(text, startCursive + numQuotes, numQuotes);
             if (endQuotes >= 0) {
-                matches.add(LinearMatcher.of(startCursive, text.substring(startCursive, endQuotes)));
+                matches.add(LinearMatchResult.of(startCursive, text.substring(startCursive, endQuotes)));
                 return endQuotes;
             } else {
                 return startCursive + numQuotes;

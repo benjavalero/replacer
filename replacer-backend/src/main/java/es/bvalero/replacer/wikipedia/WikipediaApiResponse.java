@@ -8,9 +8,7 @@ import org.springframework.lang.Nullable;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WikipediaApiResponse {
-
-    // TODO: It is public to be accessible by benchmarks
+class WikipediaApiResponse {
 
     @Nullable
     private Error error;

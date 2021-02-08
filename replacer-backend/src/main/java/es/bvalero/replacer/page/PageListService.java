@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.finder.FinderUtils;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.text.Collator;

@@ -2,8 +2,8 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.Replacement;
-import es.bvalero.replacer.finder.ReplacementFindService;
+import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.*;
@@ -57,7 +57,7 @@ class PageReviewCustomServiceTest {
     private WikipediaService wikipediaService;
 
     @Mock
-    private ReplacementFindService replacementFindService;
+    private ReplacementFinderService replacementFinderService;
 
     @Mock
     private SectionReviewService sectionReviewService;
@@ -104,7 +104,7 @@ class PageReviewCustomServiceTest {
 
         // The page contains replacements
         Mockito
-            .when(replacementFindService.findCustomReplacements(page, replacement, suggestion))
+            .when(replacementFinderService.findCustomReplacements(page, replacement, suggestion))
             .thenReturn(replacements);
 
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, replacement, suggestion);
@@ -145,7 +145,7 @@ class PageReviewCustomServiceTest {
 
         // The page 2 contains no replacements
         Mockito
-            .when(replacementFindService.findCustomReplacements(page2, replacement, suggestion))
+            .when(replacementFinderService.findCustomReplacements(page2, replacement, suggestion))
             .thenReturn(Collections.emptyList());
 
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, replacement, suggestion);

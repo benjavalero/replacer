@@ -263,7 +263,7 @@
                     <excludes>
                         <exclude>**/benchmark/**/*Test.java</exclude>
                         <exclude>**/benchmark/*Test.java</exclude>
-                        <exclude>**/benchmark/*Benchmark.java</exclude>
+                        <exclude>**/*BenchmarkTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>

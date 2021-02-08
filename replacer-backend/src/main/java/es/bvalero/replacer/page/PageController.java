@@ -3,9 +3,9 @@ package es.bvalero.replacer.page;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.UserParameters;
-import es.bvalero.replacer.finder.CosmeticFindService;
+import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.replacement.ReplacementCountService;
-import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Optional;
@@ -37,7 +37,7 @@ public class PageController {
     private WikipediaService wikipediaService;
 
     @Autowired
-    private CosmeticFindService cosmeticFindService;
+    private CosmeticFinderService cosmeticFinderService;
 
     @Autowired
     private PageListService pageListService;
@@ -134,7 +134,7 @@ public class PageController {
                     .content(savePage.getContent())
                     .title(savePage.getTitle())
                     .build();
-                String textToSave = cosmeticFindService.applyCosmeticChanges(page);
+                String textToSave = cosmeticFinderService.applyCosmeticChanges(page);
                 wikipediaService.savePageContent(
                     params.getLang(),
                     pageId,
@@ -149,7 +149,7 @@ public class PageController {
         }
 
         // Mark page as reviewed in the database
-        if (ReplacementEntity.TYPE_CUSTOM.equals(savePage.getType())) {
+        if (ReplacementType.CUSTOM.equals(savePage.getType())) {
             if (StringUtils.isBlank(savePage.getSubtype())) throw new AssertionError();
             pageReviewCustomService.reviewPageReplacements( // NOSONAR
                 pageId,
