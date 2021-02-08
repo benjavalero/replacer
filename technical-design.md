@@ -68,9 +68,10 @@ In backend we have the following packages:
 
 - `config`. Spring configuration classes with beans used in several packages.
 
-- `wikipedia`. Helper class `WikipediaService` to authenticate in Wikipedia to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page).
-
-  The authentication is performed by the Oauth 1.0a protocol, the authentication is implemented in the backend, and the frontend only contains the last access token. Note there are different OAuth tokens to develop locally (see `replacer.wikipedia.api.*` properties). The Production ones, once logged in, redirect to https://replacer.toolforge.org, while the Development ones redirect to http://localhost:8080.
+- `dump`. Helper classes to parse a dump, extract the pages, the replacements in these page, and finally add the fount replacements into the database. `DumpFinder` finds the latest dump available for a given project. `DumpManager` checks periodically the latest available dump, and indexes it, by running the job implementing `DumpJob`. Note that in the past there were two implementations: one in Spring Batch and another with SAX. Currently there is only the last one which give better performance results. When indexing we have the typical steps:
+  - Read: the dump is read and parsed in `DumpHandler`, extracting the pages into `DumpPage`.
+  - Process: `DumpPageProcessor` transforms each dump page into a list of replacements to be saved in the database. `ReplacementCache` helps to retrieve the database replacements in chunks in order to compare them to the ones obtained in the processing.
+  - Write: `DumpWriter` inserts or updates in the database the resulting replacements from the processor.
 
 - `finder`. The core functionality of the tool is to find potential replacements in a text. This package offers several helper classes to find these and other similar useful matches in a text. Note that these match searches will be performed millions of times when indexing a whole dump, therefore the performance is critical.
 
@@ -88,6 +89,10 @@ In backend we have the following packages:
 
   - `benchmark`. Performance tests for different approaches in order to find the best performant finders.
 
+- `wikipedia`. Helper class `WikipediaService` to authenticate in Wikipedia to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page).
+
+  The authentication is performed by the Oauth 1.0a protocol, the authentication is implemented in the backend, and the frontend only contains the last access token. Note there are different OAuth tokens to develop locally (see `replacer.wikipedia.api.*` properties). The Production ones, once logged in, redirect to https://replacer.toolforge.org, while the Development ones redirect to http://localhost:8080.
+
 
 #### Package `replacement`
 
@@ -100,39 +105,6 @@ Currently, we interact with this table in two different ways: `ReplacementDao` (
 An important tool feature is listing all the types and subtypes of the existing replacements along with the amount to be reviewed. This is a costly query, so we perform it periodically in `ReplacementCountService` and cache the results meanwhile.
 
 When a new page is indexed, or there have been any modifications, the replacements in the database must be updated. `ReplacementIndexService` offers a method, receiving the list of the new page replacements, which adds the new replacements and marks as obsolete the ones not found in the new list.
-
-#### Package `dump`
-
-The class `DumpFinder` is in charge of finding the latest dump available for a given project.
-
-The dumps are generated monthly and placed in a shared folder in Wikipedia servers. This dump folder is structured in sub-folders corresponding to the different wiki-projects, e.g. `eswiki`, which are also structured in sub-folders for each generation date, e.g. `20120120`, containing finally the dump files. For instance:
-
-- `/public/dumps/public`
-  - `enwiki`
-  - `eswiki`
-    - `20200101`
-      - `eswiki-20200101-pages-articles-multistream.xml.bz2`
-      - `eswiki-20200101-pages-articles.xml.bz2`
-      - …
-    - `20191220`
-    - `20191201`
-    - …
-  - `eswikibooks`
-  - …
-
-The path of the shared folder and the wiki-project ares configured externally.
-
-The class `DumpManager` checks periodically the latest available dump, and indexes it, by running the job implementing `DumpJob`.
-
-Note that in the past there were two implementations: one in Spring Batch and another with SAX. Currently there is only the last one which give better performance results.
-
-We have anyway the typical steps:
-- Read: the dump is read and parsed in `DumpHandler`, extracting the pages into `DumpPage`.
-- Process: the processor `DumpPageProcessor` transforms each dump page into a list of replacements to be saved in the database.
-- Write: the writer `DumpWriter` inserts or updates in the database the resulting replacements from the processor.
-
-There is also a `ReplacementCache` helper to retrieve the replacements in database in chunks in order to compare them to the ones obtained in the processing.
-
 
 ### Formatting
 
