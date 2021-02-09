@@ -41,7 +41,7 @@ class DumpHandler extends DefaultHandler {
     private DumpWriter dumpWriter;
 
     @Autowired
-    private ReplacementCache replacementCache;
+    private PageReplacementService pageReplacementService;
 
     @Resource
     private Map<String, Long> numPagesEstimated;
@@ -96,7 +96,7 @@ class DumpHandler extends DefaultHandler {
         this.end = Instant.now().toEpochMilli();
 
         dumpWriter.write(toWrite);
-        replacementCache.finish(lang);
+        pageReplacementService.finish(lang);
 
         LOGGER.warn("END Dump Job Execution: {}", this.getDumpIndexingStatus());
     }

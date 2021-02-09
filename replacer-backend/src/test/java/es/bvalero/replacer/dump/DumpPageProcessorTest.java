@@ -29,7 +29,7 @@ class DumpPageProcessorTest {
     private List<String> ignorableTemplates;
 
     @Mock
-    private ReplacementCache replacementCache;
+    private PageReplacementService pageReplacementService;
 
     @Mock
     private ReplacementIndexService replacementIndexService;
@@ -56,7 +56,7 @@ class DumpPageProcessorTest {
             .build();
         dumpPageProcessor.processPage(dumpPage);
 
-        Mockito.verify(replacementCache).findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class));
+        Mockito.verify(pageReplacementService).findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class));
         Mockito.verify(replacementFinderService).find(Mockito.any(DumpPage.class));
         Mockito
             .verify(replacementIndexService)
@@ -105,7 +105,7 @@ class DumpPageProcessorTest {
 
         ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(today);
         Mockito
-            .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .when(pageReplacementService.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
         Assertions.assertTrue(dumpPageProcessor.processPage(dumpPage).isEmpty());
@@ -126,7 +126,7 @@ class DumpPageProcessorTest {
 
         ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(today);
         Mockito
-            .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .when(pageReplacementService.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
         dumpPageProcessor.processPage(dumpPage);
@@ -148,7 +148,7 @@ class DumpPageProcessorTest {
 
         ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(yesterday);
         Mockito
-            .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .when(pageReplacementService.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
         dumpPageProcessor.processPage(dumpPage);
@@ -167,7 +167,7 @@ class DumpPageProcessorTest {
 
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
         Mockito
-            .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .when(pageReplacementService.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(dbReplacements);
 
         Replacement replacement = Replacement.builder().start(0).text("X").build();
@@ -197,7 +197,7 @@ class DumpPageProcessorTest {
         ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(yesterday);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
         Mockito
-            .when(replacementCache.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .when(pageReplacementService.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(dbReplacements);
 
         List<Replacement> replacements = Collections.emptyList();

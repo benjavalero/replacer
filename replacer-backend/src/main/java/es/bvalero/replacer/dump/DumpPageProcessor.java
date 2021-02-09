@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 class DumpPageProcessor {
 
     @Autowired
-    private ReplacementCache replacementCache;
+    private PageReplacementService pageReplacementService;
 
     @Autowired
     private ReplacementIndexService replacementIndexService;
@@ -71,7 +71,10 @@ class DumpPageProcessor {
     @Loggable(prepend = true, value = Loggable.TRACE)
     @VisibleForTesting
     List<ReplacementEntity> processPage(DumpPage dumpPage) {
-        List<ReplacementEntity> dbReplacements = replacementCache.findByPageId(dumpPage.getId(), dumpPage.getLang());
+        List<ReplacementEntity> dbReplacements = pageReplacementService.findByPageId(
+            dumpPage.getId(),
+            dumpPage.getLang()
+        );
         Optional<LocalDate> dbLastUpdate = dbReplacements
             .stream()
             .map(ReplacementEntity::getLastUpdate)
@@ -95,7 +98,10 @@ class DumpPageProcessor {
     }
 
     private List<ReplacementEntity> notProcessPage(DumpPage dumpPage) {
-        List<ReplacementEntity> dbReplacements = replacementCache.findByPageId(dumpPage.getId(), dumpPage.getLang());
+        List<ReplacementEntity> dbReplacements = pageReplacementService.findByPageId(
+            dumpPage.getId(),
+            dumpPage.getLang()
+        );
 
         // Return the DB replacements not reviewed in order to delete them
         return dbReplacements

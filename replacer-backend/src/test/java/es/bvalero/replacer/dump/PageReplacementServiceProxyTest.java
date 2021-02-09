@@ -13,18 +13,18 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-class ReplacementCacheTest {
+class PageReplacementServiceProxyTest {
 
     @Mock
     private ReplacementService replacementService;
 
     @InjectMocks
-    private ReplacementCache replacementCache;
+    private PageReplacementServiceProxy pageReplacementService;
 
     @BeforeEach
     public void setUp() {
-        replacementCache = new ReplacementCache();
-        replacementCache.setChunkSize(1000);
+        pageReplacementService = new PageReplacementServiceProxy();
+        pageReplacementService.setChunkSize(1000);
         MockitoAnnotations.initMocks(this);
     }
 
@@ -43,10 +43,10 @@ class ReplacementCacheTest {
             .when(replacementService.findByPageInterval(1001, 2000, WikipediaLanguage.SPANISH))
             .thenReturn(dbReplacements2);
 
-        List<ReplacementEntity> replacements = replacementCache.findByPageId(1, WikipediaLanguage.SPANISH);
+        List<ReplacementEntity> replacements = pageReplacementService.findByPageId(1, WikipediaLanguage.SPANISH);
         Assertions.assertTrue(replacements.isEmpty());
 
-        replacements = replacementCache.findByPageId(1001, WikipediaLanguage.SPANISH);
+        replacements = pageReplacementService.findByPageId(1001, WikipediaLanguage.SPANISH);
         Assertions.assertEquals(dbReplacements2, replacements);
 
         // Check that the page 2 has been cleaned
@@ -63,7 +63,7 @@ class ReplacementCacheTest {
             .when(replacementService.findByPageInterval(1, 2000, WikipediaLanguage.SPANISH))
             .thenReturn(dbReplacements);
 
-        List<ReplacementEntity> replacements = replacementCache.findByPageId(1001, WikipediaLanguage.SPANISH);
+        List<ReplacementEntity> replacements = pageReplacementService.findByPageId(1001, WikipediaLanguage.SPANISH);
         Assertions.assertEquals(dbReplacements, replacements);
     }
 }

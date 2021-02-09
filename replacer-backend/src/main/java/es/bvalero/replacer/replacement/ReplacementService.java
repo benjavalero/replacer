@@ -49,6 +49,10 @@ public class ReplacementService {
         replacementDao.deleteObsoleteByPageId(lang, pageIds);
     }
 
+    public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
+        return replacementDao.findByPageId(pageId, lang);
+    }
+
     ///// PAGE REVIEW
 
     public long findRandomIdToBeReviewed(long chunkSize, WikipediaLanguage lang) {

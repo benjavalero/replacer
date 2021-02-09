@@ -13,10 +13,12 @@ import org.apache.commons.collections4.ListValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
+@Primary
 @Component
-class ReplacementCache {
+class PageReplacementServiceProxy implements PageReplacementService {
 
     @Autowired
     private ReplacementService replacementService;
@@ -25,10 +27,13 @@ class ReplacementCache {
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
 
+    // No need to store the lang. We can assume we are not indexing more than one language at a time.
     private final ListValuedMap<Integer, ReplacementEntity> replacementMap = new ArrayListValuedHashMap<>(chunkSize);
+
     private int maxCachedId = 0;
 
-    List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
+    @Override
+    public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
         // Load the cache the first time or when needed
         if (maxCachedId == 0 || pageId > maxCachedId) {
             clean(lang);
@@ -73,7 +78,8 @@ class ReplacementCache {
     }
 
     @Loggable(value = Loggable.TRACE)
-    void finish(WikipediaLanguage lang) {
+    @Override
+    public void finish(WikipediaLanguage lang) {
         this.clean(lang);
         this.maxCachedId = 0;
     }
