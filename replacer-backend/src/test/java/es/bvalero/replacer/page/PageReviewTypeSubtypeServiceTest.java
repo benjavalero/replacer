@@ -4,7 +4,6 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.*;
@@ -71,9 +70,6 @@ class PageReviewTypeSubtypeServiceTest {
 
     @Mock
     private SectionReviewService sectionReviewService;
-
-    @Mock
-    private ReplacementCountService replacementCountService;
 
     @Spy
     private ModelMapper modelMapper;

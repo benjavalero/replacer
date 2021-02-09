@@ -1,9 +1,11 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class ReplacementService {
 
     @Autowired
+    @Qualifier("replacementProxy")
     private ReplacementDao replacementDao;
 
     ///// CRUD
@@ -85,8 +88,20 @@ public class ReplacementService {
 
     ///// STATISTICS
 
+    long countReplacementsReviewed(WikipediaLanguage lang) {
+        return replacementDao.countReplacementsReviewed(lang);
+    }
+
     public long countReplacementsNotReviewed(WikipediaLanguage lang) {
         return replacementDao.countReplacementsNotReviewed(lang);
+    }
+
+    List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
+        return replacementDao.countReplacementsGroupedByReviewer(lang);
+    }
+
+    List<TypeCount> countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException {
+        return replacementDao.countReplacementsGroupedByType(lang).getTypeCounts();
     }
 
     ///// PAGE LISTS

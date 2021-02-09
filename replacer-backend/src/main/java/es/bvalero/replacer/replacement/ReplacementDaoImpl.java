@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.lang.Nullable;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Loggable(Loggable.TRACE) // To warn about performance issues
+@Primary
+@Qualifier("replacementDao")
 @Repository
 @Transactional
 class ReplacementDaoImpl implements ReplacementDao {
@@ -270,12 +274,17 @@ class ReplacementDaoImpl implements ReplacementDao {
     }
 
     @Override
-    public List<TypeSubtypeCount> countPagesGroupedByTypeAndSubtype() {
+    public LanguageCount countReplacementsGroupedByType(WikipediaLanguage lang) {
+        return LanguageCount.build(countPagesGroupedByTypeAndSubtype(lang));
+    }
+
+    private List<TypeSubtypeCount> countPagesGroupedByTypeAndSubtype(WikipediaLanguage lang) {
         String sql =
-            "SELECT lang, type, subtype, COUNT(DISTINCT article_id) AS num FROM replacement2 " +
-            "WHERE reviewer IS NULL " +
+            "SELECT type, subtype, COUNT(DISTINCT article_id) AS num FROM replacement2 " +
+            "WHERE lang = :lang AND reviewer IS NULL " +
             "GROUP BY lang, type, subtype";
-        return jdbcTemplate.query(sql, new TypeSubtypeCountRowMapper());
+        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue(PARAM_LANG, lang.getCode());
+        return jdbcTemplate.query(sql, namedParameters, new TypeSubtypeCountRowMapper());
     }
 
     ///// PAGE LISTS

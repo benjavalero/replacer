@@ -22,7 +22,8 @@ abstract class PageReviewService {
 
     static final int CACHE_SIZE = 100; // Maximum 500 as it is used as page size when searching in Wikipedia
     // Cache the found pages candidates to be reviewed
-    // to find faster the next one after the user reviews one
+    // to find faster the next one after the user reviews one.
+    // This map can grow a lot. We use Caffeine cache to clean periodically the old or obsolete lists.
     private final Cache<String, PageSearchResult> cachedPageIds = Caffeine
         .newBuilder()
         .expireAfterWrite(1, TimeUnit.DAYS)

@@ -1,46 +1,83 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.TestOnly;
 
-@Value
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 class LanguageCount {
 
-    // TODO: Include TypeCount and SubtypeCount as private nested classes
-    // and manage here the complete building of the language count
+    private final Map<String, TypeCount> typeCounts;
 
-    WikipediaLanguage lang;
-
-    @Getter(AccessLevel.NONE)
-    Map<String, TypeCount> typeCounts = new TreeMap<>();
+    static LanguageCount build(List<TypeSubtypeCount> counts) {
+        final Map<String, TypeCount> typeCounts = new TreeMap<>();
+        for (TypeSubtypeCount count : counts) {
+            String type = count.getType();
+            TypeCount typeCount = typeCounts.computeIfAbsent(type, TypeCount::of);
+            typeCount.add(SubtypeCount.of(count.getSubtype(), count.getCount()));
+        }
+        return new LanguageCount(typeCounts);
+    }
 
     List<TypeCount> getTypeCounts() {
-        return new ArrayList<>(this.typeCounts.values());
+        return List.copyOf(this.typeCounts.values());
     }
 
-    static LanguageCount ofEmpty() {
-        return new LanguageCount(WikipediaLanguage.getDefault());
+    @TestOnly
+    boolean isEmpty() {
+        return typeCounts.isEmpty();
     }
 
+    @TestOnly
+    int size() {
+        return typeCounts.size();
+    }
+
+    @TestOnly
     boolean contains(String type) {
         return typeCounts.containsKey(type);
     }
 
-    void add(TypeCount typeCount) {
-        this.typeCounts.put(typeCount.getType(), typeCount);
-    }
-
-    void remove(String type) {
-        this.typeCounts.remove(type);
-    }
-
+    @TestOnly
     TypeCount get(String type) {
         return typeCounts.get(type);
+    }
+
+    void removeTypeCount(String type, String subtype) {
+        if (this.typeCounts.containsKey(type)) {
+            TypeCount typeCount = this.typeCounts.get(type);
+            typeCount.remove(subtype);
+
+            // Empty parent if children are empty
+            if (typeCount.isEmpty()) {
+                this.typeCounts.remove(type);
+            }
+        }
+    }
+
+    void decrementSubtypeCount(String type, String subtype) {
+        if (this.typeCounts.containsKey(type)) {
+            TypeCount typeCount = this.typeCounts.get(type);
+            typeCount
+                .get(subtype)
+                .ifPresent(
+                    subtypeCount -> {
+                        long newCount = subtypeCount.getCount() - 1;
+                        if (newCount > 0) {
+                            // Update the subtype with the new count
+                            typeCount.add(subtypeCount.withCount(newCount));
+                        } else {
+                            // Remove the subtype count as in method "removeCachedReplacementCount"
+                            typeCount.remove(subtype);
+
+                            // Empty parent if children are empty
+                            if (typeCount.isEmpty()) {
+                                this.typeCounts.remove(type);
+                            }
+                        }
+                    }
+                );
+        }
     }
 }

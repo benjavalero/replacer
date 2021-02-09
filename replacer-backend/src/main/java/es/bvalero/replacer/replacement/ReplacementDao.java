@@ -1,5 +1,6 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
 import java.util.Set;
@@ -62,7 +63,7 @@ interface ReplacementDao {
 
     List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang);
 
-    List<TypeSubtypeCount> countPagesGroupedByTypeAndSubtype();
+    LanguageCount countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException;
 
     ///// PAGE LISTS
 

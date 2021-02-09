@@ -5,8 +5,9 @@ import java.util.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Value;
+import org.jetbrains.annotations.TestOnly;
 
-@Value
+@Value(staticConstructor = "of")
 class TypeCount implements Comparable<TypeCount> {
 
     @JsonProperty("t")
@@ -30,6 +31,11 @@ class TypeCount implements Comparable<TypeCount> {
 
     boolean isEmpty() {
         return this.subtypeCounts.isEmpty();
+    }
+
+    @TestOnly
+    int size() {
+        return this.subtypeCounts.size();
     }
 
     Optional<SubtypeCount> get(String subtype) {

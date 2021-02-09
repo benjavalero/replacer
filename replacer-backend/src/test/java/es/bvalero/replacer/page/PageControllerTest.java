@@ -10,7 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.replacement.Suggestion;
-import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.wikipedia.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -54,9 +53,6 @@ class PageControllerTest {
 
     @MockBean
     private PageListService pageListService;
-
-    @MockBean
-    private ReplacementCountService replacementCountService;
 
     @Test
     void testFindRandomPageWithReplacements() throws Exception {

@@ -3,7 +3,6 @@ package es.bvalero.replacer.page;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
@@ -33,9 +32,6 @@ class PageReviewTypeSubtypeService extends PageReviewService {
     @Autowired
     private ReplacementService replacementService;
 
-    @Autowired
-    private ReplacementCountService replacementCountService;
-
     @Getter
     @Setter
     @Resource
@@ -55,16 +51,6 @@ class PageReviewTypeSubtypeService extends PageReviewService {
             options.getSubtype(),
             pagination
         );
-
-        if (pageIds.isEmpty()) {
-            // If finally there are no results empty the cached count for the replacement
-            // No need to check if there exists something cached
-            replacementCountService.removeCachedReplacementCount(
-                options.getLang(),
-                options.getType(),
-                options.getSubtype()
-            );
-        }
 
         long totalResults = replacementService.countPagesToBeReviewedBySubtype(
             options.getLang(),
@@ -92,9 +78,6 @@ class PageReviewTypeSubtypeService extends PageReviewService {
 
     void reviewPageReplacements(int pageId, WikipediaLanguage lang, String type, String subtype, String reviewer) {
         replacementService.reviewByPageId(lang, pageId, type, subtype, reviewer);
-
-        // Decrease the cached count (one page)
-        replacementCountService.decreaseCachedReplacementsCount(lang, type, subtype, 1);
     }
 
     @Loggable(prepend = true, value = Loggable.TRACE)

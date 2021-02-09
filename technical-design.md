@@ -77,7 +77,7 @@ In backend we have the following packages:
 
   - `common`. Several interfaces. `Finder` will be implemented to find specific matches: URLs, templates, misspellings, etc. `FinderService` will be implemente to find all matches of a common type: replacements, custom replacements, cosmetics and immutables.
 
-    Some of the finders use a list of properties which are maintained in text files (or Wikipedia pages) which need to be parsed first. These finders retrieve the properties from a manager class extending `ParseFileManager`. All of these also implement the Observable pattern. The managers reload the properties periodically, and the observer finders are notified in case of changes.
+    Some of the finders use a list of properties which are maintained in text files (or Wikipedia pages) which need to be parsed first. These finders retrieve the properties from a manager class extending `ParseFileManager`. All of these also implement the Observable pattern. The managers reload the properties periodically, and the observer finders are notified in case of changes. The first load is done at the start of the application and it takes few seconds, so there is a little chance that, when using the application just started, some of them is not loaded yet. Just in case we check this possibility and return no results if so.
 
   - `util`. Several finders are based on regular expressions. We use `RegexMatchFinder` to iterate the match results of a regex. This tool uses also a _text-based_ implementation of regular expressions in `AutomatonMatchFinder`, which builds an automaton from the regex and gives performance improvements of 1 to 2 orders of magnitude for simple expressions. However, it doesn't include advanced features implying backtracking. Finally, most finders are implemented _by hand_ with `LinearMatchFinder`. This makes the implementations quite more complex but the performance improvement is worth it.
 
@@ -129,14 +129,3 @@ A custom `logback-spring.xml` exists to simplify the log pattern, and include a 
 The default logging level is DEBUG, using INFO for calls in controllers and WARNING for suspicious replacements or immutables.
 
 Finally, we use the annotation `@Loggable` provided by dependency `jcabi-annotations`. It _wraps_ the annotated methods by aspects logging the start and the end of the method, displaying the elapsed time, warning about too long time, parameters, etc. In order to work, we need to _weave_ the compiled classes adding the annotated functionality by using the `aspectj-maven-plugin`. Note that Spring provides a limited AspectJ solution which adds the functionality in runtime, but as it works proxying the classes, it can only be applied in public methods and in calls from different classes.
-
-## Cache
-
-There are several places where some cache policy could be useful.
-
-- Load of misspellings, false positives, build automata, etc. This is done at the start of the application and it takes few seconds, so there is a little chance that, when using the application just started, some of them is not loaded yet. Just in case we check this possibility and return no results if so.
-
-- List of replacement type and subtype counts. It's a heavy query in database so we preload the counts on start and refresh them periodically. We add synchronization just in case the list is requested when still loading on start.
-
-- List of page IDs to be reviewed. We use a map to store the lists of articles to be reviewed by type and subtype. However this map can grow a lot. We use Caffeine cache to clean periodically the old or obsolete lists.
-

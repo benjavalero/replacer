@@ -5,7 +5,6 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.UserParameters;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.replacement.ReplacementCountService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Optional;
@@ -41,9 +40,6 @@ public class PageController {
 
     @Autowired
     private PageListService pageListService;
-
-    @Autowired
-    private ReplacementCountService replacementCountService;
 
     /* FIND RANDOM PAGES WITH REPLACEMENTS */
 
@@ -193,8 +189,5 @@ public class PageController {
     public void reviewAsSystemBySubtype(UserParameters params, String type, String subtype) {
         // Set as reviewed in the database
         pageListService.reviewAsSystemBySubtype(params.getLang(), type, subtype);
-
-        // Remove from the replacement count cache
-        replacementCountService.removeCachedReplacementCount(params.getLang(), type, subtype);
     }
 }

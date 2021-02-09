@@ -25,38 +25,38 @@ class ReplacementControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private ReplacementCountService replacementCountService;
+    private ReplacementService replacementService;
 
     @Test
     void testCountReplacementsToReview() throws Exception {
         long count = 100;
-        when(replacementCountService.countReplacementsNotReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
+        when(replacementService.countReplacementsNotReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
 
         mvc
             .perform(get("/api/replacements/count?reviewed=false&lang=es"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", is(Long.valueOf(count).intValue())));
 
-        verify(replacementCountService, times(1)).countReplacementsNotReviewed(WikipediaLanguage.SPANISH);
+        verify(replacementService, times(1)).countReplacementsNotReviewed(WikipediaLanguage.SPANISH);
     }
 
     @Test
     void testCountReplacementsReviewed() throws Exception {
         long count = 100;
-        when(replacementCountService.countReplacementsReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
+        when(replacementService.countReplacementsReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
 
         mvc
             .perform(get("/api/replacements/count?reviewed=true&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", is(Long.valueOf(count).intValue())));
 
-        verify(replacementCountService, times(1)).countReplacementsReviewed(WikipediaLanguage.SPANISH);
+        verify(replacementService, times(1)).countReplacementsReviewed(WikipediaLanguage.SPANISH);
     }
 
     @Test
     void testCountReplacementsGroupedByReviewer() throws Exception {
         ReviewerCount count = new ReviewerCount("X", 100);
-        when(replacementCountService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH))
+        when(replacementService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH))
             .thenReturn(Collections.singletonList(count));
 
         mvc
@@ -67,15 +67,15 @@ class ReplacementControllerTest {
             .andExpect(jsonPath("$[0].reviewer", is("X")))
             .andExpect(jsonPath("$[0].count", is(100)));
 
-        verify(replacementCountService, times(1)).countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH);
+        verify(replacementService, times(1)).countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH);
     }
 
     @Test
     void testFindReplacementCount() throws Exception {
-        SubtypeCount subCount = new SubtypeCount("Y", 100);
-        TypeCount count = new TypeCount("X");
+        SubtypeCount subCount = SubtypeCount.of("Y", 100);
+        TypeCount count = TypeCount.of("X");
         count.add(subCount);
-        when(replacementCountService.getCachedReplacementTypeCounts(WikipediaLanguage.SPANISH))
+        when(replacementService.countReplacementsGroupedByType(WikipediaLanguage.SPANISH))
             .thenReturn(Collections.singletonList(count));
 
         mvc
@@ -87,6 +87,6 @@ class ReplacementControllerTest {
             .andExpect(jsonPath("$[0].l[0].s", is("Y")))
             .andExpect(jsonPath("$[0].l[0].c", is(100)));
 
-        verify(replacementCountService, times(1)).getCachedReplacementTypeCounts(WikipediaLanguage.SPANISH);
+        verify(replacementService, times(1)).countReplacementsGroupedByType(WikipediaLanguage.SPANISH);
     }
 }
