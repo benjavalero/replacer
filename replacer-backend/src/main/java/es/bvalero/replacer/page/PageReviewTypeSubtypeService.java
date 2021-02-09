@@ -66,10 +66,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.trace("Update page replacements in database");
-        replacementIndexService.indexPageReplacements(
-            page,
-            replacements.stream().map(page::convertReplacementToIndexed).collect(Collectors.toList())
-        );
+        replacementIndexService.indexPageReplacements(page, replacements);
 
         // To build the review we are only interested in the replacements of the given type and subtype
         // We can run the filter even with an empty list

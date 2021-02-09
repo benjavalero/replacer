@@ -36,7 +36,7 @@ public class ReplacementService {
     }
 
     public void deleteAll(List<ReplacementEntity> entityList) {
-        replacementDao.deleteAll(entityList);
+        replacementDao.delete(entityList);
     }
 
     ///// INDEXATION

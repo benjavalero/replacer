@@ -55,7 +55,7 @@ class ReplacementControllerTest {
 
     @Test
     void testCountReplacementsGroupedByReviewer() throws Exception {
-        ReviewerCount count = new ReviewerCount("X", 100);
+        ReviewerCount count = ReviewerCount.of("X", 100);
         when(replacementService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH))
             .thenReturn(Collections.singletonList(count));
 

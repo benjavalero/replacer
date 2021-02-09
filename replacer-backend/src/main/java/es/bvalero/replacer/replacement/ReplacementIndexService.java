@@ -1,6 +1,7 @@
 package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.page.IndexablePage;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,19 +24,14 @@ public class ReplacementIndexService {
     /**
      * Update the replacements of a page in DB with the found ones
      */
-    public void indexPageReplacements(IndexablePage page, List<IndexableReplacement> replacements) {
-        // All replacements correspond to the same page
-        if (replacements.stream().anyMatch(r -> r.getPageId() != page.getId())) {
-            throw new IllegalArgumentException("Indexable replacements from more than one page");
-        }
-
+    public void indexPageReplacements(IndexablePage page, List<Replacement> replacements) {
         // We need the page ID because the replacement list to index might be empty
         List<ReplacementEntity> toSave = findIndexPageReplacements(
             page,
             replacements,
             replacementDao.findByPageId(page.getId(), page.getLang())
         );
-        saveReplacements(toSave);
+        saveIndexedReplacements(toSave);
     }
 
     /**
@@ -46,16 +42,24 @@ public class ReplacementIndexService {
     @Loggable(prepend = true, value = Loggable.TRACE)
     public List<ReplacementEntity> findIndexPageReplacements(
         IndexablePage page,
-        List<IndexableReplacement> replacements,
+        List<Replacement> replacements,
         List<ReplacementEntity> dbReplacements
     ) {
         List<ReplacementEntity> result = new ArrayList<>(100);
 
+        List<IndexableReplacement> indexableReplacements = replacements
+            .stream()
+            .map(r -> convertToIndexable(page, r))
+            .collect(Collectors.toList());
+
         // Ignore context when comparing replacements in case there are cases with the same context
         boolean ignoreContext =
-            (replacements.size() != replacements.stream().map(IndexableReplacement::getContext).distinct().count()) ||
+            (
+                indexableReplacements.size() !=
+                indexableReplacements.stream().map(IndexableReplacement::getContext).distinct().count()
+            ) ||
             (dbReplacements.size() != dbReplacements.stream().map(ReplacementEntity::getContext).distinct().count());
-        replacements.forEach(
+        indexableReplacements.forEach(
             replacement -> handleReplacement(replacement, dbReplacements, ignoreContext).ifPresent(result::add)
         );
 
@@ -136,6 +140,7 @@ public class ReplacementIndexService {
     ) {
         ReplacementEntity result = dbReplacement.setToKeep(); // Initially we mark it to be kept
         if (dbReplacement.isToBeReviewed() && dbReplacement.isOlderThan(replacement.getLastUpdate())) {
+            // The replacement is the same but the date is outdated in database
             result = result.updateLastUpdate(replacement.getLastUpdate());
 
             // Also update other values just in case any of them has changed
@@ -149,26 +154,38 @@ public class ReplacementIndexService {
         return result;
     }
 
-    private void saveReplacements(List<ReplacementEntity> replacements) {
+    public void saveIndexedReplacements(List<ReplacementEntity> replacements) {
         try {
             List<ReplacementEntity> toInsert = replacements
                 .stream()
                 .filter(ReplacementEntity::isToCreate)
                 .collect(Collectors.toList());
-            toInsert.forEach(r -> replacementDao.insert(r));
+            if (!toInsert.isEmpty()) {
+                replacementDao.insert(toInsert);
+            }
+
+            List<ReplacementEntity> toUpdateDate = replacements
+                .stream()
+                .filter(ReplacementEntity::isToUpdateDate)
+                .collect(Collectors.toList());
+            if (!toUpdateDate.isEmpty()) {
+                replacementDao.updateDate(toUpdateDate);
+            }
 
             List<ReplacementEntity> toUpdate = replacements
                 .stream()
-                .filter(ReplacementEntity::isToUpdate)
+                .filter(ReplacementEntity::isToUpdateContext)
                 .collect(Collectors.toList());
-            toUpdate.forEach(r -> replacementDao.update(r));
+            if (!toUpdate.isEmpty()) {
+                replacementDao.update(toUpdate);
+            }
 
             List<ReplacementEntity> toRemove = replacements
                 .stream()
                 .filter(ReplacementEntity::isToDelete)
                 .collect(Collectors.toList());
             if (!toRemove.isEmpty()) {
-                replacementDao.deleteAll(toRemove);
+                replacementDao.delete(toRemove);
             }
         } catch (Exception e) {
             LOGGER.error("Error saving replacements: {}", replacements, e);
@@ -189,6 +206,20 @@ public class ReplacementIndexService {
             .title(replacement.getTitle())
             .build()
             .setToCreate();
+    }
+
+    @VisibleForTesting
+    IndexableReplacement convertToIndexable(IndexablePage page, Replacement replacement) {
+        return IndexableReplacement.of(
+            page.getId(),
+            page.getLang(),
+            replacement.getType(),
+            replacement.getSubtype(),
+            replacement.getStart(),
+            page.getContext(replacement),
+            page.getLastUpdate(),
+            page.getTitle()
+        );
     }
 
     /**

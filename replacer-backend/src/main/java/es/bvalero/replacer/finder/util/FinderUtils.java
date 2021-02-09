@@ -114,7 +114,7 @@ public class FinderUtils {
 
     public static String getContextAroundWord(String text, int start, int end, int threshold) {
         int limitLeft = Math.max(0, start - threshold);
-        int limitRight = Math.min(text.length() - 1, end + threshold);
+        int limitRight = Math.min(text.length(), end + threshold);
         return text.substring(limitLeft, limitRight);
     }
 }

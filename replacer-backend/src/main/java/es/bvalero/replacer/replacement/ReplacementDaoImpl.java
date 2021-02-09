@@ -82,7 +82,7 @@ class ReplacementDaoImpl implements ReplacementDao {
     }
 
     @Override
-    public void deleteAll(List<ReplacementEntity> entityList) {
+    public void delete(List<ReplacementEntity> entityList) {
         String sql = "DELETE FROM replacement2 WHERE id IN (:ids)";
         Set<Long> ids = entityList.stream().map(ReplacementEntity::getId).collect(Collectors.toSet());
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);

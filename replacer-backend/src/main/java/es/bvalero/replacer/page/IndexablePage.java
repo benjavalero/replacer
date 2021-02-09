@@ -3,7 +3,6 @@ package es.bvalero.replacer.page;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.replacement.IndexableReplacement;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
@@ -43,20 +42,7 @@ public interface IndexablePage {
         }
     }
 
-    default IndexableReplacement convertReplacementToIndexed(Replacement replacement) {
-        return IndexableReplacement.of(
-            this.getId(),
-            this.getLang(),
-            replacement.getType(),
-            replacement.getSubtype(),
-            replacement.getStart(),
-            this.getContext(replacement),
-            this.getLastUpdate(),
-            this.getTitle()
-        );
-    }
-
-    private String getContext(Replacement replacement) {
+    default String getContext(Replacement replacement) {
         return FinderUtils.getContextAroundWord(this.getContent(), replacement.getStart(), replacement.getEnd(), 20);
     }
 }

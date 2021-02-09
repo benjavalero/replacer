@@ -8,7 +8,6 @@ import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,10 +57,7 @@ class PageReviewNoTypeService extends PageReviewService {
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.trace("Update page replacements in database");
-        replacementIndexService.indexPageReplacements(
-            page,
-            replacements.stream().map(page::convertReplacementToIndexed).collect(Collectors.toList())
-        );
+        replacementIndexService.indexPageReplacements(page, replacements);
 
         return replacements;
     }

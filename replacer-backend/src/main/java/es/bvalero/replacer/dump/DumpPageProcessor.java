@@ -90,11 +90,7 @@ class DumpPageProcessor {
         }
 
         List<Replacement> replacements = IterableUtils.toList(replacementFinderService.find(dumpPage));
-        return replacementIndexService.findIndexPageReplacements(
-            dumpPage,
-            replacements.stream().map(dumpPage::convertReplacementToIndexed).collect(Collectors.toList()),
-            dbReplacements
-        );
+        return replacementIndexService.findIndexPageReplacements(dumpPage, replacements, dbReplacements);
     }
 
     private List<ReplacementEntity> notProcessPage(DumpPage dumpPage) {

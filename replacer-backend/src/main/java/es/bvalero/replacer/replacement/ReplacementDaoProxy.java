@@ -91,8 +91,8 @@ class ReplacementDaoProxy implements ReplacementDao {
     }
 
     @Override
-    public void deleteAll(List<ReplacementEntity> entityList) {
-        this.replacementDao.deleteAll(entityList);
+    public void delete(List<ReplacementEntity> entityList) {
+        this.replacementDao.delete(entityList);
     }
 
     @Override

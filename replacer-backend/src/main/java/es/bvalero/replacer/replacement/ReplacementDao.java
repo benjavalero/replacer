@@ -20,7 +20,7 @@ interface ReplacementDao {
 
     void updateDate(List<ReplacementEntity> entityList);
 
-    void deleteAll(List<ReplacementEntity> entityList);
+    void delete(List<ReplacementEntity> entityList);
 
     ///// INDEXATION
 

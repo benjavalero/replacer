@@ -8,6 +8,6 @@ class ReviewerCountRowMapper implements RowMapper<ReviewerCount> {
 
     @Override
     public ReviewerCount mapRow(ResultSet result, int rowNum) throws SQLException {
-        return new ReviewerCount(result.getString("REVIEWER"), result.getLong("NUM"));
+        return ReviewerCount.of(result.getString("REVIEWER"), result.getLong("NUM"));
     }
 }

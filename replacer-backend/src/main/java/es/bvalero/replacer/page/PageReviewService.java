@@ -24,6 +24,7 @@ abstract class PageReviewService {
     // Cache the found pages candidates to be reviewed
     // to find faster the next one after the user reviews one.
     // This map can grow a lot. We use Caffeine cache to clean periodically the old or obsolete lists.
+    // TODO: Manage the cache in a proxy class
     private final Cache<String, PageSearchResult> cachedPageIds = Caffeine
         .newBuilder()
         .expireAfterWrite(1, TimeUnit.DAYS)

@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-public class IndexableReplacement {
+class IndexableReplacement {
 
     int pageId;
     WikipediaLanguage lang;
