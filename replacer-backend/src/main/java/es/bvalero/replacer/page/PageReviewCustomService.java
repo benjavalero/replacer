@@ -4,8 +4,8 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -29,7 +29,7 @@ class PageReviewCustomService extends PageReviewService {
     private WikipediaService wikipediaService;
 
     @Autowired
-    private ReplacementDao replacementDao;
+    private ReplacementService replacementService;
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -60,7 +60,7 @@ class PageReviewCustomService extends PageReviewService {
                 cachedOffsets.put(cacheKey, offset);
             }
 
-            List<Integer> reviewedIds = replacementDao.findPageIdsReviewedByCustomTypeAndSubtype(
+            List<Integer> reviewedIds = replacementService.findPageIdsReviewedByCustomTypeAndSubtype(
                 options.getLang(),
                 options.getSubtype()
             );
@@ -115,7 +115,7 @@ class PageReviewCustomService extends PageReviewService {
 
     void reviewPageReplacements(int pageId, WikipediaLanguage lang, String subtype, String reviewer) {
         // Custom replacements don't exist in the database to be reviewed
-        replacementDao.insert(ReplacementEntity.ofCustomReviewed(pageId, lang, subtype, reviewer));
+        replacementService.insert(ReplacementEntity.ofCustomReviewed(pageId, lang, subtype, reviewer));
     }
 
     Optional<String> validateCustomReplacement(String replacement, WikipediaLanguage lang) {

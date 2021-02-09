@@ -1,8 +1,8 @@
 package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 class ReplacementCache {
 
     @Autowired
-    private ReplacementDao replacementDao;
+    private ReplacementService replacementService;
 
     @Setter
     @Value("${replacer.dump.batch.chunk.size}")
@@ -50,7 +50,7 @@ class ReplacementCache {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     private void load(int minId, int maxId, WikipediaLanguage lang) {
-        replacementDao
+        replacementService
             .findByPageInterval(minId, maxId, lang)
             .forEach(replacement -> replacementMap.put(replacement.getPageId(), replacement));
     }
@@ -67,7 +67,7 @@ class ReplacementCache {
 
         // We keep the rows reviewed by any user for the sake of statistics
         if (!obsoleteIds.isEmpty()) {
-            replacementDao.deleteObsoleteByPageId(lang, obsoleteIds);
+            replacementService.deleteObsoleteByPageId(lang, obsoleteIds);
         }
         replacementMap.clear();
     }

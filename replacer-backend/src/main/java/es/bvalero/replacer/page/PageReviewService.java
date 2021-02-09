@@ -4,8 +4,8 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -32,7 +32,7 @@ abstract class PageReviewService {
     private WikipediaService wikipediaService;
 
     @Autowired
-    private ReplacementDao replacementDao;
+    private ReplacementService replacementService;
 
     @Autowired
     private SectionReviewService sectionReviewService;
@@ -150,7 +150,7 @@ abstract class PageReviewService {
 
     void setPageAsReviewed(int pageId, PageReviewOptions options) {
         // These reviewed replacements will be cleaned up in the next dump indexation
-        replacementDao.reviewByPageId(options.getLang(), pageId, null, null, ReplacementEntity.REVIEWER_SYSTEM);
+        replacementService.reviewByPageId(options.getLang(), pageId, null, null, ReplacementEntity.REVIEWER_SYSTEM);
     }
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {

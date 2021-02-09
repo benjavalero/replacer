@@ -4,8 +4,8 @@ import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.replacement.ReplacementCountService;
-import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -31,7 +31,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
     private ReplacementIndexService replacementIndexService;
 
     @Autowired
-    private ReplacementDao replacementDao;
+    private ReplacementService replacementService;
 
     @Autowired
     private ReplacementCountService replacementCountService;
@@ -49,7 +49,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-        List<Integer> pageIds = replacementDao.findRandomPageIdsToBeReviewedBySubtype(
+        List<Integer> pageIds = replacementService.findRandomPageIdsToBeReviewedBySubtype(
             options.getLang(),
             options.getType(),
             options.getSubtype(),
@@ -66,7 +66,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
             );
         }
 
-        long totalResults = replacementDao.countPagesToBeReviewedBySubtype(
+        long totalResults = replacementService.countPagesToBeReviewedBySubtype(
             options.getLang(),
             options.getType(),
             options.getSubtype()
@@ -91,7 +91,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
     }
 
     void reviewPageReplacements(int pageId, WikipediaLanguage lang, String type, String subtype, String reviewer) {
-        replacementDao.reviewByPageId(lang, pageId, type, subtype, reviewer);
+        replacementService.reviewByPageId(lang, pageId, type, subtype, reviewer);
 
         // Decrease the cached count (one page)
         replacementCountService.decreaseCachedReplacementsCount(lang, type, subtype, 1);

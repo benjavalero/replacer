@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.mockito.MockitoAnnotations;
 class ReplacementCacheTest {
 
     @Mock
-    private ReplacementDao replacementDao;
+    private ReplacementService replacementService;
 
     @InjectMocks
     private ReplacementCache replacementCache;
@@ -36,9 +36,11 @@ class ReplacementCacheTest {
         ReplacementEntity replacement2 = ReplacementEntity.of(1001, "", "", 0);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
         List<ReplacementEntity> dbReplacements2 = Collections.singletonList(replacement2);
-        Mockito.when(replacementDao.findByPageInterval(1, 1000, WikipediaLanguage.SPANISH)).thenReturn(dbReplacements);
         Mockito
-            .when(replacementDao.findByPageInterval(1001, 2000, WikipediaLanguage.SPANISH))
+            .when(replacementService.findByPageInterval(1, 1000, WikipediaLanguage.SPANISH))
+            .thenReturn(dbReplacements);
+        Mockito
+            .when(replacementService.findByPageInterval(1001, 2000, WikipediaLanguage.SPANISH))
             .thenReturn(dbReplacements2);
 
         List<ReplacementEntity> replacements = replacementCache.findByPageId(1, WikipediaLanguage.SPANISH);
@@ -48,7 +50,7 @@ class ReplacementCacheTest {
         Assertions.assertEquals(dbReplacements2, replacements);
 
         // Check that the page 2 has been cleaned
-        Mockito.verify(replacementDao).deleteObsoleteByPageId(WikipediaLanguage.SPANISH, Collections.singleton(2));
+        Mockito.verify(replacementService).deleteObsoleteByPageId(WikipediaLanguage.SPANISH, Collections.singleton(2));
     }
 
     @Test
@@ -57,7 +59,9 @@ class ReplacementCacheTest {
         // So the first load is enlarged
         ReplacementEntity replacement = ReplacementEntity.of(1001, "", "", 0);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
-        Mockito.when(replacementDao.findByPageInterval(1, 2000, WikipediaLanguage.SPANISH)).thenReturn(dbReplacements);
+        Mockito
+            .when(replacementService.findByPageInterval(1, 2000, WikipediaLanguage.SPANISH))
+            .thenReturn(dbReplacements);
 
         List<ReplacementEntity> replacements = replacementCache.findByPageId(1001, WikipediaLanguage.SPANISH);
         Assertions.assertEquals(dbReplacements, replacements);

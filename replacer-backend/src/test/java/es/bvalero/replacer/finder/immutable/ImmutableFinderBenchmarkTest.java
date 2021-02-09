@@ -7,7 +7,7 @@ import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.replacement.Misspelling;
 import es.bvalero.replacer.finder.replacement.MisspellingManager;
-import es.bvalero.replacer.replacement.ReplacementDao;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
@@ -60,7 +60,7 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
     private WikipediaService wikipediaService;
 
     @MockBean
-    private ReplacementDao replacementDao;
+    private ReplacementService replacementService;
 
     @Test
     void testBenchmark() throws ReplacerException {

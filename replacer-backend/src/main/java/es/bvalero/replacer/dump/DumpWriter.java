@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 class DumpWriter {
 
     @Autowired
-    private ReplacementDao replacementDao;
+    private ReplacementService replacementService;
 
     void write(List<? extends List<ReplacementEntity>> items) {
         List<ReplacementEntity> flatList = items.stream().flatMap(Collection::stream).collect(Collectors.toList());
@@ -22,7 +22,7 @@ class DumpWriter {
             .filter(ReplacementEntity::isToCreate)
             .collect(Collectors.toList());
         if (!toInsert.isEmpty()) {
-            replacementDao.insert(toInsert);
+            replacementService.insert(toInsert);
         }
 
         List<ReplacementEntity> toUpdateContext = flatList
@@ -30,7 +30,7 @@ class DumpWriter {
             .filter(ReplacementEntity::isToUpdateContext)
             .collect(Collectors.toList());
         if (!toUpdateContext.isEmpty()) {
-            replacementDao.update(toUpdateContext);
+            replacementService.update(toUpdateContext);
         }
 
         List<ReplacementEntity> toUpdateDate = flatList
@@ -38,7 +38,7 @@ class DumpWriter {
             .filter(ReplacementEntity::isToUpdateDate)
             .collect(Collectors.toList());
         if (!toUpdateDate.isEmpty()) {
-            replacementDao.updateDate(toUpdateDate);
+            replacementService.updateDate(toUpdateDate);
         }
 
         List<ReplacementEntity> toDelete = flatList
@@ -46,7 +46,7 @@ class DumpWriter {
             .filter(ReplacementEntity::isToDelete)
             .collect(Collectors.toList());
         if (!toDelete.isEmpty()) {
-            replacementDao.deleteAll(toDelete);
+            replacementService.deleteAll(toDelete);
         }
     }
 }

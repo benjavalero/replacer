@@ -2,8 +2,8 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -29,7 +29,7 @@ class PageReviewNoTypeService extends PageReviewService {
     private ReplacementIndexService replacementIndexService;
 
     @Autowired
-    private ReplacementDao replacementDao;
+    private ReplacementService replacementService;
 
     @Getter
     @Setter
@@ -46,9 +46,9 @@ class PageReviewNoTypeService extends PageReviewService {
         // Find a random page without filtering by type takes a lot
         // Instead find a random replacement and then the following pages
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-        long randomStart = replacementDao.findRandomIdToBeReviewed(CACHE_SIZE, options.getLang());
-        long totalResults = replacementDao.countReplacementsNotReviewed(options.getLang());
-        List<Integer> pageIds = replacementDao.findPageIdsToBeReviewed(options.getLang(), randomStart, pagination);
+        long randomStart = replacementService.findRandomIdToBeReviewed(CACHE_SIZE, options.getLang());
+        long totalResults = replacementService.countReplacementsNotReviewed(options.getLang());
+        List<Integer> pageIds = replacementService.findPageIdsToBeReviewed(options.getLang(), randomStart, pagination);
         return PageSearchResult.of(totalResults, pageIds);
     }
 
@@ -67,6 +67,6 @@ class PageReviewNoTypeService extends PageReviewService {
     }
 
     void reviewPageReplacements(int pageId, WikipediaLanguage lang, String reviewer) {
-        replacementDao.reviewByPageId(lang, pageId, null, null, reviewer);
+        replacementService.reviewByPageId(lang, pageId, null, null, reviewer);
     }
 }

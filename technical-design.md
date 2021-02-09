@@ -89,22 +89,16 @@ In backend we have the following packages:
 
   - `benchmark`. Performance tests for different approaches in order to find the best performant finders.
 
+- `page`. Helper classes to review a page, i.e. find all the related replacements to be processed by the frontend.
+
+- `replacement`. Helper classes to retrieve replacements from database, and cache proxies for some heavy operations. Currently the database has a **huge** table, represented with `ReplacementEntity`, containing all the replacements found for all Wikipedia pages, along with the review status. For performance reasons we use a direct JDBC approach in `ReplacementDao`.
+
+  When a new page is indexed, or there have been any modifications, the replacements in the database must be updated. `ReplacementIndexService` offers a method, receiving the list of the new page replacements, which adds the new replacements and marks as obsolete the ones not found in the new list.
+
 - `wikipedia`. Helper class `WikipediaService` to authenticate in Wikipedia to perform requests against the [Wikipedia API](https://www.mediawiki.org/wiki/API:Main_page).
 
   The authentication is performed by the Oauth 1.0a protocol, the authentication is implemented in the backend, and the frontend only contains the last access token. Note there are different OAuth tokens to develop locally (see `replacer.wikipedia.api.*` properties). The Production ones, once logged in, redirect to https://replacer.toolforge.org, while the Development ones redirect to http://localhost:8080.
 
-
-#### Package `replacement`
-
-This package contains the main logic to interact with the database.
-
-The database has a **huge** table, represented with `ReplacementEntity`, containing all the (valid) replacements found for all Wikipedia pages, along with the review status.
-
-Currently, we interact with this table in two different ways: `ReplacementDao` (JDBC) for bulk operations, and `ReplacementRepository` (JPA). For the DAO, `ReplacementRowMapper` is in charge of mapping the table and the entity.
-
-An important tool feature is listing all the types and subtypes of the existing replacements along with the amount to be reviewed. This is a costly query, so we perform it periodically in `ReplacementCountService` and cache the results meanwhile.
-
-When a new page is indexed, or there have been any modifications, the replacements in the database must be updated. `ReplacementIndexService` offers a method, receiving the list of the new page replacements, which adds the new replacements and marks as obsolete the ones not found in the new list.
 
 ### Formatting
 

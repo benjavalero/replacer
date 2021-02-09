@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.replacement.ReplacementDao;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ class MisspellingManagerTest {
     private WikipediaService wikipediaService;
 
     @Mock
-    private ReplacementDao replacementDao;
+    private ReplacementService replacementService;
 
     @InjectMocks
     private MisspellingManager misspellingManager;
@@ -64,7 +64,7 @@ class MisspellingManagerTest {
         misspellingManager.setItems(map1);
 
         Mockito
-            .verify(replacementDao, Mockito.times(0))
+            .verify(replacementService, Mockito.times(0))
             .deleteToBeReviewedBySubtype(Mockito.any(WikipediaLanguage.class), Mockito.anyString(), Mockito.anySet());
 
         Misspelling misspelling3 = Misspelling.ofCaseInsensitive("C", "D");
@@ -73,7 +73,7 @@ class MisspellingManagerTest {
         misspellingManager.setItems(map2);
 
         Mockito
-            .verify(replacementDao, Mockito.times(1))
+            .verify(replacementService, Mockito.times(1))
             .deleteToBeReviewedBySubtype(
                 WikipediaLanguage.SPANISH,
                 ReplacementType.MISSPELLING_SIMPLE,

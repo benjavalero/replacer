@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.replacement.ReplacementDao;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ import org.mockito.MockitoAnnotations;
 class PageListServiceTest {
 
     @Mock
-    private ReplacementDao replacementDao;
+    private ReplacementService replacementService;
 
     @InjectMocks
     private PageListService pageListService;
@@ -34,7 +34,7 @@ class PageListServiceTest {
 
         Mockito
             .when(
-                replacementDao.findPageTitlesToReviewBySubtype(
+                replacementService.findPageTitlesToReviewBySubtype(
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.anyString(),
                     Mockito.anyString()

@@ -4,8 +4,8 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.*;
 import javax.annotation.Resource;
@@ -51,7 +51,7 @@ class PageReviewCustomServiceTest {
     private List<String> ignorableTemplates;
 
     @Mock
-    private ReplacementDao replacementDao;
+    private ReplacementService replacementService;
 
     @Mock
     private WikipediaService wikipediaService;
@@ -99,7 +99,7 @@ class PageReviewCustomServiceTest {
 
         // The result is not already reviewed
         Mockito
-            .when(replacementDao.findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage.SPANISH, replacement))
+            .when(replacementService.findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage.SPANISH, replacement))
             .thenReturn(Collections.emptyList());
 
         // The page contains replacements
@@ -137,7 +137,7 @@ class PageReviewCustomServiceTest {
         // The result 1 is already reviewed
         // The result 2 is not reviewed the first time, but reviewed the second time.
         Mockito
-            .when(replacementDao.findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage.SPANISH, replacement))
+            .when(replacementService.findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage.SPANISH, replacement))
             .thenReturn(Collections.singletonList(randomId));
 
         // The pages exist in Wikipedia
@@ -162,7 +162,7 @@ class PageReviewCustomServiceTest {
             );
 
         // We add nothing to database
-        Mockito.verify(replacementDao, Mockito.never()).insert(Mockito.any(ReplacementEntity.class));
+        Mockito.verify(replacementService, Mockito.never()).insert(Mockito.any(ReplacementEntity.class));
 
         Assertions.assertFalse(review.isPresent());
     }
