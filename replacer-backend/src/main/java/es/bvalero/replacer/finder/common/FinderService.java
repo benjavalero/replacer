@@ -12,14 +12,16 @@ public interface FinderService<T extends FinderResult> {
     default Iterable<T> find(IndexablePage page) {
         // We include a default implementation that just creates an iterable
         // from all the results for each associated finder.
-        return () ->
-            this.getFinders()
-                .stream()
-                .flatMap(finder -> StreamSupport.stream(finder.find(page).spliterator(), false))
-                .iterator();
+        return find(page, IterableUtils.toList(getFinders()));
     }
 
-    List<Finder<T>> getFinders();
+    // Intermediate step to be able to pass dynamically the finders
+    default Iterable<T> find(IndexablePage page, List<Finder<T>> finders) {
+        return () ->
+            finders.stream().flatMap(finder -> StreamSupport.stream(finder.find(page).spliterator(), false)).iterator();
+    }
+
+    Iterable<Finder<T>> getFinders();
 
     @TestOnly
     default List<T> findList(String text) {

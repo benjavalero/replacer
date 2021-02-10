@@ -7,7 +7,7 @@ import es.bvalero.replacer.page.IndexablePage;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
+import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class ReplacementFinderServiceTest {
 
     @Test
     void testFindReplacementsEmpty() {
-        Mockito.when(replacementFinders.iterator()).thenReturn(Collections.emptyIterator());
+        Mockito.when(replacementFinders.toArray()).thenReturn(new ReplacementFinder[] {});
         Assertions.assertTrue(replacementFinderService.findList("").isEmpty());
     }
 
@@ -44,7 +44,7 @@ class ReplacementFinderServiceTest {
         Replacement replacement = Replacement.builder().start(0).text("").build();
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
         Mockito.when(finder.find(Mockito.any(IndexablePage.class))).thenReturn(List.of(replacement));
-        Mockito.when(replacementFinders.iterator()).thenReturn(Stream.of(finder).iterator());
+        Mockito.when(replacementFinders.toArray()).thenReturn(new ReplacementFinder[] { finder });
 
         List<Replacement> replacements = replacementFinderService.findList(" ");
 
@@ -60,7 +60,7 @@ class ReplacementFinderServiceTest {
         Replacement replacement2 = Replacement.builder().start(2).text("C").build(); // Not contained in immutable
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
         Mockito.when(finder.find(Mockito.any(IndexablePage.class))).thenReturn(List.of(replacement1, replacement2));
-        Mockito.when(replacementFinders.iterator()).thenReturn(Stream.of(finder).iterator());
+        Mockito.when(replacementFinders.toArray()).thenReturn(new ReplacementFinder[] { finder });
         Mockito
             .when(immutableFinderService.find(Mockito.any(IndexablePage.class)))
             .thenReturn(Collections.singleton(immutable1));
@@ -78,32 +78,12 @@ class ReplacementFinderServiceTest {
         Replacement replacement1 = Replacement.builder().start(1).text("B").build();
         ReplacementFinder finder = Mockito.mock(ReplacementFinder.class);
         Mockito.when(finder.find(Mockito.any(IndexablePage.class))).thenReturn(List.of(replacement1));
-        Mockito.when(replacementFinders.iterator()).thenReturn(Stream.of(finder).iterator());
+        Mockito.when(replacementFinders.toArray()).thenReturn(new ReplacementFinder[] { finder });
         Mockito
             .when(immutableFinderService.find(Mockito.any(IndexablePage.class)))
             .thenReturn(Collections.singleton(immutable1));
 
         List<Replacement> replacements = replacementFinderService.findList("");
-
-        Assertions.assertTrue(replacements.isEmpty());
-    }
-
-    @Test
-    void testFindCustomReplacements() {
-        List<Replacement> replacements = replacementFinderService.findCustomReplacements(
-            FakePage.of("A X C"),
-            "X",
-            "Y"
-        );
-
-        Assertions.assertFalse(replacements.isEmpty());
-        Assertions.assertEquals(1, replacements.size());
-        Assertions.assertEquals("X", replacements.get(0).getText());
-    }
-
-    @Test
-    void testFindCustomReplacementsWithNoResults() {
-        List<Replacement> replacements = replacementFinderService.findCustomReplacements(FakePage.of("AXC"), "X", "Y");
 
         Assertions.assertTrue(replacements.isEmpty());
     }

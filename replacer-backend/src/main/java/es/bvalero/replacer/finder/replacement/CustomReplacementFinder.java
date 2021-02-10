@@ -7,17 +7,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.TestOnly;
 
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 class CustomReplacementFinder implements ReplacementFinder {
 
     private final String replacement;
     private final String suggestion;
     private final Pattern pattern;
 
-    CustomReplacementFinder(String replacement, String suggestion) {
-        this.replacement = replacement;
-        this.suggestion = suggestion;
-        this.pattern = buildCustomRegex(this.replacement, this.suggestion);
+    static CustomReplacementFinder of(CustomOptions customOptions) {
+        return of(customOptions.getReplacement(), customOptions.getSuggestion());
+    }
+
+    @TestOnly
+    static CustomReplacementFinder of(String replacement, String suggestion) {
+        return new CustomReplacementFinder(replacement, suggestion, buildCustomRegex(replacement, suggestion));
     }
 
     @Override
@@ -25,7 +32,7 @@ class CustomReplacementFinder implements ReplacementFinder {
         return RegexMatchFinder.find(page.getContent(), pattern);
     }
 
-    private Pattern buildCustomRegex(String replacement, String suggestion) {
+    private static Pattern buildCustomRegex(String replacement, String suggestion) {
         // If both the replacement and the suggestion start with lowercase
         // we consider the regex to be case-insensitive
         boolean caseInsensitive =

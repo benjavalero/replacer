@@ -1,8 +1,8 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.finder.replacement.CustomReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ class PageReviewCustomService extends PageReviewService {
     private ReplacementService replacementService;
 
     @Autowired
-    private ReplacementFinderService replacementFinderService;
+    private CustomReplacementFinderService customReplacementFinderService;
 
     @Getter
     @Setter
@@ -110,7 +111,9 @@ class PageReviewCustomService extends PageReviewService {
     List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We do nothing in the database in case the list is empty
         // We want to review the page every time in case anything has changed
-        return replacementFinderService.findCustomReplacements(page, options.getSubtype(), options.getSuggestion());
+        return IterableUtils.toList(
+            customReplacementFinderService.findCustomReplacements(page, options.toCustomOptions())
+        );
     }
 
     void reviewPageReplacements(int pageId, WikipediaLanguage lang, String subtype, String reviewer) {
@@ -119,6 +122,6 @@ class PageReviewCustomService extends PageReviewService {
     }
 
     Optional<String> validateCustomReplacement(String replacement, WikipediaLanguage lang) {
-        return replacementFinderService.findExistingMisspelling(replacement, lang);
+        return customReplacementFinderService.findExistingMisspelling(replacement, lang);
     }
 }

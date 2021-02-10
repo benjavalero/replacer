@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.finder.util.FinderUtils;
 import lombok.Value;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.Nullable;
 
 /**
@@ -18,7 +17,6 @@ public class Suggestion {
     @Nullable
     String comment;
 
-    @VisibleForTesting
     public static Suggestion ofNoComment(String text) {
         return of(text, null);
     }
