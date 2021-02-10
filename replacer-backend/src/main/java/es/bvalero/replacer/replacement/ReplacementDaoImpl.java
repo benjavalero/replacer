@@ -9,8 +9,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.lang.Nullable;
@@ -18,11 +16,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Loggable(Loggable.TRACE) // To warn about performance issues
-@Primary
-@Qualifier("replacementDao")
 @Repository
 @Transactional
-class ReplacementDaoImpl implements ReplacementDao {
+class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
 
     private static final String PARAM_PAGE_ID = "pageId";
     private static final String PARAM_LANG = "lang";
@@ -35,6 +31,19 @@ class ReplacementDaoImpl implements ReplacementDao {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     ///// CRUD
+
+    @Override
+    public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
+        // We need all the fields but the title so we don't select it to improve performance
+        String sql =
+            "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
+            "FROM replacement2 WHERE lang = :lang AND article_id = :pageId AND type <> :type";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue(PARAM_LANG, lang.getCode())
+            .addValue(PARAM_PAGE_ID, pageId)
+            .addValue(PARAM_TYPE, ReplacementType.CUSTOM);
+        return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
+    }
 
     @Override
     public void insert(ReplacementEntity entity) {
@@ -89,7 +98,7 @@ class ReplacementDaoImpl implements ReplacementDao {
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    ///// INDEXATION
+    ///// DUMP INDEXATION
 
     @Override
     public List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang) {
@@ -116,19 +125,6 @@ class ReplacementDaoImpl implements ReplacementDao {
             .addValue("pageIds", pageIds)
             .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
         jdbcTemplate.update(sql, namedParameters);
-    }
-
-    @Override
-    public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
-        // We need all the fields but the title so we don't select it to improve performance
-        String sql =
-            "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
-            "FROM replacement2 WHERE lang = :lang AND article_id = :pageId AND type <> :type";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_PAGE_ID, pageId)
-            .addValue(PARAM_TYPE, ReplacementType.CUSTOM);
-        return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
     ///// PAGE REVIEW
@@ -315,7 +311,7 @@ class ReplacementDaoImpl implements ReplacementDao {
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    ///// OTHER
+    ///// MISSPELLING MANAGER
 
     @Override
     public void deleteToBeReviewedBySubtype(WikipediaLanguage lang, String type, Set<String> subtypes) {

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
 import java.util.Set;
@@ -9,6 +8,8 @@ import org.springframework.lang.Nullable;
 
 interface ReplacementDao {
     ///// CRUD
+
+    List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang);
 
     void insert(ReplacementEntity entity);
 
@@ -22,13 +23,11 @@ interface ReplacementDao {
 
     void delete(List<ReplacementEntity> entityList);
 
-    ///// INDEXATION
+    ///// DUMP INDEXATION
 
     List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang);
 
     void deleteObsoleteByPageId(WikipediaLanguage lang, Set<Integer> pageIds);
-
-    List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang);
 
     ///// PAGE REVIEW
 
@@ -55,23 +54,13 @@ interface ReplacementDao {
         String reviewer
     );
 
-    ///// STATISTICS
-
-    long countReplacementsReviewed(WikipediaLanguage lang);
-
-    long countReplacementsNotReviewed(WikipediaLanguage lang);
-
-    List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang);
-
-    LanguageCount countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException;
-
     ///// PAGE LISTS
 
     List<String> findPageTitlesToReviewBySubtype(WikipediaLanguage lang, String type, String subtype);
 
     void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype);
 
-    ///// OTHER
+    ///// MISSPELLING MANAGER
 
     void deleteToBeReviewedBySubtype(WikipediaLanguage lang, String type, Set<String> subtypes);
 }

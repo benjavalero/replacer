@@ -14,7 +14,7 @@ import org.mockito.MockitoAnnotations;
 class ReplacementDaoProxyTest {
 
     @Mock
-    private ReplacementDao replacementDao;
+    private ReplacementStatsDao replacementStatsDao;
 
     @InjectMocks
     private ReplacementDaoProxy replacementDaoProxy;
@@ -29,7 +29,9 @@ class ReplacementDaoProxyTest {
     void testCountReplacementsReviewed() {
         long count = new Random().nextLong();
 
-        Mockito.when(replacementDao.countReplacementsReviewed(Mockito.any(WikipediaLanguage.class))).thenReturn(count);
+        Mockito
+            .when(replacementStatsDao.countReplacementsReviewed(Mockito.any(WikipediaLanguage.class)))
+            .thenReturn(count);
 
         Assertions.assertEquals(count, replacementDaoProxy.countReplacementsReviewed(WikipediaLanguage.SPANISH));
     }
@@ -39,7 +41,7 @@ class ReplacementDaoProxyTest {
         long count = new Random().nextLong();
 
         Mockito
-            .when(replacementDao.countReplacementsNotReviewed(Mockito.any(WikipediaLanguage.class)))
+            .when(replacementStatsDao.countReplacementsNotReviewed(Mockito.any(WikipediaLanguage.class)))
             .thenReturn(count);
 
         Assertions.assertEquals(count, replacementDaoProxy.countReplacementsNotReviewed(WikipediaLanguage.SPANISH));
@@ -50,7 +52,7 @@ class ReplacementDaoProxyTest {
         List<ReviewerCount> result = new ArrayList<>();
 
         Mockito
-            .when(replacementDao.countReplacementsGroupedByReviewer(Mockito.any(WikipediaLanguage.class)))
+            .when(replacementStatsDao.countReplacementsGroupedByReviewer(Mockito.any(WikipediaLanguage.class)))
             .thenReturn(result);
 
         Assertions.assertEquals(
@@ -66,7 +68,7 @@ class ReplacementDaoProxyTest {
         TypeSubtypeCount count1 = TypeSubtypeCount.of("X", "Y", 2L);
         TypeSubtypeCount count2 = TypeSubtypeCount.of("X", "Z", 1L);
         List<TypeSubtypeCount> counts = Arrays.asList(count1, count2);
-        Mockito.when(replacementDao.countReplacementsGroupedByType(lang)).thenReturn(LanguageCount.build(counts));
+        Mockito.when(replacementStatsDao.countReplacementsGroupedByType(lang)).thenReturn(LanguageCount.build(counts));
 
         replacementDaoProxy.scheduledUpdateReplacementCount();
 

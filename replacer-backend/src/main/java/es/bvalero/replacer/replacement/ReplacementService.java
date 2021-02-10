@@ -5,7 +5,6 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -14,32 +13,22 @@ import org.springframework.stereotype.Service;
 public class ReplacementService {
 
     @Autowired
-    @Qualifier("replacementProxy")
     private ReplacementDao replacementDao;
 
+    @Autowired
+    private ReplacementStatsDao replacementStatsDao;
+
     ///// CRUD
+
+    public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
+        return replacementDao.findByPageId(pageId, lang);
+    }
 
     public void insert(ReplacementEntity entity) {
         replacementDao.insert(entity);
     }
 
-    public void insert(List<ReplacementEntity> entityList) {
-        replacementDao.insert(entityList);
-    }
-
-    public void update(List<ReplacementEntity> entityList) {
-        replacementDao.update(entityList);
-    }
-
-    public void updateDate(List<ReplacementEntity> entityList) {
-        replacementDao.updateDate(entityList);
-    }
-
-    public void deleteAll(List<ReplacementEntity> entityList) {
-        replacementDao.delete(entityList);
-    }
-
-    ///// INDEXATION
+    ///// DUMP INDEXATION
 
     public List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang) {
         return replacementDao.findByPageInterval(minPageId, maxPageId, lang);
@@ -47,10 +36,6 @@ public class ReplacementService {
 
     public void deleteObsoleteByPageId(WikipediaLanguage lang, Set<Integer> pageIds) {
         replacementDao.deleteObsoleteByPageId(lang, pageIds);
-    }
-
-    public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
-        return replacementDao.findByPageId(pageId, lang);
     }
 
     ///// PAGE REVIEW
@@ -93,19 +78,19 @@ public class ReplacementService {
     ///// STATISTICS
 
     long countReplacementsReviewed(WikipediaLanguage lang) {
-        return replacementDao.countReplacementsReviewed(lang);
+        return replacementStatsDao.countReplacementsReviewed(lang);
     }
 
     public long countReplacementsNotReviewed(WikipediaLanguage lang) {
-        return replacementDao.countReplacementsNotReviewed(lang);
+        return replacementStatsDao.countReplacementsNotReviewed(lang);
     }
 
     List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
-        return replacementDao.countReplacementsGroupedByReviewer(lang);
+        return replacementStatsDao.countReplacementsGroupedByReviewer(lang);
     }
 
     List<TypeCount> countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException {
-        return replacementDao.countReplacementsGroupedByType(lang).getTypeCounts();
+        return replacementStatsDao.countReplacementsGroupedByType(lang).getTypeCounts();
     }
 
     ///// PAGE LISTS
@@ -118,7 +103,7 @@ public class ReplacementService {
         replacementDao.reviewAsSystemBySubtype(lang, type, subtype);
     }
 
-    ///// OTHER
+    ///// MISSPELLING MANAGER
 
     public void deleteToBeReviewedBySubtype(WikipediaLanguage lang, String type, Set<String> subtypes) {
         replacementDao.deleteToBeReviewedBySubtype(lang, type, subtypes);

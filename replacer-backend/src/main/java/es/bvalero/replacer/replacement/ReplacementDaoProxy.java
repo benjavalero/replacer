@@ -5,23 +5,19 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Pageable;
-import org.springframework.lang.Nullable;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Slf4j
-@Qualifier("replacementProxy")
+@Primary
 @Component
-class ReplacementDaoProxy implements ReplacementDao {
+class ReplacementDaoProxy implements ReplacementStatsDao {
 
     @Autowired
-    @Qualifier("replacementDao")
-    private ReplacementDao replacementDao;
+    private ReplacementStatsDao replacementStatsDao;
 
     // Replacement count cache
     // It's a heavy query in database so we preload the counts on start and refresh them periodically.
@@ -39,140 +35,28 @@ class ReplacementDaoProxy implements ReplacementDao {
 
     @Override
     public long countReplacementsReviewed(WikipediaLanguage lang) {
-        return this.countReviewed.computeIfAbsent(lang, l -> this.replacementDao.countReplacementsReviewed(l));
+        return this.countReviewed.computeIfAbsent(lang, l -> this.replacementStatsDao.countReplacementsReviewed(l));
     }
 
     @Override
     public long countReplacementsNotReviewed(WikipediaLanguage lang) {
-        return this.countNotReviewed.computeIfAbsent(lang, l -> this.replacementDao.countReplacementsNotReviewed(l));
+        return this.countNotReviewed.computeIfAbsent(
+                lang,
+                l -> this.replacementStatsDao.countReplacementsNotReviewed(l)
+            );
     }
 
     @Override
     public List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
         return this.countByReviewer.computeIfAbsent(
                 lang,
-                l -> this.replacementDao.countReplacementsGroupedByReviewer(l)
+                l -> this.replacementStatsDao.countReplacementsGroupedByReviewer(l)
             );
-    }
-
-    @Override
-    public List<String> findPageTitlesToReviewBySubtype(WikipediaLanguage lang, String type, String subtype) {
-        return this.replacementDao.findPageTitlesToReviewBySubtype(lang, type, subtype);
     }
 
     @Override
     public LanguageCount countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException {
         return this.getReplacementCount().get(lang);
-    }
-
-    @Override
-    public void insert(ReplacementEntity entity) {
-        this.replacementDao.insert(entity);
-    }
-
-    @Override
-    public void insert(List<ReplacementEntity> entityList) {
-        this.replacementDao.insert(entityList);
-    }
-
-    @Override
-    public void update(ReplacementEntity entity) {
-        this.replacementDao.update(entity);
-    }
-
-    @Override
-    public void update(List<ReplacementEntity> entityList) {
-        this.replacementDao.update(entityList);
-    }
-
-    @Override
-    public void updateDate(List<ReplacementEntity> entityList) {
-        this.replacementDao.updateDate(entityList);
-    }
-
-    @Override
-    public void delete(List<ReplacementEntity> entityList) {
-        this.replacementDao.delete(entityList);
-    }
-
-    @Override
-    public List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang) {
-        return this.replacementDao.findByPageInterval(minPageId, maxPageId, lang);
-    }
-
-    @Override
-    public void deleteObsoleteByPageId(WikipediaLanguage lang, Set<Integer> pageIds) {
-        this.replacementDao.deleteObsoleteByPageId(lang, pageIds);
-    }
-
-    @Override
-    public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
-        return this.replacementDao.findByPageId(pageId, lang);
-    }
-
-    @Override
-    public long findRandomIdToBeReviewed(long chunkSize, WikipediaLanguage lang) {
-        return this.replacementDao.findRandomIdToBeReviewed(chunkSize, lang);
-    }
-
-    @Override
-    public List<Integer> findPageIdsToBeReviewed(WikipediaLanguage lang, long start, Pageable pageable) {
-        return this.replacementDao.findPageIdsToBeReviewed(lang, start, pageable);
-    }
-
-    @Override
-    public List<Integer> findRandomPageIdsToBeReviewedBySubtype(
-        WikipediaLanguage lang,
-        String type,
-        String subtype,
-        Pageable pageable
-    ) {
-        List<Integer> pageIds =
-            this.replacementDao.findRandomPageIdsToBeReviewedBySubtype(lang, type, subtype, pageable);
-        if (pageIds.isEmpty()) {
-            // If there are no results empty the cached count for the replacement
-            removeCachedReplacementCount(lang, type, subtype);
-        }
-        return pageIds;
-    }
-
-    @Override
-    public long countPagesToBeReviewedBySubtype(WikipediaLanguage lang, String type, String subtype) {
-        return this.replacementDao.countPagesToBeReviewedBySubtype(lang, type, subtype);
-    }
-
-    @Override
-    public List<Integer> findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage lang, String subtype) {
-        return this.replacementDao.findPageIdsReviewedByCustomTypeAndSubtype(lang, subtype);
-    }
-
-    @Override
-    public void reviewByPageId(
-        WikipediaLanguage lang,
-        int pageId,
-        @Nullable String type,
-        @Nullable String subtype,
-        String reviewer
-    ) {
-        this.replacementDao.reviewByPageId(lang, pageId, type, subtype, reviewer);
-
-        if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype)) {
-            // Decrement the cached count (one page)
-            decrementSubtypeCount(lang, type, subtype);
-        }
-    }
-
-    @Override
-    public void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
-        this.replacementDao.reviewAsSystemBySubtype(lang, type, subtype);
-
-        // Remove from the replacement count cache
-        removeCachedReplacementCount(lang, type, subtype);
-    }
-
-    @Override
-    public void deleteToBeReviewedBySubtype(WikipediaLanguage lang, String type, Set<String> subtypes) {
-        this.replacementDao.deleteToBeReviewedBySubtype(lang, type, subtypes);
     }
 
     /* SCHEDULED UPDATE OF CACHE */
@@ -199,7 +83,7 @@ class ReplacementDaoProxy implements ReplacementDao {
     private synchronized void loadReplacementTypeCounts() throws ReplacerException {
         Map<WikipediaLanguage, LanguageCount> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
-            map.put(lang, replacementDao.countReplacementsGroupedByType(lang));
+            map.put(lang, replacementStatsDao.countReplacementsGroupedByType(lang));
         }
         this.replacementCount = map;
         this.notifyAll();
@@ -208,9 +92,9 @@ class ReplacementDaoProxy implements ReplacementDao {
     @Scheduled(fixedDelayString = "${replacer.page.stats.delay}")
     public void scheduledUpdateStatistics() {
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
-            this.countReviewed.put(lang, this.replacementDao.countReplacementsReviewed(lang));
-            this.countNotReviewed.put(lang, this.replacementDao.countReplacementsNotReviewed(lang));
-            this.countByReviewer.put(lang, this.replacementDao.countReplacementsGroupedByReviewer(lang));
+            this.countReviewed.put(lang, this.replacementStatsDao.countReplacementsReviewed(lang));
+            this.countNotReviewed.put(lang, this.replacementStatsDao.countReplacementsNotReviewed(lang));
+            this.countByReviewer.put(lang, this.replacementStatsDao.countReplacementsGroupedByReviewer(lang));
         }
     }
 
