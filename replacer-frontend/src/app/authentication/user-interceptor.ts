@@ -9,7 +9,7 @@ export class UserInterceptor implements HttpInterceptor {
   constructor(private authenticationService: AuthenticationService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!req.params.has(USER_PARAM)) {
+    if (!req.params.has(USER_PARAM) && this.authenticationService.user) {
       return next.handle(req.clone({ params: req.params.append(USER_PARAM, this.authenticationService.user.name) }));
     } else {
       return next.handle(req);
