@@ -3,8 +3,6 @@ package es.bvalero.replacer.finder.benchmark.template;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
