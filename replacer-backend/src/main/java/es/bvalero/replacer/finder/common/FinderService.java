@@ -9,11 +9,14 @@ import org.jetbrains.annotations.TestOnly;
 public interface FinderService<T extends FinderResult> {
     // This method returns an Iterable in case we want to retrieve the results one-by-one,
     // for instance to improve performance.
-    // TODO: Maybe provide a helper returning a list as it is quite used
     default Iterable<T> find(IndexablePage page) {
         // We include a default implementation that just creates an iterable
         // from all the results for each associated finder.
         return find(page, IterableUtils.toList(getFinders()));
+    }
+
+    default List<T> findList(IndexablePage page) {
+        return IterableUtils.toList(find(page));
     }
 
     // Intermediate step to be able to pass dynamically the finders

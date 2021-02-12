@@ -14,7 +14,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.IterableUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -89,7 +88,7 @@ class DumpPageProcessor {
             return Collections.emptyList();
         }
 
-        List<Replacement> replacements = IterableUtils.toList(replacementFinderService.find(dumpPage));
+        List<Replacement> replacements = replacementFinderService.findList(dumpPage);
         return replacementIndexService.findIndexPageReplacements(dumpPage, replacements, dbReplacements);
     }
 

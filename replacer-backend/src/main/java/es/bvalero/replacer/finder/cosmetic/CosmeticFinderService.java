@@ -27,7 +27,7 @@ public class CosmeticFinderService implements FinderService<Cosmetic> {
      */
     public String applyCosmeticChanges(IndexablePage page) {
         String fixedText = page.getContent();
-        List<Cosmetic> cosmetics = new LinkedList<>(IterableUtils.toList(this.find(page)));
+        List<Cosmetic> cosmetics = new LinkedList<>(this.findList(page));
 
         if (!cosmetics.isEmpty()) {
             Collections.sort(cosmetics);

@@ -136,7 +136,7 @@ class PageReviewNoTypeServiceTest {
         Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(page));
 
         // The page contains replacements
-        Mockito.when(replacementFinderService.find(page)).thenReturn(replacements);
+        Mockito.when(replacementFinderService.findList(page)).thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
@@ -167,7 +167,7 @@ class PageReviewNoTypeServiceTest {
 
         // The page doesn't contain replacements
         List<Replacement> noPageReplacements = Collections.emptyList();
-        Mockito.when(replacementFinderService.find(page)).thenReturn(noPageReplacements);
+        Mockito.when(replacementFinderService.findList(page)).thenReturn(noPageReplacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
@@ -194,7 +194,7 @@ class PageReviewNoTypeServiceTest {
         Mockito.when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(page2));
 
         // The page contains replacements
-        Mockito.when(replacementFinderService.find(page2)).thenReturn(replacements);
+        Mockito.when(replacementFinderService.findList(page2)).thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 

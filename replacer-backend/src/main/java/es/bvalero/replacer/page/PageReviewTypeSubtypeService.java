@@ -10,7 +10,6 @@ import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -53,7 +52,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
 
     @Override
     List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
-        List<Replacement> replacements = IterableUtils.toList(replacementFinderService.find(page));
+        List<Replacement> replacements = replacementFinderService.findList(page);
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.trace("Update page replacements in database");

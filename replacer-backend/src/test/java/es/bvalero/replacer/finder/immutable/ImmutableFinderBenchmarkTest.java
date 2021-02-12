@@ -14,7 +14,6 @@ import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.hamcrest.MatcherAssert;
@@ -104,7 +103,7 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
                 for (ImmutableFinder finder : finders) {
                     long start = System.nanoTime();
                     for (int i = 0; i < numIterations; i++) {
-                        IterableUtils.toList(finder.findList(text));
+                        finder.findList(text);
                     }
                     double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                     if (print) {
