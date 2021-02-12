@@ -1,7 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.config.TestConfiguration;
 import es.bvalero.replacer.config.XmlConfiguration;
 import java.util.Arrays;
 import java.util.List;
@@ -12,11 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(
     classes = {
-        WikipediaServiceImpl.class,
-        WikipediaApiFacade.class,
-        WikipediaApiConfiguration.class,
-        XmlConfiguration.class,
-        TestConfiguration.class,
+        WikipediaServiceImpl.class, WikipediaApiFacade.class, WikipediaApiConfiguration.class, XmlConfiguration.class,
     }
 )
 class WikipediaServiceIT {

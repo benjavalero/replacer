@@ -147,24 +147,25 @@ public class PageController {
         // Mark page as reviewed in the database
         if (ReplacementType.CUSTOM.equals(savePage.getType())) {
             if (StringUtils.isBlank(savePage.getSubtype())) throw new AssertionError();
-            pageReviewCustomService.reviewPageReplacements( // NOSONAR
+            pageReviewCustomService.reviewPageReplacements(
                 pageId,
-                params.getLang(),
-                savePage.getSubtype(),
+                PageReviewOptions.ofCustom(params.getLang(), savePage.getSubtype(), ""),
                 params.getUser()
             );
         } else if (StringUtils.isNotBlank(savePage.getType())) {
             if (StringUtils.isBlank(savePage.getSubtype())) throw new AssertionError();
-            pageReviewTypeSubtypeService.reviewPageReplacements( // NOSONAR
+            pageReviewTypeSubtypeService.reviewPageReplacements(
                 pageId,
-                params.getLang(),
-                savePage.getType(),
-                savePage.getSubtype(),
+                PageReviewOptions.ofTypeSubtype(params.getLang(), savePage.getType(), savePage.getSubtype()),
                 params.getUser()
             );
         } else {
             if (StringUtils.isNotBlank(savePage.getSubtype())) throw new AssertionError();
-            pageReviewNoTypeService.reviewPageReplacements(pageId, params.getLang(), params.getUser());
+            pageReviewNoTypeService.reviewPageReplacements(
+                pageId,
+                PageReviewOptions.ofNoType(params.getLang()),
+                params.getUser()
+            );
         }
 
         return new ResponseEntity<>(HttpStatus.OK);

@@ -1,33 +1,55 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.Nullable;
 
 /**
  * Domain class of a page to review to be used in the front-end.
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
+@Builder
 class PageReview {
 
-    private int id;
-    private WikipediaLanguage lang;
-    private String title;
-    private String content;
+    int id;
+    WikipediaLanguage lang;
+    String title;
+    String content;
 
     @Nullable
-    private Integer section;
+    @With(AccessLevel.PACKAGE)
+    Integer section;
 
-    private String anchor;
-    private String queryTimestamp;
-    private List<PageReplacement> replacements;
-    private long numPending;
+    @Nullable
+    String anchor;
+
+    String queryTimestamp;
+    List<PageReplacement> replacements;
+    long numPending;
+
+    static PageReview of(WikipediaPage page, List<PageReplacement> replacements, long numPending) {
+        return PageReview
+            .builder()
+            .id(page.getId())
+            .lang(page.getLang())
+            .title(page.getTitle())
+            .content(page.getContent())
+            .section(page.getSection())
+            .anchor(page.getAnchor())
+            .queryTimestamp(page.getQueryTimestamp())
+            .replacements(replacements)
+            .numPending(numPending)
+            .build();
+    }
+
+    @TestOnly
+    static PageReview ofEmpty() {
+        return PageReview.builder().build();
+    }
 
     @Override
     public String toString() {

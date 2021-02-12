@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = XmlConfiguration.class)
@@ -62,9 +61,6 @@ class PageReviewCustomServiceTest {
 
     @Mock
     private SectionReviewService sectionReviewService;
-
-    @Spy
-    private ModelMapper modelMapper;
 
     @InjectMocks
     private PageReviewCustomService pageReviewCustomService;

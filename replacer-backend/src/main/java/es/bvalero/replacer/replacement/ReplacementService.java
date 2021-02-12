@@ -1,7 +1,11 @@
 package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ReplacementService {
+
+    @Autowired
+    private ReplacementIndexService replacementIndexService;
 
     @Autowired
     private ReplacementDao replacementDao;
@@ -34,14 +41,15 @@ public class ReplacementService {
         return replacementDao.findByPageInterval(minPageId, maxPageId, lang);
     }
 
-    public void deleteObsoleteByPageId(WikipediaLanguage lang, Set<Integer> pageIds) {
-        replacementDao.deleteObsoleteByPageId(lang, pageIds);
+    public void indexObsoleteByPageId(WikipediaLanguage lang, int pageId) {
+        IndexablePage dummyPage = WikipediaPage.builder().lang(lang).id(pageId).lastUpdate(LocalDate.now()).build();
+        replacementIndexService.indexPageReplacements(dummyPage, Collections.emptyList());
     }
 
     ///// PAGE REVIEW
 
-    public long findRandomIdToBeReviewed(long chunkSize, WikipediaLanguage lang) {
-        return replacementDao.findRandomIdToBeReviewed(chunkSize, lang);
+    public long findRandomIdToBeReviewed(WikipediaLanguage lang, long chunkSize) {
+        return replacementDao.findRandomIdToBeReviewed(lang, chunkSize);
     }
 
     public List<Integer> findPageIdsToBeReviewed(WikipediaLanguage lang, long start, Pageable pageable) {

@@ -7,6 +7,7 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.List;
+import org.jetbrains.annotations.VisibleForTesting;
 
 public interface IndexablePage {
     int getId();
@@ -21,17 +22,20 @@ public interface IndexablePage {
 
     LocalDate getLastUpdate();
 
+    // Throw an exception instead of returning a boolean to capture the cause
     default void validateProcessable(List<String> ignorableTemplates) throws ReplacerException {
         validateProcessableByNamespace();
         validateProcessableByContent(ignorableTemplates);
     }
 
+    @VisibleForTesting
     default void validateProcessableByNamespace() throws ReplacerException {
         if (!WikipediaNamespace.getProcessableNamespaces().contains(getNamespace())) {
             throw new ReplacerException("Page not processable by namespace: " + getNamespace());
         }
     }
 
+    @VisibleForTesting
     default void validateProcessableByContent(List<String> ignorableTemplates) throws ReplacerException {
         String lowerContent = getContent().toLowerCase();
         for (String template : ignorableTemplates) {

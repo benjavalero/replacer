@@ -27,11 +27,9 @@ interface ReplacementDao {
 
     List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang);
 
-    void deleteObsoleteByPageId(WikipediaLanguage lang, Set<Integer> pageIds);
-
     ///// PAGE REVIEW
 
-    long findRandomIdToBeReviewed(long chunkSize, WikipediaLanguage lang);
+    long findRandomIdToBeReviewed(WikipediaLanguage lang, long chunkSize);
 
     List<Integer> findPageIdsToBeReviewed(WikipediaLanguage lang, long start, Pageable pageable);
 

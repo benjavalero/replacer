@@ -5,12 +5,8 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
-import javax.annotation.Resource;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +26,6 @@ class PageReviewNoTypeService extends PageReviewService {
     @Autowired
     private ReplacementService replacementService;
 
-    @Getter
-    @Setter
-    @Resource
-    private List<String> ignorableTemplates;
-
     @Override
     String buildReplacementCacheKey(PageReviewOptions options) {
         return options.getLang().getCode();
@@ -45,7 +36,7 @@ class PageReviewNoTypeService extends PageReviewService {
         // Find a random page without filtering by type takes a lot
         // Instead find a random replacement and then the following pages
         PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-        long randomStart = replacementService.findRandomIdToBeReviewed(CACHE_SIZE, options.getLang());
+        long randomStart = replacementService.findRandomIdToBeReviewed(options.getLang(), CACHE_SIZE);
         long totalResults = replacementService.countReplacementsNotReviewed(options.getLang());
         List<Integer> pageIds = replacementService.findPageIdsToBeReviewed(options.getLang(), randomStart, pagination);
         return PageSearchResult.of(totalResults, pageIds);
@@ -62,7 +53,8 @@ class PageReviewNoTypeService extends PageReviewService {
         return replacements;
     }
 
-    void reviewPageReplacements(int pageId, WikipediaLanguage lang, String reviewer) {
-        replacementService.reviewByPageId(lang, pageId, null, null, reviewer);
+    @Override
+    public void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer) {
+        replacementService.reviewByPageId(options.getLang(), pageId, null, null, reviewer);
     }
 }

@@ -9,15 +9,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.modelmapper.ModelMapper;
 
 class SectionReviewServiceTest {
 
     @Mock
     private WikipediaService wikipediaService;
-
-    @Spy
-    private ModelMapper modelMapper;
 
     @InjectMocks
     private SectionReviewService sectionReviewService;
@@ -34,7 +30,7 @@ class SectionReviewServiceTest {
             .when(wikipediaService.getPageSections(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.emptyList());
 
-        PageReview review = new PageReview();
+        PageReview review = PageReview.ofEmpty();
         Optional<PageReview> sectionReview = sectionReviewService.findSectionReview(review);
 
         Assertions.assertFalse(sectionReview.isPresent());
@@ -45,13 +41,15 @@ class SectionReviewServiceTest {
         int pageId = 1;
         String content = "This is an sample content.";
         Suggestion suggestion = Suggestion.ofNoComment("a");
-        PageReplacement replacement = new PageReplacement(8, "an", Collections.singletonList(suggestion)); // "an"
+        PageReplacement replacement = PageReplacement.of(8, "an", Collections.singletonList(suggestion)); // "an"
 
-        PageReview pageReview = new PageReview();
-        pageReview.setId(pageId);
-        pageReview.setLang(WikipediaLanguage.SPANISH);
-        pageReview.setContent(content);
-        pageReview.setReplacements(Collections.singletonList(replacement));
+        PageReview pageReview = PageReview
+            .builder()
+            .id(pageId)
+            .lang(WikipediaLanguage.SPANISH)
+            .content(content)
+            .replacements(Collections.singletonList(replacement))
+            .build();
 
         int sectionId = 3;
         int offset = 5;

@@ -4,27 +4,29 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
+import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.VisibleForTesting;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 abstract class PageReviewService {
 
-    static final int CACHE_SIZE = 100; // Maximum 500 as it is used as page size when searching in Wikipedia
+    // Maximum 500 as it is used as page size when searching in Wikipedia
+    static final int CACHE_SIZE = 100;
+
     // Cache the found pages candidates to be reviewed
     // to find faster the next one after the user reviews one.
     // This map can grow a lot. We use Caffeine cache to clean periodically the old or obsolete lists.
-    // TODO: Manage the cache in a proxy class
     private final Cache<String, PageSearchResult> cachedPageIds = Caffeine
         .newBuilder()
         .expireAfterWrite(1, TimeUnit.DAYS)
@@ -39,8 +41,9 @@ abstract class PageReviewService {
     @Autowired
     private SectionReviewService sectionReviewService;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    @Setter
+    @Resource
+    private List<String> ignorableTemplates;
 
     Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
         // Retrieve an ID of a potential page to be replaced
@@ -61,6 +64,8 @@ abstract class PageReviewService {
         // If we get here, there are no more pages to review
         return Optional.empty();
     }
+
+    ///// CACHE /////
 
     private Optional<Integer> findPageIdToReview(PageReviewOptions options) {
         // First we try to get the random replacement from the cache
@@ -112,8 +117,6 @@ abstract class PageReviewService {
         return review;
     }
 
-    abstract List<String> getIgnorableTemplates();
-
     private Optional<WikipediaPage> getPageFromWikipedia(int pageId, PageReviewOptions options) {
         try {
             Optional<WikipediaPage> page = wikipediaService.getPageById(pageId, options.getLang());
@@ -132,7 +135,7 @@ abstract class PageReviewService {
             }
 
             // We get here if the page is not found or not processable
-            setPageAsReviewed(pageId, options);
+            indexObsoletePage(pageId, options.getLang());
         } catch (ReplacerException e) {
             LOGGER.error("Error finding page in Wikipedia for {} - {}", options.getLang(), pageId, e);
         }
@@ -142,7 +145,7 @@ abstract class PageReviewService {
 
     private boolean validatePage(WikipediaPage page) {
         try {
-            page.validateProcessable(getIgnorableTemplates());
+            page.validateProcessable(ignorableTemplates);
             return true;
         } catch (ReplacerException e) {
             LOGGER.warn("{} - {} - {}", e.getMessage(), page.getId(), page.getTitle());
@@ -150,9 +153,9 @@ abstract class PageReviewService {
         }
     }
 
-    void setPageAsReviewed(int pageId, PageReviewOptions options) {
-        // These reviewed replacements will be cleaned up in the next dump indexation
-        replacementService.reviewByPageId(options.getLang(), pageId, null, null, ReplacementEntity.REVIEWER_SYSTEM);
+    private void indexObsoletePage(int pageId, WikipediaLanguage lang) {
+        // Force index to delete the page from database
+        replacementService.indexObsoleteByPageId(lang, pageId);
     }
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
@@ -177,7 +180,7 @@ abstract class PageReviewService {
     private List<Replacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
         List<Replacement> replacements = findAllReplacements(page, options);
 
-        // Return the replacements sorted as they appear in the text
+        // TODO: WHY?? Return the replacements sorted as they appear in the text
         replacements.sort(Collections.reverseOrder());
         LOGGER.debug(
             "Found {} replacements in page {} - {} for options {}",
@@ -193,11 +196,11 @@ abstract class PageReviewService {
 
     @VisibleForTesting
     PageReview buildPageReview(WikipediaPage page, List<Replacement> replacements, PageReviewOptions options) {
-        // TODO: remove ModelMapper use and make PageReview immutable
-        PageReview review = modelMapper.map(page, PageReview.class);
-        review.setReplacements(replacements.stream().map(this::convertToDto).collect(Collectors.toList()));
-        review.setNumPending(findTotalResultsFromCache(options) + 1); // Include the current one as pending
-        return review;
+        return PageReview.of(
+            page,
+            replacements.stream().map(this::convertToDto).collect(Collectors.toList()),
+            findTotalResultsFromCache(options) + 1 // Include the current one as pending
+        );
     }
 
     private long findTotalResultsFromCache(PageReviewOptions options) {
@@ -208,7 +211,8 @@ abstract class PageReviewService {
     }
 
     private PageReplacement convertToDto(Replacement replacement) {
-        // TODO: remove ModelMapper use and make PageReplacement immutable
-        return modelMapper.map(replacement, PageReplacement.class);
+        return PageReplacement.of(replacement.getStart(), replacement.getText(), replacement.getSuggestions());
     }
+
+    abstract void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer);
 }

@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 
@@ -70,9 +69,6 @@ class PageReviewTypeSubtypeServiceTest {
 
     @Mock
     private SectionReviewService sectionReviewService;
-
-    @Spy
-    private ModelMapper modelMapper;
 
     @InjectMocks
     private PageReviewTypeSubtypeService pageReviewTypeSubtypeService;
@@ -207,8 +203,9 @@ class PageReviewTypeSubtypeServiceTest {
         pageReviewTypeSubtypeService.loadCache(options);
 
         // The page has sections
-        PageReview sectionReview = pageReviewTypeSubtypeService.buildPageReview(page, replacements, options);
-        sectionReview.setSection(sectionId);
+        PageReview sectionReview = pageReviewTypeSubtypeService
+            .buildPageReview(page, replacements, options)
+            .withSection(sectionId);
         Mockito
             .when(sectionReviewService.findSectionReview(Mockito.any(PageReview.class)))
             .thenReturn(Optional.of(sectionReview));

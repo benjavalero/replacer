@@ -4,13 +4,11 @@ import es.bvalero.replacer.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -22,21 +20,15 @@ class SectionReviewService {
     @Autowired
     private WikipediaService wikipediaService;
 
-    @Autowired
-    private ModelMapper modelMapper;
-
     /**
-     * @param review The review of the complete page.
      * @return The review of a section of the page, or empty if there is no such section.
      */
     Optional<PageReview> findSectionReview(PageReview review) {
         assert review.getSection() == null;
 
-        // Get the sections from the Wikipedia API (better than calculating them by ourselves)
         try {
-            List<WikipediaSection> sections = new ArrayList<>(
-                wikipediaService.getPageSections(review.getId(), review.getLang())
-            );
+            // Get the sections from the Wikipedia API (better than calculating them by ourselves)
+            List<WikipediaSection> sections = wikipediaService.getPageSections(review.getId(), review.getLang());
 
             // Find the smallest section containing all the replacements
             Optional<WikipediaSection> smallestSection = getSmallestSectionContainingAllReplacements(
@@ -44,62 +36,34 @@ class SectionReviewService {
                 review.getReplacements()
             );
             if (smallestSection.isPresent()) {
-                // Retrieve the section from Wikipedia API. Better than calculating it by ourselves, just in case.
+                // Get the section from Wikipedia API (better than calculating it by ourselves)
                 Optional<WikipediaPage> pageSection = wikipediaService.getPageByIdAndSection(
                     review.getId(),
                     smallestSection.get(),
                     review.getLang()
                 );
                 if (pageSection.isPresent()) {
-                    // Modify the start position of the replacements according to the section start
+                    // We need to modify the start position of the replacements according to the section start
                     List<PageReplacement> sectionReplacements = translateReplacementsByOffset(
                         review.getReplacements(),
-                        smallestSection.get().getByteOffset()
+                        smallestSection.get().getByteOffset(),
+                        pageSection.get()
                     );
-                    // We need to check some rare cases where the byte-offset doesn't match with the section position
-                    if (
-                        sectionReplacements
-                            .stream()
-                            .allMatch(rep -> validatePageReplacement(rep, pageSection.get().getContent()))
-                    ) {
-                        LOGGER.debug(
-                            "Found section for page {} - {} - {} => {} - {}",
-                            pageSection.get().getLang(),
-                            pageSection.get().getId(),
-                            pageSection.get().getTitle(),
-                            pageSection.get().getSection(),
-                            pageSection.get().getAnchor()
-                        );
-                        return Optional.of(
-                            buildPageReview(
-                                pageSection.get(),
-                                translateReplacementsByOffset(
-                                    review.getReplacements(),
-                                    smallestSection.get().getByteOffset()
-                                ),
-                                review
-                            )
-                        );
-                    } else {
-                        LOGGER.warn(
-                            "Not valid byte-offset in page section: {} - {} - {} - {} - {}",
-                            pageSection.get().getLang(),
-                            pageSection.get().getId(),
-                            pageSection.get().getTitle(),
-                            smallestSection.get().getAnchor(),
-                            smallestSection.get().getByteOffset()
-                        );
-                    }
+
+                    LOGGER.debug(
+                        "Found section for page {} - {} - {} => {} - {}",
+                        pageSection.get().getLang(),
+                        pageSection.get().getId(),
+                        pageSection.get().getTitle(),
+                        pageSection.get().getSection(),
+                        pageSection.get().getAnchor()
+                    );
+                    return Optional.of(buildPageReview(pageSection.get(), sectionReplacements, review));
                 }
             }
         } catch (ReplacerException e) {
-            LOGGER.error(
-                "Error finding section in page {} - {} - {}",
-                review.getLang(),
-                review.getId(),
-                review.getTitle(),
-                e
-            );
+            // No need to log the details as they are logged at the end of the method
+            LOGGER.error("Error finding section", e);
         }
 
         LOGGER.debug("No section found in page: {} - {} - {}", review.getLang(), review.getId(), review.getTitle());
@@ -154,8 +118,30 @@ class SectionReviewService {
         }
     }
 
-    private List<PageReplacement> translateReplacementsByOffset(List<PageReplacement> replacements, int offset) {
-        return replacements.stream().map(rep -> rep.withStart(rep.getStart() - offset)).collect(Collectors.toList());
+    private List<PageReplacement> translateReplacementsByOffset(
+        List<PageReplacement> replacements,
+        int sectionOffset,
+        WikipediaPage pageSection
+    ) throws ReplacerException {
+        List<PageReplacement> translated = replacements
+            .stream()
+            .map(rep -> rep.withStart(rep.getStart() - sectionOffset))
+            .collect(Collectors.toList());
+
+        // We need to check some rare cases where the byte-offset doesn't match with the section position
+        // usually because of emojis or other strange Unicode characters
+        if (translated.stream().anyMatch(rep -> !validatePageReplacement(rep, pageSection.getContent()))) {
+            LOGGER.warn(
+                "Not valid byte-offset in page section: {} - {} - {} - {}",
+                pageSection.getLang(),
+                pageSection.getId(),
+                pageSection.getTitle(),
+                sectionOffset
+            );
+            throw new ReplacerException("Not valid byte-offset in page section");
+        }
+
+        return translated;
     }
 
     private boolean validatePageReplacement(PageReplacement replacement, String text) {
@@ -166,10 +152,6 @@ class SectionReviewService {
     }
 
     private PageReview buildPageReview(WikipediaPage page, List<PageReplacement> replacements, PageReview pageReview) {
-        // TODO: remove ModelMapper use and make PageReview immutable
-        PageReview review = modelMapper.map(page, PageReview.class);
-        review.setReplacements(replacements);
-        review.setNumPending(pageReview.getNumPending());
-        return review;
+        return PageReview.of(page, replacements, pageReview.getNumPending());
     }
 }

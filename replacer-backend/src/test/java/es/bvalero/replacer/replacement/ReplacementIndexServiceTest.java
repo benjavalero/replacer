@@ -73,7 +73,7 @@ class ReplacementIndexServiceTest {
         // Both obsolete to review or reviewed by system ==> Delete
         // A dummy replacement will be created instead
         ReplacementEntity rep2 = ReplacementEntity.of(1, "", "", 2);
-        ReplacementEntity rep3 = ReplacementEntity.of(1, "", "", 3).withReviewer(ReplacementEntity.REVIEWER_SYSTEM);
+        ReplacementEntity rep3 = ReplacementEntity.of(1, "", "", 3).setSystemReviewed();
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(rep2, rep3));
 
         List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(
@@ -147,8 +147,8 @@ class ReplacementIndexServiceTest {
         ReplacementEntity r3db = ReplacementEntity.of(1, "3", "3", 3).withContext(context).withLastUpdate(before);
         ReplacementEntity r4db = ReplacementEntity.of(1, "4", "4", 4).withReviewer(context).withLastUpdate(before);
         ReplacementEntity r6db = ReplacementEntity.of(1, "6", "6", 6);
-        ReplacementEntity r7db = ReplacementEntity.of(1, "7", "7", 7).withReviewer(context);
-        ReplacementEntity r8db = ReplacementEntity.of(1, "8", "8", 2).withReviewer(ReplacementEntity.REVIEWER_SYSTEM);
+        ReplacementEntity r7db = ReplacementEntity.of(1, "7", "7", 7).withReviewer("");
+        ReplacementEntity r8db = ReplacementEntity.of(1, "8", "8", 2).setSystemReviewed();
         List<ReplacementEntity> dbReplacements = new ArrayList<>(
             Arrays.asList(r1db, r2db, r3db, r4db, r6db, r7db, r8db)
         );
@@ -203,10 +203,7 @@ class ReplacementIndexServiceTest {
         ReplacementEntity r2db = ReplacementEntity.of(1, "2", "2", 2).withReviewer("").withLastUpdate(before);
         ReplacementEntity r4db = ReplacementEntity.of(1, "4", "4", 4).withLastUpdate(before);
         ReplacementEntity r5db = ReplacementEntity.of(1, "5", "5", 5).withReviewer("").withLastUpdate(before);
-        ReplacementEntity r6db = ReplacementEntity
-            .of(1, "6", "6", 6)
-            .withReviewer(ReplacementEntity.REVIEWER_SYSTEM)
-            .withLastUpdate(before);
+        ReplacementEntity r6db = ReplacementEntity.of(1, "6", "6", 6).setSystemReviewed().withLastUpdate(before);
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db, r4db, r5db, r6db));
 
         List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(

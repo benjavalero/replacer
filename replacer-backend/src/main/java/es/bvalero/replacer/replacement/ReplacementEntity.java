@@ -16,7 +16,7 @@ import org.springframework.lang.Nullable;
 @Builder
 public class ReplacementEntity {
 
-    public static final String REVIEWER_SYSTEM = "system"; // TODO: Reduce visibility
+    static final String REVIEWER_SYSTEM = "system";
 
     @Nullable
     Long id; // Nullable when still to be created in database
@@ -66,6 +66,11 @@ public class ReplacementEntity {
 
     boolean isOlderThan(LocalDate date) {
         return this.lastUpdate.isBefore(date);
+    }
+
+    @TestOnly
+    ReplacementEntity setSystemReviewed() {
+        return withReviewer(REVIEWER_SYSTEM);
     }
 
     public boolean isSystemReviewed() {

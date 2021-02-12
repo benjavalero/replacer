@@ -65,7 +65,7 @@ class PageControllerTest {
         int start = 5;
         String rep = "A";
         Suggestion suggestion = Suggestion.of("a", "b");
-        PageReplacement replacement = new PageReplacement(start, rep, Collections.singletonList(suggestion));
+        PageReplacement replacement = PageReplacement.of(start, rep, Collections.singletonList(suggestion));
         List<PageReplacement> replacements = Collections.singletonList(replacement);
         long numPending = replacements.size();
         PageReview review = new PageReview(
@@ -103,7 +103,7 @@ class PageControllerTest {
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
-        when(pageReviewTypeSubtypeService.findRandomPageReview(options)).thenReturn(Optional.of(new PageReview()));
+        when(pageReviewTypeSubtypeService.findRandomPageReview(options)).thenReturn(Optional.of(PageReview.ofEmpty()));
 
         mvc
             .perform(get("/api/pages/random?type=X&subtype=Y&lang=es").contentType(MediaType.APPLICATION_JSON))
@@ -115,7 +115,7 @@ class PageControllerTest {
     @Test
     void testFindRandomPageByCustomReplacement() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
-        when(pageReviewCustomService.findRandomPageReview(options)).thenReturn(Optional.of(new PageReview()));
+        when(pageReviewCustomService.findRandomPageReview(options)).thenReturn(Optional.of(PageReview.ofEmpty()));
 
         mvc
             .perform(
@@ -129,7 +129,7 @@ class PageControllerTest {
     @Test
     void testFindPageReviewById() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
-        when(pageReviewNoTypeService.getPageReview(123, options)).thenReturn(Optional.of(new PageReview()));
+        when(pageReviewNoTypeService.getPageReview(123, options)).thenReturn(Optional.of(PageReview.ofEmpty()));
 
         mvc.perform(get("/api/pages/123?lang=es").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
@@ -139,7 +139,7 @@ class PageControllerTest {
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
-        when(pageReviewTypeSubtypeService.getPageReview(123, options)).thenReturn(Optional.of(new PageReview()));
+        when(pageReviewTypeSubtypeService.getPageReview(123, options)).thenReturn(Optional.of(PageReview.ofEmpty()));
 
         mvc
             .perform(get("/api/pages/123?type=X&subtype=Y&lang=es").contentType(MediaType.APPLICATION_JSON))
@@ -151,7 +151,7 @@ class PageControllerTest {
     @Test
     void testFindPageReviewByIdAndCustomReplacement() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
-        when(pageReviewCustomService.getPageReview(123, options)).thenReturn(Optional.of(new PageReview()));
+        when(pageReviewCustomService.getPageReview(123, options)).thenReturn(Optional.of(PageReview.ofEmpty()));
 
         mvc
             .perform(get("/api/pages/123?replacement=X&suggestion=Y&lang=es").contentType(MediaType.APPLICATION_JSON))

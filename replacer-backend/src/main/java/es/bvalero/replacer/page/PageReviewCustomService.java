@@ -11,9 +11,6 @@ import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
-import javax.annotation.Resource;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +31,6 @@ class PageReviewCustomService extends PageReviewService {
 
     @Autowired
     private CustomReplacementFinderService customReplacementFinderService;
-
-    @Getter
-    @Setter
-    @Resource
-    private List<String> ignorableTemplates;
 
     @Override
     String buildReplacementCacheKey(PageReviewOptions options) {
@@ -103,11 +95,6 @@ class PageReviewCustomService extends PageReviewService {
     }
 
     @Override
-    void setPageAsReviewed(int pageId, PageReviewOptions options) {
-        // Do nothing
-    }
-
-    @Override
     List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We do nothing in the database in case the list is empty
         // We want to review the page every time in case anything has changed
@@ -116,9 +103,12 @@ class PageReviewCustomService extends PageReviewService {
         );
     }
 
-    void reviewPageReplacements(int pageId, WikipediaLanguage lang, String subtype, String reviewer) {
+    @Override
+    public void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer) {
         // Custom replacements don't exist in the database to be reviewed
-        replacementService.insert(ReplacementEntity.ofCustomReviewed(pageId, lang, subtype, reviewer));
+        replacementService.insert(
+            ReplacementEntity.ofCustomReviewed(pageId, options.getLang(), options.getSubtype(), reviewer)
+        );
     }
 
     Optional<String> validateCustomReplacement(String replacement, WikipediaLanguage lang) {

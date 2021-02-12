@@ -115,22 +115,10 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
         return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
-    @Override
-    public void deleteObsoleteByPageId(WikipediaLanguage lang, Set<Integer> pageIds) {
-        String sql =
-            "DELETE FROM replacement2 " +
-            "WHERE lang = :lang AND article_id IN (:pageIds) AND (reviewer IS NULL OR reviewer = :system)";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue("pageIds", pageIds)
-            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
-        jdbcTemplate.update(sql, namedParameters);
-    }
-
     ///// PAGE REVIEW
 
     @Override
-    public long findRandomIdToBeReviewed(long chunkSize, WikipediaLanguage lang) {
+    public long findRandomIdToBeReviewed(WikipediaLanguage lang, long chunkSize) {
         String sql =
             "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) FROM replacement2 " +
             "WHERE lang = :lang AND reviewer IS NULL";

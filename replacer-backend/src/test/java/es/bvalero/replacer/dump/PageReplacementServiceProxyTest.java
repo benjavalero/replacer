@@ -50,7 +50,7 @@ class PageReplacementServiceProxyTest {
         Assertions.assertEquals(dbReplacements2, replacements);
 
         // Check that the page 2 has been cleaned
-        Mockito.verify(replacementService).deleteObsoleteByPageId(WikipediaLanguage.SPANISH, Collections.singleton(2));
+        Mockito.verify(replacementService).indexObsoleteByPageId(WikipediaLanguage.SPANISH, 2);
     }
 
     @Test
