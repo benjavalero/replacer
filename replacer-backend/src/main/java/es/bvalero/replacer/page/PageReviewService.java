@@ -180,7 +180,8 @@ abstract class PageReviewService {
     private List<Replacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
         List<Replacement> replacements = findAllReplacements(page, options);
 
-        // TODO: WHY?? Return the replacements sorted as they appear in the text
+        // Return the replacements sorted as they appear in the text
+        // So there is no need to sort them in the frontend
         replacements.sort(Collections.reverseOrder());
         LOGGER.debug(
             "Found {} replacements in page {} - {} for options {}",
