@@ -12,8 +12,6 @@ import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import javax.annotation.Resource;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +38,6 @@ abstract class PageReviewService {
 
     @Autowired
     private SectionReviewService sectionReviewService;
-
-    @Setter
-    @Resource
-    private List<String> ignorableTemplates;
 
     Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
         // Retrieve an ID of a potential page to be replaced
@@ -145,7 +139,7 @@ abstract class PageReviewService {
 
     private boolean validatePage(WikipediaPage page) {
         try {
-            page.validateProcessable(ignorableTemplates);
+            page.validateProcessable();
             return true;
         } catch (ReplacerException e) {
             LOGGER.warn("{} - {} - {}", e.getMessage(), page.getId(), page.getTitle());

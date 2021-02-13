@@ -10,7 +10,8 @@ enum ImmutableFinderPriority {
     LOW(2),
     MEDIUM(5),
     HIGH(12),
-    VERY_HIGH(25);
+    VERY_HIGH(25),
+    MAX(100);
 
     private final int value;
 }

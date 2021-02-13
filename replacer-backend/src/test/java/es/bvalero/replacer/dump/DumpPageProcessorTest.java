@@ -1,7 +1,6 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.page.IndexablePage;
@@ -12,7 +11,6 @@ import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,13 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = XmlConfiguration.class)
 class DumpPageProcessorTest {
-
-    @Resource
-    private List<String> ignorableTemplates;
 
     @Mock
     private PageReplacementService pageReplacementService;
@@ -74,20 +67,9 @@ class DumpPageProcessorTest {
         DumpPage dumpAnnex = DumpPage.builder().namespace(WikipediaNamespace.ANNEX).content("").build();
         DumpPage dumpCategory = DumpPage.builder().namespace(WikipediaNamespace.CATEGORY).build();
 
-        dumpPage.validateProcessable(ignorableTemplates);
-        dumpAnnex.validateProcessable(ignorableTemplates);
-        Assertions.assertThrows(ReplacerException.class, () -> dumpCategory.validateProcessable(ignorableTemplates));
-    }
-
-    @Test
-    void testProcessRedirection() {
-        DumpPage dumpPage = DumpPage
-            .builder()
-            .lang(WikipediaLanguage.SPANISH)
-            .namespace(WikipediaNamespace.ARTICLE)
-            .content("#Redirect")
-            .build();
-        Assertions.assertThrows(ReplacerException.class, () -> dumpPage.validateProcessable(ignorableTemplates));
+        dumpPage.validateProcessable();
+        dumpAnnex.validateProcessable();
+        Assertions.assertThrows(ReplacerException.class, dumpCategory::validateProcessable);
     }
 
     @Test

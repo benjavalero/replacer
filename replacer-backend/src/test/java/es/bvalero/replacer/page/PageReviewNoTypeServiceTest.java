@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
@@ -9,15 +8,12 @@ import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDate;
 import java.util.*;
-import javax.annotation.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 
-@SpringBootTest(classes = XmlConfiguration.class)
 class PageReviewNoTypeServiceTest {
 
     private final int randomId = 1;
@@ -51,9 +47,6 @@ class PageReviewNoTypeServiceTest {
     private final List<Replacement> replacements = Collections.singletonList(replacement);
     private final PageReviewOptions options = PageReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
 
-    @Resource
-    private List<String> ignorableTemplates;
-
     @Mock
     private ReplacementService replacementService;
 
@@ -75,7 +68,6 @@ class PageReviewNoTypeServiceTest {
     @BeforeEach
     public void setUp() {
         pageReviewNoTypeService = new PageReviewNoTypeService();
-        pageReviewNoTypeService.setIgnorableTemplates(ignorableTemplates);
         MockitoAnnotations.initMocks(this);
     }
 

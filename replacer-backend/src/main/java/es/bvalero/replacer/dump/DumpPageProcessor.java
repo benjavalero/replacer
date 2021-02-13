@@ -12,7 +12,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +34,12 @@ class DumpPageProcessor {
     @Autowired
     private ReplacementFinderService replacementFinderService;
 
-    @Resource
-    private List<String> ignorableTemplates;
-
     @Nullable
     List<ReplacementEntity> process(DumpPage dumpPage) throws ReplacerException {
-        // 1. Check if it is processable by content
+        // 1. Check if it is processable by namespace
         // We "skip" the item by throwing an exception
         try {
-            dumpPage.validateProcessable(ignorableTemplates);
+            dumpPage.validateProcessable();
         } catch (ReplacerException e) {
             // Remove possible existing (not reviewed) replacements
             List<ReplacementEntity> toDelete = notProcessPage(dumpPage);
