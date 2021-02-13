@@ -1,9 +1,9 @@
 package es.bvalero.replacer.finder.immutable;
 
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -30,12 +30,12 @@ class CommentFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         return LinearMatchFinder.find(page, this::findResult);
     }
 
     @Nullable
-    private MatchResult findResult(IndexablePage page, int start) {
+    private MatchResult findResult(FinderPage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findComment(page, start, matches);
@@ -43,7 +43,7 @@ class CommentFinder extends ImmutableCheckedFinder {
         return matches.isEmpty() ? null : matches.get(0);
     }
 
-    private int findComment(IndexablePage page, int start, List<MatchResult> matches) {
+    private int findComment(FinderPage page, int start, List<MatchResult> matches) {
         String text = page.getContent();
         int startComment = findStartComment(text, start);
         if (startComment >= 0) {

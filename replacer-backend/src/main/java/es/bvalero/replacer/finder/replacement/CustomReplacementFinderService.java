@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.replacement;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.page.IndexablePage;
+import es.bvalero.replacer.finder.common.FinderPage;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -19,12 +19,12 @@ public class CustomReplacementFinderService extends ReplacementFinderService {
     private MisspellingComposedFinder misspellingComposedFinder;
 
     @Override
-    public Iterable<Replacement> find(IndexablePage page) {
+    public Iterable<Replacement> find(FinderPage page) {
         throw new IllegalCallerException();
     }
 
     @Loggable(prepend = true, value = Loggable.TRACE, unit = TimeUnit.SECONDS)
-    public Iterable<Replacement> findCustomReplacements(IndexablePage page, CustomOptions customOptions) {
+    public Iterable<Replacement> findCustomReplacements(FinderPage page, CustomOptions customOptions) {
         CustomReplacementFinder finder = CustomReplacementFinder.of(customOptions);
         return findReplacements(page, Collections.singletonList(finder));
     }

@@ -2,6 +2,7 @@ package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.replacement.ReplacementEntity;
@@ -84,8 +85,12 @@ class DumpPageProcessor {
             return Collections.emptyList();
         }
 
-        List<Replacement> replacements = replacementFinderService.findList(dumpPage);
+        List<Replacement> replacements = replacementFinderService.findList(convertPage(dumpPage));
         return replacementIndexService.findIndexPageReplacements(dumpPage, replacements, dbReplacements);
+    }
+
+    FinderPage convertPage(DumpPage page) {
+        return FinderPage.of(page.getLang(), page.getContent(), page.getTitle());
     }
 
     private List<ReplacementEntity> notProcessPage(DumpPage dumpPage) {

@@ -3,9 +3,9 @@ package es.bvalero.replacer.finder.immutable;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
@@ -60,7 +60,7 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(IndexablePage page) {
+    public Iterable<Immutable> find(FinderPage page) {
         List<Immutable> immutables = new ArrayList<>(100);
         for (LinearMatchResult template : findAllTemplates(page)) {
             immutables.addAll(findImmutables(template));
@@ -69,13 +69,13 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // We are overriding the more general find method
         throw new IllegalCallerException();
     }
 
     @VisibleForTesting
-    List<LinearMatchResult> findAllTemplates(IndexablePage page) {
+    List<LinearMatchResult> findAllTemplates(FinderPage page) {
         List<LinearMatchResult> matches = new ArrayList<>(100);
 
         // Each template found may contain nested templates which are added after
@@ -89,7 +89,7 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
         return matches;
     }
 
-    private int findTemplate(IndexablePage page, int start, List<LinearMatchResult> matches) {
+    private int findTemplate(FinderPage page, int start, List<LinearMatchResult> matches) {
         String text = page.getContent();
         int startTemplate = findStartTemplate(text, start);
         if (startTemplate >= 0) {

@@ -1,9 +1,9 @@
 package es.bvalero.replacer.finder.immutable;
 
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -29,12 +29,12 @@ class CursiveFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         return LinearMatchFinder.find(page, this::findResult);
     }
 
     @Nullable
-    private MatchResult findResult(IndexablePage page, int start) {
+    private MatchResult findResult(FinderPage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findCursive(page, start, matches);
@@ -42,7 +42,7 @@ class CursiveFinder extends ImmutableCheckedFinder {
         return matches.isEmpty() ? null : matches.get(0);
     }
 
-    private int findCursive(IndexablePage page, int start, List<MatchResult> matches) {
+    private int findCursive(FinderPage page, int start, List<MatchResult> matches) {
         String text = page.getContent();
         int startCursive = findStartCursive(text, start);
         if (startCursive >= 0) {

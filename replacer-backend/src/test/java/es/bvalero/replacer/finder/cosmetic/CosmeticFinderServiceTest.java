@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic;
 
-import es.bvalero.replacer.finder.common.FakePage;
-import es.bvalero.replacer.page.IndexablePage;
+import es.bvalero.replacer.finder.common.FinderPage;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -35,12 +34,12 @@ class CosmeticFinderServiceTest {
         Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|link]]").finder(finder).fix("[[link]]").build();
         List<Cosmetic> cosmetics = new LinkedList<>(); // To be able to sort it
         cosmetics.add(cosmetic);
-        Mockito.when(finder.find(Mockito.any(IndexablePage.class))).thenReturn(cosmetics);
+        Mockito.when(finder.find(Mockito.any(FinderPage.class))).thenReturn(cosmetics);
         Mockito.when(cosmeticFinders.toArray()).thenReturn(new CosmeticFinder[] { finder });
 
         String text = "A [[Link|link]] to simplify.";
         String expected = "A [[link]] to simplify.";
-        IndexablePage page = FakePage.of(text);
+        FinderPage page = FinderPage.of(text);
         Assertions.assertEquals(expected, cosmeticFinderService.applyCosmeticChanges(page));
     }
 }

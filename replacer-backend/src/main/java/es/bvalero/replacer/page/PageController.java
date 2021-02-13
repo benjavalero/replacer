@@ -3,9 +3,9 @@ package es.bvalero.replacer.page;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.UserParameters;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Optional;
 import javax.validation.constraints.Size;
@@ -124,12 +124,7 @@ public class PageController {
             // Upload new content to Wikipedia
             try {
                 // Apply cosmetic changes
-                WikipediaPage page = WikipediaPage
-                    .builder()
-                    .lang(params.getLang())
-                    .content(savePage.getContent())
-                    .title(savePage.getTitle())
-                    .build();
+                FinderPage page = FinderPage.of(params.getLang(), savePage.getContent(), savePage.getTitle());
                 String textToSave = cosmeticFinderService.applyCosmeticChanges(page);
                 wikipediaService.savePageContent(
                     params.getLang(),

@@ -99,7 +99,7 @@ class PageReviewCustomService extends PageReviewService {
         // We do nothing in the database in case the list is empty
         // We want to review the page every time in case anything has changed
         return IterableUtils.toList(
-            customReplacementFinderService.findCustomReplacements(page, options.toCustomOptions())
+            customReplacementFinderService.findCustomReplacements(convertPage(page), options.toCustomOptions())
         );
     }
 

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement;
 
-import es.bvalero.replacer.finder.common.FakePage;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
@@ -28,7 +28,7 @@ class CustomReplacementFinderServiceTest {
     @Test
     void testFindCustomReplacements() {
         List<Replacement> replacements = IterableUtils.toList(
-            customReplacementFinderService.findCustomReplacements(FakePage.of("A X C"), CustomOptions.of("X", "Y"))
+            customReplacementFinderService.findCustomReplacements(FinderPage.of("A X C"), CustomOptions.of("X", "Y"))
         );
 
         Assertions.assertFalse(replacements.isEmpty());
@@ -39,7 +39,7 @@ class CustomReplacementFinderServiceTest {
     @Test
     void testFindCustomReplacementsWithNoResults() {
         List<Replacement> replacements = IterableUtils.toList(
-            customReplacementFinderService.findCustomReplacements(FakePage.of("AXC"), CustomOptions.of("X", "Y"))
+            customReplacementFinderService.findCustomReplacements(FinderPage.of("AXC"), CustomOptions.of("X", "Y"))
         );
 
         Assertions.assertTrue(replacements.isEmpty());

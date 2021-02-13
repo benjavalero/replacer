@@ -1,10 +1,10 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,11 +20,11 @@ class CompleteTagLinearFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
-        return LinearMatchFinder.find(page, this::findResult);
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+        return LinearMatchFinder.find(page, (page1, start) -> findResult(page1, start));
     }
 
-    private MatchResult findResult(IndexablePage page, int start) {
+    private MatchResult findResult(FinderPage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findCompleteTag(page.getContent(), start, matches);

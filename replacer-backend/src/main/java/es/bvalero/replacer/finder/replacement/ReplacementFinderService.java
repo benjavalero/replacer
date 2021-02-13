@@ -3,10 +3,10 @@ package es.bvalero.replacer.finder.replacement;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.finder.common.Finder;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.common.FinderService;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
-import es.bvalero.replacer.page.IndexablePage;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +37,7 @@ public class ReplacementFinderService implements FinderService<Replacement> {
 
     @Loggable(prepend = true, value = Loggable.TRACE, unit = TimeUnit.SECONDS)
     @Override
-    public Iterable<Replacement> find(IndexablePage page) {
+    public Iterable<Replacement> find(FinderPage page) {
         // The replacement finder ignores in the response all the found replacements which are contained
         // in the found immutables. Usually there will be much more immutables found than replacements.
         // Thus it is better to obtain first all the replacements, and then obtain the immutables one by one,
@@ -45,7 +45,7 @@ public class ReplacementFinderService implements FinderService<Replacement> {
         return findReplacements(page, getFinders());
     }
 
-    protected Iterable<Replacement> findReplacements(IndexablePage page, List<Finder<Replacement>> finders) {
+    protected Iterable<Replacement> findReplacements(FinderPage page, List<Finder<Replacement>> finders) {
         // First we retrieve all replacements and later filter only the valid
         Iterable<Replacement> allReplacements = find(page, finders);
         return filterReplacements(page, allReplacements);
@@ -56,7 +56,7 @@ public class ReplacementFinderService implements FinderService<Replacement> {
         return new ArrayList<>(replacementFinders);
     }
 
-    private Iterable<Replacement> filterReplacements(IndexablePage page, Iterable<Replacement> allReplacements) {
+    private Iterable<Replacement> filterReplacements(FinderPage page, Iterable<Replacement> allReplacements) {
         // Remove duplicates. By the way we sort the collection.
         Iterable<Replacement> noDupes = removeDuplicates(allReplacements);
 
@@ -92,7 +92,7 @@ public class ReplacementFinderService implements FinderService<Replacement> {
         return StreamSupport.stream(iterable.spliterator(), false);
     }
 
-    private Iterable<Replacement> removeImmutables(IndexablePage page, Iterable<Replacement> replacements) {
+    private Iterable<Replacement> removeImmutables(FinderPage page, Iterable<Replacement> replacements) {
         // LinkedList to remove items. Order is kept.
         List<Replacement> replacementList = new LinkedList<>(IterableUtils.toList(replacements));
 

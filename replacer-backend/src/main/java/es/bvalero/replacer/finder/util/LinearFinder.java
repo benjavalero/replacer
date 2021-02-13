@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.util;
 
-import es.bvalero.replacer.page.IndexablePage;
+import es.bvalero.replacer.finder.common.FinderPage;
 import java.util.regex.MatchResult;
 import org.springframework.lang.Nullable;
 
@@ -10,5 +10,5 @@ public interface LinearFinder {
      * @return the next result from the start position.
      */
     @Nullable
-    MatchResult findResult(IndexablePage page, int start);
+    MatchResult findResult(FinderPage page, int start);
 }

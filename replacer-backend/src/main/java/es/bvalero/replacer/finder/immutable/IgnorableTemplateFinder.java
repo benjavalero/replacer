@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.immutable;
 
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -22,7 +22,7 @@ class IgnorableTemplateFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         String lowerContent = page.getContent().toLowerCase();
         for (String template : ignorableTemplates) {
             int start = lowerContent.indexOf(template);
@@ -34,7 +34,7 @@ class IgnorableTemplateFinder extends ImmutableCheckedFinder {
         return Collections.emptyList();
     }
 
-    private MatchResult buildCompleteMatchResult(IndexablePage page) {
+    private MatchResult buildCompleteMatchResult(FinderPage page) {
         return LinearMatchResult.of(0, page.getContent());
     }
 }

@@ -3,9 +3,9 @@ package es.bvalero.replacer.finder.replacement;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
@@ -55,7 +55,7 @@ class MisspellingComposedFinder extends MisspellingFinder {
     }
 
     @Override
-    public Iterable<Replacement> find(IndexablePage page) {
+    public Iterable<Replacement> find(FinderPage page) {
         RunAutomaton automaton = this.automata.get(page.getLang());
         if (automaton == null) {
             return Collections.emptyList();
@@ -73,7 +73,7 @@ class MisspellingComposedFinder extends MisspellingFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // We are overriding the more general find method
         throw new IllegalCallerException();
     }

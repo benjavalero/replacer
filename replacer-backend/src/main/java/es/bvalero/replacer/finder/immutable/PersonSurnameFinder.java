@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.immutable;
 
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +28,7 @@ class PersonSurnameFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(IndexablePage page) {
+    public Iterable<Immutable> find(FinderPage page) {
         List<Immutable> result = new ArrayList<>(100);
         for (String personSurname : personSurnames) {
             result.addAll(findResults(page.getContent(), personSurname));
@@ -37,7 +37,7 @@ class PersonSurnameFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // We are overriding the more general find method
         throw new IllegalCallerException();
     }

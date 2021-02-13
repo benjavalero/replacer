@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable;
 
-import es.bvalero.replacer.page.IndexablePage;
+import es.bvalero.replacer.finder.common.FinderPage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +19,7 @@ abstract class ImmutableCheckedFinder implements ImmutableFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(IndexablePage page) {
+    public Iterable<Immutable> find(FinderPage page) {
         // Trick: use iterable converter with no conversion at all but decoration
         return IterableUtils.transformedIterable(
             ImmutableFinder.super.find(page),
@@ -27,7 +27,7 @@ abstract class ImmutableCheckedFinder implements ImmutableFinder {
         );
     }
 
-    private Immutable check(Immutable immutable, IndexablePage page) {
+    private Immutable check(Immutable immutable, FinderPage page) {
         if (showLongImmutables) {
             this.checkMaxLength(immutable, page);
         }
@@ -38,13 +38,13 @@ abstract class ImmutableCheckedFinder implements ImmutableFinder {
         return Integer.MAX_VALUE;
     }
 
-    private void checkMaxLength(Immutable immutable, IndexablePage page) {
+    private void checkMaxLength(Immutable immutable, FinderPage page) {
         if (immutable.getText().length() > getMaxLength()) {
             logWarning(immutable, page, "Immutable too long");
         }
     }
 
-    void logWarning(Immutable immutable, IndexablePage page, String message) {
+    void logWarning(Immutable immutable, FinderPage page, String message) {
         LOGGER.warn(
             "{}: {} - {} - {} - {} - {}",
             message,

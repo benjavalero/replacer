@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.cosmetic;
 
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -21,7 +21,7 @@ class FileLowercaseFinder implements CosmeticFinder {
     private List<String> fileSpaces;
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         String concat = fileSpaces.stream().map(String::toLowerCase).collect(Collectors.joining("|"));
         String regex = String.format(REGEX_FILE_SPACE, concat);
         return RegexMatchFinder.find(page.getContent(), Pattern.compile(regex));

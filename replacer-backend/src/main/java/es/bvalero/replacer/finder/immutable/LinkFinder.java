@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.immutable;
 
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
@@ -42,7 +42,7 @@ class LinkFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(IndexablePage page) {
+    public Iterable<Immutable> find(FinderPage page) {
         List<Immutable> immutables = new ArrayList<>(100);
         for (LinearMatchResult template : findAllLinks(page)) {
             immutables.addAll(findImmutables(template, page));
@@ -51,13 +51,13 @@ class LinkFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // We are overriding the more general find method
         throw new IllegalCallerException();
     }
 
     @VisibleForTesting
-    List<LinearMatchResult> findAllLinks(IndexablePage page) {
+    List<LinearMatchResult> findAllLinks(FinderPage page) {
         List<LinearMatchResult> matches = new ArrayList<>(100);
         // Each link found may contain nested links which are added after
         int start = 0;
@@ -69,7 +69,7 @@ class LinkFinder extends ImmutableCheckedFinder {
         return matches;
     }
 
-    private int findLink(IndexablePage page, int start, List<LinearMatchResult> matches) {
+    private int findLink(FinderPage page, int start, List<LinearMatchResult> matches) {
         String text = page.getContent();
         int startLink = findStartLink(text, start);
         if (startLink >= 0) {
@@ -132,7 +132,7 @@ class LinkFinder extends ImmutableCheckedFinder {
         }
     }
 
-    private List<Immutable> findImmutables(LinearMatchResult link, IndexablePage page) {
+    private List<Immutable> findImmutables(LinearMatchResult link, FinderPage page) {
         // If the link is suffixed then return the complete link
         String text = page.getContent();
         int endSuffix = findEndSuffix(text, link.end());

@@ -1,9 +1,9 @@
 package es.bvalero.replacer.finder.immutable;
 
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -32,13 +32,13 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // Even with several tags taken into account the faster approach is the linear search in one-pass
         return LinearMatchFinder.find(page, this::findResult);
     }
 
     @Nullable
-    private MatchResult findResult(IndexablePage page, int start) {
+    private MatchResult findResult(FinderPage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findCompleteTag(page.getContent(), start, matches);

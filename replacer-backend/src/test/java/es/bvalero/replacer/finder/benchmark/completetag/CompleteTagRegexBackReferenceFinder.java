@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -18,7 +18,7 @@ class CompleteTagRegexBackReferenceFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), pattern);
     }
 }

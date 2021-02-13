@@ -5,12 +5,12 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.replacement.Misspelling;
 import es.bvalero.replacer.finder.replacement.MisspellingManager;
 import es.bvalero.replacer.finder.replacement.Suggestion;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.page.IndexablePage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
@@ -113,7 +113,7 @@ class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         RunAutomaton automaton = this.uppercaseAfterAutomata.get(page.getLang());
         if (automaton == null) {
             return Collections.emptyList();

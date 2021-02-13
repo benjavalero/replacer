@@ -3,8 +3,8 @@ package es.bvalero.replacer.finder.immutable;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.regex.MatchResult;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ class UrlFinder implements ImmutableFinder {
     );
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         return AutomatonMatchFinder.find(page.getContent(), AUTOMATON_URL);
     }
 

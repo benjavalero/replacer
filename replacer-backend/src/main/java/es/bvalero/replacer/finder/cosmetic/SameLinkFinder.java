@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.cosmetic;
 
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
@@ -16,7 +16,7 @@ class SameLinkFinder extends CosmeticCheckedFinder {
     private static final Pattern PATTERN_SAME_LINK = Pattern.compile(REGEX_SAME_LINK, Pattern.CASE_INSENSITIVE);
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), PATTERN_SAME_LINK);
     }
 

@@ -1,9 +1,9 @@
 package es.bvalero.replacer.finder.benchmark.category;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -15,12 +15,12 @@ class CategoryLinearFinder implements BenchmarkFinder {
     private static final String CATEGORY_END = "]]";
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         return LinearMatchFinder.find(page, this::findResult);
     }
 
     @Nullable
-    private MatchResult findResult(IndexablePage page, int start) {
+    private MatchResult findResult(FinderPage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findCategory(page.getContent(), start, matches);

@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.cosmetic;
 
 import es.bvalero.replacer.finder.common.Finder;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.common.FinderService;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class CosmeticFinderService implements FinderService<Cosmetic> {
     /**
      * @return the page text with all the cosmetic changes applied.
      */
-    public String applyCosmeticChanges(IndexablePage page) {
+    public String applyCosmeticChanges(FinderPage page) {
         String fixedText = page.getContent();
         List<Cosmetic> cosmetics = new LinkedList<>(this.findList(page));
 

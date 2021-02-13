@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.config.XmlConfiguration;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -22,7 +22,7 @@ class CompleteTemplateFinderTest {
     void testFindTemplate() {
         String template = "{{Template|Text}}";
 
-        WikipediaPage page = WikipediaPage.builder().content(template).build();
+        FinderPage page = FinderPage.of(template);
         List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
 
         Assertions.assertEquals(1, matches.size());
@@ -33,7 +33,7 @@ class CompleteTemplateFinderTest {
     void testFindTemplateTruncated() {
         String template = "{{Template|Text";
 
-        WikipediaPage page = WikipediaPage.builder().content(template).build();
+        FinderPage page = FinderPage.of(template);
         List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
 
         Assertions.assertTrue(matches.isEmpty());
@@ -44,7 +44,7 @@ class CompleteTemplateFinderTest {
         String template2 = "{{Template2|Text2}}";
         String template = String.format("{{Template|Text %s Text}}", template2);
 
-        WikipediaPage page = WikipediaPage.builder().content(template).build();
+        FinderPage page = FinderPage.of(template);
         List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
 
         Assertions.assertEquals(2, matches.size());
@@ -58,7 +58,7 @@ class CompleteTemplateFinderTest {
         String template2 = "{{Template2|Text2}}";
         String template = String.format("{{Template|Text %s Text %s Text}}", template2, template3);
 
-        WikipediaPage page = WikipediaPage.builder().content(template).build();
+        FinderPage page = FinderPage.of(template);
         List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
 
         Set<String> templates = Set.of(template, template2, template3);
@@ -71,7 +71,7 @@ class CompleteTemplateFinderTest {
         String template2 = String.format("{{Template2|Text2 %s Text2}}", template3);
         String template = String.format("{{Template|Text %s Text}}", template2);
 
-        WikipediaPage page = WikipediaPage.builder().content(template).build();
+        FinderPage page = FinderPage.of(template);
         List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
 
         Assertions.assertEquals(3, matches.size());
@@ -86,7 +86,7 @@ class CompleteTemplateFinderTest {
         String template2 = String.format("{{Template2|Text2 %s Text2}}", template3);
         String template = String.format("{{Template|Text %s Text", template2);
 
-        WikipediaPage page = WikipediaPage.builder().content(template).build();
+        FinderPage page = FinderPage.of(template);
         List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
 
         Assertions.assertEquals(2, matches.size());
@@ -100,7 +100,7 @@ class CompleteTemplateFinderTest {
         String template2 = "{{Template2|Text2}}";
         String text = String.format("%s %s", template1, template2);
 
-        WikipediaPage page = WikipediaPage.builder().content(text).build();
+        FinderPage page = FinderPage.of(text);
         List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
 
         List<String> expected = List.of(template1, template2);

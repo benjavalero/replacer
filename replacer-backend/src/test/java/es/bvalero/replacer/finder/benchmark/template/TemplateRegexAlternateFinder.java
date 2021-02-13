@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.benchmark.template;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -20,7 +20,7 @@ class TemplateRegexAlternateFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), pattern);
     }
 }

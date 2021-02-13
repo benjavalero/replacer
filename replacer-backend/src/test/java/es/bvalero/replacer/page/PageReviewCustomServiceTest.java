@@ -96,7 +96,10 @@ class PageReviewCustomServiceTest {
         // The page contains replacements
         Mockito
             .when(
-                customReplacementFinderService.findCustomReplacements(page, CustomOptions.of(replacement, suggestion))
+                customReplacementFinderService.findCustomReplacements(
+                    pageReviewCustomService.convertPage(page),
+                    CustomOptions.of(replacement, suggestion)
+                )
             )
             .thenReturn(replacements);
 
@@ -139,7 +142,10 @@ class PageReviewCustomServiceTest {
         // The page 2 contains no replacements
         Mockito
             .when(
-                customReplacementFinderService.findCustomReplacements(page2, CustomOptions.of(replacement, suggestion))
+                customReplacementFinderService.findCustomReplacements(
+                    pageReviewCustomService.convertPage(page2),
+                    CustomOptions.of(replacement, suggestion)
+                )
             )
             .thenReturn(Collections.emptyList());
 

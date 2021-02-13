@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.benchmark;
 
 import es.bvalero.replacer.finder.common.Finder;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,7 +17,7 @@ public interface BenchmarkFinder extends Finder<BenchmarkResult> {
     }
 
     @Override
-    default Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    default Iterable<MatchResult> findMatchResults(FinderPage page) {
         // As most benchmarks override the main method this will not be called
         throw new IllegalCallerException();
     }

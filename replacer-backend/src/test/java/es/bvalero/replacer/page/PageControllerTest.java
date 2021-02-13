@@ -9,10 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.replacement.Suggestion;
 import es.bvalero.replacer.wikipedia.AccessToken;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Collections;
 import java.util.List;
@@ -173,7 +173,7 @@ class PageControllerTest {
         String subtype = "S";
         SavePage savePage = new SavePage(section, title, content, timestamp, token, tokenSecret, type, subtype);
 
-        when(cosmeticFinderService.applyCosmeticChanges(any(WikipediaPage.class))).thenReturn("C");
+        when(cosmeticFinderService.applyCosmeticChanges(any(FinderPage.class))).thenReturn("C");
 
         mvc
             .perform(
@@ -183,12 +183,7 @@ class PageControllerTest {
             )
             .andExpect(status().isOk());
 
-        WikipediaPage page = WikipediaPage
-            .builder()
-            .lang(WikipediaLanguage.SPANISH)
-            .content(savePage.getContent())
-            .title(savePage.getTitle())
-            .build();
+        FinderPage page = FinderPage.of(WikipediaLanguage.SPANISH, savePage.getContent(), savePage.getTitle());
         verify(cosmeticFinderService, times(1)).applyCosmeticChanges(page);
         verify(wikipediaService, times(1))
             .savePageContent(
@@ -221,7 +216,7 @@ class PageControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(cosmeticFinderService, times(0)).applyCosmeticChanges(any(WikipediaPage.class));
+        verify(cosmeticFinderService, times(0)).applyCosmeticChanges(any(FinderPage.class));
         verify(wikipediaService, times(0))
             .savePageContent(
                 any(WikipediaLanguage.class),

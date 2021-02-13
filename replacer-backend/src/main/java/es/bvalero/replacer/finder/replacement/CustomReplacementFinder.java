@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.replacement;
 
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -28,7 +28,7 @@ class CustomReplacementFinder implements ReplacementFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), pattern);
     }
 

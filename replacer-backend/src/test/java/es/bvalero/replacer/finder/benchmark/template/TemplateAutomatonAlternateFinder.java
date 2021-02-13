@@ -4,8 +4,8 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.List;
 import java.util.regex.MatchResult;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +25,7 @@ class TemplateAutomatonAlternateFinder implements BenchmarkFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         return AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 }

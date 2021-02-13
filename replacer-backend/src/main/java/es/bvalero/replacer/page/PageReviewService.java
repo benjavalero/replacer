@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
@@ -188,6 +189,10 @@ abstract class PageReviewService {
     }
 
     abstract List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
+
+    FinderPage convertPage(WikipediaPage page) {
+        return FinderPage.of(page.getLang(), page.getContent(), page.getTitle());
+    }
 
     @VisibleForTesting
     PageReview buildPageReview(WikipediaPage page, List<Replacement> replacements, PageReviewOptions options) {

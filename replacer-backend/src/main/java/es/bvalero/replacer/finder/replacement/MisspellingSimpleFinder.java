@@ -1,10 +1,10 @@
 package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -35,7 +35,7 @@ class MisspellingSimpleFinder extends MisspellingFinder {
     }
 
     @Override
-    public Iterable<Replacement> find(IndexablePage page) {
+    public Iterable<Replacement> find(FinderPage page) {
         // We need to perform additional transformations according to the language
         return StreamSupport
             .stream(LinearMatchFinder.find(page, this::findResult).spliterator(), false)
@@ -48,13 +48,13 @@ class MisspellingSimpleFinder extends MisspellingFinder {
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // We are overriding the more general find method
         throw new IllegalCallerException();
     }
 
     @Nullable
-    private MatchResult findResult(IndexablePage page, int start) {
+    private MatchResult findResult(FinderPage page, int start) {
         List<MatchResult> matches = new ArrayList<>(100);
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findWord(page.getContent(), start, matches);

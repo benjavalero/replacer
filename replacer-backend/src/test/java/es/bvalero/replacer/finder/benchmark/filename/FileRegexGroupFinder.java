@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.benchmark.filename;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
@@ -16,7 +16,7 @@ class FileRegexGroupFinder implements BenchmarkFinder {
     private static final Pattern PATTERN = Pattern.compile(REGEX);
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), PATTERN);
     }
 

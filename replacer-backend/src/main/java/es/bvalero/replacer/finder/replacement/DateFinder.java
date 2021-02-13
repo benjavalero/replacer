@@ -3,9 +3,9 @@ package es.bvalero.replacer.finder.replacement;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.page.IndexablePage;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -82,7 +82,7 @@ class DateFinder implements ReplacementFinder {
     );
 
     @Override
-    public Iterable<MatchResult> findMatchResults(IndexablePage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         if (WikipediaLanguage.SPANISH == page.getLang()) {
             return AutomatonMatchFinder.find(page.getContent(), AUTOMATON_UPPERCASE_LONG_DATE);
         } else {

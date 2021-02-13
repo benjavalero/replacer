@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.util;
 
-import es.bvalero.replacer.page.IndexablePage;
+import es.bvalero.replacer.finder.common.FinderPage;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.regex.MatchResult;
@@ -12,18 +12,18 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class LinearMatchFinder {
 
-    public static Iterable<MatchResult> find(IndexablePage page, LinearFinder finder) {
+    public static Iterable<MatchResult> find(FinderPage page, LinearFinder finder) {
         return () -> new LinearIterator(page, finder);
     }
 
     private static class LinearIterator implements Iterator<MatchResult> {
 
-        private final IndexablePage page;
+        private final FinderPage page;
         private final LinearFinder finder;
         private int start;
         private MatchResult next;
 
-        LinearIterator(IndexablePage page, LinearFinder finder) {
+        LinearIterator(FinderPage page, LinearFinder finder) {
             this.page = page;
             this.finder = finder;
             this.start = 0;
