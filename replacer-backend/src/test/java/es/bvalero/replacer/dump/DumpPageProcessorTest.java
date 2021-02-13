@@ -6,7 +6,7 @@ import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.page.IndexablePage;
+import es.bvalero.replacer.replacement.IndexablePage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import java.time.LocalDate;
@@ -42,7 +42,7 @@ class DumpPageProcessorTest {
 
     @Test
     void testProcessSimple() {
-        DumpPage dumpPage = DumpPage
+        IndexablePage dumpPage = IndexablePage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
@@ -59,14 +59,14 @@ class DumpPageProcessorTest {
 
     @Test
     void testCheckNamespaces() throws ReplacerException {
-        DumpPage dumpPage = DumpPage
+        IndexablePage dumpPage = IndexablePage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
             .content("")
             .build();
-        DumpPage dumpAnnex = DumpPage.builder().namespace(WikipediaNamespace.ANNEX).content("").build();
-        DumpPage dumpCategory = DumpPage.builder().namespace(WikipediaNamespace.CATEGORY).build();
+        IndexablePage dumpAnnex = IndexablePage.builder().namespace(WikipediaNamespace.ANNEX).content("").build();
+        IndexablePage dumpCategory = IndexablePage.builder().namespace(WikipediaNamespace.CATEGORY).build();
 
         dumpPage.validateProcessable();
         dumpAnnex.validateProcessable();
@@ -78,7 +78,7 @@ class DumpPageProcessorTest {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1L);
 
-        DumpPage dumpPage = DumpPage
+        IndexablePage dumpPage = IndexablePage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
@@ -99,7 +99,7 @@ class DumpPageProcessorTest {
     void testProcessLastUpdateWhenTimestamp() {
         LocalDate today = LocalDate.now();
 
-        DumpPage dumpPage = DumpPage
+        IndexablePage dumpPage = IndexablePage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
@@ -121,7 +121,7 @@ class DumpPageProcessorTest {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1L);
 
-        DumpPage dumpPage = DumpPage
+        IndexablePage dumpPage = IndexablePage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
@@ -140,7 +140,7 @@ class DumpPageProcessorTest {
 
     @Test
     void testProcessNewPage() {
-        DumpPage dumpPage = DumpPage
+        IndexablePage dumpPage = IndexablePage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
@@ -169,7 +169,7 @@ class DumpPageProcessorTest {
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1L);
 
-        DumpPage dumpPage = DumpPage
+        IndexablePage dumpPage = IndexablePage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)

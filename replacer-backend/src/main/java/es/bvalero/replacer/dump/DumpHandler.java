@@ -3,6 +3,7 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
+import es.bvalero.replacer.replacement.IndexablePage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import java.nio.file.Path;
@@ -148,7 +149,7 @@ class DumpHandler extends DefaultHandler {
     }
 
     private void processPage() {
-        DumpPage dumpPage = DumpPage
+        IndexablePage dumpPage = IndexablePage
             .builder()
             .id(this.currentId)
             .lang(this.lang)

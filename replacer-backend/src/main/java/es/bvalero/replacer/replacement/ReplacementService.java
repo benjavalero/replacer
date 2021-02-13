@@ -2,8 +2,6 @@ package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.page.IndexablePage;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +40,7 @@ public class ReplacementService {
     }
 
     public void indexObsoleteByPageId(WikipediaLanguage lang, int pageId) {
-        IndexablePage dummyPage = WikipediaPage.builder().lang(lang).id(pageId).lastUpdate(LocalDate.now()).build();
+        IndexablePage dummyPage = IndexablePage.builder().lang(lang).id(pageId).lastUpdate(LocalDate.now()).build();
         replacementIndexService.indexPageReplacements(dummyPage, Collections.emptyList());
     }
 

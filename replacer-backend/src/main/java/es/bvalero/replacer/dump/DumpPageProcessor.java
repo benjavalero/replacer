@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
+import es.bvalero.replacer.replacement.IndexablePage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import java.time.LocalDate;
@@ -36,7 +37,7 @@ class DumpPageProcessor {
     private ReplacementFinderService replacementFinderService;
 
     @Nullable
-    List<ReplacementEntity> process(DumpPage dumpPage) throws ReplacerException {
+    List<ReplacementEntity> process(IndexablePage dumpPage) throws ReplacerException {
         // 1. Check if it is processable by namespace
         // We "skip" the item by throwing an exception
         try {
@@ -66,7 +67,7 @@ class DumpPageProcessor {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @VisibleForTesting
-    List<ReplacementEntity> processPage(DumpPage dumpPage) {
+    List<ReplacementEntity> processPage(IndexablePage dumpPage) {
         List<ReplacementEntity> dbReplacements = pageReplacementService.findByPageId(
             dumpPage.getId(),
             dumpPage.getLang()
@@ -75,7 +76,7 @@ class DumpPageProcessor {
             .stream()
             .map(ReplacementEntity::getLastUpdate)
             .max(Comparator.comparing(LocalDate::toEpochDay));
-        if (dbLastUpdate.isPresent() && !dumpPage.isProcessableByTimestamp(dbLastUpdate.get())) {
+        if (dbLastUpdate.isPresent() && !isProcessableByTimestamp(dumpPage, dbLastUpdate.get())) {
             LOGGER.trace(
                 "Page not processable by date: {}. Dump date: {}. DB date: {}",
                 dumpPage.getTitle(),
@@ -89,11 +90,18 @@ class DumpPageProcessor {
         return replacementIndexService.findIndexPageReplacements(dumpPage, replacements, dbReplacements);
     }
 
-    FinderPage convertPage(DumpPage page) {
+    private boolean isProcessableByTimestamp(IndexablePage dumpPage, LocalDate dbDate) {
+        // If page modified in dump equals to the last indexing, reprocess always.
+        // If page modified in dump after last indexing, reprocess always.
+        // If page modified in dump before last indexing, do not reprocess.
+        return !dumpPage.getLastUpdate().isBefore(dbDate);
+    }
+
+    FinderPage convertPage(IndexablePage page) {
         return FinderPage.of(page.getLang(), page.getContent(), page.getTitle());
     }
 
-    private List<ReplacementEntity> notProcessPage(DumpPage dumpPage) {
+    private List<ReplacementEntity> notProcessPage(IndexablePage dumpPage) {
         List<ReplacementEntity> dbReplacements = pageReplacementService.findByPageId(
             dumpPage.getId(),
             dumpPage.getLang()

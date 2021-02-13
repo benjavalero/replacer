@@ -2,7 +2,6 @@ package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
-import es.bvalero.replacer.page.IndexablePage;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,9 +11,7 @@ import org.springframework.lang.Nullable;
 
 @Value
 @Builder
-public class WikipediaPage implements IndexablePage {
-
-    // TODO: Make not public. Use interface IndexablePage outside this package when needed.
+public class WikipediaPage {
 
     int id;
     WikipediaLanguage lang;

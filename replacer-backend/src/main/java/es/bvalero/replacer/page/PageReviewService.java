@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.replacement.IndexablePage;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -140,12 +141,24 @@ abstract class PageReviewService {
 
     private boolean validatePage(WikipediaPage page) {
         try {
-            page.validateProcessable();
+            toIndexable(page).validateProcessable();
             return true;
         } catch (ReplacerException e) {
             LOGGER.warn("{} - {} - {}", e.getMessage(), page.getId(), page.getTitle());
             return false;
         }
+    }
+
+    IndexablePage toIndexable(WikipediaPage page) {
+        return IndexablePage
+            .builder()
+            .id(page.getId())
+            .lang(page.getLang())
+            .title(page.getTitle())
+            .namespace(page.getNamespace())
+            .lastUpdate(page.getLastUpdate())
+            .content(page.getContent())
+            .build();
     }
 
     private void indexObsoletePage(int pageId, WikipediaLanguage lang) {

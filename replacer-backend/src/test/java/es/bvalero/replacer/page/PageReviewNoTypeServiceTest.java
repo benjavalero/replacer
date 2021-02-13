@@ -138,7 +138,7 @@ class PageReviewNoTypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexPageReplacements(Mockito.eq(page), Mockito.anyList());
+            .indexPageReplacements(Mockito.eq(pageReviewNoTypeService.toIndexable(page)), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId, review.get().getId());
@@ -169,7 +169,9 @@ class PageReviewNoTypeServiceTest {
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        Mockito.verify(replacementIndexService, Mockito.times(1)).indexPageReplacements(page, Collections.emptyList());
+        Mockito
+            .verify(replacementIndexService, Mockito.times(1))
+            .indexPageReplacements(pageReviewNoTypeService.toIndexable(page), Collections.emptyList());
 
         Assertions.assertFalse(review.isPresent());
     }
@@ -200,7 +202,7 @@ class PageReviewNoTypeServiceTest {
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexPageReplacements(Mockito.eq(page2), Mockito.anyList());
+            .indexPageReplacements(Mockito.eq(pageReviewNoTypeService.toIndexable(page2)), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId2, review.get().getId());

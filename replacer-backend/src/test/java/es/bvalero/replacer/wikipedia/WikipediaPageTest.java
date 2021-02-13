@@ -14,17 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 class WikipediaPageTest {
 
     @Test
-    void testIsProcessableByNamespace() throws ReplacerException {
-        Assertions.assertThrows(
-            ReplacerException.class,
-            () ->
-                WikipediaPage.builder().namespace(WikipediaNamespace.WIKIPEDIA).build().validateProcessableByNamespace()
-        );
-        WikipediaPage.builder().namespace(WikipediaNamespace.ARTICLE).build().validateProcessableByNamespace();
-        WikipediaPage.builder().namespace(WikipediaNamespace.ANNEX).build().validateProcessableByNamespace();
-    }
-
-    @Test
     void testParseWikipediaDate() {
         LocalDate expected = LocalDate.of(2018, Month.AUGUST, 31);
         Assertions.assertEquals(expected, WikipediaUtils.parseWikipediaTimestamp("2018-08-31T05:17:28Z"));

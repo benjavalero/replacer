@@ -1,6 +1,8 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.time.LocalDate;
@@ -27,7 +29,7 @@ class ReplacementIndexServiceTest {
     @Test
     void testIndexNewPageReplacements() {
         int pageId = new Random().nextInt();
-        WikipediaPage page = WikipediaPage.builder().id(pageId).lang(WikipediaLanguage.SPANISH).build();
+        IndexablePage page = IndexablePage.builder().id(pageId).lang(WikipediaLanguage.SPANISH).build();
 
         replacementIndexService.indexPageReplacements(page, Collections.emptyList());
 
@@ -39,7 +41,7 @@ class ReplacementIndexServiceTest {
     @Test
     void testIndexNewPage() {
         Replacement rep1 = Replacement.builder().start(0).text("X").build(); // New => ADD
-        WikipediaPage page = WikipediaPage
+        IndexablePage page = IndexablePage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .content("X")
@@ -63,7 +65,7 @@ class ReplacementIndexServiceTest {
     void testIndexObsoletePage() {
         List<Replacement> newReplacements = Collections.emptyList();
         int pageId = new Random().nextInt();
-        WikipediaPage page = WikipediaPage
+        IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
             .lang(WikipediaLanguage.SPANISH)
@@ -97,7 +99,7 @@ class ReplacementIndexServiceTest {
         List<Replacement> newReplacements = Collections.emptyList();
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
 
-        WikipediaPage page = WikipediaPage.builder().lang(WikipediaLanguage.SPANISH).build();
+        IndexablePage page = IndexablePage.builder().lang(WikipediaLanguage.SPANISH).build();
         List<ReplacementEntity> result = replacementIndexService.findIndexPageReplacements(
             page,
             newReplacements,
@@ -125,7 +127,7 @@ class ReplacementIndexServiceTest {
 
         String content = "012345678";
         String context = "012345678"; // The context is the same than content as it is so short
-        WikipediaPage page = WikipediaPage
+        IndexablePage page = IndexablePage
             .builder()
             .id(1)
             .lang(WikipediaLanguage.getDefault())
@@ -184,7 +186,7 @@ class ReplacementIndexServiceTest {
 
         String content = "012345678";
         String context = "012345678"; // The context is the same than content as it is so short
-        WikipediaPage page = WikipediaPage
+        IndexablePage page = IndexablePage
             .builder()
             .id(1)
             .lang(WikipediaLanguage.getDefault())
@@ -221,5 +223,16 @@ class ReplacementIndexServiceTest {
             ),
             new HashSet<>(toIndex)
         );
+    }
+
+    @Test
+    void testIndexablePageIsProcessableByNamespace() throws ReplacerException {
+        Assertions.assertThrows(
+            ReplacerException.class,
+            () ->
+                IndexablePage.builder().namespace(WikipediaNamespace.WIKIPEDIA).build().validateProcessableByNamespace()
+        );
+        IndexablePage.builder().namespace(WikipediaNamespace.ARTICLE).build().validateProcessableByNamespace();
+        IndexablePage.builder().namespace(WikipediaNamespace.ANNEX).build().validateProcessableByNamespace();
     }
 }

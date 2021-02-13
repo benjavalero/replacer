@@ -47,7 +47,7 @@ class PageReviewNoTypeService extends PageReviewService {
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         LOGGER.trace("Update page replacements in database");
-        replacementIndexService.indexPageReplacements(page, replacements);
+        replacementIndexService.indexPageReplacements(toIndexable(page), replacements);
 
         return replacements;
     }

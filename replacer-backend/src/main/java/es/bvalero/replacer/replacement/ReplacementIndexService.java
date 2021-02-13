@@ -2,7 +2,7 @@ package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.page.IndexablePage;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -216,10 +216,14 @@ public class ReplacementIndexService {
             replacement.getType(),
             replacement.getSubtype(),
             replacement.getStart(),
-            page.getContext(replacement),
+            getContext(page, replacement),
             page.getLastUpdate(),
             page.getTitle()
         );
+    }
+
+    private String getContext(IndexablePage page, Replacement replacement) {
+        return FinderUtils.getContextAroundWord(page.getContent(), replacement.getStart(), replacement.getEnd(), 20);
     }
 
     /**
