@@ -1,7 +1,7 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import java.util.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.common;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

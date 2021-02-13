@@ -2,10 +2,10 @@ package es.bvalero.replacer.finder.replacement;
 
 import static org.hamcrest.Matchers.is;
 
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import java.util.List;

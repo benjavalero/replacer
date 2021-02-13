@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.immutable;
 
-import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Collection;
 import org.junit.jupiter.api.Assertions;

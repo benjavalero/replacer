@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.benchmark.person;
 
 import static org.hamcrest.Matchers.is;
 
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;

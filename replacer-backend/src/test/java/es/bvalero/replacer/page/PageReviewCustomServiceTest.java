@@ -1,6 +1,8 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.finder.replacement.CustomOptions;
 import es.bvalero.replacer.finder.replacement.CustomReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.Replacement;

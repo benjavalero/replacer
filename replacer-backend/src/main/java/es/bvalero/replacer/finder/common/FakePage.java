@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.common;
 
+import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.page.IndexablePage;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Value;

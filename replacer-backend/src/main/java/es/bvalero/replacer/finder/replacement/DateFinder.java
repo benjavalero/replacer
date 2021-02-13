@@ -2,10 +2,10 @@ package es.bvalero.replacer.finder.replacement;
 
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.page.IndexablePage;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;

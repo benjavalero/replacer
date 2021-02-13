@@ -1,8 +1,8 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.text.Collator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

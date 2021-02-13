@@ -1,6 +1,5 @@
-package es.bvalero.replacer;
+package es.bvalero.replacer.common;
 
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import lombok.Data;
 
 @Data

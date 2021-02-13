@@ -1,8 +1,8 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

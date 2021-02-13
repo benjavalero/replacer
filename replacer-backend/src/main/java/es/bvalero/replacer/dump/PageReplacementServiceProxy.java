@@ -1,9 +1,9 @@
 package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable;
 
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 import java.util.HashSet;

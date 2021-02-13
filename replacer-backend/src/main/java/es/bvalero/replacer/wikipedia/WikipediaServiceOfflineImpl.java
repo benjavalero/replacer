@@ -1,6 +1,8 @@
 package es.bvalero.replacer.wikipedia;
 
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.common.WikipediaNamespace;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;

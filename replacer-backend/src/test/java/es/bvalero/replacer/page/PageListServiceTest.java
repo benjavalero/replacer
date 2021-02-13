@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;

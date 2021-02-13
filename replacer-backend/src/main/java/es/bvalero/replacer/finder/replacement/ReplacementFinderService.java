@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.replacement;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.finder.common.Finder;
 import es.bvalero.replacer.finder.common.FinderService;
 import es.bvalero.replacer.finder.immutable.Immutable;

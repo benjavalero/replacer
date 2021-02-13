@@ -1,7 +1,9 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.common.WikipediaNamespace;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;

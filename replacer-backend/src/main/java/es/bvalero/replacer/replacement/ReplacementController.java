@@ -1,8 +1,8 @@
 package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

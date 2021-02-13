@@ -1,8 +1,8 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.page.IndexablePage;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.time.LocalDate;
 import java.util.Collections;

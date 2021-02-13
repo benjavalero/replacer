@@ -1,10 +1,10 @@
 package es.bvalero.replacer.finder.replacement;
 
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import es.bvalero.replacer.page.IndexablePage;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

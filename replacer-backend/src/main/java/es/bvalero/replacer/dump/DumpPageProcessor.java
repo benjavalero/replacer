@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.replacement.ReplacementEntity;

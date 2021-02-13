@@ -1,7 +1,9 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.common.WikipediaNamespace;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.replacement;
 
-import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

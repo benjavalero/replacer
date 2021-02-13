@@ -1,6 +1,6 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Pageable;

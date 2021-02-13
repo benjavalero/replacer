@@ -1,9 +1,9 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import java.nio.file.Path;
 import java.time.Instant;

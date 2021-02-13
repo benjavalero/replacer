@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.benchmark.cursive;
 
 import static org.hamcrest.Matchers.is;
 
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.util.ArrayList;

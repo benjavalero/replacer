@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.List;
 
 interface PageReplacementService {

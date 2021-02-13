@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.replacement.Suggestion;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.Collections;

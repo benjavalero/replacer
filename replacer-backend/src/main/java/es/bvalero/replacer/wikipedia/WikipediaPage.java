@@ -1,5 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
+import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.page.IndexablePage;
 import java.time.LocalDate;
 import lombok.AccessLevel;

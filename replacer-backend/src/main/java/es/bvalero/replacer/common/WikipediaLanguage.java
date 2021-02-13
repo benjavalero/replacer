@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.common;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;

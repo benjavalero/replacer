@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable;
 
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.finder.common.Finder;
 import es.bvalero.replacer.finder.common.FinderService;
 import es.bvalero.replacer.finder.replacement.Misspelling;

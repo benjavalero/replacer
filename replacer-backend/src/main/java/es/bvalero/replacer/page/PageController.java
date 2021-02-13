@@ -1,8 +1,8 @@
 package es.bvalero.replacer.page;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.UserParameters;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.UserParameters;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.wikipedia.WikipediaPage;

@@ -1,8 +1,8 @@
 package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;

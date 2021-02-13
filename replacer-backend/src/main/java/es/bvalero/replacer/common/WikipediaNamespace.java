@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.common;
 
 import java.util.Arrays;
 import java.util.EnumSet;

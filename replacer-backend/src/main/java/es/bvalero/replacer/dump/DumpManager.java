@@ -1,8 +1,8 @@
 package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.ReplacerException;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import java.nio.file.Path;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

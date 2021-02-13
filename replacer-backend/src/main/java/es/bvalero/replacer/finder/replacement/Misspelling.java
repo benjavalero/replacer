@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 import lombok.Value;
 import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.TestOnly;
-import org.jetbrains.annotations.VisibleForTesting;
 
 /**
  * Domain class corresponding to a potential simple or composed misspelling.

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import java.util.List;
 

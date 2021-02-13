@@ -1,8 +1,8 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.replacement.CustomOptions;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Value;

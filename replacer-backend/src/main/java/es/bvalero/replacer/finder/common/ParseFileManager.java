@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.common;
 
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.BufferedReader;
@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
 

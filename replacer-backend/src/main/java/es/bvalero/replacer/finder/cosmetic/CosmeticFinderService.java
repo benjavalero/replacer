@@ -4,7 +4,6 @@ import es.bvalero.replacer.finder.common.Finder;
 import es.bvalero.replacer.finder.common.FinderService;
 import es.bvalero.replacer.page.IndexablePage;
 import java.util.*;
-import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

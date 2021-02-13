@@ -2,7 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;

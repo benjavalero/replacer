@@ -1,7 +1,7 @@
 package es.bvalero.replacer.replacement;
 
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.time.LocalDate;
 import java.util.*;

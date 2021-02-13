@@ -1,7 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import es.bvalero.replacer.ReplacerException;
+import es.bvalero.replacer.common.ReplacerException;
 import java.util.List;
 import lombok.Data;
 import org.springframework.lang.Nullable;

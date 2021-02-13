@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.wikipedia.WikipediaLanguage;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
 import lombok.*;
