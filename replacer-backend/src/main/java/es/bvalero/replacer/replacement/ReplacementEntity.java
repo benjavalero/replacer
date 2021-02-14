@@ -1,7 +1,6 @@
 package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.replacement.ReplacementType;
 import java.time.LocalDate;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
@@ -143,24 +142,5 @@ public class ReplacementEntity {
             this.position == 0 &&
             REVIEWER_SYSTEM.equals(this.reviewer)
         );
-    }
-
-    public static ReplacementEntity ofCustomReviewed(
-        int pageId,
-        WikipediaLanguage lang,
-        String subtype,
-        String reviewer
-    ) {
-        return ReplacementEntity
-            .builder()
-            .pageId(pageId)
-            .lang(lang.getCode())
-            .type(ReplacementType.CUSTOM)
-            .subtype(subtype)
-            .position(0)
-            .lastUpdate(LocalDate.now())
-            .reviewer(reviewer)
-            .build()
-            .setToCreate();
     }
 }
