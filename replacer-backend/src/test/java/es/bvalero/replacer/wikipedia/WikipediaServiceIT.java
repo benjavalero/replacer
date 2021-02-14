@@ -1,5 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
+import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
@@ -103,8 +104,8 @@ class WikipediaServiceIT {
         );
 
         // Save the conflict content started 1 day before
-        String before = WikipediaUtils.formatWikipediaTimestamp(
-            WikipediaUtils.parseWikipediaTimestamp(page.getQueryTimestamp()).atTime(0, 0).minusDays(1)
+        String before = DateUtils.formatWikipediaTimestamp(
+            DateUtils.parseWikipediaTimestamp(page.getQueryTimestamp()).atTime(0, 0).minusDays(1)
         );
 
         Assertions.assertThrows(

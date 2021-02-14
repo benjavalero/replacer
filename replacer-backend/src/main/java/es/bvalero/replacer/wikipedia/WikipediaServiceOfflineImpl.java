@@ -1,8 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
-import es.bvalero.replacer.common.ReplacerException;
-import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.common.WikipediaNamespace;
+import es.bvalero.replacer.common.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,17 +30,17 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return WikipediaUtils.getFileContent("/offline/misspelling-list.txt");
+        return FileUtils.getFileContent("/offline/misspelling-list.txt");
     }
 
     @Override
     public String getFalsePositiveListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return WikipediaUtils.getFileContent("/offline/false-positives.txt");
+        return FileUtils.getFileContent("/offline/false-positives.txt");
     }
 
     @Override
     public String getComposedMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return WikipediaUtils.getFileContent("/offline/composed-misspellings.txt");
+        return FileUtils.getFileContent("/offline/composed-misspellings.txt");
     }
 
     @Override
@@ -52,14 +50,14 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
 
     private WikipediaPage buildFakePage(int pageId) throws ReplacerException {
         LocalDateTime nowDate = LocalDateTime.now();
-        String now = WikipediaUtils.formatWikipediaTimestamp(nowDate);
+        String now = DateUtils.formatWikipediaTimestamp(nowDate);
         return WikipediaPage
             .builder()
             .id(pageId)
             .lang(WikipediaLanguage.getDefault())
             .namespace(WikipediaNamespace.ARTICLE)
             .title("América del Norte")
-            .content(WikipediaUtils.getFileContent("/offline/sample-article.txt"))
+            .content(FileUtils.getFileContent("/offline/sample-article.txt"))
             .lastUpdate(nowDate.toLocalDate())
             .queryTimestamp(now)
             .build();

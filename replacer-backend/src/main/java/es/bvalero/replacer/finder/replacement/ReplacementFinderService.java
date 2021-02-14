@@ -1,13 +1,13 @@
 package es.bvalero.replacer.finder.replacement;
 
 import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.common.FileUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.finder.common.Finder;
 import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.common.FinderService;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
-import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -122,7 +122,7 @@ public class ReplacementFinderService implements FinderService<Replacement> {
 
     @TestOnly
     public static Set<String> getMisspellings() throws ReplacerException {
-        String text = WikipediaUtils.getFileContent("/offline/misspelling-list.txt");
+        String text = FileUtils.getFileContent("/offline/misspelling-list.txt");
         MisspellingManager misspellingManager = new MisspellingManager();
         Set<Misspelling> misspellings = misspellingManager.parseItemsText(text);
         MisspellingFinder misspellingFinder = new MisspellingSimpleFinder();
@@ -131,7 +131,7 @@ public class ReplacementFinderService implements FinderService<Replacement> {
 
     @TestOnly
     public static Set<String> getComposedMisspellings() throws ReplacerException {
-        String text = WikipediaUtils.getFileContent("/offline/composed-misspellings.txt");
+        String text = FileUtils.getFileContent("/offline/composed-misspellings.txt");
         MisspellingManager misspellingManager = new MisspellingComposedManager();
         Set<Misspelling> misspellings = misspellingManager.parseItemsText(text);
         MisspellingFinder misspellingFinder = new MisspellingComposedFinder();

@@ -1,6 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
@@ -185,7 +186,7 @@ class WikipediaServiceImpl implements WikipediaService {
             .title(page.getTitle())
             .namespace(WikipediaNamespace.valueOf(page.getNs()))
             .content(page.getRevisions().get(0).getSlots().getMain().getContent())
-            .lastUpdate(WikipediaUtils.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
+            .lastUpdate(DateUtils.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
             .queryTimestamp(queryTimestamp)
             .build();
     }

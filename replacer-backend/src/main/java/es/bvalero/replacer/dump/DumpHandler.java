@@ -1,11 +1,11 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.replacement.IndexablePage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.wikipedia.WikipediaUtils;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -155,7 +155,7 @@ class DumpHandler extends DefaultHandler {
             .lang(this.lang)
             .title(this.currentTitle)
             .namespace(WikipediaNamespace.valueOf(this.currentNamespace))
-            .lastUpdate(WikipediaUtils.parseWikipediaTimestamp(this.currentTimestamp))
+            .lastUpdate(DateUtils.parseWikipediaTimestamp(this.currentTimestamp))
             .content(this.currentContent)
             .build();
 
