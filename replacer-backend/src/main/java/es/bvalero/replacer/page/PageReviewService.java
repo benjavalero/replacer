@@ -8,7 +8,6 @@ import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.replacement.IndexablePage;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;

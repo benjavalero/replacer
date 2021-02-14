@@ -29,7 +29,7 @@ public interface WikipediaService {
     Optional<WikipediaPage> getPageByIdAndSection(int pageId, WikipediaSection section, WikipediaLanguage lang)
         throws ReplacerException;
 
-    PageSearchResult getPageIdsByStringMatch(
+    WikipediaSearchResult getPageIdsByStringMatch(
         WikipediaLanguage lang,
         String text,
         boolean caseSensitive,

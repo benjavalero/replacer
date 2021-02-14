@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.page;
 
 import java.util.*;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.Getter;
 // It's not worth to make this class immutable.
 // At least we encapsulate the logic to manage the internal list.
 @Getter
-public final class PageSearchResult {
+final class PageSearchResult {
 
     private final List<Integer> pageIds = new LinkedList<>();
     private long total;

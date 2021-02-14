@@ -165,7 +165,7 @@ class WikipediaServiceTest {
             .when(wikipediaApiFacade.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
-        PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
+        WikipediaSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
             WikipediaLanguage.SPANISH,
             "",
             false,
@@ -184,7 +184,7 @@ class WikipediaServiceTest {
             .when(wikipediaApiFacade.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
-        PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
+        WikipediaSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
             WikipediaLanguage.SPANISH,
             "",
             false,

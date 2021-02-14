@@ -258,7 +258,7 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Override
     @Loggable(value = Loggable.DEBUG)
-    public PageSearchResult getPageIdsByStringMatch(
+    public WikipediaSearchResult getPageIdsByStringMatch(
         WikipediaLanguage lang,
         String text,
         boolean caseSensitive,
@@ -268,7 +268,7 @@ class WikipediaServiceImpl implements WikipediaService {
         // Avoid exception when reaching the maximum offset limit
         if (offset + limit >= MAX_OFFSET_LIMIT) {
             LOGGER.warn("Maximum offset reached: {} - {} - {}", lang, text, caseSensitive);
-            return PageSearchResult.ofEmpty();
+            return WikipediaSearchResult.ofEmpty();
         }
 
         WikipediaApiResponse apiResponse = wikipediaApiFacade.executeGetRequest(
@@ -323,7 +323,7 @@ class WikipediaServiceImpl implements WikipediaService {
         return quoted;
     }
 
-    private PageSearchResult extractPageIdsFromSearchJson(WikipediaApiResponse response) {
+    private WikipediaSearchResult extractPageIdsFromSearchJson(WikipediaApiResponse response) {
         List<Integer> pageIds = response
             .getQuery()
             .getSearch()
@@ -336,7 +336,7 @@ class WikipediaServiceImpl implements WikipediaService {
             throw new IllegalArgumentException("Null page ID in API response: " + response);
         }
 
-        return PageSearchResult.of(response.getQuery().getSearchinfo().getTotalhits(), pageIds);
+        return WikipediaSearchResult.of(response.getQuery().getSearchinfo().getTotalhits(), pageIds);
     }
 
     @Loggable(value = Loggable.DEBUG, ignore = ReplacerException.class)

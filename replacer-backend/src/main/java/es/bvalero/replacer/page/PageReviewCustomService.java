@@ -7,8 +7,8 @@ import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.PageSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
@@ -58,12 +58,14 @@ class PageReviewCustomService extends PageReviewService {
                 options.getSubtype()
             );
 
-            PageSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
-                options.getLang(),
-                options.getSubtype(),
-                caseSensitive,
-                offset,
-                CACHE_SIZE
+            PageSearchResult pageIds = convert(
+                wikipediaService.getPageIdsByStringMatch(
+                    options.getLang(),
+                    options.getSubtype(),
+                    caseSensitive,
+                    offset,
+                    CACHE_SIZE
+                )
             );
             offset += CACHE_SIZE;
             cachedOffsets.put(cacheKey, offset);
@@ -74,12 +76,14 @@ class PageReviewCustomService extends PageReviewService {
 
                 if (pageIds.isEmpty()) {
                     pageIds =
-                        wikipediaService.getPageIdsByStringMatch(
-                            options.getLang(),
-                            options.getSubtype(),
-                            caseSensitive,
-                            offset,
-                            CACHE_SIZE
+                        convert(
+                            wikipediaService.getPageIdsByStringMatch(
+                                options.getLang(),
+                                options.getSubtype(),
+                                caseSensitive,
+                                offset,
+                                CACHE_SIZE
+                            )
                         );
                     offset += CACHE_SIZE;
                     cachedOffsets.put(cacheKey, offset);
@@ -92,6 +96,10 @@ class PageReviewCustomService extends PageReviewService {
         }
 
         return PageSearchResult.ofEmpty();
+    }
+
+    private PageSearchResult convert(WikipediaSearchResult wikipediaSearchResult) {
+        return PageSearchResult.of(wikipediaSearchResult.getTotal(), wikipediaSearchResult.getPageIds());
     }
 
     @Override

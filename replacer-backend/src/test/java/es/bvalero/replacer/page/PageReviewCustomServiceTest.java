@@ -83,7 +83,7 @@ class PageReviewCustomServiceTest {
                     Mockito.anyInt()
                 )
             )
-            .thenReturn(PageSearchResult.of(1, pageIds));
+            .thenReturn(WikipediaSearchResult.of(1, pageIds));
 
         // The page exists in Wikipedia
         Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(page));
@@ -127,8 +127,8 @@ class PageReviewCustomServiceTest {
                     Mockito.anyInt()
                 )
             )
-            .thenReturn(PageSearchResult.of(pageIds.size(), pageIds))
-            .thenReturn(PageSearchResult.ofEmpty());
+            .thenReturn(WikipediaSearchResult.of(pageIds.size(), pageIds))
+            .thenReturn(WikipediaSearchResult.ofEmpty());
 
         // The result 1 is already reviewed
         // The result 2 is not reviewed the first time, but reviewed the second time.
