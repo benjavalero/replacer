@@ -106,7 +106,8 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
         @Nullable Integer section,
         String pageContent,
         String currentTimestamp,
-        AccessToken accessToken
+        String token,
+        String tokenSecret
     ) {
         // Do nothing
     }

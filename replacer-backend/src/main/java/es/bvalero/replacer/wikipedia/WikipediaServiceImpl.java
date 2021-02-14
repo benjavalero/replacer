@@ -347,8 +347,10 @@ class WikipediaServiceImpl implements WikipediaService {
         @Nullable Integer section,
         String pageContent,
         String currentTimestamp,
-        AccessToken accessToken
+        String token,
+        String tokenSecret
     ) throws ReplacerException {
+        AccessToken accessToken = AccessToken.of(token, tokenSecret);
         EditToken editToken = getEditToken(pageId, lang, accessToken);
         // Pre-check of edit conflicts
         if (currentTimestamp.compareTo(editToken.getTimestamp()) <= 0) {

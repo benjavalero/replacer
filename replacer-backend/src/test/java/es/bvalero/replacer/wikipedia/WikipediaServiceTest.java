@@ -231,13 +231,12 @@ class WikipediaServiceTest {
             )
             .thenReturn(response);
 
-        AccessToken accessToken = AccessToken.ofEmpty();
         // We use a timestamp BEFORE the timestamp of the last edition (from the edit token)
         String currentTimestamp = "2019-06-23T21:24:09Z";
 
         Assertions.assertThrows(
             ReplacerException.class,
-            () -> wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, 0, "", currentTimestamp, accessToken)
+            () -> wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, 0, "", currentTimestamp, "", "")
         );
     }
 
@@ -257,10 +256,9 @@ class WikipediaServiceTest {
             )
             .thenReturn(response);
 
-        AccessToken accessToken = AccessToken.ofEmpty();
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         String currentTimestamp = "2019-06-25T21:24:09Z";
-        wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, null, "", currentTimestamp, accessToken);
+        wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, null, "", currentTimestamp, "", "");
 
         // Two calls: one for the EditToken and another to save the content
         Mockito
@@ -274,7 +272,7 @@ class WikipediaServiceTest {
         // Save a section
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         currentTimestamp = "2019-06-26T21:24:09Z";
-        wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, 2, "", currentTimestamp, accessToken);
+        wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, 2, "", currentTimestamp, "", "");
 
         // Two calls: one for the EditToken and another to save the content (x2 save page and section in this test)
         Mockito

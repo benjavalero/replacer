@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.wikipedia.AccessToken;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,10 +25,6 @@ class SavePage {
 
     @Nullable
     private String subtype;
-
-    AccessToken getAccessToken() {
-        return AccessToken.of(token, tokenSecret);
-    }
 
     @Override
     public String toString() {

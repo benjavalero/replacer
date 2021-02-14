@@ -131,7 +131,8 @@ public class PageController {
                     savePage.getSection(),
                     textToSave,
                     savePage.getTimestamp(),
-                    savePage.getAccessToken()
+                    savePage.getToken(),
+                    savePage.getTokenSecret()
                 );
             } catch (ReplacerException e) {
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
