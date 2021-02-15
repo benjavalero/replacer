@@ -141,17 +141,20 @@ public class PageController {
 
         // Mark page as reviewed in the database
         if (ReplacementType.CUSTOM.equals(savePage.getType())) {
-            if (StringUtils.isBlank(savePage.getSubtype())) throw new AssertionError();
+            String subtype = savePage.getSubtype();
+            assert subtype != null;
             pageReviewCustomService.reviewPageReplacements(
                 pageId,
-                PageReviewOptions.ofCustom(params.getLang(), savePage.getSubtype(), ""),
+                PageReviewOptions.ofCustom(params.getLang(), subtype, ""),
                 params.getUser()
             );
         } else if (StringUtils.isNotBlank(savePage.getType())) {
-            if (StringUtils.isBlank(savePage.getSubtype())) throw new AssertionError();
+            String type = savePage.getType();
+            String subtype = savePage.getSubtype();
+            assert type != null && subtype != null;
             pageReviewTypeSubtypeService.reviewPageReplacements(
                 pageId,
-                PageReviewOptions.ofTypeSubtype(params.getLang(), savePage.getType(), savePage.getSubtype()),
+                PageReviewOptions.ofTypeSubtype(params.getLang(), type, subtype),
                 params.getUser()
             );
         } else {

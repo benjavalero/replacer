@@ -1,18 +1,31 @@
 package es.bvalero.replacer.finder.immutable;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class CursiveFinderTest {
 
-    @Test
-    void testCursiveSimple() {
-        String cursive = "''cursive''";
+    @ParameterizedTest
+    @ValueSource(
+        strings = {
+            "''cursive''",
+            "'''bold'''",
+            // Cursive with quote
+            "''Beefeater's cool''",
+            // Cursive with bold
+            "''A '''Game''' of Thrones''",
+            // Cursive with one character
+            "''B''",
+            // Cursive with two characters
+            "''Be''",
+        }
+    )
+    void testFindCursive(String cursive) {
         String text = String.format("A %s.", cursive);
 
         ImmutableFinder cursiveFinder = new CursiveFinder();
@@ -43,9 +56,10 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assertions.assertEquals(2, matches.size());
-        Assertions.assertEquals(cursive1, matches.get(0).getText());
-        Assertions.assertEquals(cursive2, matches.get(1).getText());
+        Assertions.assertEquals(
+            Set.of(cursive1, cursive2),
+            matches.stream().map(Immutable::getText).collect(Collectors.toSet())
+        );
     }
 
     @Test
@@ -57,21 +71,10 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Set<String> expected = new HashSet<>(Arrays.asList(cursive1, cursive2));
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void testBoldSimple() {
-        String bold = "'''bold'''";
-        String text = String.format("A %s.", bold);
-
-        ImmutableFinder cursiveFinder = new CursiveFinder();
-        List<Immutable> matches = cursiveFinder.findList(text);
-
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(bold, matches.get(0).getText());
+        Assertions.assertEquals(
+            Set.of(cursive1, cursive2),
+            matches.stream().map(Immutable::getText).collect(Collectors.toSet())
+        );
     }
 
     @Test
@@ -83,9 +86,10 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assertions.assertEquals(2, matches.size());
-        Assertions.assertEquals(bold1, matches.get(0).getText());
-        Assertions.assertEquals(bold2, matches.get(1).getText());
+        Assertions.assertEquals(
+            Set.of(bold1, bold2),
+            matches.stream().map(Immutable::getText).collect(Collectors.toSet())
+        );
     }
 
     @Test
@@ -97,22 +101,10 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Set<String> expected = new HashSet<>(Arrays.asList(bold1, bold2));
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void testCursiveWithQuote() {
-        // We need to capture more than one character after the inner quote
-        String cursive = "''Beefeater's cool''";
-        String text = String.format("A %s.", cursive);
-
-        ImmutableFinder cursiveFinder = new CursiveFinder();
-        List<Immutable> matches = cursiveFinder.findList(text);
-
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(cursive, matches.get(0).getText());
+        Assertions.assertEquals(
+            Set.of(bold1, bold2),
+            matches.stream().map(Immutable::getText).collect(Collectors.toSet())
+        );
     }
 
     @Test
@@ -125,42 +117,5 @@ class CursiveFinderTest {
         List<Immutable> matches = cursiveFinder.findList(text);
 
         Assertions.assertEquals(2, matches.size());
-    }
-
-    @Test
-    void testCursiveWithBold() {
-        String cursive = "''A '''Game''' of Thrones''";
-        String text = String.format("A %s.", cursive);
-
-        ImmutableFinder cursiveFinder = new CursiveFinder();
-        List<Immutable> matches = cursiveFinder.findList(text);
-
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(cursive, matches.get(0).getText());
-    }
-
-    @Test
-    void testCursiveWithOneCharacter() {
-        // We need to capture more than one character between the quotes
-        String cursive = "''B''";
-        String text = String.format("A %s.", cursive);
-
-        ImmutableFinder cursiveFinder = new CursiveFinder();
-        List<Immutable> matches = cursiveFinder.findList(text);
-
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(cursive, matches.get(0).getText());
-    }
-
-    @Test
-    void testCursiveWithTwoCharacters() {
-        String cursive = "''Be''";
-        String text = String.format("A %s.", cursive);
-
-        ImmutableFinder cursiveFinder = new CursiveFinder();
-        List<Immutable> matches = cursiveFinder.findList(text);
-
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(cursive, matches.get(0).getText());
     }
 }
