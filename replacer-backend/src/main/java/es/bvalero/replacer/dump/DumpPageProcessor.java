@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.replacement.IndexablePage;
+import es.bvalero.replacer.replacement.IndexableReplacement;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import java.time.LocalDate;
@@ -87,7 +88,11 @@ class DumpPageProcessor {
         }
 
         List<Replacement> replacements = replacementFinderService.findList(convertPage(dumpPage));
-        return replacementIndexService.findIndexPageReplacements(dumpPage, replacements, dbReplacements);
+        return replacementIndexService.findIndexPageReplacements(
+            dumpPage,
+            replacements.stream().map(r -> convertToIndexable(dumpPage, r)).collect(Collectors.toList()),
+            dbReplacements
+        );
     }
 
     private boolean isProcessableByTimestamp(IndexablePage dumpPage, LocalDate dbDate) {
@@ -99,6 +104,20 @@ class DumpPageProcessor {
 
     FinderPage convertPage(IndexablePage page) {
         return FinderPage.of(page.getLang(), page.getContent(), page.getTitle());
+    }
+
+    private IndexableReplacement convertToIndexable(IndexablePage page, Replacement replacement) {
+        return IndexableReplacement
+            .builder()
+            .pageId(page.getId())
+            .lang(page.getLang())
+            .type(replacement.getType())
+            .subtype(replacement.getSubtype())
+            .position(replacement.getStart())
+            .context(replacement.getContext(page.getContent()))
+            .lastUpdate(page.getLastUpdate())
+            .title(page.getTitle())
+            .build();
     }
 
     private List<ReplacementEntity> notProcessPage(IndexablePage dumpPage) {

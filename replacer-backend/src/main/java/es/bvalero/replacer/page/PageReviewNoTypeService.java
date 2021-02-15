@@ -2,7 +2,6 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.util.List;
@@ -17,9 +16,6 @@ class PageReviewNoTypeService extends PageReviewService {
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
-
-    @Autowired
-    private ReplacementIndexService replacementIndexService;
 
     @Autowired
     private ReplacementService replacementService;
@@ -45,8 +41,7 @@ class PageReviewNoTypeService extends PageReviewService {
         List<Replacement> replacements = replacementFinderService.findList(convertPage(page));
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
-        LOGGER.trace("Update page replacements in database");
-        replacementIndexService.indexPageReplacements(toIndexable(page), replacements);
+        indexReplacements(page, replacements);
 
         return replacements;
     }

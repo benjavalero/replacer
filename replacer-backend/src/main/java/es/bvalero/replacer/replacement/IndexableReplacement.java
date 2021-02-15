@@ -2,10 +2,12 @@ package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
 import java.time.LocalDate;
+import lombok.Builder;
 import lombok.Value;
 
-@Value(staticConstructor = "of")
-class IndexableReplacement {
+@Value
+@Builder
+public class IndexableReplacement {
 
     int pageId;
     WikipediaLanguage lang;

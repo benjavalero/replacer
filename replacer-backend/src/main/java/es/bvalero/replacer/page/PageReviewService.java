@@ -7,6 +7,8 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.replacement.IndexablePage;
+import es.bvalero.replacer.replacement.IndexableReplacement;
+import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -36,6 +38,9 @@ abstract class PageReviewService {
 
     @Autowired
     private ReplacementService replacementService;
+
+    @Autowired
+    private ReplacementIndexService replacementIndexService;
 
     @Autowired
     private SectionReviewService sectionReviewService;
@@ -204,6 +209,30 @@ abstract class PageReviewService {
 
     FinderPage convertPage(WikipediaPage page) {
         return FinderPage.of(page.getLang(), page.getContent(), page.getTitle());
+    }
+
+    void indexReplacements(WikipediaPage page, List<Replacement> replacements) {
+        LOGGER.trace("Update page replacements in database");
+        IndexablePage indexablePage = toIndexable(page);
+        List<IndexableReplacement> indexableReplacements = replacements
+            .stream()
+            .map(r -> convertToIndexable(indexablePage, r))
+            .collect(Collectors.toList());
+        replacementIndexService.indexPageReplacements(indexablePage, indexableReplacements);
+    }
+
+    private IndexableReplacement convertToIndexable(IndexablePage page, Replacement replacement) {
+        return IndexableReplacement
+            .builder()
+            .pageId(page.getId())
+            .lang(page.getLang())
+            .type(replacement.getType())
+            .subtype(replacement.getSubtype())
+            .position(replacement.getStart())
+            .context(replacement.getContext(page.getContent()))
+            .lastUpdate(page.getLastUpdate())
+            .title(page.getTitle())
+            .build();
     }
 
     @VisibleForTesting

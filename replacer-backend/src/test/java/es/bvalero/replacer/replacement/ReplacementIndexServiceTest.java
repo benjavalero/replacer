@@ -3,8 +3,6 @@ package es.bvalero.replacer.replacement;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
-import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.time.LocalDate;
 import java.util.*;
 import org.junit.jupiter.api.Assertions;
@@ -40,14 +38,9 @@ class ReplacementIndexServiceTest {
 
     @Test
     void testIndexNewPage() {
-        Replacement rep1 = Replacement.builder().start(0).text("X").build(); // New => ADD
-        IndexablePage page = IndexablePage
-            .builder()
-            .lang(WikipediaLanguage.SPANISH)
-            .content("X")
-            .lastUpdate(LocalDate.now())
-            .build();
-        List<Replacement> newReplacements = Collections.singletonList(rep1);
+        IndexableReplacement rep1 = IndexableReplacement.builder().lang(WikipediaLanguage.SPANISH).build(); // New => ADD
+        IndexablePage page = IndexablePage.builder().lang(WikipediaLanguage.SPANISH).build();
+        List<IndexableReplacement> newReplacements = Collections.singletonList(rep1);
 
         List<ReplacementEntity> dbReplacements = new ArrayList<>();
 
@@ -57,13 +50,12 @@ class ReplacementIndexServiceTest {
             dbReplacements
         );
 
-        IndexableReplacement idx1 = replacementIndexService.convertToIndexable(page, rep1);
-        Assertions.assertEquals(Collections.singletonList(replacementIndexService.convertToEntity(idx1)), toIndex);
+        Assertions.assertEquals(Collections.singletonList(replacementIndexService.convertToEntity(rep1)), toIndex);
     }
 
     @Test
     void testIndexObsoletePage() {
-        List<Replacement> newReplacements = Collections.emptyList();
+        List<IndexableReplacement> newReplacements = Collections.emptyList();
         int pageId = new Random().nextInt();
         IndexablePage page = IndexablePage
             .builder()
@@ -96,7 +88,7 @@ class ReplacementIndexServiceTest {
 
     @Test
     void testIndexPageWithoutReplacements() {
-        List<Replacement> newReplacements = Collections.emptyList();
+        List<IndexableReplacement> newReplacements = Collections.emptyList();
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
 
         IndexablePage page = IndexablePage.builder().lang(WikipediaLanguage.SPANISH).build();
@@ -136,12 +128,57 @@ class ReplacementIndexServiceTest {
             .build();
 
         // Replacements found to index
-        Replacement r1 = Replacement.builder().type("1").subtype("1").start(1).text("1").build();
-        Replacement r2 = Replacement.builder().type("2").subtype("2").start(2).text("2").build();
-        Replacement r3 = Replacement.builder().type("3").subtype("3").start(3).text("3").build();
-        Replacement r4 = Replacement.builder().type("4").subtype("4").start(4).text("4").build();
-        Replacement r5 = Replacement.builder().type("5").subtype("5").start(5).text("5").build();
-        List<Replacement> newReplacements = Arrays.asList(r1, r2, r3, r4, r5);
+        IndexableReplacement r1 = IndexableReplacement
+            .builder()
+            .pageId(1)
+            .lang(WikipediaLanguage.getDefault())
+            .type("1")
+            .subtype("1")
+            .position(1)
+            .context(context)
+            .lastUpdate(same)
+            .build();
+        IndexableReplacement r2 = IndexableReplacement
+            .builder()
+            .pageId(1)
+            .lang(WikipediaLanguage.getDefault())
+            .type("2")
+            .subtype("2")
+            .position(2)
+            .context(context)
+            .lastUpdate(same)
+            .build();
+        IndexableReplacement r3 = IndexableReplacement
+            .builder()
+            .pageId(1)
+            .lang(WikipediaLanguage.getDefault())
+            .type("3")
+            .subtype("3")
+            .position(3)
+            .context(context)
+            .lastUpdate(same)
+            .build();
+        IndexableReplacement r4 = IndexableReplacement
+            .builder()
+            .pageId(1)
+            .lang(WikipediaLanguage.getDefault())
+            .type("4")
+            .subtype("4")
+            .position(4)
+            .context(context)
+            .lastUpdate(same)
+            .build();
+        IndexableReplacement r5 = IndexableReplacement
+            .builder()
+            .pageId(1)
+            .lang(WikipediaLanguage.getDefault())
+            .type("5")
+            .subtype("5")
+            .position(5)
+            .context(context)
+            .lastUpdate(same)
+            .build();
+        List<IndexableReplacement> newReplacements = Arrays.asList(r1, r2, r3, r4, r5);
 
         // Existing replacements in DB
         ReplacementEntity r1db = ReplacementEntity.of(1, "1", "1", 1).withContext(context); // To match with the one found to index
@@ -164,7 +201,7 @@ class ReplacementIndexServiceTest {
         Assertions.assertEquals(
             Set.of(
                 r3db.updateLastUpdate(same),
-                replacementIndexService.convertToEntity(replacementIndexService.convertToIndexable(page, r5)),
+                replacementIndexService.convertToEntity(r5),
                 r6db.setToDelete(),
                 r8db.setToDelete()
             ),
@@ -195,10 +232,37 @@ class ReplacementIndexServiceTest {
             .build();
 
         // Replacements found to index
-        Replacement r1 = Replacement.builder().type("1").subtype("1").start(1).text("1").build();
-        Replacement r2 = Replacement.builder().type("2").subtype("2").start(2).text("2").build();
-        Replacement r3 = Replacement.builder().type("3").subtype("3").start(3).text("3").build();
-        List<Replacement> newReplacements = Arrays.asList(r1, r2, r3);
+        IndexableReplacement r1 = IndexableReplacement
+            .builder()
+            .pageId(1)
+            .lang(WikipediaLanguage.getDefault())
+            .type("1")
+            .subtype("1")
+            .position(1)
+            .context(context)
+            .lastUpdate(same)
+            .build();
+        IndexableReplacement r2 = IndexableReplacement
+            .builder()
+            .pageId(1)
+            .lang(WikipediaLanguage.getDefault())
+            .type("2")
+            .subtype("2")
+            .position(2)
+            .context(context)
+            .lastUpdate(same)
+            .build();
+        IndexableReplacement r3 = IndexableReplacement
+            .builder()
+            .pageId(1)
+            .lang(WikipediaLanguage.getDefault())
+            .type("3")
+            .subtype("3")
+            .position(3)
+            .context(context)
+            .lastUpdate(same)
+            .build();
+        List<IndexableReplacement> newReplacements = Arrays.asList(r1, r2, r3);
 
         // Existing replacements in DB
         ReplacementEntity r1db = ReplacementEntity.of(1, "1", "1", 1).withContext(context).withLastUpdate(before);
@@ -217,7 +281,7 @@ class ReplacementIndexServiceTest {
         Assertions.assertEquals(
             Set.of(
                 r1db.updateLastUpdate(same),
-                replacementIndexService.convertToEntity(replacementIndexService.convertToIndexable(page, r3)),
+                replacementIndexService.convertToEntity(r3),
                 r4db.setToDelete(),
                 r6db.setToDelete()
             ),

@@ -1,8 +1,6 @@
 package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +22,7 @@ public class ReplacementIndexService {
     /**
      * Update the replacements of a page in DB with the found ones
      */
-    public void indexPageReplacements(IndexablePage page, List<Replacement> replacements) {
+    public void indexPageReplacements(IndexablePage page, List<IndexableReplacement> replacements) {
         // We need the page ID because the replacement list to index might be empty
         List<ReplacementEntity> toSave = findIndexPageReplacements(
             page,
@@ -42,24 +40,16 @@ public class ReplacementIndexService {
     @Loggable(prepend = true, value = Loggable.TRACE)
     public List<ReplacementEntity> findIndexPageReplacements(
         IndexablePage page,
-        List<Replacement> replacements,
+        List<IndexableReplacement> replacements,
         List<ReplacementEntity> dbReplacements
     ) {
         List<ReplacementEntity> result = new ArrayList<>(100);
 
-        List<IndexableReplacement> indexableReplacements = replacements
-            .stream()
-            .map(r -> convertToIndexable(page, r))
-            .collect(Collectors.toList());
-
         // Ignore context when comparing replacements in case there are cases with the same context
         boolean ignoreContext =
-            (
-                indexableReplacements.size() !=
-                indexableReplacements.stream().map(IndexableReplacement::getContext).distinct().count()
-            ) ||
+            (replacements.size() != replacements.stream().map(IndexableReplacement::getContext).distinct().count()) ||
             (dbReplacements.size() != dbReplacements.stream().map(ReplacementEntity::getContext).distinct().count());
-        indexableReplacements.forEach(
+        replacements.forEach(
             replacement -> handleReplacement(replacement, dbReplacements, ignoreContext).ifPresent(result::add)
         );
 
@@ -206,24 +196,6 @@ public class ReplacementIndexService {
             .title(replacement.getTitle())
             .build()
             .setToCreate();
-    }
-
-    @VisibleForTesting
-    IndexableReplacement convertToIndexable(IndexablePage page, Replacement replacement) {
-        return IndexableReplacement.of(
-            page.getId(),
-            page.getLang(),
-            replacement.getType(),
-            replacement.getSubtype(),
-            replacement.getStart(),
-            getContext(page, replacement),
-            page.getLastUpdate(),
-            page.getTitle()
-        );
-    }
-
-    private String getContext(IndexablePage page, Replacement replacement) {
-        return FinderUtils.getContextAroundWord(page.getContent(), replacement.getStart(), replacement.getEnd(), 20);
     }
 
     /**
