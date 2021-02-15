@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.finder.replacement.CustomOptions;
 import es.bvalero.replacer.finder.replacement.CustomReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.*;
@@ -90,7 +91,13 @@ class PageReviewCustomServiceTest {
 
         // The result is not already reviewed
         Mockito
-            .when(replacementService.findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage.SPANISH, replacement))
+            .when(
+                replacementService.findPageIdsReviewedByTypeAndSubtype(
+                    WikipediaLanguage.SPANISH,
+                    ReplacementType.CUSTOM,
+                    replacement
+                )
+            )
             .thenReturn(Collections.emptyList());
 
         // The page contains replacements
@@ -133,7 +140,13 @@ class PageReviewCustomServiceTest {
         // The result 1 is already reviewed
         // The result 2 is not reviewed the first time, but reviewed the second time.
         Mockito
-            .when(replacementService.findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage.SPANISH, replacement))
+            .when(
+                replacementService.findPageIdsReviewedByTypeAndSubtype(
+                    WikipediaLanguage.SPANISH,
+                    ReplacementType.CUSTOM,
+                    replacement
+                )
+            )
             .thenReturn(Collections.singletonList(randomId));
 
         // The pages exist in Wikipedia

@@ -2,7 +2,6 @@ package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.replacement.ReplacementType;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -37,11 +36,10 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
         // We need all the fields but the title so we don't select it to improve performance
         String sql =
             "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
-            "FROM replacement2 WHERE lang = :lang AND article_id = :pageId AND type <> :type";
+            "FROM replacement2 WHERE lang = :lang AND article_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_PAGE_ID, pageId)
-            .addValue(PARAM_TYPE, ReplacementType.CUSTOM);
+            .addValue(PARAM_PAGE_ID, pageId);
         return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
@@ -106,12 +104,11 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
         // We are not interested in the custom replacements when reindexing
         String sql =
             "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
-            "FROM replacement2 WHERE lang = :lang AND article_id BETWEEN :minPageId AND :maxPageId AND type <> :type";
+            "FROM replacement2 WHERE lang = :lang AND article_id BETWEEN :minPageId AND :maxPageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
             .addValue("minPageId", minPageId)
-            .addValue("maxPageId", maxPageId)
-            .addValue(PARAM_TYPE, ReplacementType.CUSTOM);
+            .addValue("maxPageId", maxPageId);
         return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
@@ -187,13 +184,13 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
 
     // Using DISTINCT makes the query not to use to wanted index "idx_count"
     @Override
-    public List<Integer> findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage lang, String subtype) {
+    public List<Integer> findPageIdsReviewedByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype) {
         String sql =
             "SELECT article_id FROM replacement2 " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NOT NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_TYPE, ReplacementType.CUSTOM)
+            .addValue(PARAM_TYPE, type)
             .addValue(PARAM_SUBTYPE, subtype);
         return jdbcTemplate.queryForList(sql, namedParameters, Integer.class);
     }

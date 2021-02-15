@@ -55,8 +55,9 @@ class PageReviewCustomService extends PageReviewService {
                 cachedOffsets.put(cacheKey, offset);
             }
 
-            List<Integer> reviewedIds = replacementService.findPageIdsReviewedByCustomTypeAndSubtype(
+            List<Integer> reviewedIds = replacementService.findPageIdsReviewedByTypeAndSubtype(
                 options.getLang(),
+                ReplacementType.CUSTOM,
                 options.getSubtype()
             );
 

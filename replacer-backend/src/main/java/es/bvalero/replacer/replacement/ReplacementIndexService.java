@@ -1,6 +1,7 @@
 package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,12 +25,20 @@ public class ReplacementIndexService {
      */
     public void indexPageReplacements(IndexablePage page, List<IndexableReplacement> replacements) {
         // We need the page ID because the replacement list to index might be empty
-        List<ReplacementEntity> toSave = findIndexPageReplacements(
-            page,
-            replacements,
-            replacementDao.findByPageId(page.getId(), page.getLang())
-        );
+        List<ReplacementEntity> toSave = findIndexPageReplacements(page, replacements, findDbReplacements(page));
         saveIndexedReplacements(toSave);
+    }
+
+    private List<ReplacementEntity> findDbReplacements(IndexablePage page) {
+        return replacementDao
+            .findByPageId(page.getId(), page.getLang())
+            .stream()
+            .filter(this::isNotCustom)
+            .collect(Collectors.toList());
+    }
+
+    private boolean isNotCustom(ReplacementEntity replacement) {
+        return !ReplacementType.CUSTOM.equals(replacement.getType());
     }
 
     /**

@@ -25,10 +25,6 @@ public class ReplacementService {
 
     ///// CRUD
 
-    public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
-        return replacementDao.findByPageId(pageId, lang);
-    }
-
     public void insert(ReplacementEntity entity) {
         replacementDao.insert(entity);
     }
@@ -67,8 +63,8 @@ public class ReplacementService {
         return replacementDao.countPagesToBeReviewedBySubtype(lang, type, subtype);
     }
 
-    public List<Integer> findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage lang, String subtype) {
-        return replacementDao.findPageIdsReviewedByCustomTypeAndSubtype(lang, subtype);
+    public List<Integer> findPageIdsReviewedByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype) {
+        return replacementDao.findPageIdsReviewedByTypeAndSubtype(lang, type, subtype);
     }
 
     public void reviewByPageId(

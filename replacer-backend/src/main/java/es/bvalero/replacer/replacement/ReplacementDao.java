@@ -42,7 +42,7 @@ interface ReplacementDao {
 
     long countPagesToBeReviewedBySubtype(WikipediaLanguage lang, String type, String subtype);
 
-    List<Integer> findPageIdsReviewedByCustomTypeAndSubtype(WikipediaLanguage lang, String subtype);
+    List<Integer> findPageIdsReviewedByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype);
 
     void reviewByPageId(
         WikipediaLanguage lang,
