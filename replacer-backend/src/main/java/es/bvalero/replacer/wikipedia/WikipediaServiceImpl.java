@@ -339,7 +339,6 @@ class WikipediaServiceImpl implements WikipediaService {
         return WikipediaSearchResult.of(response.getQuery().getSearchinfo().getTotalhits(), pageIds);
     }
 
-    @Loggable(value = Loggable.DEBUG, ignore = ReplacerException.class)
     @Override
     public void savePageContent(
         WikipediaLanguage lang,

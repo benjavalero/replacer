@@ -17,7 +17,7 @@ public class DumpController {
     @Autowired
     private DumpManager dumpManager;
 
-    @Loggable(value = Loggable.DEBUG)
+    @Loggable(value = Loggable.DEBUG, trim = false)
     @GetMapping(value = "/status")
     public DumpIndexingStatus getDumpIndexingStatus() {
         return dumpManager.getDumpIndexingStatus();
