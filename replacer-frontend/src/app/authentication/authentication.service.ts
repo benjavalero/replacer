@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { UserService } from '../user/user.service';
 import { RequestToken } from './request-token.model';
 import { Language, LANG_DEFAULT, WikipediaUser } from './wikipedia-user.model';
 
@@ -11,19 +12,11 @@ import { Language, LANG_DEFAULT, WikipediaUser } from './wikipedia-user.model';
 })
 export class AuthenticationService {
   readonly baseUrl = `${environment.apiUrl}/authentication`;
-  readonly wikipediaUserKey = 'wikipediaUser';
-
-  private readonly _user = new BehaviorSubject<WikipediaUser>(this.getLocalUser());
-  readonly user$ = this._user.asObservable();
 
   private readonly _lang = new BehaviorSubject<Language>(this.getLocalLang());
   readonly lang$ = this._lang.asObservable();
 
-  constructor(private httpClient: HttpClient) {}
-
-  isAuthenticated(): boolean {
-    return this.user !== null;
-  }
+  constructor(private httpClient: HttpClient, private userService: UserService) {}
 
   getAuthenticationUrl$(): Observable<string> {
     return this.getRequestToken$().pipe(
@@ -47,7 +40,7 @@ export class AuthenticationService {
         this.requestToken = null;
 
         // Save user and access token to further use in Wikipedia requests
-        this.user = wikipediaUser;
+        this.userService.setUser(wikipediaUser);
 
         return wikipediaUser;
       })
@@ -63,10 +56,6 @@ export class AuthenticationService {
     return this.httpClient.get<WikipediaUser>(`${this.baseUrl}/logged-user`, {
       params
     });
-  }
-
-  clearSession(): void {
-    this.user = null;
   }
 
   get redirectPath(): string {
@@ -91,23 +80,6 @@ export class AuthenticationService {
     } else {
       localStorage.removeItem('requestToken');
     }
-  }
-
-  private getLocalUser(): WikipediaUser {
-    return JSON.parse(localStorage.getItem(this.wikipediaUserKey));
-  }
-
-  get user(): WikipediaUser {
-    return this._user.getValue();
-  }
-
-  set user(user: WikipediaUser) {
-    if (user) {
-      localStorage.setItem(this.wikipediaUserKey, JSON.stringify(user));
-    } else {
-      localStorage.removeItem(this.wikipediaUserKey);
-    }
-    this._user.next(user);
   }
 
   private getLocalLang(): Language {

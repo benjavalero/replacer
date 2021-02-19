@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../alert/alert.service';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { Language } from '../authentication/wikipedia-user.model';
+import { UserService } from '../user/user.service';
 import { ArticleService } from './article.service';
 import { PageReplacement } from './page-replacement.model';
 import { PageReview } from './page-review.model';
@@ -35,6 +36,7 @@ export class EditPageComponent implements OnInit {
     private articleService: ArticleService,
     private router: Router,
     private authenticationService: AuthenticationService,
+    private userService: UserService,
     private titleService: Title
   ) {}
 
@@ -154,7 +156,7 @@ export class EditPageComponent implements OnInit {
           const errMsg = `Error al guardar el artículo: ${err.error}`;
           if (errMsg.includes('mwoauth-invalid-authorization')) {
             // Clear session and reload the page
-            this.authenticationService.clearSession();
+            this.userService.clearSession();
             window.location.reload();
           } else {
             this.alertService.addErrorMessage(errMsg);

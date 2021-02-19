@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../alert/alert.service';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { WikipediaUser } from '../authentication/wikipedia-user.model';
+import { UserService } from '../user/user.service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private authenticationService: AuthenticationService,
+    private userService: UserService,
     private router: Router,
     private alertService: AlertService
   ) {}
@@ -38,7 +40,7 @@ export class LoginComponent implements OnInit {
           }
         );
       } else {
-        if (this.authenticationService.isAuthenticated()) {
+        if (this.userService.isValidUser()) {
           this.alertService.clearAlertMessages();
           this.router.navigate(['dashboard']);
         } else {

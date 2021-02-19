@@ -57,7 +57,7 @@
   </div>
 
   <div class="col-md-6 col-lg-4 py-1">
-    <div class="card h-100 bg-light" *ngIf="admin">
+    <div class="card h-100 bg-light" *ngIf="admin$ | async">
       <div class="card-body">
         <h4 class="card-title">Indexación [ADMIN]</h4>
         <p class="card-text">Muestra el estado de la indexación.</p>

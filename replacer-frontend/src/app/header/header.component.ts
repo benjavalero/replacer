@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthenticationService } from '../authentication/authentication.service';
 import { Language, WikipediaUser } from '../authentication/wikipedia-user.model';
+import { UserService } from '../user/user.service';
 
 @Component({
   selector: 'app-header',
@@ -10,15 +12,17 @@ import { Language, WikipediaUser } from '../authentication/wikipedia-user.model'
 })
 export class HeaderComponent implements OnInit {
   isNavCollapsed = true;
-  user: WikipediaUser;
+  user$: Observable<WikipediaUser>;
   lang: Language;
 
-  constructor(private authenticationService: AuthenticationService, private router: Router) {}
+  constructor(
+    private authenticationService: AuthenticationService,
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
-    this.authenticationService.user$.subscribe((user: WikipediaUser) => {
-      this.user = user;
-    });
+    this.user$ = this.userService.user$;
 
     this.authenticationService.lang$.subscribe((lang: Language) => {
       this.lang = lang;
@@ -36,7 +40,7 @@ export class HeaderComponent implements OnInit {
 
   onCloseSession() {
     // Clear session and reload the page
-    this.authenticationService.clearSession();
+    this.userService.clearSession();
     this.router.navigate(['']);
   }
 }

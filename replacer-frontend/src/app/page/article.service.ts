@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { AuthenticationService } from '../authentication/authentication.service';
+import { UserService } from '../user/user.service';
 import { PageReview } from './page-review.model';
 import { SavePage } from './save-page.model';
 
@@ -14,7 +14,7 @@ export class ArticleService {
 
   private cachedPageReviews = {};
 
-  constructor(private httpClient: HttpClient, private authenticationService: AuthenticationService) {}
+  constructor(private httpClient: HttpClient, private userService: UserService) {}
 
   findRandomArticle(type: string, subtype: string, suggestion: string): Observable<PageReview> {
     let params: HttpParams = new HttpParams();
@@ -75,7 +75,7 @@ export class ArticleService {
     section: number,
     currentTimestamp: string
   ): Observable<any> {
-    if (!this.authenticationService.isAuthenticated()) {
+    if (!this.userService.isValidUser()) {
       return throwError('El usuario no está autenticado. Recargue la página para retomar la sesión.');
     }
 
@@ -86,8 +86,8 @@ export class ArticleService {
     savePage.title = title;
     savePage.content = content;
     savePage.timestamp = currentTimestamp;
-    savePage.token = this.authenticationService.user.accessToken.token;
-    savePage.tokenSecret = this.authenticationService.user.accessToken.tokenSecret;
+    savePage.token = this.userService.accessToken.token;
+    savePage.tokenSecret = this.userService.accessToken.tokenSecret;
     if (type && subtype) {
       savePage.type = type;
       savePage.subtype = subtype;

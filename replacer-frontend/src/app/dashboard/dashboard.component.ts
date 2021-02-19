@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { AuthenticationService } from '../authentication/authentication.service';
-import { WikipediaUser } from '../authentication/wikipedia-user.model';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { UserService } from '../user/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,15 +10,13 @@ import { WikipediaUser } from '../authentication/wikipedia-user.model';
   styleUrls: []
 })
 export class DashboardComponent implements OnInit {
-  admin = false;
+  admin$: Observable<Boolean>;
 
-  constructor(private authenticationService: AuthenticationService, private titleService: Title) {}
+  constructor(private userService: UserService, private titleService: Title) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Reemplazador de la Wikipedia');
 
-    this.authenticationService.user$.subscribe((user: WikipediaUser) => {
-      this.admin = user.admin;
-    });
+    this.admin$ = this.userService.user$.pipe(map((user) => user.admin));
   }
 }
