@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../alert/alert.service';
-import { AuthenticationService } from '../authentication/authentication.service';
-import { Language } from '../authentication/wikipedia-user.model';
+import { Language } from '../user/language-model';
+import { UserConfigService } from '../user/user-config.service';
 import { UserService } from '../user/user.service';
 import { ArticleService } from './article.service';
 import { PageReplacement } from './page-replacement.model';
@@ -35,15 +35,13 @@ export class EditPageComponent implements OnInit {
     private alertService: AlertService,
     private articleService: ArticleService,
     private router: Router,
-    private authenticationService: AuthenticationService,
     private userService: UserService,
+    private userConfigService: UserConfigService,
     private titleService: Title
   ) {}
 
   ngOnInit() {
-    this.authenticationService.lang$.subscribe((lang: Language) => {
-      this.lang = lang;
-    });
+    this.lang = this.userConfigService.lang;
 
     this.articleId = +this.route.snapshot.paramMap.get('id');
     this.filteredType = this.route.snapshot.paramMap.get('type');

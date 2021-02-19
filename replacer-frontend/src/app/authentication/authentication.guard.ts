@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
+import { Language } from '../user/language-model';
+import { LANG_PARAM, UserConfigService } from '../user/user-config.service';
 import { UserService } from '../user/user.service';
 import { AuthenticationService } from './authentication.service';
-import { Language, LANG_PARAM } from './wikipedia-user.model';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
+    private userConfigService: UserConfigService,
     private router: Router
   ) {}
 
@@ -20,7 +22,7 @@ export class AuthenticationGuard implements CanActivate {
     // Enable language by param
     const lang: Language = Language[route.queryParamMap.get(LANG_PARAM)];
     if (lang) {
-      this.authenticationService.lang = lang;
+      this.userConfigService.lang = lang;
     }
 
     if (this.userService.isValidUser()) {

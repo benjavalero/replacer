@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { AlertService } from '../alert/alert.service';
-import { AuthenticationService } from '../authentication/authentication.service';
 import { ReplacementService } from '../replacement/replacement.service';
+import { UserConfigService } from '../user/user-config.service';
 import { ReviewerCount } from './reviewer-count.model';
 
 @Component({
@@ -20,14 +20,14 @@ export class StatsComponent implements OnInit {
     private replacementService: ReplacementService,
     private alertService: AlertService,
     private titleService: Title,
-    private authenticationService: AuthenticationService
+    private userConfigService: UserConfigService
   ) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Estadísticas');
     this.alertService.clearAlertMessages();
 
-    this.lang = this.authenticationService.lang;
+    this.lang = this.userConfigService.lang;
 
     this.findNumNotReviewed();
     this.findNumReviewed();

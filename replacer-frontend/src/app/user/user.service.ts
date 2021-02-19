@@ -3,6 +3,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AccessToken } from '../authentication/access-token.model';
 import { WikipediaUser } from '../authentication/wikipedia-user.model';
 
+export const USER_PARAM = 'user';
+
 @Injectable({
   providedIn: 'root'
 })

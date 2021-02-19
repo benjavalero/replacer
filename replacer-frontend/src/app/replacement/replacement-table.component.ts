@@ -2,9 +2,9 @@ import { Component, Input, OnInit, QueryList, ViewChildren } from '@angular/core
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
 import { PAGE_SIZE } from '../app-const';
-import { AuthenticationService } from '../authentication/authentication.service';
 import { ArticleService } from '../page/article.service';
 import { sleep } from '../sleep';
+import { UserConfigService } from '../user/user-config.service';
 import { ColumnSortableDirective, compare, compareLocale, SortDirection, SortEvent } from './column-sortable.directive';
 import { ReplacementCount } from './replacement-count-list.model';
 import { ReviewSubtypeComponent } from './review-subtype.component';
@@ -36,7 +36,7 @@ export class ReplacementTableComponent implements OnInit {
   pageListUrl: string;
 
   constructor(
-    private authenticationService: AuthenticationService,
+    private userConfigService: UserConfigService,
     private articleService: ArticleService,
     private modalService: NgbModal
   ) {
@@ -48,7 +48,7 @@ export class ReplacementTableComponent implements OnInit {
     this.collectionSize = 0;
     this.pageValue = 1;
     this.pageSize = PAGE_SIZE;
-    this.pageListUrl = `${environment.apiUrl}/pages/list?lang=${this.authenticationService.lang}`;
+    this.pageListUrl = `${environment.apiUrl}/pages/list?lang=${this.userConfigService.lang}`;
   }
 
   ngOnInit() {

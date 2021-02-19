@@ -1,20 +1,17 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { UserService } from '../user/user.service';
 import { RequestToken } from './request-token.model';
-import { Language, LANG_DEFAULT, WikipediaUser } from './wikipedia-user.model';
+import { WikipediaUser } from './wikipedia-user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
   readonly baseUrl = `${environment.apiUrl}/authentication`;
-
-  private readonly _lang = new BehaviorSubject<Language>(this.getLocalLang());
-  readonly lang$ = this._lang.asObservable();
 
   constructor(private httpClient: HttpClient, private userService: UserService) {}
 
@@ -80,22 +77,5 @@ export class AuthenticationService {
     } else {
       localStorage.removeItem('requestToken');
     }
-  }
-
-  private getLocalLang(): Language {
-    return JSON.parse(localStorage.getItem('lang')) || LANG_DEFAULT;
-  }
-
-  get lang(): Language {
-    return this._lang.getValue();
-  }
-
-  set lang(lang: Language) {
-    if (lang) {
-      localStorage.setItem('lang', JSON.stringify(lang));
-    } else {
-      localStorage.removeItem('lang');
-    }
-    this._lang.next(lang);
   }
 }

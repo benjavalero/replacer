@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthenticationService } from '../authentication/authentication.service';
-import { Language, WikipediaUser } from '../authentication/wikipedia-user.model';
+import { map } from 'rxjs/operators';
+import { WikipediaUser } from '../authentication/wikipedia-user.model';
+import { Language } from '../user/language-model';
+import { UserConfigService } from '../user/user-config.service';
 import { UserService } from '../user/user.service';
 
 @Component({
@@ -13,27 +15,20 @@ import { UserService } from '../user/user.service';
 export class HeaderComponent implements OnInit {
   isNavCollapsed = true;
   user$: Observable<WikipediaUser>;
-  lang: Language;
+  lang$: Observable<Language>;
 
-  constructor(
-    private authenticationService: AuthenticationService,
-    private userService: UserService,
-    private router: Router
-  ) {}
+  constructor(private userService: UserService, private userConfigService: UserConfigService, private router: Router) {}
 
   ngOnInit(): void {
     this.user$ = this.userService.user$;
-
-    this.authenticationService.lang$.subscribe((lang: Language) => {
-      this.lang = lang;
-    });
+    this.lang$ = this.userConfigService.config$.pipe(map((config) => config.lang));
   }
 
   onSelectLang(lang: string) {
     // Enable language
     const language: Language = Language[lang];
     if (language) {
-      this.authenticationService.lang = language;
+      this.userConfigService.lang = language;
       this.router.navigate(['']);
     }
   }
