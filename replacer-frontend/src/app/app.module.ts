@@ -7,13 +7,13 @@ import { NgbCollapseModule, NgbDropdownModule, NgbModalModule, NgbPaginationModu
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { AuthenticationGuard } from './authentication/authentication.guard';
-import { LangInterceptor } from './authentication/lang-interceptor';
-import { UserInterceptor } from './authentication/user-interceptor';
+import { AuthenticationGuard } from './guard/authentication.guard';
+import { LangInterceptor } from './interceptor/lang-interceptor';
+import { UserInterceptor } from './interceptor/user-interceptor';
 
 import { AlertContainerComponent } from './alert/alert-container.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './authentication/login.component';
 import { OAuthResponseComponent } from './authentication/oauth-response.component';
 import { HeaderComponent } from './header/header.component';
 import { FindRandomComponent } from './page/find-random.component';

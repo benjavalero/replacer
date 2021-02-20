@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { UserService } from '../user/user.service';
 import { RequestToken } from './request-token.model';
-import { WikipediaUser } from './wikipedia-user.model';
+import { User } from '../user/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,9 +32,9 @@ export class AuthenticationService {
     return this.httpClient.get<RequestToken>(`${this.baseUrl}/request-token`);
   }
 
-  loginUser$(oauthVerifier: string): Observable<WikipediaUser> {
+  loginUser$(oauthVerifier: string): Observable<User> {
     return this.getLoggedUser$(oauthVerifier).pipe(
-      map((wikipediaUser: WikipediaUser) => {
+      map((wikipediaUser: User) => {
         // Remove request token as it is no longer needed
         localStorage.removeItem(this.requestTokenKey);
 
@@ -46,14 +46,14 @@ export class AuthenticationService {
     );
   }
 
-  private getLoggedUser$(verificationToken: string): Observable<WikipediaUser> {
+  private getLoggedUser$(verificationToken: string): Observable<User> {
     const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey));
     const params = new HttpParams()
       .append('requestToken', requestToken.token)
       .append('requestTokenSecret', requestToken.tokenSecret)
       .append('oauthVerifier', verificationToken);
 
-    return this.httpClient.get<WikipediaUser>(`${this.baseUrl}/logged-user`, {
+    return this.httpClient.get<User>(`${this.baseUrl}/logged-user`, {
       params
     });
   }

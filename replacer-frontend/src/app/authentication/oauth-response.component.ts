@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/alert/alert.service';
 import { AuthenticationService } from './authentication.service';
-import { WikipediaUser } from './wikipedia-user.model';
+import { User } from '../user/user.model';
 
 @Component({
   selector: 'app-oauth',
@@ -25,7 +25,7 @@ export class OAuthResponseComponent implements OnInit {
       const oauthVerifier: string = params['oauth_verifier'];
       if (oauthVerifier) {
         this.authenticationService.loginUser$(oauthVerifier).subscribe(
-          (user: WikipediaUser) => {
+          (user: User) => {
             this.router.navigate([this.authenticationService.redirectPath || 'dashboard']);
           },
           (err) => {

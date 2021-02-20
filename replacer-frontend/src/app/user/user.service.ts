@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AccessToken } from '../authentication/access-token.model';
-import { WikipediaUser } from '../authentication/wikipedia-user.model';
+import { User } from './user.model';
 
 export const USER_PARAM = 'user';
 
@@ -10,13 +10,13 @@ export const USER_PARAM = 'user';
 })
 export class UserService {
   private readonly wikipediaUserKey = 'wikipediaUser';
-  private readonly _user = new BehaviorSubject<WikipediaUser>(this.emptyUser());
+  private readonly _user = new BehaviorSubject<User>(this.emptyUser());
 
   constructor() {
     this.loadUser();
   }
 
-  get user$(): Observable<WikipediaUser> {
+  get user$(): Observable<User> {
     return this._user.asObservable();
   }
 
@@ -40,7 +40,7 @@ export class UserService {
     this._user.next(user);
   }
 
-  private emptyUser(): WikipediaUser {
+  private emptyUser(): User {
     return { name: null, admin: false, accessToken: null };
   }
 
@@ -48,7 +48,7 @@ export class UserService {
     return this.isValid(this._user.getValue());
   }
 
-  private isValid(user: WikipediaUser): boolean {
+  private isValid(user: User): boolean {
     return user != null && user.name != null && user.admin != null && user.accessToken != null;
   }
 
@@ -56,7 +56,7 @@ export class UserService {
     this.setUser(this.emptyUser());
   }
 
-  setUser(user: WikipediaUser): void {
+  setUser(user: User): void {
     localStorage.setItem(this.wikipediaUserKey, JSON.stringify(user));
     this._user.next(user);
   }

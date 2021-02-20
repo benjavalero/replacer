@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthenticationGuard } from './authentication/authentication.guard';
+import { AuthenticationGuard } from './guard/authentication.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { OAuthResponseComponent } from './authentication/oauth-response.component';
-import { LoginComponent } from './login/login.component';
+import { LoginComponent } from './authentication/login.component';
 import { FindRandomComponent } from './page/find-random.component';
 import { FindCustomComponent } from './page/find-custom.component';
 import { EditPageComponent } from './page/edit-page.component';

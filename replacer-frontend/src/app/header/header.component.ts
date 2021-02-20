@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { WikipediaUser } from '../authentication/wikipedia-user.model';
+import { User } from '../user/user.model';
 import { Language } from '../user/language-model';
 import { UserConfigService } from '../user/user-config.service';
 import { UserService } from '../user/user.service';
@@ -14,7 +14,7 @@ import { UserService } from '../user/user.service';
 })
 export class HeaderComponent implements OnInit {
   isNavCollapsed = true;
-  user$: Observable<WikipediaUser>;
+  user$: Observable<User>;
   lang$: Observable<Language>;
 
   constructor(private userService: UserService, private userConfigService: UserConfigService, private router: Router) {}

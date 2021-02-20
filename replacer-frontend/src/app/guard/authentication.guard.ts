@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Language } from '../user/language-model';
 import { LANG_PARAM, UserConfigService } from '../user/user-config.service';
 import { UserService } from '../user/user.service';
-import { AuthenticationService } from './authentication.service';
+import { AuthenticationService } from '../authentication/authentication.service';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
