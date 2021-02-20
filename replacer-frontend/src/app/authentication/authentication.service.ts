@@ -11,7 +11,9 @@ import { WikipediaUser } from './wikipedia-user.model';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  readonly baseUrl = `${environment.apiUrl}/authentication`;
+  private readonly requestTokenKey = 'requestToken';
+  private readonly redirectPathKey = 'redirectPath';
+  private readonly baseUrl = `${environment.apiUrl}/authentication`;
 
   constructor(private httpClient: HttpClient, private userService: UserService) {}
 
@@ -19,7 +21,7 @@ export class AuthenticationService {
     return this.getRequestToken$().pipe(
       map((token: RequestToken) => {
         // We keep the request token for further use on verification
-        this.requestToken = token;
+        localStorage.setItem(this.requestTokenKey, JSON.stringify(token));
 
         return token.authorizationUrl;
       })
@@ -34,7 +36,7 @@ export class AuthenticationService {
     return this.getLoggedUser$(oauthVerifier).pipe(
       map((wikipediaUser: WikipediaUser) => {
         // Remove request token as it is no longer needed
-        this.requestToken = null;
+        localStorage.removeItem(this.requestTokenKey);
 
         // Save user and access token to further use in Wikipedia requests
         this.userService.setUser(wikipediaUser);
@@ -45,9 +47,10 @@ export class AuthenticationService {
   }
 
   private getLoggedUser$(verificationToken: string): Observable<WikipediaUser> {
+    const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey));
     const params = new HttpParams()
-      .append('requestToken', this.requestToken.token)
-      .append('requestTokenSecret', this.requestToken.tokenSecret)
+      .append('requestToken', requestToken.token)
+      .append('requestTokenSecret', requestToken.tokenSecret)
       .append('oauthVerifier', verificationToken);
 
     return this.httpClient.get<WikipediaUser>(`${this.baseUrl}/logged-user`, {
@@ -56,26 +59,12 @@ export class AuthenticationService {
   }
 
   get redirectPath(): string {
-    return localStorage.getItem('redirectPath');
+    const path = localStorage.getItem(this.redirectPathKey);
+    localStorage.removeItem(this.redirectPathKey);
+    return path;
   }
 
   set redirectPath(path: string) {
-    if (path) {
-      localStorage.setItem('redirectPath', decodeURIComponent(path));
-    } else {
-      localStorage.removeItem('redirectPath');
-    }
-  }
-
-  get requestToken(): RequestToken {
-    return JSON.parse(localStorage.getItem('requestToken'));
-  }
-
-  set requestToken(token: RequestToken) {
-    if (token) {
-      localStorage.setItem('requestToken', JSON.stringify(token));
-    } else {
-      localStorage.removeItem('requestToken');
-    }
+    localStorage.setItem(this.redirectPathKey, decodeURIComponent(path));
   }
 }

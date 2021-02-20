@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthenticationGuard } from './authentication/authentication.guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { OAuthResponseComponent } from './authentication/oauth-response.component';
 import { LoginComponent } from './login/login.component';
 import { FindRandomComponent } from './page/find-random.component';
 import { FindCustomComponent } from './page/find-custom.component';
@@ -11,7 +12,8 @@ import { FindReplacementComponent } from './replacement/find-replacement.compone
 import { StatsComponent } from './stats/stats.component';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent },
+  { path: '', component: OAuthResponseComponent },
+  { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthenticationGuard] },
   { path: 'random', component: FindRandomComponent, canActivate: [AuthenticationGuard] },
   { path: 'random/:type/:subtype', component: FindRandomComponent, canActivate: [AuthenticationGuard] },

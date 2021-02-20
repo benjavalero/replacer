@@ -1,4 +1,4 @@
-<div *ngIf="authorizationUrl">
+<div>
   <div class="card mb-3 mt-3">
     <div class="card-body">
       <h2 class="card-title">Replacer de la Wikipedia</h2>
@@ -15,8 +15,13 @@
       <p class="card-text">
         Necesita autenticarse en la Wikipedia para guardar los cambios con su usuario.
       </p>
-      <a class="btn btn-primary w-100" href="{{ authorizationUrl }}">
-        Iniciar sesión</a>
+      <div *ngIf="authorizationUrl$ | async as url; else loading">
+        <a class="btn btn-primary w-100" href="{{ url }}">
+          Iniciar sesión</a>
+      </div>
+      <ng-template #loading>
+        <p>Comprobando autenticación…</p>
+      </ng-template>
     </div>
   </div>
 </div>

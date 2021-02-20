@@ -32,7 +32,7 @@ export class AuthenticationGuard implements CanActivate {
       this.authenticationService.redirectPath = route.url.join('/');
 
       // Navigate to login page
-      this.router.navigate(['']);
+      this.router.navigate(['login']);
 
       return false;
     }

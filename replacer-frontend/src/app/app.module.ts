@@ -14,6 +14,7 @@ import { UserInterceptor } from './authentication/user-interceptor';
 import { AlertContainerComponent } from './alert/alert-container.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
+import { OAuthResponseComponent } from './authentication/oauth-response.component';
 import { HeaderComponent } from './header/header.component';
 import { FindRandomComponent } from './page/find-random.component';
 import { FindCustomComponent } from './page/find-custom.component';
@@ -32,6 +33,7 @@ import { StatsComponent } from './stats/stats.component';
     AlertContainerComponent,
     DashboardComponent,
     LoginComponent,
+    OAuthResponseComponent,
     HeaderComponent,
     FindRandomComponent,
     FindCustomComponent,
