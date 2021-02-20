@@ -7,7 +7,7 @@ import { User } from '../user/user.model';
 @Component({
   selector: 'app-oauth',
   template: `
-    <p>Comprobando autenticación…</p>
+    <app-alert>Comprobando autenticación…</app-alert>
   `,
   styles: []
 })

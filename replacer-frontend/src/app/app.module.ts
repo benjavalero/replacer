@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgbCollapseModule, NgbDropdownModule, NgbModalModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbCollapseModule, NgbDropdownModule, NgbModalModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,6 +12,7 @@ import { LangInterceptor } from './interceptor/lang-interceptor';
 import { UserInterceptor } from './interceptor/user-interceptor';
 
 import { AlertContainerComponent } from './alert/alert-container.component';
+import { AlertComponent } from './alert/alert.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './authentication/login.component';
 import { OAuthResponseComponent } from './authentication/oauth-response.component';
@@ -31,6 +32,7 @@ import { StatsComponent } from './stats/stats.component';
   declarations: [
     AppComponent,
     AlertContainerComponent,
+    AlertComponent,
     DashboardComponent,
     LoginComponent,
     OAuthResponseComponent,
@@ -51,6 +53,7 @@ import { StatsComponent } from './stats/stats.component';
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
+    NgbAlertModule,
     NgbCollapseModule,
     NgbDropdownModule,
     NgbModalModule,
