@@ -1,11 +1,22 @@
-<h3>Estadísticas («{{ lang }}»)</h3>
+<h3>Estadísticas</h3>
 
+<app-alert type="warning" [icon]="true">
+  <p>Las siguientes estadísticas corresponden a la Wikipedia actualmente seleccionada: <strong>{{ lang }}</strong></p>
+  <p>Se consideran contribuciones tanto las revisiones realizadas con cambios como aquellas sin ellos.</p>
+</app-alert>
+
+<ng-template #loading>Calculando…</ng-template>
 <ul>
-  <li>Reemplazos revisados: <strong>{{ numReviewed }}</strong></li>
-  <li>Reemplazos sin revisar: <strong>{{ numNotReviewed }}</strong></li>
+  <li>Reemplazos revisados:
+    <strong *ngIf="numReviewed$ | async as numReviewed; else loading">{{ numReviewed }}</strong>
+  </li>
+  <li>Reemplazos sin revisar:
+    <strong *ngIf="numNotReviewed$ | async as numNotReviewed; else loading">{{ numNotReviewed }}</strong>
+  </li>
 </ul>
 
-<div *ngIf="numReviewedGrouped.length">
+<h4>Contribuciones</h4>
+<div *ngIf="numReviewedGrouped$ | async as numReviewedGrouped; else loading">
   <table class="table" aria-describedby="Lista de usuarios que han contribuido y su número de contribuciones">
     <thead>
       <tr>

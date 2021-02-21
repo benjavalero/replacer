@@ -1,4 +1,4 @@
 export interface ReviewerCount {
-    reviewer: string;
-    count: number;
+  reviewer: string;
+  count: number;
 }
