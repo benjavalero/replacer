@@ -1,0 +1,28 @@
+<div *ngIf="status$ | async as status">
+  <div *ngIf="status">
+    <h3>Indexación</h3>
+
+    <ul>
+      <li>En ejecución: <strong>{{ status.running }}</strong></li>
+      <li>Fichero en proceso: <strong>{{ status.dumpFileName }}</strong></li>
+      <li>Inicio: <strong>{{ status.startDate }}</strong></li>
+      <li>Final: <strong>{{ status.endDate }}</strong></li>
+      <li>Páginas leídas: <strong>{{ status.numPagesRead }}</strong></li>
+      <li>Artículos procesados: <strong>{{ status.numPagesProcessed }}</strong></li>
+      <li>Tiempo transcurrido: <strong>{{ status.elapsed }} (hh:mm:ss)</strong></li>
+      <li>Progreso: <strong>{{ status.progress | number }} %</strong></li>
+      <li>Tiempo medio por artículo: <strong>{{ status.average | number }} ms</strong></li>
+      <li *ngIf="status.running">Tiempo estimado de finalización: <strong>{{ status.eta }} (hh:mm:ss)</strong></li>
+    </ul>
+
+    <form *ngIf="!status.running" (ngSubmit)="onSubmit()" class="mb-3">
+      <button type="submit" class="btn btn-primary" id="button-index">
+        Lanzar indexación
+      </button>
+    </form>
+
+  </div>
+  <div *ngIf="!status">
+    <app-alert>Cargando estado de la indexación…</app-alert>
+  </div>
+</div>

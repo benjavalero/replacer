@@ -7,7 +7,7 @@ import { LoginComponent } from './authentication/login.component';
 import { FindRandomComponent } from './page/find-random.component';
 import { FindCustomComponent } from './page/find-custom.component';
 import { EditPageComponent } from './page/edit-page.component';
-import { DumpComponent } from './dump/dump.component';
+import { DumpIndexingComponent } from './dump-indexing/dump-indexing.component';
 import { FindReplacementComponent } from './replacement/find-replacement.component';
 import { StatsComponent } from './stats/stats.component';
 
@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'article/:id', component: EditPageComponent, canActivate: [AuthenticationGuard] },
   { path: 'article/:id/:type/:subtype', component: EditPageComponent, canActivate: [AuthenticationGuard] },
   { path: 'article/:id/:type/:subtype/:suggestion', component: EditPageComponent, canActivate: [AuthenticationGuard] },
-  { path: 'dump', component: DumpComponent, canActivate: [AuthenticationGuard] },
+  { path: 'dump', component: DumpIndexingComponent, canActivate: [AuthenticationGuard] },
   { path: 'replacement', component: FindReplacementComponent, canActivate: [AuthenticationGuard] },
   { path: 'stats', component: StatsComponent, canActivate: [AuthenticationGuard] },
   { path: '**', redirectTo: '/dashboard', pathMatch: 'full' }

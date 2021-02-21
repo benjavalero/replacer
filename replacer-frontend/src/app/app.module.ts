@@ -22,7 +22,7 @@ import { FindRandomComponent } from './page/find-random.component';
 import { FindCustomComponent } from './page/find-custom.component';
 import { EditPageComponent } from './page/edit-page.component';
 import { EditSnippetComponent } from './page/edit-snippet.component';
-import { DumpComponent } from './dump/dump.component';
+import { DumpIndexingComponent } from './dump-indexing/dump-indexing.component';
 import { FindReplacementComponent } from './replacement/find-replacement.component';
 import { ReplacementTableComponent } from './replacement/replacement-table.component';
 import { ReviewSubtypeComponent } from './replacement/review-subtype.component';
@@ -42,7 +42,7 @@ import { StatsComponent } from './stats/stats.component';
     FindCustomComponent,
     EditPageComponent,
     EditSnippetComponent,
-    DumpComponent,
+    DumpIndexingComponent,
     FindReplacementComponent,
     ReplacementTableComponent,
     ReviewSubtypeComponent,
