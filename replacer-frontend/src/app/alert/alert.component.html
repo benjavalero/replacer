@@ -1,3 +1,11 @@
 <ngb-alert [dismissible]="false" [type]="type">
-  <ng-content></ng-content>
+  <div class="row vertical-align text-center">
+    <div class="col-sm-1" *ngIf="icon">
+      <fa-icon [icon]="warningIcon" size="3x"></fa-icon>
+    </div>
+    <!-- Center if there is no icon -->
+    <div class="col-sm-11" [ngClass]="{'text-left': icon}">
+      <ng-content></ng-content>
+    </div>
+  </div>
 </ngb-alert>

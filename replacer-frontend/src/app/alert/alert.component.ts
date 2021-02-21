@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-alert',
@@ -8,6 +9,9 @@ import { Component, Input } from '@angular/core';
 export class AlertComponent {
   @Input() type = 'primary';
   @Input() message: string;
+  @Input() icon: boolean;
+
+  warningIcon = faExclamationCircle;
 
   constructor() {}
 }

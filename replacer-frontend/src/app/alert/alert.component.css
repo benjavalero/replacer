@@ -1,3 +1,8 @@
 :host {
   display: block;
 }
+
+.vertical-align {
+  display: flex;
+  align-items: center;
+}

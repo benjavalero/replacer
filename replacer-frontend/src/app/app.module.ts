@@ -13,6 +13,7 @@ import { UserInterceptor } from './interceptor/user-interceptor';
 
 import { AlertContainerComponent } from './alert/alert-container.component';
 import { AlertComponent } from './alert/alert.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './authentication/login.component';
 import { OAuthResponseComponent } from './authentication/oauth-response.component';
@@ -53,6 +54,7 @@ import { StatsComponent } from './stats/stats.component';
     FormsModule,
     HttpClientModule,
     AppRoutingModule,
+    FontAwesomeModule,
     NgbAlertModule,
     NgbCollapseModule,
     NgbDropdownModule,
