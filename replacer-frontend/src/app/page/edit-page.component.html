@@ -17,7 +17,7 @@
   </nav>
 
   <h3>{{ title }}
-    <a href="{{ url }}" target="_blank" class="small">[Abrir en Wikipedia]</a>
+    <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="small">[Abrir en Wikipedia]</a>
   </h3>
 
   <app-edit-snippet *ngFor="let replacement of replacements" [text]="content" [start]="replacement.start"
