@@ -4,7 +4,7 @@
       <fa-icon [icon]="warningIcon" size="3x"></fa-icon>
     </div>
     <!-- Center if there is no icon -->
-    <div class="col-sm-11" [ngClass]="{'text-left': icon}">
+    <div [ngClass]="{'col-sm-11 text-left': icon, 'col': !icon}">
       <ng-content></ng-content>
     </div>
   </div>
