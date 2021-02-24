@@ -1,5 +1,13 @@
 <h3>Reemplazo personalizado</h3>
 
+<app-alert type="warning" [icon]="true">
+  <p>El propósito de los reemplazos personalizados es facilitar aquellas correcciones con pocas ocurrencias y que por
+    tanto no figuran en los listados generales.</p>
+  <p>Si un reemplazo tiene muchas ocurrencias, se recomienda añadirlo a los <a
+      href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos" target="_blank"
+      rel="noopener noreferrer">listados generales</a> para un mantenimiento más óptimo.</p>
+</app-alert>
+
 <form (ngSubmit)="onSubmit()" class="mt-2">
   <div class="form-group row">
     <label for="text-replacement" class="col-sm-2 col-form-label">Texto a reemplazar:</label>
