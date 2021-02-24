@@ -9,14 +9,14 @@ import { SavePage } from './save-page.model';
 @Injectable({
   providedIn: 'root'
 })
-export class ArticleService {
+export class PageService {
   baseUrl = `${environment.apiUrl}/pages`;
 
   private cachedPageReviews = {};
 
   constructor(private httpClient: HttpClient, private userService: UserService) {}
 
-  findRandomArticle(type: string, subtype: string, suggestion: string): Observable<PageReview> {
+  findRandomPage(type: string, subtype: string, suggestion: string): Observable<PageReview> {
     let params: HttpParams = new HttpParams();
     if (type && subtype) {
       if (suggestion) {

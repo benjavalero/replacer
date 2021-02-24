@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-
+import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../alert/alert.service';
-import { ArticleService } from './article.service';
 import { PageReview } from './page-review.model';
+import { PageService } from './page.service';
 
 @Component({
   selector: 'app-find-random',
@@ -18,7 +17,7 @@ export class FindRandomComponent implements OnInit {
 
   constructor(
     private alertService: AlertService,
-    private articleService: ArticleService,
+    private pageService: PageService,
     private router: Router,
     private route: ActivatedRoute,
     private titleService: Title
@@ -36,25 +35,25 @@ export class FindRandomComponent implements OnInit {
     this.titleService.setTitle(`Replacer - ${msg}`);
     this.alertService.addInfoMessage(msg);
 
-    this.articleService.findRandomArticle(this.filteredType, this.filteredSubtype, this.suggestion).subscribe(
+    this.pageService.findRandomPage(this.filteredType, this.filteredSubtype, this.suggestion).subscribe(
       (review: PageReview) => {
         if (review) {
           // Cache the review
-          this.articleService.putPageReviewInCache(this.filteredType, this.filteredSubtype, review);
+          this.pageService.putPageReviewInCache(this.filteredType, this.filteredSubtype, review);
 
-          const articleId = review.id;
+          const pageId = review.id;
           // TODO : Do something with the title
 
           if (this.filteredType && this.filteredSubtype) {
             if (this.suggestion) {
               this.router.navigate([
-                `article/${articleId}/${this.filteredType}/${this.filteredSubtype}/${this.suggestion}`
+                `article/${pageId}/${this.filteredType}/${this.filteredSubtype}/${this.suggestion}`
               ]);
             } else {
-              this.router.navigate([`article/${articleId}/${this.filteredType}/${this.filteredSubtype}`]);
+              this.router.navigate([`article/${pageId}/${this.filteredType}/${this.filteredSubtype}`]);
             }
           } else {
-            this.router.navigate([`article/${articleId}`]);
+            this.router.navigate([`article/${pageId}`]);
           }
         } else {
           this.alertService.addWarningMessage(

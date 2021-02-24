@@ -5,9 +5,9 @@ import { AlertService } from '../alert/alert.service';
 import { Language } from '../user/language-model';
 import { UserConfigService } from '../user/user-config.service';
 import { UserService } from '../user/user.service';
-import { ArticleService } from './article.service';
 import { PageReplacement } from './page-replacement.model';
 import { PageReview } from './page-review.model';
+import { PageService } from './page.service';
 
 @Component({
   selector: 'app-edit-page',
@@ -15,7 +15,7 @@ import { PageReview } from './page-review.model';
   styleUrls: []
 })
 export class EditPageComponent implements OnInit {
-  private articleId: number;
+  private pageId: number;
   filteredType: string;
   filteredSubtype: string;
   suggestion: string; // Only for type 'custom'
@@ -33,7 +33,7 @@ export class EditPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private alertService: AlertService,
-    private articleService: ArticleService,
+    private pageService: PageService,
     private router: Router,
     private userService: UserService,
     private userConfigService: UserConfigService,
@@ -43,31 +43,27 @@ export class EditPageComponent implements OnInit {
   ngOnInit() {
     this.lang = this.userConfigService.lang;
 
-    this.articleId = +this.route.snapshot.paramMap.get('id');
+    this.pageId = +this.route.snapshot.paramMap.get('id');
     this.filteredType = this.route.snapshot.paramMap.get('type');
     this.filteredSubtype = this.route.snapshot.paramMap.get('subtype');
     this.suggestion = this.route.snapshot.paramMap.get('suggestion');
 
     // First try to get the review from the cache
-    const cachedReview = this.articleService.getPageReviewFromCache(
-      this.articleId,
-      this.filteredType,
-      this.filteredSubtype
-    );
+    const cachedReview = this.pageService.getPageReviewFromCache(this.pageId, this.filteredType, this.filteredSubtype);
 
     let htmlTitle = 'Replacer - ';
     if (this.filteredType && this.filteredSubtype) {
       htmlTitle += `${this.filteredSubtype} - `;
     }
-    htmlTitle += cachedReview ? cachedReview.title : this.articleId;
+    htmlTitle += cachedReview ? cachedReview.title : this.pageId;
     this.titleService.setTitle(htmlTitle);
     this.alertService.addInfoMessage('Buscando potenciales reemplazos del artículo…');
 
     if (cachedReview) {
       this.manageReview(cachedReview);
     } else {
-      this.articleService
-        .findPageReviewById(this.articleId, this.filteredType, this.filteredSubtype, this.suggestion)
+      this.pageService
+        .findPageReviewById(this.pageId, this.filteredType, this.filteredSubtype, this.suggestion)
         .subscribe(
           (review: PageReview) => {
             if (review) {
@@ -76,7 +72,7 @@ export class EditPageComponent implements OnInit {
               this.alertService.addWarningMessage(
                 'No se ha encontrado ningún reemplazo en la versión más actualizada del artículo'
               );
-              this.redirectToNextArticle();
+              this.redirectToNextPage();
             }
           },
           (err) => {
@@ -119,13 +115,13 @@ export class EditPageComponent implements OnInit {
       this.alertService.addInfoMessage(`Guardando cambios en «${this.title}»…`);
       this.saveContent(contentToSave);
     } else {
-      // Save with no changes => Mark article as reviewed
+      // Save with no changes => Mark page as reviewed
       this.saveWithNoChanges();
     }
   }
 
   onSaveNoChanges() {
-    // Save with no changes => Mark article as reviewed
+    // Save with no changes => Mark page as reviewed
     this.saveWithNoChanges();
   }
 
@@ -135,12 +131,12 @@ export class EditPageComponent implements OnInit {
   }
 
   private saveContent(content: string) {
-    // Remove replacements as a trick to hide the article
+    // Remove replacements as a trick to hide the page
     this.replacements = [];
 
-    this.articleService
+    this.pageService
       .savePage(
-        this.articleId,
+        this.pageId,
         this.filteredType,
         this.filteredSubtype,
         this.title,
@@ -162,12 +158,12 @@ export class EditPageComponent implements OnInit {
         },
         () => {
           this.alertService.addSuccessMessage('Cambios guardados con éxito');
-          this.redirectToNextArticle();
+          this.redirectToNextPage();
         }
       );
   }
 
-  private redirectToNextArticle() {
+  private redirectToNextPage() {
     if (this.filteredType && this.filteredSubtype) {
       if (this.suggestion) {
         this.router.navigate([`random/${this.filteredType}/${this.filteredSubtype}/${this.suggestion}`]);

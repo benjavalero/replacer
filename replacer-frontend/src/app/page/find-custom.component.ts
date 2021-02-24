@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
-
+import { Router } from '@angular/router';
 import { AlertService } from '../alert/alert.service';
-import { ArticleService } from './article.service';
+import { PageService } from './page.service';
 
 @Component({
   selector: 'app-find-custom',
@@ -19,7 +18,7 @@ export class FindCustomComponent implements OnInit {
     private router: Router,
     private alertService: AlertService,
     private titleService: Title,
-    private articleService: ArticleService
+    private pageService: PageService
   ) {}
 
   ngOnInit() {
@@ -39,7 +38,7 @@ export class FindCustomComponent implements OnInit {
     if (r === s) {
       this.alertService.addErrorMessage('El texto a reemplazar y el sugerido son iguales');
     } else {
-      this.articleService.validateCustomReplacement(r).subscribe((type: string) => {
+      this.pageService.validateCustomReplacement(r).subscribe((type: string) => {
         if (type) {
           this.alertService.addWarningMessage(`Reemplazo de tipo ${type} ya existente`);
           this.router.navigate([`random/${type}/${r}`]);
