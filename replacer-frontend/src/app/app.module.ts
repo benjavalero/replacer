@@ -20,6 +20,7 @@ import { OAuthResponseComponent } from './authentication/oauth-response.componen
 import { HeaderComponent } from './header/header.component';
 import { FindRandomComponent } from './page/find-random.component';
 import { FindCustomComponent } from './page/find-custom.component';
+import { ValidateCustomComponent } from './page/validate-custom.component';
 import { EditPageComponent } from './page/edit-page.component';
 import { EditSnippetComponent } from './page/edit-snippet.component';
 import { DumpIndexingComponent } from './dump-indexing/dump-indexing.component';
@@ -39,6 +40,7 @@ import { StatsComponent } from './stats/stats.component';
     HeaderComponent,
     FindRandomComponent,
     FindCustomComponent,
+    ValidateCustomComponent,
     EditPageComponent,
     EditSnippetComponent,
     DumpIndexingComponent,

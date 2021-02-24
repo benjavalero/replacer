@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../alert/alert.service';
 import { PageService } from './page.service';
+import { ValidateCustomComponent } from './validate-custom.component';
 
 @Component({
   selector: 'app-find-custom',
@@ -18,8 +20,12 @@ export class FindCustomComponent implements OnInit {
     private router: Router,
     private alertService: AlertService,
     private titleService: Title,
-    private pageService: PageService
-  ) {}
+    private pageService: PageService,
+    private modalService: NgbModal
+  ) {
+    this.replacement = '';
+    this.suggestion = '';
+  }
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Reemplazo personalizado');
@@ -40,8 +46,17 @@ export class FindCustomComponent implements OnInit {
     } else {
       this.pageService.validateCustomReplacement(r).subscribe((type: string) => {
         if (type) {
-          this.alertService.addWarningMessage(`Reemplazo de tipo ${type} ya existente`);
-          this.router.navigate([`random/${type}/${r}`]);
+          const modalRef = this.modalService.open(ValidateCustomComponent);
+          modalRef.componentInstance.type = type;
+          modalRef.componentInstance.subtype = r;
+          modalRef.result.then(
+            (result) => {
+              this.router.navigate([`random/${type}/${r}`]);
+            },
+            (reason) => {
+              // Nothing to do
+            }
+          );
         } else {
           this.router.navigate([`random/Personalizado/${r}/${s}`]);
         }
