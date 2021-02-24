@@ -27,4 +27,8 @@ public interface FinderResult extends Comparable<FinderResult> {
         // We don't want an item to contain itself
         return this.getRange().containsRange(r.getRange()) && !this.getRange().equals(r.getRange());
     }
+
+    default boolean containsOrEquals(FinderResult r) {
+        return this.getRange().containsRange(r.getRange());
+    }
 }

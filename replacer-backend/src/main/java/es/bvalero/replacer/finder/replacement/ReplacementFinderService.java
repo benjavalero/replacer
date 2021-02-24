@@ -117,7 +117,7 @@ public class ReplacementFinderService implements FinderService<Replacement> {
         // For not-composed misspellings we just check a simple contains
         return ReplacementType.MISSPELLING_COMPOSED.equals(r.getType())
             ? immutable.intersects(r)
-            : immutable.contains(r);
+            : immutable.containsOrEquals(r);
     }
 
     @TestOnly
