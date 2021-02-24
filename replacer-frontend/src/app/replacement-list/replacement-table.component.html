@@ -1,0 +1,50 @@
+<div *ngIf="replacementCounts.length">
+  <h4>{{ type }}</h4>
+
+  <div *ngIf="filtrable" class="form-group mt-4">
+    <input class="form-control" type="text" [(ngModel)]="filter" autocomplete="off"
+      placeholder="Filtrar por subtipo (ignora mayúsculas y acentos)" />
+  </div>
+
+  <div *ngIf="filteredItems.length">
+    <table class="table"
+      aria-describedby="Lista de potenciales reemplazos sin revisar y la cantidad estimada de páginas que los contienen">
+      <thead>
+        <tr>
+          <th scope="col" class="{{ columnDirection('s') }}" (click)="sort('s')">Subtipo</th>
+          <th scope="col" class="{{ columnDirection('c') }}" (click)="sort('c')">N.º</th>
+          <th scope="col" class="d-none d-sm-table-cell text-nowrap">
+            Lista de
+            <br />
+            páginas
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of filteredItems">
+          <td class="w-75">
+            <a routerLink="/random/{{ type }}/{{ item.s }}">{{ item.s }}</a>
+          </td>
+          <td class="w-25">{{ item.c }}</td>
+          <td class="d-none d-sm-table-cell text-nowrap">
+            <a class="btn btn-outline-secondary" role="button"
+              href="{{ pageListUrl }}&type={{ type }}&subtype={{ item.s }}" target="_blank"
+              title="Abrir lista de páginas">
+              <fa-icon [icon]="listIcon"></fa-icon>
+            </a>
+            &nbsp;
+            <a class="btn btn-outline-secondary" role="button" (click)="reviewPages(item.s)"
+              title="Marcar todas como revisadas">
+              <fa-icon [icon]="checkIcon"></fa-icon>
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ngb-pagination *ngIf="filtrable" [collectionSize]="this.replacementCounts.length" [(page)]="page"
+      [pageSize]="pageSize" [maxSize]="maxSize" [rotate]="true" class="d-flex justify-content-center">
+    </ngb-pagination>
+  </div>
+  <p *ngIf="!filteredItems.length">No hay reemplazos que cumplan los filtros de búsqueda.</p>
+</div>

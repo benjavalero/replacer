@@ -1,0 +1,14 @@
+<div *ngIf="counts$ | async as typeCounts; else loading">
+  <h3>Lista de reemplazos</h3>
+
+  <p>
+    Las siguientes listas muestran potenciales errores ortográficos y de estilo sin revisar, así como el número estimado
+    de páginas que los contienen.
+  </p>
+
+  <app-replacement-table *ngFor="let typeCount of typeCounts" [type]="typeCount.t" [replacementCounts]="typeCount.l">
+  </app-replacement-table>
+</div>
+<ng-template #loading>
+  <app-alert>Cargando lista de reemplazos…</app-alert>
+</ng-template>

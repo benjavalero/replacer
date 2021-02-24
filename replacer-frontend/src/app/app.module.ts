@@ -23,10 +23,9 @@ import { FindCustomComponent } from './page/find-custom.component';
 import { EditPageComponent } from './page/edit-page.component';
 import { EditSnippetComponent } from './page/edit-snippet.component';
 import { DumpIndexingComponent } from './dump-indexing/dump-indexing.component';
-import { FindReplacementComponent } from './replacement/find-replacement.component';
-import { ReplacementTableComponent } from './replacement/replacement-table.component';
-import { ReviewSubtypeComponent } from './replacement/review-subtype.component';
-import { ColumnSortableDirective } from './replacement/column-sortable.directive';
+import { ReplacementListComponent } from './replacement-list/replacement-list.component';
+import { ReplacementTableComponent } from './replacement-list/replacement-table.component';
+import { ReviewSubtypeComponent } from './replacement-list/review-subtype.component';
 import { StatsComponent } from './stats/stats.component';
 
 @NgModule({
@@ -43,10 +42,9 @@ import { StatsComponent } from './stats/stats.component';
     EditPageComponent,
     EditSnippetComponent,
     DumpIndexingComponent,
-    FindReplacementComponent,
+    ReplacementListComponent,
     ReplacementTableComponent,
     ReviewSubtypeComponent,
-    ColumnSortableDirective,
     StatsComponent
   ],
   imports: [

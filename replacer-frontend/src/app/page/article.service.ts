@@ -95,10 +95,4 @@ export class ArticleService {
 
     return this.httpClient.post<string>(`${this.baseUrl}/${pageId}`, savePage);
   }
-
-  reviewPages(type: string, subtype: string): Observable<any> {
-    let params: HttpParams = new HttpParams();
-    params = params.append('type', type).append('subtype', subtype);
-    return this.httpClient.post<any>(`${this.baseUrl}/review`, null, { params });
-  }
 }
