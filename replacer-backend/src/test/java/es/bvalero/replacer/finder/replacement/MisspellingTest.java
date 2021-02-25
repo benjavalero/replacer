@@ -14,7 +14,7 @@ class MisspellingTest {
 
         Assertions.assertEquals(1, suggestions.size());
         Assertions.assertEquals("A", suggestions.get(0).getText());
-        Assertions.assertEquals("", suggestions.get(0).getComment());
+        Assertions.assertNull(suggestions.get(0).getComment());
     }
 
     @Test

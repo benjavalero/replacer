@@ -10,28 +10,32 @@ const THRESHOLD = 200; // Number of characters to display around the replacement
   styleUrls: ['./edit-snippet.component.css']
 })
 export class EditSnippetComponent implements OnInit {
-
   @Input() text: string;
   @Input() start: number;
   @Input() word: string;
   @Input() suggestions: Suggestion[];
 
   textLeft: string;
-  suggestionSelectedValue: Suggestion;
+  private suggestionSelectedValue: Suggestion;
   textRight: string;
 
   @Output() fixed: EventEmitter<any> = new EventEmitter();
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
     this.textLeft = this.trimLeft(this.text);
     this.textRight = this.trimRight(this.text);
 
     // If the original word is not in the suggestions we added it at the first position
-    const originalWordSuggested = this.suggestions.map(sug => sug.text).findIndex(word => word === this.word);
-    if (originalWordSuggested >= 0) {
-      this.suggestionSelected = this.suggestions[originalWordSuggested];
+    const posOriginalWord = this.suggestions.map((sug) => sug.text).findIndex((word) => word === this.word);
+    if (posOriginalWord >= 0) {
+      let originalSuggested = this.suggestions[posOriginalWord];
+      if (!originalSuggested.comment) {
+        originalSuggested = { ...originalSuggested, comment: 'no reemplazar' };
+        this.suggestions[posOriginalWord] = originalSuggested;
+      }
+      this.suggestionSelected = originalSuggested;
     } else {
       this.suggestions.unshift({
         text: this.word,
@@ -64,5 +68,4 @@ export class EditSnippetComponent implements OnInit {
     const limitRight = Math.min(end + THRESHOLD, text.length);
     return text.slice(end, limitRight) + (limitRight === text.length ? '' : ' [...]');
   }
-
 }

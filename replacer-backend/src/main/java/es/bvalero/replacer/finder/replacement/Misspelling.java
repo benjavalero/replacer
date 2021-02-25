@@ -81,7 +81,7 @@ public class Misspelling {
     private Suggestion parseSuggestion(String suggestion) {
         String text = suggestion.replaceAll(REGEX_BRACKETS, "").trim();
         Matcher m = PATTERN_BRACKETS.matcher(suggestion);
-        String explanation = "";
+        String explanation = null;
         if (m.find()) {
             // Remove the leading and trailing brackets
             String brackets = m.group();
