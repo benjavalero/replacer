@@ -105,7 +105,29 @@ abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeLis
     private List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
         List<Suggestion> suggestions = new LinkedList<>();
         for (Suggestion misspellingSuggestion : misspelling.getSuggestions()) {
-            suggestions.addAll(applyMisspellingSuggestion(word, misspelling.isCaseSensitive(), misspellingSuggestion));
+            if (misspelling.isCaseSensitive()) {
+                suggestions.add(misspellingSuggestion);
+            } else {
+                // Apply the case of the original word to the generic misspelling suggestion
+                suggestions.add(
+                    FinderUtils.startsWithUpperCase(word) ? misspellingSuggestion.toUppercase() : misspellingSuggestion
+                );
+            }
+        }
+
+        // Special case. For case-sensitive misspellings which transform uppercase to lowercase,
+        // we also provide the uppercase version just in case it is correct according to punctuation rules.
+        if (
+            misspelling.isCaseSensitive() &&
+            FinderUtils.startsWithUpperCase(word) &&
+            !FinderUtils.isUppercase(word) &&
+            suggestions.stream().map(Suggestion::getText).noneMatch(word::equals)
+        ) {
+            suggestions
+                .stream()
+                .filter(s -> FinderUtils.toLowerCase(word).equals(s.getText()))
+                .findAny()
+                .ifPresent(s -> suggestions.add(s.toUppercase()));
         }
 
         // If any of the suggestions matches the original then move it as the first suggestion
@@ -118,27 +140,5 @@ abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeLis
         }
 
         return suggestions;
-    }
-
-    private List<Suggestion> applyMisspellingSuggestion(String word, boolean caseSensitive, Suggestion suggestion) {
-        if (caseSensitive) {
-            // Try to provide also a suggestion for sentence start
-            if (
-                FinderUtils.startsWithUpperCase(word) &&
-                !FinderUtils.isUppercase(word) &&
-                FinderUtils.startsWithLowerCase(suggestion.getText())
-            ) {
-                return List.of(suggestion, suggestion.toUppercase());
-            } else {
-                return List.of(suggestion);
-            }
-        } else {
-            // Try to keep the uppercase of the original text
-            if (FinderUtils.startsWithUpperCase(word)) {
-                return Collections.singletonList(suggestion.toUppercase());
-            } else {
-                return Collections.singletonList(suggestion);
-            }
-        }
     }
 }

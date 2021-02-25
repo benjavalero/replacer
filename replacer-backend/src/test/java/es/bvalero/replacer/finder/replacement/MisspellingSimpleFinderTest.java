@@ -363,7 +363,7 @@ class MisspellingSimpleFinderTest {
     }
 
     @Test
-    void testCaseSensitiveSuggestionsDifferentCase() {
+    void testLowercaseCaseSensitiveSuggestionsDifferentCase() {
         String text = "Las 3 am.";
 
         Misspelling misspelling = Misspelling.ofCaseSensitive("am", "AM (sigla), a. m. (hora), am (idioma)");
@@ -380,6 +380,26 @@ class MisspellingSimpleFinderTest {
             .suggestions(
                 List.of(Suggestion.of("am", "idioma"), Suggestion.of("AM", "sigla"), Suggestion.of("a. m.", "hora"))
             )
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testUppercaseCaseSensitiveSuggestionsDifferentCase() {
+        String text = "En Julio.";
+
+        Misspelling misspelling = Misspelling.ofCaseSensitive("Julio", "julio (mes), Julio (nombre)");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("Julio")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("Julio")
+            .suggestions(List.of(Suggestion.of("Julio", "nombre"), Suggestion.of("julio", "mes")))
             .build();
         Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
     }
