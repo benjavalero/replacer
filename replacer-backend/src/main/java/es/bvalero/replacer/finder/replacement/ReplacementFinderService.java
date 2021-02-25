@@ -84,7 +84,7 @@ public class ReplacementFinderService implements FinderService<Replacement> {
 
         // Filter to return the replacements which are NOT strictly contained in any other
         return toStream(replacements)
-            .filter(r -> toStream(replacements).noneMatch(r2 -> r2.contains(r)))
+            .filter(r -> toStream(replacements).noneMatch(r2 -> r2.containsStrictly(r)))
             .collect(Collectors.toList());
     }
 
@@ -102,7 +102,7 @@ public class ReplacementFinderService implements FinderService<Replacement> {
         }
 
         for (Immutable immutable : immutableFinderService.find(page)) {
-            replacementList.removeIf(r -> this.containsOrIntersects(immutable, r));
+            replacementList.removeIf(immutable::intersects);
 
             // No need to continue finding the immutables if there are no replacements
             if (replacementList.isEmpty()) {
@@ -111,13 +111,6 @@ public class ReplacementFinderService implements FinderService<Replacement> {
         }
 
         return replacementList;
-    }
-
-    private boolean containsOrIntersects(Immutable immutable, Replacement r) {
-        // For not-composed misspellings we just check a simple contains
-        return ReplacementType.MISSPELLING_COMPOSED.equals(r.getType())
-            ? immutable.intersects(r)
-            : immutable.containsOrEquals(r);
     }
 
     @TestOnly

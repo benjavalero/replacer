@@ -23,12 +23,14 @@ public interface FinderResult extends Comparable<FinderResult> {
         return this.getRange().isOverlappedBy(r.getRange());
     }
 
-    default boolean contains(FinderResult r) {
+    /** @return if a result contains strictly, i.e. not been equal, another result. */
+    default boolean containsStrictly(FinderResult r) {
         // We don't want an item to contain itself
         return this.getRange().containsRange(r.getRange()) && !this.getRange().equals(r.getRange());
     }
 
-    default boolean containsOrEquals(FinderResult r) {
+    /** @return if a result contains (not strictly, i.e. both can be equal) another result. */
+    default boolean contains(FinderResult r) {
         return this.getRange().containsRange(r.getRange());
     }
 }
