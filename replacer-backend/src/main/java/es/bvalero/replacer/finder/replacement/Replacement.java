@@ -15,16 +15,10 @@ import lombok.*;
  */
 @Value
 @Builder
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Replacement implements FinderResult {
 
-    // Two replacements are equal if they have the same start and end
-    @EqualsAndHashCode.Include
     int start;
-
-    @EqualsAndHashCode.Include
     String text;
-
     String type;
 
     @With(AccessLevel.PACKAGE)

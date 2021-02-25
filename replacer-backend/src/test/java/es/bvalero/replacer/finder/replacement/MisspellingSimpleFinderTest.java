@@ -11,8 +11,6 @@ import org.junit.jupiter.api.Test;
 
 class MisspellingSimpleFinderTest {
 
-    private static final SetValuedMap<WikipediaLanguage, Misspelling> EMPTY_MAP = new HashSetValuedHashMap<>();
-
     private MisspellingSimpleFinder misspellingFinder;
 
     @BeforeEach
@@ -20,223 +18,292 @@ class MisspellingSimpleFinderTest {
         misspellingFinder = new MisspellingSimpleFinder();
     }
 
-    @Test
-    void testFindMisspellingsNoResults() {
-        String text = "Sample text";
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "b");
-        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
+    private void fakeUpdateMisspellingList(List<Misspelling> misspellings) {
         SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
-        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
+        map.putAll(WikipediaLanguage.SPANISH, misspellings);
 
-        // Fake the update of the misspelling list in the misspelling manager
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+        SetValuedMap<WikipediaLanguage, Misspelling> emptyMap = new HashSetValuedHashMap<>();
+        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", emptyMap, map));
+    }
+
+    @Test
+    void testNoResults() {
+        String text = "Un texto";
+
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("abadia", "abadía");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Assertions.assertNotNull(results);
         Assertions.assertTrue(results.isEmpty());
     }
 
     @Test
-    void testFindMisspellingsWithResults() {
-        String text = "sample text.";
-        Misspelling misspelling1 = Misspelling.ofCaseInsensitive("sample", "ejemplo");
-        Misspelling misspelling2 = Misspelling.ofCaseInsensitive("text", "texto");
-        Set<Misspelling> misspellingSet = new HashSet<>(Arrays.asList(misspelling1, misspelling2));
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
-        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
+    void testOneResult() {
+        String text = "Una abadia.";
 
-        // Fake the update of the misspelling list in the misspelling manager
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("abadia", "abadía");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Assertions.assertNotNull(results);
-        Assertions.assertEquals(2, results.size());
-
-        Replacement result1 = results.get(0);
-        Assertions.assertEquals("sample", result1.getText());
-        Assertions.assertEquals(0, result1.getStart());
-        Assertions.assertEquals("sample", result1.getSubtype());
-
-        Replacement result2 = results.get(1);
-        Assertions.assertEquals("text", result2.getText());
-        Assertions.assertEquals(7, result2.getStart());
-        Assertions.assertEquals("text", result2.getSubtype());
+        Replacement expected = Replacement
+            .builder()
+            .start(4)
+            .text("abadia")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("abadia")
+            .suggestions(List.of(Suggestion.ofNoComment("abadía")))
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
-    void testFindMisspellingsWithResultCaseInsensitive() {
-        String text = "Sample Text";
+    void testTwoResults() {
+        String text = "Una abadia online.";
+
+        Misspelling misspelling1 = Misspelling.ofCaseInsensitive("abadia", "abadía");
+        Misspelling misspelling2 = Misspelling.ofCaseInsensitive("online", "en línea");
+        this.fakeUpdateMisspellingList(List.of(misspelling1, misspelling2));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected1 = Replacement
+            .builder()
+            .start(4)
+            .text("abadia")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("abadia")
+            .suggestions(List.of(Suggestion.ofNoComment("abadía")))
+            .build();
+        Replacement expected2 = Replacement
+            .builder()
+            .start(11)
+            .text("online")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("online")
+            .suggestions(List.of(Suggestion.ofNoComment("en línea")))
+            .build();
+        Assertions.assertEquals(Set.of(expected1, expected2), new HashSet<>(results));
+    }
+
+    @Test
+    void testUppercase() {
+        String text = "Una Abadia.";
+
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("abadia", "abadía");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(4)
+            .text("Abadia")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("abadia")
+            .suggestions(List.of(Suggestion.ofNoComment("Abadía")))
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testCaseSensitiveUppercaseVersusLowercase() {
+        String text = "En enero.";
+
+        Misspelling misspelling = Misspelling.ofCaseSensitive("Enero", "enero");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Assertions.assertEquals(Collections.emptySet(), new HashSet<>(results));
+    }
+
+    @Test
+    void testCaseSensitiveUppercase() {
+        String text = "En Brazil.";
+
+        Misspelling misspelling = Misspelling.ofCaseSensitive("Brazil", "Brasil");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("Brazil")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("Brazil")
+            .suggestions(List.of(Suggestion.ofNoComment("Brasil")))
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testCaseSensitiveUppercaseToLowercase() {
+        String text = "En Enero.";
+
+        Misspelling misspelling = Misspelling.ofCaseSensitive("Enero", "enero");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Suggestion suggestion = Suggestion.ofNoComment("enero");
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("Enero")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("Enero")
+            .suggestions(List.of(suggestion.toUppercase(), suggestion))
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testCaseSensitiveLowercaseVersusUppercase() {
+        String text = "En Angola.";
+
+        Misspelling misspelling = Misspelling.ofCaseSensitive("angola", "Angola");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Assertions.assertEquals(Collections.emptySet(), new HashSet<>(results));
+    }
+
+    @Test
+    void testCaseSensitiveLowercase() {
+        String text = "En ves.";
+
+        Misspelling misspelling = Misspelling.ofCaseSensitive("ves", "vez");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("ves")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("ves")
+            .suggestions(List.of(Suggestion.ofNoComment("vez")))
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testCaseSensitiveLowercaseToUppercase() {
+        String text = "En angola.";
+
+        Misspelling misspelling = Misspelling.ofCaseSensitive("angola", "Angola");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("angola")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("angola")
+            .suggestions(List.of(Suggestion.ofNoComment("Angola")))
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testCompleteWord() {
+        String text = "Un texto";
+
         Misspelling misspelling = Misspelling.ofCaseInsensitive("text", "texto");
-        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
-        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
-
-        // Fake the update of the misspelling list in the misspelling manager
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+        this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Assertions.assertNotNull(results);
-        Assertions.assertEquals(1, results.size());
-        Replacement result = results.get(0);
-        Assertions.assertEquals("Text", result.getText());
-        Assertions.assertEquals("text", result.getSubtype());
+        Assertions.assertTrue(results.isEmpty());
     }
 
     @Test
-    void testFindMisspellingsWithResultCaseSensitive() {
-        String text = "text Text";
-        Misspelling misspelling = Misspelling.of("text", true, "texto");
-        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
-        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
+    void testAllUppercaseCaseInsensitive() {
+        String text = "Una ABADIA.";
 
-        // Fake the update of the misspelling list in the misspelling manager
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("abadia", "abadía");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Assertions.assertNotNull(results);
-        Assertions.assertEquals(1, results.size());
-        Replacement result = results.get(0);
-        Assertions.assertEquals("text", result.getText());
-        Assertions.assertEquals(0, result.getStart());
-        Assertions.assertEquals("text", result.getSubtype());
+        Assertions.assertTrue(results.isEmpty());
     }
 
     @Test
-    void testFindMisspellingsWithCompleteWord() {
-        String text = "Texto Text";
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("text", "texto");
-        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
-        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
+    void testAllUppercaseCaseSensitive() {
+        String text = "Un OVNI.";
 
-        // Fake the update of the misspelling list in the misspelling manager
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+        Misspelling misspelling = Misspelling.ofCaseSensitive("OVNI", "ovni");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Assertions.assertNotNull(results);
-        Assertions.assertEquals(1, results.size());
-        Replacement result = results.get(0);
-        Assertions.assertEquals("Text", result.getText());
-        Assertions.assertEquals(6, result.getStart());
-        Assertions.assertEquals("text", result.getSubtype());
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("OVNI")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("OVNI")
+            .suggestions(List.of(Suggestion.ofNoComment("ovni")))
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
-    void testFindMisspellingsWithUppercase() {
-        String text = "SAMPLE TEXT";
-        Misspelling misspelling1 = Misspelling.of("SAMPLE", true, "sample");
-        Misspelling misspelling2 = Misspelling.of("text", false, "texto");
-        Set<Misspelling> misspellingSet = new HashSet<>(Arrays.asList(misspelling1, misspelling2));
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
-        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
-
-        // Fake the update of the misspelling list in the misspelling manager
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
-
-        List<Replacement> results = misspellingFinder.findList(text);
-
-        Assertions.assertNotNull(results);
-        Assertions.assertEquals(1, results.size());
-        Replacement result = results.get(0);
-        Assertions.assertEquals("SAMPLE", result.getText());
-        Assertions.assertEquals(0, result.getStart());
-        Assertions.assertEquals("SAMPLE", result.getSubtype());
-    }
-
-    @Test
-    void testFindMisspellingsBetweenUnderscores() {
+    void testBetweenUnderscores() {
         String text = "A _Text Text_ _Text_ Text.";
+
         Misspelling misspelling = Misspelling.ofCaseInsensitive("text", "texto");
-        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
-        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
-
-        // Fake the update of the misspelling list in the misspelling manager
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+        this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Assertions.assertNotNull(results);
-        Assertions.assertEquals(1, results.size());
-        Replacement result = results.get(0);
-        Assertions.assertEquals("Text", result.getText());
-        Assertions.assertEquals(21, result.getStart());
-        Assertions.assertEquals("text", result.getSubtype());
+        Replacement expected = Replacement
+            .builder()
+            .start(21)
+            .text("Text")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("text")
+            .suggestions(List.of(Suggestion.ofNoComment("Texto")))
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
-    void testFindMisspellingSuggestion() {
-        // lowercase -> uppercase: españa -> España
-        // uppercase -> lowercase: Domingo -> domingo
-        // lowercase -> lowercase: aguila -> águila
-        // uppercase -> uppercase: Aguila -> Águila
-        String text = "españa Domingo aguila Aguila";
-        Misspelling misspellingCS = Misspelling.of("españa", true, "España");
-        Misspelling misspellingCS2 = Misspelling.of("Domingo", true, "domingo");
-        Misspelling misspellingCI = Misspelling.of("aguila", false, "águila");
+    void testSameWordFirst() {
+        String text = "Un entreno.";
 
-        Set<Misspelling> misspellingSet = new HashSet<>(Arrays.asList(misspellingCS, misspellingCS2, misspellingCI));
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
-        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
-
-        // Fake the update of the misspelling list in the misspelling manager
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
-
-        List<Replacement> results = misspellingFinder.findList(text);
-
-        Assertions.assertEquals("España", results.get(0).getSuggestions().get(0).getText());
-        Assertions.assertEquals("domingo", results.get(1).getSuggestions().get(0).getText());
-        Assertions.assertEquals("águila", results.get(2).getSuggestions().get(0).getText());
-        Assertions.assertEquals("Águila", results.get(3).getSuggestions().get(0).getText());
-    }
-
-    @Test
-    void testFindMisspellingSuggestionSameWordFirst() {
         String word = "entreno";
         String comment = "entrenó (verbo), entreno (sustantivo)";
         Misspelling misspelling = Misspelling.ofCaseInsensitive(word, comment);
-        String text = String.format("Un %s.", word);
-
-        // Fake the update of the misspelling list in the misspelling manager
-        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
-        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
-
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+        this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Assertions.assertEquals(1, results.size());
-        Assertions.assertEquals(3, results.get(0).getStart());
-        Assertions.assertEquals(word, results.get(0).getText());
-        Assertions.assertEquals(2, results.get(0).getSuggestions().size());
-        Assertions.assertEquals(word, results.get(0).getSuggestions().get(0).getText());
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("entreno")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("entreno")
+            .suggestions(List.of(Suggestion.of("entreno", "sustantivo"), Suggestion.of("entrenó", "verbo")))
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
-    void testMisspellingListEmpty() {
-        // Fake the update of the misspelling list in the misspelling manager
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, EMPTY_MAP));
-
-        Assertions.assertTrue(misspellingFinder.findList("A sample text").isEmpty());
-    }
-
-    @Test
-    void testFindMisspellingWithDot() {
+    void testMisspellingWithDot() {
         String text = "De 23 cms. de altura";
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("cms.", "cm");
-        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
-        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
 
-        // Fake the update of the misspelling list in the misspelling manager
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("cms.", "cm");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingFinder.findList(text);
 
@@ -244,18 +311,98 @@ class MisspellingSimpleFinderTest {
     }
 
     @Test
-    void testFindMisspellingWithNumber() {
+    void testMisspellingWithNumber() {
         String text = "De 23 m2 de extensión";
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("m2", "m²");
-        Set<Misspelling> misspellingSet = Collections.singleton(misspelling);
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
-        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
 
-        // Fake the update of the misspelling list in the misspelling manager
-        misspellingFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("m2", "m²");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingFinder.findList(text);
 
         Assertions.assertTrue(results.isEmpty());
+    }
+
+    @Test
+    void testSuggestionsDifferentCaseLowercase() {
+        String text = "Un avion.";
+
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("avion", "avión (aeronave), Avión (río)");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("avion")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("avion")
+            .suggestions(List.of(Suggestion.of("avión", "aeronave"), Suggestion.of("Avión", "río")))
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testSuggestionsDifferentCaseUppercase() {
+        String text = "Un Avion.";
+
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("avion", "avión (aeronave), Avión (río)");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("Avion")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("avion")
+            .suggestions(List.of(Suggestion.of("Avión", "aeronave"), Suggestion.of("Avión", "río")))
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testCaseSensitiveSuggestionsDifferentCase() {
+        String text = "Las 3 am.";
+
+        Misspelling misspelling = Misspelling.ofCaseSensitive("am", "AM (sigla), a. m. (hora), am (idioma)");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(6)
+            .text("am")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("am")
+            .suggestions(
+                List.of(Suggestion.of("am", "idioma"), Suggestion.of("AM", "sigla"), Suggestion.of("a. m.", "hora"))
+            )
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+    }
+
+    @Test
+    void testLowercaseMisspellingCaseInsensitive() {
+        String text = "En brazil";
+
+        // There are several cases like this in the Spanish list
+        // Ideally the word should be lowercase or the misspelling should be case-sensitive
+        Misspelling misspelling = Misspelling.ofCaseInsensitive("Brazil", "Brasil");
+        this.fakeUpdateMisspellingList(List.of(misspelling));
+
+        List<Replacement> results = misspellingFinder.findList(text);
+
+        Replacement expected = Replacement
+            .builder()
+            .start(3)
+            .text("brazil")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("Brazil")
+            .suggestions(List.of(Suggestion.ofNoComment("Brasil")))
+            .build();
+        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
     }
 }

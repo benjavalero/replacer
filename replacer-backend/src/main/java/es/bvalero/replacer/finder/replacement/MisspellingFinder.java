@@ -105,31 +105,32 @@ abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeLis
     private List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
         List<Suggestion> suggestions = new LinkedList<>();
         for (Suggestion misspellingSuggestion : misspelling.getSuggestions()) {
-            List<Suggestion> toAdd = applyMisspellingSuggestion(
-                word,
-                misspelling.isCaseSensitive(),
-                misspellingSuggestion
-            );
+            suggestions.addAll(applyMisspellingSuggestion(word, misspelling.isCaseSensitive(), misspellingSuggestion));
+        }
 
-            // If the suggested word matches the original then add it as the first suggestion
-            boolean containsOriginal = toAdd.stream().anyMatch(s -> s.getText().equals(word));
-            if (containsOriginal) {
-                suggestions.addAll(0, toAdd);
-            } else {
-                suggestions.addAll(toAdd);
+        // If any of the suggestions matches the original then move it as the first suggestion
+        for (int i = 0; i < suggestions.size(); i++) {
+            if (suggestions.get(i).getText().equals(word)) {
+                Suggestion original = suggestions.remove(i);
+                suggestions.add(0, original);
+                break;
             }
         }
+
         return suggestions;
     }
 
     private List<Suggestion> applyMisspellingSuggestion(String word, boolean caseSensitive, Suggestion suggestion) {
         if (caseSensitive) {
             // Try to provide also a suggestion for sentence start
-            Suggestion uppercase = suggestion.toUppercase();
-            if (uppercase.equals(suggestion)) {
-                return Collections.singletonList(suggestion);
+            if (
+                FinderUtils.startsWithUpperCase(word) &&
+                !FinderUtils.isUppercase(word) &&
+                FinderUtils.startsWithLowerCase(suggestion.getText())
+            ) {
+                return List.of(suggestion, suggestion.toUppercase());
             } else {
-                return List.of(suggestion, uppercase);
+                return List.of(suggestion);
             }
         } else {
             // Try to keep the uppercase of the original text

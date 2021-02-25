@@ -41,7 +41,7 @@ class SectionReviewServiceTest {
     void testFindSectionReview() throws ReplacerException {
         int pageId = 1;
         String content = "This is an sample content.";
-        Suggestion suggestion = Suggestion.ofNoComment("a");
+        Suggestion suggestion = Suggestion.of("a", "");
         PageReplacement replacement = PageReplacement.of(8, "an", Collections.singletonList(suggestion)); // "an"
 
         PageReview pageReview = PageReview

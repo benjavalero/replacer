@@ -55,12 +55,17 @@ public class Misspelling {
         return Misspelling.of(word, false, comment);
     }
 
+    @TestOnly
+    static Misspelling ofCaseSensitive(String word, String comment) {
+        return Misspelling.of(word, true, comment);
+    }
+
     private List<Suggestion> parseSuggestionsFromComment(String comment) {
         List<Suggestion> suggestionList = new ArrayList<>(5);
 
         // EXCEPTION: Composed misspellings with one word finished with comma, e.g. "mas."
         if (comment.endsWith(",") && FinderUtils.isWord(comment.substring(0, comment.length() - 2))) {
-            suggestionList.add(Suggestion.of(comment, null));
+            suggestionList.add(Suggestion.ofNoComment(comment));
             return suggestionList;
         }
 

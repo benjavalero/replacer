@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.finder.util.FinderUtils;
 import lombok.Value;
-import org.springframework.lang.Nullable;
 
 /**
  * A suggestion for a replacement.
@@ -14,11 +13,10 @@ public class Suggestion {
     String text;
 
     /** An optional description to explain the motivation of the fix */
-    @Nullable
     String comment;
 
-    public static Suggestion ofNoComment(String text) {
-        return of(text, null);
+    static Suggestion ofNoComment(String text) {
+        return of(text, "");
     }
 
     Suggestion toUppercase() {

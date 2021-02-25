@@ -68,6 +68,10 @@ public class FinderUtils {
         return !Character.isLetterOrDigit(separator) && !invalidSeparators.contains(separator);
     }
 
+    public static boolean isUppercase(String text) {
+        return text.chars().allMatch(Character::isUpperCase);
+    }
+
     public static boolean isAscii(char ch) {
         return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
     }
