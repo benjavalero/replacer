@@ -29,7 +29,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
 
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
-        PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
+        PageRequest pagination = PageRequest.of(0, getCacheSize());
         List<Integer> pageIds = replacementService.findRandomPageIdsToBeReviewedBySubtype(
             options.getLang(),
             options.getType(),

@@ -22,9 +22,6 @@ import org.springframework.stereotype.Service;
 @Service
 class PageReviewCustomService extends PageReviewService {
 
-    // Cache the offsets to find custom replacements with Wikipedia Search API
-    private final Map<String, Integer> cachedOffsets = new HashMap<>();
-
     @Autowired
     private WikipediaService wikipediaService;
 
@@ -42,56 +39,47 @@ class PageReviewCustomService extends PageReviewService {
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         try {
-            boolean caseSensitive =
-                FinderUtils.containsUppercase(options.getSubtype()) ||
-                FinderUtils.containsUppercase(options.getSuggestion());
-
-            // Find cached offset
+            // Initialize search
             int offset = 0;
-            String cacheKey = buildReplacementCacheKey(options);
-            if (cachedOffsets.containsKey(cacheKey)) {
-                offset = cachedOffsets.get(cacheKey);
-            } else {
-                cachedOffsets.put(cacheKey, offset);
+
+            WikipediaSearchResult searchResult = findWikipediaResults(options, offset);
+            final long totalWikipediaResults = searchResult.getTotal();
+            long totalToReview = searchResult.getTotal();
+            final List<Integer> pageIds = new LinkedList<>(searchResult.getPageIds());
+
+            // Calculate this out of the loop only if needed the first time
+            List<Integer> reviewedIds = new ArrayList<>();
+            if (!pageIds.isEmpty()) {
+                reviewedIds.addAll(
+                    replacementService.findPageIdsReviewedByTypeAndSubtype(
+                        options.getLang(),
+                        ReplacementType.CUSTOM,
+                        options.getSubtype()
+                    )
+                );
             }
 
-            List<Integer> reviewedIds = replacementService.findPageIdsReviewedByTypeAndSubtype(
-                options.getLang(),
-                ReplacementType.CUSTOM,
-                options.getSubtype()
-            );
-
-            PageSearchResult pageIds = convert(
-                wikipediaService.getPageIdsByStringMatch(
-                    options.getLang(),
-                    options.getSubtype(),
-                    caseSensitive,
-                    offset,
-                    CACHE_SIZE
-                )
-            );
-            offset += CACHE_SIZE;
-            cachedOffsets.put(cacheKey, offset);
-
-            while (!pageIds.isEmpty()) {
+            while (totalToReview >= 0) {
                 // Discard the pages already reviewed
-                pageIds.removePageIds(reviewedIds);
+                for (Integer reviewId : reviewedIds) {
+                    if (pageIds.remove(reviewId)) {
+                        totalToReview--;
+                    }
+                }
 
                 if (pageIds.isEmpty()) {
-                    pageIds =
-                        convert(
-                            wikipediaService.getPageIdsByStringMatch(
-                                options.getLang(),
-                                options.getSubtype(),
-                                caseSensitive,
-                                offset,
-                                CACHE_SIZE
-                            )
-                        );
-                    offset += CACHE_SIZE;
-                    cachedOffsets.put(cacheKey, offset);
+                    offset += getCacheSize();
+                    if (offset >= totalWikipediaResults) {
+                        LOGGER.debug("All results retrieved from Wikipedia are already reviewed");
+                        return PageSearchResult.ofEmpty();
+                    }
+
+                    searchResult = findWikipediaResults(options, offset);
+                    // For simplicity's sake we assume the number of total results is the same
+                    pageIds.clear();
+                    pageIds.addAll(searchResult.getPageIds());
                 } else {
-                    return pageIds;
+                    return PageSearchResult.of(totalToReview, pageIds);
                 }
             }
         } catch (ReplacerException e) {
@@ -101,8 +89,21 @@ class PageReviewCustomService extends PageReviewService {
         return PageSearchResult.ofEmpty();
     }
 
-    private PageSearchResult convert(WikipediaSearchResult wikipediaSearchResult) {
-        return PageSearchResult.of(wikipediaSearchResult.getTotal(), wikipediaSearchResult.getPageIds());
+    private WikipediaSearchResult findWikipediaResults(PageReviewOptions options, int offset) throws ReplacerException {
+        return wikipediaService.getPageIdsByStringMatch(
+            options.getLang(),
+            options.getSubtype(),
+            isCaseSensitive(options),
+            offset,
+            getCacheSize()
+        );
+    }
+
+    private boolean isCaseSensitive(PageReviewOptions options) {
+        return (
+            FinderUtils.containsUppercase(options.getSubtype()) ||
+            FinderUtils.containsUppercase(options.getSuggestion())
+        );
     }
 
     @Override

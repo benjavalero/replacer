@@ -257,7 +257,7 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG)
+    @Loggable(value = Loggable.DEBUG, prepend = true)
     public WikipediaSearchResult getPageIdsByStringMatch(
         WikipediaLanguage lang,
         String text,

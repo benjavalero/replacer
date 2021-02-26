@@ -29,8 +29,8 @@ class PageReviewNoTypeService extends PageReviewService {
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         // Find a random page without filtering by type takes a lot
         // Instead find a random replacement and then the following pages
-        PageRequest pagination = PageRequest.of(0, CACHE_SIZE);
-        long randomStart = replacementService.findRandomIdToBeReviewed(options.getLang(), CACHE_SIZE);
+        PageRequest pagination = PageRequest.of(0, getCacheSize());
+        long randomStart = replacementService.findRandomIdToBeReviewed(options.getLang(), getCacheSize());
         long totalResults = replacementService.countReplacementsNotReviewed(options.getLang());
         List<Integer> pageIds = replacementService.findPageIdsToBeReviewed(options.getLang(), randomStart, pagination);
         return PageSearchResult.of(totalResults, pageIds);

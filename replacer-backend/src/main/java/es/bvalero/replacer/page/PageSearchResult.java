@@ -18,35 +18,30 @@ final class PageSearchResult {
         this.pageIds.addAll(new HashSet<>(pageIds));
     }
 
-    public static PageSearchResult of(long total, List<Integer> pageIds) {
+    static PageSearchResult of(long total, List<Integer> pageIds) {
         return new PageSearchResult(total, pageIds);
     }
 
-    public static PageSearchResult ofEmpty() {
+    static PageSearchResult ofEmpty() {
         return new PageSearchResult(0, Collections.emptyList());
     }
 
-    public boolean isEmpty() {
+    boolean isEmptyTotal() {
+        return total == 0;
+    }
+
+    /** @return if the cached result list is empty. It doesn't mean the total is 0! */
+    boolean isEmpty() {
         return this.getPageIds().isEmpty();
     }
 
-    public Optional<Integer> popPageId() {
+    Optional<Integer> popPageId() {
         if (isEmpty()) {
             return Optional.empty();
         } else {
             this.total--;
             return Optional.of(this.pageIds.remove(0));
         }
-    }
-
-    public void removePageIds(List<Integer> toRemove) {
-        toRemove.forEach(
-            id -> {
-                if (this.pageIds.remove(id)) {
-                    this.total--;
-                }
-            }
-        );
     }
 
     @Override

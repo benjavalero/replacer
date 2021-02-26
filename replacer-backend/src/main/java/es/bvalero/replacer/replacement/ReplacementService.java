@@ -1,5 +1,6 @@
 package es.bvalero.replacer.replacement;
 
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import java.time.LocalDate;
@@ -63,6 +64,7 @@ public class ReplacementService {
         return replacementDao.countPagesToBeReviewedBySubtype(lang, type, subtype);
     }
 
+    @Loggable(value = Loggable.DEBUG, prepend = true)
     public List<Integer> findPageIdsReviewedByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype) {
         return replacementDao.findPageIdsReviewedByTypeAndSubtype(lang, type, subtype);
     }

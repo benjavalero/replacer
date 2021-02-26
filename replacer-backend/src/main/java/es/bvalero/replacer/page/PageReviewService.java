@@ -15,6 +15,9 @@ import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 abstract class PageReviewService {
 
     // Maximum 500 as it is used as page size when searching in Wikipedia
-    static final int CACHE_SIZE = 100;
+    @Getter(AccessLevel.PROTECTED)
+    @Setter(AccessLevel.PACKAGE) // For testing
+    private int cacheSize = 100;
 
     // Cache the found pages candidates to be reviewed
     // to find faster the next one after the user reviews one.
@@ -97,10 +102,17 @@ abstract class PageReviewService {
 
     @VisibleForTesting
     boolean loadCache(PageReviewOptions options) {
-        PageSearchResult pageIds = findPageIdsToReview(options);
+        // In case the cached result list is empty but also the total then quit
+        // Else reload the cached result list
         String key = buildReplacementCacheKey(options);
-        cachedPageIds.put(key, pageIds);
-        return !pageIds.isEmpty();
+        PageSearchResult result = cachedPageIds.getIfPresent(key);
+        if (result != null && result.isEmptyTotal()) {
+            return false;
+        } else {
+            PageSearchResult pageIds = findPageIdsToReview(options);
+            cachedPageIds.put(key, pageIds);
+            return !pageIds.isEmpty();
+        }
     }
 
     abstract PageSearchResult findPageIdsToReview(PageReviewOptions options);
