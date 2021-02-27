@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../alert/alert.service';
-import { PageService } from './page.service';
-import { ValidateCustomComponent } from './validate-custom.component';
 
 @Component({
   selector: 'app-find-custom',
@@ -16,13 +13,7 @@ export class FindCustomComponent implements OnInit {
   suggestion: string;
   caseSensitive: boolean;
 
-  constructor(
-    private router: Router,
-    private alertService: AlertService,
-    private titleService: Title,
-    private pageService: PageService,
-    private modalService: NgbModal
-  ) {
+  constructor(private router: Router, private alertService: AlertService, private titleService: Title) {
     this.replacement = '';
     this.suggestion = '';
     this.caseSensitive = false;
@@ -42,23 +33,7 @@ export class FindCustomComponent implements OnInit {
     if (r === s) {
       this.alertService.addErrorMessage('El texto a reemplazar y el sugerido son iguales');
     } else {
-      this.pageService.validateCustomReplacement(r).subscribe((type: string) => {
-        if (type) {
-          const modalRef = this.modalService.open(ValidateCustomComponent);
-          modalRef.componentInstance.type = type;
-          modalRef.componentInstance.subtype = r;
-          modalRef.result.then(
-            (result) => {
-              this.router.navigate([`random/${type}/${r}`]);
-            },
-            (reason) => {
-              // Nothing to do
-            }
-          );
-        } else {
-          this.router.navigate([`random/Personalizado/${r}/${s}/${cs}`]);
-        }
-      });
+      this.router.navigate([`random/Personalizado/${r}/${s}/${cs}`]);
     }
   }
 }

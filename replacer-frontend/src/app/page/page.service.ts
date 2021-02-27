@@ -17,9 +17,6 @@ export class PageService {
   constructor(private httpClient: HttpClient, private userService: UserService) {}
 
   findRandomPage(type: string, subtype: string, suggestion: string, caseSensitive: boolean): Observable<PageReview> {
-    console.log('Find random service');
-    console.log(suggestion, caseSensitive);
-
     let params: HttpParams = new HttpParams();
     if (type && subtype) {
       if (suggestion) {

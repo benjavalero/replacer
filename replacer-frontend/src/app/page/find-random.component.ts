@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../alert/alert.service';
 import { PageReview } from './page-review.model';
 import { PageService } from './page.service';
+import { ValidateCustomComponent } from './validate-custom.component';
 
 @Component({
   selector: 'app-find-random',
@@ -21,7 +23,8 @@ export class FindRandomComponent implements OnInit {
     private pageService: PageService,
     private router: Router,
     private route: ActivatedRoute,
-    private titleService: Title
+    private titleService: Title,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit() {
@@ -37,6 +40,14 @@ export class FindRandomComponent implements OnInit {
     this.titleService.setTitle(`Replacer - ${msg}`);
     this.alertService.addInfoMessage(msg);
 
+    if (this.suggestion) {
+      this.validateCustomReplacement();
+    } else {
+      this.findRandomPage();
+    }
+  }
+
+  private findRandomPage(): void {
     this.pageService.findRandomPage(this.filteredType, this.filteredSubtype, this.suggestion, this.caseSensitive).subscribe(
       (review: PageReview) => {
         if (review) {
@@ -69,5 +80,29 @@ export class FindRandomComponent implements OnInit {
         this.alertService.addErrorMessage('Error al buscar artículos con reemplazos: ' + err.error.message);
       }
     );
+  }
+
+  private validateCustomReplacement(): void {
+    const replacement = this.filteredSubtype.trim();
+    this.pageService.validateCustomReplacement(replacement).subscribe(
+      (type: string) => {
+        if (type) {
+          this.openValidationModal$(this.filteredType, replacement).then(
+            (result) => {
+              this.router.navigate([`random/${type}/${replacement}`]);
+            }
+          );
+        } else {
+          this.findRandomPage();
+        }
+      }
+    );
+  }
+
+  private openValidationModal$(type: string, subtype: string): Promise<any> {
+    const modalRef = this.modalService.open(ValidateCustomComponent);
+    modalRef.componentInstance.type = type;
+    modalRef.componentInstance.subtype = subtype;
+    return modalRef.result;
   }
 }
