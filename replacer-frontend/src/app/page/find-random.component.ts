@@ -14,6 +14,7 @@ export class FindRandomComponent implements OnInit {
   private filteredType: string;
   private filteredSubtype: string;
   private suggestion: string; // Only for type 'custom'
+  private caseSensitive: boolean; // Only for type 'custom'
 
   constructor(
     private alertService: AlertService,
@@ -27,6 +28,7 @@ export class FindRandomComponent implements OnInit {
     this.filteredType = this.route.snapshot.paramMap.get('type');
     this.filteredSubtype = this.route.snapshot.paramMap.get('subtype');
     this.suggestion = this.route.snapshot.paramMap.get('suggestion');
+    this.caseSensitive = this.route.snapshot.paramMap.get('cs') === 'true';
 
     const msg =
       this.filteredType && this.filteredSubtype
@@ -35,7 +37,7 @@ export class FindRandomComponent implements OnInit {
     this.titleService.setTitle(`Replacer - ${msg}`);
     this.alertService.addInfoMessage(msg);
 
-    this.pageService.findRandomPage(this.filteredType, this.filteredSubtype, this.suggestion).subscribe(
+    this.pageService.findRandomPage(this.filteredType, this.filteredSubtype, this.suggestion, this.caseSensitive).subscribe(
       (review: PageReview) => {
         if (review) {
           // Cache the review
@@ -47,7 +49,7 @@ export class FindRandomComponent implements OnInit {
           if (this.filteredType && this.filteredSubtype) {
             if (this.suggestion) {
               this.router.navigate([
-                `article/${pageId}/${this.filteredType}/${this.filteredSubtype}/${this.suggestion}`
+                `article/${pageId}/${this.filteredType}/${this.filteredSubtype}/${this.suggestion}/${this.caseSensitive}`
               ]);
             } else {
               this.router.navigate([`article/${pageId}/${this.filteredType}/${this.filteredSubtype}`]);

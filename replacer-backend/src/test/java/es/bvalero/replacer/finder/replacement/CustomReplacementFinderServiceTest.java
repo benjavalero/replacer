@@ -28,7 +28,10 @@ class CustomReplacementFinderServiceTest {
     @Test
     void testFindCustomReplacements() {
         List<Replacement> replacements = IterableUtils.toList(
-            customReplacementFinderService.findCustomReplacements(FinderPage.of("A X C"), CustomOptions.of("X", "Y"))
+            customReplacementFinderService.findCustomReplacements(
+                FinderPage.of("A X C"),
+                CustomOptions.of("X", true, "Y")
+            )
         );
 
         Assertions.assertFalse(replacements.isEmpty());
@@ -39,7 +42,10 @@ class CustomReplacementFinderServiceTest {
     @Test
     void testFindCustomReplacementsWithNoResults() {
         List<Replacement> replacements = IterableUtils.toList(
-            customReplacementFinderService.findCustomReplacements(FinderPage.of("AXC"), CustomOptions.of("X", "Y"))
+            customReplacementFinderService.findCustomReplacements(
+                FinderPage.of("AXC"),
+                CustomOptions.of("X", true, "Y")
+            )
         );
 
         Assertions.assertTrue(replacements.isEmpty());

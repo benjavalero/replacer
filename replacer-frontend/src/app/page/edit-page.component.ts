@@ -19,6 +19,7 @@ export class EditPageComponent implements OnInit {
   filteredType: string;
   filteredSubtype: string;
   suggestion: string; // Only for type 'custom'
+  private caseSensitive: boolean; // Only for type 'custom'
 
   private lang: Language;
   title: string;
@@ -47,6 +48,7 @@ export class EditPageComponent implements OnInit {
     this.filteredType = this.route.snapshot.paramMap.get('type');
     this.filteredSubtype = this.route.snapshot.paramMap.get('subtype');
     this.suggestion = this.route.snapshot.paramMap.get('suggestion');
+    this.caseSensitive = this.route.snapshot.paramMap.get('cs') === 'true';
 
     // First try to get the review from the cache
     const cachedReview = this.pageService.getPageReviewFromCache(this.pageId, this.filteredType, this.filteredSubtype);
@@ -63,7 +65,7 @@ export class EditPageComponent implements OnInit {
       this.manageReview(cachedReview);
     } else {
       this.pageService
-        .findPageReviewById(this.pageId, this.filteredType, this.filteredSubtype, this.suggestion)
+        .findPageReviewById(this.pageId, this.filteredType, this.filteredSubtype, this.suggestion, this.caseSensitive)
         .subscribe(
           (review: PageReview) => {
             if (review) {
@@ -166,7 +168,9 @@ export class EditPageComponent implements OnInit {
   private redirectToNextPage() {
     if (this.filteredType && this.filteredSubtype) {
       if (this.suggestion) {
-        this.router.navigate([`random/${this.filteredType}/${this.filteredSubtype}/${this.suggestion}`]);
+        this.router.navigate([
+          `random/${this.filteredType}/${this.filteredSubtype}/${this.suggestion}/${this.caseSensitive}`
+        ]);
       } else {
         this.router.navigate([`random/${this.filteredType}/${this.filteredSubtype}`]);
       }

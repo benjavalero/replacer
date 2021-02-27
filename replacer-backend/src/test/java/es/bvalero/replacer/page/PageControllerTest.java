@@ -113,12 +113,12 @@ class PageControllerTest {
 
     @Test
     void testFindRandomPageByCustomReplacement() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
+        PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", false);
         when(pageReviewCustomService.findRandomPageReview(options)).thenReturn(Optional.of(PageReview.ofEmpty()));
 
         mvc
             .perform(
-                get("/api/pages/random?replacement=X&suggestion=Y&lang=es").contentType(MediaType.APPLICATION_JSON)
+                get("/api/pages/random?replacement=X&cs=&suggestion=Y&lang=es").contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
 
@@ -149,11 +149,13 @@ class PageControllerTest {
 
     @Test
     void testFindPageReviewByIdAndCustomReplacement() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y");
+        PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", true);
         when(pageReviewCustomService.getPageReview(123, options)).thenReturn(Optional.of(PageReview.ofEmpty()));
 
         mvc
-            .perform(get("/api/pages/123?replacement=X&suggestion=Y&lang=es").contentType(MediaType.APPLICATION_JSON))
+            .perform(
+                get("/api/pages/123?replacement=X&cs=true&suggestion=Y&lang=es").contentType(MediaType.APPLICATION_JSON)
+            )
             .andExpect(status().isOk());
 
         verify(pageReviewCustomService, times(1)).getPageReview(123, options);

@@ -16,11 +16,17 @@ export class PageService {
 
   constructor(private httpClient: HttpClient, private userService: UserService) {}
 
-  findRandomPage(type: string, subtype: string, suggestion: string): Observable<PageReview> {
+  findRandomPage(type: string, subtype: string, suggestion: string, caseSensitive: boolean): Observable<PageReview> {
+    console.log('Find random service');
+    console.log(suggestion, caseSensitive);
+
     let params: HttpParams = new HttpParams();
     if (type && subtype) {
       if (suggestion) {
-        params = params.append('replacement', subtype).append('suggestion', suggestion);
+        params = params
+          .append('replacement', subtype)
+          .append('suggestion', suggestion)
+          .append('cs', String(caseSensitive));
       } else {
         params = params.append('type', type).append('subtype', subtype);
       }
@@ -54,11 +60,20 @@ export class PageService {
     return this.httpClient.get<string>(`${this.baseUrl}/validate`, { params });
   }
 
-  findPageReviewById(pageId: number, type: string, subtype: string, suggestion: string): Observable<PageReview> {
+  findPageReviewById(
+    pageId: number,
+    type: string,
+    subtype: string,
+    suggestion: string,
+    caseSensitive: boolean
+  ): Observable<PageReview> {
     let params: HttpParams = new HttpParams();
     if (type && subtype) {
       if (suggestion) {
-        params = params.append('replacement', subtype).append('suggestion', suggestion);
+        params = params
+          .append('replacement', subtype)
+          .append('suggestion', suggestion)
+          .append('cs', String(caseSensitive));
       } else {
         params = params.append('type', type).append('subtype', subtype);
       }

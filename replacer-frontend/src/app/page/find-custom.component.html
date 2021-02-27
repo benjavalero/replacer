@@ -8,7 +8,11 @@
       rel="noopener noreferrer">listados generales</a> para un mantenimiento más óptimo.</p>
 </app-alert>
 
-<form (ngSubmit)="onSubmit()" class="mt-2">
+<p>Las reglas para definir un reemplazo personalizado son las mismas que para los errores ortográficos de los listados
+  generales: un texto a reemplazar, si se quiere distinguir mayúsculas en dicho texto y una sugerencia para reemplazar
+  el texto.</p>
+
+<form (ngSubmit)="onSubmit()" class="mt-4">
   <div class="form-group row">
     <label for="text-replacement" class="col-sm-2 col-form-label">Texto a reemplazar:</label>
     <div class="col-sm-10">
@@ -16,19 +20,22 @@
         placeholder="Texto a reemplazar" [(ngModel)]="replacement" autocomplete="off" />
     </div>
   </div>
-  <div class="form-group row">
-    <label for="text-suggestion" class="col-sm-2 col-form-label">Texto sugerido:</label>
-    <div class="col-sm-10">
-      <input id="text-suggestion" name="text-suggestion" class="form-control" type="text" placeholder="Texto sugerido"
-        [(ngModel)]="suggestion" autocomplete="off" />
-    </div>
-  </div>
   <div class="form-check">
     <input class="form-check-input" type="checkbox" [(ngModel)]="caseSensitive" id="case-sensitive"
       name="case-sensitive">
     <label class="form-check-label" for="case-sensitive">
-      Respetar mayúsculas
+      Distinguir mayúsculas en el texto a reemplazar
     </label>
+  </div>
+  <div class="form-group row mt-4">
+    <label for="text-suggestion" class="col-sm-2 col-form-label">Texto sugerido:</label>
+    <div class="col-sm-10">
+      <input id="text-suggestion" name="text-suggestion" class="form-control" type="text" placeholder="Texto sugerido"
+        [(ngModel)]="suggestion" autocomplete="off" />
+      <small class="form-text text-muted">
+        Puede introducir varias sugerencias separadas por comas
+      </small>
+    </div>
   </div>
 
   <button type="submit" class="btn btn-primary mt-2" id="button-search">

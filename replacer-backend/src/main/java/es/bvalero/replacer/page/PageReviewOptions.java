@@ -15,25 +15,31 @@ public class PageReviewOptions {
     String type;
     String subtype;
     String suggestion;
+    boolean caseSensitive;
 
     WikipediaLanguage getLang() {
         return lang == null ? WikipediaLanguage.getDefault() : lang;
     }
 
     static PageReviewOptions ofNoType(WikipediaLanguage lang) {
-        return new PageReviewOptions(lang, null, null, null);
+        return new PageReviewOptions(lang, null, null, null, false);
     }
 
     static PageReviewOptions ofTypeSubtype(WikipediaLanguage lang, String type, String subtype) {
-        return new PageReviewOptions(lang, type, subtype, null);
+        return new PageReviewOptions(lang, type, subtype, null, false);
     }
 
-    static PageReviewOptions ofCustom(WikipediaLanguage lang, String replacement, String suggestion) {
-        return new PageReviewOptions(lang, ReplacementType.CUSTOM, replacement, suggestion);
+    static PageReviewOptions ofCustom(
+        WikipediaLanguage lang,
+        String replacement,
+        String suggestion,
+        boolean caseSensitive
+    ) {
+        return new PageReviewOptions(lang, ReplacementType.CUSTOM, replacement, suggestion, caseSensitive);
     }
 
     CustomOptions toCustomOptions() {
-        return CustomOptions.of(subtype, suggestion);
+        return CustomOptions.of(subtype, caseSensitive, suggestion);
     }
 
     @Override

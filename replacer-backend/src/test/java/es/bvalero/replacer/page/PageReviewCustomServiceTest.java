@@ -65,7 +65,7 @@ class PageReviewCustomServiceTest {
         )
             .thenReturn(WikipediaSearchResult.ofEmpty());
 
-        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion);
+        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
 
         Assertions.assertTrue(review.isEmpty());
@@ -109,7 +109,7 @@ class PageReviewCustomServiceTest {
             .thenReturn(List.of(pageId));
 
         // Only one call
-        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion);
+        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
         Assertions.assertTrue(review.isEmpty());
 
@@ -167,7 +167,7 @@ class PageReviewCustomServiceTest {
             .thenReturn(List.of(customRep));
 
         // First call
-        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion);
+        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review1 = pageReviewCustomService.findRandomPageReview(options);
         Assertions.assertFalse(review1.isEmpty());
         review1.ifPresent(
@@ -237,7 +237,7 @@ class PageReviewCustomServiceTest {
             .thenReturn(Collections.emptyList());
 
         // Only call
-        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion);
+        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
         Assertions.assertTrue(review.isEmpty());
 
@@ -295,7 +295,7 @@ class PageReviewCustomServiceTest {
             .thenReturn(List.of(customRep));
 
         // Only call
-        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion);
+        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
         Assertions.assertFalse(review.isEmpty());
         review.ifPresent(
@@ -347,7 +347,7 @@ class PageReviewCustomServiceTest {
             .thenReturn(List.of(12, 23, 34, 45));
 
         // Only call
-        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion);
+        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
         Assertions.assertTrue(review.isEmpty());
 
@@ -415,7 +415,7 @@ class PageReviewCustomServiceTest {
             .thenReturn(List.of(customRep));
 
         // Call 1
-        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion);
+        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
         Assertions.assertFalse(review.isEmpty());
         review.ifPresent(

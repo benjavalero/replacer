@@ -25,6 +25,7 @@ export class FindCustomComponent implements OnInit {
   ) {
     this.replacement = '';
     this.suggestion = '';
+    this.caseSensitive = false;
   }
 
   ngOnInit() {
@@ -33,12 +34,9 @@ export class FindCustomComponent implements OnInit {
   }
 
   onSubmit() {
-    let r = this.replacement.trim();
-    let s = this.suggestion.trim();
-    if (!this.caseSensitive) {
-      r = r.toLocaleLowerCase('es');
-      s = s.toLocaleLowerCase('es');
-    }
+    const r = this.replacement.trim();
+    const s = this.suggestion.trim();
+    const cs = this.caseSensitive || false;
 
     this.alertService.clearAlertMessages();
     if (r === s) {
@@ -58,7 +56,7 @@ export class FindCustomComponent implements OnInit {
             }
           );
         } else {
-          this.router.navigate([`random/Personalizado/${r}/${s}`]);
+          this.router.navigate([`random/Personalizado/${r}/${s}/${cs}`]);
         }
       });
     }

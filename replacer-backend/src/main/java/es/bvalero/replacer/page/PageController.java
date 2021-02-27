@@ -58,14 +58,15 @@ public class PageController {
         );
     }
 
-    @GetMapping(value = "/random", params = { "replacement", "suggestion" })
+    @GetMapping(value = "/random", params = { "replacement", "cs", "suggestion" })
     public Optional<PageReview> findRandomPageByCustomReplacement(
         @RequestParam @Size(max = 100) String replacement,
+        @RequestParam(defaultValue = "false") Boolean cs,
         @RequestParam String suggestion,
         UserParameters params
     ) {
         return pageReviewCustomService.findRandomPageReview(
-            PageReviewOptions.ofCustom(params.getLang(), replacement, suggestion)
+            PageReviewOptions.ofCustom(params.getLang(), replacement, suggestion, cs)
         );
     }
 
@@ -97,16 +98,17 @@ public class PageController {
         );
     }
 
-    @GetMapping(value = "/{id}", params = { "replacement", "suggestion" })
+    @GetMapping(value = "/{id}", params = { "replacement", "cs", "suggestion" })
     public Optional<PageReview> findPageReviewByIdAndCustomReplacement(
         @PathVariable("id") int pageId,
         @RequestParam @Size(max = 100) String replacement,
+        @RequestParam(defaultValue = "false") Boolean cs,
         @RequestParam String suggestion,
         UserParameters params
     ) {
         return pageReviewCustomService.getPageReview(
             pageId,
-            PageReviewOptions.ofCustom(params.getLang(), replacement, suggestion)
+            PageReviewOptions.ofCustom(params.getLang(), replacement, suggestion, cs)
         );
     }
 
@@ -145,7 +147,7 @@ public class PageController {
             assert subtype != null;
             pageReviewCustomService.reviewPageReplacements(
                 pageId,
-                PageReviewOptions.ofCustom(params.getLang(), subtype, ""),
+                PageReviewOptions.ofCustom(params.getLang(), subtype, "", false),
                 params.getUser()
             );
         } else if (StringUtils.isNotBlank(savePage.getType())) {

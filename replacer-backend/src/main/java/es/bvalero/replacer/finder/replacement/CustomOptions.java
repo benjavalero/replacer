@@ -6,5 +6,6 @@ import lombok.Value;
 public class CustomOptions {
 
     String replacement;
+    boolean caseSensitive;
     String suggestion;
 }

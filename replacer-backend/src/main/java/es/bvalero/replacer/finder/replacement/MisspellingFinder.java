@@ -102,7 +102,7 @@ abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeLis
         return applyMisspellingSuggestions(originalWord, misspelling);
     }
 
-    private List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
+    static List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
         List<Suggestion> suggestions = new LinkedList<>();
         for (Suggestion misspellingSuggestion : misspelling.getSuggestions()) {
             if (misspelling.isCaseSensitive()) {

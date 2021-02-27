@@ -13,7 +13,7 @@ class CustomReplacementFinderTest {
         String suggestion = "y";
         String text = "Ax x.";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, false, suggestion);
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assertions.assertEquals(1, replacements.size());
@@ -28,7 +28,7 @@ class CustomReplacementFinderTest {
         String suggestion = "París";
         String text = "En parís París.";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, true, suggestion);
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assertions.assertEquals(1, replacements.size());
@@ -42,12 +42,15 @@ class CustomReplacementFinderTest {
         String suggestion = "enero";
         String text = "En enero Enero.";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, true, suggestion);
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(replacement, replacements.get(0).getText());
-        Assertions.assertEquals(suggestion, replacements.get(0).getSuggestions().get(0).getText());
+        // We return the lowercase and also the uppercase just in case of correct punctuation rules
+        Assertions.assertEquals(2, replacements.get(0).getSuggestions().size());
+        Assertions.assertEquals("Enero", replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals("enero", replacements.get(0).getSuggestions().get(1).getText());
     }
 
     @Test
@@ -56,7 +59,7 @@ class CustomReplacementFinderTest {
         String suggestion = "Taiwán";
         String text = "En taiwan Taiwan taiwán Taiwán.";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, true, suggestion);
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assertions.assertEquals(1, replacements.size());
@@ -70,7 +73,7 @@ class CustomReplacementFinderTest {
         String suggestion = "más";
         String text = "En mas Mas más Más.";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, false, suggestion);
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assertions.assertEquals(2, replacements.size());
@@ -90,10 +93,25 @@ class CustomReplacementFinderTest {
         String suggestion = "Washington, D.C.";
         String text = "En Washington D.CX. y Washington D.C. y Madrid";
 
-        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, suggestion);
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, false, suggestion);
         List<Replacement> replacements = customReplacementFinder.findList(text);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(replacement, replacements.get(0).getText());
+    }
+
+    @Test
+    void testSeveralSuggestions() {
+        String replacement = "on line";
+        String suggestion = "online, en línea";
+        String text = "Curso on line.";
+
+        CustomReplacementFinder customReplacementFinder = CustomReplacementFinder.of(replacement, false, suggestion);
+        List<Replacement> replacements = customReplacementFinder.findList(text);
+
+        Assertions.assertEquals(1, replacements.size());
+        Assertions.assertEquals(replacement, replacements.get(0).getText());
+        Assertions.assertEquals("online", replacements.get(0).getSuggestions().get(0).getText());
+        Assertions.assertEquals("en línea", replacements.get(0).getSuggestions().get(1).getText());
     }
 }
