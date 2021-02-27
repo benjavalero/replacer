@@ -1,9 +1,11 @@
 # Versions
 
-## 2.8.3 (??)
+## 2.9.0 (27 Feb 2021)
 - Improve texts in dashboard, removing references to Spanish language and adding a warning.
 - Improve suggestions for composed misspellings
 - Improve technical documentation and organization of the code for easier maintenance
+- Improve management of custom replacement results
+- Explain better how to use correctly custom replacements
 
 ## 2.8.2 (29 Jan 2021)
 - Improve finder for template immutables
