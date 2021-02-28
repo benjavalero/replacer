@@ -35,8 +35,8 @@ final class PageSearchResult {
         return this.getPageIds().isEmpty();
     }
 
-    Optional<Integer> popPageId() {
-        if (isEmpty()) {
+    synchronized Optional<Integer> popPageId() {
+        if (this.isEmpty()) {
             return Optional.empty();
         } else {
             this.total--;
