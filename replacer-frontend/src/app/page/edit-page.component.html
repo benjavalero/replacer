@@ -16,12 +16,6 @@
     </ol>
   </nav>
 
-  <app-alert type="warning" [icon]="true" *ngIf="filteredType === 'Personalizado' && numPending > 50">
-    <p>El reemplazo personalizado introducido tiene muchas ocurrencias. Se recomienda añadirlo a los <a
-        href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos" target="_blank"
-        rel="noopener noreferrer">listados generales</a> para un mantenimiento más óptimo.</p>
-  </app-alert>
-
   <h3>{{ title }}
     <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="small">[Abrir en Wikipedia]</a>
   </h3>
@@ -38,4 +32,9 @@
     Marcar como revisado (sin guardar cambios)
   </button>
 
+  <app-alert type="warning" [icon]="true" *ngIf="filteredType === 'Personalizado' && numPending > 50">
+    <p>El reemplazo personalizado introducido tiene muchas ocurrencias. Se recomienda añadirlo a los <a
+        href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos" target="_blank"
+        rel="noopener noreferrer">listados generales</a> para un mantenimiento más óptimo.</p>
+  </app-alert>
 </div>

@@ -1,8 +1,19 @@
 :host {
   display: block;
+  margin-top: 2ex;
 }
 
 .vertical-align {
   display: flex;
   align-items: center;
+}
+
+@media (max-width: 576px) {
+  .ng-fa-icon {
+    display: none;
+  }
+
+  .alert-warning {
+    font-size: smaller;
+  }
 }

@@ -3,6 +3,7 @@
 ## 2.9.1 (28 Feb 2021)
 - Fix: load replacement list every time the list section is opened
 - Fix: maintain replacement count cache in backend
+- Move warnings to the bottom of the pages to make them less intrusive specially on mobile devices
 
 ## 2.9.0 (27 Feb 2021)
 - Improve texts in dashboard, removing references to Spanish language and adding a warning.
