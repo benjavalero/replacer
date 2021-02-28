@@ -63,7 +63,7 @@ class SectionReviewService {
             }
         } catch (ReplacerException e) {
             // No need to log the details as they are logged at the end of the method
-            LOGGER.error("Error finding section", e);
+            LOGGER.warn("Error finding section", e);
         }
 
         LOGGER.debug("No section found in page: {} - {} - {}", review.getLang(), review.getId(), review.getTitle());
