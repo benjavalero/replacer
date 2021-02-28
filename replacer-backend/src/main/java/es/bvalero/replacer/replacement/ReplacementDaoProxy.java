@@ -5,9 +5,11 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -57,6 +59,20 @@ class ReplacementDaoProxy implements ReplacementStatsDao {
     @Override
     public LanguageCount countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException {
         return this.getReplacementCount().get(lang);
+    }
+
+    @Override
+    public void reviewByPageId(
+        WikipediaLanguage lang,
+        int pageId,
+        @Nullable String type,
+        @Nullable String subtype,
+        String reviewer
+    ) {
+        if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype)) {
+            this.decrementSubtypeCount(lang, type, subtype);
+        }
+        this.replacementStatsDao.reviewByPageId(lang, pageId, type, subtype, reviewer);
     }
 
     @Override

@@ -44,14 +44,6 @@ interface ReplacementDao {
 
     List<Integer> findPageIdsReviewedByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype);
 
-    void reviewByPageId(
-        WikipediaLanguage lang,
-        int pageId,
-        @Nullable String type,
-        @Nullable String subtype,
-        String reviewer
-    );
-
     ///// PAGE LISTS
 
     List<String> findPageTitlesToReviewBySubtype(WikipediaLanguage lang, String type, String subtype);

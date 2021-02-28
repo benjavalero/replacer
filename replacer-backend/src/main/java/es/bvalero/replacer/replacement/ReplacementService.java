@@ -76,7 +76,7 @@ public class ReplacementService {
         @Nullable String subtype,
         String reviewer
     ) {
-        replacementDao.reviewByPageId(lang, pageId, type, subtype, reviewer);
+        replacementStatsDao.reviewByPageId(lang, pageId, type, subtype, reviewer);
     }
 
     ///// STATISTICS
