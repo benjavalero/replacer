@@ -42,7 +42,7 @@
       </tbody>
     </table>
 
-    <ngb-pagination *ngIf="filtrable" [collectionSize]="this.replacementCounts.length" [(page)]="page"
+    <ngb-pagination *ngIf="collectionSize > pageSize" [collectionSize]="collectionSize" [(page)]="page"
       [pageSize]="pageSize" [maxSize]="maxSize" [rotate]="true" class="d-flex justify-content-center">
     </ngb-pagination>
   </div>

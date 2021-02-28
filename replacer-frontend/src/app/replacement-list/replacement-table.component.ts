@@ -26,6 +26,7 @@ export class ReplacementTableComponent implements OnInit {
   sortColumn: string;
   sortDirection: SortDirection;
   filterValue: string;
+  collectionSize: number;
   pageSize = this.PAGE_SIZE;
   maxSize = this.MAX_SIZE;
   pageValue: number;
@@ -47,6 +48,7 @@ export class ReplacementTableComponent implements OnInit {
     this.sortColumn = 's';
     this.sortDirection = 'asc';
     this.filterValue = '';
+    this.collectionSize = this.replacementCounts.length;
     this.pageValue = 1;
 
     this.pageListUrl = `${environment.apiUrl}/pages/list?lang=${this.userConfigService.lang}`;
@@ -63,6 +65,7 @@ export class ReplacementTableComponent implements OnInit {
     const filtered = this.filterCounts(this.replacementCounts, this.filterValue);
     const paginated = this.paginateCounts(filtered, this.pageValue, this.pageSize);
 
+    this.collectionSize = filtered.length;
     this.filteredItems = paginated;
   }
 

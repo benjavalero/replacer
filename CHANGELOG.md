@@ -1,5 +1,8 @@
 # Versions
 
+## 2.9.2 (28 Feb 2021)
+- Fix: pagination when filtering in replacement list
+
 ## 2.9.1 (28 Feb 2021)
 - Fix: load replacement list every time the list section is opened
 - Fix: maintain replacement count cache in backend
