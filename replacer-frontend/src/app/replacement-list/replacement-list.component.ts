@@ -24,5 +24,7 @@ export class ReplacementListComponent implements OnInit {
   ngOnInit() {
     this.alertService.clearAlertMessages();
     this.titleService.setTitle('Replacer - Lista de reemplazos');
+
+    this.replacementService.loadCountsFromServer();
   }
 }

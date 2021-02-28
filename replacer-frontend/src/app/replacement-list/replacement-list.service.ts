@@ -14,11 +14,9 @@ export class ReplacementListService {
     return this._counts.asObservable();
   }
 
-  constructor(private httpClient: HttpClient) {
-    this.loadCountsFromServer();
-  }
+  constructor(private httpClient: HttpClient) {}
 
-  private loadCountsFromServer() {
+  loadCountsFromServer() {
     this.findReplacementCounts$().subscribe((typeCounts: ReplacementCountList[]) => this._counts.next(typeCounts));
   }
 
