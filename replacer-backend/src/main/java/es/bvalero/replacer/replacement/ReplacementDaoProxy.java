@@ -59,6 +59,12 @@ class ReplacementDaoProxy implements ReplacementStatsDao {
         return this.getReplacementCount().get(lang);
     }
 
+    @Override
+    public void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
+        this.removeCachedReplacementCount(lang, type, subtype);
+        this.replacementStatsDao.reviewAsSystemBySubtype(lang, type, subtype);
+    }
+
     /* SCHEDULED UPDATE OF CACHE */
 
     private synchronized Map<WikipediaLanguage, LanguageCount> getReplacementCount() throws ReplacerException {

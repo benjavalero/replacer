@@ -104,7 +104,7 @@ public class ReplacementService {
     }
 
     public void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
-        replacementDao.reviewAsSystemBySubtype(lang, type, subtype);
+        replacementStatsDao.reviewAsSystemBySubtype(lang, type, subtype);
     }
 
     ///// MISSPELLING MANAGER

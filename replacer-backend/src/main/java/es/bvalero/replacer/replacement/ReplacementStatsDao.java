@@ -12,4 +12,6 @@ interface ReplacementStatsDao {
     List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang);
 
     LanguageCount countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException;
+
+    void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype);
 }

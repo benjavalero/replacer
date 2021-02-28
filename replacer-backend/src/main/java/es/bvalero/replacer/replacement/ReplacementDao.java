@@ -56,8 +56,6 @@ interface ReplacementDao {
 
     List<String> findPageTitlesToReviewBySubtype(WikipediaLanguage lang, String type, String subtype);
 
-    void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype);
-
     ///// MISSPELLING MANAGER
 
     void deleteToBeReviewedBySubtype(WikipediaLanguage lang, String type, Set<String> subtypes);
