@@ -27,6 +27,7 @@ export class DumpIndexingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.titleService.setTitle('Replacer - Indexación');
     this.status$ = this.dumpService.status$;
+    this.alertService.clearAlertMessages();
 
     // Refresh every 10 seconds
     this.subscription = interval(10000).subscribe(() => {
