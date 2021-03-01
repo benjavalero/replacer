@@ -57,7 +57,7 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
             .lang(WikipediaLanguage.getDefault())
             .namespace(WikipediaNamespace.ARTICLE)
             .title("América del Norte")
-            .content(FileUtils.getFileContent("/offline/sample-article.txt"))
+            .content(FileUtils.getFileContent("/offline/sample-page.txt"))
             .lastUpdate(nowDate.toLocalDate())
             .queryTimestamp(now)
             .build();

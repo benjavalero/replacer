@@ -50,7 +50,7 @@ class DumpHandler extends DefaultHandler {
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
 
-    // Current article values
+    // Current page values
     private final StringBuilder currentChars = new StringBuilder(5000);
     private String currentTitle;
     private int currentNamespace;
