@@ -212,7 +212,7 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
             int posEquals = parameter.indexOf('=');
             if (posEquals >= 0) {
                 param = parameter.substring(0, posEquals);
-                value = parameter.substring(posEquals + 1).trim();
+                value = parameter.substring(posEquals + 1);
             }
 
             // Always return the parameter
@@ -223,7 +223,7 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
                 // If the value is followed by a reference, comment or similar we ignore it
                 int posLessThan = value.indexOf('<');
                 if (posLessThan >= 0) {
-                    value = value.substring(0, posLessThan).trim();
+                    value = value.substring(0, posLessThan);
                 }
 
                 // If the param is in the list
@@ -232,7 +232,7 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
                 // then we also return the value
                 if (
                     paramNames.contains(FinderUtils.toLowerCase(param.trim())) ||
-                    paramValues.contains(FinderUtils.toLowerCase(value)) ||
+                    paramValues.contains(FinderUtils.toLowerCase(value.trim())) ||
                     matchesFile(value)
                 ) {
                     int startValue = startParameter + posEquals + 1;

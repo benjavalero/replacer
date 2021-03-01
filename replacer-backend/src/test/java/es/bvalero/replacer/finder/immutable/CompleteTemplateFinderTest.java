@@ -118,6 +118,11 @@ class CompleteTemplateFinderTest {
 
         List<String> names = List.of("Template1", "Template2", "Template3");
         Assertions.assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(names));
+
+        // Check positions
+        Assertions.assertTrue(
+            matches.stream().allMatch(m -> text.substring(m.getStart(), m.getEnd()).equals(m.getText()))
+        );
     }
 
     @Test
@@ -136,23 +141,33 @@ class CompleteTemplateFinderTest {
         Assertions.assertFalse(
             matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains(template3)
         );
+
+        // Check positions
+        Assertions.assertTrue(
+            matches.stream().allMatch(m -> text.substring(m.getStart(), m.getEnd()).equals(m.getText()))
+        );
     }
 
     @Test
     void testFindParamValues() {
-        String template1 = "{{Template1|param1=valor1}}";
-        String template2 = "{{Template2|índice=valor2}}";
-        String template3 = "{{Template3|param3=album}}";
-        String template4 = "{{Template4|param4=xxx.jpg}}";
+        String template1 = "{{Template1|param1= valor1}}";
+        String template2 = "{{Template2|índice=valor2 }}";
+        String template3 = "{{Template3|param3= album }}";
+        String template4 = "{{Template4|param4= xxx.jpg}}";
         String text = String.format("%s %s %s %s", template1, template2, template3, template4);
 
         List<Immutable> matches = completeTemplateFinder.findList(text);
 
         List<String> params = List.of("param1", "índice", "param3", "param4");
-        List<String> values = List.of("valor2", "album", "xxx.jpg");
+        List<String> values = List.of("valor2 ", " album ", " xxx.jpg");
         Assertions.assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(params));
         Assertions.assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(values));
         Assertions.assertFalse(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains("valor1"));
+
+        // Check positions
+        Assertions.assertTrue(
+            matches.stream().allMatch(m -> text.substring(m.getStart(), m.getEnd()).equals(m.getText()))
+        );
     }
 
     @Test
@@ -172,9 +187,14 @@ class CompleteTemplateFinderTest {
 
         List<Immutable> matches = completeTemplateFinder.findList(text);
 
-        Set<String> expected = Set.of("Template", "image ", "x.jpg");
+        Set<String> expected = Set.of("Template", "image ", " x.jpg ");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assertions.assertEquals(expected, actual);
+
+        // Check positions
+        Assertions.assertTrue(
+            matches.stream().allMatch(m -> text.substring(m.getStart(), m.getEnd()).equals(m.getText()))
+        );
     }
 
     @Test
@@ -209,6 +229,11 @@ class CompleteTemplateFinderTest {
             38,
             matches.stream().filter(m -> m.getText().equals("value2")).findAny().get().getStart()
         );
+
+        // Check positions
+        Assertions.assertTrue(
+            matches.stream().allMatch(m -> template.substring(m.getStart(), m.getEnd()).equals(m.getText()))
+        );
     }
 
     @Test
@@ -230,5 +255,10 @@ class CompleteTemplateFinderTest {
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assertions.assertEquals(expected, actual);
         Assertions.assertTrue(matches.stream().allMatch(m -> m.getStart() >= 0));
+
+        // Check positions
+        Assertions.assertTrue(
+            matches.stream().allMatch(m -> text.substring(m.getStart(), m.getEnd()).equals(m.getText()))
+        );
     }
 }
