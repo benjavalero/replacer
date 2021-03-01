@@ -29,7 +29,7 @@ abstract class PageReviewService {
     // Maximum 500 as it is used as page size when searching in Wikipedia
     @Getter(AccessLevel.PROTECTED)
     @Setter(AccessLevel.PACKAGE) // For testing
-    private int cacheSize = 100;
+    private int cacheSize = 500;
 
     // Cache the found pages candidates to be reviewed
     // to find faster the next one after the user reviews one.
