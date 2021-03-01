@@ -216,6 +216,8 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
             }
 
             // Always return the parameter
+            // To calculate the parameter position we assume the parameters are not repeated in the template
+            // As we are removing nested templates, the only way to calculate the position is find the first match.
             int startParameter = template.start() + template.group().indexOf("|" + param) + 1;
             immutables.add(Immutable.of(startParameter, param));
 

@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.immutable;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
@@ -260,5 +261,19 @@ class CompleteTemplateFinderTest {
         Assertions.assertTrue(
             matches.stream().allMatch(m -> text.substring(m.getStart(), m.getEnd()).equals(m.getText()))
         );
+    }
+
+    @Test
+    void testRepeatedParameters() {
+        String text = "{{T|x = A|x = B}}";
+
+        List<Immutable> matches = completeTemplateFinder.findList(text);
+
+        // To calculate the parameter position we assume the parameters are not repeated in the template
+        // Therefore in this case though we find both parameters always the first position is returned
+        Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "x "));
+        Set<Immutable> actual = new HashSet<>(matches);
+        Assertions.assertEquals(3, matches.size());
+        Assertions.assertEquals(expected, actual);
     }
 }
