@@ -1,5 +1,10 @@
 # Versions
 
+## 2.9.3 (8 Mar 2021)
+- Increment pagination size for Wikipedia searches to the maximum allowed in order to reduce the amount of calls
+- Fix: find values in template params when surrounded by whitespaces
+- Improve capture of template parameters to ignore
+
 ## 2.9.2 (28 Feb 2021)
 - Fix: pagination when filtering in replacement list
 
