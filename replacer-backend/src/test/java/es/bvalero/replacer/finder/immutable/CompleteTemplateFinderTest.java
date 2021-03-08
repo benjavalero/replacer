@@ -129,7 +129,7 @@ class CompleteTemplateFinderTest {
     @Test
     void testFindCompleteTemplates() {
         String template1 = "{{Cita libro|param=value}}";
-        String template2 = "{{#tag:Text2}}";
+        String template2 = "{{#expr:Text2}}";
         String template3 = "{{Template3|param=value}}"; // Not captured
         String text = String.format("%s %s %s", template1, template2, template3);
 
@@ -151,16 +151,18 @@ class CompleteTemplateFinderTest {
 
     @Test
     void testFindParamValues() {
-        String template1 = "{{Template1|param1= valor1}}";
-        String template2 = "{{Template2|índice=valor2 }}";
-        String template3 = "{{Template3|param3= album }}";
-        String template4 = "{{Template4|param4= xxx.jpg}}";
-        String text = String.format("%s %s %s %s", template1, template2, template3, template4);
+        String template1 = "{{Template1|param1= valor1}}"; // Only param
+        String template2 = "{{Taxobox|param2=valor2}}"; // Ignored complete
+        String template3 = "{{Template3|url= valor3 }}"; // Param + value
+        String template4 = "{{Template4|param4= xxx.jpg}}"; // Param + value
+        String template5 = "{{Fs player|nat=Brazil}}"; // Param + value
+        String text = String.format("%s %s %s %s %s", template1, template2, template3, template4, template5);
 
         List<Immutable> matches = completeTemplateFinder.findList(text);
 
-        List<String> params = List.of("param1", "índice", "param3", "param4");
-        List<String> values = List.of("valor2 ", " album ", " xxx.jpg");
+        List<String> params = List.of("param1", "url", "param4", "nat");
+        List<String> values = List.of(" valor3 ", " xxx.jpg", "Brazil");
+
         Assertions.assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(params));
         Assertions.assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(values));
         Assertions.assertFalse(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains("valor1"));
@@ -200,12 +202,12 @@ class CompleteTemplateFinderTest {
 
     @Test
     void testNestedTemplateValues() {
-        String template2 = "{{Template2|índice=value2}}";
+        String template2 = "{{Template2|url=value2}}";
         String template = String.format("{{Template1|param1=%s}}", template2);
 
         List<Immutable> matches = completeTemplateFinder.findList(template);
 
-        Set<String> expected = Set.of("Template1", "Template2", "param1", "índice", "value2");
+        Set<String> expected = Set.of("Template1", "Template2", "param1", "url", "value2");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assertions.assertEquals(expected, actual);
 
@@ -222,12 +224,9 @@ class CompleteTemplateFinderTest {
             21,
             matches.stream().filter(m -> m.getText().equals("Template2")).findAny().get().getStart()
         );
+        Assertions.assertEquals(31, matches.stream().filter(m -> m.getText().equals("url")).findAny().get().getStart());
         Assertions.assertEquals(
-            31,
-            matches.stream().filter(m -> m.getText().equals("índice")).findAny().get().getStart()
-        );
-        Assertions.assertEquals(
-            38,
+            35,
             matches.stream().filter(m -> m.getText().equals("value2")).findAny().get().getStart()
         );
 

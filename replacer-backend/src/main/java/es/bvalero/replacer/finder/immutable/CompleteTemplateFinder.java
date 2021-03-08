@@ -8,9 +8,10 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.*;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import org.apache.commons.collections4.SetValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.Nullable;
@@ -31,27 +32,45 @@ import org.springframework.stereotype.Component;
 @Component
 class CompleteTemplateFinder extends ImmutableCheckedFinder {
 
+    private static final String TEMPLATE_CITE_REGEX = "cit[ae]( |<L>)*";
+    private static final String WILDCARD = "*";
     private static final String START_TEMPLATE = "{{";
     private static final String END_TEMPLATE = "}}";
 
-    @Resource
-    private List<String> templateNames;
+    // Templates of type "cite" will always be ignored as a whole
+    private static final RunAutomaton TEMPLATE_CITE_AUTOMATON = new RunAutomaton(
+        new RegExp(TEMPLATE_CITE_REGEX).toAutomaton(new DatatypesAutomatonProvider())
+    );
 
     @Resource
-    private Set<String> paramNames;
+    private List<String> templateParams;
 
-    @Resource
-    private Set<String> paramValues;
+    // Set with the names of the templates to be ignored as a whole
+    private final Set<String> templateNames = new HashSet<>();
 
-    private RunAutomaton automatonTemplateNames;
+    // Set with the names of the parameters whose values will be ignored no matter the template they are in
+    private final Set<String> paramNames = new HashSet<>();
+
+    // Map with the pairs template name-param whose values will be ignored
+    // Take into account that there might be several param names for the same template name
+    private final SetValuedMap<String, String> templateParamPairs = new HashSetValuedHashMap<>();
 
     @PostConstruct
     public void initAutomaton() {
-        automatonTemplateNames =
-            new RunAutomaton(
-                new RegExp(String.format("(%s)", StringUtils.join(toUpperCase(templateNames), '|')))
-                .toAutomaton(new DatatypesAutomatonProvider())
-            );
+        for (String pair : templateParams) {
+            String[] tokens = pair.split("\\|");
+            if (tokens.length == 2) {
+                String name = FinderUtils.toLowerCase(tokens[0].trim());
+                String param = FinderUtils.toLowerCase(tokens[1].trim());
+                if (WILDCARD.equals(param)) {
+                    this.templateNames.add(name);
+                } else if (WILDCARD.equals(name)) {
+                    this.paramNames.add(param);
+                } else {
+                    this.templateParamPairs.put(name, param);
+                }
+            }
+        }
     }
 
     @Override
@@ -159,14 +178,6 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
         }
     }
 
-    private List<String> toUpperCase(List<String> names) {
-        return names.stream().map(this::toUpperCase).collect(Collectors.toList());
-    }
-
-    private String toUpperCase(String word) {
-        return FinderUtils.startsWithLowerCase(word) ? FinderUtils.setFirstUpperCaseClass(word) : word;
-    }
-
     private List<Immutable> findImmutables(LinearMatchResult template) {
         String content = template.group();
 
@@ -194,8 +205,8 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
             templateName = templateName.substring(0, posColon);
         }
 
-        // If the template name is in the list we instead return an immutable of the complete template
-        if (automatonTemplateNames.run(templateName.trim())) {
+        // If the template is to be ignored as a whole then return an immutable of the complete template
+        if (ignoreCompleteTemplate(templateName)) {
             return Collections.singletonList(this.convert(template));
         }
 
@@ -228,13 +239,16 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
                     value = value.substring(0, posLessThan);
                 }
 
-                // If the param is in the list
-                // or the value is in the list
+                // If the param is to be always ignored
+                // or the pair template name-param is to be ignored
                 // or the value is a file or a domain
                 // then we also return the value
                 if (
                     paramNames.contains(FinderUtils.toLowerCase(param.trim())) ||
-                    paramValues.contains(FinderUtils.toLowerCase(value.trim())) ||
+                    templateParamPairs.containsMapping(
+                        FinderUtils.toLowerCase(templateName.trim()),
+                        FinderUtils.toLowerCase(param.trim())
+                    ) ||
                     matchesFile(value)
                 ) {
                     int startValue = startParameter + posEquals + 1;
@@ -244,6 +258,11 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
         }
 
         return immutables;
+    }
+
+    private boolean ignoreCompleteTemplate(String templateName) {
+        String template = FinderUtils.toLowerCase(templateName.trim());
+        return TEMPLATE_CITE_AUTOMATON.run(template) || templateNames.contains(template);
     }
 
     private boolean matchesFile(String value) {
