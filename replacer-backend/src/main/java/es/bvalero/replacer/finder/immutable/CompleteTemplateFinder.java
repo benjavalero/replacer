@@ -269,7 +269,8 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
         return TEMPLATE_CITE_AUTOMATON.run(template) || templateNames.contains(template);
     }
 
-    private boolean matchesFile(String value) {
+    private boolean matchesFile(String text) {
+        String value = text.trim();
         int dot = value.lastIndexOf('.');
         if (dot >= 0) {
             String extension = value.substring(dot + 1);

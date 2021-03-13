@@ -154,14 +154,14 @@ class CompleteTemplateFinderTest {
         String template1 = "{{Template1|param1= valor1}}"; // Only param
         String template2 = "{{Taxobox|param2=valor2}}"; // Ignored complete
         String template3 = "{{Template3|url= valor3 }}"; // Param + value
-        String template4 = "{{Template4|param4= xxx.jpg}}"; // Param + value
+        String template4 = "{{Template4|param4= xxx.jpg }}"; // Param + value
         String template5 = "{{Fs player|nat=Brazil}}"; // Param + value
         String text = String.format("%s %s %s %s %s", template1, template2, template3, template4, template5);
 
         List<Immutable> matches = completeTemplateFinder.findList(text);
 
         List<String> params = List.of("param1", "url", "param4", "nat");
-        List<String> values = List.of(" valor3 ", " xxx.jpg", "Brazil");
+        List<String> values = List.of(" valor3 ", " xxx.jpg ", "Brazil");
 
         Assertions.assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(params));
         Assertions.assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(values));
