@@ -60,6 +60,7 @@
         <value>AllMusic|class</value>
         <value>Certification Table Entry|type</value>
         <value>fs player|nat</value>    <!-- The value is used for the template Bandera which admits English values -->
+        <value>Identificador carretera española|tipo</value>
         <value>Jugador de fútbol|nat</value>    <!-- The value is used for the template Bandera which admits English values -->
         <value>Medallero|var</value>
     </util:list>
