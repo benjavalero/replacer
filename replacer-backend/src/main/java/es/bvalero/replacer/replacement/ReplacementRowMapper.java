@@ -11,8 +11,8 @@ public class ReplacementRowMapper implements RowMapper<ReplacementEntity> {
         return ReplacementEntity
             .builder()
             .id(result.getLong("ID"))
-            .pageId(result.getInt("ARTICLE_ID"))
             .lang(result.getString("LANG"))
+            .pageId(result.getInt("ARTICLE_ID"))
             .type(result.getString("TYPE"))
             .subtype(result.getString("SUBTYPE"))
             .position(result.getInt("POSITION"))

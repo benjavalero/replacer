@@ -20,8 +20,8 @@ public class ReplacementEntity {
     @Nullable
     Long id; // Nullable when still to be created in database
 
-    int pageId;
     String lang;
+    int pageId;
     String type;
     String subtype;
 
@@ -124,8 +124,8 @@ public class ReplacementEntity {
     static ReplacementEntity ofDummy(int pageId, WikipediaLanguage lang, LocalDate lastUpdate) {
         return ReplacementEntity
             .builder()
-            .pageId(pageId)
             .lang(lang.getCode())
+            .pageId(pageId)
             .type("")
             .subtype("")
             .position(0)

@@ -174,17 +174,17 @@ class WikipediaServiceImpl implements WikipediaService {
             .getPages()
             .stream()
             .filter(page -> !page.isMissing())
-            .map(page -> convertToDto(page, queryTimestamp, lang))
+            .map(page -> convert(page, lang, queryTimestamp))
             .collect(Collectors.toList());
     }
 
-    private WikipediaPage convertToDto(WikipediaApiResponse.Page page, String queryTimestamp, WikipediaLanguage lang) {
+    private WikipediaPage convert(WikipediaApiResponse.Page page, WikipediaLanguage lang, String queryTimestamp) {
         return WikipediaPage
             .builder()
-            .id(page.getPageid())
             .lang(lang)
-            .title(page.getTitle())
+            .id(page.getPageid())
             .namespace(WikipediaNamespace.valueOf(page.getNs()))
+            .title(page.getTitle())
             .content(page.getRevisions().get(0).getSlots().getMain().getContent())
             .lastUpdate(DateUtils.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
             .queryTimestamp(queryTimestamp)
@@ -215,7 +215,7 @@ class WikipediaServiceImpl implements WikipediaService {
             .getSections()
             .stream()
             .filter(this::isSectionValid)
-            .map(this::convertToDto)
+            .map(this::convert)
             .collect(Collectors.toList());
     }
 
@@ -228,7 +228,7 @@ class WikipediaServiceImpl implements WikipediaService {
         }
     }
 
-    private WikipediaSection convertToDto(WikipediaApiResponse.Section section) {
+    private WikipediaSection convert(WikipediaApiResponse.Section section) {
         return WikipediaSection
             .builder()
             .level(Integer.parseInt(section.getLevel()))

@@ -12,12 +12,12 @@ import org.jetbrains.annotations.VisibleForTesting;
 @Builder
 public class IndexablePage {
 
-    int id;
     WikipediaLanguage lang;
-    String title;
+    int id;
     WikipediaNamespace namespace;
-    LocalDate lastUpdate;
+    String title;
     String content;
+    LocalDate lastUpdate;
 
     // Throw an exception instead of returning a boolean to capture the cause
     public void validateProcessable() throws ReplacerException {
@@ -38,9 +38,9 @@ public class IndexablePage {
             this.getId() +
             ", lang=" +
             this.getLang().getCode() +
-            ", title=" +
+            ", title='" +
             this.getTitle() +
-            ")"
+            "')"
         );
     }
 }

@@ -9,8 +9,8 @@ import lombok.Value;
 @Builder
 public class IndexableReplacement {
 
-    int pageId;
     WikipediaLanguage lang;
+    int pageId;
     String type;
     String subtype;
     int position;

@@ -131,14 +131,14 @@ class PageReviewNoTypeServiceTest {
 
         // The page contains replacements
         Mockito
-            .when(replacementFinderService.findList(pageReviewNoTypeService.convertPage(page)))
+            .when(replacementFinderService.findList(pageReviewNoTypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexPageReplacements(Mockito.eq(pageReviewNoTypeService.toIndexable(page)), Mockito.anyList());
+            .indexPageReplacements(Mockito.eq(pageReviewNoTypeService.convertToIndexablePage(page)), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId, review.get().getPage().getId());
@@ -164,14 +164,14 @@ class PageReviewNoTypeServiceTest {
         // The page doesn't contain replacements
         List<Replacement> noPageReplacements = Collections.emptyList();
         Mockito
-            .when(replacementFinderService.findList(pageReviewNoTypeService.convertPage(page)))
+            .when(replacementFinderService.findList(pageReviewNoTypeService.convertToFinderPage(page)))
             .thenReturn(noPageReplacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexPageReplacements(pageReviewNoTypeService.toIndexable(page), Collections.emptyList());
+            .indexPageReplacements(pageReviewNoTypeService.convertToIndexablePage(page), Collections.emptyList());
 
         Assertions.assertFalse(review.isPresent());
     }
@@ -195,14 +195,17 @@ class PageReviewNoTypeServiceTest {
 
         // The page contains replacements
         Mockito
-            .when(replacementFinderService.findList(pageReviewNoTypeService.convertPage(page2)))
+            .when(replacementFinderService.findList(pageReviewNoTypeService.convertToFinderPage(page2)))
             .thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         Mockito
             .verify(replacementIndexService, Mockito.times(1))
-            .indexPageReplacements(Mockito.eq(pageReviewNoTypeService.toIndexable(page2)), Mockito.anyList());
+            .indexPageReplacements(
+                Mockito.eq(pageReviewNoTypeService.convertToIndexablePage(page2)),
+                Mockito.anyList()
+            );
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId2, review.get().getPage().getId());

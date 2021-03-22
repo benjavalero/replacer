@@ -161,7 +161,7 @@ abstract class PageReviewService {
 
     private boolean validatePage(WikipediaPage page) {
         try {
-            toIndexable(page).validateProcessable();
+            convertToIndexablePage(page).validateProcessable();
             return true;
         } catch (ReplacerException e) {
             LOGGER.warn("{} - {} - {}", e.getMessage(), page.getId(), page.getTitle());
@@ -169,7 +169,8 @@ abstract class PageReviewService {
         }
     }
 
-    IndexablePage toIndexable(WikipediaPage page) {
+    @VisibleForTesting
+    IndexablePage convertToIndexablePage(WikipediaPage page) {
         return IndexablePage
             .builder()
             .id(page.getId())
@@ -223,25 +224,25 @@ abstract class PageReviewService {
 
     abstract List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
 
-    FinderPage convertPage(WikipediaPage page) {
+    protected FinderPage convertToFinderPage(WikipediaPage page) {
         return FinderPage.of(page.getLang(), page.getContent(), page.getTitle());
     }
 
     void indexReplacements(WikipediaPage page, List<Replacement> replacements) {
         LOGGER.trace("Update page replacements in database");
-        IndexablePage indexablePage = toIndexable(page);
+        IndexablePage indexablePage = convertToIndexablePage(page);
         List<IndexableReplacement> indexableReplacements = replacements
             .stream()
-            .map(r -> convertToIndexable(indexablePage, r))
+            .map(r -> convert(r, indexablePage))
             .collect(Collectors.toList());
         replacementIndexService.indexPageReplacements(indexablePage, indexableReplacements);
     }
 
-    private IndexableReplacement convertToIndexable(IndexablePage page, Replacement replacement) {
+    private IndexableReplacement convert(Replacement replacement, IndexablePage page) {
         return IndexableReplacement
             .builder()
-            .pageId(page.getId())
             .lang(page.getLang())
+            .pageId(page.getId())
             .type(replacement.getType())
             .subtype(replacement.getSubtype())
             .position(replacement.getStart())
@@ -255,7 +256,7 @@ abstract class PageReviewService {
     PageReview buildPageReview(WikipediaPage page, List<Replacement> replacements, PageReviewOptions options) {
         return PageReview.of(
             page,
-            replacements.stream().map(this::convertToDto).collect(Collectors.toList()),
+            replacements.stream().map(this::convert).collect(Collectors.toList()),
             convert(options)
         );
     }
@@ -267,7 +268,7 @@ abstract class PageReviewService {
         return result != null ? result.getTotal() : 0L;
     }
 
-    private PageReplacement convertToDto(Replacement replacement) {
+    private PageReplacement convert(Replacement replacement) {
         return PageReplacement.of(replacement.getStart(), replacement.getText(), replacement.getSuggestions());
     }
 

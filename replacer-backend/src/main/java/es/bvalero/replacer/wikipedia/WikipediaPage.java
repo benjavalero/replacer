@@ -18,10 +18,10 @@ public class WikipediaPage {
 
     WikipediaLanguage lang;
     int id;
-    String title;
     WikipediaNamespace namespace;
-    LocalDate lastUpdate;
+    String title;
     String content;
+    LocalDate lastUpdate;
 
     @With(AccessLevel.PACKAGE)
     @Nullable
@@ -37,12 +37,14 @@ public class WikipediaPage {
             this.getLang() +
             ", id=" +
             this.getId() +
+            ", namesapce=" +
+            this.getNamespace() +
             ", title='" +
             this.getTitle() +
-            ", lastUpdate='" +
-            this.getLastUpdate() +
             ", content=" +
             StringUtils.abbreviate(this.getContent(), CONTENT_SIZE) +
+            ", lastUpdate='" +
+            this.getLastUpdate() +
             "', section=" +
             this.getSection() +
             ", queryTimestamp=" +

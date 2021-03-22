@@ -99,7 +99,7 @@ class PageReviewCustomService extends PageReviewService {
         // We do nothing in the database in case the list is empty
         // We want to review the page every time in case anything has changed
         return IterableUtils.toList(
-            customReplacementFinderService.findCustomReplacements(convertPage(page), convertOptions(options))
+            customReplacementFinderService.findCustomReplacements(convertToFinderPage(page), convertOptions(options))
         );
     }
 
@@ -122,8 +122,8 @@ class PageReviewCustomService extends PageReviewService {
     private ReplacementEntity buildCustomReviewed(int pageId, WikipediaLanguage lang, String subtype, String reviewer) {
         return ReplacementEntity
             .builder()
-            .pageId(pageId)
             .lang(lang.getCode())
+            .pageId(pageId)
             .type(ReplacementType.CUSTOM)
             .subtype(subtype)
             .position(0)

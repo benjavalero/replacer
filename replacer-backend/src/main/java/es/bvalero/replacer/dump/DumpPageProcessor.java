@@ -66,6 +66,21 @@ class DumpPageProcessor {
         }
     }
 
+    private List<ReplacementEntity> notProcessPage(IndexablePage dumpPage) {
+        List<ReplacementEntity> dbReplacements = pageReplacementService.findByPageId(
+            dumpPage.getId(),
+            dumpPage.getLang()
+        );
+
+        // Return the DB replacements not reviewed in order to delete them
+        return dbReplacements
+            .stream()
+            .filter(ReplacementEntity::isToBeReviewed)
+            .filter(ReplacementEntity::isSystemReviewed)
+            .map(ReplacementEntity::setToDelete)
+            .collect(Collectors.toList());
+    }
+
     @Loggable(prepend = true, value = Loggable.TRACE)
     @VisibleForTesting
     List<ReplacementEntity> processPage(IndexablePage dumpPage) {
@@ -87,10 +102,10 @@ class DumpPageProcessor {
             return Collections.emptyList();
         }
 
-        List<Replacement> replacements = replacementFinderService.findList(convertPage(dumpPage));
+        List<Replacement> replacements = replacementFinderService.findList(convert(dumpPage));
         return replacementIndexService.findIndexPageReplacements(
             dumpPage,
-            replacements.stream().map(r -> convertToIndexable(dumpPage, r)).collect(Collectors.toList()),
+            replacements.stream().map(r -> convert(r, dumpPage)).collect(Collectors.toList()),
             dbReplacements
         );
     }
@@ -102,15 +117,15 @@ class DumpPageProcessor {
         return !dumpPage.getLastUpdate().isBefore(dbDate);
     }
 
-    FinderPage convertPage(IndexablePage page) {
+    private FinderPage convert(IndexablePage page) {
         return FinderPage.of(page.getLang(), page.getContent(), page.getTitle());
     }
 
-    private IndexableReplacement convertToIndexable(IndexablePage page, Replacement replacement) {
+    private IndexableReplacement convert(Replacement replacement, IndexablePage page) {
         return IndexableReplacement
             .builder()
-            .pageId(page.getId())
             .lang(page.getLang())
+            .pageId(page.getId())
             .type(replacement.getType())
             .subtype(replacement.getSubtype())
             .position(replacement.getStart())
@@ -118,20 +133,5 @@ class DumpPageProcessor {
             .lastUpdate(page.getLastUpdate())
             .title(page.getTitle())
             .build();
-    }
-
-    private List<ReplacementEntity> notProcessPage(IndexablePage dumpPage) {
-        List<ReplacementEntity> dbReplacements = pageReplacementService.findByPageId(
-            dumpPage.getId(),
-            dumpPage.getLang()
-        );
-
-        // Return the DB replacements not reviewed in order to delete them
-        return dbReplacements
-            .stream()
-            .filter(ReplacementEntity::isToBeReviewed)
-            .filter(ReplacementEntity::isSystemReviewed)
-            .map(ReplacementEntity::setToDelete)
-            .collect(Collectors.toList());
     }
 }

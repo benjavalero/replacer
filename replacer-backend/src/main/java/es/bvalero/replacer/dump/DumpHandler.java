@@ -151,12 +151,12 @@ class DumpHandler extends DefaultHandler {
     private void processPage() {
         IndexablePage dumpPage = IndexablePage
             .builder()
-            .id(this.currentId)
             .lang(this.lang)
-            .title(this.currentTitle)
+            .id(this.currentId)
             .namespace(WikipediaNamespace.valueOf(this.currentNamespace))
-            .lastUpdate(DateUtils.parseWikipediaTimestamp(this.currentTimestamp))
+            .title(this.currentTitle)
             .content(this.currentContent)
+            .lastUpdate(DateUtils.parseWikipediaTimestamp(this.currentTimestamp))
             .build();
 
         // If return null the page is processable but nothing to do

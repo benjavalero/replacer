@@ -32,9 +32,9 @@ class WikipediaApiFacade {
 
     RequestToken getRequestToken() throws ReplacerException {
         try {
-            OAuth1RequestToken requestToken = oAuthService.getRequestToken();
-            String authorizationUrl = oAuthService.getAuthorizationUrl(requestToken);
-            return RequestToken.of(requestToken.getToken(), requestToken.getTokenSecret(), authorizationUrl);
+            OAuth1RequestToken oAuth1RequestToken = oAuthService.getRequestToken();
+            String authorizationUrl = oAuthService.getAuthorizationUrl(oAuth1RequestToken);
+            return convert(oAuth1RequestToken, authorizationUrl);
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             Thread.currentThread().interrupt();
@@ -44,12 +44,16 @@ class WikipediaApiFacade {
         }
     }
 
+    private RequestToken convert(OAuth1RequestToken oAuth1RequestToken, String authorizationUrl) {
+        return RequestToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret(), authorizationUrl);
+    }
+
     AccessToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier)
         throws ReplacerException {
         try {
             OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken(requestToken, requestTokenSecret);
             OAuth1AccessToken oAuth1AccessToken = oAuthService.getAccessToken(oAuth1RequestToken, oauthVerifier);
-            return AccessToken.of(oAuth1AccessToken.getToken(), oAuth1AccessToken.getTokenSecret());
+            return convert(oAuth1AccessToken);
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             Thread.currentThread().interrupt();
@@ -57,6 +61,10 @@ class WikipediaApiFacade {
         } catch (ExecutionException | IOException e) {
             throw new ReplacerException(e);
         }
+    }
+
+    private AccessToken convert(OAuth1AccessToken oAuth1AccessToken) {
+        return AccessToken.of(oAuth1AccessToken.getToken(), oAuth1AccessToken.getTokenSecret());
     }
 
     WikipediaApiResponse executeGetRequest(Map<String, String> params, WikipediaLanguage lang)
@@ -93,7 +101,7 @@ class WikipediaApiFacade {
         OAuthRequest request = createOAuthRequestWithParams(params, verb, lang);
 
         if (isSigned) {
-            signOAuthRequest(request, convertToEntity(accessToken));
+            signOAuthRequest(request, convert(accessToken));
         }
 
         try {
@@ -104,10 +112,7 @@ class WikipediaApiFacade {
                 );
             }
 
-            LOGGER.trace("OAuth response body: {}", response.getBody());
-            WikipediaApiResponse apiResponse = jsonMapper.readValue(response.getBody(), WikipediaApiResponse.class);
-            apiResponse.validate();
-            return apiResponse;
+            return convert(response);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new ReplacerException("ERROR executing OAuth Request", e);
@@ -130,11 +135,18 @@ class WikipediaApiFacade {
         return request;
     }
 
-    private OAuth1AccessToken convertToEntity(AccessToken accessToken) {
+    private OAuth1AccessToken convert(AccessToken accessToken) {
         return new OAuth1AccessToken(accessToken.getToken(), accessToken.getTokenSecret());
     }
 
     private void signOAuthRequest(OAuthRequest request, OAuth1AccessToken accessToken) {
         oAuthService.signRequest(accessToken, request);
+    }
+
+    private WikipediaApiResponse convert(Response response) throws IOException, ReplacerException {
+        LOGGER.trace("OAuth response body: {}", response.getBody());
+        WikipediaApiResponse apiResponse = jsonMapper.readValue(response.getBody(), WikipediaApiResponse.class);
+        apiResponse.validate();
+        return apiResponse;
     }
 }

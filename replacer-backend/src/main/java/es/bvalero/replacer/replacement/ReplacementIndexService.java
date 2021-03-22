@@ -89,7 +89,7 @@ public class ReplacementIndexService {
             result = withAction.isToUpdate() ? Optional.of(withAction) : Optional.empty();
         } else {
             // New replacement
-            ReplacementEntity newReplacement = convertToEntity(replacement);
+            ReplacementEntity newReplacement = convert(replacement);
             dbPageReplacements.add(newReplacement);
             result = Optional.of(newReplacement);
             LOGGER.trace("Replacement inserted in DB: {}", replacement);
@@ -192,11 +192,11 @@ public class ReplacementIndexService {
     }
 
     @VisibleForTesting
-    ReplacementEntity convertToEntity(IndexableReplacement replacement) {
+    ReplacementEntity convert(IndexableReplacement replacement) {
         return ReplacementEntity
             .builder()
-            .pageId(replacement.getPageId())
             .lang(replacement.getLang().getCode())
+            .pageId(replacement.getPageId())
             .type(replacement.getType())
             .subtype(replacement.getSubtype())
             .position(replacement.getPosition())

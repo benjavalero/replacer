@@ -50,7 +50,7 @@ class ReplacementIndexServiceTest {
             dbReplacements
         );
 
-        Assertions.assertEquals(Collections.singletonList(replacementIndexService.convertToEntity(rep1)), toIndex);
+        Assertions.assertEquals(Collections.singletonList(replacementIndexService.convert(rep1)), toIndex);
     }
 
     @Test
@@ -201,7 +201,7 @@ class ReplacementIndexServiceTest {
         Assertions.assertEquals(
             Set.of(
                 r3db.updateLastUpdate(same),
-                replacementIndexService.convertToEntity(r5),
+                replacementIndexService.convert(r5),
                 r6db.setToDelete(),
                 r8db.setToDelete()
             ),
@@ -281,7 +281,7 @@ class ReplacementIndexServiceTest {
         Assertions.assertEquals(
             Set.of(
                 r1db.updateLastUpdate(same),
-                replacementIndexService.convertToEntity(r3),
+                replacementIndexService.convert(r3),
                 r4db.setToDelete(),
                 r6db.setToDelete()
             ),
