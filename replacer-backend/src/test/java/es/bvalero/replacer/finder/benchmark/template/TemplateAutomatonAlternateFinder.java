@@ -20,7 +20,7 @@ class TemplateAutomatonAlternateFinder implements BenchmarkFinder {
         this.automaton =
             new RunAutomaton(
                 new RegExp(String.format(REGEX_NESTED, StringUtils.join(toUpperCase(words), '|'), REGEX_TEMPLATE))
-                .toAutomaton(new DatatypesAutomatonProvider())
+                    .toAutomaton(new DatatypesAutomatonProvider())
             );
     }
 

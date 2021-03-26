@@ -78,7 +78,7 @@ class DateFinder implements ReplacementFinder {
                 StringUtils.join(MONTHS_UPPERCASE_CLASS, "|")
             )
         )
-        .toAutomaton(new DatatypesAutomatonProvider())
+            .toAutomaton(new DatatypesAutomatonProvider())
     );
 
     @Override

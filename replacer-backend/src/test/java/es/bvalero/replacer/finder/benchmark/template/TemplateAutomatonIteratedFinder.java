@@ -27,7 +27,7 @@ class TemplateAutomatonIteratedFinder implements BenchmarkFinder {
                     name ->
                         new RunAutomaton(
                             new RegExp(String.format(REGEX_NESTED, name, REGEX_TEMPLATE))
-                            .toAutomaton(new DatatypesAutomatonProvider())
+                                .toAutomaton(new DatatypesAutomatonProvider())
                         )
                 )
                 .collect(Collectors.toList())
