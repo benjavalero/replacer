@@ -24,11 +24,14 @@ class SectionReviewService {
      * @return The review of a section of the page, or empty if there is no such section.
      */
     Optional<PageReview> findSectionReview(PageReview review) {
-        assert review.getSection() == null;
+        assert review.getPage().getSection() == null;
 
         try {
             // Get the sections from the Wikipedia API (better than calculating them by ourselves)
-            List<WikipediaSection> sections = wikipediaService.getPageSections(review.getId(), review.getLang());
+            List<WikipediaSection> sections = wikipediaService.getPageSections(
+                review.getPage().getId(),
+                review.getPage().getLang()
+            );
 
             // Find the smallest section containing all the replacements
             Optional<WikipediaSection> smallestSection = getSmallestSectionContainingAllReplacements(
@@ -38,9 +41,9 @@ class SectionReviewService {
             if (smallestSection.isPresent()) {
                 // Get the section from Wikipedia API (better than calculating it by ourselves)
                 Optional<WikipediaPage> pageSection = wikipediaService.getPageByIdAndSection(
-                    review.getId(),
+                    review.getPage().getId(),
                     smallestSection.get(),
-                    review.getLang()
+                    review.getPage().getLang()
                 );
                 if (pageSection.isPresent()) {
                     // We need to modify the start position of the replacements according to the section start
@@ -51,12 +54,11 @@ class SectionReviewService {
                     );
 
                     LOGGER.debug(
-                        "Found section for page {} - {} - {} => {} - {}",
+                        "Found section for page {} - {} - {} => {}",
                         pageSection.get().getLang(),
                         pageSection.get().getId(),
                         pageSection.get().getTitle(),
-                        pageSection.get().getSection(),
-                        pageSection.get().getAnchor()
+                        pageSection.get().getSection()
                     );
                     return Optional.of(buildPageReview(pageSection.get(), sectionReplacements, review));
                 }
@@ -66,7 +68,12 @@ class SectionReviewService {
             LOGGER.warn("Error finding section", e);
         }
 
-        LOGGER.debug("No section found in page: {} - {} - {}", review.getLang(), review.getId(), review.getTitle());
+        LOGGER.debug(
+            "No section found in page: {} - {} - {}",
+            review.getPage().getLang(),
+            review.getPage().getId(),
+            review.getPage().getTitle()
+        );
         return Optional.empty();
     }
 
@@ -152,6 +159,6 @@ class SectionReviewService {
     }
 
     private PageReview buildPageReview(WikipediaPage page, List<PageReplacement> replacements, PageReview pageReview) {
-        return PageReview.of(page, replacements, pageReview.getNumPending());
+        return PageReview.of(page, replacements, pageReview.getSearch());
     }
 }

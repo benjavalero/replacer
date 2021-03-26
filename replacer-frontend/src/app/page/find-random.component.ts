@@ -6,6 +6,7 @@ import { AlertService } from '../alert/alert.service';
 import { PageReview } from './page-review.model';
 import { PageService } from './page.service';
 import { ValidateCustomComponent } from './validate-custom.component';
+import { ValidateType } from './validate-custom.model';
 
 @Component({
   selector: 'app-find-random',
@@ -54,7 +55,7 @@ export class FindRandomComponent implements OnInit {
           // Cache the review
           this.pageService.putPageReviewInCache(this.filteredType, this.filteredSubtype, review);
 
-          const pageId = review.id;
+          const pageId = review.page.id;
           // TODO : Do something with the title
 
           if (this.filteredType && this.filteredSubtype) {
@@ -84,19 +85,17 @@ export class FindRandomComponent implements OnInit {
 
   private validateCustomReplacement(): void {
     const replacement = this.filteredSubtype.trim();
-    this.pageService.validateCustomReplacement(replacement).subscribe(
-      (type: string) => {
-        if (type) {
-          this.openValidationModal$(this.filteredType, replacement).then(
-            (result) => {
-              this.router.navigate([`random/${type}/${replacement}`]);
-            }
-          );
+    this.pageService
+      .validateCustomReplacement(replacement, this.caseSensitive)
+      .subscribe((validateType: ValidateType) => {
+        if (validateType.type) {
+          this.openValidationModal$(validateType.type, validateType.subtype).then((result) => {
+            this.router.navigate([`random/${validateType.type}/${validateType.subtype}`]);
+          });
         } else {
           this.findRandomPage();
         }
-      }
-    );
+      });
   }
 
   private openValidationModal$(type: string, subtype: string): Promise<any> {

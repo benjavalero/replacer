@@ -47,7 +47,7 @@ class PageReviewNoTypeServiceTest {
         .text("Y")
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
-    private final PageReviewOptions options = PageReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
+    private final PageReviewOptions options = PageReviewOptions.ofNoType();
 
     @Mock
     private ReplacementService replacementService;
@@ -141,7 +141,7 @@ class PageReviewNoTypeServiceTest {
             .indexPageReplacements(Mockito.eq(pageReviewNoTypeService.toIndexable(page)), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
-        Assertions.assertEquals(randomId, review.get().getId());
+        Assertions.assertEquals(randomId, review.get().getPage().getId());
     }
 
     @Test
@@ -205,6 +205,6 @@ class PageReviewNoTypeServiceTest {
             .indexPageReplacements(Mockito.eq(pageReviewNoTypeService.toIndexable(page2)), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
-        Assertions.assertEquals(randomId2, review.get().getId());
+        Assertions.assertEquals(randomId2, review.get().getPage().getId());
     }
 }

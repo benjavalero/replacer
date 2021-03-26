@@ -1,45 +1,27 @@
 package es.bvalero.replacer.page;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.Nullable;
+import es.bvalero.replacer.wikipedia.AccessToken;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@ApiModel(description = "Page to update and mark as reviewed. Empty contents is equivalent to review with no changes.")
+@Getter
+@Setter
 class SavePage {
 
-    @Nullable
-    private Integer section;
+    @ApiModelProperty(value = "Page to review", required = true)
+    private PageDto page;
 
-    private String title;
-    private String content;
-    private String timestamp;
-    private String token;
-    private String tokenSecret;
+    @ApiModelProperty(value = "Search options of the replacements to review", required = true)
+    private PageReviewSearch search;
 
-    @Nullable
-    private String type;
-
-    @Nullable
-    private String subtype;
+    @ApiModelProperty(value = "OAuth access token", required = true)
+    private AccessToken accessToken;
 
     @Override
     public String toString() {
-        return (
-            "SavePage(section=" +
-            this.getSection() +
-            ", title=" +
-            this.getTitle() +
-            ", content=" +
-            StringUtils.abbreviate(this.getContent(), PageController.CONTENT_SIZE) +
-            ", type=" +
-            this.getType() +
-            ", subtype=" +
-            this.getSubtype() +
-            ")"
-        );
+        return ("SavePage(page=" + this.getPage() + ", search=" + this.getSearch() + ")");
     }
 }

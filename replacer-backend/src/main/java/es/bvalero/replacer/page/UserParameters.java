@@ -1,19 +1,15 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
+import io.swagger.annotations.ApiParam;
 import lombok.Data;
 
 @Data
-public class UserParameters {
+class UserParameters {
 
-    // This is for the moment only used in PageController.
-    // In case it is used in more controllers this class could be moved to common package.
+    @ApiParam(value = "Language", required = true)
+    private WikipediaLanguage lang;
 
-    WikipediaLanguage lang;
-    String user;
-
-    @Override
-    public String toString() {
-        return "lang=" + this.getLang() + ", user=" + this.getUser();
-    }
+    @ApiParam(value = "Wikipedia user name", required = true, example = "Benjavalero")
+    private String user;
 }

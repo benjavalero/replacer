@@ -159,7 +159,7 @@ class DumpHandler extends DefaultHandler {
             .content(this.currentContent)
             .build();
 
-        // If return null the it is processable but nothing to do
+        // If return null the page is processable but nothing to do
         // If throws ReplacerException then the page is not processable
         try {
             List<ReplacementEntity> replacementEntities = dumpPageProcessor.process(dumpPage);

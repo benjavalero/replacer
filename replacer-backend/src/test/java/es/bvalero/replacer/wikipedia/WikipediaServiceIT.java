@@ -100,8 +100,7 @@ class WikipediaServiceIT {
             0,
             newContent,
             page.getQueryTimestamp(),
-            "",
-            ""
+            AccessToken.ofEmpty()
         );
 
         // Save the conflict content started 1 day before
@@ -118,8 +117,7 @@ class WikipediaServiceIT {
                     0,
                     conflictContent,
                     before,
-                    "",
-                    ""
+                    AccessToken.ofEmpty()
                 )
         );
     }

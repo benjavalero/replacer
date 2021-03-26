@@ -21,9 +21,7 @@ export class ReplacementListService {
   }
 
   private findReplacementCounts$(): Observable<ReplacementCountList[]> {
-    return this.httpClient.get<ReplacementCountList[]>(
-      `${environment.apiUrl}/replacements/count?reviewed=false&grouped`
-    );
+    return this.httpClient.get<ReplacementCountList[]>(`${environment.apiUrl}/replacement-types/count`);
   }
 
   reviewPages$(type: string, subtype: string): Observable<any> {

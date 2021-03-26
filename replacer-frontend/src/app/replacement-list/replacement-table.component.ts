@@ -51,7 +51,7 @@ export class ReplacementTableComponent implements OnInit {
     this.collectionSize = this.replacementCounts.length;
     this.pageValue = 1;
 
-    this.pageListUrl = `${environment.apiUrl}/pages/list?lang=${this.userConfigService.lang}`;
+    this.pageListUrl = `${environment.apiUrl}/pages?lang=${this.userConfigService.lang}`;
   }
 
   ngOnInit(): void {

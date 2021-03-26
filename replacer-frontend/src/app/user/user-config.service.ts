@@ -48,7 +48,7 @@ export class UserConfigService {
 
   set lang(lang: Language) {
     const currentConfig = this._config.getValue();
-    const newConfig = {...currentConfig, lang: lang};
+    const newConfig = { ...currentConfig, lang: lang };
 
     localStorage.setItem(this.userConfigKey, JSON.stringify(newConfig));
     this._config.next(newConfig);

@@ -12,6 +12,7 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.replacement.Suggestion;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Collections;
 import java.util.List;
@@ -66,42 +67,41 @@ class PageControllerTest {
         Suggestion suggestion = Suggestion.of("a", "b");
         PageReplacement replacement = PageReplacement.of(start, rep, Collections.singletonList(suggestion));
         List<PageReplacement> replacements = Collections.singletonList(replacement);
-        long numPending = replacements.size();
-        PageReview review = new PageReview(
-            id,
+        long numPending = 7;
+        PageReviewSearch search = PageReviewSearch.builder().numPending(numPending).build();
+        PageDto page = new PageDto(
             WikipediaLanguage.SPANISH,
+            id,
             title,
             content,
-            section,
-            anchor,
-            queryTimestamp,
-            replacements,
-            numPending
+            PageSection.of(section, anchor),
+            queryTimestamp
         );
-        PageReviewOptions options = PageReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
+        PageReview review = new PageReview(page, replacements, search);
+        PageReviewOptions options = PageReviewOptions.ofNoType();
         when(pageReviewNoTypeService.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(get("/api/pages/random?lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id", is(id)))
-            .andExpect(jsonPath("$.title", is(title)))
-            .andExpect(jsonPath("$.content", is(content)))
-            .andExpect(jsonPath("$.section", is(section)))
-            .andExpect(jsonPath("$.anchor", is(anchor)))
-            .andExpect(jsonPath("$.queryTimestamp", is(queryTimestamp)))
+            .andExpect(jsonPath("$.page.id", is(id)))
+            .andExpect(jsonPath("$.page.title", is(title)))
+            .andExpect(jsonPath("$.page.content", is(content)))
+            .andExpect(jsonPath("$.page.section.id", is(section)))
+            .andExpect(jsonPath("$.page.section.title", is(anchor)))
+            .andExpect(jsonPath("$.page.queryTimestamp", is(queryTimestamp)))
             .andExpect(jsonPath("$.replacements[0].start", is(start)))
             .andExpect(jsonPath("$.replacements[0].text", is(rep)))
             .andExpect(jsonPath("$.replacements[0].suggestions[0].text", is("a")))
             .andExpect(jsonPath("$.replacements[0].suggestions[0].comment", is("b")))
-            .andExpect(jsonPath("$.numPending", is(Long.valueOf(numPending).intValue())));
+            .andExpect(jsonPath("$.search.numPending", is(Long.valueOf(numPending).intValue())));
 
         verify(pageReviewNoTypeService, times(1)).findRandomPageReview(options);
     }
 
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
+        PageReviewOptions options = PageReviewOptions.ofTypeSubtype("X", "Y");
         when(pageReviewTypeSubtypeService.findRandomPageReview(options)).thenReturn(Optional.of(PageReview.ofEmpty()));
 
         mvc
@@ -118,7 +118,8 @@ class PageControllerTest {
 
         mvc
             .perform(
-                get("/api/pages/random?replacement=X&cs=&suggestion=Y&lang=es").contentType(MediaType.APPLICATION_JSON)
+                get("/api/pages/random?type=Personalizado&subtype=X&cs=false&suggestion=Y&lang=es")
+                    .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
 
@@ -127,7 +128,7 @@ class PageControllerTest {
 
     @Test
     void testFindPageReviewById() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofNoType(WikipediaLanguage.SPANISH);
+        PageReviewOptions options = PageReviewOptions.ofNoType();
         when(pageReviewNoTypeService.getPageReview(123, options)).thenReturn(Optional.of(PageReview.ofEmpty()));
 
         mvc.perform(get("/api/pages/123?lang=es").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
@@ -137,7 +138,7 @@ class PageControllerTest {
 
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
+        PageReviewOptions options = PageReviewOptions.ofTypeSubtype("X", "Y");
         when(pageReviewTypeSubtypeService.getPageReview(123, options)).thenReturn(Optional.of(PageReview.ofEmpty()));
 
         mvc
@@ -154,7 +155,8 @@ class PageControllerTest {
 
         mvc
             .perform(
-                get("/api/pages/123?replacement=X&cs=true&suggestion=Y&lang=es").contentType(MediaType.APPLICATION_JSON)
+                get("/api/pages/123?type=Personalizado&subtype=X&cs=true&suggestion=Y&lang=es")
+                    .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
 
@@ -172,7 +174,20 @@ class PageControllerTest {
         String tokenSecret = "B";
         String type = "T";
         String subtype = "S";
-        SavePage savePage = new SavePage(section, title, content, timestamp, token, tokenSecret, type, subtype);
+        SavePage savePage = new SavePage();
+        PageDto page = PageDto
+            .builder()
+            .lang(WikipediaLanguage.SPANISH)
+            .id(pageId)
+            .title(title)
+            .content(content)
+            .section(PageSection.of(section, ""))
+            .queryTimestamp(timestamp)
+            .build();
+        savePage.setPage(page);
+        PageReviewSearch search = PageReviewSearch.builder().type(type).subtype(subtype).build();
+        savePage.setSearch(search);
+        savePage.setAccessToken(AccessToken.of(token, tokenSecret));
 
         when(cosmeticFinderService.applyCosmeticChanges(any(FinderPage.class))).thenReturn("C");
 
@@ -184,8 +199,12 @@ class PageControllerTest {
             )
             .andExpect(status().isOk());
 
-        FinderPage page = FinderPage.of(WikipediaLanguage.SPANISH, savePage.getContent(), savePage.getTitle());
-        verify(cosmeticFinderService, times(1)).applyCosmeticChanges(page);
+        FinderPage finderPage = FinderPage.of(
+            WikipediaLanguage.SPANISH,
+            savePage.getPage().getContent(),
+            savePage.getPage().getTitle()
+        );
+        verify(cosmeticFinderService, times(1)).applyCosmeticChanges(finderPage);
         verify(wikipediaService, times(1))
             .savePageContent(
                 any(WikipediaLanguage.class),
@@ -193,8 +212,7 @@ class PageControllerTest {
                 eq(section),
                 eq("C"),
                 eq(timestamp),
-                eq("A"),
-                eq("B")
+                eq(AccessToken.of("A", "B"))
             );
     }
 
@@ -208,7 +226,19 @@ class PageControllerTest {
         String tokenSecret = "B";
         String type = "T";
         String subtype = "S";
-        SavePage savePage = new SavePage(section, title, null, timestamp, token, tokenSecret, type, subtype);
+        SavePage savePage = new SavePage();
+        PageDto page = PageDto
+            .builder()
+            .lang(WikipediaLanguage.SPANISH)
+            .id(pageId)
+            .title(title)
+            .section(PageSection.of(section, ""))
+            .queryTimestamp(timestamp)
+            .build();
+        savePage.setPage(page);
+        PageReviewSearch search = PageReviewSearch.builder().type(type).subtype(subtype).build();
+        savePage.setSearch(search);
+        savePage.setAccessToken(AccessToken.of(token, tokenSecret));
 
         mvc
             .perform(
@@ -226,8 +256,7 @@ class PageControllerTest {
                 anyInt(),
                 anyString(),
                 anyString(),
-                anyString(),
-                anyString()
+                any(AccessToken.class)
             );
     }
 }

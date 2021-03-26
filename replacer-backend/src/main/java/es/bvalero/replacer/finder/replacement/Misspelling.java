@@ -26,11 +26,13 @@ public class Misspelling {
 
     private static final Pattern PATTERN_SUGGESTION = Pattern.compile(REGEX_SUGGESTION);
 
+    String type;
     String word;
     boolean caseSensitive;
     List<Suggestion> suggestions;
 
-    private Misspelling(String word, boolean caseSensitive, String comment) {
+    private Misspelling(String type, String word, boolean caseSensitive, String comment) {
+        this.type = type;
         this.word = word;
         this.caseSensitive = caseSensitive;
 
@@ -46,18 +48,23 @@ public class Misspelling {
         }
     }
 
+    public static Misspelling of(String type, String word, boolean caseSensitive, String comment) {
+        return new Misspelling(type, word, caseSensitive, comment);
+    }
+
+    @TestOnly
     public static Misspelling of(String word, boolean caseSensitive, String comment) {
-        return new Misspelling(word, caseSensitive, comment);
+        return new Misspelling(ReplacementType.MISSPELLING_SIMPLE, word, caseSensitive, comment);
     }
 
     @TestOnly
     static Misspelling ofCaseInsensitive(String word, String comment) {
-        return Misspelling.of(word, false, comment);
+        return Misspelling.of(ReplacementType.MISSPELLING_SIMPLE, word, false, comment);
     }
 
     @TestOnly
     static Misspelling ofCaseSensitive(String word, String comment) {
-        return Misspelling.of(word, true, comment);
+        return Misspelling.of(ReplacementType.MISSPELLING_SIMPLE, word, true, comment);
     }
 
     private List<Suggestion> parseSuggestionsFromComment(String comment) {

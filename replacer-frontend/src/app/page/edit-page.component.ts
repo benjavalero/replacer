@@ -6,7 +6,7 @@ import { Language } from '../user/language-model';
 import { UserConfigService } from '../user/user-config.service';
 import { UserService } from '../user/user.service';
 import { PageReplacement } from './page-replacement.model';
-import { PageReview } from './page-review.model';
+import { PageDto, PageReview, PageSearch } from './page-review.model';
 import { PageService } from './page.service';
 
 @Component({
@@ -15,21 +15,10 @@ import { PageService } from './page.service';
   styleUrls: []
 })
 export class EditPageComponent implements OnInit {
-  private pageId: number;
-  filteredType: string;
-  filteredSubtype: string;
-  suggestion: string; // Only for type 'custom'
-  private caseSensitive: boolean; // Only for type 'custom'
-
-  private lang: Language;
-  title: string;
-  content: string;
-  private section: number;
-  private anchor: string;
+  page: PageDto;
   replacements: PageReplacement[] = [];
-  numPending: number;
+  search: PageSearch;
   fixedCount = 0;
-  private currentTimestamp: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,62 +26,59 @@ export class EditPageComponent implements OnInit {
     private pageService: PageService,
     private router: Router,
     private userService: UserService,
-    private userConfigService: UserConfigService,
     private titleService: Title
   ) {}
 
   ngOnInit() {
-    this.lang = this.userConfigService.lang;
-
-    this.pageId = +this.route.snapshot.paramMap.get('id');
-    this.filteredType = this.route.snapshot.paramMap.get('type');
-    this.filteredSubtype = this.route.snapshot.paramMap.get('subtype');
-    this.suggestion = this.route.snapshot.paramMap.get('suggestion');
-    this.caseSensitive = this.route.snapshot.paramMap.get('cs') === 'true';
+    const pageId = +this.route.snapshot.paramMap.get('id');
+    const filteredType = this.route.snapshot.paramMap.get('type');
+    const filteredSubtype = this.route.snapshot.paramMap.get('subtype');
+    const suggestion = this.route.snapshot.paramMap.get('suggestion');
+    const caseSensitive = this.route.snapshot.paramMap.get('cs') === 'true';
 
     // First try to get the review from the cache
-    const cachedReview = this.pageService.getPageReviewFromCache(this.pageId, this.filteredType, this.filteredSubtype);
+    const cachedReview = this.pageService.getPageReviewFromCache(pageId, filteredType, filteredSubtype);
 
     let htmlTitle = 'Replacer - ';
-    if (this.filteredType && this.filteredSubtype) {
-      htmlTitle += `${this.filteredSubtype} - `;
+    if (filteredType && filteredSubtype) {
+      htmlTitle += `${filteredSubtype} - `;
     }
-    htmlTitle += cachedReview ? cachedReview.title : this.pageId;
+    htmlTitle += cachedReview ? cachedReview.page.title : pageId;
     this.titleService.setTitle(htmlTitle);
     this.alertService.addInfoMessage('Buscando potenciales reemplazos del artículo…');
 
     if (cachedReview) {
       this.manageReview(cachedReview);
     } else {
-      this.pageService
-        .findPageReviewById(this.pageId, this.filteredType, this.filteredSubtype, this.suggestion, this.caseSensitive)
-        .subscribe(
-          (review: PageReview) => {
-            if (review) {
-              this.manageReview(review);
-            } else {
-              this.alertService.addWarningMessage(
-                'No se ha encontrado ningún reemplazo en la versión más actualizada del artículo'
-              );
-              this.redirectToNextPage();
-            }
-          },
-          (err) => {
-            this.alertService.addErrorMessage('Error al buscar los reemplazos en el artículo: ' + err.error.message);
+      this.pageService.findPageReviewById(pageId, filteredType, filteredSubtype, suggestion, caseSensitive).subscribe(
+        (review: PageReview) => {
+          if (review) {
+            this.manageReview(review);
+          } else {
+            this.alertService.addWarningMessage(
+              'No se ha encontrado ningún reemplazo en la versión más actualizada del artículo'
+            );
+            this.redirectToNextPage({
+              numPending: 0,
+              type: filteredType,
+              subtype: filteredSubtype,
+              suggestion: suggestion,
+              cs: caseSensitive
+            });
           }
-        );
+        },
+        (err) => {
+          this.alertService.addErrorMessage('Error al buscar los reemplazos en el artículo: ' + err.error.message);
+        }
+      );
     }
   }
 
   private manageReview(review: PageReview) {
     this.alertService.clearAlertMessages();
-    this.title = review.title;
-    this.content = review.content;
-    this.section = review.section;
-    this.anchor = review.anchor;
-    this.currentTimestamp = review.queryTimestamp;
+    this.page = review.page;
     this.replacements = review.replacements;
-    this.numPending = review.numPending;
+    this.search = review.search;
   }
 
   onFixed(fixed: any) {
@@ -109,12 +95,12 @@ export class EditPageComponent implements OnInit {
     const fixedReplacements = this.getFixedReplacements().sort((a, b): number => b.start - a.start);
     if (fixedReplacements) {
       // Apply the fixes in the original text
-      let contentToSave = this.content;
+      let contentToSave = this.page.content;
       fixedReplacements.forEach((rep) => {
         contentToSave = this.replaceText(contentToSave, rep.start, rep.text, rep.textFixed);
       });
 
-      this.alertService.addInfoMessage(`Guardando cambios en «${this.title}»…`);
+      this.alertService.addInfoMessage(`Guardando cambios en «${this.page.title}»…`);
       this.saveContent(contentToSave);
     } else {
       // Save with no changes => Mark page as reviewed
@@ -128,7 +114,7 @@ export class EditPageComponent implements OnInit {
   }
 
   private saveWithNoChanges() {
-    this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.title}»…`);
+    this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.page.title}»…`);
     this.saveContent(' ');
   }
 
@@ -136,43 +122,32 @@ export class EditPageComponent implements OnInit {
     // Remove replacements as a trick to hide the page
     this.replacements = [];
 
-    this.pageService
-      .savePage(
-        this.pageId,
-        this.filteredType,
-        this.filteredSubtype,
-        this.title,
-        content,
-        this.section,
-        this.currentTimestamp
-      )
-      .subscribe(
-        (res) => {},
-        (err) => {
-          const errMsg = `Error al guardar el artículo: ${err.error}`;
-          if (errMsg.includes('mwoauth-invalid-authorization')) {
-            // Clear session and reload the page
-            this.userService.clearSession();
-            window.location.reload();
-          } else {
-            this.alertService.addErrorMessage(errMsg);
-          }
-        },
-        () => {
-          this.alertService.addSuccessMessage('Cambios guardados con éxito');
-          this.redirectToNextPage();
+    const savePage = { ...this.page, content: content };
+    this.pageService.savePage(savePage, this.search).subscribe(
+      (res) => {},
+      (err) => {
+        const errMsg = `Error al guardar el artículo: ${err.error}`;
+        if (errMsg.includes('mwoauth-invalid-authorization')) {
+          // Clear session and reload the page
+          this.userService.clearSession();
+          window.location.reload();
+        } else {
+          this.alertService.addErrorMessage(errMsg);
         }
-      );
+      },
+      () => {
+        this.alertService.addSuccessMessage('Cambios guardados con éxito');
+        this.redirectToNextPage(this.search);
+      }
+    );
   }
 
-  private redirectToNextPage() {
-    if (this.filteredType && this.filteredSubtype) {
-      if (this.suggestion) {
-        this.router.navigate([
-          `random/${this.filteredType}/${this.filteredSubtype}/${this.suggestion}/${this.caseSensitive}`
-        ]);
+  private redirectToNextPage(search: PageSearch) {
+    if (search.type && search.subtype) {
+      if (search.suggestion) {
+        this.router.navigate([`random/${search.type}/${search.subtype}/${search.suggestion}/${search.cs}`]);
       } else {
-        this.router.navigate([`random/${this.filteredType}/${this.filteredSubtype}`]);
+        this.router.navigate([`random/${search.type}/${search.subtype}`]);
       }
     } else {
       this.router.navigate(['random']);
@@ -184,9 +159,9 @@ export class EditPageComponent implements OnInit {
   }
 
   get url(): string {
-    let url = `https://${this.lang || Language.es}.wikipedia.org/wiki/${this.title}`;
-    if (this.section && this.anchor) {
-      url += `#${this.anchor}`;
+    let url = `https://${this.page.lang || Language.es}.wikipedia.org/wiki/${this.page.title}`;
+    if (this.page.section) {
+      url += `#${this.page.section.title}`;
     }
     return url;
   }

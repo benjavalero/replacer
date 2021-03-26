@@ -3,9 +3,11 @@ package es.bvalero.replacer.wikipedia;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ class AuthenticationControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private WikipediaService wikipediaService;
@@ -47,13 +52,12 @@ class AuthenticationControllerTest {
         when(wikipediaService.getLoggedUser(anyString(), anyString(), anyString()))
             .thenReturn(WikipediaUser.of(userName, true, accessToken));
 
+        VerificationToken verifier = VerificationToken.of("X", "Y", "V");
         mvc
             .perform(
-                get("/api/authentication/logged-user")
+                post("/api/authentication/logged-user")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .param("requestToken", "X")
-                    .param("requestTokenSecret", "Y")
-                    .param("oauthVerifier", "V")
+                    .content(objectMapper.writeValueAsString(verifier))
             )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name", is("C")))

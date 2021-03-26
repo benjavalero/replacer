@@ -30,13 +30,12 @@ public class CustomReplacementFinderService extends ReplacementFinderService {
     }
 
     /** Checks if the given word exists as a misspelling and in this case returns the type */
-    public Optional<String> findExistingMisspelling(String word, WikipediaLanguage lang) {
-        if (misspellingSimpleFinder.findMisspellingByWord(word, lang).isPresent()) {
-            return Optional.of(misspellingSimpleFinder.getType());
-        } else if (misspellingComposedFinder.findMisspellingByWord(word, lang).isPresent()) {
-            return Optional.of(misspellingComposedFinder.getType());
+    public Optional<Misspelling> findExistingMisspelling(String word, WikipediaLanguage lang) {
+        Optional<Misspelling> simpleMisspelling = misspellingSimpleFinder.findMisspellingByWord(word, lang);
+        if (simpleMisspelling.isPresent()) {
+            return simpleMisspelling;
         } else {
-            return Optional.empty();
+            return misspellingComposedFinder.findMisspellingByWord(word, lang);
         }
     }
 }

@@ -44,11 +44,10 @@ class SectionReviewServiceTest {
         Suggestion suggestion = Suggestion.of("a", "");
         PageReplacement replacement = PageReplacement.of(8, "an", Collections.singletonList(suggestion)); // "an"
 
+        PageDto page = PageDto.builder().id(pageId).lang(WikipediaLanguage.SPANISH).content(content).build();
         PageReview pageReview = PageReview
             .builder()
-            .id(pageId)
-            .lang(WikipediaLanguage.SPANISH)
-            .content(content)
+            .page(page)
             .replacements(Collections.singletonList(replacement))
             .build();
 
@@ -65,7 +64,7 @@ class SectionReviewServiceTest {
             .id(pageId)
             .lang(WikipediaLanguage.SPANISH)
             .content(sectionContent)
-            .section(sectionId)
+            .section(WikipediaSection.builder().index(sectionId).build())
             .build();
         Mockito
             .when(
@@ -82,9 +81,11 @@ class SectionReviewServiceTest {
         Assertions.assertTrue(sectionReview.isPresent());
         sectionReview.ifPresent(
             review -> {
-                Assertions.assertEquals(pageId, review.getId());
-                Assertions.assertEquals(Integer.valueOf(sectionId), review.getSection());
-                Assertions.assertEquals(sectionContent, review.getContent());
+                Assertions.assertEquals(pageId, review.getPage().getId());
+                Assertions.assertNotNull(review.getPage().getSection());
+                Assertions.assertNotNull(review.getPage().getSection().getId());
+                Assertions.assertEquals(Integer.valueOf(sectionId), review.getPage().getSection().getId());
+                Assertions.assertEquals(sectionContent, review.getPage().getContent());
                 Assertions.assertEquals(1, review.getReplacements().size());
                 Assertions.assertEquals(8 - offset, review.getReplacements().get(0).getStart());
             }

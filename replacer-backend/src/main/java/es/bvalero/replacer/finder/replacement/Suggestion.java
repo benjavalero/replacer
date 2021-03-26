@@ -2,20 +2,20 @@ package es.bvalero.replacer.finder.replacement;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
 import org.springframework.lang.Nullable;
 
-/**
- * A suggestion for a replacement.
- */
+@ApiModel(description = "Suggestion for a replacement")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
 public class Suggestion {
 
-    /** The new text after the replacement */
+    @ApiModelProperty(value = "Fix proposed for a replacement", required = true, example = "aun")
     String text;
 
-    /** An optional description to explain the motivation of the fix */
+    @ApiModelProperty(value = "Description to explain the motivation of the fix", example = "incluso, aunque")
     @Nullable
     String comment;
 

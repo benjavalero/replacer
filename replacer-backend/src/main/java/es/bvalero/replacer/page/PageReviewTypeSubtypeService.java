@@ -30,18 +30,17 @@ class PageReviewTypeSubtypeService extends PageReviewService {
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, getCacheSize());
+        String type = options.getType();
+        String subtype = options.getSubtype();
+        assert type != null && subtype != null;
         List<Integer> pageIds = replacementService.findRandomPageIdsToBeReviewedBySubtype(
             options.getLang(),
-            options.getType(),
-            options.getSubtype(),
+            type,
+            subtype,
             pagination
         );
 
-        long totalResults = replacementService.countPagesToBeReviewedBySubtype(
-            options.getLang(),
-            options.getType(),
-            options.getSubtype()
-        );
+        long totalResults = replacementService.countPagesToBeReviewedBySubtype(options.getLang(), type, subtype);
         return PageSearchResult.of(totalResults, pageIds);
     }
 
@@ -54,12 +53,18 @@ class PageReviewTypeSubtypeService extends PageReviewService {
 
         // To build the review we are only interested in the replacements of the given type and subtype
         // We can run the filter even with an empty list
-        return filterReplacementsByTypeAndSubtype(replacements, options.getType(), options.getSubtype());
+        String type = options.getType();
+        String subtype = options.getSubtype();
+        assert type != null && subtype != null;
+        return filterReplacementsByTypeAndSubtype(replacements, type, subtype);
     }
 
     @Override
     public void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer) {
-        replacementService.reviewByPageId(options.getLang(), pageId, options.getType(), options.getSubtype(), reviewer);
+        String type = options.getType();
+        String subtype = options.getSubtype();
+        assert type != null && subtype != null;
+        replacementService.reviewByPageId(options.getLang(), pageId, type, subtype, reviewer);
     }
 
     @Loggable(prepend = true, value = Loggable.TRACE)

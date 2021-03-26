@@ -48,7 +48,7 @@ class DumpControllerTest {
         when(dumpManager.getDumpIndexingStatus()).thenReturn(indexation);
 
         mvc
-            .perform(get("/api/dump-indexing/status").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/dump-indexing").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.running", equalTo(running)))
             .andExpect(jsonPath("$.numPagesRead", is(Long.valueOf(numPagesRead).intValue())))
@@ -63,9 +63,7 @@ class DumpControllerTest {
 
     @Test
     void testPostStart() throws Exception {
-        mvc
-            .perform(post("/api/dump-indexing/start").contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+        mvc.perform(post("/api/dump-indexing").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
         verify(dumpManager, times(1)).processLatestDumpFiles();
     }

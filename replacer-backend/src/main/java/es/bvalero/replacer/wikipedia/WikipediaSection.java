@@ -16,4 +16,9 @@ public class WikipediaSection implements Comparable<WikipediaSection> {
     public int compareTo(WikipediaSection other) {
         return Integer.compare(byteOffset, other.byteOffset);
     }
+
+    @Override
+    public String toString() {
+        return "WikipediaSection(index=" + this.getIndex() + ", anchor=" + this.getAnchor() + ")";
+    }
 }

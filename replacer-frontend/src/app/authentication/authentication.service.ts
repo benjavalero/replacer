@@ -48,14 +48,12 @@ export class AuthenticationService {
 
   private getLoggedUser$(verificationToken: string): Observable<User> {
     const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey));
-    const params = new HttpParams()
-      .append('requestToken', requestToken.token)
-      .append('requestTokenSecret', requestToken.tokenSecret)
-      .append('oauthVerifier', verificationToken);
-
-    return this.httpClient.get<User>(`${this.baseUrl}/logged-user`, {
-      params
-    });
+    const body = {
+      requestToken: requestToken.token,
+      requestTokenSecret: requestToken.tokenSecret,
+      oauthVerifier: verificationToken
+    };
+    return this.httpClient.post<User>(`${this.baseUrl}/logged-user`, body);
   }
 
   get redirectPath(): string {

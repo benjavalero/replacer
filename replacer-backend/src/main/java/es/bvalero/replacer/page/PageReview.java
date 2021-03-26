@@ -1,10 +1,10 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaSection;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.*;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.Nullable;
 
@@ -15,64 +15,42 @@ import org.springframework.lang.Nullable;
 @Builder
 class PageReview {
 
-    int id;
-    WikipediaLanguage lang;
-    String title;
-    String content;
+    @ApiModelProperty(required = true)
+    PageDto page;
 
-    @Nullable
-    @With(AccessLevel.PACKAGE)
-    Integer section;
-
-    @Nullable
-    String anchor;
-
-    String queryTimestamp;
+    @ApiModelProperty(value = "List of replacements to review", required = true)
     List<PageReplacement> replacements;
-    long numPending;
 
-    static PageReview of(WikipediaPage page, List<PageReplacement> replacements, long numPending) {
-        return PageReview
+    @ApiModelProperty(value = "Search options of the replacements to review", required = true)
+    PageReviewSearch search;
+
+    static PageReview of(WikipediaPage page, List<PageReplacement> replacements, PageReviewSearch search) {
+        return PageReview.builder().page(convert(page)).replacements(replacements).search(search).build();
+    }
+
+    private static PageDto convert(WikipediaPage page) {
+        return PageDto
             .builder()
             .id(page.getId())
             .lang(page.getLang())
             .title(page.getTitle())
             .content(page.getContent())
-            .section(page.getSection())
-            .anchor(page.getAnchor())
+            .section(convert(page.getSection()))
             .queryTimestamp(page.getQueryTimestamp())
-            .replacements(replacements)
-            .numPending(numPending)
             .build();
+    }
+
+    @Nullable
+    private static PageSection convert(@Nullable WikipediaSection section) {
+        if (section == null) {
+            return null;
+        } else {
+            return PageSection.of(section.getIndex(), section.getAnchor());
+        }
     }
 
     @TestOnly
     static PageReview ofEmpty() {
-        return PageReview.builder().build();
-    }
-
-    @Override
-    public String toString() {
-        return (
-            "PageReview(id=" +
-            this.getId() +
-            ", lang=" +
-            this.getLang() +
-            ", title=" +
-            this.getTitle() +
-            ", content=" +
-            StringUtils.abbreviate(this.getContent(), PageController.CONTENT_SIZE) +
-            ", section=" +
-            this.getSection() +
-            ", anchor=" +
-            this.getAnchor() +
-            ", queryTimestamp=" +
-            this.getQueryTimestamp() +
-            ", replacements=" +
-            this.getReplacements() +
-            ", numPending=" +
-            this.getNumPending() +
-            ")"
-        );
+        return PageReview.builder().page(new PageDto()).build();
     }
 }

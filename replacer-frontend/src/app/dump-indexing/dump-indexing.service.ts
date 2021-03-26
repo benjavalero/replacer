@@ -42,14 +42,14 @@ export class DumpIndexingService {
   }
 
   private getDumpIndexing$(): Observable<DumpIndexing> {
-    return this.httpClient.get<DumpIndexing>(`${this.baseUrl}/status`);
+    return this.httpClient.get<DumpIndexing>(`${this.baseUrl}`);
   }
 
   startDumpIndexing$(): Observable<any> {
     // Empty the last indexation
     this._status.next(null);
 
-    return this.httpClient.post<any>(`${this.baseUrl}/start`, null);
+    return this.httpClient.post<any>(`${this.baseUrl}`, null);
   }
 
   private formatDate(milliseconds: number): Date {

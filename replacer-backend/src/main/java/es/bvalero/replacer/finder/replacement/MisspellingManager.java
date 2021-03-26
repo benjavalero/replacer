@@ -79,7 +79,7 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
             boolean cs = CASE_SENSITIVE_VALUE.equalsIgnoreCase(tokens[1].trim());
             String comment = tokens[2].trim();
             try {
-                misspelling = Misspelling.of(word, cs, comment);
+                misspelling = Misspelling.of(getType(), word, cs, comment);
             } catch (IllegalArgumentException e) {
                 LOGGER.warn("Ignore not valid misspelling: " + e.getMessage());
             }

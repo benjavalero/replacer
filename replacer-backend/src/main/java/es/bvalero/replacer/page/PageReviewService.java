@@ -256,7 +256,7 @@ abstract class PageReviewService {
         return PageReview.of(
             page,
             replacements.stream().map(this::convertToDto).collect(Collectors.toList()),
-            findTotalResultsFromCache(options) + 1 // Include the current one as pending
+            convert(options)
         );
     }
 
@@ -269,6 +269,22 @@ abstract class PageReviewService {
 
     private PageReplacement convertToDto(Replacement replacement) {
         return PageReplacement.of(replacement.getStart(), replacement.getText(), replacement.getSuggestions());
+    }
+
+    private PageReviewSearch convert(PageReviewOptions options) {
+        long numPending = findTotalResultsFromCache(options) + 1; // Include the current one as pending
+        if (options.getType() == null) {
+            return PageReviewSearch.builder().numPending(numPending).build();
+        } else {
+            return PageReviewSearch
+                .builder()
+                .numPending(numPending)
+                .type(options.getType())
+                .subtype(options.getSubtype())
+                .suggestion(options.getSuggestion())
+                .cs(options.getCs())
+                .build();
+        }
     }
 
     abstract void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer);

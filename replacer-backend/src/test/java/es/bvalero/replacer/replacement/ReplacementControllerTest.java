@@ -35,7 +35,7 @@ class ReplacementControllerTest {
         mvc
             .perform(get("/api/replacements/count?reviewed=false&lang=es"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", is(Long.valueOf(count).intValue())));
+            .andExpect(jsonPath("$.count", is(Long.valueOf(count).intValue())));
 
         verify(replacementService, times(1)).countReplacementsNotReviewed(WikipediaLanguage.SPANISH);
     }
@@ -48,7 +48,7 @@ class ReplacementControllerTest {
         mvc
             .perform(get("/api/replacements/count?reviewed=true&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", is(Long.valueOf(count).intValue())));
+            .andExpect(jsonPath("$.count", is(Long.valueOf(count).intValue())));
 
         verify(replacementService, times(1)).countReplacementsReviewed(WikipediaLanguage.SPANISH);
     }
@@ -60,9 +60,7 @@ class ReplacementControllerTest {
             .thenReturn(Collections.singletonList(count));
 
         mvc
-            .perform(
-                get("/api/replacements/count?reviewed=true&grouped&lang=es").contentType(MediaType.APPLICATION_JSON)
-            )
+            .perform(get("/api/users/count?lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].reviewer", is("X")))
             .andExpect(jsonPath("$[0].count", is(100)));
@@ -79,9 +77,7 @@ class ReplacementControllerTest {
             .thenReturn(Collections.singletonList(count));
 
         mvc
-            .perform(
-                get("/api/replacements/count?reviewed=false&grouped&lang=es").contentType(MediaType.APPLICATION_JSON)
-            )
+            .perform(get("/api/replacement-types/count?lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].t", is("X")))
             .andExpect(jsonPath("$[0].l[0].s", is("Y")))

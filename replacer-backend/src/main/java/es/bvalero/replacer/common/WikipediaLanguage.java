@@ -29,4 +29,9 @@ public enum WikipediaLanguage {
     public static WikipediaLanguage forValues(@Nullable String code) {
         return map.getOrDefault(code, getDefault());
     }
+
+    @Override
+    public String toString() {
+        return this.code;
+    }
 }

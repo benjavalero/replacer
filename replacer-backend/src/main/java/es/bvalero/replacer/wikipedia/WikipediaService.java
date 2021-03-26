@@ -43,7 +43,6 @@ public interface WikipediaService {
         @Nullable Integer section,
         String pageContent,
         String currentTimestamp,
-        String token,
-        String tokenSecret
+        AccessToken accessToken
     ) throws ReplacerException;
 }

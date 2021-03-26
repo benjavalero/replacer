@@ -7,10 +7,7 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.finder.common.FinderPage;
-import es.bvalero.replacer.finder.replacement.CustomOptions;
-import es.bvalero.replacer.finder.replacement.CustomReplacementFinderService;
-import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.ReplacementType;
+import es.bvalero.replacer.finder.replacement.*;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.*;
@@ -172,10 +169,10 @@ class PageReviewCustomServiceTest {
         Assertions.assertFalse(review1.isEmpty());
         review1.ifPresent(
             r -> {
-                Assertions.assertEquals(lang, r.getLang());
-                Assertions.assertEquals(pageId, r.getId());
-                Assertions.assertEquals(content, r.getContent());
-                Assertions.assertEquals(1, r.getNumPending());
+                Assertions.assertEquals(lang, r.getPage().getLang());
+                Assertions.assertEquals(pageId, r.getPage().getId());
+                Assertions.assertEquals(content, r.getPage().getContent());
+                Assertions.assertEquals(1, r.getSearch().getNumPending());
             }
         );
 
@@ -300,10 +297,10 @@ class PageReviewCustomServiceTest {
         Assertions.assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                Assertions.assertEquals(lang, r.getLang());
-                Assertions.assertEquals(pageId2, r.getId());
-                Assertions.assertEquals(content, r.getContent());
-                Assertions.assertEquals(1, r.getNumPending());
+                Assertions.assertEquals(lang, r.getPage().getLang());
+                Assertions.assertEquals(pageId2, r.getPage().getId());
+                Assertions.assertEquals(content, r.getPage().getContent());
+                Assertions.assertEquals(1, r.getSearch().getNumPending());
             }
         );
 
@@ -420,8 +417,8 @@ class PageReviewCustomServiceTest {
         Assertions.assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                Assertions.assertEquals(1, r.getId());
-                Assertions.assertEquals(4, r.getNumPending());
+                Assertions.assertEquals(1, r.getPage().getId());
+                Assertions.assertEquals(4, r.getSearch().getNumPending());
             }
         );
         // Cache: 2, 3
@@ -431,8 +428,8 @@ class PageReviewCustomServiceTest {
         Assertions.assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                Assertions.assertEquals(2, r.getId());
-                Assertions.assertEquals(3, r.getNumPending());
+                Assertions.assertEquals(2, r.getPage().getId());
+                Assertions.assertEquals(3, r.getSearch().getNumPending());
             }
         );
         // Cache: 3
@@ -442,8 +439,8 @@ class PageReviewCustomServiceTest {
         Assertions.assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                Assertions.assertEquals(3, r.getId());
-                Assertions.assertEquals(2, r.getNumPending());
+                Assertions.assertEquals(3, r.getPage().getId());
+                Assertions.assertEquals(2, r.getSearch().getNumPending());
             }
         );
         // Cache: empty
@@ -453,8 +450,8 @@ class PageReviewCustomServiceTest {
         Assertions.assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                Assertions.assertEquals(4, r.getId());
-                Assertions.assertEquals(1, r.getNumPending());
+                Assertions.assertEquals(4, r.getPage().getId());
+                Assertions.assertEquals(1, r.getSearch().getNumPending());
             }
         );
 
@@ -467,5 +464,86 @@ class PageReviewCustomServiceTest {
         verify(replacementService, times(2))
             .findPageIdsReviewedByTypeAndSubtype(lang, ReplacementType.CUSTOM, replacement);
         verify(wikipediaService, times(4)).getPageById(anyInt(), any(WikipediaLanguage.class));
+    }
+
+    @Test
+    void testValidateCustomReplacement() {
+        final WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        final String simple = ReplacementType.MISSPELLING_SIMPLE;
+
+        // Case-insensitive: accion||acción
+        Misspelling misspelling1 = Misspelling.of(simple, "accion", false, "acción");
+        Mockito
+            .when(customReplacementFinderService.findExistingMisspelling("accion", lang))
+            .thenReturn(Optional.of(misspelling1));
+        Mockito
+            .when(customReplacementFinderService.findExistingMisspelling("Accion", lang))
+            .thenReturn(Optional.of(misspelling1));
+        Assertions.assertEquals(
+            MisspellingType.ofEmpty(),
+            pageReviewCustomService.validateCustomReplacement(lang, "accion", true)
+        );
+        Assertions.assertEquals(
+            MisspellingType.of(simple, "accion"),
+            pageReviewCustomService.validateCustomReplacement(lang, "accion", false)
+        );
+        Assertions.assertEquals(
+            MisspellingType.ofEmpty(),
+            pageReviewCustomService.validateCustomReplacement(lang, "Accion", true)
+        );
+        Assertions.assertEquals(
+            MisspellingType.ofEmpty(),
+            pageReviewCustomService.validateCustomReplacement(lang, "Accion", false)
+        );
+
+        // Case-sensitive uppercase: Enero|cs|enero
+        Misspelling misspelling2 = Misspelling.of(simple, "Enero", true, "enero");
+        Mockito
+            .when(customReplacementFinderService.findExistingMisspelling("Enero", lang))
+            .thenReturn(Optional.of(misspelling2));
+        Mockito
+            .when(customReplacementFinderService.findExistingMisspelling("enero", lang))
+            .thenReturn(Optional.empty());
+        Assertions.assertEquals(
+            MisspellingType.ofEmpty(),
+            pageReviewCustomService.validateCustomReplacement(lang, "enero", true)
+        );
+        Assertions.assertEquals(
+            MisspellingType.ofEmpty(),
+            pageReviewCustomService.validateCustomReplacement(lang, "enero", false)
+        );
+        Assertions.assertEquals(
+            MisspellingType.of(simple, "Enero"),
+            pageReviewCustomService.validateCustomReplacement(lang, "Enero", true)
+        );
+        Assertions.assertEquals(
+            MisspellingType.ofEmpty(),
+            pageReviewCustomService.validateCustomReplacement(lang, "Enero", false)
+        );
+
+        // Case-sensitive lowercase: madrid|cs|Madrid
+        Misspelling misspelling3 = Misspelling.of(simple, "madrid", true, "Madrid");
+        Mockito
+            .when(customReplacementFinderService.findExistingMisspelling("madrid", lang))
+            .thenReturn(Optional.of(misspelling3));
+        Mockito
+            .when(customReplacementFinderService.findExistingMisspelling("Madrid", lang))
+            .thenReturn(Optional.empty());
+        Assertions.assertEquals(
+            MisspellingType.of(simple, "madrid"),
+            pageReviewCustomService.validateCustomReplacement(lang, "madrid", true)
+        );
+        Assertions.assertEquals(
+            MisspellingType.ofEmpty(),
+            pageReviewCustomService.validateCustomReplacement(lang, "madrid", false)
+        );
+        Assertions.assertEquals(
+            MisspellingType.ofEmpty(),
+            pageReviewCustomService.validateCustomReplacement(lang, "Madrid", true)
+        );
+        Assertions.assertEquals(
+            MisspellingType.ofEmpty(),
+            pageReviewCustomService.validateCustomReplacement(lang, "Madrid", false)
+        );
     }
 }

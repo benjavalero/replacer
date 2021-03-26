@@ -247,7 +247,7 @@ class WikipediaServiceImpl implements WikipediaService {
             lang
         );
         List<WikipediaPage> pages = extractPagesFromJson(apiResponse, lang);
-        return pages.stream().findAny().map(p -> p.withSection(section.getIndex()).withAnchor(section.getAnchor()));
+        return pages.stream().findAny().map(p -> p.withSection(section));
     }
 
     private Map<String, String> buildPageIdsAndSectionRequestParams(int pageId, int section) {
@@ -346,10 +346,8 @@ class WikipediaServiceImpl implements WikipediaService {
         @Nullable Integer section,
         String pageContent,
         String currentTimestamp,
-        String token,
-        String tokenSecret
+        AccessToken accessToken
     ) throws ReplacerException {
-        AccessToken accessToken = AccessToken.of(token, tokenSecret);
         EditToken editToken = getEditToken(pageId, lang, accessToken);
         // Pre-check of edit conflicts
         if (currentTimestamp.compareTo(editToken.getTimestamp()) <= 0) {

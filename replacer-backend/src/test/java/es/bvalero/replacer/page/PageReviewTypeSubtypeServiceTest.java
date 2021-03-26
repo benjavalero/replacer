@@ -48,8 +48,8 @@ class PageReviewTypeSubtypeServiceTest {
         .text("Y")
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
-    private final PageReviewOptions options = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "X", "Y");
-    private final PageReviewOptions options2 = PageReviewOptions.ofTypeSubtype(WikipediaLanguage.SPANISH, "A", "B");
+    private final PageReviewOptions options = PageReviewOptions.ofTypeSubtype("X", "Y");
+    private final PageReviewOptions options2 = PageReviewOptions.ofTypeSubtype("A", "B");
 
     @Mock
     private ReplacementService replacementService;
@@ -136,7 +136,7 @@ class PageReviewTypeSubtypeServiceTest {
             .indexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
-        Assertions.assertEquals(randomId, review.get().getId());
+        Assertions.assertEquals(randomId, review.get().getPage().getId());
     }
 
     @Test
@@ -182,11 +182,11 @@ class PageReviewTypeSubtypeServiceTest {
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
         Assertions.assertTrue(review.isPresent());
-        Assertions.assertEquals(randomId, review.get().getId());
+        Assertions.assertEquals(randomId, review.get().getPage().getId());
 
         review = pageReviewTypeSubtypeService.findRandomPageReview(options);
         Assertions.assertTrue(review.isPresent());
-        Assertions.assertEquals(randomId2, review.get().getId());
+        Assertions.assertEquals(randomId2, review.get().getPage().getId());
 
         review = pageReviewTypeSubtypeService.findRandomPageReview(options);
         Assertions.assertFalse(review.isPresent());
@@ -208,9 +208,8 @@ class PageReviewTypeSubtypeServiceTest {
         pageReviewTypeSubtypeService.loadCache(options);
 
         // The page has sections
-        PageReview sectionReview = pageReviewTypeSubtypeService
-            .buildPageReview(page, replacements, options)
-            .withSection(sectionId);
+        PageReview sectionReview = pageReviewTypeSubtypeService.buildPageReview(page, replacements, options);
+        sectionReview.getPage().setSection(PageSection.of(sectionId, ""));
         Mockito
             .when(sectionReviewService.findSectionReview(Mockito.any(PageReview.class)))
             .thenReturn(Optional.of(sectionReview));
@@ -220,10 +219,11 @@ class PageReviewTypeSubtypeServiceTest {
         Assertions.assertTrue(review.isPresent());
         review.ifPresent(
             rev -> {
-                Assertions.assertEquals(randomId, rev.getId());
+                Assertions.assertEquals(randomId, rev.getPage().getId());
                 Assertions.assertEquals(replacements.size(), rev.getReplacements().size());
-                Assertions.assertNotNull(rev.getSection());
-                Assertions.assertEquals(sectionId, rev.getSection().intValue());
+                Assertions.assertNotNull(rev.getPage().getSection());
+                Assertions.assertNotNull(rev.getPage().getSection().getId());
+                Assertions.assertEquals(sectionId, rev.getPage().getSection().getId().intValue());
             }
         );
     }
@@ -251,9 +251,9 @@ class PageReviewTypeSubtypeServiceTest {
         Assertions.assertTrue(review.isPresent());
         review.ifPresent(
             rev -> {
-                Assertions.assertEquals(randomId, rev.getId());
+                Assertions.assertEquals(randomId, rev.getPage().getId());
                 Assertions.assertEquals(replacements.size(), rev.getReplacements().size());
-                Assertions.assertNull(rev.getSection());
+                Assertions.assertNull(rev.getPage().getSection());
             }
         );
     }

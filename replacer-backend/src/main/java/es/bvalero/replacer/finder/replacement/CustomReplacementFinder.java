@@ -59,7 +59,7 @@ class CustomReplacementFinder implements ReplacementFinder {
     }
 
     private List<Suggestion> findSuggestions(String text) {
-        Misspelling misspelling = Misspelling.of(replacement, caseSensitive, suggestion);
+        Misspelling misspelling = Misspelling.of(ReplacementType.CUSTOM, replacement, caseSensitive, suggestion);
         return MisspellingFinder.applyMisspellingSuggestions(text, misspelling);
     }
 }

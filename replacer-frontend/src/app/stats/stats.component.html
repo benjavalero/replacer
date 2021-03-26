@@ -8,10 +8,10 @@
 <ng-template #loading>Calculando…</ng-template>
 <ul>
   <li>Reemplazos revisados:
-    <strong *ngIf="numReviewed$ | async as numReviewed; else loading">{{ numReviewed }}</strong>
+    <strong *ngIf="numReviewed$ | async as numReviewed; else loading">{{ numReviewed.count }}</strong>
   </li>
   <li>Reemplazos sin revisar:
-    <strong *ngIf="numNotReviewed$ | async as numNotReviewed; else loading">{{ numNotReviewed }}</strong>
+    <strong *ngIf="numNotReviewed$ | async as numNotReviewed; else loading">{{ numNotReviewed.count }}</strong>
   </li>
 </ul>
 

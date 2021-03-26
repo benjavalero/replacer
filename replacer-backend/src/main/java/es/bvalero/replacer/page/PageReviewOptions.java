@@ -1,45 +1,70 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.replacement.CustomOptions;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
+import io.swagger.annotations.ApiParam;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Value;
+import javax.validation.constraints.Size;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.TestOnly;
+import org.springframework.lang.Nullable;
 
-@Value
-public class PageReviewOptions {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+class PageReviewOptions {
 
-    WikipediaLanguage lang;
-    String type;
-    String subtype;
-    String suggestion;
-    boolean caseSensitive;
+    @ApiParam(value = "Language", required = true)
+    private WikipediaLanguage lang;
 
-    WikipediaLanguage getLang() {
-        return lang == null ? WikipediaLanguage.getDefault() : lang;
+    @ApiParam(value = "Wikipedia user name", required = true, example = "Benjavalero")
+    private String user;
+
+    @ApiParam(value = "Replacement type", example = "Ortografía")
+    @Nullable
+    private String type;
+
+    @Size(max = 100)
+    @ApiParam(value = "Replacement subtype", example = "aún")
+    @Nullable
+    private String subtype;
+
+    @ApiParam(value = "Custom replacement suggestion", example = "todavía")
+    @Nullable
+    private String suggestion;
+
+    @ApiParam(value = "If the custom replacement is case-sensitive")
+    @Nullable
+    private Boolean cs;
+
+    @TestOnly
+    static PageReviewOptions ofNoType() {
+        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).build();
     }
 
-    static PageReviewOptions ofNoType(WikipediaLanguage lang) {
-        return new PageReviewOptions(lang, null, null, null, false);
+    @TestOnly
+    static PageReviewOptions ofTypeSubtype(String type, String subtype) {
+        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).type(type).subtype(subtype).build();
     }
 
-    static PageReviewOptions ofTypeSubtype(WikipediaLanguage lang, String type, String subtype) {
-        return new PageReviewOptions(lang, type, subtype, null, false);
-    }
-
+    @TestOnly
     static PageReviewOptions ofCustom(
         WikipediaLanguage lang,
         String replacement,
         String suggestion,
         boolean caseSensitive
     ) {
-        return new PageReviewOptions(lang, ReplacementType.CUSTOM, replacement, suggestion, caseSensitive);
-    }
-
-    CustomOptions toCustomOptions() {
-        return CustomOptions.of(subtype, caseSensitive, suggestion);
+        return PageReviewOptions
+            .builder()
+            .lang(lang)
+            .type(ReplacementType.CUSTOM)
+            .subtype(replacement)
+            .suggestion(suggestion)
+            .cs(caseSensitive)
+            .build();
     }
 
     @Override
@@ -47,11 +72,20 @@ public class PageReviewOptions {
         List<String> list = new ArrayList<>();
         list.add(lang.toString());
 
-        if (type == null) {
+        if (StringUtils.isBlank(type)) {
             list.add("NO TYPE");
-        } else {
+        } else if (StringUtils.isBlank(suggestion)) {
             list.add(type);
+            assert StringUtils.isNotBlank(subtype);
             list.add(subtype);
+        } else {
+            assert ReplacementType.CUSTOM.equals(type);
+            list.add(type);
+            assert StringUtils.isNotBlank(subtype);
+            list.add(subtype);
+            list.add(suggestion);
+            assert cs != null;
+            list.add(Boolean.toString(cs));
         }
 
         return StringUtils.join(list, " - ");

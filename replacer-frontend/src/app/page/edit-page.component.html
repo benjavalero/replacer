@@ -1,26 +1,26 @@
 <div *ngIf="replacements.length" class="container">
-  <nav *ngIf="filteredType && filteredSubtype" aria-label="breadcrumb">
+  <nav *ngIf="search.type && search.subtype" aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item">{{ filteredType }}</li>
-      <ng-template [ngIf]="!suggestion">
-        <li class="breadcrumb-item">{{ filteredSubtype }}
-          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ numPending }}</span></span>
+      <li class="breadcrumb-item">{{ search.type }}</li>
+      <ng-template [ngIf]="!search.suggestion">
+        <li class="breadcrumb-item">{{ search.subtype }}
+          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ search.numPending }}</span></span>
         </li>
       </ng-template>
-      <ng-template [ngIf]="suggestion">
-        <li class="breadcrumb-item">{{ filteredSubtype }}</li>
-        <li class="breadcrumb-item">{{ suggestion }}
-          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ numPending }}</span></span>
+      <ng-template [ngIf]="search.suggestion">
+        <li class="breadcrumb-item">{{ search.subtype }}</li>
+        <li class="breadcrumb-item">{{ search.suggestion }}
+          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ search.numPending }}</span></span>
         </li>
       </ng-template>
     </ol>
   </nav>
 
-  <h3>{{ title }}
+  <h3>{{ page.title }}
     <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="small">[Abrir en Wikipedia]</a>
   </h3>
 
-  <app-edit-snippet *ngFor="let replacement of replacements" [text]="content" [start]="replacement.start"
+  <app-edit-snippet *ngFor="let replacement of replacements" [text]="page.content" [start]="replacement.start"
     [word]="replacement.text" [suggestions]="replacement.suggestions" (fixed)="onFixed($event)">
   </app-edit-snippet>
 
@@ -32,7 +32,8 @@
     Marcar como revisado (sin guardar cambios)
   </button>
 
-  <app-alert type="warning" [icon]="true" class="alert-small" *ngIf="filteredType === 'Personalizado' && numPending > 50">
+  <app-alert type="warning" [icon]="true" class="alert-small"
+    *ngIf="search.type === 'Personalizado' && search.numPending > 50">
     <p>El reemplazo personalizado introducido tiene muchas ocurrencias. Se recomienda añadirlo a los <a
         href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos" target="_blank"
         rel="noopener noreferrer">listados generales</a> para un mantenimiento más óptimo.</p>

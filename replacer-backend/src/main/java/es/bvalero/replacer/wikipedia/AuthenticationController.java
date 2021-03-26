@@ -2,12 +2,13 @@ package es.bvalero.replacer.wikipedia;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@Api(tags = "authentication")
 @Loggable(prepend = true)
 @RestController
 @RequestMapping("api/authentication")
@@ -16,17 +17,25 @@ public class AuthenticationController {
     @Autowired
     private WikipediaService wikipediaService;
 
+    @ApiOperation(value = "Generate a request token to start OAuth authentication in MediaWiki")
     @GetMapping(value = "/request-token")
     public RequestToken getRequestToken() throws ReplacerException {
         return wikipediaService.getRequestToken();
     }
 
-    @GetMapping(value = "/logged-user")
+    @ApiOperation(
+        value = "Retrieve the user (already authenticated in MediaWiki) and the access token for further operations"
+    )
+    @PostMapping(value = "/logged-user")
     public WikipediaUser getLoggedUser(
-        @RequestParam String requestToken,
-        @RequestParam String requestTokenSecret,
-        @RequestParam String oauthVerifier
+        @ApiParam(
+            value = "Verification token received after MediaWiki authentication"
+        ) @RequestBody VerificationToken verificationToken
     ) throws ReplacerException {
-        return wikipediaService.getLoggedUser(requestToken, requestTokenSecret, oauthVerifier);
+        return wikipediaService.getLoggedUser(
+            verificationToken.getRequestToken(),
+            verificationToken.getRequestTokenSecret(),
+            verificationToken.getOauthVerifier()
+        );
     }
 }

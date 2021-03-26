@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserService } from '../user/user.service';
-import { PageReview } from './page-review.model';
-import { SavePage } from './save-page.model';
+import { PageDto, PageReview, PageSearch, SavePage } from './page-review.model';
+import { ValidateType } from './validate-custom.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +19,9 @@ export class PageService {
   findRandomPage(type: string, subtype: string, suggestion: string, caseSensitive: boolean): Observable<PageReview> {
     let params: HttpParams = new HttpParams();
     if (type && subtype) {
+      params = params.append('type', type).append('subtype', subtype);
       if (suggestion) {
-        params = params
-          .append('replacement', subtype)
-          .append('suggestion', suggestion)
-          .append('cs', String(caseSensitive));
-      } else {
-        params = params.append('type', type).append('subtype', subtype);
+        params = params.append('suggestion', suggestion).append('cs', String(caseSensitive));
       }
     }
     return this.httpClient.get<PageReview>(`${this.baseUrl}/random`, { params });
@@ -39,7 +35,7 @@ export class PageService {
   }
 
   putPageReviewInCache(type: string, subtype: string, review: PageReview): void {
-    const key = this.buildReviewCacheKey(review.id, type, subtype);
+    const key = this.buildReviewCacheKey(review.page.id, type, subtype);
     this.cachedPageReviews[key] = review;
   }
 
@@ -51,10 +47,10 @@ export class PageService {
     }
   }
 
-  validateCustomReplacement(replacement: string): Observable<string> {
+  validateCustomReplacement(replacement: string, caseSensitive: boolean): Observable<ValidateType> {
     let params: HttpParams = new HttpParams();
-    params = params.append('replacement', replacement);
-    return this.httpClient.get<string>(`${this.baseUrl}/validate`, { params });
+    params = params.append('replacement', replacement).append('cs', String(caseSensitive));
+    return this.httpClient.get<ValidateType>(`${this.baseUrl}/validate`, { params });
   }
 
   findPageReviewById(
@@ -66,45 +62,24 @@ export class PageService {
   ): Observable<PageReview> {
     let params: HttpParams = new HttpParams();
     if (type && subtype) {
+      params = params.append('type', type).append('subtype', subtype);
       if (suggestion) {
-        params = params
-          .append('replacement', subtype)
-          .append('suggestion', suggestion)
-          .append('cs', String(caseSensitive));
-      } else {
-        params = params.append('type', type).append('subtype', subtype);
+        params = params.append('suggestion', suggestion).append('cs', String(caseSensitive));
       }
     }
     return this.httpClient.get<PageReview>(`${this.baseUrl}/${pageId}`, { params });
   }
 
-  savePage(
-    pageId: number,
-    type: string,
-    subtype: string,
-    title: string,
-    content: string,
-    section: number,
-    currentTimestamp: string
-  ): Observable<any> {
+  savePage(page: PageDto, search: PageSearch): Observable<any> {
     if (!this.userService.isValidUser()) {
       return throwError('El usuario no está autenticado. Recargue la página para retomar la sesión.');
     }
 
     const savePage = new SavePage();
-    if (section) {
-      savePage.section = section;
-    }
-    savePage.title = title;
-    savePage.content = content;
-    savePage.timestamp = currentTimestamp;
-    savePage.token = this.userService.accessToken.token;
-    savePage.tokenSecret = this.userService.accessToken.tokenSecret;
-    if (type && subtype) {
-      savePage.type = type;
-      savePage.subtype = subtype;
-    }
+    savePage.page = page;
+    savePage.search = search;
+    savePage.accessToken = this.userService.accessToken;
 
-    return this.httpClient.post<string>(`${this.baseUrl}/${pageId}`, savePage);
+    return this.httpClient.post<string>(`${this.baseUrl}/${page.id}`, savePage);
   }
 }

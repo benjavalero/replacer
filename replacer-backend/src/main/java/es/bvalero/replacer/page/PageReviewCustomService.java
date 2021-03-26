@@ -2,10 +2,7 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.replacement.CustomReplacementFinderService;
-import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.replacement.*;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -47,15 +44,16 @@ class PageReviewCustomService extends PageReviewService {
             long totalToReview = searchResult.getTotal();
             final List<Integer> pageIds = new LinkedList<>(searchResult.getPageIds());
 
+            String type = options.getType();
+            String subtype = options.getSubtype();
+            assert ReplacementType.CUSTOM.equals(type);
+            assert subtype != null;
+
             // Calculate this out of the loop only if needed the first time
             List<Integer> reviewedIds = new ArrayList<>();
             if (!pageIds.isEmpty()) {
                 reviewedIds.addAll(
-                    replacementService.findPageIdsReviewedByTypeAndSubtype(
-                        options.getLang(),
-                        ReplacementType.CUSTOM,
-                        options.getSubtype()
-                    )
+                    replacementService.findPageIdsReviewedByTypeAndSubtype(options.getLang(), type, subtype)
                 );
             }
 
@@ -90,20 +88,10 @@ class PageReviewCustomService extends PageReviewService {
     }
 
     private WikipediaSearchResult findWikipediaResults(PageReviewOptions options, int offset) throws ReplacerException {
-        return wikipediaService.getPageIdsByStringMatch(
-            options.getLang(),
-            options.getSubtype(),
-            isCaseSensitive(options),
-            offset,
-            getCacheSize()
-        );
-    }
-
-    private boolean isCaseSensitive(PageReviewOptions options) {
-        return (
-            FinderUtils.containsUppercase(options.getSubtype()) ||
-            FinderUtils.containsUppercase(options.getSuggestion())
-        );
+        String subtype = options.getSubtype();
+        Boolean cs = options.getCs();
+        assert subtype != null && cs != null;
+        return wikipediaService.getPageIdsByStringMatch(options.getLang(), subtype, cs, offset, getCacheSize());
     }
 
     @Override
@@ -111,14 +99,24 @@ class PageReviewCustomService extends PageReviewService {
         // We do nothing in the database in case the list is empty
         // We want to review the page every time in case anything has changed
         return IterableUtils.toList(
-            customReplacementFinderService.findCustomReplacements(convertPage(page), options.toCustomOptions())
+            customReplacementFinderService.findCustomReplacements(convertPage(page), convertOptions(options))
         );
+    }
+
+    private CustomOptions convertOptions(PageReviewOptions options) {
+        String subtype = options.getSubtype();
+        Boolean cs = options.getCs();
+        String suggestion = options.getSuggestion();
+        assert subtype != null && cs != null && suggestion != null;
+        return CustomOptions.of(subtype, cs, suggestion);
     }
 
     @Override
     public void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer) {
         // Custom replacements don't exist in the database to be reviewed
-        replacementService.insert(buildCustomReviewed(pageId, options.getLang(), options.getSubtype(), reviewer));
+        String subtype = options.getSubtype();
+        assert subtype != null;
+        replacementService.insert(buildCustomReviewed(pageId, options.getLang(), subtype, reviewer));
     }
 
     private ReplacementEntity buildCustomReviewed(int pageId, WikipediaLanguage lang, String subtype, String reviewer) {
@@ -134,7 +132,18 @@ class PageReviewCustomService extends PageReviewService {
             .build();
     }
 
-    Optional<String> validateCustomReplacement(String replacement, WikipediaLanguage lang) {
-        return customReplacementFinderService.findExistingMisspelling(replacement, lang);
+    MisspellingType validateCustomReplacement(WikipediaLanguage lang, String replacement, boolean caseSensitive) {
+        Optional<Misspelling> misspelling = customReplacementFinderService.findExistingMisspelling(replacement, lang);
+        if (misspelling.isEmpty()) {
+            return MisspellingType.ofEmpty();
+        } else if (misspelling.get().isCaseSensitive()) {
+            return caseSensitive && misspelling.get().getWord().equals(replacement)
+                ? MisspellingType.of(misspelling.get().getType(), misspelling.get().getWord())
+                : MisspellingType.ofEmpty();
+        } else {
+            return !caseSensitive && misspelling.get().getWord().equals(replacement)
+                ? MisspellingType.of(misspelling.get().getType(), misspelling.get().getWord())
+                : MisspellingType.ofEmpty();
+        }
     }
 }

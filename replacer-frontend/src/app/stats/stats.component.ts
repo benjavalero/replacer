@@ -3,6 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { AlertService } from '../alert/alert.service';
 import { UserConfigService } from '../user/user-config.service';
+import { ReplacementCount } from './count.model';
 import { ReviewerCount } from './reviewer-count.model';
 import { StatsService } from './stats.service';
 
@@ -13,8 +14,8 @@ import { StatsService } from './stats.service';
 })
 export class StatsComponent implements OnInit {
   lang: string;
-  numReviewed$: Observable<number>;
-  numNotReviewed$: Observable<number>;
+  numReviewed$: Observable<ReplacementCount>;
+  numNotReviewed$: Observable<ReplacementCount>;
   numReviewedGrouped$: Observable<ReviewerCount[]>;
 
   constructor(

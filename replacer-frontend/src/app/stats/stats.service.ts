@@ -2,25 +2,24 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { ReplacementCount } from './count.model';
 import { ReviewerCount } from './reviewer-count.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatsService {
-  private readonly baseUrl = `${environment.apiUrl}/replacements`;
-
   constructor(private httpClient: HttpClient) {}
 
-  findNumReviewed$(): Observable<number> {
-    return this.httpClient.get<number>(`${this.baseUrl}/count?reviewed=true`);
+  findNumReviewed$(): Observable<ReplacementCount> {
+    return this.httpClient.get<ReplacementCount>(`${environment.apiUrl}/replacements/count?reviewed=true`);
   }
 
-  findNumNotReviewed$(): Observable<number> {
-    return this.httpClient.get<number>(`${this.baseUrl}/count?reviewed=false`);
+  findNumNotReviewed$(): Observable<ReplacementCount> {
+    return this.httpClient.get<ReplacementCount>(`${environment.apiUrl}/replacements/count?reviewed=false`);
   }
 
   findNumReviewedByReviewer$(): Observable<ReviewerCount[]> {
-    return this.httpClient.get<ReviewerCount[]>(`${this.baseUrl}/count?reviewed=true&grouped`);
+    return this.httpClient.get<ReviewerCount[]>(`${environment.apiUrl}/users/count`);
   }
 }

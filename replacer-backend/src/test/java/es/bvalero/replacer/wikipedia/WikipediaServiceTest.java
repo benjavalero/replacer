@@ -236,7 +236,15 @@ class WikipediaServiceTest {
 
         Assertions.assertThrows(
             ReplacerException.class,
-            () -> wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, 0, "", currentTimestamp, "", "")
+            () ->
+                wikipediaService.savePageContent(
+                    WikipediaLanguage.SPANISH,
+                    1,
+                    0,
+                    "",
+                    currentTimestamp,
+                    AccessToken.ofEmpty()
+                )
         );
     }
 
@@ -258,7 +266,14 @@ class WikipediaServiceTest {
 
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         String currentTimestamp = "2019-06-25T21:24:09Z";
-        wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, null, "", currentTimestamp, "", "");
+        wikipediaService.savePageContent(
+            WikipediaLanguage.SPANISH,
+            1,
+            null,
+            "",
+            currentTimestamp,
+            AccessToken.ofEmpty()
+        );
 
         // Two calls: one for the EditToken and another to save the content
         Mockito
@@ -272,7 +287,7 @@ class WikipediaServiceTest {
         // Save a section
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         currentTimestamp = "2019-06-26T21:24:09Z";
-        wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, 2, "", currentTimestamp, "", "");
+        wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, 2, "", currentTimestamp, AccessToken.ofEmpty());
 
         // Two calls: one for the EditToken and another to save the content (x2 save page and section in this test)
         Mockito
@@ -393,12 +408,12 @@ class WikipediaServiceTest {
         Assertions.assertEquals(WikipediaNamespace.USER, page.getNamespace());
         Assertions.assertTrue(page.getLastUpdate().getYear() >= 2019);
         Assertions.assertTrue(page.getContent().startsWith("=="));
-        Assertions.assertEquals(Integer.valueOf(sectionId), page.getSection());
+        Assertions.assertNotNull(page.getSection());
+        Assertions.assertEquals(Integer.valueOf(sectionId), page.getSection().getIndex());
     }
 
     @Test
     void testWikipediaServiceOffline() throws ReplacerException {
-        AccessToken accessToken = AccessToken.ofEmpty();
         Assertions.assertNotNull(wikipediaServiceOffline.getRequestToken());
         WikipediaUser user = wikipediaServiceOffline.getLoggedUser("", "", "");
         Assertions.assertEquals("offline", user.getName());
