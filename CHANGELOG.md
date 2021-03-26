@@ -1,5 +1,9 @@
 # Versions
 
+## 2.9.4 (26 Mar 2021)
+- Fix: find file values in templates with trailing spaces
+- More template params to ignore
+
 ## 2.9.3 (8 Mar 2021)
 - Increment pagination size for Wikipedia searches to the maximum allowed in order to reduce the amount of calls
 - Fix: find values in template params when surrounded by whitespaces
