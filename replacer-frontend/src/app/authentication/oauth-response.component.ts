@@ -6,9 +6,7 @@ import { User } from '../user/user.model';
 
 @Component({
   selector: 'app-oauth',
-  template: `
-    <app-alert>Comprobando autenticación…</app-alert>
-  `,
+  template: ``,
   styles: []
 })
 export class OAuthResponseComponent implements OnInit {
@@ -20,6 +18,8 @@ export class OAuthResponseComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.alertService.addInfoMessage('Comprobando autenticación…');
+
     // Manage return from authorization URL
     this.route.queryParams.subscribe((params) => {
       const oauthVerifier: string = params['oauth_verifier'];

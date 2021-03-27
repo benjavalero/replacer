@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-import { AlertService } from '../alert/alert.service';
 import { UserConfigService } from '../user/user-config.service';
 import { ReplacementCount } from './count.model';
 import { ReviewerCount } from './reviewer-count.model';
@@ -20,14 +19,12 @@ export class StatsComponent implements OnInit {
 
   constructor(
     private statsService: StatsService,
-    private alertService: AlertService,
     private titleService: Title,
     private userConfigService: UserConfigService
   ) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Estadísticas');
-    this.alertService.clearAlertMessages();
 
     this.lang = this.userConfigService.lang;
 

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AlertService } from '../alert/alert.service';
+import { AuthenticationService } from '../authentication/authentication.service';
 import { Language } from '../user/language-model';
 import { LANG_PARAM, UserConfigService } from '../user/user-config.service';
 import { UserService } from '../user/user.service';
-import { AuthenticationService } from '../authentication/authentication.service';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
@@ -12,6 +13,7 @@ export class AuthenticationGuard implements CanActivate {
     private authenticationService: AuthenticationService,
     private userService: UserService,
     private userConfigService: UserConfigService,
+    private alertService: AlertService,
     private router: Router
   ) {}
 
@@ -24,6 +26,9 @@ export class AuthenticationGuard implements CanActivate {
     if (lang) {
       this.userConfigService.lang = lang;
     }
+
+    // Clear all alerts
+    this.alertService.clearAlertMessages();
 
     if (this.userService.isValidUser()) {
       return true;

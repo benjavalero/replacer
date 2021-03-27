@@ -21,7 +21,6 @@ export class FindCustomComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Reemplazo personalizado');
-    this.alertService.clearAlertMessages();
   }
 
   onSubmit() {
@@ -29,11 +28,21 @@ export class FindCustomComponent implements OnInit {
     const s = this.suggestion.trim();
     const cs = this.caseSensitive || false;
 
-    this.alertService.clearAlertMessages();
-    if (r === s) {
-      this.alertService.addErrorMessage('El texto a reemplazar y el sugerido son iguales');
-    } else {
+    if (this.validate(r, s)) {
       this.router.navigate([`random/Personalizado/${r}/${s}/${cs}`]);
     }
+  }
+
+  private validate(replacement: string, suggestion: string): boolean {
+    this.alertService.clearAlertMessages();
+
+    if (!replacement || !suggestion) {
+      this.alertService.addErrorMessage('El reemplazo y la sugerencia son obligatorios');
+      return false;
+    } else if (replacement === suggestion) {
+      this.alertService.addErrorMessage('El texto a reemplazar y el sugerido son iguales');
+      return false;
+    }
+    return true;
   }
 }

@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { interval, Observable, Subscription } from 'rxjs';
-import { AlertService } from '../alert/alert.service';
 import { sleep } from '../sleep';
 import { DumpIndexing } from './dump-indexing.model';
 import { DumpIndexingService } from './dump-indexing.service';
@@ -18,21 +17,15 @@ export class DumpIndexingComponent implements OnInit, OnDestroy {
   // Check the status
   subscription: Subscription;
 
-  constructor(
-    private dumpService: DumpIndexingService,
-    private alertService: AlertService,
-    private titleService: Title
-  ) {}
+  constructor(private dumpService: DumpIndexingService, private titleService: Title) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Indexación');
     this.status$ = this.dumpService.status$;
-    this.alertService.clearAlertMessages();
 
     // Refresh every 10 seconds
     this.subscription = interval(10000).subscribe(() => {
       this.dumpService.refreshDumpIndexing();
-      this.alertService.clearAlertMessages();
     });
   }
 
@@ -45,7 +38,5 @@ export class DumpIndexingComponent implements OnInit, OnDestroy {
       // It takes a little for the back-end to set the running status
       sleep(10000).then(() => this.dumpService.refreshDumpIndexing());
     });
-
-    this.alertService.addInfoMessage('Iniciando indexación…');
   }
 }

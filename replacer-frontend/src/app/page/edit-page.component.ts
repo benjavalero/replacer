@@ -3,7 +3,6 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../alert/alert.service';
 import { Language } from '../user/language-model';
-import { UserConfigService } from '../user/user-config.service';
 import { UserService } from '../user/user.service';
 import { PageReplacement } from './page-replacement.model';
 import { PageDto, PageReview, PageSearch } from './page-review.model';
@@ -55,6 +54,7 @@ export class EditPageComponent implements OnInit {
           if (review) {
             this.manageReview(review);
           } else {
+            // This alert will be short as it will be cleared on redirecting to next page
             this.alertService.addWarningMessage(
               'No se ha encontrado ningún reemplazo en la versión más actualizada del artículo'
             );
@@ -76,6 +76,7 @@ export class EditPageComponent implements OnInit {
 
   private manageReview(review: PageReview) {
     this.alertService.clearAlertMessages();
+
     this.page = review.page;
     this.replacements = review.replacements;
     this.search = review.search;
@@ -136,6 +137,7 @@ export class EditPageComponent implements OnInit {
         }
       },
       () => {
+        // This alert will be short as it will be cleared on redirecting to next page
         this.alertService.addSuccessMessage('Cambios guardados con éxito');
         this.redirectToNextPage(this.search);
       }
