@@ -23,3 +23,6 @@ CREATE INDEX idx_reviewer ON replacement2 (reviewer);
 
 -- Dump index
 CREATE INDEX idx_dump ON replacement2 (lang, article_id, reviewer);
+
+-- Rename replacement table
+RENAME TABLE replacement2 TO replacement;

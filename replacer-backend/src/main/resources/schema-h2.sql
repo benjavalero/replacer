@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS REPLACEMENT2 (
+CREATE TABLE IF NOT EXISTS replacement (
 	ID BIGINT NOT NULL AUTO_INCREMENT,
 	CONTEXT VARCHAR(255),
 	LANG VARCHAR(2),
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS REPLACEMENT2 (
 	CONSTRAINT CONSTRAINT_A PRIMARY KEY (ID)
 );
 
-CREATE INDEX IF NOT EXISTS idx_count ON replacement2 (lang, reviewer, type, subtype);
-CREATE INDEX IF NOT EXISTS idx_count_no_type ON replacement2 (lang, reviewer);
-CREATE INDEX IF NOT EXISTS idx_reviewer ON replacement2 (reviewer);
-CREATE INDEX IF NOT EXISTS idx_dump ON replacement2 (lang, article_id, reviewer);
+CREATE INDEX IF NOT EXISTS idx_count ON replacement (lang, reviewer, type, subtype);
+CREATE INDEX IF NOT EXISTS idx_count_no_type ON replacement (lang, reviewer);
+CREATE INDEX IF NOT EXISTS idx_reviewer ON replacement (reviewer);
+CREATE INDEX IF NOT EXISTS idx_dump ON replacement (lang, article_id, reviewer);

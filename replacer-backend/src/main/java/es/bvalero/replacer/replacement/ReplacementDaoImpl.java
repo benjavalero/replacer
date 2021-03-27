@@ -36,7 +36,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
         // We need all the fields but the title so we don't select it to improve performance
         String sql =
             "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
-            "FROM replacement2 WHERE lang = :lang AND article_id = :pageId";
+            "FROM replacement WHERE lang = :lang AND article_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
             .addValue(PARAM_PAGE_ID, pageId);
@@ -46,7 +46,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public void insert(ReplacementEntity entity) {
         final String sql =
-            "INSERT INTO replacement2 (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +
+            "INSERT INTO replacement (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +
             "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer, :title)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
         jdbcTemplate.update(sql, namedParameters);
@@ -55,7 +55,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public void insert(List<ReplacementEntity> entityList) {
         final String sql =
-            "INSERT INTO replacement2 (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +
+            "INSERT INTO replacement (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +
             "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer, :title)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(entityList.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
@@ -64,7 +64,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public void update(ReplacementEntity entity) {
         final String sql =
-            "UPDATE replacement2 " +
+            "UPDATE replacement " +
             "SET position=:position, context=:context, last_update=:lastUpdate " +
             "WHERE id=:id";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
@@ -74,7 +74,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public void update(List<ReplacementEntity> entityList) {
         final String sql =
-            "UPDATE replacement2 " +
+            "UPDATE replacement " +
             "SET position=:position, context=:context, last_update=:lastUpdate " +
             "WHERE id=:id";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(entityList.toArray());
@@ -83,14 +83,14 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
 
     @Override
     public void updateDate(List<ReplacementEntity> entityList) {
-        final String sql = "UPDATE replacement2 SET last_update=:lastUpdate WHERE id=:id";
+        final String sql = "UPDATE replacement SET last_update=:lastUpdate WHERE id=:id";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(entityList.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override
     public void delete(List<ReplacementEntity> entityList) {
-        String sql = "DELETE FROM replacement2 WHERE id IN (:ids)";
+        String sql = "DELETE FROM replacement WHERE id IN (:ids)";
         Set<Long> ids = entityList.stream().map(ReplacementEntity::getId).collect(Collectors.toSet());
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
         jdbcTemplate.update(sql, namedParameters);
@@ -104,7 +104,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
         // We are not interested in the custom replacements when reindexing
         String sql =
             "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
-            "FROM replacement2 WHERE lang = :lang AND article_id BETWEEN :minPageId AND :maxPageId";
+            "FROM replacement WHERE lang = :lang AND article_id BETWEEN :minPageId AND :maxPageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
             .addValue("minPageId", minPageId)
@@ -117,7 +117,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public long findRandomIdToBeReviewed(WikipediaLanguage lang, long chunkSize) {
         String sql =
-            "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) FROM replacement2 " +
+            "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("chunkSize", chunkSize)
@@ -130,7 +130,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public List<Integer> findPageIdsToBeReviewed(WikipediaLanguage lang, long start, Pageable pageable) {
         String sql =
-            "SELECT article_id FROM replacement2 " +
+            "SELECT article_id FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NULL AND id > :start " +
             "ORDER BY id " +
             "LIMIT " +
@@ -154,7 +154,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
         Pageable pageable
     ) {
         String sql =
-            "SELECT article_id FROM replacement2 " +
+            "SELECT article_id FROM replacement " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL " +
             "ORDER BY RAND() " +
             "LIMIT " +
@@ -172,7 +172,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public long countPagesToBeReviewedBySubtype(WikipediaLanguage lang, String type, String subtype) {
         String sql =
-            "SELECT COUNT (DISTINCT article_id) FROM replacement2 " +
+            "SELECT COUNT (DISTINCT article_id) FROM replacement " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
@@ -186,7 +186,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public List<Integer> findPageIdsReviewedByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype) {
         String sql =
-            "SELECT article_id FROM replacement2 " +
+            "SELECT article_id FROM replacement " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NOT NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
@@ -204,7 +204,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
         String reviewer
     ) {
         String sql =
-            "UPDATE replacement2 SET reviewer=:reviewer, last_update=:now " +
+            "UPDATE replacement SET reviewer=:reviewer, last_update=:now " +
             "WHERE lang = :lang AND article_id = :pageId AND reviewer IS NULL ";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_REVIEWER, reviewer)
@@ -223,8 +223,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public long countReplacementsReviewed(WikipediaLanguage lang) {
         String sql =
-            "SELECT COUNT(*) FROM replacement2 " +
-            "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
+            "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
             .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
@@ -235,7 +234,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     // This count is also used to guess the total for the review without type. Not worth to DISTINCT.
     @Override
     public long countReplacementsNotReviewed(WikipediaLanguage lang) {
-        String sql = "SELECT COUNT(*) FROM replacement2 WHERE lang = :lang AND reviewer IS NULL";
+        String sql = "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue(PARAM_LANG, lang.getCode());
         Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
         return result == null ? 0L : result;
@@ -244,7 +243,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
         String sql =
-            "SELECT reviewer, COUNT(*) AS num FROM replacement2 " +
+            "SELECT reviewer, COUNT(*) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system " +
             "GROUP BY reviewer " +
             "ORDER BY COUNT(*) DESC";
@@ -261,7 +260,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
 
     private List<TypeSubtypeCount> countPagesGroupedByTypeAndSubtype(WikipediaLanguage lang) {
         String sql =
-            "SELECT type, subtype, COUNT(DISTINCT article_id) AS num FROM replacement2 " +
+            "SELECT type, subtype, COUNT(DISTINCT article_id) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NULL " +
             "GROUP BY lang, type, subtype";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue(PARAM_LANG, lang.getCode());
@@ -273,7 +272,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public List<String> findPageTitlesToReviewBySubtype(WikipediaLanguage lang, String type, String subtype) {
         String sql =
-            "SELECT DISTINCT(title) FROM replacement2 " +
+            "SELECT DISTINCT(title) FROM replacement " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
@@ -285,7 +284,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
         String sql =
-            "UPDATE replacement2 SET reviewer=:system, last_update=:now " +
+            "UPDATE replacement SET reviewer=:system, last_update=:now " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM)
@@ -301,7 +300,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public void deleteToBeReviewedBySubtype(WikipediaLanguage lang, String type, Set<String> subtypes) {
         String sql =
-            "DELETE FROM replacement2 " +
+            "DELETE FROM replacement " +
             "WHERE lang = :lang AND type = :type AND subtype IN (:subtypes) AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
