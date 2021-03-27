@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from '../alert/alert.service';
+import { ReplacementListService } from '../replacement-list/replacement-list.service';
 import { Language } from '../user/language-model';
 import { UserService } from '../user/user.service';
 import { PageReplacement } from './page-replacement.model';
@@ -25,7 +26,8 @@ export class EditPageComponent implements OnInit {
     private pageService: PageService,
     private router: Router,
     private userService: UserService,
-    private titleService: Title
+    private titleService: Title,
+    private replacementListService: ReplacementListService
   ) {}
 
   ngOnInit() {
@@ -80,6 +82,11 @@ export class EditPageComponent implements OnInit {
     this.page = review.page;
     this.replacements = review.replacements;
     this.search = review.search;
+
+    // Update count cache
+    if (this.search.type && this.search.subtype) {
+      this.replacementListService.updateSubtypeCount(this.search.type, this.search.subtype, this.search.numPending);
+    }
   }
 
   onFixed(fixed: any) {
@@ -122,6 +129,11 @@ export class EditPageComponent implements OnInit {
   private saveContent(content: string) {
     // Remove replacements as a trick to hide the page
     this.replacements = [];
+
+    // Decrement the count cache
+    if (this.search.type && this.search.subtype) {
+      this.replacementListService.decrementCount(this.search.type, this.search.subtype);
+    }
 
     const savePage = { ...this.page, content: content };
     this.pageService.savePage(savePage, this.search).subscribe(

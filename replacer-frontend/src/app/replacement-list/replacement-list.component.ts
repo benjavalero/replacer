@@ -18,7 +18,5 @@ export class ReplacementListComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Lista de reemplazos');
-
-    this.replacementService.loadCountsFromServer();
   }
 }

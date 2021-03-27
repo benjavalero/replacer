@@ -146,13 +146,7 @@ export class ReplacementTableComponent implements OnInit {
     modalRef.result.then(
       (result) => {
         this.replacementService.reviewPages$(this.type, subtype).subscribe(() => {
-          // Remove the type/subtype from the cache
-          for (let i = 0; i < this.replacementCounts.length; i++) {
-            if (this.replacementCounts[i].s === subtype) {
-              this.replacementCounts.splice(i, 1);
-            }
-          }
-          this.refreshFilteredItems();
+          // Nothing to do
         });
       },
       (reason) => {
