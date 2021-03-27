@@ -6,12 +6,11 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
@@ -28,66 +27,55 @@ class DateFinder implements ReplacementFinder {
     static final String SUBTYPE_LEADING_ZERO = "Día con cero";
     static final String SUBTYPE_UPPERCASE = "Mes en mayúscula";
 
-    private static final List<String> MONTHS_LOWERCASE = Arrays.asList(
-        "enero",
-        "febrero",
-        "marzo",
-        "abril",
-        "mayo",
-        "junio",
-        "julio",
-        "agosto",
-        "sep?tiembre",
-        "octubre",
-        "noviembre",
-        "diciembre"
-    );
-
-    private static final List<String> MONTHS_UPPERCASE_CLASS = MONTHS_LOWERCASE
-        .stream()
-        .map(FinderUtils::setFirstUpperCaseClass)
-        .collect(Collectors.toUnmodifiableList());
-
-    private static final List<String> CONNECTORS = Arrays.asList(
-        "a",
-        "desde",
-        "de",
-        "durante",
-        "el",
-        "entre",
-        "en",
-        "hacia",
-        "hasta",
-        "para",
-        "y"
-    );
-
-    private static final List<String> CONNECTORS_UPPERCASE_CLASS = CONNECTORS
-        .stream()
-        .map(FinderUtils::setFirstUpperCaseClass)
-        .collect(Collectors.toUnmodifiableList());
-
     @RegExp
     private static final String REGEX_DATE = "(%s|(3[01]|[012]?<N>)( [Dd]e)?) (%s) ([Dd]el? )?[12]\\.?<N>{3}";
 
-    private static final RunAutomaton AUTOMATON_UPPERCASE_LONG_DATE = new RunAutomaton(
-        new dk.brics.automaton.RegExp(
-            String.format(
-                REGEX_DATE,
-                StringUtils.join(CONNECTORS_UPPERCASE_CLASS, "|"),
-                StringUtils.join(MONTHS_UPPERCASE_CLASS, "|")
-            )
-        )
-            .toAutomaton(new DatatypesAutomatonProvider())
-    );
+    @Resource
+    private Map<String, String> monthNames;
+
+    @Resource
+    private Map<String, String> dateConnectors;
+
+    private final Map<WikipediaLanguage, RunAutomaton> dateAutomata = new EnumMap<>(WikipediaLanguage.class);
+
+    @PostConstruct
+    public void init() {
+        for (WikipediaLanguage lang : WikipediaLanguage.values()) {
+            if (!monthNames.containsKey(lang.getCode()) || !dateConnectors.containsKey(lang.getCode())) {
+                // Skip this language as it has no configuration for date finder
+                continue;
+            }
+
+            final List<String> monthsLowerCase = Arrays.asList(monthNames.get(lang.getCode()).split(","));
+            final List<String> connectors = Arrays.asList(dateConnectors.get(lang.getCode()).split(","));
+            final List<String> monthsUpperCaseClass = monthsLowerCase
+                .stream()
+                .map(FinderUtils::setFirstUpperCaseClass)
+                .collect(Collectors.toUnmodifiableList());
+            final List<String> connectorsUpperCaseClass = connectors
+                .stream()
+                .map(FinderUtils::setFirstUpperCaseClass)
+                .collect(Collectors.toUnmodifiableList());
+            final RunAutomaton dateAutomaton = new RunAutomaton(
+                new dk.brics.automaton.RegExp(
+                    String.format(
+                        REGEX_DATE,
+                        StringUtils.join(connectorsUpperCaseClass, "|"),
+                        StringUtils.join(monthsUpperCaseClass, "|")
+                    )
+                )
+                    .toAutomaton(new DatatypesAutomatonProvider())
+            );
+            dateAutomata.put(lang, dateAutomaton);
+        }
+    }
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        if (WikipediaLanguage.SPANISH == page.getLang()) {
-            return AutomatonMatchFinder.find(page.getContent(), AUTOMATON_UPPERCASE_LONG_DATE);
-        } else {
-            return Collections.emptyList();
-        }
+        RunAutomaton dateAutomaton = dateAutomata.get(page.getLang());
+        return dateAutomaton != null
+            ? AutomatonMatchFinder.find(page.getContent(), dateAutomaton)
+            : Collections.emptyList();
     }
 
     @Override

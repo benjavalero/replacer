@@ -1,14 +1,19 @@
 package es.bvalero.replacer.finder.replacement;
 
+import es.bvalero.replacer.config.XmlConfiguration;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = { DateFinder.class, XmlConfiguration.class })
 class DateFinderTest {
 
-    private final DateFinder date2Finder = new DateFinder();
+    @Autowired
+    private DateFinder dateFinder;
 
     @ParameterizedTest
     @CsvSource(
@@ -41,7 +46,7 @@ class DateFinderTest {
         }
     )
     void testLongDate(String date, String expected, String subtype) {
-        List<Replacement> replacements = date2Finder.findList(date);
+        List<Replacement> replacements = dateFinder.findList(date);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());
@@ -52,7 +57,7 @@ class DateFinderTest {
     @ParameterizedTest
     @ValueSource(strings = { "15 de agosto del 2019", "15 de setiembre de 2020" })
     void testValidLongDate(String date) {
-        List<Replacement> replacements = date2Finder.findList(date);
+        List<Replacement> replacements = dateFinder.findList(date);
 
         Assertions.assertTrue(replacements.isEmpty());
     }
@@ -74,7 +79,7 @@ class DateFinderTest {
         }
     )
     void testMonthYear(String date, String expected, String subtype) {
-        List<Replacement> replacements = date2Finder.findList(date);
+        List<Replacement> replacements = dateFinder.findList(date);
 
         Assertions.assertEquals(1, replacements.size());
         Assertions.assertEquals(date, replacements.get(0).getText());
@@ -85,7 +90,7 @@ class DateFinderTest {
     @ParameterizedTest
     @ValueSource(strings = { "Desde agosto del 2019", "desde setiembre de 2020", "de agosto de 2000" })
     void testValidMonthYear(String date) {
-        List<Replacement> replacements = date2Finder.findList(date);
+        List<Replacement> replacements = dateFinder.findList(date);
 
         Assertions.assertTrue(replacements.isEmpty());
     }
