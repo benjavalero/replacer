@@ -1,11 +1,11 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
 import { RequestToken } from './request-token.model';
-import { User } from '../user/user.model';
 
 @Injectable({
   providedIn: 'root'

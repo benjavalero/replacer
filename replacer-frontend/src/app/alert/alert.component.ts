@@ -12,6 +12,4 @@ export class AlertComponent {
   @Input() icon: boolean;
 
   warningIcon = faExclamationCircle;
-
-  constructor() {}
 }

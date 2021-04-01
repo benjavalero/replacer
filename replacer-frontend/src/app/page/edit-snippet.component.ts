@@ -21,8 +21,6 @@ export class EditSnippetComponent implements OnInit {
 
   @Output() fixed: EventEmitter<any> = new EventEmitter();
 
-  constructor() {}
-
   ngOnInit() {
     this.textLeft = this.trimLeft(this.text);
     this.textRight = this.trimRight(this.text);

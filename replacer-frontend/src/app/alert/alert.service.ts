@@ -9,8 +9,6 @@ export class AlertService {
   private readonly _alerts = new BehaviorSubject<AlertMessage[]>([]);
   readonly alerts$ = this._alerts.asObservable();
 
-  constructor() {}
-
   private get alerts(): AlertMessage[] {
     return this._alerts.getValue();
   }

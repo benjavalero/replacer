@@ -10,7 +10,7 @@ import { UserService } from '../user/user.service';
   styleUrls: []
 })
 export class DashboardComponent implements OnInit {
-  admin$: Observable<Boolean>;
+  admin$: Observable<boolean>;
 
   constructor(private userService: UserService, private titleService: Title) {}
 

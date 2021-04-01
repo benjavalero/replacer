@@ -137,7 +137,9 @@ export class EditPageComponent implements OnInit {
 
     const savePage = { ...this.page, content: content };
     this.pageService.savePage(savePage, this.search).subscribe(
-      (res) => {},
+      (res) => {
+        // Do nothing
+      },
       (err) => {
         const errMsg = `Error al guardar el artículo: ${err.error}`;
         if (errMsg.includes('mwoauth-invalid-authorization')) {
