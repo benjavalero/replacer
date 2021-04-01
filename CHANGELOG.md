@@ -1,5 +1,8 @@
 # Versions
 
+## 2.9.5 (1 Apr 2021)
+- Fix: infinite loop on custom review when all provided results have no replacements
+
 ## 2.9.4 (26 Mar 2021)
 - Fix: find file values in templates with trailing spaces
 - More template params to ignore
