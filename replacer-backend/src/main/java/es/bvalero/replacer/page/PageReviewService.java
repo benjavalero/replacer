@@ -108,8 +108,10 @@ abstract class PageReviewService {
         String key = buildReplacementCacheKey(options);
         PageSearchResult result = cachedPageIds.getIfPresent(key);
         if (result != null && result.isEmptyTotal()) {
-            if (StringUtils.isNotBlank(options.getType()) && StringUtils.isNotBlank(options.getSubtype())) {
-                replacementService.reviewAsSystemBySubtype(options.getLang(), options.getType(), options.getSubtype());
+            String type = options.getType();
+            String subtype = options.getSubtype();
+            if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype)) {
+                replacementService.reviewAsSystemBySubtype(options.getLang(), type, subtype);
             }
             return false;
         } else {

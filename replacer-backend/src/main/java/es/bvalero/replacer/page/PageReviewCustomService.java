@@ -37,9 +37,9 @@ class PageReviewCustomService extends PageReviewService {
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         try {
             // Initialize search
-            int offset = 0;
+            options.incrementOffset(getCacheSize());
 
-            WikipediaSearchResult searchResult = findWikipediaResults(options, offset);
+            WikipediaSearchResult searchResult = findWikipediaResults(options);
             final long totalWikipediaResults = searchResult.getTotal();
             long totalToReview = searchResult.getTotal();
             final List<Integer> pageIds = new LinkedList<>(searchResult.getPageIds());
@@ -66,13 +66,14 @@ class PageReviewCustomService extends PageReviewService {
                 }
 
                 if (pageIds.isEmpty()) {
-                    offset += getCacheSize();
-                    if (offset >= totalWikipediaResults) {
+                    options.incrementOffset(getCacheSize());
+                    assert options.getOffset() != null;
+                    if (options.getOffset() >= totalWikipediaResults) {
                         LOGGER.debug("All results retrieved from Wikipedia are already reviewed");
                         return PageSearchResult.ofEmpty();
                     }
 
-                    searchResult = findWikipediaResults(options, offset);
+                    searchResult = findWikipediaResults(options);
                     // For simplicity's sake we assume the number of total results is the same
                     pageIds.clear();
                     pageIds.addAll(searchResult.getPageIds());
@@ -87,10 +88,11 @@ class PageReviewCustomService extends PageReviewService {
         return PageSearchResult.ofEmpty();
     }
 
-    private WikipediaSearchResult findWikipediaResults(PageReviewOptions options, int offset) throws ReplacerException {
+    private WikipediaSearchResult findWikipediaResults(PageReviewOptions options) throws ReplacerException {
         String subtype = options.getSubtype();
         Boolean cs = options.getCs();
-        assert subtype != null && cs != null;
+        Integer offset = options.getOffset();
+        assert subtype != null && cs != null && offset != null;
         return wikipediaService.getPageIdsByStringMatch(options.getLang(), subtype, cs, offset, getCacheSize());
     }
 

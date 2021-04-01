@@ -247,7 +247,7 @@ class PageReviewCustomServiceTest {
     }
 
     @Test
-    void testWtoResultsFirstReviewed() throws ReplacerException {
+    void testTwoResultsFirstReviewed() throws ReplacerException {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
         final String replacement = "R";
         final String suggestion = "S";
@@ -411,9 +411,10 @@ class PageReviewCustomServiceTest {
         when(customReplacementFinderService.findCustomReplacements(any(FinderPage.class), any(CustomOptions.class)))
             .thenReturn(List.of(customRep));
 
+        // We cannot use the same options object for all calls as it is mutable (and mutated)
         // Call 1
-        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
-        Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
+        PageReviewOptions options1 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
+        Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options1);
         Assertions.assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
@@ -424,7 +425,8 @@ class PageReviewCustomServiceTest {
         // Cache: 2, 3
 
         // Call 2
-        review = pageReviewCustomService.findRandomPageReview(options);
+        PageReviewOptions options2 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
+        review = pageReviewCustomService.findRandomPageReview(options2);
         Assertions.assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
@@ -435,7 +437,8 @@ class PageReviewCustomServiceTest {
         // Cache: 3
 
         // Call 3
-        review = pageReviewCustomService.findRandomPageReview(options);
+        PageReviewOptions options3 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
+        review = pageReviewCustomService.findRandomPageReview(options3);
         Assertions.assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
@@ -446,7 +449,8 @@ class PageReviewCustomServiceTest {
         // Cache: empty
 
         // Call 4
-        review = pageReviewCustomService.findRandomPageReview(options);
+        PageReviewOptions options4 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
+        review = pageReviewCustomService.findRandomPageReview(options4);
         Assertions.assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
@@ -454,13 +458,78 @@ class PageReviewCustomServiceTest {
                 Assertions.assertEquals(1, r.getSearch().getNumPending());
             }
         );
+        // Cache: empty
 
         // Call 5: To start again after message of no more results
-        review = pageReviewCustomService.findRandomPageReview(options);
+        PageReviewOptions options5 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
+        review = pageReviewCustomService.findRandomPageReview(options5);
         Assertions.assertTrue(review.isEmpty());
 
         // Verifications
         verify(wikipediaService, times(2)).getPageIdsByStringMatch(lang, replacement, true, 0, CACHE_SIZE);
+        verify(replacementService, times(2))
+            .findPageIdsReviewedByTypeAndSubtype(lang, ReplacementType.CUSTOM, replacement);
+        verify(wikipediaService, times(4)).getPageById(anyInt(), any(WikipediaLanguage.class));
+    }
+
+    @Test
+    void testAllResultsWithoutReplacements() throws ReplacerException {
+        final WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        final String replacement = "R";
+        final String suggestion = "S";
+
+        // 4 Wikipedia results all without repalcements
+
+        final String content = "A R";
+        final Map<Integer, WikipediaPage> pages = new HashMap<>();
+        for (int i = 1; i <= 4; i++) {
+            pages.put(
+                i,
+                WikipediaPage.builder().lang(lang).id(i).namespace(WikipediaNamespace.ARTICLE).content(content).build()
+            );
+        }
+
+        // Mocks
+        when(
+            wikipediaService.getPageIdsByStringMatch(
+                any(WikipediaLanguage.class),
+                anyString(),
+                anyBoolean(),
+                anyInt(),
+                anyInt()
+            )
+        )
+            .thenReturn(WikipediaSearchResult.of(4, List.of(1, 2, 3)))
+            .thenReturn(WikipediaSearchResult.of(4, List.of(4)))
+            .thenReturn(WikipediaSearchResult.of(4, Collections.emptyList()));
+
+        when(
+            replacementService.findPageIdsReviewedByTypeAndSubtype(
+                any(WikipediaLanguage.class),
+                anyString(),
+                anyString()
+            )
+        )
+            .thenReturn(Collections.emptyList());
+
+        when(wikipediaService.getPageById(anyInt(), any(WikipediaLanguage.class)))
+            .thenReturn(Optional.of(pages.get(1))) // Call 1
+            .thenReturn(Optional.of(pages.get(2))) // Call 2
+            .thenReturn(Optional.of(pages.get(3))) // Call 3
+            .thenReturn(Optional.of(pages.get(4))); // Call 4
+
+        when(customReplacementFinderService.findCustomReplacements(any(FinderPage.class), any(CustomOptions.class)))
+            .thenReturn(Collections.emptyList());
+
+        // Only Call
+        PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
+        Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
+        Assertions.assertTrue(review.isEmpty());
+
+        // Verifications
+        verify(wikipediaService, times(1)).getPageIdsByStringMatch(lang, replacement, true, 0, CACHE_SIZE);
+        verify(wikipediaService, times(1)).getPageIdsByStringMatch(lang, replacement, true, CACHE_SIZE, CACHE_SIZE);
+        verify(wikipediaService, times(1)).getPageIdsByStringMatch(lang, replacement, true, 2 * CACHE_SIZE, CACHE_SIZE);
         verify(replacementService, times(2))
             .findPageIdsReviewedByTypeAndSubtype(lang, ReplacementType.CUSTOM, replacement);
         verify(wikipediaService, times(4)).getPageById(anyInt(), any(WikipediaLanguage.class));

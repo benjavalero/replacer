@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import io.swagger.annotations.ApiParam;
@@ -39,6 +40,14 @@ class PageReviewOptions {
     @ApiParam(value = "If the custom replacement is case-sensitive")
     @Nullable
     private Boolean cs;
+
+    @JsonIgnore
+    @Nullable
+    Integer offset = null;
+
+    void incrementOffset(int increment) {
+        this.offset = this.offset == null ? 0 : this.offset + increment;
+    }
 
     @TestOnly
     static PageReviewOptions ofNoType() {
