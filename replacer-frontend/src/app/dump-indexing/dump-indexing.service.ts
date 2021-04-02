@@ -1,27 +1,18 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { DumpIndexing } from './dump-indexing.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DumpIndexingService implements OnDestroy {
+export class DumpIndexingService {
   private readonly baseUrl = `${environment.apiUrl}/dump-indexing`;
   private readonly _status = new BehaviorSubject<DumpIndexing>(null);
 
-  // Check the status
-  subscription: Subscription;
-
   constructor(private httpClient: HttpClient) {
     this.refreshDumpIndexing();
-    this.subscription = interval(10000).subscribe(() => this.refreshDumpIndexing());
-  }
-
-  ngOnDestroy() {
-    this._status.complete();
-    this.subscription.unsubscribe();
   }
 
   get status$(): Observable<DumpIndexing> {
