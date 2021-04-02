@@ -561,7 +561,7 @@ class PageReviewCustomServiceTest {
             pageReviewCustomService.validateCustomReplacement(lang, "Accion", true)
         );
         Assertions.assertEquals(
-            MisspellingType.ofEmpty(),
+            MisspellingType.of(simple, "accion"),
             pageReviewCustomService.validateCustomReplacement(lang, "Accion", false)
         );
 

@@ -143,7 +143,7 @@ class PageReviewCustomService extends PageReviewService {
                 ? MisspellingType.of(misspelling.get().getType(), misspelling.get().getWord())
                 : MisspellingType.ofEmpty();
         } else {
-            return !caseSensitive && misspelling.get().getWord().equals(replacement)
+            return !caseSensitive && misspelling.get().getWord().equalsIgnoreCase(replacement)
                 ? MisspellingType.of(misspelling.get().getType(), misspelling.get().getWord())
                 : MisspellingType.ofEmpty();
         }
