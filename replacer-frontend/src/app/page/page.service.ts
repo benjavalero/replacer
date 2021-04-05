@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserService } from '../user/user.service';
-import { PageDto, PageReview, PageSearch, SavePage } from './page-review.model';
+import { PageDto, PageReview, PageSearch, ReviewOptions, SavePage } from './page-review.model';
 import { ValidateType } from './validate-custom.model';
 
 @Injectable({
@@ -12,39 +12,17 @@ import { ValidateType } from './validate-custom.model';
 export class PageService {
   baseUrl = `${environment.apiUrl}/pages`;
 
-  private cachedPageReviews = {};
-
   constructor(private httpClient: HttpClient, private userService: UserService) {}
 
-  findRandomPage(type: string, subtype: string, suggestion: string, caseSensitive: boolean): Observable<PageReview> {
+  findRandomPage(options: ReviewOptions): Observable<PageReview> {
     let params: HttpParams = new HttpParams();
-    if (type && subtype) {
-      params = params.append('type', type).append('subtype', subtype);
-      if (suggestion) {
-        params = params.append('suggestion', suggestion).append('cs', String(caseSensitive));
+    if (options.type && options.subtype) {
+      params = params.append('type', options.type).append('subtype', options.subtype);
+      if (options.suggestion) {
+        params = params.append('suggestion', options.suggestion).append('cs', String(options.cs));
       }
     }
     return this.httpClient.get<PageReview>(`${this.baseUrl}/random`, { params });
-  }
-
-  getPageReviewFromCache(pageId: number, type: string, subtype: string): PageReview {
-    const key = this.buildReviewCacheKey(pageId, type, subtype);
-    const review = this.cachedPageReviews[key];
-    delete this.cachedPageReviews[key];
-    return review;
-  }
-
-  putPageReviewInCache(type: string, subtype: string, review: PageReview): void {
-    const key = this.buildReviewCacheKey(review.page.id, type, subtype);
-    this.cachedPageReviews[key] = review;
-  }
-
-  private buildReviewCacheKey(pageId: number, type: string, subtype: string): string {
-    if (type && subtype) {
-      return `${pageId}-${type}-${subtype}`;
-    } else {
-      return String(pageId);
-    }
   }
 
   validateCustomReplacement(replacement: string, caseSensitive: boolean): Observable<ValidateType> {
@@ -53,18 +31,12 @@ export class PageService {
     return this.httpClient.get<ValidateType>(`${this.baseUrl}/validate`, { params });
   }
 
-  findPageReviewById(
-    pageId: number,
-    type: string,
-    subtype: string,
-    suggestion: string,
-    caseSensitive: boolean
-  ): Observable<PageReview> {
+  findPageReviewById(pageId: number, options: ReviewOptions): Observable<PageReview> {
     let params: HttpParams = new HttpParams();
-    if (type && subtype) {
-      params = params.append('type', type).append('subtype', subtype);
-      if (suggestion) {
-        params = params.append('suggestion', suggestion).append('cs', String(caseSensitive));
+    if (options.type && options.subtype) {
+      params = params.append('type', options.type).append('subtype', options.subtype);
+      if (options.suggestion) {
+        params = params.append('suggestion', options.suggestion).append('cs', String(options.cs));
       }
     }
     return this.httpClient.get<PageReview>(`${this.baseUrl}/${pageId}`, { params });

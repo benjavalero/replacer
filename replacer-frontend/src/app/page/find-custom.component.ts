@@ -29,7 +29,7 @@ export class FindCustomComponent implements OnInit {
     const cs = this.caseSensitive || false;
 
     if (this.validate(r, s)) {
-      this.router.navigate([`random/Personalizado/${r}/${s}/${cs}`]);
+      this.router.navigate([`custom/${r}/${s}/${cs}`]);
     }
   }
 

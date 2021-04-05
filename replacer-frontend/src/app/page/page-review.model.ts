@@ -2,6 +2,13 @@ import { AccessToken } from '../authentication/access-token.model';
 import { Language } from '../user/language-model';
 import { PageReplacement } from './page-replacement.model';
 
+export interface ReviewOptions {
+  type?: string;
+  subtype?: string;
+  suggestion?: string;
+  cs?: boolean;
+}
+
 export interface PageReview {
   page: PageDto;
   replacements: PageReplacement[];

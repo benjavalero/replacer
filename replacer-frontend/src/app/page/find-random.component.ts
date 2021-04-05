@@ -1,23 +1,24 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../alert/alert.service';
-import { PageReview } from './page-review.model';
+import { ReplacementListService } from '../replacement-list/replacement-list.service';
+import { PageReview, ReviewOptions } from './page-review.model';
 import { PageService } from './page.service';
 import { ValidateCustomComponent } from './validate-custom.component';
 import { ValidateType } from './validate-custom.model';
 
 @Component({
   selector: 'app-find-random',
-  template: ``,
+  template: `
+    <app-edit-page *ngIf="review" [review]="review" (saved)="onSaved($event)"></app-edit-page>
+  `,
   styleUrls: []
 })
 export class FindRandomComponent implements OnInit {
-  private filteredType: string;
-  private filteredSubtype: string;
-  private suggestion: string; // Only for type 'custom'
-  private caseSensitive: boolean; // Only for type 'custom'
+  review: PageReview;
 
   constructor(
     private alertService: AlertService,
@@ -25,54 +26,50 @@ export class FindRandomComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private titleService: Title,
-    private modalService: NgbModal
+    private location: Location,
+    private modalService: NgbModal,
+    private replacementListService: ReplacementListService
   ) {}
 
   ngOnInit() {
-    this.filteredType = this.route.snapshot.paramMap.get('type');
-    this.filteredSubtype = this.route.snapshot.paramMap.get('subtype');
-    this.suggestion = this.route.snapshot.paramMap.get('suggestion');
-    this.caseSensitive = this.route.snapshot.paramMap.get('cs') === 'true';
+    // Optional search options
+    const pageId: number = +this.route.snapshot.paramMap.get('id');
+    const options: ReviewOptions = {
+      type: this.route.snapshot.paramMap.get('type'),
+      subtype: this.route.snapshot.paramMap.get('subtype'),
+      suggestion: this.route.snapshot.paramMap.get('suggestion'),
+      cs: this.route.snapshot.paramMap.get('cs') === 'true'
+    };
+    if (options.suggestion) {
+      options.type = 'Personalizado';
+    }
 
-    const msg =
-      this.filteredType && this.filteredSubtype
-        ? `Buscando artículo aleatorio de tipo «${this.filteredType} - ${this.filteredSubtype}»…`
-        : 'Buscando artículo aleatorio…';
-    this.titleService.setTitle(`Replacer - ${msg}`);
-    this.alertService.addInfoMessage(msg);
-
-    if (this.suggestion) {
-      this.validateCustomReplacement();
+    if (pageId) {
+      this.findPageReview(pageId, options);
+    } else if (options.suggestion) {
+      this.validateCustomReplacement(options);
     } else {
-      this.findRandomPage();
+      this.findRandomPage(options);
     }
   }
 
-  private findRandomPage(): void {
-    this.pageService.findRandomPage(this.filteredType, this.filteredSubtype, this.suggestion, this.caseSensitive).subscribe(
+  private findRandomPage(options: ReviewOptions): void {
+    const msg =
+      options.type && options.subtype
+        ? `Buscando artículo aleatorio de tipo «${options.type} - ${options.subtype}»…`
+        : 'Buscando artículo aleatorio…';
+    this.titleService.setTitle(`Replacer - ${msg}`);
+
+    this.alertService.addInfoMessage(msg);
+
+    this.pageService.findRandomPage(options).subscribe(
       (review: PageReview) => {
         if (review) {
-          // Cache the review
-          this.pageService.putPageReviewInCache(this.filteredType, this.filteredSubtype, review);
-
-          const pageId = review.page.id;
-          // TODO : Do something with the title
-
-          if (this.filteredType && this.filteredSubtype) {
-            if (this.suggestion) {
-              this.router.navigate([
-                `article/${pageId}/${this.filteredType}/${this.filteredSubtype}/${this.suggestion}/${this.caseSensitive}`
-              ]);
-            } else {
-              this.router.navigate([`article/${pageId}/${this.filteredType}/${this.filteredSubtype}`]);
-            }
-          } else {
-            this.router.navigate([`article/${pageId}`]);
-          }
+          this.manageReview(review, options);
         } else {
           this.alertService.addWarningMessage(
-            this.filteredType && this.filteredSubtype
-              ? `No se ha encontrado ningún artículo de tipo «${this.filteredType} - ${this.filteredSubtype}»`
+            options.type && options.subtype
+              ? `No se ha encontrado ningún artículo de tipo «${options.type} - ${options.subtype}»`
               : 'No se ha encontrado ningún artículo'
           );
         }
@@ -83,19 +80,89 @@ export class FindRandomComponent implements OnInit {
     );
   }
 
-  private validateCustomReplacement(): void {
-    const replacement = this.filteredSubtype.trim();
-    this.pageService
-      .validateCustomReplacement(replacement, this.caseSensitive)
-      .subscribe((validateType: ValidateType) => {
-        if (validateType.type) {
-          this.openValidationModal$(validateType.type, validateType.subtype).then((result) => {
-            this.router.navigate([`random/${validateType.type}/${validateType.subtype}`]);
-          });
+  private findPageReview(pageId: number, options: ReviewOptions): void {
+    this.pageService.findPageReviewById(pageId, options).subscribe(
+      (review: PageReview) => {
+        if (review) {
+          this.manageReview(review, options);
         } else {
-          this.findRandomPage();
+          // This alert will be short as it will be cleared on redirecting to next page
+          this.alertService.addWarningMessage(
+            'No se ha encontrado ningún reemplazo en la versión más actualizada del artículo'
+          );
+          this.findRandomPage(options);
         }
-      });
+      },
+      (err) => {
+        this.alertService.addErrorMessage('Error al buscar los reemplazos en el artículo: ' + err.error.message);
+      }
+    );
+  }
+
+  private manageReview(review: PageReview, options: ReviewOptions): void {
+    this.alertService.clearAlertMessages();
+
+    this.review = review;
+
+    // Modify title
+    let htmlTitle = 'Replacer - ';
+    if (options.type && options.subtype) {
+      htmlTitle += `${options.subtype} - `;
+    }
+    htmlTitle += review.page.title;
+    this.titleService.setTitle(htmlTitle);
+
+    this.setReviewUrl(options, review.page.id);
+
+    // Update count cache
+    if (options.type && options.subtype) {
+      this.replacementListService.updateSubtypeCount(options.type, options.subtype, review.search.numPending);
+    }
+  }
+
+  private setReviewUrl(options: ReviewOptions, pageId: number): void {
+    this.location.replaceState(this.getReviewUrl(options, pageId));
+  }
+
+  private getReviewUrl(options: ReviewOptions, pageId: number): string {
+    let path: string;
+    if (options.type && options.subtype) {
+      if (options.suggestion) {
+        path = `/custom/${options.subtype}/${options.suggestion}/${options.cs}`;
+      } else {
+        path = `/list/${options.type}/${options.subtype}`;
+      }
+    } else {
+      path = '/random';
+    }
+
+    if (pageId) {
+      path = `${path}/${pageId}`;
+    }
+
+    return path;
+  }
+
+  onSaved(options: ReviewOptions) {
+    this.setReviewUrl(options, null);
+    this.findRandomPage(options);
+  }
+
+  private validateCustomReplacement(options: ReviewOptions): void {
+    const replacement = options.subtype.trim();
+    this.pageService.validateCustomReplacement(replacement, options.cs).subscribe((validateType: ValidateType) => {
+      if (validateType.type) {
+        this.openValidationModal$(validateType.type, validateType.subtype).then((result) => {
+          const knownTypeOptions: ReviewOptions = {
+            type: validateType.type,
+            subtype: validateType.subtype
+          };
+          this.router.navigate([this.getReviewUrl(knownTypeOptions, null)]);
+        });
+      } else {
+        this.findRandomPage(options);
+      }
+    });
   }
 
   private openValidationModal$(type: string, subtype: string): Promise<any> {

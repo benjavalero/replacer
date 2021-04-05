@@ -1,27 +1,28 @@
-<div *ngIf="replacements.length" class="container">
-  <nav *ngIf="search.type && search.subtype" aria-label="breadcrumb">
+<div *ngIf="review.replacements.length" class="container">
+  <nav *ngIf="review.search.type && review.search.subtype" aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item">{{ search.type }}</li>
-      <ng-template [ngIf]="!search.suggestion">
-        <li class="breadcrumb-item">{{ search.subtype }}
-          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ search.numPending }}</span></span>
+      <li class="breadcrumb-item">{{ review.search.type }}</li>
+      <ng-template [ngIf]="!review.search.suggestion">
+        <li class="breadcrumb-item">{{ review.search.subtype }}
+          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ review.search.numPending }}</span></span>
         </li>
       </ng-template>
-      <ng-template [ngIf]="search.suggestion">
-        <li class="breadcrumb-item">{{ search.subtype }}</li>
-        <li class="breadcrumb-item">{{ search.suggestion }}
-          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ search.numPending }}</span></span>
+      <ng-template [ngIf]="review.search.suggestion">
+        <li class="breadcrumb-item">{{ review.search.subtype }}</li>
+        <li class="breadcrumb-item">{{ review.search.suggestion }}
+          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ review.search.numPending }}</span></span>
         </li>
       </ng-template>
     </ol>
   </nav>
 
-  <h3>{{ page.title }}
+  <h3>{{ review.page.title }}
     <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="small">[Abrir en Wikipedia]</a>
   </h3>
 
-  <app-edit-snippet *ngFor="let replacement of replacements" [text]="page.content" [start]="replacement.start"
-    [word]="replacement.text" [suggestions]="replacement.suggestions" (fixed)="onFixed($event)">
+  <app-edit-snippet *ngFor="let replacement of review.replacements" [text]="review.page.content"
+    [start]="replacement.start" [word]="replacement.text" [suggestions]="replacement.suggestions"
+    (fixed)="onFixed($event)">
   </app-edit-snippet>
 
   <button type="button" class="btn btn-success w-100 mt-3 mb-3 p-3" [disabled]="!fixedCount" (click)="onSaveChanges()">
@@ -33,7 +34,7 @@
   </button>
 
   <app-alert type="warning" [icon]="true" class="alert-small"
-    *ngIf="search.type === 'Personalizado' && search.numPending > 50">
+    *ngIf="review.search.type === 'Personalizado' && review.search.numPending > 50">
     <p>El reemplazo personalizado introducido tiene muchas ocurrencias. Se recomienda añadirlo a los <a
         href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos" target="_blank"
         rel="noopener noreferrer">listados generales</a> para un mantenimiento más óptimo.</p>
