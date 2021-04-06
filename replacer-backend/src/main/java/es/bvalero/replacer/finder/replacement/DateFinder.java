@@ -26,6 +26,7 @@ class DateFinder implements ReplacementFinder {
     static final String SUBTYPE_INCOMPLETE = "Fecha incompleta";
     static final String SUBTYPE_LEADING_ZERO = "Día con cero";
     static final String SUBTYPE_UPPERCASE = "Mes en mayúscula";
+    private static final Set<String> PREPOSITIONS = Set.of("de", "del");
 
     @RegExp
     private static final String REGEX_DATE = "(%s|(3[01]|[012]?<N>)( [Dd]e)?) (%s) ([Dd]el? )?[12]\\.?<N>{3}";
@@ -222,7 +223,7 @@ class DateFinder implements ReplacementFinder {
     }
 
     private boolean isNotPreposition(String word) {
-        return !FinderUtils.toLowerCase(word).startsWith("de");
+        return !PREPOSITIONS.contains(FinderUtils.toLowerCase(word));
     }
 
     private String fixLeadingZero(String day) {
