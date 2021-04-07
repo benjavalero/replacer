@@ -72,6 +72,10 @@ export class FindRandomComponent implements OnInit {
               ? `No se ha encontrado ningún artículo de tipo «${options.type} - ${options.subtype}»`
               : 'No se ha encontrado ningún artículo'
           );
+          // Update count cache
+          if (options.type && options.subtype) {
+            this.replacementListService.updateSubtypeCount(options.type, options.subtype, 0);
+          }
         }
       },
       (err) => {

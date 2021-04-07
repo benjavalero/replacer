@@ -64,12 +64,6 @@ export class ReplacementListService implements OnDestroy {
     return this.httpClient.post<any>(`${environment.apiUrl}/pages/review`, null, { params });
   }
 
-  decrementCount(type: string, subtype: string): void {
-    this.updateSubtypeCount(type, subtype, -1);
-  }
-
-  // If the count is negative then decrement the current value
-  // If it is positive then modify the current value with the given one
   updateSubtypeCount(type: string, subtype: string, count: number): void {
     const currentCounts = JSON.parse(localStorage.getItem(this.countsKey));
     for (let i = 0; i < currentCounts.length; i++) {
@@ -78,12 +72,7 @@ export class ReplacementListService implements OnDestroy {
         for (let j = 0; j < typeCount.l.length; j++) {
           const subtypeCount: ReplacementCount = typeCount.l[j];
           if (subtypeCount.s === subtype) {
-            if (count < 0) {
-              subtypeCount.c = subtypeCount.c - count;
-            } else {
-              subtypeCount.c = count;
-            }
-
+            subtypeCount.c = count;
             if (subtypeCount.c <= 0) {
               typeCount.l.splice(j, 1);
             }

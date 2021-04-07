@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { AlertService } from '../alert/alert.service';
-import { ReplacementListService } from '../replacement-list/replacement-list.service';
 import { UserService } from '../user/user.service';
 import { PageReplacement } from './page-replacement.model';
 import { PageReview, ReviewOptions } from './page-review.model';
@@ -18,12 +17,7 @@ export class EditPageComponent implements OnChanges {
 
   @Output() saved: EventEmitter<ReviewOptions> = new EventEmitter();
 
-  constructor(
-    private alertService: AlertService,
-    private pageService: PageService,
-    private userService: UserService,
-    private replacementListService: ReplacementListService
-  ) {}
+  constructor(private alertService: AlertService, private pageService: PageService, private userService: UserService) {}
 
   ngOnChanges() {
     this.fixedCount = 0;
@@ -69,11 +63,6 @@ export class EditPageComponent implements OnChanges {
   private saveContent(content: string) {
     // Remove replacements as a trick to hide the page
     this.review.replacements = [];
-
-    // Decrement the count cache
-    if (this.review.search.type && this.review.search.subtype) {
-      this.replacementListService.decrementCount(this.review.search.type, this.review.search.subtype);
-    }
 
     const savePage = { ...this.review.page, content: content };
     this.pageService.savePage(savePage, this.review.search).subscribe(
