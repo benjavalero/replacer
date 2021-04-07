@@ -101,8 +101,8 @@ class DateFinderTest {
 
     @Test
     void testGalicianMonth() {
-        String date = "30 decembro de 1591";
-        String expected = "30 de decembro de 1591";
+        String date = "30 decembro do 1591";
+        String expected = "30 de decembro do 1591";
         String subtype = DateFinder.SUBTYPE_INCOMPLETE;
 
         FinderPage page = FinderPage.of(WikipediaLanguage.GALICIAN, date, "");
