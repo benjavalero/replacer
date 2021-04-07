@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { AlertService } from '../alert/alert.service';
 import { ReplacementListService } from '../replacement-list/replacement-list.service';
 import { UserService } from '../user/user.service';
@@ -11,7 +11,7 @@ import { PageService } from './page.service';
   templateUrl: './edit-page.component.html',
   styleUrls: []
 })
-export class EditPageComponent {
+export class EditPageComponent implements OnChanges {
   @Input() review: PageReview;
 
   fixedCount = 0;
@@ -24,6 +24,10 @@ export class EditPageComponent {
     private userService: UserService,
     private replacementListService: ReplacementListService
   ) {}
+
+  ngOnChanges() {
+    this.fixedCount = 0;
+  }
 
   onFixed(fixed: any) {
     this.review.replacements.find((rep) => rep.start === fixed.position).textFixed = fixed.newText;
