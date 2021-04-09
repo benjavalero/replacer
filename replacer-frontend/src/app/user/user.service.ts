@@ -41,7 +41,7 @@ export class UserService {
   }
 
   private emptyUser(): User {
-    return { name: null, admin: false, accessToken: null };
+    return {} as User;
   }
 
   isValidUser(): boolean {
@@ -49,7 +49,13 @@ export class UserService {
   }
 
   private isValid(user: User): boolean {
-    return user != null && user.name != null && user.admin != null && user.accessToken != null;
+    return (
+      user != null && user.name != null && user.hasRights != null && user.admin != null && user.accessToken != null
+    );
+  }
+
+  hasRightsUser(): boolean {
+    return this._user.getValue().hasRights;
   }
 
   clearSession(): void {

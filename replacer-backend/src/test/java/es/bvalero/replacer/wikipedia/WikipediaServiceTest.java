@@ -198,7 +198,7 @@ class WikipediaServiceTest {
     void testLoggedUserName() throws Exception {
         // API response
         String textResponse =
-            "{\"batchcomplete\": \"\", \"query\": {\"userinfo\": {\"id\": 9620478, \"name\": \"Benjavalero\"}}}";
+            "{\"batchcomplete\":\"\",\"query\":{\"userinfo\":{\"id\":24149,\"name\":\"Benjavalero\",\"groups\":[\"*\",\"user\",\"autoconfirmed\"]}}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
             .when(
@@ -211,8 +211,9 @@ class WikipediaServiceTest {
             .thenReturn(response);
 
         AccessToken accessToken = AccessToken.ofEmpty();
-        String username = wikipediaService.getLoggedUserName(accessToken);
-        Assertions.assertEquals("Benjavalero", username);
+        WikipediaApiResponse.UserInfo userInfo = wikipediaService.getLoggedUserName(accessToken);
+        Assertions.assertEquals("Benjavalero", userInfo.getName());
+        Assertions.assertEquals(List.of("*", "user", "autoconfirmed"), userInfo.getGroups());
     }
 
     @Test

@@ -5,7 +5,7 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div id="navbarSupportedContent" class="navbar-collapse" [ngbCollapse]="isNavCollapsed" *ngIf="user$ | async as user">
-    <ul class="navbar-nav mr-auto" *ngIf="user.name">
+    <ul class="navbar-nav mr-auto" *ngIf="user.hasRights">
       <li class="nav-item">
         <a class="nav-link" routerLinkActive="active" routerLink="/random" (click)="isNavCollapsed = true"
           title="Revisa todos los posibles reemplazos de un artículo aleatorio">Artículo aleatorio</a>

@@ -31,6 +31,9 @@ export class AuthenticationGuard implements CanActivate {
     this.alertService.clearAlertMessages();
 
     if (this.userService.isValidUser()) {
+      if (!this.userService.hasRightsUser() && state.url !== '/dashboard') {
+        this.router.navigate(['dashboard']);
+      }
       return true;
     } else {
       // Save redirect url so after authenticating we can move them back to the page they requested

@@ -50,7 +50,7 @@ class AuthenticationControllerTest {
         String userName = "C";
 
         when(wikipediaService.getLoggedUser(anyString(), anyString(), anyString()))
-            .thenReturn(WikipediaUser.of(userName, true, accessToken));
+            .thenReturn(WikipediaUser.of(userName, true, true, accessToken));
 
         VerificationToken verifier = VerificationToken.of("X", "Y", "V");
         mvc
@@ -61,6 +61,7 @@ class AuthenticationControllerTest {
             )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name", is("C")))
+            .andExpect(jsonPath("$.hasRights", equalTo(true)))
             .andExpect(jsonPath("$.admin", equalTo(true)))
             .andExpect(jsonPath("$.accessToken.token", is("A")))
             .andExpect(jsonPath("$.accessToken.tokenSecret", is("B")));

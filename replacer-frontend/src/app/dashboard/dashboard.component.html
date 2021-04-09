@@ -9,56 +9,63 @@
   </div>
 </div>
 
-<div class="row">
-  <div class="col-md-6 col-lg-4 py-1">
-    <div class="card h-100 bg-light">
-      <div class="card-body">
-        <h4 class="card-title">Artículo aleatorio</h4>
-        <p class="card-text">Revisa todos los posibles reemplazos de un artículo aleatorio.</p>
-        <a routerLink="/random" class="stretched-link"></a>
+<div *ngIf="user$ | async as user">
+  <div class="row" *ngIf="user.hasRights">
+    <div class="col-md-6 col-lg-4 py-1">
+      <div class="card h-100 bg-light">
+        <div class="card-body">
+          <h4 class="card-title">Artículo aleatorio</h4>
+          <p class="card-text">Revisa todos los posibles reemplazos de un artículo aleatorio.</p>
+          <a routerLink="/random" class="stretched-link"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 py-1">
+      <div class="card h-100 bg-light">
+        <div class="card-body">
+          <h4 class="card-title">Lista de reemplazos</h4>
+          <p class="card-text">Revisa todos los artículos que contienen un reemplazo en concreto.</p>
+          <a routerLink="/list" class="stretched-link"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 py-1">
+      <div class="card h-100 bg-light">
+        <div class="card-body">
+          <h4 class="card-title">Reemplazo personalizado</h4>
+          <p class="card-text">Revisa todos los artículos que contienen un reemplazo personalizado.</p>
+          <a routerLink="/custom" class="stretched-link"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 py-1">
+      <div class="card h-100 bg-light">
+        <div class="card-body">
+          <h4 class="card-title">Estadísticas</h4>
+          <p class="card-text">Muestra, entre otras estadísticas, el número de reemplazos indexados y revisados.</p>
+          <a routerLink="/stats" class="stretched-link"></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 py-1">
+      <div class="card h-100 bg-light" *ngIf="user.admin">
+        <div class="card-body">
+          <h4 class="card-title">Indexación [ADMIN]</h4>
+          <p class="card-text">Muestra el estado de la indexación.</p>
+          <a routerLink="/dump" class="stretched-link"></a>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="col-md-6 col-lg-4 py-1">
-    <div class="card h-100 bg-light">
-      <div class="card-body">
-        <h4 class="card-title">Lista de reemplazos</h4>
-        <p class="card-text">Revisa todos los artículos que contienen un reemplazo en concreto.</p>
-        <a routerLink="/list" class="stretched-link"></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-6 col-lg-4 py-1">
-    <div class="card h-100 bg-light">
-      <div class="card-body">
-        <h4 class="card-title">Reemplazo personalizado</h4>
-        <p class="card-text">Revisa todos los artículos que contienen un reemplazo personalizado.</p>
-        <a routerLink="/custom" class="stretched-link"></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-6 col-lg-4 py-1">
-    <div class="card h-100 bg-light">
-      <div class="card-body">
-        <h4 class="card-title">Estadísticas</h4>
-        <p class="card-text">Muestra, entre otras estadísticas, el número de reemplazos indexados y revisados.</p>
-        <a routerLink="/stats" class="stretched-link"></a>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-6 col-lg-4 py-1">
-    <div class="card h-100 bg-light" *ngIf="admin$ | async">
-      <div class="card-body">
-        <h4 class="card-title">Indexación [ADMIN]</h4>
-        <p class="card-text">Muestra el estado de la indexación.</p>
-        <a routerLink="/dump" class="stretched-link"></a>
-      </div>
-    </div>
-  </div>
+  <app-alert type="danger" *ngIf="!user.hasRights">
+    <p>Es necesario ser un usuario <a href="https://es.wikipedia.org/wiki/Wikipedia:Autoconfirmados" target="_blank"
+        rel="noopener noreferrer">autoconfirmado</a> para utilizar Replacer.</p>
+  </app-alert>
 </div>
 
 <app-alert type="warning" [icon]="true" class="alert-small">

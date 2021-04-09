@@ -31,6 +31,7 @@ class WikipediaServiceImpl implements WikipediaService {
     private static final String PARAM_PAGE_ID = "pageid";
     private static final String PARAM_PAGE_IDS = "pageids";
     private static final int MAX_OFFSET_LIMIT = 10000;
+    private static final String GROUP_AUTOCONFIRMED = "autoconfirmed";
 
     @Autowired
     private WikipediaApiFacade wikipediaApiFacade;
@@ -57,9 +58,11 @@ class WikipediaServiceImpl implements WikipediaService {
     public WikipediaUser getLoggedUser(String requestToken, String requestTokenSecret, String oauthVerifier)
         throws ReplacerException {
         AccessToken accessToken = this.getAccessToken(requestToken, requestTokenSecret, oauthVerifier);
-        String userName = this.getLoggedUserName(accessToken);
+        WikipediaApiResponse.UserInfo userInfo = this.getLoggedUserName(accessToken);
+        String userName = userInfo.getName();
+        boolean hasRights = userInfo.getGroups().contains(GROUP_AUTOCONFIRMED);
         boolean admin = this.isAdminUser(userName);
-        return WikipediaUser.of(userName, admin, accessToken);
+        return WikipediaUser.of(userName, hasRights, admin, accessToken);
     }
 
     private AccessToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier)
@@ -68,7 +71,7 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     @VisibleForTesting
-    String getLoggedUserName(AccessToken accessToken) throws ReplacerException {
+    WikipediaApiResponse.UserInfo getLoggedUserName(AccessToken accessToken) throws ReplacerException {
         WikipediaApiResponse apiResponse = wikipediaApiFacade.executeSignedGetRequest(
             buildUserNameRequestParams(),
             WikipediaLanguage.getDefault(),
@@ -81,11 +84,12 @@ class WikipediaServiceImpl implements WikipediaService {
         Map<String, String> params = new HashMap<>();
         params.put(PARAM_ACTION, VALUE_QUERY);
         params.put("meta", "userinfo");
+        params.put("uiprop", "groups");
         return params;
     }
 
-    private String extractUserNameFromJson(WikipediaApiResponse response) {
-        return response.getQuery().getUserinfo().getName();
+    private WikipediaApiResponse.UserInfo extractUserNameFromJson(WikipediaApiResponse response) {
+        return response.getQuery().getUserinfo();
     }
 
     @VisibleForTesting

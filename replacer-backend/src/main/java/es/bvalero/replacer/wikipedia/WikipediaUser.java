@@ -11,6 +11,9 @@ class WikipediaUser {
     @ApiModelProperty(value = "Wikipedia user name", required = true, example = "Benjavalero")
     String name;
 
+    @ApiModelProperty(value = "If the user the rights to use the tool", required = true, example = "true")
+    boolean hasRights;
+
     @ApiModelProperty(value = "If the user is administrator of Replacer", required = true, example = "false")
     boolean admin;
 

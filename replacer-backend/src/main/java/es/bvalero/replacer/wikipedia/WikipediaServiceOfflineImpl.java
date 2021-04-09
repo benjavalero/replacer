@@ -25,7 +25,7 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
 
     @Override
     public WikipediaUser getLoggedUser(String requestToken, String requestTokenSecret, String oauthVerifier) {
-        return WikipediaUser.of("offline", true, AccessToken.ofEmpty());
+        return WikipediaUser.of("offline", true, true, AccessToken.ofEmpty());
     }
 
     @Override

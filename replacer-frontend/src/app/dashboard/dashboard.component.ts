@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
 
 @Component({
@@ -10,13 +10,13 @@ import { UserService } from '../user/user.service';
   styleUrls: []
 })
 export class DashboardComponent implements OnInit {
-  admin$: Observable<boolean>;
+  user$: Observable<User>;
 
   constructor(private userService: UserService, private titleService: Title) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Reemplazador de la Wikipedia');
 
-    this.admin$ = this.userService.user$.pipe(map((user) => user.admin));
+    this.user$ = this.userService.user$;
   }
 }

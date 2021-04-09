@@ -53,6 +53,7 @@ class WikipediaApiResponse {
 
         private int id;
         private String name;
+        private List<String> groups;
     }
 
     @Data
