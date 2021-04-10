@@ -3,9 +3,11 @@
  a el||al, a él, a El
  a mas||a más
  a parte||a parte (locución), aparte (adjetivo, sustantivo, adverbio o verbo)
+ a pesar que||a pesar de que
  Administración Publica|cs|Administración Pública
  Alberto Del Río|cs|Alberto Del Rio (nombre comercial del luchador, sin tilde)
  Angel Nieto|cs|Ángel Nieto (piloto español)
+ anuncio su||anunció su
  aún así||aun así, aún así (todavía así)
  aún cuando||aun cuando (incluso), aún cuando (todavía)
  aún estando||aun estando (incluso), aún estando (todavía)
@@ -19,16 +21,24 @@
  con mas||con más
  darse cuenta que||darse cuenta de que
  de el||del, de él, de El, dé el, dé él
+ de estás||de estas
  de mas||de más
+ dejo el||dejó el
  desarrollo un||desarrolló un (verbo)
  Educación Publica|cs|Educación Pública
  el mas||el más
+ el proximo||el próximo
  el sólo||el solo (adjetivo), él solamente (para evitar ambigüedad)
+ el titulo||el título
  en el qué||en el que
+ en estás||en estas
+ enel||en el, Enel (compañía eléctrica)
  en la qué||en la que
  entorno a||en torno a (locución adverbial)
  entre si||entre sí (pronombre), entre si (conjunción)
  es mas||es más
+ esta compuesta||está compuesta
+ esta compuesto||está compuesto
  ésta área||esta área
  ésta canción||esta canción
  ésta ciudad||esta ciudad
@@ -50,6 +60,7 @@
  ésta producción||esta producción
  ésta región||esta región
  ésta serie||esta serie
+ esta siendo||está siendo
  ésta situación||esta situación
  ésta técnica||esta técnica
  ésta temporada||esta temporada
@@ -81,19 +92,24 @@
  éste último|| este último
  éstos dos||estos dos
  éstos últimos||estos últimos
+ grandes perdidas||grandes pérdidas
  hay mas||hay más
  Jose Antonio|cs|José Antonio (nombre propio español)
  Jose Manuel|cs|José Manuel (nombre propio español y portugués)
  Jose Maria|cs|José María (nombre propio español)
  Jose María|cs|José María (nombre propio español)
+ jugo en||jugó en
  la mas||la más
  la perdida de||la pérdida de
  la practica||la practica (verbo), la práctica (sustantivo)
  la primer||la primera, el primero, lo primero
  la version||la versión
+ laminas de||láminas de
  las mas||las más
  lo mas||lo más
+ logro ganar||logró ganar
  los mas||los más
+ luego paso||luego pasó
  mal entendido||mal entendido (adjetivo), malentendido (sustantivo)
  mas adelante||más adelante
  mas allá||más allá
@@ -125,9 +141,13 @@
  opinión publica||opinión pública
  Parque Nacional|cs|parque nacional
  Parque Natural|cs|parque natural
+ paso a ser||pasó a ser
  por que||por que (preposición + relativo o conjunción), porque (conjunción causal), por qué (interrogación o exclamación), porqué (sustantivo, causa)
  Primera Division|cs|Primera División
  que mas||que más
+ que tenia||que tenía
+ que seria||que sería
+ que venia de||que venía de
  Ramón Llull|cs|Ramon Llull
  relacionada a||relacionada con
  relacionadas a||relacionadas con
@@ -139,7 +159,9 @@
  Rio Negro|cs|Río Negro (región o río en varios países de lengua española, EE. UU. y Brasil), Rio Negro (en portugués e inglés)
  Salud Publica|cs|Salud Pública
  salud publica|cs|salud pública
+ San Sebastian||San Sebastián
  Santa Barbara|cs|Santa Bárbara (localidad o región en varios países de lengua española y EE. UU.), Santa Barbara (en inglés)
+ Santa Monica|cs|Santa Mónica (localidad o región en varios países de lengua española y EE. UU.), Santa Monica (en inglés)
  SD Éibar|cs|SD Eibar
  S. D. Éibar|cs|S. D. Eibar
  S.D. Éibar|cs|S. D. Eibar
@@ -154,9 +176,12 @@
  se dieron cuenta que||se dieron cuenta de que
  se dio cuenta que||se dio cuenta de que
  se encuentro||se encuentra (presente), se encontró (pretérito)
+ se entero||se enteró
  se fundo||se fundó
+ se ira||se irá
  se jugo||se jugó
  se llamo||se llamó
+ se probo||se probó
  se publico||se publicó
  se puedo||se puede (presente), se pudo (pretérito)
  se registro||se registró
@@ -164,14 +189,17 @@
  Segunda Division|cs|Segunda División
  Seguridad Publica|cs|Seguridad Pública
  ser mas||ser más
+ sí bien||si bien (locución conjuntiva)
  si misma||sí misma
  si mismas||sí mismas
  si mismo||sí mismo
  si mismos||sí mismos
+ Simon Bolivar|cs|Simón Bolívar
  Sociedad Deportiva Éibar|cs|Sociedad Deportiva Eibar
  son mas||son más
  tener mas||tener más
  Tercera Division|cs|Tercera División
+ tomo el||tomó el
  TV Publica|cs|TV Pública
  un sólo||un solo
  una version||una versión

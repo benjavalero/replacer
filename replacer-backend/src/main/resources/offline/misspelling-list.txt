@@ -18,7 +18,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
 * El único parámetro disponible actualmente es <code>cs</code> (''case-sensitive''). Si se indica este parámetro, el término solo se tendrá en cuenta si coinciden las mayúsculas y minúsculas. Para no distinguir mayúsculas y minúsculas, simplemente se debe dejar el parámetro vacío.
 * Puede ser una sola la corrección sugerida o varias, separadas estas por comas. En ambos casos, cada una de las alternativas puede ir acompañada de una breve explicación entre paréntesis. Por ejemplo:
 ** <code> acido||ácido</code>
-** <code> actuo||actúo (verbo, 1.ª persona), actuó (verbo, 3.ª persona)</code>
+** <code> actuo||actuó (verbo, 3.ª persona), actúo (verbo, 1.ª persona)</code>
 
 === Recomendaciones ===
 
@@ -26,7 +26,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
 * Es habitual incluir los términos potencialmente incorrectos en todas las formas posibles: masculino, femenino y sus plurales. Por ejemplo, si se incluye la entrada <code> basco||vasco</code>, se pueden incluir también entradas para «basca», «bascos» y «bascas».
 * Si la entrada no distingue mayúsculas y minúsculas (es decir, no incluye el parámetro <code>cs</code>) se recomienda que el término comience por minúscula para evitar confusiones.
 * Se recomienda ordenar las alternativas de mayor a menor frecuencia. Por ejemplo, en <code>ultimo||último (adjetivo), ultimo (verbo)</code>, el adjetivo es mucho más frecuente que el verbo.
-* La anterior recomendación se aplica igualmente si la alternativa más frecuente es el término original, por ejemplo en <code>mudo||mudo (adjetivo y verbo 1.ª persona), mudó (3.ª persona)</code>. En estos casos, colocar el término original como primera alternativa puede ayudar a las herramientas a saber que dicho término tiene mayoría de falsos positivos.
+* La anterior recomendación se aplica igualmente si la alternativa más frecuente es el término original, por ejemplo en <code>mudo||mudo (adjetivo y verbo, 1.ª persona), mudó (verbo, 3.ª persona)</code>. En estos casos, colocar el término original como primera alternativa puede ayudar a las herramientas a saber que dicho término tiene mayoría de falsos positivos.
 
 {{Índice}}
 
@@ -50,7 +50,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  abducio||abdujo
  abdució||abdujo
  abece||abecé
- aber||a ver, haber, aber («pero» en alemán)
+ aber||a ver, haber, aber (‘pero’ en alemán)
  aberracion||aberración
  abietacea||abietácea
  abietaceas||abietáceas
@@ -74,7 +74,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  abnegacion||abnegación
  abogacia||abogacía
  abogacias||abogacías
- abordo||a bordo (locución adverbial), abordaje (sustantivo), abordo (verbo, 1.ª persona), abordó (verbo, 3.ª persona)
+ abordo||a bordo (locución adverbial), abordaje (sustantivo), abordó (verbo, 3.ª persona), abordo (verbo, 1.ª persona)
  aborígen||aborigen
  aborigenes||aborígenes
  abosorbida||absorbida
@@ -99,7 +99,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  abrio||abrió
  abrío||abrió
  abrogacion||abrogación
- abs|cs|ABS (sigla del inglés Anti Blocking System, 'sistema antibloqueo')
+ abs|cs|ABS (sigla del inglés Anti Blocking System ‘sistema antibloqueo’)
  abside||ábside
  absides||ábsides
  absorcion||absorción
@@ -124,7 +124,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  abulicos||abúlicos
  abundacia||abundancia
  aca||acá
- acabo||a cabo (locución adverbial), acabo (verbo, 1.ª persona; sustantivo), acabó (verbo, 3.ª persona)
+ acabo||a cabo (locución adverbial), acabó (verbo, 3.ª persona), acabo (verbo, 1.ª persona; sustantivo)
  académcia||académica
  académcias||académicas
  académcio||académico
@@ -390,11 +390,12 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  adrián|cs|Adrián
  Adrogue||Adrogué
  adrogué|cs|Adrogué
- adsl|cs|ADSL (sigla del inglés Asymmetric Digital Subscriber Line 'línea de abonado digital asimétrica')
+ adsl|cs|ADSL (sigla del inglés Asymmetric Digital Subscriber Line ‘línea de abonado digital asimétrica’)
  aduccion||aducción
  aducieron||adujeron
  adució||adujo
  aducio||adujo
+ adultera||adúltera (adjetivo y sustantivo), adultera (verbo)
  advocacion||advocación
  aemás||además
  aerea||aérea
@@ -792,7 +793,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  alveólos||alvéolos (forma recomendada), alveolos
  alvergar||albergar
  alzo||alzó (3.ª persona), alzo (1.ª persona)
- am|cs|AM (sigla del ingl. Amplitude Modulation 'modulación de amplitud'), a. m. (ante merídiem), am (código ISO 639-1 del idioma amhárico)
+ am|cs|AM (sigla del ingl. Amplitude Modulation ‘modulación de amplitud’), a. m. (ante merídiem), am (código ISO 639-1 del idioma amhárico)
  amasanderia||amasandería
  amasanderias||amasanderías
  amazonica||amazónica
@@ -934,6 +935,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  andasen||anduviesen
  anden||andén (sustantivo), anden (verbo, 3.ª persona plural)
  andó||anduvo
+ Andoain||Andoáin
  andorra|cs|Andorra
  andrea|cs|Andrea
  Andreina||Andreína
@@ -1294,11 +1296,11 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  aquárium||acuario
  aquariums||acuarios
  aquáriums||acuarios
- aquél||aquel (determinante y pronombre, forma recomendada desde 2010), aquél (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
- aquélla||aquella (determinante y pronombre, forma recomendada desde 2010), aquélla (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
- aquéllas||aquellas (determinante y pronombre, forma recomendada desde 2010), aquéllas (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
+ aquél||aquel (determinante y pronombre), aquél (pronombre)
+ aquélla||aquella (determinante y pronombre), aquélla (pronombre)
+ aquéllas||aquellas (determinante y pronombre), aquéllas (pronombre)
  aquéllo||aquello
- aquéllos||aquellos (determinante y pronombre, forma recomendada desde 2010), aquéllos (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
+ aquéllos||aquellos (determinante y pronombre), aquéllos (pronombre)
  aqui||aquí
  aquménida||aqueménida
  arabe||árabe
@@ -1913,6 +1915,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  bacon||bacón, beicon
  baculo||báculo
  baculos||báculos
+ badminton||bádminton
  baez||Báez
  báez|cs|Báez
  bagdad|cs|Bagdad
@@ -2556,6 +2559,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  bronzes||bronces
  brotola||brótola
  brotolas||brótolas
+ brujeria||brujería
  brujula||brújula
  brujulas||brújulas
  brunei||Brunéi
@@ -2750,6 +2754,8 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  calcomanias||calcomanías
  calculo||cálculo (sustantivo), calculó (verbo, 3.ª persona), calculo (verbo, 1.ª persona)
  calculos||cálculos
+ calderon|cs|calderón (signo ortográfico; cetáceo; otros significados), Calderón (apellido)
+ Calderon|cs|Calderón
  calefaccion||calefacción
  calefon||calefón
  calibracion||calibración
@@ -4162,6 +4168,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  compro||compró (3.ª persona), compro (1.ª persona)
  comprobacion||comprobación
  comun||común
+ comúnes||comunes
  comunicacion||comunicación
  comunicologa||comunicóloga
  comunicologas||comunicólogas
@@ -4802,7 +4809,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  coríntios||corintios
  cormoran||cormorán
  cornea||córnea (adjetivo o sustantivo), cornea (verbo)
- corneo||córneo (adjetivo), corneo (verbo, 1.ª persona), corneó (verbo, 3.ª persona)
+ corneo||córneo (adjetivo), corneó (verbo, 3.ª persona), corneo (verbo, 1.ª persona)
  corner||córner
  corneres||córneres
  corners||córneres
@@ -5552,6 +5559,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  deicándose||dedicándose
  deicó||dedicó
  dejacion||dejación
+ dejame||déjame
  dejándo||dejando
  dejandola||dejándola
  dejandolas||dejándolas
@@ -5588,7 +5596,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  demagogicos||demagógicos
  demarcacion||demarcación
  demas||demás
- demerito||demérito (sustantivo), demerito (verbo, 1.ª persona), demeritó (verbo, 3.ª persona)
+ demerito||demérito (sustantivo), demeritó (verbo, 3.ª persona), demerito (verbo, 1.ª persona)
  demeritos||deméritos
  demiurgica||demiúrgica
  demiurgicas||demiúrgicas
@@ -5685,7 +5693,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  desaciendo||deshaciendo
  desaciendose||deshaciéndose
  desaciéndose||deshaciéndose
- desacieron||desasieron (conjugación de desasir, 'soltar, desprender lo asido'), deshicieron (conjugación de deshacer)
+ desacieron||desasieron (conjugación de desasir, ‘soltar, desprender lo asido’), deshicieron (conjugación de deshacer)
  desafia||desafía
  desafias||desafías
  desafio||desafío (sustantivo o verbo, 1.ª persona), desafió (verbo, 3.ª persona)
@@ -5846,7 +5854,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  desestimacion||desestimación
  desguaze||desguace (sustantivo o verbo, 3.ª persona), desguacé (verbo, 1.ª persona)
  desguazes||desguaces
- deshacieron||desasieron (conjugación de desasir, 'soltar, desprender lo asido'), deshicieron (conjugación de deshacer)
+ deshacieron||desasieron (conjugación de desasir, ‘soltar, desprender lo asido’), deshicieron (conjugación de deshacer)
  deshechando||desechando
  deshechar||desechar
  deshidratacion||deshidratación
@@ -6202,7 +6210,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  difusion||difusión
  digestion||digestión
  dígital||digital
- digito||dígito (sustantivo), digito (verbo, 1.ª persona), digitó (verbo, 3.ª persona)
+ digito||dígito (sustantivo), digitó (verbo, 3.ª persona), digito (verbo, 1.ª persona)
  digitos||dígitos
  digrafo||dígrafo (secuencia de dos letras), digrafo (grafo dirigido)
  digrafos||dígrafos (secuencia de dos letras), digrafos (grafo dirigido)
@@ -7326,8 +7334,8 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  erroneos||erróneos
  erróres||errores
  erupcion||erupción
- ésa||esa (determinante y pronombre, forma recomendada desde 2010), ésa (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
- ésas||esas (determinante y pronombre, forma recomendada desde 2010), ésas (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
+ ésa||esa (determinante y pronombre), ésa (pronombre)
+ ésas||esas (determinante y pronombre), ésas (pronombre)
  escalafon||escalafón
  escandalo||escándalo
  escandalos||escándalos
@@ -7419,7 +7427,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  escuuelas||escuelas
  esdrujula||esdrújula
  esdrujulas||esdrújulas
- ése||ese (determinante y pronombre, forma recomendada desde 2010), ése (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
+ ése||ese (determinante y pronombre), ése (pronombre)
  eselente||excelente
  eselentes||excelentes
  esena||escena
@@ -7461,7 +7469,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  éso||eso
  esofago||esófago
  esofagos||esófagos
- ésos||esos (determinante y pronombre, forma recomendada desde 2010), ésos (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
+ ésos||esos (determinante y pronombre), ésos (pronombre)
  esoterica||esotérica
  esóterica||esotérica
  esotericas||esotéricas
@@ -7662,7 +7670,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  esqui||esquí
  esquies||esquíes
  esquis||esquís (o esquíes)
- ésta||esta (determinante y pronombre, forma recomendada desde 2010), ésta (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
+ ésta||esta (determinante y pronombre), ésta (pronombre)
  estába||estaba
  estabán||estaban
  estableciendose||estableciéndose
@@ -7689,6 +7697,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  Estadounidense|cs|estadounidense
  estadounidénses||estadounidenses
  Estadounidenses|cs|estadounidenses
+ estadunidenses|cs|estadounidenses
  estallo||estalló (3.ª persona), estallo (1.ª persona)
  estampacion||estampación
  estan||están
@@ -7702,7 +7711,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  estaria||estaría
  estariamos||estaríamos
  estarian||estarían
- éstas||estas (determinante y pronombre, forma recomendada desde 2010), éstas (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
+ éstas||estas (determinante y pronombre), éstas (pronombre)
  estatica||estática
  estaticas||estáticas
  estatico||estático
@@ -7719,7 +7728,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  estba||estaba
  estban||estaban
  estbas||estabas
- éste||este (determinante y pronombre, forma recomendada desde 2010), éste (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
+ éste||este (determinante y pronombre), éste (pronombre)
  estearico||esteárico
  estearicos||esteáricos
  estefania||Estefanía
@@ -7796,7 +7805,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  estomatologias||estomatologías
  estomatologo||estomatólogo
  estomatologos||estomatólogos
- éstos||estos (determinante y pronombre, forma recomendada desde 2010), éstos (pronombre, forma aceptable cuando puede confundirse con el determinante, e incorrecta en los demás casos)
+ éstos||estos (determinante y pronombre), éstos (pronombre)
  estrambotica||estrambótica
  estramboticas||estrambóticas
  estrambotico||estrambótico
@@ -9469,7 +9478,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  goticos||góticos
  govierno||gobierno
  goviernos||gobiernos
- gps|cs|GPS (sigla del inglés Global Positioning System 'sistema de posicionamiento mundial')
+ gps|cs|GPS (sigla del inglés Global Positioning System ‘sistema de posicionamiento mundial’)
  grabacion||grabación
  grabo||grabó (3.ª persona), grabo (1.ª persona)
  gradacion||gradación
@@ -9665,7 +9674,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  gwh|cs|GWh
 
 == H ==
- hábeas||habeas (''habeas corpus'', en cursiva y con minúsculas)
+ hábeas||habeas (''habeas corpus,'' en cursiva y con minúsculas)
  habeis||habéis
  habia||había
  habian||habían
@@ -11183,6 +11192,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  inutil||inútil
  inutiles||inútiles
  invadio||invadió
+ invalido||inválido (adjetivo o sustantivo), invalidó (verbo, 3.ª persona), invalido (verbo, 1.ª persona)
  invasion||invasión
  invenciblidad||invencibilidad
  invencion||invención
@@ -11298,7 +11308,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  israeli||israelí
  israelies||israelíes
  israelis||israelís
- issn|cs|ISSN (sigla del inglés International Standard Serial Number 'número de serie [del sistema] estándar internacional')
+ issn|cs|ISSN (sigla del inglés International Standard Serial Number ‘número de serie [del sistema] estándar internacional’)
  istalacion||instalación
  Istanbul||Estambul
  isteria||histeria
@@ -12043,7 +12053,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  logitud||longitud
  lograria||lograría
  lograrias||lograrías
- logro||logro (sustantivo, verbo 1.ª persona), logró (verbo, 3.ª persona) 
+ logro||logro (sustantivo, verbo 1.ª persona), logró (verbo, 3.ª persona)
  logrono||Logroño
  logroño|cs|Logroño
  lombarderia||lombardería
@@ -12068,7 +12078,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  lp|cs|LP
  lP|cs|LP
  Lp|cs|LP
- lsd|cs|LSD (sigla del inglés LySergic acid Diethylamide 'dietilamida de ácido lisérgico')
+ lsd|cs|LSD (sigla del inglés LySergic acid Diethylamide ‘dietilamida de ácido lisérgico’)
  lt||l (símbolo del litro)
  ltrs||l (símbolo del litro)
  lts|cs|l (símbolo del litro)
@@ -12197,8 +12207,8 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  maharanis||maharanís, marajanís
  mahon||Mahón
  maices||maíces
- mail||correo, ''e-mail'' (correo electrónico)
- mails||correos, ''e-mails'' (correos electrónicos)
+ mail||correo, ''e-mail'' (‘correo electrónico’ en inglés), correo electrónico
+ mails||correos, ''e-mails'' (‘correos electrónicos’ en inglés), correos electrónicos
  Maipu||Maipú
  maipú|cs|Maipú
  maiz||maíz
@@ -12213,6 +12223,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  Malaga||Málaga
  málaga|cs|Málaga
  malasia|cs|Malasia (país), malasia (adjetivo)
+ maldicion||maldición
  malecon||malecón
  malefica||maléfica
  maleficas||maléficas
@@ -12596,7 +12607,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  merecias||merecías
  merida||Mérida
  mérida|cs|Mérida
- merito||mérito (sustantivo), merito (verbo, 1.ª persona), meritó (verbo, 3.ª persona)
+ merito||mérito (sustantivo), meritó (verbo, 3.ª persona), merito (verbo, 1.ª persona)
  meritos||méritos
  merlin||merlín
  merlon||merlón
@@ -13145,7 +13156,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  muchisimos||muchísimos
  mudejar||mudéjar
  mudejares||mudéjares
- mudo||mudo (adjetivo y verbo 1.ª persona), mudó (3.ª persona)
+ mudo||mudo (adjetivo y verbo, 1.ª persona), mudó (verbo, 3.ª persona)
  muerdago||muérdago
  muerdagos||muérdagos
  muesta||muestra
@@ -13251,9 +13262,9 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  mwh|cs|MWh (megavatio-hora)
 
 == N ==
- n°||n.º (abreviatura de «número»; va con punto y con «o» voladita —no con símbolo de grados—)
- nº||n.º (abreviatura de «número»; va con punto)
- n.°||n.º (abreviatura de «número»; va con «o» voladita —no con símbolo de grados—)
+ n°||n.º (abreviatura de «número»: va con punto y con «o» voladita —no con símbolo de grados—), número
+ nº||n.º (abreviatura de «número»: va con punto), número
+ n.°||n.º (abreviatura de «número»: va con «o» voladita —no con símbolo de grados—), número
  naberia||nabería
  naberias||naberías
  nabidad||Navidad
@@ -15003,7 +15014,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  platano||plátano
  platanos||plátanos
  platica||platica (verbo), plática (sustantivo)
- platicas||pláticas (sustantivo), platicas(verbo), platicás (verbo), 
+ platicas||pláticas (sustantivo), platicas (verbo, 2.ª persona: tú), platicás (verbo, 2.ª persona: vos)
  Platon||Platón
  platonica||platónica
  platonicamente||platónicamente
@@ -16135,7 +16146,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  racionalizaria||racionalizaría
  racionalizarian||racionalizarían
  racionalizarias||racionalizarías
- rádar||radar 
+ rádar||radar
  radiacion||radiación
  radian||radian (verbo), radián (unidad geométrica)
  radioastronoma||radioastrónoma
@@ -16285,6 +16296,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  reciéntemente||recientemente
  reciento||recinto, reciente
  reción||recién
+ reciproca||recíproca (adjetivo), reciproca (verbo)
  recive||recibe
  reciven||reciben
  recivida||recibida
@@ -16854,8 +16866,8 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  rítmos||ritmos
  Riyad||Riad
  Riyadh||Riad
- rna|cs|RNA (sigla del inglés Ribonucleic Acid 'ácido ribonucleico')
- rnas||RNA (sigla del inglés Ribonucleic Acid 'ácido ribonucleico')
+ rna|cs|RNA (sigla del inglés Ribonucleic Acid ‘ácido ribonucleico’)
+ rnas||RNA (sigla del inglés Ribonucleic Acid ‘ácido ribonucleico’)
  robotica||robótica
  roboticas||robóticas
  robotico||robótico
@@ -17636,10 +17648,10 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  slóganes||eslóganes
  slogans||eslóganes
  slógans||eslóganes
- smart||inteligente, '''smart TV''' (televisión inteligente)
+ smart||inteligente, ''smart TV'' (‘televisión inteligente’ en inglés)
  smartphone||teléfono inteligente
  smartphones||teléfonos inteligentes
- smarts||inteligente, '''smarts TV''' (televisiones inteligentes)
+ smarts||inteligente, ''smart TVs'' (‘televisiones inteligentes’ en inglés)
  smoking||esmoquin
  snoopy|cs|Snoopy
  soberania||soberanía
@@ -17709,7 +17721,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  solia||solía
  solian||solían
  solias||solías
- solicito||solicitó (verbo, 3.ª persona), solicito (verbo, 1.ª persona), solícito (adjetivo)
+ solicito||solicitó (verbo, 3.ª persona), solícito (adjetivo), solicito (verbo, 1.ª persona)
  solida||sólida (adjetivo), solida (verbo)
  solidas||sólidas (adjetivo, plural), solidas (verbo)
  solidiariamente||solidariamente
@@ -17720,7 +17732,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  solipedos||solípedos
  Solis||Solís
  solís|cs|Solís
- sólo||solo (adjetivo y adverbio, forma recomendada desde 2010), sólo (adverbio, forma aceptable cuando puede confundirse con el adjetivo, e incorrecta en los demás casos), solamente (para evitar ambigüedades)
+ sólo||solo (adjetivo y adverbio), sólo (adverbio), solamente (para evitar ambigüedades)
  solucion||solución
  somali||somalí
  sombria||sombría
@@ -17936,6 +17948,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  sufrio||sufrió
  sufrío||sufrió
  sugerió||sugirió
+ suicido||suicidio (sustantivo), suicidó (verbo, 3.ª persona), suicido (verbo, 1.ª persona)
  suíza||Suiza (país), suiza (gentilicio)
  sujección||sujeción
  sujecciones||sujeciones
@@ -19702,7 +19715,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  vivenda||vivienda
  vivendas||viviendas
  vivia||vivía
- vivian||vivían (verbo, 3.ª persona), Vivian (nombre propio)
+ vivian||vivían (verbo, 3.ª persona), Vivian (nombre de pila femenino)
  vivias||vivías
  vivio||vivió
  vivipara||vivípara
