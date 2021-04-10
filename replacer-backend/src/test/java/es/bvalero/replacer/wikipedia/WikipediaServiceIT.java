@@ -100,6 +100,7 @@ class WikipediaServiceIT {
             0,
             newContent,
             page.getQueryTimestamp(),
+            "Replacer Integration Test",
             AccessToken.ofEmpty()
         );
 
@@ -117,6 +118,7 @@ class WikipediaServiceIT {
                     0,
                     conflictContent,
                     before,
+                    "Replacer Integration Test",
                     AccessToken.ofEmpty()
                 )
         );

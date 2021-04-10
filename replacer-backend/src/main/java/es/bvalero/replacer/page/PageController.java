@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/pages")
 public class PageController {
 
+    private static final String EDIT_SUMMARY = "Reemplazos con [[Usuario:Benjavalero/Replacer|Replacer]]";
+    private static final String COSMETIC_CHANGES = "mejoras cosméticas";
+
     @Autowired
     private PageReviewNoTypeService pageReviewNoTypeService;
 
@@ -110,6 +113,7 @@ public class PageController {
                     savePage.getPage().getTitle()
                 );
                 String textToSave = cosmeticFinderService.applyCosmeticChanges(page);
+                boolean applyCosmetics = !textToSave.equals(page.getContent());
                 PageSection section = savePage.getPage().getSection();
                 wikipediaService.savePageContent(
                     params.getLang(),
@@ -117,6 +121,7 @@ public class PageController {
                     section == null ? null : section.getId(),
                     textToSave,
                     savePage.getPage().getQueryTimestamp(),
+                    buildEditSummary(savePage.getSearch(), applyCosmetics),
                     savePage.getAccessToken()
                 );
             } catch (ReplacerException e) {
@@ -125,27 +130,30 @@ public class PageController {
         }
 
         // Mark page as reviewed in the database
-        if (ReplacementType.CUSTOM.equals(savePage.getSearch().getType())) {
-            pageReviewCustomService.reviewPageReplacements(
-                pageId,
-                convert(savePage.getSearch(), params.getLang()),
-                params.getUser()
-            );
-        } else if (StringUtils.isNotBlank(savePage.getSearch().getType())) {
-            pageReviewTypeSubtypeService.reviewPageReplacements(
-                pageId,
-                convert(savePage.getSearch(), params.getLang()),
-                params.getUser()
-            );
-        } else {
-            pageReviewNoTypeService.reviewPageReplacements(
-                pageId,
-                convert(savePage.getSearch(), params.getLang()),
-                params.getUser()
-            );
-        }
+        this.markAsReviewed(pageId, params.getLang(), params.getUser(), savePage.getSearch());
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private String buildEditSummary(PageReviewSearch search, boolean applyCosmetics) {
+        StringBuilder summary = new StringBuilder(EDIT_SUMMARY);
+        if (StringUtils.isNotBlank(search.getType()) && StringUtils.isNotBlank(search.getSubtype())) {
+            summary.append(": «").append(search.getSubtype()).append('»');
+        }
+        if (applyCosmetics) {
+            summary.append(" + ").append(COSMETIC_CHANGES);
+        }
+        return summary.toString();
+    }
+
+    private void markAsReviewed(int pageId, WikipediaLanguage lang, String reviewer, PageReviewSearch search) {
+        if (ReplacementType.CUSTOM.equals(search.getType())) {
+            pageReviewCustomService.reviewPageReplacements(pageId, convert(search, lang), reviewer);
+        } else if (StringUtils.isNotBlank(search.getType())) {
+            pageReviewTypeSubtypeService.reviewPageReplacements(pageId, convert(search, lang), reviewer);
+        } else {
+            pageReviewNoTypeService.reviewPageReplacements(pageId, convert(search, lang), reviewer);
+        }
     }
 
     private PageReviewOptions convert(PageReviewSearch search, WikipediaLanguage lang) {

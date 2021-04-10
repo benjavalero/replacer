@@ -244,6 +244,7 @@ class WikipediaServiceTest {
                     0,
                     "",
                     currentTimestamp,
+                    "",
                     AccessToken.ofEmpty()
                 )
         );
@@ -273,6 +274,7 @@ class WikipediaServiceTest {
             null,
             "",
             currentTimestamp,
+            "",
             AccessToken.ofEmpty()
         );
 
@@ -288,7 +290,15 @@ class WikipediaServiceTest {
         // Save a section
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         currentTimestamp = "2019-06-26T21:24:09Z";
-        wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, 2, "", currentTimestamp, AccessToken.ofEmpty());
+        wikipediaService.savePageContent(
+            WikipediaLanguage.SPANISH,
+            1,
+            2,
+            "",
+            currentTimestamp,
+            "",
+            AccessToken.ofEmpty()
+        );
 
         // Two calls: one for the EditToken and another to save the content (x2 save page and section in this test)
         Mockito

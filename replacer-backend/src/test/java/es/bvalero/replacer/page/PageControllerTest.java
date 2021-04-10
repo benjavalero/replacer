@@ -212,6 +212,7 @@ class PageControllerTest {
                 eq(section),
                 eq("C"),
                 eq(timestamp),
+                anyString(),
                 eq(AccessToken.of("A", "B"))
             );
     }
@@ -254,6 +255,7 @@ class PageControllerTest {
                 any(WikipediaLanguage.class),
                 eq(pageId),
                 anyInt(),
+                anyString(),
                 anyString(),
                 anyString(),
                 any(AccessToken.class)

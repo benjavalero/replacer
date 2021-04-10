@@ -23,8 +23,6 @@ import org.springframework.stereotype.Service;
 @Profile("!offline")
 class WikipediaServiceImpl implements WikipediaService {
 
-    private static final String EDIT_SUMMARY =
-        "Correcciones ortográficas con [[Usuario:Benjavalero/Replacer|Replacer]] (herramienta en línea de revisión de errores)";
     private static final int MAX_PAGES_REQUESTED = 50;
     private static final String PARAM_ACTION = "action";
     private static final String VALUE_QUERY = "query";
@@ -350,6 +348,7 @@ class WikipediaServiceImpl implements WikipediaService {
         @Nullable Integer section,
         String pageContent,
         String currentTimestamp,
+        String editSummary,
         AccessToken accessToken
     ) throws ReplacerException {
         EditToken editToken = getEditToken(pageId, lang, accessToken);
@@ -369,7 +368,7 @@ class WikipediaServiceImpl implements WikipediaService {
         }
 
         wikipediaApiFacade.executeSignedPostRequest(
-            buildSavePageContentRequestParams(pageId, pageContent, section, currentTimestamp, editToken),
+            buildSavePageContentRequestParams(pageId, pageContent, section, currentTimestamp, editSummary, editToken),
             lang,
             accessToken
         );
@@ -380,6 +379,7 @@ class WikipediaServiceImpl implements WikipediaService {
         String pageContent,
         @Nullable Integer section,
         String currentTimestamp,
+        String editSummary,
         EditToken editToken
     ) {
         Map<String, String> params = new HashMap<>();
@@ -389,7 +389,7 @@ class WikipediaServiceImpl implements WikipediaService {
         if (section != null) {
             params.put("section", Integer.toString(section));
         }
-        params.put("summary", EDIT_SUMMARY);
+        params.put("summary", editSummary);
         params.put("watchlist", "nochange");
         params.put("bot", "true");
         params.put("minor", "true");
