@@ -2,6 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -28,11 +29,13 @@ public class AuthenticationController {
     )
     @PostMapping(value = "/logged-user")
     public WikipediaUser getLoggedUser(
+        @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang,
         @ApiParam(
             value = "Verification token received after MediaWiki authentication"
         ) @RequestBody VerificationToken verificationToken
     ) throws ReplacerException {
         return wikipediaService.getLoggedUser(
+            lang,
             verificationToken.getRequestToken(),
             verificationToken.getRequestTokenSecret(),
             verificationToken.getOauthVerifier()

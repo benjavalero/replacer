@@ -9,8 +9,12 @@ import org.springframework.lang.Nullable;
 public interface WikipediaService {
     RequestToken getRequestToken() throws ReplacerException;
 
-    WikipediaUser getLoggedUser(String requestToken, String requestTokenSecret, String oauthVerifier)
-        throws ReplacerException;
+    WikipediaUser getLoggedUser(
+        WikipediaLanguage lang,
+        String requestToken,
+        String requestTokenSecret,
+        String oauthVerifier
+    ) throws ReplacerException;
 
     String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException;
 

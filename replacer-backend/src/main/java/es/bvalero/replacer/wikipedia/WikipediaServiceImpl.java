@@ -53,10 +53,14 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     @Override
-    public WikipediaUser getLoggedUser(String requestToken, String requestTokenSecret, String oauthVerifier)
-        throws ReplacerException {
+    public WikipediaUser getLoggedUser(
+        WikipediaLanguage lang,
+        String requestToken,
+        String requestTokenSecret,
+        String oauthVerifier
+    ) throws ReplacerException {
         AccessToken accessToken = this.getAccessToken(requestToken, requestTokenSecret, oauthVerifier);
-        WikipediaApiResponse.UserInfo userInfo = this.getLoggedUserName(accessToken);
+        WikipediaApiResponse.UserInfo userInfo = this.getLoggedUserName(lang, accessToken);
         String userName = userInfo.getName();
         boolean hasRights = userInfo.getGroups().contains(GROUP_AUTOCONFIRMED);
         boolean admin = this.isAdminUser(userName);
@@ -69,10 +73,12 @@ class WikipediaServiceImpl implements WikipediaService {
     }
 
     @VisibleForTesting
-    WikipediaApiResponse.UserInfo getLoggedUserName(AccessToken accessToken) throws ReplacerException {
+    @Loggable(value = Loggable.DEBUG)
+    WikipediaApiResponse.UserInfo getLoggedUserName(WikipediaLanguage lang, AccessToken accessToken)
+        throws ReplacerException {
         WikipediaApiResponse apiResponse = wikipediaApiFacade.executeSignedGetRequest(
             buildUserNameRequestParams(),
-            WikipediaLanguage.getDefault(),
+            lang,
             accessToken
         );
         return extractUserNameFromJson(apiResponse);

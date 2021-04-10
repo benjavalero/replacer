@@ -211,7 +211,10 @@ class WikipediaServiceTest {
             .thenReturn(response);
 
         AccessToken accessToken = AccessToken.ofEmpty();
-        WikipediaApiResponse.UserInfo userInfo = wikipediaService.getLoggedUserName(accessToken);
+        WikipediaApiResponse.UserInfo userInfo = wikipediaService.getLoggedUserName(
+            WikipediaLanguage.getDefault(),
+            accessToken
+        );
         Assertions.assertEquals("Benjavalero", userInfo.getName());
         Assertions.assertEquals(List.of("*", "user", "autoconfirmed"), userInfo.getGroups());
     }
@@ -426,35 +429,45 @@ class WikipediaServiceTest {
     @Test
     void testWikipediaServiceOffline() throws ReplacerException {
         Assertions.assertNotNull(wikipediaServiceOffline.getRequestToken());
-        WikipediaUser user = wikipediaServiceOffline.getLoggedUser("", "", "");
+        WikipediaUser user = wikipediaServiceOffline.getLoggedUser(WikipediaLanguage.getDefault(), "", "", "");
         Assertions.assertEquals("offline", user.getName());
         Assertions.assertTrue(user.isAdmin());
         Assertions.assertEquals(AccessToken.ofEmpty(), user.getAccessToken());
         Assertions.assertTrue(
-            StringUtils.isNotBlank(wikipediaServiceOffline.getMisspellingListPageContent(WikipediaLanguage.SPANISH))
-        );
-        Assertions.assertTrue(
             StringUtils.isNotBlank(
-                wikipediaServiceOffline.getComposedMisspellingListPageContent(WikipediaLanguage.SPANISH)
+                wikipediaServiceOffline.getMisspellingListPageContent(WikipediaLanguage.getDefault())
             )
         );
         Assertions.assertTrue(
-            StringUtils.isNotBlank(wikipediaServiceOffline.getFalsePositiveListPageContent(WikipediaLanguage.SPANISH))
+            StringUtils.isNotBlank(
+                wikipediaServiceOffline.getComposedMisspellingListPageContent(WikipediaLanguage.getDefault())
+            )
+        );
+        Assertions.assertTrue(
+            StringUtils.isNotBlank(
+                wikipediaServiceOffline.getFalsePositiveListPageContent(WikipediaLanguage.getDefault())
+            )
         );
         Assertions.assertEquals(
             Integer.valueOf(1),
-            wikipediaServiceOffline.getPageByTitle("", WikipediaLanguage.SPANISH).map(WikipediaPage::getId).orElse(0)
+            wikipediaServiceOffline
+                .getPageByTitle("", WikipediaLanguage.getDefault())
+                .map(WikipediaPage::getId)
+                .orElse(0)
         );
         Assertions.assertFalse(
-            wikipediaServiceOffline.getPageById(1, WikipediaLanguage.SPANISH).map(WikipediaPage::getSection).isPresent()
+            wikipediaServiceOffline
+                .getPageById(1, WikipediaLanguage.getDefault())
+                .map(WikipediaPage::getSection)
+                .isPresent()
         );
         Assertions.assertFalse(
-            wikipediaServiceOffline.getPageIdsByStringMatch(WikipediaLanguage.SPANISH, "", false, 0, 100).isEmpty()
+            wikipediaServiceOffline.getPageIdsByStringMatch(WikipediaLanguage.getDefault(), "", false, 0, 100).isEmpty()
         );
-        Assertions.assertTrue(wikipediaServiceOffline.getPageSections(1, WikipediaLanguage.SPANISH).isEmpty());
+        Assertions.assertTrue(wikipediaServiceOffline.getPageSections(1, WikipediaLanguage.getDefault()).isEmpty());
         Assertions.assertEquals(
             2,
-            wikipediaServiceOffline.getPagesByIds(Arrays.asList(1, 2), WikipediaLanguage.SPANISH).size()
+            wikipediaServiceOffline.getPagesByIds(Arrays.asList(1, 2), WikipediaLanguage.getDefault()).size()
         );
     }
 }

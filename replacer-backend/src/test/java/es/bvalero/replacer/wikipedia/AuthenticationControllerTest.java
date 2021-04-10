@@ -8,8 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -49,13 +51,15 @@ class AuthenticationControllerTest {
         AccessToken accessToken = AccessToken.of("A", "B");
         String userName = "C";
 
-        when(wikipediaService.getLoggedUser(anyString(), anyString(), anyString()))
+        when(
+            wikipediaService.getLoggedUser(Mockito.any(WikipediaLanguage.class), anyString(), anyString(), anyString())
+        )
             .thenReturn(WikipediaUser.of(userName, true, true, accessToken));
 
         VerificationToken verifier = VerificationToken.of("X", "Y", "V");
         mvc
             .perform(
-                post("/api/authentication/logged-user")
+                post("/api/authentication/logged-user?lang=es")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(verifier))
             )
@@ -66,6 +70,7 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.accessToken.token", is("A")))
             .andExpect(jsonPath("$.accessToken.tokenSecret", is("B")));
 
-        verify(wikipediaService, times(1)).getLoggedUser(anyString(), anyString(), anyString());
+        verify(wikipediaService, times(1))
+            .getLoggedUser(Mockito.any(WikipediaLanguage.class), anyString(), anyString(), anyString());
     }
 }
