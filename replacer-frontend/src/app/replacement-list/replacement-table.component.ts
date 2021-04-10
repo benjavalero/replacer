@@ -77,11 +77,7 @@ export class ReplacementTableComponent implements OnInit {
       .toLowerCase();
   }
 
-  get filter(): string {
-    return this.filterValue;
-  }
-
-  set filter(value: string) {
+  onFilter(value: string) {
     this.filterValue = value;
     this.page = 1; // Reset page
     this.refreshFilteredItems();

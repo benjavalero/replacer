@@ -2,8 +2,8 @@
   <h4>{{ type }}</h4>
 
   <div *ngIf="filtrable" class="form-group mt-4">
-    <input class="form-control" type="text" [(ngModel)]="filter" autocomplete="off"
-      placeholder="Filtrar por subtipo (ignora mayúsculas y acentos)" />
+    <input class="form-control" type="text" [ngModel]="filterValue" autocomplete="off"
+      (ngModelChange)="onFilter($event)" placeholder="Filtrar por subtipo (ignora mayúsculas y acentos)" />
   </div>
 
   <div *ngIf="filteredItems.length">
