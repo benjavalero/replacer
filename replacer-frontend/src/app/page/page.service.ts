@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { UserService } from '../user/user.service';
 import { PageDto, PageReview, PageSearch, ReviewOptions, SavePage } from './page-review.model';
@@ -10,7 +11,9 @@ import { ValidateType } from './validate-custom.model';
   providedIn: 'root'
 })
 export class PageService {
-  baseUrl = `${environment.apiUrl}/pages`;
+  private readonly lastSaveKey = 'lastSave';
+  private readonly editionsPerMinute = 5;
+  private readonly baseUrl = `${environment.apiUrl}/pages`;
 
   constructor(private httpClient: HttpClient, private userService: UserService) {}
 
@@ -47,11 +50,28 @@ export class PageService {
       return throwError('El usuario no está autenticado. Recargue la página para retomar la sesión.');
     }
 
+    // Store the date of the last save to check there are at least 12 s between savings (5 editions/min)
+    let sleepTime = 0;
+    const lastSave: number = +localStorage.getItem(this.lastSaveKey);
+    if (lastSave && page.content !== ' ') {
+      const minGap: number = (1000 * 60) / this.editionsPerMinute;
+      const gap: number = Date.now() - lastSave;
+      if (gap < minGap) {
+        sleepTime = minGap - gap;
+      }
+    }
+
     const savePage = new SavePage();
     savePage.page = page;
     savePage.search = search;
     savePage.accessToken = this.userService.accessToken;
 
-    return this.httpClient.post<string>(`${this.baseUrl}/${page.id}`, savePage);
+    // Store the new last save date
+    if (page.content !== ' ') {
+      localStorage.setItem(this.lastSaveKey, String(Date.now()));
+    }
+
+    // Call backend and delay the observable response
+    return this.httpClient.post<string>(`${this.baseUrl}/${page.id}`, savePage).pipe(delay(sleepTime));
   }
 }
