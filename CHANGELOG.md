@@ -1,5 +1,12 @@
 # Versions
 
+## 2.10.0 (10 Apr 2021)
+- Allow only autoconfirmed users
+- Limit the number of editions per minute
+- Improve edit summary to include the specific replacement applied
+- Fix: custom replacement validation
+- Fix: date finder in Galician
+
 ## 2.9.5 (1 Apr 2021)
 - Fix: infinite loop on custom review when all provided results have no replacements
 
