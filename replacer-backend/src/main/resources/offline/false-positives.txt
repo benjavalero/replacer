@@ -150,11 +150,11 @@
  # No se añade a esta lista puesto que hay usuarios que sí la revisan
  # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
  # Finalmente se añade a esta lista puesto que ha habido quejas ya que sigue siendo un término controvertido
- ést?[ea]
- ést?[oa]s
- aquél
- aquélla
- aquéll[oa]s
+ [Éé]st?[ea]
+ [Éé]st?[oa]s
+ [Aa]quél
+ [Aa]quélla
+ [Aa]quéll[oa]s
 
  # Ivan
  Ivan Lendl
@@ -340,7 +340,7 @@
  # Esta forma no es incorrecta, aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
  # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
  # Finalmente se añade a esta lista puesto que ha habido quejas ya que sigue siendo un término controvertido
- sólo
+ [Ss]ólo
 
  # Tokyo
  TV Tokyo
