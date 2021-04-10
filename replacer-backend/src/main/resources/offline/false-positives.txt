@@ -149,6 +149,12 @@
  # Esta forma no es incorrecta (salvo en «ésto»), aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
  # No se añade a esta lista puesto que hay usuarios que sí la revisan
  # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
+ # Finalmente se añade a esta lista puesto que ha habido quejas ya que sigue siendo un término controvertido
+ ést?[ea]
+ ést?[oa]s
+ aquél
+ aquélla
+ aquéll[oa]s
 
  # Ivan
  Ivan Lendl
@@ -332,8 +338,9 @@
 
  # sólo
  # Esta forma no es incorrecta, aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
- # No se añade a esta lista puesto que hay usuarios que sí la revisan
  # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
+ # Finalmente se añade a esta lista puesto que ha habido quejas ya que sigue siendo un término controvertido
+ sólo
 
  # Tokyo
  TV Tokyo
