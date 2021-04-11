@@ -1,5 +1,8 @@
 # Versions
 
+## 2.10.2 (11 Apr 2021)
+- Fix in Galician dates
+
 ## 2.10.1 (11 Apr 2021)
 - Fix: The language is needed to retrieve the user groups
 
