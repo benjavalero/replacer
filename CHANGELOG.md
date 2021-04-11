@@ -1,5 +1,8 @@
 # Versions
 
+## 2.10.1 (11 Apr 2021)
+- Fix: The language is needed to retrieve the user groups
+
 ## 2.10.0 (10 Apr 2021)
 - Allow only autoconfirmed users
 - Limit the number of editions per minute
