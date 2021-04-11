@@ -182,7 +182,7 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
         String content = template.group();
 
         // Special case "{{|}}"
-        if ("{{|}}".equals(content)) {
+        if (!validateSpecialCharacters(content)) {
             return Collections.emptyList();
         }
 
@@ -262,6 +262,13 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
         }
 
         return immutables;
+    }
+
+    private boolean validateSpecialCharacters(String template) {
+        String content = template.substring(2, template.length() - 2);
+
+        // Check that not all the characters are a pipe
+        return content.chars().anyMatch(ch -> ch != '|');
     }
 
     private boolean ignoreCompleteTemplate(String templateName) {

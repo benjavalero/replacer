@@ -237,8 +237,8 @@ class CompleteTemplateFinderTest {
     }
 
     @Test
-    void testSpecialCharacter() {
-        String text = "{{|}}";
+    void testSpecialCharacters() {
+        String text = "{{|||}}";
 
         List<Immutable> matches = completeTemplateFinder.findList(text);
 
