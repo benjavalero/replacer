@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { faCheckDouble, faList } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
@@ -13,7 +13,7 @@ import { rotate, SortDirection } from './sort-direction.model';
   templateUrl: './replacement-table.component.html',
   styleUrls: ['./replacement-table.component.css']
 })
-export class ReplacementTableComponent implements OnInit {
+export class ReplacementTableComponent implements OnChanges {
   private readonly PAGE_SIZE = 8;
   private readonly MAX_SIZE = 3;
 
@@ -54,14 +54,18 @@ export class ReplacementTableComponent implements OnInit {
     this.pageListUrl = `${environment.apiUrl}/pages?lang=${this.userConfigService.lang}`;
   }
 
-  ngOnInit(): void {
+  ngOnChanges() {
+    this.sortAndRefresh();
+  }
+
+  private sortAndRefresh(): void {
+    // The sorting can be done in the original counts to speed up next filters without sorting
+    this.replacementCounts = this.sortCounts(this.replacementCounts, this.sortColumn, this.sortDirection);
+
     this.refreshFilteredItems();
   }
 
   private refreshFilteredItems(): void {
-    // The sorting can be done in the original counts to speed up next filters without sorting
-    this.replacementCounts = this.sortCounts(this.replacementCounts, this.sortColumn, this.sortDirection);
-
     const filtered = this.filterCounts(this.replacementCounts, this.filterValue);
     const paginated = this.paginateCounts(filtered, this.pageValue, this.pageSize);
 
@@ -96,7 +100,7 @@ export class ReplacementTableComponent implements OnInit {
     this.sortDirection = rotate[this.columnDirection(column)];
     this.sortColumn = column;
 
-    this.refreshFilteredItems();
+    this.sortAndRefresh();
   }
 
   columnDirection(column: string): SortDirection {
