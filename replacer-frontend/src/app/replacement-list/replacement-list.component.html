@@ -1,4 +1,4 @@
-<div *ngIf="counts$ | async as typeCounts; else loading">
+<div *ngIf="typeCounts.length">
   <h3>Lista de reemplazos</h3>
 
   <p>
@@ -9,6 +9,6 @@
   <app-replacement-table *ngFor="let typeCount of typeCounts" [type]="typeCount.t" [replacementCounts]="typeCount.l">
   </app-replacement-table>
 </div>
-<ng-template #loading>
+<div *ngIf="!typeCounts.length">
   <app-alert>Cargando lista de reemplazos…</app-alert>
-</ng-template>
+</div>
