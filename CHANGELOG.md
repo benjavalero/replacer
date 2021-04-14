@@ -1,5 +1,10 @@
 # Versions
 
+## 2.10.3 (14 Apr 2021)
+- Fix: Only sort replacement table after sort event
+- Fix: Refresh and don't recreate table components in replacement list
+- Specific table for custom replacements. This should improve custom replacement performance.
+
 ## 2.10.2 (11 Apr 2021)
 - Fix in Galician dates
 
