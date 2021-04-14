@@ -9,7 +9,7 @@ import { ReplacementCount, ReplacementCountList } from './replacement-list.model
 })
 export class ReplacementListService implements OnDestroy {
   private readonly countsKey = 'counts';
-  private readonly _counts = new BehaviorSubject<ReplacementCountList[]>(null);
+  private readonly _counts = new BehaviorSubject<ReplacementCountList[]>([]);
 
   // Task to refresh the counts periodically
   subscription: Subscription;
