@@ -182,19 +182,6 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
         return result == null ? 0L : result;
     }
 
-    // Using DISTINCT makes the query not to use to wanted index "idx_count"
-    @Override
-    public List<Integer> findPageIdsReviewedByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype) {
-        String sql =
-            "SELECT article_id FROM replacement " +
-            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NOT NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_TYPE, type)
-            .addValue(PARAM_SUBTYPE, subtype);
-        return jdbcTemplate.queryForList(sql, namedParameters, Integer.class);
-    }
-
     @Override
     public void reviewByPageId(
         WikipediaLanguage lang,

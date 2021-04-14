@@ -3,7 +3,7 @@ package es.bvalero.replacer.page;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.replacement.*;
-import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
@@ -46,15 +46,14 @@ class PageReviewCustomService extends PageReviewService {
 
             String type = options.getType();
             String subtype = options.getSubtype();
+            boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
             assert ReplacementType.CUSTOM.equals(type);
             assert subtype != null;
 
             // Calculate this out of the loop only if needed the first time
             List<Integer> reviewedIds = new ArrayList<>();
             if (!pageIds.isEmpty()) {
-                reviewedIds.addAll(
-                    replacementService.findPageIdsReviewedByTypeAndSubtype(options.getLang(), type, subtype)
-                );
+                reviewedIds.addAll(replacementService.findPageIdsReviewedByReplacement(options.getLang(), subtype, cs));
             }
 
             while (totalToReview >= 0) {
@@ -117,18 +116,24 @@ class PageReviewCustomService extends PageReviewService {
     public void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer) {
         // Custom replacements don't exist in the database to be reviewed
         String subtype = options.getSubtype();
+        boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
         assert subtype != null;
-        replacementService.insert(buildCustomReviewed(pageId, options.getLang(), subtype, reviewer));
+        replacementService.insertCustom(buildCustomReviewed(pageId, options.getLang(), subtype, cs, reviewer));
     }
 
-    private ReplacementEntity buildCustomReviewed(int pageId, WikipediaLanguage lang, String subtype, String reviewer) {
-        return ReplacementEntity
+    private CustomEntity buildCustomReviewed(
+        int pageId,
+        WikipediaLanguage lang,
+        String replacement,
+        boolean cs,
+        String reviewer
+    ) {
+        return CustomEntity
             .builder()
             .lang(lang.getCode())
             .pageId(pageId)
-            .type(ReplacementType.CUSTOM)
-            .subtype(subtype)
-            .position(0)
+            .replacement(replacement)
+            .cs(cs)
             .lastUpdate(LocalDate.now())
             .reviewer(reviewer)
             .build();

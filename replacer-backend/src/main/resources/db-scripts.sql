@@ -26,3 +26,21 @@ CREATE INDEX idx_dump ON replacement2 (lang, article_id, reviewer);
 
 -- Rename replacement table
 RENAME TABLE replacement2 TO replacement;
+
+-- New table only for custom replacements
+CREATE TABLE custom (
+    id INT NOT NULL AUTO_INCREMENT,
+    article_id INT NOT NULL,
+    lang VARCHAR(2) NOT NULL,
+    replacement VARCHAR(100) COLLATE utf8mb4_bin NOT NULL,
+    cs TINYINT(1) NOT NULL DEFAULT 0,
+    last_update DATE NOT NULL,
+    reviewer VARCHAR(100) NOT NULL, -- In order to make the index work
+    PRIMARY KEY (id)
+);
+
+-- Move from replacement to custom
+INSERT INTO custom(article_id, lang, replacement, last_update, reviewer)
+    SELECT article_id, lang, subtype, last_update, reviewer
+    FROM replacement WHERE type = 'Personalizado';
+DELETE FROM replacement WHERE type = 'Personalizado';

@@ -30,15 +30,7 @@ public class ReplacementIndexService {
     }
 
     private List<ReplacementEntity> findDbReplacements(IndexablePage page) {
-        return replacementDao
-            .findByPageId(page.getId(), page.getLang())
-            .stream()
-            .filter(this::isNotCustom)
-            .collect(Collectors.toList());
-    }
-
-    private boolean isNotCustom(ReplacementEntity replacement) {
-        return !ReplacementType.CUSTOM.equals(replacement.getType());
+        return replacementDao.findByPageId(page.getId(), page.getLang());
     }
 
     /**

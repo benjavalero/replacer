@@ -2,7 +2,6 @@ package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.ArrayList;
@@ -56,13 +55,7 @@ class PageReplacementServiceProxy implements PageReplacementService {
     private void load(int minId, int maxId, WikipediaLanguage lang) {
         replacementService
             .findByPageInterval(minId, maxId, lang)
-            .stream()
-            .filter(this::isNotCustom)
             .forEach(replacement -> replacementMap.put(replacement.getPageId(), replacement));
-    }
-
-    private boolean isNotCustom(ReplacementEntity replacement) {
-        return !ReplacementType.CUSTOM.equals(replacement.getType());
     }
 
     @Loggable(prepend = true, value = Loggable.TRACE)

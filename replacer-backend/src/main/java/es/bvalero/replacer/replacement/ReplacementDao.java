@@ -41,8 +41,6 @@ interface ReplacementDao {
 
     long countPagesToBeReviewedBySubtype(WikipediaLanguage lang, String type, String subtype);
 
-    List<Integer> findPageIdsReviewedByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype);
-
     ///// PAGE LISTS
 
     List<String> findPageTitlesToReviewBySubtype(WikipediaLanguage lang, String type, String subtype);

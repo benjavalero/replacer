@@ -24,10 +24,17 @@ public class ReplacementService {
     @Autowired
     private ReplacementStatsDao replacementStatsDao;
 
+    @Autowired
+    private CustomDao customDao;
+
     ///// CRUD
 
     public void insert(ReplacementEntity entity) {
         replacementDao.insert(entity);
+    }
+
+    public void insertCustom(CustomEntity entity) {
+        customDao.insert(entity);
     }
 
     ///// DUMP INDEXATION
@@ -65,8 +72,8 @@ public class ReplacementService {
     }
 
     @Loggable(value = Loggable.DEBUG, prepend = true)
-    public List<Integer> findPageIdsReviewedByTypeAndSubtype(WikipediaLanguage lang, String type, String subtype) {
-        return replacementDao.findPageIdsReviewedByTypeAndSubtype(lang, type, subtype);
+    public List<Integer> findPageIdsReviewedByReplacement(WikipediaLanguage lang, String replacement, boolean cs) {
+        return customDao.findPageIdsReviewed(lang, replacement, cs);
     }
 
     public void reviewByPageId(
