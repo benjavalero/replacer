@@ -24,7 +24,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     private static final String PARAM_TYPE = "type";
     private static final String PARAM_SUBTYPE = "subtype";
     private static final String PARAM_REVIEWER = "reviewer";
-    private static final String PARAM_SYSTEM = "system";
+    private static final String PARAM_VALUE_SYSTEM = "system";
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -213,7 +213,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
             "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
+            .addValue(PARAM_VALUE_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
         Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
         return result == null ? 0L : result;
     }
@@ -236,7 +236,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
             "ORDER BY COUNT(*) DESC";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
+            .addValue(PARAM_VALUE_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM);
         return jdbcTemplate.query(sql, namedParameters, new ReviewerCountRowMapper());
     }
 
@@ -274,7 +274,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
             "UPDATE replacement SET reviewer=:system, last_update=:now " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM)
+            .addValue(PARAM_VALUE_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM)
             .addValue("now", LocalDate.now())
             .addValue(PARAM_LANG, lang.getCode())
             .addValue(PARAM_TYPE, type)

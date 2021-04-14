@@ -44,7 +44,8 @@ class DumpPageProcessor {
         try {
             dumpPage.validateProcessable();
         } catch (ReplacerException e) {
-            // Remove possible existing (not reviewed) replacements
+            // If the page is not processable then it should not exist in DB ==> remove all replacements of this page
+            // There could be replacements reviewed by users that we want to keep for the sake of statistics
             List<ReplacementEntity> toDelete = notProcessPage(dumpPage);
             if (toDelete.isEmpty()) {
                 throw e;
@@ -75,8 +76,7 @@ class DumpPageProcessor {
         // Return the DB replacements not reviewed in order to delete them
         return dbReplacements
             .stream()
-            .filter(ReplacementEntity::isToBeReviewed)
-            .filter(ReplacementEntity::isSystemReviewed)
+            .filter(r -> r.isToBeReviewed() || r.isSystemReviewed())
             .map(ReplacementEntity::setToDelete)
             .collect(Collectors.toList());
     }
