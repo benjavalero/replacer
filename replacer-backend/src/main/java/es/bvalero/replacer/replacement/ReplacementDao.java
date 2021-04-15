@@ -10,8 +10,6 @@ interface ReplacementDao {
 
     List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang);
 
-    void insert(ReplacementEntity entity);
-
     void insert(List<ReplacementEntity> entityList);
 
     void update(ReplacementEntity entity);

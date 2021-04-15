@@ -8,6 +8,7 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.replacement.*;
+import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.*;
@@ -70,7 +71,7 @@ class PageReviewCustomServiceTest {
         verify(wikipediaService, times(1)).getPageIdsByStringMatch(lang, replacement, true, 0, CACHE_SIZE);
         verify(replacementService, never())
             .findPageIdsReviewedByReplacement(any(WikipediaLanguage.class), anyString(), anyBoolean());
-        verify(replacementService, never()).insert(any(ReplacementEntity.class));
+        verify(replacementService, never()).insert(any(CustomEntity.class));
     }
 
     @Test
@@ -109,7 +110,7 @@ class PageReviewCustomServiceTest {
         // Verifications
         verify(wikipediaService, times(1)).getPageIdsByStringMatch(lang, replacement, true, 0, CACHE_SIZE);
         verify(replacementService, times(1)).findPageIdsReviewedByReplacement(lang, replacement, true);
-        verify(replacementService, never()).insert(any(ReplacementEntity.class));
+        verify(replacementService, never()).insert(any(CustomEntity.class));
     }
 
     @Test
@@ -175,7 +176,7 @@ class PageReviewCustomServiceTest {
         verify(wikipediaService, times(1)).getPageIdsByStringMatch(lang, replacement, true, 0, CACHE_SIZE);
         verify(replacementService, times(1)).findPageIdsReviewedByReplacement(lang, replacement, true);
         verify(wikipediaService, times(1)).getPageById(pageId, lang);
-        verify(replacementService, never()).insert(any(ReplacementEntity.class));
+        verify(replacementService, never()).insert(any(CustomEntity.class));
     }
 
     @Test
@@ -228,7 +229,7 @@ class PageReviewCustomServiceTest {
         verify(wikipediaService, times(1)).getPageIdsByStringMatch(lang, replacement, true, 0, CACHE_SIZE);
         verify(replacementService, times(1)).findPageIdsReviewedByReplacement(lang, replacement, true);
         verify(wikipediaService, times(1)).getPageById(pageId, lang);
-        verify(replacementService, never()).insert(any(ReplacementEntity.class));
+        verify(replacementService, never()).insert(any(CustomEntity.class));
     }
 
     @Test
@@ -289,7 +290,7 @@ class PageReviewCustomServiceTest {
         verify(wikipediaService, times(1)).getPageIdsByStringMatch(lang, replacement, true, 0, CACHE_SIZE);
         verify(replacementService, times(1)).findPageIdsReviewedByReplacement(lang, replacement, true);
         verify(wikipediaService, times(1)).getPageById(pageId2, lang);
-        verify(replacementService, never()).insert(any(ReplacementEntity.class));
+        verify(replacementService, never()).insert(any(CustomEntity.class));
     }
 
     @Test
@@ -329,7 +330,7 @@ class PageReviewCustomServiceTest {
         verify(wikipediaService, times(1)).getPageIdsByStringMatch(lang, replacement, true, 3, CACHE_SIZE);
         verify(replacementService, times(1)).findPageIdsReviewedByReplacement(lang, replacement, true);
         verify(wikipediaService, times(0)).getPageById(anyInt(), any(WikipediaLanguage.class));
-        verify(replacementService, never()).insert(any(ReplacementEntity.class));
+        verify(replacementService, never()).insert(any(CustomEntity.class));
     }
 
     @Test

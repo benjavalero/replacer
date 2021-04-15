@@ -118,7 +118,7 @@ class PageReviewCustomService extends PageReviewService {
         String subtype = options.getSubtype();
         boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
         assert subtype != null;
-        replacementService.insertCustom(buildCustomReviewed(pageId, options.getLang(), subtype, cs, reviewer));
+        replacementService.insert(buildCustomReviewed(pageId, options.getLang(), subtype, cs, reviewer));
     }
 
     private CustomEntity buildCustomReviewed(

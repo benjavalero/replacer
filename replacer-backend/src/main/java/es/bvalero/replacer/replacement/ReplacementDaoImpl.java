@@ -44,15 +44,6 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     }
 
     @Override
-    public void insert(ReplacementEntity entity) {
-        final String sql =
-            "INSERT INTO replacement (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +
-            "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer, :title)";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
-        jdbcTemplate.update(sql, namedParameters);
-    }
-
-    @Override
     public void insert(List<ReplacementEntity> entityList) {
         final String sql =
             "INSERT INTO replacement (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +

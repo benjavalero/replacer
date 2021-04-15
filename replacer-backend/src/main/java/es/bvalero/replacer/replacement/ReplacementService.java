@@ -29,11 +29,7 @@ public class ReplacementService {
 
     ///// CRUD
 
-    public void insert(ReplacementEntity entity) {
-        replacementDao.insert(entity);
-    }
-
-    public void insertCustom(CustomEntity entity) {
+    public void insert(CustomEntity entity) {
         customDao.insert(entity);
     }
 
