@@ -44,3 +44,17 @@ INSERT INTO custom(article_id, lang, replacement, last_update, reviewer)
     SELECT article_id, lang, subtype, last_update, reviewer
     FROM replacement WHERE type = 'Personalizado';
 DELETE FROM replacement WHERE type = 'Personalizado';
+
+-- New table only for custom replacements
+CREATE TABLE page (
+    lang VARCHAR(2) NOT NULL,
+    article_id INT NOT NULL,
+    title VARCHAR(255) COLLATE utf8mb4_bin,
+    PRIMARY KEY (lang, article_id)
+);
+-- For the moment we don't need to define FK between Replacement/Custom and Page at DB level
+-- Move titles to page table
+INSERT IGNORE INTO page(lang, article_id, title)
+    SELECT lang, article_id, title
+    FROM replacement WHERE title IS NOT NULL;
+ALTER TABLE replacement DROP COLUMN title;

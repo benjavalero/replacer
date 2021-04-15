@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -14,11 +15,14 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Loggable(Loggable.TRACE) // To warn about performance issues
 @Repository
 @Transactional
 class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
 
+    private static final String FROM_REPLACEMENT_JOIN_PAGE =
+        "FROM replacement r JOIN page p ON r.lang = p.lang AND r.article_id = p.article_id ";
     private static final String PARAM_PAGE_ID = "pageId";
     private static final String PARAM_LANG = "lang";
     private static final String PARAM_TYPE = "type";
@@ -29,13 +33,17 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
+    @Autowired
+    private PageDao pageDao;
+
     ///// CRUD
 
     @Override
     public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
         String sql =
-            "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, title " +
-            "FROM replacement WHERE lang = :lang AND article_id = :pageId";
+            "SELECT r.id, r.article_id, r.lang, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
+            FROM_REPLACEMENT_JOIN_PAGE +
+            "WHERE r.lang = :lang AND r.article_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
             .addValue(PARAM_PAGE_ID, pageId);
@@ -44,11 +52,21 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
 
     @Override
     public void insert(List<ReplacementEntity> entityList) {
+        this.insertUpdatePages(entityList);
+
         final String sql =
-            "INSERT INTO replacement (article_id, lang, type, subtype, position, context, last_update, reviewer, title) " +
-            "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer, :title)";
+            "INSERT INTO replacement (article_id, lang, type, subtype, position, context, last_update, reviewer) " +
+            "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(entityList.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
+    private void insertUpdatePages(List<ReplacementEntity> entityList) {
+        entityList
+            .stream()
+            .map(r -> PageEntity.of(r.getLang(), r.getPageId(), r.getTitle()))
+            .distinct()
+            .forEach(p -> pageDao.insertUpdatePage(p));
     }
 
     @Override
@@ -63,9 +81,11 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
 
     @Override
     public void update(List<ReplacementEntity> entityList) {
+        this.insertUpdatePages(entityList);
+
         final String sql =
             "UPDATE replacement " +
-            "SET position=:position, context=:context, last_update=:lastUpdate, title=:title " +
+            "SET position=:position, context=:context, last_update=:lastUpdate " +
             "WHERE id=:id";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(entityList.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
@@ -91,8 +111,9 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang) {
         String sql =
-            "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, title " +
-            "FROM replacement WHERE lang = :lang AND article_id BETWEEN :minPageId AND :maxPageId";
+            "SELECT r.id, r.article_id, r.lang, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
+            FROM_REPLACEMENT_JOIN_PAGE +
+            "WHERE r.lang = :lang AND r.article_id BETWEEN :minPageId AND :maxPageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
             .addValue("minPageId", minPageId)
@@ -247,8 +268,9 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     @Override
     public List<String> findPageTitlesToReviewBySubtype(WikipediaLanguage lang, String type, String subtype) {
         String sql =
-            "SELECT DISTINCT(title) FROM replacement " +
-            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
+            "SELECT DISTINCT(p.title) " +
+            FROM_REPLACEMENT_JOIN_PAGE +
+            "WHERE r.lang = :lang AND r.type = :type AND r.subtype = :subtype AND r.reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
             .addValue(PARAM_TYPE, type)
