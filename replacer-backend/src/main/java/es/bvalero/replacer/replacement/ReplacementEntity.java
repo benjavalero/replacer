@@ -39,6 +39,7 @@ public class ReplacementEntity {
     @With(AccessLevel.PACKAGE)
     String reviewer;
 
+    @With(AccessLevel.PACKAGE)
     String title;
 
     // Temporary field not in database to know the status of the replacement while indexing
@@ -109,12 +110,17 @@ public class ReplacementEntity {
     }
 
     ReplacementEntity updatePosition(int position) {
-        // Action for position and context is the same
+        // Action for position, context and title is the same
         return withPosition(position).withCudAction("UC");
     }
 
+    ReplacementEntity updateTitle(String title) {
+        // Action for position, context and title is the same
+        return withTitle(title).withCudAction("UC");
+    }
+
     boolean isToUpdate() {
-        return this.cudAction != null && this.cudAction.contains("U");
+        return this.cudAction != null && this.cudAction.startsWith("U");
     }
 
     ReplacementEntity setToKeep() {
@@ -135,7 +141,7 @@ public class ReplacementEntity {
             .setToCreate();
     }
 
-    boolean isDummy() {
+    public boolean isDummy() {
         return (
             StringUtils.isEmpty(this.type) &&
             StringUtils.isEmpty(this.subtype) &&

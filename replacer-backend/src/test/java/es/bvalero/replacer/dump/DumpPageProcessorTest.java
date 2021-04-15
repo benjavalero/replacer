@@ -84,9 +84,10 @@ class DumpPageProcessorTest {
             .namespace(WikipediaNamespace.ARTICLE)
             .content("")
             .lastUpdate(yesterday)
+            .title("T")
             .build();
 
-        ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(today);
+        ReplacementEntity replacement = ReplacementEntity.builder().lastUpdate(today).title("T").build();
         Mockito
             .when(pageReplacementService.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));

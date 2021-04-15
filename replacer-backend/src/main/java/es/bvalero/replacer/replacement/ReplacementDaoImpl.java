@@ -33,9 +33,8 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
 
     @Override
     public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
-        // We need all the fields but the title so we don't select it to improve performance
         String sql =
-            "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
+            "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, title " +
             "FROM replacement WHERE lang = :lang AND article_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())
@@ -66,7 +65,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     public void update(List<ReplacementEntity> entityList) {
         final String sql =
             "UPDATE replacement " +
-            "SET position=:position, context=:context, last_update=:lastUpdate " +
+            "SET position=:position, context=:context, last_update=:lastUpdate, title=:title " +
             "WHERE id=:id";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(entityList.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
@@ -91,10 +90,8 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
 
     @Override
     public List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang) {
-        // We need all the fields but the title so we don't select it to improve performance
-        // We are not interested in the custom replacements when reindexing
         String sql =
-            "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, NULL AS title " +
+            "SELECT id, article_id, lang, type, subtype, position, context, last_update, reviewer, title " +
             "FROM replacement WHERE lang = :lang AND article_id BETWEEN :minPageId AND :maxPageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue(PARAM_LANG, lang.getCode())

@@ -92,7 +92,11 @@ class DumpPageProcessor {
             .stream()
             .map(ReplacementEntity::getLastUpdate)
             .max(Comparator.comparing(LocalDate::toEpochDay));
-        if (dbLastUpdate.isPresent() && !isProcessableByTimestamp(dumpPage, dbLastUpdate.get())) {
+        if (
+            dbLastUpdate.isPresent() &&
+            !isProcessableByTimestamp(dumpPage, dbLastUpdate.get()) &&
+            validatePageTitles(dumpPage, dbReplacements)
+        ) {
             LOGGER.trace(
                 "Page not processable by date: {}. Dump date: {}. DB date: {}",
                 dumpPage.getTitle(),
@@ -108,6 +112,15 @@ class DumpPageProcessor {
             replacements.stream().map(r -> convert(r, dumpPage)).collect(Collectors.toList()),
             dbReplacements
         );
+    }
+
+    private boolean validatePageTitles(IndexablePage dumpPage, List<ReplacementEntity> dbReplacements) {
+        // In case the page title has changed we force the page processing
+        return dbReplacements
+            .stream()
+            .filter(r -> !r.isDummy())
+            .map(ReplacementEntity::getTitle)
+            .allMatch(t -> dumpPage.getTitle().equals(t));
     }
 
     private boolean isProcessableByTimestamp(IndexablePage dumpPage, LocalDate dbDate) {

@@ -1,7 +1,6 @@
 package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.finder.replacement.ReplacementType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -141,6 +140,9 @@ public class ReplacementIndexService {
             if (!replacement.getContext().equals(dbReplacement.getContext())) {
                 result = result.updateContext(replacement.getContext());
             }
+            if (!replacement.getTitle().equals(dbReplacement.getTitle())) {
+                result = result.updateTitle(replacement.getTitle());
+            }
         }
         return result;
     }
@@ -226,6 +228,17 @@ public class ReplacementIndexService {
             .collect(Collectors.toList());
         dbReplacements.removeAll(obsolete);
         result.addAll(obsolete.stream().map(ReplacementEntity::setToDelete).collect(Collectors.toList()));
+
+        // Just in case check the title as it might change with time
+        // The title could be null in case of indexing an obsolete dummy page
+        if (StringUtils.isNotBlank(page.getTitle())) {
+            List<ReplacementEntity> oldTitle = dbReplacements
+                .stream()
+                .filter(rep -> !rep.isDummy())
+                .filter(rep -> !page.getTitle().equals(rep.getTitle()))
+                .collect(Collectors.toList());
+            result.addAll(oldTitle.stream().map(rep -> rep.updateTitle(page.getTitle())).collect(Collectors.toList()));
+        }
 
         // We use a dummy replacement to store in some place the last update of the page
         // in case there are no replacements to review to store it instead.
