@@ -1,5 +1,9 @@
 # Versions
 
+## 2.10.4 (16 Apr 2021)
+- Fix: Load replacement list
+- Update titles during indexation
+
 ## 2.10.3 (14 Apr 2021)
 - Fix: Only sort replacement table after sort event
 - Fix: Refresh and don't recreate table components in replacement list
