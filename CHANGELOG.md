@@ -1,5 +1,8 @@
 # Versions
 
+## 2.10.5 (17 Apr 2021)
+- New table for page titles
+
 ## 2.10.4 (16 Apr 2021)
 - Fix: Load replacement list
 - Update titles during indexation
