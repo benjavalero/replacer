@@ -1,46 +1,59 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
-import { Suggestion } from './suggestion.model';
-
-const THRESHOLD = 200; // Number of characters to display around the replacements
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EditCustomSnippetComponent } from './edit-custom-snippet.component';
+import { FixedReplacement, getReplacementEnd, PageReplacement, Snippet, Suggestion } from './page-replacement.model';
 
 @Component({
   selector: 'app-edit-snippet',
   templateUrl: './edit-snippet.component.html',
+  encapsulation: ViewEncapsulation.None,
   styleUrls: ['./edit-snippet.component.css']
 })
 export class EditSnippetComponent implements OnInit {
-  @Input() text: string;
-  @Input() start: number;
-  @Input() word: string;
-  @Input() suggestions: Suggestion[];
+  @Input() index: number;
+  @Input() pageText: string;
+  @Input() replacement: PageReplacement;
 
-  textLeft: string;
+  // Limits on left and right to edit the snippet as we would clash with other replacements
+  @Input() limitLeft: number;
+  @Input() limitRight: number;
+
   private suggestionSelectedValue: Suggestion;
-  textRight: string;
+  customFix: Snippet;
 
-  @Output() fixed: EventEmitter<any> = new EventEmitter();
+  @Output() fixed: EventEmitter<FixedReplacement> = new EventEmitter();
+
+  constructor(private modalService: NgbModal) {}
 
   ngOnInit() {
-    this.textLeft = this.trimLeft(this.text);
-    this.textRight = this.trimRight(this.text);
+    this.manageOriginalWord();
+  }
 
+  private manageOriginalWord(): void {
     // If the original word is not in the suggestions we added it at the first position
-    const posOriginalWord = this.suggestions.map((sug) => sug.text).findIndex((word) => word === this.word);
+    const posOriginalWord = this.replacement.suggestions
+      .map((sug) => sug.text)
+      .findIndex((word) => word === this.replacement.text);
     if (posOriginalWord >= 0) {
-      let originalSuggested = this.suggestions[posOriginalWord];
+      let originalSuggested = this.replacement.suggestions[posOriginalWord];
       if (!originalSuggested.comment) {
         originalSuggested = { ...originalSuggested, comment: 'no reemplazar' };
-        this.suggestions[posOriginalWord] = originalSuggested;
+        this.replacement.suggestions[posOriginalWord] = originalSuggested;
       }
       this.suggestionSelected = originalSuggested;
     } else {
-      this.suggestions.unshift({
-        text: this.word,
-        comment: 'no reemplazar'
-      });
-      this.suggestionSelected = this.suggestions[0];
+      const defaultSuggestion: Suggestion = { text: this.replacement.text, comment: 'no reemplazar' };
+      this.replacement.suggestions.unshift(defaultSuggestion);
+      this.suggestionSelected = this.replacement.suggestions[0];
     }
+  }
+
+  get textLeft(): string {
+    return this.trimLeft().text;
+  }
+
+  get textRight(): string {
+    return this.trimRight().text;
   }
 
   get suggestionSelected(): Suggestion {
@@ -49,21 +62,56 @@ export class EditSnippetComponent implements OnInit {
 
   set suggestionSelected(suggestion: Suggestion) {
     this.suggestionSelectedValue = suggestion;
-    this.fixed.emit({ position: this.start, newText: suggestion.text === this.word ? null : suggestion.text });
+    this.customFix = null;
+    const fixedReplacement: FixedReplacement = {
+      index: this.index,
+      start: this.replacement.start,
+      oldText: this.replacement.text,
+      newText: suggestion.text !== this.replacement.text ? suggestion.text : null
+    };
+    this.fixed.emit(fixedReplacement);
   }
 
   onSelectSuggestion(index: number) {
-    this.suggestionSelected = this.suggestions[index];
+    this.suggestionSelected = this.replacement.suggestions[index];
   }
 
-  private trimLeft(text: string): string {
-    const limitLeft = Math.max(0, this.start - THRESHOLD);
-    return (limitLeft ? '[...] ' : '') + text.slice(limitLeft, this.start);
+  private trimLeft(): Snippet {
+    const snippetText = this.pageText.slice(this.limitLeft, this.replacement.start);
+    return { start: this.limitLeft, text: snippetText };
   }
 
-  private trimRight(text: string): string {
-    const end = this.start + this.word.length;
-    const limitRight = Math.min(end + THRESHOLD, text.length);
-    return text.slice(end, limitRight) + (limitRight === text.length ? '' : ' [...]');
+  private trimRight(): Snippet {
+    const snippetText = this.pageText.slice(getReplacementEnd(this.replacement), this.limitRight);
+    return { start: getReplacementEnd(this.replacement), text: snippetText };
+  }
+
+  onEdit(): void {
+    const modalRef = this.modalService.open(EditCustomSnippetComponent, { windowClass: 'snippet-modal' });
+    const editableSnippet = this.customFix ? this.customFix : this.buildEditableSnippet();
+    modalRef.componentInstance.snippet = editableSnippet;
+    modalRef.result.then(
+      (result: Snippet) => {
+        if (editableSnippet.text !== result.text) {
+          this.suggestionSelectedValue = null;
+          this.customFix = result;
+
+          const fixedReplacement: FixedReplacement = {
+            index: this.index,
+            start: result.start,
+            oldText: editableSnippet.text,
+            newText: result.text
+          };
+          this.fixed.emit(fixedReplacement);
+        }
+      },
+      (reason) => {
+        // Nothing to do
+      }
+    );
+  }
+
+  private buildEditableSnippet(): Snippet {
+    return { start: this.limitLeft, text: this.textLeft + this.suggestionSelected.text + this.textRight };
   }
 }

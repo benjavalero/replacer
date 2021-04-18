@@ -1,12 +1,20 @@
 <div class="border border-secondary p-2 mt-3 mb-3">
 
-  <div class="pre">{{ textLeft }}<span class="btn"
-      [ngClass]="{ 'btn-danger': word === suggestionSelected.text, 'btn-success': word !== suggestionSelected.text }">{{ suggestionSelected.text }}</span>{{ textRight }}
+  <div class="pre" *ngIf="suggestionSelected">
+    <span>{{ textLeft }}</span>
+    <!-- IMPORTANT: Don't break lines brefore or after the snippet not to introduce unwanted whitespaces -->
+    <span class="btn"
+      [ngClass]="{ 'btn-danger': replacement.text === suggestionSelected.text, 'btn-success': replacement.text !== suggestionSelected.text }">{{
+      suggestionSelected.text }}</span>
+    <span>{{ textRight }}</span>
+  </div>
+  <div class="pre" *ngIf="customFix">
+    <span>{{ customFix.text }}</span>
   </div>
 
   <div class="container mt-3">
-    <div class="row">
-      <div *ngFor="let suggestion of suggestions; let i = index; let first = first; let last = last"
+    <div class="row" *ngIf="suggestionSelected">
+      <div *ngFor="let suggestion of replacement.suggestions; let i = index; let first = first; let last = last"
         class="btn text-left col-sm" [ngClass]="{ 'btn-primary': suggestion === suggestionSelected,
          'btn-outline-primary': suggestion !== suggestionSelected,
          'first-suggestion': first, 'middle-suggestion': !first && !last, 'last-suggestion': last }"
@@ -14,6 +22,11 @@
         {{ suggestion.text }}
         <span *ngIf="suggestion.comment" class="small">({{ suggestion.comment }})</span>
       </div>
+    </div>
+    <div class="row">
+      <button type="button" class="btn w-100 btn-primary mt-1" (click)="onEdit()">
+        Editar fragmento
+      </button>
     </div>
   </div>
 

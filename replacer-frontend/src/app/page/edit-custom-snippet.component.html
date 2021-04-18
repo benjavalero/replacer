@@ -1,0 +1,7 @@
+<!-- IMPORTANT: Don't break lines brefore or after the snippet not to introduce unwanted whitespaces -->
+<div class="modal-body" class="border pre m-2 p-2" contenteditable ngbAutofocus (input)="onChange($event)">{{
+  snippet.text }}</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-primary" (click)="activeModal.dismiss()">Cancelar</button>
+  <button type="button" class="btn btn-primary" (click)="accept()">Aceptar</button>
+</div>

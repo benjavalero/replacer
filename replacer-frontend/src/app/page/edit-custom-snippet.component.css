@@ -1,0 +1,6 @@
+.pre {
+  white-space: pre-wrap;
+  font-family: monospace;
+  max-height: 60vh;
+  overflow: scroll;
+}

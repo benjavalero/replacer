@@ -1,5 +1,8 @@
 # Versions
 
+## 2.11.0 (??)
+- New feature: edit text around replacement
+
 ## 2.10.5 (17 Apr 2021)
 - New table for page titles
 

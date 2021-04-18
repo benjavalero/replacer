@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { AlertService } from '../alert/alert.service';
 import { UserService } from '../user/user.service';
-import { PageReplacement } from './page-replacement.model';
+import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
 import { PageReview, ReviewOptions } from './page-review.model';
 import { PageService } from './page.service';
 
@@ -13,33 +13,66 @@ import { PageService } from './page.service';
 export class EditPageComponent implements OnChanges {
   @Input() review: PageReview;
 
-  fixedCount = 0;
+  private readonly THRESHOLD = 200; // Maximum number of characters to display around the replacements
+  private fixedReplacements: FixedReplacement[];
 
   @Output() saved: EventEmitter<ReviewOptions> = new EventEmitter();
 
   constructor(private alertService: AlertService, private pageService: PageService, private userService: UserService) {}
 
   ngOnChanges() {
-    this.fixedCount = 0;
+    // We assume the replacements are returned sorted by the back-end
+    this.fixedReplacements = new Array<FixedReplacement>(this.review.replacements.length);
   }
 
-  onFixed(fixed: any) {
-    this.review.replacements.find((rep) => rep.start === fixed.position).textFixed = fixed.newText;
-    this.fixedCount = this.getFixedReplacements().length;
+  // Calculate limits in order not to clash with other replacements
+  limitLeft(index: number): number {
+    const currentStart = this.review.replacements[index].start;
+    let limit: number;
+    if (index == 0) {
+      limit = 0;
+    } else {
+      const previousEnd = getReplacementEnd(this.review.replacements[index - 1]);
+      const diff = Math.floor(currentStart - previousEnd / 2);
+      limit = currentStart - diff;
+    }
+    return Math.max(limit, currentStart - this.THRESHOLD);
   }
 
-  private getFixedReplacements(): PageReplacement[] {
-    return this.review.replacements.filter((rep) => rep.textFixed);
+  limitRight(index: number): number {
+    const r = this.review.replacements[index];
+    const currentEnd = getReplacementEnd(this.review.replacements[index]);
+    let limit: number;
+    if (index == this.review.replacements.length - 1) {
+      limit = this.review.page.content.length;
+    } else {
+      const nextStart = this.review.replacements[index + 1].start;
+      const diff = Math.floor(nextStart - currentEnd / 2);
+      limit = currentEnd + diff;
+    }
+    return Math.min(limit, currentEnd + this.THRESHOLD);
+  }
+
+  get fixedCount(): number {
+    return this.filterFixedReplacements().length;
+  }
+
+  private filterFixedReplacements(): FixedReplacement[] {
+    return this.fixedReplacements.filter((f) => !!f.newText);
+  }
+
+  onFixed(fixed: FixedReplacement) {
+    this.fixedReplacements[fixed.index] = fixed;
   }
 
   onSaveChanges() {
     // Sort the fixed replacements in reverse to start by the end
-    const fixedReplacements = this.getFixedReplacements().sort((a, b): number => b.start - a.start);
+    const fixedReplacements = this.filterFixedReplacements().sort((a, b): number => b.start - a.start);
     if (fixedReplacements) {
       // Apply the fixes in the original text
       let contentToSave = this.review.page.content;
-      fixedReplacements.forEach((rep) => {
-        contentToSave = this.replaceText(contentToSave, rep.start, rep.text, rep.textFixed);
+      fixedReplacements.forEach((fix) => {
+        contentToSave = this.replaceText(contentToSave, fix.start, fix.oldText, fix.newText);
       });
 
       this.alertService.addInfoMessage(`Guardando cambios en «${this.review.page.title}»…`);

@@ -20,12 +20,13 @@
     <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="small">[Abrir en Wikipedia]</a>
   </h3>
 
-  <app-edit-snippet *ngFor="let replacement of review.replacements" [text]="review.page.content"
-    [start]="replacement.start" [word]="replacement.text" [suggestions]="replacement.suggestions"
-    (fixed)="onFixed($event)">
+  <app-edit-snippet *ngFor="let replacement of review.replacements; let i = index; let first = first; let last = last"
+    [index]="i" [pageText]="review.page.content" [replacement]="replacement" (fixed)="onFixed($event)"
+    [limitLeft]="limitLeft(i)" [limitRight]="limitRight(i)">
   </app-edit-snippet>
 
-  <button type="button" class="btn btn-success w-100 mt-3 mb-3 p-3" [disabled]="fixedCount === 0" (click)="onSaveChanges()">
+  <button type="button" class="btn btn-success w-100 mt-3 mb-3 p-3" [disabled]="fixedCount === 0"
+    (click)="onSaveChanges()">
     Guardar cambios <span class="badge badge-light">{{ fixedCount }}</span>
   </button>
 

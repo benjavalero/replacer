@@ -1,6 +1,7 @@
 .pre {
   white-space: pre-wrap;
   font-family: monospace;
+  overflow: scroll;
 }
 
 .pre .btn {
@@ -27,5 +28,11 @@
   .last-suggestion {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .snippet-modal .modal-content {
+    width: 95vw;
   }
 }
