@@ -2,7 +2,7 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementService;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ class PageListServiceTest {
     @Test
     void testFindPageList() {
         // An array list to be able to sort
-        List<String> list = new ArrayList<>(List.of("Bo", "C", "Aá", "Bñ", "Ae"));
+        List<String> list = Arrays.asList("Bo", "C", "Aá", "Bñ", null, "Ae");
         List<String> sorted = List.of("Aá", "Ae", "Bñ", "Bo", "C");
 
         Mockito
