@@ -94,8 +94,8 @@ class DumpPageProcessor {
             .max(Comparator.comparing(LocalDate::toEpochDay));
         if (
             dbLastUpdate.isPresent() &&
-            !isProcessableByTimestamp(dumpPage, dbLastUpdate.get()) &&
-            validatePageTitles(dumpPage, dbReplacements)
+            isNotProcessableByTimestamp(dumpPage, dbLastUpdate.get()) &&
+            isNotProcessableByPageTitle(dumpPage, dbReplacements)
         ) {
             LOGGER.trace(
                 "Page not processable by date: {}. Dump date: {}. DB date: {}",
@@ -107,14 +107,16 @@ class DumpPageProcessor {
         }
 
         List<Replacement> replacements = replacementFinderService.findList(convert(dumpPage));
-        return replacementIndexService.findIndexPageReplacements(
+        List<ReplacementEntity> toUpdate = replacementIndexService.findIndexPageReplacements(
             dumpPage,
             replacements.stream().map(r -> convert(r, dumpPage)).collect(Collectors.toList()),
             dbReplacements
         );
+        LOGGER.trace("Replacements to update: {}", toUpdate.size());
+        return toUpdate;
     }
 
-    private boolean validatePageTitles(IndexablePage dumpPage, List<ReplacementEntity> dbReplacements) {
+    private boolean isNotProcessableByPageTitle(IndexablePage dumpPage, List<ReplacementEntity> dbReplacements) {
         // In case the page title has changed we force the page processing
         return dbReplacements
             .stream()
@@ -123,11 +125,11 @@ class DumpPageProcessor {
             .allMatch(t -> dumpPage.getTitle().equals(t));
     }
 
-    private boolean isProcessableByTimestamp(IndexablePage dumpPage, LocalDate dbDate) {
+    private boolean isNotProcessableByTimestamp(IndexablePage dumpPage, LocalDate dbDate) {
         // If page modified in dump equals to the last indexing, reprocess always.
         // If page modified in dump after last indexing, reprocess always.
         // If page modified in dump before last indexing, do not reprocess.
-        return !dumpPage.getLastUpdate().isBefore(dbDate);
+        return dumpPage.getLastUpdate().isBefore(dbDate);
     }
 
     private FinderPage convert(IndexablePage page) {

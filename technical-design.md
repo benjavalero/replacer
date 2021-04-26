@@ -53,6 +53,11 @@ For the second use case:
     2. Save the page replacements in the database
 3. Save a summary of the process in the database
 
+On an indexation, all dump pages are read but not all of them are taken into account or processed:
+
+- Pages are processable (and therefore _read_) if their namespace is one of the supported ones: articles and annexes.
+- Processable pages are to be processed if after reindexation the related replacements in database must be updated. Pages are not processed if dump page timestamp is before the last indexation in database.
+
 
 ## Code Conventions
 

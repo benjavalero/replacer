@@ -210,7 +210,6 @@ public class ReplacementIndexService {
         IndexablePage page,
         List<ReplacementEntity> dbReplacements
     ) {
-        // We assume there are no custom replacements in the list
         List<ReplacementEntity> result = new ArrayList<>(100);
 
         // Find just in case the system-reviewed replacements and delete them
