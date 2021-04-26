@@ -326,6 +326,39 @@ class ReplacementIndexServiceTest {
     }
 
     @Test
+    void testSeveralDummies() {
+        LocalDate same = LocalDate.now();
+        LocalDate before = same.minusDays(1);
+
+        String title = "T";
+        String content = "012345678";
+        IndexablePage page = IndexablePage
+            .builder()
+            .id(1)
+            .lang(WikipediaLanguage.getDefault())
+            .content(content)
+            .lastUpdate(same)
+            .title(title)
+            .build();
+
+        // No replacements to index
+        List<IndexableReplacement> newReplacements = Collections.emptyList();
+
+        // Existing replacements in DB: two dummies, one of them old and obsolete.
+        ReplacementEntity r1db = ReplacementEntity.ofDummy(page.getId(), page.getLang(), before);
+        ReplacementEntity r2db = ReplacementEntity.ofDummy(page.getId(), page.getLang(), same);
+        List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db));
+
+        List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(
+            page,
+            newReplacements,
+            dbReplacements
+        );
+
+        Assertions.assertEquals(Set.of(r1db.setToDelete()), new HashSet<>(toIndex));
+    }
+
+    @Test
     void testIndexablePageIsProcessableByNamespace() throws ReplacerException {
         Assertions.assertThrows(
             ReplacerException.class,

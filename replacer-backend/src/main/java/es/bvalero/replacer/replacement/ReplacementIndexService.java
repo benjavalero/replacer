@@ -1,10 +1,7 @@
 package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -244,11 +241,23 @@ public class ReplacementIndexService {
         // The user-reviewed replacements can't be used as they are only kept for the sake of statistics
         // and have the date of the user review action.
 
+        // Just in case check there is only one dummy
+        List<ReplacementEntity> dummies = dbReplacements
+            .stream()
+            .filter(ReplacementEntity::isDummy)
+            .sorted(Comparator.comparing(ReplacementEntity::getLastUpdate).reversed())
+            .collect(Collectors.toList());
+        if (dummies.size() > 1) {
+            List<ReplacementEntity> obsoleteDummies = dummies.subList(1, dummies.size());
+            dbReplacements.removeAll(obsoleteDummies);
+            result.addAll(obsoleteDummies.stream().map(ReplacementEntity::setToDelete).collect(Collectors.toList()));
+        }
+
         // If there remain replacements to review there is no need of dummy replacement
         // If not a dummy replacement must be created or updated (if older)
         // As this is the last step there is no need to update the DB list
         boolean existReplacementsToReview = dbReplacements.stream().anyMatch(ReplacementEntity::isToBeReviewed);
-        Optional<ReplacementEntity> dummy = dbReplacements.stream().filter(ReplacementEntity::isDummy).findAny();
+        Optional<ReplacementEntity> dummy = dummies.isEmpty() ? Optional.empty() : Optional.of(dummies.get(0));
         if (existReplacementsToReview) {
             dummy.ifPresent(d -> result.add(d.setToDelete()));
         } else {
