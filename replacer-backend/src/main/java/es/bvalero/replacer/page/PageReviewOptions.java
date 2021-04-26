@@ -79,6 +79,7 @@ class PageReviewOptions {
     @Override
     public String toString() {
         List<String> list = new ArrayList<>();
+        list.add(user);
         list.add(lang.toString());
 
         if (StringUtils.isBlank(type)) {
