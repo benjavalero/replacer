@@ -3,6 +3,7 @@ import { faCheckDouble, faList } from '@fortawesome/free-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
 import { UserConfigService } from '../user/user-config.service';
+import { UserService } from '../user/user.service';
 import { ReplacementCount } from './replacement-list.model';
 import { ReplacementListService } from './replacement-list.service';
 import { ReviewSubtypeComponent } from './review-subtype.component';
@@ -38,6 +39,7 @@ export class ReplacementTableComponent implements OnChanges {
 
   constructor(
     private userConfigService: UserConfigService,
+    private userService: UserService,
     private replacementService: ReplacementListService,
     private modalService: NgbModal
   ) {
@@ -51,7 +53,7 @@ export class ReplacementTableComponent implements OnChanges {
     this.collectionSize = this.replacementCounts.length;
     this.pageValue = 1;
 
-    this.pageListUrl = `${environment.apiUrl}/pages?lang=${this.userConfigService.lang}`;
+    this.pageListUrl = `${environment.apiUrl}/pages?lang=${this.userConfigService.lang}&user=${this.userService.userName}`;
   }
 
   ngOnChanges() {
