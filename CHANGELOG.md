@@ -3,6 +3,7 @@
 ## 2.11.0 (??)
 - New feature: edit text around replacement
 - Fix regression: add user in traces
+- Improve error messages in frontend
 
 ## 2.10.5 (17 Apr 2021)
 - New table for page titles

@@ -79,7 +79,9 @@ export class FindRandomComponent implements OnInit {
         }
       },
       (err) => {
-        this.alertService.addErrorMessage('Error al buscar artículos con reemplazos: ' + err.error.message);
+        this.alertService.addErrorMessage(
+          'Error al buscar artículos con reemplazos: ' + (err.error?.message || err.message)
+        );
       }
     );
   }
@@ -98,7 +100,9 @@ export class FindRandomComponent implements OnInit {
         }
       },
       (err) => {
-        this.alertService.addErrorMessage('Error al buscar los reemplazos en el artículo: ' + err.error.message);
+        this.alertService.addErrorMessage(
+          'Error al buscar los reemplazos en el artículo: ' + (err.error?.message || err.message)
+        );
       }
     );
   }
