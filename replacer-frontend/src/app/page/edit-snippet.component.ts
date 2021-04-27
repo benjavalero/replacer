@@ -99,7 +99,7 @@ export class EditSnippetComponent implements OnInit {
           const fixedReplacement: FixedReplacement = {
             index: this.index,
             start: result.start,
-            oldText: editableSnippet.text,
+            oldText: this.getOriginalText(),
             newText: result.text
           };
           this.fixed.emit(fixedReplacement);
@@ -113,5 +113,9 @@ export class EditSnippetComponent implements OnInit {
 
   private buildEditableSnippet(): Snippet {
     return { start: this.limitLeft, text: this.textLeft + this.suggestionSelected.text + this.textRight };
+  }
+
+  private getOriginalText(): string {
+    return this.textLeft + this.replacement.text + this.textRight;
   }
 }
