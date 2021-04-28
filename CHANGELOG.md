@@ -1,9 +1,10 @@
 # Versions
 
-## 2.11.0 (??)
+## 2.11.0 (28 Apr 2021)
 - New feature: edit text around replacement
 - Fix regression: add user in traces
 - Improve error messages in frontend
+- Fix: find pages titles when some title is null
 
 ## 2.10.5 (17 Apr 2021)
 - New table for page titles
