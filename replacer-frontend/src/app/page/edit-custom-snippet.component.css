@@ -1,6 +1,11 @@
 .pre {
   white-space: pre-wrap;
   font-family: monospace;
-  max-height: 60vh;
-  overflow: scroll;
+  overflow: auto;
+}
+
+@media (max-width: 320px) {
+  .pre {
+    max-height: 60vh;
+  }
 }
