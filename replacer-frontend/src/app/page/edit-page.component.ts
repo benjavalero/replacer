@@ -33,21 +33,20 @@ export class EditPageComponent implements OnChanges {
       limit = 0;
     } else {
       const previousEnd = getReplacementEnd(this.review.replacements[index - 1]);
-      const diff = Math.floor(currentStart - previousEnd / 2);
+      const diff = Math.floor((currentStart - previousEnd) / 2);
       limit = currentStart - diff;
     }
     return Math.max(limit, currentStart - this.THRESHOLD);
   }
 
   limitRight(index: number): number {
-    const r = this.review.replacements[index];
     const currentEnd = getReplacementEnd(this.review.replacements[index]);
     let limit: number;
     if (index == this.review.replacements.length - 1) {
       limit = this.review.page.content.length;
     } else {
       const nextStart = this.review.replacements[index + 1].start;
-      const diff = Math.floor(nextStart - currentEnd / 2);
+      const diff = Math.floor((nextStart - currentEnd) / 2);
       limit = currentEnd + diff;
     }
     return Math.min(limit, currentEnd + this.THRESHOLD);
