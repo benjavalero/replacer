@@ -1,5 +1,8 @@
 # Versions
 
+## 2.11.1 (29 Apr 2021)
+- Fix: limits between snippets are not well calculated
+
 ## 2.11.0 (28 Apr 2021)
 - New feature: edit text around replacement
 - Fix regression: add user in traces
