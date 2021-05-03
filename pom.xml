@@ -15,6 +15,11 @@
     <version>2.11.1</version>
     <packaging>pom</packaging>
 
+    <properties>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>benjavalero-github</sonar.organization>
+    </properties>
+
     <modules>
         <module>replacer-frontend</module>
         <module>replacer-backend</module>

@@ -1,3 +1,12 @@
+# Idea
+.idea
+*.iml
+*.iws
+*.ipr
+
+# VS Code
+.vscode
+
 target
 .DS_Store
 logs
