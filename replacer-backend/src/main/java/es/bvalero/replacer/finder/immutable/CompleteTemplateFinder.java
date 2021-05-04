@@ -228,6 +228,10 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
             if (posEquals >= 0) {
                 param = parameter.substring(0, posEquals);
                 value = parameter.substring(posEquals + 1);
+            } else {
+                // Don't take into account parameters with no equals and value
+                // By the way we skip parameters which actually are link aliases
+                continue;
             }
 
             // Always return the parameter
