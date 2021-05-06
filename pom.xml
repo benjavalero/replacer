@@ -12,10 +12,12 @@
 
     <groupId>es.bvalero.replacer</groupId>
     <artifactId>replacer-parent</artifactId>
-    <version>2.11.1</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <properties>
+		<revision>2.11.1</revision>
+
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>benjavalero-github</sonar.organization>
     </properties>
