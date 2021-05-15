@@ -46,7 +46,7 @@ export class EditPageComponent implements OnChanges {
       limit = this.review.page.content.length;
     } else {
       const nextStart = this.review.replacements[index + 1].start;
-      const diff = Math.floor((nextStart - currentEnd) / 2);
+      const diff = Math.ceil((nextStart - currentEnd) / 2);
       limit = currentEnd + diff;
     }
     return Math.min(limit, currentEnd + this.THRESHOLD);
