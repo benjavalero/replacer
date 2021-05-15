@@ -264,13 +264,29 @@ class CompleteTemplateFinderTest {
 
     @Test
     void testRepeatedParameters() {
-        String text = "{{T|x = A|x = B}}";
+        String text = "{{T|x = A|x = A}}";
 
         List<Immutable> matches = completeTemplateFinder.findList(text);
 
         // To calculate the parameter position we assume the parameters are not repeated in the template
         // Therefore in this case though we find both parameters always the first position is returned
         Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "x "));
+        Set<Immutable> actual = new HashSet<>(matches);
+        Assertions.assertEquals(3, matches.size());
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testSimilarParameters() {
+        String text = "{{T|image_caption=A|image=A}}";
+
+        List<Immutable> matches = completeTemplateFinder.findList(text);
+
+        Set<Immutable> expected = Set.of(
+            Immutable.of(2, "T"),
+            Immutable.of(4, "image_caption"),
+            Immutable.of(20, "image")
+        );
         Set<Immutable> actual = new HashSet<>(matches);
         Assertions.assertEquals(3, matches.size());
         Assertions.assertEquals(expected, actual);
