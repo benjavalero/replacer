@@ -432,7 +432,7 @@ class WikipediaServiceTest {
         WikipediaUser user = wikipediaServiceOffline.getLoggedUser(WikipediaLanguage.getDefault(), "", "", "");
         Assertions.assertEquals("offline", user.getName());
         Assertions.assertTrue(user.isAdmin());
-        Assertions.assertEquals(AccessToken.ofEmpty(), user.getAccessToken());
+        Assertions.assertEquals(AccessToken.ofEmpty(), AccessToken.of(user.getToken(), user.getTokenSecret()));
         Assertions.assertTrue(
             StringUtils.isNotBlank(
                 wikipediaServiceOffline.getMisspellingListPageContent(WikipediaLanguage.getDefault())

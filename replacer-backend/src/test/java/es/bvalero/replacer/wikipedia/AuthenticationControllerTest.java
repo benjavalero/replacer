@@ -48,13 +48,12 @@ class AuthenticationControllerTest {
 
     @Test
     void testGetLoggedUser() throws Exception {
-        AccessToken accessToken = AccessToken.of("A", "B");
         String userName = "C";
 
         when(
             wikipediaService.getLoggedUser(Mockito.any(WikipediaLanguage.class), anyString(), anyString(), anyString())
         )
-            .thenReturn(WikipediaUser.of(userName, true, true, accessToken));
+            .thenReturn(WikipediaUser.of(userName, true, true, "A", "B"));
 
         VerificationToken verifier = VerificationToken.of("X", "Y", "V");
         mvc
@@ -67,8 +66,8 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.name", is("C")))
             .andExpect(jsonPath("$.hasRights", equalTo(true)))
             .andExpect(jsonPath("$.admin", equalTo(true)))
-            .andExpect(jsonPath("$.accessToken.token", is("A")))
-            .andExpect(jsonPath("$.accessToken.tokenSecret", is("B")));
+            .andExpect(jsonPath("$.token", is("A")))
+            .andExpect(jsonPath("$.tokenSecret", is("B")));
 
         verify(wikipediaService, times(1))
             .getLoggedUser(Mockito.any(WikipediaLanguage.class), anyString(), anyString(), anyString());

@@ -17,5 +17,9 @@ class WikipediaUser {
     @ApiModelProperty(value = "If the user is administrator of Replacer", required = true, example = "false")
     boolean admin;
 
-    AccessToken accessToken;
+    @ApiModelProperty(required = true, example = "f8e520e8669a2d65e094d649a96427ff")
+    String token;
+
+    @ApiModelProperty(required = true, example = "36dd90e87c59acc138ee0c38487e975af6da141e")
+    String tokenSecret;
 }

@@ -187,7 +187,8 @@ class PageControllerTest {
         savePage.setPage(page);
         PageReviewSearch search = PageReviewSearch.builder().type(type).subtype(subtype).build();
         savePage.setSearch(search);
-        savePage.setAccessToken(AccessToken.of(token, tokenSecret));
+        savePage.setToken(token);
+        savePage.setTokenSecret(tokenSecret);
 
         when(cosmeticFinderService.applyCosmeticChanges(any(FinderPage.class))).thenReturn("C");
 
@@ -239,7 +240,8 @@ class PageControllerTest {
         savePage.setPage(page);
         PageReviewSearch search = PageReviewSearch.builder().type(type).subtype(subtype).build();
         savePage.setSearch(search);
-        savePage.setAccessToken(AccessToken.of(token, tokenSecret));
+        savePage.setToken(token);
+        savePage.setTokenSecret(tokenSecret);
 
         mvc
             .perform(

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.wikipedia.AccessToken;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -17,8 +16,11 @@ class SavePage {
     @ApiModelProperty(value = "Search options of the replacements to review", required = true)
     private PageReviewSearch search;
 
-    @ApiModelProperty(value = "OAuth access token", required = true)
-    private AccessToken accessToken;
+    @ApiModelProperty(required = true, example = "f8e520e8669a2d65e094d649a96427ff")
+    private String token;
+
+    @ApiModelProperty(required = true, example = "36dd90e87c59acc138ee0c38487e975af6da141e")
+    private String tokenSecret;
 
     @Override
     public String toString() {

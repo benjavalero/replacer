@@ -64,7 +64,7 @@ class WikipediaServiceImpl implements WikipediaService {
         String userName = userInfo.getName();
         boolean hasRights = userInfo.getGroups().contains(GROUP_AUTOCONFIRMED);
         boolean admin = this.isAdminUser(userName);
-        return WikipediaUser.of(userName, hasRights, admin, accessToken);
+        return WikipediaUser.of(userName, hasRights, admin, accessToken.getToken(), accessToken.getTokenSecret());
     }
 
     private AccessToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier)

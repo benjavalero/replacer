@@ -1,4 +1,3 @@
-import { AccessToken } from '../authentication/access-token.model';
 import { Language } from '../user/language-model';
 import { PageReplacement } from './page-replacement.model';
 
@@ -40,5 +39,6 @@ export interface PageSearch {
 export class SavePage {
   page: PageDto;
   search: PageSearch;
-  accessToken: AccessToken;
+  token: string;
+  tokenSecret: string;
 }
