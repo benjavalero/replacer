@@ -48,7 +48,7 @@ class WikipediaApiFacade {
         return RequestToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret(), authorizationUrl);
     }
 
-    AccessToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier)
+    OAuthToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier)
         throws ReplacerException {
         try {
             OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken(requestToken, requestTokenSecret);
@@ -63,8 +63,8 @@ class WikipediaApiFacade {
         }
     }
 
-    private AccessToken convert(OAuth1AccessToken oAuth1AccessToken) {
-        return AccessToken.of(oAuth1AccessToken.getToken(), oAuth1AccessToken.getTokenSecret());
+    private OAuthToken convert(OAuth1AccessToken oAuth1AccessToken) {
+        return OAuthToken.of(oAuth1AccessToken.getToken(), oAuth1AccessToken.getTokenSecret());
     }
 
     WikipediaApiResponse executeGetRequest(Map<String, String> params, WikipediaLanguage lang)
@@ -75,7 +75,7 @@ class WikipediaApiFacade {
     WikipediaApiResponse executeSignedGetRequest(
         Map<String, String> params,
         WikipediaLanguage lang,
-        AccessToken accessToken
+        OAuthToken accessToken
     ) throws ReplacerException {
         return executeRequest(params, Verb.GET, lang, accessToken);
     }
@@ -83,7 +83,7 @@ class WikipediaApiFacade {
     WikipediaApiResponse executeSignedPostRequest(
         Map<String, String> params,
         WikipediaLanguage lang,
-        AccessToken accessToken
+        OAuthToken accessToken
     ) throws ReplacerException {
         return executeRequest(params, Verb.POST, lang, accessToken);
     }
@@ -93,7 +93,7 @@ class WikipediaApiFacade {
         Map<String, String> params,
         Verb verb,
         WikipediaLanguage lang,
-        @Nullable AccessToken accessToken
+        @Nullable OAuthToken accessToken
     ) throws ReplacerException {
         // Access token may be an empty string in tests
         boolean isSigned = accessToken != null && StringUtils.isNotBlank(accessToken.getToken());
@@ -135,7 +135,7 @@ class WikipediaApiFacade {
         return request;
     }
 
-    private OAuth1AccessToken convert(AccessToken accessToken) {
+    private OAuth1AccessToken convert(OAuthToken accessToken) {
         return new OAuth1AccessToken(accessToken.getToken(), accessToken.getTokenSecret());
     }
 

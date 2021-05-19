@@ -59,7 +59,7 @@ class WikipediaApiFacadeTest {
         String oauthVerifier = "C";
         Mockito.when(oAuthService.getAccessToken(requestToken, oauthVerifier)).thenReturn(oAuth1AccessToken);
 
-        AccessToken accessToken = AccessToken.of("A", "B");
+        OAuthToken accessToken = OAuthToken.of("A", "B");
         Assertions.assertEquals(accessToken, wikipediaApiFacade.getAccessToken("X", "Y", oauthVerifier));
         Mockito.verify(oAuthService).getAccessToken(requestToken, oauthVerifier);
     }
@@ -134,7 +134,7 @@ class WikipediaApiFacadeTest {
             wikipediaApiFacade.executeSignedPostRequest(
                 Collections.emptyMap(),
                 WikipediaLanguage.SPANISH,
-                AccessToken.of("A", "B")
+                OAuthToken.of("A", "B")
             )
         );
     }

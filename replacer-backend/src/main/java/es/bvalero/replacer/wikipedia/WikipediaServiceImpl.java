@@ -59,7 +59,7 @@ class WikipediaServiceImpl implements WikipediaService {
         String requestTokenSecret,
         String oauthVerifier
     ) throws ReplacerException {
-        AccessToken accessToken = this.getAccessToken(requestToken, requestTokenSecret, oauthVerifier);
+        OAuthToken accessToken = this.getAccessToken(requestToken, requestTokenSecret, oauthVerifier);
         WikipediaApiResponse.UserInfo userInfo = this.getLoggedUserName(lang, accessToken);
         String userName = userInfo.getName();
         boolean hasRights = userInfo.getGroups().contains(GROUP_AUTOCONFIRMED);
@@ -67,14 +67,14 @@ class WikipediaServiceImpl implements WikipediaService {
         return WikipediaUser.of(userName, hasRights, admin, accessToken.getToken(), accessToken.getTokenSecret());
     }
 
-    private AccessToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier)
+    private OAuthToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier)
         throws ReplacerException {
         return wikipediaApiFacade.getAccessToken(requestToken, requestTokenSecret, oauthVerifier);
     }
 
     @VisibleForTesting
     @Loggable(value = Loggable.DEBUG)
-    WikipediaApiResponse.UserInfo getLoggedUserName(WikipediaLanguage lang, AccessToken accessToken)
+    WikipediaApiResponse.UserInfo getLoggedUserName(WikipediaLanguage lang, OAuthToken accessToken)
         throws ReplacerException {
         WikipediaApiResponse apiResponse = wikipediaApiFacade.executeSignedGetRequest(
             buildUserNameRequestParams(),
@@ -355,7 +355,7 @@ class WikipediaServiceImpl implements WikipediaService {
         String pageContent,
         String currentTimestamp,
         String editSummary,
-        AccessToken accessToken
+        OAuthToken accessToken
     ) throws ReplacerException {
         EditToken editToken = getEditToken(pageId, lang, accessToken);
         // Pre-check of edit conflicts
@@ -407,7 +407,7 @@ class WikipediaServiceImpl implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @VisibleForTesting
-    EditToken getEditToken(int pageId, WikipediaLanguage lang, AccessToken accessToken) throws ReplacerException {
+    EditToken getEditToken(int pageId, WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException {
         WikipediaApiResponse apiResponse = wikipediaApiFacade.executeSignedPostRequest(
             buildEditTokenRequestParams(pageId),
             lang,

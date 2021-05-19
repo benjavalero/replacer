@@ -48,6 +48,6 @@ public interface WikipediaService {
         String pageContent,
         String currentTimestamp,
         String editSummary,
-        AccessToken accessToken
+        OAuthToken accessToken
     ) throws ReplacerException;
 }

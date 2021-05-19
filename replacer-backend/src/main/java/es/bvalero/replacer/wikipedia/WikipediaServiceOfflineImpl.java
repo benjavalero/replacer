@@ -30,7 +30,7 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
         String requestTokenSecret,
         String oauthVerifier
     ) {
-        AccessToken accessToken = AccessToken.ofEmpty();
+        OAuthToken accessToken = OAuthToken.ofEmpty();
         return WikipediaUser.of("offline", true, true, accessToken.getToken(), accessToken.getTokenSecret());
     }
 
@@ -113,7 +113,7 @@ class WikipediaServiceOfflineImpl implements WikipediaService {
         String pageContent,
         String currentTimestamp,
         String editSummary,
-        AccessToken accessToken
+        OAuthToken accessToken
     ) {
         // Do nothing
     }

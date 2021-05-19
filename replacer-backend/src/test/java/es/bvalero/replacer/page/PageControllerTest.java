@@ -12,7 +12,7 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.replacement.Suggestion;
-import es.bvalero.replacer.wikipedia.AccessToken;
+import es.bvalero.replacer.wikipedia.OAuthToken;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Collections;
 import java.util.List;
@@ -214,7 +214,7 @@ class PageControllerTest {
                 eq("C"),
                 eq(timestamp),
                 anyString(),
-                eq(AccessToken.of("A", "B"))
+                eq(OAuthToken.of("A", "B"))
             );
     }
 
@@ -260,7 +260,7 @@ class PageControllerTest {
                 anyString(),
                 anyString(),
                 anyString(),
-                any(AccessToken.class)
+                any(OAuthToken.class)
             );
     }
 }

@@ -3,12 +3,12 @@ package es.bvalero.replacer.wikipedia;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-public class AccessToken {
+public class OAuthToken {
 
     String token;
     String tokenSecret;
 
-    static AccessToken ofEmpty() {
-        return AccessToken.of("", "");
+    static OAuthToken ofEmpty() {
+        return OAuthToken.of("", "");
     }
 }

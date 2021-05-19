@@ -6,7 +6,7 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.wikipedia.AccessToken;
+import es.bvalero.replacer.wikipedia.OAuthToken;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -123,7 +123,7 @@ public class PageController {
                     textToSave,
                     savePage.getPage().getQueryTimestamp(),
                     buildEditSummary(savePage.getSearch(), applyCosmetics),
-                    AccessToken.of(savePage.getToken(), savePage.getTokenSecret())
+                    OAuthToken.of(savePage.getToken(), savePage.getTokenSecret())
                 );
             } catch (ReplacerException e) {
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -43,14 +43,14 @@ class WikipediaServiceTest {
                 wikipediaApiFacade.executeSignedPostRequest(
                     Mockito.anyMap(),
                     Mockito.any(WikipediaLanguage.class),
-                    Mockito.any(AccessToken.class)
+                    Mockito.any(OAuthToken.class)
                 )
             )
             .thenReturn(response);
         Assertions.assertTrue(response.isBatchcomplete());
 
         // We pass a null access token to retrieve an anonymous edit token
-        EditToken editToken = wikipediaService.getEditToken(2209245, WikipediaLanguage.SPANISH, AccessToken.ofEmpty());
+        EditToken editToken = wikipediaService.getEditToken(2209245, WikipediaLanguage.SPANISH, OAuthToken.ofEmpty());
         Assertions.assertNotNull(editToken.getCsrfToken());
         Assertions.assertEquals("+\\", editToken.getCsrfToken());
         Assertions.assertEquals("2019-06-24T21:24:09Z", editToken.getTimestamp());
@@ -205,12 +205,12 @@ class WikipediaServiceTest {
                 wikipediaApiFacade.executeSignedGetRequest(
                     Mockito.anyMap(),
                     Mockito.any(WikipediaLanguage.class),
-                    Mockito.any(AccessToken.class)
+                    Mockito.any(OAuthToken.class)
                 )
             )
             .thenReturn(response);
 
-        AccessToken accessToken = AccessToken.ofEmpty();
+        OAuthToken accessToken = OAuthToken.ofEmpty();
         WikipediaApiResponse.UserInfo userInfo = wikipediaService.getLoggedUserName(
             WikipediaLanguage.getDefault(),
             accessToken
@@ -230,7 +230,7 @@ class WikipediaServiceTest {
                 wikipediaApiFacade.executeSignedPostRequest(
                     Mockito.anyMap(),
                     Mockito.any(WikipediaLanguage.class),
-                    Mockito.any(AccessToken.class)
+                    Mockito.any(OAuthToken.class)
                 )
             )
             .thenReturn(response);
@@ -248,7 +248,7 @@ class WikipediaServiceTest {
                     "",
                     currentTimestamp,
                     "",
-                    AccessToken.ofEmpty()
+                    OAuthToken.ofEmpty()
                 )
         );
     }
@@ -264,7 +264,7 @@ class WikipediaServiceTest {
                 wikipediaApiFacade.executeSignedPostRequest(
                     Mockito.anyMap(),
                     Mockito.any(WikipediaLanguage.class),
-                    Mockito.any(AccessToken.class)
+                    Mockito.any(OAuthToken.class)
                 )
             )
             .thenReturn(response);
@@ -278,7 +278,7 @@ class WikipediaServiceTest {
             "",
             currentTimestamp,
             "",
-            AccessToken.ofEmpty()
+            OAuthToken.ofEmpty()
         );
 
         // Two calls: one for the EditToken and another to save the content
@@ -287,7 +287,7 @@ class WikipediaServiceTest {
             .executeSignedPostRequest(
                 Mockito.anyMap(),
                 Mockito.any(WikipediaLanguage.class),
-                Mockito.any(AccessToken.class)
+                Mockito.any(OAuthToken.class)
             );
 
         // Save a section
@@ -300,7 +300,7 @@ class WikipediaServiceTest {
             "",
             currentTimestamp,
             "",
-            AccessToken.ofEmpty()
+            OAuthToken.ofEmpty()
         );
 
         // Two calls: one for the EditToken and another to save the content (x2 save page and section in this test)
@@ -309,7 +309,7 @@ class WikipediaServiceTest {
             .executeSignedPostRequest(
                 Mockito.anyMap(),
                 Mockito.any(WikipediaLanguage.class),
-                Mockito.any(AccessToken.class)
+                Mockito.any(OAuthToken.class)
             );
     }
 
@@ -432,7 +432,7 @@ class WikipediaServiceTest {
         WikipediaUser user = wikipediaServiceOffline.getLoggedUser(WikipediaLanguage.getDefault(), "", "", "");
         Assertions.assertEquals("offline", user.getName());
         Assertions.assertTrue(user.isAdmin());
-        Assertions.assertEquals(AccessToken.ofEmpty(), AccessToken.of(user.getToken(), user.getTokenSecret()));
+        Assertions.assertEquals(OAuthToken.ofEmpty(), OAuthToken.of(user.getToken(), user.getTokenSecret()));
         Assertions.assertTrue(
             StringUtils.isNotBlank(
                 wikipediaServiceOffline.getMisspellingListPageContent(WikipediaLanguage.getDefault())
