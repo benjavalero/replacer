@@ -8,12 +8,10 @@ import es.bvalero.replacer.common.WikipediaNamespace;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -29,14 +27,9 @@ class WikipediaServiceImpl implements WikipediaService {
     private static final String PARAM_PAGE_ID = "pageid";
     private static final String PARAM_PAGE_IDS = "pageids";
     private static final int MAX_OFFSET_LIMIT = 10000;
-    private static final String GROUP_AUTOCONFIRMED = "autoconfirmed";
 
     @Autowired
     private WikipediaApiFacade wikipediaApiFacade;
-
-    @Setter // For testing
-    @Value("${replacer.admin.user}")
-    private String adminUser;
 
     @Resource
     private Map<String, String> simpleMisspellingPages;
@@ -48,28 +41,12 @@ class WikipediaServiceImpl implements WikipediaService {
     private Map<String, String> falsePositivePages;
 
     @Override
-    public RequestToken getRequestToken() throws ReplacerException {
-        return wikipediaApiFacade.getRequestToken();
+    public UserInfo getUserInfo(WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException {
+        return convertUserInfo(getLoggedUserName(lang, accessToken));
     }
 
-    @Override
-    public WikipediaUser getLoggedUser(
-        WikipediaLanguage lang,
-        String requestToken,
-        String requestTokenSecret,
-        String oauthVerifier
-    ) throws ReplacerException {
-        OAuthToken accessToken = this.getAccessToken(requestToken, requestTokenSecret, oauthVerifier);
-        WikipediaApiResponse.UserInfo userInfo = this.getLoggedUserName(lang, accessToken);
-        String userName = userInfo.getName();
-        boolean hasRights = userInfo.getGroups().contains(GROUP_AUTOCONFIRMED);
-        boolean admin = this.isAdminUser(userName);
-        return WikipediaUser.of(userName, hasRights, admin, accessToken.getToken(), accessToken.getTokenSecret());
-    }
-
-    private OAuthToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier)
-        throws ReplacerException {
-        return wikipediaApiFacade.getAccessToken(requestToken, requestTokenSecret, oauthVerifier);
+    private UserInfo convertUserInfo(WikipediaApiResponse.UserInfo userInfo) {
+        return UserInfo.of(userInfo.getName(), userInfo.getGroups());
     }
 
     @VisibleForTesting
@@ -94,11 +71,6 @@ class WikipediaServiceImpl implements WikipediaService {
 
     private WikipediaApiResponse.UserInfo extractUserNameFromJson(WikipediaApiResponse response) {
         return response.getQuery().getUserinfo();
-    }
-
-    @VisibleForTesting
-    boolean isAdminUser(String username) {
-        return this.adminUser.equals(username);
     }
 
     @Override

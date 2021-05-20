@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.oauth;
 
 import com.github.scribejava.apis.MediaWikiApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-class WikipediaApiConfiguration {
+public class OAuthMediaWikiConfiguration {
 
     @Value("${replacer.wikipedia.api.key}")
     private String apiKey;
@@ -17,7 +17,7 @@ class WikipediaApiConfiguration {
     private String apiSecret;
 
     @Bean
-    public OAuth10aService oAuthService() {
+    public OAuth10aService oAuth10aService() {
         return new ServiceBuilder(apiKey).apiSecret(apiSecret).callback("oob").build(MediaWikiApi.instance());
     }
 }

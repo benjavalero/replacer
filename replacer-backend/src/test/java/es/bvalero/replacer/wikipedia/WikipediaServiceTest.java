@@ -393,13 +393,6 @@ class WikipediaServiceTest {
     }
 
     @Test
-    void testIsAdminUser() {
-        wikipediaService.setAdminUser("X");
-        Assertions.assertTrue(wikipediaService.isAdminUser("X"));
-        Assertions.assertFalse(wikipediaService.isAdminUser("Y"));
-    }
-
-    @Test
     void testGetPageContentByIdAndSection() throws Exception {
         // API response
         String textResponse =
@@ -428,11 +421,6 @@ class WikipediaServiceTest {
 
     @Test
     void testWikipediaServiceOffline() throws ReplacerException {
-        Assertions.assertNotNull(wikipediaServiceOffline.getRequestToken());
-        WikipediaUser user = wikipediaServiceOffline.getLoggedUser(WikipediaLanguage.getDefault(), "", "", "");
-        Assertions.assertEquals("offline", user.getName());
-        Assertions.assertTrue(user.isAdmin());
-        Assertions.assertEquals(OAuthToken.ofEmpty(), OAuthToken.of(user.getToken(), user.getTokenSecret()));
         Assertions.assertTrue(
             StringUtils.isNotBlank(
                 wikipediaServiceOffline.getMisspellingListPageContent(WikipediaLanguage.getDefault())

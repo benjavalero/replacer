@@ -8,7 +8,7 @@ public class OAuthToken {
     String token;
     String tokenSecret;
 
-    static OAuthToken ofEmpty() {
+    public static OAuthToken ofEmpty() {
         return OAuthToken.of("", "");
     }
 }

@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.config.XmlConfiguration;
+import es.bvalero.replacer.wikipedia.oauth.OAuthMediaWikiConfiguration;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(
     classes = {
-        WikipediaServiceImpl.class, WikipediaApiFacade.class, WikipediaApiConfiguration.class, XmlConfiguration.class,
+        WikipediaServiceImpl.class, WikipediaApiFacade.class, OAuthMediaWikiConfiguration.class, XmlConfiguration.class,
     }
 )
 class WikipediaServiceIT {

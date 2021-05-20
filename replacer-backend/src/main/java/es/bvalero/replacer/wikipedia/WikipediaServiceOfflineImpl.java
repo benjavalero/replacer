@@ -16,22 +16,9 @@ import org.springframework.stereotype.Service;
 @Profile("offline")
 class WikipediaServiceOfflineImpl implements WikipediaService {
 
-    private static final String AUTHORIZATION_URL = "/?oauth_verifier=x";
-
     @Override
-    public RequestToken getRequestToken() {
-        return RequestToken.of("", "", AUTHORIZATION_URL);
-    }
-
-    @Override
-    public WikipediaUser getLoggedUser(
-        WikipediaLanguage lang,
-        String requestToken,
-        String requestTokenSecret,
-        String oauthVerifier
-    ) {
-        OAuthToken accessToken = OAuthToken.ofEmpty();
-        return WikipediaUser.of("offline", true, true, accessToken.getToken(), accessToken.getTokenSecret());
+    public UserInfo getUserInfo(WikipediaLanguage lang, OAuthToken accessToken) {
+        return UserInfo.of("offline", List.of("autoconfirmed"));
     }
 
     @Override

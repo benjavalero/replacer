@@ -25,34 +25,16 @@ class WikipediaApiFacade {
     private static final String WIKIPEDIA_API_URL = "https://%s.wikipedia.org/w/api.php";
 
     @Autowired
-    private OAuth10aService oAuthService;
+    private OAuth10aService oAuth10aService;
 
     @Autowired
     private ObjectMapper jsonMapper;
-
-    RequestToken getRequestToken() throws ReplacerException {
-        try {
-            OAuth1RequestToken oAuth1RequestToken = oAuthService.getRequestToken();
-            String authorizationUrl = oAuthService.getAuthorizationUrl(oAuth1RequestToken);
-            return convert(oAuth1RequestToken, authorizationUrl);
-        } catch (InterruptedException e) {
-            // This cannot be unit-tested because the mocked InterruptedException make other tests fail
-            Thread.currentThread().interrupt();
-            throw new ReplacerException(e);
-        } catch (ExecutionException | IOException e) {
-            throw new ReplacerException(e);
-        }
-    }
-
-    private RequestToken convert(OAuth1RequestToken oAuth1RequestToken, String authorizationUrl) {
-        return RequestToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret(), authorizationUrl);
-    }
 
     OAuthToken getAccessToken(String requestToken, String requestTokenSecret, String oauthVerifier)
         throws ReplacerException {
         try {
             OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken(requestToken, requestTokenSecret);
-            OAuth1AccessToken oAuth1AccessToken = oAuthService.getAccessToken(oAuth1RequestToken, oauthVerifier);
+            OAuth1AccessToken oAuth1AccessToken = oAuth10aService.getAccessToken(oAuth1RequestToken, oauthVerifier);
             return convert(oAuth1AccessToken);
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
@@ -105,7 +87,7 @@ class WikipediaApiFacade {
         }
 
         try {
-            Response response = oAuthService.execute(request);
+            Response response = oAuth10aService.execute(request);
             if (!response.isSuccessful()) {
                 throw new ReplacerException(
                     String.format("Call not successful: %d - %s", response.getCode(), response.getMessage())
@@ -140,7 +122,7 @@ class WikipediaApiFacade {
     }
 
     private void signOAuthRequest(OAuthRequest request, OAuth1AccessToken accessToken) {
-        oAuthService.signRequest(accessToken, request);
+        oAuth10aService.signRequest(accessToken, request);
     }
 
     private WikipediaApiResponse convert(Response response) throws IOException, ReplacerException {

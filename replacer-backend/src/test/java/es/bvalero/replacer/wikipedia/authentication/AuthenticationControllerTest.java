@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.authentication;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.OAuthToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -30,11 +31,11 @@ class AuthenticationControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private WikipediaService wikipediaService;
+    private AuthenticationService authenticationService;
 
     @Test
     void testGetRequestToken() throws Exception {
-        when(wikipediaService.getRequestToken()).thenReturn(RequestToken.of("X", "Y", "Z"));
+        when(authenticationService.getRequestToken()).thenReturn(RequestToken.of("X", "Y", "Z"));
 
         mvc
             .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
@@ -43,7 +44,7 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.tokenSecret", is("Y")))
             .andExpect(jsonPath("$.authorizationUrl", is("Z")));
 
-        verify(wikipediaService, times(1)).getRequestToken();
+        verify(authenticationService, times(1)).getRequestToken();
     }
 
     @Test
@@ -51,11 +52,15 @@ class AuthenticationControllerTest {
         String userName = "C";
 
         when(
-            wikipediaService.getLoggedUser(Mockito.any(WikipediaLanguage.class), anyString(), anyString(), anyString())
+            authenticationService.getLoggedUser(
+                Mockito.any(WikipediaLanguage.class),
+                Mockito.any(OAuthToken.class),
+                anyString()
+            )
         )
             .thenReturn(WikipediaUser.of(userName, true, true, "A", "B"));
 
-        VerificationToken verifier = VerificationToken.of("X", "Y", "V");
+        VerificationToken verifier = new VerificationToken("X", "Y", "V");
         mvc
             .perform(
                 post("/api/authentication/logged-user?lang=es")
@@ -69,7 +74,7 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.token", is("A")))
             .andExpect(jsonPath("$.tokenSecret", is("B")));
 
-        verify(wikipediaService, times(1))
-            .getLoggedUser(Mockito.any(WikipediaLanguage.class), anyString(), anyString(), anyString());
+        verify(authenticationService, times(1))
+            .getLoggedUser(Mockito.any(WikipediaLanguage.class), Mockito.any(OAuthToken.class), anyString());
     }
 }

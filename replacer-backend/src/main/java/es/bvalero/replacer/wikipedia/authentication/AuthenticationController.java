@@ -1,8 +1,9 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.authentication;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.OAuthToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -16,12 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private AuthenticationService authenticationService;
 
     @ApiOperation(value = "Generate a request token to start OAuth authentication in MediaWiki")
     @GetMapping(value = "/request-token")
     public RequestToken getRequestToken() throws ReplacerException {
-        return wikipediaService.getRequestToken();
+        return authenticationService.getRequestToken();
     }
 
     @ApiOperation(
@@ -34,10 +35,9 @@ public class AuthenticationController {
             value = "Verification token received after MediaWiki authentication"
         ) @RequestBody VerificationToken verificationToken
     ) throws ReplacerException {
-        return wikipediaService.getLoggedUser(
+        return authenticationService.getLoggedUser(
             lang,
-            verificationToken.getRequestToken(),
-            verificationToken.getRequestTokenSecret(),
+            OAuthToken.of(verificationToken.getRequestToken(), verificationToken.getRequestTokenSecret()),
             verificationToken.getOauthVerifier()
         );
     }
