@@ -48,22 +48,22 @@ class AuthenticationControllerTest {
     }
 
     @Test
-    void testGetLoggedUser() throws Exception {
+    void testAuthenticate() throws Exception {
         String userName = "C";
 
         when(
-            authenticationService.getLoggedUser(
+            authenticationService.authenticate(
                 Mockito.any(WikipediaLanguage.class),
                 Mockito.any(OAuthToken.class),
                 anyString()
             )
         )
-            .thenReturn(WikipediaUser.of(userName, true, true, "A", "B"));
+            .thenReturn(AuthenticateResponse.of(userName, true, true, "A", "B"));
 
-        VerificationToken verifier = new VerificationToken("X", "Y", "V");
+        AuthenticateRequest verifier = AuthenticateRequest.of("X", "Y", "V");
         mvc
             .perform(
-                post("/api/authentication/logged-user?lang=es")
+                post("/api/authentication/authenticate?lang=es")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(verifier))
             )
@@ -75,6 +75,6 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.tokenSecret", is("B")));
 
         verify(authenticationService, times(1))
-            .getLoggedUser(Mockito.any(WikipediaLanguage.class), Mockito.any(OAuthToken.class), anyString());
+            .authenticate(Mockito.any(WikipediaLanguage.class), Mockito.any(OAuthToken.class), anyString());
     }
 }

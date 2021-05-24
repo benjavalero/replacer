@@ -1,16 +1,14 @@
 package es.bvalero.replacer.wikipedia.authentication;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@ApiModel(description = "OAuth verification token")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-class VerificationToken {
+@AllArgsConstructor(staticName = "of")
+class AuthenticateRequest {
 
     @ApiModelProperty(required = true, example = "4360336e38cd5dc8e3f90ad797154275")
     private String requestToken;

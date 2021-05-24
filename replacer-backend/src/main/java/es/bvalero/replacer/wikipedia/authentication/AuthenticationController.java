@@ -19,26 +19,22 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @ApiOperation(value = "Generate a request token to start OAuth authentication in MediaWiki")
+    @ApiOperation(value = "Generate a request token to start OAuth authentication")
     @GetMapping(value = "/request-token")
     public RequestToken getRequestToken() throws ReplacerException {
         return authenticationService.getRequestToken();
     }
 
-    @ApiOperation(
-        value = "Retrieve the user (already authenticated in MediaWiki) and the access token for further operations"
-    )
-    @PostMapping(value = "/logged-user")
-    public WikipediaUser getLoggedUser(
-        @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang,
-        @ApiParam(
-            value = "Verification token received after MediaWiki authentication"
-        ) @RequestBody VerificationToken verificationToken
+    @ApiOperation(value = "Verify the OAuth authentication and return the authenticated user details")
+    @PostMapping(value = "/authenticate")
+    public AuthenticateResponse authenticate(
+        @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam String lang,
+        @RequestBody AuthenticateRequest authenticateRequest
     ) throws ReplacerException {
-        return authenticationService.getLoggedUser(
-            lang,
-            OAuthToken.of(verificationToken.getRequestToken(), verificationToken.getRequestTokenSecret()),
-            verificationToken.getOauthVerifier()
+        return authenticationService.authenticate(
+            WikipediaLanguage.forValues(lang),
+            OAuthToken.of(authenticateRequest.getRequestToken(), authenticateRequest.getRequestTokenSecret()),
+            authenticateRequest.getOauthVerifier()
         );
     }
 }

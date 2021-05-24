@@ -60,10 +60,10 @@ class AuthenticationServiceTest {
         Mockito
             .when(wikipediaService.getUserInfo(lang, accessToken))
             .thenReturn(UserInfo.of(name, List.of(AuthenticationService.GROUP_AUTOCONFIRMED)));
-        WikipediaUser expected = WikipediaUser.of(name, true, true, "A", "B");
+        AuthenticateResponse expected = AuthenticateResponse.of(name, true, true, "A", "B");
 
         authenticationService.setAdminUser(name);
-        WikipediaUser actual = authenticationService.getLoggedUser(lang, requestToken, oAuthVerifier);
+        AuthenticateResponse actual = authenticationService.authenticate(lang, requestToken, oAuthVerifier);
 
         Assertions.assertEquals(expected, actual);
     }

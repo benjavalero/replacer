@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/alert/alert.service';
-import { AuthenticationService } from './authentication.service';
 import { User } from '../user/user.model';
+import { AuthenticationService } from './authentication.service';
 
 @Component({
   selector: 'app-oauth',

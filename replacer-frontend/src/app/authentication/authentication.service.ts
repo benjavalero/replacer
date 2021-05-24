@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
-import { RequestToken } from './request-token.model';
+import { AuthenticateRequest, AuthenticateResponse, RequestToken } from './authentication.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,27 +33,35 @@ export class AuthenticationService {
   }
 
   loginUser$(oauthVerifier: string): Observable<User> {
-    return this.getLoggedUser$(oauthVerifier).pipe(
-      map((wikipediaUser: User) => {
+    return this.authenticate$(oauthVerifier).pipe(
+      map((response: AuthenticateResponse) => {
         // Remove request token as it is no longer needed
         localStorage.removeItem(this.requestTokenKey);
 
         // Save user and access token to further use in Wikipedia requests
+        const wikipediaUser: User = {
+          name: response.name,
+          hasRights: response.hasRights,
+          admin: response.admin,
+          accessToken: {
+            token: response.token,
+            tokenSecret: response.tokenSecret
+          }
+        };
         this.userService.setUser(wikipediaUser);
-
         return wikipediaUser;
       })
     );
   }
 
-  private getLoggedUser$(verificationToken: string): Observable<User> {
+  private authenticate$(oauthVerifier: string): Observable<AuthenticateResponse> {
     const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey));
-    const body = {
+    const body: AuthenticateRequest = {
       requestToken: requestToken.token,
       requestTokenSecret: requestToken.tokenSecret,
-      oauthVerifier: verificationToken
+      oauthVerifier: oauthVerifier
     };
-    return this.httpClient.post<User>(`${this.baseUrl}/logged-user`, body);
+    return this.httpClient.post<AuthenticateResponse>(`${this.baseUrl}/authenticate`, body);
   }
 
   get redirectPath(): string {

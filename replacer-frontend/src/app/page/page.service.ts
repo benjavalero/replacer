@@ -64,8 +64,8 @@ export class PageService {
     const savePage = new SavePage();
     savePage.page = page;
     savePage.search = search;
-    savePage.token = this.userService.user.token;
-    savePage.tokenSecret = this.userService.user.tokenSecret;
+    savePage.token = this.userService.accessToken.token;
+    savePage.tokenSecret = this.userService.accessToken.tokenSecret;
 
     // Store the new last save date
     if (page.content !== ' ') {

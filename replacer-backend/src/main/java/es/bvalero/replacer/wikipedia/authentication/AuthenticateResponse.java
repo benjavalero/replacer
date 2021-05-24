@@ -1,12 +1,10 @@
 package es.bvalero.replacer.wikipedia.authentication;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
 
-@ApiModel(description = "User authenticated in MediaWiki")
 @Value(staticConstructor = "of")
-class WikipediaUser {
+class AuthenticateResponse {
 
     @ApiModelProperty(value = "Wikipedia user name", required = true, example = "Benjavalero")
     String name;

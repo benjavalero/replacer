@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from './user.model';
+import { AccessToken, User } from './user.model';
 
 export const USER_PARAM = 'user';
 
@@ -19,8 +19,8 @@ export class UserService {
     return this._user.asObservable();
   }
 
-  get user(): User {
-    return this._user.getValue();
+  get accessToken(): AccessToken {
+    return this._user.getValue().accessToken;
   }
 
   get userName(): string {
@@ -48,9 +48,7 @@ export class UserService {
   }
 
   private isValid(user: User): boolean {
-    return (
-      user != null && user.name != null && user.hasRights != null && user.admin != null && user.token != null
-    );
+    return user != null && user.name != null && user.hasRights != null && user.admin != null && user.accessToken != null;
   }
 
   hasRightsUser(): boolean {

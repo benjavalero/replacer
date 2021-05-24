@@ -34,14 +34,20 @@ class AuthenticationService {
         return RequestToken.of(requestToken.getToken(), requestToken.getTokenSecret(), authorizationUrl);
     }
 
-    WikipediaUser getLoggedUser(WikipediaLanguage lang, OAuthToken requestToken, String oAuthVerifier)
+    AuthenticateResponse authenticate(WikipediaLanguage lang, OAuthToken requestToken, String oAuthVerifier)
         throws ReplacerException {
         OAuthToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
         UserInfo userInfo = wikipediaService.getUserInfo(lang, accessToken);
         String userName = userInfo.getName();
         boolean hasRights = userInfo.getGroups().contains(GROUP_AUTOCONFIRMED);
         boolean admin = this.isAdminUser(userName);
-        return WikipediaUser.of(userName, hasRights, admin, accessToken.getToken(), accessToken.getTokenSecret());
+        return AuthenticateResponse.of(
+            userName,
+            hasRights,
+            admin,
+            accessToken.getToken(),
+            accessToken.getTokenSecret()
+        );
     }
 
     @VisibleForTesting
