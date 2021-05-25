@@ -1,5 +1,11 @@
 # Versions
 
+## 2.11.2 (25 May 2021)
+- Don't return as immutable template parameters with no equals and value
+- Add more templates to ignore completely
+- Fix calculate parameter position with a similar one inside the same template
+- Improve separation between fragments too close
+
 ## 2.11.1 (29 Apr 2021)
 - Fix: limits between snippets are not well calculated
 
@@ -202,16 +208,16 @@
 
 ## 2.3.7 (30 de septiembre de 2019)
 - Corregir bucle infinito al buscar reemplazos personalizados
-- Corregir permisos para mostrar ciertas secciones 
+- Corregir permisos para mostrar ciertas secciones
 
 ## 2.3.6 (26 de septiembre de 2019)
 - Ignorar plantillas de traducción
-- Enlace a la página de la herramienta en la Wikipedia en el pie 
-y en el resumen de cada edición 
+- Enlace a la página de la herramienta en la Wikipedia en el pie
+y en el resumen de cada edición
 
 ## 2.3.5 (24 de septiembre de 2019)
 - Mejoras en la captura de nombres de ficheros
-- Ignorar artículos con las plantillas «Destruir» o «CopyEdit» 
+- Ignorar artículos con las plantillas «Destruir» o «CopyEdit»
 
 ## 2.3.4 (24 de septiembre de 2019)
 - Ignorar plantilla «TA»
@@ -238,7 +244,7 @@ y en el resumen de cada edición
 - Mejora en la captura de nombres de ficheros
 - Se añaden títulos (en la barra del navegador) a todas las secciones
 - Se reindexa siempre un artículo del dump si su fecha coincide con la última indexación,
-para indexar los nuevos tipos de reemplazos. 
+para indexar los nuevos tipos de reemplazos.
 
 ## 2.2.1 (7 de septiembre de 2019)
 - Corregir casos puntuales al leer las secciones de un artículo
@@ -312,4 +318,4 @@ en pantalla.
 - Se ofrecen varias alternativas de reemplazos (si las hay)
 - Al editar un tipo de reemplazo en concreto solo se muestra ese
 - Buscador de reemplazos para fechas con meses en mayúscula
-- Posibilidad de buscar reemplazos personalizados 
+- Posibilidad de buscar reemplazos personalizados
