@@ -286,7 +286,7 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
     }
 
     private boolean ignoreCompleteTemplate(String templateName) {
-        String template = FinderUtils.toLowerCase(templateName.trim());
+        String template = FinderUtils.toLowerCase(templateName.trim()).replace('_', ' ');
         return (
             TEMPLATE_CITE_AUTOMATON.run(template) ||
             templateNames.contains(template) ||
