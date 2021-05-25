@@ -1,8 +1,5 @@
 package es.bvalero.replacer.finder.immutable;
 
-import dk.brics.automaton.DatatypesAutomatonProvider;
-import dk.brics.automaton.RegExp;
-import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
@@ -32,22 +29,18 @@ import org.springframework.stereotype.Component;
 @Component
 class CompleteTemplateFinder extends ImmutableCheckedFinder {
 
-    private static final String TEMPLATE_CITE_REGEX = "cit[ae]( |<L>)*";
-    private static final String TEMPLATE_IMDB = "imdb";
     private static final String WILDCARD = "*";
     private static final String START_TEMPLATE = "{{";
     private static final String END_TEMPLATE = "}}";
-
-    // Templates of type "cite" will always be ignored as a whole
-    private static final RunAutomaton TEMPLATE_CITE_AUTOMATON = new RunAutomaton(
-        new RegExp(TEMPLATE_CITE_REGEX).toAutomaton(new DatatypesAutomatonProvider())
-    );
 
     @Resource
     private List<String> templateParams;
 
     // Set with the names of the templates to be ignored as a whole
     private final Set<String> templateNames = new HashSet<>();
+
+    // Set with the partial names of the templates to be ignored as a whole
+    private final Set<String> templateNamesPartial = new HashSet<>();
 
     // Set with the names of the parameters whose values will be ignored no matter the template they are in
     private final Set<String> paramNames = new HashSet<>();
@@ -64,7 +57,11 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
                 String name = FinderUtils.toLowerCase(tokens[0].trim());
                 String param = FinderUtils.toLowerCase(tokens[1].trim());
                 if (WILDCARD.equals(param)) {
-                    this.templateNames.add(name);
+                    if (name.endsWith(WILDCARD)) {
+                        this.templateNamesPartial.add(name.substring(0, name.length() - 1));
+                    } else {
+                        this.templateNames.add(name);
+                    }
                 } else if (WILDCARD.equals(name)) {
                     this.paramNames.add(param);
                 } else {
@@ -287,11 +284,7 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
 
     private boolean ignoreCompleteTemplate(String templateName) {
         String template = FinderUtils.toLowerCase(templateName.trim()).replace('_', ' ');
-        return (
-            TEMPLATE_CITE_AUTOMATON.run(template) ||
-            templateNames.contains(template) ||
-            template.startsWith(TEMPLATE_IMDB)
-        );
+        return (templateNames.contains(template) || templateNamesPartial.stream().anyMatch(template::startsWith));
     }
 
     private boolean matchesFile(String text) {

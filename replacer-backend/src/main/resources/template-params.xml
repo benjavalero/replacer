@@ -15,6 +15,8 @@
     -->
     <util:list id="templateParams" value-type="java.lang.String">
         <!-- Templates to be ignored completely -->
+        <value>cita*|*</value>
+        <value>cite*|*</value>
         <value>caja de cita|*</value>
         <value>commons|*</value>
         <value>commonscat|*</value>
@@ -25,6 +27,7 @@
         <value>Fila LIC|*</value>
         <value>harvnb|*</value>         <!-- Cita Harvard -->
         <value>harvnp|*</value>         <!-- Cita Harvard -->
+        <value>imdb*|*</value>
         <value>link|*</value>
         <value>NF|*</value>             <!-- It is converted into a category and contains person names -->
         <value>nihongo|*</value>        <!-- Japanese transcriptions -->
@@ -39,7 +42,7 @@
         <value>traducido ref|*</value>
         <value>wayback|*</value>
         <value>webarchive|*</value>
-        <value>Wikidata_list/Patrimonio andaluz|*</value>
+        <value>Wikidata list*|*</value>
         <value>#expr|*</value>         <!-- It contains mathematical expressions in particular the word "round" -->
         <value>#invoke|*</value>
         <value>#tag|*</value>
