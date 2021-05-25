@@ -39,7 +39,7 @@
         <value>traducido ref|*</value>
         <value>wayback|*</value>
         <value>webarchive|*</value>
-        <value>Wikidata_list/Patrimonio andaluz</value>
+        <value>Wikidata_list/Patrimonio andaluz|*</value>
         <value>#expr|*</value>         <!-- It contains mathematical expressions in particular the word "round" -->
         <value>#invoke|*</value>
         <value>#tag|*</value>
