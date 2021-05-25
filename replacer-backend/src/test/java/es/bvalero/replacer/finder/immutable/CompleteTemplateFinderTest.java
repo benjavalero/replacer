@@ -306,4 +306,15 @@ class CompleteTemplateFinderTest {
         Set<Immutable> actual = new HashSet<>(matches);
         Assertions.assertEquals(expected, actual);
     }
+
+    @Test
+    void testArgumentWithFile() {
+        String text = "{{T|xxx.jpg}}";
+
+        List<Immutable> matches = completeTemplateFinder.findList(text);
+
+        Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "xxx.jpg"));
+        Set<Immutable> actual = new HashSet<>(matches);
+        Assertions.assertEquals(expected, actual);
+    }
 }

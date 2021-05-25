@@ -226,10 +226,6 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
             if (posEquals >= 0) {
                 param = parameter.substring(0, posEquals);
                 value = parameter.substring(posEquals + 1);
-            } else {
-                // Don't take into account parameters with no equals and value
-                // By the way we skip parameters which actually are link aliases
-                continue;
             }
 
             // Always return the parameter
@@ -245,7 +241,16 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
                         : template.group().indexOf("|" + param)
                 ) +
                 1;
-            immutables.add(Immutable.of(startParameter, param));
+            if (posEquals >= 0) {
+                immutables.add(Immutable.of(startParameter, param));
+            } else {
+                // Don't take into account parameters with no equals and value (except if they are files)
+                // By the way we skip parameters which actually are link aliases
+                if (matchesFile(param)) {
+                    immutables.add(Immutable.of(startParameter, param));
+                }
+                continue;
+            }
 
             if (StringUtils.isNotEmpty(value)) {
                 // If the value is followed by a reference, comment or similar we ignore it
