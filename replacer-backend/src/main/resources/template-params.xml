@@ -15,6 +15,9 @@
     -->
     <util:list id="templateParams" value-type="java.lang.String">
         <!-- Templates to be ignored completely -->
+        <value>caja de cita|*</value>
+        <value>commons|*</value>
+        <value>commonscat|*</value>
         <value>DEFAULTSORT|*</value>    <!-- It usually contains words without accents for the sake of sorting -->
         <value>enlace roto|*</value>
         <value>ficha de taxón|*</value>
@@ -27,6 +30,7 @@
         <value>nihongo|*</value>        <!-- Japanese transcriptions -->
         <value>obra citada|*</value>
         <value>ORDENAR|*</value>        <!-- It usually contains words without accents for the sake of sorting -->
+        <value>quote|*</value>
         <value>refn|*</value>           <!-- Nested references -->
         <value>sort|*</value>
         <value>sortname|*</value>
@@ -35,6 +39,7 @@
         <value>traducido ref|*</value>
         <value>wayback|*</value>
         <value>webarchive|*</value>
+        <value>Wikidata_list/Patrimonio andaluz</value>
         <value>#expr|*</value>         <!-- It contains mathematical expressions in particular the word "round" -->
         <value>#invoke|*</value>
         <value>#tag|*</value>

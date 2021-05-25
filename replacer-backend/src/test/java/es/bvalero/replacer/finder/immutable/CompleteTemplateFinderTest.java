@@ -131,11 +131,12 @@ class CompleteTemplateFinderTest {
         String template1 = "{{Cita libro|param=value}}";
         String template2 = "{{#expr:Text2}}";
         String template3 = "{{Template3|param=value}}"; // Not captured
-        String text = String.format("%s %s %s", template1, template2, template3);
+        String template4 = "{{IMDb nombre|1229738|Luis Posada}}";
+        String text = String.format("%s %s %s %s", template1, template2, template3, template4);
 
         List<Immutable> matches = completeTemplateFinder.findList(text);
 
-        List<String> templates = List.of(template1, template2);
+        List<String> templates = List.of(template1, template2, template4);
         Assertions.assertTrue(
             matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(templates)
         );

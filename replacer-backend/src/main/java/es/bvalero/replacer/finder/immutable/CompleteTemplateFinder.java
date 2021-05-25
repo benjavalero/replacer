@@ -33,6 +33,7 @@ import org.springframework.stereotype.Component;
 class CompleteTemplateFinder extends ImmutableCheckedFinder {
 
     private static final String TEMPLATE_CITE_REGEX = "cit[ae]( |<L>)*";
+    private static final String TEMPLATE_IMDB = "imdb";
     private static final String WILDCARD = "*";
     private static final String START_TEMPLATE = "{{";
     private static final String END_TEMPLATE = "}}";
@@ -286,7 +287,11 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
 
     private boolean ignoreCompleteTemplate(String templateName) {
         String template = FinderUtils.toLowerCase(templateName.trim());
-        return TEMPLATE_CITE_AUTOMATON.run(template) || templateNames.contains(template);
+        return (
+            TEMPLATE_CITE_AUTOMATON.run(template) ||
+            templateNames.contains(template) ||
+            template.startsWith(TEMPLATE_IMDB)
+        );
     }
 
     private boolean matchesFile(String text) {
