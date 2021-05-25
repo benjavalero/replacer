@@ -1,5 +1,8 @@
 # Versions
 
+## 2.11.3 (25 May 2021)
+- Fixes and improvements on ignoring templates
+
 ## 2.11.2 (25 May 2021)
 - Don't return as immutable template parameters with no equals and value
 - Add more templates to ignore completely
