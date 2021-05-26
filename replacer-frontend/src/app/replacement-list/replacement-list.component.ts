@@ -26,7 +26,22 @@ export class ReplacementListComponent implements OnInit {
           }
         }
         if (!found) {
-          this.typeCounts.push(counts[i]);
+          // Insert the new type count
+          this.typeCounts.splice(i, 0, counts[i]);
+        }
+      }
+
+      // Inverse check to remove obsolete type counts not existing in the new value
+      for (let i = 0; i < this.typeCounts.length; i++) {
+        let found = false;
+        for (let j = 0; j < counts.length; j++) {
+          if (this.typeCounts[i].t === counts[j].t) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          this.typeCounts[i].l = [];
         }
       }
     });
