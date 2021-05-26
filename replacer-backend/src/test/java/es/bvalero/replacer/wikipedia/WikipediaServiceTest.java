@@ -18,7 +18,7 @@ class WikipediaServiceTest {
     private ObjectMapper jsonMapper;
 
     @Mock
-    private WikipediaApiFacade wikipediaApiFacade;
+    private WikipediaRequestService wikipediaRequestService;
 
     @InjectMocks
     private WikipediaServiceImpl wikipediaService;
@@ -40,7 +40,7 @@ class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
             .when(
-                wikipediaApiFacade.executeSignedPostRequest(
+                wikipediaRequestService.executeSignedPostRequest(
                     Mockito.anyMap(),
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.any(OAuthToken.class)
@@ -63,7 +63,7 @@ class WikipediaServiceTest {
             "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
-            .when(wikipediaApiFacade.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
+            .when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
         int pageId = 6219990;
@@ -86,7 +86,7 @@ class WikipediaServiceTest {
             "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
-            .when(wikipediaApiFacade.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
+            .when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
         int pageId = 6219990;
@@ -109,7 +109,7 @@ class WikipediaServiceTest {
             "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"pageid\":6219990,\"ns\":2,\"title\":\"Usuario:Benjavalero\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Soy de [[Orihuela]]\"}}}]},{\"pageid\":6903884,\"ns\":2,\"title\":\"Usuario:Benjavalero/Taller\",\"revisions\":[{\"timestamp\": \"2016-02-26T21:48:59Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"Enlace a [[Pais Vasco]].\"}}}]}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
-            .when(wikipediaApiFacade.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
+            .when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
         List<WikipediaPage> pages = wikipediaService.getPagesByIds(
@@ -147,7 +147,7 @@ class WikipediaServiceTest {
             "{\"batchcomplete\":true,\"curtimestamp\": \"2019-06-13T10:41:02Z\",\"query\":{\"pages\":[{\"ns\":2,\"title\":\"Usuario:Benjavaleroxx\",\"missing\":true}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
-            .when(wikipediaApiFacade.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
+            .when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
         Assertions.assertFalse(
@@ -162,7 +162,7 @@ class WikipediaServiceTest {
             "{\"batchcomplete\":\"\",\"continue\":{\"sroffset\":100,\"continue\":\"-||\"},\"query\":{\"searchinfo\":{\"totalhits\":10},\"search\":[{\"ns\":0,\"title\":\"Belanova\",\"pageid\":297896},{\"ns\":0,\"title\":\"Wil Hartog\",\"pageid\":7694956},{\"ns\":0,\"title\":\"Compuesto químico\",\"pageid\":10547},{\"ns\":0,\"title\":\"Aun así te vas\",\"pageid\":2460037},{\"ns\":0,\"title\":\"Educación\",\"pageid\":975},{\"ns\":0,\"title\":\"Abolicionismo\",\"pageid\":173068},{\"ns\":0,\"title\":\"Canaán\",\"pageid\":718871},{\"ns\":0,\"title\":\"Coahuila de Zaragoza\",\"pageid\":724588},{\"ns\":0,\"title\":\"Filosofía\",\"pageid\":689592},{\"ns\":0,\"title\":\"Cárites\",\"pageid\":71433}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
-            .when(wikipediaApiFacade.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
+            .when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
         WikipediaSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
@@ -181,7 +181,7 @@ class WikipediaServiceTest {
         String textResponse = "{\"batchcomplete\":\"\",\"query\":{\"searchinfo\":{\"totalhits\":0},\"search\":[]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
-            .when(wikipediaApiFacade.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
+            .when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
         WikipediaSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
@@ -202,7 +202,7 @@ class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
             .when(
-                wikipediaApiFacade.executeSignedGetRequest(
+                wikipediaRequestService.executeSignedGetRequest(
                     Mockito.anyMap(),
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.any(OAuthToken.class)
@@ -227,7 +227,7 @@ class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
             .when(
-                wikipediaApiFacade.executeSignedPostRequest(
+                wikipediaRequestService.executeSignedPostRequest(
                     Mockito.anyMap(),
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.any(OAuthToken.class)
@@ -261,7 +261,7 @@ class WikipediaServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
             .when(
-                wikipediaApiFacade.executeSignedPostRequest(
+                wikipediaRequestService.executeSignedPostRequest(
                     Mockito.anyMap(),
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.any(OAuthToken.class)
@@ -283,7 +283,7 @@ class WikipediaServiceTest {
 
         // Two calls: one for the EditToken and another to save the content
         Mockito
-            .verify(wikipediaApiFacade, Mockito.times(2))
+            .verify(wikipediaRequestService, Mockito.times(2))
             .executeSignedPostRequest(
                 Mockito.anyMap(),
                 Mockito.any(WikipediaLanguage.class),
@@ -305,7 +305,7 @@ class WikipediaServiceTest {
 
         // Two calls: one for the EditToken and another to save the content (x2 save page and section in this test)
         Mockito
-            .verify(wikipediaApiFacade, Mockito.times(4))
+            .verify(wikipediaRequestService, Mockito.times(4))
             .executeSignedPostRequest(
                 Mockito.anyMap(),
                 Mockito.any(WikipediaLanguage.class),
@@ -334,7 +334,7 @@ class WikipediaServiceTest {
             "{\"parse\":{\"title\":\"Usuario:Benjavalero/Taller\",\"pageid\":6903884,\"sections\":[{\"toclevel\":1,\"level\":\"2\",\"line\":\"Pruebas con cursiva\",\"number\":\"1\",\"index\":\"1\",\"fromtitle\":\"Usuario:Benjavalero/Taller\",\"byteoffset\":1998,\"anchor\":\"Pruebas_con_cursiva\"},{\"toclevel\":1,\"level\":\"2\",\"line\":\"Pruebas de banderas de la Selección Española\",\"number\":\"2\",\"index\":\"2\",\"fromtitle\":\"Usuario:Benjavalero/Taller\",\"byteoffset\":2275,\"anchor\":\"Pruebas_de_banderas_de_la_Selección_Española\"},{\"toclevel\":1,\"level\":\"2\",\"line\":\"Referencias\",\"number\":\"3\",\"index\":\"3\",\"fromtitle\":\"Usuario:Benjavalero/Taller\",\"byteoffset\":2497,\"anchor\":\"Referencias\"}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
-            .when(wikipediaApiFacade.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
+            .when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
         List<WikipediaSection> sections = wikipediaService.getPageSections(6903884, WikipediaLanguage.SPANISH);
@@ -384,7 +384,7 @@ class WikipediaServiceTest {
             "{\"parse\":{\"title\":\"Anexo:Asteroides (161001)\\u2013(162000)\",\"pageid\":6633556,\"sections\":[{\"toclevel\":1,\"level\":\"2\",\"line\":\"Asteroides del (161001) al (161100)\",\"number\":\"1\",\"index\":\"\",\"byteoffset\":null,\"anchor\":\"Asteroides_del_(161001)_al_(161100)\"},{\"toclevel\":1,\"level\":\"2\",\"line\":\"Asteroides del (161101) al (161200)\",\"number\":\"2\",\"index\":\"\",\"byteoffset\":null,\"anchor\":\"Asteroides_del_(161101)_al_(161200)\"}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
-            .when(wikipediaApiFacade.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
+            .when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
         List<WikipediaSection> sections = wikipediaService.getPageSections(6633556, WikipediaLanguage.SPANISH);
@@ -399,7 +399,7 @@ class WikipediaServiceTest {
             "{\"batchcomplete\":true,\"curtimestamp\":\"2019-10-17T15:12:03Z\",\"query\":{\"pages\":[{\"pageid\":6903884,\"ns\":2,\"title\":\"Usuario:Benjavalero/Taller\",\"revisions\":[{\"timestamp\":\"2019-08-24T07:51:05Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"== Pruebas con cursiva ==\\n\\n* El libro ''La historia interminable''.\\n* Comillas sin cerrar: ''La historia interminable\\n* Con negrita ''La '''historia''' interminable''.\\n* Con cursiva ''La ''historia'' interminable''.\\n* Con negrita buena ''La '''''historia''''' interminable''.\\n\\n=== Pruebas de subsecciones ===\\n\\nEsta es una subsección tonta solo para probar la captura de secciones.\"}}}]}]}}";
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         Mockito
-            .when(wikipediaApiFacade.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
+            .when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
         int pageId = 6903884;

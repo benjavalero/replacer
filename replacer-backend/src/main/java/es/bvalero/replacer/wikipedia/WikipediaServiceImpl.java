@@ -29,7 +29,7 @@ class WikipediaServiceImpl implements WikipediaService {
     private static final int MAX_OFFSET_LIMIT = 10000;
 
     @Autowired
-    private WikipediaApiFacade wikipediaApiFacade;
+    private WikipediaRequestService wikipediaRequestService;
 
     @Resource
     private Map<String, String> simpleMisspellingPages;
@@ -53,7 +53,7 @@ class WikipediaServiceImpl implements WikipediaService {
     @Loggable(value = Loggable.DEBUG)
     WikipediaApiResponse.UserInfo getLoggedUserName(WikipediaLanguage lang, OAuthToken accessToken)
         throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaApiFacade.executeSignedGetRequest(
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedGetRequest(
             buildUserNameRequestParams(),
             lang,
             accessToken
@@ -128,7 +128,7 @@ class WikipediaServiceImpl implements WikipediaService {
 
     private List<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue, WikipediaLanguage lang)
         throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaApiFacade.executeGetRequest(
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
             buildPageIdsRequestParams(pagesParam, pagesValue),
             lang
         );
@@ -174,7 +174,7 @@ class WikipediaServiceImpl implements WikipediaService {
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
     public List<WikipediaSection> getPageSections(int pageId, WikipediaLanguage lang) throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaApiFacade.executeGetRequest(
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
             buildPageSectionsRequestParams(pageId),
             lang
         );
@@ -222,7 +222,7 @@ class WikipediaServiceImpl implements WikipediaService {
     @Override
     public Optional<WikipediaPage> getPageByIdAndSection(int pageId, WikipediaSection section, WikipediaLanguage lang)
         throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaApiFacade.executeGetRequest(
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
             buildPageIdsAndSectionRequestParams(pageId, section.getIndex()),
             lang
         );
@@ -251,7 +251,7 @@ class WikipediaServiceImpl implements WikipediaService {
             return WikipediaSearchResult.ofEmpty();
         }
 
-        WikipediaApiResponse apiResponse = wikipediaApiFacade.executeGetRequest(
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
             buildPageIdsByStringMatchRequestParams(text, caseSensitive, offset, limit),
             lang
         );
@@ -345,7 +345,7 @@ class WikipediaServiceImpl implements WikipediaService {
             );
         }
 
-        wikipediaApiFacade.executeSignedPostRequest(
+        wikipediaRequestService.executeSignedPostRequest(
             buildSavePageContentRequestParams(pageId, pageContent, section, currentTimestamp, editSummary, editToken),
             lang,
             accessToken
@@ -380,7 +380,7 @@ class WikipediaServiceImpl implements WikipediaService {
     @Loggable(prepend = true, value = Loggable.TRACE)
     @VisibleForTesting
     EditToken getEditToken(int pageId, WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaApiFacade.executeSignedPostRequest(
+        WikipediaApiResponse apiResponse = wikipediaRequestService.executeSignedPostRequest(
             buildEditTokenRequestParams(pageId),
             lang,
             accessToken

@@ -2,6 +2,7 @@ package es.bvalero.replacer.wikipedia.oauth;
 
 import es.bvalero.replacer.wikipedia.OAuthService;
 import es.bvalero.replacer.wikipedia.OAuthToken;
+import java.util.Map;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,15 @@ class OAuthOfflineService implements OAuthService {
     @Override
     public OAuthToken getAccessToken(OAuthToken requestToken, String oAuthVerifier) {
         return OAuthToken.ofEmpty();
+    }
+
+    @Override
+    public String executeRequest(String verb, String url, Map<String, String> parameters) {
+        return "";
+    }
+
+    @Override
+    public String executeSignedRequest(String verb, String url, Map<String, String> parameters, OAuthToken oAuthToken) {
+        return "";
     }
 }
