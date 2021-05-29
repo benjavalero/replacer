@@ -22,6 +22,7 @@
         <value>commonscat|*</value>
         <value>DEFAULTSORT|*</value>    <!-- It usually contains words without accents for the sake of sorting -->
         <value>enlace roto|*</value>
+        <value>facebook|*</value>
         <value>ficha de taxón|*</value>
         <value>Fila BIC|*</value>
         <value>Fila LIC|*</value>
@@ -40,6 +41,8 @@
         <value>sfn|*</value>            <!-- Cita Harvard -->
         <value>taxobox|*</value>
         <value>traducido ref|*</value>
+        <value>twitter|*</value>
+        <value>versalita|*</value>
         <value>wayback|*</value>
         <value>webarchive|*</value>
         <value>Wikidata list*|*</value>
