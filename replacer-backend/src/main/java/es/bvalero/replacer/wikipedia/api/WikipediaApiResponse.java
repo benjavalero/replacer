@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import es.bvalero.replacer.common.ReplacerException;
@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.Data;
 import org.springframework.lang.Nullable;
 
+/** DTO matching the common format for a Wikipedia classic API response */
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 class WikipediaApiResponse {
@@ -31,7 +32,7 @@ class WikipediaApiResponse {
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class Error {
+    private static class Error {
 
         private String code;
         private String info;
@@ -39,7 +40,7 @@ class WikipediaApiResponse {
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Query {
+    static class Query {
 
         private UserInfo userinfo;
         private SearchInfo searchinfo;
@@ -63,7 +64,7 @@ class WikipediaApiResponse {
     }
 
     @Data
-    public static class Page {
+    static class Page {
 
         private int pageid;
         private int ns;
@@ -74,7 +75,7 @@ class WikipediaApiResponse {
     }
 
     @Data
-    public static class Revision {
+    static class Revision {
 
         private String timestamp;
         private Slots slots;
@@ -87,14 +88,14 @@ class WikipediaApiResponse {
     }
 
     @Data
-    public static class Slots {
+    static class Slots {
 
         private Main main;
     }
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Main {
+    static class Main {
 
         private String content;
     }

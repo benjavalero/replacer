@@ -1,16 +1,12 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.common;
 
-import es.bvalero.replacer.common.DateUtils;
-import es.bvalero.replacer.config.XmlConfiguration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = XmlConfiguration.class)
-class WikipediaPageTest {
+class DateUtilsTest {
 
     @Test
     void testParseWikipediaDate() {

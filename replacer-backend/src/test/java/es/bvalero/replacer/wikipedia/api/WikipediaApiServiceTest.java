@@ -1,9 +1,10 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.*;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -12,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
-class WikipediaServiceTest {
+class WikipediaApiServiceTest {
 
     @Spy
     private ObjectMapper jsonMapper;
@@ -21,14 +22,14 @@ class WikipediaServiceTest {
     private WikipediaRequestService wikipediaRequestService;
 
     @InjectMocks
-    private WikipediaServiceImpl wikipediaService;
+    private WikipediaApiService wikipediaService;
 
     private WikipediaService wikipediaServiceOffline;
 
     @BeforeEach
     void setUp() {
-        wikipediaService = new WikipediaServiceImpl();
-        wikipediaServiceOffline = new WikipediaServiceOfflineImpl();
+        wikipediaService = new WikipediaApiService();
+        wikipediaServiceOffline = new WikipediaOfflineService();
         MockitoAnnotations.initMocks(this);
     }
 

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.api;
 
 import lombok.Value;
 

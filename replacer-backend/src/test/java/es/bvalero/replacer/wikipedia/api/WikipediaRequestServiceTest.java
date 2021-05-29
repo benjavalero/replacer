@@ -1,8 +1,10 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.wikipedia.OAuthService;
+import es.bvalero.replacer.wikipedia.OAuthToken;
 import java.util.Collections;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

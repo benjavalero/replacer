@@ -1,10 +1,12 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.api;
 
 import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.config.XmlConfiguration;
+import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.oauth.OAuthMediaWikiConfiguration;
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(
     classes = {
-        WikipediaServiceImpl.class,
+        WikipediaApiService.class,
         WikipediaRequestService.class,
         OAuthMediaWikiConfiguration.class,
         XmlConfiguration.class,
@@ -24,7 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class WikipediaServiceIT {
 
     @Autowired
-    private WikipediaServiceImpl wikipediaService;
+    private WikipediaApiService wikipediaService;
 
     @Test
     void testGetPageContent() throws ReplacerException {

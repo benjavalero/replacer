@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark;
 
 import es.bvalero.replacer.common.ReplacerException;
-import es.bvalero.replacer.wikipedia.WikipediaUtils;
+import es.bvalero.replacer.wikipedia.api.WikipediaUtils;
 import java.util.List;
 
 public abstract class BaseFinderBenchmark {

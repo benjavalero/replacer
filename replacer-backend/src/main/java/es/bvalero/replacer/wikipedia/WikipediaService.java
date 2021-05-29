@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.lang.Nullable;
 
+/** Service to perform operations in Wikipedia */
 public interface WikipediaService {
     UserInfo getUserInfo(WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException;
 

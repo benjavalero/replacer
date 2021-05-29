@@ -5,9 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class DateUtils {
 

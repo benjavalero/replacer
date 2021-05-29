@@ -3,7 +3,6 @@ package es.bvalero.replacer.wikipedia;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import java.time.LocalDate;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
@@ -23,7 +22,7 @@ public class WikipediaPage {
     String content;
     LocalDate lastUpdate;
 
-    @With(AccessLevel.PACKAGE)
+    @With
     @Nullable
     WikipediaSection section;
 

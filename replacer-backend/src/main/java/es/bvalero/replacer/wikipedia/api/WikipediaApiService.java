@@ -1,10 +1,11 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.api;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
@@ -16,10 +17,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+/** Wikipedia service implementation using classic Wikipedia API */
 @Slf4j
 @Service
 @Profile("!offline")
-class WikipediaServiceImpl implements WikipediaService {
+class WikipediaApiService implements WikipediaService {
 
     private static final int MAX_PAGES_REQUESTED = 50;
     private static final String PARAM_ACTION = "action";

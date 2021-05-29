@@ -1,6 +1,7 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.wikipedia.api;
 
 import es.bvalero.replacer.common.*;
+import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @Profile("offline")
-class WikipediaServiceOfflineImpl implements WikipediaService {
+class WikipediaOfflineService implements WikipediaService {
 
     @Override
     public UserInfo getUserInfo(WikipediaLanguage lang, OAuthToken accessToken) {

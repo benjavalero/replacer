@@ -3,6 +3,7 @@ package es.bvalero.replacer.wikipedia;
 import java.util.Collections;
 import java.util.List;
 import lombok.Value;
+import org.jetbrains.annotations.TestOnly;
 
 @Value(staticConstructor = "of")
 public class WikipediaSearchResult {
@@ -14,7 +15,8 @@ public class WikipediaSearchResult {
         return new WikipediaSearchResult(0, Collections.emptyList());
     }
 
-    boolean isEmpty() {
+    @TestOnly
+    public boolean isEmpty() {
         return this.getPageIds().isEmpty();
     }
 }
