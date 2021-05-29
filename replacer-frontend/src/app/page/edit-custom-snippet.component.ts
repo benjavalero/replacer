@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserConfigService } from '../user/user-config.service';
 import { Snippet } from './page-replacement.model';
 
 @Component({
@@ -10,11 +11,13 @@ import { Snippet } from './page-replacement.model';
 export class EditCustomSnippetComponent implements OnInit {
   @Input() snippet: Snippet;
   private newText: string;
+  userLang: string;
 
-  constructor(public activeModal: NgbActiveModal) {}
+  constructor(public activeModal: NgbActiveModal, private userConfigService: UserConfigService) {}
 
   ngOnInit(): void {
     this.newText = this.snippet.text;
+    this.userLang = this.userConfigService.lang;
   }
 
   onChange(event: any) {
