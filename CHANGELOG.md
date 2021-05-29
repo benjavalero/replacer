@@ -1,5 +1,8 @@
 # Versions
 
+## 2.11.4 (29 May 2021)
+- More ignorable templates
+
 ## 2.11.3 (25 May 2021)
 - Fixes and improvements on ignoring templates
 
