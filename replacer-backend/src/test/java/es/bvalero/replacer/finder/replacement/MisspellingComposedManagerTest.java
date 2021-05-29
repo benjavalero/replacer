@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.common.ListingLoader;
+import es.bvalero.replacer.finder.listing.ListingLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

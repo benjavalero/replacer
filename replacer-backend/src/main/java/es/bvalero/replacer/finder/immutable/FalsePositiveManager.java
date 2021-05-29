@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.common.ListingLoader;
-import es.bvalero.replacer.finder.common.ParseFileManager;
+import es.bvalero.replacer.finder.listing.ListingLoader;
+import es.bvalero.replacer.finder.listing.ParseFileManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

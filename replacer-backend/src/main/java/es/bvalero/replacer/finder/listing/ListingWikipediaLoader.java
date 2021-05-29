@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.common;
+package es.bvalero.replacer.finder.listing;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
