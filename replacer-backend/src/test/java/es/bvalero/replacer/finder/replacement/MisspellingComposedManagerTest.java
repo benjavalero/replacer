@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.finder.common.ListingLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,7 +13,7 @@ import org.mockito.MockitoAnnotations;
 class MisspellingComposedManagerTest {
 
     @Mock
-    private WikipediaService wikipediaService;
+    private ListingLoader listingLoader;
 
     @InjectMocks
     private MisspellingComposedManager misspellingComposedManager;
@@ -27,11 +27,11 @@ class MisspellingComposedManagerTest {
     @Test
     void testUpdate() throws ReplacerException {
         Mockito
-            .when(wikipediaService.getComposedMisspellingListPageContent(Mockito.any(WikipediaLanguage.class)))
+            .when(listingLoader.getComposedMisspellingListPageContent(Mockito.any(WikipediaLanguage.class)))
             .thenReturn("");
 
         misspellingComposedManager.scheduledItemListUpdate();
 
-        Mockito.verify(wikipediaService).getComposedMisspellingListPageContent(WikipediaLanguage.SPANISH);
+        Mockito.verify(listingLoader).getComposedMisspellingListPageContent(WikipediaLanguage.SPANISH);
     }
 }

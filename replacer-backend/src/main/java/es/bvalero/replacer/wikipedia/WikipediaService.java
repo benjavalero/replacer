@@ -4,22 +4,18 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import java.util.List;
 import java.util.Optional;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.Nullable;
 
 /** Service to perform operations in Wikipedia */
 public interface WikipediaService {
     UserInfo getUserInfo(WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException;
 
-    String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException;
-
-    String getFalsePositiveListPageContent(WikipediaLanguage lang) throws ReplacerException;
-
-    String getComposedMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException;
-
     Optional<WikipediaPage> getPageByTitle(String pageTitle, WikipediaLanguage lang) throws ReplacerException;
 
     Optional<WikipediaPage> getPageById(int pageId, WikipediaLanguage lang) throws ReplacerException;
 
+    @TestOnly
     List<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws ReplacerException;
 
     List<WikipediaSection> getPageSections(int pageId, WikipediaLanguage lang) throws ReplacerException;

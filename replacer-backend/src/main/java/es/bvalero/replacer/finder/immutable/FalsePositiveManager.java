@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.common.ListingLoader;
 import es.bvalero.replacer.finder.common.ParseFileManager;
-import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 class FalsePositiveManager extends ParseFileManager<String> {
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private ListingLoader listingLoader;
 
     @Override
     protected String getLabel() {
@@ -23,7 +23,7 @@ class FalsePositiveManager extends ParseFileManager<String> {
 
     @Override
     protected String findItemsTextInWikipedia(WikipediaLanguage lang) throws ReplacerException {
-        return wikipediaService.getFalsePositiveListPageContent(lang);
+        return listingLoader.getFalsePositiveListPageContent(lang);
     }
 
     @Override

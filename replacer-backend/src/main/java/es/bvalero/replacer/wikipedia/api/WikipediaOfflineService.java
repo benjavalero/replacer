@@ -23,21 +23,6 @@ class WikipediaOfflineService implements WikipediaService {
     }
 
     @Override
-    public String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return FileUtils.getFileContent("/offline/misspelling-list.txt");
-    }
-
-    @Override
-    public String getFalsePositiveListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return FileUtils.getFileContent("/offline/false-positives.txt");
-    }
-
-    @Override
-    public String getComposedMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return FileUtils.getFileContent("/offline/composed-misspellings.txt");
-    }
-
-    @Override
     public Optional<WikipediaPage> getPageByTitle(String pageTitle, WikipediaLanguage lang) throws ReplacerException {
         return Optional.of(buildFakePage(1));
     }

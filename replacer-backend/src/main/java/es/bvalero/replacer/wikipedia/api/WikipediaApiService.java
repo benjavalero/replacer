@@ -8,7 +8,6 @@ import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -32,15 +31,6 @@ class WikipediaApiService implements WikipediaService {
 
     @Autowired
     private WikipediaRequestService wikipediaRequestService;
-
-    @Resource
-    private Map<String, String> simpleMisspellingPages;
-
-    @Resource
-    private Map<String, String> composedMisspellingPages;
-
-    @Resource
-    private Map<String, String> falsePositivePages;
 
     @Override
     public UserInfo getUserInfo(WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException {
@@ -73,27 +63,6 @@ class WikipediaApiService implements WikipediaService {
 
     private WikipediaApiResponse.UserInfo extractUserNameFromJson(WikipediaApiResponse response) {
         return response.getQuery().getUserinfo();
-    }
-
-    @Override
-    public String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return getPageByTitle(simpleMisspellingPages.get(lang.getCode()), lang)
-            .orElseThrow(ReplacerException::new)
-            .getContent();
-    }
-
-    @Override
-    public String getFalsePositiveListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return getPageByTitle(falsePositivePages.get(lang.getCode()), lang)
-            .orElseThrow(ReplacerException::new)
-            .getContent();
-    }
-
-    @Override
-    public String getComposedMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
-        return getPageByTitle(composedMisspellingPages.get(lang.getCode()), lang)
-            .orElseThrow(ReplacerException::new)
-            .getContent();
     }
 
     @Loggable(prepend = true, value = Loggable.TRACE)

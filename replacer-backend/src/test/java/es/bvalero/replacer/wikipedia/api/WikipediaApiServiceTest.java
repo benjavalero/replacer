@@ -422,21 +422,6 @@ class WikipediaApiServiceTest {
 
     @Test
     void testWikipediaServiceOffline() throws ReplacerException {
-        Assertions.assertTrue(
-            StringUtils.isNotBlank(
-                wikipediaServiceOffline.getMisspellingListPageContent(WikipediaLanguage.getDefault())
-            )
-        );
-        Assertions.assertTrue(
-            StringUtils.isNotBlank(
-                wikipediaServiceOffline.getComposedMisspellingListPageContent(WikipediaLanguage.getDefault())
-            )
-        );
-        Assertions.assertTrue(
-            StringUtils.isNotBlank(
-                wikipediaServiceOffline.getFalsePositiveListPageContent(WikipediaLanguage.getDefault())
-            )
-        );
         Assertions.assertEquals(
             Integer.valueOf(1),
             wikipediaServiceOffline

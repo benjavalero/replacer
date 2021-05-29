@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.finder.common.ListingLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 class MisspellingComposedManager extends MisspellingManager {
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private ListingLoader listingLoader;
 
     @Override
     protected String getLabel() {
@@ -24,6 +24,6 @@ class MisspellingComposedManager extends MisspellingManager {
 
     @Override
     protected String findItemsTextInWikipedia(WikipediaLanguage lang) throws ReplacerException {
-        return wikipediaService.getComposedMisspellingListPageContent(lang);
+        return listingLoader.getComposedMisspellingListPageContent(lang);
     }
 }

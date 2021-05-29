@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.common.ListingLoader;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,7 +20,7 @@ import org.mockito.MockitoAnnotations;
 class MisspellingManagerTest {
 
     @Mock
-    private WikipediaService wikipediaService;
+    private ListingLoader listingLoader;
 
     @Mock
     private ReplacementService replacementService;
@@ -83,12 +83,10 @@ class MisspellingManagerTest {
 
     @Test
     void testUpdate() throws ReplacerException {
-        Mockito
-            .when(wikipediaService.getMisspellingListPageContent(Mockito.any(WikipediaLanguage.class)))
-            .thenReturn("");
+        Mockito.when(listingLoader.getMisspellingListPageContent(Mockito.any(WikipediaLanguage.class))).thenReturn("");
 
         misspellingManager.scheduledItemListUpdate();
 
-        Mockito.verify(wikipediaService).getMisspellingListPageContent(WikipediaLanguage.SPANISH);
+        Mockito.verify(listingLoader).getMisspellingListPageContent(WikipediaLanguage.SPANISH);
     }
 }

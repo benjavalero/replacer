@@ -2,9 +2,9 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.common.ListingLoader;
 import es.bvalero.replacer.finder.common.ParseFileManager;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,7 +26,7 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
     private static final String CASE_SENSITIVE_VALUE = "cs";
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private ListingLoader listingLoader;
 
     @Autowired
     private ReplacementService replacementService;
@@ -65,7 +65,7 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
 
     @Override
     protected String findItemsTextInWikipedia(WikipediaLanguage lang) throws ReplacerException {
-        return wikipediaService.getMisspellingListPageContent(lang);
+        return listingLoader.getMisspellingListPageContent(lang);
     }
 
     @Override
