@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark;
 
-import es.bvalero.replacer.finder.common.Finder;
-import es.bvalero.replacer.finder.common.FinderPage;
+import es.bvalero.replacer.finder.Finder;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.HashSet;
 import java.util.List;

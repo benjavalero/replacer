@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic;
 
-import es.bvalero.replacer.finder.common.FinderPage;
+import es.bvalero.replacer.finder.FinderPage;
 import java.util.LinkedList;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;

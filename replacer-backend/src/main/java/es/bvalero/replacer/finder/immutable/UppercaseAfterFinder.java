@@ -5,7 +5,7 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.common.FinderPage;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Misspelling;
 import es.bvalero.replacer.finder.replacement.MisspellingManager;
 import es.bvalero.replacer.finder.replacement.Suggestion;

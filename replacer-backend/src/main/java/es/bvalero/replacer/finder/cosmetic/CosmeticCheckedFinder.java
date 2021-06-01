@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic;
 
-import es.bvalero.replacer.finder.common.FinderPage;
+import es.bvalero.replacer.finder.FinderPage;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 

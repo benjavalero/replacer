@@ -2,7 +2,7 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.common.FinderPage;
+import es.bvalero.replacer.finder.FinderPage;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Assertions;

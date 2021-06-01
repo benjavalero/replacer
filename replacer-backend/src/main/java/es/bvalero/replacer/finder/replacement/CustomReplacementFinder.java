@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement;
 
-import es.bvalero.replacer.finder.common.FinderPage;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.List;
 import java.util.regex.MatchResult;

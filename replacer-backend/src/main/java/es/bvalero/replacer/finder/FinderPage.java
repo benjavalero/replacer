@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.common;
+package es.bvalero.replacer.finder;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
 import lombok.Value;

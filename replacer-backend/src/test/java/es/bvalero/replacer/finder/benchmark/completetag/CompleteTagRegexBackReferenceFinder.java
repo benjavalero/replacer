@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.common.FinderPage;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Set;
 import java.util.regex.MatchResult;

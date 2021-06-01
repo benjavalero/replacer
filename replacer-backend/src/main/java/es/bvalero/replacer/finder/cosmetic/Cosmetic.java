@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic;
 
-import es.bvalero.replacer.finder.common.FinderResult;
+import es.bvalero.replacer.finder.FinderResult;
 import lombok.Builder;
 import lombok.Value;
 

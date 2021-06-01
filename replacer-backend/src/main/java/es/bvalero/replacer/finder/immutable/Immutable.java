@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable;
 
-import es.bvalero.replacer.finder.common.FinderResult;
+import es.bvalero.replacer.finder.FinderResult;
 import lombok.Value;
 
 /**

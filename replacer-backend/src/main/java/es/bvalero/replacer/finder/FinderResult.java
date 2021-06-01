@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.common;
+package es.bvalero.replacer.finder;
 
 import org.apache.commons.lang3.Range;
 

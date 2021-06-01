@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable;
 
-import es.bvalero.replacer.finder.common.Finder;
+import es.bvalero.replacer.finder.Finder;
 import java.util.regex.MatchResult;
 
 interface ImmutableFinder extends Finder<Immutable>, Comparable<ImmutableFinder> {

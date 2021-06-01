@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic;
 
-import es.bvalero.replacer.finder.common.Finder;
+import es.bvalero.replacer.finder.Finder;
 import java.util.regex.MatchResult;
 
 interface CosmeticFinder extends Finder<Cosmetic> {

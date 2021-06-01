@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable;
 
-import es.bvalero.replacer.finder.common.FinderPage;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.*;

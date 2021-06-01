@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.common.FileUtils;
 import es.bvalero.replacer.common.ReplacerException;
-import es.bvalero.replacer.finder.common.Finder;
-import es.bvalero.replacer.finder.common.FinderService;
+import es.bvalero.replacer.finder.Finder;
+import es.bvalero.replacer.finder.FinderService;
 import es.bvalero.replacer.finder.replacement.Misspelling;
 import es.bvalero.replacer.finder.replacement.MisspellingManager;
 import java.util.ArrayList;

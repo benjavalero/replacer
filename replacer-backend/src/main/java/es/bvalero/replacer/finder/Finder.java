@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.common;
+package es.bvalero.replacer.finder;
 
 import java.util.List;
 import java.util.regex.MatchResult;

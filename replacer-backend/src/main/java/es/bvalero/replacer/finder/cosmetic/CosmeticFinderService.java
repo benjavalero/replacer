@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.cosmetic;
 
-import es.bvalero.replacer.finder.common.Finder;
-import es.bvalero.replacer.finder.common.FinderPage;
-import es.bvalero.replacer.finder.common.FinderService;
+import es.bvalero.replacer.finder.Finder;
+import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.FinderService;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
