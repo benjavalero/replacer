@@ -9,9 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class MisspellingComposedManager extends MisspellingManager {
 
-    @Autowired
-    private ListingContentService listingContentService;
-
     @Override
     protected String getLabel() {
         return "Composed Misspelling";

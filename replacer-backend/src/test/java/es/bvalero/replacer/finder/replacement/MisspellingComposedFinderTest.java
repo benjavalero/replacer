@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.MisspellingComposedManager;
 import es.bvalero.replacer.finder.listing.Suggestion;
 import java.beans.PropertyChangeEvent;
 import java.util.*;
@@ -25,7 +26,9 @@ class MisspellingComposedFinderTest {
         map.putAll(WikipediaLanguage.SPANISH, misspellings);
 
         SetValuedMap<WikipediaLanguage, Misspelling> emptyMap = new HashSetValuedHashMap<>();
-        misspellingComposedFinder.propertyChange(new PropertyChangeEvent(this, "name", emptyMap, map));
+        misspellingComposedFinder.propertyChange(
+            new PropertyChangeEvent(this, MisspellingComposedManager.PROPERTY_ITEMS, emptyMap, map)
+        );
     }
 
     @Test

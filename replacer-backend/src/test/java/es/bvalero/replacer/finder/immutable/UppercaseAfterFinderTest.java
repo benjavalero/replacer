@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.MisspellingManager;
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -31,26 +32,13 @@ class UppercaseAfterFinderTest {
         String noun2 = "Febrero";
         String text = "{{ param=" + noun1 + " | " + noun2 + " }} zzz";
 
-        Misspelling misspelling1 = Misspelling.of("Enero", true, "enero");
-        Misspelling misspelling2 = Misspelling.of("Febrero", true, "febrero");
-        Misspelling misspelling3 = Misspelling.of("habia", false, "había"); // Ignored
-        Misspelling misspelling4 = Misspelling.of("madrid", true, "Madrid"); // Ignored
-        Misspelling misspelling5 = Misspelling.of("Julio", true, "Julio, julio");
-        Misspelling misspelling6 = Misspelling.of("Paris", true, "París"); // Ignored
-        Set<Misspelling> misspellingSet = new HashSet<>(
-            Arrays.asList(misspelling1, misspelling2, misspelling3, misspelling4, misspelling5, misspelling6)
-        );
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
-        map.putAll(WikipediaLanguage.SPANISH, misspellingSet);
-
-        // Test the filtering of uppercase words
-        Set<String> expectedWords = new HashSet<>(
-            Arrays.asList(misspelling1.getWord(), misspelling2.getWord(), misspelling5.getWord())
-        );
-        Assertions.assertEquals(expectedWords, new HashSet<>(uppercaseAfterFinder.getUppercaseWords(misspellingSet)));
+        SetValuedMap<WikipediaLanguage, String> map = new HashSetValuedHashMap<>();
+        map.putAll(WikipediaLanguage.getDefault(), Set.of("Enero", "Febrero"));
 
         // Fake the update of the misspelling list in the misspelling manager
-        uppercaseAfterFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+        uppercaseAfterFinder.propertyChange(
+            new PropertyChangeEvent(this, MisspellingManager.PROPERTY_UPPERCASE_WORDS, EMPTY_MAP, map)
+        );
 
         List<Immutable> matches = uppercaseAfterFinder.findList(text);
 

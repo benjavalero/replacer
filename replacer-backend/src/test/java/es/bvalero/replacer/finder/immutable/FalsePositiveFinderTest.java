@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.listing.FalsePositiveManager;
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -31,7 +32,9 @@ class FalsePositiveFinderTest {
         map.putAll(WikipediaLanguage.SPANISH, falsePositives);
 
         // Fake the update of the list in the manager
-        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+        falsePositiveFinder.propertyChange(
+            new PropertyChangeEvent(this, FalsePositiveManager.PROPERTY_ITEMS, EMPTY_MAP, map)
+        );
 
         List<Immutable> matches = falsePositiveFinder.findList(text);
 
@@ -51,7 +54,9 @@ class FalsePositiveFinderTest {
         map.putAll(WikipediaLanguage.SPANISH, falsePositives);
 
         // Fake the update of the list in the manager
-        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, map));
+        falsePositiveFinder.propertyChange(
+            new PropertyChangeEvent(this, FalsePositiveManager.PROPERTY_ITEMS, EMPTY_MAP, map)
+        );
 
         List<Immutable> matches1 = falsePositiveFinder.findList(text1);
 
@@ -73,7 +78,9 @@ class FalsePositiveFinderTest {
     @Test
     void testFalsePositivesListEmpty() {
         // Fake the update of the list in the manager
-        falsePositiveFinder.propertyChange(new PropertyChangeEvent(this, "name", EMPTY_MAP, EMPTY_MAP));
+        falsePositiveFinder.propertyChange(
+            new PropertyChangeEvent(this, FalsePositiveManager.PROPERTY_ITEMS, EMPTY_MAP, EMPTY_MAP)
+        );
 
         Assertions.assertTrue(falsePositiveFinder.findList("A sample text").isEmpty());
     }

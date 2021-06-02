@@ -31,7 +31,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Slf4j
 public abstract class ListingManager<T> {
 
-    private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+    @VisibleForTesting
+    public static final String PROPERTY_ITEMS = "items";
+
+    protected final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     @Getter(AccessLevel.PROTECTED)
     private SetValuedMap<WikipediaLanguage, T> items = new HashSetValuedHashMap<>();
@@ -42,7 +45,7 @@ public abstract class ListingManager<T> {
     }
 
     public void setItems(SetValuedMap<WikipediaLanguage, T> items) {
-        changeSupport.firePropertyChange("name", this.items, items);
+        changeSupport.firePropertyChange(PROPERTY_ITEMS, this.items, items);
         this.items = items;
     }
 

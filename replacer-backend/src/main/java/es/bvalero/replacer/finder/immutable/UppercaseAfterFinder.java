@@ -6,9 +6,7 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.MisspellingManager;
-import es.bvalero.replacer.finder.listing.Suggestion;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeEvent;
@@ -18,7 +16,6 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -53,58 +50,32 @@ class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        SetValuedMap<WikipediaLanguage, Misspelling> misspellings = (SetValuedMap<WikipediaLanguage, Misspelling>) evt.getNewValue();
-        this.uppercaseAfterAutomata = buildUppercaseAfterAutomata(misspellings);
+        if (MisspellingManager.PROPERTY_UPPERCASE_WORDS.equals(evt.getPropertyName())) {
+            SetValuedMap<WikipediaLanguage, String> uppercaseWords = (SetValuedMap<WikipediaLanguage, String>) evt.getNewValue();
+            this.uppercaseAfterAutomata = buildUppercaseAfterAutomata(uppercaseWords);
+        }
     }
 
     @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)
     private Map<WikipediaLanguage, RunAutomaton> buildUppercaseAfterAutomata(
-        SetValuedMap<WikipediaLanguage, Misspelling> misspellings
+        SetValuedMap<WikipediaLanguage, String> uppercaseWords
     ) {
         Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
-        for (WikipediaLanguage lang : misspellings.keySet()) {
-            map.put(lang, buildUppercaseAfterAutomaton(misspellings.get(lang)));
+        for (WikipediaLanguage lang : uppercaseWords.keySet()) {
+            map.put(lang, buildUppercaseAfterAutomaton(uppercaseWords.get(lang)));
         }
         return map;
     }
 
     @Nullable
-    private RunAutomaton buildUppercaseAfterAutomaton(@Nullable Set<Misspelling> misspellings) {
+    private RunAutomaton buildUppercaseAfterAutomaton(@Nullable Set<String> words) {
         // There are hundreds of only uppercase words so the best approach is a simple alternation
-        if (misspellings != null) {
-            Set<String> words = getUppercaseWords(misspellings);
-
-            if (!words.isEmpty()) {
-                String alternations = String.format(REGEX_UPPERCASE_AFTER_PUNCTUATION, StringUtils.join(words, "|"));
-                return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
-            }
+        if (words != null && !words.isEmpty()) {
+            String alternations = String.format(REGEX_UPPERCASE_AFTER_PUNCTUATION, StringUtils.join(words, "|"));
+            return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
+        } else {
+            return null;
         }
-        return null;
-    }
-
-    /**
-     * Find the misspellings which start with uppercase and are case-sensitive
-     */
-    Set<String> getUppercaseWords(Set<Misspelling> misspellings) {
-        return misspellings
-            .stream()
-            .filter(this::isUppercaseMisspelling)
-            .map(Misspelling::getWord)
-            .collect(Collectors.toSet());
-    }
-
-    private boolean isUppercaseMisspelling(Misspelling misspelling) {
-        String word = misspelling.getWord();
-        // Any of the suggestions is the misspelling word in lowercase
-        return (
-            misspelling.isCaseSensitive() &&
-            FinderUtils.startsWithUpperCase(word) &&
-            misspelling
-                .getSuggestions()
-                .stream()
-                .map(Suggestion::getText)
-                .anyMatch(text -> text.equals(FinderUtils.toLowerCase(word)))
-        );
     }
 
     @Override

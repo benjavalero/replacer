@@ -4,9 +4,7 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.replacement.ReplacementService;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.Assertions;
@@ -90,5 +88,27 @@ class MisspellingManagerTest {
         misspellingManager.scheduledItemListUpdate();
 
         Mockito.verify(listingContentService).getMisspellingListingContent(WikipediaLanguage.SPANISH);
+    }
+
+    @Test
+    void testUppercaseWordsFiltering() {
+        Misspelling misspelling1 = Misspelling.of("Enero", true, "enero");
+        Misspelling misspelling2 = Misspelling.of("Febrero", true, "febrero");
+        Misspelling misspelling3 = Misspelling.of("habia", false, "había"); // Ignored
+        Misspelling misspelling4 = Misspelling.of("madrid", true, "Madrid"); // Ignored
+        Misspelling misspelling5 = Misspelling.of("Julio", true, "Julio, julio");
+        Misspelling misspelling6 = Misspelling.of("Paris", true, "París"); // Ignored
+        Set<Misspelling> misspellingSet = new HashSet<>(
+            Arrays.asList(misspelling1, misspelling2, misspelling3, misspelling4, misspelling5, misspelling6)
+        );
+        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
+        map.putAll(WikipediaLanguage.getDefault(), misspellingSet);
+
+        misspellingManager.setItems(map);
+
+        Set<String> expectedWords = new HashSet<>(
+            Arrays.asList(misspelling1.getWord(), misspelling2.getWord(), misspelling5.getWord())
+        );
+        Assertions.assertEquals(expectedWords, misspellingManager.getUppercaseWords(WikipediaLanguage.getDefault()));
     }
 }
