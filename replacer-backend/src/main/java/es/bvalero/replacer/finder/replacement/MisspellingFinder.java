@@ -2,6 +2,9 @@ package es.bvalero.replacer.finder.replacement;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.MisspellingManager;
+import es.bvalero.replacer.finder.listing.Suggestion;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

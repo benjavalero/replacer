@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.finder.replacement.Suggestion;
+import es.bvalero.replacer.finder.listing.Suggestion;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.*;

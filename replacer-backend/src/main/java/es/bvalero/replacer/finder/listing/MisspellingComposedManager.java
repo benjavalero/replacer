@@ -1,16 +1,16 @@
-package es.bvalero.replacer.finder.replacement;
+package es.bvalero.replacer.finder.listing;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.listing.ListingLoader;
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-class MisspellingComposedManager extends MisspellingManager {
+public class MisspellingComposedManager extends MisspellingManager {
 
     @Autowired
-    private ListingLoader listingLoader;
+    private ListingContentService listingContentService;
 
     @Override
     protected String getLabel() {
@@ -24,6 +24,6 @@ class MisspellingComposedManager extends MisspellingManager {
 
     @Override
     protected String findItemsTextInWikipedia(WikipediaLanguage lang) throws ReplacerException {
-        return listingLoader.getComposedMisspellingListPageContent(lang);
+        return listingContentService.getComposedMisspellingListingContent(lang);
     }
 }

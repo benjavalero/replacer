@@ -2,6 +2,8 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.MisspellingManager;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.replacement;
+package es.bvalero.replacer.finder.listing;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -19,11 +19,11 @@ public class Suggestion {
     @Nullable
     String comment;
 
-    static Suggestion ofNoComment(String text) {
+    public static Suggestion ofNoComment(String text) {
         return of(text, null);
     }
 
-    Suggestion toUppercase() {
+    public Suggestion toUppercase() {
         return of(FinderUtils.setFirstUpperCase(text), comment);
     }
 }

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.replacement.Misspelling;
+import es.bvalero.replacer.finder.listing.Misspelling;
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 import java.util.HashSet;

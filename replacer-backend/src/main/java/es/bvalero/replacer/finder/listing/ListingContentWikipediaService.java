@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile("!offline")
-class ListingWikipediaLoader implements ListingLoader {
+class ListingContentWikipediaService implements ListingContentService {
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -26,7 +26,7 @@ class ListingWikipediaLoader implements ListingLoader {
     private Map<String, String> falsePositivePages;
 
     @Override
-    public String getMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
+    public String getMisspellingListingContent(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaService
             .getPageByTitle(simpleMisspellingPages.get(lang.getCode()), lang)
             .orElseThrow(ReplacerException::new)
@@ -34,7 +34,7 @@ class ListingWikipediaLoader implements ListingLoader {
     }
 
     @Override
-    public String getFalsePositiveListPageContent(WikipediaLanguage lang) throws ReplacerException {
+    public String getFalsePositiveListingContent(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaService
             .getPageByTitle(falsePositivePages.get(lang.getCode()), lang)
             .orElseThrow(ReplacerException::new)
@@ -42,7 +42,7 @@ class ListingWikipediaLoader implements ListingLoader {
     }
 
     @Override
-    public String getComposedMisspellingListPageContent(WikipediaLanguage lang) throws ReplacerException {
+    public String getComposedMisspellingListingContent(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaService
             .getPageByTitle(composedMisspellingPages.get(lang.getCode()), lang)
             .orElseThrow(ReplacerException::new)

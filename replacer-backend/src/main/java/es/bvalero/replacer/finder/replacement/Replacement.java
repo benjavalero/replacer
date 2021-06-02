@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.finder.FinderResult;
+import es.bvalero.replacer.finder.listing.Suggestion;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.List;
 import lombok.*;

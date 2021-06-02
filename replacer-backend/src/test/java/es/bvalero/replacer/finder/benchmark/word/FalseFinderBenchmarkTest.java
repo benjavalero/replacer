@@ -3,9 +3,11 @@ package es.bvalero.replacer.finder.benchmark.word;
 import static org.hamcrest.Matchers.is;
 
 import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
+import es.bvalero.replacer.finder.listing.FalsePositiveManager;
+import es.bvalero.replacer.finder.listing.ListingContentOfflineService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -17,7 +19,10 @@ class FalseFinderBenchmarkTest extends BaseFinderBenchmark {
     @Test
     void testWordFinderBenchmark() throws ReplacerException {
         // Load the false positives
-        Set<String> words = ImmutableFinderService.getFalsePositives();
+        FalsePositiveManager falsePositiveManager = new FalsePositiveManager();
+        falsePositiveManager.setListingContentService(new ListingContentOfflineService());
+        falsePositiveManager.scheduledItemListUpdate();
+        Set<String> words = falsePositiveManager.getItems(WikipediaLanguage.getDefault());
 
         /* NOTE: We can use the same finders that we use for misspellings just with a different set of words */
 

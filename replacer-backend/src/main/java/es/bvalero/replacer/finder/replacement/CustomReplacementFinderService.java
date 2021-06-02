@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.replacement;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.listing.Misspelling;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;

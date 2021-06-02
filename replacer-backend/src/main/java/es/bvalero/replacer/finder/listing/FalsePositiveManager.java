@@ -1,9 +1,8 @@
-package es.bvalero.replacer.finder.immutable;
+package es.bvalero.replacer.finder.listing;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.listing.ListingLoader;
-import es.bvalero.replacer.finder.listing.ParseFileManager;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +10,11 @@ import org.springframework.stereotype.Service;
  * Manages the cache for the false positive list in order to reduce the calls to Wikipedia.
  */
 @Service
-class FalsePositiveManager extends ParseFileManager<String> {
+public class FalsePositiveManager extends ListingManager<String> {
 
+    @Setter // For testing
     @Autowired
-    private ListingLoader listingLoader;
+    private ListingContentService listingContentService;
 
     @Override
     protected String getLabel() {
@@ -23,7 +23,7 @@ class FalsePositiveManager extends ParseFileManager<String> {
 
     @Override
     protected String findItemsTextInWikipedia(WikipediaLanguage lang) throws ReplacerException {
-        return listingLoader.getFalsePositiveListPageContent(lang);
+        return listingContentService.getFalsePositiveListingContent(lang);
     }
 
     @Override

@@ -1,9 +1,8 @@
-package es.bvalero.replacer.finder.replacement;
+package es.bvalero.replacer.finder.listing;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.listing.ListingLoader;
-import es.bvalero.replacer.finder.listing.ParseFileManager;
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,14 +18,14 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class MisspellingManager extends ParseFileManager<Misspelling> {
+public class MisspellingManager extends ListingManager<Misspelling> {
 
     // Public as it is used also for some immutables
 
     private static final String CASE_SENSITIVE_VALUE = "cs";
 
     @Autowired
-    private ListingLoader listingLoader;
+    private ListingContentService listingContentService;
 
     @Autowired
     private ReplacementService replacementService;
@@ -65,7 +64,7 @@ public class MisspellingManager extends ParseFileManager<Misspelling> {
 
     @Override
     protected String findItemsTextInWikipedia(WikipediaLanguage lang) throws ReplacerException {
-        return listingLoader.getMisspellingListPageContent(lang);
+        return listingContentService.getMisspellingListingContent(lang);
     }
 
     @Override

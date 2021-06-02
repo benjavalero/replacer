@@ -7,8 +7,10 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
-import es.bvalero.replacer.finder.replacement.Misspelling;
-import es.bvalero.replacer.finder.replacement.MisspellingManager;
+import es.bvalero.replacer.finder.listing.FalsePositiveManager;
+import es.bvalero.replacer.finder.listing.ListingContentOfflineService;
+import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.MisspellingManager;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.ArrayList;
@@ -64,14 +66,11 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
     @Test
     void testBenchmark() throws ReplacerException {
         // Load false positives
-        String text = FileUtils.getFileContent("/offline/false-positives.txt");
-        Set<String> falsePositives = falsePositiveManager.parseItemsText(text);
-        SetValuedMap<WikipediaLanguage, String> falsePositiveMap = new HashSetValuedHashMap<>();
-        falsePositiveMap.putAll(WikipediaLanguage.getDefault(), falsePositives);
-        falsePositiveManager.setItems(falsePositiveMap);
+        falsePositiveManager.setListingContentService(new ListingContentOfflineService());
+        falsePositiveManager.scheduledItemListUpdate();
 
         // Load misspellings
-        text = FileUtils.getFileContent("/offline/misspelling-list.txt");
+        String text = FileUtils.getFileContent("/offline/misspelling-list.txt");
         Set<Misspelling> misspellings = misspellingManager.parseItemsText(text);
         SetValuedMap<WikipediaLanguage, Misspelling> misspellingMap = new HashSetValuedHashMap<>();
         misspellingMap.putAll(WikipediaLanguage.getDefault(), misspellings);

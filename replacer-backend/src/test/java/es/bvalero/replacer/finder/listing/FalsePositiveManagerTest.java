@@ -1,8 +1,7 @@
-package es.bvalero.replacer.finder.immutable;
+package es.bvalero.replacer.finder.listing;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.listing.ListingLoader;
 import java.util.Collection;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +14,7 @@ import org.mockito.MockitoAnnotations;
 class FalsePositiveManagerTest {
 
     @Mock
-    private ListingLoader listingLoader;
+    private ListingContentService listingContentService;
 
     @InjectMocks
     private FalsePositiveManager falsePositiveManager;
@@ -49,11 +48,11 @@ class FalsePositiveManagerTest {
     @Test
     void testUpdate() throws ReplacerException {
         Mockito
-            .when(listingLoader.getFalsePositiveListPageContent(Mockito.any(WikipediaLanguage.class)))
+            .when(listingContentService.getFalsePositiveListingContent(Mockito.any(WikipediaLanguage.class)))
             .thenReturn("");
 
         falsePositiveManager.scheduledItemListUpdate();
 
-        Mockito.verify(listingLoader).getFalsePositiveListPageContent(WikipediaLanguage.SPANISH);
+        Mockito.verify(listingContentService).getFalsePositiveListingContent(WikipediaLanguage.SPANISH);
     }
 }

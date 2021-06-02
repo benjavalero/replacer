@@ -1,5 +1,6 @@
-package es.bvalero.replacer.finder.replacement;
+package es.bvalero.replacer.finder.listing;
 
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -58,12 +59,12 @@ public class Misspelling {
     }
 
     @TestOnly
-    static Misspelling ofCaseInsensitive(String word, String comment) {
+    public static Misspelling ofCaseInsensitive(String word, String comment) {
         return Misspelling.of(ReplacementType.MISSPELLING_SIMPLE, word, false, comment);
     }
 
     @TestOnly
-    static Misspelling ofCaseSensitive(String word, String comment) {
+    public static Misspelling ofCaseSensitive(String word, String comment) {
         return Misspelling.of(ReplacementType.MISSPELLING_SIMPLE, word, true, comment);
     }
 

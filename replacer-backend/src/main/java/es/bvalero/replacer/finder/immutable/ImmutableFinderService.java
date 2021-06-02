@@ -4,8 +4,8 @@ import es.bvalero.replacer.common.FileUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderService;
-import es.bvalero.replacer.finder.replacement.Misspelling;
-import es.bvalero.replacer.finder.replacement.MisspellingManager;
+import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.MisspellingManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,13 +29,6 @@ public class ImmutableFinderService implements FinderService<Immutable> {
     @Override
     public List<Finder<Immutable>> getFinders() {
         return new ArrayList<>(immutableFinders);
-    }
-
-    @TestOnly
-    public static Set<String> getFalsePositives() throws ReplacerException {
-        String text = FileUtils.getFileContent("/offline/false-positives.txt");
-        FalsePositiveManager falsePositiveManager = new FalsePositiveManager();
-        return falsePositiveManager.parseItemsText(text);
     }
 
     @TestOnly

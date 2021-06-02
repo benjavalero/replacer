@@ -1,6 +1,8 @@
 package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.Suggestion;
 import java.beans.PropertyChangeEvent;
 import java.util.*;
 import org.apache.commons.collections4.SetValuedMap;

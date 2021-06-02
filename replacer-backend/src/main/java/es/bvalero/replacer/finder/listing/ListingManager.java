@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -28,12 +29,17 @@ import org.springframework.scheduling.annotation.Scheduled;
  * maintained externally and used by some finders.
  */
 @Slf4j
-public abstract class ParseFileManager<T> {
+public abstract class ListingManager<T> {
 
     private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
     @Getter(AccessLevel.PROTECTED)
     private SetValuedMap<WikipediaLanguage, T> items = new HashSetValuedHashMap<>();
+
+    @VisibleForTesting
+    public Set<T> getItems(WikipediaLanguage lang) {
+        return this.items.get(lang);
+    }
 
     public void setItems(SetValuedMap<WikipediaLanguage, T> items) {
         changeSupport.firePropertyChange("name", this.items, items);
