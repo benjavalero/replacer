@@ -2,22 +2,16 @@ package es.bvalero.replacer.finder.immutable;
 
 import static org.hamcrest.Matchers.is;
 
-import es.bvalero.replacer.common.FileUtils;
 import es.bvalero.replacer.common.ReplacerException;
-import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.listing.FalsePositiveManager;
 import es.bvalero.replacer.finder.listing.ListingContentOfflineService;
-import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.MisspellingManager;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import org.apache.commons.collections4.SetValuedMap;
-import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,11 +64,8 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
         falsePositiveManager.scheduledItemListUpdate();
 
         // Load misspellings
-        String text = FileUtils.getFileContent("/offline/misspelling-list.txt");
-        Set<Misspelling> misspellings = misspellingManager.parseItemsText(text);
-        SetValuedMap<WikipediaLanguage, Misspelling> misspellingMap = new HashSetValuedHashMap<>();
-        misspellingMap.putAll(WikipediaLanguage.getDefault(), misspellings);
-        misspellingManager.setItems(misspellingMap);
+        misspellingManager.setListingContentService(new ListingContentOfflineService());
+        misspellingManager.scheduledItemListUpdate();
 
         run(immutableFinders);
 

@@ -27,6 +27,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 /**
  * Abstract class, implementing the Observable pattern, to load periodically properties
  * maintained externally and used by some finders.
+ *
+ * It needs to be public in order to run the @Scheduled task.
  */
 @Slf4j
 public abstract class ListingManager<T> {

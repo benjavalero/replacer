@@ -14,17 +14,21 @@ import org.junit.jupiter.api.Test;
 
 class MisspellingComposedFinderTest {
 
+    private MisspellingComposedManager misspellingComposedManager;
     private MisspellingComposedFinder misspellingComposedFinder;
 
     @BeforeEach
     public void setUp() {
+        misspellingComposedManager = new MisspellingComposedManager();
         misspellingComposedFinder = new MisspellingComposedFinder();
+        misspellingComposedFinder.setComposedManager(misspellingComposedManager);
     }
 
     private void fakeUpdateMisspellingList(List<Misspelling> misspellings) {
         SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
         map.putAll(WikipediaLanguage.SPANISH, misspellings);
 
+        misspellingComposedManager.setItems(map);
         SetValuedMap<WikipediaLanguage, Misspelling> emptyMap = new HashSetValuedHashMap<>();
         misspellingComposedFinder.propertyChange(
             new PropertyChangeEvent(this, MisspellingComposedManager.PROPERTY_ITEMS, emptyMap, map)

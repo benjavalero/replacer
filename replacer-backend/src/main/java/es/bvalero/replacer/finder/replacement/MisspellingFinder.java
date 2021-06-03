@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder.replacement;
 
-import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.MisspellingManager;
@@ -18,9 +17,6 @@ import org.apache.commons.collections4.SetValuedMap;
  */
 abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeListener {
 
-    // Derived from the misspelling set to access faster by word
-    private Map<WikipediaLanguage, Map<String, Misspelling>> misspellingMap = new EnumMap<>(WikipediaLanguage.class);
-
     abstract MisspellingManager getMisspellingManager();
 
     @PostConstruct
@@ -31,39 +27,10 @@ abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeLis
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        SetValuedMap<WikipediaLanguage, Misspelling> misspellings = (SetValuedMap<WikipediaLanguage, Misspelling>) evt.getNewValue();
-        this.misspellingMap = buildMisspellingMaps(misspellings);
-        processMisspellingChange(misspellings);
-    }
-
-    @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)
-    private Map<WikipediaLanguage, Map<String, Misspelling>> buildMisspellingMaps(
-        SetValuedMap<WikipediaLanguage, Misspelling> misspellings
-    ) {
-        // Build a map to quick access the misspellings by word
-        Map<WikipediaLanguage, Map<String, Misspelling>> map = new EnumMap<>(WikipediaLanguage.class);
-        for (WikipediaLanguage lang : misspellings.keySet()) {
-            map.put(lang, buildMisspellingMap(misspellings.get(lang)));
+        if (MisspellingManager.PROPERTY_ITEMS.equals(evt.getPropertyName())) {
+            SetValuedMap<WikipediaLanguage, Misspelling> misspellings = (SetValuedMap<WikipediaLanguage, Misspelling>) evt.getNewValue();
+            processMisspellingChange(misspellings);
         }
-        return map;
-    }
-
-    public Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
-        // Build a map to quick access the misspellings by word
-        Map<String, Misspelling> map = new HashMap<>(misspellings.size());
-        misspellings.forEach(
-            misspelling -> {
-                String word = misspelling.getWord();
-                if (misspelling.isCaseSensitive()) {
-                    map.put(word, misspelling);
-                } else {
-                    // If case-insensitive, we add to the map "word" and "Word".
-                    map.put(FinderUtils.setFirstLowerCase(word), misspelling);
-                    map.put(FinderUtils.setFirstUpperCase(word), misspelling);
-                }
-            }
-        );
-        return map;
     }
 
     abstract void processMisspellingChange(SetValuedMap<WikipediaLanguage, Misspelling> misspellings);
@@ -95,7 +62,7 @@ abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeLis
 
     // Return the misspelling related to the given word, or empty if there is no such misspelling.
     public Optional<Misspelling> findMisspellingByWord(String word, WikipediaLanguage lang) {
-        return Optional.ofNullable(this.misspellingMap.getOrDefault(lang, Collections.emptyMap()).get(word));
+        return Optional.ofNullable(getMisspellingManager().getMisspellingMap(lang).get(word));
     }
 
     // Transform the case of the suggestion, e.g. "Habia" -> "Había"

@@ -2,19 +2,14 @@ package es.bvalero.replacer.finder.replacement;
 
 import static org.hamcrest.Matchers.is;
 
-import es.bvalero.replacer.common.FileUtils;
 import es.bvalero.replacer.common.ReplacerException;
-import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
-import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.ListingContentOfflineService;
 import es.bvalero.replacer.finder.listing.MisspellingComposedManager;
 import es.bvalero.replacer.finder.listing.MisspellingManager;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.List;
-import java.util.Set;
-import org.apache.commons.collections4.SetValuedMap;
-import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,18 +47,12 @@ class ReplacementFinderBenchmarkTest extends BaseFinderBenchmark {
     @Test
     void testBenchmark() throws ReplacerException {
         // Load composed misspellings
-        String text = FileUtils.getFileContent("/offline/composed-misspellings.txt");
-        Set<Misspelling> composedMisspellings = misspellingComposedManager.parseItemsText(text);
-        SetValuedMap<WikipediaLanguage, Misspelling> composedMisspellingMap = new HashSetValuedHashMap<>();
-        composedMisspellingMap.putAll(WikipediaLanguage.getDefault(), composedMisspellings);
-        misspellingComposedManager.setItems(composedMisspellingMap);
+        misspellingComposedManager.setListingContentService(new ListingContentOfflineService());
+        misspellingComposedManager.scheduledItemListUpdate();
 
         // Load misspellings
-        text = FileUtils.getFileContent("/offline/misspelling-list.txt");
-        Set<Misspelling> misspellings = misspellingManager.parseItemsText(text);
-        SetValuedMap<WikipediaLanguage, Misspelling> misspellingMap = new HashSetValuedHashMap<>();
-        misspellingMap.putAll(WikipediaLanguage.getDefault(), misspellings);
-        misspellingManager.setItems(misspellingMap);
+        misspellingManager.setListingContentService(new ListingContentOfflineService());
+        misspellingManager.scheduledItemListUpdate();
 
         run(replacementFinders);
 

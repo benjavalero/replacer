@@ -1,15 +1,13 @@
 package es.bvalero.replacer.finder.listing;
 
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.replacement.ReplacementService;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
@@ -36,7 +34,14 @@ public class MisspellingManager extends ListingManager<Misspelling> {
     @Autowired
     private ReplacementService replacementService;
 
+    // Derived from the misspelling set to access faster by word
+    private Map<WikipediaLanguage, Map<String, Misspelling>> misspellingMap = new EnumMap<>(WikipediaLanguage.class);
+
     private SetValuedMap<WikipediaLanguage, String> uppercaseWords = new HashSetValuedHashMap<>();
+
+    public Map<String, Misspelling> getMisspellingMap(WikipediaLanguage lang) {
+        return this.misspellingMap.get(lang);
+    }
 
     @VisibleForTesting
     public Set<String> getUppercaseWords(WikipediaLanguage lang) {
@@ -48,6 +53,8 @@ public class MisspellingManager extends ListingManager<Misspelling> {
         SetValuedMap<WikipediaLanguage, Misspelling> oldItems = super.getItems();
         super.setItems(newItems);
         this.processRemovedItems(oldItems, newItems);
+
+        this.misspellingMap = buildMisspellingMaps(newItems);
 
         SetValuedMap<WikipediaLanguage, String> newUppercaseWords = getUppercaseWords((newItems));
         changeSupport.firePropertyChange(PROPERTY_UPPERCASE_WORDS, this.uppercaseWords, newUppercaseWords);
@@ -68,6 +75,36 @@ public class MisspellingManager extends ListingManager<Misspelling> {
                 replacementService.deleteToBeReviewedBySubtype(lang, getType(), new HashSet<>(oldWords));
             }
         }
+    }
+
+    @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)
+    private Map<WikipediaLanguage, Map<String, Misspelling>> buildMisspellingMaps(
+        SetValuedMap<WikipediaLanguage, Misspelling> misspellings
+    ) {
+        // Build a map to quick access the misspellings by word
+        Map<WikipediaLanguage, Map<String, Misspelling>> map = new EnumMap<>(WikipediaLanguage.class);
+        for (WikipediaLanguage lang : misspellings.keySet()) {
+            map.put(lang, buildMisspellingMap(misspellings.get(lang)));
+        }
+        return map;
+    }
+
+    private Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
+        // Build a map to quick access the misspellings by word
+        Map<String, Misspelling> map = new HashMap<>(misspellings.size());
+        misspellings.forEach(
+            misspelling -> {
+                String word = misspelling.getWord();
+                if (misspelling.isCaseSensitive()) {
+                    map.put(word, misspelling);
+                } else {
+                    // If case-insensitive, we add to the map "word" and "Word".
+                    map.put(FinderUtils.setFirstLowerCase(word), misspelling);
+                    map.put(FinderUtils.setFirstUpperCase(word), misspelling);
+                }
+            }
+        );
+        return map;
     }
 
     private SetValuedMap<WikipediaLanguage, String> getUppercaseWords(

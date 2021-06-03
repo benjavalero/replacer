@@ -3,9 +3,11 @@ package es.bvalero.replacer.finder.benchmark.word;
 import static org.hamcrest.Matchers.is;
 
 import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
+import es.bvalero.replacer.finder.listing.ListingContentOfflineService;
+import es.bvalero.replacer.finder.listing.MisspellingComposedManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -17,7 +19,10 @@ class ComposedFinderBenchmarkTest extends BaseFinderBenchmark {
     @Test
     void testWordFinderBenchmark() throws ReplacerException {
         // Load the misspellings
-        Set<String> words = ReplacementFinderService.getComposedMisspellings();
+        MisspellingComposedManager misspellingManager = new MisspellingComposedManager();
+        misspellingManager.setListingContentService(new ListingContentOfflineService());
+        misspellingManager.scheduledItemListUpdate();
+        Set<String> words = misspellingManager.getMisspellingMap(WikipediaLanguage.getDefault()).keySet();
 
         /* NOTE: We can use the same finders that we use for misspellings just with a different set of words */
 

@@ -1,16 +1,11 @@
 package es.bvalero.replacer.finder.replacement;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.FileUtils;
-import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderService;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
-import es.bvalero.replacer.finder.listing.Misspelling;
-import es.bvalero.replacer.finder.listing.MisspellingComposedManager;
-import es.bvalero.replacer.finder.listing.MisspellingManager;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -18,7 +13,6 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -114,23 +108,5 @@ public class ReplacementFinderService implements FinderService<Replacement> {
         }
 
         return replacementList;
-    }
-
-    @TestOnly
-    public static Set<String> getMisspellings() throws ReplacerException {
-        String text = FileUtils.getFileContent("/offline/misspelling-list.txt");
-        MisspellingManager misspellingManager = new MisspellingManager();
-        Set<Misspelling> misspellings = misspellingManager.parseItemsText(text);
-        MisspellingFinder misspellingFinder = new MisspellingSimpleFinder();
-        return misspellingFinder.buildMisspellingMap(misspellings).keySet();
-    }
-
-    @TestOnly
-    public static Set<String> getComposedMisspellings() throws ReplacerException {
-        String text = FileUtils.getFileContent("/offline/composed-misspellings.txt");
-        MisspellingManager misspellingManager = new MisspellingComposedManager();
-        Set<Misspelling> misspellings = misspellingManager.parseItemsText(text);
-        MisspellingFinder misspellingFinder = new MisspellingComposedFinder();
-        return misspellingFinder.buildMisspellingMap(misspellings).keySet();
     }
 }

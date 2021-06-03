@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import lombok.AccessLevel;
+import lombok.Setter;
 import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 class MisspellingSimpleFinder extends MisspellingFinder {
 
+    @Setter(AccessLevel.PACKAGE) // For testing
     @Autowired
     private MisspellingManager misspellingManager;
 

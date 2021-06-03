@@ -14,17 +14,21 @@ import org.junit.jupiter.api.Test;
 
 class MisspellingSimpleFinderTest {
 
+    private MisspellingManager misspellingManager;
     private MisspellingSimpleFinder misspellingFinder;
 
     @BeforeEach
     void setUp() {
+        misspellingManager = new MisspellingManager();
         misspellingFinder = new MisspellingSimpleFinder();
+        misspellingFinder.setMisspellingManager(misspellingManager);
     }
 
     private void fakeUpdateMisspellingList(List<Misspelling> misspellings) {
         SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
         map.putAll(WikipediaLanguage.SPANISH, misspellings);
 
+        misspellingManager.setItems(map);
         SetValuedMap<WikipediaLanguage, Misspelling> emptyMap = new HashSetValuedHashMap<>();
         misspellingFinder.propertyChange(
             new PropertyChangeEvent(this, MisspellingManager.PROPERTY_ITEMS, emptyMap, map)
