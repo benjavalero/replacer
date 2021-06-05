@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { User } from '../user/user.model';
 import { Language } from '../user/language-model';
 import { UserConfigService } from '../user/user-config.service';
+import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
+import { ChangeLanguageComponent } from './change-language.component';
 
 @Component({
   selector: 'app-header',
@@ -17,7 +19,12 @@ export class HeaderComponent implements OnInit {
   user$: Observable<User>;
   lang$: Observable<Language>;
 
-  constructor(private userService: UserService, private userConfigService: UserConfigService, private router: Router) {}
+  constructor(
+    private userService: UserService,
+    private userConfigService: UserConfigService,
+    private router: Router,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
     this.user$ = this.userService.user$;
@@ -28,12 +35,24 @@ export class HeaderComponent implements OnInit {
     // Enable language
     const language: Language = Language[lang];
     if (language) {
-      this.userConfigService.lang = language;
-      this.router.navigate(['']);
+      const modalRef = this.modalService.open(ChangeLanguageComponent);
+      modalRef.result.then(
+        (result) => {
+          this.userConfigService.lang = language;
+          this.closeSession();
+        },
+        (reason) => {
+          // Nothing to do
+        }
+      );
     }
   }
 
   onCloseSession() {
+    this.closeSession();
+  }
+
+  private closeSession(): void {
     // Clear session and reload the page
     this.userService.clearSession();
     this.router.navigate(['']);

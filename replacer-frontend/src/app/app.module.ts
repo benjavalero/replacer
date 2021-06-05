@@ -18,6 +18,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './authentication/login.component';
 import { OAuthResponseComponent } from './authentication/oauth-response.component';
 import { HeaderComponent } from './header/header.component';
+import { ChangeLanguageComponent } from './header/change-language.component';
 import { FindRandomComponent } from './page/find-random.component';
 import { FindCustomComponent } from './page/find-custom.component';
 import { ValidateCustomComponent } from './page/validate-custom.component';
@@ -39,6 +40,7 @@ import { StatsComponent } from './stats/stats.component';
     LoginComponent,
     OAuthResponseComponent,
     HeaderComponent,
+    ChangeLanguageComponent,
     FindRandomComponent,
     FindCustomComponent,
     ValidateCustomComponent,
