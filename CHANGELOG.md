@@ -1,5 +1,8 @@
 # Versions
 
+## ???
+- Add lang attribute on editable snippets to help browser spellcheckers
+
 ## 2.11.4 (29 May 2021)
 - More ignorable templates
 
