@@ -52,8 +52,9 @@ export class PageService {
 
     // Store the date of the last save to check there are at least 12 s between savings (5 editions/min)
     let sleepTime = 0;
+    const isBotUser = this.userService.isBotUser();
     const lastSave: number = +localStorage.getItem(this.lastSaveKey);
-    if (lastSave && page.content !== ' ') {
+    if (!isBotUser && lastSave && page.content !== ' ') {
       const minGap: number = (1000 * 60) / this.editionsPerMinute;
       const gap: number = Date.now() - lastSave;
       if (gap < minGap) {

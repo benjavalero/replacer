@@ -1,6 +1,7 @@
 export class User {
   name: string;
   hasRights: boolean;
+  bot: boolean;
   admin: boolean;
   accessToken: AccessToken;
 }

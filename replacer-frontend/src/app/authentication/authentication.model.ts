@@ -13,6 +13,7 @@ export class AuthenticateRequest {
 export interface AuthenticateResponse {
   name: string;
   hasRights: boolean;
+  bot: boolean;
   admin: boolean;
   token: string;
   tokenSecret: string;

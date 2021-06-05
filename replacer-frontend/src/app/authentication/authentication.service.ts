@@ -42,6 +42,7 @@ export class AuthenticationService {
         const wikipediaUser: User = {
           name: response.name,
           hasRights: response.hasRights,
+          bot: response.bot,
           admin: response.admin,
           accessToken: {
             token: response.token,

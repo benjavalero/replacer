@@ -58,7 +58,7 @@ class AuthenticationControllerTest {
                 anyString()
             )
         )
-            .thenReturn(AuthenticateResponse.of(userName, true, true, "A", "B"));
+            .thenReturn(AuthenticateResponse.of(userName, true, false, true, "A", "B"));
 
         AuthenticateRequest verifier = AuthenticateRequest.of("X", "Y", "V");
         mvc
@@ -70,6 +70,7 @@ class AuthenticationControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.name", is("C")))
             .andExpect(jsonPath("$.hasRights", equalTo(true)))
+            .andExpect(jsonPath("$.bot", equalTo(false)))
             .andExpect(jsonPath("$.admin", equalTo(true)))
             .andExpect(jsonPath("$.token", is("A")))
             .andExpect(jsonPath("$.tokenSecret", is("B")));

@@ -12,6 +12,9 @@ class AuthenticateResponse {
     @ApiModelProperty(value = "If the user the rights to use the tool", required = true, example = "true")
     boolean hasRights;
 
+    @ApiModelProperty(value = "If the user is a bot", required = true, example = "true")
+    boolean bot;
+
     @ApiModelProperty(value = "If the user is administrator of Replacer", required = true, example = "false")
     boolean admin;
 

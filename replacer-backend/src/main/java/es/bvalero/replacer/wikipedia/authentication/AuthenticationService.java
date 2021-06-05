@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 class AuthenticationService {
 
     static final String GROUP_AUTOCONFIRMED = "autoconfirmed";
+    private static final String GROUP_BOT = "bot";
 
     @Autowired
     private OAuthService oAuthService;
@@ -40,10 +41,12 @@ class AuthenticationService {
         UserInfo userInfo = wikipediaService.getUserInfo(lang, accessToken);
         String userName = userInfo.getName();
         boolean hasRights = userInfo.getGroups().contains(GROUP_AUTOCONFIRMED);
+        boolean bot = userInfo.getGroups().contains(GROUP_BOT);
         boolean admin = this.isAdminUser(userName);
         return AuthenticateResponse.of(
             userName,
             hasRights,
+            bot,
             admin,
             accessToken.getToken(),
             accessToken.getTokenSecret()
