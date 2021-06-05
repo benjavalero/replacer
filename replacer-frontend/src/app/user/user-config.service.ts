@@ -3,8 +3,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Language } from './language-model';
 import { UserConfig } from './user-config.model';
 
-export const LANG_PARAM = 'lang';
-
 @Injectable({
   providedIn: 'root'
 })

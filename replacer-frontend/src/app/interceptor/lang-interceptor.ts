@@ -1,7 +1,9 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LANG_PARAM, UserConfigService } from '../user/user-config.service';
+import { UserConfigService } from '../user/user-config.service';
+
+const LANG_PARAM = 'lang';
 
 @Injectable()
 export class LangInterceptor implements HttpInterceptor {
