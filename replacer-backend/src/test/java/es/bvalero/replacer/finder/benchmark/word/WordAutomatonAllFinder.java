@@ -16,7 +16,7 @@ class WordAutomatonAllFinder implements BenchmarkFinder {
     private final Set<String> words;
 
     WordAutomatonAllFinder(Collection<String> words) {
-        this.wordPattern = new RunAutomaton(new RegExp("(<L>|[-'])+").toAutomaton(new DatatypesAutomatonProvider()));
+        this.wordPattern = new RunAutomaton(new RegExp("<L>+").toAutomaton(new DatatypesAutomatonProvider()));
         this.words = new HashSet<>(words);
     }
 

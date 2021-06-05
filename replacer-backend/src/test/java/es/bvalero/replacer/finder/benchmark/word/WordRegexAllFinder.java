@@ -14,7 +14,7 @@ class WordRegexAllFinder implements BenchmarkFinder {
     private final Set<String> words;
 
     WordRegexAllFinder(Collection<String> words) {
-        this.wordPattern = Pattern.compile("[\\w\\-']+", Pattern.UNICODE_CHARACTER_CLASS);
+        this.wordPattern = Pattern.compile("\\w+", Pattern.UNICODE_CHARACTER_CLASS);
         this.words = new HashSet<>(words);
     }
 

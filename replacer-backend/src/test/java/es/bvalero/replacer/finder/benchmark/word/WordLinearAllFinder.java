@@ -48,6 +48,6 @@ class WordLinearAllFinder implements BenchmarkFinder {
     }
 
     private boolean isLetter(char ch) {
-        return Character.isLetter(ch) || ch == '-' || ch == '\'';
+        return Character.isLetter(ch);
     }
 }
