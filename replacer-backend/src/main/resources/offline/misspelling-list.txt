@@ -99,7 +99,6 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  abrio||abrió
  abrío||abrió
  abrogacion||abrogación
- abs|cs|ABS (sigla del inglés Anti Blocking System ‘sistema antibloqueo’)
  abside||ábside
  absides||ábsides
  absorcion||absorción
@@ -558,12 +557,13 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  ajigolon||ajigolón, agigolón
  ajis||ajís
  ajises||ajíes, ajís
+ alagar||halagar, alargar
+ alago||halago (sustantivo y verbo, 1.ª persona), halagó (verbo, 3.ª persona)
+ alagó||halagó, alargó
  alacran||alacrán
  alalimon||alalimón
  alamo||álamo
  alamos||álamos
- Alavi-Alava||Alaví-Alavá
- Alavi-Von-Va||Alaví-Von-Va
  albanes||albanés
  albania|cs|Albania
  albañileria||albañilería
@@ -2642,7 +2642,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  buros||burós
  bursatil||bursátil
  bursatiles||bursátiles
- Burundí||Burundi
+ Burundí||Burundi (país), burundés (gentilicio)
  burundi|cs|Burundi
  bús||bus
  buscapies||buscapiés
@@ -3236,7 +3236,6 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  cassette||casete
  cassettes||casetes
  Castelldefels||Casteldefels
- Castilla-León||Castilla y León
  cástin||castin, casting
  cásting||casting, castin
  castings||cástines
@@ -3357,7 +3356,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  cedacerias||cedacerías
  cederron||cederrón, CD-ROM
  cederrónes||cederrones
- cedio||cedió
+ cedio||cedió, cedido
  cedron||cedrón
  cedula||cédula
  cedulas||cédulas
@@ -3592,6 +3591,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  ciaticas||ciáticas
  ciatico||ciático
  ciaticos||ciáticos
+ Ciceron|cs|Cicerón
  ciclica||cíclica
  ciclicas||cíclicas
  ciclico||cíclico
@@ -3878,9 +3878,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  closets||clósets
  cluster||clúster
  clusteres||clústeres
- cm.||cm
  cms||cm
- cms.||cm
  cmt||cm
  cmtrs||cm
  cmts||cm
@@ -4594,7 +4592,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  contradiria||contradiría
  contradirian||contradirían
  contradirias||contradirías
- contrado||contrato, contratado, encontradoc
+ contrado||contrato, contratado, encontrado
  contraestays||contraestayes
  contraloria||contraloría
  contralorias||contralorías
@@ -5104,6 +5102,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  cronometros||cronómetros
  crotalo||crótalo (sustantivo), córtalo (verbo + pronombre)
  crotalos||crótalos (sustantivo, plural), córtalos (verbo + pronombre)
+ crowdfunding||micromecenazgo, financiación popular, microfinanciación
  cruasan||cruasán
  cruasanteria||cruasantería
  cruasanterias||cruasanterías
@@ -5682,6 +5681,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  derretias||derretías
  derritio||derritió
  derroco||derrocó (3.ª persona), derroco (1.ª persona)
+ derrotandolo||derrotándolo
  derruída||derruida
  derruídas||derruidas
  derruído||derruido
@@ -5995,6 +5995,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  detras||detrás
  detro||dentro
  detrozado||destrozado
+ deuce||iguales (tenis)
  deuvede||deuvedé, devedé, DVD
  deuvedes||deuvedés, devedés, DVD
  devaluacion||devaluación
@@ -6713,6 +6714,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  edificiós||edificios
  edifico||edificio (sustantivo), edificó (verbo, 3.ª persona), edifico (verbo, 1.ª persona)
  edificos||edificios
+ edito||editó (verbo, 3.ª persona), edito (verbo, 1.ª persona)
  eduación||educación
  eduardo|cs|Eduardo
  educacion||educación
@@ -10354,9 +10356,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  hoteleria||hotelería, hostelería
  hotelerias||hotelerías, hostelerías
  hr||h
- hr.||h
  hrs||h
- hrs.||h
  hsta||hasta
  huancaina||huancaína
  huancainas||huancaínas
@@ -10734,6 +10734,8 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  incognitos||incógnitos
  incolume||incólume
  incolumes||incólumes
+ incomodas||incómodas (adjetivo), incomodas (verbo, 2.ª persona)
+ incomodo||incómodo (adjetivo), incomodó (verbo, 3.ª persona), incomodo (verbo, 1.ª persona)
  inconciente||inconsciente
  inconcientes||inconscientes
  inconita||incógnita
@@ -10947,7 +10949,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  ingés||inglés
  ingestion||ingestión
  inglaterra|cs|Inglaterra
- ingles||inglés (salvo para el plural de ingle)
+ ingles||inglés (gentilicio, idioma), ingles (plural de ingle)
  inglésa||inglesa
  inglésas||inglesas
  ingléses||ingleses
@@ -12087,6 +12089,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  lucho||Lucho (nombre propio de varón), luchó (verbo, 3.ª persona), lucho (verbo, 1.ª persona)
  Lucia|cs|Lucia (nombre propio italiano), Lucía (nombre propio español y gallego)
  lucia|cs|lucía (verbo)
+ Luculo|cs|Lúculo
  ludica||lúdica
  ludicas||lúdicas
  ludico||lúdico
@@ -13262,9 +13265,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  mwh|cs|MWh (megavatio-hora)
 
 == N ==
- n°||n.º (abreviatura de «número»: va con punto y con «o» voladita —no con símbolo de grados—), número
  nº||n.º (abreviatura de «número»: va con punto), número
- n.°||n.º (abreviatura de «número»: va con «o» voladita —no con símbolo de grados—), número
  naberia||nabería
  naberias||naberías
  nabidad||Navidad
@@ -14709,6 +14710,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  pérdio||perdió
  perdíz||perdiz
  perdon||perdón
+ perdoname||perdóname (tú), perdoname (vos)
  perdónes||perdones
  peregrinacion||peregrinación
  perenifolia||perennifolia
@@ -16038,9 +16040,10 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  qeu||que
  qualquier||cualquier
  qualquiera||cualquiera
+ qualy||fase de clasificación
  quásar||cuásar, ''quasar''
  quásars||cuásares, ''quasars''
- Québec||Quebec
+ Québec||Quebec (en español), Québec (en francés)
  quebeques||quebequés, quebequense
  quedarón||quedaron
  quedo||quedó (verbo, 3.ª persona), quedo (adjetivo, adverbio o verbo, 1.ª persona)
@@ -17046,6 +17049,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  salomonico||salomónico
  salomonicos||salomónicos
  salon||salón
+ salúd||salud
  salvame||sálvame
  salvandole||salvándole
  salvandoles||salvándoles
@@ -17372,7 +17376,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  seudonimos||seudónimos
  seudopodo||seudópodo
  seudopodos||seudópodos
- Seul||Seúl
+ Seul|cs|Seúl (ciudad coreana)
  seúl|cs|Seúl
  sexagesima||sexagésima
  sexagesimas||sexagésimas
@@ -17550,6 +17554,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  sinfonicos||sinfónicos
  Singapore||Singapur
  singapur|cs|Singapur
+ single||sencillo (música), individual (tenis), individuales (tenis)
  sinlges||singles
  sinnumero||sinnúmero
  sinodatico||sinodático
@@ -17652,6 +17657,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  smartphone||teléfono inteligente
  smartphones||teléfonos inteligentes
  smarts||inteligente, ''smart TVs'' (‘televisiones inteligentes’ en inglés)
+ smash||remate (tenis), mate (tenis)
  smoking||esmoquin
  snoopy|cs|Snoopy
  soberania||soberanía
@@ -18531,7 +18537,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  tias||tías
  tiber||Tíber
  tibet||Tíbet
- TIC's||TIC
+ tiebreak||muerte súbita (tenis), juego decisivo (tenis)
  tienpo||tiempo
  tifon||tifón
  timida||tímida
@@ -18797,7 +18803,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  transistorias||transitorias
  transistorio||transitorio
  transistorios||transitorios
- transito||tránsito (sustantivo), transito (verbo)
+ transito||tránsito (sustantivo), transitó (verbo, 3.ª persona), transito (verbo, 1.ª persona)
  translacion||translación, traslación
  transladada||trasladada
  transladadas||trasladadas
@@ -19192,6 +19198,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  ugandes||ugandés
  ulcera||úlcera (sustantivo), ulcera (verbo)
  ulceras||úlceras (sustantivo), ulceras (verbo)
+ Ulster||Úlster
  ultilogo||ultílogo
  ultilogos||ultílogos
  ultima||última (adjetivo), ultima (verbo)
@@ -19435,10 +19442,11 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  vaquerias||vaquerías
  vareidad||variedad
  variacion||variación
+ varian||varían (verbo), Varian (nombre propio)
  variete||varietés
  varieté||varietés
  varietes||varietés
- vario||varió
+ vario||varió (verbo, 3.ª persona), vario (adjetivo), varios (adjetivo), Vario (nombre propio), varío (verbo, 1.ª persona)
  variós||varios
  varíos||varios
  varon||varón
@@ -19535,7 +19543,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  verdososos||verdosos
  verguenza||vergüenza
  verguenzas||vergüenzas
- veria||vería (verbo), Veria, Véria (nombre propio)
+ veria||vería (verbo), Veria (ciudad griega), Véria (nombre propio)
  verian||verían
  verin||Verín
  verín|cs|Verín

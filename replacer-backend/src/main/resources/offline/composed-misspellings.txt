@@ -19,12 +19,22 @@
  aun,|cs|aún,
  Carlos Ménem|cs|Carlos Menem
  con mas||con más
+ continua estando||continúa estando
+ continua siendo||continúa siendo
+ continuo su||continuó su
+ continuo sus||continuó sus
  darse cuenta que||darse cuenta de que
+ de Cordoba||de Córdoba
  de el||del, de él, de El, dé el, dé él
  de estás||de estas
  de mas||de más
+ de Mexico||de México
  dejo el||dejó el
+ del genero||del género
  desarrollo un||desarrolló un (verbo)
+ distrito de Verdun||distrito de Verdún
+ donde paso||donde pasó
+ drop shot||dejada (tenis)
  Educación Publica|cs|Educación Pública
  el mas||el más
  el proximo||el próximo
@@ -34,11 +44,13 @@
  en estás||en estas
  enel||en el, Enel (compañía eléctrica)
  en la qué||en la que
+ en perdida||en pérdida
  entorno a||en torno a (locución adverbial)
  entre si||entre sí (pronombre), entre si (conjunción)
  es mas||es más
  esta compuesta||está compuesta
  esta compuesto||está compuesto
+ esta libre||está libre
  ésta área||esta área
  ésta canción||esta canción
  ésta ciudad||esta ciudad
@@ -93,23 +105,28 @@
  éstos dos||estos dos
  éstos últimos||estos últimos
  grandes perdidas||grandes pérdidas
+ hawk-eye||ojo de halcón
  hay mas||hay más
+ Hugo Chavez|cs|Hugo Chávez
  Jose Antonio|cs|José Antonio (nombre propio español)
  Jose Manuel|cs|José Manuel (nombre propio español y portugués)
  Jose Maria|cs|José María (nombre propio español)
  Jose María|cs|José María (nombre propio español)
  jugo en||jugó en
  la mas||la más
- la perdida de||la pérdida de
+ la perdida||la pérdida
  la practica||la practica (verbo), la práctica (sustantivo)
  la primer||la primera, el primero, lo primero
  la version||la versión
  laminas de||láminas de
  las mas||las más
+ Latino América||Latinoamérica
  lo mas||lo más
  logro ganar||logró ganar
  los mas||los más
+ lucky loser||perdedor afortunado (deporte)
  luego paso||luego pasó
+ main draw||cuadro principal
  mal entendido||mal entendido (adjetivo), malentendido (sustantivo)
  mas adelante||más adelante
  mas allá||más allá
@@ -130,25 +147,34 @@
  mas tarde||más tarde
  mas y|cs|más y
  mas.|cs|más.
+ match ball||pelota de partido
+ match point||punto de partido
  Metro de Paris|cs|Metro de París (en español), Métro de Paris (en francés)
  Miguel Angel|cs|Miguel Ángel (nombre propio, en particular castellanización del artista italiano)
  mucho mas||mucho más
  nada mas||nada más
  Nicolas de Bari|cs|Nicolás de Bari
  Nicolas Maduro|cs|Nicolás Maduro
+ norte americano||norteamericano (gentilicio)
  o mas||o más
  opera prima|cs|ópera prima (en español)
  opinión publica||opinión pública
  Parque Nacional|cs|parque nacional
  Parque Natural|cs|parque natural
  paso a ser||pasó a ser
+ passing shot||golpe pasado, golpe pasante
  por que||por que (preposición + relativo o conjunción), porque (conjunción causal), por qué (interrogación o exclamación), porqué (sustantivo, causa)
  Primera Division|cs|Primera División
+ punto de break||punto de rotura
+ que dejo||que dejó
+ que desempeño||que desempeñó
+ que esta en||que está en
  que mas||que más
  que tenia||que tenía
  que seria||que sería
  que venia de||que venía de
  Ramón Llull|cs|Ramon Llull
+ revelarse contra||rebelarse contra
  relacionada a||relacionada con
  relacionadas a||relacionadas con
  relacionado a||relacionado con
@@ -157,6 +183,7 @@
  Rio Claro|cs|Río Claro (región o río en varios países de lengua española y Brasil), Rio Claro (en portugués)
  Rio de Janeiro|cs|Río de Janeiro (en español), Rio de Janeiro (en portugués y otros idiomas)
  Rio Negro|cs|Río Negro (región o río en varios países de lengua española, EE. UU. y Brasil), Rio Negro (en portugués e inglés)
+ round robin||todos contra todos, fase de liguilla
  Salud Publica|cs|Salud Pública
  salud publica|cs|salud pública
  San Sebastian||San Sebastián
@@ -189,6 +216,8 @@
  Segunda Division|cs|Segunda División
  Seguridad Publica|cs|Seguridad Pública
  ser mas||ser más
+ set ball||pelota de set
+ set point||punto de set
  sí bien||si bien (locución conjuntiva)
  si misma||sí misma
  si mismas||sí mismas
@@ -197,15 +226,21 @@
  Simon Bolivar|cs|Simón Bolívar
  Sociedad Deportiva Éibar|cs|Sociedad Deportiva Eibar
  son mas||son más
+ super tiebreak||superdesempate
  tener mas||tener más
  Tercera Division|cs|Tercera División
  tomo el||tomó el
+ top spin||golpe liftado
+ top ten||los diez primeros, los diez mejores
  TV Publica|cs|TV Pública
+ un sin fin||un sinfín
  un sólo||un solo
+ una perdida||una pérdida
  una version||una versión
  Universidad de Paris|cs|Universidad de París
  vez mas||vez más
  vía publica||vía pública
  Victor Manuel|cs|Víctor Manuel (entre otros, nombre en español de varios monarcas italianos)
  Victor Pecci|cs|Víctor Pecci (tenista paraguayo)
+ wild card||invitación, tenista invitado
  y mas||y más
