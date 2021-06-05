@@ -309,26 +309,12 @@ class MisspellingSimpleFinderTest {
 
     @Test
     void testMisspellingWithDot() {
-        String text = "De 23 cms. de altura";
-
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("cms.", "cm");
-        this.fakeUpdateMisspellingList(List.of(misspelling));
-
-        List<Replacement> results = misspellingFinder.findList(text);
-
-        Assertions.assertTrue(results.isEmpty());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> Misspelling.ofCaseInsensitive("cms.", "cm"));
     }
 
     @Test
     void testMisspellingWithNumber() {
-        String text = "De 23 m2 de extensión";
-
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("m2", "m²");
-        this.fakeUpdateMisspellingList(List.of(misspelling));
-
-        List<Replacement> results = misspellingFinder.findList(text);
-
-        Assertions.assertTrue(results.isEmpty());
+        Assertions.assertThrows(IllegalArgumentException.class, () -> Misspelling.ofCaseInsensitive("m2", "m²"));
     }
 
     @Test

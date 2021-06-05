@@ -39,7 +39,7 @@ class MisspellingComposedFinderTest {
     void testNoResults() {
         String text = "Un texto";
 
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("aún así", "aun así");
+        Misspelling misspelling = Misspelling.of(ReplacementType.MISSPELLING_COMPOSED, "aún así", false, "aun así");
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
@@ -51,7 +51,7 @@ class MisspellingComposedFinderTest {
     void testOneResult() {
         String text = "Y aún así vino.";
 
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("aún así", "aun así");
+        Misspelling misspelling = Misspelling.of(ReplacementType.MISSPELLING_COMPOSED, "aún así", false, "aun así");
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
@@ -72,7 +72,7 @@ class MisspellingComposedFinderTest {
         String text = "Y aún así vino.";
 
         Misspelling simple = Misspelling.ofCaseInsensitive("aún", "aun");
-        Misspelling composed = Misspelling.ofCaseInsensitive("aún así", "aun así");
+        Misspelling composed = Misspelling.of(ReplacementType.MISSPELLING_COMPOSED, "aún así", false, "aun así");
         this.fakeUpdateMisspellingList(List.of(simple, composed));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
@@ -92,7 +92,7 @@ class MisspellingComposedFinderTest {
     void testMisspellingWithDot() {
         String text = "Aún mas. Masa.";
 
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("mas.", "más.");
+        Misspelling misspelling = Misspelling.of(ReplacementType.MISSPELLING_COMPOSED, "mas.", false, "más.");
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
@@ -112,7 +112,7 @@ class MisspellingComposedFinderTest {
     void testMisspellingWithComma() {
         String text = "Más aun, dos.";
 
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("aun,", "aún,");
+        Misspelling misspelling = Misspelling.of(ReplacementType.MISSPELLING_COMPOSED, "aun,", false, "aún,");
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
@@ -132,7 +132,7 @@ class MisspellingComposedFinderTest {
     void testMisspellingWithNumber() {
         String text = "En Rio 2016.";
 
-        Misspelling misspelling = Misspelling.ofCaseSensitive("Rio 2016", "Río 2016");
+        Misspelling misspelling = Misspelling.of(ReplacementType.MISSPELLING_COMPOSED, "Rio 2016", false, "Río 2016");
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
@@ -152,7 +152,12 @@ class MisspellingComposedFinderTest {
     void testCaseSensitiveUppercaseToLowercase() {
         String text = "Parque Nacional de Doñana";
 
-        Misspelling misspelling = Misspelling.ofCaseSensitive("Parque Nacional", "parque nacional");
+        Misspelling misspelling = Misspelling.of(
+            ReplacementType.MISSPELLING_COMPOSED,
+            "Parque Nacional",
+            true,
+            "parque nacional"
+        );
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);

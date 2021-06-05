@@ -37,6 +37,9 @@ public class Misspelling {
         this.word = word;
         this.caseSensitive = caseSensitive;
 
+        // Validate the word
+        validateMisspellingWord(type, word);
+
         // Validate the comment and extract the suggestions
         this.suggestions = new ArrayList<>();
         try {
@@ -66,6 +69,15 @@ public class Misspelling {
     @TestOnly
     public static Misspelling ofCaseSensitive(String word, String comment) {
         return Misspelling.of(ReplacementType.MISSPELLING_SIMPLE, word, true, comment);
+    }
+
+    private void validateMisspellingWord(String type, String word) {
+        if (ReplacementType.MISSPELLING_SIMPLE.equals(type)) {
+            boolean isValid = word.chars().allMatch(Character::isLetter);
+            if (!isValid) {
+                throw new IllegalArgumentException("Not valid misspelling word: " + word);
+            }
+        }
     }
 
     private List<Suggestion> parseSuggestionsFromComment(String comment) {
