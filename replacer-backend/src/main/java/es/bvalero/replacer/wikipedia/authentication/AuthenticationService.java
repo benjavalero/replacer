@@ -7,14 +7,13 @@ import es.bvalero.replacer.wikipedia.OAuthToken;
 import es.bvalero.replacer.wikipedia.UserInfo;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import lombok.Setter;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 /** Service to perform authentication operations */
 @Service
-class AuthenticationService {
+public class AuthenticationService {
 
     static final String GROUP_AUTOCONFIRMED = "autoconfirmed";
     private static final String GROUP_BOT = "bot";
@@ -53,8 +52,7 @@ class AuthenticationService {
         );
     }
 
-    @VisibleForTesting
-    boolean isAdminUser(String username) {
+    public boolean isAdminUser(String username) {
         return this.adminUser.equals(username);
     }
 }

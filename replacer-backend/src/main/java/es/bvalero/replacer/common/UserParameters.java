@@ -1,11 +1,10 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.common;
 
-import es.bvalero.replacer.common.WikipediaLanguage;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
 
 @Data
-class UserParameters {
+public class UserParameters {
 
     @ApiParam(value = "Language", required = true)
     private WikipediaLanguage lang;

@@ -2,6 +2,7 @@ package es.bvalero.replacer.page;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.common.UserParameters;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;

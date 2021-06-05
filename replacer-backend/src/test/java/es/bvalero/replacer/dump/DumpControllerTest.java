@@ -2,12 +2,14 @@ package es.bvalero.replacer.dump;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import es.bvalero.replacer.wikipedia.authentication.AuthenticationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ class DumpControllerTest {
     @MockBean
     private DumpManager dumpManager;
 
+    @MockBean
+    private AuthenticationService authenticationService;
+
     @Test
     void testGetDumpIndexingStatus() throws Exception {
         boolean running = true;
@@ -45,10 +50,11 @@ class DumpControllerTest {
             start,
             end
         );
+        when(authenticationService.isAdminUser(anyString())).thenReturn(true);
         when(dumpManager.getDumpIndexingStatus()).thenReturn(indexation);
 
         mvc
-            .perform(get("/api/dump-indexing").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.running", equalTo(running)))
             .andExpect(jsonPath("$.numPagesRead", is(Long.valueOf(numPagesRead).intValue())))
@@ -63,7 +69,11 @@ class DumpControllerTest {
 
     @Test
     void testPostStart() throws Exception {
-        mvc.perform(post("/api/dump-indexing").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        when(authenticationService.isAdminUser(anyString())).thenReturn(true);
+
+        mvc
+            .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
 
         verify(dumpManager, times(1)).processLatestDumpFiles();
     }
