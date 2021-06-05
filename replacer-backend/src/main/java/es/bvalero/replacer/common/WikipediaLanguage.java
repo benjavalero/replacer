@@ -7,8 +7,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.lang.Nullable;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @AllArgsConstructor
 public enum WikipediaLanguage {
@@ -26,8 +27,13 @@ public enum WikipediaLanguage {
         return SPANISH;
     }
 
-    public static WikipediaLanguage forValues(@Nullable String code) {
-        return map.getOrDefault(code, getDefault());
+    public static WikipediaLanguage forValues(String code) {
+        if (map.containsKey(code)) {
+            return map.get(code);
+        } else {
+            LOGGER.error("Wrong language code: {}", code);
+            return getDefault();
+        }
     }
 
     @Override
