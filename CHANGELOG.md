@@ -3,6 +3,7 @@
 ## ???
 - Add lang attribute on editable snippets to help browser spellcheckers
 - Don't limit bot users to 5 editions per minute
+- Don't support new lines between quotes. Log warning when this happens and ignore.
 
 ## 2.11.4 (29 May 2021)
 - More ignorable templates

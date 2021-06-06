@@ -15,6 +15,7 @@ import org.springframework.lang.Nullable;
 @Slf4j
 abstract class QuotesFinder extends ImmutableCheckedFinder {
 
+    private static final char NEW_LINE = '\n';
     private static final Set<Character> FORBIDDEN_CHARS = Set.of('\n', '#', '{', '}', '<', '>');
     private static final Set<Character> QUOTE_CHARS = Set.of('«', '»', '"', '“', '”');
 
@@ -87,6 +88,11 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
             } else {
                 // No quote ending found
                 // It's possible that the quote start was a false positive
+                Immutable immutable = Immutable.of(
+                    startQuote,
+                    FinderUtils.getContextAroundWord(text, startQuote, startQuote + 1, CONTEXT_THRESHOLD)
+                );
+                logWarning(immutable, page, "Truncated quotes");
                 return startQuote + 1;
             }
         } else {
@@ -99,7 +105,15 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
     }
 
     private int findEndQuote(String text, int start) {
-        return text.indexOf(getEndChar(), start);
+        for (int i = start; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch == NEW_LINE) {
+                return -1;
+            } else if (ch == getEndChar()) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /* Check if the found text contains any forbidden char */
