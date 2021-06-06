@@ -1,6 +1,6 @@
 # Versions
 
-## ???
+## 2.11.5 (6 Jun 2021)
 - Add lang attribute on editable snippets to help browser spellcheckers
 - Don't limit bot users to 5 editions per minute
 - Don't support new lines between quotes. Log warning when this happens and ignore.
