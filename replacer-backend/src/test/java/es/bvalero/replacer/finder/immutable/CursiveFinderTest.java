@@ -64,15 +64,17 @@ class CursiveFinderTest {
 
     @Test
     void testCursiveTruncated() {
-        String cursive1 = "''cursive1";
-        String cursive2 = "''cursive2''";
-        String text = String.format("A %s\n and %s.", cursive1, cursive2);
+        String cursive1 = "''xxx''";
+        String cursive2 = "''yyy"; // Truncated with new line
+        String cursive3 = "''zzz''";
+        String cursive4 = "''aaa"; // Truncated with end
+        String text = String.format("%s %s\n %s %s.", cursive1, cursive2, cursive3, cursive4);
 
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
         Assertions.assertEquals(
-            Set.of(cursive1, cursive2),
+            Set.of(cursive1, cursive2, cursive3),
             matches.stream().map(Immutable::getText).collect(Collectors.toSet())
         );
     }
@@ -94,15 +96,17 @@ class CursiveFinderTest {
 
     @Test
     void testBoldTruncated() {
-        String bold1 = "'''bold";
-        String bold2 = "'''bold'''";
-        String text = String.format("A %s\n and %s.", bold1, bold2);
+        String bold1 = "'''xxx'''";
+        String bold2 = "'''yyy"; // Truncated with new line
+        String bold3 = "'''zzz'''";
+        String bold4 = "'''aaa"; // Truncated with end
+        String text = String.format("%s %s\n %s %s.", bold1, bold2, bold3, bold4);
 
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
         Assertions.assertEquals(
-            Set.of(bold1, bold2),
+            Set.of(bold1, bold2, bold3),
             matches.stream().map(Immutable::getText).collect(Collectors.toSet())
         );
     }

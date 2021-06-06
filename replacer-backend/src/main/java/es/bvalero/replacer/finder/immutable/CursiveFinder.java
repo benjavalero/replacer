@@ -60,6 +60,13 @@ class CursiveFinder extends ImmutableCheckedFinder {
                 }
                 return endQuotes;
             } else {
+                // No cursive ending found
+                // It's possible that the cursive start was a false positive
+                Immutable immutable = Immutable.of(
+                    startCursive,
+                    FinderUtils.getContextAroundWord(text, startCursive, startCursive + numQuotes, CONTEXT_THRESHOLD)
+                );
+                logWarning(immutable, page, "Truncated cursive");
                 return startCursive + numQuotes;
             }
         } else {
