@@ -1,5 +1,8 @@
 # Versions
 
+## 2.11.6 ????
+- Improve filename finder
+
 ## 2.11.5 (6 Jun 2021)
 - Add lang attribute on editable snippets to help browser spellcheckers
 - Don't limit bot users to 5 editions per minute

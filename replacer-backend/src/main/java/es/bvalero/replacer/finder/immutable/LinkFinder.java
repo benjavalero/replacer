@@ -142,7 +142,7 @@ class LinkFinder extends ImmutableCheckedFinder {
 
         String content = link.group().substring(START_LINK.length(), link.group().length() - END_LINK.length());
 
-        int posPipe = content.indexOf('|');
+        int posPipe = content.lastIndexOf('|');
         String linkTitle = posPipe >= 0 ? content.substring(0, posPipe) : content;
         String linkAlias = posPipe >= 0 ? content.substring(posPipe + 1) : null;
 
@@ -160,8 +160,13 @@ class LinkFinder extends ImmutableCheckedFinder {
         }
 
         // If the link alias exists then return the link title
+        // In case the alias exists but is a parameter then return the complete link
         if (linkAlias != null) {
-            return Collections.singletonList(Immutable.of(link.start() + START_LINK.length(), linkTitle));
+            if (linkAlias.contains("=")) {
+                return Collections.singletonList(this.convert(link));
+            } else {
+                return Collections.singletonList(Immutable.of(link.start() + START_LINK.length(), linkTitle));
+            }
         }
 
         // In any other case then return no immutable

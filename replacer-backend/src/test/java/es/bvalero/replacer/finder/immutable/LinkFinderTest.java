@@ -182,6 +182,29 @@ class LinkFinderTest {
         Assertions.assertEquals(expected, actual);
     }
 
+    @Test
+    void testFileAliasedWithParameters() {
+        String fileWithParameters = "Archivo:xxx.jpg|link=yyy";
+        String text = String.format("[[%s|alias]]", fileWithParameters);
+
+        List<Immutable> matches = linkFinder.findList(text);
+
+        Set<String> expected = Set.of(fileWithParameters);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void testParameterAlias() {
+        String text = "[[Archivo:xxx.jpg|link=yyy]]";
+
+        List<Immutable> matches = linkFinder.findList(text);
+
+        Set<String> expected = Set.of(text);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assertions.assertEquals(expected, actual);
+    }
+
     @ParameterizedTest
     @ValueSource(
         strings = {
