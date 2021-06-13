@@ -2,6 +2,7 @@
 
 ## 2.11.6 ????
 - Improve filename finder
+- Ignore styles in tables
 
 ## 2.11.5 (6 Jun 2021)
 - Add lang attribute on editable snippets to help browser spellcheckers
