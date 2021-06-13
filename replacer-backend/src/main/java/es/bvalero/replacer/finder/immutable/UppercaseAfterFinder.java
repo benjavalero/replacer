@@ -33,7 +33,29 @@ import org.springframework.stereotype.Component;
 class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
 
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_UPPERCASE_AFTER_PUNCTUATION = "[!#*|=.]<Zs>*(%s)";
+    private static final String CELL_SEPARATOR = "\\|\\|";
+
+    @org.intellij.lang.annotations.RegExp
+    private static final String FIRST_CELL_SEPARATOR = "\n\\|";
+
+    @org.intellij.lang.annotations.RegExp
+    private static final String CAPTION_SEPARATOR = "\\|\\+";
+
+    // Escaping is necessary for automaton
+    private static final String CELL_HTML_TAG = "\\<td\\>";
+
+    @org.intellij.lang.annotations.RegExp
+    private static final String CLASS_PUNCTUATION = "[=#*.!]";
+
+    @org.intellij.lang.annotations.RegExp
+    private static final String REGEX_UPPERCASE_AFTER_PUNCTUATION = String.format(
+        "(%s|%s|%s|%s|%s)<Zs>*(%%s)",
+        CLASS_PUNCTUATION,
+        FIRST_CELL_SEPARATOR,
+        CELL_SEPARATOR,
+        CAPTION_SEPARATOR,
+        CELL_HTML_TAG
+    );
 
     @Autowired
     private MisspellingManager misspellingManager;
@@ -96,9 +118,16 @@ class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
 
     @Override
     public Immutable convert(MatchResult match) {
-        String word = match.group().substring(1).trim();
-        int startPos = match.start() + match.group().indexOf(word);
-        return Immutable.of(startPos, word);
+        // Find the first uppercase letter
+        String text = match.group();
+        for (int i = 0; i < text.length(); i++) {
+            if (Character.isUpperCase(text.charAt(i))) {
+                String word = text.substring(i).trim();
+                int startPos = match.start() + i;
+                return Immutable.of(startPos, word);
+            }
+        }
+        throw new IllegalArgumentException("Wrong match with no uppercase letter");
     }
 
     @Override
