@@ -32,12 +32,12 @@
  Alex de Angelis
  Alex Ferguson
  Alex Kuznetsov
- Alex O			# Para encontrar ocurrencias como Alex O'Connell
+ Alex O         # Para encontrar ocurrencias como Alex O'Connell
  Alex Shelley
  Alex Zülle
 
  # america
- # North America Editorial 	# Cubierto por North America
+ # North America Editorial  # Cubierto por North America
  America Tour
  Captain America
  Central America
@@ -46,7 +46,7 @@
  Road America
  Skate America
  South America
- # UCI America Tour 		# Cubierto por America Tour
+ # UCI America Tour         # Cubierto por America Tour
  [Ii]n America
  of America
 
@@ -56,6 +56,11 @@
  # angeles
  # Se encuentra también como inmutable en PersonNameFinder
  of Los Angeles
+
+ # Astana
+ Astana Pro Team
+ FC Astana
+ Team Astana
 
  # aun
  # La mayoría de los casos considero que hay que revisarlos manualmente
@@ -149,7 +154,7 @@
  # Esta forma no es incorrecta (salvo en «ésto»), aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
  # No se añade a esta lista puesto que hay usuarios que sí la revisan
  # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
- # Finalmente se añade a esta lista puesto que ha habido quejas ya que sigue siendo un término controvertido
+ # Finalmente se añaden a esta lista puesto que ha habido quejas, ya que siguen siendo términos controvertidos.
  [Éé]st?[ea]
  [Éé]st?[oa]s
  [Aa]quél
@@ -165,6 +170,12 @@
  # jose
  San Jose Earthquakes
 
+ # Julian
+ Julian Knowle
+ Julian Alaphilippe
+ Julian Assange
+ Julian Casablancas
+
  # Julio
  Nueve de Julio
 
@@ -174,12 +185,21 @@
  Junior Team
  Junior de Barranquilla
 
- Atlético Junior 		# Se refiere también al equipo Junior de Barranquilla
- Deportiva Junior		# Se refiere también al equipo Junior de Barranquilla
+ Atlético Junior        # Se refiere también al equipo Junior de Barranquilla
+ Deportiva Junior       # Se refiere también al equipo Junior de Barranquilla
  Disney Junior
  Super Junior
  Top Race Junior
  World Junior
+
+ # logro
+ [Ee]l logro
+ [Aa]l logro
+ [Uu]n logro
+ gran logro
+ mayor logro
+ su logro
+
 
  # Manchester
  # Cubierto por PersonNameFinder
@@ -193,8 +213,8 @@
  Maria di
  Maria do
  Maria in
- Maria Kirilenko	# Aunque se romaniza como María Kirilenko
- Maria Sakkari		# Aunque se romaniza como María Sákkari
+ Maria Kirilenko    # Aunque se romaniza como María Kirilenko
+ Maria Sakkari      # Aunque se romaniza como María Sákkari
 
  Anna Maria
  Carlo? Maria
@@ -226,7 +246,7 @@
 
  # Hay varios casos de nombres propios, incluso ciudades, con el día y el mes.
  # Las fechas completas son más largas y machacan estos falsos positivos
- 1º de Mayo 		# Habrá que "revisitarlo" cuando se empiece a corregir el estilo de los ordinales, incluidos títulos de artículos.
+ 1º de Mayo         # Habrá que "revisitarlo" cuando se empiece a corregir el estilo de los ordinales, incluidos títulos de artículos.
  2 de Mayo
  9 de Mayo
  25 de Mayo
@@ -261,7 +281,7 @@
 
  # Paris
  Paris Hilton
- Paris Saint 	 # Paris Saint-Germain
+ Paris Saint     # Paris Saint-Germain
  in Paris
 
  # publica
@@ -295,12 +315,12 @@
  un retiro
 
  # rio
- Rio Ave 			# Aunque en español llevaría tilde, la mayoría son falsos positivos de los clubes de fútbol o en portugués.
- Rio Branco 		# Ídem
+ Rio Ave            # Aunque en español llevaría tilde, la mayoría son falsos positivos de los clubes de fútbol o en portugués.
+ Rio Branco         # Ídem
  Rio Grande do Sul
  Rio Grande do Norte
  Rio Grande Valley
- do Rio de Janeiro 	# Incluyo esta completa para machacar la entrada en composed-misspellings
+ do Rio de Janeiro  # Incluyo esta completa para machacar la entrada en composed-misspellings
  do Rio
  in Rio
 
@@ -336,10 +356,16 @@
  # Se encuentra también como inmutable en PersonNameFinder y SurnameFinder
  [Tt]he [Ss]ky
 
+ # Sofia
+ CSKA Sofia
+ Levski Sofia
+ Slavia Sofia
+ Sofia Kenin
+
  # sólo
  # Esta forma no es incorrecta, aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
  # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
- # Finalmente se añade a esta lista puesto que ha habido quejas ya que sigue siendo un término controvertido
+ # Finalmente se añade a esta lista puesto que ha habido quejas, ya que sigue siendo un término controvertido.
  [Ss]ólo
 
  # Tokyo
