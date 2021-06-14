@@ -7,16 +7,16 @@ import bz2
 import xml.sax
 import re
 
+YEAR_REGEX = re.compile(r'\b(1\d{3}|20[01]\d|202[01])\b')
+PROCESSABLE_NAMESPACES = ['0', '104']
+DEFAULT_SECTION = "Sección inicial"
+
 class DumpHandler(xml.sax.ContentHandler):
     def __init__(self):
         self.CurrentData = ""
         self.title = ""
         self.ns = ""
         self.text = ""
-        self.section = ""
-
-        # Regex to find a year
-        self.regex = re.compile(r'\b(1\d{3}|20[01]\d|202[01])\b')
 
     # Call when an element starts
     def startElement(self, tag, attributes):
@@ -35,42 +35,53 @@ class DumpHandler(xml.sax.ContentHandler):
         elif tag == "text":
             self.text = self.CurrentData.strip()
         elif tag == "page":
-            # Restart section
-            self.section = ""
-
             # Only process articles and annexes
-            if self.ns in ['0', '104']:
-                self.checkListsInText(self.text)
+            if self.ns in PROCESSABLE_NAMESPACES:
+                self.processPage()
 
-    def checkListsInText(self, text):
-        # Read the wikitext line by line looking for lists
-        # For each list found we process it to find years and check if they are well ordered
+    def processPage(self):
+        # Find all lists in page as an array of pairs section-listLines
+        foundLists = self.findListsInText()
 
+        # Filter unordered lists and find (if existing) the one with more unordered items
+        maxUnorderedList = None
+        maxNumItems = 0
+        for foundList in foundLists:
+            numUnordered = self.findNumberOfUnorderedItems(foundList[1])
+            if (numUnordered > maxNumItems):
+                maxUnorderedList = foundList
+                maxNumItems = numUnordered
+
+        # TODO
+        # 3. Find all tables in page
+        # 4. Filter unordered tables and find (if existing) the one with more unordered rows
+        # 5. Find the list/table with more unordered items. If existing, print the result.
+        # NOTE: WE NEED TO KEEP THE SECTION DURING ALL THE STEPS
+
+        if maxUnorderedList:
+            print('\t'.join([self.title, maxUnorderedList[0], str(len(maxUnorderedList[1])), str(maxNumItems)]))
+
+    def findListsInText(self):
+        foundLists = []
+
+        section = DEFAULT_SECTION
         listLines = []
-        for line in text.splitlines():
+        for line in self.text.splitlines():
             line = line.strip()
             if line.startswith('*'):
                 listLines.append(line)
             elif line.startswith('=') and line.endswith('='):
-                self.section = line.replace('=', '').strip()
+                section = line.replace('=', '').strip()
             elif line:
                 # If empty line we continue
                 # If not empty then the list has ended and we process it
                 if len(listLines):
-                    numUnordered = self.findNumberOfUnorderedItems(listLines)
-                    if numUnordered > 0:
-                        # DEBUG
-                        # print('---------------')
-                        # print(self.title, '###', self.section)
-                        # print('----')
-                        # print("\n".join(listLines))
-                        # print('---------------')
-
-                        print('\t'.join([self.title, self.section, str(len(listLines)), str(numUnordered)]))
-                        return
+                    foundLists.append([section, listLines])
 
                 # Continue with next list
                 listLines = []
+        return foundLists
+
 
     # Return -1 in case of list to be ignored
     # Return  0 in case of list well ordered
@@ -103,7 +114,7 @@ class DumpHandler(xml.sax.ContentHandler):
         return numUnordered
 
     def findYearInLine(self, line):
-        results = re.findall(self.regex, line)
+        results = re.findall(YEAR_REGEX, line)
         if len(results) == 1:
             return int(results[0][0])
         else:
