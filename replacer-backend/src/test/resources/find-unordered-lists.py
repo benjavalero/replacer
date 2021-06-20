@@ -40,7 +40,7 @@ class DumpHandler(xml.sax.ContentHandler):
                 self.processPage()
 
     def processPage(self):
-        # Find all lists in page as an array of pairs section-listLines
+        # Find all lists in page as an array of pairs section-lines
         foundLists = self.findListsInText()
 
         # Filter unordered lists and find (if existing) the one with more unordered items
@@ -52,43 +52,84 @@ class DumpHandler(xml.sax.ContentHandler):
                 maxUnorderedList = foundList
                 maxNumItems = numUnordered
 
-        # TODO
-        # 3. Find all tables in page
-        # 4. Filter unordered tables and find (if existing) the one with more unordered rows
-        # 5. Find the list/table with more unordered items. If existing, print the result.
-        # NOTE: WE NEED TO KEEP THE SECTION DURING ALL THE STEPS
+        # Find all tables in page as an array of pairs section-lines
+        foundTables = self.findTableRowsInText()
 
-        if maxUnorderedList:
-            print('\t'.join([self.title, maxUnorderedList[0], str(len(maxUnorderedList[1])), str(maxNumItems)]))
+        # Filter unordered table rows and find (if existing) the one with more unordered rows
+        maxUnorderedTable = None
+        maxNumRows = 0
+        for foundTable in foundTables:
+            numUnordered = self.findNumberOfUnorderedItems(foundTable[1])
+            if (numUnordered > maxNumRows):
+                maxUnorderedTable = foundTable
+                maxNumRows = numUnordered
+
+        # Find the list/table with more unordered items. If existing, print the result.
+        maxUnordered = maxUnorderedList
+        maxItems = maxNumItems
+        if not maxUnordered or maxNumRows > maxNumItems:
+            maxUnordered = maxUnorderedTable
+            maxItems = maxNumRows
+
+        if maxUnordered:
+            print('\t'.join([self.title, maxUnordered[0], str(len(maxUnordered[1])), str(maxItems)]))
+
 
     def findListsInText(self):
         foundLists = []
 
         section = DEFAULT_SECTION
-        listLines = []
+        lines = []
         for line in self.text.splitlines():
             line = line.strip()
             if line.startswith('*'):
-                listLines.append(line)
+                lines.append(line)
             elif line.startswith('=') and line.endswith('='):
                 section = line.replace('=', '').strip()
             elif line:
                 # If empty line we continue
                 # If not empty then the list has ended and we process it
-                if len(listLines):
-                    foundLists.append([section, listLines])
+                if len(lines):
+                    foundLists.append([section, lines])
 
                 # Continue with next list
-                listLines = []
+                lines = []
         return foundLists
+
+
+    def findTableRowsInText(self):
+        foundRows = []
+
+        section = DEFAULT_SECTION
+        lines = []
+        inTable = False
+        for line in self.text.splitlines():
+            line = line.strip()
+            if line.startswith('=') and line.endswith('='):
+                section = line.replace('=', '').strip()
+            elif line.startswith('{|'):
+                # Start table
+                inTable = True
+            elif line.startswith('|}'):
+                # If not empty then the list has ended and we process it
+                if len(lines):
+                    foundRows.append([section, lines])
+
+                # Continue with next table
+                lines = []
+                inTable = False
+            elif line.startswith('|') and inTable and not line.startswith('|-') and not line.startswith('|+'):
+                lines.append(line)
+
+        return foundRows
 
 
     # Return -1 in case of list to be ignored
     # Return  0 in case of list well ordered
     # Return  n in case of list with n items unordered
-    def findNumberOfUnorderedItems(self, listLines):
+    def findNumberOfUnorderedItems(self, lines):
         years = []
-        for line in listLines:
+        for line in lines:
             # Exclude lists containing templates
             if "{{" in line:
                 return -1
