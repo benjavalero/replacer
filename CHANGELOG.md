@@ -1,6 +1,6 @@
 # Versions
 
-## 2.11.6 ????
+## 2.11.6 (28 Jun 2021)
 - Improve filename finder
 - Ignore styles in tables
 - Improve uppercase-after finder
