@@ -341,13 +341,13 @@
             <plugin>
                 <groupId>com.hubspot.maven.plugins</groupId>
                 <artifactId>prettier-maven-plugin</artifactId>
-                <version>0.13</version>
+                <version>0.14</version>
                 <configuration>
                     <!--
                     Available values:
                     https://github.com/HubSpot/prettier-maven-plugin/tree/master/src/main/binaries/prettier-java
                     -->
-                    <prettierJavaVersion>1.0.2</prettierJavaVersion>
+                    <prettierJavaVersion>1.3.0</prettierJavaVersion>
                 </configuration>
                 <executions>
                     <execution>
