@@ -68,6 +68,7 @@ The tool is composed by two independent modules, both in the same repository: th
 Files are usually suffixed: service, controller, entity, etc.
 
 For the moment the size of the project is not so big that it is worth to divide the backend in several submodules.
+Besides, the backend is quite coupled to Spring Boot framework, making more difficult to use Java 9 modules.
 Instead, packages are meant to be as independent as possible, organizing the code by feature and following the principles of Clean Architecture.
 
 In backend, we have the following packages:
