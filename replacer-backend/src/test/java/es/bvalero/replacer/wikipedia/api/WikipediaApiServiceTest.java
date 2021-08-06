@@ -439,9 +439,5 @@ class WikipediaApiServiceTest {
             wikipediaServiceOffline.getPageIdsByStringMatch(WikipediaLanguage.getDefault(), "", false, 0, 100).isEmpty()
         );
         Assertions.assertTrue(wikipediaServiceOffline.getPageSections(1, WikipediaLanguage.getDefault()).isEmpty());
-        Assertions.assertEquals(
-            2,
-            wikipediaServiceOffline.getPagesByIds(Arrays.asList(1, 2), WikipediaLanguage.getDefault()).size()
-        );
     }
 }

@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import java.util.List;
 import java.util.Optional;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.Nullable;
 
 /** Service to perform operations in Wikipedia */
@@ -14,9 +13,6 @@ public interface WikipediaService {
     Optional<WikipediaPage> getPageByTitle(String pageTitle, WikipediaLanguage lang) throws ReplacerException;
 
     Optional<WikipediaPage> getPageById(int pageId, WikipediaLanguage lang) throws ReplacerException;
-
-    @TestOnly
-    List<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws ReplacerException;
 
     List<WikipediaSection> getPageSections(int pageId, WikipediaLanguage lang) throws ReplacerException;
 

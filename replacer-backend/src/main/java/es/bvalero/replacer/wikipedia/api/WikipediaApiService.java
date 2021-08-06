@@ -79,9 +79,9 @@ class WikipediaApiService implements WikipediaService {
         return getPagesByIds(Collections.singletonList(pageId), lang).stream().findAny();
     }
 
+    @VisibleForTesting
     @Loggable(prepend = true, value = Loggable.TRACE)
-    @Override
-    public List<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws ReplacerException {
+    List<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws ReplacerException {
         List<WikipediaPage> pages = new ArrayList<>(pageIds.size());
         // There is a maximum number of pages to request
         // We split the request in several sub-lists

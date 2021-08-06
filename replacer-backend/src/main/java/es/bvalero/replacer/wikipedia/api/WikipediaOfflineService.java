@@ -48,15 +48,6 @@ class WikipediaOfflineService implements WikipediaService {
     }
 
     @Override
-    public List<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws ReplacerException {
-        List<WikipediaPage> pages = new ArrayList<>();
-        for (Integer id : pageIds) {
-            getPageByTitle(Integer.toString(id), lang).ifPresent(pages::add);
-        }
-        return pages;
-    }
-
-    @Override
     public List<WikipediaSection> getPageSections(int pageId, WikipediaLanguage lang) {
         return Collections.emptyList();
     }
