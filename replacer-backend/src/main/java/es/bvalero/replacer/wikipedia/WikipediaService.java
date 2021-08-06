@@ -10,13 +10,13 @@ import org.springframework.lang.Nullable;
 public interface WikipediaService {
     UserInfo getUserInfo(WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException;
 
-    Optional<WikipediaPage> getPageByTitle(String pageTitle, WikipediaLanguage lang) throws ReplacerException;
+    Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) throws ReplacerException;
 
-    Optional<WikipediaPage> getPageById(int pageId, WikipediaLanguage lang) throws ReplacerException;
+    Optional<WikipediaPage> getPageById(WikipediaLanguage lang, int pageId) throws ReplacerException;
 
-    List<WikipediaSection> getPageSections(int pageId, WikipediaLanguage lang) throws ReplacerException;
+    List<WikipediaSection> getPageSections(WikipediaLanguage lang, int pageId) throws ReplacerException;
 
-    Optional<WikipediaPage> getPageByIdAndSection(int pageId, WikipediaSection section, WikipediaLanguage lang)
+    Optional<WikipediaPage> getPageByIdAndSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
         throws ReplacerException;
 
     WikipediaSearchResult getPageIdsByStringMatch(

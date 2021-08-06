@@ -3,7 +3,6 @@ package es.bvalero.replacer.wikipedia.api;
 import es.bvalero.replacer.common.*;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +22,7 @@ class WikipediaOfflineService implements WikipediaService {
     }
 
     @Override
-    public Optional<WikipediaPage> getPageByTitle(String pageTitle, WikipediaLanguage lang) throws ReplacerException {
+    public Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) throws ReplacerException {
         return Optional.of(buildFakePage(1));
     }
 
@@ -43,17 +42,17 @@ class WikipediaOfflineService implements WikipediaService {
     }
 
     @Override
-    public Optional<WikipediaPage> getPageById(int pageId, WikipediaLanguage lang) throws ReplacerException {
+    public Optional<WikipediaPage> getPageById(WikipediaLanguage lang, int pageId) throws ReplacerException {
         return Optional.of(buildFakePage(pageId));
     }
 
     @Override
-    public List<WikipediaSection> getPageSections(int pageId, WikipediaLanguage lang) {
+    public List<WikipediaSection> getPageSections(WikipediaLanguage lang, int pageId) {
         return Collections.emptyList();
     }
 
     @Override
-    public Optional<WikipediaPage> getPageByIdAndSection(int pageId, WikipediaSection section, WikipediaLanguage lang)
+    public Optional<WikipediaPage> getPageByIdAndSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
         throws ReplacerException {
         return Optional.of(buildFakePage(pageId).withSection(section));
     }

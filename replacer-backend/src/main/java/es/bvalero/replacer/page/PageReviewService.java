@@ -137,7 +137,7 @@ abstract class PageReviewService {
 
     private Optional<WikipediaPage> getPageFromWikipedia(int pageId, PageReviewOptions options) {
         try {
-            Optional<WikipediaPage> page = wikipediaService.getPageById(pageId, options.getLang());
+            Optional<WikipediaPage> page = wikipediaService.getPageById(options.getLang(), pageId);
             if (page.isPresent()) {
                 if (validatePage(page.get())) {
                     LOGGER.debug(

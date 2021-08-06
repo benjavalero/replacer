@@ -67,14 +67,14 @@ class WikipediaApiService implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
-    public Optional<WikipediaPage> getPageByTitle(String pageTitle, WikipediaLanguage lang) throws ReplacerException {
+    public Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) throws ReplacerException {
         // Return the only value that should be in the map
         return getPagesByIds("titles", pageTitle, lang).stream().findAny();
     }
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
-    public Optional<WikipediaPage> getPageById(int pageId, WikipediaLanguage lang) throws ReplacerException {
+    public Optional<WikipediaPage> getPageById(WikipediaLanguage lang, int pageId) throws ReplacerException {
         // Return the only value that should be in the map
         return getPagesByIds(Collections.singletonList(pageId), lang).stream().findAny();
     }
@@ -144,7 +144,7 @@ class WikipediaApiService implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
-    public List<WikipediaSection> getPageSections(int pageId, WikipediaLanguage lang) throws ReplacerException {
+    public List<WikipediaSection> getPageSections(WikipediaLanguage lang, int pageId) throws ReplacerException {
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
             buildPageSectionsRequestParams(pageId),
             lang
@@ -191,7 +191,7 @@ class WikipediaApiService implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
-    public Optional<WikipediaPage> getPageByIdAndSection(int pageId, WikipediaSection section, WikipediaLanguage lang)
+    public Optional<WikipediaPage> getPageByIdAndSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
         throws ReplacerException {
         WikipediaApiResponse apiResponse = wikipediaRequestService.executeGetRequest(
             buildPageIdsAndSectionRequestParams(pageId, section.getIndex()),

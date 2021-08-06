@@ -28,7 +28,7 @@ class ListingContentWikipediaService implements ListingContentService {
     @Override
     public String getMisspellingListingContent(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaService
-            .getPageByTitle(simpleMisspellingPages.get(lang.getCode()), lang)
+            .getPageByTitle(lang, simpleMisspellingPages.get(lang.getCode()))
             .orElseThrow(ReplacerException::new)
             .getContent();
     }
@@ -36,7 +36,7 @@ class ListingContentWikipediaService implements ListingContentService {
     @Override
     public String getFalsePositiveListingContent(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaService
-            .getPageByTitle(falsePositivePages.get(lang.getCode()), lang)
+            .getPageByTitle(lang, falsePositivePages.get(lang.getCode()))
             .orElseThrow(ReplacerException::new)
             .getContent();
     }
@@ -44,7 +44,7 @@ class ListingContentWikipediaService implements ListingContentService {
     @Override
     public String getComposedMisspellingListingContent(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaService
-            .getPageByTitle(composedMisspellingPages.get(lang.getCode()), lang)
+            .getPageByTitle(lang, composedMisspellingPages.get(lang.getCode()))
             .orElseThrow(ReplacerException::new)
             .getContent();
     }

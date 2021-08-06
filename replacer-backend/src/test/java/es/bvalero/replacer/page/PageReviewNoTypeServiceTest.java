@@ -106,7 +106,7 @@ class PageReviewNoTypeServiceTest {
             .thenReturn(Collections.emptyList());
 
         // The page doesn't exist in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.empty());
+        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.empty());
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
@@ -127,7 +127,7 @@ class PageReviewNoTypeServiceTest {
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
 
         // The page exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(page));
+        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
 
         // The page contains replacements
         Mockito
@@ -159,7 +159,7 @@ class PageReviewNoTypeServiceTest {
             .thenReturn(Collections.emptyList());
 
         // The page exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(page));
+        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
 
         // The page doesn't contain replacements
         List<Replacement> noPageReplacements = Collections.emptyList();
@@ -190,8 +190,8 @@ class PageReviewNoTypeServiceTest {
             .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)));
 
         // Only the page 2 exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(randomId, WikipediaLanguage.SPANISH)).thenReturn(Optional.empty());
-        Mockito.when(wikipediaService.getPageById(randomId2, WikipediaLanguage.SPANISH)).thenReturn(Optional.of(page2));
+        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.empty());
+        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId2)).thenReturn(Optional.of(page2));
 
         // The page contains replacements
         Mockito

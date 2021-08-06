@@ -29,8 +29,8 @@ class SectionReviewService {
         try {
             // Get the sections from the Wikipedia API (better than calculating them by ourselves)
             List<WikipediaSection> sections = wikipediaService.getPageSections(
-                review.getPage().getId(),
-                review.getPage().getLang()
+                review.getPage().getLang(),
+                review.getPage().getId()
             );
 
             // Find the smallest section containing all the replacements
@@ -41,9 +41,9 @@ class SectionReviewService {
             if (smallestSection.isPresent()) {
                 // Get the section from Wikipedia API (better than calculating it by ourselves)
                 Optional<WikipediaPage> pageSection = wikipediaService.getPageByIdAndSection(
+                    review.getPage().getLang(),
                     review.getPage().getId(),
-                    smallestSection.get(),
-                    review.getPage().getLang()
+                    smallestSection.get()
                 );
                 if (pageSection.isPresent()) {
                     // We need to modify the start position of the replacements according to the section start

@@ -28,7 +28,7 @@ class SectionReviewServiceTest {
     @Test
     void testFindSectionReviewNoSections() throws ReplacerException {
         Mockito
-            .when(wikipediaService.getPageSections(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .when(wikipediaService.getPageSections(Mockito.any(WikipediaLanguage.class), Mockito.anyInt()))
             .thenReturn(Collections.emptyList());
 
         PageReview review = PageReview.ofEmpty();
@@ -55,7 +55,7 @@ class SectionReviewServiceTest {
         int offset = 5;
         WikipediaSection section = WikipediaSection.builder().level(2).index(sectionId).byteOffset(offset).build();
         Mockito
-            .when(wikipediaService.getPageSections(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+            .when(wikipediaService.getPageSections(Mockito.any(WikipediaLanguage.class), Mockito.anyInt()))
             .thenReturn(Collections.singletonList(section));
 
         String sectionContent = content.substring(offset, 10);
@@ -69,9 +69,9 @@ class SectionReviewServiceTest {
         Mockito
             .when(
                 wikipediaService.getPageByIdAndSection(
+                    Mockito.any(WikipediaLanguage.class),
                     Mockito.eq(pageId),
-                    Mockito.eq(section),
-                    Mockito.any(WikipediaLanguage.class)
+                    Mockito.eq(section)
                 )
             )
             .thenReturn(Optional.of(pageSection));

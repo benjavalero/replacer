@@ -32,7 +32,7 @@ class WikipediaServiceIT {
     void testGetPageContent() throws ReplacerException {
         String title = "Usuario:Benjavalero";
         WikipediaPage page = wikipediaService
-            .getPageByTitle(title, WikipediaLanguage.SPANISH)
+            .getPageByTitle(WikipediaLanguage.SPANISH, title)
             .orElseThrow(ReplacerException::new);
         Assertions.assertNotNull(page);
         Assertions.assertEquals(6219990, page.getId());
@@ -76,7 +76,7 @@ class WikipediaServiceIT {
     @Test
     void testGetPageContentUnavailable() throws ReplacerException {
         Assertions.assertFalse(
-            wikipediaService.getPageByTitle("Usuario:Benjavaleroxx", WikipediaLanguage.SPANISH).isPresent()
+            wikipediaService.getPageByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent()
         );
     }
 
@@ -92,7 +92,7 @@ class WikipediaServiceIT {
     @Test
     void testSavePageWithConflicts() throws ReplacerException {
         WikipediaPage page = wikipediaService
-            .getPageByTitle("Wikipedia:Zona de pruebas/5", WikipediaLanguage.SPANISH)
+            .getPageByTitle(WikipediaLanguage.SPANISH, "Wikipedia:Zona de pruebas/5")
             .orElseThrow(ReplacerException::new);
 
         String originalContent = page.getContent();

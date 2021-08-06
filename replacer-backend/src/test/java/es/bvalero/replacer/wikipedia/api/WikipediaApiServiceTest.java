@@ -70,7 +70,7 @@ class WikipediaApiServiceTest {
         int pageId = 6219990;
         String title = "Usuario:Benjavalero";
         WikipediaPage page = wikipediaService
-            .getPageByTitle(title, WikipediaLanguage.SPANISH)
+            .getPageByTitle(WikipediaLanguage.SPANISH, title)
             .orElseThrow(ReplacerException::new);
         Assertions.assertNotNull(page);
         Assertions.assertEquals(pageId, page.getId());
@@ -93,7 +93,7 @@ class WikipediaApiServiceTest {
         int pageId = 6219990;
         String title = "Usuario:Benjavalero";
         WikipediaPage page = wikipediaService
-            .getPageById(pageId, WikipediaLanguage.SPANISH)
+            .getPageById(WikipediaLanguage.SPANISH, pageId)
             .orElseThrow(ReplacerException::new);
         Assertions.assertNotNull(page);
         Assertions.assertEquals(pageId, page.getId());
@@ -152,7 +152,7 @@ class WikipediaApiServiceTest {
             .thenReturn(response);
 
         Assertions.assertFalse(
-            wikipediaService.getPageByTitle("Usuario:Benjavaleroxx", WikipediaLanguage.SPANISH).isPresent()
+            wikipediaService.getPageByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent()
         );
     }
 
@@ -338,7 +338,7 @@ class WikipediaApiServiceTest {
             .when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
-        List<WikipediaSection> sections = wikipediaService.getPageSections(6903884, WikipediaLanguage.SPANISH);
+        List<WikipediaSection> sections = wikipediaService.getPageSections(WikipediaLanguage.SPANISH, 6903884);
         Assertions.assertNotNull(sections);
         Assertions.assertEquals(3, sections.size());
 
@@ -388,7 +388,7 @@ class WikipediaApiServiceTest {
             .when(wikipediaRequestService.executeGetRequest(Mockito.anyMap(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(response);
 
-        List<WikipediaSection> sections = wikipediaService.getPageSections(6633556, WikipediaLanguage.SPANISH);
+        List<WikipediaSection> sections = wikipediaService.getPageSections(WikipediaLanguage.SPANISH, 6633556);
         Assertions.assertNotNull(sections);
         Assertions.assertTrue(sections.isEmpty());
     }
@@ -408,7 +408,7 @@ class WikipediaApiServiceTest {
         WikipediaSection section = WikipediaSection.builder().index(sectionId).build();
         String title = "Usuario:Benjavalero/Taller";
         WikipediaPage page = wikipediaService
-            .getPageByIdAndSection(pageId, section, WikipediaLanguage.SPANISH)
+            .getPageByIdAndSection(WikipediaLanguage.SPANISH, pageId, section)
             .orElseThrow(ReplacerException::new);
         Assertions.assertNotNull(page);
         Assertions.assertEquals(pageId, page.getId());
@@ -425,19 +425,19 @@ class WikipediaApiServiceTest {
         Assertions.assertEquals(
             Integer.valueOf(1),
             wikipediaServiceOffline
-                .getPageByTitle("", WikipediaLanguage.getDefault())
+                .getPageByTitle(WikipediaLanguage.getDefault(), "")
                 .map(WikipediaPage::getId)
                 .orElse(0)
         );
         Assertions.assertFalse(
             wikipediaServiceOffline
-                .getPageById(1, WikipediaLanguage.getDefault())
+                .getPageById(WikipediaLanguage.getDefault(), 1)
                 .map(WikipediaPage::getSection)
                 .isPresent()
         );
         Assertions.assertFalse(
             wikipediaServiceOffline.getPageIdsByStringMatch(WikipediaLanguage.getDefault(), "", false, 0, 100).isEmpty()
         );
-        Assertions.assertTrue(wikipediaServiceOffline.getPageSections(1, WikipediaLanguage.getDefault()).isEmpty());
+        Assertions.assertTrue(wikipediaServiceOffline.getPageSections(WikipediaLanguage.getDefault(), 1).isEmpty());
     }
 }
