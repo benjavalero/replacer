@@ -12,6 +12,7 @@ import es.bvalero.replacer.finder.replacement.*;
 import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.*;
+import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -133,6 +134,7 @@ class PageReviewCustomServiceTest {
             .lang(lang)
             .id(pageId)
             .namespace(WikipediaNamespace.ARTICLE)
+            .lastUpdate(LocalDateTime.now())
             .content(content)
             .build();
 
@@ -188,7 +190,7 @@ class PageReviewCustomServiceTest {
         // Search in Wikipedia returns a result which is not reviewed yet but the page has no replacements
         // ==> Return an empty review
         // We don't insert any fake replacement in database.
-        // Custom replacements are not re-indexed so we wouldn't detect future changes in the page.
+        // Custom replacements are not re-indexed, so we wouldn't detect future changes in the page.
 
         final int pageId = 123;
         final String content = "A R";
@@ -199,6 +201,7 @@ class PageReviewCustomServiceTest {
             .id(pageId)
             .namespace(WikipediaNamespace.ARTICLE)
             .content(content)
+            .lastUpdate(LocalDateTime.now())
             .build();
 
         // Mocks
@@ -252,6 +255,7 @@ class PageReviewCustomServiceTest {
             .id(pageId2)
             .namespace(WikipediaNamespace.ARTICLE)
             .content(content)
+            .lastUpdate(LocalDateTime.now())
             .build();
 
         // Mocks
@@ -349,7 +353,14 @@ class PageReviewCustomServiceTest {
         for (int i = 1; i <= 4; i++) {
             pages.put(
                 i,
-                WikipediaPage.builder().lang(lang).id(i).namespace(WikipediaNamespace.ARTICLE).content(content).build()
+                WikipediaPage
+                    .builder()
+                    .lang(lang)
+                    .id(i)
+                    .namespace(WikipediaNamespace.ARTICLE)
+                    .content(content)
+                    .lastUpdate(LocalDateTime.now())
+                    .build()
             );
         }
 
@@ -456,7 +467,14 @@ class PageReviewCustomServiceTest {
         for (int i = 1; i <= 4; i++) {
             pages.put(
                 i,
-                WikipediaPage.builder().lang(lang).id(i).namespace(WikipediaNamespace.ARTICLE).content(content).build()
+                WikipediaPage
+                    .builder()
+                    .lang(lang)
+                    .id(i)
+                    .namespace(WikipediaNamespace.ARTICLE)
+                    .content(content)
+                    .lastUpdate(LocalDateTime.now())
+                    .build()
             );
         }
 

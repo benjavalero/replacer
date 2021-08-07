@@ -36,7 +36,7 @@ class WikipediaOfflineService implements WikipediaService {
             .namespace(WikipediaNamespace.ARTICLE)
             .title("América del Norte")
             .content(FileUtils.getFileContent("/offline/sample-page.txt"))
-            .lastUpdate(nowDate.toLocalDate())
+            .lastUpdate(nowDate)
             .queryTimestamp(now)
             .build();
     }

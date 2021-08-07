@@ -179,7 +179,7 @@ abstract class PageReviewService {
             .lang(page.getLang())
             .title(page.getTitle())
             .namespace(page.getNamespace())
-            .lastUpdate(page.getLastUpdate())
+            .lastUpdate(page.getLastUpdate().toLocalDate())
             .content(page.getContent())
             .build();
     }

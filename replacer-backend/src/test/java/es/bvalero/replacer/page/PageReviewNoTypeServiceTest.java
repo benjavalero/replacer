@@ -8,7 +8,7 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ class PageReviewNoTypeServiceTest {
         .lang(WikipediaLanguage.SPANISH)
         .namespace(WikipediaNamespace.ARTICLE)
         .content(content)
-        .lastUpdate(LocalDate.now())
+        .lastUpdate(LocalDateTime.now())
         .build();
     private final WikipediaPage page2 = WikipediaPage
         .builder()
@@ -36,7 +36,7 @@ class PageReviewNoTypeServiceTest {
         .lang(WikipediaLanguage.SPANISH)
         .namespace(WikipediaNamespace.ANNEX)
         .content(content2)
-        .lastUpdate(LocalDate.now())
+        .lastUpdate(LocalDateTime.now())
         .build();
     private final int offset = 1;
     private final Replacement replacement = Replacement

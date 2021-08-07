@@ -2,7 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
@@ -21,14 +21,13 @@ public class WikipediaPage {
     WikipediaNamespace namespace;
     String title;
     String content;
-    LocalDate lastUpdate;
+    LocalDateTime lastUpdate; // Store time in case it is needed in the future
 
     @With
     @Nullable
     WikipediaSection section;
 
-    // Store the timestamp when the page was queried. No need to convert it to Date format.
-    String queryTimestamp;
+    String queryTimestamp; // Store the timestamp when the page was queried
 
     @Override
     public String toString() {

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.common;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.AccessLevel;
@@ -14,8 +13,8 @@ public class DateUtils {
         WIKIPEDIA_DATE_PATTERN
     );
 
-    public static LocalDate parseWikipediaTimestamp(String timestamp) {
-        return LocalDate.from(WIKIPEDIA_DATE_FORMATTER.parse(timestamp));
+    public static LocalDateTime parseWikipediaTimestamp(String timestamp) {
+        return LocalDateTime.from(WIKIPEDIA_DATE_FORMATTER.parse(timestamp));
     }
 
     public static String formatWikipediaTimestamp(LocalDateTime localDateTime) {

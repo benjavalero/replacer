@@ -112,7 +112,7 @@ class WikipediaServiceIT {
 
         // Save the conflict content started 1 day before
         String before = DateUtils.formatWikipediaTimestamp(
-            DateUtils.parseWikipediaTimestamp(page.getQueryTimestamp()).atTime(0, 0).minusDays(1)
+            DateUtils.parseWikipediaTimestamp(page.getQueryTimestamp()).minusDays(1)
         );
 
         Assertions.assertThrows(

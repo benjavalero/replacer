@@ -156,7 +156,7 @@ class DumpHandler extends DefaultHandler {
             .namespace(WikipediaNamespace.valueOf(this.currentNamespace))
             .title(this.currentTitle)
             .content(this.currentContent)
-            .lastUpdate(DateUtils.parseWikipediaTimestamp(this.currentTimestamp))
+            .lastUpdate(DateUtils.parseWikipediaTimestamp(this.currentTimestamp).toLocalDate())
             .build();
 
         // If return null the page is processable but nothing to do
