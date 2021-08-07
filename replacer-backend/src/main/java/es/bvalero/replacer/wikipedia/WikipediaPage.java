@@ -9,11 +9,12 @@ import lombok.With;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
+/** Domain object representing a page retrieved from Wikipedia */
 @Value
 @Builder
 public class WikipediaPage {
 
-    private static final int CONTENT_SIZE = 50;
+    private static final int MAX_PRINTABLE_CONTENT_SIZE = 50;
 
     WikipediaLanguage lang;
     int id;
@@ -41,7 +42,7 @@ public class WikipediaPage {
             ", title='" +
             this.getTitle() +
             ", content=" +
-            StringUtils.abbreviate(this.getContent(), CONTENT_SIZE) +
+            StringUtils.abbreviate(this.getContent(), MAX_PRINTABLE_CONTENT_SIZE) +
             ", lastUpdate='" +
             this.getLastUpdate() +
             "', section=" +

@@ -1,5 +1,9 @@
 package es.bvalero.replacer.common;
 
+/**
+ * Exception to be used in the context of Replacer.
+ * It is not worth to define sub-exceptions by functionality.
+ */
 public class ReplacerException extends Exception {
 
     public ReplacerException() {
