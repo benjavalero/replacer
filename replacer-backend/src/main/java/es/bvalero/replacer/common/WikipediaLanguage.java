@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.TestOnly;
 
 @Slf4j
 @Getter
@@ -23,6 +24,7 @@ public enum WikipediaLanguage {
     @JsonValue
     private final String code;
 
+    @TestOnly
     public static WikipediaLanguage getDefault() {
         return SPANISH;
     }

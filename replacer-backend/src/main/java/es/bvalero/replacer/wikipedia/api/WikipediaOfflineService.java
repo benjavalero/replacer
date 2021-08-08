@@ -31,7 +31,7 @@ class WikipediaOfflineService implements WikipediaService {
         return WikipediaPage
             .builder()
             .id(pageId)
-            .lang(WikipediaLanguage.getDefault())
+            .lang(WikipediaLanguage.SPANISH)
             .namespace(WikipediaNamespace.ARTICLE)
             .title("América del Norte")
             .content(FileUtils.getFileContent("/offline/sample-page.txt"))
