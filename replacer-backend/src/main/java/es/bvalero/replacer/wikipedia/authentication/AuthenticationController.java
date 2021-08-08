@@ -28,11 +28,11 @@ public class AuthenticationController {
     @ApiOperation(value = "Verify the OAuth authentication and return the authenticated user details")
     @PostMapping(value = "/authenticate")
     public AuthenticateResponse authenticate(
-        @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam String lang,
+        @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang,
         @RequestBody AuthenticateRequest authenticateRequest
     ) throws ReplacerException {
         return authenticationService.authenticate(
-            WikipediaLanguage.forValues(lang),
+            lang,
             OAuthToken.of(authenticateRequest.getRequestToken(), authenticateRequest.getRequestTokenSecret()),
             authenticateRequest.getOauthVerifier()
         );

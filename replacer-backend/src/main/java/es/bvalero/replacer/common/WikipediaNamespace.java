@@ -36,6 +36,8 @@ public enum WikipediaNamespace {
         return EnumSet.of(ARTICLE, ANNEX);
     }
 
+    // We cannot override the static method "valueOf(String)"
+    // but in this case as the value is an integer we can overload the method
     public static WikipediaNamespace valueOf(int namespace) {
         return map.get(namespace);
     }

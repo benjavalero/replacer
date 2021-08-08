@@ -27,7 +27,8 @@ public enum WikipediaLanguage {
         return SPANISH;
     }
 
-    public static WikipediaLanguage forValues(String code) {
+    // We cannot override the static method "valueOf(String)"
+    static WikipediaLanguage valueOfCode(String code) {
         if (map.containsKey(code)) {
             return map.get(code);
         } else {

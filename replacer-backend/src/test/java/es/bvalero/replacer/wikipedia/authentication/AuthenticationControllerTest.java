@@ -76,6 +76,6 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.tokenSecret", is("B")));
 
         verify(authenticationService, times(1))
-            .authenticate(Mockito.any(WikipediaLanguage.class), Mockito.any(OAuthToken.class), anyString());
+            .authenticate(Mockito.eq(WikipediaLanguage.SPANISH), Mockito.any(OAuthToken.class), anyString());
     }
 }
