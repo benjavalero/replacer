@@ -2,6 +2,7 @@ package es.bvalero.replacer.common;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
@@ -14,7 +15,7 @@ public class DateUtils {
     );
 
     public static LocalDateTime parseWikipediaTimestamp(String timestamp) {
-        return LocalDateTime.from(WIKIPEDIA_DATE_FORMATTER.parse(timestamp));
+        return LocalDateTime.from(WIKIPEDIA_DATE_FORMATTER.parse(timestamp)).truncatedTo(ChronoUnit.SECONDS);
     }
 
     public static String formatWikipediaTimestamp(LocalDateTime localDateTime) {

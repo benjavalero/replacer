@@ -2,6 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.lang.Nullable;
@@ -32,7 +33,7 @@ public interface WikipediaService {
         int pageId,
         @Nullable Integer section,
         String pageContent,
-        String currentTimestamp,
+        LocalDateTime currentTimestamp,
         String editSummary,
         OAuthToken accessToken
     ) throws ReplacerException;

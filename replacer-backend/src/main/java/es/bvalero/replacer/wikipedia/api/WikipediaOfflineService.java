@@ -73,7 +73,7 @@ class WikipediaOfflineService implements WikipediaService {
         int pageId,
         @Nullable Integer section,
         String pageContent,
-        String currentTimestamp,
+        LocalDateTime currentTimestamp,
         String editSummary,
         OAuthToken accessToken
     ) {

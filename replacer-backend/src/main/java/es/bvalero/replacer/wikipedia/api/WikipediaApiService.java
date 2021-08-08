@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.*;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -296,7 +297,7 @@ class WikipediaApiService implements WikipediaService {
         int pageId,
         @Nullable Integer section,
         String pageContent,
-        String currentTimestamp,
+        LocalDateTime currentTimestamp,
         String editSummary,
         OAuthToken accessToken
     ) throws ReplacerException {
@@ -327,7 +328,7 @@ class WikipediaApiService implements WikipediaService {
         int pageId,
         String pageContent,
         @Nullable Integer section,
-        String currentTimestamp,
+        LocalDateTime currentTimestamp,
         String editSummary,
         EditToken editToken
     ) {
@@ -343,8 +344,10 @@ class WikipediaApiService implements WikipediaService {
         params.put("bot", "true");
         params.put("minor", "true");
         params.put("token", editToken.getCsrfToken());
-        params.put("starttimestamp", currentTimestamp); // Timestamp when the editing process began
-        params.put("basetimestamp", editToken.getTimestamp()); // Timestamp of the base revision
+        // Timestamp when the editing process began
+        params.put("starttimestamp", DateUtils.formatWikipediaTimestamp(currentTimestamp));
+        // Timestamp of the base revision
+        params.put("basetimestamp", DateUtils.formatWikipediaTimestamp(editToken.getTimestamp()));
         return params;
     }
 
@@ -372,7 +375,9 @@ class WikipediaApiService implements WikipediaService {
     private EditToken extractEditTokenFromJson(WikipediaApiResponse response) {
         return EditToken.of(
             response.getQuery().getTokens().getCsrftoken(),
-            response.getQuery().getPages().get(0).getRevisions().get(0).getTimestamp()
+            DateUtils.parseWikipediaTimestamp(
+                response.getQuery().getPages().get(0).getRevisions().get(0).getTimestamp()
+            )
         );
     }
 }

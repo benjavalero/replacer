@@ -8,6 +8,7 @@ import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.wikipedia.OAuthToken;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.oauth.OAuthMediaWikiConfiguration;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
@@ -105,13 +106,13 @@ class WikipediaServiceIT {
             page.getId(),
             0,
             newContent,
-            DateUtils.formatWikipediaTimestamp(page.getQueryTimestamp()),
+            page.getQueryTimestamp(),
             "Replacer Integration Test",
             OAuthToken.ofEmpty()
         );
 
         // Save the conflict content started 1 day before
-        String before = DateUtils.formatWikipediaTimestamp(page.getQueryTimestamp().minusDays(1));
+        LocalDateTime before = page.getQueryTimestamp().minusDays(1);
 
         Assertions.assertThrows(
             ReplacerException.class,

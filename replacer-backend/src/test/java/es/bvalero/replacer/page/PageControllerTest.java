@@ -8,12 +8,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.listing.Suggestion;
 import es.bvalero.replacer.wikipedia.OAuthToken;
 import es.bvalero.replacer.wikipedia.WikipediaService;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -169,7 +172,7 @@ class PageControllerTest {
         int section = 3;
         String title = "Q";
         String content = "X";
-        String timestamp = "Y";
+        LocalDateTime timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         String token = "A";
         String tokenSecret = "B";
         String type = "T";
@@ -182,7 +185,7 @@ class PageControllerTest {
             .title(title)
             .content(content)
             .section(PageSection.of(section, ""))
-            .queryTimestamp(timestamp)
+            .queryTimestamp(DateUtils.formatWikipediaTimestamp(timestamp))
             .build();
         savePage.setPage(page);
         PageReviewSearch search = PageReviewSearch.builder().type(type).subtype(subtype).build();
@@ -223,7 +226,7 @@ class PageControllerTest {
         int pageId = 123;
         int section = 3;
         String title = "Q";
-        String timestamp = "Y";
+        LocalDateTime timestamp = LocalDateTime.now();
         String token = "A";
         String tokenSecret = "B";
         String type = "T";
@@ -235,7 +238,7 @@ class PageControllerTest {
             .id(pageId)
             .title(title)
             .section(PageSection.of(section, ""))
-            .queryTimestamp(timestamp)
+            .queryTimestamp(DateUtils.formatWikipediaTimestamp(timestamp))
             .build();
         savePage.setPage(page);
         PageReviewSearch search = PageReviewSearch.builder().type(type).subtype(subtype).build();
@@ -258,7 +261,7 @@ class PageControllerTest {
                 eq(pageId),
                 anyInt(),
                 anyString(),
-                anyString(),
+                any(LocalDateTime.class),
                 anyString(),
                 any(OAuthToken.class)
             );

@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page;
 
 import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.UserParameters;
 import es.bvalero.replacer.common.WikipediaLanguage;
@@ -122,7 +123,7 @@ public class PageController {
                     pageId,
                     section == null ? null : section.getId(),
                     textToSave,
-                    savePage.getPage().getQueryTimestamp(),
+                    DateUtils.parseWikipediaTimestamp(savePage.getPage().getQueryTimestamp()),
                     buildEditSummary(savePage.getSearch(), applyCosmetics),
                     OAuthToken.of(savePage.getToken(), savePage.getTokenSecret())
                 );
