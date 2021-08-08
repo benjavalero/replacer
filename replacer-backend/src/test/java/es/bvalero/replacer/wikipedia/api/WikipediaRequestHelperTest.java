@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
-class WikipediaRequestServiceTest {
+class WikipediaRequestHelperTest {
 
     @Mock
     private OAuthService oAuthService;
@@ -20,11 +20,11 @@ class WikipediaRequestServiceTest {
     private ObjectMapper jsonMapper;
 
     @InjectMocks
-    private WikipediaRequestService wikipediaRequestService;
+    private WikipediaRequestHelper wikipediaRequestHelper;
 
     @BeforeEach
     public void setUp() {
-        wikipediaRequestService = new WikipediaRequestService();
+        wikipediaRequestHelper = new WikipediaRequestHelper();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -38,7 +38,7 @@ class WikipediaRequestServiceTest {
             .thenReturn(textResponse);
 
         try {
-            wikipediaRequestService.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.SPANISH);
+            wikipediaRequestHelper.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.SPANISH);
         } catch (ReplacerException e) {
             Assertions.assertTrue(e.getMessage().startsWith("too-many-pageids"));
         }
@@ -53,7 +53,7 @@ class WikipediaRequestServiceTest {
 
         Assertions.assertThrows(
             ReplacerException.class,
-            () -> wikipediaRequestService.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.SPANISH)
+            () -> wikipediaRequestHelper.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.SPANISH)
         );
     }
 
@@ -74,7 +74,7 @@ class WikipediaRequestServiceTest {
             .thenReturn(textResponse);
 
         Assertions.assertNotNull(
-            wikipediaRequestService.executeSignedPostRequest(
+            wikipediaRequestHelper.executeSignedPostRequest(
                 Collections.emptyMap(),
                 WikipediaLanguage.SPANISH,
                 OAuthToken.of("A", "B")

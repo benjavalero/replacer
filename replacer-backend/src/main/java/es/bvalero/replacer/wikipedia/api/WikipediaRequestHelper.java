@@ -12,12 +12,12 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-/** Service to perform Wikipedia API requests */
+/** Helper to perform Wikipedia API requests */
 @Slf4j
-@Service
-class WikipediaRequestService {
+@Component
+class WikipediaRequestHelper {
 
     private static final String VERB_GET = "GET";
     private static final String VERB_POST = "POST";
