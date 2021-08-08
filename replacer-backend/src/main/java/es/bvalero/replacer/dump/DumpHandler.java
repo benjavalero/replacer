@@ -1,11 +1,11 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.replacement.IndexablePage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -156,7 +156,7 @@ class DumpHandler extends DefaultHandler {
             .namespace(WikipediaNamespace.valueOf(this.currentNamespace))
             .title(this.currentTitle)
             .content(this.currentContent)
-            .lastUpdate(DateUtils.parseWikipediaTimestamp(this.currentTimestamp).toLocalDate())
+            .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(this.currentTimestamp).toLocalDate())
             .build();
 
         // If return null the page is processable but nothing to do

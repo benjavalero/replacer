@@ -1,11 +1,11 @@
 package es.bvalero.replacer.wikipedia.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.*;
+import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -56,7 +56,10 @@ class WikipediaApiServiceTest {
         EditToken editToken = wikipediaService.getEditToken(2209245, WikipediaLanguage.SPANISH, OAuthToken.ofEmpty());
         Assertions.assertNotNull(editToken.getCsrfToken());
         Assertions.assertEquals("+\\", editToken.getCsrfToken());
-        Assertions.assertEquals("2019-06-24T21:24:09Z", DateUtils.formatWikipediaTimestamp(editToken.getTimestamp()));
+        Assertions.assertEquals(
+            "2019-06-24T21:24:09Z",
+            WikipediaDateUtils.formatWikipediaTimestamp(editToken.getTimestamp())
+        );
     }
 
     @Test
@@ -239,7 +242,7 @@ class WikipediaApiServiceTest {
             .thenReturn(response);
 
         // We use a timestamp BEFORE the timestamp of the last edition (from the edit token)
-        LocalDateTime currentTimestamp = DateUtils.parseWikipediaTimestamp("2019-06-23T21:24:09Z");
+        LocalDateTime currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-23T21:24:09Z");
 
         Assertions.assertThrows(
             ReplacerException.class,
@@ -273,7 +276,7 @@ class WikipediaApiServiceTest {
             .thenReturn(response);
 
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
-        LocalDateTime currentTimestamp = DateUtils.parseWikipediaTimestamp("2019-06-25T21:24:09Z");
+        LocalDateTime currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-25T21:24:09Z");
         wikipediaService.savePageContent(
             WikipediaLanguage.SPANISH,
             1,
@@ -295,7 +298,7 @@ class WikipediaApiServiceTest {
 
         // Save a section
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
-        currentTimestamp = DateUtils.parseWikipediaTimestamp("2019-06-26T21:24:09Z");
+        currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-26T21:24:09Z");
         wikipediaService.savePageContent(
             WikipediaLanguage.SPANISH,
             1,

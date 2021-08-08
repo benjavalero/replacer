@@ -8,12 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.listing.Suggestion;
 import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -185,7 +185,7 @@ class PageControllerTest {
             .title(title)
             .content(content)
             .section(PageSection.of(section, ""))
-            .queryTimestamp(DateUtils.formatWikipediaTimestamp(timestamp))
+            .queryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp))
             .build();
         savePage.setPage(page);
         PageReviewSearch search = PageReviewSearch.builder().type(type).subtype(subtype).build();
@@ -238,7 +238,7 @@ class PageControllerTest {
             .id(pageId)
             .title(title)
             .section(PageSection.of(section, ""))
-            .queryTimestamp(DateUtils.formatWikipediaTimestamp(timestamp))
+            .queryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp))
             .build();
         savePage.setPage(page);
         PageReviewSearch search = PageReviewSearch.builder().type(type).subtype(subtype).build();

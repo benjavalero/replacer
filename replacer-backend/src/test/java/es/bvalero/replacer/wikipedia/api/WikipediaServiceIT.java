@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia.api;
 
-import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;

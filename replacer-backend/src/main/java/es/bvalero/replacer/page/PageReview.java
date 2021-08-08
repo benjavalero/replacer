@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.common.DateUtils;
+import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,7 +37,7 @@ class PageReview {
             .title(page.getTitle())
             .content(page.getContent())
             .section(convert(page.getSection()))
-            .queryTimestamp(DateUtils.formatWikipediaTimestamp(page.getQueryTimestamp()))
+            .queryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(page.getQueryTimestamp()))
             .build();
     }
 

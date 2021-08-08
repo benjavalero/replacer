@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.UserParameters;
 import es.bvalero.replacer.common.WikipediaLanguage;
@@ -9,6 +8,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -123,7 +123,7 @@ public class PageController {
                     pageId,
                     section == null ? null : section.getId(),
                     textToSave,
-                    DateUtils.parseWikipediaTimestamp(savePage.getPage().getQueryTimestamp()),
+                    WikipediaDateUtils.parseWikipediaTimestamp(savePage.getPage().getQueryTimestamp()),
                     buildEditSummary(savePage.getSearch(), applyCosmetics),
                     OAuthToken.of(savePage.getToken(), savePage.getTokenSecret())
                 );

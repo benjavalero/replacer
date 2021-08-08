@@ -1,11 +1,11 @@
 package es.bvalero.replacer.wikipedia.api;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.*;
+import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -138,8 +138,8 @@ class WikipediaApiService implements WikipediaService {
             .namespace(WikipediaNamespace.valueOf(page.getNs()))
             .title(page.getTitle())
             .content(page.getRevisions().get(0).getSlots().getMain().getContent())
-            .lastUpdate(DateUtils.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
-            .queryTimestamp(DateUtils.parseWikipediaTimestamp(queryTimestamp))
+            .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
+            .queryTimestamp(WikipediaDateUtils.parseWikipediaTimestamp(queryTimestamp))
             .build();
     }
 
@@ -345,9 +345,9 @@ class WikipediaApiService implements WikipediaService {
         params.put("minor", "true");
         params.put("token", editToken.getCsrfToken());
         // Timestamp when the editing process began
-        params.put("starttimestamp", DateUtils.formatWikipediaTimestamp(currentTimestamp));
+        params.put("starttimestamp", WikipediaDateUtils.formatWikipediaTimestamp(currentTimestamp));
         // Timestamp of the base revision
-        params.put("basetimestamp", DateUtils.formatWikipediaTimestamp(editToken.getTimestamp()));
+        params.put("basetimestamp", WikipediaDateUtils.formatWikipediaTimestamp(editToken.getTimestamp()));
         return params;
     }
 
@@ -375,7 +375,7 @@ class WikipediaApiService implements WikipediaService {
     private EditToken extractEditTokenFromJson(WikipediaApiResponse response) {
         return EditToken.of(
             response.getQuery().getTokens().getCsrftoken(),
-            DateUtils.parseWikipediaTimestamp(
+            WikipediaDateUtils.parseWikipediaTimestamp(
                 response.getQuery().getPages().get(0).getRevisions().get(0).getTimestamp()
             )
         );

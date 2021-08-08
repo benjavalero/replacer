@@ -1,6 +1,5 @@
 package es.bvalero.replacer.wikipedia;
 
-import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import java.time.LocalDateTime;
@@ -44,11 +43,11 @@ public class WikipediaPage {
             ", content=" +
             StringUtils.abbreviate(this.getContent(), MAX_PRINTABLE_CONTENT_SIZE) +
             ", lastUpdate='" +
-            DateUtils.formatWikipediaTimestamp(this.getLastUpdate()) +
+            WikipediaDateUtils.formatWikipediaTimestamp(this.getLastUpdate()) +
             "', section=" +
             this.getSection() +
             ", queryTimestamp=" +
-            DateUtils.formatWikipediaTimestamp(this.getQueryTimestamp()) +
+            WikipediaDateUtils.formatWikipediaTimestamp(this.getQueryTimestamp()) +
             ")"
         );
     }
