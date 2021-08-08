@@ -105,15 +105,13 @@ class WikipediaServiceIT {
             page.getId(),
             0,
             newContent,
-            page.getQueryTimestamp(),
+            DateUtils.formatWikipediaTimestamp(page.getQueryTimestamp()),
             "Replacer Integration Test",
             OAuthToken.ofEmpty()
         );
 
         // Save the conflict content started 1 day before
-        String before = DateUtils.formatWikipediaTimestamp(
-            DateUtils.parseWikipediaTimestamp(page.getQueryTimestamp()).minusDays(1)
-        );
+        String before = DateUtils.formatWikipediaTimestamp(page.getQueryTimestamp().minusDays(1));
 
         Assertions.assertThrows(
             ReplacerException.class,

@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.Suggestion;
 import es.bvalero.replacer.wikipedia.*;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
@@ -65,6 +66,8 @@ class SectionReviewServiceTest {
             .lang(WikipediaLanguage.SPANISH)
             .content(sectionContent)
             .section(WikipediaSection.builder().index(sectionId).build())
+            .lastUpdate(LocalDateTime.now())
+            .queryTimestamp(LocalDateTime.now())
             .build();
         Mockito
             .when(

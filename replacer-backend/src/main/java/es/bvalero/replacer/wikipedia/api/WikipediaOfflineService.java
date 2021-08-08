@@ -27,8 +27,7 @@ class WikipediaOfflineService implements WikipediaService {
     }
 
     private WikipediaPage buildFakePage(int pageId) throws ReplacerException {
-        LocalDateTime nowDate = LocalDateTime.now();
-        String now = DateUtils.formatWikipediaTimestamp(nowDate);
+        LocalDateTime now = LocalDateTime.now();
         return WikipediaPage
             .builder()
             .id(pageId)
@@ -36,7 +35,7 @@ class WikipediaOfflineService implements WikipediaService {
             .namespace(WikipediaNamespace.ARTICLE)
             .title("América del Norte")
             .content(FileUtils.getFileContent("/offline/sample-page.txt"))
-            .lastUpdate(nowDate)
+            .lastUpdate(now)
             .queryTimestamp(now)
             .build();
     }

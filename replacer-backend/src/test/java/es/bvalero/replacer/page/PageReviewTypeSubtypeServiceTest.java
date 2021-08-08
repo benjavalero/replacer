@@ -30,6 +30,7 @@ class PageReviewTypeSubtypeServiceTest {
         .namespace(WikipediaNamespace.ARTICLE)
         .content(content)
         .lastUpdate(LocalDateTime.now())
+        .queryTimestamp(LocalDateTime.now())
         .build();
     private final WikipediaPage page2 = WikipediaPage
         .builder()
@@ -38,6 +39,7 @@ class PageReviewTypeSubtypeServiceTest {
         .namespace(WikipediaNamespace.ANNEX)
         .content(content2)
         .lastUpdate(LocalDateTime.now())
+        .queryTimestamp(LocalDateTime.now())
         .build();
     private final int offset = 1;
     private final Replacement replacement = Replacement

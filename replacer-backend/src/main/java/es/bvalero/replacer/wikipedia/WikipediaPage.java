@@ -1,5 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
+import es.bvalero.replacer.common.DateUtils;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import java.time.LocalDateTime;
@@ -27,13 +28,13 @@ public class WikipediaPage {
     @Nullable
     WikipediaSection section;
 
-    String queryTimestamp; // Store the timestamp when the page was queried
+    LocalDateTime queryTimestamp; // Store the timestamp when the page was queried
 
     @Override
     public String toString() {
         return (
             "WikipediaPage(lang=" +
-            this.getLang() +
+            this.getLang().getCode() +
             ", id=" +
             this.getId() +
             ", namesapce=" +
@@ -43,11 +44,11 @@ public class WikipediaPage {
             ", content=" +
             StringUtils.abbreviate(this.getContent(), MAX_PRINTABLE_CONTENT_SIZE) +
             ", lastUpdate='" +
-            this.getLastUpdate() +
+            DateUtils.formatWikipediaTimestamp(this.getLastUpdate()) +
             "', section=" +
             this.getSection() +
             ", queryTimestamp=" +
-            this.getQueryTimestamp() +
+            DateUtils.formatWikipediaTimestamp(this.getQueryTimestamp()) +
             ")"
         );
     }

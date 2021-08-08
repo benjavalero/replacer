@@ -138,7 +138,7 @@ class WikipediaApiService implements WikipediaService {
             .title(page.getTitle())
             .content(page.getRevisions().get(0).getSlots().getMain().getContent())
             .lastUpdate(DateUtils.parseWikipediaTimestamp(page.getRevisions().get(0).getTimestamp()))
-            .queryTimestamp(queryTimestamp)
+            .queryTimestamp(DateUtils.parseWikipediaTimestamp(queryTimestamp))
             .build();
     }
 
