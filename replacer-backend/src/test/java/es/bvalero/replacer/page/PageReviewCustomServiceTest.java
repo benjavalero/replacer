@@ -10,6 +10,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.replacement.*;
 import es.bvalero.replacer.replacement.CustomEntity;
+import es.bvalero.replacer.replacement.IndexablePageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
@@ -34,6 +35,9 @@ class PageReviewCustomServiceTest {
 
     @Mock
     private SectionReviewService sectionReviewService;
+
+    @Mock
+    private IndexablePageValidator indexablePageValidator;
 
     @InjectMocks
     private PageReviewCustomService pageReviewCustomService;

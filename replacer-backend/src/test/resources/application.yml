@@ -3,3 +3,6 @@ spring:
     banner-mode: 'off'
   output:
     ansi.enabled: ALWAYS
+
+replacer:
+  processable.namespaces: 0,104

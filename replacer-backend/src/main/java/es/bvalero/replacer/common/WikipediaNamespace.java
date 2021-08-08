@@ -1,9 +1,7 @@
 package es.bvalero.replacer.common;
 
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -31,10 +29,6 @@ public enum WikipediaNamespace {
         .collect(Collectors.toMap(WikipediaNamespace::getValue, Function.identity()));
 
     private final int value;
-
-    public static Set<WikipediaNamespace> getProcessableNamespaces() {
-        return EnumSet.of(ARTICLE, ANNEX);
-    }
 
     // We cannot override the static method "valueOf(String)"
     // but in this case as the value is an integer we can overload the method

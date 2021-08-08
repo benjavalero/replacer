@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,9 @@ class WikipediaApiService implements WikipediaService {
 
     @Autowired
     private WikipediaRequestService wikipediaRequestService;
+
+    @Value("${replacer.processable.namespaces}")
+    private Set<Integer> processableNamespaces;
 
     @Override
     public UserInfo getUserInfo(WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException {
@@ -244,17 +248,7 @@ class WikipediaApiService implements WikipediaService {
         params.put("sroffset", Integer.toString(offset));
         params.put("srsort", "create_timestamp_asc"); // So the order is invariable after editing
         params.put("srsearch", buildSearchExpression(text, caseSensitive));
-        params.put(
-            "srnamespace",
-            StringUtils.join(
-                WikipediaNamespace
-                    .getProcessableNamespaces()
-                    .stream()
-                    .map(WikipediaNamespace::getValue)
-                    .collect(Collectors.toList()),
-                "|"
-            )
-        );
+        params.put("srnamespace", StringUtils.join(processableNamespaces, "|"));
         params.put("srwhat", "text");
         params.put("srinfo", "totalhits");
         params.put("srprop", "");

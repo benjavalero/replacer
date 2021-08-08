@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
+import es.bvalero.replacer.replacement.IndexablePageValidator;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.*;
@@ -65,6 +66,9 @@ class PageReviewNoTypeServiceTest {
 
     @Mock
     private SectionReviewService sectionReviewService;
+
+    @Mock
+    private IndexablePageValidator indexablePageValidator;
 
     @InjectMocks
     private PageReviewNoTypeService pageReviewNoTypeService;

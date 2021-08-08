@@ -5,10 +5,7 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.replacement.IndexablePage;
-import es.bvalero.replacer.replacement.IndexableReplacement;
-import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.replacement.*;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,12 +34,15 @@ class DumpPageProcessor {
     @Autowired
     private ReplacementFinderService replacementFinderService;
 
+    @Autowired
+    private IndexablePageValidator indexablePageValidator;
+
     @Nullable
     List<ReplacementEntity> process(IndexablePage dumpPage) throws ReplacerException {
         // 1. Check if it is processable by namespace
         // We "skip" the item by throwing an exception
         try {
-            dumpPage.validateProcessable();
+            indexablePageValidator.validateProcessable(dumpPage);
         } catch (ReplacerException e) {
             // If the page is not processable then it should not exist in DB ==> remove all replacements of this page
             // There could be replacements reviewed by users that we want to keep for the sake of statistics

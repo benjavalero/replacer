@@ -19,18 +19,6 @@ public class IndexablePage {
     String content;
     LocalDate lastUpdate;
 
-    // Throw an exception instead of returning a boolean to capture the cause
-    public void validateProcessable() throws ReplacerException {
-        validateProcessableByNamespace();
-    }
-
-    @VisibleForTesting
-    void validateProcessableByNamespace() throws ReplacerException {
-        if (!WikipediaNamespace.getProcessableNamespaces().contains(getNamespace())) {
-            throw new ReplacerException("Page not processable by namespace: " + getNamespace());
-        }
-    }
-
     @Override
     public String toString() {
         return (

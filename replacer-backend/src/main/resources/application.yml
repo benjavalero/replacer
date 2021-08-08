@@ -26,6 +26,7 @@ replacer:
   page.stats.delay: 600000 # Every 10 minutes
   show.long.immutables: true
   admin.user: Benjavalero
+  processable.namespaces: 0,104
 
 ---
 

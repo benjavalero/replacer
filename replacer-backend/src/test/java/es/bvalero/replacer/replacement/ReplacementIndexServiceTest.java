@@ -9,11 +9,17 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = { IndexablePageValidator.class })
 class ReplacementIndexServiceTest {
 
     @Mock
     private ReplacementDao replacementDao;
+
+    @Autowired
+    private IndexablePageValidator indexablePageValidator;
 
     @InjectMocks
     private ReplacementIndexService replacementIndexService;
@@ -363,9 +369,15 @@ class ReplacementIndexServiceTest {
         Assertions.assertThrows(
             ReplacerException.class,
             () ->
-                IndexablePage.builder().namespace(WikipediaNamespace.WIKIPEDIA).build().validateProcessableByNamespace()
+                indexablePageValidator.validateProcessableByNamespace(
+                    IndexablePage.builder().namespace(WikipediaNamespace.WIKIPEDIA).build()
+                )
         );
-        IndexablePage.builder().namespace(WikipediaNamespace.ARTICLE).build().validateProcessableByNamespace();
-        IndexablePage.builder().namespace(WikipediaNamespace.ANNEX).build().validateProcessableByNamespace();
+        indexablePageValidator.validateProcessableByNamespace(
+            IndexablePage.builder().namespace(WikipediaNamespace.ARTICLE).build()
+        );
+        indexablePageValidator.validateProcessableByNamespace(
+            IndexablePage.builder().namespace(WikipediaNamespace.ANNEX).build()
+        );
     }
 }
