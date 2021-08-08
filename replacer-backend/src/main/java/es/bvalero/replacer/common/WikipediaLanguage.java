@@ -31,8 +31,9 @@ public enum WikipediaLanguage {
         if (map.containsKey(code)) {
             return map.get(code);
         } else {
-            LOGGER.error("Wrong language code: {}", code);
-            return getDefault();
+            String msg = String.format("Wrong language code: %s", code);
+            LOGGER.error(msg);
+            throw new IllegalArgumentException(msg);
         }
     }
 
