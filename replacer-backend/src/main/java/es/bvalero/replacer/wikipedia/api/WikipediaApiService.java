@@ -50,11 +50,14 @@ class WikipediaApiService implements WikipediaService {
     @Loggable(value = Loggable.DEBUG)
     WikipediaApiResponse.UserInfo getLoggedUserName(WikipediaLanguage lang, OAuthToken accessToken)
         throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeSignedGetRequest(
-            buildUserNameRequestParams(),
-            lang,
-            accessToken
-        );
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.GET)
+            .lang(lang)
+            .params(buildUserNameRequestParams())
+            .accessToken(accessToken)
+            .build();
+        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeApiRequest(apiRequest);
         return extractUserNameFromJson(apiResponse);
     }
 
@@ -104,10 +107,13 @@ class WikipediaApiService implements WikipediaService {
 
     private List<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue, WikipediaLanguage lang)
         throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeGetRequest(
-            buildPageIdsRequestParams(pagesParam, pagesValue),
-            lang
-        );
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.GET)
+            .lang(lang)
+            .params(buildPageIdsRequestParams(pagesParam, pagesValue))
+            .build();
+        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeApiRequest(apiRequest);
         return extractPagesFromJson(apiResponse, lang);
     }
 
@@ -150,10 +156,13 @@ class WikipediaApiService implements WikipediaService {
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
     public List<WikipediaSection> getPageSections(WikipediaLanguage lang, int pageId) throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeGetRequest(
-            buildPageSectionsRequestParams(pageId),
-            lang
-        );
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.GET)
+            .lang(lang)
+            .params(buildPageSectionsRequestParams(pageId))
+            .build();
+        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeApiRequest(apiRequest);
         return extractSectionsFromJson(apiResponse);
     }
 
@@ -198,10 +207,13 @@ class WikipediaApiService implements WikipediaService {
     @Override
     public Optional<WikipediaPage> getPageByIdAndSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
         throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeGetRequest(
-            buildPageIdsAndSectionRequestParams(pageId, section.getIndex()),
-            lang
-        );
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.GET)
+            .lang(lang)
+            .params(buildPageIdsAndSectionRequestParams(pageId, section.getIndex()))
+            .build();
+        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeApiRequest(apiRequest);
         List<WikipediaPage> pages = extractPagesFromJson(apiResponse, lang);
         return pages.stream().findAny().map(p -> p.withSection(section));
     }
@@ -227,10 +239,13 @@ class WikipediaApiService implements WikipediaService {
             return WikipediaSearchResult.ofEmpty();
         }
 
-        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeGetRequest(
-            buildPageIdsByStringMatchRequestParams(text, caseSensitive, offset, limit),
-            lang
-        );
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.GET)
+            .lang(lang)
+            .params(buildPageIdsByStringMatchRequestParams(text, caseSensitive, offset, limit))
+            .build();
+        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeApiRequest(apiRequest);
         return extractPageIdsFromSearchJson(apiResponse);
     }
 
@@ -311,11 +326,23 @@ class WikipediaApiService implements WikipediaService {
             );
         }
 
-        wikipediaRequestHelper.executeSignedPostRequest(
-            buildSavePageContentRequestParams(pageId, pageContent, section, currentTimestamp, editSummary, editToken),
-            lang,
-            accessToken
-        );
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.POST)
+            .lang(lang)
+            .params(
+                buildSavePageContentRequestParams(
+                    pageId,
+                    pageContent,
+                    section,
+                    currentTimestamp,
+                    editSummary,
+                    editToken
+                )
+            )
+            .accessToken(accessToken)
+            .build();
+        wikipediaRequestHelper.executeApiRequest(apiRequest);
     }
 
     private Map<String, String> buildSavePageContentRequestParams(
@@ -348,11 +375,14 @@ class WikipediaApiService implements WikipediaService {
     @Loggable(prepend = true, value = Loggable.TRACE)
     @VisibleForTesting
     EditToken getEditToken(int pageId, WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException {
-        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeSignedPostRequest(
-            buildEditTokenRequestParams(pageId),
-            lang,
-            accessToken
-        );
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.POST)
+            .lang(lang)
+            .params(buildEditTokenRequestParams(pageId))
+            .accessToken(accessToken)
+            .build();
+        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeApiRequest(apiRequest);
         return extractEditTokenFromJson(apiResponse);
     }
 

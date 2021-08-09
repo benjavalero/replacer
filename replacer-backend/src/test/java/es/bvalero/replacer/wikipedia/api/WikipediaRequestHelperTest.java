@@ -5,7 +5,6 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.OAuthService;
 import es.bvalero.replacer.wikipedia.OAuthToken;
-import java.util.Collections;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,12 @@ class WikipediaRequestHelperTest {
             .thenReturn(textResponse);
 
         try {
-            wikipediaRequestHelper.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.SPANISH);
+            WikipediaApiRequest apiRequest = WikipediaApiRequest
+                .builder()
+                .verb(WikipediaApiRequestVerb.GET)
+                .lang(WikipediaLanguage.getDefault())
+                .build();
+            wikipediaRequestHelper.executeApiRequest(apiRequest);
         } catch (ReplacerException e) {
             Assertions.assertTrue(e.getMessage().startsWith("too-many-pageids"));
         }
@@ -51,10 +55,12 @@ class WikipediaRequestHelperTest {
             .when(oAuthService.executeRequest(Mockito.anyString(), Mockito.anyString(), Mockito.anyMap()))
             .thenThrow(ReplacerException.class);
 
-        Assertions.assertThrows(
-            ReplacerException.class,
-            () -> wikipediaRequestHelper.executeGetRequest(Collections.emptyMap(), WikipediaLanguage.SPANISH)
-        );
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.GET)
+            .lang(WikipediaLanguage.getDefault())
+            .build();
+        Assertions.assertThrows(ReplacerException.class, () -> wikipediaRequestHelper.executeApiRequest(apiRequest));
     }
 
     @Test
@@ -73,12 +79,12 @@ class WikipediaRequestHelperTest {
             )
             .thenReturn(textResponse);
 
-        Assertions.assertNotNull(
-            wikipediaRequestHelper.executeSignedPostRequest(
-                Collections.emptyMap(),
-                WikipediaLanguage.SPANISH,
-                OAuthToken.of("A", "B")
-            )
-        );
+        WikipediaApiRequest apiRequest = WikipediaApiRequest
+            .builder()
+            .verb(WikipediaApiRequestVerb.POST)
+            .lang(WikipediaLanguage.getDefault())
+            .accessToken(OAuthToken.of("A", "B"))
+            .build();
+        Assertions.assertNotNull(wikipediaRequestHelper.executeApiRequest(apiRequest));
     }
 }

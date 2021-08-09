@@ -6,12 +6,8 @@ import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.OAuthService;
-import es.bvalero.replacer.wikipedia.OAuthToken;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /** Helper to perform Wikipedia API requests */
@@ -19,8 +15,6 @@ import org.springframework.stereotype.Component;
 @Component
 class WikipediaRequestHelper {
 
-    private static final String VERB_GET = "GET";
-    private static final String VERB_POST = "POST";
     private static final String WIKIPEDIA_API_URL = "https://%s.wikipedia.org/w/api.php";
 
     @Autowired
@@ -29,45 +23,27 @@ class WikipediaRequestHelper {
     @Autowired
     private ObjectMapper jsonMapper;
 
-    WikipediaApiResponse executeGetRequest(Map<String, String> params, WikipediaLanguage lang)
-        throws ReplacerException {
-        return executeRequest(params, VERB_GET, lang, null);
-    }
-
-    WikipediaApiResponse executeSignedGetRequest(
-        Map<String, String> params,
-        WikipediaLanguage lang,
-        OAuthToken accessToken
-    ) throws ReplacerException {
-        return executeRequest(params, VERB_GET, lang, accessToken);
-    }
-
-    WikipediaApiResponse executeSignedPostRequest(
-        Map<String, String> params,
-        WikipediaLanguage lang,
-        OAuthToken accessToken
-    ) throws ReplacerException {
-        return executeRequest(params, VERB_POST, lang, accessToken);
-    }
-
     @Loggable(prepend = true, value = Loggable.TRACE)
-    private WikipediaApiResponse executeRequest(
-        Map<String, String> params,
-        String verb,
-        WikipediaLanguage lang,
-        @Nullable OAuthToken accessToken
-    ) throws ReplacerException {
+    WikipediaApiResponse executeApiRequest(WikipediaApiRequest apiRequest) throws ReplacerException {
         // Add common parameters to receive a JSON response from Wikipedia API
-        Map<String, String> parameters = new HashMap<>(params);
-        parameters.put("format", "json");
-        parameters.put("formatversion", "2");
+        WikipediaApiRequest request = apiRequest
+            .toBuilder()
+            .param("format", "json")
+            .param("formatversion", "2")
+            .build();
 
-        String url = buildWikipediaRequestUrl(lang);
+        String url = buildWikipediaRequestUrl(request.getLang());
         String responseBody;
-        if (accessToken == null) {
-            responseBody = oAuthService.executeRequest(verb, url, parameters);
+        if (request.getAccessToken() == null) {
+            responseBody = oAuthService.executeRequest(request.getVerb().toString(), url, request.getParams());
         } else {
-            responseBody = oAuthService.executeSignedRequest(verb, url, parameters, accessToken);
+            responseBody =
+                oAuthService.executeSignedRequest(
+                    request.getVerb().toString(),
+                    url,
+                    request.getParams(),
+                    request.getAccessToken()
+                );
         }
         return convert(responseBody);
     }
