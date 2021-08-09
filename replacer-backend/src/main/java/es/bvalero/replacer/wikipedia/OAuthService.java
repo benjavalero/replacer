@@ -12,9 +12,4 @@ public interface OAuthService {
     String getAuthorizationUrl(OAuthToken requestToken) throws ReplacerException;
 
     OAuthToken getAccessToken(OAuthToken requestToken, String oAuthVerifier) throws ReplacerException;
-
-    String executeRequest(String verb, String url, Map<String, String> parameters) throws ReplacerException;
-
-    String executeSignedRequest(String verb, String url, Map<String, String> parameters, OAuthToken oAuthToken)
-        throws ReplacerException;
 }

@@ -26,14 +26,4 @@ class OAuthOfflineService implements OAuthService {
     public OAuthToken getAccessToken(OAuthToken requestToken, String oAuthVerifier) {
         return OAuthToken.ofEmpty();
     }
-
-    @Override
-    public String executeRequest(String verb, String url, Map<String, String> parameters) {
-        return "";
-    }
-
-    @Override
-    public String executeSignedRequest(String verb, String url, Map<String, String> parameters, OAuthToken oAuthToken) {
-        return "";
-    }
 }
