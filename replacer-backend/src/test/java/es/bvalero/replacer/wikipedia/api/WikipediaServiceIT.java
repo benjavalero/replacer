@@ -18,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(
     classes = {
         WikipediaApiService.class,
-        WikipediaRequestHelper.class,
+        WikipediaApiRequestHelper.class,
         OAuthMediaWikiConfiguration.class,
         XmlConfiguration.class,
     }

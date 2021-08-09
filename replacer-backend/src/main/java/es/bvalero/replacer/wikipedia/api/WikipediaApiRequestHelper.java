@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 /** Helper to perform Wikipedia API requests */
 @Slf4j
 @Component
-class WikipediaRequestHelper {
+class WikipediaApiRequestHelper {
 
     private static final String WIKIPEDIA_API_URL = "https://%s.wikipedia.org/w/api.php";
 

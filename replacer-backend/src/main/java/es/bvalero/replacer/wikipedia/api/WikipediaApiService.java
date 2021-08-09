@@ -32,7 +32,7 @@ class WikipediaApiService implements WikipediaService {
     private static final int MAX_OFFSET_LIMIT = 10000;
 
     @Autowired
-    private WikipediaRequestHelper wikipediaRequestHelper;
+    private WikipediaApiRequestHelper wikipediaApiRequestHelper;
 
     @Value("${replacer.processable.namespaces}")
     private Set<Integer> processableNamespaces;
@@ -57,7 +57,7 @@ class WikipediaApiService implements WikipediaService {
             .params(buildUserNameRequestParams())
             .accessToken(accessToken)
             .build();
-        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeApiRequest(apiRequest);
+        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
         return extractUserNameFromJson(apiResponse);
     }
 
@@ -113,7 +113,7 @@ class WikipediaApiService implements WikipediaService {
             .lang(lang)
             .params(buildPageIdsRequestParams(pagesParam, pagesValue))
             .build();
-        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeApiRequest(apiRequest);
+        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
         return extractPagesFromJson(apiResponse, lang);
     }
 
@@ -162,7 +162,7 @@ class WikipediaApiService implements WikipediaService {
             .lang(lang)
             .params(buildPageSectionsRequestParams(pageId))
             .build();
-        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeApiRequest(apiRequest);
+        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
         return extractSectionsFromJson(apiResponse);
     }
 
@@ -213,7 +213,7 @@ class WikipediaApiService implements WikipediaService {
             .lang(lang)
             .params(buildPageIdsAndSectionRequestParams(pageId, section.getIndex()))
             .build();
-        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeApiRequest(apiRequest);
+        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
         List<WikipediaPage> pages = extractPagesFromJson(apiResponse, lang);
         return pages.stream().findAny().map(p -> p.withSection(section));
     }
@@ -245,7 +245,7 @@ class WikipediaApiService implements WikipediaService {
             .lang(lang)
             .params(buildPageIdsByStringMatchRequestParams(text, caseSensitive, offset, limit))
             .build();
-        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeApiRequest(apiRequest);
+        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
         return extractPageIdsFromSearchJson(apiResponse);
     }
 
@@ -342,7 +342,7 @@ class WikipediaApiService implements WikipediaService {
             )
             .accessToken(accessToken)
             .build();
-        wikipediaRequestHelper.executeApiRequest(apiRequest);
+        wikipediaApiRequestHelper.executeApiRequest(apiRequest);
     }
 
     private Map<String, String> buildSavePageContentRequestParams(
@@ -382,7 +382,7 @@ class WikipediaApiService implements WikipediaService {
             .params(buildEditTokenRequestParams(pageId))
             .accessToken(accessToken)
             .build();
-        WikipediaApiResponse apiResponse = wikipediaRequestHelper.executeApiRequest(apiRequest);
+        WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
         return extractEditTokenFromJson(apiResponse);
     }
 
