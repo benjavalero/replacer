@@ -367,7 +367,7 @@ class WikipediaApiServiceTest {
     }
 
     @Test
-    void testGetPageContentByIdAndSection() throws Exception {
+    void testGetPageSection() throws Exception {
         // API response
         String textResponse =
             "{\"batchcomplete\":true,\"curtimestamp\":\"2019-10-17T15:12:03Z\",\"query\":{\"pages\":[{\"pageid\":6903884,\"ns\":2,\"title\":\"Usuario:Benjavalero/Taller\",\"revisions\":[{\"timestamp\":\"2019-08-24T07:51:05Z\",\"slots\":{\"main\":{\"contentmodel\":\"wikitext\",\"contentformat\":\"text/x-wiki\",\"content\":\"== Pruebas con cursiva ==\\n\\n* El libro ''La historia interminable''.\\n* Comillas sin cerrar: ''La historia interminable\\n* Con negrita ''La '''historia''' interminable''.\\n* Con cursiva ''La ''historia'' interminable''.\\n* Con negrita buena ''La '''''historia''''' interminable''.\\n\\n=== Pruebas de subsecciones ===\\n\\nEsta es una subsección tonta solo para probar la captura de secciones.\"}}}]}]}}";
@@ -381,9 +381,10 @@ class WikipediaApiServiceTest {
         WikipediaSection section = WikipediaSection.builder().index(sectionId).build();
         String title = "Usuario:Benjavalero/Taller";
         WikipediaPage page = wikipediaService
-            .getPageByIdAndSection(WikipediaLanguage.SPANISH, pageId, section)
+            .getPageSection(WikipediaLanguage.getDefault(), pageId, section)
             .orElseThrow(ReplacerException::new);
         Assertions.assertNotNull(page);
+        Assertions.assertEquals(WikipediaLanguage.getDefault(), page.getLang());
         Assertions.assertEquals(pageId, page.getId());
         Assertions.assertEquals(title, page.getTitle());
         Assertions.assertEquals(WikipediaNamespace.USER, page.getNamespace());

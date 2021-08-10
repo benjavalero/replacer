@@ -9,7 +9,11 @@ import lombok.With;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 
-/** Domain object representing a page retrieved from Wikipedia */
+/**
+ * Domain object representing a page retrieved from Wikipedia.
+ * It may also represent a specific section of a page,
+ * though they are the same thing for Wikipedia API.
+ */
 @Value
 @Builder
 public class WikipediaPage {
@@ -22,12 +26,11 @@ public class WikipediaPage {
     String title;
     String content;
     LocalDateTime lastUpdate; // Store time in case it is needed in the future
+    LocalDateTime queryTimestamp; // Store the timestamp when the page was queried
 
     @With
     @Nullable
-    WikipediaSection section;
-
-    LocalDateTime queryTimestamp; // Store the timestamp when the page was queried
+    WikipediaSection section; // Defined in case it is a section and null if it is the whole page
 
     @Override
     public String toString() {
@@ -44,10 +47,10 @@ public class WikipediaPage {
             StringUtils.abbreviate(this.getContent(), MAX_PRINTABLE_CONTENT_SIZE) +
             ", lastUpdate='" +
             WikipediaDateUtils.formatWikipediaTimestamp(this.getLastUpdate()) +
-            "', section=" +
-            this.getSection() +
             ", queryTimestamp=" +
             WikipediaDateUtils.formatWikipediaTimestamp(this.getQueryTimestamp()) +
+            "', section=" +
+            this.getSection() +
             ")"
         );
     }

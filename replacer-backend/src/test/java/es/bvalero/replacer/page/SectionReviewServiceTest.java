@@ -71,7 +71,7 @@ class SectionReviewServiceTest {
             .build();
         Mockito
             .when(
-                wikipediaService.getPageByIdAndSection(
+                wikipediaService.getPageSection(
                     Mockito.any(WikipediaLanguage.class),
                     Mockito.eq(pageId),
                     Mockito.eq(section)

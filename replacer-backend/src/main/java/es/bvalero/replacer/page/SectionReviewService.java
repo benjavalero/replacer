@@ -40,7 +40,7 @@ class SectionReviewService {
             );
             if (smallestSection.isPresent()) {
                 // Get the section from Wikipedia API (better than calculating it by ourselves)
-                Optional<WikipediaPage> pageSection = wikipediaService.getPageByIdAndSection(
+                Optional<WikipediaPage> pageSection = wikipediaService.getPageSection(
                     review.getPage().getLang(),
                     review.getPage().getId(),
                     smallestSection.get()
@@ -135,7 +135,7 @@ class SectionReviewService {
             .map(rep -> rep.withStart(rep.getStart() - sectionOffset))
             .collect(Collectors.toList());
 
-        // We need to check some rare cases where the byte-offset doesn't match with the section position
+        // We need to check some rare cases where the byte-offset doesn't match with the section position,
         // usually because of emojis or other strange Unicode characters
         if (translated.stream().anyMatch(rep -> !validatePageReplacement(rep, pageSection.getContent()))) {
             LOGGER.warn(

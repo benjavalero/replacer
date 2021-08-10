@@ -2,7 +2,6 @@ package es.bvalero.replacer.wikipedia.oauth;
 
 import es.bvalero.replacer.wikipedia.OAuthService;
 import es.bvalero.replacer.wikipedia.OAuthToken;
-import java.util.Map;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 

@@ -3,6 +3,7 @@ package es.bvalero.replacer.wikipedia;
 import lombok.Builder;
 import lombok.Value;
 
+/** Domain object representing the hierarchy of a Wikipedia page section */
 @Value
 @Builder
 public class WikipediaSection implements Comparable<WikipediaSection> {

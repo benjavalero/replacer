@@ -205,7 +205,7 @@ class WikipediaApiService implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
-    public Optional<WikipediaPage> getPageByIdAndSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
+    public Optional<WikipediaPage> getPageSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
         throws ReplacerException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()

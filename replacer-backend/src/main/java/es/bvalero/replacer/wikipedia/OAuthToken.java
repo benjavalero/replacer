@@ -2,6 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import lombok.Value;
 
+/** Domain object representing a standard OAuth pair token/secret */
 @Value(staticConstructor = "of")
 public class OAuthToken {
 
