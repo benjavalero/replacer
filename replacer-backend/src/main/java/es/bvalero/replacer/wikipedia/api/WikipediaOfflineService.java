@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 class WikipediaOfflineService implements WikipediaService {
 
     @Override
-    public UserInfo getUserInfo(WikipediaLanguage lang, OAuthToken accessToken) {
-        return UserInfo.of("offline", List.of("autoconfirmed"));
+    public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, OAuthToken accessToken) {
+        return WikipediaUser.of("offline", List.of(WikipediaUserGroup.AUTOCONFIRMED));
     }
 
     @Override

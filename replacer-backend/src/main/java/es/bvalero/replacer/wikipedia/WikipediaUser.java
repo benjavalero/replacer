@@ -3,9 +3,10 @@ package es.bvalero.replacer.wikipedia;
 import java.util.List;
 import lombok.Value;
 
+/** Domain object representing a user account in Wikipedia */
 @Value(staticConstructor = "of")
-public class UserInfo {
+public class WikipediaUser {
 
     String name;
-    List<String> groups;
+    List<WikipediaUserGroup> groups;
 }

@@ -38,12 +38,15 @@ class WikipediaApiService implements WikipediaService {
     private Set<Integer> processableNamespaces;
 
     @Override
-    public UserInfo getUserInfo(WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException {
+    public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException {
         return convertUserInfo(getLoggedUserName(lang, accessToken));
     }
 
-    private UserInfo convertUserInfo(WikipediaApiResponse.UserInfo userInfo) {
-        return UserInfo.of(userInfo.getName(), userInfo.getGroups());
+    private WikipediaUser convertUserInfo(WikipediaApiResponse.UserInfo userInfo) {
+        return WikipediaUser.of(
+            userInfo.getName(),
+            userInfo.getGroups().stream().map(WikipediaUserGroup::valueOfLabel).collect(Collectors.toList())
+        );
     }
 
     @VisibleForTesting

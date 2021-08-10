@@ -9,7 +9,7 @@ import org.springframework.lang.Nullable;
 
 /** Service to perform operations on Wikipedia */
 public interface WikipediaService {
-    UserInfo getUserInfo(WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException;
+    WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException;
 
     Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) throws ReplacerException;
 

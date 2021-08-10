@@ -2,10 +2,7 @@ package es.bvalero.replacer.wikipedia.authentication;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.OAuthService;
-import es.bvalero.replacer.wikipedia.OAuthToken;
-import es.bvalero.replacer.wikipedia.UserInfo;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.*;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,9 +11,6 @@ import org.springframework.stereotype.Service;
 /** Service to perform authentication operations */
 @Service
 public class AuthenticationService {
-
-    static final String GROUP_AUTOCONFIRMED = "autoconfirmed";
-    private static final String GROUP_BOT = "bot";
 
     @Autowired
     private OAuthService oAuthService;
@@ -37,10 +31,10 @@ public class AuthenticationService {
     AuthenticateResponse authenticate(WikipediaLanguage lang, OAuthToken requestToken, String oAuthVerifier)
         throws ReplacerException {
         OAuthToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
-        UserInfo userInfo = wikipediaService.getUserInfo(lang, accessToken);
-        String userName = userInfo.getName();
-        boolean hasRights = userInfo.getGroups().contains(GROUP_AUTOCONFIRMED);
-        boolean bot = userInfo.getGroups().contains(GROUP_BOT);
+        WikipediaUser wikipediaUser = wikipediaService.getAuthenticatedUser(lang, accessToken);
+        String userName = wikipediaUser.getName();
+        boolean hasRights = wikipediaUser.getGroups().contains(WikipediaUserGroup.AUTOCONFIRMED);
+        boolean bot = wikipediaUser.getGroups().contains(WikipediaUserGroup.BOT);
         boolean admin = this.isAdminUser(userName);
         return AuthenticateResponse.of(
             userName,

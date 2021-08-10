@@ -2,10 +2,7 @@ package es.bvalero.replacer.wikipedia.authentication;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.OAuthService;
-import es.bvalero.replacer.wikipedia.OAuthToken;
-import es.bvalero.replacer.wikipedia.UserInfo;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.*;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,8 +55,8 @@ class AuthenticationServiceTest {
         OAuthToken accessToken = OAuthToken.of("A", "B");
         Mockito.when(oAuthService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
         Mockito
-            .when(wikipediaService.getUserInfo(lang, accessToken))
-            .thenReturn(UserInfo.of(name, List.of(AuthenticationService.GROUP_AUTOCONFIRMED)));
+            .when(wikipediaService.getAuthenticatedUser(lang, accessToken))
+            .thenReturn(WikipediaUser.of(name, List.of(WikipediaUserGroup.AUTOCONFIRMED)));
         AuthenticateResponse expected = AuthenticateResponse.of(name, true, false, true, "A", "B");
 
         authenticationService.setAdminUser(name);
