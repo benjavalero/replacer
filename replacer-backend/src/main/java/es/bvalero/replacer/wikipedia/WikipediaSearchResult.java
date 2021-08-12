@@ -12,7 +12,7 @@ public class WikipediaSearchResult {
     List<Integer> pageIds;
 
     public static WikipediaSearchResult ofEmpty() {
-        return new WikipediaSearchResult(0, Collections.emptyList());
+        return WikipediaSearchResult.of(0, Collections.emptyList());
     }
 
     @TestOnly

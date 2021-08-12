@@ -164,13 +164,7 @@ class WikipediaApiServiceTest {
             .when(wikipediaApiRequestHelper.executeApiRequest(Mockito.any(WikipediaApiRequest.class)))
             .thenReturn(response);
 
-        WikipediaSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
-            WikipediaLanguage.SPANISH,
-            "",
-            false,
-            0,
-            100
-        );
+        WikipediaSearchResult pageIds = wikipediaService.searchByText(WikipediaLanguage.SPANISH, "", false, 0, 100);
         Assertions.assertEquals(10, pageIds.getTotal());
     }
 
@@ -183,13 +177,7 @@ class WikipediaApiServiceTest {
             .when(wikipediaApiRequestHelper.executeApiRequest(Mockito.any(WikipediaApiRequest.class)))
             .thenReturn(response);
 
-        WikipediaSearchResult pageIds = wikipediaService.getPageIdsByStringMatch(
-            WikipediaLanguage.SPANISH,
-            "",
-            false,
-            0,
-            100
-        );
+        WikipediaSearchResult pageIds = wikipediaService.searchByText(WikipediaLanguage.SPANISH, "", false, 0, 100);
         Assertions.assertTrue(pageIds.isEmpty());
     }
 
@@ -409,7 +397,7 @@ class WikipediaApiServiceTest {
                 .isPresent()
         );
         Assertions.assertFalse(
-            wikipediaServiceOffline.getPageIdsByStringMatch(WikipediaLanguage.getDefault(), "", false, 0, 100).isEmpty()
+            wikipediaServiceOffline.searchByText(WikipediaLanguage.getDefault(), "", false, 0, 100).isEmpty()
         );
         Assertions.assertTrue(wikipediaServiceOffline.getPageSections(WikipediaLanguage.getDefault(), 1).isEmpty());
     }

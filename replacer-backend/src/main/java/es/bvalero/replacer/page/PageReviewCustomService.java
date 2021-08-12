@@ -93,7 +93,7 @@ class PageReviewCustomService extends PageReviewService {
         Boolean cs = options.getCs();
         Integer offset = options.getOffset();
         assert subtype != null && cs != null && offset != null;
-        return wikipediaService.getPageIdsByStringMatch(options.getLang(), subtype, cs, offset, getCacheSize());
+        return wikipediaService.searchByText(options.getLang(), subtype, cs, offset, getCacheSize());
     }
 
     @Override

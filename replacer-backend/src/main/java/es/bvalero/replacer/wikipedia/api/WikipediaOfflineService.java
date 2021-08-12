@@ -57,7 +57,7 @@ class WikipediaOfflineService implements WikipediaService {
     }
 
     @Override
-    public WikipediaSearchResult getPageIdsByStringMatch(
+    public WikipediaSearchResult searchByText(
         WikipediaLanguage lang,
         String text,
         boolean caseSensitive,

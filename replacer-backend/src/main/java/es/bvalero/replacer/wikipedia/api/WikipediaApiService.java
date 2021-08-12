@@ -228,7 +228,7 @@ class WikipediaApiService implements WikipediaService {
 
     @Override
     @Loggable(value = Loggable.DEBUG, prepend = true)
-    public WikipediaSearchResult getPageIdsByStringMatch(
+    public WikipediaSearchResult searchByText(
         WikipediaLanguage lang,
         String text,
         boolean caseSensitive,
