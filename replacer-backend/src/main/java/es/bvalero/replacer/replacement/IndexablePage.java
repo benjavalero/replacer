@@ -1,12 +1,10 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.common.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Value;
-import org.jetbrains.annotations.VisibleForTesting;
 
 @Value
 @Builder

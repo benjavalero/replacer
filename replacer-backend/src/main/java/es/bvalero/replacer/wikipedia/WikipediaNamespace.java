@@ -1,4 +1,4 @@
-package es.bvalero.replacer.common;
+package es.bvalero.replacer.wikipedia;
 
 import java.util.Arrays;
 import java.util.Map;

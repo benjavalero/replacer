@@ -5,14 +5,16 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.common.WikipediaNamespace;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.replacement.*;
 import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.IndexablePageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.*;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaPage;
+import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.*;
 import org.junit.jupiter.api.Assertions;

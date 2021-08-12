@@ -2,7 +2,7 @@ package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.common.WikipediaNamespace;
+import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.*;
 import org.junit.jupiter.api.Assertions;
