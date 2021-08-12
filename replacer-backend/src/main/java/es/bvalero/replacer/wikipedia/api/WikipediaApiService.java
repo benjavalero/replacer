@@ -308,16 +308,16 @@ class WikipediaApiService implements WikipediaService {
         int pageId,
         @Nullable Integer section,
         String pageContent,
-        LocalDateTime currentTimestamp,
+        LocalDateTime queryTimestamp,
         String editSummary,
         OAuthToken accessToken
     ) throws ReplacerException {
         EditToken editToken = getEditToken(pageId, lang, accessToken);
         // Pre-check of edit conflicts
-        if (currentTimestamp.compareTo(editToken.getTimestamp()) <= 0) {
+        if (queryTimestamp.compareTo(editToken.getTimestamp()) <= 0) {
             LOGGER.warn(
                 "Page edited at the same time: {} - {} - {} - {} - {}",
-                currentTimestamp,
+                queryTimestamp,
                 editToken.getTimestamp(),
                 lang,
                 pageId,
@@ -333,14 +333,7 @@ class WikipediaApiService implements WikipediaService {
             .verb(WikipediaApiRequestVerb.POST)
             .lang(lang)
             .params(
-                buildSavePageContentRequestParams(
-                    pageId,
-                    pageContent,
-                    section,
-                    currentTimestamp,
-                    editSummary,
-                    editToken
-                )
+                buildSavePageContentRequestParams(pageId, pageContent, section, queryTimestamp, editSummary, editToken)
             )
             .accessToken(accessToken)
             .build();
