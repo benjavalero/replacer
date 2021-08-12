@@ -14,7 +14,6 @@ import es.bvalero.replacer.wikipedia.OAuthToken;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -51,8 +50,10 @@ class WikipediaApiRequestHelper {
         String url = buildWikipediaRequestUrl(apiRequest.getLang());
         OAuthRequest mediaWikiRequest = new OAuthRequest(verb, url);
         apiRequest.getParams().forEach(mediaWikiRequest::addParameter);
-        if (apiRequest.getAccessToken() != null && StringUtils.isNotBlank(apiRequest.getAccessToken().getToken())) {
-            OAuth1AccessToken accessToken = convertAccessToken(apiRequest.getAccessToken());
+        OAuthToken oAuthToken = apiRequest.getAccessToken();
+        // No need to check empty tokens as they are only used in offline mode or in tests
+        if (oAuthToken != null) {
+            OAuth1AccessToken accessToken = convertAccessToken(oAuthToken);
             mediaWikiApiService.signRequest(accessToken, mediaWikiRequest);
         }
 
