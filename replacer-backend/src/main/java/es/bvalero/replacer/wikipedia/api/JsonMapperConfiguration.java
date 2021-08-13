@@ -1,4 +1,4 @@
-package es.bvalero.replacer.config;
+package es.bvalero.replacer.wikipedia.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MapperConfiguration {
+class JsonMapperConfiguration {
 
     @Bean
     public ObjectMapper jsonMapper() {

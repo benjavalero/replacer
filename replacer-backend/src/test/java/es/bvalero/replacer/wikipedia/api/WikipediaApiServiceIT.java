@@ -2,11 +2,9 @@ package es.bvalero.replacer.wikipedia.api;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.wikipedia.OAuthToken;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
-import es.bvalero.replacer.wikipedia.oauth.OAuthMediaWikiConfiguration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -19,11 +17,11 @@ import org.springframework.boot.test.context.SpringBootTest;
     classes = {
         WikipediaApiService.class,
         WikipediaApiRequestHelper.class,
-        OAuthMediaWikiConfiguration.class,
-        XmlConfiguration.class,
+        MediaWikiApiConfiguration.class,
+        JsonMapperConfiguration.class,
     }
 )
-class WikipediaServiceIT {
+class WikipediaApiServiceIT {
 
     @Autowired
     private WikipediaApiService wikipediaService;
