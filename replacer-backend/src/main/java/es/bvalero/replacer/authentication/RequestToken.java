@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia.authentication;
+package es.bvalero.replacer.authentication;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

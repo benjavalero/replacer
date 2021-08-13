@@ -1,8 +1,8 @@
 package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.authentication.AuthenticationService;
 import es.bvalero.replacer.common.UserParameters;
-import es.bvalero.replacer.wikipedia.authentication.AuthenticationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;

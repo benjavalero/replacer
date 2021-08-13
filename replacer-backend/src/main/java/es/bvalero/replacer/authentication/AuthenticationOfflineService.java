@@ -1,36 +1,34 @@
-package es.bvalero.replacer.wikipedia.authentication;
+package es.bvalero.replacer.authentication;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.*;
-import lombok.Setter;
+import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaUser;
+import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-/** Service to perform authentication operations */
 @Service
-public class AuthenticationService {
+@Profile("offline")
+class AuthenticationOfflineService implements AuthenticationService {
 
-    @Autowired
-    private OAuthService oAuthService;
+    private static final String AUTHORIZATION_URL = "/?oauth_verifier=x";
 
     @Autowired
     private WikipediaService wikipediaService;
 
-    @Setter // For testing
-    @Value("${replacer.admin.user}")
-    private String adminUser;
-
-    RequestToken getRequestToken() throws ReplacerException {
-        OAuthToken requestToken = oAuthService.getRequestToken();
-        String authorizationUrl = oAuthService.getAuthorizationUrl(requestToken);
-        return RequestToken.of(requestToken.getToken(), requestToken.getTokenSecret(), authorizationUrl);
+    @Override
+    public RequestToken getRequestToken() {
+        OAuthToken requestToken = OAuthToken.ofEmpty();
+        return RequestToken.of(requestToken.getToken(), requestToken.getTokenSecret(), AUTHORIZATION_URL);
     }
 
-    AuthenticateResponse authenticate(WikipediaLanguage lang, OAuthToken requestToken, String oAuthVerifier)
+    @Override
+    public AuthenticateResponse authenticate(WikipediaLanguage lang, OAuthToken requestToken, String oAuthVerifier)
         throws ReplacerException {
-        OAuthToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
+        OAuthToken accessToken = OAuthToken.ofEmpty();
         WikipediaUser wikipediaUser = wikipediaService.getAuthenticatedUser(lang, accessToken);
         String userName = wikipediaUser.getName();
         boolean hasRights = wikipediaUser.getGroups().contains(WikipediaUserGroup.AUTOCONFIRMED);
@@ -46,7 +44,8 @@ public class AuthenticationService {
         );
     }
 
+    @Override
     public boolean isAdminUser(String username) {
-        return this.adminUser.equals(username);
+        return true;
     }
 }

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia.authentication;
+package es.bvalero.replacer.authentication;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;

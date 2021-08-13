@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia.authentication;
+package es.bvalero.replacer.authentication;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
