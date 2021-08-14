@@ -4,9 +4,9 @@ import static org.hamcrest.Matchers.is;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
-import es.bvalero.replacer.finder.listing.ListingContentOfflineService;
 import es.bvalero.replacer.finder.listing.MisspellingComposedManager;
 import es.bvalero.replacer.finder.listing.MisspellingManager;
+import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.List;
@@ -47,11 +47,11 @@ class ReplacementFinderBenchmarkTest extends BaseFinderBenchmark {
     @Test
     void testBenchmark() throws ReplacerException {
         // Load composed misspellings
-        misspellingComposedManager.setListingContentService(new ListingContentOfflineService());
+        misspellingComposedManager.setListingFinder(new ListingOfflineFinder());
         misspellingComposedManager.scheduledItemListUpdate();
 
         // Load misspellings
-        misspellingManager.setListingContentService(new ListingContentOfflineService());
+        misspellingManager.setListingFinder(new ListingOfflineFinder());
         misspellingManager.scheduledItemListUpdate();
 
         run(replacementFinders);

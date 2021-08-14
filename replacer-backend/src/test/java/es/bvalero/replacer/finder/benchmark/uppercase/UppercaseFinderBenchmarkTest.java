@@ -6,8 +6,8 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.listing.ListingContentOfflineService;
 import es.bvalero.replacer.finder.listing.MisspellingManager;
+import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +20,7 @@ class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
     void testBenchmark() throws ReplacerException {
         // Load the uppercase misspellings
         MisspellingManager misspellingManager = new MisspellingManager();
-        misspellingManager.setListingContentService(new ListingContentOfflineService());
+        misspellingManager.setListingFinder(new ListingOfflineFinder());
         misspellingManager.scheduledItemListUpdate();
         Set<String> words = misspellingManager.getUppercaseWords(WikipediaLanguage.getDefault());
 

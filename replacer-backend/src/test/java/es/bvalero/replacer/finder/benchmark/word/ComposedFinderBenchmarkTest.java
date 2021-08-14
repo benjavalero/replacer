@@ -6,8 +6,8 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.listing.ListingContentOfflineService;
 import es.bvalero.replacer.finder.listing.MisspellingComposedManager;
+import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +20,7 @@ class ComposedFinderBenchmarkTest extends BaseFinderBenchmark {
     void testWordFinderBenchmark() throws ReplacerException {
         // Load the misspellings
         MisspellingComposedManager misspellingManager = new MisspellingComposedManager();
-        misspellingManager.setListingContentService(new ListingContentOfflineService());
+        misspellingManager.setListingFinder(new ListingOfflineFinder());
         misspellingManager.scheduledItemListUpdate();
         Set<String> words = misspellingManager.getMisspellingMap(WikipediaLanguage.getDefault()).keySet();
 

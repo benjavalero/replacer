@@ -7,7 +7,7 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.listing.FalsePositiveManager;
-import es.bvalero.replacer.finder.listing.ListingContentOfflineService;
+import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +20,7 @@ class FalseFinderBenchmarkTest extends BaseFinderBenchmark {
     void testWordFinderBenchmark() throws ReplacerException {
         // Load the false positives
         FalsePositiveManager falsePositiveManager = new FalsePositiveManager();
-        falsePositiveManager.setListingContentService(new ListingContentOfflineService());
+        falsePositiveManager.setListingFinder(new ListingOfflineFinder());
         falsePositiveManager.scheduledItemListUpdate();
         Set<String> words = falsePositiveManager.getItems(WikipediaLanguage.getDefault());
 

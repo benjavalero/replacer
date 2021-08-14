@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.listing;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class FalsePositiveManager extends ListingManager<String> {
 
     @Setter // For testing
     @Autowired
-    private ListingContentService listingContentService;
+    private ListingFinder listingFinder;
 
     @Override
     protected String getLabel() {
@@ -23,7 +24,7 @@ public class FalsePositiveManager extends ListingManager<String> {
 
     @Override
     protected String findItemsTextInWikipedia(WikipediaLanguage lang) throws ReplacerException {
-        return listingContentService.getFalsePositiveListingContent(lang);
+        return listingFinder.getFalsePositiveListing(lang);
     }
 
     @Override

@@ -20,6 +20,6 @@ public class MisspellingComposedManager extends MisspellingManager {
 
     @Override
     protected String findItemsTextInWikipedia(WikipediaLanguage lang) throws ReplacerException {
-        return listingContentService.getComposedMisspellingListingContent(lang);
+        return listingFinder.getComposedMisspellingListing(lang);
     }
 }

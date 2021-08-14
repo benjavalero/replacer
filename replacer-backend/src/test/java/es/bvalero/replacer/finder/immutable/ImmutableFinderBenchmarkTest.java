@@ -6,8 +6,8 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.listing.FalsePositiveManager;
-import es.bvalero.replacer.finder.listing.ListingContentOfflineService;
 import es.bvalero.replacer.finder.listing.MisspellingManager;
+import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.ArrayList;
@@ -60,11 +60,11 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
     @Test
     void testBenchmark() throws ReplacerException {
         // Load false positives
-        falsePositiveManager.setListingContentService(new ListingContentOfflineService());
+        falsePositiveManager.setListingFinder(new ListingOfflineFinder());
         falsePositiveManager.scheduledItemListUpdate();
 
         // Load misspellings
-        misspellingManager.setListingContentService(new ListingContentOfflineService());
+        misspellingManager.setListingFinder(new ListingOfflineFinder());
         misspellingManager.scheduledItemListUpdate();
 
         run(immutableFinders);

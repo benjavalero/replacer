@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.listing;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.replacement.ReplacementService;
@@ -29,7 +30,7 @@ public class MisspellingManager extends ListingManager<Misspelling> {
 
     @Setter // For testing
     @Autowired
-    protected ListingContentService listingContentService;
+    protected ListingFinder listingFinder;
 
     @Autowired
     private ReplacementService replacementService;
@@ -153,7 +154,7 @@ public class MisspellingManager extends ListingManager<Misspelling> {
 
     @Override
     protected String findItemsTextInWikipedia(WikipediaLanguage lang) throws ReplacerException {
-        return listingContentService.getMisspellingListingContent(lang);
+        return listingFinder.getSimpleMisspellingListing(lang);
     }
 
     @Override

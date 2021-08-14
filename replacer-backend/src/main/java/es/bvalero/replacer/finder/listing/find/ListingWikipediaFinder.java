@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.listing;
+package es.bvalero.replacer.finder.listing.find;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile("!offline")
-class ListingContentWikipediaService implements ListingContentService {
+class ListingWikipediaFinder implements ListingFinder {
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -26,7 +26,7 @@ class ListingContentWikipediaService implements ListingContentService {
     private Map<String, String> falsePositivePages;
 
     @Override
-    public String getMisspellingListingContent(WikipediaLanguage lang) throws ReplacerException {
+    public String getSimpleMisspellingListing(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaService
             .getPageByTitle(lang, simpleMisspellingPages.get(lang.getCode()))
             .orElseThrow(ReplacerException::new)
@@ -34,7 +34,7 @@ class ListingContentWikipediaService implements ListingContentService {
     }
 
     @Override
-    public String getFalsePositiveListingContent(WikipediaLanguage lang) throws ReplacerException {
+    public String getFalsePositiveListing(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaService
             .getPageByTitle(lang, falsePositivePages.get(lang.getCode()))
             .orElseThrow(ReplacerException::new)
@@ -42,7 +42,7 @@ class ListingContentWikipediaService implements ListingContentService {
     }
 
     @Override
-    public String getComposedMisspellingListingContent(WikipediaLanguage lang) throws ReplacerException {
+    public String getComposedMisspellingListing(WikipediaLanguage lang) throws ReplacerException {
         return wikipediaService
             .getPageByTitle(lang, composedMisspellingPages.get(lang.getCode()))
             .orElseThrow(ReplacerException::new)
