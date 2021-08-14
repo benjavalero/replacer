@@ -3,15 +3,18 @@ package es.bvalero.replacer.finder.replacement;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
-import es.bvalero.replacer.finder.listing.MisspellingManager;
+import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import javax.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.apache.commons.collections4.SetValuedMap;
@@ -23,20 +26,23 @@ import org.springframework.stereotype.Component;
  * Find misspellings with only word, e.g. `habia` in Spanish
  */
 @Component
-class MisspellingSimpleFinder extends MisspellingFinder {
+public class MisspellingSimpleFinder extends MisspellingFinder implements PropertyChangeListener {
+
+    // TODO: Move logic related to MISSPELLING MAP to the parent class to be applied also for Composed Misspellings
 
     @Setter(AccessLevel.PACKAGE) // For testing
     @Autowired
-    private MisspellingManager misspellingManager;
+    private SimpleMisspellingLoader simpleMisspellingLoader;
 
-    @Override
-    MisspellingManager getMisspellingManager() {
-        return misspellingManager;
+    @PostConstruct
+    public void init() {
+        simpleMisspellingLoader.addPropertyChangeListener(this);
     }
 
     @Override
-    void processMisspellingChange(SetValuedMap<WikipediaLanguage, Misspelling> misspellings) {
-        // Do nothing
+    @SuppressWarnings("unchecked")
+    public void propertyChange(PropertyChangeEvent evt) {
+        this.buildMisspellingMaps((SetValuedMap<WikipediaLanguage, Misspelling>) evt.getNewValue());
     }
 
     @Override

@@ -5,18 +5,18 @@ import static org.hamcrest.Matchers.is;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
-import es.bvalero.replacer.finder.listing.FalsePositiveManager;
-import es.bvalero.replacer.finder.listing.MisspellingManager;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
-import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.finder.listing.load.FalsePositiveLoader;
+import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
+import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import java.util.ArrayList;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
     classes = {
@@ -25,7 +25,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
         CommentFinder.class,
         CompleteTagFinder.class,
         CursiveFinder.class,
-        FalsePositiveManager.class,
+        ListingOfflineFinder.class,
+        FalsePositiveParser.class,
+        FalsePositiveLoader.class,
         FalsePositiveFinder.class,
         LinkFinder.class,
         PersonNameFinder.class,
@@ -34,38 +36,32 @@ import org.springframework.boot.test.mock.mockito.MockBean;
         QuotesDoubleFinder.class,
         QuotesTypographicFinder.class,
         CompleteTemplateFinder.class,
-        MisspellingManager.class,
+        SimpleMisspellingParser.class,
+        SimpleMisspellingLoader.class,
         UppercaseAfterFinder.class,
         UrlFinder.class,
         XmlTagFinder.class,
     }
 )
+@ActiveProfiles("offline")
 class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
 
     @Autowired
     private List<ImmutableFinder> immutableFinders;
 
     @Autowired
-    private MisspellingManager misspellingManager;
+    private SimpleMisspellingLoader simpleMisspellingLoader;
 
     @Autowired
-    private FalsePositiveManager falsePositiveManager;
-
-    @MockBean
-    private WikipediaService wikipediaService;
-
-    @MockBean
-    private ReplacementService replacementService;
+    private FalsePositiveLoader falsePositiveLoader;
 
     @Test
     void testBenchmark() throws ReplacerException {
         // Load false positives
-        falsePositiveManager.setListingFinder(new ListingOfflineFinder());
-        falsePositiveManager.scheduledItemListUpdate();
+        falsePositiveLoader.load();
 
         // Load misspellings
-        misspellingManager.setListingFinder(new ListingOfflineFinder());
-        misspellingManager.scheduledItemListUpdate();
+        simpleMisspellingLoader.load();
 
         run(immutableFinders);
 

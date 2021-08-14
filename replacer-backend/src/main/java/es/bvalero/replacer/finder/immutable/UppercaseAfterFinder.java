@@ -6,7 +6,8 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.listing.MisspellingManager;
+import es.bvalero.replacer.finder.listing.*;
+import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeEvent;
@@ -16,9 +17,12 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
+import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -30,7 +34,7 @@ import org.springframework.stereotype.Component;
  * The considered punctuations are: `!`, `#`, `*`, `|`, `=` and `.`
  */
 @Component
-class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
+public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
 
     @org.intellij.lang.annotations.RegExp
     private static final String CELL_SEPARATOR = "\\|\\|";
@@ -58,7 +62,7 @@ class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
     );
 
     @Autowired
-    private MisspellingManager misspellingManager;
+    private SimpleMisspellingLoader simpleMisspellingLoader;
 
     // Regex with the misspellings which start with uppercase and are case-sensitive
     // and starting with a special character which justifies the uppercase
@@ -66,16 +70,52 @@ class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
 
     @PostConstruct
     public void init() {
-        misspellingManager.addPropertyChangeListener(this);
+        simpleMisspellingLoader.addPropertyChangeListener(this);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        if (MisspellingManager.PROPERTY_UPPERCASE_WORDS.equals(evt.getPropertyName())) {
-            SetValuedMap<WikipediaLanguage, String> uppercaseWords = (SetValuedMap<WikipediaLanguage, String>) evt.getNewValue();
-            this.uppercaseAfterAutomata = buildUppercaseAfterAutomata(uppercaseWords);
+        SetValuedMap<WikipediaLanguage, String> uppercaseWords = getUppercaseWords(
+            (SetValuedMap<WikipediaLanguage, SimpleMisspelling>) evt.getNewValue()
+        );
+        this.uppercaseAfterAutomata = buildUppercaseAfterAutomata(uppercaseWords);
+    }
+
+    @VisibleForTesting
+    public SetValuedMap<WikipediaLanguage, String> getUppercaseWords(
+        SetValuedMap<WikipediaLanguage, SimpleMisspelling> misspellings
+    ) {
+        SetValuedMap<WikipediaLanguage, String> map = new HashSetValuedHashMap<>();
+        for (WikipediaLanguage lang : misspellings.keySet()) {
+            map.putAll(lang, getUppercaseWords(misspellings.get(lang)));
         }
+        return map;
+    }
+
+    /**
+     * Find the misspellings which start with uppercase and are case-sensitive
+     */
+    private Set<String> getUppercaseWords(Set<SimpleMisspelling> misspellings) {
+        return misspellings
+            .stream()
+            .filter(this::isUppercaseMisspelling)
+            .map(SimpleMisspelling::getWord)
+            .collect(Collectors.toSet());
+    }
+
+    private boolean isUppercaseMisspelling(SimpleMisspelling misspelling) {
+        String word = misspelling.getWord();
+        // Any of the suggestions is the misspelling word in lowercase
+        return (
+            misspelling.isCaseSensitive() &&
+            FinderUtils.startsWithUpperCase(word) &&
+            misspelling
+                .getSuggestions()
+                .stream()
+                .map(MisspellingSuggestion::getText)
+                .anyMatch(text -> text.equals(FinderUtils.toLowerCase(word)))
+        );
     }
 
     @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)

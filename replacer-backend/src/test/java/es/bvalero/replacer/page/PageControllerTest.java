@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
-import es.bvalero.replacer.finder.listing.Suggestion;
+import es.bvalero.replacer.finder.replacement.Suggestion;
 import es.bvalero.replacer.wikipedia.OAuthToken;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;

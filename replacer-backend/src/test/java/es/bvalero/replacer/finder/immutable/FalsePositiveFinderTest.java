@@ -1,12 +1,13 @@
 package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.listing.FalsePositiveManager;
+import es.bvalero.replacer.finder.listing.FalsePositive;
+import es.bvalero.replacer.finder.listing.load.FalsePositiveLoader;
 import java.beans.PropertyChangeEvent;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.Assertions;
@@ -27,13 +28,16 @@ class FalsePositiveFinderTest {
     @Test
     void testRegexFalsePositives() {
         String text = "Un sólo de éstos en el Index Online.";
-        Set<String> falsePositives = new HashSet<>(Arrays.asList("[Ss]ólo", "[Éé]st?[aeo]s?", "Index", "[Oo]nline"));
-        SetValuedMap<WikipediaLanguage, String> map = new HashSetValuedHashMap<>();
+        Set<FalsePositive> falsePositives = Stream
+            .of("[Ss]ólo", "[Éé]st?[aeo]s?", "Index", "[Oo]nline")
+            .map(FalsePositive::of)
+            .collect(Collectors.toSet());
+        SetValuedMap<WikipediaLanguage, FalsePositive> map = new HashSetValuedHashMap<>();
         map.putAll(WikipediaLanguage.SPANISH, falsePositives);
 
         // Fake the update of the list in the manager
         falsePositiveFinder.propertyChange(
-            new PropertyChangeEvent(this, FalsePositiveManager.PROPERTY_ITEMS, EMPTY_MAP, map)
+            new PropertyChangeEvent(this, FalsePositiveLoader.PROPERTY_ITEMS, EMPTY_MAP, map)
         );
 
         List<Immutable> matches = falsePositiveFinder.findList(text);
@@ -49,13 +53,16 @@ class FalsePositiveFinderTest {
     @Test
     void testNestedFalsePositives() {
         String text1 = "A Top Album Chart.";
-        Set<String> falsePositives = new HashSet<>(Arrays.asList("Top Album", "Album Chart"));
-        SetValuedMap<WikipediaLanguage, String> map = new HashSetValuedHashMap<>();
+        Set<FalsePositive> falsePositives = Stream
+            .of("Top Album", "Album Chart")
+            .map(FalsePositive::of)
+            .collect(Collectors.toSet());
+        SetValuedMap<WikipediaLanguage, FalsePositive> map = new HashSetValuedHashMap<>();
         map.putAll(WikipediaLanguage.SPANISH, falsePositives);
 
         // Fake the update of the list in the manager
         falsePositiveFinder.propertyChange(
-            new PropertyChangeEvent(this, FalsePositiveManager.PROPERTY_ITEMS, EMPTY_MAP, map)
+            new PropertyChangeEvent(this, FalsePositiveLoader.PROPERTY_ITEMS, EMPTY_MAP, map)
         );
 
         List<Immutable> matches1 = falsePositiveFinder.findList(text1);
@@ -79,7 +86,7 @@ class FalsePositiveFinderTest {
     void testFalsePositivesListEmpty() {
         // Fake the update of the list in the manager
         falsePositiveFinder.propertyChange(
-            new PropertyChangeEvent(this, FalsePositiveManager.PROPERTY_ITEMS, EMPTY_MAP, EMPTY_MAP)
+            new PropertyChangeEvent(this, FalsePositiveLoader.PROPERTY_ITEMS, EMPTY_MAP, EMPTY_MAP)
         );
 
         Assertions.assertTrue(falsePositiveFinder.findList("A sample text").isEmpty());

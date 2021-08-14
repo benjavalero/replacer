@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.listing;
+package es.bvalero.replacer.finder.replacement;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -11,6 +11,8 @@ import org.springframework.lang.Nullable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
 public class Suggestion {
+
+    // TODO: Clone or move in the adequate package and let this one with no Swagger documentation (MisspellingSuggestion)
 
     @ApiModelProperty(value = "Fix proposed for a replacement", required = true, example = "aun")
     String text;

@@ -6,11 +6,15 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.listing.MisspellingComposedManager;
+import es.bvalero.replacer.finder.listing.ComposedMisspelling;
+import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
+import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
+import es.bvalero.replacer.finder.replacement.MisspellingComposedFinder;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
@@ -19,10 +23,19 @@ class ComposedFinderBenchmarkTest extends BaseFinderBenchmark {
     @Test
     void testWordFinderBenchmark() throws ReplacerException {
         // Load the misspellings
-        MisspellingComposedManager misspellingManager = new MisspellingComposedManager();
-        misspellingManager.setListingFinder(new ListingOfflineFinder());
-        misspellingManager.scheduledItemListUpdate();
-        Set<String> words = misspellingManager.getMisspellingMap(WikipediaLanguage.getDefault()).keySet();
+        ComposedMisspellingLoader composedMisspellingLoader = new ComposedMisspellingLoader();
+        ListingFinder listingFinder = new ListingOfflineFinder();
+        composedMisspellingLoader.setComposedMisspellingParser(new ComposedMisspellingParser());
+        Set<ComposedMisspelling> misspellings = composedMisspellingLoader.parseListing(
+            listingFinder.getComposedMisspellingListing(WikipediaLanguage.getDefault())
+        );
+
+        // Extract the misspelling words
+        MisspellingComposedFinder misspellingComposedFinder = new MisspellingComposedFinder();
+        Map<String, Misspelling> misspellingMap = misspellingComposedFinder.buildMisspellingMap(
+            misspellings.stream().map(cm -> (Misspelling) cm).collect(Collectors.toSet())
+        );
+        Set<String> words = misspellingMap.keySet();
 
         /* NOTE: We can use the same finders that we use for misspellings just with a different set of words */
 

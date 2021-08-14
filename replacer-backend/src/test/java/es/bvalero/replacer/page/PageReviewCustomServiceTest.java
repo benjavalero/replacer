@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.replacement.*;
 import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.IndexablePageValidator;
@@ -472,7 +472,7 @@ class PageReviewCustomServiceTest {
         final String simple = ReplacementType.MISSPELLING_SIMPLE;
 
         // Case-insensitive: accion||acción
-        Misspelling misspelling1 = Misspelling.of(simple, "accion", false, "acción");
+        SimpleMisspelling misspelling1 = SimpleMisspelling.of("accion", false, "acción");
         Mockito
             .when(customReplacementFinderService.findExistingMisspelling("accion", lang))
             .thenReturn(Optional.of(misspelling1));
@@ -497,7 +497,7 @@ class PageReviewCustomServiceTest {
         );
 
         // Case-sensitive uppercase: Enero|cs|enero
-        Misspelling misspelling2 = Misspelling.of(simple, "Enero", true, "enero");
+        SimpleMisspelling misspelling2 = SimpleMisspelling.of("Enero", true, "enero");
         Mockito
             .when(customReplacementFinderService.findExistingMisspelling("Enero", lang))
             .thenReturn(Optional.of(misspelling2));
@@ -522,7 +522,7 @@ class PageReviewCustomServiceTest {
         );
 
         // Case-sensitive lowercase: madrid|cs|Madrid
-        Misspelling misspelling3 = Misspelling.of(simple, "madrid", true, "Madrid");
+        SimpleMisspelling misspelling3 = SimpleMisspelling.of("madrid", true, "Madrid");
         Mockito
             .when(customReplacementFinderService.findExistingMisspelling("madrid", lang))
             .thenReturn(Optional.of(misspelling3));

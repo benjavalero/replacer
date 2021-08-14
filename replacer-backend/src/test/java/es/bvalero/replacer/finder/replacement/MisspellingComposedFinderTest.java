@@ -1,9 +1,8 @@
 package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.listing.Misspelling;
-import es.bvalero.replacer.finder.listing.MisspellingComposedManager;
-import es.bvalero.replacer.finder.listing.Suggestion;
+import es.bvalero.replacer.finder.listing.ComposedMisspelling;
+import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import java.beans.PropertyChangeEvent;
 import java.util.*;
 import org.apache.commons.collections4.SetValuedMap;
@@ -14,24 +13,24 @@ import org.junit.jupiter.api.Test;
 
 class MisspellingComposedFinderTest {
 
-    private MisspellingComposedManager misspellingComposedManager;
+    private ComposedMisspellingLoader composedMisspellingLoader;
     private MisspellingComposedFinder misspellingComposedFinder;
 
     @BeforeEach
     public void setUp() {
-        misspellingComposedManager = new MisspellingComposedManager();
+        composedMisspellingLoader = new ComposedMisspellingLoader();
         misspellingComposedFinder = new MisspellingComposedFinder();
-        misspellingComposedFinder.setComposedManager(misspellingComposedManager);
+        misspellingComposedFinder.setComposedMisspellingLoader(composedMisspellingLoader);
     }
 
-    private void fakeUpdateMisspellingList(List<Misspelling> misspellings) {
-        SetValuedMap<WikipediaLanguage, Misspelling> map = new HashSetValuedHashMap<>();
+    private void fakeUpdateMisspellingList(List<ComposedMisspelling> misspellings) {
+        SetValuedMap<WikipediaLanguage, ComposedMisspelling> map = new HashSetValuedHashMap<>();
         map.putAll(WikipediaLanguage.SPANISH, misspellings);
 
-        misspellingComposedManager.setItems(map);
-        SetValuedMap<WikipediaLanguage, Misspelling> emptyMap = new HashSetValuedHashMap<>();
+        composedMisspellingLoader.setItems(map);
+        SetValuedMap<WikipediaLanguage, ComposedMisspelling> emptyMap = new HashSetValuedHashMap<>();
         misspellingComposedFinder.propertyChange(
-            new PropertyChangeEvent(this, MisspellingComposedManager.PROPERTY_ITEMS, emptyMap, map)
+            new PropertyChangeEvent(this, ComposedMisspellingLoader.PROPERTY_ITEMS, emptyMap, map)
         );
     }
 
@@ -39,7 +38,7 @@ class MisspellingComposedFinderTest {
     void testNoResults() {
         String text = "Un texto";
 
-        Misspelling misspelling = Misspelling.of(ReplacementType.MISSPELLING_COMPOSED, "aún así", false, "aun así");
+        ComposedMisspelling misspelling = ComposedMisspelling.of("aún así", false, "aun así");
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
@@ -51,7 +50,7 @@ class MisspellingComposedFinderTest {
     void testOneResult() {
         String text = "Y aún así vino.";
 
-        Misspelling misspelling = Misspelling.of(ReplacementType.MISSPELLING_COMPOSED, "aún así", false, "aun así");
+        ComposedMisspelling misspelling = ComposedMisspelling.of("aún así", false, "aun así");
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
@@ -71,8 +70,8 @@ class MisspellingComposedFinderTest {
     void testNested() {
         String text = "Y aún así vino.";
 
-        Misspelling simple = Misspelling.ofCaseInsensitive("aún", "aun");
-        Misspelling composed = Misspelling.of(ReplacementType.MISSPELLING_COMPOSED, "aún así", false, "aun así");
+        ComposedMisspelling simple = ComposedMisspelling.of("aún", false, "aun");
+        ComposedMisspelling composed = ComposedMisspelling.of("aún así", false, "aun así");
         this.fakeUpdateMisspellingList(List.of(simple, composed));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
@@ -92,7 +91,7 @@ class MisspellingComposedFinderTest {
     void testMisspellingWithDot() {
         String text = "Aún mas. Masa.";
 
-        Misspelling misspelling = Misspelling.of(ReplacementType.MISSPELLING_COMPOSED, "mas.", false, "más.");
+        ComposedMisspelling misspelling = ComposedMisspelling.of("mas.", false, "más.");
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
@@ -112,7 +111,7 @@ class MisspellingComposedFinderTest {
     void testMisspellingWithComma() {
         String text = "Más aun, dos.";
 
-        Misspelling misspelling = Misspelling.of(ReplacementType.MISSPELLING_COMPOSED, "aun,", false, "aún,");
+        ComposedMisspelling misspelling = ComposedMisspelling.of("aun,", false, "aún,");
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
@@ -132,7 +131,7 @@ class MisspellingComposedFinderTest {
     void testMisspellingWithNumber() {
         String text = "En Rio 2016.";
 
-        Misspelling misspelling = Misspelling.of(ReplacementType.MISSPELLING_COMPOSED, "Rio 2016", false, "Río 2016");
+        ComposedMisspelling misspelling = ComposedMisspelling.of("Rio 2016", false, "Río 2016");
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
@@ -152,12 +151,7 @@ class MisspellingComposedFinderTest {
     void testCaseSensitiveUppercaseToLowercase() {
         String text = "Parque Nacional de Doñana";
 
-        Misspelling misspelling = Misspelling.of(
-            ReplacementType.MISSPELLING_COMPOSED,
-            "Parque Nacional",
-            true,
-            "parque nacional"
-        );
+        ComposedMisspelling misspelling = ComposedMisspelling.of("Parque Nacional", true, "parque nacional");
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingComposedFinder.findList(text);

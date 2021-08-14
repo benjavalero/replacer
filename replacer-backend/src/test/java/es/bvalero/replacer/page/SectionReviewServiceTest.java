@@ -2,7 +2,7 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.listing.Suggestion;
+import es.bvalero.replacer.finder.replacement.Suggestion;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
 import java.util.Collections;

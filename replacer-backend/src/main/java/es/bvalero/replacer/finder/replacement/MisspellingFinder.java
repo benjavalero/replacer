@@ -1,39 +1,55 @@
 package es.bvalero.replacer.finder.replacement;
 
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.Misspelling;
-import es.bvalero.replacer.finder.listing.MisspellingManager;
-import es.bvalero.replacer.finder.listing.Suggestion;
+import es.bvalero.replacer.finder.listing.MisspellingSuggestion;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.regex.MatchResult;
-import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
+import org.jetbrains.annotations.VisibleForTesting;
 
 /**
  * Abstract class for the common functionality of the misspelling finders.
  */
-abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeListener {
+abstract class MisspellingFinder implements ReplacementFinder {
 
-    abstract MisspellingManager getMisspellingManager();
+    // Derived from the misspelling set to access faster by word
+    private Map<WikipediaLanguage, Map<String, Misspelling>> misspellingMap = new EnumMap<>(WikipediaLanguage.class);
 
-    @PostConstruct
-    public void init() {
-        getMisspellingManager().addPropertyChangeListener(this);
+    private Map<String, Misspelling> getMisspellingMap(WikipediaLanguage lang) {
+        return this.misspellingMap.get(lang);
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (MisspellingManager.PROPERTY_ITEMS.equals(evt.getPropertyName())) {
-            SetValuedMap<WikipediaLanguage, Misspelling> misspellings = (SetValuedMap<WikipediaLanguage, Misspelling>) evt.getNewValue();
-            processMisspellingChange(misspellings);
+    @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)
+    void buildMisspellingMaps(SetValuedMap<WikipediaLanguage, Misspelling> misspellings) {
+        // Build a map to quick access the misspellings by word
+        Map<WikipediaLanguage, Map<String, Misspelling>> map = new EnumMap<>(WikipediaLanguage.class);
+        for (WikipediaLanguage lang : misspellings.keySet()) {
+            map.put(lang, buildMisspellingMap(misspellings.get(lang)));
         }
+        this.misspellingMap = map;
     }
 
-    abstract void processMisspellingChange(SetValuedMap<WikipediaLanguage, Misspelling> misspellings);
+    @VisibleForTesting
+    public Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
+        // Build a map to quick access the misspellings by word
+        Map<String, Misspelling> map = new HashMap<>(misspellings.size());
+        misspellings.forEach(
+            misspelling -> {
+                String word = misspelling.getWord();
+                if (misspelling.isCaseSensitive()) {
+                    map.put(word, misspelling);
+                } else {
+                    // If case-insensitive, we add to the map "word" and "Word".
+                    map.put(FinderUtils.setFirstLowerCase(word), misspelling);
+                    map.put(FinderUtils.setFirstUpperCase(word), misspelling);
+                }
+            }
+        );
+        return map;
+    }
 
     boolean isExistingWord(String word, WikipediaLanguage lang) {
         return findMisspellingByWord(word, lang).isPresent();
@@ -62,7 +78,7 @@ abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeLis
 
     // Return the misspelling related to the given word, or empty if there is no such misspelling.
     public Optional<Misspelling> findMisspellingByWord(String word, WikipediaLanguage lang) {
-        return Optional.ofNullable(getMisspellingManager().getMisspellingMap(lang).get(word));
+        return Optional.ofNullable(getMisspellingMap(lang).get(word));
     }
 
     // Transform the case of the suggestion, e.g. "Habia" -> "Había"
@@ -74,14 +90,13 @@ abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeLis
 
     static List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
         List<Suggestion> suggestions = new LinkedList<>();
-        for (Suggestion misspellingSuggestion : misspelling.getSuggestions()) {
+        for (MisspellingSuggestion misspellingSuggestion : misspelling.getSuggestions()) {
+            Suggestion suggestion = convertSuggestion(misspellingSuggestion);
             if (misspelling.isCaseSensitive()) {
-                suggestions.add(misspellingSuggestion);
+                suggestions.add(suggestion);
             } else {
                 // Apply the case of the original word to the generic misspelling suggestion
-                suggestions.add(
-                    FinderUtils.startsWithUpperCase(word) ? misspellingSuggestion.toUppercase() : misspellingSuggestion
-                );
+                suggestions.add(FinderUtils.startsWithUpperCase(word) ? suggestion.toUppercase() : suggestion);
             }
         }
 
@@ -110,5 +125,9 @@ abstract class MisspellingFinder implements ReplacementFinder, PropertyChangeLis
         }
 
         return suggestions;
+    }
+
+    private static Suggestion convertSuggestion(MisspellingSuggestion misspellingSuggestion) {
+        return Suggestion.of(misspellingSuggestion.getText(), misspellingSuggestion.getComment());
     }
 }

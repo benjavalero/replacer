@@ -1,8 +1,6 @@
 package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.listing.Misspelling;
-import es.bvalero.replacer.finder.listing.Suggestion;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -61,7 +59,7 @@ class CustomReplacementFinder implements ReplacementFinder {
     }
 
     private List<Suggestion> findSuggestions(String text) {
-        Misspelling misspelling = Misspelling.of(ReplacementType.CUSTOM, replacement, caseSensitive, suggestion);
+        CustomMisspelling misspelling = CustomMisspelling.of(replacement, caseSensitive, suggestion);
         return MisspellingFinder.applyMisspellingSuggestions(text, misspelling);
     }
 }

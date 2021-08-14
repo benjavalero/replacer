@@ -6,11 +6,15 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.listing.FalsePositiveManager;
+import es.bvalero.replacer.finder.listing.FalsePositive;
+import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
+import es.bvalero.replacer.finder.listing.load.FalsePositiveLoader;
+import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
@@ -19,10 +23,15 @@ class FalseFinderBenchmarkTest extends BaseFinderBenchmark {
     @Test
     void testWordFinderBenchmark() throws ReplacerException {
         // Load the false positives
-        FalsePositiveManager falsePositiveManager = new FalsePositiveManager();
-        falsePositiveManager.setListingFinder(new ListingOfflineFinder());
-        falsePositiveManager.scheduledItemListUpdate();
-        Set<String> words = falsePositiveManager.getItems(WikipediaLanguage.getDefault());
+        FalsePositiveLoader falsePositiveLoader = new FalsePositiveLoader();
+        ListingFinder listingFinder = new ListingOfflineFinder();
+        falsePositiveLoader.setFalsePositiveParser(new FalsePositiveParser());
+        Set<FalsePositive> falsePositives = falsePositiveLoader.parseListing(
+            listingFinder.getFalsePositiveListing(WikipediaLanguage.getDefault())
+        );
+
+        // Extract the false positive expressions
+        Set<String> words = falsePositives.stream().map(FalsePositive::getExpression).collect(Collectors.toSet());
 
         /* NOTE: We can use the same finders that we use for misspellings just with a different set of words */
 

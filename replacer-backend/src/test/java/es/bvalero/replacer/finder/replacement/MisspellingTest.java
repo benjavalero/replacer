@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.replacement;
 
-import es.bvalero.replacer.finder.listing.Misspelling;
-import es.bvalero.replacer.finder.listing.Suggestion;
+import es.bvalero.replacer.finder.listing.MisspellingSuggestion;
+import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,9 +10,9 @@ class MisspellingTest {
 
     @Test
     void testParseSimpleSuggestion() {
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "A");
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive("a", "A");
 
-        List<Suggestion> suggestions = misspelling.getSuggestions();
+        List<MisspellingSuggestion> suggestions = misspelling.getSuggestions();
 
         Assertions.assertEquals(1, suggestions.size());
         Assertions.assertEquals("A", suggestions.get(0).getText());
@@ -21,9 +21,9 @@ class MisspellingTest {
 
     @Test
     void testParseComposedSuggestion() {
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "A, B, C");
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive("a", "A, B, C");
 
-        List<Suggestion> suggestions = misspelling.getSuggestions();
+        List<MisspellingSuggestion> suggestions = misspelling.getSuggestions();
 
         Assertions.assertEquals(3, suggestions.size());
         Assertions.assertEquals("A", suggestions.get(0).getText());
@@ -33,9 +33,9 @@ class MisspellingTest {
 
     @Test
     void testParseComposedSuggestionWithComments() {
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "A (D), B (E), C (F)");
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive("a", "A (D), B (E), C (F)");
 
-        List<Suggestion> suggestions = misspelling.getSuggestions();
+        List<MisspellingSuggestion> suggestions = misspelling.getSuggestions();
 
         Assertions.assertEquals(3, suggestions.size());
         Assertions.assertEquals("A", suggestions.get(0).getText());
@@ -48,9 +48,9 @@ class MisspellingTest {
 
     @Test
     void testParseComposedSuggestionWithCommentsAndCommas() {
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "A (D, G), B (E, H), C (F, I)");
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive("a", "A (D, G), B (E, H), C (F, I)");
 
-        List<Suggestion> suggestions = misspelling.getSuggestions();
+        List<MisspellingSuggestion> suggestions = misspelling.getSuggestions();
 
         Assertions.assertEquals(3, suggestions.size());
         Assertions.assertEquals("A", suggestions.get(0).getText());
@@ -63,9 +63,9 @@ class MisspellingTest {
 
     @Test
     void testParseSuggestionWithExplanationBefore() {
-        Misspelling misspelling = Misspelling.ofCaseInsensitive("a", "(B) A");
+        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive("a", "(B) A");
 
-        List<Suggestion> suggestions = misspelling.getSuggestions();
+        List<MisspellingSuggestion> suggestions = misspelling.getSuggestions();
 
         Assertions.assertEquals(1, suggestions.size());
         Assertions.assertEquals("A", suggestions.get(0).getText());
@@ -74,11 +74,11 @@ class MisspellingTest {
 
     @Test
     void testMisspellingWithNullComment() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> Misspelling.ofCaseInsensitive("A", null));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> SimpleMisspelling.ofCaseInsensitive("A", null));
     }
 
     @Test
     void testMisspellingWithEmptyComment() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> Misspelling.ofCaseInsensitive("A", ""));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> SimpleMisspelling.ofCaseInsensitive("A", ""));
     }
 }

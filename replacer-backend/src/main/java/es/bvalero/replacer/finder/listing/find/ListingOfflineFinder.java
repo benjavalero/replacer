@@ -7,7 +7,7 @@ import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-@VisibleForTesting // TODO: Check
+@VisibleForTesting
 @Component
 @Profile("offline")
 public class ListingOfflineFinder implements ListingFinder {

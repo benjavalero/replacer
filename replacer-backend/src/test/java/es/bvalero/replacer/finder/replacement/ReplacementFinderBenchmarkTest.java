@@ -3,56 +3,54 @@ package es.bvalero.replacer.finder.replacement;
 import static org.hamcrest.Matchers.is;
 
 import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
-import es.bvalero.replacer.finder.listing.MisspellingComposedManager;
-import es.bvalero.replacer.finder.listing.MisspellingManager;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
-import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
+import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
+import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
     classes = {
         ReplacementFinder.class,
+        XmlConfiguration.class,
         AcuteOFinder.class,
         DateFinder.class,
-        MisspellingComposedManager.class,
+        ListingOfflineFinder.class,
+        ComposedMisspellingParser.class,
+        ComposedMisspellingLoader.class,
         MisspellingComposedFinder.class,
-        MisspellingManager.class,
+        SimpleMisspellingParser.class,
+        SimpleMisspellingLoader.class,
         MisspellingSimpleFinder.class,
     }
 )
+@ActiveProfiles("offline")
 class ReplacementFinderBenchmarkTest extends BaseFinderBenchmark {
 
     @Autowired
     private List<ReplacementFinder> replacementFinders;
 
     @Autowired
-    private MisspellingManager misspellingManager;
+    private SimpleMisspellingLoader simpleMisspellingLoader;
 
     @Autowired
-    private MisspellingComposedManager misspellingComposedManager;
-
-    @MockBean
-    private WikipediaService wikipediaService;
-
-    @MockBean
-    private ReplacementService replacementService;
+    private ComposedMisspellingLoader composedMisspellingLoader;
 
     @Test
     void testBenchmark() throws ReplacerException {
         // Load composed misspellings
-        misspellingComposedManager.setListingFinder(new ListingOfflineFinder());
-        misspellingComposedManager.scheduledItemListUpdate();
+        composedMisspellingLoader.load();
 
         // Load misspellings
-        misspellingManager.setListingFinder(new ListingOfflineFinder());
-        misspellingManager.scheduledItemListUpdate();
+        simpleMisspellingLoader.load();
 
         run(replacementFinders);
 

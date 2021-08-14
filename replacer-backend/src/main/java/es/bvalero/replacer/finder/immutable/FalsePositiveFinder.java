@@ -6,7 +6,8 @@ import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.listing.FalsePositiveManager;
+import es.bvalero.replacer.finder.listing.FalsePositive;
+import es.bvalero.replacer.finder.listing.load.FalsePositiveLoader;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeEvent;
@@ -16,6 +17,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -31,25 +33,25 @@ import org.springframework.stereotype.Component;
 class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
 
     @Autowired
-    private FalsePositiveManager falsePositiveManager;
+    private FalsePositiveLoader falsePositiveLoader;
 
     private Map<WikipediaLanguage, RunAutomaton> falsePositivesAutomata = new EnumMap<>(WikipediaLanguage.class);
 
     @PostConstruct
     public void init() {
-        falsePositiveManager.addPropertyChangeListener(this);
+        falsePositiveLoader.addPropertyChangeListener(this);
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void propertyChange(PropertyChangeEvent evt) {
-        SetValuedMap<WikipediaLanguage, String> falsePositives = (SetValuedMap<WikipediaLanguage, String>) evt.getNewValue();
+        SetValuedMap<WikipediaLanguage, FalsePositive> falsePositives = (SetValuedMap<WikipediaLanguage, FalsePositive>) evt.getNewValue();
         this.falsePositivesAutomata = buildFalsePositivesAutomata(falsePositives);
     }
 
     @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)
     private Map<WikipediaLanguage, RunAutomaton> buildFalsePositivesAutomata(
-        SetValuedMap<WikipediaLanguage, String> falsePositives
+        SetValuedMap<WikipediaLanguage, FalsePositive> falsePositives
     ) {
         Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : falsePositives.keySet()) {
@@ -59,15 +61,21 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
     }
 
     @Nullable
-    private RunAutomaton buildFalsePositivesAutomaton(@Nullable Set<String> falsePositives) {
-        // Currently there are about 300 false positives so the best approach is a simple alternation
-        // It gives the best performance with big difference but it is not perfect though
+    private RunAutomaton buildFalsePositivesAutomaton(@Nullable Set<FalsePositive> falsePositives) {
+        // Currently, there are about 300 false positives so the best approach is a simple alternation.
+        // It gives the best performance with big difference, but it is not perfect though.
         // As we check later if the match is a complete word, we could match an incomplete word
         // that overlaps with the following word which is actually a good match.
         // For instance, in "ratones aún son", the false positive "es aún" is matched but not valid,
         // and it makes that the next one "aún son" is not matched.
         if (falsePositives != null && !falsePositives.isEmpty()) {
-            String alternations = String.format("(%s)", StringUtils.join(falsePositives, "|"));
+            String alternations = String.format(
+                "(%s)",
+                StringUtils.join(
+                    falsePositives.stream().map(FalsePositive::getExpression).collect(Collectors.toList()),
+                    "|"
+                )
+            );
             return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
         } else {
             return null;
