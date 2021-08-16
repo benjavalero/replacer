@@ -25,9 +25,4 @@ public class ComposedMisspelling implements Misspelling {
     public String getKey() {
         return this.word;
     }
-
-    @Override
-    public String getType() {
-        return ReplacementType.MISSPELLING_COMPOSED;
-    }
 }

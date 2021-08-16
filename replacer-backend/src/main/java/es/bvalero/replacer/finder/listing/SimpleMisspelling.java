@@ -46,9 +46,4 @@ public class SimpleMisspelling implements Misspelling {
     public String getKey() {
         return this.word;
     }
-
-    @Override
-    public String getType() {
-        return ReplacementType.MISSPELLING_SIMPLE;
-    }
 }

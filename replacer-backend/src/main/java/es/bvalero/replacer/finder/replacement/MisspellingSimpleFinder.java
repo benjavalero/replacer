@@ -28,8 +28,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class MisspellingSimpleFinder extends MisspellingFinder implements PropertyChangeListener {
 
-    // TODO: Move logic related to MISSPELLING MAP to the parent class to be applied also for Composed Misspellings
-
     @Setter(AccessLevel.PACKAGE) // For testing
     @Autowired
     private SimpleMisspellingLoader simpleMisspellingLoader;
@@ -105,7 +103,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     }
 
     @Override
-    String getType() {
+    ReplacementType getType() {
         return ReplacementType.MISSPELLING_SIMPLE;
     }
 }

@@ -75,7 +75,9 @@ class PageReviewTypeSubtypeService extends PageReviewService {
     ) {
         return replacements
             .stream()
-            .filter(replacement -> replacement.getType().equals(type) && replacement.getSubtype().equals(subtype))
+            .filter(
+                replacement -> replacement.getType().getLabel().equals(type) && replacement.getSubtype().equals(subtype)
+            )
             .collect(Collectors.toList());
     }
 }

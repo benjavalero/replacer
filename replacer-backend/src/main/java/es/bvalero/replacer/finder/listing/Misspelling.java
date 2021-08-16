@@ -18,8 +18,6 @@ public interface Misspelling extends ListingItem {
 
     Pattern PATTERN_SUGGESTION = Pattern.compile(REGEX_SUGGESTION);
 
-    String getType();
-
     String getWord();
 
     boolean isCaseSensitive();

@@ -24,7 +24,6 @@ import org.springframework.stereotype.Component;
 @Component
 class DateFinder implements ReplacementFinder {
 
-    private static final String TYPE_DATE = "Fechas";
     static final String SUBTYPE_DOT_YEAR = "Año con punto";
     static final String SUBTYPE_INCOMPLETE = "Fecha incompleta";
     static final String SUBTYPE_LEADING_ZERO = "Día con cero";
@@ -192,7 +191,7 @@ class DateFinder implements ReplacementFinder {
 
         return Replacement
             .builder()
-            .type(TYPE_DATE)
+            .type(ReplacementType.DATE)
             .subtype(subtype)
             .start(match.start())
             .text(date)
@@ -238,7 +237,7 @@ class DateFinder implements ReplacementFinder {
 
         return Replacement
             .builder()
-            .type(TYPE_DATE)
+            .type(ReplacementType.DATE)
             .subtype(subtype)
             .start(match.start())
             .text(date)

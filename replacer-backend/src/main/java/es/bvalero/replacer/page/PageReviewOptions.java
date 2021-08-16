@@ -26,7 +26,7 @@ class PageReviewOptions {
 
     @ApiParam(value = "Replacement type", example = "Ortografía")
     @Nullable
-    private String type;
+    private String type; // TODO: ReplacementType
 
     @Size(max = 100)
     @ApiParam(value = "Replacement subtype", example = "aún")
@@ -69,7 +69,7 @@ class PageReviewOptions {
         return PageReviewOptions
             .builder()
             .lang(lang)
-            .type(ReplacementType.CUSTOM)
+            .type(ReplacementType.CUSTOM.getLabel())
             .subtype(replacement)
             .suggestion(suggestion)
             .cs(caseSensitive)
@@ -89,7 +89,7 @@ class PageReviewOptions {
             assert StringUtils.isNotBlank(subtype);
             list.add(subtype);
         } else {
-            assert ReplacementType.CUSTOM.equals(type);
+            assert ReplacementType.CUSTOM.getLabel().equals(type);
             list.add(type);
             assert StringUtils.isNotBlank(subtype);
             list.add(subtype);

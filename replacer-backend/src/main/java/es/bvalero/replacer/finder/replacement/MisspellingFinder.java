@@ -69,7 +69,7 @@ abstract class MisspellingFinder implements ReplacementFinder {
             .build();
     }
 
-    abstract String getType();
+    abstract ReplacementType getType();
 
     String getSubtype(String text, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists

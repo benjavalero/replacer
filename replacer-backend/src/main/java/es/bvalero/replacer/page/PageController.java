@@ -150,7 +150,7 @@ public class PageController {
     }
 
     private void markAsReviewed(int pageId, WikipediaLanguage lang, String reviewer, PageReviewSearch search) {
-        if (ReplacementType.CUSTOM.equals(search.getType())) {
+        if (ReplacementType.CUSTOM.getLabel().equals(search.getType())) {
             pageReviewCustomService.reviewPageReplacements(pageId, convert(search, lang), reviewer);
         } else if (StringUtils.isNotBlank(search.getType())) {
             pageReviewTypeSubtypeService.reviewPageReplacements(pageId, convert(search, lang), reviewer);

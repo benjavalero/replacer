@@ -469,7 +469,7 @@ class PageReviewCustomServiceTest {
     @Test
     void testValidateCustomReplacement() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        final String simple = ReplacementType.MISSPELLING_SIMPLE;
+        final ReplacementType simple = ReplacementType.MISSPELLING_SIMPLE;
 
         // Case-insensitive: accion||acción
         SimpleMisspelling misspelling1 = SimpleMisspelling.of("accion", false, "acción");

@@ -26,9 +26,4 @@ class CustomMisspelling implements Misspelling {
     public String getKey() {
         return this.word;
     }
-
-    @Override
-    public String getType() {
-        return ReplacementType.CUSTOM;
-    }
 }

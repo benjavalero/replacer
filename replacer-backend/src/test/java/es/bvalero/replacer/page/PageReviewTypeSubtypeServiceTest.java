@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.replacement.IndexablePage;
 import es.bvalero.replacer.replacement.IndexablePageValidator;
 import es.bvalero.replacer.replacement.ReplacementIndexService;
@@ -47,13 +48,19 @@ class PageReviewTypeSubtypeServiceTest {
     private final Replacement replacement = Replacement
         .builder()
         .start(offset)
-        .type("X")
+        .type(ReplacementType.MISSPELLING_SIMPLE)
         .subtype("Y")
         .text("Y")
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
-    private final PageReviewOptions options = PageReviewOptions.ofTypeSubtype("X", "Y");
-    private final PageReviewOptions options2 = PageReviewOptions.ofTypeSubtype("A", "B");
+    private final PageReviewOptions options = PageReviewOptions.ofTypeSubtype(
+        ReplacementType.MISSPELLING_SIMPLE.getLabel(),
+        "Y"
+    );
+    private final PageReviewOptions options2 = PageReviewOptions.ofTypeSubtype(
+        ReplacementType.MISSPELLING_COMPOSED.getLabel(),
+        "B"
+    );
 
     @Mock
     private ReplacementService replacementService;

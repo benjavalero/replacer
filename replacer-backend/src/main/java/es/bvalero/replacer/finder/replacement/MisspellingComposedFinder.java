@@ -99,7 +99,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     }
 
     @Override
-    String getType() {
+    ReplacementType getType() {
         return ReplacementType.MISSPELLING_COMPOSED;
     }
 }

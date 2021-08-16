@@ -60,7 +60,7 @@ class ObsoleteMisspellingListenerTest {
             .verify(replacementService, Mockito.times(1))
             .deleteToBeReviewedBySubtype(
                 WikipediaLanguage.SPANISH,
-                ReplacementType.MISSPELLING_SIMPLE,
+                ReplacementType.MISSPELLING_SIMPLE.getLabel(),
                 Collections.singleton("A")
             );
     }

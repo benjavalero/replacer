@@ -1,12 +1,35 @@
 package es.bvalero.replacer.finder.replacement;
 
-import lombok.AccessLevel;
+import com.fasterxml.jackson.annotation.JsonValue;
+import es.bvalero.replacer.finder.listing.ComposedMisspelling;
+import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class ReplacementType {
+@Getter
+@AllArgsConstructor
+public enum ReplacementType {
+    MISSPELLING_SIMPLE("Ortografía"),
+    MISSPELLING_COMPOSED("Compuestos"),
+    CUSTOM("Personalizado"),
+    DATE("Fechas");
 
-    public static final String MISSPELLING_SIMPLE = "Ortografía";
-    public static final String MISSPELLING_COMPOSED = "Compuestos";
-    public static final String CUSTOM = "Personalizado";
+    @JsonValue
+    private final String label;
+
+    @Override
+    public String toString() {
+        return this.label;
+    }
+
+    public static ReplacementType ofMisspellingType(Misspelling misspelling) {
+        if (misspelling instanceof SimpleMisspelling) {
+            return MISSPELLING_SIMPLE;
+        } else if (misspelling instanceof ComposedMisspelling) {
+            return MISSPELLING_COMPOSED;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 }

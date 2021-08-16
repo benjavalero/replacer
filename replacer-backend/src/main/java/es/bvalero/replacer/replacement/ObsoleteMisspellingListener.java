@@ -4,9 +4,9 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -53,19 +53,19 @@ public class ObsoleteMisspellingListener implements PropertyChangeListener {
             Set<String> newWords = newItems.get(lang).stream().map(Misspelling::getWord).collect(Collectors.toSet());
             oldWords.removeAll(newWords);
             if (!oldWords.isEmpty()) {
-                String misspellingType = oldItems
+                ReplacementType misspellingType = oldItems
                     .get(lang)
                     .stream()
                     .findAny()
-                    .orElseThrow(IllegalCallerException::new)
-                    .getType();
+                    .map(ReplacementType::ofMisspellingType)
+                    .orElseThrow(IllegalArgumentException::new);
                 LOGGER.warn(
                     "Deleting from database obsolete misspellings: {} - {} - {}",
                     lang,
                     misspellingType,
                     oldWords
                 );
-                replacementService.deleteToBeReviewedBySubtype(lang, misspellingType, new HashSet<>(oldWords));
+                replacementService.deleteToBeReviewedBySubtype(lang, misspellingType.getLabel(), oldWords);
             }
         }
     }

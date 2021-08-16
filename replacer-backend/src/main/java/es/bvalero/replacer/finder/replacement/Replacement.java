@@ -19,7 +19,7 @@ public class Replacement implements FinderResult {
 
     int start;
     String text;
-    String type;
+    ReplacementType type;
 
     @With(AccessLevel.PACKAGE)
     String subtype;

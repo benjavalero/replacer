@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
 import org.springframework.lang.Nullable;
@@ -11,7 +12,7 @@ class MisspellingType {
 
     @ApiModelProperty(value = "Known replacement type or empty", example = "Ortografía")
     @Nullable
-    String type;
+    ReplacementType type;
 
     @ApiModelProperty(value = "Known replacement subtype or empty", example = "aún")
     @Nullable

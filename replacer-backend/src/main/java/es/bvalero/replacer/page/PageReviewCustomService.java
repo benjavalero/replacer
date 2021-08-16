@@ -2,7 +2,9 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.replacement.*;
 import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
@@ -48,7 +50,7 @@ class PageReviewCustomService extends PageReviewService {
             String type = options.getType();
             String subtype = options.getSubtype();
             boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
-            assert ReplacementType.CUSTOM.equals(type);
+            assert ReplacementType.CUSTOM.getLabel().equals(type);
             assert subtype != null;
 
             // Calculate this out of the loop only if needed the first time
@@ -146,11 +148,11 @@ class PageReviewCustomService extends PageReviewService {
             return MisspellingType.ofEmpty();
         } else if (misspelling.get().isCaseSensitive()) {
             return caseSensitive && misspelling.get().getWord().equals(replacement)
-                ? MisspellingType.of(misspelling.get().getType(), misspelling.get().getWord())
+                ? MisspellingType.of(ReplacementType.ofMisspellingType(misspelling.get()), misspelling.get().getWord())
                 : MisspellingType.ofEmpty();
         } else {
             return !caseSensitive && misspelling.get().getWord().equalsIgnoreCase(replacement)
-                ? MisspellingType.of(misspelling.get().getType(), misspelling.get().getWord())
+                ? MisspellingType.of(ReplacementType.ofMisspellingType(misspelling.get()), misspelling.get().getWord())
                 : MisspellingType.ofEmpty();
         }
     }

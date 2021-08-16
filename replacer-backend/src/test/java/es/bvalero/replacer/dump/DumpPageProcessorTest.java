@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.replacement.IndexablePage;
 import es.bvalero.replacer.replacement.IndexablePageValidator;
 import es.bvalero.replacer.replacement.ReplacementEntity;
@@ -164,7 +165,7 @@ class DumpPageProcessorTest {
             .when(pageReplacementService.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
             .thenReturn(dbReplacements);
 
-        Replacement replacement = Replacement.builder().start(0).text("X").build();
+        Replacement replacement = Replacement.builder().start(0).text("X").type(ReplacementType.DATE).build();
         List<Replacement> replacements = Collections.singletonList(replacement);
         Mockito.when(replacementFinderService.findList(Mockito.any(FinderPage.class))).thenReturn(replacements);
 

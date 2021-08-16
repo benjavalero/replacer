@@ -141,7 +141,7 @@ class DumpPageProcessor {
             .builder()
             .lang(page.getLang())
             .pageId(page.getId())
-            .type(replacement.getType())
+            .type(replacement.getType().getLabel())
             .subtype(replacement.getSubtype())
             .position(replacement.getStart())
             .context(replacement.getContext(page.getContent()))
