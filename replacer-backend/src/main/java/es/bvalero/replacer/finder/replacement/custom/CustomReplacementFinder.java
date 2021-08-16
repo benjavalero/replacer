@@ -60,7 +60,7 @@ class CustomReplacementFinder implements ReplacementFinder {
             .build();
     }
 
-    private List<Suggestion> findSuggestions(String text) {
+    private List<ReplacementSuggestion> findSuggestions(String text) {
         CustomMisspelling misspelling = CustomMisspelling.of(replacement, caseSensitive, suggestion);
         return MisspellingFinder.applyMisspellingSuggestions(text, misspelling);
     }

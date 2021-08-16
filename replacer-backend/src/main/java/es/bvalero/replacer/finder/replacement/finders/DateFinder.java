@@ -6,8 +6,8 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
+import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.finder.replacement.Suggestion;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.*;
@@ -265,7 +265,7 @@ public class DateFinder implements ReplacementFinder {
         return WikipediaLanguage.SPANISH.equals(lang) ? date.replace("setiembre", "septiembre") : date;
     }
 
-    private List<Suggestion> findSuggestions(String date) {
-        return Collections.singletonList(Suggestion.ofNoComment(date));
+    private List<ReplacementSuggestion> findSuggestions(String date) {
+        return Collections.singletonList(ReplacementSuggestion.ofNoComment(date));
     }
 }

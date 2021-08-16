@@ -6,8 +6,8 @@ import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.MisspellingSuggestion;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
+import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.finder.replacement.Suggestion;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.*;
 import java.util.regex.MatchResult;
@@ -86,16 +86,16 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     // Transform the case of the suggestion, e.g. "Habia" -> "Había"
-    List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
+    List<ReplacementSuggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
         Misspelling misspelling = findMisspellingByWord(originalWord, lang).orElseThrow(IllegalArgumentException::new);
         return applyMisspellingSuggestions(originalWord, misspelling);
     }
 
-    public static List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
-        List<Suggestion> suggestions = new LinkedList<>();
+    public static List<ReplacementSuggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
+        List<ReplacementSuggestion> suggestions = new LinkedList<>();
         for (MisspellingSuggestion misspellingSuggestion : misspelling.getSuggestions()) {
-            Suggestion suggestion = convertSuggestion(misspellingSuggestion);
+            ReplacementSuggestion suggestion = convertSuggestion(misspellingSuggestion);
             if (misspelling.isCaseSensitive()) {
                 suggestions.add(suggestion);
             } else {
@@ -110,7 +110,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
             misspelling.isCaseSensitive() &&
             FinderUtils.startsWithUpperCase(word) &&
             !FinderUtils.isUppercase(word) &&
-            suggestions.stream().map(Suggestion::getText).noneMatch(word::equals)
+            suggestions.stream().map(ReplacementSuggestion::getText).noneMatch(word::equals)
         ) {
             suggestions
                 .stream()
@@ -122,7 +122,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         // If any of the suggestions matches the original then move it as the first suggestion
         for (int i = 0; i < suggestions.size(); i++) {
             if (suggestions.get(i).getText().equals(word)) {
-                Suggestion original = suggestions.remove(i);
+                ReplacementSuggestion original = suggestions.remove(i);
                 suggestions.add(0, original);
                 break;
             }
@@ -131,7 +131,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         return suggestions;
     }
 
-    private static Suggestion convertSuggestion(MisspellingSuggestion misspellingSuggestion) {
-        return Suggestion.of(misspellingSuggestion.getText(), misspellingSuggestion.getComment());
+    private static ReplacementSuggestion convertSuggestion(MisspellingSuggestion misspellingSuggestion) {
+        return ReplacementSuggestion.of(misspellingSuggestion.getText(), misspellingSuggestion.getComment());
     }
 }

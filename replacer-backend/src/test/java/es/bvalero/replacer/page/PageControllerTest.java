@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
-import es.bvalero.replacer.finder.replacement.Suggestion;
 import es.bvalero.replacer.wikipedia.OAuthToken;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -67,7 +66,7 @@ class PageControllerTest {
         String queryTimestamp = "Z";
         int start = 5;
         String rep = "A";
-        Suggestion suggestion = Suggestion.of("a", "b");
+        PageReplacementSuggestion suggestion = PageReplacementSuggestion.of("a", "b");
         PageReplacement replacement = PageReplacement.of(start, rep, Collections.singletonList(suggestion));
         List<PageReplacement> replacements = Collections.singletonList(replacement);
         long numPending = 7;

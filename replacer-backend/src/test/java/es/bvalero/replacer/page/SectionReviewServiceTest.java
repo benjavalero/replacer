@@ -2,7 +2,6 @@ package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.finder.replacement.Suggestion;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -42,7 +41,7 @@ class SectionReviewServiceTest {
     void testFindSectionReview() throws ReplacerException {
         int pageId = 1;
         String content = "This is an sample content.";
-        Suggestion suggestion = Suggestion.of("a", "");
+        PageReplacementSuggestion suggestion = PageReplacementSuggestion.of("a", "");
         PageReplacement replacement = PageReplacement.of(8, "an", Collections.singletonList(suggestion)); // "an"
 
         PageDto page = PageDto.builder().id(pageId).lang(WikipediaLanguage.SPANISH).content(content).build();

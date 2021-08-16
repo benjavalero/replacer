@@ -119,7 +119,12 @@ class PageReviewCustomServiceTest {
 
         final int pageId = 123;
         final String content = "A R";
-        final Replacement customRep = Replacement.builder().start(2).text("R").build();
+        final Replacement customRep = Replacement
+            .builder()
+            .start(2)
+            .text("R")
+            .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
+            .build();
         final WikipediaSearchResult searchResult = WikipediaSearchResult.of(1, List.of(pageId));
         final WikipediaPage page = WikipediaPage
             .builder()
@@ -225,7 +230,12 @@ class PageReviewCustomServiceTest {
         final int pageId1 = 123;
         final int pageId2 = 456;
         final String content = "A R";
-        final Replacement customRep = Replacement.builder().start(2).text("R").build();
+        final Replacement customRep = Replacement
+            .builder()
+            .start(2)
+            .text("R")
+            .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
+            .build();
         final WikipediaSearchResult searchResult = WikipediaSearchResult.of(2, List.of(pageId1, pageId2));
         final WikipediaPage page = WikipediaPage
             .builder()
@@ -311,7 +321,12 @@ class PageReviewCustomServiceTest {
         // The user will review with no changes the rest, i.e. 2, 4
 
         final String content = "A R";
-        final Replacement customRep = Replacement.builder().start(2).text("R").build();
+        final Replacement customRep = Replacement
+            .builder()
+            .start(2)
+            .text("R")
+            .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
+            .build();
         final Map<Integer, WikipediaPage> pages = new HashMap<>();
         for (int i = 1; i <= 4; i++) {
             pages.put(

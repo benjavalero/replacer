@@ -1,7 +1,6 @@
-package es.bvalero.replacer.finder.replacement;
+package es.bvalero.replacer.page;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
@@ -10,9 +9,7 @@ import org.springframework.lang.Nullable;
 @ApiModel(description = "Suggestion for a replacement")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
-public class Suggestion {
-
-    // TODO: Clone or move in the adequate package and let this one with no Swagger documentation (MisspellingSuggestion)
+class PageReplacementSuggestion {
 
     @ApiModelProperty(value = "Fix proposed for a replacement", required = true, example = "aun")
     String text;
@@ -20,12 +17,4 @@ public class Suggestion {
     @ApiModelProperty(value = "Description to explain the motivation of the fix", example = "incluso, aunque")
     @Nullable
     String comment;
-
-    public static Suggestion ofNoComment(String text) {
-        return of(text, null);
-    }
-
-    public Suggestion toUppercase() {
-        return of(FinderUtils.setFirstUpperCase(text), comment);
-    }
 }

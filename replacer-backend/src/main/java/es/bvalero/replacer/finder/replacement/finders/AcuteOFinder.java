@@ -4,8 +4,8 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
+import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.finder.replacement.Suggestion;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
@@ -88,8 +88,8 @@ public class AcuteOFinder implements ReplacementFinder {
             : SUBTYPE_ACUTE_O_WORDS;
     }
 
-    private List<Suggestion> findSuggestions() {
-        return Collections.singletonList(Suggestion.ofNoComment(FIX_ACUTE_O));
+    private List<ReplacementSuggestion> findSuggestions() {
+        return Collections.singletonList(ReplacementSuggestion.ofNoComment(FIX_ACUTE_O));
     }
 
     @Nullable

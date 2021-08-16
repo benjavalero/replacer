@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.replacement.*;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -271,7 +272,15 @@ abstract class PageReviewService {
     }
 
     private PageReplacement convert(Replacement replacement) {
-        return PageReplacement.of(replacement.getStart(), replacement.getText(), replacement.getSuggestions());
+        return PageReplacement.of(
+            replacement.getStart(),
+            replacement.getText(),
+            replacement.getSuggestions().stream().map(this::convert).collect(Collectors.toList())
+        );
+    }
+
+    private PageReplacementSuggestion convert(ReplacementSuggestion suggestion) {
+        return PageReplacementSuggestion.of(suggestion.getText(), suggestion.getComment());
     }
 
     private PageReviewSearch convert(PageReviewOptions options) {

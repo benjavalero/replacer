@@ -24,5 +24,5 @@ public class Replacement implements FinderResult {
     String subtype;
 
     @With
-    List<Suggestion> suggestions;
+    List<ReplacementSuggestion> suggestions;
 }

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.finder.replacement.Suggestion;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.*;
@@ -16,7 +15,7 @@ class PageReplacement {
     String text;
 
     @ApiModelProperty(value = "List of suggestions to fix the replacement", required = true)
-    List<Suggestion> suggestions;
+    List<PageReplacementSuggestion> suggestions;
 
     int getEnd() {
         return this.start + this.text.length();
