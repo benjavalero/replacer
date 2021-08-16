@@ -12,7 +12,7 @@ import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
-import es.bvalero.replacer.finder.replacement.MisspellingSimpleFinder;
+import es.bvalero.replacer.finder.replacement.finders.MisspellingSimpleFinder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

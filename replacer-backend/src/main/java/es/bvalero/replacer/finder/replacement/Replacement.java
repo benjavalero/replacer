@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.finder.FinderResult;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.List;
 import lombok.*;
 
@@ -21,13 +20,9 @@ public class Replacement implements FinderResult {
     String text;
     ReplacementType type;
 
-    @With(AccessLevel.PACKAGE)
+    @With
     String subtype;
 
-    @With(AccessLevel.PACKAGE)
+    @With
     List<Suggestion> suggestions;
-
-    public String getContext(String pageContent) {
-        return FinderUtils.getContextAroundWord(pageContent, start, getEnd(), 20);
-    }
 }

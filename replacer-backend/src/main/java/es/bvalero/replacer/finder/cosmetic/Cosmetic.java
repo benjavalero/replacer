@@ -11,7 +11,7 @@ import lombok.Value;
  */
 @Value
 @Builder
-class Cosmetic implements FinderResult {
+public class Cosmetic implements FinderResult {
 
     int start;
     String text;

@@ -12,7 +12,7 @@ import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
-import es.bvalero.replacer.finder.replacement.MisspellingComposedFinder;
+import es.bvalero.replacer.finder.replacement.finders.MisspellingComposedFinder;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.hamcrest.MatcherAssert;

@@ -1,11 +1,14 @@
 package es.bvalero.replacer.finder;
 
+import es.bvalero.replacer.finder.util.FinderUtils;
 import org.apache.commons.lang3.Range;
+import org.jetbrains.annotations.TestOnly;
 
 public interface FinderResult extends Comparable<FinderResult> {
     int getStart();
     String getText();
 
+    @TestOnly
     default int getEnd() {
         return this.getStart() + this.getText().length();
     }
@@ -30,7 +33,12 @@ public interface FinderResult extends Comparable<FinderResult> {
     }
 
     /** @return if a result contains (not strictly, i.e. both can be equal) another result. */
+    @TestOnly
     default boolean contains(FinderResult r) {
         return this.getRange().containsRange(r.getRange());
+    }
+
+    default String getContext(String pageContent) {
+        return FinderUtils.getContextAroundWord(pageContent, getStart(), getEnd(), 20);
     }
 }

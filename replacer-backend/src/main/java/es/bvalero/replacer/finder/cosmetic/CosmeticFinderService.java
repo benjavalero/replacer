@@ -13,9 +13,6 @@ public class CosmeticFinderService implements FinderService<Cosmetic> {
     @Autowired
     private List<CosmeticFinder> cosmeticFinders;
 
-    @Autowired
-    private CheckWikipediaService checkWikipediaService;
-
     @Override
     public List<Finder<Cosmetic>> getFinders() {
         return new ArrayList<>(cosmeticFinders);
@@ -31,7 +28,7 @@ public class CosmeticFinderService implements FinderService<Cosmetic> {
         if (!cosmetics.isEmpty()) {
             Collections.sort(cosmetics);
 
-            // By default the results are sorted in descending order by the start
+            // By default, the results are sorted in descending order by the start.
             for (Cosmetic cosmetic : cosmetics) {
                 fixedText = replaceInText(cosmetic, fixedText);
             }

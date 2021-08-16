@@ -16,9 +16,6 @@ class CosmeticFinderServiceTest {
     @Mock
     private List<CosmeticFinder> cosmeticFinders;
 
-    @Mock
-    private CheckWikipediaService checkWikipediaService;
-
     @InjectMocks
     private CosmeticFinderService cosmeticFinderService;
 

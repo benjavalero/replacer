@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 /** Decorator to perform some checks in found immutables */
 @Slf4j
-abstract class ImmutableCheckedFinder implements ImmutableFinder {
+public abstract class ImmutableCheckedFinder implements ImmutableFinder {
 
     protected static final int CONTEXT_THRESHOLD = 50;
 
@@ -34,7 +34,7 @@ abstract class ImmutableCheckedFinder implements ImmutableFinder {
         return immutable;
     }
 
-    int getMaxLength() {
+    protected int getMaxLength() {
         return Integer.MAX_VALUE;
     }
 
@@ -44,7 +44,7 @@ abstract class ImmutableCheckedFinder implements ImmutableFinder {
         }
     }
 
-    void logWarning(Immutable immutable, FinderPage page, String message) {
+    protected void logWarning(Immutable immutable, FinderPage page, String message) {
         LOGGER.warn(
             "{}: {} - {} - {} - {} - {}",
             message,

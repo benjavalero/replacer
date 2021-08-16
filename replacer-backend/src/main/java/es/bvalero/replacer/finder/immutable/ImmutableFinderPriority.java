@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-enum ImmutableFinderPriority {
+public enum ImmutableFinderPriority {
     NONE(0),
     LOW(2),
     MEDIUM(5),

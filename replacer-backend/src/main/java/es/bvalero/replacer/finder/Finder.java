@@ -28,7 +28,7 @@ public interface Finder<T extends FinderResult> {
     }
 
     default boolean validate(MatchResult matchResult, String completeText) {
-        // By default return true in case no validation is needed
+        // By default, return true in case no validation is needed.
         return true;
     }
 

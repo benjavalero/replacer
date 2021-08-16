@@ -5,7 +5,7 @@ import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** Decorator to report to Check Wikipedia */
-abstract class CosmeticCheckedFinder implements CosmeticFinder {
+public abstract class CosmeticCheckedFinder implements CosmeticFinder {
 
     private CheckWikipediaService checkWikipediaService;
 
@@ -20,7 +20,7 @@ abstract class CosmeticCheckedFinder implements CosmeticFinder {
         return IterableUtils.filteredIterable(CosmeticFinder.super.find(page), cosmetic -> this.applyAction(page));
     }
 
-    abstract int getFixId();
+    protected abstract int getFixId();
 
     private boolean applyAction(FinderPage page) {
         checkWikipediaService.reportFix(page.getLang(), page.getTitle(), getFixId());

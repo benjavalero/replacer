@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
  * that a page fix has been done by Replacer.
  */
 @Service
-class CheckWikipediaService {
+public class CheckWikipediaService {
 
     @Autowired
     RestTemplate restTemplate;

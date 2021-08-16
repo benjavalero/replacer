@@ -6,7 +6,7 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
-import es.bvalero.replacer.finder.immutable.UppercaseAfterFinder;
+import es.bvalero.replacer.finder.immutable.finders.UppercaseAfterFinder;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
