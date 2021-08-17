@@ -6,9 +6,9 @@ import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.replacement.IndexablePage;
-import es.bvalero.replacer.replacement.IndexablePageValidator;
-import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.page.index.IndexablePage;
+import es.bvalero.replacer.page.index.IndexablePageValidator;
+import es.bvalero.replacer.page.index.PageIndexHelper;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -74,7 +74,7 @@ class PageReviewTypeSubtypeServiceTest {
     private ReplacementFinderService replacementFinderService;
 
     @Mock
-    private ReplacementIndexService replacementIndexService;
+    private PageIndexHelper pageIndexHelper;
 
     @Mock
     private SectionReviewService sectionReviewService;
@@ -117,7 +117,7 @@ class PageReviewTypeSubtypeServiceTest {
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options2);
 
         Mockito
-            .verify(replacementIndexService, Mockito.times(1))
+            .verify(pageIndexHelper, Mockito.times(1))
             .indexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList());
 
         Assertions.assertFalse(review.isPresent());
@@ -148,7 +148,7 @@ class PageReviewTypeSubtypeServiceTest {
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
 
         Mockito
-            .verify(replacementIndexService, Mockito.times(1))
+            .verify(pageIndexHelper, Mockito.times(1))
             .indexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());

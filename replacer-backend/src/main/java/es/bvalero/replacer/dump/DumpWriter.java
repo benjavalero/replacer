@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
+import es.bvalero.replacer.page.index.PageIndexHelper;
 import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.replacement.ReplacementIndexService;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 class DumpWriter {
 
     @Autowired
-    private ReplacementIndexService replacementIndexService;
+    private PageIndexHelper pageIndexHelper;
 
     void write(List<? extends List<ReplacementEntity>> items) {
         List<ReplacementEntity> flatList = items.stream().flatMap(Collection::stream).collect(Collectors.toList());
 
-        replacementIndexService.saveIndexedReplacements(flatList);
+        pageIndexHelper.saveIndexedReplacements(flatList);
     }
 }

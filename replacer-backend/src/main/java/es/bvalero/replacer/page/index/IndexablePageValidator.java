@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.ReplacerException;
 import java.util.Set;
@@ -18,7 +18,7 @@ public class IndexablePageValidator {
     }
 
     @VisibleForTesting
-    void validateProcessableByNamespace(IndexablePage page) throws ReplacerException {
+    public void validateProcessableByNamespace(IndexablePage page) throws ReplacerException {
         if (!processableNamespaces.contains(page.getNamespace().getValue())) {
             throw new ReplacerException("Page not processable by namespace: " + page.getNamespace());
         }

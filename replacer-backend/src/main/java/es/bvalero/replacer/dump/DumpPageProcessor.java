@@ -5,7 +5,11 @@ import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.replacement.*;
+import es.bvalero.replacer.page.index.IndexablePage;
+import es.bvalero.replacer.page.index.IndexablePageValidator;
+import es.bvalero.replacer.page.index.IndexableReplacement;
+import es.bvalero.replacer.page.index.PageIndexHelper;
+import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,7 +33,7 @@ class DumpPageProcessor {
     private PageReplacementService pageReplacementService;
 
     @Autowired
-    private ReplacementIndexService replacementIndexService;
+    private PageIndexHelper pageIndexHelper;
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -107,7 +111,7 @@ class DumpPageProcessor {
         }
 
         List<Replacement> replacements = replacementFinderService.findList(convert(dumpPage));
-        List<ReplacementEntity> toUpdate = replacementIndexService.findIndexPageReplacements(
+        List<ReplacementEntity> toUpdate = pageIndexHelper.findIndexPageReplacements(
             dumpPage,
             replacements.stream().map(r -> convert(r, dumpPage)).collect(Collectors.toList()),
             dbReplacements

@@ -6,8 +6,8 @@ import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.replacement.IndexablePageValidator;
-import es.bvalero.replacer.replacement.ReplacementIndexService;
+import es.bvalero.replacer.page.index.IndexablePageValidator;
+import es.bvalero.replacer.page.index.PageIndexHelper;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -62,7 +62,7 @@ class PageReviewNoTypeServiceTest {
     private WikipediaService wikipediaService;
 
     @Mock
-    private ReplacementIndexService replacementIndexService;
+    private PageIndexHelper pageIndexHelper;
 
     @Mock
     private ReplacementFinderService replacementFinderService;
@@ -146,7 +146,7 @@ class PageReviewNoTypeServiceTest {
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         Mockito
-            .verify(replacementIndexService, Mockito.times(1))
+            .verify(pageIndexHelper, Mockito.times(1))
             .indexPageReplacements(Mockito.eq(pageReviewNoTypeService.convertToIndexablePage(page)), Mockito.anyList());
 
         Assertions.assertTrue(review.isPresent());
@@ -179,7 +179,7 @@ class PageReviewNoTypeServiceTest {
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         Mockito
-            .verify(replacementIndexService, Mockito.times(1))
+            .verify(pageIndexHelper, Mockito.times(1))
             .indexPageReplacements(pageReviewNoTypeService.convertToIndexablePage(page), Collections.emptyList());
 
         Assertions.assertFalse(review.isPresent());
@@ -210,7 +210,7 @@ class PageReviewNoTypeServiceTest {
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         Mockito
-            .verify(replacementIndexService, Mockito.times(1))
+            .verify(pageIndexHelper, Mockito.times(1))
             .indexPageReplacements(
                 Mockito.eq(pageReviewNoTypeService.convertToIndexablePage(page2)),
                 Mockito.anyList()

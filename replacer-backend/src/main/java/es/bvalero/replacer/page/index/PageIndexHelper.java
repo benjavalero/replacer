@@ -1,17 +1,19 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.page.index;
 
 import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.replacement.ReplacementDao;
+import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-@Service
-public class ReplacementIndexService {
+@Component
+public class PageIndexHelper {
 
     @Autowired
     private ReplacementDao replacementDao;

@@ -28,7 +28,7 @@ public class ReplacementEntity {
     @With(AccessLevel.PRIVATE)
     int position;
 
-    @With(AccessLevel.PACKAGE)
+    @With
     String context;
 
     @VisibleForTesting
@@ -36,10 +36,10 @@ public class ReplacementEntity {
     LocalDate lastUpdate;
 
     @Nullable
-    @With(AccessLevel.PACKAGE)
+    @With
     String reviewer;
 
-    @With(AccessLevel.PACKAGE)
+    @With
     String title;
 
     // Temporary field not in database to know the status of the replacement while indexing
@@ -64,12 +64,12 @@ public class ReplacementEntity {
         return this.reviewer == null;
     }
 
-    boolean isOlderThan(LocalDate date) {
+    public boolean isOlderThan(LocalDate date) {
         return this.lastUpdate.isBefore(date);
     }
 
     @TestOnly
-    ReplacementEntity setSystemReviewed() {
+    public ReplacementEntity setSystemReviewed() {
         return withReviewer(REVIEWER_SYSTEM);
     }
 
@@ -77,7 +77,7 @@ public class ReplacementEntity {
         return REVIEWER_SYSTEM.equals(this.reviewer);
     }
 
-    ReplacementEntity setToCreate() {
+    public ReplacementEntity setToCreate() {
         return withCudAction("C");
     }
 
@@ -93,7 +93,7 @@ public class ReplacementEntity {
         return "D".equals(this.cudAction);
     }
 
-    ReplacementEntity updateLastUpdate(LocalDate lastUpdate) {
+    public ReplacementEntity updateLastUpdate(LocalDate lastUpdate) {
         return withLastUpdate(lastUpdate).withCudAction("UD");
     }
 
@@ -101,7 +101,7 @@ public class ReplacementEntity {
         return "UD".equals(this.cudAction);
     }
 
-    ReplacementEntity updateContext(String context) {
+    public ReplacementEntity updateContext(String context) {
         return withContext(context).withCudAction("UC");
     }
 
@@ -109,25 +109,25 @@ public class ReplacementEntity {
         return "UC".equals(this.cudAction);
     }
 
-    ReplacementEntity updatePosition(int position) {
+    public ReplacementEntity updatePosition(int position) {
         // Action for position, context and title is the same
         return withPosition(position).withCudAction("UC");
     }
 
-    ReplacementEntity updateTitle(String title) {
+    public ReplacementEntity updateTitle(String title) {
         // Action for position, context and title is the same
         return withTitle(title).withCudAction("UC");
     }
 
-    boolean isToUpdate() {
+    public boolean isToUpdate() {
         return this.cudAction != null && this.cudAction.startsWith("U");
     }
 
-    ReplacementEntity setToKeep() {
+    public ReplacementEntity setToKeep() {
         return withCudAction("K");
     }
 
-    static ReplacementEntity ofDummy(int pageId, WikipediaLanguage lang, LocalDate lastUpdate) {
+    public static ReplacementEntity ofDummy(int pageId, WikipediaLanguage lang, LocalDate lastUpdate) {
         return ReplacementEntity
             .builder()
             .lang(lang.getCode())

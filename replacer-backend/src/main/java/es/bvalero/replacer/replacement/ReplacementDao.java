@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.data.domain.Pageable;
 
-interface ReplacementDao {
+public interface ReplacementDao {
     ///// CRUD
 
     List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang);

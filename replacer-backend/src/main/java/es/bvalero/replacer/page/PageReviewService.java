@@ -7,7 +7,11 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
-import es.bvalero.replacer.replacement.*;
+import es.bvalero.replacer.page.index.IndexablePage;
+import es.bvalero.replacer.page.index.IndexablePageValidator;
+import es.bvalero.replacer.page.index.IndexableReplacement;
+import es.bvalero.replacer.page.index.PageIndexHelper;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
@@ -44,7 +48,7 @@ abstract class PageReviewService {
     private ReplacementService replacementService;
 
     @Autowired
-    private ReplacementIndexService replacementIndexService;
+    private PageIndexHelper pageIndexHelper;
 
     @Autowired
     private SectionReviewService sectionReviewService;
@@ -238,7 +242,7 @@ abstract class PageReviewService {
             .stream()
             .map(r -> convert(r, indexablePage))
             .collect(Collectors.toList());
-        replacementIndexService.indexPageReplacements(indexablePage, indexableReplacements);
+        pageIndexHelper.indexPageReplacements(indexablePage, indexableReplacements);
     }
 
     private IndexableReplacement convert(Replacement replacement, IndexablePage page) {

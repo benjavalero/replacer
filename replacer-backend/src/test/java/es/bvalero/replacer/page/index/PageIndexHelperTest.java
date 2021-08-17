@@ -1,7 +1,8 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.replacement.*;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.*;
@@ -13,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = { IndexablePageValidator.class })
-class ReplacementIndexServiceTest {
+class PageIndexHelperTest {
 
     @Mock
     private ReplacementDao replacementDao;
@@ -22,11 +23,11 @@ class ReplacementIndexServiceTest {
     private IndexablePageValidator indexablePageValidator;
 
     @InjectMocks
-    private ReplacementIndexService replacementIndexService;
+    private PageIndexHelper pageIndexHelper;
 
     @BeforeEach
     void setUp() {
-        replacementIndexService = new ReplacementIndexService();
+        pageIndexHelper = new PageIndexHelper();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -35,7 +36,7 @@ class ReplacementIndexServiceTest {
         int pageId = new Random().nextInt();
         IndexablePage page = IndexablePage.builder().id(pageId).lang(WikipediaLanguage.SPANISH).build();
 
-        replacementIndexService.indexPageReplacements(page, Collections.emptyList());
+        pageIndexHelper.indexPageReplacements(page, Collections.emptyList());
 
         Mockito
             .verify(replacementDao, Mockito.times(1))
@@ -50,13 +51,13 @@ class ReplacementIndexServiceTest {
 
         List<ReplacementEntity> dbReplacements = new ArrayList<>();
 
-        List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(
+        List<ReplacementEntity> toIndex = pageIndexHelper.findIndexPageReplacements(
             page,
             newReplacements,
             dbReplacements
         );
 
-        Assertions.assertEquals(Collections.singletonList(replacementIndexService.convert(rep1)), toIndex);
+        Assertions.assertEquals(Collections.singletonList(pageIndexHelper.convert(rep1)), toIndex);
     }
 
     @Test
@@ -76,7 +77,7 @@ class ReplacementIndexServiceTest {
         ReplacementEntity rep3 = ReplacementEntity.of(1, "", "", 3).setSystemReviewed();
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(rep2, rep3));
 
-        List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(
+        List<ReplacementEntity> toIndex = pageIndexHelper.findIndexPageReplacements(
             page,
             newReplacements,
             dbReplacements
@@ -98,7 +99,7 @@ class ReplacementIndexServiceTest {
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
 
         IndexablePage page = IndexablePage.builder().lang(WikipediaLanguage.SPANISH).build();
-        List<ReplacementEntity> result = replacementIndexService.findIndexPageReplacements(
+        List<ReplacementEntity> result = pageIndexHelper.findIndexPageReplacements(
             page,
             newReplacements,
             dbReplacements
@@ -213,19 +214,14 @@ class ReplacementIndexServiceTest {
             Arrays.asList(r1db, r2db, r3db, r4db, r6db, r7db, r8db)
         );
 
-        List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(
+        List<ReplacementEntity> toIndex = pageIndexHelper.findIndexPageReplacements(
             page,
             newReplacements,
             dbReplacements
         );
 
         Assertions.assertEquals(
-            Set.of(
-                r3db.updateLastUpdate(same),
-                replacementIndexService.convert(r5),
-                r6db.setToDelete(),
-                r8db.setToDelete()
-            ),
+            Set.of(r3db.updateLastUpdate(same), pageIndexHelper.convert(r5), r6db.setToDelete(), r8db.setToDelete()),
             new HashSet<>(toIndex)
         );
     }
@@ -314,19 +310,14 @@ class ReplacementIndexServiceTest {
             .withLastUpdate(before);
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db, r4db, r5db, r6db));
 
-        List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(
+        List<ReplacementEntity> toIndex = pageIndexHelper.findIndexPageReplacements(
             page,
             newReplacements,
             dbReplacements
         );
 
         Assertions.assertEquals(
-            Set.of(
-                r1db.updateLastUpdate(same),
-                replacementIndexService.convert(r3),
-                r4db.setToDelete(),
-                r6db.setToDelete()
-            ),
+            Set.of(r1db.updateLastUpdate(same), pageIndexHelper.convert(r3), r4db.setToDelete(), r6db.setToDelete()),
             new HashSet<>(toIndex)
         );
     }
@@ -355,7 +346,7 @@ class ReplacementIndexServiceTest {
         ReplacementEntity r2db = ReplacementEntity.ofDummy(page.getId(), page.getLang(), same);
         List<ReplacementEntity> dbReplacements = new ArrayList<>(Arrays.asList(r1db, r2db));
 
-        List<ReplacementEntity> toIndex = replacementIndexService.findIndexPageReplacements(
+        List<ReplacementEntity> toIndex = pageIndexHelper.findIndexPageReplacements(
             page,
             newReplacements,
             dbReplacements

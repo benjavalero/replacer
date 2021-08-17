@@ -6,10 +6,10 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.replacement.IndexablePage;
-import es.bvalero.replacer.replacement.IndexablePageValidator;
+import es.bvalero.replacer.page.index.IndexablePage;
+import es.bvalero.replacer.page.index.IndexablePageValidator;
+import es.bvalero.replacer.page.index.PageIndexHelper;
 import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.replacement.ReplacementIndexService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -31,7 +31,7 @@ class DumpPageProcessorTest {
     private PageReplacementService pageReplacementService;
 
     @Mock
-    private ReplacementIndexService replacementIndexService;
+    private PageIndexHelper pageIndexHelper;
 
     @Mock
     private ReplacementFinderService replacementFinderService;
@@ -61,7 +61,7 @@ class DumpPageProcessorTest {
         Mockito.verify(pageReplacementService).findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class));
         Mockito.verify(replacementFinderService).findList(Mockito.any(FinderPage.class));
         Mockito
-            .verify(replacementIndexService)
+            .verify(pageIndexHelper)
             .findIndexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList(), Mockito.anyList());
     }
 
@@ -172,7 +172,7 @@ class DumpPageProcessorTest {
         dumpPageProcessor.processPage(dumpPage);
 
         Mockito
-            .verify(replacementIndexService)
+            .verify(pageIndexHelper)
             .findIndexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList(), Mockito.eq(dbReplacements));
     }
 
@@ -201,7 +201,7 @@ class DumpPageProcessorTest {
         dumpPageProcessor.processPage(dumpPage);
 
         Mockito
-            .verify(replacementIndexService)
+            .verify(pageIndexHelper)
             .findIndexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList(), Mockito.eq(dbReplacements));
     }
 }

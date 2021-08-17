@@ -3,6 +3,8 @@ package es.bvalero.replacer.replacement;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.page.index.IndexablePage;
+import es.bvalero.replacer.page.index.PageIndexHelper;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class ReplacementService {
 
     @Autowired
-    private ReplacementIndexService replacementIndexService;
+    private PageIndexHelper pageIndexHelper;
 
     @Autowired
     private ReplacementDao replacementDao;
@@ -41,7 +43,7 @@ public class ReplacementService {
 
     public void indexObsoleteByPageId(WikipediaLanguage lang, int pageId) {
         IndexablePage dummyPage = IndexablePage.builder().lang(lang).id(pageId).lastUpdate(LocalDate.now()).build();
-        replacementIndexService.indexPageReplacements(dummyPage, Collections.emptyList());
+        pageIndexHelper.indexPageReplacements(dummyPage, Collections.emptyList());
     }
 
     ///// PAGE REVIEW
