@@ -140,7 +140,7 @@ class PageReviewNoTypeServiceTest {
 
         // The page contains replacements
         Mockito
-            .when(replacementFinderService.findList(pageReviewNoTypeService.convertToFinderPage(page)))
+            .when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
@@ -173,7 +173,7 @@ class PageReviewNoTypeServiceTest {
         // The page doesn't contain replacements
         List<Replacement> noPageReplacements = Collections.emptyList();
         Mockito
-            .when(replacementFinderService.findList(pageReviewNoTypeService.convertToFinderPage(page)))
+            .when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page)))
             .thenReturn(noPageReplacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
@@ -204,7 +204,7 @@ class PageReviewNoTypeServiceTest {
 
         // The page contains replacements
         Mockito
-            .when(replacementFinderService.findList(pageReviewNoTypeService.convertToFinderPage(page2)))
+            .when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page2)))
             .thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);

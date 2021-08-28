@@ -34,7 +34,7 @@ public class ReplacementFinderService implements FinderService<Replacement> {
 
     @Loggable(prepend = true, value = Loggable.TRACE, unit = TimeUnit.SECONDS)
     @Override
-    public Iterable<Replacement> find(FinderPage page) {
+    public Iterable<Replacement> findIterable(FinderPage page) {
         // The replacement finder ignores in the response all the found replacements which are contained
         // in the found immutables. Usually there will be much more immutables found than replacements.
         // Thus it is better to obtain first all the replacements, and then obtain the immutables one by one,
@@ -44,7 +44,7 @@ public class ReplacementFinderService implements FinderService<Replacement> {
 
     protected Iterable<Replacement> findReplacements(FinderPage page, List<Finder<Replacement>> finders) {
         // First we retrieve all replacements and later filter only the valid
-        Iterable<Replacement> allReplacements = find(page, finders);
+        Iterable<Replacement> allReplacements = findIterable(page, finders);
         return filterReplacements(page, allReplacements);
     }
 
@@ -98,7 +98,7 @@ public class ReplacementFinderService implements FinderService<Replacement> {
             return Collections.emptyList();
         }
 
-        for (Immutable immutable : immutableFinderService.find(page)) {
+        for (Immutable immutable : immutableFinderService.findIterable(page)) {
             replacementList.removeIf(immutable::intersects);
 
             // No need to continue finding the immutables if there are no replacements

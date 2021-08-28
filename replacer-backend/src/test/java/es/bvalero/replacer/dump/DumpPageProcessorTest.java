@@ -59,7 +59,7 @@ class DumpPageProcessorTest {
         dumpPageProcessor.processPage(dumpPage);
 
         Mockito.verify(pageReplacementService).findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class));
-        Mockito.verify(replacementFinderService).findList(Mockito.any(FinderPage.class));
+        Mockito.verify(replacementFinderService).find(Mockito.any(FinderPage.class));
         Mockito
             .verify(pageIndexHelper)
             .findIndexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList(), Mockito.anyList());
@@ -104,7 +104,7 @@ class DumpPageProcessorTest {
             .thenReturn(Collections.singletonList(replacement));
 
         Assertions.assertTrue(dumpPageProcessor.processPage(dumpPage).isEmpty());
-        Mockito.verify(replacementFinderService, Mockito.times(0)).findList(Mockito.any(FinderPage.class));
+        Mockito.verify(replacementFinderService, Mockito.times(0)).find(Mockito.any(FinderPage.class));
     }
 
     @Test
@@ -125,7 +125,7 @@ class DumpPageProcessorTest {
             .thenReturn(Collections.singletonList(replacement));
 
         dumpPageProcessor.processPage(dumpPage);
-        Mockito.verify(replacementFinderService).findList(Mockito.any(FinderPage.class));
+        Mockito.verify(replacementFinderService).find(Mockito.any(FinderPage.class));
     }
 
     @Test
@@ -147,7 +147,7 @@ class DumpPageProcessorTest {
             .thenReturn(Collections.singletonList(replacement));
 
         dumpPageProcessor.processPage(dumpPage);
-        Mockito.verify(replacementFinderService).findList(Mockito.any(FinderPage.class));
+        Mockito.verify(replacementFinderService).find(Mockito.any(FinderPage.class));
     }
 
     @Test
@@ -167,7 +167,7 @@ class DumpPageProcessorTest {
 
         Replacement replacement = Replacement.builder().start(0).text("X").type(ReplacementType.DATE).build();
         List<Replacement> replacements = Collections.singletonList(replacement);
-        Mockito.when(replacementFinderService.findList(Mockito.any(FinderPage.class))).thenReturn(replacements);
+        Mockito.when(replacementFinderService.find(Mockito.any(FinderPage.class))).thenReturn(replacements);
 
         dumpPageProcessor.processPage(dumpPage);
 
@@ -196,7 +196,7 @@ class DumpPageProcessorTest {
             .thenReturn(dbReplacements);
 
         List<Replacement> replacements = Collections.emptyList();
-        Mockito.when(replacementFinderService.findList(Mockito.any(FinderPage.class))).thenReturn(replacements);
+        Mockito.when(replacementFinderService.find(Mockito.any(FinderPage.class))).thenReturn(replacements);
 
         dumpPageProcessor.processPage(dumpPage);
 

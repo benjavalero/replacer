@@ -24,7 +24,7 @@ public class CustomReplacementFinderService extends ReplacementFinderService {
     private MisspellingComposedFinder misspellingComposedFinder;
 
     @Override
-    public Iterable<Replacement> find(FinderPage page) {
+    public Iterable<Replacement> findIterable(FinderPage page) {
         throw new IllegalCallerException();
     }
 

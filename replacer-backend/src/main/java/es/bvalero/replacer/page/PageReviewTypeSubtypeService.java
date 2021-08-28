@@ -46,7 +46,7 @@ class PageReviewTypeSubtypeService extends PageReviewService {
 
     @Override
     List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
-        List<Replacement> replacements = replacementFinderService.findList(convertToFinderPage(page));
+        List<Replacement> replacements = replacementFinderService.find(convertToFinderPage(page));
 
         // We take profit and we update the database with the just calculated replacements (also when empty)
         indexReplacements(page, replacements);

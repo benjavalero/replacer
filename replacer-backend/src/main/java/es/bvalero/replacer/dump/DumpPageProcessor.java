@@ -110,7 +110,7 @@ class DumpPageProcessor {
             return Collections.emptyList();
         }
 
-        List<Replacement> replacements = replacementFinderService.findList(convert(dumpPage));
+        List<Replacement> replacements = replacementFinderService.find(convert(dumpPage));
         List<ReplacementEntity> toUpdate = pageIndexHelper.findIndexPageReplacements(
             dumpPage,
             replacements.stream().map(r -> convert(r, dumpPage)).collect(Collectors.toList()),

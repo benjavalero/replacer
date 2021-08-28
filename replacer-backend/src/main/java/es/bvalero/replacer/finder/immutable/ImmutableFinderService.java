@@ -21,7 +21,7 @@ public class ImmutableFinderService implements FinderService<Immutable> {
     }
 
     @Override
-    public List<Finder<Immutable>> getFinders() {
+    public Iterable<Finder<Immutable>> getFinders() {
         return new ArrayList<>(immutableFinders);
     }
 }

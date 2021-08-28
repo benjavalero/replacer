@@ -111,7 +111,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         // The page contains replacements
         Mockito
-            .when(replacementFinderService.findList(pageReviewTypeSubtypeService.convertToFinderPage(page)))
+            .when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options2);
@@ -142,7 +142,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         // The page contains replacements
         Mockito
-            .when(replacementFinderService.findList(pageReviewTypeSubtypeService.convertToFinderPage(page)))
+            .when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
@@ -190,10 +190,10 @@ class PageReviewTypeSubtypeServiceTest {
 
         // The pages contains replacements
         Mockito
-            .when(replacementFinderService.findList(pageReviewTypeSubtypeService.convertToFinderPage(page)))
+            .when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
         Mockito
-            .when(replacementFinderService.findList(pageReviewTypeSubtypeService.convertToFinderPage(page2)))
+            .when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page2)))
             .thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
@@ -217,7 +217,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         // The page contains replacements
         Mockito
-            .when(replacementFinderService.findList(pageReviewTypeSubtypeService.convertToFinderPage(page)))
+            .when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
 
         // Load the cache in order to find the total results
@@ -251,7 +251,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         // The page contains replacements
         Mockito
-            .when(replacementFinderService.findList(pageReviewTypeSubtypeService.convertToFinderPage(page)))
+            .when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
 
         // The page has no sections

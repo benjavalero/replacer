@@ -14,7 +14,7 @@ public class CosmeticFinderService implements FinderService<Cosmetic> {
     private List<CosmeticFinder> cosmeticFinders;
 
     @Override
-    public List<Finder<Cosmetic>> getFinders() {
+    public Iterable<Finder<Cosmetic>> getFinders() {
         return new ArrayList<>(cosmeticFinders);
     }
 
@@ -23,7 +23,7 @@ public class CosmeticFinderService implements FinderService<Cosmetic> {
      */
     public String applyCosmeticChanges(FinderPage page) {
         String fixedText = page.getContent();
-        List<Cosmetic> cosmetics = new LinkedList<>(this.findList(page));
+        List<Cosmetic> cosmetics = new LinkedList<>(this.find(page));
 
         if (!cosmetics.isEmpty()) {
             Collections.sort(cosmetics);
