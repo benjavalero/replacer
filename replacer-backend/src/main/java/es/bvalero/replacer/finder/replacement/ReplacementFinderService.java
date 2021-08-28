@@ -1,18 +1,9 @@
 package es.bvalero.replacer.finder.replacement;
 
-import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.finder.Finder;
-import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.FinderService;
-import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class ReplacementFinderService implements FinderService<Replacement> {
+public class ReplacementFinderService extends ImmutableFilterFinderService<Replacement> {
 
     @Autowired
     private List<ReplacementFinder> replacementFinders;
@@ -32,81 +23,8 @@ public class ReplacementFinderService implements FinderService<Replacement> {
     @Autowired
     private ImmutableFinderService immutableFinderService;
 
-    @Loggable(prepend = true, value = Loggable.TRACE, unit = TimeUnit.SECONDS)
-    @Override
-    public Iterable<Replacement> findIterable(FinderPage page) {
-        // The replacement finder ignores in the response all the found replacements which are contained
-        // in the found immutables. Usually there will be much more immutables found than replacements.
-        // Thus it is better to obtain first all the replacements, and then obtain the immutables one by one,
-        // aborting in case the replacement list gets empty. This way we can avoid lots of immutable calculations.
-        return findReplacements(page, getFinders());
-    }
-
-    protected Iterable<Replacement> findReplacements(FinderPage page, List<Finder<Replacement>> finders) {
-        // First we retrieve all replacements and later filter only the valid
-        Iterable<Replacement> allReplacements = findIterable(page, finders);
-        return filterReplacements(page, allReplacements);
-    }
-
     @Override
     public List<Finder<Replacement>> getFinders() {
         return new ArrayList<>(replacementFinders);
-    }
-
-    private Iterable<Replacement> filterReplacements(FinderPage page, Iterable<Replacement> allReplacements) {
-        // Remove duplicates. By the way we sort the collection.
-        Iterable<Replacement> noDupes = removeDuplicates(allReplacements);
-
-        // Remove nested. There might be replacements (strictly) contained in others.
-        Iterable<Replacement> noNested = removeNested(noDupes);
-
-        // Remove the ones contained in immutables
-        return removeImmutables(page, noNested);
-    }
-
-    private Iterable<Replacement> removeDuplicates(Iterable<Replacement> replacements) {
-        // TreeSet to distinct and sort
-        Set<Replacement> noDupes = new TreeSet<>();
-        for (Replacement replacement : replacements) {
-            noDupes.add(replacement);
-        }
-        return noDupes;
-    }
-
-    private Iterable<Replacement> removeNested(Iterable<Replacement> replacements) {
-        // We need to filter the items against the collection itself so it is not a stateless predicate.
-        // We assume all the replacements in the iterable are distinct, in this case,
-        // this means there are not two replacements with the same start and end,
-        // so the contain function is strict.
-
-        // Filter to return the replacements which are NOT strictly contained in any other
-        return toStream(replacements)
-            .filter(r -> toStream(replacements).noneMatch(r2 -> r2.containsStrictly(r)))
-            .collect(Collectors.toList());
-    }
-
-    private Stream<Replacement> toStream(Iterable<Replacement> iterable) {
-        return StreamSupport.stream(iterable.spliterator(), false);
-    }
-
-    private Iterable<Replacement> removeImmutables(FinderPage page, Iterable<Replacement> replacements) {
-        // LinkedList to remove items. Order is kept.
-        List<Replacement> replacementList = new LinkedList<>(IterableUtils.toList(replacements));
-
-        // No need to find the immutables if there are no replacements
-        if (replacementList.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        for (Immutable immutable : immutableFinderService.findIterable(page)) {
-            replacementList.removeIf(immutable::intersects);
-
-            // No need to continue finding the immutables if there are no replacements
-            if (replacementList.isEmpty()) {
-                return Collections.emptyList();
-            }
-        }
-
-        return replacementList;
     }
 }

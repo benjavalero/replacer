@@ -22,7 +22,6 @@ public interface FinderService<T extends FinderResult> {
         return findIterable(page, getFinders());
     }
 
-    // TODO: This could be private once we implement the Immutable finder as a decorator
     default Iterable<T> findIterable(FinderPage page, Iterable<Finder<T>> finders) {
         return () ->
             IterableUtils
