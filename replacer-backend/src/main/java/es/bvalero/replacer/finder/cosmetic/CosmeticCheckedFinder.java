@@ -1,6 +1,8 @@
 package es.bvalero.replacer.finder.cosmetic;
 
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
+import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaService;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,10 +22,10 @@ public abstract class CosmeticCheckedFinder implements CosmeticFinder {
         return IterableUtils.filteredIterable(CosmeticFinder.super.find(page), cosmetic -> this.applyAction(page));
     }
 
-    protected abstract int getFixId();
+    protected abstract CheckWikipediaAction getCheckWikipediaAction();
 
     private boolean applyAction(FinderPage page) {
-        checkWikipediaService.reportFix(page.getLang(), page.getTitle(), getFixId());
+        checkWikipediaService.reportFix(page.getLang(), page.getTitle(), getCheckWikipediaAction());
         return true;
     }
 }

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import es.bvalero.replacer.finder.cosmetic.CheckWikipediaService;
 import es.bvalero.replacer.finder.cosmetic.Cosmetic;
+import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaService;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

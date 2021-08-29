@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.cosmetic;
+package es.bvalero.replacer.finder.cosmetic.checkwikipedia;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,16 @@ public class CheckWikipediaService {
 
     private static final String CHECK_WIKIPEDIA_URL = "https://checkwiki.toolforge.org/cgi-bin/checkwiki.cgi";
 
-    void reportFix(WikipediaLanguage lang, String pageTitle, int fixId) {
+    public void reportFix(WikipediaLanguage lang, String pageTitle, CheckWikipediaAction action) {
         String project = String.format("%swiki", lang.getCode());
 
-        String url = CHECK_WIKIPEDIA_URL + "?project=" + project + "&view=only&id=" + fixId + "&title=" + pageTitle;
+        String url = String.format(
+            "%s?project=%s&view=only&id=%d&title=%s",
+            CHECK_WIKIPEDIA_URL,
+            project,
+            action.getValue(),
+            pageTitle
+        );
         restTemplate.getForObject(url, String.class);
     }
 }

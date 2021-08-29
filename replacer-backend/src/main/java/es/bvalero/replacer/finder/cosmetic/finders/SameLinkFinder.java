@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
+import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -38,8 +39,8 @@ class SameLinkFinder extends CosmeticCheckedFinder {
     }
 
     @Override
-    public int getFixId() {
-        return 64;
+    public CheckWikipediaAction getCheckWikipediaAction() {
+        return CheckWikipediaAction.LINK_EQUAL_TO_LINKTEXT;
     }
 
     @Override
