@@ -40,13 +40,6 @@ public class CosmeticFinderService implements FinderService<Cosmetic> {
     private String replaceInText(Cosmetic cosmetic, String text) {
         int start = cosmetic.getStart();
         String oldText = cosmetic.getText();
-
-        // Check just in case that the cosmetic is correct
-        String current = text.substring(start, start + oldText.length());
-        if (!current.equals(oldText)) {
-            throw new IllegalArgumentException("Wrong cosmetic: " + current + " - " + oldText);
-        }
-
         String newText = cosmetic.getFix();
         return text.substring(0, start) + newText + text.substring(start + oldText.length());
     }
