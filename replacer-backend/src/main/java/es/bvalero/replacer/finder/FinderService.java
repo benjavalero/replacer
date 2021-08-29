@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder;
 
 import java.util.List;
-import java.util.stream.StreamSupport;
 import org.apache.commons.collections4.IterableUtils;
 import org.jetbrains.annotations.TestOnly;
 
@@ -22,13 +21,11 @@ public interface FinderService<T extends FinderResult> {
         return findIterable(page, getFinders());
     }
 
+    @SuppressWarnings("unchecked")
     default Iterable<T> findIterable(FinderPage page, Iterable<Finder<T>> finders) {
-        return () ->
-            IterableUtils
-                .toList(finders)
-                .stream()
-                .flatMap(finder -> StreamSupport.stream(finder.find(page).spliterator(), false))
-                .iterator();
+        return IterableUtils.chainedIterable(
+            IterableUtils.toList(finders).stream().map(finder -> finder.find(page)).toArray(Iterable[]::new)
+        );
     }
 
     /* Finders whose results will be included in the results  */
