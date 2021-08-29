@@ -25,7 +25,7 @@ public interface Misspelling extends ListingItem {
     List<MisspellingSuggestion> getSuggestions();
 
     default List<MisspellingSuggestion> parseComment(String comment) {
-        List<MisspellingSuggestion> suggestionList = new ArrayList<>(5);
+        List<MisspellingSuggestion> suggestionList = new ArrayList<>();
 
         try {
             // EXCEPTION: Composed misspellings with one word finished with comma, e.g. "mas."

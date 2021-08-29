@@ -66,7 +66,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
 
     @Nullable
     private MatchResult findResult(FinderPage page, int start) {
-        List<MatchResult> matches = new ArrayList<>(100);
+        List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findWord(page.getContent(), start, matches);
         }

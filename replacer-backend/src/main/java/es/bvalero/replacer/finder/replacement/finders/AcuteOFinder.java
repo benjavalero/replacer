@@ -40,7 +40,7 @@ public class AcuteOFinder implements ReplacementFinder {
 
     @Nullable
     private MatchResult findResult(FinderPage page, int start) {
-        List<MatchResult> matches = new ArrayList<>(100);
+        List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
             start = findAcuteO(page.getContent(), start, matches);
         }
@@ -50,11 +50,11 @@ public class AcuteOFinder implements ReplacementFinder {
     private int findAcuteO(String text, int start, List<MatchResult> matches) {
         int startAcuteO = text.indexOf(SEARCH_ACUTE_O, start);
         if (startAcuteO >= 0) {
-            int endAcute0 = startAcuteO + SEARCH_ACUTE_O.length();
+            int endAcuteO = startAcuteO + SEARCH_ACUTE_O.length();
             String wordBefore = findWordBefore(text, startAcuteO);
-            String wordAfter = findWordAfter(text, endAcute0);
+            String wordAfter = findWordAfter(text, endAcuteO);
             if (wordBefore == null || wordAfter == null) {
-                return endAcute0;
+                return endAcuteO;
             } else {
                 matches.add(
                     LinearMatchResult.of(startAcuteO - wordBefore.length(), wordBefore + SEARCH_ACUTE_O + wordAfter)

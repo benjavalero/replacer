@@ -32,7 +32,7 @@ class PersonSurnameFinder implements ImmutableFinder {
 
     @Override
     public Iterable<Immutable> find(FinderPage page) {
-        List<Immutable> result = new ArrayList<>(100);
+        List<Immutable> result = new ArrayList<>();
         for (String personSurname : personSurnames) {
             result.addAll(findResults(page.getContent(), personSurname));
         }
@@ -46,7 +46,7 @@ class PersonSurnameFinder implements ImmutableFinder {
     }
 
     private List<Immutable> findResults(String text, String surname) {
-        List<Immutable> results = new ArrayList<>(100);
+        List<Immutable> results = new ArrayList<>();
         int start = 0;
         while (start >= 0 && start < text.length()) {
             start = text.indexOf(surname, start);
