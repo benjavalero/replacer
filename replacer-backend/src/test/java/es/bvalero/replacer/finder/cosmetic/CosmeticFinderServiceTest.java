@@ -28,7 +28,7 @@ class CosmeticFinderServiceTest {
     @Test
     void testApplyCosmeticChanges() {
         CosmeticFinder finder = Mockito.mock(CosmeticFinder.class);
-        Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|link]]").finder(finder).fix("[[link]]").build();
+        Cosmetic cosmetic = Cosmetic.builder().start(2).text("[[Link|link]]").fix("[[link]]").build();
         List<Cosmetic> cosmetics = new LinkedList<>(); // To be able to sort it
         cosmetics.add(cosmetic);
         Mockito.when(finder.find(Mockito.any(FinderPage.class))).thenReturn(cosmetics);

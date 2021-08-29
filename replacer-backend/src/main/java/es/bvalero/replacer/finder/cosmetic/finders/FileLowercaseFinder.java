@@ -31,7 +31,7 @@ class FileLowercaseFinder implements CosmeticFinder {
 
     @Override
     public Cosmetic convert(MatchResult match) {
-        return Cosmetic.builder().start(match.start(1)).text(match.group(1)).fix(getFix(match)).finder(this).build();
+        return Cosmetic.builder().start(match.start(1)).text(match.group(1)).fix(getFix(match)).build();
     }
 
     @Override

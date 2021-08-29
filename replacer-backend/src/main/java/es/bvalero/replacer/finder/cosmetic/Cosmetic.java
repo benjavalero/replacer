@@ -16,5 +16,4 @@ public class Cosmetic implements FinderResult {
     int start;
     String text;
     String fix;
-    CosmeticFinder finder;
 }
