@@ -41,4 +41,13 @@ public interface FinderResult extends Comparable<FinderResult> {
     default String getContext(String pageContent) {
         return FinderUtils.getContextAroundWord(pageContent, getStart(), getEnd(), 20);
     }
+
+    @TestOnly
+    default boolean validate(String pageContent) {
+        if (getText().equals(pageContent.substring(getStart(), getEnd()))) {
+            return true;
+        } else {
+            throw new IllegalArgumentException("Wrong positions in Finder Result");
+        }
+    }
 }

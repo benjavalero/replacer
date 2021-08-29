@@ -49,11 +49,6 @@ class UppercaseAfterFinderTest {
         Set<String> expected = Set.of("Febrero", "Marzo");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         Assertions.assertEquals(expected, actual);
-
-        // Check positions
-        Assertions.assertTrue(
-            matches.stream().allMatch(m -> text.substring(m.getStart(), m.getEnd()).equals(m.getText()))
-        );
     }
 
     @Test
