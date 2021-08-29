@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
@@ -12,6 +13,7 @@ import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import java.util.List;
+import org.apache.commons.collections4.IterableUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +81,8 @@ class ReplacementFinderBenchmarkTest extends BaseFinderBenchmark {
                 for (ReplacementFinder finder : finders) {
                     long start = System.nanoTime();
                     for (int i = 0; i < numIterations; i++) {
-                        finder.findList(text);
+                        // Only transform the iterable without validating not to penalize the performance of the benchmark
+                        IterableUtils.toList(finder.find(FinderPage.of(text)));
                     }
                     double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                     if (print) {

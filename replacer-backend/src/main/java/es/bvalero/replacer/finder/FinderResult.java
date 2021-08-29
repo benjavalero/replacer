@@ -44,6 +44,7 @@ public interface FinderResult extends Comparable<FinderResult> {
 
     @TestOnly
     default boolean validate(String pageContent) {
+        // Validate positions only on tests not to penalize the performance
         if (getText().equals(pageContent.substring(getStart(), getEnd()))) {
             return true;
         } else {

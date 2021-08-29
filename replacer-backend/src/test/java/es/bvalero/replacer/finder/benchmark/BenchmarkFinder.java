@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.IterableUtils;
 import org.jetbrains.annotations.TestOnly;
 
 public interface BenchmarkFinder extends Finder<BenchmarkResult> {
     @TestOnly
     default Set<BenchmarkResult> findMatches(String text) {
-        return new HashSet<>(this.findList(text));
+        // Only transform the iterable without validating not to penalize the performance of the benchmark
+        return new HashSet<>(IterableUtils.toList(this.find(FinderPage.of(text))));
     }
 
     @Override

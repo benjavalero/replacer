@@ -4,16 +4,16 @@ import static org.hamcrest.Matchers.is;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
-import es.bvalero.replacer.finder.immutable.finders.*;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;
 import es.bvalero.replacer.finder.listing.load.FalsePositiveLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
-import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.collections4.IterableUtils;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +93,8 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
                 for (ImmutableFinder finder : finders) {
                     long start = System.nanoTime();
                     for (int i = 0; i < numIterations; i++) {
-                        finder.findList(text);
+                        // Only transform the iterable without validating not to penalize the performance of the benchmark
+                        IterableUtils.toList(finder.find(FinderPage.of(text)));
                     }
                     double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
                     if (print) {
@@ -102,34 +103,5 @@ class ImmutableFinderBenchmarkTest extends BaseFinderBenchmark {
                 }
             }
         );
-    }
-
-    @Test
-    void testMatches() throws ReplacerException {
-        // Load the finders
-        List<ImmutableFinder> finders = new ArrayList<>();
-        finders.add(new UrlFinder());
-        finders.add(new XmlTagFinder());
-        finders.add(new CompleteTagFinder());
-        finders.add(new QuotesDoubleFinder());
-        finders.add(new QuotesTypographicFinder());
-        finders.add(new QuotesAngularFinder());
-
-        List<String> sampleContents = findSampleContents();
-
-        finders.forEach(
-            finder -> {
-                System.out.println("FINDER: " + finder.getClass().getSimpleName());
-                sampleContents.forEach(
-                    content -> {
-                        finder.findList(content).forEach(result -> System.out.println("==> " + result.getText()));
-                        System.out.println("----------");
-                    }
-                );
-                System.out.println();
-            }
-        );
-
-        MatcherAssert.assertThat(true, is(true));
     }
 }
