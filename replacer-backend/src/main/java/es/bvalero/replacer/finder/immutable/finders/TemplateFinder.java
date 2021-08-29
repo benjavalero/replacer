@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
  * </ul>
  */
 @Component
-class CompleteTemplateFinder extends ImmutableCheckedFinder {
+class TemplateFinder extends ImmutableCheckedFinder {
 
     private static final String WILDCARD = "*";
     private static final String START_TEMPLATE = "{{";
@@ -48,12 +48,12 @@ class CompleteTemplateFinder extends ImmutableCheckedFinder {
     // Set with the names of the parameters whose values will be ignored no matter the template they are in
     private final Set<String> paramNames = new HashSet<>();
 
-    // Map with the pairs template name-param whose values will be ignored
+    // Map with the pairs (template name-param) whose values will be ignored
     // Take into account that there might be several param names for the same template name
     private final SetValuedMap<String, String> templateParamPairs = new HashSetValuedHashMap<>();
 
     @PostConstruct
-    public void initAutomaton() {
+    public void initTemplateParams() {
         for (String pair : templateParams) {
             String[] tokens = pair.split("\\|");
             if (tokens.length == 2) {

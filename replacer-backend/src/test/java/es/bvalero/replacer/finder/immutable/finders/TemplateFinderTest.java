@@ -14,18 +14,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { CompleteTemplateFinder.class, XmlConfiguration.class })
-class CompleteTemplateFinderTest {
+@SpringBootTest(classes = { TemplateFinder.class, XmlConfiguration.class })
+class TemplateFinderTest {
 
     @Autowired
-    private CompleteTemplateFinder completeTemplateFinder;
+    private TemplateFinder templateFinder;
 
     @Test
     void testFindTemplate() {
         String template = "{{Template|Text}}";
 
         FinderPage page = FinderPage.of(template);
-        List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
+        List<LinearMatchResult> matches = templateFinder.findAllTemplates(page);
 
         Assertions.assertEquals(1, matches.size());
         Assertions.assertEquals(template, matches.get(0).group());
@@ -36,7 +36,7 @@ class CompleteTemplateFinderTest {
         String template = "{{Template|Text";
 
         FinderPage page = FinderPage.of(template);
-        List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
+        List<LinearMatchResult> matches = templateFinder.findAllTemplates(page);
 
         Assertions.assertTrue(matches.isEmpty());
     }
@@ -47,7 +47,7 @@ class CompleteTemplateFinderTest {
         String template = String.format("{{Template|Text %s Text}}", template2);
 
         FinderPage page = FinderPage.of(template);
-        List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
+        List<LinearMatchResult> matches = templateFinder.findAllTemplates(page);
 
         Assertions.assertEquals(2, matches.size());
         Assertions.assertEquals(template, matches.get(0).group());
@@ -61,7 +61,7 @@ class CompleteTemplateFinderTest {
         String template = String.format("{{Template|Text %s Text %s Text}}", template2, template3);
 
         FinderPage page = FinderPage.of(template);
-        List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
+        List<LinearMatchResult> matches = templateFinder.findAllTemplates(page);
 
         Set<String> templates = Set.of(template, template2, template3);
         Assertions.assertEquals(templates, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
@@ -74,7 +74,7 @@ class CompleteTemplateFinderTest {
         String template = String.format("{{Template|Text %s Text}}", template2);
 
         FinderPage page = FinderPage.of(template);
-        List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
+        List<LinearMatchResult> matches = templateFinder.findAllTemplates(page);
 
         Assertions.assertEquals(3, matches.size());
         Assertions.assertEquals(template, matches.get(0).group());
@@ -89,7 +89,7 @@ class CompleteTemplateFinderTest {
         String template = String.format("{{Template|Text %s Text", template2);
 
         FinderPage page = FinderPage.of(template);
-        List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
+        List<LinearMatchResult> matches = templateFinder.findAllTemplates(page);
 
         Assertions.assertEquals(2, matches.size());
         Assertions.assertEquals(template2, matches.get(0).group());
@@ -103,7 +103,7 @@ class CompleteTemplateFinderTest {
         String text = String.format("%s %s", template1, template2);
 
         FinderPage page = FinderPage.of(text);
-        List<LinearMatchResult> matches = completeTemplateFinder.findAllTemplates(page);
+        List<LinearMatchResult> matches = templateFinder.findAllTemplates(page);
 
         List<String> expected = List.of(template1, template2);
         Assertions.assertEquals(expected, matches.stream().map(MatchResult::group).collect(Collectors.toList()));
@@ -116,7 +116,7 @@ class CompleteTemplateFinderTest {
         String template3 = "{{Template3|param=value}}";
         String text = String.format("%s %s %s", template1, template2, template3);
 
-        List<Immutable> matches = completeTemplateFinder.findList(text);
+        List<Immutable> matches = templateFinder.findList(text);
 
         List<String> names = List.of("Template1", "Template2", "Template3");
         Assertions.assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(names));
@@ -131,7 +131,7 @@ class CompleteTemplateFinderTest {
         String template5 = "{{Enlace_roto|2=http://www.example.com}}";
         String text = String.format("%s %s %s %s %s", template1, template2, template3, template4, template5);
 
-        List<Immutable> matches = completeTemplateFinder.findList(text);
+        List<Immutable> matches = templateFinder.findList(text);
 
         List<String> templates = List.of(template1, template2, template4, template5);
         Assertions.assertTrue(
@@ -151,7 +151,7 @@ class CompleteTemplateFinderTest {
         String template5 = "{{Fs player|nat=Brazil}}"; // Param + value
         String text = String.format("%s %s %s %s %s", template1, template2, template3, template4, template5);
 
-        List<Immutable> matches = completeTemplateFinder.findList(text);
+        List<Immutable> matches = templateFinder.findList(text);
 
         List<String> params = List.of("param1", "url", "param4", "nat");
         List<String> values = List.of(" valor3 ", " xxx.jpg ", "Brazil");
@@ -165,7 +165,7 @@ class CompleteTemplateFinderTest {
     void testCiteValue() {
         String text = "{{P|ps= «Libro Nº 34, año 1825, f. 145).»}}";
 
-        List<Immutable> matches = completeTemplateFinder.findList(text);
+        List<Immutable> matches = templateFinder.findList(text);
 
         Set<String> expected = Set.of("P", "ps");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -176,7 +176,7 @@ class CompleteTemplateFinderTest {
     void testValueWithComment() {
         String text = "{{Template|image = x.jpg <!-- A comment -->}}";
 
-        List<Immutable> matches = completeTemplateFinder.findList(text);
+        List<Immutable> matches = templateFinder.findList(text);
 
         Set<String> expected = Set.of("Template", "image ", " x.jpg ");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -188,7 +188,7 @@ class CompleteTemplateFinderTest {
         String template2 = "{{Template2|url=value2}}";
         String template = String.format("{{Template1|param1=%s}}", template2);
 
-        List<Immutable> matches = completeTemplateFinder.findList(template);
+        List<Immutable> matches = templateFinder.findList(template);
 
         Set<String> expected = Set.of("Template1", "Template2", "param1", "url", "value2");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -218,7 +218,7 @@ class CompleteTemplateFinderTest {
     void testSpecialCharacters() {
         String text = "{{|||}}";
 
-        List<Immutable> matches = completeTemplateFinder.findList(text);
+        List<Immutable> matches = templateFinder.findList(text);
 
         Assertions.assertTrue(matches.isEmpty());
     }
@@ -227,7 +227,7 @@ class CompleteTemplateFinderTest {
     void testContiguousTemplates() {
         String text = "{{T|x={{A}}{{B}} |y=C}}";
 
-        List<Immutable> matches = completeTemplateFinder.findList(text);
+        List<Immutable> matches = templateFinder.findList(text);
 
         Set<String> expected = Set.of("T", "x", "A", "B", "y");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -239,7 +239,7 @@ class CompleteTemplateFinderTest {
     void testRepeatedParameters() {
         String text = "{{T|x = A|x = A}}";
 
-        List<Immutable> matches = completeTemplateFinder.findList(text);
+        List<Immutable> matches = templateFinder.findList(text);
 
         // To calculate the parameter position we assume the parameters are not repeated in the template
         // Therefore in this case though we find both parameters always the first position is returned
@@ -253,7 +253,7 @@ class CompleteTemplateFinderTest {
     void testSimilarParameters() {
         String text = "{{T|image_caption=A|image=A}}";
 
-        List<Immutable> matches = completeTemplateFinder.findList(text);
+        List<Immutable> matches = templateFinder.findList(text);
 
         Set<Immutable> expected = Set.of(
             Immutable.of(2, "T"),
@@ -269,7 +269,7 @@ class CompleteTemplateFinderTest {
     void testValueWithLink() {
         String text = "{{T|x=[[A|B]]|y=C}}";
 
-        List<Immutable> matches = completeTemplateFinder.findList(text);
+        List<Immutable> matches = templateFinder.findList(text);
 
         // To calculate the parameter position we assume the parameters are not repeated in the template
         // Therefore in this case though we find both parameters always the first position is returned
@@ -282,7 +282,7 @@ class CompleteTemplateFinderTest {
     void testArgumentWithFile() {
         String text = "{{T|xxx.jpg}}";
 
-        List<Immutable> matches = completeTemplateFinder.findList(text);
+        List<Immutable> matches = templateFinder.findList(text);
 
         Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "xxx.jpg"));
         Set<Immutable> actual = new HashSet<>(matches);

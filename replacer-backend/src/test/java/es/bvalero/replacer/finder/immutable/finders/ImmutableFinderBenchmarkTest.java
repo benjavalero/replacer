@@ -38,7 +38,7 @@ import org.springframework.test.context.ActiveProfiles;
         QuotesAngularFinder.class,
         QuotesDoubleFinder.class,
         QuotesTypographicFinder.class,
-        CompleteTemplateFinder.class,
+        TemplateFinder.class,
         SimpleMisspellingParser.class,
         SimpleMisspellingLoader.class,
         TableFinder.class,
