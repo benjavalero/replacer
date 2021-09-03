@@ -2,7 +2,6 @@ package es.bvalero.replacer.finder;
 
 import java.util.List;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
 import org.apache.commons.collections4.IterableUtils;
 import org.jetbrains.annotations.TestOnly;
 
@@ -41,10 +40,9 @@ public interface Finder<T extends FinderResult> {
 
     @TestOnly
     default List<T> findList(String text) {
-        return IterableUtils
-            .toList(this.find(FinderPage.of(text)))
-            .stream()
-            .filter(m -> m.validate(text))
-            .collect(Collectors.toList());
+        // When testing, validate the position of the match results.
+        return IterableUtils.toList(
+            IterableUtils.filteredIterable(this.find(FinderPage.of(text)), m -> m.validate(text))
+        );
     }
 }
