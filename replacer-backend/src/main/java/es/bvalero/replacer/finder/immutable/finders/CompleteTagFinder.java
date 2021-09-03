@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -43,20 +44,22 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
     private MatchResult findResult(FinderPage page, int start) {
         List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
-            start = findCompleteTag(page.getContent(), start, matches);
+            start = findCompleteTag(page, start, matches);
         }
         return matches.isEmpty() ? null : matches.get(0);
     }
 
-    private int findCompleteTag(String text, int start, List<MatchResult> matches) {
+    private int findCompleteTag(FinderPage page, int start, List<MatchResult> matches) {
+        String text = page.getContent();
         int startCompleteTag = findStartCompleteTag(text, start);
         if (startCompleteTag >= 0) {
             int startOpenTag = startCompleteTag + 1;
             String tag = findSupportedTag(text, startOpenTag);
             if (tag == null) {
+                // The tag found is not in the list. Continue.
                 return startOpenTag;
             } else {
-                int endOpenTag = findEndTag(text, startOpenTag + tag.length());
+                int endOpenTag = findEndOpenTag(text, startOpenTag + tag.length());
                 if (endOpenTag >= 0) {
                     // Check cases like <br />
                     if (text.substring(startOpenTag, endOpenTag).contains("/")) {
@@ -70,9 +73,26 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
                         );
                         return endCompleteTag;
                     } else {
+                        // Tag not closed. Notify and continue.
+                        Immutable immutable = Immutable.of(
+                            startCompleteTag,
+                            FinderUtils.getContextAroundWord(text, startCompleteTag, endOpenTag, CONTEXT_THRESHOLD)
+                        );
+                        logWarning(immutable, page, "Tag not closed");
                         return endOpenTag + 1;
                     }
                 } else {
+                    // Open tag not closed. Notify and continue.
+                    Immutable immutable = Immutable.of(
+                        startCompleteTag,
+                        FinderUtils.getContextAroundWord(
+                            text,
+                            startCompleteTag,
+                            startOpenTag + tag.length(),
+                            CONTEXT_THRESHOLD
+                        )
+                    );
+                    logWarning(immutable, page, "Open tag not closed");
                     return startOpenTag + tag.length();
                 }
             }
@@ -100,7 +120,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
         return completeTags.contains(tag) ? tag : null;
     }
 
-    private int findEndTag(String text, int start) {
+    private int findEndOpenTag(String text, int start) {
         return text.indexOf('>', start);
     }
 
