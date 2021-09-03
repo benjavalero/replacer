@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
@@ -19,14 +20,21 @@ class FileLowercaseFinder implements CosmeticFinder {
     @RegExp
     private static final String REGEX_FILE_SPACE = "\\[\\[(%s)[:\\]]";
 
+    private Pattern patternFileSpace;
+
     @Resource
     private List<String> fileSpaces;
 
-    @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+    @PostConstruct
+    public void init() {
         String concat = fileSpaces.stream().map(String::toLowerCase).collect(Collectors.joining("|"));
         String regex = String.format(REGEX_FILE_SPACE, concat);
-        return RegexMatchFinder.find(page.getContent(), Pattern.compile(regex));
+        patternFileSpace = Pattern.compile(regex);
+    }
+
+    @Override
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+        return RegexMatchFinder.find(page.getContent(), patternFileSpace);
     }
 
     @Override
