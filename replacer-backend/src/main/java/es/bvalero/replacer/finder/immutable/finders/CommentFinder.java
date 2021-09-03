@@ -50,19 +50,19 @@ class CommentFinder extends ImmutableCheckedFinder {
         String text = page.getContent();
         int startComment = findStartComment(text, start);
         if (startComment >= 0) {
-            int endComment = findEndComment(text, startComment + START_COMMENT.length());
+            int startCommentText = startComment + START_COMMENT.length();
+            int endComment = findEndComment(text, startCommentText);
             if (endComment >= 0) {
-                int endCommentComplete = endComment + END_COMMENT.length();
-                matches.add(LinearMatchResult.of(startComment, text.substring(startComment, endCommentComplete)));
-                return endCommentComplete;
+                matches.add(LinearMatchResult.of(startComment, text.substring(startComment, endComment)));
+                return endComment;
             } else {
-                // Comment not closed. Not worth keep on searching.
+                // Comment not closed. Notify and continue.
                 Immutable immutable = Immutable.of(
                     startComment,
-                    FinderUtils.getContextAroundWord(text, startComment, startComment, CONTEXT_THRESHOLD)
+                    FinderUtils.getContextAroundWord(text, startComment, startCommentText, CONTEXT_THRESHOLD)
                 );
                 logWarning(immutable, page, "Comment not closed");
-                return -1;
+                return startCommentText;
             }
         } else {
             return -1;
@@ -74,6 +74,7 @@ class CommentFinder extends ImmutableCheckedFinder {
     }
 
     private int findEndComment(String text, int start) {
-        return text.indexOf(END_COMMENT, start);
+        int posTagEndComment = text.indexOf(END_COMMENT, start);
+        return posTagEndComment >= 0 ? posTagEndComment + END_COMMENT.length() : posTagEndComment;
     }
 }
