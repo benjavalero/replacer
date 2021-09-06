@@ -4,11 +4,12 @@ import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.apache.commons.collections4.IterableUtils;
 
 class CompleteTagRegexIteratedFinder implements BenchmarkFinder {
 
@@ -25,10 +26,12 @@ class CompleteTagRegexIteratedFinder implements BenchmarkFinder {
 
     @Override
     public Set<BenchmarkResult> findMatches(String text) {
-        return patterns
-            .stream()
-            .flatMap(pattern -> IterableUtils.toList(RegexMatchFinder.find(text, pattern)).stream())
-            .map(this::convert)
-            .collect(Collectors.toSet());
+        Set<BenchmarkResult> results = new HashSet<>();
+        for (Pattern pattern : patterns) {
+            for (MatchResult matchResult : RegexMatchFinder.find(text, pattern)) {
+                results.add(convert(matchResult));
+            }
+        }
+        return results;
     }
 }

@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
+import org.springframework.lang.Nullable;
 
 class CompleteTagLinearFinder implements BenchmarkFinder {
 
@@ -21,9 +22,10 @@ class CompleteTagLinearFinder implements BenchmarkFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        return LinearMatchFinder.find(page, (page1, start) -> findResult(page1, start));
+        return LinearMatchFinder.find(page, this::findResult);
     }
 
+    @Nullable
     private MatchResult findResult(FinderPage page, int start) {
         List<MatchResult> matches = new ArrayList<>();
         while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
@@ -62,6 +64,7 @@ class CompleteTagLinearFinder implements BenchmarkFinder {
         return text.indexOf('<', start);
     }
 
+    @Nullable
     private String findSupportedTag(String text, int start) {
         StringBuilder tagBuilder = new StringBuilder();
         for (int i = start; i < text.length(); i++) {

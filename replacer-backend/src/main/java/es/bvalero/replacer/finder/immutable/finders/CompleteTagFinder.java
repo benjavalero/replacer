@@ -35,7 +35,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        // Even with several tags taken into account the faster approach is the linear search in one-pass
+        // Even with more than 10 tags, the faster approach with difference is the linear search in one-pass.
         return LinearMatchFinder.find(page, this::findResult);
     }
 
