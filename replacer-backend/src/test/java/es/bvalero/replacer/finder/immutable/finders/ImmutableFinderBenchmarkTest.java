@@ -42,7 +42,7 @@ import org.springframework.test.context.ActiveProfiles;
         SimpleMisspellingParser.class,
         SimpleMisspellingLoader.class,
         TableFinder.class,
-        UppercaseAfterFinder.class,
+        UppercaseFinder.class,
         UrlFinder.class,
         XmlTagFinder.class,
     }

@@ -15,15 +15,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class UppercaseAfterFinderTest {
+class UppercaseFinderTest {
 
     private static final SetValuedMap<WikipediaLanguage, SimpleMisspelling> EMPTY_MAP = new HashSetValuedHashMap<>();
 
-    private UppercaseAfterFinder uppercaseAfterFinder;
+    private UppercaseFinder uppercaseFinder;
 
     @BeforeEach
     public void setUp() {
-        uppercaseAfterFinder = new UppercaseAfterFinder();
+        uppercaseFinder = new UppercaseFinder();
 
         Set<String> uppercaseWords = Set.of("Enero", "Febrero", "Marzo", "Abril", "Mayo");
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> map = new HashSetValuedHashMap<>();
@@ -35,7 +35,7 @@ class UppercaseAfterFinderTest {
         }
 
         // Fake the update of the misspelling list in the misspelling manager
-        uppercaseAfterFinder.propertyChange(
+        uppercaseFinder.propertyChange(
             new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, EMPTY_MAP, map)
         );
     }
@@ -44,7 +44,7 @@ class UppercaseAfterFinderTest {
     void testUppercaseAfterList() {
         String text = "\n" + "Enero\n" + "* Febrero\n" + "# Marzo\n" + "Abril";
 
-        List<Immutable> matches = uppercaseAfterFinder.findList(text);
+        List<Immutable> matches = uppercaseFinder.findList(text);
 
         Set<String> expected = Set.of("Febrero", "Marzo");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -55,7 +55,7 @@ class UppercaseAfterFinderTest {
     void testUppercaseAfterDot() {
         String text = "En Enero. Febrero.";
 
-        List<Immutable> matches = uppercaseAfterFinder.findList(text);
+        List<Immutable> matches = uppercaseFinder.findList(text);
 
         Set<String> expected = Set.of("Febrero");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -66,7 +66,7 @@ class UppercaseAfterFinderTest {
     void testUppercaseAfterParameter() {
         String text = "{{ param=Enero }}";
 
-        List<Immutable> matches = uppercaseAfterFinder.findList(text);
+        List<Immutable> matches = uppercaseFinder.findList(text);
 
         Set<String> expected = Set.of("Enero");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -77,7 +77,7 @@ class UppercaseAfterFinderTest {
     void testUppercaseAfterTableCell() {
         String text = "{|\n" + "|+ Marzo\n" + "|-\n" + "! Abril !! Mayo\n" + "|-\n" + "|Enero||Febrero\n" + "|}";
 
-        List<Immutable> matches = uppercaseAfterFinder.findList(text);
+        List<Immutable> matches = uppercaseFinder.findList(text);
 
         Set<String> expected = Set.of("Enero", "Febrero", "Marzo", "Abril", "Mayo");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -88,7 +88,7 @@ class UppercaseAfterFinderTest {
     void testUppercaseAfterLinkAlias() {
         String text = "En [[Enero|Enero]]";
 
-        List<Immutable> matches = uppercaseAfterFinder.findList(text);
+        List<Immutable> matches = uppercaseFinder.findList(text);
 
         Set<String> expected = Collections.emptySet();
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -99,7 +99,7 @@ class UppercaseAfterFinderTest {
     void testUppercaseAfterHtmlTableCell() {
         String text = "<table><tr><td>Marzo</td></tr></table>";
 
-        List<Immutable> matches = uppercaseAfterFinder.findList(text);
+        List<Immutable> matches = uppercaseFinder.findList(text);
 
         Set<String> expected = Set.of("Marzo");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
@@ -128,7 +128,7 @@ class UppercaseAfterFinderTest {
         Set<String> expectedWords = Set.of(misspelling1.getWord(), misspelling2.getWord(), misspelling5.getWord());
         Assertions.assertEquals(
             expectedWords,
-            uppercaseAfterFinder.getUppercaseWords(map).get(WikipediaLanguage.getDefault())
+            uppercaseFinder.getUppercaseWords(map).get(WikipediaLanguage.getDefault())
         );
     }
 }

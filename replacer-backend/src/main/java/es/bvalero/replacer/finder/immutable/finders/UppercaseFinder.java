@@ -37,7 +37,7 @@ import org.springframework.stereotype.Component;
  * The considered punctuations are: `!`, `#`, `*`, `|`, `=` and `.`
  */
 @Component
-public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeListener {
+public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener {
 
     @org.intellij.lang.annotations.RegExp
     private static final String CELL_SEPARATOR = "\\|\\|";
@@ -55,7 +55,7 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
     private static final String CLASS_PUNCTUATION = "[=#*.!]";
 
     @org.intellij.lang.annotations.RegExp
-    private static final String REGEX_UPPERCASE_AFTER_PUNCTUATION = String.format(
+    private static final String REGEX_UPPERCASE_PUNCTUATION = String.format(
         "(%s|%s|%s|%s|%s)<Zs>*(%%s)",
         CLASS_PUNCTUATION,
         FIRST_CELL_SEPARATOR,
@@ -69,7 +69,7 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
 
     // Regex with the misspellings which start with uppercase and are case-sensitive
     // and starting with a special character which justifies the uppercase
-    private Map<WikipediaLanguage, RunAutomaton> uppercaseAfterAutomata = new EnumMap<>(WikipediaLanguage.class);
+    private Map<WikipediaLanguage, RunAutomaton> uppercaseAutomata = new EnumMap<>(WikipediaLanguage.class);
 
     @PostConstruct
     public void init() {
@@ -82,7 +82,7 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
         SetValuedMap<WikipediaLanguage, String> uppercaseWords = getUppercaseWords(
             (SetValuedMap<WikipediaLanguage, SimpleMisspelling>) evt.getNewValue()
         );
-        this.uppercaseAfterAutomata = buildUppercaseAfterAutomata(uppercaseWords);
+        this.uppercaseAutomata = buildUppercaseAutomata(uppercaseWords);
     }
 
     @VisibleForTesting
@@ -122,21 +122,21 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
     }
 
     @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)
-    private Map<WikipediaLanguage, RunAutomaton> buildUppercaseAfterAutomata(
+    private Map<WikipediaLanguage, RunAutomaton> buildUppercaseAutomata(
         SetValuedMap<WikipediaLanguage, String> uppercaseWords
     ) {
         Map<WikipediaLanguage, RunAutomaton> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : uppercaseWords.keySet()) {
-            map.put(lang, buildUppercaseAfterAutomaton(uppercaseWords.get(lang)));
+            map.put(lang, buildUppercaseAutomaton(uppercaseWords.get(lang)));
         }
         return map;
     }
 
     @Nullable
-    private RunAutomaton buildUppercaseAfterAutomaton(@Nullable Set<String> words) {
+    private RunAutomaton buildUppercaseAutomaton(@Nullable Set<String> words) {
         // There are hundreds of only uppercase words so the best approach is a simple alternation
         if (words != null && !words.isEmpty()) {
-            String alternations = String.format(REGEX_UPPERCASE_AFTER_PUNCTUATION, StringUtils.join(words, "|"));
+            String alternations = String.format(REGEX_UPPERCASE_PUNCTUATION, StringUtils.join(words, "|"));
             return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
         } else {
             return null;
@@ -150,7 +150,7 @@ public class UppercaseAfterFinder implements ImmutableFinder, PropertyChangeList
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        RunAutomaton automaton = this.uppercaseAfterAutomata.get(page.getLang());
+        RunAutomaton automaton = this.uppercaseAutomata.get(page.getLang());
         if (automaton == null) {
             return Collections.emptyList();
         } else {
