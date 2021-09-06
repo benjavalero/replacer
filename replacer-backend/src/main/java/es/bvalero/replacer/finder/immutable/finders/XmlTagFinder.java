@@ -50,9 +50,11 @@ class XmlTagFinder extends ImmutableCheckedFinder {
                     }
                     return endTag + 1;
                 } else {
+                    // Not an XML tag
                     return startTag + 1;
                 }
             } else {
+                // Not an XML tag
                 return startTag + 1;
             }
         } else {

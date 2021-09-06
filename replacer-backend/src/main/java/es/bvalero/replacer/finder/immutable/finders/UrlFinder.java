@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 class UrlFinder implements ImmutableFinder {
 
-    // The automaton works quite well and provides support for complex URLs so it is worth
-    // to use it even if it doesn't give the best performance
+    // The automaton works quite well and provides support for complex URLs,
+    // so it is worth to use it even if it doesn't give the best performance.
     private static final String REGEX_URL = "https?://<URI>";
 
     private static final RunAutomaton AUTOMATON_URL = new RunAutomaton(

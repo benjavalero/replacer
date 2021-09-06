@@ -28,11 +28,12 @@ class IgnorableTemplateFinder extends ImmutableCheckedFinder {
         String lowerContent = page.getContent().toLowerCase();
         for (String template : ignorableTemplates) {
             int start = lowerContent.indexOf(template);
+            // Check we are not capturing the start of a non-ignorable template
             if (start >= 0 && FinderUtils.isWordCompleteInText(start, template, lowerContent)) {
                 return List.of(buildCompleteMatchResult(page));
             }
         }
-        // If we get here no ignore template has been found
+        // If we get here no ignorable template has been found
         return Collections.emptyList();
     }
 

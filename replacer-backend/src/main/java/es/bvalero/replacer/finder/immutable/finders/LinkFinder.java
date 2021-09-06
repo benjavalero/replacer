@@ -65,6 +65,7 @@ class LinkFinder extends ImmutableCheckedFinder {
         // Each link found may contain nested links which are added after
         int start = 0;
         while (start >= 0 && start < page.getContent().length()) {
+            // Use a LinkedList as some elements will be prepended
             List<LinearMatchResult> subMatches = new LinkedList<>();
             start = findLink(page, start, subMatches);
             matches.addAll(subMatches);
@@ -77,16 +78,15 @@ class LinkFinder extends ImmutableCheckedFinder {
         int startLink = findStartLink(text, start);
         if (startLink >= 0) {
             LinearMatchResult completeMatch = findNestedLink(text, startLink, matches);
-            if (completeMatch != null) {
-                matches.add(0, completeMatch);
-                return completeMatch.end();
-            } else {
-                // Link not closed. Not worth keep on searching.
+            if (completeMatch == null) {
+                // Link not closed. Not worth keep on searching as the next links are considered as nested.
                 logWarning(text, startLink, startLink + START_LINK.length(), page, "Link not closed");
                 return -1;
+            } else {
+                matches.add(0, completeMatch);
+                return completeMatch.end();
             }
         } else {
-            // No more link
             return -1;
         }
     }

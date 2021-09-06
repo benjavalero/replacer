@@ -19,9 +19,6 @@ import org.springframework.stereotype.Component;
  *
  * It also finds words used commonly in titles, as `Sky` in `Sky News`.
  * Or compound words, as `Los Angeles`.
- *
- * The list will keep on growing. For the moment the best approach is to iterate
- * the list of words and find them in the text with `String.indexOf`.
  */
 @Component
 class PersonNameFinder implements ImmutableFinder {
@@ -37,6 +34,8 @@ class PersonNameFinder implements ImmutableFinder {
     @Override
     public Iterable<Immutable> find(FinderPage page) {
         List<Immutable> result = new ArrayList<>();
+        // The list will keep on growing
+        // For the moment the best approach is to iterate the list of words and find them in the text.
         for (String personName : personNames) {
             result.addAll(findResults(page.getContent(), personName));
         }

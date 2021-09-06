@@ -69,6 +69,10 @@ class CommentFinder extends ImmutableCheckedFinder {
 
     private int findEndComment(String text, int start) {
         int posTagEndComment = text.indexOf(END_COMMENT, start);
-        return posTagEndComment >= 0 ? posTagEndComment + END_COMMENT.length() : posTagEndComment;
+        if (posTagEndComment >= 0) {
+            return posTagEndComment + END_COMMENT.length();
+        } else {
+            return -1;
+        }
     }
 }

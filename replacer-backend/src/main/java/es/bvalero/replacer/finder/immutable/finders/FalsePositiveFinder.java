@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import com.jcabi.aspects.Loggable;
-import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.WikipediaLanguage;
@@ -78,7 +77,7 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
                     "|"
                 )
             );
-            return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
+            return new RunAutomaton(new RegExp(alternations).toAutomaton());
         } else {
             return null;
         }
@@ -92,14 +91,12 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         RunAutomaton automaton = this.falsePositivesAutomata.get(page.getLang());
-        return automaton == null
-            ? Collections.emptyList()
-            // Benchmarks show similar performance with and without validation
-            : AutomatonMatchFinder.find(page.getContent(), automaton);
+        return automaton == null ? Collections.emptyList() : AutomatonMatchFinder.find(page.getContent(), automaton);
     }
 
     @Override
     public boolean validate(MatchResult match, String text) {
+        // Benchmarks show similar performance with and without validation
         return FinderUtils.isWordCompleteInText(match.start(), match.group(), text);
     }
 }

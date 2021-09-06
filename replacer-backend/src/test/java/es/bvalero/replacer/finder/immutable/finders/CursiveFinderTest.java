@@ -124,4 +124,26 @@ class CursiveFinderTest {
 
         Assertions.assertEquals(2, matches.size());
     }
+
+    @Test
+    void testBlankCursive() {
+        String cursive = "A blank '' '' cursive.";
+        String text = String.format("%s", cursive);
+
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
+
+        Assertions.assertTrue(matches.isEmpty());
+    }
+
+    @Test
+    void testBlankCursiveWithNewLine() {
+        String cursive = "A blank cursive ''\n";
+        String text = String.format("%s", cursive);
+
+        ImmutableFinder cursiveFinder = new CursiveFinder();
+        List<Immutable> matches = cursiveFinder.findList(text);
+
+        Assertions.assertTrue(matches.isEmpty());
+    }
 }

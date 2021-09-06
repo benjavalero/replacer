@@ -48,17 +48,21 @@ class CursiveFinder extends ImmutableCheckedFinder {
         int startCursive = findStartCursive(text, start);
         if (startCursive >= 0) {
             int numQuotes = findNumQuotes(text, startCursive);
+            assert numQuotes >= 2;
             int endQuotes = findEndQuotes(text, startCursive + numQuotes, numQuotes);
             if (endQuotes >= 0) {
-                if (StringUtils.isBlank(text.substring(startCursive + numQuotes, endQuotes))) {
+                // Check if the content of the cursive is empty. Notify and continue in such a case.
+                int endCursiveText = text.length() == endQuotes || text.charAt(endQuotes) == '\n'
+                    ? endQuotes
+                    : endQuotes - numQuotes;
+                if (StringUtils.isBlank(text.substring(startCursive + numQuotes, endCursiveText))) {
                     logWarning(text, startCursive, endQuotes, page, "Empty cursive");
                 } else {
                     matches.add(LinearMatchResult.of(startCursive, text.substring(startCursive, endQuotes)));
                 }
                 return endQuotes;
             } else {
-                // No cursive ending found
-                // It's possible that the cursive start was a false positive
+                // No cursive ending found. Notify and continue.
                 logWarning(text, startCursive, startCursive + numQuotes, page, "Truncated cursive");
                 return startCursive + numQuotes;
             }
@@ -90,6 +94,7 @@ class CursiveFinder extends ImmutableCheckedFinder {
         for (; i < text.length(); i++) {
             char ch = text.charAt(i);
             if (ch == '\n') {
+                // New lines are considered as an ending for cursive
                 return i;
             } else if (ch == '\'') {
                 tagBuilder.append(ch);

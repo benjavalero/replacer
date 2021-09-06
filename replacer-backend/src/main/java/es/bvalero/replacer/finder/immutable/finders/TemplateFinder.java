@@ -101,6 +101,7 @@ class TemplateFinder extends ImmutableCheckedFinder {
         // Each template found may contain nested templates which are added after
         int start = 0;
         while (start >= 0 && start < page.getContent().length()) {
+            // Use a LinkedList as some elements will be prepended
             List<LinearMatchResult> subMatches = new LinkedList<>();
             start = findTemplate(page, start, subMatches);
             matches.addAll(subMatches);
@@ -118,12 +119,11 @@ class TemplateFinder extends ImmutableCheckedFinder {
                 matches.add(0, completeMatch);
                 return completeMatch.end();
             } else {
-                // Template not closed. Not worth keep on searching.
+                // Template not closed. Not worth keep on searching as the next templates are considered as nested.
                 logWarning(text, startTemplate, startTemplate + START_TEMPLATE.length(), page, "Template not closed");
                 return -1;
             }
         } else {
-            // No more templates
             return -1;
         }
     }

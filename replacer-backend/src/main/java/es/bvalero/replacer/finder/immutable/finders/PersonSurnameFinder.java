@@ -15,9 +15,6 @@ import org.springframework.stereotype.Component;
 /**
  * Find person surnames. Also usual nouns preceded by a word starting in uppercase,
  * e.g. in Spanish `RCA Records`, as "records" is also a noun to be written with an accent.
- *
- * The list will keep on growing. For the moment the best approach is to iterate
- * the list of words and find them in the text with `String.indexOf`.
  */
 @Component
 class PersonSurnameFinder implements ImmutableFinder {
@@ -33,6 +30,8 @@ class PersonSurnameFinder implements ImmutableFinder {
     @Override
     public Iterable<Immutable> find(FinderPage page) {
         List<Immutable> result = new ArrayList<>();
+        // The list will keep on growing
+        // For the moment the best approach is to iterate the list of words and find them in the text.
         for (String personSurname : personSurnames) {
             result.addAll(findResults(page.getContent(), personSurname));
         }

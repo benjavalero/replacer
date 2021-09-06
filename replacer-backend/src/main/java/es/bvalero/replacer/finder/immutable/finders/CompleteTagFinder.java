@@ -60,12 +60,14 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
             } else {
                 int endOpenTag = findEndOpenTag(text, startOpenTag + tag.length());
                 if (endOpenTag >= 0) {
-                    // Check cases like <br />
-                    if (text.substring(startOpenTag, endOpenTag).contains("/")) {
-                        return endOpenTag + 1;
+                    endOpenTag++; // Move to the position next to the end of the open tag
+
+                    // Check self-closing tags
+                    if (text.substring(startOpenTag, endOpenTag).endsWith("/>")) {
+                        return endOpenTag;
                     }
 
-                    int endCompleteTag = findEndCompleteTag(text, endOpenTag + 1, tag);
+                    int endCompleteTag = findEndCompleteTag(text, endOpenTag, tag);
                     if (endCompleteTag >= 0) {
                         matches.add(
                             LinearMatchResult.of(startCompleteTag, text.substring(startCompleteTag, endCompleteTag))
@@ -74,7 +76,7 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
                     } else {
                         // Tag not closed. Notify and continue.
                         logWarning(text, startCompleteTag, endOpenTag, page, "Tag not closed");
-                        return endOpenTag + 1;
+                        return endOpenTag;
                     }
                 } else {
                     // Open tag not closed. Notify and continue.

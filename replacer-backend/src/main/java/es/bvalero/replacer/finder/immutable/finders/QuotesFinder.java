@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
@@ -18,7 +17,7 @@ import org.springframework.lang.Nullable;
 abstract class QuotesFinder extends ImmutableCheckedFinder {
 
     private static final char NEW_LINE = '\n';
-    private static final Set<Character> FORBIDDEN_CHARS = Set.of('\n', '#', '{', '}', '<', '>');
+    private static final Set<Character> FORBIDDEN_CHARS = Set.of('#', '{', '}', '<', '>');
     private static final Set<Character> QUOTE_CHARS = Set.of('«', '»', '"', '“', '”');
 
     @Override
@@ -55,20 +54,20 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
         if (startQuote >= 0) {
             int endQuote = findEndQuote(text, startQuote + 1);
             if (endQuote >= 0) {
-                String quotedText = text.substring(startQuote, endQuote + 1);
+                endQuote++; // Move to the position next to the end of the quote
+
+                String quotedText = text.substring(startQuote, endQuote);
+                String innerText = quotedText.substring(1, quotedText.length() - 1);
 
                 if (!validateForbiddenChars(quotedText)) {
-                    // Quote containing new lines or other forbidden chars. Skipping.
-                    return endQuote + 1;
+                    // Quote containing forbidden chars. Continue.
+                    return endQuote;
                 }
 
-                LinearMatchResult linearMatchResult = LinearMatchResult.of(startQuote, quotedText);
-
                 // Check the quoted text is not empty and is not an attribute
-                String innerText = quotedText.substring(1, quotedText.length() - 1);
                 if (StringUtils.isBlank(innerText) && text.charAt(startQuote - 1) != '=') {
                     logWarning(text, startQuote, endQuote, page, "Empty quoted text");
-                    return endQuote + 1;
+                    return endQuote;
                 }
 
                 // Check the quoted text is not quoted again
@@ -77,16 +76,15 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
                     QUOTE_CHARS.contains(innerText.charAt(0)) &&
                     QUOTE_CHARS.contains(innerText.charAt(innerText.length() - 1))
                 ) {
-                    Immutable immutable = convert(linearMatchResult);
-                    logWarning(immutable.getText(), immutable.getStart(), immutable.getEnd(), page, "Redundant quotes");
+                    logWarning(text, startQuote, endQuote, page, "Redundant quotes");
                     // Continue
                 }
 
-                matches.add(linearMatchResult);
-                return endQuote + 1;
+                matches.add(LinearMatchResult.of(startQuote, quotedText));
+                return endQuote;
             } else {
                 // No quote ending found
-                // It's possible that the quote start was a false positive
+                // It's possible that the quote start was a false positive or the quote contains new lines
                 logWarning(text, startQuote, startQuote + 1, page, "Truncated quotes");
                 return startQuote + 1;
             }
@@ -103,6 +101,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
         for (int i = start; i < text.length(); i++) {
             char ch = text.charAt(i);
             if (ch == NEW_LINE) {
+                // New lines are not allowed inside quotes
                 return -1;
             } else if (ch == getEndChar()) {
                 return i;
