@@ -9,12 +9,12 @@ import java.util.regex.Pattern;
 
 class WordRegexFinder implements BenchmarkFinder {
 
-    private final List<Pattern> words;
+    private final List<Pattern> patterns;
 
     WordRegexFinder(Collection<String> words) {
-        this.words = new ArrayList<>();
+        this.patterns = new ArrayList<>();
         for (String word : words) {
-            this.words.add(Pattern.compile(word));
+            this.patterns.add(Pattern.compile(word));
         }
     }
 
@@ -22,8 +22,8 @@ class WordRegexFinder implements BenchmarkFinder {
     public Set<BenchmarkResult> findMatches(String text) {
         // We loop over all the words and find them in the text with a regex
         Set<BenchmarkResult> matches = new HashSet<>();
-        for (Pattern word : this.words) {
-            Matcher m = word.matcher(text);
+        for (Pattern pattern : this.patterns) {
+            Matcher m = pattern.matcher(text);
             while (m.find()) {
                 if (FinderUtils.isWordCompleteInText(m.start(), m.group(), text)) {
                     matches.add(BenchmarkResult.of(m.start(), m.group()));

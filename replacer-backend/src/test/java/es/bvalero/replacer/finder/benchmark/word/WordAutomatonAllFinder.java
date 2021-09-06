@@ -12,11 +12,11 @@ import java.util.Set;
 
 class WordAutomatonAllFinder implements BenchmarkFinder {
 
-    private final RunAutomaton wordPattern;
+    private final RunAutomaton wordAutomaton;
     private final Set<String> words;
 
     WordAutomatonAllFinder(Collection<String> words) {
-        this.wordPattern = new RunAutomaton(new RegExp("<L>+").toAutomaton(new DatatypesAutomatonProvider()));
+        this.wordAutomaton = new RunAutomaton(new RegExp("<L>+").toAutomaton(new DatatypesAutomatonProvider()));
         this.words = new HashSet<>(words);
     }
 
@@ -24,7 +24,7 @@ class WordAutomatonAllFinder implements BenchmarkFinder {
     public Set<BenchmarkResult> findMatches(String text) {
         // Find all words in the text with an automaton and check if they are in the list
         Set<BenchmarkResult> matches = new HashSet<>();
-        AutomatonMatcher m = this.wordPattern.newMatcher(text);
+        AutomatonMatcher m = this.wordAutomaton.newMatcher(text);
         while (m.find()) {
             if (this.words.contains(m.group())) {
                 matches.add(BenchmarkResult.of(m.start(), m.group()));

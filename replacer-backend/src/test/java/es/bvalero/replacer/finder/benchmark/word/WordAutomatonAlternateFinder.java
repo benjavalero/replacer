@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
 import dk.brics.automaton.AutomatonMatcher;
-import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
@@ -14,18 +13,18 @@ import org.apache.commons.lang3.StringUtils;
 
 class WordAutomatonAlternateFinder implements BenchmarkFinder {
 
-    private final RunAutomaton words;
+    private final RunAutomaton automaton;
 
     WordAutomatonAlternateFinder(Collection<String> words) {
         String alternations = '(' + StringUtils.join(words, "|") + ')';
-        this.words = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
+        this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
 
     @Override
     public Set<BenchmarkResult> findMatches(String text) {
         // Build an alternate automaton with all the words and match it against the text
         Set<BenchmarkResult> matches = new HashSet<>();
-        AutomatonMatcher m = this.words.newMatcher(text);
+        AutomatonMatcher m = this.automaton.newMatcher(text);
         while (m.find()) {
             if (FinderUtils.isWordCompleteInText(m.start(), m.group(), text)) {
                 matches.add(BenchmarkResult.of(m.start(), m.group()));
