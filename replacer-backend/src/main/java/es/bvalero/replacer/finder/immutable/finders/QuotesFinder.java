@@ -4,7 +4,6 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
@@ -68,11 +67,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
                 // Check the quoted text is not empty and is not an attribute
                 String innerText = quotedText.substring(1, quotedText.length() - 1);
                 if (StringUtils.isBlank(innerText) && text.charAt(startQuote - 1) != '=') {
-                    Immutable immutable = Immutable.of(
-                        startQuote,
-                        FinderUtils.getContextAroundWord(text, startQuote, endQuote, CONTEXT_THRESHOLD)
-                    );
-                    logWarning(immutable, page, "Empty quoted text");
+                    logWarning(text, startQuote, endQuote, page, "Empty quoted text");
                     return endQuote + 1;
                 }
 
@@ -82,7 +77,8 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
                     QUOTE_CHARS.contains(innerText.charAt(0)) &&
                     QUOTE_CHARS.contains(innerText.charAt(innerText.length() - 1))
                 ) {
-                    logWarning(convert(linearMatchResult), page, "Redundant quotes");
+                    Immutable immutable = convert(linearMatchResult);
+                    logWarning(immutable.getText(), immutable.getStart(), immutable.getEnd(), page, "Redundant quotes");
                     // Continue
                 }
 
@@ -91,11 +87,7 @@ abstract class QuotesFinder extends ImmutableCheckedFinder {
             } else {
                 // No quote ending found
                 // It's possible that the quote start was a false positive
-                Immutable immutable = Immutable.of(
-                    startQuote,
-                    FinderUtils.getContextAroundWord(text, startQuote, startQuote + 1, CONTEXT_THRESHOLD)
-                );
-                logWarning(immutable, page, "Truncated quotes");
+                logWarning(text, startQuote, startQuote + 1, page, "Truncated quotes");
                 return startQuote + 1;
             }
         } else {

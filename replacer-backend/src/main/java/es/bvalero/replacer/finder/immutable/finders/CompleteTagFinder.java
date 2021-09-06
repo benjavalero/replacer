@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -74,25 +73,12 @@ class CompleteTagFinder extends ImmutableCheckedFinder {
                         return endCompleteTag;
                     } else {
                         // Tag not closed. Notify and continue.
-                        Immutable immutable = Immutable.of(
-                            startCompleteTag,
-                            FinderUtils.getContextAroundWord(text, startCompleteTag, endOpenTag, CONTEXT_THRESHOLD)
-                        );
-                        logWarning(immutable, page, "Tag not closed");
+                        logWarning(text, startCompleteTag, endOpenTag, page, "Tag not closed");
                         return endOpenTag + 1;
                     }
                 } else {
                     // Open tag not closed. Notify and continue.
-                    Immutable immutable = Immutable.of(
-                        startCompleteTag,
-                        FinderUtils.getContextAroundWord(
-                            text,
-                            startCompleteTag,
-                            startOpenTag + tag.length(),
-                            CONTEXT_THRESHOLD
-                        )
-                    );
-                    logWarning(immutable, page, "Open tag not closed");
+                    logWarning(text, startCompleteTag, startOpenTag + tag.length(), page, "Open tag not closed");
                     return startOpenTag + tag.length();
                 }
             }

@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.immutable;
 
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,7 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 @Slf4j
 public abstract class ImmutableCheckedFinder implements ImmutableFinder {
 
-    protected static final int CONTEXT_THRESHOLD = 50;
+    private static final String SUFFIX_FINDER_CLASS = "Finder";
+    private static final int CONTEXT_THRESHOLD = 50;
 
     private boolean showLongImmutables;
 
@@ -40,19 +42,22 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
 
     private void checkMaxLength(Immutable immutable, FinderPage page) {
         if (immutable.getText().length() > getMaxLength()) {
-            logWarning(immutable, page, "Immutable too long");
+            String message = String.format("%s too long", getImmutableType());
+            logWarning(immutable.getText(), page, message);
         }
     }
 
-    protected void logWarning(Immutable immutable, FinderPage page, String message) {
-        LOGGER.warn(
-            "{}: {} - {} - {} - {} - {}",
-            message,
-            this.getClass().getSimpleName(),
-            immutable.getText(),
-            page.getLang(),
-            page.getTitle(),
-            immutable.getStart()
-        );
+    private String getImmutableType() {
+        String className = this.getClass().getSimpleName();
+        return className.substring(className.length() - SUFFIX_FINDER_CLASS.length());
+    }
+
+    protected void logWarning(String pageContent, int start, int end, FinderPage page, String message) {
+        String immutableText = FinderUtils.getContextAroundWord(pageContent, start, end, CONTEXT_THRESHOLD);
+        logWarning(immutableText, page, message);
+    }
+
+    private void logWarning(String immutableText, FinderPage page, String message) {
+        LOGGER.warn("{}: {} - {} - {}", message, immutableText, page.getLang(), page.getTitle());
     }
 }

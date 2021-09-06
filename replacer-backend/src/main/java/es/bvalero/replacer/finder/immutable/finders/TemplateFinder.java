@@ -119,11 +119,7 @@ class TemplateFinder extends ImmutableCheckedFinder {
                 return completeMatch.end();
             } else {
                 // Template not closed. Not worth keep on searching.
-                Immutable immutable = Immutable.of(
-                    startTemplate,
-                    FinderUtils.getContextAroundWord(text, startTemplate, startTemplate, CONTEXT_THRESHOLD)
-                );
-                logWarning(immutable, page, "Template not closed");
+                logWarning(text, startTemplate, startTemplate + START_TEMPLATE.length(), page, "Template not closed");
                 return -1;
             }
         } else {

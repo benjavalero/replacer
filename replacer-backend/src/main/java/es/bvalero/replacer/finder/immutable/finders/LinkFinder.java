@@ -82,11 +82,7 @@ class LinkFinder extends ImmutableCheckedFinder {
                 return completeMatch.end();
             } else {
                 // Link not closed. Not worth keep on searching.
-                Immutable immutable = Immutable.of(
-                    startLink,
-                    FinderUtils.getContextAroundWord(text, startLink, startLink, CONTEXT_THRESHOLD)
-                );
-                logWarning(immutable, page, "Link not closed");
+                logWarning(text, startLink, startLink + START_LINK.length(), page, "Link not closed");
                 return -1;
             }
         } else {

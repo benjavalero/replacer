@@ -1,10 +1,8 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
@@ -53,11 +51,7 @@ class CursiveFinder extends ImmutableCheckedFinder {
             int endQuotes = findEndQuotes(text, startCursive + numQuotes, numQuotes);
             if (endQuotes >= 0) {
                 if (StringUtils.isBlank(text.substring(startCursive + numQuotes, endQuotes))) {
-                    Immutable immutable = Immutable.of(
-                        startCursive,
-                        FinderUtils.getContextAroundWord(text, startCursive, endQuotes, CONTEXT_THRESHOLD)
-                    );
-                    logWarning(immutable, page, "Empty cursive");
+                    logWarning(text, startCursive, endQuotes, page, "Empty cursive");
                 } else {
                     matches.add(LinearMatchResult.of(startCursive, text.substring(startCursive, endQuotes)));
                 }
@@ -65,11 +59,7 @@ class CursiveFinder extends ImmutableCheckedFinder {
             } else {
                 // No cursive ending found
                 // It's possible that the cursive start was a false positive
-                Immutable immutable = Immutable.of(
-                    startCursive,
-                    FinderUtils.getContextAroundWord(text, startCursive, startCursive + numQuotes, CONTEXT_THRESHOLD)
-                );
-                logWarning(immutable, page, "Truncated cursive");
+                logWarning(text, startCursive, startCursive + numQuotes, page, "Truncated cursive");
                 return startCursive + numQuotes;
             }
         } else {

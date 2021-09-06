@@ -1,10 +1,8 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
@@ -57,11 +55,7 @@ class CommentFinder extends ImmutableCheckedFinder {
                 return endComment;
             } else {
                 // Comment not closed. Notify and continue.
-                Immutable immutable = Immutable.of(
-                    startComment,
-                    FinderUtils.getContextAroundWord(text, startComment, startCommentText, CONTEXT_THRESHOLD)
-                );
-                logWarning(immutable, page, "Comment not closed");
+                logWarning(text, startComment, startCommentText, page, "Comment not closed");
                 return startCommentText;
             }
         } else {
