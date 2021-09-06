@@ -2,10 +2,12 @@ package es.bvalero.replacer.finder.immutable.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
+import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,27 +25,51 @@ class TableFinder extends ImmutableCheckedFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        return findAllTableStyles(page.getContent());
+        return LinearMatchFinder.find(page, this::findResult);
     }
 
-    private List<MatchResult> findAllTableStyles(String text) {
-        List<MatchResult> tableLines = new ArrayList<>();
-        int startLine = -1;
-        for (int i = 0; i < text.length(); i++) {
-            if (text.charAt(i) == '\n') {
-                if (startLine >= 0) {
-                    // Finish line
-                    String line = text.substring(startLine, i);
-                    if (isImmutableLine(line)) {
-                        tableLines.add(LinearMatchResult.of(startLine, line));
-                    }
-                }
-                startLine = -1;
-            } else if (startLine < 0) {
-                startLine = i;
+    @Nullable
+    private MatchResult findResult(FinderPage page, int start) {
+        List<MatchResult> matches = new ArrayList<>();
+        while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
+            start = findLine(page, start, matches);
+        }
+        return matches.isEmpty() ? null : matches.get(0);
+    }
+
+    private int findLine(FinderPage page, int start, List<MatchResult> matches) {
+        String text = page.getContent();
+        int startLine = findStartLine(text, start);
+        if (startLine >= 0) {
+            int endLine = findEndLine(text, startLine);
+            String line;
+            if (endLine >= 0) {
+                line = text.substring(startLine, endLine);
+            } else {
+                // End of file
+                line = text.substring(startLine);
+            }
+
+            if (isImmutableLine(line)) {
+                matches.add(LinearMatchResult.of(startLine, line));
+            }
+            return endLine;
+        } else {
+            return -1;
+        }
+    }
+
+    private int findStartLine(String text, int start) {
+        for (int i = start; i < text.length(); i++) {
+            if (text.charAt(i) != '\n') {
+                return i;
             }
         }
-        return tableLines;
+        return -1;
+    }
+
+    private int findEndLine(String text, int start) {
+        return text.indexOf('\n', start);
     }
 
     private boolean isImmutableLine(String line) {
