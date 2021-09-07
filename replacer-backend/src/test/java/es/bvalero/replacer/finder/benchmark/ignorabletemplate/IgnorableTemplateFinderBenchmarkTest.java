@@ -3,39 +3,33 @@ package es.bvalero.replacer.finder.benchmark.ignorabletemplate;
 import static org.hamcrest.Matchers.is;
 
 import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
+import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import javax.annotation.Resource;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest(classes = XmlConfiguration.class)
 class IgnorableTemplateFinderBenchmarkTest extends BaseFinderBenchmark {
 
-    private static final int ITERATIONS = 1000;
+    @Resource
+    private Set<String> ignorableTemplates;
 
     @Test
-    void testRedirectMatcherBenchmark() throws ReplacerException {
-        // Load the matchers
-        List<IgnorableTemplateAbstractFinder> matchers = new ArrayList<>();
-        matchers.add(new IgnorableTemplateLowercaseContainsFinder()); // WINNER
-        matchers.add(new IgnorableTemplateContainsIgnoreCaseFinder());
-        matchers.add(new IgnorableTemplateRegexInsensitiveFinder());
+    void testBenchmark() throws ReplacerException {
+        // Load the finders
+        List<BenchmarkFinder> finders = new ArrayList<>();
+        finders.add(new IgnorableTemplateLowercaseContainsFinder(ignorableTemplates));
+        finders.add(new IgnorableTemplateRegexFinder(ignorableTemplates));
+        finders.add(new IgnorableTemplateRegexInsensitiveFinder(ignorableTemplates));
+        finders.add(new IgnorableTemplateAutomatonFinder(ignorableTemplates));
 
-        System.out.println();
-        System.out.println("FINDER\tTIME");
-        findSampleContents()
-            .forEach(
-                value -> {
-                    for (IgnorableTemplateAbstractFinder matcher : matchers) {
-                        long start = System.currentTimeMillis();
-                        for (int i = 0; i < ITERATIONS; i++) {
-                            matcher.isRedirect(value);
-                        }
-                        long end = System.currentTimeMillis() - start;
-                        System.out.println(matcher.getClass().getSimpleName() + "\t" + end);
-                    }
-                }
-            );
+        runBenchmark(finders);
 
         MatcherAssert.assertThat(true, is(true));
     }

@@ -1,34 +1,39 @@
 package es.bvalero.replacer.finder.benchmark.ignorabletemplate;
 
+import dk.brics.automaton.AutomatonMatcher;
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
-class IgnorableTemplateRegexInsensitiveFinder implements BenchmarkFinder {
+class IgnorableTemplateAutomatonFinder implements BenchmarkFinder {
 
-    private final Pattern pattern;
+    private final RunAutomaton automaton;
 
-    IgnorableTemplateRegexInsensitiveFinder(Set<String> ignorableTemplates) {
+    IgnorableTemplateAutomatonFinder(Set<String> ignorableTemplates) {
         Set<String> fixedTemplates = ignorableTemplates
             .stream()
             .map(s -> s.replace("{", "\\{"))
+            .map(s -> s.replace("#", "\\#"))
+            .map(FinderUtils::toLowerCase)
             .collect(Collectors.toSet());
         String alternations = '(' + StringUtils.join(fixedTemplates, "|") + ')';
-        this.pattern = Pattern.compile(alternations, Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+        this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
 
     @Override
     public Set<BenchmarkResult> findMatches(String text) {
         Set<BenchmarkResult> matches = new HashSet<>();
-        Matcher m = this.pattern.matcher(FinderUtils.toLowerCase(text));
+        String lowerCaseText = FinderUtils.toLowerCase(text);
+        AutomatonMatcher m = this.automaton.newMatcher(lowerCaseText);
         while (m.find()) {
-            if (FinderUtils.isWordCompleteInText(m.start(), m.group(), text)) {
+            if (FinderUtils.isWordCompleteInText(m.start(), m.group(), lowerCaseText)) {
                 matches.add(BenchmarkResult.of(0, text));
             }
         }
