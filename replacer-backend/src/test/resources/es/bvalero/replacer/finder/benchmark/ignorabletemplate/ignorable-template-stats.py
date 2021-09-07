@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Import data
-words = pd.read_csv('redirect-benchmark.csv', sep='\t')
+words = pd.read_csv('ignorable-template-benchmark.csv', sep='\t')
 
 # Box Plot (Log)
 f, (ax) = plt.subplots(1, 1, figsize=(12, 4))

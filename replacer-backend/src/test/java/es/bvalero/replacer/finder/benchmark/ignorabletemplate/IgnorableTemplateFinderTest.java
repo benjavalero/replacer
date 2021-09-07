@@ -1,10 +1,10 @@
-package es.bvalero.replacer.finder.benchmark.redirect;
+package es.bvalero.replacer.finder.benchmark.ignorabletemplate;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RedirectMatcherTest {
+class IgnorableTemplateFinderTest {
 
     private String text;
 
@@ -15,19 +15,19 @@ class RedirectMatcherTest {
 
     @Test
     void testRedirectLowercaseContainsMatcher() {
-        RedirectLowercaseContainsMatcher matcher = new RedirectLowercaseContainsMatcher();
+        IgnorableTemplateLowercaseContainsFinder matcher = new IgnorableTemplateLowercaseContainsFinder();
         Assertions.assertTrue(matcher.isRedirect(text));
     }
 
     @Test
     void testRedirectContainsIgnoreCaseMatcher() {
-        RedirectContainsIgnoreCaseMatcher matcher = new RedirectContainsIgnoreCaseMatcher();
+        IgnorableTemplateContainsIgnoreCaseFinder matcher = new IgnorableTemplateContainsIgnoreCaseFinder();
         Assertions.assertTrue(matcher.isRedirect(text));
     }
 
     @Test
     void testRedirectRegexInsensitiveMatcher() {
-        RedirectRegexInsensitiveMatcher matcher = new RedirectRegexInsensitiveMatcher();
+        IgnorableTemplateRegexInsensitiveFinder matcher = new IgnorableTemplateRegexInsensitiveFinder();
         Assertions.assertTrue(matcher.isRedirect(text));
     }
 }
