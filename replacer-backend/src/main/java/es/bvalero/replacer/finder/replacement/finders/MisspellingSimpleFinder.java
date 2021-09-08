@@ -47,6 +47,8 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
 
     @Override
     public Iterable<Replacement> find(FinderPage page) {
+        // There are thousands of simple misspellings
+        // The best approach is to find all words in the text and check if they are in the list
         // We need to perform additional transformations according to the language
         return StreamSupport
             .stream(LinearMatchFinder.find(page, this::findResult).spliterator(), false)
