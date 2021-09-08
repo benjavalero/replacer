@@ -13,9 +13,9 @@ import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
@@ -90,12 +90,11 @@ public class DateFinder implements ReplacementFinder {
 
     @Override
     public Iterable<Replacement> find(FinderPage page) {
-        // We need to perform additional transformations according to the language
-        return StreamSupport
-            .stream(findMatchResults(page).spliterator(), false)
-            .filter(r -> validate(r, page.getContent()))
-            .map(m -> this.convert(m, page.getLang()))
-            .collect(Collectors.toList());
+        // We need to perform additional transformations according to the language in the last conversion step
+        String text = page.getContent();
+        Iterable<MatchResult> allMatchResults = findMatchResults(page);
+        Iterable<MatchResult> validMatchResults = filterValidMatchResults(allMatchResults, text);
+        return IterableUtils.transformedIterable(validMatchResults, m -> this.convert(m, page.getLang()));
     }
 
     @Override
