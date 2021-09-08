@@ -34,7 +34,7 @@ class SurnameFinderBenchmarkTest extends BaseFinderBenchmark {
         // finders.add(new SurnameRegexAlternateCompleteFinder(personSurnames)); // Short
         finders.add(new SurnameAutomatonAlternateCompleteFinder(personSurnames));
 
-        runBenchmark(finders, WARM_UP, ITERATIONS);
+        runBenchmark(finders);
 
         MatcherAssert.assertThat(true, is(true));
     }

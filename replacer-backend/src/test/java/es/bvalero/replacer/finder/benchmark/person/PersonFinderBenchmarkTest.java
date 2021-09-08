@@ -34,7 +34,7 @@ class PersonFinderBenchmarkTest extends BaseFinderBenchmark {
         // finders.add(new PersonRegexAlternateCompleteFinder(personNames)); // Very long
         finders.add(new PersonAutomatonAlternateCompleteFinder(personNames));
 
-        runBenchmark(finders, WARM_UP, ITERATIONS);
+        runBenchmark(finders);
 
         MatcherAssert.assertThat(true, is(true));
     }
