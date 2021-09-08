@@ -8,7 +8,6 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
-import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
@@ -19,7 +18,6 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import javax.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -77,27 +75,13 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
     }
 
     @Override
-    public Iterable<Replacement> find(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         RunAutomaton automaton = this.automata.get(page.getLang());
         if (automaton == null) {
             return Collections.emptyList();
         } else {
-            // We need to perform additional transformations according to the language
-            return StreamSupport
-                .stream(AutomatonMatchFinder.find(page.getContent(), automaton).spliterator(), false)
-                .filter(match -> this.validate(match, page))
-                .map(match -> this.convert(match, page))
-                .filter(r -> isExistingWord(r.getText(), page.getLang()))
-                .map(r -> r.withSubtype(getSubtype(r.getText(), page.getLang())))
-                .map(r -> r.withSuggestions(findSuggestions(r.getText(), page.getLang())))
-                .collect(Collectors.toList());
+            return AutomatonMatchFinder.find(page.getContent(), automaton);
         }
-    }
-
-    @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        // We are overriding the more general find method
-        throw new IllegalCallerException();
     }
 
     @Override

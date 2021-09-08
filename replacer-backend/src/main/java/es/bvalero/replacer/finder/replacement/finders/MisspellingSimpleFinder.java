@@ -4,9 +4,7 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
-import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchFinder;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.beans.PropertyChangeEvent;
@@ -14,8 +12,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.MatchResult;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import javax.annotation.PostConstruct;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -46,24 +42,10 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     }
 
     @Override
-    public Iterable<Replacement> find(FinderPage page) {
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // There are thousands of simple misspellings
         // The best approach is to find all words in the text and check if they are in the list
-        // We need to perform additional transformations according to the language
-        return StreamSupport
-            .stream(LinearMatchFinder.find(page, this::findResult).spliterator(), false)
-            .map(match -> this.convert(match, page))
-            .filter(r -> isExistingWord(r.getText(), page.getLang()))
-            .filter(r -> FinderUtils.isWordCompleteInText(r.getStart(), r.getText(), page.getContent()))
-            .map(r -> r.withSubtype(getSubtype(r.getText(), page.getLang())))
-            .map(r -> r.withSuggestions(findSuggestions(r.getText(), page.getLang())))
-            .collect(Collectors.toList());
-    }
-
-    @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        // We are overriding the more general find method
-        throw new IllegalCallerException();
+        return LinearMatchFinder.find(page, this::findResult);
     }
 
     @Nullable

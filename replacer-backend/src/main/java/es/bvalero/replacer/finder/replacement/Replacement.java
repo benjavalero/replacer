@@ -19,10 +19,6 @@ public class Replacement implements FinderResult {
     int start;
     String text;
     ReplacementType type;
-
-    @With
     String subtype;
-
-    @With
     List<ReplacementSuggestion> suggestions;
 }

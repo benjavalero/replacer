@@ -56,7 +56,12 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         return map;
     }
 
-    boolean isExistingWord(String word, WikipediaLanguage lang) {
+    @Override
+    public boolean validate(MatchResult match, FinderPage page) {
+        return ReplacementFinder.super.validate(match, page) && isExistingWord(match.group(), page.getLang());
+    }
+
+    private boolean isExistingWord(String word, WikipediaLanguage lang) {
         return findMisspellingByWord(word, lang).isPresent();
     }
 
@@ -67,10 +72,10 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         return Replacement
             .builder()
             .type(getType())
-            // .subtype(getSubtype(text, lang))
+            .subtype(getSubtype(text, page.getLang()))
             .start(start)
             .text(text)
-            //.suggestions(findSuggestions(text, lang))
+            .suggestions(findSuggestions(text, page.getLang()))
             .build();
     }
 
