@@ -17,7 +17,7 @@ public interface Finder<T extends FinderResult> {
 
         Iterable<MatchResult> allMatchResults = findMatchResults(page);
         Iterable<MatchResult> validMatchResults = filterValidMatchResults(allMatchResults, page);
-        return convertMatchResults(validMatchResults);
+        return convertMatchResults(validMatchResults, page);
     }
 
     Iterable<MatchResult> findMatchResults(FinderPage page);
@@ -31,11 +31,11 @@ public interface Finder<T extends FinderResult> {
         return true;
     }
 
-    default Iterable<T> convertMatchResults(Iterable<MatchResult> matchResults) {
-        return IterableUtils.transformedIterable(matchResults, this::convert);
+    default Iterable<T> convertMatchResults(Iterable<MatchResult> matchResults, FinderPage page) {
+        return IterableUtils.transformedIterable(matchResults, m -> convert(m, page));
     }
 
-    T convert(MatchResult matchResult);
+    T convert(MatchResult matchResult, FinderPage page);
 
     @TestOnly
     default List<T> findList(String text) {

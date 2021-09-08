@@ -52,7 +52,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
         // We need to perform additional transformations according to the language
         return StreamSupport
             .stream(LinearMatchFinder.find(page, this::findResult).spliterator(), false)
-            .map(this::convert)
+            .map(match -> this.convert(match, page))
             .filter(r -> isExistingWord(r.getText(), page.getLang()))
             .filter(r -> FinderUtils.isWordCompleteInText(r.getStart(), r.getText(), page.getContent()))
             .map(r -> r.withSubtype(getSubtype(r.getText(), page.getLang())))

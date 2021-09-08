@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.MisspellingSuggestion;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -60,7 +61,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     @Override
-    public Replacement convert(MatchResult matcher) {
+    public Replacement convert(MatchResult matcher, FinderPage page) {
         int start = matcher.start();
         String text = matcher.group();
         return Replacement

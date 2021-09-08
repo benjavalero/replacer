@@ -86,7 +86,7 @@ public class MisspellingComposedFinder extends MisspellingFinder implements Prop
             return StreamSupport
                 .stream(AutomatonMatchFinder.find(page.getContent(), automaton).spliterator(), false)
                 .filter(match -> this.validate(match, page))
-                .map(this::convert)
+                .map(match -> this.convert(match, page))
                 .filter(r -> isExistingWord(r.getText(), page.getLang()))
                 .map(r -> r.withSubtype(getSubtype(r.getText(), page.getLang())))
                 .map(r -> r.withSuggestions(findSuggestions(r.getText(), page.getLang())))

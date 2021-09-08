@@ -47,7 +47,7 @@ class CustomReplacementFinder implements ReplacementFinder {
     }
 
     @Override
-    public Replacement convert(MatchResult matcher) {
+    public Replacement convert(MatchResult matcher, FinderPage page) {
         int start = matcher.start();
         String text = matcher.group();
         return Replacement

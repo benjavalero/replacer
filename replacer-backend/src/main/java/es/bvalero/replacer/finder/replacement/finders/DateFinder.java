@@ -133,7 +133,7 @@ public class DateFinder implements ReplacementFinder {
     }
 
     @Override
-    public Replacement convert(MatchResult matchResult) {
+    public Replacement convert(MatchResult matchResult, FinderPage page) {
         throw new IllegalCallerException();
     }
 
