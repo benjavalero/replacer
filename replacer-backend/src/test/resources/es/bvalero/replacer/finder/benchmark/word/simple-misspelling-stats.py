@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Import data
-words = pd.read_csv('word-benchmark.csv', sep='\t')
+words = pd.read_csv('simple-misspelling-benchmark.csv', sep='\t')
 
 # Basic stats
 pd.set_option('float_format', '{:.2f}'.format)

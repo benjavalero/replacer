@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
-class FalseFinderBenchmarkTest extends BaseFinderBenchmark {
+class FalsePositiveFinderBenchmarkTest extends BaseFinderBenchmark {
 
     @Test
     void testWordFinderBenchmark() throws ReplacerException {

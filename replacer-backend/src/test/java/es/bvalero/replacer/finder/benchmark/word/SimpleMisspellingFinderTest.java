@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class FalseFinderTest {
+class SimpleMisspellingFinderTest {
 
     private Collection<String> words;
     private String text;
@@ -17,16 +17,15 @@ class FalseFinderTest {
 
     @BeforeEach
     public void setUp() {
-        this.words = Arrays.asList("Aaron Carter", "Victoria Abril");
-        this.text = "En Abril Victoria Abril salió con Aaron Carter.";
+        this.words = Arrays.asList("Um", "um", "españa");
+        this.text = "Um suma um, españa um.";
 
         this.expected = new HashSet<>();
-        this.expected.add(BenchmarkResult.of(9, "Victoria Abril"));
-        this.expected.add(BenchmarkResult.of(34, "Aaron Carter"));
+        this.expected.add(BenchmarkResult.of(0, "Um"));
+        this.expected.add(BenchmarkResult.of(8, "um"));
+        this.expected.add(BenchmarkResult.of(12, "españa"));
+        this.expected.add(BenchmarkResult.of(19, "um"));
     }
-
-    // NOTE: We can use the same finders that we use for misspellings just with a different set of words.
-    // Nevertheless, some of them don't work as they search for simple words and not for composed ones.
 
     @Test
     void testWordIndexOfFinder() {
