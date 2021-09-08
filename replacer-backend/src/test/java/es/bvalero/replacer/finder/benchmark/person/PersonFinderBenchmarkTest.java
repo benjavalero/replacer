@@ -25,16 +25,16 @@ class PersonFinderBenchmarkTest extends BaseFinderBenchmark {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new PersonIndexOfFinder(personNames));
-        // finders.add(new PersonRegexFinder(personNames)); // Long
+        // finders.add(new PersonRegexFinder(personNames)); // Medium
         // finders.add(new PersonAutomatonFinder(personNames)); // Long
-        // finders.add(new PersonRegexCompleteFinder(personNames)); // Long
+        // finders.add(new PersonRegexCompleteFinder(personNames)); // Medium
         // finders.add(new PersonAutomatonCompleteFinder(personNames)); // Long
         // finders.add(new PersonRegexAlternateFinder(personNames)); // Very long
         finders.add(new PersonAutomatonAlternateFinder(personNames));
         // finders.add(new PersonRegexAlternateCompleteFinder(personNames)); // Very long
         finders.add(new PersonAutomatonAlternateCompleteFinder(personNames));
 
-        runBenchmark(finders, WARM_UP, ITERATIONS * 10);
+        runBenchmark(finders, WARM_UP, ITERATIONS);
 
         MatcherAssert.assertThat(true, is(true));
     }

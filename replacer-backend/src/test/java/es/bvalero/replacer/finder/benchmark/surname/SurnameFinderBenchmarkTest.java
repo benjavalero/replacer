@@ -28,13 +28,13 @@ class SurnameFinderBenchmarkTest extends BaseFinderBenchmark {
         // finders.add(new SurnameRegexFinder(personSurnames)); // Medium
         // finders.add(new SurnameAutomatonFinder(personSurnames)); // Long
         // finders.add(new SurnameRegexCompleteFinder(personSurnames)); // Very long
-        // finders.add(new SurnameAutomatonCompleteFinder(personSurnames)); // Long
+        // finders.add(new SurnameAutomatonCompleteFinder(personSurnames)); // Very long
         // finders.add(new SurnameRegexAlternateFinder(personSurnames)); // Very long
         finders.add(new SurnameAutomatonAlternateFinder(personSurnames));
-        // finders.add(new SurnameRegexAlternateCompleteFinder(personSurnames)); // Short-Medium
+        // finders.add(new SurnameRegexAlternateCompleteFinder(personSurnames)); // Short
         finders.add(new SurnameAutomatonAlternateCompleteFinder(personSurnames));
 
-        runBenchmark(finders, WARM_UP, ITERATIONS * 10);
+        runBenchmark(finders, WARM_UP, ITERATIONS);
 
         MatcherAssert.assertThat(true, is(true));
     }
