@@ -16,7 +16,7 @@ class UppercaseAutomatonIterateFinder implements BenchmarkFinder {
         this.words = new ArrayList<>();
         for (String word : words) {
             this.words.add(
-                    new RunAutomaton(new RegExp("[!#*|=.]<Zs>*" + word).toAutomaton(new DatatypesAutomatonProvider()))
+                    new RunAutomaton(new RegExp("[!#*=.]<Zs>*" + word).toAutomaton(new DatatypesAutomatonProvider()))
                 );
         }
     }

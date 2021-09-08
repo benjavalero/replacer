@@ -13,7 +13,7 @@ class UppercaseRegexIterateFinder implements BenchmarkFinder {
     UppercaseRegexIterateFinder(Collection<String> words) {
         this.words = new ArrayList<>();
         for (String word : words) {
-            this.words.add(Pattern.compile("[!#*|=.]\\s*" + word));
+            this.words.add(Pattern.compile("[!#*=.]\\s*" + word));
         }
     }
 

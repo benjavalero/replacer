@@ -16,7 +16,7 @@ class UppercaseAutomatonAlternateFinder implements BenchmarkFinder {
     private final RunAutomaton words;
 
     UppercaseAutomatonAlternateFinder(Collection<String> words) {
-        String alternations = "[!#*|=.]<Zs>*(" + StringUtils.join(words, "|") + ')';
+        String alternations = "[!#*=.]<Zs>*(" + StringUtils.join(words, "|") + ')';
         this.words = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
     }
 

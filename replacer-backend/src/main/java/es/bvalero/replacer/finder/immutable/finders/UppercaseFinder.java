@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
  * Find words in uppercase which are correct according to the punctuation,
  * e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
  *
- * The considered punctuations are: `!`, `#`, `*`, `|`, `=` and `.`
+ * The considered punctuations are: `!`, `#`, `*`, `=` and `.`
  */
 @Component
 public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener {
@@ -134,7 +134,8 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     @Nullable
     private RunAutomaton buildUppercaseAutomaton(@Nullable Set<String> words) {
-        // There are hundreds of only uppercase words so the best approach is a simple alternation
+        // Currently, there are about 60 uppercase case-sensitive misspellings,
+        // so the best approach is a simple alternation
         if (words != null && !words.isEmpty()) {
             String alternations = String.format(REGEX_UPPERCASE_PUNCTUATION, StringUtils.join(words, "|"));
             return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));

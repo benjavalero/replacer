@@ -14,7 +14,7 @@ class UppercaseRegexAlternateLookBehindFinder implements BenchmarkFinder {
     private final Pattern words;
 
     UppercaseRegexAlternateLookBehindFinder(Collection<String> words) {
-        String alternations = "(?<=[!#*|=.])\\s*(?:" + StringUtils.join(words, "|") + ')';
+        String alternations = "(?<=[!#*=.])\\s*(" + StringUtils.join(words, "|") + ')';
         this.words = Pattern.compile(alternations);
     }
 

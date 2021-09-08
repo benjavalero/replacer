@@ -14,7 +14,7 @@ class UppercaseRegexAlternateFinder implements BenchmarkFinder {
     private final Pattern words;
 
     UppercaseRegexAlternateFinder(Collection<String> words) {
-        String alternations = "[!#*|=.]\\s*(?:" + StringUtils.join(words, "|") + ")";
+        String alternations = "[!#*=.]\\s*(" + StringUtils.join(words, "|") + ")";
         this.words = Pattern.compile(alternations);
     }
 

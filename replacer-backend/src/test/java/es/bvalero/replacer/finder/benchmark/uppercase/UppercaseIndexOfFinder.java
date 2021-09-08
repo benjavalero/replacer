@@ -9,7 +9,7 @@ import java.util.Set;
 
 class UppercaseIndexOfFinder implements BenchmarkFinder {
 
-    private static final Set<Character> PUNCTUATIONS = Set.of('!', '#', '*', '|', '=', '.');
+    private static final Set<Character> PUNCTUATIONS = Set.of('!', '#', '*', '=', '.');
 
     private final Collection<String> words;
 
