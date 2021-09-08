@@ -1,19 +1,28 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import dk.brics.automaton.RegExp;
+import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
+import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.MatchResult;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import org.apache.commons.collections4.IterableUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 /** Find some ignorable templates. In case they are found the complete text must be ignored. */
 @Component
 class IgnorableTemplateFinder extends ImmutableCheckedFinder {
+
+    private RunAutomaton automaton;
 
     @Resource
     private List<String> ignorableTemplates;
@@ -23,21 +32,44 @@ class IgnorableTemplateFinder extends ImmutableCheckedFinder {
         return ImmutableFinderPriority.MAX;
     }
 
-    @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        String lowerContent = page.getContent().toLowerCase();
-        for (String template : ignorableTemplates) {
-            int start = lowerContent.indexOf(template);
-            // Check we are not capturing the start of a non-ignorable template
-            if (start >= 0 && FinderUtils.isWordCompleteInText(start, template, lowerContent)) {
-                return List.of(buildCompleteMatchResult(page));
-            }
-        }
-        // If we get here no ignorable template has been found
-        return Collections.emptyList();
+    @PostConstruct
+    public void init() {
+        Set<String> fixedTemplates = ignorableTemplates
+            .stream()
+            .map(s -> s.replace("{", "\\{"))
+            .map(s -> s.replace("#", "\\#"))
+            .map(FinderUtils::toLowerCase)
+            .collect(Collectors.toSet());
+        String alternations = '(' + StringUtils.join(fixedTemplates, "|") + ')';
+        this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }
 
-    private MatchResult buildCompleteMatchResult(FinderPage page) {
-        return LinearMatchResult.of(0, page.getContent());
+    @Override
+    public Iterable<Immutable> find(FinderPage page) {
+        // We need to perform additional transformations according to the total page content
+        String lowerCaseContent = FinderUtils.toLowerCase(page.getContent());
+        Iterable<MatchResult> matchResults = AutomatonMatchFinder.find(lowerCaseContent, this.automaton);
+        Iterable<MatchResult> validatedResults = IterableUtils.filteredIterable(
+            matchResults,
+            matchResult -> validateIgnorableTemplate(matchResult, lowerCaseContent)
+        );
+        return IterableUtils.transformedIterable(
+            validatedResults,
+            matchResult -> this.convertIgnorableTemplate(matchResult, page)
+        );
+    }
+
+    @Override
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+        // We are overriding the more general find method
+        throw new IllegalCallerException();
+    }
+
+    private boolean validateIgnorableTemplate(MatchResult match, String text) {
+        return FinderUtils.isWordCompleteInText(match.start(), match.group(), text);
+    }
+
+    private Immutable convertIgnorableTemplate(MatchResult match, FinderPage page) {
+        return Immutable.of(0, page.getContent());
     }
 }
