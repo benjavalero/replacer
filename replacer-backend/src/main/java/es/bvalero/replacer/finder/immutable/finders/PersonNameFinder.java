@@ -5,11 +5,15 @@ import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.finder.util.LinearMatchFinder;
+import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
+import org.apache.commons.collections4.IterableUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,15 +35,18 @@ class PersonNameFinder implements ImmutableFinder {
         return ImmutableFinderPriority.HIGH;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Iterable<Immutable> find(FinderPage page) {
-        List<Immutable> result = new ArrayList<>();
         // The list will keep on growing
-        // For the moment the best approach is to iterate the list of words and find them in the text.
-        for (String personName : personNames) {
-            result.addAll(findResults(page.getContent(), personName));
-        }
-        return result;
+        // For the moment the best approach is to iterate the list of words and find them in the text
+        return IterableUtils.chainedIterable(
+            personNames
+                .stream()
+                .map(PersonNameLinearFinder::new)
+                .map(finder -> finder.find(page))
+                .toArray(Iterable[]::new)
+        );
     }
 
     @Override
@@ -48,18 +55,39 @@ class PersonNameFinder implements ImmutableFinder {
         throw new IllegalCallerException();
     }
 
-    private List<Immutable> findResults(String text, String personName) {
-        List<Immutable> results = new ArrayList<>();
-        int start = 0;
-        while (start >= 0 && start < text.length()) {
-            start = text.indexOf(personName, start);
-            if (start >= 0) { // Person name found
-                if (FinderUtils.isWordFollowedByUppercase(start, personName, text)) {
-                    results.add(Immutable.of(start, personName));
+    private static class PersonNameLinearFinder implements ImmutableFinder {
+
+        private final String personName;
+
+        PersonNameLinearFinder(String personName) {
+            this.personName = personName;
+        }
+
+        @Override
+        public Iterable<MatchResult> findMatchResults(FinderPage page) {
+            return LinearMatchFinder.find(page, this::findResult);
+        }
+
+        @Nullable
+        private MatchResult findResult(FinderPage page, int start) {
+            List<MatchResult> matches = new ArrayList<>();
+            while (start >= 0 && start < page.getContent().length() && matches.isEmpty()) {
+                start = findPersonName(page, start, personName, matches);
+            }
+            return matches.isEmpty() ? null : matches.get(0);
+        }
+
+        private int findPersonName(FinderPage page, int start, String personName, List<MatchResult> matches) {
+            String text = page.getContent();
+            int personNameStart = text.indexOf(personName, start);
+            if (personNameStart >= 0) {
+                if (FinderUtils.isWordFollowedByUppercase(personNameStart, personName, text)) {
+                    matches.add(LinearMatchResult.of(personNameStart, personName));
                 }
-                start += personName.length() + 1;
+                return personNameStart + personName.length();
+            } else {
+                return -1;
             }
         }
-        return results;
     }
 }
