@@ -95,8 +95,8 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
     }
 
     @Override
-    public boolean validate(MatchResult match, String text) {
+    public boolean validate(MatchResult match, FinderPage page) {
         // Benchmarks show similar performance with and without validation
-        return FinderUtils.isWordCompleteInText(match.start(), match.group(), text);
+        return FinderUtils.isWordCompleteInText(match.start(), match.group(), page.getContent());
     }
 }

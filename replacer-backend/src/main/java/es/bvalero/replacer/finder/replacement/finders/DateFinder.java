@@ -91,9 +91,8 @@ public class DateFinder implements ReplacementFinder {
     @Override
     public Iterable<Replacement> find(FinderPage page) {
         // We need to perform additional transformations according to the language in the last conversion step
-        String text = page.getContent();
         Iterable<MatchResult> allMatchResults = findMatchResults(page);
-        Iterable<MatchResult> validMatchResults = filterValidMatchResults(allMatchResults, text);
+        Iterable<MatchResult> validMatchResults = filterValidMatchResults(allMatchResults, page);
         return IterableUtils.transformedIterable(validMatchResults, m -> this.convert(m, page.getLang()));
     }
 
@@ -106,7 +105,7 @@ public class DateFinder implements ReplacementFinder {
     }
 
     @Override
-    public boolean validate(MatchResult match, String text) {
+    public boolean validate(MatchResult match, FinderPage text) {
         return ReplacementFinder.super.validate(match, text) && !isValidDate(match.group());
     }
 

@@ -23,7 +23,7 @@ class SameLinkFinder extends CosmeticCheckedFinder {
     }
 
     @Override
-    public boolean validate(MatchResult match, String text) {
+    public boolean validate(MatchResult match, FinderPage text) {
         String link = match.group(1);
         String title = match.group(2);
         return isSameLink(link, title);

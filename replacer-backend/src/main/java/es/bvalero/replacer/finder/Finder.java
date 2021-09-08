@@ -15,19 +15,18 @@ public interface Finder<T extends FinderResult> {
         //    and filter the list to keep only the valid match results
         // 3. Convert the list of match results into a list of T items
 
-        String text = page.getContent();
         Iterable<MatchResult> allMatchResults = findMatchResults(page);
-        Iterable<MatchResult> validMatchResults = filterValidMatchResults(allMatchResults, text);
+        Iterable<MatchResult> validMatchResults = filterValidMatchResults(allMatchResults, page);
         return convertMatchResults(validMatchResults);
     }
 
     Iterable<MatchResult> findMatchResults(FinderPage page);
 
-    default Iterable<MatchResult> filterValidMatchResults(Iterable<MatchResult> matchResults, String completeText) {
-        return IterableUtils.filteredIterable(matchResults, matchResult -> validate(matchResult, completeText));
+    default Iterable<MatchResult> filterValidMatchResults(Iterable<MatchResult> matchResults, FinderPage page) {
+        return IterableUtils.filteredIterable(matchResults, matchResult -> validate(matchResult, page));
     }
 
-    default boolean validate(MatchResult matchResult, String completeText) {
+    default boolean validate(MatchResult matchResult, FinderPage page) {
         // By default, return true in case no validation is needed.
         return true;
     }

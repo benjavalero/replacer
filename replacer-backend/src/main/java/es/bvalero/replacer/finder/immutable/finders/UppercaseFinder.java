@@ -175,9 +175,9 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     }
 
     @Override
-    public boolean validate(MatchResult match, String text) {
+    public boolean validate(MatchResult match, FinderPage page) {
         String word = match.group().substring(1).trim();
         int startPos = match.start() + match.group().indexOf(word);
-        return FinderUtils.isWordCompleteInText(startPos, word, text);
+        return FinderUtils.isWordCompleteInText(startPos, word, page.getContent());
     }
 }
