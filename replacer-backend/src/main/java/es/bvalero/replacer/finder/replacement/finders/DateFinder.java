@@ -15,7 +15,6 @@ import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
@@ -89,14 +88,6 @@ public class DateFinder implements ReplacementFinder {
     }
 
     @Override
-    public Iterable<Replacement> find(FinderPage page) {
-        // We need to perform additional transformations according to the language in the last conversion step
-        Iterable<MatchResult> allMatchResults = findMatchResults(page);
-        Iterable<MatchResult> validMatchResults = filterValidMatchResults(allMatchResults, page);
-        return IterableUtils.transformedIterable(validMatchResults, m -> this.convert(m, page.getLang()));
-    }
-
-    @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         RunAutomaton dateAutomaton = dateAutomata.get(page.getLang());
         return dateAutomaton != null
@@ -105,8 +96,8 @@ public class DateFinder implements ReplacementFinder {
     }
 
     @Override
-    public boolean validate(MatchResult match, FinderPage text) {
-        return ReplacementFinder.super.validate(match, text) && !isValidDate(match.group());
+    public boolean validate(MatchResult match, FinderPage page) {
+        return ReplacementFinder.super.validate(match, page) && !isValidDate(match.group());
     }
 
     private boolean isValidDate(String date) {
@@ -133,11 +124,8 @@ public class DateFinder implements ReplacementFinder {
     }
 
     @Override
-    public Replacement convert(MatchResult matchResult, FinderPage page) {
-        throw new IllegalCallerException();
-    }
-
-    public Replacement convert(MatchResult matcher, WikipediaLanguage lang) {
+    public Replacement convert(MatchResult matcher, FinderPage page) {
+        WikipediaLanguage lang = page.getLang();
         return startsWithNumber(matcher.group()) ? convertLongDate(matcher, lang) : convertMonthYear(matcher, lang);
     }
 
