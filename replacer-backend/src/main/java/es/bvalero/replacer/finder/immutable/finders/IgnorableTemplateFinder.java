@@ -14,7 +14,6 @@ import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -45,31 +44,21 @@ class IgnorableTemplateFinder extends ImmutableCheckedFinder {
     }
 
     @Override
-    public Iterable<Immutable> find(FinderPage page) {
-        // We need to perform additional transformations according to the total page content
-        String lowerCaseContent = FinderUtils.toLowerCase(page.getContent());
-        Iterable<MatchResult> matchResults = AutomatonMatchFinder.find(lowerCaseContent, this.automaton);
-        Iterable<MatchResult> validatedResults = IterableUtils.filteredIterable(
-            matchResults,
-            matchResult -> validateIgnorableTemplate(matchResult, lowerCaseContent)
-        );
-        return IterableUtils.transformedIterable(
-            validatedResults,
-            matchResult -> this.convertIgnorableTemplate(matchResult, page)
+    public Iterable<MatchResult> findMatchResults(FinderPage page) {
+        return AutomatonMatchFinder.find(FinderUtils.toLowerCase(page.getContent()), automaton);
+    }
+
+    @Override
+    public boolean validate(MatchResult match, FinderPage page) {
+        return FinderUtils.isWordCompleteInText(
+            match.start(),
+            match.group(),
+            FinderUtils.toLowerCase(page.getContent())
         );
     }
 
     @Override
-    public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        // We are overriding the more general find method
-        throw new IllegalCallerException();
-    }
-
-    private boolean validateIgnorableTemplate(MatchResult match, String text) {
-        return FinderUtils.isWordCompleteInText(match.start(), match.group(), text);
-    }
-
-    private Immutable convertIgnorableTemplate(MatchResult match, FinderPage page) {
+    public Immutable convert(MatchResult match, FinderPage page) {
         return Immutable.of(0, page.getContent());
     }
 }
