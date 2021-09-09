@@ -45,13 +45,13 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         // Loop over all the words and find them in the text with a regex
         finders.add(new WordIndexOfFinder(words));
         finders.add(new WordRegexFinder(words));
-        finders.add(new WordAutomatonFinder(words));
-        // finders.add(new WordRegexCompleteFinder(words)); // Discarded: about 700 times slower
+        // finders.add(new WordAutomatonFinder(words)); // Medium
+        // finders.add(new WordRegexCompleteFinder(words)); // Very long
 
         // Build an alternation with all the words and find the regex in the text
-        finders.add(new WordRegexAlternateFinder(words));
-        finders.add(new WordAutomatonAlternateFinder(words)); // Winner
-        finders.add(new WordRegexAlternateCompleteFinder(words));
+        // finders.add(new WordRegexAlternateFinder(words)); // Long
+        finders.add(new WordAutomatonAlternateFinder(words));
+        // finders.add(new WordRegexAlternateCompleteFinder(words)); // Medium
 
         // Find all words in the text and check if they are in the list
         // finders.add(new WordRegexAllFinder(words)); // Don't work with composed
@@ -59,7 +59,7 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
         // finders.add(new WordLinearAllFinder(words)); // Don't work with composed
         // finders.add(new WordRegexAllCompleteFinder(words)); // Don't work with composed
 
-        runBenchmark(finders, 5, 50);
+        runBenchmark(finders);
 
         MatcherAssert.assertThat(true, is(true));
     }
