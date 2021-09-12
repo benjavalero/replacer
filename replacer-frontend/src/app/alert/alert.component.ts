@@ -7,9 +7,8 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./alert.component.css']
 })
 export class AlertComponent {
-  @Input() type = 'primary';
-  @Input() message: string;
-  @Input() icon: boolean;
+  @Input() type: string = 'primary';
+  @Input() icon: boolean = false;
 
   warningIcon = faExclamationCircle;
 }

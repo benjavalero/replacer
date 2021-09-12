@@ -53,20 +53,22 @@ export class PageService {
     // Store the date of the last save to check there are at least 12 s between savings (5 editions/min)
     let sleepTime = 0;
     const isBotUser = this.userService.isBotUser();
-    const lastSave: number = +localStorage.getItem(this.lastSaveKey);
+    const lastSave = localStorage.getItem(this.lastSaveKey);
     if (!isBotUser && lastSave && page.content !== ' ') {
       const minGap: number = (1000 * 60) / this.editionsPerMinute;
-      const gap: number = Date.now() - lastSave;
+      const lastSaveDate: number = +lastSave;
+      const gap: number = Date.now() - lastSaveDate;
       if (gap < minGap) {
         sleepTime = minGap - gap;
       }
     }
 
-    const savePage = new SavePage();
-    savePage.page = page;
-    savePage.search = search;
-    savePage.token = this.userService.accessToken.token;
-    savePage.tokenSecret = this.userService.accessToken.tokenSecret;
+    const savePage = new SavePage(
+      page,
+      search,
+      this.userService.accessToken.token,
+      this.userService.accessToken.tokenSecret
+    );
 
     // Store the new last save date
     if (page.content !== ' ') {

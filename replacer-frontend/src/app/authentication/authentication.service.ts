@@ -39,16 +39,7 @@ export class AuthenticationService {
         localStorage.removeItem(this.requestTokenKey);
 
         // Save user and access token to further use in Wikipedia requests
-        const wikipediaUser: User = {
-          name: response.name,
-          hasRights: response.hasRights,
-          bot: response.bot,
-          admin: response.admin,
-          accessToken: {
-            token: response.token,
-            tokenSecret: response.tokenSecret
-          }
-        };
+        const wikipediaUser = new User(response);
         this.userService.setUser(wikipediaUser);
         return wikipediaUser;
       })
@@ -56,19 +47,16 @@ export class AuthenticationService {
   }
 
   private authenticate$(oauthVerifier: string): Observable<AuthenticateResponse> {
-    const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey));
-    const body: AuthenticateRequest = {
-      requestToken: requestToken.token,
-      requestTokenSecret: requestToken.tokenSecret,
-      oauthVerifier: oauthVerifier
-    };
+    // At this point we can assert that the request token exists
+    const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey)!);
+    const body = new AuthenticateRequest(requestToken, oauthVerifier);
     return this.httpClient.post<AuthenticateResponse>(`${this.baseUrl}/authenticate`, body);
   }
 
   get redirectPath(): string {
     const path = localStorage.getItem(this.redirectPathKey);
     localStorage.removeItem(this.redirectPathKey);
-    return path;
+    return path || '';
   }
 
   set redirectPath(path: string) {

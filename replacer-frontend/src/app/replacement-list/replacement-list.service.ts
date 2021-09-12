@@ -38,7 +38,7 @@ export class ReplacementListService implements OnDestroy {
 
   private storageEventListener(event: StorageEvent) {
     if (event.storageArea == localStorage && event.key === this.countsKey) {
-      this.updateCounts(JSON.parse(event.newValue));
+      this.updateCounts(JSON.parse(event.newValue!));
     }
   }
 
@@ -65,7 +65,7 @@ export class ReplacementListService implements OnDestroy {
   }
 
   updateSubtypeCount(type: string, subtype: string, count: number): void {
-    const currentCounts = JSON.parse(localStorage.getItem(this.countsKey));
+    const currentCounts = JSON.parse(localStorage.getItem(this.countsKey)!);
     for (let i = 0; i < currentCounts.length; i++) {
       const typeCount: ReplacementCountList = currentCounts[i];
       if (typeCount.t === type) {

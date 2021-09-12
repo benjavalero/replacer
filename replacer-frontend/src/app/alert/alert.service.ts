@@ -26,30 +26,22 @@ export class AlertService {
   }
 
   addInfoMessage(msg: string) {
-    this.addAlertMessage({
-      type: 'primary',
-      message: msg
-    });
+    this.addMessage('primary', msg);
   }
 
   addSuccessMessage(msg: string) {
-    this.addAlertMessage({
-      type: 'success',
-      message: msg
-    });
+    this.addMessage('success', msg);
   }
 
   addWarningMessage(msg: string) {
-    this.addAlertMessage({
-      type: 'warning',
-      message: msg
-    });
+    this.addMessage('warning', msg);
   }
 
   addErrorMessage(msg: string) {
-    this.addAlertMessage({
-      type: 'danger',
-      message: msg
-    });
+    this.addMessage('danger', msg);
+  }
+
+  private addMessage(type: string, msg: string) {
+    this.addAlertMessage(new AlertMessage(type, msg));
   }
 }

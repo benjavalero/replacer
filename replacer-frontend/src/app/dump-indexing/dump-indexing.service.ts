@@ -9,13 +9,13 @@ import { DumpIndexing } from './dump-indexing.model';
 })
 export class DumpIndexingService {
   private readonly baseUrl = `${environment.apiUrl}/dump-indexing`;
-  private readonly _status = new BehaviorSubject<DumpIndexing>(null);
+  private readonly _status = new BehaviorSubject<DumpIndexing | null>(null);
 
   constructor(private httpClient: HttpClient) {
     this.refreshDumpIndexing();
   }
 
-  get status$(): Observable<DumpIndexing> {
+  get status$(): Observable<DumpIndexing | null> {
     return this._status.asObservable();
   }
 
@@ -28,10 +28,10 @@ export class DumpIndexingService {
       const average = this.calculateAverage(status);
       const eta = this.formatMilliseconds(this.calculateEta(status));
 
-      const newStatus = {
+      const newStatus: DumpIndexing = {
         ...status,
-        startDate: startDate,
-        endDate: endDate,
+        startDate: startDate || undefined,
+        endDate: endDate || undefined,
         elapsed: elapsed,
         progress: progress,
         average: average,
@@ -52,7 +52,7 @@ export class DumpIndexingService {
     return this.httpClient.post<any>(`${this.baseUrl}`, null);
   }
 
-  private formatDate(milliseconds: number): Date {
+  private formatDate(milliseconds: number | undefined): Date | null {
     return milliseconds ? new Date(milliseconds) : null;
   }
 
@@ -78,7 +78,7 @@ export class DumpIndexingService {
   }
 
   private calculateProgress(status: DumpIndexing): number {
-    if (status.numPagesRead) {
+    if (status.numPagesRead && status.numPagesEstimated) {
       // We might have more read pages than the estimation constant
       return (status.numPagesRead * 100.0) / Math.max(status.numPagesEstimated, status.numPagesRead);
     } else {
@@ -95,7 +95,7 @@ export class DumpIndexingService {
   }
 
   private calculateEta(status: DumpIndexing): number {
-    if (status.running) {
+    if (status.running && status.numPagesRead && status.numPagesEstimated) {
       const toRead = Math.max(status.numPagesEstimated, status.numPagesRead) - status.numPagesRead;
       return toRead * this.calculateAverage(status);
     } else {

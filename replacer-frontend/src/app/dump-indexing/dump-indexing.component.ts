@@ -12,10 +12,10 @@ import { DumpIndexingService } from './dump-indexing.service';
 })
 export class DumpIndexingComponent implements OnInit, OnDestroy {
   // Status Details
-  status$: Observable<DumpIndexing>;
+  status$!: Observable<DumpIndexing | null>;
 
   // Check the status
-  subscription: Subscription;
+  subscription!: Subscription;
 
   constructor(private dumpService: DumpIndexingService, private titleService: Title) {}
 

@@ -16,8 +16,8 @@ import { ChangeLanguageComponent } from './change-language.component';
 })
 export class HeaderComponent implements OnInit {
   isNavCollapsed = true;
-  user$: Observable<User>;
-  lang$: Observable<Language>;
+  user$!: Observable<User>;
+  lang$!: Observable<Language>;
 
   constructor(
     private userService: UserService,
@@ -33,7 +33,7 @@ export class HeaderComponent implements OnInit {
 
   onSelectLang(lang: string) {
     // Enable language
-    const language: Language = Language[lang];
+    const language: Language = Language[lang as keyof typeof Language];
     if (language) {
       const modalRef = this.modalService.open(ChangeLanguageComponent);
       modalRef.result.then(

@@ -7,8 +7,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
   styles: []
 })
 export class ValidateCustomComponent {
-  @Input() type: string;
-  @Input() subtype: string;
+  @Input() type!: string;
+  @Input() subtype!: string;
 
   constructor(public activeModal: NgbActiveModal) {}
 }

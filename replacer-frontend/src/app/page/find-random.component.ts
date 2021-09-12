@@ -18,7 +18,7 @@ import { ValidateType } from './validate-custom.model';
   styleUrls: []
 })
 export class FindRandomComponent implements OnInit {
-  review: PageReview;
+  review: PageReview | null;
 
   constructor(
     private alertService: AlertService,
@@ -29,23 +29,25 @@ export class FindRandomComponent implements OnInit {
     private location: Location,
     private modalService: NgbModal,
     private replacementListService: ReplacementListService
-  ) {}
+  ) {
+    this.review = null;
+  }
 
   ngOnInit() {
     // Optional search options
-    const pageId: number = +this.route.snapshot.paramMap.get('id');
-    const options: ReviewOptions = {
-      type: this.route.snapshot.paramMap.get('type'),
-      subtype: this.route.snapshot.paramMap.get('subtype'),
-      suggestion: this.route.snapshot.paramMap.get('suggestion'),
-      cs: this.route.snapshot.paramMap.get('cs') === 'true'
-    };
+    const pageId = this.route.snapshot.paramMap.get('id');
+    const options = new ReviewOptions(
+      this.route.snapshot.paramMap.get('type'),
+      this.route.snapshot.paramMap.get('subtype'),
+      this.route.snapshot.paramMap.get('suggestion'),
+      this.route.snapshot.paramMap.get('cs') === 'true'
+    );
     if (options.suggestion) {
       options.type = 'Personalizado';
     }
 
     if (pageId) {
-      this.findPageReview(pageId, options);
+      this.findPageReview(+pageId, options);
     } else if (options.suggestion) {
       this.validateCustomReplacement(options);
     } else {
@@ -128,11 +130,11 @@ export class FindRandomComponent implements OnInit {
     }
   }
 
-  private setReviewUrl(options: ReviewOptions, pageId: number): void {
+  private setReviewUrl(options: ReviewOptions, pageId: number | null): void {
     this.location.replaceState(this.getReviewUrl(options, pageId));
   }
 
-  private getReviewUrl(options: ReviewOptions, pageId: number): string {
+  private getReviewUrl(options: ReviewOptions, pageId: number | null): string {
     let path: string;
     if (options.type && options.subtype) {
       if (options.suggestion) {
@@ -157,14 +159,11 @@ export class FindRandomComponent implements OnInit {
   }
 
   private validateCustomReplacement(options: ReviewOptions): void {
-    const replacement = options.subtype.trim();
-    this.pageService.validateCustomReplacement(replacement, options.cs).subscribe((validateType: ValidateType) => {
-      if (validateType.type) {
+    const replacement = options.subtype!.trim();
+    this.pageService.validateCustomReplacement(replacement, options.cs!).subscribe((validateType: ValidateType) => {
+      if (validateType.type && validateType.subtype) {
         this.openValidationModal$(validateType.type, validateType.subtype).then((result) => {
-          const knownTypeOptions: ReviewOptions = {
-            type: validateType.type,
-            subtype: validateType.subtype
-          };
+          const knownTypeOptions = new ReviewOptions(validateType.type!, validateType.subtype!, null, null);
           this.router.navigate([this.getReviewUrl(knownTypeOptions, null)]);
         });
       } else {

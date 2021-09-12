@@ -31,9 +31,13 @@ export class UserService {
     // TODO: We clean the old user key. This line must be removed in the future.
     localStorage.removeItem('user');
 
-    let user = JSON.parse(localStorage.getItem(this.wikipediaUserKey));
-    if (!this.isValid(user)) {
-      user = this.emptyUser();
+    let user = this.emptyUser();
+    const localWikipediaUser = localStorage.getItem(this.wikipediaUserKey);
+    if (localWikipediaUser) {
+      const localUser: User = JSON.parse(localWikipediaUser);
+      if (this.isValid(localUser)) {
+        user = localUser;
+      }
     }
 
     this._user.next(user);

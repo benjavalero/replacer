@@ -8,6 +8,12 @@ export class AuthenticateRequest {
   requestToken: string;
   requestTokenSecret: string;
   oauthVerifier: string;
+
+  constructor(requestToken: RequestToken, oauthVerifier: string) {
+    this.requestToken = requestToken.token;
+    this.requestTokenSecret = requestToken.tokenSecret;
+    this.oauthVerifier = oauthVerifier;
+  }
 }
 
 export interface AuthenticateResponse {

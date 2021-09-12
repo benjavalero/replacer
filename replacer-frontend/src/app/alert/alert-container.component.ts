@@ -8,7 +8,7 @@ import { AlertService } from './alert.service';
   styleUrls: ['./alert-container.component.css']
 })
 export class AlertContainerComponent implements OnInit {
-  alerts: AlertMessage[];
+  alerts: AlertMessage[] = [];
 
   constructor(private alertService: AlertService) {}
 

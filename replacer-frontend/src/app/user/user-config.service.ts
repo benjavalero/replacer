@@ -24,16 +24,20 @@ export class UserConfigService {
     // TODO: We clean the old lang key. This line must be removed in the future.
     localStorage.removeItem('lang');
 
-    let config = JSON.parse(localStorage.getItem(this.userConfigKey));
-    if (!this.isValid(config)) {
-      config = this.emptyConfig();
+    let config = this.emptyConfig();
+    const localUserConfig = localStorage.getItem(this.userConfigKey);
+    if (localUserConfig) {
+      const localConfig: UserConfig = JSON.parse(localUserConfig);
+      if (this.isValid(localConfig)) {
+        config = localConfig;
+      }
     }
 
     this._config.next(config);
   }
 
   private emptyConfig(): UserConfig {
-    return { lang: this.LANG_DEFAULT };
+    return new UserConfig(this.LANG_DEFAULT);
   }
 
   private isValid(config: UserConfig): boolean {

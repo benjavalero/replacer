@@ -13,14 +13,26 @@ export interface Suggestion {
   comment?: string;
 }
 
-export interface FixedReplacement {
+export class FixedReplacement {
   index: number;
   start: number;
   oldText: string;
-  newText: string;
+  newText: string | null;
+
+  constructor(index: number, start: number, oldText: string, newText: string | null) {
+    this.index = index;
+    this.start = start;
+    this.oldText = oldText;
+    this.newText = newText;
+  }
 }
 
-export interface Snippet {
+export class Snippet {
   start: number;
   text: string;
+
+  constructor(start: number, text: string) {
+    this.start = start;
+    this.text = text;
+  }
 }

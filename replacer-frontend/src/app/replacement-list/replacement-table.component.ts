@@ -18,7 +18,7 @@ export class ReplacementTableComponent implements OnChanges {
   private readonly PAGE_SIZE = 8;
   private readonly MAX_SIZE = 3;
 
-  @Input() type: string;
+  @Input() type!: string;
   @Input() replacementCounts: ReplacementCount[];
 
   filteredItems: ReplacementCount[];
@@ -111,7 +111,9 @@ export class ReplacementTableComponent implements OnChanges {
 
   private sortCounts(items: ReplacementCount[], column: string, direction: SortDirection): ReplacementCount[] {
     return [...items].sort((a, b) => {
-      const res = column === 's' ? this.compareString(a[column], b[column]) : this.compareNumber(a[column], b[column]);
+      const aValue: any = a[column as keyof ReplacementCount];
+      const bValue: any = b[column as keyof ReplacementCount];
+      const res = column === 's' ? this.compareString(aValue, bValue) : this.compareNumber(aValue, bValue);
       return direction === 'asc' ? res : -res;
     });
   }

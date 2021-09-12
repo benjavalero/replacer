@@ -8,7 +8,7 @@ import { AuthenticationService } from './authentication.service';
   styles: []
 })
 export class LoginComponent implements OnInit {
-  authorizationUrl$: Observable<string>;
+  authorizationUrl$!: Observable<string>;
 
   constructor(private authenticationService: AuthenticationService) {}
 

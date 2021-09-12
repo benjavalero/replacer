@@ -10,20 +10,22 @@ import { FixedReplacement, getReplacementEnd, PageReplacement, Snippet, Suggesti
   styleUrls: ['./edit-snippet.component.css']
 })
 export class EditSnippetComponent implements OnInit {
-  @Input() index: number;
-  @Input() pageText: string;
-  @Input() replacement: PageReplacement;
+  @Input() index!: number;
+  @Input() pageText!: string;
+  @Input() replacement!: PageReplacement;
 
   // Limits on left and right to edit the snippet as we would clash with other replacements
-  @Input() limitLeft: number;
-  @Input() limitRight: number;
+  @Input() limitLeft!: number;
+  @Input() limitRight!: number;
 
-  private suggestionSelectedValue: Suggestion;
-  customFix: Snippet;
+  private suggestionSelectedValue!: Suggestion | null;
+  customFix: Snippet | null;
 
   @Output() fixed: EventEmitter<FixedReplacement> = new EventEmitter();
 
-  constructor(private modalService: NgbModal) {}
+  constructor(private modalService: NgbModal) {
+    this.customFix = null;
+  }
 
   ngOnInit() {
     this.manageOriginalWord();
@@ -56,19 +58,19 @@ export class EditSnippetComponent implements OnInit {
     return this.trimRight().text;
   }
 
-  get suggestionSelected(): Suggestion {
+  get suggestionSelected(): Suggestion | null {
     return this.suggestionSelectedValue;
   }
 
-  set suggestionSelected(suggestion: Suggestion) {
+  set suggestionSelected(suggestion: Suggestion | null) {
     this.suggestionSelectedValue = suggestion;
     this.customFix = null;
-    const fixedReplacement: FixedReplacement = {
-      index: this.index,
-      start: this.replacement.start,
-      oldText: this.replacement.text,
-      newText: suggestion.text !== this.replacement.text ? suggestion.text : null
-    };
+    const fixedReplacement = new FixedReplacement(
+      this.index,
+      this.replacement.start,
+      this.replacement.text,
+      suggestion && suggestion.text !== this.replacement.text ? suggestion.text : null
+    );
     this.fixed.emit(fixedReplacement);
   }
 
@@ -78,12 +80,12 @@ export class EditSnippetComponent implements OnInit {
 
   private trimLeft(): Snippet {
     const snippetText = this.pageText.slice(this.limitLeft, this.replacement.start);
-    return { start: this.limitLeft, text: snippetText };
+    return new Snippet(this.limitLeft, snippetText);
   }
 
   private trimRight(): Snippet {
     const snippetText = this.pageText.slice(getReplacementEnd(this.replacement), this.limitRight);
-    return { start: getReplacementEnd(this.replacement), text: snippetText };
+    return new Snippet(getReplacementEnd(this.replacement), snippetText);
   }
 
   onEdit(): void {
@@ -96,12 +98,7 @@ export class EditSnippetComponent implements OnInit {
           this.suggestionSelectedValue = null;
           this.customFix = result;
 
-          const fixedReplacement: FixedReplacement = {
-            index: this.index,
-            start: result.start,
-            oldText: this.getOriginalText(),
-            newText: result.text
-          };
+          const fixedReplacement = new FixedReplacement(this.index, result.start, this.getOriginalText(), result.text);
           this.fixed.emit(fixedReplacement);
         }
       },
@@ -112,7 +109,7 @@ export class EditSnippetComponent implements OnInit {
   }
 
   private buildEditableSnippet(): Snippet {
-    return { start: this.limitLeft, text: this.textLeft + this.suggestionSelected.text + this.textRight };
+    return new Snippet(this.limitLeft, this.textLeft + this.suggestionSelected!.text + this.textRight);
   }
 
   private getOriginalText(): string {

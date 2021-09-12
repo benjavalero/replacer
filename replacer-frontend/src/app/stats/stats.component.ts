@@ -12,10 +12,10 @@ import { StatsService } from './stats.service';
   styleUrls: []
 })
 export class StatsComponent implements OnInit {
-  lang: string;
-  numReviewed$: Observable<ReplacementCount>;
-  numNotReviewed$: Observable<ReplacementCount>;
-  numReviewedGrouped$: Observable<ReviewerCount[]>;
+  lang!: string;
+  numReviewed$!: Observable<ReplacementCount>;
+  numNotReviewed$!: Observable<ReplacementCount>;
+  numReviewedGrouped$!: Observable<ReviewerCount[]>;
 
   constructor(
     private statsService: StatsService,

@@ -9,9 +9,9 @@ import { Snippet } from './page-replacement.model';
   styleUrls: ['./edit-custom-snippet.component.css']
 })
 export class EditCustomSnippetComponent implements OnInit {
-  @Input() snippet: Snippet;
-  private newText: string;
-  userLang: string;
+  @Input() snippet!: Snippet;
+  private newText!: string;
+  userLang!: string;
 
   constructor(public activeModal: NgbActiveModal, private userConfigService: UserConfigService) {}
 

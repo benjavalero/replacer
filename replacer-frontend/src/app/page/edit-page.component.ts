@@ -11,10 +11,10 @@ import { PageService } from './page.service';
   styleUrls: []
 })
 export class EditPageComponent implements OnChanges {
-  @Input() review: PageReview;
+  @Input() review!: PageReview;
 
   private readonly THRESHOLD = 200; // Maximum number of characters to display around the replacements
-  private fixedReplacements: FixedReplacement[];
+  private fixedReplacements!: FixedReplacement[];
 
   @Output() saved: EventEmitter<ReviewOptions> = new EventEmitter();
 
@@ -71,7 +71,7 @@ export class EditPageComponent implements OnChanges {
       // Apply the fixes in the original text
       let contentToSave = this.review.page.content;
       fixedReplacements.forEach((fix) => {
-        contentToSave = this.replaceText(contentToSave, fix.start, fix.oldText, fix.newText);
+        contentToSave = this.replaceText(contentToSave, fix.start, fix.oldText, fix.newText!);
       });
 
       this.alertService.addInfoMessage(`Guardando cambios en «${this.review.page.title}»…`);
@@ -115,12 +115,14 @@ export class EditPageComponent implements OnChanges {
         // This alert will be short as it will be cleared on redirecting to next page
         this.alertService.addSuccessMessage('Cambios guardados con éxito');
 
-        this.saved.emit({
-          type: this.review.search.type,
-          subtype: this.review.search.subtype,
-          suggestion: this.review.search.suggestion,
-          cs: this.review.search.cs
-        });
+        this.saved.emit(
+          new ReviewOptions(
+            this.review.search.type || null,
+            this.review.search.subtype || null,
+            this.review.search.suggestion || null,
+            this.review.search.cs || null
+          )
+        );
       }
     );
   }
