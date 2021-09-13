@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
 import com.jcabi.aspects.Loggable;
+import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.WikipediaLanguage;
@@ -77,7 +78,7 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
                     "|"
                 )
             );
-            return new RunAutomaton(new RegExp(alternations).toAutomaton());
+            return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
         } else {
             return null;
         }
