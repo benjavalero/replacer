@@ -17,12 +17,24 @@
  aún teniendo||aun teniendo (incluso), aún teniendo (todavía)
  aun.|cs|aún.
  aun,|cs|aún,
+ cm2||cm² (unidad de medida)
+ cm3||cm³ (unidad de medida)
  Carlos Ménem|cs|Carlos Menem
+ Castilla-León||Castilla y León
+ Castilla León||Castilla y León
+ Castilla Leon||Castilla y León
+ Castilla y Leon||Castilla y León
+ Castilla la Mancha||Castilla-La Mancha
+ Castilla La Mancha||Castilla-La Mancha
  con mas||con más
  continua estando||continúa estando
  continua siendo||continúa siendo
  continuo su||continuó su
  continuo sus||continuó sus
+ dam2||dam² (unidad de medida)
+ dm2||dm² (unidad de medida)
+ dam3||dam³ (unidad de medida)
+ dm3||dm³ (unidad de medida)
  darse cuenta que||darse cuenta de que
  de Cordoba||de Córdoba
  de el||del, de él, de El, dé el, dé él
@@ -106,6 +118,8 @@
  éstos últimos||estos últimos
  grandes perdidas||grandes pérdidas
  hawk-eye||ojo de halcón
+ hm2||hm² (unidad de medida)
+ hm3||hm³ (unidad de medida)
  hay mas||hay más
  Hugo Chavez|cs|Hugo Chávez
  Jose Antonio|cs|José Antonio (nombre propio español)
@@ -113,6 +127,9 @@
  Jose Maria|cs|José María (nombre propio español)
  Jose María|cs|José María (nombre propio español)
  jugo en||jugó en
+ km2||km² (unidad de medida)
+ km3||km³ (unidad de medida)
+ km. de||km de
  la mas||la más
  la perdida||la pérdida
  la practica||la practica (verbo), la práctica (sustantivo)
@@ -126,6 +143,10 @@
  los mas||los más
  lucky loser||perdedor afortunado (deporte)
  luego paso||luego pasó
+ m2||m² (unidad de medida), m2 (variable)
+ m3||m³ (unidad de medida), m3 (variable)
+ mm2||mm² (unidad de medida)
+ mm3||mm³ (unidad de medida)
  main draw||cuadro principal
  mal entendido||mal entendido (adjetivo), malentendido (sustantivo)
  mas adelante||más adelante

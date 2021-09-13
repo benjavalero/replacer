@@ -6,7 +6,13 @@
 * Incluyo los casos con aproximadamente más de 400 ocurrencias
 
  # Abril
- Feria de Abril
+ # Feria de Abril+
+ # | Abril
+ # 60px"|Abril
+ # = Abril
+ # }} Abril
+ # text:Abril
+ # text: Abril
 
  # Adrian
  Adrian Mannarino
@@ -56,6 +62,16 @@
  # angeles
  # Se encuentra también como inmutable en PersonNameFinder
  of Los Angeles
+
+ # Agosto
+ [Pp]arque 25 de Agosto
+ # | Agosto
+ # 60px"|Agosto
+ # = Agosto
+ # }} Agosto
+ # text:Agosto
+ # text: Agosto
+ # * Agosto
 
  # Astana
  Astana Pro Team
@@ -128,6 +144,45 @@
  Division of
  Division I
 
+ # Febrero
+ [Aa]tlético 3 de Febrero
+ 3 de Febrero FBC
+ 3 de Febrero CDE
+ Tres de Febrero
+ Siete de Febrero
+ Veintidós de Febrero
+ [Pp]arque 3 de Febrero
+ [Pp]arque Tres de Febrero
+ [Ee]stadio 12 de Febrero
+ [Aa]tlético 7 de Febrero
+ [Aa]v. 20 de Febrero
+ [Aa]venida 20 de Febrero
+ [Aa]venida del 20 de Febrero
+ # | Febrero
+ # 60px"|Febrero
+ # = Febrero
+ # }} Febrero
+ # text:Febrero
+ # text: Febrero
+ # * Febrero
+ Avenida del 28 de Febrero
+ Avenida 28 de Febrero
+ [Aa]v. 28 de Febrero
+ [Cc]lub 6 de Febrero
+ [Cc]lub 7 de Febrero
+ [Cc]lub 20 de Febrero
+ [Cc]alle 3 de Febrero
+ [Rr]evolución de Febrero
+ [Ee]stación 25 de Febrero
+ [Mm]unicipalidad de 3 de Febrero
+ [Mm]unicipalidad 3 de Febrero
+ Pedro Febrero
+ Bartolomé Febrero
+ Ramón Febrero
+ [Ee]xpreso 27 de Febrero
+ [Aa]grupación 24 de Febrero
+ [Bb]ulevar 27 de Febrero
+
  First Division
  Second Division
  Third Division
@@ -135,6 +190,16 @@
  Joy Division
  Premier Division
  X Division
+
+ #Diciembre
+ # | Diciembre
+ # 60px"|Diciembre
+ # = Diciembre
+ # }} Diciembre
+ # text:Diciembre
+ # text: Diciembre
+ # * Diciembre
+ [Aa]sesinatos de Diciembre
 
  # Domingo
  # Se encuentra también como inmutable en SurnameFinder y en PersonNameFinder
@@ -144,6 +209,15 @@
 
  Plácido Domingo
  Santo Domingo
+
+ #Enero
+ # | Enero
+ # 60px"|Enero
+ # = Enero
+ # }} Enero
+ # text:Enero
+ # text: Enero
+ # * Enero
 
  # Eibar: la ciudad es con tilde y el equipo sin ella.
  SD Eibar
@@ -176,8 +250,24 @@
  Julian Assange
  Julian Casablancas
 
+ # Junio
+ # | Junio
+ # 60px"|Junio
+ # = Junio
+ # }} Junio
+ # text:Junio
+ # text: Junio
+ # * Junio
+
  # Julio
  Nueve de Julio
+ # | Julio
+ # 60px"|Julio
+ # = Julio
+ # }} Julio
+ # text:Julio
+ # text: Julio
+ # * Julio
 
  # junior
  Junior College
@@ -200,6 +290,10 @@
  mayor logro
  su logro
 
+ # magazine
+ # Interesa detectar los casos relacionados con el formato televisivo o de revista
+ # Ignoramos todos los pertenecientes a nombres propios
+ Magazine
 
  # Manchester
  # Cubierto por PersonNameFinder
@@ -215,6 +309,44 @@
  Maria in
  Maria Kirilenko    # Aunque se romaniza como María Kirilenko
  Maria Sakkari      # Aunque se romaniza como María Sákkari
+
+ #Marzo
+ José Luis Marzo
+ Tres de Marzo
+ Cuatro de Marzo
+ [Dd]eportivo 18 de Marzo
+ [Rr]evolución de Marzo
+ [Aa]lianza del 14 de Marzo
+ Mario Marzo
+ Primero de Marzo
+ [Pp]laza 18 de Marzo
+ [Mm]ovimiento del 1 de Marzo
+ [Mm]ovimiento 1 de Marzo
+ [Mm]ovimiento del 26 de Marzo
+ [Mm]ovimiento 26 de Marzo
+ [Mm]ovimiento del 22 de Marzo
+ [Mm]ovimiento 22 de Marzo
+ U.D. 21 de Marzo
+ [Dd]eportiva 21 de Marzo
+ 19 de Marzo FC
+ 21 de Marzo FC
+ [Ll]iebre de Marzo
+ [Ee]stadio 1º de Marzo
+ [Ee]stadio 1 de Marzo
+ [Ee]stadio 3 de Marzo
+ [Ee]stadio 26 de Marzo
+ [Ee]stadio 28 de Marzo
+ [Pp]laza 11 de Marzo
+ [Cc]alle 30 de Marzo
+ [Ff]iebre de Marzo
+ Marzo [Pp]araguayo
+ # | Marzo
+ # 60px"|Marzo
+ # = Marzo
+ # }} Marzo
+ # text:Marzo
+ # text: Marzo
+ # * Marzo
 
  Anna Maria
  Carlo? Maria
@@ -242,30 +374,163 @@
  Geoff Masters
 
  # Mayo
- [Rr]ío Mayo
-
- # Hay varios casos de nombres propios, incluso ciudades, con el día y el mes.
+  # Hay varios casos de nombres propios, incluso ciudades, con el día y el mes.
  # Las fechas completas son más largas y machacan estos falsos positivos
+ [Rr]ío Mayo
  1º de Mayo         # Habrá que "revisitarlo" cuando se empiece a corregir el estilo de los ordinales, incluidos títulos de artículos.
+ 1.º de Mayo
  2 de Mayo
  9 de Mayo
  25 de Mayo
- Avenida de Mayo
+ Héroes del 5 de Mayo
+ [Cc]alle 21 de Mayo
+ [Aa]venida 21 de Mayo
+ [Aa]v. 21 de Mayo
+ [Aa]venida del 21 de Mayo
+ [Aa]v. del 21 de Mayo
+ Primera de Mayo
+ Cuatro de Mayo
+ [Cc]onde de Mayo
+ [Cc]ondesa de Mayo
+ Mayo francés
+ Mayo del 68
+ Carlos Mayo
+ Andrés Mayo
+ Gema Mayo
+ Mayo Simon
+ Rahn Mayo
+ Mayo SATA
+ Mayo S.A.T.A
+ Mayo S. A.
+ Mayo S.A.
+ Mayo SA
+ Gregorio Mayo
+ Gilmar Mayo
+ Taita Mayo
+ Elton Mayo
+ Liliana Mayo
+ Ediciones Mayo
+ OJ Mayo
+ [Aa]ndador 5 de Mayo
+ Cultural de Mayo
+ [Oo]rden de Mayo
+ Enrique Mayo
+ Morton and Mayo
+ Nueve de Mayo
+ Soledad Mayo
+ Señor de Mayo
+ [Cc]ompañía Mayo
+ [Aa]venida de Mayo
+ Archie Mayo
  Campo de Mayo
  Cruz de Mayo
  Dos de Mayo
- Plaza de Mayo
+ [Pp]laza de Mayo
  Primero de Mayo
- Revolución de Mayo
+ [Rr]evolución de Mayo
  San José de Mayo
  Sol de Mayo
  Veinticinco de Mayo
+ Pasaje Histórico 5 de Mayo
+ Cultura Mayo
+ Hugo Mayo
+ Cruces de Mayo
+ Dulce Briyi Mayo
+ Marie Mayo
+ Tres de Mayo
+ [Pp]arque de Mayo
+ [Pp]laza 5 de Mayo
+ Alto Mayo
+ Gómez Mayo
+ Susana Mayo
+ Julio Mayo
+ Alfredo Mayo
+ Iban Mayo
+ Iván Mayo
+ David Mayo
+ Mayo Musical
+ [Ii]sla de Mayo
+ # | Mayo
+ # 60px"|Mayo
+ # = Mayo
+ # }} Mayo
+ # text:Mayo
+ # text: Mayo
+ # * Mayo
+ [Cc]lub 1 de Mayo
+ [Mm]ayo de 1968
+ Cumbe Mayo
+ Kelvin Mayo
+ Karen Mayo
+ Palo de Mayo
+ Aldo Mayo
+ Mayo Hotel
+ Poetas en Mayo
+ [Bb]arrio 14 de Mayo
+ Nacional 14 de Mayo
+ [Gg]eneración de Mayo
+ Anastasia Mayo
+ Dolores Mayo
+ Mayo Clinic
+ [Cc]línica Mayo
+ Mayo Smith
+ [Ee]stadio 9 de Mayo
+ Rungrado Primero de Mayo
+ [Ee]stadio 19 [Mm]ayo de 1956
+ [Bb]éisbol 3 de [Mm]ayo
+ [Ss]ucesos de Mayo
+ Margaret Mayo
+ Club 15 de Mayo
+ Esquenazi-Mayo
+ Virginia Mayo
+ Pactos de Mayo
+ Ávila Mayo
+ Av de Mayo
+ Av. de Mayo
+ Yaqui y Mayo
+ Avenida 1 de Mayo
+ Mayo Möller
+ [Cc]ondado de Mayo
+ [Pp]ingada del Mayo
+ Forgueras y Mayo
+ Clara de Mayo
+ Gran Premio del 1 de Mayo
+ Mayo-Danay
+ César Mayo
+ Josh Mayo
+ [Uu]rbanización Flor de Mayo
+ Cruz del Mayo
+ Centenario de Mayo
 
  # Milan
  # La mayoría son del equipo de fútbol que se escribe sin tilde
  Calcio Milan
  AC Milan
  el Milan
+
+ # Noviembre
+ [Rr]evolución de Noviembre
+ [Ee]stadio 11 de Noviembre
+ [Ee]stadio 25 de Noviembre
+ # | Noviembre
+ # 60px"|Noviembre
+ # = Noviembre
+ # }} Noviembre
+ # text:Noviembre
+ # text: Noviembre
+ # * Noviembre
+ Primero de Noviembre
+ [Aa]v. 12 de Noviembre
+ [Aa]venida 12 de Noviembre
+ [Aa]venida del 12 de Noviembre
+ [Aa]v. 24 de Noviembre
+ [Aa]venida 24 de Noviembre
+ [Aa]venida del 24 de Noviembre
+ Sol de Noviembre
+ [Ll]evantamiento de Noviembre
+ [Mm]ovimiento [Rr]evolucionario 13 de Noviembre
+ [Cc]entro [Uu]rbano 5 de Noviembre
+ [Hh]ospital 20 de Noviembre
 
  # Missouri
  of Missouri
@@ -278,6 +543,15 @@
  Nicolas Prost
  Nicolas Lapierre
  Nicolas Poussin
+
+ #Octubre
+ # | Octubre
+ # 60px"|Octubre
+ # = Octubre
+ # }} Octubre
+ # text:Octubre
+ # text: Octubre
+ # * Octubre
 
  # Paris
  Paris Hilton
@@ -345,6 +619,14 @@
  Simon Cowell
  Simon Fraser
 
+ # | Septiembre
+ # 60px"|Septiembre
+ # = Septiembre
+ # }} Septiembre
+ # text:Septiembre
+ # text: Septiembre
+ # * Septiembre
+
  Eugène Simon
  Gilles Simon
  G Simon
@@ -390,3 +672,11 @@
  Victor Hănescu
  Victor Hugo
  RCA Victor
+
+ # zombie
+ Rob Zombie
+ White Zombie
+
+ # zombies
+ Marvel Zombies
+ The Zombies
