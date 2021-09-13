@@ -18,9 +18,9 @@ export class ReplacementListComponent implements OnInit {
       // We want to keep the components created in the ngFor template
       for (let i = 0; i < counts.length; i++) {
         let found = false;
-        for (let j = 0; j < this.typeCounts.length; j++) {
-          if (this.typeCounts[j].t === counts[i].t) {
-            this.typeCounts[j].l = counts[i].l;
+        for (let typeCount of this.typeCounts) {
+          if (typeCount.t === counts[i].t) {
+            typeCount.l = counts[i].l;
             found = true;
             break;
           }
@@ -32,16 +32,16 @@ export class ReplacementListComponent implements OnInit {
       }
 
       // Inverse check to remove obsolete type counts not existing in the new value
-      for (let i = 0; i < this.typeCounts.length; i++) {
+      for (let typeCount of this.typeCounts) {
         let found = false;
-        for (let j = 0; j < counts.length; j++) {
-          if (this.typeCounts[i].t === counts[j].t) {
+        for (let count of counts) {
+          if (typeCount.t === count.t) {
             found = true;
             break;
           }
         }
         if (!found) {
-          this.typeCounts[i].l = [];
+          typeCount.l = [];
         }
       }
     });
