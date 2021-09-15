@@ -13,11 +13,11 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
     private static final String SUFFIX_FINDER_CLASS = "Finder";
     private static final int CONTEXT_THRESHOLD = 50;
 
-    private boolean showLongImmutables;
+    private boolean showImmutableWarning;
 
-    @Value("${replacer.show.long.immutables}")
-    public final void setShowLongImmutables(String showLongImmutables) {
-        this.showLongImmutables = Boolean.parseBoolean(showLongImmutables);
+    @Value("${replacer.show.immutable.warning}")
+    public final void setShowImmutableWarning(String showImmutableWarning) {
+        this.showImmutableWarning = Boolean.parseBoolean(showImmutableWarning);
     }
 
     @Override
@@ -30,7 +30,7 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
     }
 
     private Immutable check(Immutable immutable, FinderPage page) {
-        if (showLongImmutables) {
+        if (showImmutableWarning) {
             this.checkMaxLength(immutable, page);
         }
         return immutable;
@@ -53,8 +53,10 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
     }
 
     protected void logWarning(String pageContent, int start, int end, FinderPage page, String message) {
-        String immutableText = FinderUtils.getContextAroundWord(pageContent, start, end, CONTEXT_THRESHOLD);
-        logWarning(immutableText, page, message);
+        if (showImmutableWarning) {
+            String immutableText = FinderUtils.getContextAroundWord(pageContent, start, end, CONTEXT_THRESHOLD);
+            logWarning(immutableText, page, message);
+        }
     }
 
     private void logWarning(String immutableText, FinderPage page, String message) {

@@ -46,9 +46,9 @@
             "description": "Delay (in milliseconds) between executions of the replacement count in database"
         },
         {
-            "name": "replacer.show.long.immutables",
+            "name": "replacer.show.immutable.warning",
             "type": "java.lang.Boolean",
-            "description": "To include in the logs the warnings for the too long immutables found"
+            "description": "To include in the logs the warnings for invalid or too long immutables found"
         },
         {
             "name": "replacer.admin.user",
