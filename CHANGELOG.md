@@ -1,5 +1,9 @@
 # Versions
 
+## 2.11.7 (??)
+- Performance improvements on finding immutables
+- Add more warnings for non-closed tags
+
 ## 2.11.6 (28 Jun 2021)
 - Improve filename finder
 - Ignore styles in tables
