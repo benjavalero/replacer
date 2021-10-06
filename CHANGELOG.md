@@ -1,6 +1,6 @@
 # Versions
 
-## 2.11.7 (??)
+## 2.11.7 (6 Oct 2021)
 - Performance improvements on finding immutables
 - Add more warnings for non-closed tags
 
