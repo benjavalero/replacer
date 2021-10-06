@@ -1,14 +1,30 @@
-== Lista de falsos positivos ==
+Este listado incluye términos o expresiones que son (casi siempre) falsos positivos, y que la herramienta [[Usuario:Benjavalero/Replacer|Replacer]] usa para ocultar potenciales reemplazos. Por ejemplo:
+* «aun así» ocultará el potencial reemplazo de «aun».
+* «Feria de Abril» ocultará el potencial reemplazo de «Abril».
+Todas las palabras que aparecen en estas expresiones han de estar completas, e incluir todo el falso positivo que se desea ignorar. Por ejemplo, <code>Julio V</code> no sería una expresión válida para ignorar las ocurrencias de «Julio Verne».
 
-* Este listado incluye términos o conjunto de términos que son (casi siempre) falsos positivos, p. ej «aun así» que ocultará el potencial reemplazo de «aun».
-* Si es posible intentamos que no se solapen con otras excepciones
-* De momento uso una expresión regular (automaton) por lo que podemos incluir algo de sintaxis de estas
-* Incluyo los casos con aproximadamente más de 400 ocurrencias
+Las expresiones de este listado distinguen entre mayúsculas y minúsculas. Se permiten algunas expresiones regulares sencillas. Por ejemplo, <code>[Aa]un así</code> ignorará las apariciones tanto de «Aun así» como de «aun así».
+
+Se pueden incluir comentarios, comenzando por <code>#</code>, en particular para indicar el número aproximado de ocurrencias de la expresión.
+
+=== Número de ocurrencias ===
+Para calcular el número de ocurrencias, cuando no haya que distinguir mayúsculas y minúsculas, se recomienda buscar la expresión en la caja de búsqueda de Wikipedia pero encerrada entre comillas dobles. Para distinguir entre mayúsculas y minúsculas, se puede añadir la opción ''insource'' que busca el texto tal cual. Por ejemplo:
+* <code>"aún así"</code> busca ocurrencias de «aún así» sin distinguir mayúsculas y minúsculas.
+* <code>"Aún así" insource:/"Aún así"/</code> busca ocurrencias de «Aún así» distinguiendo mayúsculas y minúsculas. Hay que indicar la expresión dos veces para optimizar el tiempo de respuesta de la búsqueda.
+También hay que filtrar por los espacios ''Principal'' y ''Anexo'', que son los espacios que actualmente utiliza Replacer.
+
+{{Aviso
+| tipo = contenido
+| encabezado = La cantidad de expresiones de este listado puede afectar al rendimiento de '''Replacer'''
+| texto = <br>Se recomienda incluir solo aquellas expresiones con más de 100 ocurrencias.
+}}
+
+=== Listado ===
 
  # Abril
- # Feria de Abril+
+ Feria de Abril
  # | Abril
- # 60px"|Abril
+ # px"|Abril
  # = Abril
  # }} Abril
  # text:Abril
@@ -32,15 +48,24 @@
  Albums Chart
 
  # Alex
- Alex Barros
- Alex Bogomolov
- Alex Bolt
- Alex de Angelis
- Alex Ferguson
- Alex Kuznetsov
- Alex O         # Para encontrar ocurrencias como Alex O'Connell
- Alex Shelley
- Alex Zülle
+ Alex Barros         # 340
+ Alex [Dd]e Angelis  # 300
+ Alex Ferguson       # 250
+ Alex Bolt           # 230
+ Alex O              # 300 Para encontrar ocurrencias como Alex O'Brien
+ Alex Baldolini      # 185
+ Alex Bogom[oó]lov   # 175
+ Alex Kuznetsov      # 170
+ Alex Shelley        # 165
+ Alex Ross           # 165
+ Alex George         # 145
+ Alex Zülle          # 125
+ Alex Turner         # 100
+ Alex Morgan         # 100
+ Alex Borstein       # 100
+ Alex Caffi          # 100
+ Alex Dimitriades    # 100
+ Alex Jones          # 100
 
  # america
  # North America Editorial  # Cubierto por North America
@@ -66,7 +91,7 @@
  # Agosto
  [Pp]arque 25 de Agosto
  # | Agosto
- # 60px"|Agosto
+ # px"|Agosto
  # = Agosto
  # }} Agosto
  # text:Agosto
@@ -159,7 +184,7 @@
  [Aa]venida 20 de Febrero
  [Aa]venida del 20 de Febrero
  # | Febrero
- # 60px"|Febrero
+ # px"|Febrero
  # = Febrero
  # }} Febrero
  # text:Febrero
@@ -193,7 +218,7 @@
 
  #Diciembre
  # | Diciembre
- # 60px"|Diciembre
+ # px"|Diciembre
  # = Diciembre
  # }} Diciembre
  # text:Diciembre
@@ -212,7 +237,7 @@
 
  #Enero
  # | Enero
- # 60px"|Enero
+ # px"|Enero
  # = Enero
  # }} Enero
  # text:Enero
@@ -226,9 +251,7 @@
 
  # éste (y derivados). Ídem con aquél (y derivados).
  # Esta forma no es incorrecta (salvo en «ésto»), aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
- # No se añade a esta lista puesto que hay usuarios que sí la revisan
- # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
- # Finalmente se añaden a esta lista puesto que ha habido quejas, ya que siguen siendo términos controvertidos.
+ # Se añaden a la lista puesto que ha habido quejas, ya que siguen siendo términos controvertidos.
  [Éé]st?[ea]
  [Éé]st?[oa]s
  [Aa]quél
@@ -250,37 +273,37 @@
  Julian Assange
  Julian Casablancas
 
- # Junio
- # | Junio
- # 60px"|Junio
- # = Junio
- # }} Junio
- # text:Junio
- # text: Junio
- # * Junio
-
  # Julio
  Nueve de Julio
  # | Julio
- # 60px"|Julio
+ # px"|Julio
  # = Julio
  # }} Julio
  # text:Julio
  # text: Julio
  # * Julio
 
- # junior
- Junior College
- Junior Heavyweight
- Junior Team
- Junior de Barranquilla
+ # Junio
+ # | Junio
+ # px"|Junio
+ # = Junio
+ # }} Junio
+ # text:Junio
+ # text: Junio
+ # * Junio
 
- Atlético Junior        # Se refiere también al equipo Junior de Barranquilla
- Deportiva Junior       # Se refiere también al equipo Junior de Barranquilla
- Disney Junior
- Super Junior
- Top Race Junior
- World Junior
+ # junior
+ Junior de Barranquilla # 690 Equipo de fútbol colombiano
+ Atlético Junior        # 430 Se refiere también al equipo de fútbol
+ Super Junior           # 400 Banda coreana
+ Junior College         # 385
+ Junior Heavyweight     # 320
+ Disney Junior          # 285
+ Junior Team            # 260
+ World Junior           # 245
+ Junior High            # 225
+ Top Race Junior        # 150
+ Junior Championship    # 90
 
  # logro
  [Ee]l logro
@@ -289,6 +312,37 @@
  gran logro
  mayor logro
  su logro
+
+ #M2
+ Browning M2
+ [Ll]ínea M2
+ [Aa]utopista M2
+ M2.5
+ M2.0
+ [Cc]añón M2
+ [Vv]ena M2
+ [Vv]enas M2
+ M2 Bradley
+ Gustav M2
+ M2-
+ y M2
+ M2 y
+
+ #M3
+ Browning M3
+ [Ll]ínea M3
+ [Aa]utopista M3
+ BMW M3
+ M3.5
+ M3.0
+ [Cc]añón M3
+ [Ss]ubfusil M3
+ [Vv]ena M3
+ [Vv]enas M3
+ M3 Bradley
+ M3-
+ y M3
+ M3 y
 
  # magazine
  # Interesa detectar los casos relacionados con el formato televisivo o de revista
@@ -300,15 +354,48 @@
 
  # Maria
  # Añado aquí los casos que claramente se corresponden a italiano, catalán, portugués, etc.
- Maria Anna
- Maria Callas
- Maria da
- Maria della
- Maria di
- Maria do
- Maria in
- Maria Kirilenko    # Aunque se romaniza como María Kirilenko
- Maria Sakkari      # Aunque se romaniza como María Sákkari
+ Josep Maria             # 2500
+ Anna Maria              # 1025
+ Maria della             # 500
+ Maria da                # 500
+ Ave Maria               # 460
+ Francesco Maria         # 400
+ Maria Callas            # 300
+ Carlo Maria             # 290
+ Giuseppe Maria          # 280
+ Giovanni Maria          # 275
+ Rainer Maria            # 275
+ Maria Rilke             # 250
+ Maria Anna              # 250
+ di Maria                # 240
+ Maria Kirilenko         # 240 Aunque se romaniza como María Kirilenko
+ Tatjana Maria           # 220
+ Santa Maria di          # 210
+ Carl Maria von Weber    # 210
+ Maria Grazia            # 190
+ Maria Sakkari           # 180 Aunque se romaniza como María Sákkari
+ Maria Assunta           # 165
+ Maria Pia               # 165
+ Maria delle             # 160
+ Maria João              # 160
+ Santa Maria Maggiore    # 150
+ Maria Giulini           # 140
+ Maria Novella           # 140
+ Lluís Maria             # 135
+ Patricia Maria Țig      # 130
+ Maria van               # 120
+ Maria Hill              # 120
+ Maria sopra             # 120
+ Antoni Maria            # 115
+ Maria del Mar Bonet     # 115
+ Gian Maria              # 110
+ Eva-Maria               # 110
+ Maria Visconti          # 105
+ Maria Elena Camerin     # 105
+ Filippo Maria           # 100
+ Santa Maria dei         # 100
+ Anna-Maria              # 100
+ Maria Bueno             # 100
 
  #Marzo
  José Luis Marzo
@@ -341,21 +428,12 @@
  [Ff]iebre de Marzo
  Marzo [Pp]araguayo
  # | Marzo
- # 60px"|Marzo
+ # px"|Marzo
  # = Marzo
  # }} Marzo
  # text:Marzo
  # text: Marzo
  # * Marzo
-
- Anna Maria
- Carlo? Maria
- Francesco Maria
- Giovanni Maria
- Giuseppe Maria
- Josep Maria
- Rainer Maria Rilke
- Tatjana Maria
 
  # mas
  mas no
@@ -377,71 +455,43 @@
   # Hay varios casos de nombres propios, incluso ciudades, con el día y el mes.
  # Las fechas completas son más largas y machacan estos falsos positivos
  [Rr]ío Mayo
- 1º de Mayo         # Habrá que "revisitarlo" cuando se empiece a corregir el estilo de los ordinales, incluidos títulos de artículos.
- 1.º de Mayo
- 2 de Mayo
- 9 de Mayo
- 25 de Mayo
- Héroes del 5 de Mayo
- [Cc]alle 21 de Mayo
- [Aa]venida 21 de Mayo
- [Aa]v. 21 de Mayo
- [Aa]venida del 21 de Mayo
- [Aa]v. del 21 de Mayo
- Primera de Mayo
- Cuatro de Mayo
  [Cc]onde de Mayo
  [Cc]ondesa de Mayo
- Mayo francés
+ [Ff]eria de Mayo
+ [Vv]irgen de Mayo
+ Mayo [Ff]rancés
  Mayo del 68
  Carlos Mayo
  Andrés Mayo
- Gema Mayo
- Mayo Simon
- Rahn Mayo
- Mayo SATA
- Mayo S.A.T.A
- Mayo S. A.
- Mayo S.A.
- Mayo SA
  Gregorio Mayo
- Gilmar Mayo
- Taita Mayo
- Elton Mayo
- Liliana Mayo
+ Carta de Mayo
+ Radio Mayo
  Ediciones Mayo
- OJ Mayo
  [Aa]ndador 5 de Mayo
  Cultural de Mayo
  [Oo]rden de Mayo
- Enrique Mayo
- Morton and Mayo
- Nueve de Mayo
- Soledad Mayo
  Señor de Mayo
+ Mayo Hibi
  [Cc]ompañía Mayo
- [Aa]venida de Mayo
  Archie Mayo
- Campo de Mayo
+ [Cc]ampo de Mayo
  Cruz de Mayo
- Dos de Mayo
  [Pp]laza de Mayo
- Primero de Mayo
  [Rr]evolución de Mayo
  San José de Mayo
  Sol de Mayo
+ Primer[oa] de Mayo
+ Dos de Mayo
+ Tres de Mayo
+ Cuatro de Mayo
+ Cinco de Mayo
+ Nueve de Mayo
  Veinticinco de Mayo
  Pasaje Histórico 5 de Mayo
  Cultura Mayo
- Hugo Mayo
  Cruces de Mayo
- Dulce Briyi Mayo
- Marie Mayo
- Tres de Mayo
- [Pp]arque de Mayo
- [Pp]laza 5 de Mayo
+ County Mayo
  Alto Mayo
- Gómez Mayo
  Susana Mayo
  Julio Mayo
  Alfredo Mayo
@@ -450,57 +500,69 @@
  David Mayo
  Mayo Musical
  [Ii]sla de Mayo
+ [Mm]ayo de 1968
+ Karen Mayo
+ Palo de Mayo
+ Mayo Hotel
+ Poetas en Mayo
+ Nacional 14 de Mayo
+ [Gg]eneración de Mayo
+ Mayo Clinic
+ [Bb]éisbol 3 de [Mm]ayo
+ [Ss]ucesos de Mayo
+ Margaret Mayo
+ Virginia Mayo
+ [Pp]actos de Mayo
+ Villa de Mayo
+ [Cc]ondado de Mayo
+ [Pp]ingada del Mayo
+ [Ss]alón de Mayo
+ Gran Premio del 1 de Mayo
+ Mayo-[ABCDEFGHIJKLMNOPQRSTUVWXYZ]
+ César Mayo
+ [Uu]rbanización Flor de Mayo
+ Cruz del Mayo
+ Centenario de Mayo
+ Editorial de Mayo
+ Editorial Mayo
+ Mayo Negro
+ [Bb]anco Mayo
+ Flor de Mayo
+ [Bb]iblioteca de Mayo
+ [Aa]venida de Mayo
+ [Aa]v de Mayo
+ [Aa]v. de Mayo
+ [Aa]venida [123456789] de Mayo
+ [Aa]venida [123456789][123456789] de Mayo
+ [Aa]venida del [123456789] de Mayo
+ [Aa]venida del [123456789][123456789] de Mayo
+ [Aa]v del [123456789] de Mayo
+ [Aa]v del [123456789][123456789] de Mayo
+ [Aa]v [123456789] de Mayo
+ [Aa]v. [123456789] de Mayo
+ [Aa]v. del [123456789] de Mayo
+ [Cc]alle [123456789] de Mayo
+ [Cc]. [123456789] de Mayo
+ [Bb]ulevar [123456789] de Mayo
+ [Pp]laza [123456789] de Mayo
+ [Bb]arrio [123456789] de Mayo
+ [Pa]rque [123456789] de Mayo
+ [Ee]stadio [123456789] de Mayo
+ [Ee]stadio [123456789][123456789] de Mayo
+ [Cc]lub [123456789] de Mayo
+ [Mm]ovimiento [123456789] de Mayo
+ [Cc]olonia [123456789] de Mayo
+ [Pp]aseo [123456789] de Mayo
+ [Oo]rden [123456789] de Mayo
+ [Hh]éroes del [123456789] de Mayo
+ El Mayo
  # | Mayo
- # 60px"|Mayo
+ # px"|Mayo
  # = Mayo
  # }} Mayo
  # text:Mayo
  # text: Mayo
  # * Mayo
- [Cc]lub 1 de Mayo
- [Mm]ayo de 1968
- Cumbe Mayo
- Kelvin Mayo
- Karen Mayo
- Palo de Mayo
- Aldo Mayo
- Mayo Hotel
- Poetas en Mayo
- [Bb]arrio 14 de Mayo
- Nacional 14 de Mayo
- [Gg]eneración de Mayo
- Anastasia Mayo
- Dolores Mayo
- Mayo Clinic
- [Cc]línica Mayo
- Mayo Smith
- [Ee]stadio 9 de Mayo
- Rungrado Primero de Mayo
- [Ee]stadio 19 [Mm]ayo de 1956
- [Bb]éisbol 3 de [Mm]ayo
- [Ss]ucesos de Mayo
- Margaret Mayo
- Club 15 de Mayo
- Esquenazi-Mayo
- Virginia Mayo
- Pactos de Mayo
- Ávila Mayo
- Av de Mayo
- Av. de Mayo
- Yaqui y Mayo
- Avenida 1 de Mayo
- Mayo Möller
- [Cc]ondado de Mayo
- [Pp]ingada del Mayo
- Forgueras y Mayo
- Clara de Mayo
- Gran Premio del 1 de Mayo
- Mayo-Danay
- César Mayo
- Josh Mayo
- [Uu]rbanización Flor de Mayo
- Cruz del Mayo
- Centenario de Mayo
 
  # Milan
  # La mayoría son del equipo de fútbol que se escribe sin tilde
@@ -513,7 +575,7 @@
  [Ee]stadio 11 de Noviembre
  [Ee]stadio 25 de Noviembre
  # | Noviembre
- # 60px"|Noviembre
+ # px"|Noviembre
  # = Noviembre
  # }} Noviembre
  # text:Noviembre
@@ -546,17 +608,57 @@
 
  #Octubre
  # | Octubre
- # 60px"|Octubre
+ # px"|Octubre
  # = Octubre
  # }} Octubre
  # text:Octubre
  # text: Octubre
  # * Octubre
+ Octubre [Rr]ojo
+ Octubre [Nn]egro
+ Octubre polaco
+ [Vv]alle 16 de Octubre
+ [Rr]evolución de Octubre
+ [Gg]rupo Octubre
+ Revolución de Octubre
+ [Hh]ospital 12 de Octubre
+ Hospital Universitario 12 de Octubre
+ [Aa]venida [123456789] de Octubre
+ [Aa]venida [123456789][1234567890] de Octubre
+ [Aa]venida del [123456789] de Octubre
+ [Aa]venida del [123456789][1234567890] de Octubre
+ [Aa]v del [123456789] de Octubre
+ [Aa]v del [123456789][1234567890] de Octubre
+ [Aa]v [123456789] de Octubre
+ [Aa]v. [123456789] de Octubre
+ [Aa]v. del [123456789] de Octubre
+ [Cc]alle [123456789] de Octubre
+ [Cc]. [123456789] de Octubre
+ [Bb]ulevar [123456789] de Octubre
+ [Pp]laza [123456789] de Octubre
+ [Bb]arrio [123456789] de Octubre
+ [Pa]rque [123456789] de Octubre
+ [Ee]stadio [123456789] de Octubre
+ [Ee]stadio [123456789][1234567890] de Octubre
+ [Cc]olonia [123456789] de Octubre
 
  # Paris
- Paris Hilton
- Paris Saint     # Paris Saint-Germain
- in Paris
+ in Paris                # 1340
+ Paris Saint-Germain     # 1065
+ à Paris                 # 790
+ Paris Hilton            # 330
+ Université Paris        # 235
+ Ville de Paris          # 200
+ Paris-Bercy             # 200
+ Lyon-Paris              # 150
+ Paris FC                # 135
+ Paris Saint Germain     # 125
+ Universidad Paris       # 120
+ Université de Paris     # 115
+ Stade Français Paris    # 110
+ Paris Basket            # 100
+ Paris-Levallois         # 100
+ Théâtre de Paris        # 100
 
  # publica
  publica el
@@ -578,15 +680,25 @@
  [Rr]ecords of
 
  # retiro
- Buen Retiro
- Estación Retiro
- al? retiro
- del? [Rr]etiro
- do Retiro
- [Ee]l [Rr]etiro
- en retiro
- su retiro
- un retiro
+ [Ss]u retiro       # 7150
+ [Ee]l [Rr]etiro    # 3175
+ de [Rr]etiro       # 1890
+ del [Rr]etiro      # 1530
+ y retiro           # 760
+ un retiro          # 560
+ a retiro           # 550
+ al retiro          # 530
+ en [Rr]etiro       # 460
+ retiro definitivo  # 265
+ retiro se          # 210
+ [Ee]stación Retiro # 200
+ retiro fue         # 180
+ Ramal Retiro       # 170
+ Retiro Belgrano    # 160
+ Buen Retiro        # 150
+ retiro espiritual  # 140
+ retiro voluntario  # 115
+ Retiro San Martín  # 100
 
  # rio
  Rio Ave            # Aunque en español llevaría tilde, la mayoría son falsos positivos de los clubes de fútbol o en portugués.
@@ -613,26 +725,42 @@
  [Ff]ue [Ss]ecretaria
  y [Ss]ecretaria
 
- # simon
- Simon and Schuster
- Simon Aspelin
- Simon Cowell
- Simon Fraser
-
  # | Septiembre
- # 60px"|Septiembre
+ # px"|Septiembre
  # = Septiembre
  # }} Septiembre
  # text:Septiembre
  # text: Septiembre
  # * Septiembre
 
- Eugène Simon
- Gilles Simon
- G Simon
- John Simon
- Neil Simon
- Paul Simon
+ # Simon
+ Simon and Schuster    # 1230
+ Gilles Simon          # 650
+ Paul Simon            # 415
+ John Simon            # 370
+ Saint-Simon           # 335
+ Neil Simon            # 325
+ Simon Cowell          # 320
+ Simon Aspelin         # 275
+ Simon Fraser          # 270
+ Peter Simon Pallas    # 255
+ Simon Phillips        # 230
+ Simon Rattle          # 190
+ G Simon               # 190
+ Simon Wiesenthal      # 180
+ Simon Pegg            # 170
+ Carly Simon           # 165
+ Simon Gerrans         # 155
+ Simon Yates           # 140
+ Simon Laplace         # 140
+ Simon Stadler         # 130
+ Simon Greul           # 125
+ Simon and Garfunkel   # 120
+ Simon's               # 120
+ Simon Vouet           # 115
+ Simon Clarke          # 110
+ Simon Youl            # 100
+ Anna Simon            # 80  Nombre catalán, no se tilda.
 
  # sky
  # Se encuentra también como inmutable en PersonNameFinder y SurnameFinder
@@ -646,8 +774,7 @@
 
  # sólo
  # Esta forma no es incorrecta, aunque la forma recomendada desde 2010 sea sin tilde en cualquier caso.
- # Se añaden a la lista de errores compuestos algunos casos detectados donde el verdadero positivo parece más claro
- # Finalmente se añade a esta lista puesto que ha habido quejas, ya que sigue siendo un término controvertido.
+ # Se añade a la lista puesto que ha habido quejas, ya que sigue siendo un término controvertido.
  [Ss]ólo
 
  # Tokyo

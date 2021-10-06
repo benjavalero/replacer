@@ -12,7 +12,7 @@ Nótese que el listado incluye términos que, aunque existen —por ejemplo, ''u
 
 El formato de este listado se basa en un [[:de:Wikipedia:Helferlein/Rechtschreibprüfung/Wortliste|listado similar de la Wiki alemana]]. Es importante respetarlo para el buen funcionamiento de las distintas herramientas que lo utilizan.
 
-La sintaxis básica es: <code> término potencialmente erróneo|parámetro|término sugerido</code>
+La sintaxis básica es: <code>término potencialmente erróneo|parámetro|término sugerido</code>
 * Cada línea debe comenzar con un espacio en blanco (para que el corrector ortográfico pueda distinguir estas entradas del resto del texto de la página).
 * El término potencialmente erróneo solo puede contener letras del alfabeto español con o sin acento gráfico o diéresis. No son válidos términos con espacios intermedios, puntos, comas, guiones, apóstrofos, dígitos, etc. Por ejemplo, la entrada <code>a basto||abasto</code> no es válida, ya que contiene un espacio intermedio.
 * El único parámetro disponible actualmente es <code>cs</code> (''case-sensitive''). Si se indica este parámetro, el término solamente se tendrá en cuenta si coinciden las mayúsculas y minúsculas. Para no distinguir mayúsculas y minúsculas, simplemente se debe dejar el parámetro vacío.
@@ -774,6 +774,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  altai||Altái
  altái|cs|Altái
  áltamente||altamente
+ altepetl||altépetl
  alteracion||alteración
  alternamente||alternativamente, alternadamente
  alternatina||alternativa
@@ -1735,8 +1736,6 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  aumentaria||aumentaría
  aumentarian||aumentarían
  aumentarias||aumentarías
- aún||aun (incluso, aunque), aún (todavía)
- aun||aún (todavía), aun (incluso, aunque)
  aúnque||aunque
  auqnue||aunque
  auque||aunque
@@ -1944,7 +1943,8 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  bagon||vagón
  bagón||vagón
  bahamas|cs|Bahamas
- bahia||bahía
+ Bahia|cs|Bahía (localidades)
+ bahia|cs|bahía
  bahias||bahías
  baho||vaho
  bahos||vahos
@@ -2612,9 +2612,11 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  bugias||bujías
  buho||búho
  buhos||búhos
+ Bujara|cs|Bujará (ciudad en Uzbekistán)
  bujia||bujía
  bujias||bujías
  Bujumbura||Buyumbura
+ Bukhara||Bujará (ciudad en Uzbekistán)
  bulgara||búlgara
  bulgaras||búlgaras
  bulgaria|cs|Bulgaria
@@ -3264,7 +3266,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  cassetes||casetes
  cassette||casete
  cassettes||casetes
- Casteldefels||Castelldefels
+ Casteldefels||Castelldefels (nombre oficial y preferido según la política de topónimos de Wikipedia)
  cástin||castin, casting
  cásting||casting, castin
  castings||cástines
@@ -3927,6 +3929,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  coati||coatí
  coaties||coatíes
  coatis||coatís
+ Coban||Cobán (ciudad en Guatemala)
  cocaina||cocaína
  coccido||cóccido
  coccidos||cóccidos
@@ -4078,7 +4081,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  comaprtio||compartió
  comaprtió||compartió
  comaprtir||compartir
- Comayaguela||Comayagüela (ciudad hondureña)
+ Comayaguela||Comayagüela (ciudad en Honduras)
  comayaguense||comayagüense
  combatio||combatió
  combiancion||combinación
@@ -5324,6 +5327,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  danicas||dánicas
  danico||dánico
  danicos||dánicos
+ Danli||Danlí (ciudad en Honduras)
  dara||dará
  daria|cs|daría
  dariais||daríais
@@ -7159,6 +7163,8 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  engreido||engreído
  engreidos||engreídos
  engreir||engreír
+ enlance||enlace
+ enlances||enlaces
  enlas||en las
  enlase||enlace
  enlases||enlaces
@@ -8849,6 +8855,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  fonologizacion||fonologización
  fonologo||fonólogo
  fonologos||fonólogos
+ Fontibon||Fontibón (localidad de Bogotá)
  foranea||foránea
  foraneas||foráneas
  foraneo||foráneo
@@ -9673,6 +9680,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  grupusculos||grupúsculos
  guaguanco||guaguancó
  guajardo|cs|Guajardo
+ guamuchil||guamúchil (planta), Guamúchil (ciudad en el estado de Sinaloa, México)
  Guantanamo||Guantánamo
  guarani||guaraní
  güarani||guaraní
@@ -12434,9 +12442,8 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  marcho||marchó (3.ª persona), marcho (1.ª persona)
  márgen||margen
  margenes||márgenes
- maria||María (nombre propio español), Maria (nombre propio italiano, catalán, portugués, etc.)
- maría|cs|María (nombre propio español), Maria (nombre propio italiano, catalán, portugués, etc.)
- maricon||maricón
+ maria||María (nombre propio español), Maria (nombre propio italiano, catalán, portugués, etc.), maría (sustantivo)
+ maría|cs|María (nombre propio español), Maria (nombre propio italiano, catalán, portugués, etc.), maría (sustantivo)
  marijuana||marihuana, mariguana
  mario|cs|Mario
  mariologia||mariología
@@ -13320,6 +13327,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  musaceas||musáceas
  musaceo||musáceo
  musaceos||musáceos
+ Muscat||Mascate (capital de Omán)
  muscial||musical
  muscilar||muscular
  musculo||músculo (sustantivo), musculó (verbo, 3.ª persona), musculo (verbo, 1.ª persona)
@@ -14543,8 +14551,8 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  pariodados||parodiados
  pariodando||parodiando
  pariodas||parodias
- Paris||París (excepto personaje mitológico o verbo parir)
- parís|cs|París (excepto verbo parir)
+ Paris|cs|París (nombre en español de la capital francesa), Paris (nombre en otros idiomas de la capital francesa, nombre de varias localidades estadounidenses, personaje mitológico), parís (verbo)
+ parís|cs|París (ciudad francesa), parís (verbo)
  parking||aparcamiento, estacionamiento, parqueo, parqueadero, playa (de estacionamiento), parquin
  parkings||aparcamientos, estacionamientos, parqueos, parqueaderos, playas (de estacionamiento), párquines
  parkinson|cs|enfermedad de Parkinson, párkinson
@@ -15454,6 +15462,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  posibilides||posibilidades
  posíblemente||posiblemente
  posicion||posición
+ posiciono||posicionó (3.ª persona), posiciono (1.ª persona)
  posicón||posición
  posision||posición
  posisionar||posicionar
@@ -16209,6 +16218,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  quimicas||químicas
  quimico||químico
  quimicos||químicos
+ Quimistan||Quimistán (municipio en Honduras)
  quincuagesima||quincuagésima
  quincuagesimas||quincuagésimas
  quincuagesimo||quincuagésimo
@@ -16244,6 +16254,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  quintuples||quíntuples
  quintuplo||quíntuplo
  quintuplos||quíntuplos
+ Quirigua||Quiriguá (yacimiento arqueológico en Guatemala)
  quiroptero||quiróptero
  quiropteros||quirópteros
  Quiros||Quirós
@@ -17198,11 +17209,14 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  salvandole||salvándole
  salvandoles||salvándoles
  saman||samán
+ Samarkand||Samarcanda (ciudad en Uzbekistán)
+ Samarqand||Samarcanda (ciudad en Uzbekistán)
  samurai||samurái
  samurais||samuráis
  samuray||samurái
  sán||san
  Sana|cs|Saná (capital de Yemen)
+ Sanaa|cs|Saná (capital de Yemen)
  sanacion||sanación
  sanchez||Sánchez
  sánchez|cs|Sánchez
@@ -17652,7 +17666,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  simil||símil
  similaridad||similitud
  similaridades||similitudes
- simon||simón
+ Simon|cs|Simón
  simpatia||simpatía
  simpatias||simpatías
  simpatica||simpática
@@ -18309,6 +18323,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  tampon||tampón
  tanbien||también
  tanbién||también
+ Tancitaro|cs|Tancítaro (poblado en el estado de Michoacán, México)
  tandems||tándems
  tanden||tándem
  tandens||tándems
@@ -18362,6 +18377,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  tartricas||tártricas
  tartrico||tártrico
  tartricos||tártricos
+ Tashkent||Taskent (capital de Uzbekistán)
  taxacea||taxácea
  taxaceas||taxáceas
  taxaceo||taxáceo
@@ -18754,6 +18770,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  Tokyo||Tokio
  tomaar||tomar
  tomarón||tomaron
+ Tomatlan|cs|Tomatlán (municipio en el estado de Jalisco, México)
  tombola||tómbola
  tombolas||tómbolas
  tombolo||tómbolo
@@ -18832,6 +18849,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  tortículis||tortícolis
  tortola||tórtola
  tortolas||tórtolas
+ Toshkent||Taskent (capital de Uzbekistán)
  totalemente||totalmente
  toxica||tóxica
  toxicas||tóxicas
@@ -19332,8 +19350,8 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  twittero||tuitero
  twitteros||tuiteros
  tyva||Tuvá
- tzeltal||tseltal
- tzotzil||tsotsil
+ tzeltal||tseltal (forma única según la Academia Mexicana de la Lengua)
+ tzotzil||tsotsil (forma única según la Academia Mexicana de la Lengua)
 
 == U ==
  Uagadugu||Uagadugú
@@ -19445,6 +19463,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  uruguay|cs|Uruguay
  usadba||usaba
  usalmente||usualmente
+ Usaquen||Usaquén (localidad de Bogotá)
  usaria||usaría
  usarian||usarían
  usarias||usarías
@@ -20038,6 +20057,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  xornalismo||periodismo
  xornalista||periodista
  xornalistas||periodistas
+ Xoxocotlan||Xoxocotlán (ciudad en el estado de Oaxaca, México)
  xunta||Junta
 
 == Y ==
@@ -20214,4 +20234,7 @@ La sintaxis básica es: <code> término potencialmente erróneo|parámetro|térm
  zulu||zulú
  zulues||zulúes
  zulus||zulús
+ Zuniga|cs|Zúñiga
+ Zuñiga|cs|Zúñiga
+ Zúniga|cs|Zúñiga
  zurich||Zúrich
