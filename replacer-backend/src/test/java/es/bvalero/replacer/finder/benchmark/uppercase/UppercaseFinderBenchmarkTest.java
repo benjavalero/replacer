@@ -43,12 +43,13 @@ class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
         // Load the finders
         List<BenchmarkFinder> finders = new ArrayList<>();
         finders.add(new UppercaseIndexOfFinder(words));
+        finders.add(new UppercaseAllWordsFinder(words));
         // finders.add(new UppercaseRegexIterateFinder(words)); // Long
         // finders.add(new UppercaseAutomatonIterateFinder(words)); // Medium
         // finders.add(new UppercaseRegexLookBehindFinder(words)); // Very long
-        finders.add(new UppercaseRegexAlternateFinder(words));
+        // finders.add(new UppercaseRegexAlternateFinder(words)); // Short
         finders.add(new UppercaseAutomatonAlternateFinder(words));
-        finders.add(new UppercaseRegexAlternateLookBehindFinder(words));
+        // finders.add(new UppercaseRegexAlternateLookBehindFinder(words)); // Medium
 
         runBenchmark(finders);
 

@@ -33,6 +33,12 @@ class UppercaseFinderTest {
     }
 
     @Test
+    void testUppercaseAllWordsFinder() {
+        UppercaseAllWordsFinder finder = new UppercaseAllWordsFinder(words);
+        Assertions.assertEquals(expected, finder.findMatches(text));
+    }
+
+    @Test
     void testUppercaseRegexIterateFinder() {
         UppercaseRegexIterateFinder finder = new UppercaseRegexIterateFinder(words);
         Assertions.assertEquals(expected, finder.findMatches(text));

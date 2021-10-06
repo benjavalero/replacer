@@ -1,15 +1,12 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
-import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-class UppercaseIndexOfFinder implements BenchmarkFinder {
-
-    private static final Set<Character> PUNCTUATIONS = Set.of('!', '#', '*', '=', '.');
+class UppercaseIndexOfFinder extends UppercaseBenchmarkFinder {
 
     private final Collection<String> words;
 
@@ -36,17 +33,5 @@ class UppercaseIndexOfFinder implements BenchmarkFinder {
             }
         }
         return matches;
-    }
-
-    private boolean isWordPrecededByPunctuation(int start, String text) {
-        // Find the last character not space before the word
-        int pos = start - 1;
-        while (pos >= 0) {
-            if (!Character.isWhitespace(text.charAt(pos))) {
-                break;
-            }
-            pos--;
-        }
-        return PUNCTUATIONS.contains(text.charAt(pos));
     }
 }

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
-import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
 import java.util.HashSet;
@@ -9,12 +8,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
-class UppercaseRegexAlternateFinder implements BenchmarkFinder {
+class UppercaseRegexAlternateFinder extends UppercaseBenchmarkFinder {
 
     private final Pattern words;
 
     UppercaseRegexAlternateFinder(Collection<String> words) {
-        String alternations = "[!#*=.]\\s*(" + StringUtils.join(words, "|") + ")";
+        String alternations = String.format(
+            "(?:%s)\\s*(?:%s)",
+            StringUtils.join(PUNCTUATIONS, "|"),
+            StringUtils.join(words, "|")
+        );
         this.words = Pattern.compile(alternations);
     }
 

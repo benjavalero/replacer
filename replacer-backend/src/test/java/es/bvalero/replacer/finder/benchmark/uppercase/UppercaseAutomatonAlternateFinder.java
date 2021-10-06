@@ -4,19 +4,22 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
-class UppercaseAutomatonAlternateFinder implements BenchmarkFinder {
+class UppercaseAutomatonAlternateFinder extends UppercaseBenchmarkFinder {
 
     private final RunAutomaton words;
 
     UppercaseAutomatonAlternateFinder(Collection<String> words) {
-        String alternations = "[!#*=.]<Zs>*(" + StringUtils.join(words, "|") + ')';
+        String alternations = String.format(
+            "(%s)<Zs>*(%s)",
+            StringUtils.join(PUNCTUATIONS, "|"),
+            StringUtils.join(words, "|")
+        );
         this.words = new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));
     }
 

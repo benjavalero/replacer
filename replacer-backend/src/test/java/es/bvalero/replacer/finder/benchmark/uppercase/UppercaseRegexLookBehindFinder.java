@@ -1,19 +1,20 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
-import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
-class UppercaseRegexLookBehindFinder implements BenchmarkFinder {
+class UppercaseRegexLookBehindFinder extends UppercaseBenchmarkFinder {
 
     private final List<Pattern> words;
 
     UppercaseRegexLookBehindFinder(Collection<String> words) {
         this.words = new ArrayList<>();
         for (String word : words) {
-            this.words.add(Pattern.compile("(?<=[!#*=.])\\s*" + word));
+            String regex = String.format("(?<=%s)\\s*%s", StringUtils.join(PUNCTUATIONS, "|"), word);
+            this.words.add(Pattern.compile(regex));
         }
     }
 

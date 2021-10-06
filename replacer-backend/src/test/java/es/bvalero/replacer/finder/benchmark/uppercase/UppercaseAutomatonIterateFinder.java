@@ -4,20 +4,19 @@ import dk.brics.automaton.AutomatonMatcher;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
-import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.*;
+import org.apache.commons.lang3.StringUtils;
 
-class UppercaseAutomatonIterateFinder implements BenchmarkFinder {
+class UppercaseAutomatonIterateFinder extends UppercaseBenchmarkFinder {
 
     private final List<RunAutomaton> words;
 
     UppercaseAutomatonIterateFinder(Collection<String> words) {
         this.words = new ArrayList<>();
         for (String word : words) {
-            this.words.add(
-                    new RunAutomaton(new RegExp("[!#*=.]<Zs>*" + word).toAutomaton(new DatatypesAutomatonProvider()))
-                );
+            String regex = String.format("(%s)<Zs>*%s", StringUtils.join(PUNCTUATIONS, "|"), word);
+            this.words.add(new RunAutomaton(new RegExp(regex).toAutomaton(new DatatypesAutomatonProvider())));
         }
     }
 
