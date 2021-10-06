@@ -5,7 +5,6 @@ import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import java.beans.PropertyChangeEvent;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,6 +13,8 @@ import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class UppercaseFinderTest {
 
@@ -40,47 +41,27 @@ class UppercaseFinderTest {
         );
     }
 
-    @Test
-    void testUppercaseAfterList() {
-        String text = "\n" + "Enero\n" + "* Febrero\n" + "# Marzo\n" + "Abril";
-
-        List<Immutable> matches = uppercaseFinder.findList(text);
-
-        Set<String> expected = Set.of("Febrero", "Marzo");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void testUppercaseAfterDot() {
-        String text = "En Enero. Febrero.";
-
+    @ParameterizedTest
+    @ValueSource(
+        strings = {
+            "Enero\n* Febrero\nMarzo", // Unordered list
+            "Enero\n# Febrero\nMarzo", // Ordered list
+            "Enero. Febrero.", // After dot
+            "{{ param=Febrero }}", // Parameter value
+            "{|\n" + "|+ Febrero\n" + "|}", // Table row properties
+            "{|\n" + "|-\n" + "! Febrero !! Junio\n" + "|}", // Table header
+            "{|\n" + "|-\n" + "! Junio !! Febrero\n" + "|}", // Table header
+            "{|\n" + "|-\n" + "| Febrero || Junio\n" + "|}", // Table cell
+            "{|\n" + "|-\n" + "| Junio || Febrero\n" + "|}", // Table cell
+            "<table><tr><td>Febrero</td></tr></table>", // HTML cell
+        }
+    )
+    void testUppercaseAfter(String text) {
         List<Immutable> matches = uppercaseFinder.findList(text);
 
         Set<String> expected = Set.of("Febrero");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void testUppercaseAfterParameter() {
-        String text = "{{ param=Enero }}";
-
-        List<Immutable> matches = uppercaseFinder.findList(text);
-
-        Set<String> expected = Set.of("Enero");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void testUppercaseAfterTableCell() {
-        String text = "{|\n" + "|+ Marzo\n" + "|-\n" + "! Abril !! Mayo\n" + "|-\n" + "|Enero||Febrero\n" + "|}";
-
-        List<Immutable> matches = uppercaseFinder.findList(text);
-
-        Set<String> expected = Set.of("Enero", "Febrero", "Marzo", "Abril", "Mayo");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        Assertions.assertEquals(1, matches.size());
         Assertions.assertEquals(expected, actual);
     }
 
@@ -90,20 +71,7 @@ class UppercaseFinderTest {
 
         List<Immutable> matches = uppercaseFinder.findList(text);
 
-        Set<String> expected = Collections.emptySet();
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void testUppercaseAfterHtmlTableCell() {
-        String text = "<table><tr><td>Marzo</td></tr></table>";
-
-        List<Immutable> matches = uppercaseFinder.findList(text);
-
-        Set<String> expected = Set.of("Marzo");
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertTrue(matches.isEmpty());
     }
 
     @Test

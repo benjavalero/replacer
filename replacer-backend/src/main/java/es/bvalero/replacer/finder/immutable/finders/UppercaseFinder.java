@@ -34,7 +34,13 @@ import org.springframework.stereotype.Component;
  * Find words in uppercase which are correct according to the punctuation,
  * e.g. `Enero` in `{{Cite|date=Enero de 2020}}`
  *
- * The considered punctuations are: `!`, `#`, `*`, `=` and `.`
+ * The considered punctuations are:
+ * - After dot
+ * - Parameter values
+ * - Unordered lists (after *)
+ * - Ordered lists (after #)
+ * - HTML cells
+ * - Wiki-table cells
  */
 @Component
 public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener {
