@@ -14,16 +14,37 @@ public class ListingOfflineFinder implements ListingFinder {
 
     @Override
     public String getSimpleMisspellingListing(WikipediaLanguage lang) throws ReplacerException {
-        return FileUtils.getFileContent("/offline/misspelling-list.txt");
+        switch (lang) {
+            case SPANISH:
+                return FileUtils.getFileContent("/offline/misspelling-list-es.txt");
+            case GALICIAN:
+                return FileUtils.getFileContent("/offline/misspelling-list-gl.txt");
+            default:
+                throw new IllegalCallerException();
+        }
     }
 
     @Override
     public String getFalsePositiveListing(WikipediaLanguage lang) throws ReplacerException {
-        return FileUtils.getFileContent("/offline/false-positives.txt");
+        switch (lang) {
+            case SPANISH:
+                return FileUtils.getFileContent("/offline/false-positives-es.txt");
+            case GALICIAN:
+                return FileUtils.getFileContent("/offline/false-positives-gl.txt");
+            default:
+                throw new IllegalCallerException();
+        }
     }
 
     @Override
     public String getComposedMisspellingListing(WikipediaLanguage lang) throws ReplacerException {
-        return FileUtils.getFileContent("/offline/composed-misspellings.txt");
+        switch (lang) {
+            case SPANISH:
+                return FileUtils.getFileContent("/offline/composed-misspellings-es.txt");
+            case GALICIAN:
+                return FileUtils.getFileContent("/offline/composed-misspellings-gl.txt");
+            default:
+                throw new IllegalCallerException();
+        }
     }
 }

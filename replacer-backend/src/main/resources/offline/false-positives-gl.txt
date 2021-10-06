@@ -1,0 +1,308 @@
+== Lista de falsos positivos ==
+
+* A idea xeral é incluír os termos ou conxunto de termos que son falsos positivos, ou que o son na gran maioría de casos, polo que non compensa ter que revisar por exemplo mil aparicións para detectar un só verdadeiro positivo.
+* Se é posible tentamos que non se solapen con outras excepcións. Ordena os termos en orde alfabética do termo incorrecto.
+* De momento usa unha expresión regular (automaton) polo que podemos incluír algo de sintaxe destas.
+
+ # ---------A
+ [Aa]ctualmente
+ [Aa]ctualidade
+
+ Aerolíneas Argentinas
+ Argentinos Juniors
+
+ al.
+ [Aa]l-[Aa]ndalus
+ edificio anexo
+ edificios anexos
+ Al Pacino
+ Al Qaeda
+
+ Muhammad Ali
+
+ [Rr]hythm and blues
+
+ Carlos Arroyo
+ David Arroyo
+ Esther Arroyo
+
+ Electrical Audio
+
+ Fernando Arrabal
+
+ # ---------B
+ Santa Baia
+ Editorial Bruño
+ Antonio Banderas
+
+ Moisés Barcia
+ Juan Barcia
+ Barcia Caballero
+
+ Bahía Blanca
+ Blanco Amor
+ [Bb]eta
+ Bon Jovi
+ Bosnia e Herzegovina
+ Bosnia e Hercegovina
+ Bosnia-Herzegovina
+
+ Sotelo Blanco
+ soteloblanco
+
+ CD Badajoz
+ Deportivo Badajoz
+ Google Books
+
+ # ---------C
+ of Canada
+ in Canada
+ and Canada
+ du Canada
+ Silverio Cañada
+ Carter
+ [Nn]íxer-[Cc]ongo
+
+ # catalunya
+ Catalunya Verds
+ Catalunya Ràdio
+ Catalunya [Rr]omànica
+ Catalunya Sí
+ Catalunya Banc
+ Caixa Catalunya
+ Iniciativa per Catalunya
+ Junts per Catalunya
+ Volta a Catalunya
+
+ Iker Casillas
+ Cánovas del Castillo
+
+ PEN Clube
+ Biblos Clube
+
+ # ---------D
+ Dragon Ball
+ [Vv]an [Dd]en
+ # division
+ Division 1
+ Division 2
+ Division 3
+ Division of
+ Division I
+ Division II
+ Division III
+
+ Duma
+
+ First Division
+ Second Division
+ Third Division
+ Fourth Division
+ League Division
+ Joy Division
+ Premier Division
+ A Division
+ X Division
+ Racing Division
+ Administrative Division
+ Première Division
+ se diferencia
+
+ # ---------E
+ [Cc]atastro de Ensenada
+ et al
+ et. al
+ Lynx [Ee]dicions
+ Estrella Castrillón
+
+ # ---------I
+ # Ivan
+ Ivan Lendl
+ Ivan Dodig
+ Ivan Basso
+ Ivan Ljubi[čc]i[ćc]
+ Ivan Rakitić
+ Pablo Iglesias
+
+ # ---------J
+ # jose
+ San Jose Earthquakes
+ San Jose Sharks
+ San Jose State
+
+ # Julio
+ Nueve de Julio
+ Julio Argentino
+
+ # junior
+ Junior College
+ Junior Heavyweight
+ Junior High
+ Junior Team
+ Junior de Barranquilla
+
+ Alajuela Junior
+ Atlético Junior 		# Se refiere también al equipo Junior de Barranquilla
+ Deportiva Junior		# Se refiere también al equipo Junior de Barranquilla
+ Disney Junior
+ Sauber Junior Team
+ Super Junior
+ Top Race Junior
+ World Junior
+
+ # ---------H
+ Hall of Fame
+ Prentice-Hall
+
+ # ---------L
+ Las Vegas
+ Las Palmas
+ Los Ángeles
+ Los Angeles
+ -la
+ -las
+ -lo
+ -los
+
+ # ---------M
+ # Maria
+ # Engadimos aquí os casos que claramente se corresponden a italiano, catalán, portugués, etc.
+ Maria Anna
+ Maria Callas
+ Maria da
+ Maria della
+ Maria di
+ Maria do
+ Maria in
+ Maria Kanellis
+ Maria Kirilenko	# Aínda que se romaniza como María Kirilenko
+ Maria Sakkari		# Aínda que se romaniza como María Sákkari
+ Maria von
+
+ Anna Maria
+ Carlo? Maria
+ Francesco Maria
+ Giovanni Maria
+ Giuseppe Maria
+ Josep Maria
+ Rainer Maria Rilke
+ Tatjana Maria
+
+ # Master
+ Master of
+ Master and
+ Master in
+
+ # masters
+ # A gran maioría son falsos positivos correspondentes ós torneos de tenis
+ Masters 1000
+ Masters Cup
+ Masters de
+ Masters of
+ Masters Series
+ Geoff Masters
+
+ # Mayo
+ Alfredo Mayo
+ Clínica Mayo
+ Iban Mayo
+ [Rr]ío Mayo
+
+ # Hai varios casos de nomes propios, incluso cidades, co día e o mes.
+ # As datas completas son máis longas e machacan estes falsos positivos
+ <N>+ de Mayo
+ 1º de Mayo 		# Haberá que "revisitalo" cando se empece a corrixir o estilo dos ordinais, incluídos títulos de artigos.
+ Avenida de Mayo
+ Campo de Mayo
+ Cruz de Mayo
+ Dos de Mayo
+ Plaza de Mayo
+ Primero de Mayo
+ Revolución de Mayo
+ San José de Mayo
+ Sol de Mayo
+ Veinticinco de Mayo
+
+ # Milan
+ # A maioría son do equipo de fútbol que se escribe sen til
+ Calcio Milan
+ AC Milan
+ o Milan
+
+ # Missouri
+ of Missouri
+
+ # ---------N
+ New York Times
+ New York Knicks
+
+ # Nicolas
+ Nicolas Mahut
+ Nicolas Cage
+ Nicolas Sarkozy
+ Nicolas Kiefer
+ Nicolas Prost
+ Nicolas Lapierre
+ Nicolas Poussin
+ Nicolas Roche
+ Nicolas Gilsou
+ Nicolas Frantz
+ Nicolas Anelka
+
+ # ---------P
+ # Paris
+ Paris FC
+ Paris Hilton
+ Paris Saint 	 # Paris Saint-Germain
+ in Paris
+
+ # publica
+ publica artigos
+ publica o
+ publica en
+ publica a
+ publica os
+ publica unha?
+
+ onde publica
+ que publica
+ [Tt]amén publica
+ e publica
+
+ # ---------R
+ # records
+ [Rr]ecords of
+
+ # rio
+ Rio Ave 			# Aínda que levaría til, a maioría son falsos positivos dos clubs de fútbol ou en portugués.
+ Rio Branco 		# Ídem
+ Rio Grande do Sul
+ Rio Grande do Norte
+ Rio Grande Valley
+ Rio Haryanto
+ Rio Preto
+ Rio Verde
+ do Rio
+ in Rio
+
+ # round
+ [Rr]ound [Rr]obin
+ [Rr]ock and [Rr]oll
+
+ # ---------S
+ # sebastian
+ Sebastian Bach
+ Sebastian Vettel
+ Sebastian Ingrosso
+
+ # ---------V
+ # version
+ version of
+ single version
+ album version
+ accoustic version
+
+ # ---------V
+ Río de Xaneiro
+
+[[es:Usuario:Benjavalero/FalsePositives]]

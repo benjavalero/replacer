@@ -1,0 +1,306 @@
+Nesta lista detállanse os «termos compostos» que a ferramenta [[Wikipedia:Replacer|Replacer]] detecta como potencialmente erróneos.
+
+O formato é o mesmo que o do [[Wikipedia:Revisor ortográfico/Listaxe|listado de termos simples]], coa salvedade de que esta lista extende ó anterior con termos ou expresións que conteñen caracteres non alfabéticos: espazos, números, etc. As recomendacións aplican igualmente.
+
+ Administración Publica|cs|Administración Pública
+ Alberto Del Río|cs|Alberto Del Rio (nome comercial do loitador, sen til)
+ Angel Nieto|cs|Ángel Nieto (piloto español)
+ a mais||a máis
+ a efectos de||para os efectos de
+ a grandes rasgos||a grandes trazos
+ a partires de||a partir de
+ a pesares de||a pesar de, pese a
+ a veces||ás veces
+ ao por maior||por xunto
+ ao por menor||polo miúdo
+ a traveso de||a través de
+
+ balanza de pagos||balanza de pagamentos
+ con mais||con máis
+
+ de mais||de máis
+ de este||deste
+ de estes||destes
+ de esta||desta
+ de estas||destas
+ de un||dun
+ de uns||duns
+ de unha||dunha
+ de unhas||dunhas
+ danos e prexuízos||danos e perdas
+ de todas maneiras||de todas as maneiras
+ de a ||da
+ de o ||do
+ de as ||das
+ de os ||dos
+
+ Educación Publica|cs|Educación Pública
+ e mais||e máis
+ en aras de||co fin de
+ en boga||de moda
+
+ gran importancia||grande importancia
+
+ hai mais||hai máis
+
+ mal entendido||mal entendido (adxectivo), malentendido (substantivo)
+ mais alta||máis alta
+ mais alá||máis alá
+ mais coñecida||máis coñecida
+ mais coñecido||máis coñecido
+ mais destacadas||máis destacadas
+ mais destacados||máis destacados
+ mais forte||máis forte
+ mais grande||máis grande
+ mais importante||máis importante
+ mais importantes||máis importantes
+ mais populares||máis populares
+ mais que||máis que
+ mais tarde||máis tarde
+ mais e||máis e
+ mesa camilla||mesa de braseiro
+ Metro de Paris|cs|Metro de París (en galego), Métro de Paris (en francés)
+ moito mais||moito máis
+
+ New York|cs|Nova York
+ Nueva York|cs|Nova York
+ Nicolas de Bari|cs|Nicolás de Bari
+ Nicolas Maduro|cs|Nicolás Maduro
+ non entanto||no entanto
+
+ o mais||o máis
+ ou mais||ou máis
+ opinión publica||opinión pública
+
+ Primera División|cs|Primeira División
+ Primera Division|cs|Primeira División
+ Primeira Division|cs|Primeira División
+
+ que mais||que máis
+
+ Rio Claro|cs|Río Claro (rexión ou río en varios países de lingua castelá e Brasil), Rio Claro (en portugués)
+ Rio Negro|cs|Río Negro (rexión ou río en varios países de lingua castelá, EE. UU. e Brasil), Rio Negro (en portugués e inglés)
+ Rio Tinto|cs|Río Tinto (río español), Rio Tinto (outros usos internacionais)
+ Rio 2016|cs|Río 2016 (Xogos Olímpicos de Verán)
+
+ Saude Publica|cs|Saúde Pública
+ Segunda Division|cs|Segunda División
+ Seguridade Publica|cs|Seguridade Pública
+ sen embargo||porén, non obstante, no entanto, a pesar diso, con todo, así e todo, mais, pero
+
+ tal vez||talvez
+ ter mais||ter máis
+ TV Publica|cs|TV Pública
+
+ unha version||unha versión
+ Universidade de Paris|cs|Universidade de París
+
+ vía publica||vía pública
+ Victor Manuel|cs|Vítor Manuel (entre outros, nome en galego de varios monarcas italianos)
+ Victor Pecci|cs|Víctor Pecci (tenista paraguaio)
+ visto bo||visto e prace
+
+ o aguia||a aguia
+ os aguias||as aguias
+ un aguia||unha aguia
+ uns aguias||unhas aguias
+ ese aguia||esa aguia
+ eses aguias||esas aguias
+ este aguia||esta aguia
+ estes aguias||estas aguias
+ aquel aguia||aquela aguia
+ aqueles aguias||aquelas aguias
+
+ o alma||a alma
+ os almas||as almas
+ un alma||unha alma
+ uns alma||unhas almas
+ ese alma||esa alma
+ eses almas||esas almas
+ este alma||esta alma
+ estes almas||estas almas
+ aquel alma||aquela alma
+ aqueles almas||aquelas almas
+
+ o árbore||a árbore
+ os árbores||as árbores
+ un árbore||unha árbore
+ uns árbores||unhas árbores
+ ese árbore||esa árbore
+ eses árbores||esas árbores
+ este árbore||esta árbore
+ estes árbores||estas árbores
+ aquel árbore||aquela árbore
+ aqueles árbores||aquelas árbores
+
+ o auga||a auga
+ os augas||as augas
+ un auga||unha auga
+ uns augas||unhas augas
+ ese auga||esa auga
+ eses augas||esas augas
+ este auga||esta auga
+ estes augas||estas augas
+ aquel auga||aquela auga
+ aqueles augas||aquelas augas
+
+ o ponte||a ponte
+ os pontes||as pontes
+ un ponte||unha ponte
+ uns pontes||unhas pontes
+ ese ponte||esa ponte
+ eses pontes||esas pontes
+ este ponte||esta ponte
+ estes pontes||estas pontes
+ aquel ponte||aquela ponte
+ aqueles pontes||aquelas pontes
+
+ a sal||o sal
+ as sales||os sales
+ unha sal||un sal
+ unhas sales||uns sales
+ esa sal||ese sal
+ esas sales||eses sales
+ esta sal||este sal
+ estas sales||estes sales
+ aquela sal||aquel sal
+ aquelas sales||aqueles sales
+
+ o análise||a análise
+ os análises||as análises
+ un análise||unha análise
+ uns análises||unhas análises
+ ese análise||esa análise
+ eses análises||esas análises
+ este análise||esta análise
+ estes análises||estas análises
+ aquel análise||aquela análise
+ aqueles análises||aquelas análises
+
+ o calor||a calor
+ os calores||as calores
+ un calor||unha calor
+ uns calores||unhas calores
+ ese calor||esa calor
+ eses calores||esas calores
+ este calor||esta calor
+ estes calores||estas calores
+ aquel calor||aquela calor
+ aqueles calores||aquelas calores
+
+ o fronte||a fronte
+ os frontes||as frontes
+ un fronte||unha fronte
+ uns frontes||unhas frontes
+ ese fronte||esa fronte
+ eses frontes||esas frontes
+ este fronte||esta fronte
+ estes frontes||estas frontes
+ aquel fronte||aquela fronte
+ aqueles frontes||aquelas frontes
+
+ o marxe||a marxe
+ os marxes||as marxes
+ un marxe||unha marxe
+ uns marxes||unhas marxes
+ ese marxe||esa marxe
+ eses marxes||esas marxes
+ este marxe||esta marxe
+ estes marxes||estas marxes
+ aquel marxe||aquela marxe
+ aqueles marxes||aquelas marxes
+
+ o orde||a orde
+ os ordes||as ordes
+ un orde||unha orde
+ uns ordes||unhas ordes
+
+ o reuma||a reuma
+ os reumas||as reumas
+ un reuma||unha reuma
+ uns reumas||unhas reumas
+
+ a linde||o linde
+ as lindes||os lindes
+ unha linde||un linde
+ unhas lindes||uns lindes
+
+ a mar||o mar
+ as mares||os mares
+ unha mar||un mar
+ unhas mares||uns mares
+
+ o apocalipse||a apocalipse
+ os apocalipses||as apocalipses
+ un apocalipse||unha apocalipse
+ uns apocalipses||unhas apocalipses
+
+ o arbitraxe||a arbitraxe
+ os arbitraxes||as arbitraxes
+ un arbitraxe||unha arbitraxe
+ uns arbitraxes||unhas arbitraxes
+
+ o arte||a arte
+ os artes||as arte
+ un arte||unha arte
+ uns artes||unhas artes
+
+ o canle||a canle
+ os canles||as canles
+ un canle||unha canle
+ uns canles||unhas canles
+
+ o énfase||a énfase
+ os énfases||as énfases
+ un énfase||unha énfase
+ uns énfases||unhas énfases
+
+ o fraude||a fraude
+ os fraudes||as fraudes
+ un fraude||unha fraude
+ uns fraudes||unhas fraudes
+
+ co-produción||coprodución
+ co-producións||coproducións
+ e-paper||papel electrónico
+ ex-alcade||exalcalde
+ ex-alcaldes||exalcaldes
+ ex-alcaldesa||exalcaldesa
+ ex-alcaldesas||exalcaldesas
+ ex-futbolista||exfutbolista
+ ex-futbolistas||exfutbolistas
+ ex-politica||expolítica
+ ex-política||expolítica
+ ex-politicas||expolíticas
+ ex-políticas||expolíticas
+ ex-politico||expolítico
+ ex-político||expolítico
+ ex-politicos||expolíticos
+ ex-políticos||expolíticos
+ ex-presidenta||expresidenta
+ ex-presidentas||expresidentas
+ ex-presidente||expresidente
+ ex-presidentes||expresidentes
+ ex-secretaria||exsecretaria
+ ex-secretarias||exsecretarias
+ ex-secretario||exsecretario
+ ex-secretarios||exsecretarios
+ ex-senador||exsenador
+ ex-senadora||exsenadora
+ ex-senadoras||exsenadoras
+ ex-senadores||exsenadores
+ ex-tenista||extenista
+ ex-tenistas||extenistas
+ ex-xogador||ex xogador
+ ex-xogadora||ex xogadora
+ ex-xogadoras||ex xogadoras
+ ex-xogadores||ex xogadores
+ poleo-menta||poexo-menta
+ sub-rexión||subrexión
+ sub-rexións||subrexións
+ tra-la||trala
+ tra-las||tralas
+ tra-lo||tralo
+ tra-los||tralos
+
+[[es:Usuario:Benjavalero/ComposedMisspellings]]
