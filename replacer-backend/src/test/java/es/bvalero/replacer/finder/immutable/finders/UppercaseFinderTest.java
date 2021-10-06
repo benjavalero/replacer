@@ -54,6 +54,7 @@ class UppercaseFinderTest {
             "{|\n" + "|-\n" + "| Febrero || Junio\n" + "|}", // Table cell
             "{|\n" + "|-\n" + "| Junio || Febrero\n" + "|}", // Table cell
             "<table><tr><td>Febrero</td></tr></table>", // HTML cell
+            "<timeline>\n  text:Febrero\n</timeline>", // Timeline text
         }
     )
     void testUppercaseAfter(String text) {

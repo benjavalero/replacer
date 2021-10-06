@@ -57,17 +57,20 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     // Escaping is necessary for automaton
     private static final String CELL_HTML_TAG = "\\<td\\>";
 
+    private static final String TIMELINE_TEXT = "text:";
+
     @org.intellij.lang.annotations.RegExp
     private static final String CLASS_PUNCTUATION = "[=#*.!]";
 
     @org.intellij.lang.annotations.RegExp
     private static final String REGEX_UPPERCASE_PUNCTUATION = String.format(
-        "(%s|%s|%s|%s|%s)<Zs>*(%%s)",
+        "(%s|%s|%s|%s|%s|%s)<Zs>*(%%s)",
         CLASS_PUNCTUATION,
         FIRST_CELL_SEPARATOR,
         CELL_SEPARATOR,
         CAPTION_SEPARATOR,
-        CELL_HTML_TAG
+        CELL_HTML_TAG,
+        TIMELINE_TEXT
     );
 
     @Autowired
@@ -182,8 +185,15 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        String word = match.group().substring(1).trim();
-        int startPos = match.start() + match.group().indexOf(word);
-        return FinderUtils.isWordCompleteInText(startPos, word, page.getContent());
+        // Find the first uppercase letter
+        String text = match.group();
+        for (int i = 0; i < text.length(); i++) {
+            if (Character.isUpperCase(text.charAt(i))) {
+                String word = text.substring(i).trim();
+                int startPos = match.start() + i;
+                return FinderUtils.isWordCompleteInText(startPos, word, page.getContent());
+            }
+        }
+        throw new IllegalArgumentException("Wrong match with no uppercase letter");
     }
 }

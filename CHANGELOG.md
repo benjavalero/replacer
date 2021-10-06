@@ -1,5 +1,8 @@
 # Versions
 
+## 2.11.8 (??)
+- Ignore texts in timelines
+
 ## 2.11.7 (6 Oct 2021)
 - Performance improvements on finding immutables
 - Add more warnings for non-closed tags
