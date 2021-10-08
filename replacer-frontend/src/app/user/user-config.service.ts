@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Language } from './language-model';
 import { UserConfig } from './user-config.model';
 
@@ -10,14 +10,10 @@ export class UserConfigService {
   private readonly LANG_DEFAULT: Language = Language.es;
 
   private readonly userConfigKey = 'userConfig';
-  private readonly _config = new BehaviorSubject<UserConfig>(this.emptyConfig());
+  readonly config$ = new BehaviorSubject<UserConfig>(this.emptyConfig());
 
   constructor() {
     this.loadConfig();
-  }
-
-  get config$(): Observable<UserConfig> {
-    return this._config.asObservable();
   }
 
   private loadConfig(): void {
@@ -33,7 +29,7 @@ export class UserConfigService {
       }
     }
 
-    this._config.next(config);
+    this.config$.next(config);
   }
 
   private emptyConfig(): UserConfig {
@@ -45,14 +41,14 @@ export class UserConfigService {
   }
 
   get lang(): Language {
-    return this._config.getValue().lang;
+    return this.config$.getValue().lang;
   }
 
   set lang(lang: Language) {
-    const currentConfig = this._config.getValue();
+    const currentConfig = this.config$.getValue();
     const newConfig = { ...currentConfig, lang: lang };
 
     localStorage.setItem(this.userConfigKey, JSON.stringify(newConfig));
-    this._config.next(newConfig);
+    this.config$.next(newConfig);
   }
 }

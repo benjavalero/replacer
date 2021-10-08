@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Language } from '../user/language-model';
+import { UserConfig } from '../user/user-config.model';
 import { UserConfigService } from '../user/user-config.service';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
@@ -28,7 +29,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.user$ = this.userService.user$;
-    this.lang$ = this.userConfigService.config$.pipe(map((config) => config.lang));
+    this.lang$ = this.userConfigService.config$.pipe(map((config: UserConfig) => config.lang));
   }
 
   onSelectLang(lang: string) {

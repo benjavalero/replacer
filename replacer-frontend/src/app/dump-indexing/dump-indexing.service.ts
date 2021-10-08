@@ -9,18 +9,18 @@ import { DumpIndexing } from './dump-indexing.model';
 })
 export class DumpIndexingService {
   private readonly baseUrl = `${environment.apiUrl}/dump-indexing`;
-  private readonly _status = new BehaviorSubject<DumpIndexing | null>(null);
+
+  // Initial state is null when there is no data yet
+  readonly status$ = new BehaviorSubject<DumpIndexing | null>(null);
 
   constructor(private httpClient: HttpClient) {
     this.refreshDumpIndexing();
   }
 
-  get status$(): Observable<DumpIndexing | null> {
-    return this._status.asObservable();
-  }
-
   refreshDumpIndexing(): void {
     this.getDumpIndexing$().subscribe((status: DumpIndexing) => {
+      // The calculations could done with asynchronous pipes
+      // but it is not worth as the calculations are quite simple
       const startDate = this.formatDate(status.start);
       const endDate = this.formatDate(status.end);
       const elapsed = this.formatMilliseconds(this.calculateElapsed(status));
@@ -37,7 +37,7 @@ export class DumpIndexingService {
         average: average,
         eta: eta
       };
-      this._status.next(newStatus);
+      this.status$.next(newStatus);
     });
   }
 
@@ -45,11 +45,11 @@ export class DumpIndexingService {
     return this.httpClient.get<DumpIndexing>(`${this.baseUrl}`);
   }
 
-  startDumpIndexing$(): Observable<any> {
+  startDumpIndexing$(): Observable<void> {
     // Empty the last indexation
-    this._status.next(null);
+    this.status$.next(null);
 
-    return this.httpClient.post<any>(`${this.baseUrl}`, null);
+    return this.httpClient.post<void>(`${this.baseUrl}`, null);
   }
 
   private formatDate(milliseconds: number | undefined): Date | null {

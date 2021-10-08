@@ -6,15 +6,14 @@ import { AlertMessage } from './alert-message.model';
   providedIn: 'root'
 })
 export class AlertService {
-  private readonly _alerts = new BehaviorSubject<AlertMessage[]>([]);
-  readonly alerts$ = this._alerts.asObservable();
+  readonly alerts$ = new BehaviorSubject<AlertMessage[]>([]);
 
   private get alerts(): AlertMessage[] {
-    return this._alerts.getValue();
+    return this.alerts$.getValue();
   }
 
   private set alerts(alerts: AlertMessage[]) {
-    this._alerts.next(alerts);
+    this.alerts$.next(alerts);
   }
 
   private addAlertMessage(alert: AlertMessage) {

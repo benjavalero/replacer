@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { AlertMessage } from './alert-message.model';
 import { AlertService } from './alert.service';
 
@@ -8,13 +9,11 @@ import { AlertService } from './alert.service';
   styleUrls: ['./alert-container.component.css']
 })
 export class AlertContainerComponent implements OnInit {
-  alerts: AlertMessage[] = [];
+  alerts$!: Observable<AlertMessage[]>;
 
   constructor(private alertService: AlertService) {}
 
   ngOnInit() {
-    this.alertService.alerts$.subscribe((alerts: AlertMessage[]) => {
-      this.alerts = alerts;
-    });
+    this.alerts$ = this.alertService.alerts$;
   }
 }

@@ -9,14 +9,10 @@ import { ReplacementCount, ReplacementCountList } from './replacement-list.model
 })
 export class ReplacementListService implements OnDestroy {
   private readonly countsKey = 'counts';
-  private readonly _counts = new BehaviorSubject<ReplacementCountList[]>([]);
+  readonly counts$ = new BehaviorSubject<ReplacementCountList[]>([]);
 
   // Task to refresh the counts periodically
   subscription: Subscription;
-
-  get counts$(): Observable<ReplacementCountList[]> {
-    return this._counts.asObservable();
-  }
 
   constructor(private httpClient: HttpClient) {
     // Load replacement counts and initialize the scheduled task to refresh them
@@ -30,7 +26,7 @@ export class ReplacementListService implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this._counts.complete();
+    this.counts$.complete();
     this.subscription.unsubscribe();
 
     window.removeEventListener('storage', this.storageEventListener.bind(this));
@@ -52,7 +48,7 @@ export class ReplacementListService implements OnDestroy {
 
   private updateCounts(counts: ReplacementCountList[]): void {
     localStorage.setItem(this.countsKey, JSON.stringify(counts));
-    this._counts.next(counts);
+    this.counts$.next(counts);
   }
 
   reviewPages$(type: string, subtype: string): Observable<any> {

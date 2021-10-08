@@ -9,22 +9,18 @@ export const USER_PARAM = 'user';
 })
 export class UserService {
   private readonly wikipediaUserKey = 'wikipediaUser';
-  private readonly _user = new BehaviorSubject<User>(this.emptyUser());
+  readonly user$ = new BehaviorSubject<User>(this.emptyUser());
 
   constructor() {
     this.loadUser();
   }
 
-  get user$(): Observable<User> {
-    return this._user.asObservable();
-  }
-
   get accessToken(): AccessToken {
-    return this._user.getValue().accessToken;
+    return this.user$.getValue().accessToken;
   }
 
   get userName(): string {
-    return this._user.getValue().name;
+    return this.user$.getValue().name;
   }
 
   private loadUser(): void {
@@ -40,7 +36,7 @@ export class UserService {
       }
     }
 
-    this._user.next(user);
+    this.user$.next(user);
   }
 
   private emptyUser(): User {
@@ -48,7 +44,7 @@ export class UserService {
   }
 
   isValidUser(): boolean {
-    return this.isValid(this._user.getValue());
+    return this.isValid(this.user$.getValue());
   }
 
   private isValid(user: User): boolean {
@@ -58,11 +54,11 @@ export class UserService {
   }
 
   hasRightsUser(): boolean {
-    return this._user.getValue().hasRights;
+    return this.user$.getValue().hasRights;
   }
 
   isBotUser(): boolean {
-    return this._user.getValue().bot;
+    return this.user$.getValue().bot;
   }
 
   clearSession(): void {
@@ -71,6 +67,6 @@ export class UserService {
 
   setUser(user: User): void {
     localStorage.setItem(this.wikipediaUserKey, JSON.stringify(user));
-    this._user.next(user);
+    this.user$.next(user);
   }
 }
