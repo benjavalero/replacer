@@ -120,7 +120,7 @@ export class EditPageComponent implements OnChanges {
             this.review.search.type || null,
             this.review.search.subtype || null,
             this.review.search.suggestion || null,
-            this.review.search.cs || null
+            this.review.search.cs || false
           )
         );
       }

@@ -1,6 +1,7 @@
 # Versions
 
 ## 2.11.8 (??)
+- Fix issue when finding the next custom replacement with case-insensitive
 - Ignore texts in timelines
 
 ## 2.11.7 (6 Oct 2021)
