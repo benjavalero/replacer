@@ -23,7 +23,7 @@ replacer:
   wikipedia.api:
     key: 88a04ea6ad93434f0fff31ac434960b3
     secret: 2e2bfb55301e030aa6bf8c2504624abdd12f2d04
-  page.stats.delay: 600000 # Every 10 minutes
+  page.stats.delay: 300000 # Every 5 minutes
   show.immutable.warning: true
   admin.user: Benjavalero
   processable.namespaces: 0,104
@@ -85,6 +85,8 @@ spring:
     driver-class-name: org.h2.Driver
     platform: h2
     initialization-mode: never # Set to "always" the first time
+
+replacer.page.stats.delay: 600000 # Every 10 minutes
 
 ---
 

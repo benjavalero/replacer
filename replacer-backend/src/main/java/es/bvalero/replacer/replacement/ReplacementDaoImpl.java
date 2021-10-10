@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -250,6 +251,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     }
 
     @Override
+    @Loggable(value = Loggable.TRACE, limit = 10, unit = TimeUnit.SECONDS)
     public LanguageCount countReplacementsGroupedByType(WikipediaLanguage lang) {
         return LanguageCount.build(countPagesGroupedByTypeAndSubtype(lang));
     }

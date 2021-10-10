@@ -22,7 +22,8 @@ class ReplacementDaoProxy implements ReplacementStatsDao {
     private ReplacementStatsDao replacementStatsDao;
 
     // Replacement count cache
-    // It's a heavy query in database so we preload the counts on start and refresh them periodically.
+    // It's a heavy query in database (about 5 seconds), so we load the counts on start and refresh them periodically.
+    // Of course this can lead to a slight misalignment which is fixed in the next refresh.
     // We add synchronization just in case the list is requested while still loading on start.
     private Map<WikipediaLanguage, LanguageCount> replacementCount;
 
