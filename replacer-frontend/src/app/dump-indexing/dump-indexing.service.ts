@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { DumpIndexing } from './dump-indexing.model';
 
@@ -11,7 +11,7 @@ export class DumpIndexingService {
   private readonly baseUrl = `${environment.apiUrl}/dump-indexing`;
 
   // Initial state is null when there is no data yet
-  readonly status$ = new BehaviorSubject<DumpIndexing | null>(null);
+  readonly status$ = new Subject<DumpIndexing | null>();
 
   constructor(private httpClient: HttpClient) {
     this.refreshDumpIndexing();
