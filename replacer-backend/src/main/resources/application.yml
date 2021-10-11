@@ -95,3 +95,5 @@ spring:
   profiles: offline
   datasource:
     platform: h2
+
+replacer.admin.user: offline
