@@ -40,7 +40,7 @@ export class ReplacementTableComponent implements OnChanges {
   constructor(
     private userConfigService: UserConfigService,
     private userService: UserService,
-    private replacementService: ReplacementListService,
+    private replacementListService: ReplacementListService,
     private modalService: NgbModal
   ) {
     this.replacementCounts = [];
@@ -149,7 +149,7 @@ export class ReplacementTableComponent implements OnChanges {
     modalRef.componentInstance.subtype = subtype;
     modalRef.result.then(
       (result) => {
-        this.replacementService.reviewPages$(this.type, subtype).subscribe(() => {
+        this.replacementListService.reviewSubtype$(this.type, subtype).subscribe(() => {
           // Nothing to do
         });
       },
