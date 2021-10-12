@@ -7,6 +7,7 @@
            http://www.springframework.org/schema/util
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
+    <!-- File spaces in this list must be in lowercase -->
     <util:set id="fileSpaces" value-type="java.lang.String">
         <value>archivo</value>
         <value>file</value>
@@ -17,4 +18,8 @@
         <value>imaxe</value>
     </util:set>
 
+    <!-- Complete spaces in this list must be in lowercase -->
+    <util:set id="completeSpaces" value-type="java.lang.String">
+        <value>categoría</value>
+    </util:set>
 </beans>

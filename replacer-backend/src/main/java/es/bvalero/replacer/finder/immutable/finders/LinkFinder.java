@@ -29,10 +29,11 @@ class LinkFinder extends ImmutableCheckedFinder {
     private static final String START_LINK = "[[";
     private static final String END_LINK = "]]";
 
-    private static final Set<String> completeSpaces = Set.of("categoría");
-
     @Resource
     private Set<String> fileSpaces;
+
+    @Resource
+    private Set<String> completeSpaces;
 
     @Override
     public ImmutableFinderPriority getPriority() {

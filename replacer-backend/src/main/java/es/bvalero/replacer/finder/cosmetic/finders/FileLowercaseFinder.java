@@ -5,15 +5,15 @@ import es.bvalero.replacer.finder.cosmetic.Cosmetic;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
-import java.util.List;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
+/** Find file links where the file space is in lowercase */
 @Component
 class FileLowercaseFinder implements CosmeticFinder {
 
@@ -23,11 +23,11 @@ class FileLowercaseFinder implements CosmeticFinder {
     private Pattern patternFileSpace;
 
     @Resource
-    private List<String> fileSpaces;
+    private Set<String> fileSpaces;
 
     @PostConstruct
     public void init() {
-        String concat = fileSpaces.stream().map(String::toLowerCase).collect(Collectors.joining("|"));
+        String concat = String.join("|", fileSpaces);
         String regex = String.format(REGEX_FILE_SPACE, concat);
         patternFileSpace = Pattern.compile(regex);
     }

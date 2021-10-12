@@ -9,9 +9,9 @@
 
     <!--
         This list contains pairs template name-param separated with pipes for which the param values will be ignored.
-        The wildcard * can be used for param names so the complete template will be ignored.
+        The wildcard can be used for param names so the complete template will be ignored. The wildcard can also be
+        added at the end of the template name to match the start of the template name.
         The wildcard can be used for template names so the param values will be ignored no matter the template they are in.
-        NOTE: Templates of type "cite" are not listed but will be always ignored as a whole.
     -->
     <util:list id="templateParams" value-type="java.lang.String">
         <!-- Templates to be ignored completely -->

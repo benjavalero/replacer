@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
+/** Find wiki-links where the link and the title are the same */
 @Component
 class SameLinkFinder extends CosmeticCheckedFinder {
 

@@ -144,7 +144,7 @@ public class UppercaseFinder implements ImmutableFinder, PropertyChangeListener 
     @Nullable
     private RunAutomaton buildUppercaseAutomaton(@Nullable Set<String> words) {
         // Currently, there are about 60 uppercase case-sensitive misspellings,
-        // so the best approach is a simple alternation
+        // so the best approach is an automaton of oll the terms alternated.
         if (words != null && !words.isEmpty()) {
             String alternations = String.format(REGEX_UPPERCASE_PUNCTUATION, StringUtils.join(words, "|"));
             return new RunAutomaton(new RegExp(alternations).toAutomaton(new DatatypesAutomatonProvider()));

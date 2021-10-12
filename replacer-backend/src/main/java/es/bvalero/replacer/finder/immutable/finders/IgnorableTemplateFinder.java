@@ -9,7 +9,6 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -33,12 +32,12 @@ class IgnorableTemplateFinder extends ImmutableCheckedFinder {
 
     @PostConstruct
     public void init() {
-        Set<String> fixedTemplates = ignorableTemplates
+        List<String> fixedTemplates = ignorableTemplates
             .stream()
             .map(s -> s.replace("{", "\\{"))
             .map(s -> s.replace("#", "\\#"))
             .map(FinderUtils::toLowerCase)
-            .collect(Collectors.toSet());
+            .collect(Collectors.toList());
         String alternations = '(' + StringUtils.join(fixedTemplates, "|") + ')';
         this.automaton = new RunAutomaton(new RegExp(alternations).toAutomaton());
     }

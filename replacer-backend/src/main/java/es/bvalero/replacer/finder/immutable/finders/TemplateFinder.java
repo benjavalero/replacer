@@ -190,11 +190,11 @@ class TemplateFinder extends ImmutableCheckedFinder {
                 content.substring(template.end(i) - template.start());
         }
 
-        // There might be links in the values which make the algorithm return some parts of the links as parameters
-        // We could remove them but it implies a performance penalty and it isn't worth
-        // Instead they should be found when finding the nested templates
+        // There might be links in the values which make the algorithm return some parts of the links as parameters.
+        // We could remove them, but it implies a performance penalty, and it isn't worth.
+        // Instead, they should be found when finding the nested templates.
 
-        // Remove the start end end of the template
+        // Remove the start and end of the template
         content = content.substring(START_TEMPLATE.length(), content.length() - END_TEMPLATE.length());
 
         String[] parameters = content.split("\\|");

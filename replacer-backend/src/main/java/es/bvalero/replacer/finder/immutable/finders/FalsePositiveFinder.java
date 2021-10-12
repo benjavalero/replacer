@@ -64,7 +64,7 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
 
     @Nullable
     private RunAutomaton buildFalsePositivesAutomaton(@Nullable Set<FalsePositive> falsePositives) {
-        // Currently, there are about 300 false positives so the best approach is a simple alternation.
+        // Currently, there are about 300 false positives so the best approach is an automaton with all expressions alternated.
         // It gives the best performance with big difference, but it is not perfect though.
         // As we check later if the match is a complete word, we could match an incomplete word
         // that overlaps with the following word which is actually a good match.

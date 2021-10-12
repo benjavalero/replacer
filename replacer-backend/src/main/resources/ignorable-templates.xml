@@ -8,7 +8,8 @@
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
     <!-- Pages containing these templates should not be processed -->
-    <!-- The verification is done by a simple "contains" of the given text in lowercase -->
+    <!-- The verification is done with an automaton of all the items below alternated
+         so in theory these could contain simple regular expressions -->
     <util:list id="ignorableTemplates" value-type="java.lang.String">
         <value>#redirect</value>
         <value>#redirección</value>
