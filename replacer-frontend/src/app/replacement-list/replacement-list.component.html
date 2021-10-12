@@ -8,6 +8,7 @@
 
   <app-replacement-table *ngFor="let typeCount of typeCounts" [type]="typeCount.t" [replacementCounts]="typeCount.l">
   </app-replacement-table>
+  <app-alert type="warning" *ngIf="typeCounts.length === 0">No se ha encontrado ningún artículo</app-alert>
 </div>
 <ng-template #loading>
   <app-alert>Cargando lista de reemplazos…</app-alert>

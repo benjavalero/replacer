@@ -12,12 +12,11 @@ import { ReplacementListService } from './replacement-list.service';
 export class ReplacementListComponent implements OnInit {
   typeCounts$!: Observable<ReplacementCountList[] | null>;
 
-  constructor(private titleService: Title, private replacementService: ReplacementListService) {
-    this.typeCounts$ = this.replacementService.counts$;
-  }
+  constructor(private titleService: Title, private replacementService: ReplacementListService) {}
 
   ngOnInit() {
     this.titleService.setTitle('Replacer - Lista de reemplazos');
     this.replacementService.loadCountsFromServer();
+    this.typeCounts$ = this.replacementService.counts$;
   }
 }
