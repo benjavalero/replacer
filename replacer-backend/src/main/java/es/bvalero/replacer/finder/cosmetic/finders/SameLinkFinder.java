@@ -41,7 +41,7 @@ class SameLinkFinder extends CosmeticCheckedFinder {
 
     @Override
     public CheckWikipediaAction getCheckWikipediaAction() {
-        return CheckWikipediaAction.LINK_EQUAL_TO_LINKTEXT;
+        return CheckWikipediaAction.LINK_EQUAL_TO_LINK_TEXT;
     }
 
     @Override

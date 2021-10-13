@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum CheckWikipediaAction {
-    LINK_EQUAL_TO_LINKTEXT(64);
+    LINK_EQUAL_TO_LINK_TEXT(64);
 
     private final int value;
 }
