@@ -19,14 +19,6 @@ public class IndexablePage {
 
     @Override
     public String toString() {
-        return (
-            "IndexablePage(id=" +
-            this.getId() +
-            ", lang=" +
-            this.getLang().getCode() +
-            ", title='" +
-            this.getTitle() +
-            "')"
-        );
+        return ("IndexablePage(id=" + this.getId() + ", lang=" + this.getLang() + ", title='" + this.getTitle() + "')");
     }
 }

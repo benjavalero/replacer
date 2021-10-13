@@ -35,7 +35,7 @@ public class WikipediaPage {
     public String toString() {
         return (
             "WikipediaPage(lang=" +
-            this.getLang().getCode() +
+            this.getLang() +
             ", id=" +
             this.getId() +
             ", namesapce=" +
