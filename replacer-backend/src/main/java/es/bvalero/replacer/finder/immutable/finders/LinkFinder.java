@@ -6,10 +6,13 @@ import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
-import java.util.*;
+import es.bvalero.replacer.finder.util.LinkUtils;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import javax.annotation.Resource;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +51,7 @@ class LinkFinder extends ImmutableCheckedFinder {
     @Override
     public Iterable<Immutable> find(FinderPage page) {
         List<Immutable> immutables = new ArrayList<>(100);
-        for (LinearMatchResult template : findAllLinks(page)) {
+        for (LinearMatchResult template : LinkUtils.findAllLinks(page)) {
             immutables.addAll(findImmutables(template, page));
         }
         return immutables;
@@ -58,78 +61,6 @@ class LinkFinder extends ImmutableCheckedFinder {
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // We are overriding the more general find method
         throw new IllegalCallerException();
-    }
-
-    @VisibleForTesting
-    List<LinearMatchResult> findAllLinks(FinderPage page) {
-        List<LinearMatchResult> matches = new ArrayList<>(100);
-        // Each link found may contain nested links which are added after
-        int start = 0;
-        while (start >= 0 && start < page.getContent().length()) {
-            // Use a LinkedList as some elements will be prepended
-            List<LinearMatchResult> subMatches = new LinkedList<>();
-            start = findLink(page, start, subMatches);
-            matches.addAll(subMatches);
-        }
-        return matches;
-    }
-
-    private int findLink(FinderPage page, int start, List<LinearMatchResult> matches) {
-        String text = page.getContent();
-        int startLink = findStartLink(text, start);
-        if (startLink >= 0) {
-            LinearMatchResult completeMatch = findNestedLink(text, startLink, matches);
-            if (completeMatch == null) {
-                // Link not closed. Not worth keep on searching as the next links are considered as nested.
-                logWarning(text, startLink, startLink + START_LINK.length(), page, "Link not closed");
-                return -1;
-            } else {
-                matches.add(0, completeMatch);
-                return completeMatch.end();
-            }
-        } else {
-            return -1;
-        }
-    }
-
-    private int findStartLink(String text, int start) {
-        return text.indexOf(START_LINK, start);
-    }
-
-    private int findEndLink(String text, int start) {
-        return text.indexOf(END_LINK, start);
-    }
-
-    /* Find the immutable of the link. It also finds nested links and adds them to the given list. */
-    @Nullable
-    private LinearMatchResult findNestedLink(String text, int startLink, List<LinearMatchResult> matches) {
-        int start = startLink;
-        while (true) {
-            if (text.startsWith(START_LINK, start)) {
-                start += START_LINK.length();
-            }
-            int end = findEndLink(text, start);
-            if (end < 0) {
-                return null;
-            }
-
-            int startNested = findStartLink(text, start);
-            if (startNested >= 0 && startNested < end) {
-                // Nested
-                // Find the end of the nested which can be the found end or forward in case of more nesting levels
-                LinearMatchResult nestedMatch = findNestedLink(text, startNested, matches);
-                if (nestedMatch == null) {
-                    return null;
-                }
-
-                matches.add(0, nestedMatch);
-
-                // Prepare to find the next nested
-                start = nestedMatch.end();
-            } else {
-                return LinearMatchResult.of(startLink, text.substring(startLink, end + END_LINK.length()));
-            }
-        }
     }
 
     private List<Immutable> findImmutables(LinearMatchResult link, FinderPage page) {
