@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 public abstract class ImmutableCheckedFinder implements ImmutableFinder {
 
     private static final String SUFFIX_FINDER_CLASS = "Finder";
-    private static final int CONTEXT_THRESHOLD = 50;
 
     private boolean showImmutableWarning;
 
@@ -43,7 +42,7 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
     private void checkMaxLength(Immutable immutable, FinderPage page) {
         if (immutable.getText().length() > getMaxLength()) {
             String message = String.format("%s too long", getImmutableType());
-            logWarning(immutable.getText(), page, message);
+            FinderUtils.logWarning(immutable.getText(), page, message);
         }
     }
 
@@ -54,12 +53,7 @@ public abstract class ImmutableCheckedFinder implements ImmutableFinder {
 
     protected void logWarning(String pageContent, int start, int end, FinderPage page, String message) {
         if (showImmutableWarning) {
-            String immutableText = FinderUtils.getContextAroundWord(pageContent, start, end, CONTEXT_THRESHOLD);
-            logWarning(immutableText, page, message);
+            FinderUtils.logWarning(pageContent, start, end, page, message);
         }
-    }
-
-    private void logWarning(String immutableText, FinderPage page, String message) {
-        LOGGER.warn("{}: {} - {} - {}", message, immutableText, page.getLang(), page.getTitle());
     }
 }

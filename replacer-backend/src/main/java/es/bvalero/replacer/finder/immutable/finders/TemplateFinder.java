@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
+import es.bvalero.replacer.finder.util.TemplateUtils;
 import java.util.*;
 import java.util.regex.MatchResult;
 import javax.annotation.PostConstruct;
@@ -13,7 +14,6 @@ import javax.annotation.Resource;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,11 +29,9 @@ import org.springframework.stereotype.Component;
  * </ul>
  */
 @Component
-public class TemplateFinder extends ImmutableCheckedFinder {
+class TemplateFinder extends ImmutableCheckedFinder {
 
     private static final String WILDCARD = "*";
-    public static final String START_TEMPLATE = "{{";
-    public static final String END_TEMPLATE = "}}";
 
     @Resource
     private List<String> templateParams;
@@ -81,7 +79,7 @@ public class TemplateFinder extends ImmutableCheckedFinder {
     @Override
     public Iterable<Immutable> find(FinderPage page) {
         List<Immutable> immutables = new ArrayList<>(100);
-        for (LinearMatchResult template : findAllTemplates(page)) {
+        for (LinearMatchResult template : TemplateUtils.findAllTemplates(page)) {
             immutables.addAll(findImmutables(template));
         }
         return immutables;
@@ -91,86 +89,6 @@ public class TemplateFinder extends ImmutableCheckedFinder {
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         // We are overriding the more general find method
         throw new IllegalCallerException();
-    }
-
-    public List<LinearMatchResult> findAllTemplates(FinderPage page) {
-        List<LinearMatchResult> matches = new ArrayList<>(100);
-
-        // Each template found may contain nested templates which are added after
-        int start = 0;
-        while (start >= 0 && start < page.getContent().length()) {
-            // Use a LinkedList as some elements will be prepended
-            List<LinearMatchResult> subMatches = new LinkedList<>();
-            start = findTemplate(page, start, subMatches);
-            matches.addAll(subMatches);
-        }
-
-        return matches;
-    }
-
-    private int findTemplate(FinderPage page, int start, List<LinearMatchResult> matches) {
-        String text = page.getContent();
-        int startTemplate = findStartTemplate(text, start);
-        if (startTemplate >= 0) {
-            LinearMatchResult completeMatch = findNestedTemplate(text, startTemplate, matches);
-            if (completeMatch != null) {
-                matches.add(0, completeMatch);
-                return completeMatch.end();
-            } else {
-                // Template not closed. Not worth keep on searching as the next templates are considered as nested.
-                logWarning(text, startTemplate, startTemplate + START_TEMPLATE.length(), page, "Template not closed");
-                return -1;
-            }
-        } else {
-            return -1;
-        }
-    }
-
-    private int findStartTemplate(String text, int start) {
-        return text.indexOf(START_TEMPLATE, start);
-    }
-
-    private int findEndTemplate(String text, int start) {
-        return text.indexOf(END_TEMPLATE, start);
-    }
-
-    /* Find the immutable of the template. It also finds nested templates and adds them to the given list. */
-    @Nullable
-    private LinearMatchResult findNestedTemplate(String text, int startTemplate, List<LinearMatchResult> matches) {
-        List<LinearMatchResult> nestedMatches = new ArrayList<>();
-        int start = startTemplate;
-        if (text.startsWith(START_TEMPLATE, start)) {
-            start += START_TEMPLATE.length();
-        }
-        while (true) {
-            int end = findEndTemplate(text, start);
-            if (end < 0) {
-                return null;
-            }
-
-            int startNested = findStartTemplate(text, start);
-            if (startNested >= 0 && startNested < end) {
-                // Nested
-                // Find the end of the nested which can be the found end or forward in case of more nesting levels
-                LinearMatchResult nestedMatch = findNestedTemplate(text, startNested, matches);
-                if (nestedMatch == null) {
-                    return null;
-                }
-
-                matches.add(0, nestedMatch);
-                nestedMatches.add(nestedMatch);
-
-                // Prepare to find the next nested
-                start = nestedMatch.end();
-            } else {
-                LinearMatchResult completeMatch = LinearMatchResult.of(
-                    startTemplate,
-                    text.substring(startTemplate, end + END_TEMPLATE.length())
-                );
-                completeMatch.addGroups(nestedMatches);
-                return completeMatch;
-            }
-        }
     }
 
     private List<Immutable> findImmutables(LinearMatchResult template) {
@@ -193,7 +111,11 @@ public class TemplateFinder extends ImmutableCheckedFinder {
         // Instead, they should be found when finding the nested templates.
 
         // Remove the start and end of the template
-        content = content.substring(START_TEMPLATE.length(), content.length() - END_TEMPLATE.length());
+        content =
+            content.substring(
+                TemplateUtils.START_TEMPLATE.length(),
+                content.length() - TemplateUtils.END_TEMPLATE.length()
+            );
 
         String[] parameters = content.split("\\|");
 
@@ -212,7 +134,7 @@ public class TemplateFinder extends ImmutableCheckedFinder {
         List<Immutable> immutables = new ArrayList<>();
 
         // Add the template name
-        immutables.add(Immutable.of(template.start() + START_TEMPLATE.length(), templateName));
+        immutables.add(Immutable.of(template.start() + TemplateUtils.START_TEMPLATE.length(), templateName));
 
         // Process the rest of parameters
         for (int i = 1; i < parameters.length; i++) {

@@ -1,18 +1,23 @@
 package es.bvalero.replacer.finder.util;
 
+import es.bvalero.replacer.finder.FinderPage;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+@Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FinderUtils {
 
     public static final String STRING_EMPTY = "";
     public static final Locale LOCALE_ES = Locale.forLanguageTag("es");
     private static final Set<Character> invalidSeparators = new HashSet<>(Arrays.asList('_', '/'));
-
-    private FinderUtils() {}
+    private static final int CONTEXT_THRESHOLD = 50;
 
     public static String toLowerCase(String str) {
         return str.toLowerCase(LOCALE_ES);
@@ -116,5 +121,14 @@ public class FinderUtils {
         int limitLeft = Math.max(0, start - threshold);
         int limitRight = Math.min(text.length(), end + threshold);
         return text.substring(limitLeft, limitRight);
+    }
+
+    public static void logWarning(String pageContent, int start, int end, FinderPage page, String message) {
+        String immutableText = FinderUtils.getContextAroundWord(pageContent, start, end, CONTEXT_THRESHOLD);
+        logWarning(immutableText, page, message);
+    }
+
+    public static void logWarning(String matchText, FinderPage page, String message) {
+        LOGGER.warn("{}: {} - {} - {}", message, matchText, page.getLang(), page.getTitle());
     }
 }

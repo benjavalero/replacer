@@ -4,7 +4,6 @@ import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.cosmetic.Cosmetic;
 import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaOfflineService;
 import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaService;
-import es.bvalero.replacer.finder.immutable.finders.TemplateFinder;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -14,18 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("offline")
-@SpringBootTest(
-    classes = {
-        TemplateWordFinder.class, XmlConfiguration.class, TemplateFinder.class, CheckWikipediaOfflineService.class,
-    }
-)
+@SpringBootTest(classes = { TemplateWordFinder.class, XmlConfiguration.class, CheckWikipediaOfflineService.class })
 class TemplateWordFinderTest {
 
     @Autowired
     private CheckWikipediaService checkWikipediaService;
-
-    @Autowired
-    private TemplateFinder templateFinder;
 
     @Autowired
     private TemplateWordFinder templateWordFinder;
