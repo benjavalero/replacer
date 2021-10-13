@@ -13,7 +13,6 @@ import javax.annotation.Resource;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -30,11 +29,11 @@ import org.springframework.stereotype.Component;
  * </ul>
  */
 @Component
-class TemplateFinder extends ImmutableCheckedFinder {
+public class TemplateFinder extends ImmutableCheckedFinder {
 
     private static final String WILDCARD = "*";
-    private static final String START_TEMPLATE = "{{";
-    private static final String END_TEMPLATE = "}}";
+    public static final String START_TEMPLATE = "{{";
+    public static final String END_TEMPLATE = "}}";
 
     @Resource
     private List<String> templateParams;
@@ -94,8 +93,7 @@ class TemplateFinder extends ImmutableCheckedFinder {
         throw new IllegalCallerException();
     }
 
-    @VisibleForTesting
-    List<LinearMatchResult> findAllTemplates(FinderPage page) {
+    public List<LinearMatchResult> findAllTemplates(FinderPage page) {
         List<LinearMatchResult> matches = new ArrayList<>(100);
 
         // Each template found may contain nested templates which are added after
