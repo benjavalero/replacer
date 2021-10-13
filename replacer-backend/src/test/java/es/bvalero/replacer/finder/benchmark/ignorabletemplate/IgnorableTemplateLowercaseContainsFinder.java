@@ -3,7 +3,10 @@ package es.bvalero.replacer.finder.benchmark.ignorabletemplate;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 class IgnorableTemplateLowercaseContainsFinder implements BenchmarkFinder {
 

@@ -2,7 +2,8 @@ package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.finder.FinderResult;
 import java.util.List;
-import lombok.*;
+import lombok.Builder;
+import lombok.Value;
 
 /**
  * A <strong>replacement</strong> is a potential issue to be checked and fixed (replaced). For instance,

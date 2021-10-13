@@ -2,7 +2,8 @@ package es.bvalero.replacer.page;
 
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
-import lombok.*;
+import lombok.Value;
+import lombok.With;
 
 @Value(staticConstructor = "of")
 class PageReplacement {

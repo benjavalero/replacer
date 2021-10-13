@@ -1,6 +1,8 @@
 package es.bvalero.replacer.replacement;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.TestOnly;

@@ -1,7 +1,10 @@
 package es.bvalero.replacer.finder.benchmark.person;
 
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

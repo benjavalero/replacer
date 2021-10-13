@@ -5,7 +5,8 @@ import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
-import lombok.*;
+import lombok.Builder;
+import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.Nullable;
 

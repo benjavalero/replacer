@@ -2,7 +2,10 @@ package es.bvalero.replacer.replacement;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
 import java.time.LocalDate;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Value;
+import lombok.With;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
