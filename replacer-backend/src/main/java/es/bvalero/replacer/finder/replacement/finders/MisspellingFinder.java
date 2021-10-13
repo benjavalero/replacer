@@ -12,19 +12,27 @@ import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.*;
 import java.util.regex.MatchResult;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.jetbrains.annotations.VisibleForTesting;
 
 /**
  * Abstract class for the common functionality of the misspelling finders.
  */
+@Slf4j
 public abstract class MisspellingFinder implements ReplacementFinder {
 
     // Derived from the misspelling set to access faster by word
     private Map<WikipediaLanguage, Map<String, Misspelling>> misspellingMap = new EnumMap<>(WikipediaLanguage.class);
 
     private Map<String, Misspelling> getMisspellingMap(WikipediaLanguage lang) {
-        return this.misspellingMap.get(lang);
+        Map<String, Misspelling> langMap = this.misspellingMap.get(lang);
+        if (langMap == null) {
+            LOGGER.error("No misspelling map for lang {}", lang);
+            return Collections.emptyMap();
+        } else {
+            return langMap;
+        }
     }
 
     @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)
