@@ -1,5 +1,7 @@
 package es.bvalero.replacer.page;
 
+import static org.mockito.Mockito.*;
+
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -18,7 +20,9 @@ import java.util.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 
 class PageReviewTypeSubtypeServiceTest {
@@ -94,31 +98,27 @@ class PageReviewTypeSubtypeServiceTest {
     @Test
     void testFindRandomPageToReviewTypeNotFiltered() throws ReplacerException {
         // 1 result in DB
-        Mockito
-            .when(
-                replacementService.findRandomPageIdsToBeReviewedBySubtype(
-                    Mockito.any(WikipediaLanguage.class),
-                    Mockito.anyString(),
-                    Mockito.anyString(),
-                    Mockito.any(PageRequest.class)
-                )
+        when(
+            replacementService.findRandomPageIdsToBeReviewedBySubtype(
+                any(WikipediaLanguage.class),
+                anyString(),
+                anyString(),
+                any(PageRequest.class)
             )
+        )
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
             .thenReturn(Collections.emptyList());
 
         // The page exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
+        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
 
         // The page contains replacements
-        Mockito
-            .when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
+        when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options2);
 
-        Mockito
-            .verify(pageIndexHelper, Mockito.times(1))
-            .indexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList());
+        verify(pageIndexHelper, times(1)).indexPageReplacements(any(IndexablePage.class), anyList());
 
         Assertions.assertFalse(review.isPresent());
     }
@@ -126,30 +126,26 @@ class PageReviewTypeSubtypeServiceTest {
     @Test
     void testFindRandomPageToReviewTypeFiltered() throws ReplacerException {
         // 1 result in DB
-        Mockito
-            .when(
-                replacementService.findRandomPageIdsToBeReviewedBySubtype(
-                    Mockito.any(WikipediaLanguage.class),
-                    Mockito.anyString(),
-                    Mockito.anyString(),
-                    Mockito.any(PageRequest.class)
-                )
+        when(
+            replacementService.findRandomPageIdsToBeReviewedBySubtype(
+                any(WikipediaLanguage.class),
+                anyString(),
+                anyString(),
+                any(PageRequest.class)
             )
+        )
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
 
         // The page exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
+        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
 
         // The page contains replacements
-        Mockito
-            .when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
+        when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
 
-        Mockito
-            .verify(pageIndexHelper, Mockito.times(1))
-            .indexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList());
+        verify(pageIndexHelper, times(1)).indexPageReplacements(any(IndexablePage.class), anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId, review.get().getPage().getId());
@@ -162,38 +158,30 @@ class PageReviewTypeSubtypeServiceTest {
         // 3. Find a random page by type. In DB there is no page.
 
         // 2 results in DB by type, no results the second time.
-        Mockito
-            .when(
-                replacementService.findRandomPageIdsToBeReviewedBySubtype(
-                    Mockito.any(WikipediaLanguage.class),
-                    Mockito.anyString(),
-                    Mockito.anyString(),
-                    Mockito.any(PageRequest.class)
-                )
+        when(
+            replacementService.findRandomPageIdsToBeReviewedBySubtype(
+                any(WikipediaLanguage.class),
+                anyString(),
+                anyString(),
+                any(PageRequest.class)
             )
+        )
             .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)))
             .thenReturn(Collections.emptyList());
         // 1 result in DB by no type
-        Mockito
-            .when(
-                replacementService.findPageIdsToBeReviewed(
-                    Mockito.any(WikipediaLanguage.class),
-                    Mockito.anyLong(),
-                    Mockito.any(PageRequest.class)
-                )
-            )
+        when(
+            replacementService.findPageIdsToBeReviewed(any(WikipediaLanguage.class), anyLong(), any(PageRequest.class))
+        )
             .thenReturn(new ArrayList<>(Collections.singletonList(randomId2)));
 
         // The pages exist in Wikipedia
-        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
-        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId2)).thenReturn(Optional.of(page2));
+        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
+        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId2)).thenReturn(Optional.of(page2));
 
         // The pages contains replacements
-        Mockito
-            .when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
+        when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
-        Mockito
-            .when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page2)))
+        when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page2)))
             .thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
@@ -213,11 +201,10 @@ class PageReviewTypeSubtypeServiceTest {
         final int sectionId = 1;
 
         // The page exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
+        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
 
         // The page contains replacements
-        Mockito
-            .when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
+        when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
 
         // Load the cache in order to find the total results
@@ -226,9 +213,7 @@ class PageReviewTypeSubtypeServiceTest {
         // The page has sections
         PageReview sectionReview = pageReviewTypeSubtypeService.buildPageReview(page, replacements, options);
         sectionReview.getPage().setSection(PageSection.of(sectionId, ""));
-        Mockito
-            .when(sectionReviewService.findSectionReview(Mockito.any(PageReview.class)))
-            .thenReturn(Optional.of(sectionReview));
+        when(sectionReviewService.findSectionReview(any(PageReview.class))).thenReturn(Optional.of(sectionReview));
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
 
@@ -247,17 +232,14 @@ class PageReviewTypeSubtypeServiceTest {
     @Test
     void testPageReviewWithNoSection() throws ReplacerException {
         // The page exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
+        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
 
         // The page contains replacements
-        Mockito
-            .when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
+        when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
 
         // The page has no sections
-        Mockito
-            .when(sectionReviewService.findSectionReview(Mockito.any(PageReview.class)))
-            .thenReturn(Optional.empty());
+        when(sectionReviewService.findSectionReview(any(PageReview.class))).thenReturn(Optional.empty());
 
         // Load the cache in order to find the total results
         pageReviewTypeSubtypeService.loadCache(options);

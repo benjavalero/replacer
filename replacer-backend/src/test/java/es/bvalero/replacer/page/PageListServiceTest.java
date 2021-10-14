@@ -1,5 +1,7 @@
 package es.bvalero.replacer.page;
 
+import static org.mockito.Mockito.*;
+
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Arrays;
@@ -9,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class PageListServiceTest {
@@ -32,14 +33,7 @@ class PageListServiceTest {
         List<String> list = Arrays.asList("Bo", "C", "Aá", "Bñ", null, "Ae");
         List<String> sorted = List.of("Aá", "Ae", "Bñ", "Bo", "C");
 
-        Mockito
-            .when(
-                replacementService.findPageTitlesToReviewBySubtype(
-                    Mockito.any(WikipediaLanguage.class),
-                    Mockito.anyString(),
-                    Mockito.anyString()
-                )
-            )
+        when(replacementService.findPageTitlesToReviewBySubtype(any(WikipediaLanguage.class), anyString(), anyString()))
             .thenReturn(list);
 
         List<String> result = pageListService.findPageTitlesToReviewBySubtype(WikipediaLanguage.SPANISH, "X", "Y");

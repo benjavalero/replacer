@@ -1,5 +1,7 @@
 package es.bvalero.replacer.dump;
 
+import static org.mockito.Mockito.*;
+
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
@@ -19,7 +21,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -58,11 +59,9 @@ class DumpPageProcessorTest {
             .build();
         dumpPageProcessor.processPage(dumpPage);
 
-        Mockito.verify(pageReplacementService).findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class));
-        Mockito.verify(replacementFinderService).find(Mockito.any(FinderPage.class));
-        Mockito
-            .verify(pageIndexHelper)
-            .findIndexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList(), Mockito.anyList());
+        verify(pageReplacementService).findByPageId(anyInt(), any(WikipediaLanguage.class));
+        verify(replacementFinderService).find(any(FinderPage.class));
+        verify(pageIndexHelper).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }
 
     @Test
@@ -99,12 +98,11 @@ class DumpPageProcessorTest {
             .build();
 
         ReplacementEntity replacement = ReplacementEntity.builder().lastUpdate(today).title("T").build();
-        Mockito
-            .when(pageReplacementService.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+        when(pageReplacementService.findByPageId(anyInt(), any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
         Assertions.assertTrue(dumpPageProcessor.processPage(dumpPage).isEmpty());
-        Mockito.verify(replacementFinderService, Mockito.times(0)).find(Mockito.any(FinderPage.class));
+        verify(replacementFinderService, times(0)).find(any(FinderPage.class));
     }
 
     @Test
@@ -120,12 +118,11 @@ class DumpPageProcessorTest {
             .build();
 
         ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(today);
-        Mockito
-            .when(pageReplacementService.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+        when(pageReplacementService.findByPageId(anyInt(), any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
         dumpPageProcessor.processPage(dumpPage);
-        Mockito.verify(replacementFinderService).find(Mockito.any(FinderPage.class));
+        verify(replacementFinderService).find(any(FinderPage.class));
     }
 
     @Test
@@ -142,12 +139,11 @@ class DumpPageProcessorTest {
             .build();
 
         ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(yesterday);
-        Mockito
-            .when(pageReplacementService.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
+        when(pageReplacementService.findByPageId(anyInt(), any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
         dumpPageProcessor.processPage(dumpPage);
-        Mockito.verify(replacementFinderService).find(Mockito.any(FinderPage.class));
+        verify(replacementFinderService).find(any(FinderPage.class));
     }
 
     @Test
@@ -161,19 +157,15 @@ class DumpPageProcessorTest {
             .build();
 
         List<ReplacementEntity> dbReplacements = Collections.emptyList();
-        Mockito
-            .when(pageReplacementService.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
-            .thenReturn(dbReplacements);
+        when(pageReplacementService.findByPageId(anyInt(), any(WikipediaLanguage.class))).thenReturn(dbReplacements);
 
         Replacement replacement = Replacement.builder().start(0).text("X").type(ReplacementType.DATE).build();
         List<Replacement> replacements = Collections.singletonList(replacement);
-        Mockito.when(replacementFinderService.find(Mockito.any(FinderPage.class))).thenReturn(replacements);
+        when(replacementFinderService.find(any(FinderPage.class))).thenReturn(replacements);
 
         dumpPageProcessor.processPage(dumpPage);
 
-        Mockito
-            .verify(pageIndexHelper)
-            .findIndexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList(), Mockito.eq(dbReplacements));
+        verify(pageIndexHelper).findIndexPageReplacements(any(IndexablePage.class), anyList(), eq(dbReplacements));
     }
 
     @Test
@@ -191,17 +183,13 @@ class DumpPageProcessorTest {
 
         ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(yesterday);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
-        Mockito
-            .when(pageReplacementService.findByPageId(Mockito.anyInt(), Mockito.any(WikipediaLanguage.class)))
-            .thenReturn(dbReplacements);
+        when(pageReplacementService.findByPageId(anyInt(), any(WikipediaLanguage.class))).thenReturn(dbReplacements);
 
         List<Replacement> replacements = Collections.emptyList();
-        Mockito.when(replacementFinderService.find(Mockito.any(FinderPage.class))).thenReturn(replacements);
+        when(replacementFinderService.find(any(FinderPage.class))).thenReturn(replacements);
 
         dumpPageProcessor.processPage(dumpPage);
 
-        Mockito
-            .verify(pageIndexHelper)
-            .findIndexPageReplacements(Mockito.any(IndexablePage.class), Mockito.anyList(), Mockito.eq(dbReplacements));
+        verify(pageIndexHelper).findIndexPageReplacements(any(IndexablePage.class), anyList(), eq(dbReplacements));
     }
 }

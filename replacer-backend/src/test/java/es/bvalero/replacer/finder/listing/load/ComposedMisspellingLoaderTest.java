@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.listing.load;
 
+import static org.mockito.Mockito.*;
+
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
@@ -8,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class ComposedMisspellingLoaderTest {
@@ -30,11 +31,11 @@ class ComposedMisspellingLoaderTest {
 
     @Test
     void testLoad() throws ReplacerException {
-        Mockito.when(listingFinder.getComposedMisspellingListing(Mockito.any(WikipediaLanguage.class))).thenReturn("");
+        when(listingFinder.getComposedMisspellingListing(any(WikipediaLanguage.class))).thenReturn("");
 
         composedMisspellingLoader.load();
 
-        Mockito.verify(listingFinder).getComposedMisspellingListing(WikipediaLanguage.SPANISH);
-        Mockito.verify(composedMisspellingParser, Mockito.atLeastOnce()).parseListing(Mockito.anyString());
+        verify(listingFinder).getComposedMisspellingListing(WikipediaLanguage.SPANISH);
+        verify(composedMisspellingParser, atLeastOnce()).parseListing(anyString());
     }
 }

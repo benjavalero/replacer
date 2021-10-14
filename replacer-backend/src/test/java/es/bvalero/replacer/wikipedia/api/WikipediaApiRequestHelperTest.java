@@ -1,5 +1,7 @@
 package es.bvalero.replacer.wikipedia.api;
 
+import static org.mockito.Mockito.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
@@ -10,7 +12,10 @@ import es.bvalero.replacer.wikipedia.OAuthToken;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 class WikipediaApiRequestHelperTest {
 
@@ -32,12 +37,12 @@ class WikipediaApiRequestHelperTest {
     @Test
     void testResponseWithErrors() throws Exception {
         // API response
-        Response response = Mockito.mock(Response.class);
+        Response response = mock(Response.class);
         String textResponse =
             "{\"error\":{\"code\":\"too-many-pageids\",\"info\":\"Too many values supplied for parameter \\\"pageids\\\". The limit is 50.\",\"docref\":\"See https://es.wikipedia.org/w/api.php for API usage. Subscribe to the mediawiki-api-announce mailing list at &lt;https://lists.wikimedia.org/mailman/listinfo/mediawiki-api-announce&gt; for notice of API deprecations and breaking changes.\"},\"servedby\":\"mw1342\"}";
-        Mockito.when(mediaWikiApiService.execute(Mockito.any(OAuthRequest.class))).thenReturn(response);
-        Mockito.when(response.isSuccessful()).thenReturn(true);
-        Mockito.when(response.getBody()).thenReturn(textResponse);
+        when(mediaWikiApiService.execute(any(OAuthRequest.class))).thenReturn(response);
+        when(response.isSuccessful()).thenReturn(true);
+        when(response.getBody()).thenReturn(textResponse);
 
         try {
             WikipediaApiRequest apiRequest = WikipediaApiRequest
@@ -54,9 +59,9 @@ class WikipediaApiRequestHelperTest {
     @Test
     void testResponseNotSuccessful() throws Exception {
         // API response
-        Response response = Mockito.mock(Response.class);
-        Mockito.when(mediaWikiApiService.execute(Mockito.any(OAuthRequest.class))).thenReturn(response);
-        Mockito.when(response.isSuccessful()).thenReturn(false);
+        Response response = mock(Response.class);
+        when(mediaWikiApiService.execute(any(OAuthRequest.class))).thenReturn(response);
+        when(response.isSuccessful()).thenReturn(false);
 
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
@@ -69,12 +74,12 @@ class WikipediaApiRequestHelperTest {
     @Test
     void testSignedRequest() throws Exception {
         // API response
-        Response response = Mockito.mock(Response.class);
+        Response response = mock(Response.class);
         String textResponse =
             "{\"batchcomplete\":true,\"query\":{\"pages\":[{\"pageid\":2209245,\"ns\":4,\"title\":\"Wikipedia:Zona de pruebas/5\",\"revisions\":[{\"timestamp\":\"2019-06-24T21:24:09Z\"}]}],\"tokens\":{\"csrftoken\":\"+\\\\\"}}}";
-        Mockito.when(mediaWikiApiService.execute(Mockito.any(OAuthRequest.class))).thenReturn(response);
-        Mockito.when(response.isSuccessful()).thenReturn(true);
-        Mockito.when(response.getBody()).thenReturn(textResponse);
+        when(mediaWikiApiService.execute(any(OAuthRequest.class))).thenReturn(response);
+        when(response.isSuccessful()).thenReturn(true);
+        when(response.getBody()).thenReturn(textResponse);
 
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()

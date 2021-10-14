@@ -1,5 +1,7 @@
 package es.bvalero.replacer.replacement;
 
+import static org.mockito.Mockito.*;
+
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
@@ -13,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class ObsoleteMisspellingListenerTest {
@@ -44,9 +45,8 @@ class ObsoleteMisspellingListenerTest {
             new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, EMPTY_MAP, map1)
         );
 
-        Mockito
-            .verify(replacementService, Mockito.times(0))
-            .deleteToBeReviewedBySubtype(Mockito.any(WikipediaLanguage.class), Mockito.anyString(), Mockito.anySet());
+        verify(replacementService, times(0))
+            .deleteToBeReviewedBySubtype(any(WikipediaLanguage.class), anyString(), anySet());
 
         SimpleMisspelling misspelling3 = SimpleMisspelling.ofCaseInsensitive("C", "D");
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> map2 = new HashSetValuedHashMap<>();
@@ -57,8 +57,7 @@ class ObsoleteMisspellingListenerTest {
             new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, map1, map2)
         );
 
-        Mockito
-            .verify(replacementService, Mockito.times(1))
+        verify(replacementService, times(1))
             .deleteToBeReviewedBySubtype(
                 WikipediaLanguage.SPANISH,
                 ReplacementType.MISSPELLING_SIMPLE.getLabel(),

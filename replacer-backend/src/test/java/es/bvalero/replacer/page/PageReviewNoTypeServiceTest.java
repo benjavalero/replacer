@@ -1,5 +1,7 @@
 package es.bvalero.replacer.page;
 
+import static org.mockito.Mockito.*;
+
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -17,7 +19,9 @@ import java.util.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 
 class PageReviewNoTypeServiceTest {
@@ -85,14 +89,9 @@ class PageReviewNoTypeServiceTest {
     @Test
     void testFindRandomPageToReviewNoTypeNoResultInDb() {
         // No results in DB
-        Mockito
-            .when(
-                replacementService.findPageIdsToBeReviewed(
-                    Mockito.any(WikipediaLanguage.class),
-                    Mockito.anyLong(),
-                    Mockito.any(PageRequest.class)
-                )
-            )
+        when(
+            replacementService.findPageIdsToBeReviewed(any(WikipediaLanguage.class), anyLong(), any(PageRequest.class))
+        )
             .thenReturn(Collections.emptyList());
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
@@ -103,19 +102,14 @@ class PageReviewNoTypeServiceTest {
     @Test
     void testFindRandomPageToReviewNoTypeNotInWikipedia() throws ReplacerException {
         // 1 result in DB
-        Mockito
-            .when(
-                replacementService.findPageIdsToBeReviewed(
-                    Mockito.any(WikipediaLanguage.class),
-                    Mockito.anyLong(),
-                    Mockito.any(PageRequest.class)
-                )
-            )
+        when(
+            replacementService.findPageIdsToBeReviewed(any(WikipediaLanguage.class), anyLong(), any(PageRequest.class))
+        )
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
             .thenReturn(Collections.emptyList());
 
         // The page doesn't exist in Wikipedia
-        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.empty());
+        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.empty());
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
@@ -125,29 +119,21 @@ class PageReviewNoTypeServiceTest {
     @Test
     void testFindRandomPageToReviewNoTypeWithReplacements() throws ReplacerException {
         // 1 result in DB
-        Mockito
-            .when(
-                replacementService.findPageIdsToBeReviewed(
-                    Mockito.any(WikipediaLanguage.class),
-                    Mockito.anyLong(),
-                    Mockito.any(PageRequest.class)
-                )
-            )
+        when(
+            replacementService.findPageIdsToBeReviewed(any(WikipediaLanguage.class), anyLong(), any(PageRequest.class))
+        )
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
 
         // The page exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
+        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
 
         // The page contains replacements
-        Mockito
-            .when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page)))
-            .thenReturn(replacements);
+        when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page))).thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        Mockito
-            .verify(pageIndexHelper, Mockito.times(1))
-            .indexPageReplacements(Mockito.eq(pageReviewNoTypeService.convertToIndexablePage(page)), Mockito.anyList());
+        verify(pageIndexHelper, times(1))
+            .indexPageReplacements(eq(pageReviewNoTypeService.convertToIndexablePage(page)), anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId, review.get().getPage().getId());
@@ -156,30 +142,23 @@ class PageReviewNoTypeServiceTest {
     @Test
     void testFindRandomPageToReviewNoTypeNoReplacements() throws ReplacerException {
         // 1 result in DB
-        Mockito
-            .when(
-                replacementService.findPageIdsToBeReviewed(
-                    Mockito.any(WikipediaLanguage.class),
-                    Mockito.anyLong(),
-                    Mockito.any(PageRequest.class)
-                )
-            )
+        when(
+            replacementService.findPageIdsToBeReviewed(any(WikipediaLanguage.class), anyLong(), any(PageRequest.class))
+        )
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
             .thenReturn(Collections.emptyList());
 
         // The page exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
+        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
 
         // The page doesn't contain replacements
         List<Replacement> noPageReplacements = Collections.emptyList();
-        Mockito
-            .when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page)))
+        when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page)))
             .thenReturn(noPageReplacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        Mockito
-            .verify(pageIndexHelper, Mockito.times(1))
+        verify(pageIndexHelper, times(1))
             .indexPageReplacements(pageReviewNoTypeService.convertToIndexablePage(page), Collections.emptyList());
 
         Assertions.assertFalse(review.isPresent());
@@ -188,33 +167,23 @@ class PageReviewNoTypeServiceTest {
     @Test
     void testFindRandomPageToReviewNoTypeSecondResult() throws ReplacerException {
         // 2 results in DB
-        Mockito
-            .when(
-                replacementService.findPageIdsToBeReviewed(
-                    Mockito.any(WikipediaLanguage.class),
-                    Mockito.anyLong(),
-                    Mockito.any(PageRequest.class)
-                )
-            )
+        when(
+            replacementService.findPageIdsToBeReviewed(any(WikipediaLanguage.class), anyLong(), any(PageRequest.class))
+        )
             .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)));
 
         // Only the page 2 exists in Wikipedia
-        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.empty());
-        Mockito.when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId2)).thenReturn(Optional.of(page2));
+        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.empty());
+        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId2)).thenReturn(Optional.of(page2));
 
         // The page contains replacements
-        Mockito
-            .when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page2)))
+        when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page2)))
             .thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        Mockito
-            .verify(pageIndexHelper, Mockito.times(1))
-            .indexPageReplacements(
-                Mockito.eq(pageReviewNoTypeService.convertToIndexablePage(page2)),
-                Mockito.anyList()
-            );
+        verify(pageIndexHelper, times(1))
+            .indexPageReplacements(eq(pageReviewNoTypeService.convertToIndexablePage(page2)), anyList());
 
         Assertions.assertTrue(review.isPresent());
         Assertions.assertEquals(randomId2, review.get().getPage().getId());

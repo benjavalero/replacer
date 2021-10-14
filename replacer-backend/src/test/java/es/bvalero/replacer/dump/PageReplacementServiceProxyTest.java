@@ -1,5 +1,8 @@
 package es.bvalero.replacer.dump;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
@@ -10,7 +13,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class PageReplacementServiceProxyTest {
@@ -36,12 +38,8 @@ class PageReplacementServiceProxyTest {
         ReplacementEntity replacement2 = ReplacementEntity.of(1001, "", "", 0);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
         List<ReplacementEntity> dbReplacements2 = Collections.singletonList(replacement2);
-        Mockito
-            .when(replacementService.findByPageInterval(1, 1000, WikipediaLanguage.SPANISH))
-            .thenReturn(dbReplacements);
-        Mockito
-            .when(replacementService.findByPageInterval(1001, 2000, WikipediaLanguage.SPANISH))
-            .thenReturn(dbReplacements2);
+        when(replacementService.findByPageInterval(1, 1000, WikipediaLanguage.SPANISH)).thenReturn(dbReplacements);
+        when(replacementService.findByPageInterval(1001, 2000, WikipediaLanguage.SPANISH)).thenReturn(dbReplacements2);
 
         List<ReplacementEntity> replacements = pageReplacementService.findByPageId(1, WikipediaLanguage.SPANISH);
         Assertions.assertTrue(replacements.isEmpty());
@@ -50,7 +48,7 @@ class PageReplacementServiceProxyTest {
         Assertions.assertEquals(dbReplacements2, replacements);
 
         // Check that the page 2 has been cleaned
-        Mockito.verify(replacementService).indexObsoleteByPageId(WikipediaLanguage.SPANISH, 2);
+        verify(replacementService).indexObsoleteByPageId(WikipediaLanguage.SPANISH, 2);
     }
 
     @Test
@@ -59,9 +57,7 @@ class PageReplacementServiceProxyTest {
         // So the first load is enlarged
         ReplacementEntity replacement = ReplacementEntity.of(1001, "", "", 0);
         List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
-        Mockito
-            .when(replacementService.findByPageInterval(1, 2000, WikipediaLanguage.SPANISH))
-            .thenReturn(dbReplacements);
+        when(replacementService.findByPageInterval(1, 2000, WikipediaLanguage.SPANISH)).thenReturn(dbReplacements);
 
         List<ReplacementEntity> replacements = pageReplacementService.findByPageId(1001, WikipediaLanguage.SPANISH);
         Assertions.assertEquals(dbReplacements, replacements);

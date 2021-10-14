@@ -1,5 +1,7 @@
 package es.bvalero.replacer.dump;
 
+import static org.mockito.Mockito.*;
+
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import java.nio.file.Files;
@@ -13,7 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 // Test DumpManager and DumpJobSaxImpl at a time
@@ -52,30 +53,28 @@ class DumpManagerTest {
 
         dumpJob.parseDumpFile(dumpFile, WikipediaLanguage.SPANISH);
 
-        Mockito.verify(dumpHandler).startDocument();
+        verify(dumpHandler).startDocument();
     }
 
     @Test
     void testProcessLatestDumpFileWithException() throws Exception {
-        Mockito
-            .when(dumpFinder.findLatestDumpFile(Mockito.any(WikipediaLanguage.class)))
-            .thenThrow(ReplacerException.class);
-        Mockito.when(dumpHandler.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.ofEmpty());
+        when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenThrow(ReplacerException.class);
+        when(dumpHandler.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.ofEmpty());
 
         dumpManager.processLatestDumpFiles();
 
-        Mockito.verify(dumpHandler, Mockito.never()).startDocument();
+        verify(dumpHandler, never()).startDocument();
     }
 
     @Test
     void testProcessLatestDumpFileAlreadyRunning() {
         // Fake the indexation is running
         DumpIndexingStatus status = DumpIndexingStatus.builder().running(true).build();
-        Mockito.when(dumpHandler.getDumpIndexingStatus()).thenReturn(status);
+        when(dumpHandler.getDumpIndexingStatus()).thenReturn(status);
 
         dumpManager.processLatestDumpFiles();
 
-        Mockito.verify(dumpHandler, Mockito.never()).startDocument();
+        verify(dumpHandler, never()).startDocument();
     }
 
     @Test
@@ -85,16 +84,16 @@ class DumpManagerTest {
                 .getResource("/es/bvalero/replacer/dump/eswiki/20170101/eswiki-20170101-pages-articles.xml.bz2")
                 .toURI()
         );
-        Mockito.when(dumpFinder.findLatestDumpFile(Mockito.any(WikipediaLanguage.class))).thenReturn(dumpFile);
+        when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenReturn(dumpFile);
 
         // Make the dump file old enough
         Files.setLastModifiedTime(dumpFile, FileTime.from(LocalDateTime.now().minusDays(2).toInstant(ZoneOffset.UTC)));
 
-        Mockito.when(dumpHandler.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.ofEmpty());
+        when(dumpHandler.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.ofEmpty());
 
         dumpManager.scheduledStartDumpIndexing();
 
         // Run twice (for Spanish and Galician)
-        Mockito.verify(dumpHandler, Mockito.times(2)).startDocument();
+        verify(dumpHandler, times(2)).startDocument();
     }
 }

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page;
 
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.ReplacerException;
@@ -24,7 +23,9 @@ import java.util.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 class PageReviewCustomServiceTest {
 
@@ -492,11 +493,9 @@ class PageReviewCustomServiceTest {
 
         // Case-insensitive: accion||acción
         SimpleMisspelling misspelling1 = SimpleMisspelling.of("accion", false, "acción");
-        Mockito
-            .when(customReplacementFinderService.findExistingMisspelling("accion", lang))
+        when(customReplacementFinderService.findExistingMisspelling("accion", lang))
             .thenReturn(Optional.of(misspelling1));
-        Mockito
-            .when(customReplacementFinderService.findExistingMisspelling("Accion", lang))
+        when(customReplacementFinderService.findExistingMisspelling("Accion", lang))
             .thenReturn(Optional.of(misspelling1));
         Assertions.assertEquals(
             MisspellingType.ofEmpty(),
@@ -517,12 +516,9 @@ class PageReviewCustomServiceTest {
 
         // Case-sensitive uppercase: Enero|cs|enero
         SimpleMisspelling misspelling2 = SimpleMisspelling.of("Enero", true, "enero");
-        Mockito
-            .when(customReplacementFinderService.findExistingMisspelling("Enero", lang))
+        when(customReplacementFinderService.findExistingMisspelling("Enero", lang))
             .thenReturn(Optional.of(misspelling2));
-        Mockito
-            .when(customReplacementFinderService.findExistingMisspelling("enero", lang))
-            .thenReturn(Optional.empty());
+        when(customReplacementFinderService.findExistingMisspelling("enero", lang)).thenReturn(Optional.empty());
         Assertions.assertEquals(
             MisspellingType.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "enero", true)
@@ -542,12 +538,9 @@ class PageReviewCustomServiceTest {
 
         // Case-sensitive lowercase: madrid|cs|Madrid
         SimpleMisspelling misspelling3 = SimpleMisspelling.of("madrid", true, "Madrid");
-        Mockito
-            .when(customReplacementFinderService.findExistingMisspelling("madrid", lang))
+        when(customReplacementFinderService.findExistingMisspelling("madrid", lang))
             .thenReturn(Optional.of(misspelling3));
-        Mockito
-            .when(customReplacementFinderService.findExistingMisspelling("Madrid", lang))
-            .thenReturn(Optional.empty());
+        when(customReplacementFinderService.findExistingMisspelling("Madrid", lang)).thenReturn(Optional.empty());
         Assertions.assertEquals(
             MisspellingType.of(simple, "madrid"),
             pageReviewCustomService.validateCustomReplacement(lang, "madrid", true)

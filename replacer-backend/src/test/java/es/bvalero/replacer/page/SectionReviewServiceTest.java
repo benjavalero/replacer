@@ -1,5 +1,7 @@
 package es.bvalero.replacer.page;
 
+import static org.mockito.Mockito.*;
+
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -11,7 +13,9 @@ import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 class SectionReviewServiceTest {
 
@@ -29,8 +33,7 @@ class SectionReviewServiceTest {
 
     @Test
     void testFindSectionReviewNoSections() throws ReplacerException {
-        Mockito
-            .when(wikipediaService.getPageSections(Mockito.any(WikipediaLanguage.class), Mockito.anyInt()))
+        when(wikipediaService.getPageSections(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(Collections.emptyList());
 
         PageReview review = PageReview.ofEmpty();
@@ -56,8 +59,7 @@ class SectionReviewServiceTest {
         int sectionId = 3;
         int offset = 5;
         WikipediaSection section = WikipediaSection.builder().level(2).index(sectionId).byteOffset(offset).build();
-        Mockito
-            .when(wikipediaService.getPageSections(Mockito.any(WikipediaLanguage.class), Mockito.anyInt()))
+        when(wikipediaService.getPageSections(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(Collections.singletonList(section));
 
         String sectionContent = content.substring(offset, 10);
@@ -70,14 +72,7 @@ class SectionReviewServiceTest {
             .lastUpdate(LocalDateTime.now())
             .queryTimestamp(LocalDateTime.now())
             .build();
-        Mockito
-            .when(
-                wikipediaService.getPageSection(
-                    Mockito.any(WikipediaLanguage.class),
-                    Mockito.eq(pageId),
-                    Mockito.eq(section)
-                )
-            )
+        when(wikipediaService.getPageSection(any(WikipediaLanguage.class), eq(pageId), eq(section)))
             .thenReturn(Optional.of(pageSection));
 
         Optional<PageReview> sectionReview = sectionReviewService.findSectionReview(pageReview);

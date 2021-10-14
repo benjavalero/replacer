@@ -1,6 +1,7 @@
 package es.bvalero.replacer.authentication;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -12,7 +13,6 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.OAuthToken;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -51,13 +51,7 @@ class AuthenticationControllerTest {
     void testAuthenticate() throws Exception {
         String userName = "C";
 
-        when(
-            authenticationService.authenticate(
-                Mockito.any(WikipediaLanguage.class),
-                Mockito.any(OAuthToken.class),
-                anyString()
-            )
-        )
+        when(authenticationService.authenticate(any(WikipediaLanguage.class), any(OAuthToken.class), anyString()))
             .thenReturn(AuthenticateResponse.of(userName, true, false, true, "A", "B"));
 
         AuthenticateRequest verifier = AuthenticateRequest.of("X", "Y", "V");
@@ -76,6 +70,6 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.tokenSecret", is("B")));
 
         verify(authenticationService, times(1))
-            .authenticate(Mockito.eq(WikipediaLanguage.SPANISH), Mockito.any(OAuthToken.class), anyString());
+            .authenticate(eq(WikipediaLanguage.SPANISH), any(OAuthToken.class), anyString());
     }
 }

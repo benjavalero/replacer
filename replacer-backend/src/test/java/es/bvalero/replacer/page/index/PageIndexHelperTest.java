@@ -1,5 +1,7 @@
 package es.bvalero.replacer.page.index;
 
+import static org.mockito.Mockito.*;
+
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementDao;
@@ -10,7 +12,9 @@ import java.util.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -39,9 +43,7 @@ class PageIndexHelperTest {
 
         pageIndexHelper.indexPageReplacements(page, Collections.emptyList());
 
-        Mockito
-            .verify(replacementDao, Mockito.times(1))
-            .findByPageId(Mockito.eq(pageId), Mockito.any(WikipediaLanguage.class));
+        verify(replacementDao, times(1)).findByPageId(eq(pageId), any(WikipediaLanguage.class));
     }
 
     @Test

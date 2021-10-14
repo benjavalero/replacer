@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.replacement;
 
+import static org.mockito.Mockito.*;
+
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
@@ -12,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 class ReplacementFinderServiceTest {
@@ -36,9 +37,9 @@ class ReplacementFinderServiceTest {
     void testEmpty() {
         String text = "An example.";
 
-        ReplacementFinder replacementFinder = Mockito.mock(ReplacementFinder.class);
-        Mockito.when(replacementFinder.find(Mockito.any(FinderPage.class))).thenReturn(Collections.emptyList());
-        Mockito.when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
+        ReplacementFinder replacementFinder = mock(ReplacementFinder.class);
+        when(replacementFinder.find(any(FinderPage.class))).thenReturn(Collections.emptyList());
+        when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
@@ -50,9 +51,9 @@ class ReplacementFinderServiceTest {
         String text = "An example.";
 
         Replacement replacement = Replacement.builder().start(0).text("An").build();
-        ReplacementFinder replacementFinder = Mockito.mock(ReplacementFinder.class);
-        Mockito.when(replacementFinder.find(Mockito.any(FinderPage.class))).thenReturn(List.of(replacement));
-        Mockito.when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
+        ReplacementFinder replacementFinder = mock(ReplacementFinder.class);
+        when(replacementFinder.find(any(FinderPage.class))).thenReturn(List.of(replacement));
+        when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
@@ -65,11 +66,9 @@ class ReplacementFinderServiceTest {
 
         Replacement replacement1 = Replacement.builder().start(0).text("An").build();
         Replacement replacement2 = Replacement.builder().start(3).text("example").build();
-        ReplacementFinder replacementFinder = Mockito.mock(ReplacementFinder.class);
-        Mockito
-            .when(replacementFinder.find(Mockito.any(FinderPage.class)))
-            .thenReturn(List.of(replacement1, replacement2));
-        Mockito.when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
+        ReplacementFinder replacementFinder = mock(ReplacementFinder.class);
+        when(replacementFinder.find(any(FinderPage.class))).thenReturn(List.of(replacement1, replacement2));
+        when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
@@ -84,13 +83,11 @@ class ReplacementFinderServiceTest {
         Replacement replacement2 = Replacement.builder().start(0).text("An").build();
         Assertions.assertEquals(replacement1, replacement2);
 
-        ReplacementFinder replacementFinder1 = Mockito.mock(ReplacementFinder.class);
-        ReplacementFinder replacementFinder2 = Mockito.mock(ReplacementFinder.class);
-        Mockito.when(replacementFinder1.find(Mockito.any(FinderPage.class))).thenReturn(List.of(replacement1));
-        Mockito.when(replacementFinder2.find(Mockito.any(FinderPage.class))).thenReturn(List.of(replacement2));
-        Mockito
-            .when(replacementFinders.toArray())
-            .thenReturn(List.of(replacementFinder1, replacementFinder2).toArray());
+        ReplacementFinder replacementFinder1 = mock(ReplacementFinder.class);
+        ReplacementFinder replacementFinder2 = mock(ReplacementFinder.class);
+        when(replacementFinder1.find(any(FinderPage.class))).thenReturn(List.of(replacement1));
+        when(replacementFinder2.find(any(FinderPage.class))).thenReturn(List.of(replacement2));
+        when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder1, replacementFinder2).toArray());
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
@@ -105,13 +102,11 @@ class ReplacementFinderServiceTest {
         Replacement replacement2 = Replacement.builder().start(0).text("An example").build();
         Assertions.assertTrue(replacement2.containsStrictly(replacement1));
 
-        ReplacementFinder replacementFinder1 = Mockito.mock(ReplacementFinder.class);
-        ReplacementFinder replacementFinder2 = Mockito.mock(ReplacementFinder.class);
-        Mockito.when(replacementFinder1.find(Mockito.any(FinderPage.class))).thenReturn(List.of(replacement1));
-        Mockito.when(replacementFinder2.find(Mockito.any(FinderPage.class))).thenReturn(List.of(replacement2));
-        Mockito
-            .when(replacementFinders.toArray())
-            .thenReturn(List.of(replacementFinder1, replacementFinder2).toArray());
+        ReplacementFinder replacementFinder1 = mock(ReplacementFinder.class);
+        ReplacementFinder replacementFinder2 = mock(ReplacementFinder.class);
+        when(replacementFinder1.find(any(FinderPage.class))).thenReturn(List.of(replacement1));
+        when(replacementFinder2.find(any(FinderPage.class))).thenReturn(List.of(replacement2));
+        when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder1, replacementFinder2).toArray());
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
@@ -125,12 +120,10 @@ class ReplacementFinderServiceTest {
         Replacement replacement1 = Replacement.builder().start(0).text("An").build();
         Replacement replacement2 = Replacement.builder().start(3).text("example").build();
         Immutable immutable = Immutable.of(14, "two");
-        ReplacementFinder replacementFinder = Mockito.mock(ReplacementFinder.class);
-        Mockito
-            .when(replacementFinder.find(Mockito.any(FinderPage.class)))
-            .thenReturn(List.of(replacement1, replacement2));
-        Mockito.when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
-        Mockito.when(immutableFinderService.findIterable(Mockito.any(FinderPage.class))).thenReturn(List.of(immutable));
+        ReplacementFinder replacementFinder = mock(ReplacementFinder.class);
+        when(replacementFinder.find(any(FinderPage.class))).thenReturn(List.of(replacement1, replacement2));
+        when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
+        when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
@@ -144,12 +137,10 @@ class ReplacementFinderServiceTest {
         Replacement replacement1 = Replacement.builder().start(0).text("An").build();
         Replacement replacement2 = Replacement.builder().start(3).text("example").build();
         Immutable immutable = Immutable.of(0, "An");
-        ReplacementFinder replacementFinder = Mockito.mock(ReplacementFinder.class);
-        Mockito
-            .when(replacementFinder.find(Mockito.any(FinderPage.class)))
-            .thenReturn(List.of(replacement1, replacement2));
-        Mockito.when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
-        Mockito.when(immutableFinderService.findIterable(Mockito.any(FinderPage.class))).thenReturn(List.of(immutable));
+        ReplacementFinder replacementFinder = mock(ReplacementFinder.class);
+        when(replacementFinder.find(any(FinderPage.class))).thenReturn(List.of(replacement1, replacement2));
+        when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
+        when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
@@ -163,12 +154,10 @@ class ReplacementFinderServiceTest {
         Replacement replacement1 = Replacement.builder().start(0).text("An").build();
         Replacement replacement2 = Replacement.builder().start(3).text("example").build();
         Immutable immutable = Immutable.of(0, "An example");
-        ReplacementFinder replacementFinder = Mockito.mock(ReplacementFinder.class);
-        Mockito
-            .when(replacementFinder.find(Mockito.any(FinderPage.class)))
-            .thenReturn(List.of(replacement1, replacement2));
-        Mockito.when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
-        Mockito.when(immutableFinderService.findIterable(Mockito.any(FinderPage.class))).thenReturn(List.of(immutable));
+        ReplacementFinder replacementFinder = mock(ReplacementFinder.class);
+        when(replacementFinder.find(any(FinderPage.class))).thenReturn(List.of(replacement1, replacement2));
+        when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
+        when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
@@ -181,10 +170,10 @@ class ReplacementFinderServiceTest {
 
         Replacement replacement = Replacement.builder().start(0).text("An example").build();
         Immutable immutable = Immutable.of(3, "example or");
-        ReplacementFinder replacementFinder = Mockito.mock(ReplacementFinder.class);
-        Mockito.when(replacementFinder.find(Mockito.any(FinderPage.class))).thenReturn(List.of(replacement));
-        Mockito.when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
-        Mockito.when(immutableFinderService.findIterable(Mockito.any(FinderPage.class))).thenReturn(List.of(immutable));
+        ReplacementFinder replacementFinder = mock(ReplacementFinder.class);
+        when(replacementFinder.find(any(FinderPage.class))).thenReturn(List.of(replacement));
+        when(replacementFinders.toArray()).thenReturn(List.of(replacementFinder).toArray());
+        when(immutableFinderService.findIterable(any(FinderPage.class))).thenReturn(List.of(immutable));
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
