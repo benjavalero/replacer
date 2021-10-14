@@ -1,5 +1,7 @@
 package es.bvalero.replacer.replacement;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
@@ -9,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -36,7 +37,7 @@ class ReplacementDaoProxyTest {
 
         when(replacementStatsDao.countReplacementsReviewed(any(WikipediaLanguage.class))).thenReturn(count);
 
-        Assertions.assertEquals(count, replacementDaoProxy.countReplacementsReviewed(WikipediaLanguage.SPANISH));
+        assertEquals(count, replacementDaoProxy.countReplacementsReviewed(WikipediaLanguage.SPANISH));
     }
 
     @Test
@@ -45,7 +46,7 @@ class ReplacementDaoProxyTest {
 
         when(replacementStatsDao.countReplacementsNotReviewed(any(WikipediaLanguage.class))).thenReturn(count);
 
-        Assertions.assertEquals(count, replacementDaoProxy.countReplacementsNotReviewed(WikipediaLanguage.SPANISH));
+        assertEquals(count, replacementDaoProxy.countReplacementsNotReviewed(WikipediaLanguage.SPANISH));
     }
 
     @Test
@@ -54,10 +55,7 @@ class ReplacementDaoProxyTest {
 
         when(replacementStatsDao.countReplacementsGroupedByReviewer(any(WikipediaLanguage.class))).thenReturn(result);
 
-        Assertions.assertEquals(
-            result,
-            replacementDaoProxy.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH)
-        );
+        assertEquals(result, replacementDaoProxy.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH));
     }
 
     @Test
@@ -72,44 +70,44 @@ class ReplacementDaoProxyTest {
         replacementDaoProxy.scheduledUpdateReplacementCount();
 
         LanguageCount langCount = replacementDaoProxy.countReplacementsGroupedByType(lang);
-        Assertions.assertEquals(1, langCount.size());
-        Assertions.assertTrue(langCount.contains("X"));
-        Assertions.assertEquals(2, langCount.get("X").size());
-        Assertions.assertEquals(2L, langCount.get("X").get("Y").get().getCount());
-        Assertions.assertEquals(1L, langCount.get("X").get("Z").get().getCount());
+        assertEquals(1, langCount.size());
+        assertTrue(langCount.contains("X"));
+        assertEquals(2, langCount.get("X").size());
+        assertEquals(2L, langCount.get("X").get("Y").get().getCount());
+        assertEquals(1L, langCount.get("X").get("Z").get().getCount());
 
         // Decrease a replacement count
         replacementDaoProxy.decrementSubtypeCount(lang, "X", "Y");
 
         langCount = replacementDaoProxy.countReplacementsGroupedByType(lang);
-        Assertions.assertEquals(1, langCount.size());
-        Assertions.assertTrue(langCount.contains("X"));
-        Assertions.assertEquals(2, langCount.get("X").size());
-        Assertions.assertEquals(1L, langCount.get("X").get("Y").get().getCount());
-        Assertions.assertEquals(1L, langCount.get("X").get("Z").get().getCount());
+        assertEquals(1, langCount.size());
+        assertTrue(langCount.contains("X"));
+        assertEquals(2, langCount.get("X").size());
+        assertEquals(1L, langCount.get("X").get("Y").get().getCount());
+        assertEquals(1L, langCount.get("X").get("Z").get().getCount());
 
         // Decrease a replacement count emptying it
         replacementDaoProxy.decrementSubtypeCount(lang, "X", "Z");
 
         langCount = replacementDaoProxy.countReplacementsGroupedByType(lang);
-        Assertions.assertEquals(1, langCount.size());
-        Assertions.assertTrue(langCount.contains("X"));
-        Assertions.assertEquals(1, langCount.get("X").size());
-        Assertions.assertEquals(1L, langCount.get("X").get("Y").get().getCount());
-        Assertions.assertTrue(langCount.get("X").get("Z").isEmpty());
+        assertEquals(1, langCount.size());
+        assertTrue(langCount.contains("X"));
+        assertEquals(1, langCount.get("X").size());
+        assertEquals(1L, langCount.get("X").get("Y").get().getCount());
+        assertTrue(langCount.get("X").get("Z").isEmpty());
 
         // Remove a replacement count not existing in cache
         replacementDaoProxy.removeCachedReplacementCount(lang, "A", "B");
 
         langCount = replacementDaoProxy.countReplacementsGroupedByType(lang);
-        Assertions.assertEquals(1, langCount.size());
-        Assertions.assertTrue(langCount.contains("X"));
-        Assertions.assertEquals(1, langCount.get("X").size());
+        assertEquals(1, langCount.size());
+        assertTrue(langCount.contains("X"));
+        assertEquals(1, langCount.get("X").size());
 
         // Remove a replacement count existing in cache
         replacementDaoProxy.removeCachedReplacementCount(lang, "X", "Y");
 
         langCount = replacementDaoProxy.countReplacementsGroupedByType(lang);
-        Assertions.assertTrue(langCount.isEmpty());
+        assertTrue(langCount.isEmpty());
     }
 }

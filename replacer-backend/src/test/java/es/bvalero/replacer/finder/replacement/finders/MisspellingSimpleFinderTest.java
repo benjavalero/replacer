@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
@@ -13,7 +15,6 @@ import java.util.List;
 import java.util.Set;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +50,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Assertions.assertTrue(results.isEmpty());
+        assertTrue(results.isEmpty());
     }
 
     @Test
@@ -69,7 +70,7 @@ class MisspellingSimpleFinderTest {
             .subtype("abadia")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("abadía")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -98,7 +99,7 @@ class MisspellingSimpleFinderTest {
             .subtype("online")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("en línea")))
             .build();
-        Assertions.assertEquals(Set.of(expected1, expected2), new HashSet<>(results));
+        assertEquals(Set.of(expected1, expected2), new HashSet<>(results));
     }
 
     @Test
@@ -118,7 +119,7 @@ class MisspellingSimpleFinderTest {
             .subtype("abadia")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Abadía")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -130,7 +131,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Assertions.assertEquals(Collections.emptySet(), new HashSet<>(results));
+        assertEquals(Collections.emptySet(), new HashSet<>(results));
     }
 
     @Test
@@ -150,7 +151,7 @@ class MisspellingSimpleFinderTest {
             .subtype("Brazil")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Brasil")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -171,7 +172,7 @@ class MisspellingSimpleFinderTest {
             .subtype("Enero")
             .suggestions(List.of(suggestion.toUppercase(), suggestion))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -183,7 +184,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Assertions.assertEquals(Collections.emptySet(), new HashSet<>(results));
+        assertEquals(Collections.emptySet(), new HashSet<>(results));
     }
 
     @Test
@@ -203,7 +204,7 @@ class MisspellingSimpleFinderTest {
             .subtype("ves")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("vez")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -223,7 +224,7 @@ class MisspellingSimpleFinderTest {
             .subtype("angola")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Angola")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -235,7 +236,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Assertions.assertTrue(results.isEmpty());
+        assertTrue(results.isEmpty());
     }
 
     @Test
@@ -247,7 +248,7 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        Assertions.assertTrue(results.isEmpty());
+        assertTrue(results.isEmpty());
     }
 
     @Test
@@ -267,7 +268,7 @@ class MisspellingSimpleFinderTest {
             .subtype("OVNI")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("ovni")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -287,7 +288,7 @@ class MisspellingSimpleFinderTest {
             .subtype("text")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Texto")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -311,20 +312,17 @@ class MisspellingSimpleFinderTest {
                 List.of(ReplacementSuggestion.of("entreno", "sustantivo"), ReplacementSuggestion.of("entrenó", "verbo"))
             )
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
     void testMisspellingWithDot() {
-        Assertions.assertThrows(
-            IllegalArgumentException.class,
-            () -> SimpleMisspelling.ofCaseInsensitive("cms.", "cm")
-        );
+        assertThrows(IllegalArgumentException.class, () -> SimpleMisspelling.ofCaseInsensitive("cms.", "cm"));
     }
 
     @Test
     void testMisspellingWithNumber() {
-        Assertions.assertThrows(IllegalArgumentException.class, () -> SimpleMisspelling.ofCaseInsensitive("m2", "m²"));
+        assertThrows(IllegalArgumentException.class, () -> SimpleMisspelling.ofCaseInsensitive("m2", "m²"));
     }
 
     @Test
@@ -346,7 +344,7 @@ class MisspellingSimpleFinderTest {
                 List.of(ReplacementSuggestion.of("avión", "aeronave"), ReplacementSuggestion.of("Avión", "río"))
             )
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -368,7 +366,7 @@ class MisspellingSimpleFinderTest {
                 List.of(ReplacementSuggestion.of("Avión", "aeronave"), ReplacementSuggestion.of("Avión", "río"))
             )
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -397,7 +395,7 @@ class MisspellingSimpleFinderTest {
                 )
             )
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -417,7 +415,7 @@ class MisspellingSimpleFinderTest {
             .subtype("Julio")
             .suggestions(List.of(ReplacementSuggestion.of("Julio", "nombre"), ReplacementSuggestion.of("julio", "mes")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -439,6 +437,6 @@ class MisspellingSimpleFinderTest {
             .subtype("Brazil")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Brasil")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 }

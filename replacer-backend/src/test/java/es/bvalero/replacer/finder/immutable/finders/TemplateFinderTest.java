@@ -1,15 +1,13 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.Immutable;
-import es.bvalero.replacer.finder.util.LinearMatchResult;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,7 +28,7 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         List<String> names = List.of("Template1", "Template2", "Template3");
-        Assertions.assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(names));
+        assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(names));
     }
 
     @Test
@@ -45,12 +43,8 @@ class TemplateFinderTest {
         List<Immutable> matches = templateFinder.findList(text);
 
         List<String> templates = List.of(template1, template2, template4, template5);
-        Assertions.assertTrue(
-            matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(templates)
-        );
-        Assertions.assertFalse(
-            matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains(template3)
-        );
+        assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(templates));
+        assertFalse(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains(template3));
     }
 
     @Test
@@ -67,9 +61,9 @@ class TemplateFinderTest {
         List<String> params = List.of("param1", "url", "param4", "nat");
         List<String> values = List.of(" valor3 ", " xxx.jpg ", "Brazil");
 
-        Assertions.assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(params));
-        Assertions.assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(values));
-        Assertions.assertFalse(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains("valor1"));
+        assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(params));
+        assertTrue(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).containsAll(values));
+        assertFalse(matches.stream().map(Immutable::getText).collect(Collectors.toSet()).contains("valor1"));
     }
 
     @Test
@@ -80,7 +74,7 @@ class TemplateFinderTest {
 
         Set<String> expected = Set.of("P", "ps");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -91,7 +85,7 @@ class TemplateFinderTest {
 
         Set<String> expected = Set.of("Template", "image ", " x.jpg ");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -103,26 +97,14 @@ class TemplateFinderTest {
 
         Set<String> expected = Set.of("Template1", "Template2", "param1", "url", "value2");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
 
         // Check positions
-        Assertions.assertEquals(
-            2,
-            matches.stream().filter(m -> m.getText().equals("Template1")).findAny().get().getStart()
-        );
-        Assertions.assertEquals(
-            12,
-            matches.stream().filter(m -> m.getText().equals("param1")).findAny().get().getStart()
-        );
-        Assertions.assertEquals(
-            21,
-            matches.stream().filter(m -> m.getText().equals("Template2")).findAny().get().getStart()
-        );
-        Assertions.assertEquals(31, matches.stream().filter(m -> m.getText().equals("url")).findAny().get().getStart());
-        Assertions.assertEquals(
-            35,
-            matches.stream().filter(m -> m.getText().equals("value2")).findAny().get().getStart()
-        );
+        assertEquals(2, matches.stream().filter(m -> m.getText().equals("Template1")).findAny().get().getStart());
+        assertEquals(12, matches.stream().filter(m -> m.getText().equals("param1")).findAny().get().getStart());
+        assertEquals(21, matches.stream().filter(m -> m.getText().equals("Template2")).findAny().get().getStart());
+        assertEquals(31, matches.stream().filter(m -> m.getText().equals("url")).findAny().get().getStart());
+        assertEquals(35, matches.stream().filter(m -> m.getText().equals("value2")).findAny().get().getStart());
     }
 
     @Test
@@ -131,7 +113,7 @@ class TemplateFinderTest {
 
         List<Immutable> matches = templateFinder.findList(text);
 
-        Assertions.assertTrue(matches.isEmpty());
+        assertTrue(matches.isEmpty());
     }
 
     @Test
@@ -142,8 +124,8 @@ class TemplateFinderTest {
 
         Set<String> expected = Set.of("T", "x", "A", "B", "y");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
-        Assertions.assertTrue(matches.stream().allMatch(m -> m.getStart() >= 0));
+        assertEquals(expected, actual);
+        assertTrue(matches.stream().allMatch(m -> m.getStart() >= 0));
     }
 
     @Test
@@ -156,8 +138,8 @@ class TemplateFinderTest {
         // Therefore in this case though we find both parameters always the first position is returned
         Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "x "));
         Set<Immutable> actual = new HashSet<>(matches);
-        Assertions.assertEquals(3, matches.size());
-        Assertions.assertEquals(expected, actual);
+        assertEquals(3, matches.size());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -172,8 +154,8 @@ class TemplateFinderTest {
             Immutable.of(20, "image")
         );
         Set<Immutable> actual = new HashSet<>(matches);
-        Assertions.assertEquals(3, matches.size());
-        Assertions.assertEquals(expected, actual);
+        assertEquals(3, matches.size());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -186,7 +168,7 @@ class TemplateFinderTest {
         // Therefore in this case though we find both parameters always the first position is returned
         Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "x"), Immutable.of(14, "y"));
         Set<Immutable> actual = new HashSet<>(matches);
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -197,6 +179,6 @@ class TemplateFinderTest {
 
         Set<Immutable> expected = Set.of(Immutable.of(2, "T"), Immutable.of(4, "xxx.jpg"));
         Set<Immutable> actual = new HashSet<>(matches);
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 }

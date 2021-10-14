@@ -1,5 +1,7 @@
 package es.bvalero.replacer.dump;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -8,7 +10,6 @@ import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -42,10 +43,10 @@ class PageReplacementServiceProxyTest {
         when(replacementService.findByPageInterval(1001, 2000, WikipediaLanguage.SPANISH)).thenReturn(dbReplacements2);
 
         List<ReplacementEntity> replacements = pageReplacementService.findByPageId(1, WikipediaLanguage.SPANISH);
-        Assertions.assertTrue(replacements.isEmpty());
+        assertTrue(replacements.isEmpty());
 
         replacements = pageReplacementService.findByPageId(1001, WikipediaLanguage.SPANISH);
-        Assertions.assertEquals(dbReplacements2, replacements);
+        assertEquals(dbReplacements2, replacements);
 
         // Check that the page 2 has been cleaned
         verify(replacementService).indexObsoleteByPageId(WikipediaLanguage.SPANISH, 2);
@@ -60,6 +61,6 @@ class PageReplacementServiceProxyTest {
         when(replacementService.findByPageInterval(1, 2000, WikipediaLanguage.SPANISH)).thenReturn(dbReplacements);
 
         List<ReplacementEntity> replacements = pageReplacementService.findByPageId(1001, WikipediaLanguage.SPANISH);
-        Assertions.assertEquals(dbReplacements, replacements);
+        assertEquals(dbReplacements, replacements);
     }
 }

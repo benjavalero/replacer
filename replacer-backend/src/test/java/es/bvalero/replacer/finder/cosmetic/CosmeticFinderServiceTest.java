@@ -1,11 +1,11 @@
 package es.bvalero.replacer.finder.cosmetic;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.LinkedList;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -38,6 +38,6 @@ class CosmeticFinderServiceTest {
         String text = "A [[Link|link]] to simplify.";
         String expected = "A [[link]] to simplify.";
         FinderPage page = FinderPage.of(text);
-        Assertions.assertEquals(expected, cosmeticFinderService.applyCosmeticChanges(page));
+        assertEquals(expected, cosmeticFinderService.applyCosmeticChanges(page));
     }
 }

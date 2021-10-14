@@ -1,11 +1,12 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.ImmutableFinderService;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -35,9 +36,9 @@ class CustomReplacementFinderServiceTest {
             )
         );
 
-        Assertions.assertFalse(replacements.isEmpty());
-        Assertions.assertEquals(1, replacements.size());
-        Assertions.assertEquals("X", replacements.get(0).getText());
+        assertFalse(replacements.isEmpty());
+        assertEquals(1, replacements.size());
+        assertEquals("X", replacements.get(0).getText());
     }
 
     @Test
@@ -49,6 +50,6 @@ class CustomReplacementFinderServiceTest {
             )
         );
 
-        Assertions.assertTrue(replacements.isEmpty());
+        assertTrue(replacements.isEmpty());
     }
 }

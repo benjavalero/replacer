@@ -1,9 +1,11 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -28,8 +30,8 @@ class PersonSurnameFinderTest {
     void testFindPersonSurnames(String text, String noun) {
         List<Immutable> matches = personSurnameFinder.findList(text);
 
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(noun, matches.get(0).getText());
+        assertEquals(1, matches.size());
+        assertEquals(noun, matches.get(0).getText());
     }
 
     @ParameterizedTest
@@ -37,6 +39,6 @@ class PersonSurnameFinderTest {
     void testFindPersonSurnamesNonValid(String text) {
         List<Immutable> matches = personSurnameFinder.findList(text);
 
-        Assertions.assertTrue(matches.isEmpty());
+        assertTrue(matches.isEmpty());
     }
 }

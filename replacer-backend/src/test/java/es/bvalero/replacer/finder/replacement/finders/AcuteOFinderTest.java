@@ -1,9 +1,11 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -28,13 +30,13 @@ class AcuteOFinderTest {
     )
     void testAcuteO(String text, String subtype) {
         List<Replacement> replacements = acuteOFinder.findList(text);
-        Assertions.assertEquals(1, replacements.size());
+        assertEquals(1, replacements.size());
 
         Replacement rep = replacements.get(0);
-        Assertions.assertEquals(ReplacementType.MISSPELLING_COMPOSED, rep.getType());
-        Assertions.assertEquals(subtype, rep.getSubtype());
-        Assertions.assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
-        Assertions.assertEquals(AcuteOFinder.FIX_ACUTE_O, rep.getSuggestions().get(0).getText());
+        assertEquals(ReplacementType.MISSPELLING_COMPOSED, rep.getType());
+        assertEquals(subtype, rep.getSubtype());
+        assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
+        assertEquals(AcuteOFinder.FIX_ACUTE_O, rep.getSuggestions().get(0).getText());
     }
 
     @Test
@@ -42,20 +44,20 @@ class AcuteOFinderTest {
         final String text = "En dós ó tres veces.";
 
         List<Replacement> replacements = acuteOFinder.findList(text);
-        Assertions.assertEquals(1, replacements.size());
+        assertEquals(1, replacements.size());
 
         Replacement rep = replacements.get(0);
-        Assertions.assertEquals(ReplacementType.MISSPELLING_COMPOSED, rep.getType());
-        Assertions.assertEquals(AcuteOFinder.SUBTYPE_ACUTE_O_WORDS, rep.getSubtype());
-        Assertions.assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
-        Assertions.assertEquals(7, rep.getStart());
-        Assertions.assertEquals(AcuteOFinder.FIX_ACUTE_O, rep.getSuggestions().get(0).getText());
+        assertEquals(ReplacementType.MISSPELLING_COMPOSED, rep.getType());
+        assertEquals(AcuteOFinder.SUBTYPE_ACUTE_O_WORDS, rep.getSubtype());
+        assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
+        assertEquals(7, rep.getStart());
+        assertEquals(AcuteOFinder.FIX_ACUTE_O, rep.getSuggestions().get(0).getText());
     }
 
     @ParameterizedTest
     @ValueSource(strings = { "1 o 2", "1 ó." })
     void testAcuteONotValid(String text) {
         List<Replacement> replacements = acuteOFinder.findList(text);
-        Assertions.assertTrue(replacements.isEmpty());
+        assertTrue(replacements.isEmpty());
     }
 }

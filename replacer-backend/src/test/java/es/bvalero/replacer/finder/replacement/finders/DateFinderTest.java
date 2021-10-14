@@ -1,12 +1,14 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -53,10 +55,10 @@ class DateFinderTest {
     void testLongDate(String date, String expected, String subtype) {
         List<Replacement> replacements = dateFinder.findList(date);
 
-        Assertions.assertEquals(1, replacements.size());
-        Assertions.assertEquals(date, replacements.get(0).getText());
-        Assertions.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
-        Assertions.assertEquals(subtype, replacements.get(0).getSubtype());
+        assertEquals(1, replacements.size());
+        assertEquals(date, replacements.get(0).getText());
+        assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(subtype, replacements.get(0).getSubtype());
     }
 
     @ParameterizedTest
@@ -64,7 +66,7 @@ class DateFinderTest {
     void testValidLongDate(String date) {
         List<Replacement> replacements = dateFinder.findList(date);
 
-        Assertions.assertTrue(replacements.isEmpty());
+        assertTrue(replacements.isEmpty());
     }
 
     @ParameterizedTest
@@ -86,10 +88,10 @@ class DateFinderTest {
     void testMonthYear(String date, String expected, String subtype) {
         List<Replacement> replacements = dateFinder.findList(date);
 
-        Assertions.assertEquals(1, replacements.size());
-        Assertions.assertEquals(date, replacements.get(0).getText());
-        Assertions.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
-        Assertions.assertEquals(subtype, replacements.get(0).getSubtype());
+        assertEquals(1, replacements.size());
+        assertEquals(date, replacements.get(0).getText());
+        assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(subtype, replacements.get(0).getSubtype());
     }
 
     @ParameterizedTest
@@ -97,7 +99,7 @@ class DateFinderTest {
     void testValidMonthYear(String date) {
         List<Replacement> replacements = dateFinder.findList(date);
 
-        Assertions.assertTrue(replacements.isEmpty());
+        assertTrue(replacements.isEmpty());
     }
 
     @Test
@@ -109,9 +111,9 @@ class DateFinderTest {
         FinderPage page = FinderPage.of(WikipediaLanguage.GALICIAN, date, "");
         List<Replacement> replacements = IterableUtils.toList(dateFinder.find(page));
 
-        Assertions.assertEquals(1, replacements.size());
-        Assertions.assertEquals(date, replacements.get(0).getText());
-        Assertions.assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
-        Assertions.assertEquals(subtype, replacements.get(0).getSubtype());
+        assertEquals(1, replacements.size());
+        assertEquals(date, replacements.get(0).getText());
+        assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
+        assertEquals(subtype, replacements.get(0).getSubtype());
     }
 }

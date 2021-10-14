@@ -1,5 +1,7 @@
 package es.bvalero.replacer.dump;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.ReplacerException;
@@ -10,7 +12,6 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -48,8 +49,8 @@ class DumpManagerTest {
                 .getResource("/es/bvalero/replacer/dump/eswiki/20170101/eswiki-20170101-pages-articles.xml.bz2")
                 .toURI()
         );
-        Assertions.assertNotNull(dumpFile);
-        Assertions.assertTrue(Files.exists(dumpFile));
+        assertNotNull(dumpFile);
+        assertTrue(Files.exists(dumpFile));
 
         dumpJob.parseDumpFile(dumpFile, WikipediaLanguage.SPANISH);
 

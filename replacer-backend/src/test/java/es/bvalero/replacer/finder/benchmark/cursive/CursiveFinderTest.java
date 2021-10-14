@@ -1,9 +1,10 @@
 package es.bvalero.replacer.finder.benchmark.cursive;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,36 +34,36 @@ class CursiveFinderTest {
     @Test
     void testCursiveRegexDotLazyFinder() {
         CursiveRegexDotLazyFinder finder = new CursiveRegexDotLazyFinder();
-        Assertions.assertEquals(expected, finder.findMatches(text));
+        assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testCursiveRegexFinder() {
         CursiveRegexFinder finder = new CursiveRegexFinder();
-        Assertions.assertEquals(expected, finder.findMatches(text));
+        assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testCursiveRegexDotAllLookFinder() {
         CursiveRegexDotAllLookFinder finder = new CursiveRegexDotAllLookFinder();
-        Assertions.assertEquals(expected, finder.findMatches(text));
+        assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testCursiveRegexLookFinder() {
         CursiveRegexLookFinder finder = new CursiveRegexLookFinder();
-        Assertions.assertEquals(expected, finder.findMatches(text));
+        assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testCursiveAutomatonFinder() {
         CursiveAutomatonFinder finder = new CursiveAutomatonFinder();
-        Assertions.assertEquals(expected, finder.findMatches(text));
+        assertEquals(expected, finder.findMatches(text));
     }
 
     @Test
     void testCursiveLinearFinder() {
         CursiveLinearFinder finder = new CursiveLinearFinder();
-        Assertions.assertEquals(expected, finder.findMatches(text));
+        assertEquals(expected, finder.findMatches(text));
     }
 }

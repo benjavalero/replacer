@@ -1,11 +1,13 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,8 +29,8 @@ class LinkFinderTest {
     void testFindCategories(String text) {
         List<Immutable> matches = linkFinder.findList(text);
 
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(text, matches.get(0).getText());
+        assertEquals(1, matches.size());
+        assertEquals(text, matches.get(0).getText());
     }
 
     @Test
@@ -44,7 +46,7 @@ class LinkFinderTest {
 
         Set<String> expected = Set.of(suffixed1, suffixed2, inLink);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -73,7 +75,7 @@ class LinkFinderTest {
 
         Set<String> expected = Set.of(aliased1, aliased2, withNewLine, file, aliasedAnnex, category, interWiki);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -88,7 +90,7 @@ class LinkFinderTest {
 
         Set<String> expected = Set.of(image, fileLowercase);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -100,7 +102,7 @@ class LinkFinderTest {
 
         Set<String> expected = Set.of(fileWithParameters);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -111,7 +113,7 @@ class LinkFinderTest {
 
         Set<String> expected = Set.of(text);
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @ParameterizedTest
@@ -126,8 +128,8 @@ class LinkFinderTest {
     void testFindInterLanguageLink(String text) {
         List<Immutable> matches = linkFinder.findList(text);
 
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(text, matches.get(0).getText());
+        assertEquals(1, matches.size());
+        assertEquals(text, matches.get(0).getText());
     }
 
     @ParameterizedTest
@@ -136,6 +138,6 @@ class LinkFinderTest {
         List<Immutable> matches = linkFinder.findList(text);
 
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertFalse(actual.contains(text));
+        assertFalse(actual.contains(text));
     }
 }

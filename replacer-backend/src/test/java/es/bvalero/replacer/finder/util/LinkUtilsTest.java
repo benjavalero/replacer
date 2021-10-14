@@ -1,11 +1,13 @@
 package es.bvalero.replacer.finder.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class LinkUtilsTest {
@@ -17,8 +19,8 @@ class LinkUtilsTest {
         FinderPage page = FinderPage.of(link);
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(link, matches.get(0).group());
+        assertEquals(1, matches.size());
+        assertEquals(link, matches.get(0).group());
     }
 
     @Test
@@ -28,7 +30,7 @@ class LinkUtilsTest {
         FinderPage page = FinderPage.of(link);
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
-        Assertions.assertTrue(matches.isEmpty());
+        assertTrue(matches.isEmpty());
     }
 
     @Test
@@ -39,9 +41,9 @@ class LinkUtilsTest {
         FinderPage page = FinderPage.of(link);
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
-        Assertions.assertEquals(2, matches.size());
-        Assertions.assertEquals(link, matches.get(0).group());
-        Assertions.assertEquals(link2, matches.get(1).group());
+        assertEquals(2, matches.size());
+        assertEquals(link, matches.get(0).group());
+        assertEquals(link2, matches.get(1).group());
     }
 
     @Test
@@ -54,7 +56,7 @@ class LinkUtilsTest {
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
         Set<String> links = Set.of(link, link2, link3);
-        Assertions.assertEquals(links, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
+        assertEquals(links, matches.stream().map(MatchResult::group).collect(Collectors.toSet()));
     }
 
     @Test
@@ -66,10 +68,10 @@ class LinkUtilsTest {
         FinderPage page = FinderPage.of(link);
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
-        Assertions.assertEquals(3, matches.size());
-        Assertions.assertEquals(link, matches.get(0).group());
-        Assertions.assertEquals(link2, matches.get(1).group());
-        Assertions.assertEquals(link3, matches.get(2).group());
+        assertEquals(3, matches.size());
+        assertEquals(link, matches.get(0).group());
+        assertEquals(link2, matches.get(1).group());
+        assertEquals(link3, matches.get(2).group());
     }
 
     @Test
@@ -81,9 +83,9 @@ class LinkUtilsTest {
         FinderPage page = FinderPage.of(link);
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
-        Assertions.assertEquals(2, matches.size());
-        Assertions.assertEquals(link2, matches.get(0).group());
-        Assertions.assertEquals(link3, matches.get(1).group());
+        assertEquals(2, matches.size());
+        assertEquals(link2, matches.get(0).group());
+        assertEquals(link3, matches.get(1).group());
     }
 
     @Test
@@ -96,6 +98,6 @@ class LinkUtilsTest {
         List<LinearMatchResult> matches = LinkUtils.findAllLinks(page);
 
         List<String> expected = List.of(link1, link2);
-        Assertions.assertEquals(expected, matches.stream().map(MatchResult::group).collect(Collectors.toList()));
+        assertEquals(expected, matches.stream().map(MatchResult::group).collect(Collectors.toList()));
     }
 }

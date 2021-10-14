@@ -1,5 +1,6 @@
 package es.bvalero.replacer.authentication;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -15,7 +16,6 @@ import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -48,7 +48,7 @@ class AuthenticationMediaWikiServiceTest {
         when(oAuthMediaWikiService.getAuthorizationUrl(requestToken)).thenReturn(authorizationUrl);
         RequestToken expected = RequestToken.of("A", "B", "C");
 
-        Assertions.assertEquals(expected, authenticationService.getRequestToken());
+        assertEquals(expected, authenticationService.getRequestToken());
         verify(oAuthMediaWikiService).getRequestToken();
         verify(oAuthMediaWikiService).getAuthorizationUrl(requestToken);
     }
@@ -57,7 +57,7 @@ class AuthenticationMediaWikiServiceTest {
     void testGetRequestTokenWithException() throws IOException, ExecutionException, InterruptedException {
         when(oAuthMediaWikiService.getRequestToken()).thenThrow(new IOException());
 
-        Assertions.assertThrows(ReplacerException.class, () -> authenticationService.getRequestToken());
+        assertThrows(ReplacerException.class, () -> authenticationService.getRequestToken());
     }
 
     @Test
@@ -77,13 +77,13 @@ class AuthenticationMediaWikiServiceTest {
         authenticationService.setAdminUser(name);
         AuthenticateResponse actual = authenticationService.authenticate(lang, oAuthTokenRequest, oAuthVerifier);
 
-        Assertions.assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
     void testIsAdminUser() {
         authenticationService.setAdminUser("X");
-        Assertions.assertTrue(authenticationService.isAdminUser("X"));
-        Assertions.assertFalse(authenticationService.isAdminUser("Y"));
+        assertTrue(authenticationService.isAdminUser("X"));
+        assertFalse(authenticationService.isAdminUser("Y"));
     }
 }

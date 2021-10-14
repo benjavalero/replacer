@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.ReplacerException;
@@ -20,7 +21,6 @@ import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.*;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -70,7 +70,7 @@ class PageReviewCustomServiceTest {
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
 
-        Assertions.assertTrue(review.isEmpty());
+        assertTrue(review.isEmpty());
 
         verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
         verify(replacementService, never())
@@ -101,7 +101,7 @@ class PageReviewCustomServiceTest {
         // Only one call
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
-        Assertions.assertTrue(review.isEmpty());
+        assertTrue(review.isEmpty());
 
         // Verifications
         verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
@@ -153,19 +153,19 @@ class PageReviewCustomServiceTest {
         // First call
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review1 = pageReviewCustomService.findRandomPageReview(options);
-        Assertions.assertFalse(review1.isEmpty());
+        assertFalse(review1.isEmpty());
         review1.ifPresent(
             r -> {
-                Assertions.assertEquals(lang, r.getPage().getLang());
-                Assertions.assertEquals(pageId, r.getPage().getId());
-                Assertions.assertEquals(content, r.getPage().getContent());
-                Assertions.assertEquals(1, r.getSearch().getNumPending());
+                assertEquals(lang, r.getPage().getLang());
+                assertEquals(pageId, r.getPage().getId());
+                assertEquals(content, r.getPage().getContent());
+                assertEquals(1, r.getSearch().getNumPending());
             }
         );
 
         // Second call
         Optional<PageReview> review2 = pageReviewCustomService.findRandomPageReview(options);
-        Assertions.assertTrue(review2.isEmpty());
+        assertTrue(review2.isEmpty());
 
         // Verifications
         verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
@@ -212,7 +212,7 @@ class PageReviewCustomServiceTest {
         // Only call
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
-        Assertions.assertTrue(review.isEmpty());
+        assertTrue(review.isEmpty());
 
         // Verifications
         verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
@@ -264,13 +264,13 @@ class PageReviewCustomServiceTest {
         // Only call
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
-        Assertions.assertFalse(review.isEmpty());
+        assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                Assertions.assertEquals(lang, r.getPage().getLang());
-                Assertions.assertEquals(pageId2, r.getPage().getId());
-                Assertions.assertEquals(content, r.getPage().getContent());
-                Assertions.assertEquals(1, r.getSearch().getNumPending());
+                assertEquals(lang, r.getPage().getLang());
+                assertEquals(pageId2, r.getPage().getId());
+                assertEquals(content, r.getPage().getContent());
+                assertEquals(1, r.getSearch().getNumPending());
             }
         );
 
@@ -303,7 +303,7 @@ class PageReviewCustomServiceTest {
         // Only call
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
-        Assertions.assertTrue(review.isEmpty());
+        assertTrue(review.isEmpty());
 
         // Verifications
         verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
@@ -372,11 +372,11 @@ class PageReviewCustomServiceTest {
         // Call 1
         PageReviewOptions options1 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options1);
-        Assertions.assertFalse(review.isEmpty());
+        assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                Assertions.assertEquals(1, r.getPage().getId());
-                Assertions.assertEquals(4, r.getSearch().getNumPending());
+                assertEquals(1, r.getPage().getId());
+                assertEquals(4, r.getSearch().getNumPending());
             }
         );
         // Cache: 2, 3
@@ -384,11 +384,11 @@ class PageReviewCustomServiceTest {
         // Call 2
         PageReviewOptions options2 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         review = pageReviewCustomService.findRandomPageReview(options2);
-        Assertions.assertFalse(review.isEmpty());
+        assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                Assertions.assertEquals(2, r.getPage().getId());
-                Assertions.assertEquals(3, r.getSearch().getNumPending());
+                assertEquals(2, r.getPage().getId());
+                assertEquals(3, r.getSearch().getNumPending());
             }
         );
         // Cache: 3
@@ -396,11 +396,11 @@ class PageReviewCustomServiceTest {
         // Call 3
         PageReviewOptions options3 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         review = pageReviewCustomService.findRandomPageReview(options3);
-        Assertions.assertFalse(review.isEmpty());
+        assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                Assertions.assertEquals(3, r.getPage().getId());
-                Assertions.assertEquals(2, r.getSearch().getNumPending());
+                assertEquals(3, r.getPage().getId());
+                assertEquals(2, r.getSearch().getNumPending());
             }
         );
         // Cache: empty
@@ -408,11 +408,11 @@ class PageReviewCustomServiceTest {
         // Call 4
         PageReviewOptions options4 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         review = pageReviewCustomService.findRandomPageReview(options4);
-        Assertions.assertFalse(review.isEmpty());
+        assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                Assertions.assertEquals(4, r.getPage().getId());
-                Assertions.assertEquals(1, r.getSearch().getNumPending());
+                assertEquals(4, r.getPage().getId());
+                assertEquals(1, r.getSearch().getNumPending());
             }
         );
         // Cache: empty
@@ -420,7 +420,7 @@ class PageReviewCustomServiceTest {
         // Call 5: To start again after message of no more results
         PageReviewOptions options5 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         review = pageReviewCustomService.findRandomPageReview(options5);
-        Assertions.assertTrue(review.isEmpty());
+        assertTrue(review.isEmpty());
 
         // Verifications
         verify(wikipediaService, times(2)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
@@ -476,7 +476,7 @@ class PageReviewCustomServiceTest {
         // Only Call
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
-        Assertions.assertTrue(review.isEmpty());
+        assertTrue(review.isEmpty());
 
         // Verifications
         verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
@@ -497,19 +497,19 @@ class PageReviewCustomServiceTest {
             .thenReturn(Optional.of(misspelling1));
         when(customReplacementFinderService.findExistingMisspelling("Accion", lang))
             .thenReturn(Optional.of(misspelling1));
-        Assertions.assertEquals(
+        assertEquals(
             MisspellingType.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "accion", true)
         );
-        Assertions.assertEquals(
+        assertEquals(
             MisspellingType.of(simple, "accion"),
             pageReviewCustomService.validateCustomReplacement(lang, "accion", false)
         );
-        Assertions.assertEquals(
+        assertEquals(
             MisspellingType.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "Accion", true)
         );
-        Assertions.assertEquals(
+        assertEquals(
             MisspellingType.of(simple, "accion"),
             pageReviewCustomService.validateCustomReplacement(lang, "Accion", false)
         );
@@ -519,19 +519,16 @@ class PageReviewCustomServiceTest {
         when(customReplacementFinderService.findExistingMisspelling("Enero", lang))
             .thenReturn(Optional.of(misspelling2));
         when(customReplacementFinderService.findExistingMisspelling("enero", lang)).thenReturn(Optional.empty());
-        Assertions.assertEquals(
-            MisspellingType.ofEmpty(),
-            pageReviewCustomService.validateCustomReplacement(lang, "enero", true)
-        );
-        Assertions.assertEquals(
+        assertEquals(MisspellingType.ofEmpty(), pageReviewCustomService.validateCustomReplacement(lang, "enero", true));
+        assertEquals(
             MisspellingType.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "enero", false)
         );
-        Assertions.assertEquals(
+        assertEquals(
             MisspellingType.of(simple, "Enero"),
             pageReviewCustomService.validateCustomReplacement(lang, "Enero", true)
         );
-        Assertions.assertEquals(
+        assertEquals(
             MisspellingType.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "Enero", false)
         );
@@ -541,19 +538,19 @@ class PageReviewCustomServiceTest {
         when(customReplacementFinderService.findExistingMisspelling("madrid", lang))
             .thenReturn(Optional.of(misspelling3));
         when(customReplacementFinderService.findExistingMisspelling("Madrid", lang)).thenReturn(Optional.empty());
-        Assertions.assertEquals(
+        assertEquals(
             MisspellingType.of(simple, "madrid"),
             pageReviewCustomService.validateCustomReplacement(lang, "madrid", true)
         );
-        Assertions.assertEquals(
+        assertEquals(
             MisspellingType.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "madrid", false)
         );
-        Assertions.assertEquals(
+        assertEquals(
             MisspellingType.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "Madrid", true)
         );
-        Assertions.assertEquals(
+        assertEquals(
             MisspellingType.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "Madrid", false)
         );

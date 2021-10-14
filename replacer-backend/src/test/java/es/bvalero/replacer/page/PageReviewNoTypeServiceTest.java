@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.ReplacerException;
@@ -16,7 +17,6 @@ import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.*;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -96,7 +96,7 @@ class PageReviewNoTypeServiceTest {
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        Assertions.assertFalse(review.isPresent());
+        assertFalse(review.isPresent());
     }
 
     @Test
@@ -113,7 +113,7 @@ class PageReviewNoTypeServiceTest {
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        Assertions.assertFalse(review.isPresent());
+        assertFalse(review.isPresent());
     }
 
     @Test
@@ -135,8 +135,8 @@ class PageReviewNoTypeServiceTest {
         verify(pageIndexHelper, times(1))
             .indexPageReplacements(eq(pageReviewNoTypeService.convertToIndexablePage(page)), anyList());
 
-        Assertions.assertTrue(review.isPresent());
-        Assertions.assertEquals(randomId, review.get().getPage().getId());
+        assertTrue(review.isPresent());
+        assertEquals(randomId, review.get().getPage().getId());
     }
 
     @Test
@@ -161,7 +161,7 @@ class PageReviewNoTypeServiceTest {
         verify(pageIndexHelper, times(1))
             .indexPageReplacements(pageReviewNoTypeService.convertToIndexablePage(page), Collections.emptyList());
 
-        Assertions.assertFalse(review.isPresent());
+        assertFalse(review.isPresent());
     }
 
     @Test
@@ -185,7 +185,7 @@ class PageReviewNoTypeServiceTest {
         verify(pageIndexHelper, times(1))
             .indexPageReplacements(eq(pageReviewNoTypeService.convertToIndexablePage(page2)), anyList());
 
-        Assertions.assertTrue(review.isPresent());
-        Assertions.assertEquals(randomId2, review.get().getPage().getId());
+        assertTrue(review.isPresent());
+        assertEquals(randomId2, review.get().getPage().getId());
     }
 }

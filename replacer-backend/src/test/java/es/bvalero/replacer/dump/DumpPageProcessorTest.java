@@ -1,5 +1,7 @@
 package es.bvalero.replacer.dump;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.ReplacerException;
@@ -16,7 +18,6 @@ import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -77,10 +78,7 @@ class DumpPageProcessorTest {
 
         indexablePageValidator.validateProcessable(dumpPage);
         indexablePageValidator.validateProcessable(dumpAnnex);
-        Assertions.assertThrows(
-            ReplacerException.class,
-            () -> indexablePageValidator.validateProcessable(dumpCategory)
-        );
+        assertThrows(ReplacerException.class, () -> indexablePageValidator.validateProcessable(dumpCategory));
     }
 
     @Test
@@ -101,7 +99,7 @@ class DumpPageProcessorTest {
         when(pageReplacementService.findByPageId(anyInt(), any(WikipediaLanguage.class)))
             .thenReturn(Collections.singletonList(replacement));
 
-        Assertions.assertTrue(dumpPageProcessor.processPage(dumpPage).isEmpty());
+        assertTrue(dumpPageProcessor.processPage(dumpPage).isEmpty());
         verify(replacementFinderService, times(0)).find(any(FinderPage.class));
     }
 

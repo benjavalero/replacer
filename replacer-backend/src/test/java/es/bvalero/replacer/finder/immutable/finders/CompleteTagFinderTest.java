@@ -1,9 +1,11 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -27,8 +29,8 @@ class CompleteTagFinderTest {
     void testFindCompleteTag(String text) {
         List<Immutable> matches = completeTagFinder.findList(text);
 
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(text, matches.get(0).getText());
+        assertEquals(1, matches.size());
+        assertEquals(text, matches.get(0).getText());
     }
 
     @ParameterizedTest
@@ -36,7 +38,7 @@ class CompleteTagFinderTest {
     void testFindCompleteTagNonValid(String text) {
         List<Immutable> matches = completeTagFinder.findList(text);
 
-        Assertions.assertTrue(matches.isEmpty());
+        assertTrue(matches.isEmpty());
     }
 
     @Test
@@ -45,6 +47,6 @@ class CompleteTagFinderTest {
 
         List<Immutable> matches = completeTagFinder.findList(text);
 
-        Assertions.assertEquals(2, matches.size());
+        assertEquals(2, matches.size());
     }
 }

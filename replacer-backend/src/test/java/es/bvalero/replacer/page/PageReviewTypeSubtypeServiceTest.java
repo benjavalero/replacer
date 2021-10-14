@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.ReplacerException;
@@ -17,7 +18,6 @@ import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.*;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -120,7 +120,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         verify(pageIndexHelper, times(1)).indexPageReplacements(any(IndexablePage.class), anyList());
 
-        Assertions.assertFalse(review.isPresent());
+        assertFalse(review.isPresent());
     }
 
     @Test
@@ -147,8 +147,8 @@ class PageReviewTypeSubtypeServiceTest {
 
         verify(pageIndexHelper, times(1)).indexPageReplacements(any(IndexablePage.class), anyList());
 
-        Assertions.assertTrue(review.isPresent());
-        Assertions.assertEquals(randomId, review.get().getPage().getId());
+        assertTrue(review.isPresent());
+        assertEquals(randomId, review.get().getPage().getId());
     }
 
     @Test
@@ -185,15 +185,15 @@ class PageReviewTypeSubtypeServiceTest {
             .thenReturn(replacements);
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
-        Assertions.assertTrue(review.isPresent());
-        Assertions.assertEquals(randomId, review.get().getPage().getId());
+        assertTrue(review.isPresent());
+        assertEquals(randomId, review.get().getPage().getId());
 
         review = pageReviewTypeSubtypeService.findRandomPageReview(options);
-        Assertions.assertTrue(review.isPresent());
-        Assertions.assertEquals(randomId2, review.get().getPage().getId());
+        assertTrue(review.isPresent());
+        assertEquals(randomId2, review.get().getPage().getId());
 
         review = pageReviewTypeSubtypeService.findRandomPageReview(options);
-        Assertions.assertFalse(review.isPresent());
+        assertFalse(review.isPresent());
     }
 
     @Test
@@ -217,14 +217,14 @@ class PageReviewTypeSubtypeServiceTest {
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
 
-        Assertions.assertTrue(review.isPresent());
+        assertTrue(review.isPresent());
         review.ifPresent(
             rev -> {
-                Assertions.assertEquals(randomId, rev.getPage().getId());
-                Assertions.assertEquals(replacements.size(), rev.getReplacements().size());
-                Assertions.assertNotNull(rev.getPage().getSection());
-                Assertions.assertNotNull(rev.getPage().getSection().getId());
-                Assertions.assertEquals(sectionId, rev.getPage().getSection().getId().intValue());
+                assertEquals(randomId, rev.getPage().getId());
+                assertEquals(replacements.size(), rev.getReplacements().size());
+                assertNotNull(rev.getPage().getSection());
+                assertNotNull(rev.getPage().getSection().getId());
+                assertEquals(sectionId, rev.getPage().getSection().getId().intValue());
             }
         );
     }
@@ -246,12 +246,12 @@ class PageReviewTypeSubtypeServiceTest {
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
 
-        Assertions.assertTrue(review.isPresent());
+        assertTrue(review.isPresent());
         review.ifPresent(
             rev -> {
-                Assertions.assertEquals(randomId, rev.getPage().getId());
-                Assertions.assertEquals(replacements.size(), rev.getReplacements().size());
-                Assertions.assertNull(rev.getPage().getSection());
+                assertEquals(randomId, rev.getPage().getId());
+                assertEquals(replacements.size(), rev.getReplacements().size());
+                assertNull(rev.getPage().getSection());
             }
         );
     }

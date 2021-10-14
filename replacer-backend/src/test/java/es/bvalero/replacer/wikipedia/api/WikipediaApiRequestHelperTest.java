@@ -1,5 +1,6 @@
 package es.bvalero.replacer.wikipedia.api;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +10,6 @@ import com.github.scribejava.core.oauth.OAuth10aService;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.OAuthToken;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -52,7 +52,7 @@ class WikipediaApiRequestHelperTest {
                 .build();
             wikipediaApiRequestHelper.executeApiRequest(apiRequest);
         } catch (ReplacerException e) {
-            Assertions.assertTrue(e.getMessage().startsWith("too-many-pageids"));
+            assertTrue(e.getMessage().startsWith("too-many-pageids"));
         }
     }
 
@@ -68,7 +68,7 @@ class WikipediaApiRequestHelperTest {
             .verb(WikipediaApiRequestVerb.GET)
             .lang(WikipediaLanguage.getDefault())
             .build();
-        Assertions.assertThrows(ReplacerException.class, () -> wikipediaApiRequestHelper.executeApiRequest(apiRequest));
+        assertThrows(ReplacerException.class, () -> wikipediaApiRequestHelper.executeApiRequest(apiRequest));
     }
 
     @Test
@@ -87,6 +87,6 @@ class WikipediaApiRequestHelperTest {
             .lang(WikipediaLanguage.getDefault())
             .accessToken(OAuthToken.of("A", "B"))
             .build();
-        Assertions.assertNotNull(wikipediaApiRequestHelper.executeApiRequest(apiRequest));
+        assertNotNull(wikipediaApiRequestHelper.executeApiRequest(apiRequest));
     }
 }

@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.index;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.ReplacerException;
@@ -9,7 +10,6 @@ import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.*;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -60,7 +60,7 @@ class PageIndexHelperTest {
             dbReplacements
         );
 
-        Assertions.assertEquals(Collections.singletonList(pageIndexHelper.convert(rep1)), toIndex);
+        assertEquals(Collections.singletonList(pageIndexHelper.convert(rep1)), toIndex);
     }
 
     @Test
@@ -86,7 +86,7 @@ class PageIndexHelperTest {
             dbReplacements
         );
 
-        Assertions.assertEquals(
+        assertEquals(
             Set.of(
                 ReplacementEntity.ofDummy(pageId, WikipediaLanguage.SPANISH, LocalDate.now()),
                 rep2.setToDelete(),
@@ -109,8 +109,8 @@ class PageIndexHelperTest {
         );
 
         // Save the dummy replacement
-        Assertions.assertEquals(1, result.size());
-        Assertions.assertTrue(result.get(0).isDummy());
+        assertEquals(1, result.size());
+        assertTrue(result.get(0).isDummy());
     }
 
     @Test
@@ -223,7 +223,7 @@ class PageIndexHelperTest {
             dbReplacements
         );
 
-        Assertions.assertEquals(
+        assertEquals(
             Set.of(r3db.updateLastUpdate(same), pageIndexHelper.convert(r5), r6db.setToDelete(), r8db.setToDelete()),
             new HashSet<>(toIndex)
         );
@@ -319,7 +319,7 @@ class PageIndexHelperTest {
             dbReplacements
         );
 
-        Assertions.assertEquals(
+        assertEquals(
             Set.of(r1db.updateLastUpdate(same), pageIndexHelper.convert(r3), r4db.setToDelete(), r6db.setToDelete()),
             new HashSet<>(toIndex)
         );
@@ -355,12 +355,12 @@ class PageIndexHelperTest {
             dbReplacements
         );
 
-        Assertions.assertEquals(Set.of(r1db.setToDelete()), new HashSet<>(toIndex));
+        assertEquals(Set.of(r1db.setToDelete()), new HashSet<>(toIndex));
     }
 
     @Test
     void testIndexablePageIsProcessableByNamespace() throws ReplacerException {
-        Assertions.assertThrows(
+        assertThrows(
             ReplacerException.class,
             () ->
                 indexablePageValidator.validateProcessableByNamespace(

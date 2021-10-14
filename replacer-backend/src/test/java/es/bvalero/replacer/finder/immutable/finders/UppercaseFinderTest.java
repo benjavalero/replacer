@@ -1,5 +1,8 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
@@ -10,7 +13,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -62,8 +64,8 @@ class UppercaseFinderTest {
 
         Set<String> expected = Set.of("Febrero");
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(expected, actual);
+        assertEquals(1, matches.size());
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -72,7 +74,7 @@ class UppercaseFinderTest {
 
         List<Immutable> matches = uppercaseFinder.findList(text);
 
-        Assertions.assertTrue(matches.isEmpty());
+        assertTrue(matches.isEmpty());
     }
 
     @Test
@@ -95,9 +97,6 @@ class UppercaseFinderTest {
         map.putAll(WikipediaLanguage.getDefault(), misspellingSet);
 
         Set<String> expectedWords = Set.of(misspelling1.getWord(), misspelling2.getWord(), misspelling5.getWord());
-        Assertions.assertEquals(
-            expectedWords,
-            uppercaseFinder.getUppercaseWords(map).get(WikipediaLanguage.getDefault())
-        );
+        assertEquals(expectedWords, uppercaseFinder.getUppercaseWords(map).get(WikipediaLanguage.getDefault()));
     }
 }

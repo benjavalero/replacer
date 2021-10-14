@@ -1,5 +1,8 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
@@ -12,7 +15,6 @@ import java.util.List;
 import java.util.Set;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +50,7 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        Assertions.assertTrue(results.isEmpty());
+        assertTrue(results.isEmpty());
     }
 
     @Test
@@ -68,7 +70,7 @@ class MisspellingComposedFinderTest {
             .subtype("aún así")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("aun así")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -89,7 +91,7 @@ class MisspellingComposedFinderTest {
             .subtype("aún así")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("aun así")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -109,7 +111,7 @@ class MisspellingComposedFinderTest {
             .subtype("mas.")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("más.")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -129,7 +131,7 @@ class MisspellingComposedFinderTest {
             .subtype("aun,")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("aún,")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -149,7 +151,7 @@ class MisspellingComposedFinderTest {
             .subtype("Rio 2016")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Río 2016")))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
     @Test
@@ -170,6 +172,6 @@ class MisspellingComposedFinderTest {
             .subtype("Parque Nacional")
             .suggestions(List.of(suggestion, suggestion.toUppercase()))
             .build();
-        Assertions.assertEquals(Set.of(expected), new HashSet<>(results));
+        assertEquals(Set.of(expected), new HashSet<>(results));
     }
 }

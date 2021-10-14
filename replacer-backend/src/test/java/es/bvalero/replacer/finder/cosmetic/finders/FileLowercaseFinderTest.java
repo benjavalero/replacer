@@ -1,11 +1,12 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.cosmetic.Cosmetic;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,12 +28,12 @@ class FileLowercaseFinderTest {
 
         Set<String> expectedMatches = Set.of(file1, file2);
         Set<String> actualMatches = matches.stream().map(Cosmetic::getText).collect(Collectors.toSet());
-        Assertions.assertEquals(expectedMatches, actualMatches);
+        assertEquals(expectedMatches, actualMatches);
 
         String fix1 = "Archivo";
         String fix2 = "Image";
         Set<String> expectedFixes = Set.of(fix1, fix2);
         Set<String> actualFixes = matches.stream().map(Cosmetic::getFix).collect(Collectors.toSet());
-        Assertions.assertEquals(expectedFixes, actualFixes);
+        assertEquals(expectedFixes, actualFixes);
     }
 }

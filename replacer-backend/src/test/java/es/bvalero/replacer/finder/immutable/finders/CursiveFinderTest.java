@@ -1,11 +1,13 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -33,8 +35,8 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(cursive, matches.get(0).getText());
+        assertEquals(1, matches.size());
+        assertEquals(cursive, matches.get(0).getText());
     }
 
     @Test
@@ -45,8 +47,8 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assertions.assertEquals(1, matches.size());
-        Assertions.assertEquals(cursive, matches.get(0).getText());
+        assertEquals(1, matches.size());
+        assertEquals(cursive, matches.get(0).getText());
     }
 
     @Test
@@ -58,10 +60,7 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assertions.assertEquals(
-            Set.of(cursive1, cursive2),
-            matches.stream().map(Immutable::getText).collect(Collectors.toSet())
-        );
+        assertEquals(Set.of(cursive1, cursive2), matches.stream().map(Immutable::getText).collect(Collectors.toSet()));
     }
 
     @Test
@@ -75,7 +74,7 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assertions.assertEquals(
+        assertEquals(
             Set.of(cursive1, cursive2, cursive3),
             matches.stream().map(Immutable::getText).collect(Collectors.toSet())
         );
@@ -90,10 +89,7 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assertions.assertEquals(
-            Set.of(bold1, bold2),
-            matches.stream().map(Immutable::getText).collect(Collectors.toSet())
-        );
+        assertEquals(Set.of(bold1, bold2), matches.stream().map(Immutable::getText).collect(Collectors.toSet()));
     }
 
     @Test
@@ -107,10 +103,7 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assertions.assertEquals(
-            Set.of(bold1, bold2, bold3),
-            matches.stream().map(Immutable::getText).collect(Collectors.toSet())
-        );
+        assertEquals(Set.of(bold1, bold2, bold3), matches.stream().map(Immutable::getText).collect(Collectors.toSet()));
     }
 
     @Test
@@ -122,7 +115,7 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assertions.assertEquals(2, matches.size());
+        assertEquals(2, matches.size());
     }
 
     @Test
@@ -133,7 +126,7 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assertions.assertTrue(matches.isEmpty());
+        assertTrue(matches.isEmpty());
     }
 
     @Test
@@ -144,6 +137,6 @@ class CursiveFinderTest {
         ImmutableFinder cursiveFinder = new CursiveFinder();
         List<Immutable> matches = cursiveFinder.findList(text);
 
-        Assertions.assertTrue(matches.isEmpty());
+        assertTrue(matches.isEmpty());
     }
 }

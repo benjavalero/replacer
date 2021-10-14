@@ -1,9 +1,10 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableFinder;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class CommentFinderTest {
@@ -17,8 +18,8 @@ class CommentFinderTest {
         ImmutableFinder commentFinder = new CommentFinder();
 
         List<Immutable> matches = commentFinder.findList(text);
-        Assertions.assertEquals(2, matches.size());
-        Assertions.assertEquals(comment1, matches.get(0).getText());
-        Assertions.assertEquals(comment2, matches.get(1).getText());
+        assertEquals(2, matches.size());
+        assertEquals(comment1, matches.get(0).getText());
+        assertEquals(comment2, matches.get(1).getText());
     }
 }

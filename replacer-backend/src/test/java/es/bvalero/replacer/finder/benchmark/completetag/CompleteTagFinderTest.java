@@ -1,5 +1,7 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.benchmark.BenchmarkResult;
@@ -8,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,7 +39,7 @@ class CompleteTagFinderTest {
     @Test
     void testCompleteTagRegexIteratedFinder() {
         BenchmarkFinder finder = new CompleteTagRegexIteratedFinder(completeTags);
-        Assertions.assertEquals(
+        assertEquals(
             expected,
             finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
         );
@@ -47,7 +48,7 @@ class CompleteTagFinderTest {
     @Test
     void testCompleteTagRegexBackReferenceFinder() {
         BenchmarkFinder finder = new CompleteTagRegexBackReferenceFinder(completeTags);
-        Assertions.assertEquals(
+        assertEquals(
             expected,
             finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
         );
@@ -56,7 +57,7 @@ class CompleteTagFinderTest {
     @Test
     void testCompleteTagLinearIteratedFinder() {
         BenchmarkFinder finder = new CompleteTagLinearIteratedFinder(completeTags);
-        Assertions.assertEquals(
+        assertEquals(
             expected,
             finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
         );
@@ -65,7 +66,7 @@ class CompleteTagFinderTest {
     @Test
     void testCompleteTagLinearFinder() {
         BenchmarkFinder finder = new CompleteTagLinearFinder(completeTags);
-        Assertions.assertEquals(
+        assertEquals(
             expected,
             finder.findMatches(text).stream().map(BenchmarkResult::getText).collect(Collectors.toSet())
         );

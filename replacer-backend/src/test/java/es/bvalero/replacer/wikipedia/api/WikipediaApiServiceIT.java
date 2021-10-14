@@ -1,5 +1,7 @@
 package es.bvalero.replacer.wikipedia.api;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.OAuthToken;
@@ -8,7 +10,6 @@ import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,12 +33,12 @@ class WikipediaApiServiceIT {
         WikipediaPage page = wikipediaService
             .getPageByTitle(WikipediaLanguage.SPANISH, title)
             .orElseThrow(ReplacerException::new);
-        Assertions.assertNotNull(page);
-        Assertions.assertEquals(6219990, page.getId());
-        Assertions.assertEquals(title, page.getTitle());
-        Assertions.assertEquals(WikipediaNamespace.USER, page.getNamespace());
-        Assertions.assertTrue(page.getLastUpdate().getYear() >= 2016);
-        Assertions.assertTrue(page.getContent().contains("Orihuela"));
+        assertNotNull(page);
+        assertEquals(6219990, page.getId());
+        assertEquals(title, page.getTitle());
+        assertEquals(WikipediaNamespace.USER, page.getNamespace());
+        assertTrue(page.getLastUpdate().getYear() >= 2016);
+        assertTrue(page.getContent().contains("Orihuela"));
     }
 
     @Test
@@ -47,10 +48,10 @@ class WikipediaApiServiceIT {
             Arrays.asList(6219990, 6903884),
             WikipediaLanguage.SPANISH
         );
-        Assertions.assertNotNull(pages);
-        Assertions.assertEquals(2, pages.size());
-        Assertions.assertTrue(pages.stream().anyMatch(page -> page.getId() == 6219990));
-        Assertions.assertTrue(
+        assertNotNull(pages);
+        assertEquals(2, pages.size());
+        assertTrue(pages.stream().anyMatch(page -> page.getId() == 6219990));
+        assertTrue(
             pages
                 .stream()
                 .filter(page -> page.getId() == 6219990)
@@ -59,8 +60,8 @@ class WikipediaApiServiceIT {
                 .getContent()
                 .contains("Orihuela")
         );
-        Assertions.assertTrue(pages.stream().anyMatch(page -> page.getId() == 6903884));
-        Assertions.assertTrue(
+        assertTrue(pages.stream().anyMatch(page -> page.getId() == 6903884));
+        assertTrue(
             pages
                 .stream()
                 .filter(page -> page.getId() == 6903884)
@@ -73,18 +74,16 @@ class WikipediaApiServiceIT {
 
     @Test
     void testGetPageContentUnavailable() throws ReplacerException {
-        Assertions.assertFalse(
-            wikipediaService.getPageByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent()
-        );
+        assertFalse(wikipediaService.getPageByTitle(WikipediaLanguage.SPANISH, "Usuario:Benjavaleroxx").isPresent());
     }
 
     @Test
     void testGetEditToken() throws ReplacerException {
         // We pass a null access token to retrieve an anonymous edit token
         EditToken editToken = wikipediaService.getEditToken(6903884, WikipediaLanguage.SPANISH, OAuthToken.ofEmpty());
-        Assertions.assertNotNull(editToken);
-        Assertions.assertTrue(editToken.getCsrfToken().endsWith("+\\"));
-        Assertions.assertNotNull(editToken.getTimestamp());
+        assertNotNull(editToken);
+        assertTrue(editToken.getCsrfToken().endsWith("+\\"));
+        assertNotNull(editToken.getTimestamp());
     }
 
     @Test
@@ -111,7 +110,7 @@ class WikipediaApiServiceIT {
         // Save the conflict content started 1 day before
         LocalDateTime before = page.getQueryTimestamp().minusDays(1);
 
-        Assertions.assertThrows(
+        assertThrows(
             ReplacerException.class,
             () ->
                 wikipediaService.savePageContent(

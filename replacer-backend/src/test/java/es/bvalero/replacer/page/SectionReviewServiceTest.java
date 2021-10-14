@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.ReplacerException;
@@ -10,7 +11,6 @@ import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -39,7 +39,7 @@ class SectionReviewServiceTest {
         PageReview review = PageReview.ofEmpty();
         Optional<PageReview> sectionReview = sectionReviewService.findSectionReview(review);
 
-        Assertions.assertFalse(sectionReview.isPresent());
+        assertFalse(sectionReview.isPresent());
     }
 
     @Test
@@ -77,16 +77,16 @@ class SectionReviewServiceTest {
 
         Optional<PageReview> sectionReview = sectionReviewService.findSectionReview(pageReview);
 
-        Assertions.assertTrue(sectionReview.isPresent());
+        assertTrue(sectionReview.isPresent());
         sectionReview.ifPresent(
             review -> {
-                Assertions.assertEquals(pageId, review.getPage().getId());
-                Assertions.assertNotNull(review.getPage().getSection());
-                Assertions.assertNotNull(review.getPage().getSection().getId());
-                Assertions.assertEquals(Integer.valueOf(sectionId), review.getPage().getSection().getId());
-                Assertions.assertEquals(sectionContent, review.getPage().getContent());
-                Assertions.assertEquals(1, review.getReplacements().size());
-                Assertions.assertEquals(8 - offset, review.getReplacements().get(0).getStart());
+                assertEquals(pageId, review.getPage().getId());
+                assertNotNull(review.getPage().getSection());
+                assertNotNull(review.getPage().getSection().getId());
+                assertEquals(Integer.valueOf(sectionId), review.getPage().getSection().getId());
+                assertEquals(sectionContent, review.getPage().getContent());
+                assertEquals(1, review.getReplacements().size());
+                assertEquals(8 - offset, review.getReplacements().get(0).getStart());
             }
         );
     }

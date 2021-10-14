@@ -1,11 +1,12 @@
 package es.bvalero.replacer.dump;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -47,8 +48,8 @@ class DumpFinderTest {
 
         Path latestDumpFile = dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
 
-        Assertions.assertNotNull(latestDumpFile);
-        Assertions.assertEquals(dumpFile2, latestDumpFile);
+        assertNotNull(latestDumpFile);
+        assertEquals(dumpFile2, latestDumpFile);
     }
 
     @Test
@@ -72,8 +73,8 @@ class DumpFinderTest {
 
         Path latestDumpFile = dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH);
 
-        Assertions.assertNotNull(latestDumpFile);
-        Assertions.assertEquals(dumpFile1, latestDumpFile);
+        assertNotNull(latestDumpFile);
+        assertEquals(dumpFile1, latestDumpFile);
     }
 
     @Test
@@ -90,10 +91,7 @@ class DumpFinderTest {
 
         dumpFinder.setDumpPathBase(dumpPathBase);
 
-        Assertions.assertThrows(
-            ReplacerException.class,
-            () -> dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH)
-        );
+        assertThrows(ReplacerException.class, () -> dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH));
     }
 
     @Test
@@ -111,10 +109,7 @@ class DumpFinderTest {
 
         dumpFinder.setDumpPathBase(dumpPathBase);
 
-        Assertions.assertThrows(
-            ReplacerException.class,
-            () -> dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH)
-        );
+        assertThrows(ReplacerException.class, () -> dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH));
     }
 
     @Test
@@ -122,19 +117,13 @@ class DumpFinderTest {
         dumpFinder.setDumpPathBase(dumpBaseFolder.toString());
 
         // Don't create the project sub-folder for the test
-        Assertions.assertThrows(
-            ReplacerException.class,
-            () -> dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH)
-        );
+        assertThrows(ReplacerException.class, () -> dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH));
     }
 
     @Test
     void testNotExistingDumpBaseFolder() {
         dumpFinder.setDumpPathBase("xxx");
 
-        Assertions.assertThrows(
-            ReplacerException.class,
-            () -> dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH)
-        );
+        assertThrows(ReplacerException.class, () -> dumpFinder.findLatestDumpFile(WikipediaLanguage.SPANISH));
     }
 }

@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.replacement;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.finder.FinderPage;
@@ -9,7 +10,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -43,7 +43,7 @@ class ReplacementFinderServiceTest {
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
-        Assertions.assertTrue(replacements.isEmpty());
+        assertTrue(replacements.isEmpty());
     }
 
     @Test
@@ -57,7 +57,7 @@ class ReplacementFinderServiceTest {
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
-        Assertions.assertEquals(Set.of(replacement), new HashSet<>(replacements));
+        assertEquals(Set.of(replacement), new HashSet<>(replacements));
     }
 
     @Test
@@ -72,7 +72,7 @@ class ReplacementFinderServiceTest {
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
-        Assertions.assertEquals(Set.of(replacement1, replacement2), new HashSet<>(replacements));
+        assertEquals(Set.of(replacement1, replacement2), new HashSet<>(replacements));
     }
 
     @Test
@@ -81,7 +81,7 @@ class ReplacementFinderServiceTest {
 
         Replacement replacement1 = Replacement.builder().start(0).text("An").build();
         Replacement replacement2 = Replacement.builder().start(0).text("An").build();
-        Assertions.assertEquals(replacement1, replacement2);
+        assertEquals(replacement1, replacement2);
 
         ReplacementFinder replacementFinder1 = mock(ReplacementFinder.class);
         ReplacementFinder replacementFinder2 = mock(ReplacementFinder.class);
@@ -91,7 +91,7 @@ class ReplacementFinderServiceTest {
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
-        Assertions.assertEquals(Set.of(replacement1), new HashSet<>(replacements));
+        assertEquals(Set.of(replacement1), new HashSet<>(replacements));
     }
 
     @Test
@@ -100,7 +100,7 @@ class ReplacementFinderServiceTest {
 
         Replacement replacement1 = Replacement.builder().start(0).text("An").build();
         Replacement replacement2 = Replacement.builder().start(0).text("An example").build();
-        Assertions.assertTrue(replacement2.containsStrictly(replacement1));
+        assertTrue(replacement2.containsStrictly(replacement1));
 
         ReplacementFinder replacementFinder1 = mock(ReplacementFinder.class);
         ReplacementFinder replacementFinder2 = mock(ReplacementFinder.class);
@@ -110,7 +110,7 @@ class ReplacementFinderServiceTest {
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
-        Assertions.assertEquals(Set.of(replacement2), new HashSet<>(replacements));
+        assertEquals(Set.of(replacement2), new HashSet<>(replacements));
     }
 
     @Test
@@ -127,7 +127,7 @@ class ReplacementFinderServiceTest {
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
-        Assertions.assertEquals(Set.of(replacement1, replacement2), new HashSet<>(replacements));
+        assertEquals(Set.of(replacement1, replacement2), new HashSet<>(replacements));
     }
 
     @Test
@@ -144,7 +144,7 @@ class ReplacementFinderServiceTest {
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
-        Assertions.assertEquals(Set.of(replacement2), new HashSet<>(replacements));
+        assertEquals(Set.of(replacement2), new HashSet<>(replacements));
     }
 
     @Test
@@ -161,7 +161,7 @@ class ReplacementFinderServiceTest {
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
-        Assertions.assertEquals(Collections.emptySet(), new HashSet<>(replacements));
+        assertEquals(Collections.emptySet(), new HashSet<>(replacements));
     }
 
     @Test
@@ -177,7 +177,7 @@ class ReplacementFinderServiceTest {
 
         List<Replacement> replacements = replacementFinderService.find(text);
 
-        Assertions.assertEquals(Collections.emptySet(), new HashSet<>(replacements));
+        assertEquals(Collections.emptySet(), new HashSet<>(replacements));
     }
 
     @Test
@@ -189,29 +189,29 @@ class ReplacementFinderServiceTest {
         Replacement result5 = Replacement.builder().start(0).text("ABC").build();
         Replacement result6 = Replacement.builder().start(2).text("C").build();
 
-        Assertions.assertTrue(result1.contains(result1));
-        Assertions.assertTrue(result1.intersects(result1));
-        Assertions.assertFalse(result1.containsStrictly(result1));
+        assertTrue(result1.contains(result1));
+        assertTrue(result1.intersects(result1));
+        assertFalse(result1.containsStrictly(result1));
 
-        Assertions.assertTrue(result2.intersects(result3));
-        Assertions.assertTrue(result2.contains(result3));
-        Assertions.assertTrue(result2.containsStrictly(result3));
-        Assertions.assertTrue(result3.intersects(result3));
-        Assertions.assertFalse(result3.contains(result2));
-        Assertions.assertFalse(result3.containsStrictly(result2));
+        assertTrue(result2.intersects(result3));
+        assertTrue(result2.contains(result3));
+        assertTrue(result2.containsStrictly(result3));
+        assertTrue(result3.intersects(result3));
+        assertFalse(result3.contains(result2));
+        assertFalse(result3.containsStrictly(result2));
 
-        Assertions.assertTrue(result2.intersects(result4));
-        Assertions.assertFalse(result2.contains(result4));
-        Assertions.assertFalse(result4.contains(result2));
-        Assertions.assertTrue(result4.contains(result1));
-        Assertions.assertTrue(result4.contains(result3));
+        assertTrue(result2.intersects(result4));
+        assertFalse(result2.contains(result4));
+        assertFalse(result4.contains(result2));
+        assertTrue(result4.contains(result1));
+        assertTrue(result4.contains(result3));
 
-        Assertions.assertTrue(result5.containsStrictly(result1));
-        Assertions.assertTrue(result5.containsStrictly(result2));
-        Assertions.assertTrue(result5.containsStrictly(result3));
-        Assertions.assertTrue(result5.containsStrictly(result4));
+        assertTrue(result5.containsStrictly(result1));
+        assertTrue(result5.containsStrictly(result2));
+        assertTrue(result5.containsStrictly(result3));
+        assertTrue(result5.containsStrictly(result4));
 
-        Assertions.assertFalse(result1.containsStrictly(result6));
-        Assertions.assertTrue(result2.containsStrictly(result6));
+        assertFalse(result1.containsStrictly(result6));
+        assertTrue(result2.containsStrictly(result6));
     }
 }

@@ -1,12 +1,12 @@
 package es.bvalero.replacer.page;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -37,6 +37,6 @@ class PageListServiceTest {
             .thenReturn(list);
 
         List<String> result = pageListService.findPageTitlesToReviewBySubtype(WikipediaLanguage.SPANISH, "X", "Y");
-        Assertions.assertEquals(sorted, result);
+        assertEquals(sorted, result);
     }
 }
