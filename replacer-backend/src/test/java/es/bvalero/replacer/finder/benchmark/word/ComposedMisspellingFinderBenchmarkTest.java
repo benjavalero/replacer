@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.word;
 
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
 class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
@@ -64,6 +63,6 @@ class ComposedMisspellingFinderBenchmarkTest extends BaseFinderBenchmark {
 
         runBenchmark(finders);
 
-        MatcherAssert.assertThat(true, is(true));
+        assertTrue(true);
     }
 }

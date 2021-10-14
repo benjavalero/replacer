@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.completetag;
 
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Resource;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -32,6 +31,6 @@ class CompleteTagFinderBenchmarkTest extends BaseFinderBenchmark {
 
         runBenchmark(finders);
 
-        MatcherAssert.assertThat(true, is(true));
+        assertTrue(true);
     }
 }

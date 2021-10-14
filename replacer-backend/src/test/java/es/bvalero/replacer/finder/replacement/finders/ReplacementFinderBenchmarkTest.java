@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
@@ -14,7 +14,6 @@ import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
 import java.util.List;
 import org.apache.commons.collections4.IterableUtils;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -57,7 +56,7 @@ class ReplacementFinderBenchmarkTest extends BaseFinderBenchmark {
 
         run(replacementFinders);
 
-        MatcherAssert.assertThat(true, is(true));
+        assertTrue(true);
     }
 
     private void run(List<ReplacementFinder> finders) throws ReplacerException {

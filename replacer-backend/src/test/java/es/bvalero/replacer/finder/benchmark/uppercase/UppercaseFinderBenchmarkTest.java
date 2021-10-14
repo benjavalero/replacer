@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.benchmark.uppercase;
 
-import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
 class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
@@ -53,6 +52,6 @@ class UppercaseFinderBenchmarkTest extends BaseFinderBenchmark {
 
         runBenchmark(finders);
 
-        MatcherAssert.assertThat(true, is(true));
+        assertTrue(true);
     }
 }
