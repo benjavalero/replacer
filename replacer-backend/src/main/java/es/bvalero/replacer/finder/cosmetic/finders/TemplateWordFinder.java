@@ -46,7 +46,7 @@ class TemplateWordFinder extends CosmeticCheckedFinder {
     }
 
     @Override
-    public String getFix(MatchResult match) {
+    public String getFix(MatchResult match, FinderPage page) {
         String templateText = match.group();
         int posColon = templateText.indexOf(':', START_TEMPLATE.length());
         assert posColon >= START_TEMPLATE.length();

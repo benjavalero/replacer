@@ -38,12 +38,12 @@ class FileLowercaseFinder implements CosmeticFinder {
     }
 
     @Override
-    public Cosmetic convert(MatchResult match) {
-        return Cosmetic.builder().start(match.start(1)).text(match.group(1)).fix(getFix(match)).build();
+    public Cosmetic convert(MatchResult match, FinderPage page) {
+        return Cosmetic.builder().start(match.start(1)).text(match.group(1)).fix(getFix(match, page)).build();
     }
 
     @Override
-    public String getFix(MatchResult match) {
+    public String getFix(MatchResult match, FinderPage page) {
         return FinderUtils.setFirstUpperCase(match.group(1));
     }
 }

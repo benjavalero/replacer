@@ -37,4 +37,9 @@
         <entry key="gl" value="Modelo"/>
     </util:map>
 
+    <util:map id="categoryWords" map-class="java.util.HashMap"
+              key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="es" value="Categoría"/>
+        <entry key="gl" value="Categoría"/>
+    </util:map>
 </beans>

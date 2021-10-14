@@ -20,6 +20,6 @@
 
     <!-- Complete spaces in this list must be in lowercase -->
     <util:set id="completeSpaces" value-type="java.lang.String">
-        <value>categoría</value>
+        <value>categoría</value> <!-- Spanish and Galician use the same word for categories -->
     </util:set>
 </beans>

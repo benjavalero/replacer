@@ -11,8 +11,8 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LinkUtils {
 
-    private static final String START_LINK = "[[";
-    private static final String END_LINK = "]]";
+    public static final String START_LINK = "[[";
+    public static final String END_LINK = "]]";
 
     public static List<LinearMatchResult> findAllLinks(FinderPage page) {
         List<LinearMatchResult> matches = new ArrayList<>(100);

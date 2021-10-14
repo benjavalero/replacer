@@ -50,7 +50,7 @@ class DefaultSortSpecialCharactersFinder extends CosmeticCheckedFinder {
     }
 
     @Override
-    public String getFix(MatchResult match) {
+    public String getFix(MatchResult match, FinderPage page) {
         return match.group().replaceAll("_", " ");
     }
 }

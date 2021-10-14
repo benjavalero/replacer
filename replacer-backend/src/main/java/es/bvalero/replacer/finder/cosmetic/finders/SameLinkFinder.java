@@ -45,7 +45,7 @@ class SameLinkFinder extends CosmeticCheckedFinder {
     }
 
     @Override
-    public String getFix(MatchResult match) {
+    public String getFix(MatchResult match, FinderPage page) {
         String linkTitle = match.group(2);
         return String.format("[[%s]]", linkTitle);
     }
