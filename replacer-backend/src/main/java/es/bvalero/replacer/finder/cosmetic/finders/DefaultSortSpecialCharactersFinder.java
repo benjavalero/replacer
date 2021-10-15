@@ -9,11 +9,9 @@ import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.TemplateUtils;
 import java.util.ArrayList;
 import java.util.regex.MatchResult;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /** Find template DEFAULTSORT including special characters */
-@Slf4j
 @Component
 class DefaultSortSpecialCharactersFinder extends CosmeticCheckedFinder {
 
