@@ -24,13 +24,7 @@ class TemplateWordFinderTest {
     private TemplateWordFinder templateWordFinder;
 
     @ParameterizedTest
-    @CsvSource(
-        value = {
-            "{{Plantilla: Versalita|A}}, {{Versalita|A}}",
-            "{{plantilla :DGRG}}, {{DGRG}}",
-            "{{ plantilla:{{#time:F}}}}, {{#time:F}}",
-        }
-    )
+    @CsvSource(value = { "{{Plantilla:Versalita|A}}, {{Versalita|A}}", "{{plantilla:DGRG}}, {{DGRG}}" })
     void testTemplateWordFinder(String text, String fix) {
         List<Cosmetic> cosmetics = templateWordFinder.findList(text);
 
