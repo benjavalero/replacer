@@ -1,13 +1,14 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.config.XmlConfiguration;
 import es.bvalero.replacer.finder.cosmetic.Cosmetic;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -17,23 +18,21 @@ class FileLowercaseFinderTest {
     @Autowired
     private FileLowercaseFinder fileLowercaseFinder;
 
-    @Test
-    void testFileLowercaseFinder() {
-        String file1 = "archivo";
-        String file2 = "image";
-        String file3 = "File";
-        String text = String.format("En [[%s:x.jpeg|test]] [[%s:x.png]] [[%s:x.pdf]].", file1, file2, file3);
+    @ParameterizedTest
+    @CsvSource(value = { "[[archivo:x.jpeg|test]], [[Archivo:x.jpeg|test]]", "[[image:x.png]], [[Image:x.png]]" })
+    void testFileLowercaseFinder(String text, String fix) {
+        List<Cosmetic> cosmetics = fileLowercaseFinder.findList(text);
 
-        List<Cosmetic> matches = fileLowercaseFinder.findList(text);
+        assertEquals(1, cosmetics.size());
+        assertEquals(text, cosmetics.get(0).getText());
+        assertEquals(fix, cosmetics.get(0).getFix());
+    }
 
-        Set<String> expectedMatches = Set.of(file1, file2);
-        Set<String> actualMatches = matches.stream().map(Cosmetic::getText).collect(Collectors.toSet());
-        assertEquals(expectedMatches, actualMatches);
+    @ParameterizedTest
+    @ValueSource(strings = { "[[File:x.pdf]]" })
+    void testSameLinkNotValid(String text) {
+        List<Cosmetic> cosmetics = fileLowercaseFinder.findList(text);
 
-        String fix1 = "Archivo";
-        String fix2 = "Image";
-        Set<String> expectedFixes = Set.of(fix1, fix2);
-        Set<String> actualFixes = matches.stream().map(Cosmetic::getFix).collect(Collectors.toSet());
-        assertEquals(expectedFixes, actualFixes);
+        assertTrue(cosmetics.isEmpty());
     }
 }

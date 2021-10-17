@@ -1,7 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.cosmetic.Cosmetic;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
@@ -18,12 +17,12 @@ import org.springframework.stereotype.Component;
 class FileLowercaseFinder implements CosmeticFinder {
 
     @RegExp
-    private static final String REGEX_FILE_SPACE = "\\[\\[(%s)[:\\]]";
-
-    private Pattern patternFileSpace;
+    private static final String REGEX_FILE_SPACE = "\\[\\[(%s):(.+?)]]";
 
     @Resource
     private Set<String> fileSpaces;
+
+    private Pattern patternFileSpace;
 
     @PostConstruct
     public void init() {
@@ -38,12 +37,7 @@ class FileLowercaseFinder implements CosmeticFinder {
     }
 
     @Override
-    public Cosmetic convert(MatchResult match, FinderPage page) {
-        return Cosmetic.builder().start(match.start(1)).text(match.group(1)).fix(getFix(match, page)).build();
-    }
-
-    @Override
     public String getFix(MatchResult match, FinderPage page) {
-        return FinderUtils.setFirstUpperCase(match.group(1));
+        return String.format("[[%s:%s]]", FinderUtils.setFirstUpperCase(match.group(1)), match.group(2));
     }
 }
