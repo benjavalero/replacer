@@ -27,8 +27,8 @@ class TemplateWordFinderTest {
     @CsvSource(
         value = {
             "{{Plantilla: Versalita|A}}, {{Versalita|A}}",
-            "{{plantilla:DGRG}}, {{DGRG}}",
-            "{{plantilla:{{#time:F}}}}, {{#time:F}}",
+            "{{plantilla :DGRG}}, {{DGRG}}",
+            "{{ plantilla:{{#time:F}}}}, {{#time:F}}",
         }
     )
     void testTemplateWordFinder(String text, String fix) {

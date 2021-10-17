@@ -24,6 +24,7 @@ class TemplateWordFinder extends CosmeticCheckedFinder {
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
+        // There can be nested templates so we use the well-tested template finder
         return new ArrayList<>(TemplateUtils.findAllTemplates(page));
     }
 
