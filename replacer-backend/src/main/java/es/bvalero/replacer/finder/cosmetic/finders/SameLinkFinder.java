@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 class SameLinkFinder extends CosmeticCheckedFinder {
 
     @RegExp
-    private static final String REGEX_SAME_LINK = "\\[\\[([^]|]+)\\|(\\1)]]";
+    private static final String REGEX_SAME_LINK = "\\[\\[(.+?)\\|(\\1)]]";
 
     private static final Pattern PATTERN_SAME_LINK = Pattern.compile(REGEX_SAME_LINK, Pattern.CASE_INSENSITIVE);
 

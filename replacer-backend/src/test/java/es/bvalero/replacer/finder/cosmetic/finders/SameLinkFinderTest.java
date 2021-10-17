@@ -29,7 +29,14 @@ class SameLinkFinderTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = { "[[test|test]], [[test]]", "[[Test|test]], [[test]]", "[[Test|Test]], [[Test]]" })
+    @CsvSource(
+        value = {
+            "[[test|test]], [[test]]",
+            "[[Test|test]], [[test]]",
+            "[[Test|Test]], [[Test]]",
+            "[[IPhone|iPhone]], [[iPhone]]",
+        }
+    )
     void testSameLinkFinder(String text, String fix) {
         List<Cosmetic> cosmetics = sameLinkFinder.findList(text);
 
@@ -46,6 +53,7 @@ class SameLinkFinderTest {
             "[[Guerra polaco-soviética|Guerra Polaco-Soviética]]",
             "[[Uff Móvil|UFF móvil]]",
             "[[PetroChina|Petrochina]]",
+            "[[Sida|SIDA]]",
         }
     )
     void testSameLinkNotValid(String text) {
