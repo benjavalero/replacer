@@ -4,8 +4,10 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
+import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 class DefaultSortSpecialCharactersFinder extends CosmeticCheckedFinder {
 
-    @RegExp
-    private static final String REGEX_DEFAULTSORT_TEMPLATE = "\\{\\{\\s*DEFAULTSORT\\s*:(.+?)}}";
+    private static final List<String> SORT_TEMPLATES = List.of("DEFAULTSORT", "ORDENAR");
 
-    private static final Pattern PATTERN_DEFAULTSORT_TEMPLATE = Pattern.compile(REGEX_DEFAULTSORT_TEMPLATE);
+    @RegExp
+    private static final String REGEX_DEFAULTSORT_TEMPLATE = "\\{\\{(\\s*%s\\s*):(.+?)}}";
+
+    private static final Pattern PATTERN_DEFAULTSORT_TEMPLATE = Pattern.compile(
+        String.format(REGEX_DEFAULTSORT_TEMPLATE, String.format("(?:%s)", StringUtils.join(SORT_TEMPLATES, "|")))
+    );
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
@@ -25,7 +31,7 @@ class DefaultSortSpecialCharactersFinder extends CosmeticCheckedFinder {
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        return match.group(1).chars().anyMatch(this::isNotValidCharacter);
+        return match.group(2).chars().anyMatch(this::isNotValidCharacter);
     }
 
     private boolean isNotValidCharacter(int ch) {
@@ -39,7 +45,8 @@ class DefaultSortSpecialCharactersFinder extends CosmeticCheckedFinder {
 
     @Override
     public String getFix(MatchResult match, FinderPage page) {
-        String templateContent = match.group(1).replace("_", " ").trim();
-        return String.format("{{DEFAULTSORT:%s}}", templateContent);
+        String templateName = match.group(1).trim();
+        String templateContent = match.group(2).replace("_", " ").trim();
+        return String.format("{{%s:%s}}", templateName, templateContent);
     }
 }
