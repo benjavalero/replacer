@@ -1,41 +1,31 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import static es.bvalero.replacer.finder.util.TemplateUtils.END_TEMPLATE;
-import static es.bvalero.replacer.finder.util.TemplateUtils.START_TEMPLATE;
-
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
-import es.bvalero.replacer.finder.util.TemplateUtils;
-import java.util.ArrayList;
+import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
+import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
 /** Find template DEFAULTSORT including special characters */
 @Component
 class DefaultSortSpecialCharactersFinder extends CosmeticCheckedFinder {
 
-    private static final String DEFAULT_SORT_TEMPLATE = "DEFAULTSORT";
+    @RegExp
+    private static final String REGEX_DEFAULTSORT_TEMPLATE = "\\{\\{\\s*DEFAULTSORT\\s*:(.+?)}}";
+
+    private static final Pattern PATTERN_DEFAULTSORT_TEMPLATE = Pattern.compile(REGEX_DEFAULTSORT_TEMPLATE);
 
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        return new ArrayList<>(TemplateUtils.findAllTemplates(page));
+        return RegexMatchFinder.find(page.getContent(), PATTERN_DEFAULTSORT_TEMPLATE);
     }
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        String templateText = match.group();
-        assert templateText.startsWith(START_TEMPLATE);
-        int posColon = templateText.indexOf(':', START_TEMPLATE.length());
-        if (posColon >= START_TEMPLATE.length()) {
-            String templateName = templateText.substring(START_TEMPLATE.length(), posColon).trim();
-            if (DEFAULT_SORT_TEMPLATE.equals(templateName)) {
-                String templateContent = templateText.substring(posColon + 1);
-                assert templateContent.endsWith(END_TEMPLATE);
-                return templateContent.chars().anyMatch(this::isNotValidCharacter);
-            }
-        }
-        return false;
+        return match.group(1).chars().anyMatch(this::isNotValidCharacter);
     }
 
     private boolean isNotValidCharacter(int ch) {
@@ -49,6 +39,7 @@ class DefaultSortSpecialCharactersFinder extends CosmeticCheckedFinder {
 
     @Override
     public String getFix(MatchResult match, FinderPage page) {
-        return match.group().replaceAll("_", " ");
+        String templateContent = match.group(1).replace("_", " ").trim();
+        return String.format("{{DEFAULTSORT:%s}}", templateContent);
     }
 }

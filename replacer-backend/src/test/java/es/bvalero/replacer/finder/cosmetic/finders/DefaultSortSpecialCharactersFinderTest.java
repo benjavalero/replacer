@@ -29,7 +29,7 @@ class DefaultSortSpecialCharactersFinderTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = { "{{DEFAULTSORT:AES_Andes}}, {{DEFAULTSORT:AES Andes}}" })
+    @CsvSource(value = { "{{ DEFAULTSORT : AES_Andes_2 }}, {{DEFAULTSORT:AES Andes 2}}" })
     void testSpecialCharacters(String text, String fix) {
         List<Cosmetic> cosmetics = defaultSortSpecialCharactersFinder.findList(text);
 
