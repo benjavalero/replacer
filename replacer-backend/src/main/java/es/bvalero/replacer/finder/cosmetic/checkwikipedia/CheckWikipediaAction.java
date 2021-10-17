@@ -7,6 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CheckWikipediaAction {
     TEMPLATE_WORD_USELESS(1),
+    BREAK_INCORRECT_SYNTAX(2),
     DEFAULT_SORT_SPECIAL_CHARACTERS(6),
     CATEGORY_IN_ENGLISH(21),
     CATEGORY_WITH_WHITESPACE(22),
