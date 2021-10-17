@@ -1,54 +1,47 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
-import static es.bvalero.replacer.finder.util.LinkUtils.END_LINK;
-import static es.bvalero.replacer.finder.util.LinkUtils.START_LINK;
-
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
-import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.finder.util.LinkUtils;
-import java.util.ArrayList;
+import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Map;
 import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
+import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find categories in English */
+/** Find categories containing unnecessary spaces */
 @Component
 class CategorySpaceFinder extends CosmeticCheckedFinder {
 
     @Resource
     private Map<String, String> categoryWords;
 
+    @RegExp
+    private static final String REGEX_CATEGORY_SPACE = "\\[\\[(\\s*%s\\s*):(.+?)]]";
+
+    private Pattern patternCategorySpace;
+
+    @PostConstruct
+    public void init() {
+        String alternate = String.format("(?:%s)", StringUtils.join(categoryWords.values(), "|"));
+        String regex = String.format(REGEX_CATEGORY_SPACE, alternate);
+        patternCategorySpace = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+    }
+
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
-        return new ArrayList<>(LinkUtils.findAllLinks(page));
+        return RegexMatchFinder.find(page.getContent(), patternCategorySpace);
     }
 
     @Override
     public boolean validate(MatchResult match, FinderPage page) {
-        String templateText = match.group();
-        assert templateText.startsWith(START_LINK);
-        int posColon = templateText.indexOf(':', START_LINK.length());
-        if (posColon >= START_LINK.length()) {
-            String templateName = templateText.substring(START_LINK.length(), posColon);
-            String cleanTemplateName = FinderUtils.setFirstUpperCase(templateName.trim());
-            if (categoryWords.containsValue(cleanTemplateName)) {
-                // At this point we can assure the link is a Category
-                // Check if there are additional spaces around the template name
-                if (!templateName.equalsIgnoreCase(cleanTemplateName)) {
-                    return true;
-                }
-
-                // Check if there are additional spaces around the category text
-                String categoryText = templateText.substring(posColon + 1);
-                assert categoryText.endsWith(END_LINK);
-                categoryText = categoryText.substring(0, categoryText.length() - END_LINK.length());
-                return !categoryText.equals(categoryText.trim());
-            }
-        }
-        return false;
+        String templateName = match.group(1);
+        String templateContent = match.group(2);
+        return !templateName.equals(templateName.trim()) || !templateContent.equals(templateContent.trim());
     }
 
     @Override
@@ -58,10 +51,7 @@ class CategorySpaceFinder extends CosmeticCheckedFinder {
 
     @Override
     public String getFix(MatchResult match, FinderPage page) {
-        String templateText = match.group();
-        int posColon = templateText.indexOf(':', START_LINK.length());
         String categoryWord = categoryWords.get(page.getLang().getCode());
-        String categoryText = templateText.substring(posColon + 1, templateText.length() - END_LINK.length()).trim();
-        return START_LINK + categoryWord + ":" + categoryText + END_LINK;
+        return String.format("[[%s:%s]]", categoryWord, match.group(2).trim());
     }
 }
