@@ -12,16 +12,22 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { FileLowercaseFinder.class, XmlConfiguration.class })
-class FileLowercaseFinderTest {
+@SpringBootTest(classes = { SpaceLowercaseFinder.class, XmlConfiguration.class })
+class SpaceLowercaseFinderTest {
 
     @Autowired
-    private FileLowercaseFinder fileLowercaseFinder;
+    private SpaceLowercaseFinder spaceLowercaseFinder;
 
     @ParameterizedTest
-    @CsvSource(value = { "[[archivo:x.jpeg|test]], [[Archivo:x.jpeg|test]]", "[[image:x.png]], [[Image:x.png]]" })
-    void testFileLowercaseFinder(String text, String fix) {
-        List<Cosmetic> cosmetics = fileLowercaseFinder.findList(text);
+    @CsvSource(
+        value = {
+            "[[archivo:x.jpeg|test]], [[Archivo:x.jpeg|test]]",
+            "[[imagen:x.png]], [[Imagen:x.png]]",
+            "[[anexo:Discografía de Queen]], [[Anexo:Discografía de Queen]]",
+        }
+    )
+    void testLowercaseSpaceFinder(String text, String fix) {
+        List<Cosmetic> cosmetics = spaceLowercaseFinder.findList(text);
 
         assertEquals(1, cosmetics.size());
         assertEquals(text, cosmetics.get(0).getText());
@@ -29,9 +35,9 @@ class FileLowercaseFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "[[File:x.pdf]]" })
-    void testSameLinkNotValid(String text) {
-        List<Cosmetic> cosmetics = fileLowercaseFinder.findList(text);
+    @ValueSource(strings = { "[[Archivo:x.pdf]]" })
+    void testValidSpace(String text) {
+        List<Cosmetic> cosmetics = spaceLowercaseFinder.findList(text);
 
         assertTrue(cosmetics.isEmpty());
     }

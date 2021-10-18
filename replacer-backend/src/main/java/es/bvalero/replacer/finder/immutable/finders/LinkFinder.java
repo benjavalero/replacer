@@ -1,5 +1,8 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
+import static es.bvalero.replacer.finder.util.LinkUtils.END_LINK;
+import static es.bvalero.replacer.finder.util.LinkUtils.START_LINK;
+
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.immutable.ImmutableCheckedFinder;
@@ -7,11 +10,9 @@ import es.bvalero.replacer.finder.immutable.ImmutableFinderPriority;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.LinearMatchResult;
 import es.bvalero.replacer.finder.util.LinkUtils;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.MatchResult;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -29,14 +30,32 @@ import org.springframework.stereotype.Component;
 @Component
 class LinkFinder extends ImmutableCheckedFinder {
 
-    private static final String START_LINK = "[[";
-    private static final String END_LINK = "]]";
+    private static final String FILE_SPACE_EN = "File";
+    private static final String IMAGE_SPACE_EN = "Image";
+    private static final String CATEGORY_SPACE_EN = "Category";
 
     @Resource
-    private Set<String> fileSpaces;
+    private Map<String, String> fileWords;
 
     @Resource
-    private Set<String> completeSpaces;
+    private Map<String, String> imageWords;
+
+    @Resource
+    private Map<String, String> categoryWords;
+
+    private final Set<String> fileSpaces = new HashSet<>();
+    private final Set<String> categorySpaces = new HashSet<>();
+
+    @PostConstruct
+    public void init() {
+        this.fileSpaces.add(FILE_SPACE_EN);
+        this.fileSpaces.addAll(fileWords.values());
+        this.fileSpaces.add(IMAGE_SPACE_EN);
+        this.fileSpaces.addAll(imageWords.values());
+
+        this.categorySpaces.add(CATEGORY_SPACE_EN);
+        this.categorySpaces.addAll(categoryWords.values());
+    }
 
     @Override
     public ImmutableFinderPriority getPriority() {
@@ -81,7 +100,7 @@ class LinkFinder extends ImmutableCheckedFinder {
         String linkSpace = posColon >= 0 ? linkTitle.substring(0, posColon) : null;
 
         // If the link space is in the list then return an immutable of the complete link
-        if (isCompleteSpace(linkSpace)) {
+        if (isCategorySpace(linkSpace)) {
             return Collections.singletonList(this.convert(link));
         }
 
@@ -114,12 +133,12 @@ class LinkFinder extends ImmutableCheckedFinder {
         return text.length();
     }
 
-    private boolean isCompleteSpace(@Nullable String space) {
-        return space != null && completeSpaces.contains(FinderUtils.toLowerCase(space).trim());
+    private boolean isCategorySpace(@Nullable String space) {
+        return space != null && categorySpaces.contains(FinderUtils.setFirstUpperCase(space.trim()));
     }
 
     private boolean isFileSpace(@Nullable String space) {
-        return space != null && fileSpaces.contains(FinderUtils.toLowerCase(space).trim());
+        return space != null && fileSpaces.contains(FinderUtils.setFirstUpperCase(space.trim()));
     }
 
     private boolean isLangSpace(@Nullable String space) {
