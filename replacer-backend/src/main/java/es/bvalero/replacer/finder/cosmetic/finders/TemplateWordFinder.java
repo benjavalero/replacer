@@ -23,7 +23,7 @@ class TemplateWordFinder extends CosmeticCheckedFinder {
     private Map<String, String> templateWords;
 
     @RegExp
-    private static final String REGEX_TEMPLATE_WORD = "\\{\\{(%s):(.+?)}}";
+    private static final String REGEX_TEMPLATE_WORD = "\\{\\{(%s):(\\w.+?)}}";
 
     private Pattern patternTemplateWord;
 
