@@ -27,7 +27,7 @@ class BreakIncorrectFinderTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = { "</br>, <br />" })
+    @CsvSource(value = { "</br>, <br />", "<\\br>, <br />", "<br.>, <br />", "<br \\>, <br />", "<br/>, <br />" })
     void testBreakIncorrectFinder(String text, String fix) {
         List<Cosmetic> cosmetics = breakIncorrectFinder.findList(text);
 
