@@ -30,6 +30,9 @@ class SpaceLowercaseFinder implements CosmeticFinder {
     @Resource
     private Map<String, String> annexWords;
 
+    @Resource
+    private Map<String, String> categoryWords;
+
     private Pattern patternLowercaseSpace;
 
     @PostConstruct
@@ -38,6 +41,7 @@ class SpaceLowercaseFinder implements CosmeticFinder {
         spaceWords.addAll(fileWords.values());
         spaceWords.addAll(imageWords.values());
         spaceWords.addAll(annexWords.values());
+        spaceWords.addAll(categoryWords.values());
 
         String concat = String.join("|", spaceWords);
         String regex = String.format(REGEX_SPACE, FinderUtils.toLowerCase(concat));

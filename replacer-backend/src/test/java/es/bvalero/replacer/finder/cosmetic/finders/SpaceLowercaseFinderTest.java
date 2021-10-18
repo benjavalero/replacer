@@ -24,6 +24,7 @@ class SpaceLowercaseFinderTest {
             "[[archivo:x.jpeg|test]], [[Archivo:x.jpeg|test]]",
             "[[imagen:x.png]], [[Imagen:x.png]]",
             "[[anexo:Discografía de Queen]], [[Anexo:Discografía de Queen]]",
+            "[[categoría:Animal]], [[Categoría:Animal]]",
         }
     )
     void testLowercaseSpaceFinder(String text, String fix) {
