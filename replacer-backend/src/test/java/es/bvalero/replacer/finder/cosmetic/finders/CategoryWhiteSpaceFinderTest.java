@@ -16,14 +16,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("offline")
-@SpringBootTest(classes = { CategorySpaceFinder.class, XmlConfiguration.class, CheckWikipediaOfflineService.class })
-class CategorySpaceFinderTest {
+@SpringBootTest(
+    classes = { CategoryWhiteSpaceFinder.class, XmlConfiguration.class, CheckWikipediaOfflineService.class }
+)
+class CategoryWhiteSpaceFinderTest {
 
     @Autowired
     private CheckWikipediaService checkWikipediaService;
 
     @Autowired
-    private CategorySpaceFinder categorySpaceFinder;
+    private CategoryWhiteSpaceFinder categoryWhiteSpaceFinder;
 
     @ParameterizedTest
     @CsvSource(
@@ -35,7 +37,7 @@ class CategorySpaceFinderTest {
         }
     )
     void testCategoryWithSpace(String text, String fix) {
-        List<Cosmetic> cosmetics = categorySpaceFinder.findList(text);
+        List<Cosmetic> cosmetics = categoryWhiteSpaceFinder.findList(text);
 
         assertEquals(1, cosmetics.size());
         assertEquals(text, cosmetics.get(0).getText());
@@ -45,7 +47,7 @@ class CategorySpaceFinderTest {
     @ParameterizedTest
     @ValueSource(strings = { "[[Categoría:Animal]]" })
     void testCategoryWithNoSpace(String text) {
-        List<Cosmetic> cosmetics = categorySpaceFinder.findList(text);
+        List<Cosmetic> cosmetics = categoryWhiteSpaceFinder.findList(text);
 
         assertTrue(cosmetics.isEmpty());
     }

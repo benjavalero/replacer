@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 /** Find categories containing unnecessary spaces */
 @Component
-class CategorySpaceFinder extends CosmeticCheckedFinder {
+class CategoryWhiteSpaceFinder extends CosmeticCheckedFinder {
 
     @Resource
     private Map<String, String> categoryWords;
