@@ -1,7 +1,8 @@
 package es.bvalero.replacer.finder.cosmetic.finders;
 
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.cosmetic.CosmeticFinder;
+import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
+import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.HashSet;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Component;
 
 /** Find space links where the space is in lowercase */
 @Component
-class SpaceLowercaseFinder implements CosmeticFinder {
+class SpaceLowercaseFinder extends CosmeticCheckedFinder {
 
     @RegExp
     private static final String REGEX_SPACE = "\\[\\[(%s):(.+?)]]";
@@ -51,6 +52,12 @@ class SpaceLowercaseFinder implements CosmeticFinder {
     @Override
     public Iterable<MatchResult> findMatchResults(FinderPage page) {
         return RegexMatchFinder.find(page.getContent(), patternLowercaseSpace);
+    }
+
+    @Override
+    protected CheckWikipediaAction getCheckWikipediaAction() {
+        // We return this action if the space fixed is not a Category
+        return CheckWikipediaAction.CATEGORY_IN_LOWERCASE;
     }
 
     @Override
