@@ -15,6 +15,7 @@ public enum CheckWikipediaAction {
     CATEGORY_WITH_WHITESPACE(22),
     HEADLINE_BOLD(44),
     BREAK_IN_LIST(54),
+    DOUBLE_SMALL_TAG(55),
     LINK_EQUAL_TO_LINK_TEXT(64);
 
     private final int value;
