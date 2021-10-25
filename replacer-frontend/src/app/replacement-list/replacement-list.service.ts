@@ -47,11 +47,9 @@ export class ReplacementListService {
       return;
     }
 
-    for (let i = 0; i < currentCounts.length; i++) {
-      const typeCount: ReplacementCountList = currentCounts[i];
+    for (let typeCount of currentCounts) {
       if (typeCount.t === type) {
-        for (let j = 0; j < typeCount.l.length; j++) {
-          const subtypeCount: ReplacementCount = typeCount.l[j];
+        for (let subtypeCount of typeCount.l) {
           if (subtypeCount.s === subtype) {
             subtypeCount.c = count;
           }
