@@ -62,7 +62,7 @@ class SpaceNotTranslatedFinder extends CosmeticCheckedFinder {
     @Override
     public String getFix(MatchResult match, FinderPage page) {
         String spaceWord = FinderUtils.setFirstUpperCase(match.group(1));
-        String spaceWordTranslated = null;
+        String spaceWordTranslated;
         switch (spaceWord) {
             case FILE_SPACE_EN:
                 spaceWordTranslated = fileWords.get(page.getLang().getCode());
@@ -76,6 +76,8 @@ class SpaceNotTranslatedFinder extends CosmeticCheckedFinder {
             case CATEGORY_SPACE_EN:
                 spaceWordTranslated = categoryWords.get(page.getLang().getCode());
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + spaceWord);
         }
         assert spaceWordTranslated != null;
 
