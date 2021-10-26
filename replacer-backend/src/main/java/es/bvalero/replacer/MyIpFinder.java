@@ -22,7 +22,11 @@ public class MyIpFinder {
 
     @Nullable
     private String findIpWithAmazon() {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(new URL("http://checkip.amazonaws.com/").openStream()))) {
+        try (
+            BufferedReader br = new BufferedReader(
+                new InputStreamReader(new URL("http://checkip.amazonaws.com/").openStream())
+            )
+        ) {
             return br.readLine();
         } catch (IOException e) {
             return null;
@@ -31,7 +35,9 @@ public class MyIpFinder {
 
     @Nullable
     private String findIpWithIcanhazip() {
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(new URL("http://icanhazip.com/").openStream()))) {
+        try (
+            BufferedReader in = new BufferedReader(new InputStreamReader(new URL("http://icanhazip.com/").openStream()))
+        ) {
             return in.readLine();
         } catch (IOException e) {
             return null;
