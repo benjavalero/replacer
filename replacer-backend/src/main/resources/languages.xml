@@ -46,7 +46,7 @@
     <util:map id="fileWords" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.String">
         <entry key="es" value="Archivo"/>
-        <entry key="gl" value="Ficheiro"/>
+        <entry key="gl" value="Ficheiro Arquivo"/>
     </util:map>
 
     <util:map id="imageWords" map-class="java.util.HashMap"

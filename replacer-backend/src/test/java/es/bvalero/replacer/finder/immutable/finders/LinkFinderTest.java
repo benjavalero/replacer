@@ -3,11 +3,14 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.config.XmlConfiguration;
+import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.IterableUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -139,5 +142,18 @@ class LinkFinderTest {
 
         Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
         assertFalse(actual.contains(text));
+    }
+
+    @Test
+    void testGalicianFile() {
+        String text = "[[Arquivo:xxx.jpg]]";
+
+        List<Immutable> matches = IterableUtils.toList(
+            linkFinder.find(FinderPage.of(WikipediaLanguage.GALICIAN, text, "X"))
+        );
+
+        Set<String> expected = Set.of(text);
+        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
+        assertEquals(expected, actual);
     }
 }

@@ -12,8 +12,10 @@ import es.bvalero.replacer.finder.util.LinearMatchResult;
 import es.bvalero.replacer.finder.util.LinkUtils;
 import java.util.*;
 import java.util.regex.MatchResult;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -49,7 +51,13 @@ class LinkFinder extends ImmutableCheckedFinder {
     @PostConstruct
     public void init() {
         this.fileSpaces.add(FILE_SPACE_EN);
-        this.fileSpaces.addAll(fileWords.values());
+        this.fileSpaces.addAll(
+                fileWords
+                    .values()
+                    .stream()
+                    .flatMap(val -> Arrays.stream(StringUtils.split(val)))
+                    .collect(Collectors.toList())
+            );
         this.fileSpaces.add(IMAGE_SPACE_EN);
         this.fileSpaces.addAll(imageWords.values());
 

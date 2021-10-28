@@ -11,6 +11,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
@@ -65,7 +66,8 @@ class SpaceNotTranslatedFinder extends CosmeticCheckedFinder {
         String spaceWordTranslated;
         switch (spaceWord) {
             case FILE_SPACE_EN:
-                spaceWordTranslated = fileWords.get(page.getLang().getCode());
+                // In Galician there are two alternatives, so we get the first one.
+                spaceWordTranslated = StringUtils.split(fileWords.get(page.getLang().getCode()))[0];
                 break;
             case IMAGE_SPACE_EN:
                 spaceWordTranslated = imageWords.get(page.getLang().getCode());
