@@ -26,7 +26,11 @@ class LinkFinderTest {
     @ParameterizedTest
     @ValueSource(
         strings = {
-            "[[Categoría:Países]]", "[[Categoría:Obras españolas|Españolas, Obras]]", "[[Categoría:Informática| ]]",
+            "[[Categoría:Países]]",
+            "[[Categoría:Obras españolas|Españolas, Obras]]",
+            "[[Categoría:Informática| ]]",
+            "[[Category:Asia]]",
+            "[[categoría:Asia]]",
         }
     )
     void testFindCategories(String text) {
@@ -81,19 +85,13 @@ class LinkFinderTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    void testFindFileName() {
-        String filename2 = "a b.png";
-        String image = String.format("[[Imagen:%s]]", filename2);
-        String filename3 = "Z.JPEG";
-        String fileLowercase = String.format("[[archivo:%s]]", filename3);
-        String text = String.format("%s %s", image, fileLowercase);
-
+    @ParameterizedTest
+    @ValueSource(strings = { "[[Imagen:a b.png]]", "[[archivo:Z.JPEG]]", "[[File:x.jpg]]", "[[Image:z.pdf]]" })
+    void testFindFileNames(String text) {
         List<Immutable> matches = linkFinder.findList(text);
 
-        Set<String> expected = Set.of(image, fileLowercase);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        assertEquals(expected, actual);
+        assertEquals(1, matches.size());
+        assertEquals(text, matches.get(0).getText());
     }
 
     @Test
@@ -144,16 +142,14 @@ class LinkFinderTest {
         assertFalse(actual.contains(text));
     }
 
-    @Test
-    void testGalicianFile() {
-        String text = "[[Arquivo:xxx.jpg]]";
-
+    @ParameterizedTest
+    @ValueSource(strings = { "[[Arquivo:xxx.jpg]]", "[[Ficheiro:y.pdf]]", "[[File:z.png]]", "[[imaxe:a.jpeg]]" })
+    void testGalicianFile(String text) {
         List<Immutable> matches = IterableUtils.toList(
             linkFinder.find(FinderPage.of(WikipediaLanguage.GALICIAN, text, "X"))
         );
 
-        Set<String> expected = Set.of(text);
-        Set<String> actual = matches.stream().map(Immutable::getText).collect(Collectors.toSet());
-        assertEquals(expected, actual);
+        assertEquals(1, matches.size());
+        assertEquals(text, matches.get(0).getText());
     }
 }

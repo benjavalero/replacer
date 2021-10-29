@@ -43,21 +43,24 @@
         <entry key="gl" value="Modelo"/>
     </util:map>
 
+    <!-- The following maps contain the magical words for some concepts in the different languages -->
+    <!-- The words will be separated by commas being the first one the standard option -->
+
     <util:map id="fileWords" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.String">
-        <entry key="es" value="Archivo"/>
-        <entry key="gl" value="Ficheiro Arquivo"/>
+        <entry key="es" value="Archivo,File"/>
+        <entry key="gl" value="Ficheiro,Arquivo,File"/>
     </util:map>
 
     <util:map id="imageWords" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.String">
-        <entry key="es" value="Imagen"/>
-        <entry key="gl" value="Imaxe"/>
+        <entry key="es" value="Imagen,Image"/>
+        <entry key="gl" value="Imaxe,Image"/>
     </util:map>
 
     <util:map id="categoryWords" map-class="java.util.HashMap"
               key-type="java.lang.String" value-type="java.lang.String">
-        <entry key="es" value="Categoría"/>
-        <entry key="gl" value="Categoría"/>
+        <entry key="es" value="Categoría,Category"/>
+        <entry key="gl" value="Categoría,Category"/>
     </util:map>
 </beans>

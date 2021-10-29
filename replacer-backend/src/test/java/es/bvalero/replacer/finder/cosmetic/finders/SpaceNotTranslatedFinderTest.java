@@ -45,7 +45,13 @@ class SpaceNotTranslatedFinderTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value = { "[[File:x.jpeg|test]], [[Ficheiro:x.jpeg|test]]", "[[image:x.png]], [[Imaxe:x.png]]" })
+    @CsvSource(
+        value = {
+            "[[File:x.jpeg|test]], [[Ficheiro:x.jpeg|test]]",
+            "[[image:x.png]], [[Imaxe:x.png]]",
+            "[[Arquivo:z.jpg]], [[Ficheiro:z.jpg]]",
+        }
+    )
     void testNotTranslatedSpaceInGalician(String text, String fix) {
         FinderPage page = FinderPage.of(WikipediaLanguage.GALICIAN, text, "");
         List<Cosmetic> cosmetics = IterableUtils.toList(spaceNotTranslatedFinder.find(page));

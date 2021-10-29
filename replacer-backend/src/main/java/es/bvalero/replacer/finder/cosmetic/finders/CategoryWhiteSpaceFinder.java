@@ -3,8 +3,10 @@ package es.bvalero.replacer.finder.cosmetic.finders;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticCheckedFinder;
 import es.bvalero.replacer.finder.cosmetic.checkwikipedia.CheckWikipediaAction;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.finder.util.RegexMatchFinder;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
@@ -27,7 +29,8 @@ class CategoryWhiteSpaceFinder extends CosmeticCheckedFinder {
 
     @PostConstruct
     public void init() {
-        String alternate = String.format("(?:%s)", StringUtils.join(categoryWords.values(), "|"));
+        Set<String> words = FinderUtils.getItemsInCollection(categoryWords.values());
+        String alternate = String.format("(?:%s)", StringUtils.join(words, "|"));
         String regex = String.format(REGEX_CATEGORY_SPACE, alternate);
         patternCategorySpace = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
     }
@@ -51,7 +54,7 @@ class CategoryWhiteSpaceFinder extends CosmeticCheckedFinder {
 
     @Override
     public String getFix(MatchResult match, FinderPage page) {
-        String categoryWord = categoryWords.get(page.getLang().getCode());
+        String categoryWord = FinderUtils.getFirstItemInList(categoryWords.get(page.getLang().getCode()));
         return String.format("[[%s:%s]]", categoryWord, match.group(2).trim());
     }
 }

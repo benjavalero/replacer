@@ -2,9 +2,12 @@ package es.bvalero.replacer.finder.util;
 
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -130,5 +133,20 @@ public class FinderUtils {
 
     public static void logWarning(String matchText, FinderPage page, String message) {
         LOGGER.warn("{}: {} - {} - {}", message, matchText, page.getLang(), page.getTitle());
+    }
+
+    /** Get the items in a collection of strings where each string is a comma-separated list itself */
+    public static Set<String> getItemsInCollection(Collection<String> collection) {
+        return collection.stream().flatMap(val -> splitList(val).stream()).collect(Collectors.toSet());
+    }
+
+    private static List<String> splitList(String list) {
+        return Arrays.stream(StringUtils.split(list, ",")).collect(Collectors.toList());
+    }
+
+    public static String getFirstItemInList(String list) {
+        List<String> actualList = splitList(list);
+        assert !actualList.isEmpty();
+        return actualList.get(0);
     }
 }
