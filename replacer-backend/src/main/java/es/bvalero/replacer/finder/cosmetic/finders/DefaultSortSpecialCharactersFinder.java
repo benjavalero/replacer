@@ -11,7 +11,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.RegExp;
 import org.springframework.stereotype.Component;
 
-/** Find template DEFAULTSORT including special characters */
+/**
+ * Find template DEFAULTSORT including special characters.
+ * We also find and fix cases with a whitespace after the colon though they are not reported (action 88).
+ */
 @Component
 class DefaultSortSpecialCharactersFinder extends CosmeticCheckedFinder {
 
