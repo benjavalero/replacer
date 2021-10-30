@@ -1,5 +1,9 @@
 # Versions
 
+## 2.12.0 (30 Oct 2021)
+- Lots of new cosmetic finders, e.g. to fix categories surrounded by spaces, most of them fixing in Check-Wikipedia too.
+- Add component to print the IP in the logs to try to add these IPs to a whitelist
+
 ## 2.11.8 (8 Oct 2021)
 - Ignore texts in timelines
 
