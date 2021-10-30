@@ -119,7 +119,13 @@ export class ReplacementTableComponent implements OnChanges {
   }
 
   private compareNumber(v1: number, v2: number): number {
-    return v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
+    if (v1 < v2) {
+      return -1;
+    } else if (v1 > v2) {
+      return 1;
+    } else {
+      return 0;
+    }
   }
 
   private compareString(v1: string, v2: string): number {
