@@ -14,24 +14,28 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class BreakIncorrectFinderTest {
+class DoubleHttpFinderTest {
 
     @Mock
     private CheckWikipediaService checkWikipediaService;
 
     @InjectMocks
-    private BreakIncorrectFinder breakIncorrectFinder;
+    private DoubleHttpFinder doubleHttpFinder;
 
     @BeforeEach
     public void setUp() {
-        breakIncorrectFinder = new BreakIncorrectFinder();
+        doubleHttpFinder = new DoubleHttpFinder();
         MockitoAnnotations.initMocks(this);
     }
 
     @ParameterizedTest
-    @CsvSource(value = { "</br>, <br />", "<\\br>, <br />", "<br.>, <br />", "<br \\>, <br />", "<br/>, <br />" })
-    void testBreakIncorrectFinder(String text, String fix) {
-        List<Cosmetic> cosmetics = breakIncorrectFinder.findList(text);
+    @CsvSource(
+        value = {
+            "http://http://marca.com, http://marca.com", "https://https://www.linkedin.com, https://www.linkedin.com",
+        }
+    )
+    void testDoubleHttpFinder(String text, String fix) {
+        List<Cosmetic> cosmetics = doubleHttpFinder.findList(text);
 
         assertEquals(1, cosmetics.size());
         assertEquals(text, cosmetics.get(0).getText());
@@ -39,9 +43,16 @@ class BreakIncorrectFinderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "<br>", "<br />" })
-    void testValidBreak(String text) {
-        List<Cosmetic> cosmetics = breakIncorrectFinder.findList(text);
+    @ValueSource(
+        strings = {
+            "http://marca.com",
+            "https://www.linkedin.com",
+            "http://https://www.linkedin.com",
+            "https://http://marca.com",
+        }
+    )
+    void testValidExternalLink(String text) {
+        List<Cosmetic> cosmetics = doubleHttpFinder.findList(text);
 
         assertTrue(cosmetics.isEmpty());
     }

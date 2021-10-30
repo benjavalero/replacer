@@ -18,7 +18,8 @@ public enum CheckWikipediaAction {
     DOUBLE_SMALL_TAG(55),
     HEADLINE_END_WITH_COLON(57),
     LINK_EQUAL_TO_LINK_TEXT(64),
-    TAG_WITH_NO_CONTENT(85);
+    TAG_WITH_NO_CONTENT(85),
+    EXTERNAL_LINK_WITH_DOUBLE_HTTP(93);
 
     private final int value;
 }
