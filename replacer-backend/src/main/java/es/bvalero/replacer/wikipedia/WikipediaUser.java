@@ -9,4 +9,5 @@ public class WikipediaUser {
 
     String name;
     List<WikipediaUserGroup> groups;
+    boolean admin;
 }

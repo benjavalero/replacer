@@ -33,19 +33,13 @@ class AuthenticationOfflineService implements AuthenticationService {
         String userName = wikipediaUser.getName();
         boolean hasRights = wikipediaUser.getGroups().contains(WikipediaUserGroup.AUTOCONFIRMED);
         boolean bot = wikipediaUser.getGroups().contains(WikipediaUserGroup.BOT);
-        boolean admin = this.isAdminUser(userName);
         return AuthenticateResponse.of(
             userName,
             hasRights,
             bot,
-            admin,
+            wikipediaUser.isAdmin(),
             accessToken.getToken(),
             accessToken.getTokenSecret()
         );
-    }
-
-    @Override
-    public boolean isAdminUser(String username) {
-        return true;
     }
 }

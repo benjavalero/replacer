@@ -71,19 +71,12 @@ class AuthenticationMediaWikiServiceTest {
         OAuth1AccessToken accessToken = authenticationService.convertToAccessToken(oAuthTokenAccess);
         when(oAuthMediaWikiService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
         when(wikipediaService.getAuthenticatedUser(lang, oAuthTokenAccess))
-            .thenReturn(WikipediaUser.of(name, List.of(WikipediaUserGroup.AUTOCONFIRMED)));
+            .thenReturn(WikipediaUser.of(name, List.of(WikipediaUserGroup.AUTOCONFIRMED), true));
         AuthenticateResponse expected = AuthenticateResponse.of(name, true, false, true, "A", "B");
 
         authenticationService.setAdminUser(name);
         AuthenticateResponse actual = authenticationService.authenticate(lang, oAuthTokenRequest, oAuthVerifier);
 
         assertEquals(expected, actual);
-    }
-
-    @Test
-    void testIsAdminUser() {
-        authenticationService.setAdminUser("X");
-        assertTrue(authenticationService.isAdminUser("X"));
-        assertFalse(authenticationService.isAdminUser("Y"));
     }
 }

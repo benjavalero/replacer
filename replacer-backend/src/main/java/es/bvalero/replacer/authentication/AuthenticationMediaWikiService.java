@@ -76,12 +76,11 @@ class AuthenticationMediaWikiService implements AuthenticationService {
         String userName = wikipediaUser.getName();
         boolean hasRights = wikipediaUser.getGroups().contains(WikipediaUserGroup.AUTOCONFIRMED);
         boolean bot = wikipediaUser.getGroups().contains(WikipediaUserGroup.BOT);
-        boolean admin = this.isAdminUser(userName);
         return AuthenticateResponse.of(
             userName,
             hasRights,
             bot,
-            admin,
+            wikipediaUser.isAdmin(),
             accessToken.getToken(),
             accessToken.getTokenSecret()
         );
@@ -108,10 +107,5 @@ class AuthenticationMediaWikiService implements AuthenticationService {
     @TestOnly
     OAuth1AccessToken convertToAccessToken(OAuthToken authenticationToken) {
         return new OAuth1AccessToken(authenticationToken.getToken(), authenticationToken.getTokenSecret());
-    }
-
-    @Override
-    public boolean isAdminUser(String username) {
-        return this.adminUser.equals(username);
     }
 }

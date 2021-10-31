@@ -20,7 +20,12 @@ class WikipediaOfflineService implements WikipediaService {
 
     @Override
     public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, OAuthToken accessToken) {
-        return WikipediaUser.of("offline", List.of(WikipediaUserGroup.AUTOCONFIRMED));
+        return WikipediaUser.of("offline", List.of(WikipediaUserGroup.AUTOCONFIRMED), true);
+    }
+
+    @Override
+    public boolean isAdminUser(String username) {
+        return true;
     }
 
     @Override

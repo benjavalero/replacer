@@ -10,6 +10,4 @@ public interface AuthenticationService {
 
     AuthenticateResponse authenticate(WikipediaLanguage lang, OAuthToken requestToken, String oAuthVerifier)
         throws ReplacerException;
-
-    boolean isAdminUser(String username);
 }

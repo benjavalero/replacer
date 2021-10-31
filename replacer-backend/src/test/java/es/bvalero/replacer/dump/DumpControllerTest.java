@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import es.bvalero.replacer.authentication.AuthenticationService;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ class DumpControllerTest {
     private DumpManager dumpManager;
 
     @MockBean
-    private AuthenticationService authenticationService;
+    private WikipediaService wikipediaService;
 
     @Test
     void testGetDumpIndexingStatus() throws Exception {
@@ -49,7 +49,7 @@ class DumpControllerTest {
             start,
             end
         );
-        when(authenticationService.isAdminUser(anyString())).thenReturn(true);
+        when(wikipediaService.isAdminUser(anyString())).thenReturn(true);
         when(dumpManager.getDumpIndexingStatus()).thenReturn(indexation);
 
         mvc
@@ -68,7 +68,7 @@ class DumpControllerTest {
 
     @Test
     void testPostStart() throws Exception {
-        when(authenticationService.isAdminUser(anyString())).thenReturn(true);
+        when(wikipediaService.isAdminUser(anyString())).thenReturn(true);
 
         mvc
             .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))

@@ -1,8 +1,8 @@
 package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.authentication.AuthenticationService;
 import es.bvalero.replacer.common.UserParameters;
+import es.bvalero.replacer.wikipedia.WikipediaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -27,13 +27,13 @@ public class DumpController {
     private DumpManager dumpManager;
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private WikipediaService wikipediaService;
 
     @ApiOperation(value = "Find the status of the current (or the last) dump indexation")
     @Loggable(value = Loggable.DEBUG, trim = false)
     @GetMapping(value = "")
     public ResponseEntity<DumpIndexingStatus> getDumpIndexingStatus(UserParameters params) {
-        if (authenticationService.isAdminUser(params.getUser())) {
+        if (wikipediaService.isAdminUser(params.getUser())) {
             return new ResponseEntity<>(dumpManager.getDumpIndexingStatus(), HttpStatus.OK);
         } else {
             LOGGER.error("Unauthorized user: {}", params.getUser());
@@ -45,7 +45,7 @@ public class DumpController {
     @Loggable(prepend = true)
     @PostMapping(value = "")
     public ResponseEntity<String> manualStartDumpIndexing(UserParameters params) {
-        if (authenticationService.isAdminUser(params.getUser())) {
+        if (wikipediaService.isAdminUser(params.getUser())) {
             dumpManager.processLatestDumpFiles();
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
