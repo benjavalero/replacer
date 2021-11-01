@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import io.swagger.annotations.ApiParam;
 import java.util.ArrayList;

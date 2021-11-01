@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.ArrayList;

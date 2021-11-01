@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.WikipediaLanguage;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Value;

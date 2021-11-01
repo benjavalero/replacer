@@ -2,8 +2,8 @@ package es.bvalero.replacer.dump;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.domain.ReplacerException;
+import es.bvalero.replacer.domain.WikipediaLanguage;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;

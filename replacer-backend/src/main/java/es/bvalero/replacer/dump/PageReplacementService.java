@@ -1,6 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.util.List;
 

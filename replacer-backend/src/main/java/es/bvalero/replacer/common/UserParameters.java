@@ -1,5 +1,6 @@
 package es.bvalero.replacer.common;
 
+import es.bvalero.replacer.domain.WikipediaLanguage;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
 

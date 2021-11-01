@@ -1,9 +1,9 @@
 package es.bvalero.replacer.authentication;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.domain.AccessToken;
 import es.bvalero.replacer.domain.ReplacerException;
+import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import io.swagger.annotations.Api;

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.checkwikipedia;
 
-import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.WikipediaLanguage;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 

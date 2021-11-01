@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.benchmark.uppercase;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.domain.ReplacerException;
+import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import es.bvalero.replacer.finder.immutable.finders.UppercaseFinder;

@@ -3,7 +3,7 @@ package es.bvalero.replacer.page;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Arrays;
 import java.util.List;

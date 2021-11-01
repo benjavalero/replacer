@@ -2,9 +2,9 @@ package es.bvalero.replacer.wikipedia.api;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.domain.AccessToken;
 import es.bvalero.replacer.domain.ReplacerException;
+import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.time.LocalDateTime;
