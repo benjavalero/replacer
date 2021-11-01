@@ -10,4 +10,12 @@ public class WikipediaUser {
     String name;
     List<WikipediaUserGroup> groups;
     boolean admin;
+
+    public boolean isBot() {
+        return this.groups.contains(WikipediaUserGroup.BOT);
+    }
+
+    public boolean hasRights() {
+        return this.groups.contains(WikipediaUserGroup.AUTOCONFIRMED);
+    }
 }

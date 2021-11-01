@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/** Enum with the Wikipedia user groups used in the application */
 @Getter
 @AllArgsConstructor
 public enum WikipediaUserGroup {

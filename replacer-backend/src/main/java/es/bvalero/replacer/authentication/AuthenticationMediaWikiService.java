@@ -8,7 +8,6 @@ import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.OAuthToken;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
-import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import lombok.AccessLevel;
@@ -73,13 +72,10 @@ class AuthenticationMediaWikiService implements AuthenticationService {
         throws ReplacerException {
         OAuthToken accessToken = getAccessToken(requestToken, oAuthVerifier);
         WikipediaUser wikipediaUser = wikipediaService.getAuthenticatedUser(lang, accessToken);
-        String userName = wikipediaUser.getName();
-        boolean hasRights = wikipediaUser.getGroups().contains(WikipediaUserGroup.AUTOCONFIRMED);
-        boolean bot = wikipediaUser.getGroups().contains(WikipediaUserGroup.BOT);
         return AuthenticateResponse.of(
-            userName,
-            hasRights,
-            bot,
+            wikipediaUser.getName(),
+            wikipediaUser.hasRights(),
+            wikipediaUser.isBot(),
             wikipediaUser.isAdmin(),
             accessToken.getToken(),
             accessToken.getTokenSecret()
