@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.listing.find;
 
 import es.bvalero.replacer.common.FileUtils;
-import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.ReplacerException;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;

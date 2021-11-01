@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.benchmark.completetag;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
+import es.bvalero.replacer.domain.ReplacerException;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.benchmark.BenchmarkFinder;
 import java.util.ArrayList;

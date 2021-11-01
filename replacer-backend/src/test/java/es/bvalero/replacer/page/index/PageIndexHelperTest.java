@@ -3,8 +3,8 @@ package es.bvalero.replacer.page.index;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.ReplacerException;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;

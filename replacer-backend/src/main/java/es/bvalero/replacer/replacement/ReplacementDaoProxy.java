@@ -1,8 +1,8 @@
 package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.ReplacerException;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;

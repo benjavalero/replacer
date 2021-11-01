@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.listing.load;
 
-import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.ReplacerException;
 import es.bvalero.replacer.finder.listing.ListingItem;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.beans.PropertyChangeListener;

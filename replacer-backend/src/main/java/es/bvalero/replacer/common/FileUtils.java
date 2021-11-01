@@ -1,5 +1,6 @@
 package es.bvalero.replacer.common;
 
+import es.bvalero.replacer.domain.ReplacerException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;

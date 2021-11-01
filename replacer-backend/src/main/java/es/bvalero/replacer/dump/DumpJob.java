@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.ReplacerException;
 import java.nio.file.Path;
 
 interface DumpJob {

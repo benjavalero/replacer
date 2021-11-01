@@ -1,8 +1,8 @@
 package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.ReplacerException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

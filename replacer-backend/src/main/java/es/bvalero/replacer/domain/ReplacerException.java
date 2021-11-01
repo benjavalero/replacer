@@ -1,4 +1,4 @@
-package es.bvalero.replacer.common;
+package es.bvalero.replacer.domain;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 /**
  * Exception to be used in the context of Replacer.
  * It is not worth to define sub-exceptions by functionality.
+ * In case of throwing in Controllers is identified as an error 500.
  */
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class ReplacerException extends Exception {

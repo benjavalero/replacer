@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.listing.load;
 
-import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.ReplacerException;
 import es.bvalero.replacer.finder.listing.FalsePositive;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;

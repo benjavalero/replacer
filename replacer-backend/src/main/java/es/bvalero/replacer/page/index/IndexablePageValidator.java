@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.ReplacerException;
+import es.bvalero.replacer.domain.ReplacerException;
 import java.util.Set;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Value;

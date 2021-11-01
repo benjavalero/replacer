@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.ReplacerException;
 import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
