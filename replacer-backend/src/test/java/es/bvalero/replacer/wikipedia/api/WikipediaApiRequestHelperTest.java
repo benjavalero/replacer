@@ -9,7 +9,7 @@ import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.AccessToken;
+import es.bvalero.replacer.domain.AccessToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

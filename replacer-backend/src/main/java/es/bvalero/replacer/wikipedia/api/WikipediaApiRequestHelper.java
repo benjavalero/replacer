@@ -10,7 +10,7 @@ import com.github.scribejava.core.oauth.OAuth10aService;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.AccessToken;
+import es.bvalero.replacer.domain.AccessToken;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;

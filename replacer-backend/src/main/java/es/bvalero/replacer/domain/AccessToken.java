@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.domain;
 
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;

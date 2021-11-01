@@ -6,7 +6,7 @@ import com.github.scribejava.core.oauth.OAuth10aService;
 import es.bvalero.replacer.authentication.AuthenticationService;
 import es.bvalero.replacer.authentication.RequestToken;
 import es.bvalero.replacer.common.ReplacerException;
-import es.bvalero.replacer.wikipedia.AccessToken;
+import es.bvalero.replacer.domain.AccessToken;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import org.jetbrains.annotations.VisibleForTesting;

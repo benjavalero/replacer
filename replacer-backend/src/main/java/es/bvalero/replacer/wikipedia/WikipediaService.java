@@ -2,6 +2,7 @@ package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
+import es.bvalero.replacer.domain.AccessToken;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
