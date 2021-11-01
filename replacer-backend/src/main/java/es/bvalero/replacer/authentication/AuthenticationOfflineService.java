@@ -13,6 +13,8 @@ class AuthenticationOfflineService implements AuthenticationService {
     private static final String OFFLINE_REQUEST_TOKEN = "offline-request-token";
     private static final String OFFLINE_REQUEST_TOKEN_SECRET = "offline-request-token-secret";
     private static final String AUTHORIZATION_URL = "/?oauth_verifier=x";
+    private static final String OFFLINE_ACCESS_TOKEN = "offline-access-token";
+    private static final String OFFLINE_ACCESS_TOKEN_SECRET = "offline-access-token-secret";
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -29,6 +31,6 @@ class AuthenticationOfflineService implements AuthenticationService {
 
     @Override
     public OAuthToken getAccessToken(RequestToken requestToken, String oAuthVerifier) {
-        return OAuthToken.empty();
+        return OAuthToken.of(OFFLINE_ACCESS_TOKEN, OFFLINE_ACCESS_TOKEN_SECRET);
     }
 }

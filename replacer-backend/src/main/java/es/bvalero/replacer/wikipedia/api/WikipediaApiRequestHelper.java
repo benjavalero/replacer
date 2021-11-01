@@ -51,7 +51,7 @@ class WikipediaApiRequestHelper {
         OAuthRequest mediaWikiRequest = new OAuthRequest(verb, url);
         apiRequest.getParams().forEach(mediaWikiRequest::addParameter);
         OAuthToken oAuthToken = apiRequest.getAccessToken();
-        // Access token can be empty in tests and offline usage
+        // Access token can be empty in tests
         if (oAuthToken != null && !oAuthToken.isEmpty()) {
             OAuth1AccessToken accessToken = convertAccessToken(oAuthToken);
             mediaWikiApiService.signRequest(accessToken, mediaWikiRequest);

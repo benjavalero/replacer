@@ -1,15 +1,16 @@
 package es.bvalero.replacer.wikipedia;
 
 import lombok.Value;
+import org.jetbrains.annotations.TestOnly;
 
-/** Domain object representing a standard OAuth pair token/secret */
+/** Domain object representing an OAuth access token */
 @Value(staticConstructor = "of")
 public class OAuthToken {
 
     String token;
     String tokenSecret;
 
-    // For testing and offline usage
+    @TestOnly
     public static OAuthToken empty() {
         return OAuthToken.of("", "");
     }
