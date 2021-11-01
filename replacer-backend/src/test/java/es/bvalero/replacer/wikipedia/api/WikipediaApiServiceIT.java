@@ -79,8 +79,8 @@ class WikipediaApiServiceIT {
 
     @Test
     void testGetEditToken() throws ReplacerException {
-        // We pass a null access token to retrieve an anonymous edit token
-        EditToken editToken = wikipediaService.getEditToken(6903884, WikipediaLanguage.SPANISH, OAuthToken.ofEmpty());
+        // We pass an empty access token to retrieve an anonymous edit token
+        EditToken editToken = wikipediaService.getEditToken(6903884, WikipediaLanguage.SPANISH, OAuthToken.empty());
         assertNotNull(editToken);
         assertTrue(editToken.getCsrfToken().endsWith("+\\"));
         assertNotNull(editToken.getTimestamp());
@@ -104,7 +104,7 @@ class WikipediaApiServiceIT {
             newContent,
             page.getQueryTimestamp(),
             "Replacer Integration Test",
-            OAuthToken.ofEmpty()
+            OAuthToken.empty()
         );
 
         // Save the conflict content started 1 day before
@@ -120,7 +120,7 @@ class WikipediaApiServiceIT {
                     conflictContent,
                     before,
                     "Replacer Integration Test",
-                    OAuthToken.ofEmpty()
+                    OAuthToken.empty()
                 )
         );
     }

@@ -9,7 +9,12 @@ public class OAuthToken {
     String token;
     String tokenSecret;
 
-    public static OAuthToken ofEmpty() {
+    // For testing and offline usage
+    public static OAuthToken empty() {
         return OAuthToken.of("", "");
+    }
+
+    public boolean isEmpty() {
+        return OAuthToken.empty().equals(this);
     }
 }

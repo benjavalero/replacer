@@ -17,7 +17,7 @@ class AuthenticationOfflineService implements AuthenticationService {
 
     @Override
     public OAuthToken getRequestToken() {
-        return OAuthToken.ofEmpty();
+        return OAuthToken.empty();
     }
 
     @Override
@@ -27,6 +27,6 @@ class AuthenticationOfflineService implements AuthenticationService {
 
     @Override
     public OAuthToken getAccessToken(OAuthToken requestToken, String oAuthVerifier) {
-        return OAuthToken.ofEmpty();
+        return OAuthToken.empty();
     }
 }
