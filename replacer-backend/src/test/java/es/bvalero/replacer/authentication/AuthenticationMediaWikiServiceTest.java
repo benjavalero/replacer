@@ -41,16 +41,12 @@ class AuthenticationMediaWikiServiceTest {
 
     @Test
     void testGetRequestToken() throws IOException, ExecutionException, InterruptedException, ReplacerException {
-        OAuthToken oAuthToken = OAuthToken.of("A", "B");
-        String authorizationUrl = "C";
-        OAuth1RequestToken requestToken = authenticationService.convertToRequestToken(oAuthToken);
+        OAuth1RequestToken requestToken = new OAuth1RequestToken("A", "B");
         when(oAuthMediaWikiService.getRequestToken()).thenReturn(requestToken);
-        when(oAuthMediaWikiService.getAuthorizationUrl(requestToken)).thenReturn(authorizationUrl);
-        RequestToken expected = RequestToken.of("A", "B", "C");
+        OAuthToken expected = OAuthToken.of("A", "B");
 
         assertEquals(expected, authenticationService.getRequestToken());
         verify(oAuthMediaWikiService).getRequestToken();
-        verify(oAuthMediaWikiService).getAuthorizationUrl(requestToken);
     }
 
     @Test

@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+/** REST controller to perform authentication operations */
 @Api(tags = "authentication")
 @Loggable(prepend = true)
 @RestController
@@ -19,10 +20,12 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @ApiOperation(value = "Generate a request token to start OAuth authentication")
+    @ApiOperation(value = "Generate a request token, along with the authorization URL, to start authentication")
     @GetMapping(value = "/request-token")
-    public RequestToken getRequestToken() throws ReplacerException {
-        return authenticationService.getRequestToken();
+    public RequestTokenResponse getRequestToken() throws ReplacerException {
+        OAuthToken requestToken = authenticationService.getRequestToken();
+        String authorizationUrl = authenticationService.getAuthorizationUrl(requestToken);
+        return RequestTokenResponse.of(requestToken, authorizationUrl);
     }
 
     @ApiOperation(value = "Verify the OAuth authentication and return the authenticated user details")

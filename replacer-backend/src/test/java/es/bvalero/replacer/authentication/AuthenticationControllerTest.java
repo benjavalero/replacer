@@ -35,14 +35,17 @@ class AuthenticationControllerTest {
 
     @Test
     void testGetRequestToken() throws Exception {
-        when(authenticationService.getRequestToken()).thenReturn(RequestToken.of("X", "Y", "Z"));
+        OAuthToken requestToken = OAuthToken.of("X", "Y");
+        String authorizationUrl = "Z";
+        when(authenticationService.getRequestToken()).thenReturn(requestToken);
+        when(authenticationService.getAuthorizationUrl(requestToken)).thenReturn(authorizationUrl);
 
         mvc
             .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.token", is("X")))
-            .andExpect(jsonPath("$.tokenSecret", is("Y")))
-            .andExpect(jsonPath("$.authorizationUrl", is("Z")));
+            .andExpect(jsonPath("$.token", is(requestToken.getToken())))
+            .andExpect(jsonPath("$.tokenSecret", is(requestToken.getTokenSecret())))
+            .andExpect(jsonPath("$.authorizationUrl", is(authorizationUrl)));
 
         verify(authenticationService, times(1)).getRequestToken();
     }

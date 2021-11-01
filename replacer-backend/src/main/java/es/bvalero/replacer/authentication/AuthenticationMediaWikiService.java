@@ -36,13 +36,7 @@ class AuthenticationMediaWikiService implements AuthenticationService {
     private String adminUser;
 
     @Override
-    public RequestToken getRequestToken() throws ReplacerException {
-        OAuthToken requestToken = getMediaWikiRequestToken();
-        String authorizationUrl = getAuthorizationUrl(requestToken);
-        return RequestToken.of(requestToken.getToken(), requestToken.getTokenSecret(), authorizationUrl);
-    }
-
-    private OAuthToken getMediaWikiRequestToken() throws ReplacerException {
+    public OAuthToken getRequestToken() throws ReplacerException {
         try {
             return convertRequestToken(oAuthMediaWikiService.getRequestToken());
         } catch (InterruptedException e) {
@@ -58,7 +52,8 @@ class AuthenticationMediaWikiService implements AuthenticationService {
         return OAuthToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret());
     }
 
-    private String getAuthorizationUrl(OAuthToken requestToken) {
+    @Override
+    public String getAuthorizationUrl(OAuthToken requestToken) {
         return oAuthMediaWikiService.getAuthorizationUrl(convertToRequestToken(requestToken));
     }
 
