@@ -33,6 +33,6 @@ public class SpringFoxConfiguration {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("Replacer REST API").version("2.9.3").build();
+        return new ApiInfoBuilder().title("Replacer REST API").version("2.12.0").build();
     }
 }

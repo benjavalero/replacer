@@ -4,6 +4,8 @@ import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -20,6 +22,9 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @Autowired
+    private WikipediaService wikipediaService;
+
     @ApiOperation(value = "Generate a request token, along with the authorization URL, to start authentication")
     @GetMapping(value = "/request-token")
     public RequestTokenResponse getRequestToken() throws ReplacerException {
@@ -34,10 +39,10 @@ public class AuthenticationController {
         @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang,
         @RequestBody AuthenticateRequest authenticateRequest
     ) throws ReplacerException {
-        return authenticationService.authenticate(
-            lang,
-            OAuthToken.of(authenticateRequest.getRequestToken(), authenticateRequest.getRequestTokenSecret()),
-            authenticateRequest.getOauthVerifier()
-        );
+        OAuthToken requestToken = authenticateRequest.getRequestToken();
+        String oAuthVerifier = authenticateRequest.getOauthVerifier();
+        OAuthToken accessToken = authenticationService.getAccessToken(requestToken, oAuthVerifier);
+        WikipediaUser wikipediaUser = wikipediaService.getAuthenticatedUser(lang, accessToken);
+        return AuthenticateResponse.of(accessToken, wikipediaUser);
     }
 }

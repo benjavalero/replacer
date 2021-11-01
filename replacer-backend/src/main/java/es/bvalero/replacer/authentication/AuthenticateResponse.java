@@ -1,9 +1,16 @@
 package es.bvalero.replacer.authentication;
 
+import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.WikipediaUser;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Value;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-@Value(staticConstructor = "of")
+@ApiModel(description = "Response DTO containing the access token and the user details after authentication")
+@Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 class AuthenticateResponse {
 
     @ApiModelProperty(value = "Wikipedia user name", required = true, example = "Benjavalero")
@@ -23,4 +30,15 @@ class AuthenticateResponse {
 
     @ApiModelProperty(required = true, example = "36dd90e87c59acc138ee0c38487e975af6da141e")
     String tokenSecret;
+
+    static AuthenticateResponse of(OAuthToken accessToken, WikipediaUser wikipediaUser) {
+        return new AuthenticateResponse(
+            wikipediaUser.getName(),
+            wikipediaUser.hasRights(),
+            wikipediaUser.isBot(),
+            wikipediaUser.isAdmin(),
+            accessToken.getToken(),
+            accessToken.getTokenSecret()
+        );
+    }
 }

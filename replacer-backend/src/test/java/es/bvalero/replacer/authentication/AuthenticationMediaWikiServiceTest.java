@@ -8,13 +8,8 @@ import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import es.bvalero.replacer.common.ReplacerException;
-import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.OAuthToken;
-import es.bvalero.replacer.wikipedia.WikipediaService;
-import es.bvalero.replacer.wikipedia.WikipediaUser;
-import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,9 +21,6 @@ class AuthenticationMediaWikiServiceTest {
 
     @Mock
     private OAuth10aService oAuthMediaWikiService;
-
-    @Mock
-    private WikipediaService wikipediaService;
 
     @InjectMocks
     private AuthenticationMediaWikiService authenticationService;
@@ -57,22 +49,15 @@ class AuthenticationMediaWikiServiceTest {
     }
 
     @Test
-    void testGetLoggedUser() throws IOException, ExecutionException, InterruptedException, ReplacerException {
-        WikipediaLanguage lang = WikipediaLanguage.getDefault();
+    void testGetAccessToken() throws IOException, ExecutionException, InterruptedException, ReplacerException {
         OAuthToken oAuthTokenRequest = OAuthToken.of("R", "S");
         String oAuthVerifier = "V";
-        String name = "A";
-        OAuth1RequestToken requestToken = authenticationService.convertToRequestToken(oAuthTokenRequest);
+        OAuth1RequestToken requestToken = new OAuth1RequestToken("R", "S");
         OAuthToken oAuthTokenAccess = OAuthToken.of("A", "B");
-        OAuth1AccessToken accessToken = authenticationService.convertToAccessToken(oAuthTokenAccess);
+        OAuth1AccessToken accessToken = new OAuth1AccessToken("A", "B");
         when(oAuthMediaWikiService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
-        when(wikipediaService.getAuthenticatedUser(lang, oAuthTokenAccess))
-            .thenReturn(WikipediaUser.of(name, List.of(WikipediaUserGroup.AUTOCONFIRMED), true));
-        AuthenticateResponse expected = AuthenticateResponse.of(name, true, false, true, "A", "B");
+        OAuthToken actual = authenticationService.getAccessToken(oAuthTokenRequest, oAuthVerifier);
 
-        authenticationService.setAdminUser(name);
-        AuthenticateResponse actual = authenticationService.authenticate(lang, oAuthTokenRequest, oAuthVerifier);
-
-        assertEquals(expected, actual);
+        assertEquals(oAuthTokenAccess, actual);
     }
 }

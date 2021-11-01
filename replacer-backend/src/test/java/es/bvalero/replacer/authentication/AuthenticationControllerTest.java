@@ -11,6 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.wikipedia.WikipediaUser;
+import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,9 @@ class AuthenticationControllerTest {
     @MockBean
     private AuthenticationService authenticationService;
 
+    @MockBean
+    private WikipediaService wikipediaService;
+
     @Test
     void testGetRequestToken() throws Exception {
         OAuthToken requestToken = OAuthToken.of("X", "Y");
@@ -52,27 +59,31 @@ class AuthenticationControllerTest {
 
     @Test
     void testAuthenticate() throws Exception {
+        OAuthToken requestToken = OAuthToken.of("R", "S");
+        OAuthToken accessToken = OAuthToken.of("A", "B");
         String userName = "C";
+        WikipediaUser wikipediaUser = WikipediaUser.of(userName, List.of(WikipediaUserGroup.AUTOCONFIRMED), true);
+        String oAuthVerifier = "V";
 
-        when(authenticationService.authenticate(any(WikipediaLanguage.class), any(OAuthToken.class), anyString()))
-            .thenReturn(AuthenticateResponse.of(userName, true, false, true, "A", "B"));
+        when(authenticationService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
+        when(wikipediaService.getAuthenticatedUser(WikipediaLanguage.SPANISH, accessToken)).thenReturn(wikipediaUser);
 
-        AuthenticateRequest verifier = AuthenticateRequest.of("X", "Y", "V");
+        AuthenticateRequest authenticateRequest = AuthenticateRequest.of(requestToken, oAuthVerifier);
         mvc
             .perform(
                 post("/api/authentication/authenticate?lang=es")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(verifier))
+                    .content(objectMapper.writeValueAsString(authenticateRequest))
             )
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name", is("C")))
+            .andExpect(jsonPath("$.name", is(wikipediaUser.getName())))
             .andExpect(jsonPath("$.hasRights", equalTo(true)))
             .andExpect(jsonPath("$.bot", equalTo(false)))
             .andExpect(jsonPath("$.admin", equalTo(true)))
-            .andExpect(jsonPath("$.token", is("A")))
-            .andExpect(jsonPath("$.tokenSecret", is("B")));
+            .andExpect(jsonPath("$.token", is(accessToken.getToken())))
+            .andExpect(jsonPath("$.tokenSecret", is(accessToken.getTokenSecret())));
 
-        verify(authenticationService, times(1))
-            .authenticate(eq(WikipediaLanguage.SPANISH), any(OAuthToken.class), anyString());
+        verify(authenticationService, times(1)).getAccessToken(any(OAuthToken.class), anyString());
+        verify(wikipediaService, times(1)).getAuthenticatedUser(any(WikipediaLanguage.class), any(OAuthToken.class));
     }
 }
