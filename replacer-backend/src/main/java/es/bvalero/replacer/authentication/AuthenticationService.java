@@ -5,9 +5,9 @@ import es.bvalero.replacer.wikipedia.OAuthToken;
 
 /** Service to perform authentication operations */
 public interface AuthenticationService {
-    OAuthToken getRequestToken() throws ReplacerException;
+    RequestToken getRequestToken() throws ReplacerException;
 
-    String getAuthorizationUrl(OAuthToken requestToken);
+    String getAuthorizationUrl(RequestToken requestToken);
 
-    OAuthToken getAccessToken(OAuthToken requestToken, String oAuthVerifier) throws ReplacerException;
+    OAuthToken getAccessToken(RequestToken requestToken, String oAuthVerifier) throws ReplacerException;
 }

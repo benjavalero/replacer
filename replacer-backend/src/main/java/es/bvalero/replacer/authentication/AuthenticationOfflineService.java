@@ -16,17 +16,17 @@ class AuthenticationOfflineService implements AuthenticationService {
     private WikipediaService wikipediaService;
 
     @Override
-    public OAuthToken getRequestToken() {
-        return OAuthToken.empty();
+    public RequestToken getRequestToken() {
+        return RequestToken.empty();
     }
 
     @Override
-    public String getAuthorizationUrl(OAuthToken requestToken) {
+    public String getAuthorizationUrl(RequestToken requestToken) {
         return AUTHORIZATION_URL;
     }
 
     @Override
-    public OAuthToken getAccessToken(OAuthToken requestToken, String oAuthVerifier) {
+    public OAuthToken getAccessToken(RequestToken requestToken, String oAuthVerifier) {
         return OAuthToken.empty();
     }
 }

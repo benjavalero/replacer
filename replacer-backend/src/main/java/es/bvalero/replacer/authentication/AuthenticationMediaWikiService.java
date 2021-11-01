@@ -22,7 +22,7 @@ class AuthenticationMediaWikiService implements AuthenticationService {
     private OAuth10aService oAuthMediaWikiService;
 
     @Override
-    public OAuthToken getRequestToken() throws ReplacerException {
+    public RequestToken getRequestToken() throws ReplacerException {
         try {
             return convertRequestToken(oAuthMediaWikiService.getRequestToken());
         } catch (InterruptedException e) {
@@ -34,22 +34,22 @@ class AuthenticationMediaWikiService implements AuthenticationService {
         }
     }
 
-    private OAuthToken convertRequestToken(OAuth1RequestToken oAuth1RequestToken) {
-        return OAuthToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret());
+    private RequestToken convertRequestToken(OAuth1RequestToken oAuth1RequestToken) {
+        return RequestToken.of(oAuth1RequestToken.getToken(), oAuth1RequestToken.getTokenSecret());
     }
 
     @Override
-    public String getAuthorizationUrl(OAuthToken requestToken) {
+    public String getAuthorizationUrl(RequestToken requestToken) {
         return oAuthMediaWikiService.getAuthorizationUrl(convertToRequestToken(requestToken));
     }
 
     @VisibleForTesting
-    OAuth1RequestToken convertToRequestToken(OAuthToken authenticationToken) {
+    OAuth1RequestToken convertToRequestToken(RequestToken authenticationToken) {
         return new OAuth1RequestToken(authenticationToken.getToken(), authenticationToken.getTokenSecret());
     }
 
     @Override
-    public OAuthToken getAccessToken(OAuthToken requestToken, String oAuthVerifier) throws ReplacerException {
+    public OAuthToken getAccessToken(RequestToken requestToken, String oAuthVerifier) throws ReplacerException {
         try {
             return convertAccessToken(
                 oAuthMediaWikiService.getAccessToken(convertToRequestToken(requestToken), oAuthVerifier)

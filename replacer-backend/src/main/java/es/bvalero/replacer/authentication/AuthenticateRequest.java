@@ -1,6 +1,5 @@
 package es.bvalero.replacer.authentication;
 
-import es.bvalero.replacer.wikipedia.OAuthToken;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
@@ -25,11 +24,11 @@ class AuthenticateRequest {
     private String oauthVerifier;
 
     @TestOnly
-    static AuthenticateRequest of(OAuthToken accessToken, String oAuthVerifier) {
-        return new AuthenticateRequest(accessToken.getToken(), accessToken.getTokenSecret(), oAuthVerifier);
+    static AuthenticateRequest of(RequestToken requestToken, String oAuthVerifier) {
+        return new AuthenticateRequest(requestToken.getToken(), requestToken.getTokenSecret(), oAuthVerifier);
     }
 
-    OAuthToken getRequestToken() {
-        return OAuthToken.of(token, tokenSecret);
+    RequestToken getRequestToken() {
+        return RequestToken.of(token, tokenSecret);
     }
 }

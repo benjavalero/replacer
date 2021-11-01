@@ -1,6 +1,5 @@
 package es.bvalero.replacer.authentication;
 
-import es.bvalero.replacer.wikipedia.OAuthToken;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AccessLevel;
@@ -8,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @ApiModel(
-    description = "DTO containing a generated request token, along with the authorization URL, to start authentication."
+    description = "Response DTO containing a generated request token, along with the authorization URL, to start authentication."
 )
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -26,7 +25,7 @@ class RequestTokenResponse {
     )
     String authorizationUrl;
 
-    static RequestTokenResponse of(OAuthToken requestToken, String authorizationUrl) {
+    static RequestTokenResponse of(RequestToken requestToken, String authorizationUrl) {
         return new RequestTokenResponse(requestToken.getToken(), requestToken.getTokenSecret(), authorizationUrl);
     }
 }

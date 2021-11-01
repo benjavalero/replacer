@@ -35,7 +35,7 @@ class AuthenticationMediaWikiServiceTest {
     void testGetRequestToken() throws IOException, ExecutionException, InterruptedException, ReplacerException {
         OAuth1RequestToken requestToken = new OAuth1RequestToken("A", "B");
         when(oAuthMediaWikiService.getRequestToken()).thenReturn(requestToken);
-        OAuthToken expected = OAuthToken.of("A", "B");
+        RequestToken expected = RequestToken.of("A", "B");
 
         assertEquals(expected, authenticationService.getRequestToken());
         verify(oAuthMediaWikiService).getRequestToken();
@@ -50,7 +50,7 @@ class AuthenticationMediaWikiServiceTest {
 
     @Test
     void testGetAccessToken() throws IOException, ExecutionException, InterruptedException, ReplacerException {
-        OAuthToken oAuthTokenRequest = OAuthToken.of("R", "S");
+        RequestToken oAuthTokenRequest = RequestToken.of("R", "S");
         String oAuthVerifier = "V";
         OAuth1RequestToken requestToken = new OAuth1RequestToken("R", "S");
         OAuthToken oAuthTokenAccess = OAuthToken.of("A", "B");

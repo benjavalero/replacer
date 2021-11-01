@@ -28,7 +28,7 @@ public class AuthenticationController {
     @ApiOperation(value = "Generate a request token, along with the authorization URL, to start authentication")
     @GetMapping(value = "/request-token")
     public RequestTokenResponse getRequestToken() throws ReplacerException {
-        OAuthToken requestToken = authenticationService.getRequestToken();
+        RequestToken requestToken = authenticationService.getRequestToken();
         String authorizationUrl = authenticationService.getAuthorizationUrl(requestToken);
         return RequestTokenResponse.of(requestToken, authorizationUrl);
     }
@@ -39,7 +39,7 @@ public class AuthenticationController {
         @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang,
         @RequestBody AuthenticateRequest authenticateRequest
     ) throws ReplacerException {
-        OAuthToken requestToken = authenticateRequest.getRequestToken();
+        RequestToken requestToken = authenticateRequest.getRequestToken();
         String oAuthVerifier = authenticateRequest.getOauthVerifier();
         OAuthToken accessToken = authenticationService.getAccessToken(requestToken, oAuthVerifier);
         WikipediaUser wikipediaUser = wikipediaService.getAuthenticatedUser(lang, accessToken);

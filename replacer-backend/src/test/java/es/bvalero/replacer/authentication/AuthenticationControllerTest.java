@@ -42,7 +42,7 @@ class AuthenticationControllerTest {
 
     @Test
     void testGetRequestToken() throws Exception {
-        OAuthToken requestToken = OAuthToken.of("X", "Y");
+        RequestToken requestToken = RequestToken.of("X", "Y");
         String authorizationUrl = "Z";
         when(authenticationService.getRequestToken()).thenReturn(requestToken);
         when(authenticationService.getAuthorizationUrl(requestToken)).thenReturn(authorizationUrl);
@@ -59,7 +59,7 @@ class AuthenticationControllerTest {
 
     @Test
     void testAuthenticate() throws Exception {
-        OAuthToken requestToken = OAuthToken.of("R", "S");
+        RequestToken requestToken = RequestToken.of("R", "S");
         OAuthToken accessToken = OAuthToken.of("A", "B");
         String userName = "C";
         WikipediaUser wikipediaUser = WikipediaUser.of(userName, List.of(WikipediaUserGroup.AUTOCONFIRMED), true);
@@ -83,7 +83,7 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.token", is(accessToken.getToken())))
             .andExpect(jsonPath("$.tokenSecret", is(accessToken.getTokenSecret())));
 
-        verify(authenticationService, times(1)).getAccessToken(any(OAuthToken.class), anyString());
+        verify(authenticationService, times(1)).getAccessToken(any(RequestToken.class), anyString());
         verify(wikipediaService, times(1)).getAuthenticatedUser(any(WikipediaLanguage.class), any(OAuthToken.class));
     }
 }
