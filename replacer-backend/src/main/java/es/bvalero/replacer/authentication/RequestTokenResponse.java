@@ -2,15 +2,12 @@ package es.bvalero.replacer.authentication;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Value;
 
 @ApiModel(
     description = "Response DTO containing a generated request token, along with the authorization URL, to start authentication."
 )
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Value
 class RequestTokenResponse {
 
     @ApiModelProperty(required = true, example = "b3cecd4b16ecde45d9fd1a0ce68a4091")

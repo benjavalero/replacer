@@ -4,13 +4,10 @@ import es.bvalero.replacer.wikipedia.OAuthToken;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Value;
 
 @ApiModel(description = "Response DTO containing the access token and the user details after authentication")
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Value
 class AuthenticateResponse {
 
     @ApiModelProperty(value = "Wikipedia user name", required = true, example = "Benjavalero")

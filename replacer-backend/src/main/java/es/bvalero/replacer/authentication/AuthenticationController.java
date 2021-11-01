@@ -9,6 +9,7 @@ import es.bvalero.replacer.wikipedia.WikipediaUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class AuthenticationController {
     @PostMapping(value = "/authenticate")
     public AuthenticateResponse authenticate(
         @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang,
-        @RequestBody AuthenticateRequest authenticateRequest
+        @Valid @RequestBody AuthenticateRequest authenticateRequest
     ) throws ReplacerException {
         RequestToken requestToken = authenticateRequest.getRequestToken();
         String oAuthVerifier = authenticateRequest.getOauthVerifier();

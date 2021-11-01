@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 @Profile("offline")
 class AuthenticationOfflineService implements AuthenticationService {
 
+    private static final String OFFLINE_REQUEST_TOKEN = "offline-request-token";
+    private static final String OFFLINE_REQUEST_TOKEN_SECRET = "offline-request-token-secret";
     private static final String AUTHORIZATION_URL = "/?oauth_verifier=x";
 
     @Autowired
@@ -17,7 +19,7 @@ class AuthenticationOfflineService implements AuthenticationService {
 
     @Override
     public RequestToken getRequestToken() {
-        return RequestToken.empty();
+        return RequestToken.of(OFFLINE_REQUEST_TOKEN, OFFLINE_REQUEST_TOKEN_SECRET);
     }
 
     @Override

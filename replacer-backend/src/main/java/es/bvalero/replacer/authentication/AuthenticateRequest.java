@@ -2,6 +2,7 @@ package es.bvalero.replacer.authentication;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,12 +16,15 @@ import org.jetbrains.annotations.TestOnly;
 class AuthenticateRequest {
 
     @ApiModelProperty(required = true, example = "4360336e38cd5dc8e3f90ad797154275")
+    @NotBlank
     private String token;
 
     @ApiModelProperty(required = true, example = "533f4ef5d94d89649626123db3dbec35")
+    @NotBlank
     private String tokenSecret;
 
     @ApiModelProperty(required = true, example = "04fd9900f948d22e65c5618b2093cfc5")
+    @NotBlank
     private String oauthVerifier;
 
     @TestOnly

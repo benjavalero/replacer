@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.wikipedia.OAuthToken;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -55,6 +56,19 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.authorizationUrl", is(authorizationUrl)));
 
         verify(authenticationService, times(1)).getRequestToken();
+        verify(authenticationService, times(1)).getAuthorizationUrl(any(RequestToken.class));
+    }
+
+    @Test
+    void testGetRequestTokenWithException() throws Exception {
+        when(authenticationService.getRequestToken()).thenThrow(new ReplacerException());
+
+        mvc
+            .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isInternalServerError());
+
+        verify(authenticationService, times(1)).getRequestToken();
+        verify(authenticationService, never()).getAuthorizationUrl(any(RequestToken.class));
     }
 
     @Test
@@ -85,5 +99,21 @@ class AuthenticationControllerTest {
 
         verify(authenticationService, times(1)).getAccessToken(any(RequestToken.class), anyString());
         verify(wikipediaService, times(1)).getAuthenticatedUser(any(WikipediaLanguage.class), any(OAuthToken.class));
+    }
+
+    @Test
+    void testAuthenticateEmptyVerifier() throws Exception {
+        RequestToken requestToken = RequestToken.of("R", "S");
+        String oAuthVerifier = "";
+        AuthenticateRequest authenticateRequest = AuthenticateRequest.of(requestToken, oAuthVerifier);
+        mvc
+            .perform(
+                post("/api/authentication/authenticate?lang=es")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(authenticateRequest))
+            )
+            .andExpect(status().isBadRequest());
+
+        verify(authenticationService, never()).getAccessToken(any(RequestToken.class), anyString());
     }
 }
