@@ -9,7 +9,7 @@ import org.springframework.lang.Nullable;
 
 /** Service to perform operations on Wikipedia */
 public interface WikipediaService {
-    WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException;
+    WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) throws ReplacerException;
 
     boolean isAdminUser(String username);
 
@@ -37,6 +37,6 @@ public interface WikipediaService {
         String pageContent,
         LocalDateTime queryTimestamp,
         String editSummary,
-        OAuthToken accessToken
+        AccessToken accessToken
     ) throws ReplacerException;
 }

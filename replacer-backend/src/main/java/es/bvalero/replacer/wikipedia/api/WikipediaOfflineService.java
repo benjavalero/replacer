@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 class WikipediaOfflineService implements WikipediaService {
 
     @Override
-    public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, OAuthToken accessToken) {
+    public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) {
         return WikipediaUser.of("offline", List.of(WikipediaUserGroup.AUTOCONFIRMED), true);
     }
 
@@ -82,7 +82,7 @@ class WikipediaOfflineService implements WikipediaService {
         String pageContent,
         LocalDateTime queryTimestamp,
         String editSummary,
-        OAuthToken accessToken
+        AccessToken accessToken
     ) {
         // Do nothing
     }

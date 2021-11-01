@@ -1,6 +1,6 @@
 package es.bvalero.replacer.authentication;
 
-import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,7 +28,7 @@ class AuthenticateResponse {
     @ApiModelProperty(required = true, example = "36dd90e87c59acc138ee0c38487e975af6da141e")
     String tokenSecret;
 
-    static AuthenticateResponse of(OAuthToken accessToken, WikipediaUser wikipediaUser) {
+    static AuthenticateResponse of(AccessToken accessToken, WikipediaUser wikipediaUser) {
         return new AuthenticateResponse(
             wikipediaUser.getName(),
             wikipediaUser.hasRights(),

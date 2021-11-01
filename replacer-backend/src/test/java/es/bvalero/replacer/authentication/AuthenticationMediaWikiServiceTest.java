@@ -7,7 +7,7 @@ import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import es.bvalero.replacer.common.ReplacerException;
-import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,8 +58,8 @@ class AuthenticationMediaWikiServiceTest {
         OAuth1AccessToken oAuth1AccessToken = new OAuth1AccessToken("A", "B");
         when(oAuthMediaWikiService.getAccessToken(oAuth1RequestToken, oAuthVerifier)).thenReturn(oAuth1AccessToken);
 
-        OAuthToken expected = OAuthToken.of("A", "B");
-        OAuthToken actual = authenticationService.getAccessToken(requestToken, oAuthVerifier);
+        AccessToken expected = AccessToken.of("A", "B");
+        AccessToken actual = authenticationService.getAccessToken(requestToken, oAuthVerifier);
 
         assertEquals(expected, actual);
     }

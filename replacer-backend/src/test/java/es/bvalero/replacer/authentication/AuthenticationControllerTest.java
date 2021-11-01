@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
@@ -74,7 +74,7 @@ class AuthenticationControllerTest {
     @Test
     void testAuthenticate() throws Exception {
         RequestToken requestToken = RequestToken.of("R", "S");
-        OAuthToken accessToken = OAuthToken.of("A", "B");
+        AccessToken accessToken = AccessToken.of("A", "B");
         String userName = "C";
         WikipediaUser wikipediaUser = WikipediaUser.of(userName, List.of(WikipediaUserGroup.AUTOCONFIRMED), true);
         String oAuthVerifier = "V";
@@ -98,7 +98,7 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.tokenSecret", is(accessToken.getTokenSecret())));
 
         verify(authenticationService, times(1)).getAccessToken(any(RequestToken.class), anyString());
-        verify(wikipediaService, times(1)).getAuthenticatedUser(any(WikipediaLanguage.class), any(OAuthToken.class));
+        verify(wikipediaService, times(1)).getAuthenticatedUser(any(WikipediaLanguage.class), any(AccessToken.class));
     }
 
     @Test

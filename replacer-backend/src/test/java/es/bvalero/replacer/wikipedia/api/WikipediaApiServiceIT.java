@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import java.time.LocalDateTime;
@@ -80,7 +80,7 @@ class WikipediaApiServiceIT {
     @Test
     void testGetEditToken() throws ReplacerException {
         // We pass an empty access token to retrieve an anonymous edit token
-        EditToken editToken = wikipediaService.getEditToken(6903884, WikipediaLanguage.SPANISH, OAuthToken.empty());
+        EditToken editToken = wikipediaService.getEditToken(6903884, WikipediaLanguage.SPANISH, AccessToken.empty());
         assertNotNull(editToken);
         assertTrue(editToken.getCsrfToken().endsWith("+\\"));
         assertNotNull(editToken.getTimestamp());
@@ -104,7 +104,7 @@ class WikipediaApiServiceIT {
             newContent,
             page.getQueryTimestamp(),
             "Replacer Integration Test",
-            OAuthToken.empty()
+            AccessToken.empty()
         );
 
         // Save the conflict content started 1 day before
@@ -120,7 +120,7 @@ class WikipediaApiServiceIT {
                     conflictContent,
                     before,
                     "Replacer Integration Test",
-                    OAuthToken.empty()
+                    AccessToken.empty()
                 )
         );
     }

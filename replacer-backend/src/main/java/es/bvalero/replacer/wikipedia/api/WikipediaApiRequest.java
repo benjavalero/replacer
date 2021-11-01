@@ -1,7 +1,7 @@
 package es.bvalero.replacer.wikipedia.api;
 
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import java.util.Map;
 import lombok.Builder;
 import lombok.Singular;
@@ -19,5 +19,5 @@ class WikipediaApiRequest {
     Map<String, String> params;
 
     @Nullable
-    OAuthToken accessToken;
+    AccessToken accessToken;
 }

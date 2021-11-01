@@ -9,7 +9,7 @@ import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -85,7 +85,7 @@ class WikipediaApiRequestHelperTest {
             .builder()
             .verb(WikipediaApiRequestVerb.POST)
             .lang(WikipediaLanguage.getDefault())
-            .accessToken(OAuthToken.of("A", "B"))
+            .accessToken(AccessToken.of("A", "B"))
             .build();
         assertNotNull(wikipediaApiRequestHelper.executeApiRequest(apiRequest));
     }

@@ -48,7 +48,7 @@ class WikipediaApiServiceTest {
         assertTrue(response.isBatchcomplete());
 
         // We pass an empty access token to retrieve an anonymous edit token
-        EditToken editToken = wikipediaService.getEditToken(2209245, WikipediaLanguage.SPANISH, OAuthToken.empty());
+        EditToken editToken = wikipediaService.getEditToken(2209245, WikipediaLanguage.SPANISH, AccessToken.empty());
         assertNotNull(editToken.getCsrfToken());
         assertEquals("+\\", editToken.getCsrfToken());
         assertEquals("2019-06-24T21:24:09Z", WikipediaDateUtils.formatWikipediaTimestamp(editToken.getTimestamp()));
@@ -176,7 +176,7 @@ class WikipediaApiServiceTest {
 
         WikipediaApiResponse.UserInfo userInfo = wikipediaService.getLoggedUserName(
             WikipediaLanguage.getDefault(),
-            OAuthToken.empty()
+            AccessToken.empty()
         );
         assertEquals("Benjavalero", userInfo.getName());
         assertEquals(List.of("*", "user", "autoconfirmed"), userInfo.getGroups());
@@ -203,7 +203,7 @@ class WikipediaApiServiceTest {
                     "",
                     currentTimestamp,
                     "",
-                    OAuthToken.empty()
+                    AccessToken.empty()
                 )
         );
     }
@@ -225,7 +225,7 @@ class WikipediaApiServiceTest {
             "",
             currentTimestamp,
             "",
-            OAuthToken.empty()
+            AccessToken.empty()
         );
 
         // Two calls: one for the EditToken and another to save the content
@@ -234,7 +234,15 @@ class WikipediaApiServiceTest {
         // Save a section
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-26T21:24:09Z");
-        wikipediaService.savePageContent(WikipediaLanguage.SPANISH, 1, 2, "", currentTimestamp, "", OAuthToken.empty());
+        wikipediaService.savePageContent(
+            WikipediaLanguage.SPANISH,
+            1,
+            2,
+            "",
+            currentTimestamp,
+            "",
+            AccessToken.empty()
+        );
 
         // Two calls: one for the EditToken and another to save the content (x2 save page and section in this test)
         verify(wikipediaApiRequestHelper, times(4)).executeApiRequest(any(WikipediaApiRequest.class));

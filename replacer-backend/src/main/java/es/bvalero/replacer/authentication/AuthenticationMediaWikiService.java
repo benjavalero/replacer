@@ -4,7 +4,7 @@ import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import es.bvalero.replacer.common.ReplacerException;
-import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -49,7 +49,7 @@ class AuthenticationMediaWikiService implements AuthenticationService {
     }
 
     @Override
-    public OAuthToken getAccessToken(RequestToken requestToken, String oAuthVerifier) throws ReplacerException {
+    public AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) throws ReplacerException {
         try {
             return convertAccessToken(
                 oAuthMediaWikiService.getAccessToken(convertToRequestToken(requestToken), oAuthVerifier)
@@ -63,7 +63,7 @@ class AuthenticationMediaWikiService implements AuthenticationService {
         }
     }
 
-    private OAuthToken convertAccessToken(OAuth1AccessToken oAuth1AccessToken) {
-        return OAuthToken.of(oAuth1AccessToken.getToken(), oAuth1AccessToken.getTokenSecret());
+    private AccessToken convertAccessToken(OAuth1AccessToken oAuth1AccessToken) {
+        return AccessToken.of(oAuth1AccessToken.getToken(), oAuth1AccessToken.getTokenSecret());
     }
 }

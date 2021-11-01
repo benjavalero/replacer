@@ -3,7 +3,7 @@ package es.bvalero.replacer.authentication;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import io.swagger.annotations.Api;
@@ -42,7 +42,7 @@ public class AuthenticationController {
     ) throws ReplacerException {
         RequestToken requestToken = authenticateRequest.getRequestToken();
         String oAuthVerifier = authenticateRequest.getOauthVerifier();
-        OAuthToken accessToken = authenticationService.getAccessToken(requestToken, oAuthVerifier);
+        AccessToken accessToken = authenticationService.getAccessToken(requestToken, oAuthVerifier);
         WikipediaUser wikipediaUser = wikipediaService.getAuthenticatedUser(lang, accessToken);
         return AuthenticateResponse.of(accessToken, wikipediaUser);
     }

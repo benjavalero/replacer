@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
-import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -216,7 +216,7 @@ class PageControllerTest {
                 eq("C"),
                 eq(timestamp),
                 anyString(),
-                eq(OAuthToken.of("A", "B"))
+                eq(AccessToken.of("A", "B"))
             );
     }
 
@@ -262,7 +262,7 @@ class PageControllerTest {
                 anyString(),
                 any(LocalDateTime.class),
                 anyString(),
-                any(OAuthToken.class)
+                any(AccessToken.class)
             );
     }
 }

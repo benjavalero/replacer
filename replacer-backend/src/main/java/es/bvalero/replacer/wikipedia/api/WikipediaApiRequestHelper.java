@@ -10,7 +10,7 @@ import com.github.scribejava.core.oauth.OAuth10aService;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.ReplacerException;
 import es.bvalero.replacer.common.WikipediaLanguage;
-import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
@@ -50,11 +50,11 @@ class WikipediaApiRequestHelper {
         String url = buildWikipediaRequestUrl(apiRequest.getLang());
         OAuthRequest mediaWikiRequest = new OAuthRequest(verb, url);
         apiRequest.getParams().forEach(mediaWikiRequest::addParameter);
-        OAuthToken oAuthToken = apiRequest.getAccessToken();
+        AccessToken accessToken = apiRequest.getAccessToken();
         // Access token can be empty in tests
-        if (oAuthToken != null && !oAuthToken.isEmpty()) {
-            OAuth1AccessToken accessToken = convertAccessToken(oAuthToken);
-            mediaWikiApiService.signRequest(accessToken, mediaWikiRequest);
+        if (accessToken != null && !accessToken.isEmpty()) {
+            OAuth1AccessToken oAuth1AccessToken = convertAccessToken(accessToken);
+            mediaWikiApiService.signRequest(oAuth1AccessToken, mediaWikiRequest);
         }
 
         try {
@@ -82,8 +82,8 @@ class WikipediaApiRequestHelper {
         return String.format(WIKIPEDIA_API_URL, lang.getCode());
     }
 
-    private OAuth1AccessToken convertAccessToken(OAuthToken oAuthToken) {
-        return new OAuth1AccessToken(oAuthToken.getToken(), oAuthToken.getTokenSecret());
+    private OAuth1AccessToken convertAccessToken(AccessToken accessToken) {
+        return new OAuth1AccessToken(accessToken.getToken(), accessToken.getTokenSecret());
     }
 
     private WikipediaApiResponse convert(String responseBody) throws ReplacerException {

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.authentication;
 
-import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -30,7 +30,7 @@ class AuthenticationOfflineService implements AuthenticationService {
     }
 
     @Override
-    public OAuthToken getAccessToken(RequestToken requestToken, String oAuthVerifier) {
-        return OAuthToken.of(OFFLINE_ACCESS_TOKEN, OFFLINE_ACCESS_TOKEN_SECRET);
+    public AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) {
+        return AccessToken.of(OFFLINE_ACCESS_TOKEN, OFFLINE_ACCESS_TOKEN_SECRET);
     }
 }

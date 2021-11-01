@@ -39,7 +39,8 @@ class WikipediaApiService implements WikipediaService {
     private String adminUser;
 
     @Override
-    public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException {
+    public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken)
+        throws ReplacerException {
         return convertUserInfo(getLoggedUserName(lang, accessToken));
     }
 
@@ -58,7 +59,7 @@ class WikipediaApiService implements WikipediaService {
 
     @VisibleForTesting
     @Loggable(value = Loggable.DEBUG)
-    WikipediaApiResponse.UserInfo getLoggedUserName(WikipediaLanguage lang, OAuthToken accessToken)
+    WikipediaApiResponse.UserInfo getLoggedUserName(WikipediaLanguage lang, AccessToken accessToken)
         throws ReplacerException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
@@ -318,7 +319,7 @@ class WikipediaApiService implements WikipediaService {
         String pageContent,
         LocalDateTime queryTimestamp,
         String editSummary,
-        OAuthToken accessToken
+        AccessToken accessToken
     ) throws ReplacerException {
         EditToken editToken = getEditToken(pageId, lang, accessToken);
         // Pre-check of edit conflicts
@@ -377,7 +378,7 @@ class WikipediaApiService implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @VisibleForTesting
-    EditToken getEditToken(int pageId, WikipediaLanguage lang, OAuthToken accessToken) throws ReplacerException {
+    EditToken getEditToken(int pageId, WikipediaLanguage lang, AccessToken accessToken) throws ReplacerException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.POST)

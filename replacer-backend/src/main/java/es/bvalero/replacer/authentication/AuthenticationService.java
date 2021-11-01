@@ -1,7 +1,7 @@
 package es.bvalero.replacer.authentication;
 
 import es.bvalero.replacer.common.ReplacerException;
-import es.bvalero.replacer.wikipedia.OAuthToken;
+import es.bvalero.replacer.wikipedia.AccessToken;
 
 /** Service to perform authentication operations */
 public interface AuthenticationService {
@@ -9,5 +9,5 @@ public interface AuthenticationService {
 
     String getAuthorizationUrl(RequestToken requestToken);
 
-    OAuthToken getAccessToken(RequestToken requestToken, String oAuthVerifier) throws ReplacerException;
+    AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) throws ReplacerException;
 }
