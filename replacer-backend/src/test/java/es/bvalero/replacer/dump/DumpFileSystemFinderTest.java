@@ -11,16 +11,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-class DumpFinderTest {
+class DumpFileSystemFinderTest {
 
     @TempDir
     Path dumpBaseFolder;
 
-    private DumpFinder dumpFinder;
+    private DumpFileSystemFinder dumpFinder;
 
     @BeforeEach
     public void setUp() {
-        dumpFinder = new DumpFinder();
+        dumpFinder = new DumpFileSystemFinder();
     }
 
     @Test
