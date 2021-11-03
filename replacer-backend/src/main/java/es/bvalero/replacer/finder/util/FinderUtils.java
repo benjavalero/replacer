@@ -3,7 +3,6 @@ package es.bvalero.replacer.finder.util;
 import es.bvalero.replacer.finder.FinderPage;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -19,7 +18,8 @@ public class FinderUtils {
 
     public static final String STRING_EMPTY = "";
     public static final Locale LOCALE_ES = Locale.forLanguageTag("es");
-    private static final Set<Character> invalidSeparators = new HashSet<>(Arrays.asList('_', '/'));
+    private static final Set<Character> invalidLeftSeparators = Set.of('_', '/', '.');
+    private static final Set<Character> invalidRightSeparators = Set.of('_', '/');
     private static final int CONTEXT_THRESHOLD = 50;
 
     public static String toLowerCase(String str) {
@@ -60,16 +60,20 @@ public class FinderUtils {
 
         int end = start + word.length();
         if (start == 0) {
-            return end == text.length() || isValidSeparator(text.charAt(end));
+            return end == text.length() || isValidRightSeparator(text.charAt(end));
         } else if (end == text.length()) {
-            return isValidSeparator(text.charAt(start - 1));
+            return isValidLeftSeparator(text.charAt(start - 1));
         } else {
-            return isValidSeparator(text.charAt(start - 1)) && isValidSeparator(text.charAt(end));
+            return isValidLeftSeparator(text.charAt(start - 1)) && isValidRightSeparator(text.charAt(end));
         }
     }
 
-    private static boolean isValidSeparator(char separator) {
-        return !Character.isLetterOrDigit(separator) && !invalidSeparators.contains(separator);
+    private static boolean isValidLeftSeparator(char separator) {
+        return !Character.isLetterOrDigit(separator) && !invalidLeftSeparators.contains(separator);
+    }
+
+    private static boolean isValidRightSeparator(char separator) {
+        return !Character.isLetterOrDigit(separator) && !invalidRightSeparators.contains(separator);
     }
 
     public static boolean isUppercase(String text) {

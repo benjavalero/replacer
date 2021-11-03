@@ -53,6 +53,7 @@ class MisspellingSimpleFinderTest {
             "Una ABADIA., abadia||abadía", // Word all uppercase and misspelling case-insensitive
             "En enero., Enero|cs|enero", // Lowercase word, uppercase misspelling case-sensitive
             "En Angola, angola|cs|Angola", // Uppercase word, lowercase misspelling case-sensitive
+            "Marca.com, com||con", // Word immediately preceded by a dot
         }
     )
     void testNoResults(String text, String misspellingLine) {
