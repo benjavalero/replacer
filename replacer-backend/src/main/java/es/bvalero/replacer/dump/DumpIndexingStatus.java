@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.Nullable;
 
-@ApiModel(description = "Status of the current (or the last) dump indexing")
+@ApiModel(description = "Response DTO containing the status of the current (or the last) dump indexing")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value
 @Builder

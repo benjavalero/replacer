@@ -63,7 +63,20 @@ class DumpControllerTest {
             .andExpect(jsonPath("$.start", is(Long.valueOf(start).intValue())))
             .andExpect(jsonPath("$.end", is(Long.valueOf(end).intValue())));
 
+        verify(wikipediaService, times(1)).isAdminUser(anyString());
         verify(dumpManager, times(1)).getDumpIndexingStatus();
+    }
+
+    @Test
+    void testGetDumpIndexingStatusNotAdmin() throws Exception {
+        when(wikipediaService.isAdminUser(anyString())).thenReturn(false);
+
+        mvc
+            .perform(get("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized());
+
+        verify(wikipediaService, times(1)).isAdminUser(anyString());
+        verify(dumpManager, never()).processLatestDumpFiles();
     }
 
     @Test
@@ -74,6 +87,19 @@ class DumpControllerTest {
             .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
+        verify(wikipediaService, times(1)).isAdminUser(anyString());
         verify(dumpManager, times(1)).processLatestDumpFiles();
+    }
+
+    @Test
+    void testPostStartNotAdmin() throws Exception {
+        when(wikipediaService.isAdminUser(anyString())).thenReturn(false);
+
+        mvc
+            .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized());
+
+        verify(wikipediaService, times(1)).isAdminUser(anyString());
+        verify(dumpManager, never()).processLatestDumpFiles();
     }
 }
