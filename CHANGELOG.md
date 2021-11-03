@@ -1,5 +1,8 @@
 # Versions
 
+## 2.12.1 (3 Nov 2021)
+- Ignore words immediately preceded by a dot
+
 ## 2.12.0 (30 Oct 2021)
 - Lots of new cosmetic finders, e.g. to fix categories surrounded by spaces, most of them fixing in Check-Wikipedia too.
 - Add component to print the IP in the logs to try to add these IPs to a whitelist
