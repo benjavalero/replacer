@@ -35,7 +35,7 @@ public class ReplacementService {
         customDao.insert(entity);
     }
 
-    ///// DUMP INDEXATION
+    ///// DUMP INDEXING
 
     public List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang) {
         return replacementDao.findByPageInterval(minPageId, maxPageId, lang);

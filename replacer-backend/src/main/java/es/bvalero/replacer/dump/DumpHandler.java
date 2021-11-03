@@ -58,7 +58,7 @@ class DumpHandler extends DefaultHandler {
     private String currentTimestamp;
     private String currentContent;
 
-    // Indexation status
+    // Indexing status
     private boolean running = false;
     private long numPagesRead = 0L;
     private long numPagesProcessed = 0L;

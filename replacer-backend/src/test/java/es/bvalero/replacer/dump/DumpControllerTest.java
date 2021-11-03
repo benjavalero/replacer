@@ -40,7 +40,7 @@ class DumpControllerTest {
         String dumpFileName = "xxx.xml.bz2";
         long start = 1500;
         long end = 2000;
-        DumpIndexingStatus indexation = new DumpIndexingStatus(
+        DumpIndexingStatus indexingStatus = new DumpIndexingStatus(
             running,
             numPagesRead,
             numPagesProcessed,
@@ -50,7 +50,7 @@ class DumpControllerTest {
             end
         );
         when(wikipediaService.isAdminUser(anyString())).thenReturn(true);
-        when(dumpManager.getDumpIndexingStatus()).thenReturn(indexation);
+        when(dumpManager.getDumpIndexingStatus()).thenReturn(indexingStatus);
 
         mvc
             .perform(get("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))

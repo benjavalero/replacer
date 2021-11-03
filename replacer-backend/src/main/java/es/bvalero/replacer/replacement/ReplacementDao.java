@@ -20,7 +20,7 @@ public interface ReplacementDao {
 
     void delete(List<ReplacementEntity> entityList);
 
-    ///// DUMP INDEXATION
+    ///// DUMP INDEXING
 
     List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang);
 

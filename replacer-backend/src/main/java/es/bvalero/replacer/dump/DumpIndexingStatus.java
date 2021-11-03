@@ -7,13 +7,13 @@ import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.Nullable;
 
-@ApiModel(description = "Status of the current (or the last) dump indexation")
+@ApiModel(description = "Status of the current (or the last) dump indexing")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value
 @Builder
 class DumpIndexingStatus {
 
-    @ApiModelProperty(value = "If the indexation is running", required = true, example = "false")
+    @ApiModelProperty(value = "If the indexing is running", required = true, example = "false")
     boolean running;
 
     @ApiModelProperty(value = "Number of processable pages read", example = "251934")
@@ -32,11 +32,11 @@ class DumpIndexingStatus {
     @Nullable
     String dumpFileName;
 
-    @ApiModelProperty(value = "Indexation start time (in ms)", example = "1616315965367")
+    @ApiModelProperty(value = "Indexing start time (in ms)", example = "1616315965367")
     @Nullable
     Long start;
 
-    @ApiModelProperty(value = "Indexation end time (in ms)", example = "1616317331756")
+    @ApiModelProperty(value = "Indexing end time (in ms)", example = "1616317331756")
     @Nullable
     Long end;
 

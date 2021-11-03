@@ -69,7 +69,7 @@ class DumpManagerTest {
 
     @Test
     void testProcessLatestDumpFileAlreadyRunning() {
-        // Fake the indexation is running
+        // Fake the indexing is running
         DumpIndexingStatus status = DumpIndexingStatus.builder().running(true).build();
         when(dumpHandler.getDumpIndexingStatus()).thenReturn(status);
 

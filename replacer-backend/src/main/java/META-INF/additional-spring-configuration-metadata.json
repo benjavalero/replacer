@@ -53,7 +53,7 @@
         {
             "name": "replacer.admin.user",
             "type": "java.lang.String",
-            "description": "User allowed to perform administrative actions like manual indexation"
+            "description": "User allowed to perform administrative actions like manual indexing"
         },
         {
             "name": "replacer.processable.namespaces",

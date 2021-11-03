@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * REST actions related to the dump indexing process.
+ * REST controller to perform actions related to the dump indexing process.
  */
 @Slf4j
 @Api(tags = "dump-indexing")
@@ -29,7 +29,7 @@ public class DumpController {
     @Autowired
     private WikipediaService wikipediaService;
 
-    @ApiOperation(value = "Find the status of the current (or the last) dump indexation")
+    @ApiOperation(value = "Find the status of the current (or the last) dump indexing")
     @Loggable(value = Loggable.DEBUG, trim = false)
     @GetMapping(value = "")
     public ResponseEntity<DumpIndexingStatus> getDumpIndexingStatus(UserParameters params) {
@@ -41,7 +41,7 @@ public class DumpController {
         }
     }
 
-    @ApiOperation(value = "Start manually a dump indexation")
+    @ApiOperation(value = "Start manually a dump indexing")
     @Loggable(prepend = true)
     @PostMapping(value = "")
     public ResponseEntity<String> manualStartDumpIndexing(UserParameters params) {

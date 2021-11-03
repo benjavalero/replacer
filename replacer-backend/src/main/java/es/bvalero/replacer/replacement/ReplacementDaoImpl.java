@@ -107,7 +107,7 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    ///// DUMP INDEXATION
+    ///// DUMP INDEXING
 
     @Override
     public List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang) {

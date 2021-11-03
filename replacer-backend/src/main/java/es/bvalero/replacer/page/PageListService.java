@@ -26,7 +26,7 @@ class PageListService {
     }
 
     void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
-        // These reviewed replacements will be cleaned up in the next dump indexation
+        // These reviewed replacements will be cleaned up in the next dump indexing
         replacementService.reviewAsSystemBySubtype(lang, type, subtype);
     }
 }
