@@ -5,11 +5,11 @@ import static org.junit.jupiter.api.Assertions.*;
 import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
+import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import java.beans.PropertyChangeEvent;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -17,15 +17,19 @@ import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class MisspellingSimpleFinderTest {
 
     private SimpleMisspellingLoader simpleMisspellingLoader;
+    private SimpleMisspellingParser simpleMisspellingParser;
     private MisspellingSimpleFinder misspellingFinder;
 
     @BeforeEach
     void setUp() {
         simpleMisspellingLoader = new SimpleMisspellingLoader();
+        simpleMisspellingParser = new SimpleMisspellingParser();
         misspellingFinder = new MisspellingSimpleFinder();
         misspellingFinder.setSimpleMisspellingLoader(simpleMisspellingLoader);
     }
@@ -41,11 +45,19 @@ class MisspellingSimpleFinderTest {
         );
     }
 
-    @Test
-    void testNoResults() {
-        String text = "Un texto";
-
-        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive("abadia", "abadía");
+    @ParameterizedTest
+    @CsvSource(
+        {
+            "Un texto, abadia||abadía", // Misspelling not existing in the text
+            "Un texto, text||texto", // Misspelling is not a complete word
+            "Una ABADIA., abadia||abadía", // Word all uppercase and misspelling case-insensitive
+            "En enero., Enero|cs|enero", // Lowercase word, uppercase misspelling case-sensitive
+            "En Angola, angola|cs|Angola", // Uppercase word, lowercase misspelling case-sensitive
+        }
+    )
+    void testNoResults(String text, String misspellingLine) {
+        SimpleMisspelling misspelling = simpleMisspellingParser.parseItemLine(misspellingLine);
+        assertNotNull(misspelling);
         this.fakeUpdateMisspellingList(List.of(misspelling));
 
         List<Replacement> results = misspellingFinder.findList(text);
@@ -123,18 +135,6 @@ class MisspellingSimpleFinderTest {
     }
 
     @Test
-    void testCaseSensitiveUppercaseVersusLowercase() {
-        String text = "En enero.";
-
-        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseSensitive("Enero", "enero");
-        this.fakeUpdateMisspellingList(List.of(misspelling));
-
-        List<Replacement> results = misspellingFinder.findList(text);
-
-        assertEquals(Collections.emptySet(), new HashSet<>(results));
-    }
-
-    @Test
     void testCaseSensitiveUppercase() {
         String text = "En Brazil.";
 
@@ -176,18 +176,6 @@ class MisspellingSimpleFinderTest {
     }
 
     @Test
-    void testCaseSensitiveLowercaseVersusUppercase() {
-        String text = "En Angola.";
-
-        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseSensitive("angola", "Angola");
-        this.fakeUpdateMisspellingList(List.of(misspelling));
-
-        List<Replacement> results = misspellingFinder.findList(text);
-
-        assertEquals(Collections.emptySet(), new HashSet<>(results));
-    }
-
-    @Test
     void testCaseSensitiveLowercase() {
         String text = "En ves.";
 
@@ -225,30 +213,6 @@ class MisspellingSimpleFinderTest {
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Angola")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
-    }
-
-    @Test
-    void testCompleteWord() {
-        String text = "Un texto";
-
-        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive("text", "texto");
-        this.fakeUpdateMisspellingList(List.of(misspelling));
-
-        List<Replacement> results = misspellingFinder.findList(text);
-
-        assertTrue(results.isEmpty());
-    }
-
-    @Test
-    void testAllUppercaseCaseInsensitive() {
-        String text = "Una ABADIA.";
-
-        SimpleMisspelling misspelling = SimpleMisspelling.ofCaseInsensitive("abadia", "abadía");
-        this.fakeUpdateMisspellingList(List.of(misspelling));
-
-        List<Replacement> results = misspellingFinder.findList(text);
-
-        assertTrue(results.isEmpty());
     }
 
     @Test
@@ -315,14 +279,10 @@ class MisspellingSimpleFinderTest {
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
 
-    @Test
-    void testMisspellingWithDot() {
-        assertThrows(IllegalArgumentException.class, () -> SimpleMisspelling.ofCaseInsensitive("cms.", "cm"));
-    }
-
-    @Test
-    void testMisspellingWithNumber() {
-        assertThrows(IllegalArgumentException.class, () -> SimpleMisspelling.ofCaseInsensitive("m2", "m²"));
+    @ParameterizedTest
+    @CsvSource({ "cms., cm", "m2, m²" })
+    void testNotValidMisspelling(String word, String comment) {
+        assertThrows(IllegalArgumentException.class, () -> SimpleMisspelling.ofCaseInsensitive(word, comment));
     }
 
     @Test
