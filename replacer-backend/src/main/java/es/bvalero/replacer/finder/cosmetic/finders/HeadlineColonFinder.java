@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 class HeadlineColonFinder extends CosmeticCheckedFinder {
 
     @RegExp
-    private static final String REGEX_HEADLINE_COLON = "^(={2,})\\s*([^=:]+?):\\s*\\1$";
+    private static final String REGEX_HEADLINE_COLON = "^(={2,5})\\s*([^\\s=:]+?):\\s*\\1$";
 
     private static final Pattern PATTERN_HEADLINE_COLON = Pattern.compile(REGEX_HEADLINE_COLON, Pattern.MULTILINE);
 
