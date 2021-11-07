@@ -1,31 +1,17 @@
 package es.bvalero.replacer.dump;
 
-import es.bvalero.replacer.domain.ReplacerException;
 import es.bvalero.replacer.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
-import java.nio.file.Path;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import lombok.Getter;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Handler to parse a Wikipedia XML dump with SAX.
+ * It will be instantiated for each parse job.
  */
-@Slf4j
-@Component
 class DumpHandler extends DefaultHandler {
 
     private static final String TITLE_TAG = "title";
@@ -35,20 +21,11 @@ class DumpHandler extends DefaultHandler {
     private static final String TEXT_TAG = "text";
     private static final String PAGE_TAG = "page";
 
-    @Autowired
-    private DumpPageProcessor dumpPageProcessor;
+    // Dump properties
+    @Getter
+    private final WikipediaLanguage lang;
 
-    @Autowired
-    private DumpWriter dumpWriter;
-
-    @Autowired
-    private PageReplacementService pageReplacementService;
-
-    @Resource
-    private Map<String, Long> numPagesEstimated;
-
-    @Value("${replacer.dump.batch.chunk.size}")
-    private int chunkSize;
+    private final DumpPageProcessor dumpPageProcessor;
 
     // Current page values
     private final StringBuilder currentChars = new StringBuilder(5000);
@@ -59,35 +36,31 @@ class DumpHandler extends DefaultHandler {
     private String currentContent;
 
     // Indexing status
+    @Getter
     private boolean running = false;
+
+    @Getter
     private long numPagesRead = 0L;
+
+    @Getter
     private long numPagesProcessed = 0L;
+
+    @Getter
     private Long start = null;
+
+    @Getter
     private Long end = null;
 
-    @Setter
-    private WikipediaLanguage lang;
-
-    @Setter
-    private Path latestDumpFile;
-
-    private List<List<ReplacementEntity>> toWrite;
-
-    @PostConstruct
-    public void initializeToWrite() {
-        this.toWrite = new ArrayList<>(chunkSize);
+    DumpHandler(WikipediaLanguage lang, DumpPageProcessor processor) {
+        this.lang = lang;
+        this.dumpPageProcessor = processor;
     }
 
     @Override
     public void startDocument() {
-        LOGGER.trace("START Dump Job Execution");
-
         // Reset indexing status
         this.running = true;
-        this.numPagesRead = 0L;
-        this.numPagesProcessed = 0L;
         this.start = Instant.now().toEpochMilli();
-        this.end = null;
     }
 
     @Override
@@ -96,10 +69,7 @@ class DumpHandler extends DefaultHandler {
         this.running = false;
         this.end = Instant.now().toEpochMilli();
 
-        dumpWriter.write(toWrite);
-        pageReplacementService.finish(lang);
-
-        LOGGER.warn("END Dump Job Execution: {}", this.getDumpIndexingStatus());
+        this.dumpPageProcessor.finish(lang);
     }
 
     @Override
@@ -149,7 +119,7 @@ class DumpHandler extends DefaultHandler {
     }
 
     private void processPage() {
-        IndexablePage dumpPage = IndexablePage
+        DumpPage dumpPage = DumpPage
             .builder()
             .lang(this.lang)
             .id(this.currentId)
@@ -159,18 +129,12 @@ class DumpHandler extends DefaultHandler {
             .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(this.currentTimestamp).toLocalDate())
             .build();
 
-        // If return null the page is processable but nothing to do
-        // If throws ReplacerException then the page is not processable
-        try {
-            List<ReplacementEntity> replacementEntities = dumpPageProcessor.process(dumpPage);
-
+        DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
+        if (!DumpPageProcessorResult.PAGE_NOT_PROCESSABLE.equals(result)) {
             this.incrementNumPagesRead();
-            if (replacementEntities != null) {
+            if (DumpPageProcessorResult.PAGE_PROCESSED.equals(result)) {
                 this.incrementNumPagesProcessed();
-                addToWrite(replacementEntities);
             }
-        } catch (ReplacerException e) {
-            // Page not processable
         }
     }
 
@@ -180,30 +144,5 @@ class DumpHandler extends DefaultHandler {
 
     private void incrementNumPagesProcessed() {
         this.numPagesProcessed++;
-    }
-
-    private void addToWrite(List<ReplacementEntity> replacementEntities) {
-        this.toWrite.add(replacementEntities);
-        if (this.toWrite.size() >= chunkSize) {
-            dumpWriter.write(this.toWrite);
-            this.toWrite.clear();
-        }
-    }
-
-    DumpIndexingStatus getDumpIndexingStatus() {
-        if (this.start == null) {
-            return DumpIndexingStatus.ofEmpty();
-        } else {
-            return DumpIndexingStatus
-                .builder()
-                .running(this.running)
-                .numPagesRead(this.numPagesRead)
-                .numPagesProcessed(this.numPagesProcessed)
-                .numPagesEstimated(numPagesEstimated.get(this.lang.getCode()))
-                .dumpFileName(this.latestDumpFile.getFileName().toString())
-                .start(this.start)
-                .end(this.end)
-                .build();
-        }
     }
 }

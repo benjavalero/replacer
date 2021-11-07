@@ -7,21 +7,32 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
+@Slf4j
 @Component
-class DumpJobSaxImpl implements DumpJob {
+class DumpSaxParser implements DumpParser {
 
     @Autowired
+    private DumpPageProcessor dumpPageProcessor;
+
+    @Resource
+    private Map<String, Long> numPagesEstimated;
+
+    // Singleton properties to be set in each dump parsing
     private DumpHandler dumpHandler;
+    private Path dumpFile;
 
     @PostConstruct
     void setProperty() {
@@ -30,15 +41,17 @@ class DumpJobSaxImpl implements DumpJob {
 
     @Override
     @Loggable(prepend = true, value = Loggable.DEBUG)
-    public void parseDumpFile(Path dumpFile, WikipediaLanguage lang) throws ReplacerException {
+    public void parseDumpFile(WikipediaLanguage lang, Path dumpFile) throws ReplacerException {
+        assert !isDumpIndexingRunning();
+
         try (InputStream xmlInput = new BZip2CompressorInputStream(Files.newInputStream(dumpFile), true)) {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
             saxParser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             saxParser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 
-            dumpHandler.setLatestDumpFile(dumpFile);
-            dumpHandler.setLang(lang);
+            this.dumpFile = dumpFile;
+            this.dumpHandler = new DumpHandler(lang, dumpPageProcessor);
             saxParser.parse(xmlInput, dumpHandler);
         } catch (IOException e) {
             throw new ReplacerException("Dump file not valid", e);
@@ -49,11 +62,24 @@ class DumpJobSaxImpl implements DumpJob {
 
     @Override
     public DumpIndexingStatus getDumpIndexingStatus() {
-        return dumpHandler.getDumpIndexingStatus();
+        if (this.dumpHandler == null) {
+            return DumpIndexingStatus.ofEmpty();
+        } else {
+            return DumpIndexingStatus
+                .builder()
+                .running(this.dumpHandler.isRunning())
+                .numPagesRead(this.dumpHandler.getNumPagesRead())
+                .numPagesProcessed(this.dumpHandler.getNumPagesProcessed())
+                .numPagesEstimated(numPagesEstimated.get(this.dumpHandler.getLang().getCode()))
+                .dumpFileName(this.dumpFile.getFileName().toString())
+                .start(this.dumpHandler.getStart())
+                .end(this.dumpHandler.getEnd())
+                .build();
+        }
     }
 
     @Override
-    public boolean isRunning() {
+    public boolean isDumpIndexingRunning() {
         return getDumpIndexingStatus().isRunning();
     }
 }

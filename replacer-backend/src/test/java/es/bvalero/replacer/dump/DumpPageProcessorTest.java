@@ -1,7 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.domain.ReplacerException;
@@ -23,23 +22,34 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { IndexablePageValidator.class })
 class DumpPageProcessorTest {
+
+    private final String title = "T";
+    private final DumpPage dumpPage = DumpPage
+        .builder()
+        .lang(WikipediaLanguage.SPANISH)
+        .id(1)
+        .namespace(WikipediaNamespace.ARTICLE)
+        .title(title)
+        .content("C")
+        .lastUpdate(LocalDate.now())
+        .build();
+
+    @Mock
+    private IndexablePageValidator indexablePageValidator;
 
     @Mock
     private PageReplacementService pageReplacementService;
 
     @Mock
-    private PageIndexHelper pageIndexHelper;
+    private DumpWriter dumpWriter;
 
     @Mock
     private ReplacementFinderService replacementFinderService;
 
-    @Autowired
-    private IndexablePageValidator indexablePageValidator;
+    @Mock
+    private PageIndexHelper pageIndexHelper;
 
     @InjectMocks
     private DumpPageProcessor dumpPageProcessor;
@@ -48,146 +58,80 @@ class DumpPageProcessorTest {
     public void setUp() {
         dumpPageProcessor = new DumpPageProcessor();
         MockitoAnnotations.initMocks(this);
+        dumpPageProcessor.initializeToWrite();
     }
 
     @Test
-    void testProcessSimple() {
-        IndexablePage dumpPage = IndexablePage
-            .builder()
-            .lang(WikipediaLanguage.SPANISH)
-            .namespace(WikipediaNamespace.ARTICLE)
-            .content("")
-            .build();
-        dumpPageProcessor.processPage(dumpPage);
+    void testProcessNoReplacements() throws ReplacerException {
+        List<ReplacementEntity> toUpdate = Collections.emptyList();
+        when(pageIndexHelper.findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList()))
+            .thenReturn(toUpdate);
 
-        verify(pageReplacementService).findByPageId(anyInt(), any(WikipediaLanguage.class));
+        DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
+
+        assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
+
+        verify(indexablePageValidator).validateProcessable(any(IndexablePage.class));
+        verify(pageReplacementService).findByPageId(dumpPage.getId(), dumpPage.getLang());
         verify(replacementFinderService).find(any(FinderPage.class));
         verify(pageIndexHelper).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }
 
     @Test
-    void testCheckNamespaces() throws ReplacerException {
-        IndexablePage dumpPage = IndexablePage
+    void testProcessWithReplacements() throws ReplacerException {
+        Replacement pageReplacement = Replacement
             .builder()
-            .lang(WikipediaLanguage.SPANISH)
-            .namespace(WikipediaNamespace.ARTICLE)
-            .content("")
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype("S")
+            .start(0)
+            .text("C")
             .build();
-        IndexablePage dumpAnnex = IndexablePage.builder().namespace(WikipediaNamespace.ANNEX).content("").build();
-        IndexablePage dumpCategory = IndexablePage.builder().namespace(WikipediaNamespace.CATEGORY).build();
+        List<Replacement> pageReplacements = List.of(pageReplacement);
+        when(replacementFinderService.find(any(FinderPage.class))).thenReturn(pageReplacements);
 
-        indexablePageValidator.validateProcessable(dumpPage);
-        indexablePageValidator.validateProcessable(dumpAnnex);
-        assertThrows(ReplacerException.class, () -> indexablePageValidator.validateProcessable(dumpCategory));
-    }
+        ReplacementEntity dbReplacement = ReplacementEntity.builder().build();
+        List<ReplacementEntity> toUpdate = List.of(dbReplacement);
+        when(pageIndexHelper.findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList()))
+            .thenReturn(toUpdate);
 
-    @Test
-    void testProcessLastUpdateAfterTimestamp() {
-        LocalDate today = LocalDate.now();
-        LocalDate yesterday = today.minusDays(1L);
+        DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
-        IndexablePage dumpPage = IndexablePage
-            .builder()
-            .lang(WikipediaLanguage.SPANISH)
-            .namespace(WikipediaNamespace.ARTICLE)
-            .content("")
-            .lastUpdate(yesterday)
-            .title("T")
-            .build();
+        assertEquals(DumpPageProcessorResult.PAGE_PROCESSED, result);
 
-        ReplacementEntity replacement = ReplacementEntity.builder().lastUpdate(today).title("T").build();
-        when(pageReplacementService.findByPageId(anyInt(), any(WikipediaLanguage.class)))
-            .thenReturn(Collections.singletonList(replacement));
-
-        assertTrue(dumpPageProcessor.processPage(dumpPage).isEmpty());
-        verify(replacementFinderService, times(0)).find(any(FinderPage.class));
-    }
-
-    @Test
-    void testProcessLastUpdateWhenTimestamp() {
-        LocalDate today = LocalDate.now();
-
-        IndexablePage dumpPage = IndexablePage
-            .builder()
-            .lang(WikipediaLanguage.SPANISH)
-            .namespace(WikipediaNamespace.ARTICLE)
-            .content("")
-            .lastUpdate(today)
-            .build();
-
-        ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(today);
-        when(pageReplacementService.findByPageId(anyInt(), any(WikipediaLanguage.class)))
-            .thenReturn(Collections.singletonList(replacement));
-
-        dumpPageProcessor.processPage(dumpPage);
+        verify(indexablePageValidator).validateProcessable(any(IndexablePage.class));
+        verify(pageReplacementService).findByPageId(dumpPage.getId(), dumpPage.getLang());
         verify(replacementFinderService).find(any(FinderPage.class));
+        verify(pageIndexHelper).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }
 
     @Test
-    void testProcessLastUpdateBeforeTimestamp() {
-        LocalDate today = LocalDate.now();
-        LocalDate yesterday = today.minusDays(1L);
+    void testPageNoProcessable() throws ReplacerException {
+        doThrow(ReplacerException.class).when(indexablePageValidator).validateProcessable(any(IndexablePage.class));
 
-        IndexablePage dumpPage = IndexablePage
-            .builder()
-            .lang(WikipediaLanguage.SPANISH)
-            .namespace(WikipediaNamespace.ARTICLE)
-            .content("")
-            .lastUpdate(today)
-            .build();
+        DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
-        ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(yesterday);
-        when(pageReplacementService.findByPageId(anyInt(), any(WikipediaLanguage.class)))
-            .thenReturn(Collections.singletonList(replacement));
+        assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSABLE, result);
 
-        dumpPageProcessor.processPage(dumpPage);
-        verify(replacementFinderService).find(any(FinderPage.class));
+        verify(indexablePageValidator).validateProcessable(any(IndexablePage.class));
+        verify(pageReplacementService).findByPageId(anyInt(), any(WikipediaLanguage.class));
+        verify(replacementFinderService, never()).find(any(FinderPage.class));
+        verify(pageIndexHelper, never()).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }
 
     @Test
-    void testProcessNewPage() {
-        IndexablePage dumpPage = IndexablePage
-            .builder()
-            .lang(WikipediaLanguage.SPANISH)
-            .namespace(WikipediaNamespace.ARTICLE)
-            .content("X")
-            .lastUpdate(LocalDate.now())
-            .build();
+    void testPageNotProcessed() throws ReplacerException {
+        LocalDate updated = dumpPage.getLastUpdate().plusDays(1);
+        ReplacementEntity dbReplacement = ReplacementEntity.builder().title(title).lastUpdate(updated).build();
+        List<ReplacementEntity> dbReplacements = List.of(dbReplacement);
+        when(pageReplacementService.findByPageId(dumpPage.getId(), dumpPage.getLang())).thenReturn(dbReplacements);
 
-        List<ReplacementEntity> dbReplacements = Collections.emptyList();
-        when(pageReplacementService.findByPageId(anyInt(), any(WikipediaLanguage.class))).thenReturn(dbReplacements);
+        DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
-        Replacement replacement = Replacement.builder().start(0).text("X").type(ReplacementType.DATE).build();
-        List<Replacement> replacements = Collections.singletonList(replacement);
-        when(replacementFinderService.find(any(FinderPage.class))).thenReturn(replacements);
+        assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
 
-        dumpPageProcessor.processPage(dumpPage);
-
-        verify(pageIndexHelper).findIndexPageReplacements(any(IndexablePage.class), anyList(), eq(dbReplacements));
-    }
-
-    @Test
-    void testProcessWithNoReplacementsFound() {
-        LocalDate today = LocalDate.now();
-        LocalDate yesterday = today.minusDays(1L);
-
-        IndexablePage dumpPage = IndexablePage
-            .builder()
-            .lang(WikipediaLanguage.SPANISH)
-            .namespace(WikipediaNamespace.ARTICLE)
-            .content("")
-            .lastUpdate(today)
-            .build();
-
-        ReplacementEntity replacement = ReplacementEntity.of(1, "", "", 1).withLastUpdate(yesterday);
-        List<ReplacementEntity> dbReplacements = Collections.singletonList(replacement);
-        when(pageReplacementService.findByPageId(anyInt(), any(WikipediaLanguage.class))).thenReturn(dbReplacements);
-
-        List<Replacement> replacements = Collections.emptyList();
-        when(replacementFinderService.find(any(FinderPage.class))).thenReturn(replacements);
-
-        dumpPageProcessor.processPage(dumpPage);
-
-        verify(pageIndexHelper).findIndexPageReplacements(any(IndexablePage.class), anyList(), eq(dbReplacements));
+        verify(indexablePageValidator).validateProcessable(any(IndexablePage.class));
+        verify(pageReplacementService).findByPageId(dumpPage.getId(), dumpPage.getLang());
+        verify(replacementFinderService, never()).find(any(FinderPage.class));
+        verify(pageIndexHelper, never()).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }
 }
