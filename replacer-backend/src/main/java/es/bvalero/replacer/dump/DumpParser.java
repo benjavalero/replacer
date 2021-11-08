@@ -8,6 +8,4 @@ interface DumpParser {
     void parseDumpFile(WikipediaLanguage lang, Path dumpFile) throws ReplacerException;
 
     DumpIndexingStatus getDumpIndexingStatus();
-
-    boolean isDumpIndexingRunning();
 }

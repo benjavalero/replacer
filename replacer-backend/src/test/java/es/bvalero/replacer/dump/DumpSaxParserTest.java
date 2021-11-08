@@ -59,7 +59,7 @@ class DumpSaxParserTest {
 
         dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, dumpFile);
 
-        assertFalse(dumpParser.isDumpIndexingRunning());
+        assertFalse(dumpParser.getDumpIndexingStatus().isRunning());
         verify(dumpPageProcessor, times(4)).process(any(DumpPage.class));
         verify(dumpPageProcessor, times(1)).finish(WikipediaLanguage.SPANISH);
 

@@ -36,7 +36,7 @@ class DumpManager {
     @Async
     public void processLatestDumpFiles() {
         // Check just in case the handler is already running
-        if (dumpParser.isDumpIndexingRunning()) {
+        if (isDumpIndexingRunning()) {
             LOGGER.warn("Dump indexing is already running.");
             return;
         }
@@ -53,5 +53,9 @@ class DumpManager {
 
     DumpIndexingStatus getDumpIndexingStatus() {
         return dumpParser.getDumpIndexingStatus();
+    }
+
+    private boolean isDumpIndexingRunning() {
+        return this.getDumpIndexingStatus().isRunning();
     }
 }

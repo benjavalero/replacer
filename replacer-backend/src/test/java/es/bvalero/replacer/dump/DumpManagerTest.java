@@ -30,7 +30,7 @@ class DumpManagerTest {
 
     @Test
     void testProcessLatestDumpFiles() throws ReplacerException {
-        when(dumpParser.isDumpIndexingRunning()).thenReturn(false);
+        when(dumpParser.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.ofEmpty());
 
         Path dumpPath = mock(Path.class);
         when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenReturn(dumpPath);
@@ -44,7 +44,7 @@ class DumpManagerTest {
 
     @Test
     void testProcessLatestDumpFilesWithException() throws ReplacerException {
-        when(dumpParser.isDumpIndexingRunning()).thenReturn(false);
+        when(dumpParser.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.ofEmpty());
 
         Path dumpPath = mock(Path.class);
         when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenReturn(dumpPath);
@@ -59,7 +59,7 @@ class DumpManagerTest {
 
     @Test
     void testProcessLatestDumpFilesAlreadyRunning() throws ReplacerException {
-        when(dumpParser.isDumpIndexingRunning()).thenReturn(true);
+        when(dumpParser.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.builder().running(true).build());
 
         dumpManager.processLatestDumpFiles();
 
