@@ -37,10 +37,7 @@ public class ReplacementService {
 
     ///// DUMP INDEXING
 
-    public List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang) {
-        return replacementDao.findByPageInterval(minPageId, maxPageId, lang);
-    }
-
+    // TODO: Move to the service in charge of page indexing
     public void indexObsoleteByPageId(WikipediaLanguage lang, int pageId) {
         IndexablePage dummyPage = IndexablePage.builder().lang(lang).id(pageId).lastUpdate(LocalDate.now()).build();
         pageIndexHelper.indexPageReplacements(dummyPage, Collections.emptyList());

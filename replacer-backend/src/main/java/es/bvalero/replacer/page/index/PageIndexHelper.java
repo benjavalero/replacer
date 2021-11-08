@@ -1,6 +1,8 @@
 package es.bvalero.replacer.page.index;
 
 import com.jcabi.aspects.Loggable;
+import es.bvalero.replacer.page.repository.IndexablePageDB;
+import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.util.*;
@@ -16,6 +18,9 @@ import org.springframework.stereotype.Component;
 public class PageIndexHelper {
 
     @Autowired
+    private IndexablePageRepository indexablePageRepository;
+
+    @Autowired
     private ReplacementDao replacementDao;
 
     /**
@@ -28,7 +33,10 @@ public class PageIndexHelper {
     }
 
     private List<ReplacementEntity> findDbReplacements(IndexablePage page) {
-        return replacementDao.findByPageId(page.getId(), page.getLang());
+        return indexablePageRepository
+            .findByPageId(page.getLang(), page.getId())
+            .map(IndexablePageDB::convert)
+            .orElse(Collections.emptyList());
     }
 
     /**

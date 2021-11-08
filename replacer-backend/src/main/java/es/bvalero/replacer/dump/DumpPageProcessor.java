@@ -9,6 +9,8 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.IndexableReplacement;
 import es.bvalero.replacer.page.index.PageIndexHelper;
+import es.bvalero.replacer.page.repository.IndexablePageDB;
+import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.time.LocalDate;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +36,8 @@ class DumpPageProcessor {
     private PageValidator pageValidator;
 
     @Autowired
-    private PageReplacementService pageReplacementService;
+    @Qualifier("indexablePageCacheRepository")
+    private IndexablePageRepository indexablePageRepository;
 
     @Autowired
     private DumpWriter dumpWriter;
@@ -88,17 +92,23 @@ class DumpPageProcessor {
     }
 
     private List<ReplacementEntity> notProcessPage(DumpPage dumpPage) {
-        List<ReplacementEntity> dbReplacements = pageReplacementService.findByPageId(
-            dumpPage.getId(),
-            dumpPage.getLang()
+        Optional<IndexablePageDB> indexablePageDB = indexablePageRepository.findByPageId(
+            dumpPage.getLang(),
+            dumpPage.getId()
         );
 
         // Return the DB replacements not reviewed in order to delete them
-        return dbReplacements
-            .stream()
-            .filter(r -> r.isToBeReviewed() || r.isSystemReviewed())
-            .map(ReplacementEntity::setToDelete)
-            .collect(Collectors.toList());
+        return indexablePageDB
+            .map(
+                page ->
+                    page
+                        .convert()
+                        .stream()
+                        .filter(r -> r.isToBeReviewed() || r.isSystemReviewed())
+                        .map(ReplacementEntity::setToDelete)
+                        .collect(Collectors.toList())
+            )
+            .orElse(Collections.emptyList());
     }
 
     private void addToWrite(List<ReplacementEntity> replacementEntities) {
@@ -110,10 +120,14 @@ class DumpPageProcessor {
     }
 
     private List<ReplacementEntity> processPage(DumpPage dumpPage) {
-        List<ReplacementEntity> dbReplacements = pageReplacementService.findByPageId(
-            dumpPage.getId(),
-            dumpPage.getLang()
+        Optional<IndexablePageDB> indexablePageDB = indexablePageRepository.findByPageId(
+            dumpPage.getLang(),
+            dumpPage.getId()
         );
+        List<ReplacementEntity> dbReplacements = indexablePageDB
+            .map(IndexablePageDB::convert)
+            .orElse(Collections.emptyList());
+
         Optional<LocalDate> dbLastUpdate = dbReplacements
             .stream()
             .map(ReplacementEntity::getLastUpdate)
@@ -143,6 +157,7 @@ class DumpPageProcessor {
     }
 
     private boolean isNotProcessableByPageTitle(DumpPage dumpPage, List<ReplacementEntity> dbReplacements) {
+        // TODO: Check if this method is still needed
         // In case the page title has changed we force the page processing
         return dbReplacements
             .stream()
@@ -190,6 +205,6 @@ class DumpPageProcessor {
 
     void finish(WikipediaLanguage lang) {
         dumpWriter.write(toWrite);
-        pageReplacementService.finish(lang);
+        indexablePageRepository.resetCache(lang);
     }
 }

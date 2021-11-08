@@ -8,8 +8,6 @@ import org.springframework.data.domain.Pageable;
 public interface ReplacementDao {
     ///// CRUD
 
-    List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang);
-
     void insert(List<ReplacementEntity> entityList);
 
     void update(ReplacementEntity entity);
@@ -19,10 +17,6 @@ public interface ReplacementDao {
     void updateDate(List<ReplacementEntity> entityList);
 
     void delete(List<ReplacementEntity> entityList);
-
-    ///// DUMP INDEXING
-
-    List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang);
 
     ///// PAGE REVIEW
 

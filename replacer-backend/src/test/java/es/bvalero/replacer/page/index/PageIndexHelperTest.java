@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
@@ -19,6 +20,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = { PageValidator.class })
 class PageIndexHelperTest {
+
+    @Mock
+    private IndexablePageRepository indexablePageRepository;
 
     @Mock
     private ReplacementDao replacementDao;
@@ -42,7 +46,7 @@ class PageIndexHelperTest {
 
         pageIndexHelper.indexPageReplacements(page, Collections.emptyList());
 
-        verify(replacementDao, times(1)).findByPageId(eq(pageId), any(WikipediaLanguage.class));
+        verify(indexablePageRepository, times(1)).findByPageId(any(WikipediaLanguage.class), eq(pageId));
     }
 
     @Test

@@ -40,18 +40,6 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     ///// CRUD
 
     @Override
-    public List<ReplacementEntity> findByPageId(int pageId, WikipediaLanguage lang) {
-        String sql =
-            "SELECT r.id, r.article_id, r.lang, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
-            FROM_REPLACEMENT_JOIN_PAGE +
-            "WHERE r.lang = :lang AND r.article_id = :pageId";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_PAGE_ID, pageId);
-        return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
-    }
-
-    @Override
     public void insert(List<ReplacementEntity> entityList) {
         this.insertUpdatePages(entityList);
 
@@ -105,21 +93,6 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
         Set<Long> ids = entityList.stream().map(ReplacementEntity::getId).collect(Collectors.toSet());
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
         jdbcTemplate.update(sql, namedParameters);
-    }
-
-    ///// DUMP INDEXING
-
-    @Override
-    public List<ReplacementEntity> findByPageInterval(int minPageId, int maxPageId, WikipediaLanguage lang) {
-        String sql =
-            "SELECT r.id, r.article_id, r.lang, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
-            FROM_REPLACEMENT_JOIN_PAGE +
-            "WHERE r.lang = :lang AND r.article_id BETWEEN :minPageId AND :maxPageId";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue("minPageId", minPageId)
-            .addValue("maxPageId", maxPageId);
-        return jdbcTemplate.query(sql, namedParameters, new ReplacementRowMapper());
     }
 
     ///// PAGE REVIEW

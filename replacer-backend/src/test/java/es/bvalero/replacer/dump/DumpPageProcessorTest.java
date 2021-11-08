@@ -11,12 +11,16 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.PageIndexHelper;
+import es.bvalero.replacer.page.repository.IndexablePageDB;
+import es.bvalero.replacer.page.repository.IndexablePageRepository;
+import es.bvalero.replacer.page.repository.IndexableReplacementDB;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -40,7 +44,7 @@ class DumpPageProcessorTest {
     private PageValidator pageValidator;
 
     @Mock
-    private PageReplacementService pageReplacementService;
+    private IndexablePageRepository indexablePageRepository;
 
     @Mock
     private DumpWriter dumpWriter;
@@ -72,7 +76,7 @@ class DumpPageProcessorTest {
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
 
         verify(pageValidator).validateProcessable(any(DumpPage.class));
-        verify(pageReplacementService).findByPageId(dumpPage.getId(), dumpPage.getLang());
+        verify(indexablePageRepository).findByPageId(dumpPage.getLang(), dumpPage.getId());
         verify(replacementFinderService).find(any(FinderPage.class));
         verify(pageIndexHelper).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }
@@ -99,7 +103,7 @@ class DumpPageProcessorTest {
         assertEquals(DumpPageProcessorResult.PAGE_PROCESSED, result);
 
         verify(pageValidator).validateProcessable(any(DumpPage.class));
-        verify(pageReplacementService).findByPageId(dumpPage.getId(), dumpPage.getLang());
+        verify(indexablePageRepository).findByPageId(dumpPage.getLang(), dumpPage.getId());
         verify(replacementFinderService).find(any(FinderPage.class));
         verify(pageIndexHelper).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }
@@ -113,7 +117,7 @@ class DumpPageProcessorTest {
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSABLE, result);
 
         verify(pageValidator).validateProcessable(any(DumpPage.class));
-        verify(pageReplacementService).findByPageId(anyInt(), any(WikipediaLanguage.class));
+        verify(indexablePageRepository).findByPageId(any(WikipediaLanguage.class), anyInt());
         verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexHelper, never()).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }
@@ -121,16 +125,30 @@ class DumpPageProcessorTest {
     @Test
     void testPageNotProcessed() throws ReplacerException {
         LocalDate updated = dumpPage.getLastUpdate().plusDays(1);
-        ReplacementEntity dbReplacement = ReplacementEntity.builder().title(title).lastUpdate(updated).build();
-        List<ReplacementEntity> dbReplacements = List.of(dbReplacement);
-        when(pageReplacementService.findByPageId(dumpPage.getId(), dumpPage.getLang())).thenReturn(dbReplacements);
+        IndexableReplacementDB dbReplacement = IndexableReplacementDB
+            .builder()
+            .type("")
+            .subtype("")
+            .position(0)
+            .context("")
+            .lastUpdate(updated)
+            .build();
+        IndexablePageDB dbPage = IndexablePageDB
+            .builder()
+            .lang(dumpPage.getLang())
+            .id(dumpPage.getId())
+            .title(dumpPage.getTitle())
+            .replacements(List.of(dbReplacement))
+            .build();
+        when(indexablePageRepository.findByPageId(dumpPage.getLang(), dumpPage.getId()))
+            .thenReturn(Optional.of(dbPage));
 
         DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
 
         verify(pageValidator).validateProcessable(any(DumpPage.class));
-        verify(pageReplacementService).findByPageId(dumpPage.getId(), dumpPage.getLang());
+        verify(indexablePageRepository).findByPageId(dumpPage.getLang(), dumpPage.getId());
         verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexHelper, never()).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }
