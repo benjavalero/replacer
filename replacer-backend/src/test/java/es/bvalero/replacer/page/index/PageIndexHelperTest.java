@@ -3,11 +3,10 @@ package es.bvalero.replacer.page.index;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.domain.ReplacerException;
 import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
-import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,14 +17,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest(classes = { IndexablePageValidator.class })
+@SpringBootTest(classes = { PageValidator.class })
 class PageIndexHelperTest {
 
     @Mock
     private ReplacementDao replacementDao;
 
     @Autowired
-    private IndexablePageValidator indexablePageValidator;
+    private PageValidator pageValidator;
 
     @InjectMocks
     private PageIndexHelper pageIndexHelper;
@@ -356,22 +355,5 @@ class PageIndexHelperTest {
         );
 
         assertEquals(Set.of(r1db.setToDelete()), new HashSet<>(toIndex));
-    }
-
-    @Test
-    void testIndexablePageIsProcessableByNamespace() throws ReplacerException {
-        assertThrows(
-            ReplacerException.class,
-            () ->
-                indexablePageValidator.validateProcessableByNamespace(
-                    IndexablePage.builder().namespace(WikipediaNamespace.WIKIPEDIA).build()
-                )
-        );
-        indexablePageValidator.validateProcessableByNamespace(
-            IndexablePage.builder().namespace(WikipediaNamespace.ARTICLE).build()
-        );
-        indexablePageValidator.validateProcessableByNamespace(
-            IndexablePage.builder().namespace(WikipediaNamespace.ANNEX).build()
-        );
     }
 }

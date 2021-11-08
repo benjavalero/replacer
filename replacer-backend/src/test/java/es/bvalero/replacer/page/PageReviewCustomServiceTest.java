@@ -12,7 +12,7 @@ import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
-import es.bvalero.replacer.page.index.IndexablePageValidator;
+import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
@@ -44,7 +44,7 @@ class PageReviewCustomServiceTest {
     private SectionReviewService sectionReviewService;
 
     @Mock
-    private IndexablePageValidator indexablePageValidator;
+    private PageValidator pageValidator;
 
     @InjectMocks
     private PageReviewCustomService pageReviewCustomService;

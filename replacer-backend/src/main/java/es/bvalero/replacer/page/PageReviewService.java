@@ -8,9 +8,9 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.page.index.IndexablePageValidator;
 import es.bvalero.replacer.page.index.IndexableReplacement;
 import es.bvalero.replacer.page.index.PageIndexHelper;
+import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -56,7 +56,7 @@ abstract class PageReviewService {
     private SectionReviewService sectionReviewService;
 
     @Autowired
-    private IndexablePageValidator indexablePageValidator;
+    private PageValidator pageValidator;
 
     Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
         // Retrieve an ID of a potential page to be replaced
@@ -170,7 +170,7 @@ abstract class PageReviewService {
 
     private boolean validatePage(WikipediaPage page) {
         try {
-            indexablePageValidator.validateProcessable(convertToIndexablePage(page));
+            pageValidator.validateProcessable(page);
             return true;
         } catch (ReplacerException e) {
             LOGGER.warn("{} - {} - {}", e.getMessage(), page.getId(), page.getTitle());

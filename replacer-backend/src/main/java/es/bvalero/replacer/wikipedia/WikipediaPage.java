@@ -1,6 +1,7 @@
 package es.bvalero.replacer.wikipedia;
 
 import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.page.validate.ValidatePage;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;
@@ -15,7 +16,7 @@ import org.springframework.lang.Nullable;
  */
 @Value
 @Builder
-public class WikipediaPage {
+public class WikipediaPage implements ValidatePage {
 
     private static final int MAX_PRINTABLE_CONTENT_SIZE = 50;
 

@@ -1,6 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.page.validate.ValidatePage;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.time.LocalDate;
 import lombok.Builder;
@@ -10,7 +11,7 @@ import org.springframework.lang.NonNull;
 /** Sub-domain object representing a Wikipedia page extracted from a dump XML file */
 @Value
 @Builder
-public class DumpPage {
+public class DumpPage implements ValidatePage {
 
     @NonNull
     WikipediaLanguage lang;

@@ -10,8 +10,8 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.page.index.IndexablePageValidator;
 import es.bvalero.replacer.page.index.PageIndexHelper;
+import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -84,7 +84,7 @@ class PageReviewTypeSubtypeServiceTest {
     private SectionReviewService sectionReviewService;
 
     @Mock
-    private IndexablePageValidator indexablePageValidator;
+    private PageValidator pageValidator;
 
     @InjectMocks
     private PageReviewTypeSubtypeService pageReviewTypeSubtypeService;

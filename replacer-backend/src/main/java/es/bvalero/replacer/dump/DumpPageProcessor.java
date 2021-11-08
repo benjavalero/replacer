@@ -7,9 +7,9 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.page.index.IndexablePageValidator;
 import es.bvalero.replacer.page.index.IndexableReplacement;
 import es.bvalero.replacer.page.index.PageIndexHelper;
+import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.time.LocalDate;
 import java.util.*;
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 class DumpPageProcessor {
 
     @Autowired
-    private IndexablePageValidator indexablePageValidator;
+    private PageValidator pageValidator;
 
     @Autowired
     private PageReplacementService pageReplacementService;
@@ -59,7 +59,7 @@ class DumpPageProcessor {
         // 1. Check if it is processable by namespace
         // We "skip" the item by throwing an exception
         try {
-            indexablePageValidator.validateProcessable(convertToIndexable(dumpPage));
+            pageValidator.validateProcessable(dumpPage);
         } catch (ReplacerException e) {
             // If the page is not processable then it should not exist in DB ==> remove all replacements of this page
             // There could be replacements reviewed by users that we want to keep for the sake of statistics
@@ -85,18 +85,6 @@ class DumpPageProcessor {
             LOGGER.error("Page not processed: {}", dumpPage, e);
             return DumpPageProcessorResult.PAGE_NOT_PROCESSED;
         }
-    }
-
-    private IndexablePage convertToIndexable(DumpPage dumpPage) {
-        return IndexablePage
-            .builder()
-            .lang(dumpPage.getLang())
-            .id(dumpPage.getId())
-            .namespace(dumpPage.getNamespace())
-            .title(dumpPage.getTitle())
-            .content(dumpPage.getContent())
-            .lastUpdate(dumpPage.getLastUpdate())
-            .build();
     }
 
     private List<ReplacementEntity> notProcessPage(DumpPage dumpPage) {
@@ -172,6 +160,18 @@ class DumpPageProcessor {
 
     private FinderPage convertToFinder(DumpPage page) {
         return FinderPage.of(page.getLang(), page.getContent(), page.getTitle());
+    }
+
+    private IndexablePage convertToIndexable(DumpPage dumpPage) {
+        return IndexablePage
+            .builder()
+            .lang(dumpPage.getLang())
+            .id(dumpPage.getId())
+            .namespace(dumpPage.getNamespace())
+            .title(dumpPage.getTitle())
+            .content(dumpPage.getContent())
+            .lastUpdate(dumpPage.getLastUpdate())
+            .build();
     }
 
     private IndexableReplacement convert(Replacement replacement, DumpPage page) {
