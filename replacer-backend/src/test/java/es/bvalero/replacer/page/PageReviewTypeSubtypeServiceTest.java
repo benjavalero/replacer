@@ -118,7 +118,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options2);
 
-        verify(pageIndexHelper, times(1)).indexPageReplacements(any(IndexablePage.class), anyList());
+        verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class), anyList());
 
         assertFalse(review.isPresent());
     }
@@ -145,7 +145,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
 
-        verify(pageIndexHelper, times(1)).indexPageReplacements(any(IndexablePage.class), anyList());
+        verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class), anyList());
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId());

@@ -57,7 +57,7 @@ class ObsoleteMisspellingListenerTest {
             new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, map1, map2)
         );
 
-        verify(replacementService, times(1))
+        verify(replacementService)
             .deleteToBeReviewedBySubtype(
                 WikipediaLanguage.SPANISH,
                 ReplacementType.MISSPELLING_SIMPLE.getLabel(),

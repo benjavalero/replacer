@@ -61,7 +61,7 @@ class DumpSaxParserTest {
 
         assertFalse(dumpParser.getDumpIndexingStatus().isRunning());
         verify(dumpPageProcessor, times(4)).process(any(DumpPage.class));
-        verify(dumpPageProcessor, times(1)).finish(WikipediaLanguage.SPANISH);
+        verify(dumpPageProcessor).finish(WikipediaLanguage.SPANISH);
 
         status = dumpParser.getDumpIndexingStatus();
         assertFalse(status.isRunning());

@@ -98,7 +98,7 @@ class PageControllerTest {
             .andExpect(jsonPath("$.replacements[0].suggestions[0].comment", is("b")))
             .andExpect(jsonPath("$.search.numPending", is(Long.valueOf(numPending).intValue())));
 
-        verify(pageReviewNoTypeService, times(1)).findRandomPageReview(options);
+        verify(pageReviewNoTypeService).findRandomPageReview(options);
     }
 
     @Test
@@ -110,7 +110,7 @@ class PageControllerTest {
             .perform(get("/api/pages/random?type=X&subtype=Y&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(pageReviewTypeSubtypeService, times(1)).findRandomPageReview(options);
+        verify(pageReviewTypeSubtypeService).findRandomPageReview(options);
     }
 
     @Test
@@ -125,7 +125,7 @@ class PageControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(pageReviewCustomService, times(1)).findRandomPageReview(options);
+        verify(pageReviewCustomService).findRandomPageReview(options);
     }
 
     @Test
@@ -135,7 +135,7 @@ class PageControllerTest {
 
         mvc.perform(get("/api/pages/123?lang=es").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
-        verify(pageReviewNoTypeService, times(1)).getPageReview(123, options);
+        verify(pageReviewNoTypeService).getPageReview(123, options);
     }
 
     @Test
@@ -147,7 +147,7 @@ class PageControllerTest {
             .perform(get("/api/pages/123?type=X&subtype=Y&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(pageReviewTypeSubtypeService, times(1)).getPageReview(123, options);
+        verify(pageReviewTypeSubtypeService).getPageReview(123, options);
     }
 
     @Test
@@ -162,7 +162,7 @@ class PageControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(pageReviewCustomService, times(1)).getPageReview(123, options);
+        verify(pageReviewCustomService).getPageReview(123, options);
     }
 
     @Test
@@ -207,8 +207,8 @@ class PageControllerTest {
             savePage.getPage().getContent(),
             savePage.getPage().getTitle()
         );
-        verify(cosmeticFinderService, times(1)).applyCosmeticChanges(finderPage);
-        verify(wikipediaService, times(1))
+        verify(cosmeticFinderService).applyCosmeticChanges(finderPage);
+        verify(wikipediaService)
             .savePageContent(
                 any(WikipediaLanguage.class),
                 eq(pageId),

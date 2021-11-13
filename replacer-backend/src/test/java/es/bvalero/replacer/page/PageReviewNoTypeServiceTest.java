@@ -132,7 +132,7 @@ class PageReviewNoTypeServiceTest {
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexHelper, times(1))
+        verify(pageIndexHelper)
             .indexPageReplacements(eq(pageReviewNoTypeService.convertToIndexablePage(page)), anyList());
 
         assertTrue(review.isPresent());
@@ -158,7 +158,7 @@ class PageReviewNoTypeServiceTest {
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexHelper, times(1))
+        verify(pageIndexHelper)
             .indexPageReplacements(pageReviewNoTypeService.convertToIndexablePage(page), Collections.emptyList());
 
         assertFalse(review.isPresent());
@@ -182,7 +182,7 @@ class PageReviewNoTypeServiceTest {
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexHelper, times(1))
+        verify(pageIndexHelper)
             .indexPageReplacements(eq(pageReviewNoTypeService.convertToIndexablePage(page2)), anyList());
 
         assertTrue(review.isPresent());

@@ -37,7 +37,7 @@ class ReplacementControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.count", is(Long.valueOf(count).intValue())));
 
-        verify(replacementService, times(1)).countReplacementsNotReviewed(WikipediaLanguage.SPANISH);
+        verify(replacementService).countReplacementsNotReviewed(WikipediaLanguage.SPANISH);
     }
 
     @Test
@@ -50,7 +50,7 @@ class ReplacementControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.count", is(Long.valueOf(count).intValue())));
 
-        verify(replacementService, times(1)).countReplacementsReviewed(WikipediaLanguage.SPANISH);
+        verify(replacementService).countReplacementsReviewed(WikipediaLanguage.SPANISH);
     }
 
     @Test
@@ -65,7 +65,7 @@ class ReplacementControllerTest {
             .andExpect(jsonPath("$[0].reviewer", is("X")))
             .andExpect(jsonPath("$[0].count", is(100)));
 
-        verify(replacementService, times(1)).countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH);
+        verify(replacementService).countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH);
     }
 
     @Test
@@ -83,6 +83,6 @@ class ReplacementControllerTest {
             .andExpect(jsonPath("$[0].l[0].s", is("Y")))
             .andExpect(jsonPath("$[0].l[0].c", is(100)));
 
-        verify(replacementService, times(1)).countReplacementsGroupedByType(WikipediaLanguage.SPANISH);
+        verify(replacementService).countReplacementsGroupedByType(WikipediaLanguage.SPANISH);
     }
 }

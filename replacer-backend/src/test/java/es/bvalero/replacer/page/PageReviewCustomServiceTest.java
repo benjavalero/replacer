@@ -72,7 +72,7 @@ class PageReviewCustomServiceTest {
 
         assertTrue(review.isEmpty());
 
-        verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
+        verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
         verify(replacementService, never())
             .findPageIdsReviewedByReplacement(any(WikipediaLanguage.class), anyString(), anyBoolean());
         verify(replacementService, never()).insert(any(CustomEntity.class));
@@ -104,8 +104,8 @@ class PageReviewCustomServiceTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
-        verify(replacementService, times(1)).findPageIdsReviewedByReplacement(lang, replacement, true);
+        verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
+        verify(replacementService).findPageIdsReviewedByReplacement(lang, replacement, true);
         verify(replacementService, never()).insert(any(CustomEntity.class));
     }
 
@@ -168,9 +168,9 @@ class PageReviewCustomServiceTest {
         assertTrue(review2.isEmpty());
 
         // Verifications
-        verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
-        verify(replacementService, times(1)).findPageIdsReviewedByReplacement(lang, replacement, true);
-        verify(wikipediaService, times(1)).getPageById(lang, pageId);
+        verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
+        verify(replacementService).findPageIdsReviewedByReplacement(lang, replacement, true);
+        verify(wikipediaService).getPageById(lang, pageId);
         verify(replacementService, never()).insert(any(CustomEntity.class));
     }
 
@@ -215,9 +215,9 @@ class PageReviewCustomServiceTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
-        verify(replacementService, times(1)).findPageIdsReviewedByReplacement(lang, replacement, true);
-        verify(wikipediaService, times(1)).getPageById(lang, pageId);
+        verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
+        verify(replacementService).findPageIdsReviewedByReplacement(lang, replacement, true);
+        verify(wikipediaService).getPageById(lang, pageId);
         verify(replacementService, never()).insert(any(CustomEntity.class));
     }
 
@@ -275,9 +275,9 @@ class PageReviewCustomServiceTest {
         );
 
         // Verifications
-        verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
-        verify(replacementService, times(1)).findPageIdsReviewedByReplacement(lang, replacement, true);
-        verify(wikipediaService, times(1)).getPageById(lang, pageId2);
+        verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
+        verify(replacementService).findPageIdsReviewedByReplacement(lang, replacement, true);
+        verify(wikipediaService).getPageById(lang, pageId2);
         verify(replacementService, never()).insert(any(CustomEntity.class));
     }
 
@@ -306,9 +306,9 @@ class PageReviewCustomServiceTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
-        verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 3, CACHE_SIZE);
-        verify(replacementService, times(1)).findPageIdsReviewedByReplacement(lang, replacement, true);
+        verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
+        verify(wikipediaService).searchByText(lang, replacement, true, 3, CACHE_SIZE);
+        verify(replacementService).findPageIdsReviewedByReplacement(lang, replacement, true);
         verify(wikipediaService, times(0)).getPageById(any(WikipediaLanguage.class), anyInt());
         verify(replacementService, never()).insert(any(CustomEntity.class));
     }
@@ -479,9 +479,9 @@ class PageReviewCustomServiceTest {
         assertTrue(review.isEmpty());
 
         // Verifications
-        verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
-        verify(wikipediaService, times(1)).searchByText(lang, replacement, true, CACHE_SIZE, CACHE_SIZE);
-        verify(wikipediaService, times(1)).searchByText(lang, replacement, true, 2 * CACHE_SIZE, CACHE_SIZE);
+        verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
+        verify(wikipediaService).searchByText(lang, replacement, true, CACHE_SIZE, CACHE_SIZE);
+        verify(wikipediaService).searchByText(lang, replacement, true, 2 * CACHE_SIZE, CACHE_SIZE);
         verify(replacementService, times(2)).findPageIdsReviewedByReplacement(lang, replacement, true);
         verify(wikipediaService, times(4)).getPageById(any(WikipediaLanguage.class), anyInt());
     }

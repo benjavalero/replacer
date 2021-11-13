@@ -86,6 +86,6 @@ class DumpManagerTest {
         DumpIndexingStatus actual = dumpManager.getDumpIndexingStatus();
 
         assertEquals(expected, actual);
-        verify(dumpParser, times(1)).getDumpIndexingStatus();
+        verify(dumpParser).getDumpIndexingStatus();
     }
 }

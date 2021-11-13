@@ -55,8 +55,8 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.tokenSecret", is(requestToken.getTokenSecret())))
             .andExpect(jsonPath("$.authorizationUrl", is(authorizationUrl)));
 
-        verify(authenticationService, times(1)).getRequestToken();
-        verify(authenticationService, times(1)).getAuthorizationUrl(any(RequestToken.class));
+        verify(authenticationService).getRequestToken();
+        verify(authenticationService).getAuthorizationUrl(any(RequestToken.class));
     }
 
     @Test
@@ -67,7 +67,7 @@ class AuthenticationControllerTest {
             .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isInternalServerError());
 
-        verify(authenticationService, times(1)).getRequestToken();
+        verify(authenticationService).getRequestToken();
         verify(authenticationService, never()).getAuthorizationUrl(any(RequestToken.class));
     }
 
@@ -97,8 +97,8 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.token", is(accessToken.getToken())))
             .andExpect(jsonPath("$.tokenSecret", is(accessToken.getTokenSecret())));
 
-        verify(authenticationService, times(1)).getAccessToken(any(RequestToken.class), anyString());
-        verify(wikipediaService, times(1)).getAuthenticatedUser(any(WikipediaLanguage.class), any(AccessToken.class));
+        verify(authenticationService).getAccessToken(any(RequestToken.class), anyString());
+        verify(wikipediaService).getAuthenticatedUser(any(WikipediaLanguage.class), any(AccessToken.class));
     }
 
     @Test

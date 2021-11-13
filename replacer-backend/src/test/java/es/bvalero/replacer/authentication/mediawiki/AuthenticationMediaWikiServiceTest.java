@@ -40,7 +40,7 @@ class AuthenticationMediaWikiServiceTest {
         RequestToken actual = authenticationService.getRequestToken();
         assertEquals(expected, actual);
 
-        verify(oAuthMediaWikiService, times(1)).getRequestToken();
+        verify(oAuthMediaWikiService).getRequestToken();
     }
 
     @Test

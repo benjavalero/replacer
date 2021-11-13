@@ -46,7 +46,7 @@ class PageIndexHelperTest {
 
         pageIndexHelper.indexPageReplacements(page, Collections.emptyList());
 
-        verify(indexablePageRepository, times(1)).findByPageId(any(WikipediaLanguage.class), eq(pageId));
+        verify(indexablePageRepository).findByPageId(any(WikipediaLanguage.class), eq(pageId));
     }
 
     @Test
