@@ -75,8 +75,8 @@ class DumpPageProcessorTest {
 
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
 
-        verify(pageValidator).validateProcessable(any(DumpPage.class));
         verify(indexablePageRepository).findByPageId(dumpPage.getLang(), dumpPage.getId());
+        verify(pageValidator).validateProcessable(dumpPage);
         verify(replacementFinderService).find(any(FinderPage.class));
         verify(pageIndexHelper).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }
@@ -102,8 +102,8 @@ class DumpPageProcessorTest {
 
         assertEquals(DumpPageProcessorResult.PAGE_PROCESSED, result);
 
-        verify(pageValidator).validateProcessable(any(DumpPage.class));
         verify(indexablePageRepository).findByPageId(dumpPage.getLang(), dumpPage.getId());
+        verify(pageValidator).validateProcessable(dumpPage);
         verify(replacementFinderService).find(any(FinderPage.class));
         verify(pageIndexHelper).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }
@@ -116,8 +116,8 @@ class DumpPageProcessorTest {
 
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSABLE, result);
 
-        verify(pageValidator).validateProcessable(any(DumpPage.class));
         verify(indexablePageRepository).findByPageId(any(WikipediaLanguage.class), anyInt());
+        verify(pageValidator).validateProcessable(dumpPage);
         verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexHelper, never()).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }
@@ -147,8 +147,8 @@ class DumpPageProcessorTest {
 
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
 
-        verify(pageValidator).validateProcessable(any(DumpPage.class));
         verify(indexablePageRepository).findByPageId(dumpPage.getLang(), dumpPage.getId());
+        verify(pageValidator).validateProcessable(dumpPage);
         verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexHelper, never()).findIndexPageReplacements(any(IndexablePage.class), anyList(), anyList());
     }

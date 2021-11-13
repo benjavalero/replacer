@@ -11,6 +11,7 @@ import es.bvalero.replacer.page.index.IndexableReplacement;
 import es.bvalero.replacer.page.index.PageIndexHelper;
 import es.bvalero.replacer.page.repository.IndexablePageDB;
 import es.bvalero.replacer.page.repository.IndexablePageRepository;
+import es.bvalero.replacer.page.repository.IndexableReplacementDB;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -60,30 +62,21 @@ class DumpPageProcessor {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     DumpPageProcessorResult process(DumpPage dumpPage) {
-        // 1. Check if it is processable by namespace
-        // We "skip" the item by throwing an exception
+        // In all cases we find the current status of the page in the DB
+        Optional<IndexablePageDB> dbPage = indexablePageRepository.findByPageId(dumpPage.getLang(), dumpPage.getId());
+
+        // Check if it is processable (by namespace)
+        // Redirection pages are now considered processable but discarded when finding immutables
         try {
             pageValidator.validateProcessable(dumpPage);
         } catch (ReplacerException e) {
-            // If the page is not processable then it should not exist in DB ==> remove all replacements of this page
-            // There could be replacements reviewed by users that we want to keep for the sake of statistics
-            List<ReplacementEntity> toDelete = notProcessPage(dumpPage);
-            if (!toDelete.isEmpty()) {
-                addToWrite(toDelete);
-            }
+            dbPage.ifPresent(this::notProcessPage);
             return DumpPageProcessorResult.PAGE_NOT_PROCESSABLE;
         }
 
-        // 2. Find the replacements to index
+        // Find the replacements to index and process the page
         try {
-            List<ReplacementEntity> replacements = processPage(dumpPage);
-
-            if (replacements.isEmpty()) {
-                return DumpPageProcessorResult.PAGE_NOT_PROCESSED;
-            } else {
-                addToWrite(replacements);
-                return DumpPageProcessorResult.PAGE_PROCESSED;
-            }
+            return processPage(dumpPage, dbPage.orElse(null));
         } catch (Exception e) {
             // Just in case capture possible exceptions to continue processing other pages
             LOGGER.error("Page not processed: {}", dumpPage, e);
@@ -91,24 +84,19 @@ class DumpPageProcessor {
         }
     }
 
-    private List<ReplacementEntity> notProcessPage(DumpPage dumpPage) {
-        Optional<IndexablePageDB> indexablePageDB = indexablePageRepository.findByPageId(
-            dumpPage.getLang(),
-            dumpPage.getId()
-        );
+    private void notProcessPage(IndexablePageDB dbPage) {
+        // If the page is not processable then it should not exist in DB
+        // There could be replacements reviewed by users that we want to keep for the sake of statistics
+        // Therefore we remove all non-reviewed replacements of this page
+        List<ReplacementEntity> toDelete = dbPage
+            .convert()
+            .stream()
+            .filter(r -> r.isToBeReviewed() || r.isSystemReviewed())
+            .map(ReplacementEntity::setToDelete)
+            .collect(Collectors.toList());
 
-        // Return the DB replacements not reviewed in order to delete them
-        return indexablePageDB
-            .map(
-                page ->
-                    page
-                        .convert()
-                        .stream()
-                        .filter(r -> r.isToBeReviewed() || r.isSystemReviewed())
-                        .map(ReplacementEntity::setToDelete)
-                        .collect(Collectors.toList())
-            )
-            .orElse(Collections.emptyList());
+        // The list can be empty
+        addToWrite(toDelete);
     }
 
     private void addToWrite(List<ReplacementEntity> replacementEntities) {
@@ -119,23 +107,19 @@ class DumpPageProcessor {
         }
     }
 
-    private List<ReplacementEntity> processPage(DumpPage dumpPage) {
-        Optional<IndexablePageDB> indexablePageDB = indexablePageRepository.findByPageId(
-            dumpPage.getLang(),
-            dumpPage.getId()
-        );
-        List<ReplacementEntity> dbReplacements = indexablePageDB
-            .map(IndexablePageDB::convert)
-            .orElse(Collections.emptyList());
-
-        Optional<LocalDate> dbLastUpdate = dbReplacements
-            .stream()
-            .map(ReplacementEntity::getLastUpdate)
-            .max(Comparator.comparing(LocalDate::toEpochDay));
+    private DumpPageProcessorResult processPage(DumpPage dumpPage, @Nullable IndexablePageDB dbPage) {
+        // Check if the last process of the page is after the dump generation, so we can skip it.
+        Optional<LocalDate> dbLastUpdate = dbPage == null
+            ? Optional.empty()
+            : dbPage
+                .getReplacements()
+                .stream()
+                .map(IndexableReplacementDB::getLastUpdate)
+                .max(Comparator.comparing(LocalDate::toEpochDay));
         if (
             dbLastUpdate.isPresent() &&
             isNotProcessableByTimestamp(dumpPage, dbLastUpdate.get()) &&
-            isNotProcessableByPageTitle(dumpPage, dbReplacements)
+            isNotProcessableByPageTitle(dumpPage, dbPage)
         ) {
             LOGGER.trace(
                 "Page not processable by date: {}. Dump date: {}. DB date: {}",
@@ -143,27 +127,27 @@ class DumpPageProcessor {
                 dumpPage.getLastUpdate(),
                 dbLastUpdate
             );
-            return Collections.emptyList();
+            return DumpPageProcessorResult.PAGE_NOT_PROCESSED;
         }
 
+        // Find the replacements in the dump page content
         List<Replacement> replacements = replacementFinderService.find(convertToFinder(dumpPage));
+
+        // Index the found replacements against the ones in DB (if any)
+        List<ReplacementEntity> dbReplacements = dbPage == null ? Collections.emptyList() : dbPage.convert();
         List<ReplacementEntity> toUpdate = pageIndexHelper.findIndexPageReplacements(
             convertToIndexable(dumpPage),
             replacements.stream().map(r -> convert(r, dumpPage)).collect(Collectors.toList()),
             dbReplacements
         );
         LOGGER.trace("Replacements to update: {}", toUpdate.size());
-        return toUpdate;
-    }
 
-    private boolean isNotProcessableByPageTitle(DumpPage dumpPage, List<ReplacementEntity> dbReplacements) {
-        // TODO: Check if this method is still needed
-        // In case the page title has changed we force the page processing
-        return dbReplacements
-            .stream()
-            .filter(r -> !r.isDummy())
-            .map(ReplacementEntity::getTitle)
-            .allMatch(t -> dumpPage.getTitle().equals(t));
+        if (toUpdate.isEmpty()) {
+            return DumpPageProcessorResult.PAGE_NOT_PROCESSED;
+        } else {
+            addToWrite(toUpdate);
+            return DumpPageProcessorResult.PAGE_PROCESSED;
+        }
     }
 
     private boolean isNotProcessableByTimestamp(DumpPage dumpPage, LocalDate dbDate) {
@@ -171,6 +155,12 @@ class DumpPageProcessor {
         // If page modified in dump after last indexing, reprocess always.
         // If page modified in dump before last indexing, do not reprocess.
         return dumpPage.getLastUpdate().isBefore(dbDate);
+    }
+
+    private boolean isNotProcessableByPageTitle(DumpPage dumpPage, @Nullable IndexablePageDB dbPage) {
+        // In case the page title has changed we force the page processing
+        String dbPageTitle = dbPage == null ? null : dbPage.getTitle();
+        return dumpPage.getTitle().equals(dbPageTitle);
     }
 
     private FinderPage convertToFinder(DumpPage page) {
