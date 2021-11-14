@@ -1,15 +1,15 @@
 package es.bvalero.replacer.page.repository;
 
 import es.bvalero.replacer.domain.WikipediaLanguage;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Component;
 
 @Primary
@@ -61,5 +61,44 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     @Override
     public void resetCache(WikipediaLanguage lang) {
         throw new IllegalCallerException();
+    }
+
+    @Override
+    public void updatePageTitles(Collection<IndexablePageDB> pages) {
+        String sql = "UPDATE page SET title = :title WHERE lang = :lang AND article_id = :pageId";
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
+    @Override
+    public void insertPages(Collection<IndexablePageDB> pages) {
+        String sql = "INSERT INTO page (lang, article_id, title) VALUES (:lang, :pageId, :title)";
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
+    @Override
+    public void insertReplacements(Collection<IndexableReplacementDB> replacements) {
+        String sql =
+            "INSERT INTO replacement (article_id, lang, type, subtype, position, context, last_update, reviewer) " +
+            "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer)";
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
+    @Override
+    public void updateReplacements(Collection<IndexableReplacementDB> replacements) {
+        String sql =
+            "UPDATE replacement SET position = :position, context = :context, last_update = :lastUpdate WHERE id = :id";
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
+    @Override
+    public void deleteReplacements(Collection<IndexableReplacementDB> replacements) {
+        String sql = "DELETE FROM replacement WHERE id IN (:ids)";
+        Set<Long> ids = replacements.stream().map(IndexableReplacementDB::getId).collect(Collectors.toSet());
+        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
+        jdbcTemplate.update(sql, namedParameters);
     }
 }

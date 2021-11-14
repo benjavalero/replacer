@@ -51,6 +51,7 @@ class DumpPageProcessor {
     @Autowired
     private PageIndexHelper pageIndexHelper;
 
+    // TODO: Check if to remove from this class
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
 

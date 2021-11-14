@@ -2,10 +2,7 @@ package es.bvalero.replacer.page.repository;
 
 import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementService;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,5 +74,30 @@ class IndexablePageCacheRepository implements IndexablePageRepository {
     public void resetCache(WikipediaLanguage lang) {
         this.clean(lang);
         this.maxCachedId = 0;
+    }
+
+    @Override
+    public void updatePageTitles(Collection<IndexablePageDB> pages) {
+        indexablePageRepository.updatePageTitles(pages);
+    }
+
+    @Override
+    public void insertPages(Collection<IndexablePageDB> pages) {
+        indexablePageRepository.insertPages(pages);
+    }
+
+    @Override
+    public void insertReplacements(Collection<IndexableReplacementDB> replacements) {
+        indexablePageRepository.insertReplacements(replacements);
+    }
+
+    @Override
+    public void updateReplacements(Collection<IndexableReplacementDB> replacements) {
+        indexablePageRepository.updateReplacements(replacements);
+    }
+
+    @Override
+    public void deleteReplacements(Collection<IndexableReplacementDB> replacements) {
+        indexablePageRepository.deleteReplacements(replacements);
     }
 }
