@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.repository;
 
+import es.bvalero.replacer.domain.WikipediaLanguage;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.NonNull;
@@ -14,6 +15,9 @@ public class IndexableReplacementDB {
 
     @Nullable
     Long id; // Nullable when still to be created in database
+
+    @NonNull
+    IndexablePageId indexablePageId;
 
     @NonNull
     String type;
@@ -32,4 +36,14 @@ public class IndexableReplacementDB {
 
     @Nullable
     String reviewer;
+
+    /* Named parameters to make easier the JDBC queries */
+
+    WikipediaLanguage getLang() {
+        return this.indexablePageId.getLang();
+    }
+
+    Integer getPageId() {
+        return this.indexablePageId.getPageId();
+    }
 }

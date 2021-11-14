@@ -10,6 +10,7 @@ import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.IndexableReplacement;
 import es.bvalero.replacer.page.index.PageIndexHelper;
 import es.bvalero.replacer.page.repository.IndexablePageDB;
+import es.bvalero.replacer.page.repository.IndexablePageId;
 import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.page.repository.IndexableReplacementDB;
 import es.bvalero.replacer.page.validate.PageValidator;
@@ -63,7 +64,9 @@ class DumpPageProcessor {
     @Loggable(prepend = true, value = Loggable.TRACE)
     DumpPageProcessorResult process(DumpPage dumpPage) {
         // In all cases we find the current status of the page in the DB
-        Optional<IndexablePageDB> dbPage = indexablePageRepository.findByPageId(dumpPage.getLang(), dumpPage.getId());
+        Optional<IndexablePageDB> dbPage = indexablePageRepository.findByPageId(
+            IndexablePageId.of(dumpPage.getLang(), dumpPage.getId())
+        );
 
         // Check if it is processable (by namespace)
         // Redirection pages are now considered processable but discarded when finding immutables

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.page.repository.IndexablePageId;
 import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementDao;
@@ -46,7 +47,7 @@ class PageIndexHelperTest {
 
         pageIndexHelper.indexPageReplacements(page, Collections.emptyList());
 
-        verify(indexablePageRepository).findByPageId(any(WikipediaLanguage.class), eq(pageId));
+        verify(indexablePageRepository).findByPageId(IndexablePageId.of(WikipediaLanguage.SPANISH, pageId));
     }
 
     @Test

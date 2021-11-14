@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.index;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.page.repository.IndexablePageDB;
+import es.bvalero.replacer.page.repository.IndexablePageId;
 import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.replacement.ReplacementDao;
 import es.bvalero.replacer.replacement.ReplacementEntity;
@@ -34,7 +35,7 @@ public class PageIndexHelper {
 
     private List<ReplacementEntity> findDbReplacements(IndexablePage page) {
         return indexablePageRepository
-            .findByPageId(page.getLang(), page.getId())
+            .findByPageId(IndexablePageId.of(page.getLang(), page.getId()))
             .map(IndexablePageDB::convert)
             .orElse(Collections.emptyList());
     }

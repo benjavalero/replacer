@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface IndexablePageRepository {
     /** Find an indexable page including all the replacements */
-    Optional<IndexablePageDB> findByPageId(WikipediaLanguage lang, int pageId);
+    Optional<IndexablePageDB> findByPageId(IndexablePageId id);
 
     List<IndexablePageDB> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId);
 

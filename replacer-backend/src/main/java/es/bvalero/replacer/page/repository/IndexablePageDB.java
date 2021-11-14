@@ -15,18 +15,26 @@ import org.springframework.lang.Nullable;
 @Builder
 public class IndexablePageDB {
 
+    // TODO: There should exist a FK in DB
     @NonNull
-    WikipediaLanguage lang;
+    IndexablePageId id;
 
-    @NonNull
-    Integer id;
-
-    // TODO: This should be NonNull. To check in Production DB if there is still any null case.
+    // TODO: This should be NonNull. To check why there are still so many cases in Production DB.
     @Nullable
     String title;
 
     @NonNull
     List<IndexableReplacementDB> replacements;
+
+    /* Named parameters to make easier the JDBC queries */
+
+    WikipediaLanguage getLang() {
+        return this.id.getLang();
+    }
+
+    Integer getPageId() {
+        return this.id.getPageId();
+    }
 
     // TODO: Remove once we unify with ReplacementEntity
     public List<ReplacementEntity> convert() {
@@ -38,7 +46,7 @@ public class IndexablePageDB {
             .builder()
             .id(replacement.getId())
             .lang(this.getLang().getCode())
-            .pageId(this.getId())
+            .pageId(this.getPageId())
             .type(replacement.getType())
             .subtype(replacement.getSubtype())
             .position(replacement.getPosition())

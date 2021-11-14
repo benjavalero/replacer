@@ -13,14 +13,14 @@ class IndexablePageResultExtractor implements ResultSetExtractor<List<IndexableP
 
     @Override
     public List<IndexablePageDB> extractData(ResultSet rs) throws SQLException, DataAccessException {
-        // We can assume the lang is the same for all the results
-        String lang = null;
-        Map<Integer, String> titleMap = new HashMap<>();
-        ListValuedMap<Integer, IndexableReplacementDB> replacementMap = new ArrayListValuedHashMap<>();
+        Map<IndexablePageId, String> titleMap = new HashMap<>();
+        ListValuedMap<IndexablePageId, IndexableReplacementDB> replacementMap = new ArrayListValuedHashMap<>();
 
         while (rs.next()) {
-            lang = rs.getString("LANG");
-            Integer pageId = rs.getInt("ARTICLE_ID");
+            IndexablePageId pageId = IndexablePageId.of(
+                WikipediaLanguage.valueOf(rs.getString("LANG")),
+                rs.getInt("ARTICLE_ID")
+            );
 
             titleMap.put(pageId, rs.getString("TITLE"));
             replacementMap.put(
@@ -28,6 +28,7 @@ class IndexablePageResultExtractor implements ResultSetExtractor<List<IndexableP
                 IndexableReplacementDB
                     .builder()
                     .id(rs.getLong("ID"))
+                    .indexablePageId(pageId)
                     .type(rs.getString("TYPE"))
                     .subtype(rs.getString("SUBTYPE"))
                     .position(rs.getInt("POSITION"))
@@ -38,21 +39,15 @@ class IndexablePageResultExtractor implements ResultSetExtractor<List<IndexableP
             );
         }
 
-        if (lang == null) {
+        if (titleMap.isEmpty()) {
             return Collections.emptyList();
         } else {
             List<IndexablePageDB> pageList = new ArrayList<>(titleMap.size());
-            for (Map.Entry<Integer, String> entry : titleMap.entrySet()) {
-                Integer pageId = entry.getKey();
+            for (Map.Entry<IndexablePageId, String> entry : titleMap.entrySet()) {
+                IndexablePageId pageId = entry.getKey();
                 String title = entry.getValue();
                 pageList.add(
-                    IndexablePageDB
-                        .builder()
-                        .lang(WikipediaLanguage.valueOf(lang))
-                        .id(pageId)
-                        .title(title)
-                        .replacements(replacementMap.get(pageId))
-                        .build()
+                    IndexablePageDB.builder().id(pageId).title(title).replacements(replacementMap.get(pageId)).build()
                 );
             }
             return pageList;

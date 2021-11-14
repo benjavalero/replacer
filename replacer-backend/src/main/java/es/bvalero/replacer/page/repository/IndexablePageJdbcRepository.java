@@ -24,14 +24,14 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public Optional<IndexablePageDB> findByPageId(WikipediaLanguage lang, int pageId) {
+    public Optional<IndexablePageDB> findByPageId(IndexablePageId id) {
         String sql =
             "SELECT r.id, r.lang, r.article_id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
             FROM_REPLACEMENT_JOIN_PAGE +
             "WHERE r.lang = :lang AND r.article_id = :pageId";
         SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("lang", lang.getCode())
-            .addValue("pageId", pageId);
+            .addValue("lang", id.getLang().getCode())
+            .addValue("pageId", id.getPageId());
         List<IndexablePageDB> indexablePages = jdbcTemplate.query(
             sql,
             namedParameters,

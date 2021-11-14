@@ -38,20 +38,20 @@ class IndexablePageCacheRepository implements IndexablePageRepository {
     private int maxCachedId = 0;
 
     @Override
-    public Optional<IndexablePageDB> findByPageId(WikipediaLanguage lang, int pageId) {
+    public Optional<IndexablePageDB> findByPageId(IndexablePageId id) {
         // Load the cache the first time or when needed
-        if (maxCachedId == 0 || pageId > maxCachedId) {
-            clean(lang);
+        if (maxCachedId == 0 || id.getPageId() > maxCachedId) {
+            clean(id.getLang());
 
             int minId = maxCachedId + 1;
-            while (pageId > maxCachedId) {
+            while (id.getPageId() > maxCachedId) {
                 // In case there is a gap greater than the configured chunk size between DB Replacement IDs
                 maxCachedId += chunkSize;
             }
-            load(minId, maxCachedId, lang);
+            load(minId, maxCachedId, id.getLang());
         }
 
-        return Optional.ofNullable(pageMap.remove(pageId));
+        return Optional.ofNullable(pageMap.remove(id.getPageId()));
     }
 
     @Override
@@ -61,7 +61,7 @@ class IndexablePageCacheRepository implements IndexablePageRepository {
 
     private void load(int minId, int maxId, WikipediaLanguage lang) {
         assert pageMap.isEmpty();
-        this.findByPageIdInterval(lang, minId, maxId).forEach(page -> pageMap.put(page.getId(), page));
+        this.findByPageIdInterval(lang, minId, maxId).forEach(page -> pageMap.put(page.getPageId(), page));
     }
 
     private void clean(WikipediaLanguage lang) {
