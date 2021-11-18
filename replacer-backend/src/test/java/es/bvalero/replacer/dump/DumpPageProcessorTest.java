@@ -166,7 +166,7 @@ class DumpPageProcessorTest {
     void testFinish() {
         dumpPageProcessor.finish(WikipediaLanguage.getDefault());
 
-        verify(indexablePageRepository).resetCache(WikipediaLanguage.getDefault());
+        verify(indexablePageRepository).resetCache();
         verify(pageIndexResultSaver).forceSave();
     }
 }

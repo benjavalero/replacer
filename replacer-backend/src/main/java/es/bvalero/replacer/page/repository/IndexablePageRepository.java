@@ -13,13 +13,15 @@ public interface IndexablePageRepository {
     List<IndexablePage> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId);
 
     /** Reset the cache in case we are using the cache implementation */
-    void resetCache(WikipediaLanguage lang);
+    void resetCache();
 
     /** Update the title for a collection of indexable pages */
     void updatePageTitles(Collection<IndexablePage> pages);
 
     /** Insert a collection of pages without inserting the replacements */
     void insertPages(Collection<IndexablePage> pages);
+
+    void deletePages(Collection<IndexablePage> pages);
 
     /** Insert a collection of replacements */
     void insertReplacements(Collection<IndexableReplacement> replacements);

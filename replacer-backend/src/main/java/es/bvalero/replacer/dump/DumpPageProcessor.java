@@ -161,6 +161,6 @@ class DumpPageProcessor {
 
     void finish(WikipediaLanguage lang) {
         pageIndexResultSaver.forceSave();
-        indexablePageRepository.resetCache(lang);
+        indexablePageRepository.resetCache();
     }
 }

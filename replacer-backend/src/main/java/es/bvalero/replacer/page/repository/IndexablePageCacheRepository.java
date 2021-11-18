@@ -21,9 +21,6 @@ class IndexablePageCacheRepository implements IndexablePageRepository {
     @Qualifier("indexablePageJdbcRepository")
     private IndexablePageRepository indexablePageRepository;
 
-    @Autowired
-    private ReplacementService replacementService;
-
     @Setter(AccessLevel.PACKAGE) // For testing
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
@@ -37,7 +34,7 @@ class IndexablePageCacheRepository implements IndexablePageRepository {
     public Optional<IndexablePage> findByPageId(IndexablePageId id) {
         // Load the cache the first time or when needed
         if (maxCachedId == 0 || id.getPageId() > maxCachedId) {
-            clean(id.getLang());
+            clean();
 
             int minId = maxCachedId + 1;
             while (id.getPageId() > maxCachedId) {
@@ -60,19 +57,18 @@ class IndexablePageCacheRepository implements IndexablePageRepository {
         this.findByPageIdInterval(lang, minId, maxId).forEach(page -> pageMap.put(page.getPageId(), page));
     }
 
-    private void clean(WikipediaLanguage lang) {
+    private void clean() {
         // Clear the cache if obsolete (we assume the dump pages are in order)
         // The remaining cached pages are not in the dump, so we remove them from DB.
-        // TODO: Remove completely the pages and their replacements
-        for (int obsoleteId : pageMap.keySet()) {
-            replacementService.indexObsoleteByPageId(lang, obsoleteId);
+        if (!pageMap.isEmpty()) {
+            this.deletePages(pageMap.values());
+            pageMap.clear();
         }
-        pageMap.clear();
     }
 
     @Override
-    public void resetCache(WikipediaLanguage lang) {
-        this.clean(lang);
+    public void resetCache() {
+        this.clean();
         this.maxCachedId = 0;
     }
 
@@ -84,6 +80,11 @@ class IndexablePageCacheRepository implements IndexablePageRepository {
     @Override
     public void insertPages(Collection<IndexablePage> pages) {
         indexablePageRepository.insertPages(pages);
+    }
+
+    @Override
+    public void deletePages(Collection<IndexablePage> pages) {
+        indexablePageRepository.deletePages(pages);
     }
 
     @Override

@@ -2,11 +2,11 @@ package es.bvalero.replacer.page.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.anyCollection;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.domain.WikipediaLanguage;
-import es.bvalero.replacer.replacement.ReplacementService;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +20,6 @@ class IndexablePageCacheRepositoryTest {
 
     @Mock
     private IndexablePageRepository indexablePageRepository;
-
-    @Mock
-    private ReplacementService replacementService;
 
     @InjectMocks
     private IndexablePageCacheRepository indexablePageCacheRepository;
@@ -75,7 +72,7 @@ class IndexablePageCacheRepositoryTest {
         assertEquals(page2, indexablePageDB.orElse(null));
 
         // Check that the page 2 has been cleaned
-        verify(replacementService).indexObsoleteByPageId(WikipediaLanguage.SPANISH, 2);
+        verify(indexablePageRepository).deletePages(anyCollection());
     }
 
     @Test

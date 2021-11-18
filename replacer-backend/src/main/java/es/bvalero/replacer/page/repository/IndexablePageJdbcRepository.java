@@ -59,7 +59,7 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     }
 
     @Override
-    public void resetCache(WikipediaLanguage lang) {
+    public void resetCache() {
         throw new IllegalCallerException();
     }
 
@@ -75,6 +75,18 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
         String sql = "INSERT INTO page (lang, article_id, title) VALUES (:lang, :pageId, :title)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
+    @Override
+    public void deletePages(Collection<IndexablePage> pages) {
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
+
+        // First delete the replacements
+        String sqlReplacements = "DELETE FROM replacement WHERE lang = :lang AND article_id = :pageId";
+        jdbcTemplate.batchUpdate(sqlReplacements, namedParameters);
+
+        String sqlPages = "DELETE FROM page WHERE lang = :lang AND article_id = :pageId";
+        jdbcTemplate.batchUpdate(sqlPages, namedParameters);
     }
 
     @Override
@@ -98,6 +110,7 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     public void deleteReplacements(Collection<IndexableReplacement> replacements) {
         String sql = "DELETE FROM replacement WHERE id IN (:ids)";
         Set<Long> ids = replacements.stream().map(IndexableReplacement::getId).collect(Collectors.toSet());
+        assert ids.stream().allMatch(Objects::nonNull);
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
         jdbcTemplate.update(sql, namedParameters);
     }
