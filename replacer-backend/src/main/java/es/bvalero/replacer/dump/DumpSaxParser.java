@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
+/** Service to read a Wikipedia dump with a SAX parser, extract the pages and process them. */
 @Slf4j
 @Component
 class DumpSaxParser implements DumpParser {
@@ -31,7 +32,8 @@ class DumpSaxParser implements DumpParser {
     private Map<String, Long> numPagesEstimated;
 
     // Singleton properties to be set in each dump parsing
-    private DumpHandler dumpHandler;
+    // We assume we only parse one dump at a time
+    private DumpSaxHandler dumpHandler;
     private Path dumpFile;
 
     @PostConstruct
@@ -51,7 +53,7 @@ class DumpSaxParser implements DumpParser {
             saxParser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 
             this.dumpFile = dumpFile;
-            this.dumpHandler = new DumpHandler(lang, dumpPageProcessor);
+            this.dumpHandler = new DumpSaxHandler(lang, dumpPageProcessor);
             saxParser.parse(xmlInput, dumpHandler);
         } catch (IOException e) {
             throw new ReplacerException("Dump file not valid", e);

@@ -11,13 +11,13 @@ import org.springframework.lang.NonNull;
 /** Sub-domain object representing a Wikipedia page extracted from a dump XML file */
 @Value
 @Builder
-public class DumpPage implements ValidatePage {
+class DumpPage implements ValidatePage {
 
     @NonNull
     WikipediaLanguage lang;
 
     @NonNull
-    int id;
+    Integer id;
 
     @NonNull
     WikipediaNamespace namespace;

@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -36,8 +37,11 @@ class DumpSaxParserTest {
     void testParseDumpFile() throws ReplacerException, URISyntaxException {
         // We need a real dump file to create the input stream
         Path dumpFile = Paths.get(
-            getClass()
-                .getResource("/es/bvalero/replacer/dump/eswiki/20170101/eswiki-20170101-pages-articles.xml.bz2")
+            Objects
+                .requireNonNull(
+                    getClass()
+                        .getResource("/es/bvalero/replacer/dump/eswiki/20170101/eswiki-20170101-pages-articles.xml.bz2")
+                )
                 .toURI()
         );
         assertNotNull(dumpFile);

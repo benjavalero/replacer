@@ -10,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * REST controller to perform actions related to the dump indexing process.
- */
+/** REST controller to perform actions related to the dump indexing process */
 @Slf4j
 @Api(tags = "dump-indexing")
 @RestController

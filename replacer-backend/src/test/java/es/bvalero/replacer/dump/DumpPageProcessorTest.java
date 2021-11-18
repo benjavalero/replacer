@@ -100,8 +100,7 @@ class DumpPageProcessorTest {
         // No need in this test to build the index result as it would be in the reality with the replacements
         IndexablePage page = IndexablePage.builder().id(dumpPageId).replacements(Collections.emptyList()).build();
         PageIndexResult pageIndexResult = PageIndexResult.builder().createPages(Set.of(page)).build();
-        when(pageIndexHelper.findIndexPageReplacements(any(IndexablePage.class), isNull()))
-            .thenReturn(pageIndexResult);
+        when(pageIndexHelper.findIndexPageReplacements(any(IndexablePage.class), isNull())).thenReturn(pageIndexResult);
 
         DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
@@ -127,8 +126,7 @@ class DumpPageProcessorTest {
         verify(indexablePageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(dumpPage);
         verify(replacementFinderService, never()).find(any(FinderPage.class));
-        verify(pageIndexHelper, never())
-            .findIndexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
+        verify(pageIndexHelper, never()).findIndexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
         verify(pageIndexResultSaver, never()).saveBatch(any(PageIndexResult.class));
     }
 
@@ -160,8 +158,7 @@ class DumpPageProcessorTest {
         verify(indexablePageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(dumpPage);
         verify(replacementFinderService, never()).find(any(FinderPage.class));
-        verify(pageIndexHelper, never())
-            .findIndexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
+        verify(pageIndexHelper, never()).findIndexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
         verify(pageIndexResultSaver, never()).saveBatch(any(PageIndexResult.class));
     }
 

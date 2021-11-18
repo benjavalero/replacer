@@ -12,7 +12,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Handler to parse a Wikipedia XML dump with SAX.
  * It will be instantiated for each parse job.
  */
-class DumpHandler extends DefaultHandler {
+class DumpSaxHandler extends DefaultHandler {
 
     private static final String TITLE_TAG = "title";
     private static final String NAMESPACE_TAG = "ns";
@@ -51,7 +51,7 @@ class DumpHandler extends DefaultHandler {
     @Getter
     private Long end = null;
 
-    DumpHandler(WikipediaLanguage lang, DumpPageProcessor processor) {
+    DumpSaxHandler(WikipediaLanguage lang, DumpPageProcessor processor) {
         this.lang = lang;
         this.dumpPageProcessor = processor;
     }
