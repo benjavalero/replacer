@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page.repository;
 
 import es.bvalero.replacer.domain.WikipediaLanguage;
-import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.*;
 import lombok.AccessLevel;
 import lombok.Setter;

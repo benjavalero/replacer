@@ -123,7 +123,7 @@ class PageIndexHelperTest {
 
         PageIndexResult expected = PageIndexResult
             .builder()
-            .createReplacements(Set.of(IndexableReplacement.ofDummy(pageId, LocalDate.now())))
+            .createReplacements(Set.of(IndexableReplacement.ofDummy(page)))
             .deleteReplacements(Set.of(rep2, rep3))
             .build();
 
@@ -145,7 +145,7 @@ class PageIndexHelperTest {
         PageIndexResult expected = PageIndexResult
             .builder()
             .createPages(Set.of(page))
-            .createReplacements(Set.of(IndexableReplacement.ofDummy(pageId, LocalDate.now())))
+            .createReplacements(Set.of(IndexableReplacement.ofDummy(page)))
             .build();
 
         assertEquals(expected, result);
@@ -383,8 +383,8 @@ class PageIndexHelperTest {
             .build();
 
         // Existing replacements in DB: two dummies, one of them old and obsolete.
-        IndexableReplacement r1db = IndexableReplacement.ofDummy(pageId, before);
-        IndexableReplacement r2db = IndexableReplacement.ofDummy(pageId, same);
+        IndexableReplacement r1db = IndexableReplacement.ofDummy(page).withLastUpdate(before);
+        IndexableReplacement r2db = IndexableReplacement.ofDummy(page);
         IndexablePage dbPage = IndexablePage
             .builder()
             .id(pageId)

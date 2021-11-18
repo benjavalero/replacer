@@ -1,12 +1,10 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.domain.WikipediaLanguage;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.Nullable;
@@ -67,11 +65,6 @@ public class ReplacementEntity {
         return this.lastUpdate.isBefore(date);
     }
 
-    @TestOnly
-    public ReplacementEntity setSystemReviewed() {
-        return withReviewer(REVIEWER_SYSTEM);
-    }
-
     public ReplacementEntity setToCreate() {
         return withCudAction("C");
     }
@@ -86,32 +79,5 @@ public class ReplacementEntity {
 
     public boolean isToDelete() {
         return "D".equals(this.cudAction);
-    }
-
-    public ReplacementEntity updateLastUpdate(LocalDate lastUpdate) {
-        return withLastUpdate(lastUpdate).withCudAction("UD");
-    }
-
-    public static ReplacementEntity ofDummy(int pageId, WikipediaLanguage lang, LocalDate lastUpdate) {
-        return ReplacementEntity
-            .builder()
-            .lang(lang.getCode())
-            .pageId(pageId)
-            .type("")
-            .subtype("")
-            .position(0)
-            .lastUpdate(lastUpdate)
-            .reviewer(REVIEWER_SYSTEM)
-            .build()
-            .setToCreate();
-    }
-
-    public boolean isDummy() {
-        return (
-            StringUtils.isEmpty(this.type) &&
-            StringUtils.isEmpty(this.subtype) &&
-            this.position == 0 &&
-            REVIEWER_SYSTEM.equals(this.reviewer)
-        );
     }
 }

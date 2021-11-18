@@ -2,11 +2,16 @@ package es.bvalero.replacer.page.repository;
 
 import es.bvalero.replacer.domain.WikipediaLanguage;
 import java.time.LocalDate;
-import lombok.*;
+import java.util.Objects;
+import lombok.Builder;
+import lombok.Value;
+import lombok.With;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+/** Domain object representing a replacement (to be) indexed in the database */
 @Value
 @Builder
 public class IndexableReplacement {
@@ -78,15 +83,16 @@ public class IndexableReplacement {
         return this.lastUpdate.isBefore(lastUpdate);
     }
 
-    public static IndexableReplacement ofDummy(IndexablePageId indexablePageId, LocalDate lastUpdate) {
+    public static IndexableReplacement ofDummy(IndexablePage indexablePage) {
+        Objects.requireNonNull(indexablePage.getLastUpdate());
         return IndexableReplacement
             .builder()
-            .indexablePageId(indexablePageId)
+            .indexablePageId(indexablePage.getId())
             .type("")
             .subtype("")
             .position(0)
             .context("")
-            .lastUpdate(lastUpdate)
+            .lastUpdate(indexablePage.getLastUpdate())
             .reviewer(REVIEWER_SYSTEM)
             .build();
     }

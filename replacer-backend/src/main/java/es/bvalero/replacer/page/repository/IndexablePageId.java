@@ -1,8 +1,8 @@
 package es.bvalero.replacer.page.repository;
 
 import es.bvalero.replacer.domain.WikipediaLanguage;
-import lombok.NonNull;
 import lombok.Value;
+import org.springframework.lang.NonNull;
 
 @Value(staticConstructor = "of")
 public class IndexablePageId {

@@ -233,10 +233,7 @@ public class PageIndexHelper {
                 }
             } else {
                 result.add(
-                    PageIndexResult
-                        .builder()
-                        .createReplacements(Set.of(IndexableReplacement.ofDummy(page.getId(), page.getLastUpdate())))
-                        .build()
+                    PageIndexResult.builder().createReplacements(Set.of(IndexableReplacement.ofDummy(page))).build()
                 );
             }
         }
