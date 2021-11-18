@@ -3,10 +3,10 @@ package es.bvalero.replacer.replacement;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.domain.ReplacerException;
 import es.bvalero.replacer.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.PageIndexHelper;
+import es.bvalero.replacer.page.repository.IndexablePage;
+import es.bvalero.replacer.page.repository.IndexablePageId;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +39,12 @@ public class ReplacementService {
 
     // TODO: Move to the service in charge of page indexing
     public void indexObsoleteByPageId(WikipediaLanguage lang, int pageId) {
-        IndexablePage dummyPage = IndexablePage.builder().lang(lang).id(pageId).lastUpdate(LocalDate.now()).build();
-        pageIndexHelper.indexPageReplacements(dummyPage, Collections.emptyList());
+        IndexablePage dummyPage = IndexablePage
+            .builder()
+            .id(IndexablePageId.of(lang, pageId))
+            .lastUpdate(LocalDate.now())
+            .build();
+        pageIndexHelper.indexPageReplacements(dummyPage);
     }
 
     ///// PAGE REVIEW

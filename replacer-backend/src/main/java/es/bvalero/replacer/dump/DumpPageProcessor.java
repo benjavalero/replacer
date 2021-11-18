@@ -6,23 +6,22 @@ import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.page.index.IndexableReplacement;
 import es.bvalero.replacer.page.index.PageIndexHelper;
-import es.bvalero.replacer.page.repository.IndexablePageDB;
+import es.bvalero.replacer.page.index.PageIndexResult;
+import es.bvalero.replacer.page.index.PageIndexResultSaver;
+import es.bvalero.replacer.page.repository.IndexablePage;
 import es.bvalero.replacer.page.repository.IndexablePageId;
 import es.bvalero.replacer.page.repository.IndexablePageRepository;
-import es.bvalero.replacer.page.repository.IndexableReplacementDB;
+import es.bvalero.replacer.page.repository.IndexableReplacement;
 import es.bvalero.replacer.page.validate.PageValidator;
-import es.bvalero.replacer.replacement.ReplacementEntity;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +42,7 @@ class DumpPageProcessor {
     private IndexablePageRepository indexablePageRepository;
 
     @Autowired
-    private DumpWriter dumpWriter;
+    private PageIndexResultSaver pageIndexResultSaver;
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -51,21 +50,10 @@ class DumpPageProcessor {
     @Autowired
     private PageIndexHelper pageIndexHelper;
 
-    // TODO: Check if to remove from this class
-    @Value("${replacer.dump.batch.chunk.size}")
-    private int chunkSize;
-
-    private List<List<ReplacementEntity>> toWrite;
-
-    @PostConstruct
-    public void initializeToWrite() {
-        this.toWrite = new ArrayList<>(chunkSize);
-    }
-
     @Loggable(prepend = true, value = Loggable.TRACE)
     DumpPageProcessorResult process(DumpPage dumpPage) {
         // In all cases we find the current status of the page in the DB
-        Optional<IndexablePageDB> dbPage = indexablePageRepository.findByPageId(
+        Optional<IndexablePage> dbPage = indexablePageRepository.findByPageId(
             IndexablePageId.of(dumpPage.getLang(), dumpPage.getId())
         );
 
@@ -74,7 +62,10 @@ class DumpPageProcessor {
         try {
             pageValidator.validateProcessable(dumpPage);
         } catch (ReplacerException e) {
-            dbPage.ifPresent(this::notProcessPage);
+            // If the page is not processable then it should not exist in DB
+            if (dbPage.isPresent()) {
+                LOGGER.error("Unexpected page in DB not processable: {} - {}", dumpPage.getLang(), dumpPage.getTitle());
+            }
             return DumpPageProcessorResult.PAGE_NOT_PROCESSABLE;
         }
 
@@ -88,37 +79,14 @@ class DumpPageProcessor {
         }
     }
 
-    private void notProcessPage(IndexablePageDB dbPage) {
-        // If the page is not processable then it should not exist in DB
-        // There could be replacements reviewed by users that we want to keep for the sake of statistics
-        // Therefore we remove all non-reviewed replacements of this page
-        List<ReplacementEntity> toDelete = dbPage
-            .convert()
-            .stream()
-            .filter(r -> r.isToBeReviewed() || r.isSystemReviewed())
-            .map(ReplacementEntity::setToDelete)
-            .collect(Collectors.toList());
-
-        // The list can be empty
-        addToWrite(toDelete);
-    }
-
-    private void addToWrite(List<ReplacementEntity> replacementEntities) {
-        this.toWrite.add(replacementEntities);
-        if (this.toWrite.size() >= chunkSize) {
-            dumpWriter.write(this.toWrite);
-            this.toWrite.clear();
-        }
-    }
-
-    private DumpPageProcessorResult processPage(DumpPage dumpPage, @Nullable IndexablePageDB dbPage) {
+    private DumpPageProcessorResult processPage(DumpPage dumpPage, @Nullable IndexablePage dbPage) {
         // Check if the last process of the page is after the dump generation, so we can skip it.
         Optional<LocalDate> dbLastUpdate = dbPage == null
             ? Optional.empty()
             : dbPage
                 .getReplacements()
                 .stream()
-                .map(IndexableReplacementDB::getLastUpdate)
+                .map(IndexableReplacement::getLastUpdate)
                 .max(Comparator.comparing(LocalDate::toEpochDay));
         if (
             dbLastUpdate.isPresent() &&
@@ -138,18 +106,16 @@ class DumpPageProcessor {
         List<Replacement> replacements = replacementFinderService.find(convertToFinder(dumpPage));
 
         // Index the found replacements against the ones in DB (if any)
-        List<ReplacementEntity> dbReplacements = dbPage == null ? Collections.emptyList() : dbPage.convert();
-        List<ReplacementEntity> toUpdate = pageIndexHelper.findIndexPageReplacements(
-            convertToIndexable(dumpPage),
-            replacements.stream().map(r -> convert(r, dumpPage)).collect(Collectors.toList()),
-            dbReplacements
+        PageIndexResult pageIndexResult = pageIndexHelper.findIndexPageReplacements(
+            convertToIndexable(dumpPage, replacements),
+            dbPage
         );
-        LOGGER.trace("Replacements to update: {}", toUpdate.size());
+        LOGGER.trace("Replacements to update: {}", pageIndexResult.size());
 
-        if (toUpdate.isEmpty()) {
+        if (pageIndexResult.isEmpty()) {
             return DumpPageProcessorResult.PAGE_NOT_PROCESSED;
         } else {
-            addToWrite(toUpdate);
+            pageIndexResultSaver.saveBatch(pageIndexResult);
             return DumpPageProcessorResult.PAGE_PROCESSED;
         }
     }
@@ -161,7 +127,7 @@ class DumpPageProcessor {
         return dumpPage.getLastUpdate().isBefore(dbDate);
     }
 
-    private boolean isNotProcessableByPageTitle(DumpPage dumpPage, @Nullable IndexablePageDB dbPage) {
+    private boolean isNotProcessableByPageTitle(DumpPage dumpPage, @Nullable IndexablePage dbPage) {
         // In case the page title has changed we force the page processing
         String dbPageTitle = dbPage == null ? null : dbPage.getTitle();
         return dumpPage.getTitle().equals(dbPageTitle);
@@ -171,34 +137,30 @@ class DumpPageProcessor {
         return FinderPage.of(page.getLang(), page.getContent(), page.getTitle());
     }
 
-    private IndexablePage convertToIndexable(DumpPage dumpPage) {
+    private IndexablePage convertToIndexable(DumpPage dumpPage, List<Replacement> replacements) {
         return IndexablePage
             .builder()
-            .lang(dumpPage.getLang())
-            .id(dumpPage.getId())
-            .namespace(dumpPage.getNamespace())
+            .id(IndexablePageId.of(dumpPage.getLang(), dumpPage.getId()))
             .title(dumpPage.getTitle())
-            .content(dumpPage.getContent())
             .lastUpdate(dumpPage.getLastUpdate())
+            .replacements(replacements.stream().map(r -> convertToIndexable(r, dumpPage)).collect(Collectors.toList()))
             .build();
     }
 
-    private IndexableReplacement convert(Replacement replacement, DumpPage page) {
+    private IndexableReplacement convertToIndexable(Replacement replacement, DumpPage page) {
         return IndexableReplacement
             .builder()
-            .lang(page.getLang())
-            .pageId(page.getId())
+            .indexablePageId(IndexablePageId.of(page.getLang(), page.getId()))
             .type(replacement.getType().getLabel())
             .subtype(replacement.getSubtype())
             .position(replacement.getStart())
             .context(replacement.getContext(page.getContent()))
             .lastUpdate(page.getLastUpdate())
-            .title(page.getTitle())
             .build();
     }
 
     void finish(WikipediaLanguage lang) {
-        dumpWriter.write(toWrite);
+        pageIndexResultSaver.forceSave();
         indexablePageRepository.resetCache(lang);
     }
 }

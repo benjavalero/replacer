@@ -24,7 +24,7 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public Optional<IndexablePageDB> findByPageId(IndexablePageId id) {
+    public Optional<IndexablePage> findByPageId(IndexablePageId id) {
         String sql =
             "SELECT r.id, r.lang, r.article_id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
             FROM_REPLACEMENT_JOIN_PAGE +
@@ -32,7 +32,7 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", id.getLang().getCode())
             .addValue("pageId", id.getPageId());
-        List<IndexablePageDB> indexablePages = jdbcTemplate.query(
+        List<IndexablePage> indexablePages = jdbcTemplate.query(
             sql,
             namedParameters,
             new IndexablePageResultExtractor()
@@ -46,7 +46,7 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     }
 
     @Override
-    public List<IndexablePageDB> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
+    public List<IndexablePage> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
         String sql =
             "SELECT r.id, r.lang, r.article_id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
             FROM_REPLACEMENT_JOIN_PAGE +
@@ -64,21 +64,21 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     }
 
     @Override
-    public void updatePageTitles(Collection<IndexablePageDB> pages) {
+    public void updatePageTitles(Collection<IndexablePage> pages) {
         String sql = "UPDATE page SET title = :title WHERE lang = :lang AND article_id = :pageId";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override
-    public void insertPages(Collection<IndexablePageDB> pages) {
+    public void insertPages(Collection<IndexablePage> pages) {
         String sql = "INSERT INTO page (lang, article_id, title) VALUES (:lang, :pageId, :title)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override
-    public void insertReplacements(Collection<IndexableReplacementDB> replacements) {
+    public void insertReplacements(Collection<IndexableReplacement> replacements) {
         String sql =
             "INSERT INTO replacement (article_id, lang, type, subtype, position, context, last_update, reviewer) " +
             "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer)";
@@ -87,7 +87,7 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     }
 
     @Override
-    public void updateReplacements(Collection<IndexableReplacementDB> replacements) {
+    public void updateReplacements(Collection<IndexableReplacement> replacements) {
         String sql =
             "UPDATE replacement SET position = :position, context = :context, last_update = :lastUpdate WHERE id = :id";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
@@ -95,9 +95,9 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     }
 
     @Override
-    public void deleteReplacements(Collection<IndexableReplacementDB> replacements) {
+    public void deleteReplacements(Collection<IndexableReplacement> replacements) {
         String sql = "DELETE FROM replacement WHERE id IN (:ids)";
-        Set<Long> ids = replacements.stream().map(IndexableReplacementDB::getId).collect(Collectors.toSet());
+        Set<Long> ids = replacements.stream().map(IndexableReplacement::getId).collect(Collectors.toSet());
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
         jdbcTemplate.update(sql, namedParameters);
     }

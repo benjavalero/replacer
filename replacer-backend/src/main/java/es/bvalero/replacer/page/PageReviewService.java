@@ -7,9 +7,10 @@ import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
-import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.page.index.IndexableReplacement;
 import es.bvalero.replacer.page.index.PageIndexHelper;
+import es.bvalero.replacer.page.repository.IndexablePage;
+import es.bvalero.replacer.page.repository.IndexablePageId;
+import es.bvalero.replacer.page.repository.IndexableReplacement;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaPage;
@@ -160,6 +161,7 @@ abstract class PageReviewService {
             }
 
             // We get here if the page is not found or not processable
+            // TODO: If the page is not processable then it should not exist in DB
             indexObsoletePage(pageId, options.getLang());
         } catch (ReplacerException e) {
             LOGGER.error("Error finding page in Wikipedia for {} - {}", options.getLang(), pageId, e);
@@ -179,15 +181,13 @@ abstract class PageReviewService {
     }
 
     @VisibleForTesting
-    IndexablePage convertToIndexablePage(WikipediaPage page) {
+    IndexablePage convertToIndexablePage(WikipediaPage page, List<Replacement> replacements) {
         return IndexablePage
             .builder()
-            .id(page.getId())
-            .lang(page.getLang())
+            .id(IndexablePageId.of(page.getLang(), page.getId()))
             .title(page.getTitle())
-            .namespace(page.getNamespace())
             .lastUpdate(page.getLastUpdate().toLocalDate())
-            .content(page.getContent())
+            .replacements(replacements.stream().map(r -> convertToIndexable(r, page)).collect(Collectors.toList()))
             .build();
     }
 
@@ -239,25 +239,19 @@ abstract class PageReviewService {
 
     void indexReplacements(WikipediaPage page, List<Replacement> replacements) {
         LOGGER.trace("Update page replacements in database");
-        IndexablePage indexablePage = convertToIndexablePage(page);
-        List<IndexableReplacement> indexableReplacements = replacements
-            .stream()
-            .map(r -> convert(r, indexablePage))
-            .collect(Collectors.toList());
-        pageIndexHelper.indexPageReplacements(indexablePage, indexableReplacements);
+        IndexablePage indexablePage = convertToIndexablePage(page, replacements);
+        pageIndexHelper.indexPageReplacements(indexablePage);
     }
 
-    private IndexableReplacement convert(Replacement replacement, IndexablePage page) {
+    private IndexableReplacement convertToIndexable(Replacement replacement, WikipediaPage page) {
         return IndexableReplacement
             .builder()
-            .lang(page.getLang())
-            .pageId(page.getId())
+            .indexablePageId(IndexablePageId.of(page.getLang(), page.getId()))
             .type(replacement.getType().getLabel())
             .subtype(replacement.getSubtype())
             .position(replacement.getStart())
             .context(replacement.getContext(page.getContent()))
-            .lastUpdate(page.getLastUpdate())
-            .title(page.getTitle())
+            .lastUpdate(page.getLastUpdate().toLocalDate())
             .build();
     }
 

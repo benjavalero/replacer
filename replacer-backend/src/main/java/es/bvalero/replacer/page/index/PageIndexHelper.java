@@ -1,43 +1,40 @@
 package es.bvalero.replacer.page.index;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.page.repository.IndexablePageDB;
-import es.bvalero.replacer.page.repository.IndexablePageId;
+import es.bvalero.replacer.page.repository.IndexablePage;
 import es.bvalero.replacer.page.repository.IndexablePageRepository;
-import es.bvalero.replacer.replacement.ReplacementDao;
-import es.bvalero.replacer.replacement.ReplacementEntity;
+import es.bvalero.replacer.page.repository.IndexableReplacement;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class PageIndexHelper {
 
+    // TODO: Don't make this a component. It can be a Util class.
+
     @Autowired
     private IndexablePageRepository indexablePageRepository;
 
     @Autowired
-    private ReplacementDao replacementDao;
+    private PageIndexResultSaver pageIndexResultSaver;
 
     /**
      * Update the replacements of a page in DB with the found ones
      */
-    public void indexPageReplacements(IndexablePage page, List<IndexableReplacement> replacements) {
+    public void indexPageReplacements(IndexablePage page) {
         // We need the page ID because the replacement list to index might be empty
-        List<ReplacementEntity> toSave = findIndexPageReplacements(page, replacements, findDbReplacements(page));
-        saveIndexedReplacements(toSave);
+        PageIndexResult toSave = findIndexPageReplacements(page, findDbReplacements(page));
+        pageIndexResultSaver.save(toSave);
     }
 
-    private List<ReplacementEntity> findDbReplacements(IndexablePage page) {
-        return indexablePageRepository
-            .findByPageId(IndexablePageId.of(page.getLang(), page.getId()))
-            .map(IndexablePageDB::convert)
-            .orElse(Collections.emptyList());
+    @Nullable
+    private IndexablePage findDbReplacements(IndexablePage page) {
+        return indexablePageRepository.findByPageId(page.getId()).orElse(null);
     }
 
     /**
@@ -46,23 +43,38 @@ public class PageIndexHelper {
      * @return A list of replacements to be inserted, updated or deleted in database.
      */
     @Loggable(prepend = true, value = Loggable.TRACE)
-    public List<ReplacementEntity> findIndexPageReplacements(
-        IndexablePage page,
-        List<IndexableReplacement> replacements,
-        List<ReplacementEntity> dbReplacements
-    ) {
-        List<ReplacementEntity> result = new ArrayList<>(100);
+    public PageIndexResult findIndexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage) {
+        PageIndexResult pageIndexResult = PageIndexResult.ofEmpty();
+        Set<IndexableReplacement> dbReplacements = dbPage == null
+            ? new HashSet<>() // The set must be mutable
+            : new HashSet<>(dbPage.getReplacements());
 
         // Ignore context when comparing replacements in case there are cases with the same context
         boolean ignoreContext =
-            (replacements.size() != replacements.stream().map(IndexableReplacement::getContext).distinct().count()) ||
-            (dbReplacements.size() != dbReplacements.stream().map(ReplacementEntity::getContext).distinct().count());
-        replacements.forEach(
-            replacement -> handleReplacement(replacement, dbReplacements, ignoreContext).ifPresent(result::add)
-        );
+            existReplacementsWithSameContext(page.getReplacements()) ||
+            existReplacementsWithSameContext(dbReplacements);
+        for (IndexableReplacement replacement : page.getReplacements()) {
+            pageIndexResult.add(handleReplacement(replacement, dbReplacements, ignoreContext));
+        }
 
-        result.addAll(cleanUpPageReplacements(page, dbReplacements));
-        return result;
+        // Check new page
+        if (dbPage == null) {
+            pageIndexResult.add(PageIndexResult.builder().createPages(Set.of(page)).build());
+        } else {
+            if (!Objects.equals(page.getTitle(), dbPage.getTitle())) {
+                // Just in case check the title as it might change with time
+                // The title could be null in case of indexing an obsolete dummy page
+
+                pageIndexResult.add(PageIndexResult.builder().updatePages(Set.of(page)).build());
+            }
+        }
+
+        pageIndexResult.add(cleanUpPageReplacements(page, dbReplacements));
+        return pageIndexResult;
+    }
+
+    private boolean existReplacementsWithSameContext(Collection<IndexableReplacement> replacements) {
+        return replacements.size() != replacements.stream().map(IndexableReplacement::getContext).distinct().count();
     }
 
     /**
@@ -70,35 +82,39 @@ public class PageIndexHelper {
      *
      * @return The updated replacement to be managed in DB if needed, or the new one to be created.
      */
-    private Optional<ReplacementEntity> handleReplacement(
+    private PageIndexResult handleReplacement(
         IndexableReplacement replacement,
-        List<ReplacementEntity> dbPageReplacements,
+        Set<IndexableReplacement> dbPageReplacements,
         boolean ignoreContext
     ) {
-        Optional<ReplacementEntity> result;
-        Optional<ReplacementEntity> existing = findSameReplacementInCollection(
+        PageIndexResult result;
+        Optional<IndexableReplacement> existing = findSameReplacementInCollection(
             replacement,
             dbPageReplacements,
             ignoreContext
         );
         if (existing.isPresent()) {
-            ReplacementEntity withAction = handleExistingReplacement(replacement, existing.get());
-            dbPageReplacements.remove(existing.get());
-            dbPageReplacements.add(withAction);
-            result = withAction.isToUpdate() ? Optional.of(withAction) : Optional.empty();
+            IndexableReplacement dbReplacement = existing.get();
+            IndexableReplacement handledReplacement = handleExistingReplacement(replacement, dbReplacement);
+            dbPageReplacements.remove(dbReplacement);
+            if (handledReplacement.equals(dbReplacement)) {
+                result = PageIndexResult.ofEmpty();
+            } else {
+                dbPageReplacements.add(handledReplacement.withTouched(true));
+                result = PageIndexResult.builder().updateReplacements(Set.of(handledReplacement)).build();
+            }
         } else {
             // New replacement
-            ReplacementEntity newReplacement = convert(replacement);
-            dbPageReplacements.add(newReplacement);
-            result = Optional.of(newReplacement);
+            dbPageReplacements.add(replacement.withTouched(true));
+            result = PageIndexResult.builder().createReplacements(Set.of(replacement)).build();
             LOGGER.trace("Replacement inserted in DB: {}", replacement);
         }
         return result;
     }
 
-    private Optional<ReplacementEntity> findSameReplacementInCollection(
+    private Optional<IndexableReplacement> findSameReplacementInCollection(
         IndexableReplacement replacement,
-        Collection<ReplacementEntity> entities,
+        Collection<IndexableReplacement> entities,
         boolean ignoreContext
     ) {
         return entities.stream().filter(entity -> isSameReplacement(replacement, entity, ignoreContext)).findAny();
@@ -106,20 +122,20 @@ public class PageIndexHelper {
 
     private boolean isSameReplacement(
         IndexableReplacement replacement,
-        ReplacementEntity entity,
+        IndexableReplacement entity,
         boolean ignoreContext
     ) {
         if (
-            replacement.getPageId() == entity.getPageId() &&
-            replacement.getType().equals(entity.getType()) &&
-            replacement.getSubtype().equals(entity.getSubtype())
+            Objects.equals(replacement.getIndexablePageId(), entity.getIndexablePageId()) &&
+            Objects.equals(replacement.getType(), entity.getType()) &&
+            Objects.equals(replacement.getSubtype(), entity.getSubtype())
         ) {
             if (ignoreContext) {
-                return replacement.getPosition() == entity.getPosition();
+                return Objects.equals(replacement.getPosition(), entity.getPosition());
             } else {
                 return (
-                    replacement.getPosition() == entity.getPosition() ||
-                    replacement.getContext().equals(entity.getContext())
+                    Objects.equals(replacement.getPosition(), entity.getPosition()) ||
+                    Objects.equals(replacement.getContext(), entity.getContext())
                 );
             }
         } else {
@@ -132,81 +148,26 @@ public class PageIndexHelper {
      *
      * @return The original DB replacement update plus the action to do.
      */
-    private ReplacementEntity handleExistingReplacement(
+    private IndexableReplacement handleExistingReplacement(
         IndexableReplacement replacement,
-        ReplacementEntity dbReplacement
+        IndexableReplacement dbReplacement
     ) {
-        ReplacementEntity result = dbReplacement.setToKeep(); // Initially we mark it to be kept
-        if (dbReplacement.isToBeReviewed() && dbReplacement.isOlderThan(replacement.getLastUpdate())) {
-            // The replacement is the same but the date is outdated in database
-            result = result.updateLastUpdate(replacement.getLastUpdate());
-
-            // Also update other values just in case any of them has changed
-            if (replacement.getPosition() != dbReplacement.getPosition()) {
-                result = result.updatePosition(replacement.getPosition());
-            }
-            if (!replacement.getContext().equals(dbReplacement.getContext())) {
-                result = result.updateContext(replacement.getContext());
-            }
-            if (!replacement.getTitle().equals(dbReplacement.getTitle())) {
-                result = result.updateTitle(replacement.getTitle());
-            }
+        // Check if the replacement must be updated in DB
+        if (
+            dbReplacement.isToBeReviewed() &&
+            (
+                dbReplacement.isOlderThan(replacement) ||
+                !Objects.equals(replacement.getPosition(), dbReplacement.getPosition()) ||
+                !Objects.equals(replacement.getContext(), dbReplacement.getContext())
+            )
+        ) {
+            return dbReplacement
+                .withPosition(replacement.getPosition())
+                .withContext(replacement.getContext())
+                .withLastUpdate(replacement.getLastUpdate());
+        } else {
+            return dbReplacement;
         }
-        return result;
-    }
-
-    public void saveIndexedReplacements(List<ReplacementEntity> replacements) {
-        try {
-            List<ReplacementEntity> toInsert = replacements
-                .stream()
-                .filter(ReplacementEntity::isToCreate)
-                .collect(Collectors.toList());
-            if (!toInsert.isEmpty()) {
-                replacementDao.insert(toInsert);
-            }
-
-            List<ReplacementEntity> toUpdateDate = replacements
-                .stream()
-                .filter(ReplacementEntity::isToUpdateDate)
-                .collect(Collectors.toList());
-            if (!toUpdateDate.isEmpty()) {
-                replacementDao.updateDate(toUpdateDate);
-            }
-
-            List<ReplacementEntity> toUpdate = replacements
-                .stream()
-                .filter(ReplacementEntity::isToUpdateContext)
-                .collect(Collectors.toList());
-            if (!toUpdate.isEmpty()) {
-                replacementDao.update(toUpdate);
-            }
-
-            List<ReplacementEntity> toRemove = replacements
-                .stream()
-                .filter(ReplacementEntity::isToDelete)
-                .collect(Collectors.toList());
-            if (!toRemove.isEmpty()) {
-                replacementDao.delete(toRemove);
-            }
-        } catch (Exception e) {
-            LOGGER.error("Error saving replacements: {}", replacements, e);
-        }
-    }
-
-    @VisibleForTesting
-    ReplacementEntity convert(IndexableReplacement replacement) {
-        return ReplacementEntity
-            .builder()
-            .lang(replacement.getLang().getCode())
-            .pageId(replacement.getPageId())
-            .type(replacement.getType())
-            .subtype(replacement.getSubtype())
-            .position(replacement.getPosition())
-            .context(replacement.getContext())
-            .lastUpdate(replacement.getLastUpdate())
-            .title(replacement.getTitle())
-            .build()
-            .setToCreate();
     }
 
     /**
@@ -214,38 +175,24 @@ public class PageIndexHelper {
      *
      * @return A list of replacements to be managed in DB.
      */
-    private List<ReplacementEntity> cleanUpPageReplacements(
-        IndexablePage page,
-        List<ReplacementEntity> dbReplacements
-    ) {
-        List<ReplacementEntity> result = new ArrayList<>(100);
+    private PageIndexResult cleanUpPageReplacements(IndexablePage page, Set<IndexableReplacement> dbReplacements) {
+        PageIndexResult result = PageIndexResult.ofEmpty();
 
         // Find just in case the system-reviewed replacements and delete them
-        List<ReplacementEntity> systemReviewed = dbReplacements
+        Set<IndexableReplacement> systemReviewed = dbReplacements
             .stream()
             .filter(rep -> rep.isSystemReviewed() && !rep.isDummy())
-            .collect(Collectors.toList());
-        dbReplacements.removeAll(systemReviewed);
-        result.addAll(systemReviewed.stream().map(ReplacementEntity::setToDelete).collect(Collectors.toList()));
+            .collect(Collectors.toSet());
+        systemReviewed.forEach(dbReplacements::remove);
+        result.add(PageIndexResult.builder().deleteReplacements(systemReviewed).build());
 
         // All remaining replacements to review and not checked so far are obsolete and thus to be deleted
-        List<ReplacementEntity> obsolete = dbReplacements
+        Set<IndexableReplacement> obsolete = dbReplacements
             .stream()
-            .filter(rep -> rep.isToBeReviewed() && StringUtils.isEmpty(rep.getCudAction()))
-            .collect(Collectors.toList());
-        dbReplacements.removeAll(obsolete);
-        result.addAll(obsolete.stream().map(ReplacementEntity::setToDelete).collect(Collectors.toList()));
-
-        // Just in case check the title as it might change with time
-        // The title could be null in case of indexing an obsolete dummy page
-        if (StringUtils.isNotBlank(page.getTitle())) {
-            List<ReplacementEntity> oldTitle = dbReplacements
-                .stream()
-                .filter(rep -> !rep.isDummy())
-                .filter(rep -> !page.getTitle().equals(rep.getTitle()))
-                .collect(Collectors.toList());
-            result.addAll(oldTitle.stream().map(rep -> rep.updateTitle(page.getTitle())).collect(Collectors.toList()));
-        }
+            .filter(rep -> rep.isToBeReviewed() && !rep.isTouched())
+            .collect(Collectors.toSet());
+        obsolete.forEach(dbReplacements::remove);
+        result.add(PageIndexResult.builder().deleteReplacements(obsolete).build());
 
         // We use a dummy replacement to store in some place the last update of the page
         // in case there are no replacements to review to store it instead.
@@ -253,31 +200,44 @@ public class PageIndexHelper {
         // and have the date of the user review action.
 
         // Just in case check there is only one dummy
-        List<ReplacementEntity> dummies = dbReplacements
+        List<IndexableReplacement> dummies = dbReplacements
             .stream()
-            .filter(ReplacementEntity::isDummy)
-            .sorted(Comparator.comparing(ReplacementEntity::getLastUpdate).reversed())
+            .filter(IndexableReplacement::isDummy)
+            .sorted(Comparator.comparing(IndexableReplacement::getLastUpdate).reversed())
             .collect(Collectors.toList());
         if (dummies.size() > 1) {
-            List<ReplacementEntity> obsoleteDummies = dummies.subList(1, dummies.size());
-            dbReplacements.removeAll(obsoleteDummies);
-            result.addAll(obsoleteDummies.stream().map(ReplacementEntity::setToDelete).collect(Collectors.toList()));
+            Set<IndexableReplacement> obsoleteDummies = new HashSet<>(dummies.subList(1, dummies.size()));
+            obsoleteDummies.forEach(dbReplacements::remove);
+            result.add(PageIndexResult.builder().deleteReplacements(obsoleteDummies).build());
         }
 
         // If there remain replacements to review there is no need of dummy replacement
         // If not a dummy replacement must be created or updated (if older)
         // As this is the last step there is no need to update the DB list
-        boolean existReplacementsToReview = dbReplacements.stream().anyMatch(ReplacementEntity::isToBeReviewed);
-        Optional<ReplacementEntity> dummy = dummies.isEmpty() ? Optional.empty() : Optional.of(dummies.get(0));
+        boolean existReplacementsToReview = dbReplacements.stream().anyMatch(IndexableReplacement::isToBeReviewed);
+        Optional<IndexableReplacement> dummy = dummies.isEmpty() ? Optional.empty() : Optional.of(dummies.get(0));
         if (existReplacementsToReview) {
-            dummy.ifPresent(d -> result.add(d.setToDelete()));
-        } else {
             if (dummy.isPresent()) {
-                if (dummy.get().isOlderThan(page.getLastUpdate())) {
-                    result.add(dummy.get().updateLastUpdate(page.getLastUpdate()));
+                result.add(PageIndexResult.builder().deleteReplacements(Set.of(dummy.get())).build());
+            }
+        } else {
+            assert page.getLastUpdate() != null;
+            if (dummy.isPresent()) {
+                if (!page.getReplacements().isEmpty() && dummy.get().isOlderThan(page.getLastUpdate())) {
+                    result.add(
+                        PageIndexResult
+                            .builder()
+                            .updateReplacements(Set.of(dummy.get().withLastUpdate(page.getLastUpdate())))
+                            .build()
+                    );
                 }
             } else {
-                result.add(ReplacementEntity.ofDummy(page.getId(), page.getLang(), page.getLastUpdate()));
+                result.add(
+                    PageIndexResult
+                        .builder()
+                        .createReplacements(Set.of(IndexableReplacement.ofDummy(page.getId(), page.getLastUpdate())))
+                        .build()
+                );
             }
         }
 

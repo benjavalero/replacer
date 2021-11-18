@@ -39,7 +39,7 @@ class IndexablePageCacheRepositoryTest {
         // In DB: replacements for page 2 (first load) and 1001 (second load)
         // We ask for the page 1 and 1001, so the page 2 will be cleaned.
         IndexablePageId pageId1 = IndexablePageId.of(WikipediaLanguage.SPANISH, 2);
-        IndexableReplacementDB replacement1 = IndexableReplacementDB
+        IndexableReplacement replacement1 = IndexableReplacement
             .builder()
             .indexablePageId(pageId1)
             .type("")
@@ -48,9 +48,9 @@ class IndexablePageCacheRepositoryTest {
             .context("")
             .lastUpdate(LocalDate.now())
             .build();
-        IndexablePageDB page1 = IndexablePageDB.builder().id(pageId1).replacements(List.of(replacement1)).build();
+        IndexablePage page1 = IndexablePage.builder().id(pageId1).replacements(List.of(replacement1)).build();
         IndexablePageId pageId2 = IndexablePageId.of(WikipediaLanguage.SPANISH, 1001);
-        IndexableReplacementDB replacement2 = IndexableReplacementDB
+        IndexableReplacement replacement2 = IndexableReplacement
             .builder()
             .indexablePageId(pageId2)
             .type("")
@@ -59,13 +59,13 @@ class IndexablePageCacheRepositoryTest {
             .context("")
             .lastUpdate(LocalDate.now())
             .build();
-        IndexablePageDB page2 = IndexablePageDB.builder().id(pageId2).replacements(List.of(replacement2)).build();
+        IndexablePage page2 = IndexablePage.builder().id(pageId2).replacements(List.of(replacement2)).build();
         when(indexablePageRepository.findByPageIdInterval(WikipediaLanguage.SPANISH, 1, 1000))
             .thenReturn(List.of(page1));
         when(indexablePageRepository.findByPageIdInterval(WikipediaLanguage.SPANISH, 1001, 2000))
             .thenReturn(List.of(page2));
 
-        Optional<IndexablePageDB> indexablePageDB = indexablePageCacheRepository.findByPageId(
+        Optional<IndexablePage> indexablePageDB = indexablePageCacheRepository.findByPageId(
             IndexablePageId.of(WikipediaLanguage.SPANISH, 1)
         );
         assertTrue(indexablePageDB.isEmpty());
@@ -83,7 +83,7 @@ class IndexablePageCacheRepositoryTest {
         // In DB: replacement for page 1001
         // So the first load is enlarged
         IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.SPANISH, 1001);
-        IndexableReplacementDB replacement = IndexableReplacementDB
+        IndexableReplacement replacement = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
             .type("")
@@ -92,11 +92,11 @@ class IndexablePageCacheRepositoryTest {
             .context("")
             .lastUpdate(LocalDate.now())
             .build();
-        IndexablePageDB page = IndexablePageDB.builder().id(pageId).replacements(List.of(replacement)).build();
+        IndexablePage page = IndexablePage.builder().id(pageId).replacements(List.of(replacement)).build();
         when(indexablePageRepository.findByPageIdInterval(WikipediaLanguage.SPANISH, 1, 2000))
             .thenReturn(List.of(page));
 
-        Optional<IndexablePageDB> indexablePageDB = indexablePageCacheRepository.findByPageId(
+        Optional<IndexablePage> indexablePageDB = indexablePageCacheRepository.findByPageId(
             IndexablePageId.of(WikipediaLanguage.SPANISH, 1001)
         );
         assertEquals(page, indexablePageDB.orElse(null));

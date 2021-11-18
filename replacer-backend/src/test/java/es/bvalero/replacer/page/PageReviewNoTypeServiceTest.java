@@ -54,6 +54,7 @@ class PageReviewNoTypeServiceTest {
         .start(offset)
         .text("Y")
         .type(ReplacementType.DATE)
+        .subtype("Año con punto")
         .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
@@ -133,7 +134,7 @@ class PageReviewNoTypeServiceTest {
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         verify(pageIndexHelper)
-            .indexPageReplacements(eq(pageReviewNoTypeService.convertToIndexablePage(page)), anyList());
+            .indexPageReplacements(pageReviewNoTypeService.convertToIndexablePage(page, replacements));
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId());
@@ -159,7 +160,7 @@ class PageReviewNoTypeServiceTest {
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         verify(pageIndexHelper)
-            .indexPageReplacements(pageReviewNoTypeService.convertToIndexablePage(page), Collections.emptyList());
+            .indexPageReplacements(pageReviewNoTypeService.convertToIndexablePage(page, Collections.emptyList()));
 
         assertFalse(review.isPresent());
     }
@@ -183,7 +184,7 @@ class PageReviewNoTypeServiceTest {
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
         verify(pageIndexHelper)
-            .indexPageReplacements(eq(pageReviewNoTypeService.convertToIndexablePage(page2)), anyList());
+            .indexPageReplacements(pageReviewNoTypeService.convertToIndexablePage(page2, replacements));
 
         assertTrue(review.isPresent());
         assertEquals(randomId2, review.get().getPage().getId());

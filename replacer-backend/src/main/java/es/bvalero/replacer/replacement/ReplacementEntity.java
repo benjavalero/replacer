@@ -63,10 +63,6 @@ public class ReplacementEntity {
             .build();
     }
 
-    public boolean isToBeReviewed() {
-        return this.reviewer == null;
-    }
-
     public boolean isOlderThan(LocalDate date) {
         return this.lastUpdate.isBefore(date);
     }
@@ -74,10 +70,6 @@ public class ReplacementEntity {
     @TestOnly
     public ReplacementEntity setSystemReviewed() {
         return withReviewer(REVIEWER_SYSTEM);
-    }
-
-    public boolean isSystemReviewed() {
-        return REVIEWER_SYSTEM.equals(this.reviewer);
     }
 
     public ReplacementEntity setToCreate() {
@@ -98,36 +90,6 @@ public class ReplacementEntity {
 
     public ReplacementEntity updateLastUpdate(LocalDate lastUpdate) {
         return withLastUpdate(lastUpdate).withCudAction("UD");
-    }
-
-    public boolean isToUpdateDate() {
-        return "UD".equals(this.cudAction);
-    }
-
-    public ReplacementEntity updateContext(String context) {
-        return withContext(context).withCudAction("UC");
-    }
-
-    public boolean isToUpdateContext() {
-        return "UC".equals(this.cudAction);
-    }
-
-    public ReplacementEntity updatePosition(int position) {
-        // Action for position, context and title is the same
-        return withPosition(position).withCudAction("UC");
-    }
-
-    public ReplacementEntity updateTitle(String title) {
-        // Action for position, context and title is the same
-        return withTitle(title).withCudAction("UC");
-    }
-
-    public boolean isToUpdate() {
-        return this.cudAction != null && this.cudAction.startsWith("U");
-    }
-
-    public ReplacementEntity setToKeep() {
-        return withCudAction("K");
     }
 
     public static ReplacementEntity ofDummy(int pageId, WikipediaLanguage lang, LocalDate lastUpdate) {

@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.repository;
 
 import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.replacement.ReplacementEntity;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Builder;
@@ -9,11 +10,9 @@ import lombok.NonNull;
 import lombok.Value;
 import org.springframework.lang.Nullable;
 
-// TODO: This is a temporary class until it is unified with the existing IndexablePage
-
 @Value
 @Builder
-public class IndexablePageDB {
+public class IndexablePage {
 
     // TODO: There should exist a FK in DB
     @NonNull
@@ -23,16 +22,21 @@ public class IndexablePageDB {
     @Nullable
     String title;
 
+    // Not retrieved from database but from Wikipedia or a dump
+    // It is needed in case a page has no replacements
+    @Nullable
+    LocalDate lastUpdate;
+
     @NonNull
-    List<IndexableReplacementDB> replacements;
+    List<IndexableReplacement> replacements;
 
     /* Named parameters to make easier the JDBC queries */
 
-    WikipediaLanguage getLang() {
+    public WikipediaLanguage getLang() {
         return this.id.getLang();
     }
 
-    Integer getPageId() {
+    public Integer getPageId() {
         return this.id.getPageId();
     }
 
@@ -41,7 +45,7 @@ public class IndexablePageDB {
         return this.getReplacements().stream().map(this::convert).collect(Collectors.toList());
     }
 
-    private ReplacementEntity convert(IndexableReplacementDB replacement) {
+    private ReplacementEntity convert(IndexableReplacement replacement) {
         return ReplacementEntity
             .builder()
             .id(replacement.getId())

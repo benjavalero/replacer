@@ -9,12 +9,12 @@ import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-class IndexablePageResultExtractor implements ResultSetExtractor<List<IndexablePageDB>> {
+class IndexablePageResultExtractor implements ResultSetExtractor<List<IndexablePage>> {
 
     @Override
-    public List<IndexablePageDB> extractData(ResultSet rs) throws SQLException, DataAccessException {
+    public List<IndexablePage> extractData(ResultSet rs) throws SQLException, DataAccessException {
         Map<IndexablePageId, String> titleMap = new HashMap<>();
-        ListValuedMap<IndexablePageId, IndexableReplacementDB> replacementMap = new ArrayListValuedHashMap<>();
+        ListValuedMap<IndexablePageId, IndexableReplacement> replacementMap = new ArrayListValuedHashMap<>();
 
         while (rs.next()) {
             IndexablePageId pageId = IndexablePageId.of(
@@ -25,7 +25,7 @@ class IndexablePageResultExtractor implements ResultSetExtractor<List<IndexableP
             titleMap.put(pageId, rs.getString("TITLE"));
             replacementMap.put(
                 pageId,
-                IndexableReplacementDB
+                IndexableReplacement
                     .builder()
                     .id(rs.getLong("ID"))
                     .indexablePageId(pageId)
@@ -42,12 +42,12 @@ class IndexablePageResultExtractor implements ResultSetExtractor<List<IndexableP
         if (titleMap.isEmpty()) {
             return Collections.emptyList();
         } else {
-            List<IndexablePageDB> pageList = new ArrayList<>(titleMap.size());
+            List<IndexablePage> pageList = new ArrayList<>(titleMap.size());
             for (Map.Entry<IndexablePageId, String> entry : titleMap.entrySet()) {
                 IndexablePageId pageId = entry.getKey();
                 String title = entry.getValue();
                 pageList.add(
-                    IndexablePageDB.builder().id(pageId).title(title).replacements(replacementMap.get(pageId)).build()
+                    IndexablePage.builder().id(pageId).title(title).replacements(replacementMap.get(pageId)).build()
                 );
             }
             return pageList;
