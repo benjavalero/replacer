@@ -4,7 +4,10 @@ import es.bvalero.replacer.page.repository.IndexablePage;
 import es.bvalero.replacer.page.repository.IndexableReplacement;
 import java.util.HashSet;
 import java.util.Set;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 /**
  * Sub-domain object representing the result of indexing a page or several pages
@@ -25,6 +28,9 @@ public final class PageIndexResult {
     Set<IndexablePage> updatePages = new HashSet<>();
 
     @Builder.Default
+    Set<IndexablePage> deletePages = new HashSet<>();
+
+    @Builder.Default
     Set<IndexableReplacement> createReplacements = new HashSet<>();
 
     // The attributes of a replacement may vary, e.g. the last update date, or the context/position.
@@ -38,6 +44,7 @@ public final class PageIndexResult {
         return (
             createPages.size() +
             updatePages.size() +
+            deletePages.size() +
             createReplacements.size() +
             updateReplacements.size() +
             deleteReplacements.size()
@@ -51,6 +58,7 @@ public final class PageIndexResult {
     void add(PageIndexResult pageIndexResult) {
         this.createPages.addAll(pageIndexResult.getCreatePages());
         this.updatePages.addAll(pageIndexResult.getUpdatePages());
+        this.deletePages.addAll(pageIndexResult.getDeletePages());
         this.createReplacements.addAll(pageIndexResult.getCreateReplacements());
         this.updateReplacements.addAll(pageIndexResult.getUpdateReplacements());
         this.deleteReplacements.addAll(pageIndexResult.getDeleteReplacements());
@@ -63,6 +71,7 @@ public final class PageIndexResult {
     void clear() {
         this.createPages.clear();
         this.updatePages.clear();
+        this.deletePages.clear();
         this.createReplacements.clear();
         this.updateReplacements.clear();
         this.deleteReplacements.clear();

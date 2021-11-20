@@ -1,53 +1,40 @@
 package es.bvalero.replacer.page.index;
 
-import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.page.repository.IndexablePage;
 import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.page.repository.IndexableReplacement;
 import java.util.*;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-@Slf4j
+/** Util class to compare two indexable pages and return the set of changes to apply in database */
 @Component
 public class PageIndexHelper {
 
-    // TODO: Don't make this a component. It can be a Util class.
-
     @Autowired
     private IndexablePageRepository indexablePageRepository;
-
-    @Autowired
-    private PageIndexResultSaver pageIndexResultSaver;
-
-    /**
-     * Update the replacements of a page in DB with the found ones
-     */
-    public void indexPageReplacements(IndexablePage page) {
-        // We need the page ID because the replacement list to index might be empty
-        PageIndexResult toSave = findIndexPageReplacements(page, findDbReplacements(page));
-        pageIndexResultSaver.save(toSave);
-    }
-
-    @Nullable
-    private IndexablePage findDbReplacements(IndexablePage page) {
-        return indexablePageRepository.findByPageId(page.getId()).orElse(null);
-    }
 
     /**
      * Compare the given found replacements in a page with the given ones in the database.
      *
      * @return A list of replacements to be inserted, updated or deleted in database.
      */
-    @Loggable(prepend = true, value = Loggable.TRACE)
-    public PageIndexResult findIndexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage) {
+    public PageIndexResult indexPageReplacements(@Nullable IndexablePage page, @Nullable IndexablePage dbPage) {
+        if (Objects.isNull(page) && Objects.isNull(dbPage)) {
+            throw new IllegalArgumentException();
+        }
+
         PageIndexResult pageIndexResult = PageIndexResult.ofEmpty();
         Set<IndexableReplacement> dbReplacements = dbPage == null
             ? new HashSet<>() // The set must be mutable
             : new HashSet<>(dbPage.getReplacements());
+
+        // Check obsolete page
+        if (page == null) {
+            return PageIndexResult.builder().deletePages(Set.of(dbPage)).build();
+        }
 
         // Ignore context when comparing replacements in case there are cases with the same context
         boolean ignoreContext =
@@ -107,7 +94,6 @@ public class PageIndexHelper {
             // New replacement
             dbPageReplacements.add(replacement.withTouched(true));
             result = PageIndexResult.builder().createReplacements(Set.of(replacement)).build();
-            LOGGER.trace("Replacement inserted in DB: {}", replacement);
         }
         return result;
     }
@@ -217,17 +203,22 @@ public class PageIndexHelper {
         boolean existReplacementsToReview = dbReplacements.stream().anyMatch(IndexableReplacement::isToBeReviewed);
         Optional<IndexableReplacement> dummy = dummies.isEmpty() ? Optional.empty() : Optional.of(dummies.get(0));
         if (existReplacementsToReview) {
-            if (dummy.isPresent()) {
-                result.add(PageIndexResult.builder().deleteReplacements(Set.of(dummy.get())).build());
-            }
+            dummy.ifPresent(
+                indexableReplacement ->
+                    result.add(PageIndexResult.builder().deleteReplacements(Set.of(indexableReplacement)).build())
+            );
         } else {
-            assert page.getLastUpdate() != null;
             if (dummy.isPresent()) {
-                if (!page.getReplacements().isEmpty() && dummy.get().isOlderThan(page.getLastUpdate())) {
+                if (
+                    !page.getReplacements().isEmpty() &&
+                    dummy.get().isOlderThan(Objects.requireNonNull(page.getLastUpdate()))
+                ) {
                     result.add(
                         PageIndexResult
                             .builder()
-                            .updateReplacements(Set.of(dummy.get().withLastUpdate(page.getLastUpdate())))
+                            .updateReplacements(
+                                Set.of(dummy.get().withLastUpdate(Objects.requireNonNull(page.getLastUpdate())))
+                            )
                             .build()
                     );
                 }

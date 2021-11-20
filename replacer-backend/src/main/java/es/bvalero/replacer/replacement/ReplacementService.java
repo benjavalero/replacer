@@ -3,10 +3,7 @@ package es.bvalero.replacer.replacement;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.domain.ReplacerException;
 import es.bvalero.replacer.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.index.PageIndexHelper;
-import es.bvalero.replacer.page.repository.IndexablePage;
-import es.bvalero.replacer.page.repository.IndexablePageId;
-import java.time.LocalDate;
+import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +15,10 @@ import org.springframework.stereotype.Service;
 public class ReplacementService {
 
     @Autowired
-    private PageIndexHelper pageIndexHelper;
+    private ReplacementDao replacementDao;
 
     @Autowired
-    private ReplacementDao replacementDao;
+    private IndexablePageRepository indexablePageRepository;
 
     @Autowired
     private ReplacementStatsDao replacementStatsDao;
@@ -33,18 +30,6 @@ public class ReplacementService {
 
     public void insert(CustomEntity entity) {
         customDao.insert(entity);
-    }
-
-    ///// DUMP INDEXING
-
-    // TODO: Move to the service in charge of page indexing
-    public void indexObsoleteByPageId(WikipediaLanguage lang, int pageId) {
-        IndexablePage dummyPage = IndexablePage
-            .builder()
-            .id(IndexablePageId.of(lang, pageId))
-            .lastUpdate(LocalDate.now())
-            .build();
-        pageIndexHelper.indexPageReplacements(dummyPage);
     }
 
     ///// PAGE REVIEW

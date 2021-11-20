@@ -1,40 +1,26 @@
 package es.bvalero.replacer.page.index;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import es.bvalero.replacer.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.repository.IndexablePage;
 import es.bvalero.replacer.page.repository.IndexablePageId;
-import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.page.repository.IndexableReplacement;
-import es.bvalero.replacer.page.validate.PageValidator;
 import java.time.LocalDate;
-import java.util.*;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 class PageIndexHelperTest {
 
-    @Mock
-    private IndexablePageRepository indexablePageRepository;
+    private final PageIndexHelper pageIndexHelper = new PageIndexHelper();
 
-    @Mock
-    private PageIndexResultSaver pageIndexResultSaver;
-
-    @Mock
-    private PageValidator pageValidator;
-
-    @InjectMocks
-    private PageIndexHelper pageIndexHelper;
-
-    @BeforeEach
-    void setUp() {
-        pageIndexHelper = new PageIndexHelper();
-        MockitoAnnotations.initMocks(this);
+    @Test
+    void testNullPages() {
+        assertThrows(IllegalArgumentException.class, () -> pageIndexHelper.indexPageReplacements(null, null));
     }
 
     @Test
@@ -47,9 +33,14 @@ class PageIndexHelperTest {
             .lastUpdate(LocalDate.now())
             .build();
 
-        pageIndexHelper.indexPageReplacements(page);
+        PageIndexResult result = pageIndexHelper.indexPageReplacements(page, null);
 
-        verify(indexablePageRepository).findByPageId(page.getId());
+        PageIndexResult expected = PageIndexResult
+            .builder()
+            .createPages(Set.of(page))
+            .createReplacements(Set.of(IndexableReplacement.ofDummy(page)))
+            .build();
+        assertEquals(expected, result);
     }
 
     @Test
@@ -71,7 +62,7 @@ class PageIndexHelperTest {
             .lastUpdate(LocalDate.now())
             .build();
 
-        PageIndexResult toIndex = pageIndexHelper.findIndexPageReplacements(page, null);
+        PageIndexResult toIndex = pageIndexHelper.indexPageReplacements(page, null);
 
         PageIndexResult expected = PageIndexResult
             .builder()
@@ -83,6 +74,32 @@ class PageIndexHelperTest {
 
     @Test
     void testIndexObsoletePage() {
+        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
+        IndexableReplacement dbRep = IndexableReplacement
+            .builder()
+            .indexablePageId(pageId)
+            .type("")
+            .subtype("")
+            .position(0)
+            .context("")
+            .lastUpdate(LocalDate.now())
+            .build();
+        IndexablePage dbPage = IndexablePage
+            .builder()
+            .id(pageId)
+            .replacements(List.of(dbRep))
+            .lastUpdate(LocalDate.now())
+            .build();
+
+        PageIndexResult toIndex = pageIndexHelper.indexPageReplacements(null, dbPage);
+
+        PageIndexResult expected = PageIndexResult.builder().deletePages(Set.of(dbPage)).build();
+
+        assertEquals(expected, toIndex);
+    }
+
+    @Test
+    void testIndexObsoleteReplacements() {
         IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
         IndexablePage page = IndexablePage
             .builder()
@@ -119,7 +136,7 @@ class PageIndexHelperTest {
             .lastUpdate(LocalDate.now())
             .build();
 
-        PageIndexResult toIndex = pageIndexHelper.findIndexPageReplacements(page, dbPage);
+        PageIndexResult toIndex = pageIndexHelper.indexPageReplacements(page, dbPage);
 
         PageIndexResult expected = PageIndexResult
             .builder()
@@ -139,7 +156,7 @@ class PageIndexHelperTest {
             .replacements(Collections.emptyList())
             .lastUpdate(LocalDate.now())
             .build();
-        PageIndexResult result = pageIndexHelper.findIndexPageReplacements(page, null);
+        PageIndexResult result = pageIndexHelper.indexPageReplacements(page, null);
 
         // Save the dummy replacement
         PageIndexResult expected = PageIndexResult
@@ -260,7 +277,7 @@ class PageIndexHelperTest {
             .lastUpdate(same)
             .build();
 
-        PageIndexResult toIndex = pageIndexHelper.findIndexPageReplacements(page, dbPage);
+        PageIndexResult toIndex = pageIndexHelper.indexPageReplacements(page, dbPage);
 
         PageIndexResult expected = PageIndexResult
             .builder()
@@ -358,7 +375,7 @@ class PageIndexHelperTest {
             .lastUpdate(before)
             .build();
 
-        PageIndexResult toIndex = pageIndexHelper.findIndexPageReplacements(page, dbPage);
+        PageIndexResult toIndex = pageIndexHelper.indexPageReplacements(page, dbPage);
 
         PageIndexResult expected = PageIndexResult
             .builder()
@@ -392,7 +409,7 @@ class PageIndexHelperTest {
             .lastUpdate(same)
             .build();
 
-        PageIndexResult toIndex = pageIndexHelper.findIndexPageReplacements(page, dbPage);
+        PageIndexResult toIndex = pageIndexHelper.indexPageReplacements(page, dbPage);
 
         PageIndexResult expected = PageIndexResult.builder().deleteReplacements(Set.of(r1db)).build();
         assertEquals(expected, toIndex);

@@ -8,8 +8,11 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.page.index.PageIndexHelper;
+import es.bvalero.replacer.page.index.PageIndexResult;
+import es.bvalero.replacer.page.index.PageIndexResultSaver;
 import es.bvalero.replacer.page.repository.IndexablePage;
 import es.bvalero.replacer.page.repository.IndexablePageId;
+import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.page.repository.IndexableReplacement;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
@@ -51,7 +54,13 @@ abstract class PageReviewService {
     private ReplacementService replacementService;
 
     @Autowired
+    private IndexablePageRepository indexablePageRepository;
+
+    @Autowired
     private PageIndexHelper pageIndexHelper;
+
+    @Autowired
+    private PageIndexResultSaver pageIndexResultSaver;
 
     @Autowired
     private SectionReviewService sectionReviewService;
@@ -161,8 +170,7 @@ abstract class PageReviewService {
             }
 
             // We get here if the page is not found or not processable
-            // TODO: If the page is not processable then it should not exist in DB
-            indexObsoletePage(pageId, options.getLang());
+            indexObsoletePage(options.getLang(), pageId);
         } catch (ReplacerException e) {
             LOGGER.error("Error finding page in Wikipedia for {} - {}", options.getLang(), pageId, e);
         }
@@ -191,9 +199,10 @@ abstract class PageReviewService {
             .build();
     }
 
-    private void indexObsoletePage(int pageId, WikipediaLanguage lang) {
+    private void indexObsoletePage(WikipediaLanguage lang, int pageId) {
         // Force index to delete the page from database
-        replacementService.indexObsoleteByPageId(lang, pageId);
+        findDbReplacements(IndexablePageId.of(lang, pageId))
+            .ifPresent(dbPage -> pageIndexHelper.indexPageReplacements(null, dbPage));
     }
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
@@ -240,7 +249,9 @@ abstract class PageReviewService {
     void indexReplacements(WikipediaPage page, List<Replacement> replacements) {
         LOGGER.trace("Update page replacements in database");
         IndexablePage indexablePage = convertToIndexablePage(page, replacements);
-        pageIndexHelper.indexPageReplacements(indexablePage);
+        IndexablePage dbPage = findDbReplacements(indexablePage.getId()).orElse(null);
+        PageIndexResult toSave = pageIndexHelper.indexPageReplacements(indexablePage, dbPage);
+        pageIndexResultSaver.save(toSave);
     }
 
     private IndexableReplacement convertToIndexable(Replacement replacement, WikipediaPage page) {
@@ -253,6 +264,10 @@ abstract class PageReviewService {
             .context(replacement.getContext(page.getContent()))
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .build();
+    }
+
+    private Optional<IndexablePage> findDbReplacements(IndexablePageId pageId) {
+        return indexablePageRepository.findByPageId(pageId);
     }
 
     @VisibleForTesting

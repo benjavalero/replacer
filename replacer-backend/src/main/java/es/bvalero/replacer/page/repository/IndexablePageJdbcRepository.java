@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.repository;
 
+import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.domain.WikipediaLanguage;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -10,10 +11,13 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Primary
-@Component
+@Loggable(Loggable.TRACE) // To warn about performance issues
+@Transactional
+@Repository
 @Qualifier("indexablePageJdbcRepository")
 class IndexablePageJdbcRepository implements IndexablePageRepository {
 

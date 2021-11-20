@@ -106,7 +106,7 @@ class DumpPageProcessor {
         List<Replacement> replacements = replacementFinderService.find(convertToFinder(dumpPage));
 
         // Index the found replacements against the ones in DB (if any)
-        PageIndexResult pageIndexResult = pageIndexHelper.findIndexPageReplacements(
+        PageIndexResult pageIndexResult = pageIndexHelper.indexPageReplacements(
             convertToIndexable(dumpPage, replacements),
             dbPage
         );

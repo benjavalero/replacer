@@ -10,7 +10,9 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.PageIndexHelper;
+import es.bvalero.replacer.page.index.PageIndexResultSaver;
 import es.bvalero.replacer.page.repository.IndexablePage;
+import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
@@ -72,6 +74,9 @@ class PageReviewTypeSubtypeServiceTest {
     private ReplacementService replacementService;
 
     @Mock
+    private IndexablePageRepository indexablePageRepository;
+
+    @Mock
     private WikipediaService wikipediaService;
 
     @Mock
@@ -79,6 +84,9 @@ class PageReviewTypeSubtypeServiceTest {
 
     @Mock
     private PageIndexHelper pageIndexHelper;
+
+    @Mock
+    private PageIndexResultSaver pageIndexResultSaver;
 
     @Mock
     private SectionReviewService sectionReviewService;
@@ -118,7 +126,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options2);
 
-        verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class));
+        verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class), isNull());
 
         assertFalse(review.isPresent());
     }
@@ -145,7 +153,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
 
-        verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class));
+        verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class), isNull());
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId());
