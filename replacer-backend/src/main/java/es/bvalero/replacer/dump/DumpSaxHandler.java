@@ -126,7 +126,7 @@ class DumpSaxHandler extends DefaultHandler {
             .namespace(WikipediaNamespace.valueOf(this.currentNamespace))
             .title(this.currentTitle)
             .content(this.currentContent)
-            .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(this.currentTimestamp).toLocalDate())
+            .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(this.currentTimestamp))
             .build();
 
         DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);

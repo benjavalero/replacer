@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -19,6 +20,7 @@ import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.page.repository.IndexableReplacement;
 import es.bvalero.replacer.page.validate.PageValidator;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +40,7 @@ class DumpPageProcessorTest {
         .namespace(WikipediaNamespace.getDefault())
         .title("T")
         .content("C")
-        .lastUpdate(LocalDate.now())
+        .lastUpdate(LocalDateTime.now())
         .build();
     private final IndexablePageId dumpPageId = IndexablePageId.of(dumpPage.getLang(), dumpPage.getId());
 
@@ -78,7 +80,7 @@ class DumpPageProcessorTest {
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
 
         verify(indexablePageRepository).findByPageId(dumpPageId);
-        verify(pageValidator).validateProcessable(dumpPage);
+        verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(replacementFinderService).find(any(FinderPage.class));
         verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class), isNull());
         verify(pageIndexResultSaver, never()).saveBatch(any(PageIndexResult.class));
@@ -107,7 +109,7 @@ class DumpPageProcessorTest {
         assertEquals(DumpPageProcessorResult.PAGE_PROCESSED, result);
 
         verify(indexablePageRepository).findByPageId(dumpPageId);
-        verify(pageValidator).validateProcessable(dumpPage);
+        verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(replacementFinderService).find(any(FinderPage.class));
         verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class), isNull());
         verify(pageIndexResultSaver).saveBatch(pageIndexResult);
@@ -117,14 +119,14 @@ class DumpPageProcessorTest {
     void testPageNotProcessable() throws ReplacerException {
         when(indexablePageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
 
-        doThrow(ReplacerException.class).when(pageValidator).validateProcessable(dumpPage);
+        doThrow(ReplacerException.class).when(pageValidator).validateProcessable(any(WikipediaPage.class));
 
         DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSABLE, result);
 
         verify(indexablePageRepository).findByPageId(dumpPageId);
-        verify(pageValidator).validateProcessable(dumpPage);
+        verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexHelper, never()).indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
         verify(pageIndexResultSaver, never()).saveBatch(any(PageIndexResult.class));
@@ -133,7 +135,7 @@ class DumpPageProcessorTest {
     @Test
     void testPageNotProcessedByTimestamp() throws ReplacerException {
         // The page exists in DB but has been updated after the dump
-        LocalDate updated = dumpPage.getLastUpdate().plusDays(1);
+        LocalDate updated = dumpPage.getLastUpdate().toLocalDate().plusDays(1);
         IndexableReplacement dbReplacement = IndexableReplacement
             .builder()
             .indexablePageId(dumpPageId)
@@ -156,7 +158,7 @@ class DumpPageProcessorTest {
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
 
         verify(indexablePageRepository).findByPageId(dumpPageId);
-        verify(pageValidator).validateProcessable(dumpPage);
+        verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexHelper, never()).indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
         verify(pageIndexResultSaver, never()).saveBatch(any(PageIndexResult.class));

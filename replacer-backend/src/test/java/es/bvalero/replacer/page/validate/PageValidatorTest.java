@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,14 @@ class PageValidatorTest {
 
     @Test
     void testIndexablePageIsProcessableByNamespace() throws ReplacerException {
-        ValidatePage notProcessable = mock(ValidatePage.class);
+        WikipediaPage notProcessable = mock(WikipediaPage.class);
         when(notProcessable.getNamespace()).thenReturn(WikipediaNamespace.WIKIPEDIA);
-        ValidatePage articlePage = mock(ValidatePage.class);
+        WikipediaPage articlePage = mock(WikipediaPage.class);
         when(articlePage.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
-        ValidatePage annexPage = mock(ValidatePage.class);
+        WikipediaPage annexPage = mock(WikipediaPage.class);
         when(annexPage.getNamespace()).thenReturn(WikipediaNamespace.ANNEX);
 
-        assertThrows(ReplacerException.class, () -> pageValidator.validateProcessable(notProcessable));
+        assertThrows(PageNotProcessableException.class, () -> pageValidator.validateProcessable(notProcessable));
         pageValidator.validateProcessable(articlePage);
         pageValidator.validateProcessable(annexPage);
     }

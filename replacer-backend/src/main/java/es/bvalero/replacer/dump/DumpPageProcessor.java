@@ -2,6 +2,7 @@ package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -59,8 +60,9 @@ class DumpPageProcessor {
 
         // Check if it is processable (by namespace)
         // Redirection pages are now considered processable but discarded when finding immutables
+        WikipediaPage wikipediaPage = DumpPageMapper.toDomain(dumpPage);
         try {
-            pageValidator.validateProcessable(dumpPage);
+            pageValidator.validateProcessable(wikipediaPage);
         } catch (ReplacerException e) {
             // If the page is not processable then it should not exist in DB
             if (dbPage.isPresent()) {
@@ -124,7 +126,7 @@ class DumpPageProcessor {
         // If page modified in dump equals to the last indexing, reprocess always.
         // If page modified in dump after last indexing, reprocess always.
         // If page modified in dump before last indexing, do not reprocess.
-        return dumpPage.getLastUpdate().isBefore(dbDate);
+        return dumpPage.getLastUpdate().toLocalDate().isBefore(dbDate);
     }
 
     private boolean isNotProcessableByPageTitle(DumpPage dumpPage, @Nullable IndexablePage dbPage) {
@@ -142,7 +144,7 @@ class DumpPageProcessor {
             .builder()
             .id(IndexablePageId.of(dumpPage.getLang(), dumpPage.getId()))
             .title(dumpPage.getTitle())
-            .lastUpdate(dumpPage.getLastUpdate())
+            .lastUpdate(dumpPage.getLastUpdate().toLocalDate())
             .replacements(replacements.stream().map(r -> convertToIndexable(r, dumpPage)).collect(Collectors.toList()))
             .build();
     }
@@ -155,7 +157,7 @@ class DumpPageProcessor {
             .subtype(replacement.getSubtype())
             .position(replacement.getStart())
             .context(replacement.getContext(page.getContent()))
-            .lastUpdate(page.getLastUpdate())
+            .lastUpdate(page.getLastUpdate().toLocalDate())
             .build();
     }
 
