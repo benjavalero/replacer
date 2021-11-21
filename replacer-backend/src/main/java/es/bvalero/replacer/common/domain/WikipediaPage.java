@@ -1,13 +1,11 @@
 package es.bvalero.replacer.common.domain;
 
-import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
 import lombok.experimental.NonFinal;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -21,8 +19,6 @@ import org.springframework.lang.Nullable;
 @Value
 @Builder
 public class WikipediaPage {
-
-    private static final int MAX_PRINTABLE_CONTENT_SIZE = 50;
 
     // TODO: Extract Page ID
 
@@ -53,28 +49,4 @@ public class WikipediaPage {
     @With
     @Nullable
     WikipediaSection section; // Defined in case it is a section and null if it is the whole page
-
-    /** Override default method in order to abbreviate the page content when printing */
-    @Override
-    public String toString() {
-        return (
-            "WikipediaPage(lang=" +
-            this.getLang() +
-            ", id=" +
-            this.getId() +
-            ", namespace=" +
-            this.getNamespace() +
-            ", title=" +
-            this.getTitle() +
-            ", content=" +
-            StringUtils.abbreviate(this.getContent(), MAX_PRINTABLE_CONTENT_SIZE) +
-            ", lastUpdate=" +
-            WikipediaDateUtils.formatWikipediaTimestamp(this.getLastUpdate()) +
-            ", queryTimestamp=" +
-            WikipediaDateUtils.formatWikipediaTimestamp(this.getQueryTimestamp()) +
-            ", section=" +
-            this.getSection() +
-            ")"
-        );
-    }
 }
