@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
-import es.bvalero.replacer.wikipedia.WikipediaPage;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;

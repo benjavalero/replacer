@@ -1,7 +1,8 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.common.domain;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.page.validate.ValidatePage;
+import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
+import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;
