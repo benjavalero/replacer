@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.repository;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.util.*;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -31,7 +32,7 @@ class IndexablePageCacheRepository implements IndexablePageRepository {
     private int maxCachedId = 0;
 
     @Override
-    public Optional<IndexablePage> findByPageId(IndexablePageId id) {
+    public Optional<IndexablePage> findByPageId(WikipediaPageId id) {
         // Load the cache the first time or when needed
         if (maxCachedId == 0 || id.getPageId() > maxCachedId) {
             clean();

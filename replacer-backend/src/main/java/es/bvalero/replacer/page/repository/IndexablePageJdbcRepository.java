@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.repository;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public Optional<IndexablePage> findByPageId(IndexablePageId id) {
+    public Optional<IndexablePage> findByPageId(WikipediaPageId id) {
         String sql =
             "SELECT r.id, r.lang, r.article_id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
             FROM_REPLACEMENT_JOIN_PAGE +

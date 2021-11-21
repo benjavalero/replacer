@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.repository;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
@@ -15,7 +16,7 @@ public class IndexablePage {
 
     // TODO: There should exist a FK in DB
     @NonNull
-    IndexablePageId id;
+    WikipediaPageId id;
 
     // TODO: This should be non-null. To check and fix the cases in Production.
     @Nullable

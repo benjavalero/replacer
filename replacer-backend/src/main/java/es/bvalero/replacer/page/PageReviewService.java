@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -12,7 +13,6 @@ import es.bvalero.replacer.page.index.PageIndexHelper;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexResultSaver;
 import es.bvalero.replacer.page.repository.IndexablePage;
-import es.bvalero.replacer.page.repository.IndexablePageId;
 import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.page.repository.IndexableReplacement;
 import es.bvalero.replacer.page.validate.PageValidator;
@@ -192,7 +192,7 @@ abstract class PageReviewService {
     IndexablePage convertToIndexablePage(WikipediaPage page, List<Replacement> replacements) {
         return IndexablePage
             .builder()
-            .id(IndexablePageId.of(page.getLang(), page.getId()))
+            .id(WikipediaPageId.of(page.getLang(), page.getId()))
             .title(page.getTitle())
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .replacements(replacements.stream().map(r -> convertToIndexable(r, page)).collect(Collectors.toList()))
@@ -201,7 +201,7 @@ abstract class PageReviewService {
 
     private void indexObsoletePage(WikipediaLanguage lang, int pageId) {
         // Force index to delete the page from database
-        findDbReplacements(IndexablePageId.of(lang, pageId))
+        findDbReplacements(WikipediaPageId.of(lang, pageId))
             .ifPresent(dbPage -> pageIndexHelper.indexPageReplacements(null, dbPage));
     }
 
@@ -257,7 +257,7 @@ abstract class PageReviewService {
     private IndexableReplacement convertToIndexable(Replacement replacement, WikipediaPage page) {
         return IndexableReplacement
             .builder()
-            .indexablePageId(IndexablePageId.of(page.getLang(), page.getId()))
+            .indexablePageId(WikipediaPageId.of(page.getLang(), page.getId()))
             .type(replacement.getType().getLabel())
             .subtype(replacement.getSubtype())
             .position(replacement.getStart())
@@ -266,7 +266,7 @@ abstract class PageReviewService {
             .build();
     }
 
-    private Optional<IndexablePage> findDbReplacements(IndexablePageId pageId) {
+    private Optional<IndexablePage> findDbReplacements(WikipediaPageId pageId) {
         return indexablePageRepository.findByPageId(pageId);
     }
 

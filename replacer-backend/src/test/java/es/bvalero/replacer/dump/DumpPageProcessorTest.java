@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -15,7 +16,6 @@ import es.bvalero.replacer.page.index.PageIndexHelper;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexResultSaver;
 import es.bvalero.replacer.page.repository.IndexablePage;
-import es.bvalero.replacer.page.repository.IndexablePageId;
 import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.page.repository.IndexableReplacement;
 import es.bvalero.replacer.page.validate.PageValidator;
@@ -42,7 +42,7 @@ class DumpPageProcessorTest {
         .content("C")
         .lastUpdate(LocalDateTime.now())
         .build();
-    private final IndexablePageId dumpPageId = IndexablePageId.of(dumpPage.getLang(), dumpPage.getId());
+    private final WikipediaPageId dumpPageId = WikipediaPageId.of(dumpPage.getLang(), dumpPage.getId());
 
     @Mock
     private PageValidator pageValidator;

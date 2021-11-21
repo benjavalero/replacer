@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,7 @@ class IndexablePageCacheRepositoryTest {
     void testFindDatabaseReplacements() {
         // In DB: replacements for page 2 (first load) and 1001 (second load)
         // We ask for the page 1 and 1001, so the page 2 will be cleaned.
-        IndexablePageId pageId1 = IndexablePageId.of(WikipediaLanguage.getDefault(), 2);
+        WikipediaPageId pageId1 = WikipediaPageId.of(WikipediaLanguage.getDefault(), 2);
         IndexableReplacement replacement1 = IndexableReplacement
             .builder()
             .indexablePageId(pageId1)
@@ -46,7 +47,7 @@ class IndexablePageCacheRepositoryTest {
             .lastUpdate(LocalDate.now())
             .build();
         IndexablePage page1 = IndexablePage.builder().id(pageId1).replacements(List.of(replacement1)).build();
-        IndexablePageId pageId2 = IndexablePageId.of(WikipediaLanguage.getDefault(), 1001);
+        WikipediaPageId pageId2 = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1001);
         IndexableReplacement replacement2 = IndexableReplacement
             .builder()
             .indexablePageId(pageId2)
@@ -63,12 +64,12 @@ class IndexablePageCacheRepositoryTest {
             .thenReturn(List.of(page2));
 
         Optional<IndexablePage> indexablePageDB = indexablePageCacheRepository.findByPageId(
-            IndexablePageId.of(WikipediaLanguage.getDefault(), 1)
+            WikipediaPageId.of(WikipediaLanguage.getDefault(), 1)
         );
         assertTrue(indexablePageDB.isEmpty());
 
         indexablePageDB =
-            indexablePageCacheRepository.findByPageId(IndexablePageId.of(WikipediaLanguage.getDefault(), 1001));
+            indexablePageCacheRepository.findByPageId(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1001));
         assertEquals(page2, indexablePageDB.orElse(null));
 
         // Check that the page 2 has been cleaned
@@ -79,7 +80,7 @@ class IndexablePageCacheRepositoryTest {
     void testFindDatabaseReplacementsWithEmptyLoad() {
         // In DB: replacement for page 1001
         // So the first load is enlarged
-        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1001);
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1001);
         IndexableReplacement replacement = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
@@ -94,7 +95,7 @@ class IndexablePageCacheRepositoryTest {
             .thenReturn(List.of(page));
 
         Optional<IndexablePage> indexablePageDB = indexablePageCacheRepository.findByPageId(
-            IndexablePageId.of(WikipediaLanguage.getDefault(), 1001)
+            WikipediaPageId.of(WikipediaLanguage.getDefault(), 1001)
         );
         assertEquals(page, indexablePageDB.orElse(null));
     }

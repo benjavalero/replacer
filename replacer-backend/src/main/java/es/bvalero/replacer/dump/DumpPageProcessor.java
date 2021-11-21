@@ -3,6 +3,7 @@ package es.bvalero.replacer.dump;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -11,7 +12,6 @@ import es.bvalero.replacer.page.index.PageIndexHelper;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexResultSaver;
 import es.bvalero.replacer.page.repository.IndexablePage;
-import es.bvalero.replacer.page.repository.IndexablePageId;
 import es.bvalero.replacer.page.repository.IndexablePageRepository;
 import es.bvalero.replacer.page.repository.IndexableReplacement;
 import es.bvalero.replacer.page.validate.PageValidator;
@@ -55,7 +55,7 @@ class DumpPageProcessor {
     DumpPageProcessorResult process(DumpPage dumpPage) {
         // In all cases we find the current status of the page in the DB
         Optional<IndexablePage> dbPage = indexablePageRepository.findByPageId(
-            IndexablePageId.of(dumpPage.getLang(), dumpPage.getId())
+            WikipediaPageId.of(dumpPage.getLang(), dumpPage.getId())
         );
 
         // Check if it is processable (by namespace)
@@ -142,7 +142,7 @@ class DumpPageProcessor {
     private IndexablePage convertToIndexable(DumpPage dumpPage, List<Replacement> replacements) {
         return IndexablePage
             .builder()
-            .id(IndexablePageId.of(dumpPage.getLang(), dumpPage.getId()))
+            .id(WikipediaPageId.of(dumpPage.getLang(), dumpPage.getId()))
             .title(dumpPage.getTitle())
             .lastUpdate(dumpPage.getLastUpdate().toLocalDate())
             .replacements(replacements.stream().map(r -> convertToIndexable(r, dumpPage)).collect(Collectors.toList()))
@@ -152,7 +152,7 @@ class DumpPageProcessor {
     private IndexableReplacement convertToIndexable(Replacement replacement, DumpPage page) {
         return IndexableReplacement
             .builder()
-            .indexablePageId(IndexablePageId.of(page.getLang(), page.getId()))
+            .indexablePageId(WikipediaPageId.of(page.getLang(), page.getId()))
             .type(replacement.getType().getLabel())
             .subtype(replacement.getSubtype())
             .position(replacement.getStart())

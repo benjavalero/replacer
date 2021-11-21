@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.repository;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -13,11 +14,11 @@ class IndexablePageResultExtractor implements ResultSetExtractor<List<IndexableP
 
     @Override
     public List<IndexablePage> extractData(ResultSet rs) throws SQLException, DataAccessException {
-        Map<IndexablePageId, String> titleMap = new HashMap<>();
-        ListValuedMap<IndexablePageId, IndexableReplacement> replacementMap = new ArrayListValuedHashMap<>();
+        Map<WikipediaPageId, String> titleMap = new HashMap<>();
+        ListValuedMap<WikipediaPageId, IndexableReplacement> replacementMap = new ArrayListValuedHashMap<>();
 
         while (rs.next()) {
-            IndexablePageId pageId = IndexablePageId.of(
+            WikipediaPageId pageId = WikipediaPageId.of(
                 WikipediaLanguage.valueOf(rs.getString("LANG")),
                 rs.getInt("ARTICLE_ID")
             );
@@ -43,8 +44,8 @@ class IndexablePageResultExtractor implements ResultSetExtractor<List<IndexableP
             return Collections.emptyList();
         } else {
             List<IndexablePage> pageList = new ArrayList<>(titleMap.size());
-            for (Map.Entry<IndexablePageId, String> entry : titleMap.entrySet()) {
-                IndexablePageId pageId = entry.getKey();
+            for (Map.Entry<WikipediaPageId, String> entry : titleMap.entrySet()) {
+                WikipediaPageId pageId = entry.getKey();
                 String title = entry.getValue();
                 pageList.add(
                     IndexablePage.builder().id(pageId).title(title).replacements(replacementMap.get(pageId)).build()

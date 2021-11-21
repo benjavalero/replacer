@@ -1,13 +1,14 @@
 package es.bvalero.replacer.page.repository;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 public interface IndexablePageRepository {
     /** Find an indexable page including all the replacements */
-    Optional<IndexablePage> findByPageId(IndexablePageId id);
+    Optional<IndexablePage> findByPageId(WikipediaPageId id);
 
     /** Find indexable pages, including all the replacements, by a range of page IDs. */
     List<IndexablePage> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId);

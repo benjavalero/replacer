@@ -1,11 +1,10 @@
-package es.bvalero.replacer.page.repository;
+package es.bvalero.replacer.common.domain;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
 @Value(staticConstructor = "of")
-public class IndexablePageId {
+public class WikipediaPageId {
 
     @NonNull
     WikipediaLanguage lang;
