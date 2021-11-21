@@ -1,4 +1,4 @@
-package es.bvalero.replacer.domain;
+package es.bvalero.replacer.common.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Arrays;

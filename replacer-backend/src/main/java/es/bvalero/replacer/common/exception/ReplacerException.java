@@ -1,4 +1,4 @@
-package es.bvalero.replacer.domain;
+package es.bvalero.replacer.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

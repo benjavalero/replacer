@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.listing.load;
 
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.domain.ReplacerException;
-import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.parse.ComposedMisspellingParser;
 import org.junit.jupiter.api.BeforeEach;

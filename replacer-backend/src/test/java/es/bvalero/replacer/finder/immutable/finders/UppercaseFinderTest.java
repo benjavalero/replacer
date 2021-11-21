@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.immutable.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.immutable.Immutable;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;

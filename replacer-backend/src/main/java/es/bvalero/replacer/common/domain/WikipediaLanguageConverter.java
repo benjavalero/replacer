@@ -1,4 +1,4 @@
-package es.bvalero.replacer.domain;
+package es.bvalero.replacer.common.domain;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

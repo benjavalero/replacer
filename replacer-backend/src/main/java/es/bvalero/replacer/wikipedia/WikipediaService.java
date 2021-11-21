@@ -1,8 +1,8 @@
 package es.bvalero.replacer.wikipedia;
 
-import es.bvalero.replacer.domain.AccessToken;
-import es.bvalero.replacer.domain.ReplacerException;
-import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.AccessToken;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.exception.ReplacerException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

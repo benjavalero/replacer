@@ -1,7 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.domain.UnauthorizedException;
+import es.bvalero.replacer.common.exception.UnauthorizedException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

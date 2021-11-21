@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.validate;
 
-import es.bvalero.replacer.domain.ReplacerException;
+import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaNamespace;
 import java.util.Set;
 import java.util.stream.Collectors;

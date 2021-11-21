@@ -2,8 +2,8 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.config.XmlConfiguration;
-import es.bvalero.replacer.domain.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.benchmark.BaseFinderBenchmark;
 import es.bvalero.replacer.finder.listing.find.ListingOfflineFinder;

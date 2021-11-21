@@ -2,7 +2,7 @@ package es.bvalero.replacer.authentication.mediawiki;
 
 import es.bvalero.replacer.authentication.AuthenticationService;
 import es.bvalero.replacer.authentication.RequestToken;
-import es.bvalero.replacer.domain.AccessToken;
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;

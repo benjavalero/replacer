@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.cosmetic.checkwikipedia;
 
-import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 
 /**
  * Report to Check-Wikipedia service (https://checkwiki.toolforge.org/)

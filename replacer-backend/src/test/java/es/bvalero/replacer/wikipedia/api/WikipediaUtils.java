@@ -3,7 +3,7 @@ package es.bvalero.replacer.wikipedia.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.FileUtils;
-import es.bvalero.replacer.domain.ReplacerException;
+import es.bvalero.replacer.common.exception.ReplacerException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;

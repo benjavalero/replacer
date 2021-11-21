@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.listing.find;
 
-import es.bvalero.replacer.domain.ReplacerException;
-import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Map;
 import javax.annotation.Resource;

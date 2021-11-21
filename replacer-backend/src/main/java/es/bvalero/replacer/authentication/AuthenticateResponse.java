@@ -1,6 +1,6 @@
 package es.bvalero.replacer.authentication;
 
-import es.bvalero.replacer.domain.AccessToken;
+import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.domain;
+package es.bvalero.replacer.common.domain;
 
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;

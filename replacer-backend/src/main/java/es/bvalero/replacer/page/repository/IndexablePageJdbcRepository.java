@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.repository;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;

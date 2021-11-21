@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

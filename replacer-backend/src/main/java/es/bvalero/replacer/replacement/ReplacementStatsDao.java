@@ -1,7 +1,7 @@
 package es.bvalero.replacer.replacement;
 
-import es.bvalero.replacer.domain.ReplacerException;
-import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.exception.ReplacerException;
 import java.util.List;
 import org.springframework.lang.Nullable;
 

@@ -1,7 +1,7 @@
 package es.bvalero.replacer.wikipedia.api;
 
-import es.bvalero.replacer.domain.AccessToken;
-import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.AccessToken;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Map;
 import lombok.Builder;
 import lombok.Singular;

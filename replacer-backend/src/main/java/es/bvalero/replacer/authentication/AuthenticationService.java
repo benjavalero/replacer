@@ -1,7 +1,7 @@
 package es.bvalero.replacer.authentication;
 
-import es.bvalero.replacer.domain.AccessToken;
-import es.bvalero.replacer.domain.ReplacerException;
+import es.bvalero.replacer.common.domain.AccessToken;
+import es.bvalero.replacer.common.exception.ReplacerException;
 
 /** Service to perform authentication operations */
 public interface AuthenticationService {

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.repository;
 
-import es.bvalero.replacer.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
