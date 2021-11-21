@@ -8,31 +8,54 @@ import lombok.Builder;
 import lombok.Value;
 import lombok.With;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /**
- * Domain object representing a page retrieved from Wikipedia.
- * It may also represent a specific section of a page,
- * though they are the same thing for Wikipedia API.
+ * Domain entity. It represents a page in Wikipedia: title, content, etc.
+ *
+ * Once instantiated it becomes immutable. Even when all attributes are mandatory,
+ * we implement a builder factory not to have a constructor with too many arguments.
  */
 @Value
 @Builder
 public class WikipediaPage implements ValidatePage {
 
+    // TODO: No need for a ValidatePage interface. The validator may received directly the domain object.
+
     private static final int MAX_PRINTABLE_CONTENT_SIZE = 50;
 
-    WikipediaLanguage lang;
-    int id;
-    WikipediaNamespace namespace;
-    String title;
-    String content;
-    LocalDateTime lastUpdate; // Store time in case it is needed in the future
-    LocalDateTime queryTimestamp; // Store the timestamp when the page was queried
+    // TODO: Extract Page ID
 
+    @NonNull
+    WikipediaLanguage lang;
+
+    @NonNull
+    Integer id;
+
+    @NonNull
+    WikipediaNamespace namespace;
+
+    @NonNull
+    String title;
+
+    @NonNull
+    String content;
+
+    @NonNull
+    LocalDateTime lastUpdate; // Store time (and not only date) in case it is needed in the future
+
+    @NonNull
+    @Builder.Default
+    LocalDateTime queryTimestamp = LocalDateTime.now(); // Store the timestamp when the page was queried
+
+    // It may also represent a specific section of a page, as they are the same thing for Wikipedia API.
+    // TODO: Make the class not final and create a sub-class containing the section.
     @With
     @Nullable
     WikipediaSection section; // Defined in case it is a section and null if it is the whole page
 
+    /** Override default method in order to abbreviate the page content when printing */
     @Override
     public String toString() {
         return (
@@ -40,7 +63,7 @@ public class WikipediaPage implements ValidatePage {
             this.getLang() +
             ", id=" +
             this.getId() +
-            ", namesapce=" +
+            ", namespace=" +
             this.getNamespace() +
             ", title='" +
             this.getTitle() +

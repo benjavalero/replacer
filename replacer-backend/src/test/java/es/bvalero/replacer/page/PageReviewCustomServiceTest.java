@@ -134,9 +134,9 @@ class PageReviewCustomServiceTest {
             .lang(lang)
             .id(pageId)
             .namespace(WikipediaNamespace.getDefault())
+            .title("Title")
             .content(content)
             .lastUpdate(LocalDateTime.now())
-            .queryTimestamp(LocalDateTime.now())
             .build();
 
         // Mocks
@@ -193,9 +193,9 @@ class PageReviewCustomServiceTest {
             .lang(lang)
             .id(pageId)
             .namespace(WikipediaNamespace.getDefault())
+            .title("Title")
             .content(content)
             .lastUpdate(LocalDateTime.now())
-            .queryTimestamp(LocalDateTime.now())
             .build();
 
         // Mocks
@@ -244,10 +244,10 @@ class PageReviewCustomServiceTest {
             .builder()
             .lang(lang)
             .id(pageId2)
+            .title("Title")
             .namespace(WikipediaNamespace.getDefault())
             .content(content)
             .lastUpdate(LocalDateTime.now())
-            .queryTimestamp(LocalDateTime.now())
             .build();
 
         // Mocks
@@ -339,9 +339,9 @@ class PageReviewCustomServiceTest {
                     .lang(lang)
                     .id(i)
                     .namespace(WikipediaNamespace.getDefault())
+                    .title("Title")
                     .content(content)
                     .lastUpdate(LocalDateTime.now())
-                    .queryTimestamp(LocalDateTime.now())
                     .build()
             );
         }
@@ -446,9 +446,9 @@ class PageReviewCustomServiceTest {
                     .lang(lang)
                     .id(i)
                     .namespace(WikipediaNamespace.getDefault())
+                    .title("Title")
                     .content(content)
                     .lastUpdate(LocalDateTime.now())
-                    .queryTimestamp(LocalDateTime.now())
                     .build()
             );
         }

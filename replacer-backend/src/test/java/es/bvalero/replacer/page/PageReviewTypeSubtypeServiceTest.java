@@ -38,18 +38,18 @@ class PageReviewTypeSubtypeServiceTest {
         .id(randomId)
         .lang(WikipediaLanguage.getDefault())
         .namespace(WikipediaNamespace.ARTICLE)
+        .title("Title1")
         .content(content)
         .lastUpdate(LocalDateTime.now())
-        .queryTimestamp(LocalDateTime.now())
         .build();
     private final WikipediaPage page2 = WikipediaPage
         .builder()
         .id(randomId2)
         .lang(WikipediaLanguage.getDefault())
         .namespace(WikipediaNamespace.ANNEX)
+        .title("Title2")
         .content(content2)
         .lastUpdate(LocalDateTime.now())
-        .queryTimestamp(LocalDateTime.now())
         .build();
     private final int offset = 1;
     private final Replacement replacement = Replacement

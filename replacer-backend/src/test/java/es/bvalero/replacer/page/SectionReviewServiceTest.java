@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
@@ -49,7 +50,7 @@ class SectionReviewServiceTest {
         PageReplacementSuggestion suggestion = PageReplacementSuggestion.of("a", "");
         PageReplacement replacement = PageReplacement.of(8, "an", Collections.singletonList(suggestion)); // "an"
 
-        PageDto page = PageDto.builder().id(pageId).lang(WikipediaLanguage.SPANISH).content(content).build();
+        PageDto page = PageDto.builder().id(pageId).lang(WikipediaLanguage.getDefault()).content(content).build();
         PageReview pageReview = PageReview
             .builder()
             .page(page)
@@ -66,11 +67,12 @@ class SectionReviewServiceTest {
         WikipediaPage pageSection = WikipediaPage
             .builder()
             .id(pageId)
-            .lang(WikipediaLanguage.SPANISH)
+            .lang(WikipediaLanguage.getDefault())
+            .namespace(WikipediaNamespace.getDefault())
+            .title("Title")
             .content(sectionContent)
             .section(WikipediaSection.builder().index(sectionId).build())
             .lastUpdate(LocalDateTime.now())
-            .queryTimestamp(LocalDateTime.now())
             .build();
         when(wikipediaService.getPageSection(any(WikipediaLanguage.class), eq(pageId), eq(section)))
             .thenReturn(Optional.of(pageSection));
