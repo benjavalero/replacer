@@ -6,7 +6,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.jetbrains.annotations.TestOnly;
 
+/**
+ * Domain value object. It enumerates all the namespaces used in Wikipedia pages.
+ *
+ * Even when just some of them are supported/indexed, we need to include all of them
+ * as they can be found on pages retrieved from Wikipedia or dumps.
+ */
 @Getter
 @AllArgsConstructor
 public enum WikipediaNamespace {
@@ -30,9 +37,19 @@ public enum WikipediaNamespace {
 
     private final int value;
 
+    // We choose a default namespace to be used on unit tests
+    @TestOnly
+    public static WikipediaNamespace getDefault() {
+        return ARTICLE;
+    }
+
     // We cannot override the static method "valueOf(String)"
     // but in this case as the value is an integer we can overload the method
     public static WikipediaNamespace valueOf(int namespace) {
-        return map.get(namespace);
+        if (map.containsKey(namespace)) {
+            return map.get(namespace);
+        } else {
+            throw new IllegalArgumentException("Wrong namespace value: " + namespace);
+        }
     }
 }

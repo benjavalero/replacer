@@ -35,7 +35,7 @@ class DumpPageProcessorTest {
         .builder()
         .lang(WikipediaLanguage.getDefault())
         .id(1)
-        .namespace(WikipediaNamespace.ARTICLE)
+        .namespace(WikipediaNamespace.getDefault())
         .title("T")
         .content("C")
         .lastUpdate(LocalDate.now())

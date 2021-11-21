@@ -35,7 +35,7 @@ class PageReviewNoTypeServiceTest {
     private final WikipediaPage page = WikipediaPage
         .builder()
         .id(randomId)
-        .lang(WikipediaLanguage.SPANISH)
+        .lang(WikipediaLanguage.getDefault())
         .namespace(WikipediaNamespace.ARTICLE)
         .content(content)
         .lastUpdate(LocalDateTime.now())
@@ -44,7 +44,7 @@ class PageReviewNoTypeServiceTest {
     private final WikipediaPage page2 = WikipediaPage
         .builder()
         .id(randomId2)
-        .lang(WikipediaLanguage.SPANISH)
+        .lang(WikipediaLanguage.getDefault())
         .namespace(WikipediaNamespace.ANNEX)
         .content(content2)
         .lastUpdate(LocalDateTime.now())
@@ -118,7 +118,7 @@ class PageReviewNoTypeServiceTest {
             .thenReturn(Collections.emptyList());
 
         // The page doesn't exist in Wikipedia
-        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.empty());
+        when(wikipediaService.getPageById(WikipediaLanguage.getDefault(), randomId)).thenReturn(Optional.empty());
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
@@ -134,7 +134,7 @@ class PageReviewNoTypeServiceTest {
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
 
         // The page exists in Wikipedia
-        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
+        when(wikipediaService.getPageById(WikipediaLanguage.getDefault(), randomId)).thenReturn(Optional.of(page));
 
         // The page contains replacements
         when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page))).thenReturn(replacements);
@@ -157,7 +157,7 @@ class PageReviewNoTypeServiceTest {
             .thenReturn(Collections.emptyList());
 
         // The page exists in Wikipedia
-        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.of(page));
+        when(wikipediaService.getPageById(WikipediaLanguage.getDefault(), randomId)).thenReturn(Optional.of(page));
 
         // The page doesn't contain replacements
         List<Replacement> noPageReplacements = Collections.emptyList();
@@ -180,8 +180,8 @@ class PageReviewNoTypeServiceTest {
             .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)));
 
         // Only the page 2 exists in Wikipedia
-        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId)).thenReturn(Optional.empty());
-        when(wikipediaService.getPageById(WikipediaLanguage.SPANISH, randomId2)).thenReturn(Optional.of(page2));
+        when(wikipediaService.getPageById(WikipediaLanguage.getDefault(), randomId)).thenReturn(Optional.empty());
+        when(wikipediaService.getPageById(WikipediaLanguage.getDefault(), randomId2)).thenReturn(Optional.of(page2));
 
         // The page contains replacements
         when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page2)))

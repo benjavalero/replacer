@@ -7,10 +7,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
 
-@Slf4j
+/** Domain value object. It enumerates the Wikipedia languages supported by the application. */
 @Getter
 @AllArgsConstructor
 public enum WikipediaLanguage {
@@ -24,19 +23,19 @@ public enum WikipediaLanguage {
     @JsonValue
     private final String code;
 
+    // We choose a default language to be used on unit tests
     @TestOnly
     public static WikipediaLanguage getDefault() {
         return SPANISH;
     }
 
     // We cannot override the static method "valueOf(String)"
+    // This is needed for WikipediaLanguageConverter
     static WikipediaLanguage valueOfCode(String code) {
         if (map.containsKey(code)) {
             return map.get(code);
         } else {
-            String msg = String.format("Wrong language code: %s", code);
-            LOGGER.error(msg);
-            throw new IllegalArgumentException(msg);
+            throw new IllegalArgumentException("Wrong language code: " + code);
         }
     }
 
