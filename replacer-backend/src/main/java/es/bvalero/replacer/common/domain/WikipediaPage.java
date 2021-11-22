@@ -1,6 +1,5 @@
 package es.bvalero.replacer.common.domain;
 
-import es.bvalero.replacer.wikipedia.WikipediaSection;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;

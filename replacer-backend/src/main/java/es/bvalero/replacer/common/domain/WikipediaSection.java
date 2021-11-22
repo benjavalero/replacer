@@ -1,4 +1,4 @@
-package es.bvalero.replacer.wikipedia;
+package es.bvalero.replacer.common.domain;
 
 import lombok.Builder;
 import lombok.Value;
