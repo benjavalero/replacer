@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.WikipediaPageSection;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import io.swagger.annotations.ApiModelProperty;
@@ -26,11 +26,11 @@ class PageReview {
     @ApiModelProperty(value = "Search options of the replacements to review", required = true)
     PageReviewSearch search;
 
-    static PageReview of(WikipediaPage page, List<PageReplacement> replacements, PageReviewSearch search) {
+    static PageReview of(WikipediaPageSection page, List<PageReplacement> replacements, PageReviewSearch search) {
         return PageReview.builder().page(convert(page)).replacements(replacements).search(search).build();
     }
 
-    private static PageDto convert(WikipediaPage page) {
+    private static PageDto convert(WikipediaPageSection page) {
         return PageDto
             .builder()
             .lang(page.getId().getLang())

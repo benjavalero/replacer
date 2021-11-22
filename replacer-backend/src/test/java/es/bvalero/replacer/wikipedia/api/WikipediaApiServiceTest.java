@@ -341,7 +341,7 @@ class WikipediaApiServiceTest {
             .anchor("X")
             .build();
         String title = "Usuario:Benjavalero/Taller";
-        WikipediaPage page = wikipediaService
+        WikipediaPageSection page = wikipediaService
             .getPageSection(WikipediaLanguage.getDefault(), pageId, section)
             .orElseThrow(ReplacerException::new);
         assertNotNull(page);
@@ -363,12 +363,6 @@ class WikipediaApiServiceTest {
                 .getPageByTitle(WikipediaLanguage.getDefault(), "")
                 .map(page -> page.getId().getPageId())
                 .orElse(0)
-        );
-        assertFalse(
-            wikipediaServiceOffline
-                .getPageById(WikipediaLanguage.getDefault(), 1)
-                .map(WikipediaPage::getSection)
-                .isPresent()
         );
         assertFalse(wikipediaServiceOffline.searchByText(WikipediaLanguage.getDefault(), "", false, 0, 100).isEmpty());
         assertTrue(wikipediaServiceOffline.getPageSections(WikipediaLanguage.getDefault(), 1).isEmpty());

@@ -215,7 +215,7 @@ class WikipediaApiService implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
-    public Optional<WikipediaPage> getPageSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
+    public Optional<WikipediaPageSection> getPageSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
         throws ReplacerException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
@@ -225,7 +225,7 @@ class WikipediaApiService implements WikipediaService {
             .build();
         WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
         List<WikipediaPage> pages = extractPagesFromJson(apiResponse, lang);
-        return pages.stream().findAny().map(p -> p.withSection(section));
+        return pages.stream().findAny().map(page -> WikipediaPageSection.of(page, section));
     }
 
     private Map<String, String> buildPageIdsAndSectionRequestParams(int pageId, int section) {

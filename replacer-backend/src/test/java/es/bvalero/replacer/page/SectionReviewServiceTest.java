@@ -3,11 +3,7 @@ package es.bvalero.replacer.page;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaNamespace;
-import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.common.domain.WikipediaSection;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -71,7 +67,7 @@ class SectionReviewServiceTest {
             .thenReturn(Collections.singletonList(section));
 
         String sectionContent = content.substring(offset, 10);
-        WikipediaPage pageSection = WikipediaPage
+        WikipediaPageSection pageSection = WikipediaPageSection
             .builder()
             .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
             .namespace(WikipediaNamespace.getDefault())

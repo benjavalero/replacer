@@ -1,9 +1,6 @@
 package es.bvalero.replacer.wikipedia;
 
-import es.bvalero.replacer.common.domain.AccessToken;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.domain.WikipediaSection;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +19,7 @@ public interface WikipediaService {
 
     List<WikipediaSection> getPageSections(WikipediaLanguage lang, int pageId) throws ReplacerException;
 
-    Optional<WikipediaPage> getPageSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
+    Optional<WikipediaPageSection> getPageSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
         throws ReplacerException;
 
     WikipediaSearchResult searchByText(

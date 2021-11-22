@@ -5,6 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.common.domain.WikipediaPageSection;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -273,7 +274,7 @@ abstract class PageReviewService {
     @VisibleForTesting
     PageReview buildPageReview(WikipediaPage page, List<Replacement> replacements, PageReviewOptions options) {
         return PageReview.of(
-            page,
+            WikipediaPageSection.of(page, null),
             replacements.stream().map(this::convert).collect(Collectors.toList()),
             convert(options)
         );

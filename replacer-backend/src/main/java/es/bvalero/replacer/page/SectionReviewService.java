@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.WikipediaPageSection;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -40,7 +40,7 @@ class SectionReviewService {
             );
             if (smallestSection.isPresent()) {
                 // Get the section from Wikipedia API (better than calculating it by ourselves)
-                Optional<WikipediaPage> pageSection = wikipediaService.getPageSection(
+                Optional<WikipediaPageSection> pageSection = wikipediaService.getPageSection(
                     review.getPage().getLang(),
                     review.getPage().getId(),
                     smallestSection.get()
@@ -127,7 +127,7 @@ class SectionReviewService {
     private List<PageReplacement> translateReplacementsByOffset(
         List<PageReplacement> replacements,
         int sectionOffset,
-        WikipediaPage pageSection
+        WikipediaPageSection pageSection
     ) throws ReplacerException {
         List<PageReplacement> translated = replacements
             .stream()
@@ -156,7 +156,11 @@ class SectionReviewService {
         return replacement.getText().equals(text.substring(replacement.getStart(), replacement.getEnd()));
     }
 
-    private PageReview buildPageReview(WikipediaPage page, List<PageReplacement> replacements, PageReview pageReview) {
+    private PageReview buildPageReview(
+        WikipediaPageSection page,
+        List<PageReplacement> replacements,
+        PageReview pageReview
+    ) {
         return PageReview.of(page, replacements, pageReview.getSearch());
     }
 }
