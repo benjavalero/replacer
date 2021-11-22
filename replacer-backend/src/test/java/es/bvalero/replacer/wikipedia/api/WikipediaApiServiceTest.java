@@ -71,7 +71,7 @@ class WikipediaApiServiceTest {
             .getPageByTitle(WikipediaLanguage.SPANISH, title)
             .orElseThrow(ReplacerException::new);
         assertNotNull(page);
-        assertEquals(pageId, page.getId());
+        assertEquals(pageId, page.getId().getPageId());
         assertEquals(title, page.getTitle());
         assertEquals(WikipediaNamespace.USER, page.getNamespace());
         assertTrue(page.getLastUpdate().getYear() >= 2016);
@@ -92,7 +92,7 @@ class WikipediaApiServiceTest {
             .getPageById(WikipediaLanguage.SPANISH, pageId)
             .orElseThrow(ReplacerException::new);
         assertNotNull(page);
-        assertEquals(pageId, page.getId());
+        assertEquals(pageId, page.getId().getPageId());
         assertEquals(title, page.getTitle());
         assertEquals(WikipediaNamespace.USER, page.getNamespace());
         assertTrue(page.getLastUpdate().getYear() >= 2016);
@@ -113,21 +113,21 @@ class WikipediaApiServiceTest {
         );
         assertNotNull(pages);
         assertEquals(2, pages.size());
-        assertTrue(pages.stream().anyMatch(page -> page.getId() == 6219990));
+        assertTrue(pages.stream().anyMatch(page -> page.getId().getPageId() == 6219990));
         assertTrue(
             pages
                 .stream()
-                .filter(page -> page.getId() == 6219990)
+                .filter(page -> page.getId().getPageId() == 6219990)
                 .findAny()
                 .orElseThrow(ReplacerException::new)
                 .getContent()
                 .contains("Orihuela")
         );
-        assertTrue(pages.stream().anyMatch(page -> page.getId() == 6903884));
+        assertTrue(pages.stream().anyMatch(page -> page.getId().getPageId() == 6903884));
         assertTrue(
             pages
                 .stream()
-                .filter(page -> page.getId() == 6903884)
+                .filter(page -> page.getId().getPageId() == 6903884)
                 .findAny()
                 .orElseThrow(ReplacerException::new)
                 .getContent()
@@ -342,8 +342,8 @@ class WikipediaApiServiceTest {
             .getPageSection(WikipediaLanguage.getDefault(), pageId, section)
             .orElseThrow(ReplacerException::new);
         assertNotNull(page);
-        assertEquals(WikipediaLanguage.getDefault(), page.getLang());
-        assertEquals(pageId, page.getId());
+        assertEquals(WikipediaLanguage.getDefault(), page.getId().getLang());
+        assertEquals(pageId, page.getId().getPageId());
         assertEquals(title, page.getTitle());
         assertEquals(WikipediaNamespace.USER, page.getNamespace());
         assertTrue(page.getLastUpdate().getYear() >= 2019);
@@ -358,7 +358,7 @@ class WikipediaApiServiceTest {
             Integer.valueOf(1),
             wikipediaServiceOffline
                 .getPageByTitle(WikipediaLanguage.getDefault(), "")
-                .map(WikipediaPage::getId)
+                .map(page -> page.getId().getPageId())
                 .orElse(0)
         );
         assertFalse(

@@ -54,8 +54,7 @@ class SectionReviewService {
                     );
 
                     LOGGER.debug(
-                        "Found section for page {} - {} - {} => {}",
-                        pageSection.get().getLang(),
+                        "Found section for page {} - {} => {}",
                         pageSection.get().getId(),
                         pageSection.get().getTitle(),
                         pageSection.get().getSection()
@@ -139,8 +138,7 @@ class SectionReviewService {
         // usually because of emojis or other strange Unicode characters
         if (translated.stream().anyMatch(rep -> !validatePageReplacement(rep, pageSection.getContent()))) {
             LOGGER.warn(
-                "Not valid byte-offset in page section: {} - {} - {} - {}",
-                pageSection.getLang(),
+                "Not valid byte-offset in page section: {} - {} - {}",
                 pageSection.getId(),
                 pageSection.getTitle(),
                 sectionOffset

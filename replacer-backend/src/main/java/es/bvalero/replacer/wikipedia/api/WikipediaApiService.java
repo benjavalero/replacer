@@ -1,10 +1,7 @@
 package es.bvalero.replacer.wikipedia.api;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.domain.AccessToken;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaNamespace;
-import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
@@ -157,8 +154,7 @@ class WikipediaApiService implements WikipediaService {
     private WikipediaPage convert(WikipediaApiResponse.Page page, WikipediaLanguage lang, String queryTimestamp) {
         return WikipediaPage
             .builder()
-            .lang(lang)
-            .id(page.getPageid())
+            .id(WikipediaPageId.of(lang, page.getPageid()))
             .namespace(WikipediaNamespace.valueOf(page.getNs()))
             .title(page.getTitle())
             .content(page.getRevisions().get(0).getSlots().getMain().getContent())

@@ -33,8 +33,8 @@ class PageReview {
     private static PageDto convert(WikipediaPage page) {
         return PageDto
             .builder()
-            .lang(page.getLang())
-            .id(page.getId())
+            .lang(page.getId().getLang())
+            .id(page.getId().getPageId())
             .title(page.getTitle())
             .content(page.getContent())
             .section(convert(page.getSection()))

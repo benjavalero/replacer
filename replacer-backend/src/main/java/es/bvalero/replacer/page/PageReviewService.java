@@ -192,7 +192,7 @@ abstract class PageReviewService {
     IndexablePage convertToIndexablePage(WikipediaPage page, List<Replacement> replacements) {
         return IndexablePage
             .builder()
-            .id(WikipediaPageId.of(page.getLang(), page.getId()))
+            .id(page.getId())
             .title(page.getTitle())
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .replacements(replacements.stream().map(r -> convertToIndexable(r, page)).collect(Collectors.toList()))
@@ -243,7 +243,7 @@ abstract class PageReviewService {
     abstract List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
 
     protected FinderPage convertToFinderPage(WikipediaPage page) {
-        return FinderPage.of(page.getLang(), page.getContent(), page.getTitle());
+        return FinderPage.of(page.getId().getLang(), page.getContent(), page.getTitle());
     }
 
     void indexReplacements(WikipediaPage page, List<Replacement> replacements) {
@@ -257,7 +257,7 @@ abstract class PageReviewService {
     private IndexableReplacement convertToIndexable(Replacement replacement, WikipediaPage page) {
         return IndexableReplacement
             .builder()
-            .indexablePageId(WikipediaPageId.of(page.getLang(), page.getId()))
+            .indexablePageId(page.getId())
             .type(replacement.getType().getLabel())
             .subtype(replacement.getSubtype())
             .position(replacement.getStart())

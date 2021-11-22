@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -66,8 +67,7 @@ class SectionReviewServiceTest {
         String sectionContent = content.substring(offset, 10);
         WikipediaPage pageSection = WikipediaPage
             .builder()
-            .id(pageId)
-            .lang(WikipediaLanguage.getDefault())
+            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
             .namespace(WikipediaNamespace.getDefault())
             .title("Title")
             .content(sectionContent)

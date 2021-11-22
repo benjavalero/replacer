@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
@@ -35,8 +36,7 @@ class PageReviewTypeSubtypeServiceTest {
     private final String content2 = "Y";
     private final WikipediaPage page = WikipediaPage
         .builder()
-        .id(randomId)
-        .lang(WikipediaLanguage.getDefault())
+        .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), randomId))
         .namespace(WikipediaNamespace.ARTICLE)
         .title("Title1")
         .content(content)
@@ -44,8 +44,7 @@ class PageReviewTypeSubtypeServiceTest {
         .build();
     private final WikipediaPage page2 = WikipediaPage
         .builder()
-        .id(randomId2)
-        .lang(WikipediaLanguage.getDefault())
+        .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), randomId2))
         .namespace(WikipediaNamespace.ANNEX)
         .title("Title2")
         .content(content2)

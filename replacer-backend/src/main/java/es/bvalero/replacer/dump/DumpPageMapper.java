@@ -1,6 +1,7 @@
 package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -10,8 +11,7 @@ class DumpPageMapper {
     static WikipediaPage toDomain(DumpPage dumpPage) {
         return WikipediaPage
             .builder()
-            .lang(dumpPage.getLang())
-            .id(dumpPage.getId())
+            .id(WikipediaPageId.of(dumpPage.getLang(), dumpPage.getId()))
             .namespace(dumpPage.getNamespace())
             .title(dumpPage.getTitle())
             .content(dumpPage.getContent())

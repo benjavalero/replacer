@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
@@ -131,8 +132,7 @@ class PageReviewCustomServiceTest {
         final WikipediaSearchResult searchResult = WikipediaSearchResult.of(1, List.of(pageId));
         final WikipediaPage page = WikipediaPage
             .builder()
-            .lang(lang)
-            .id(pageId)
+            .id(WikipediaPageId.of(lang, pageId))
             .namespace(WikipediaNamespace.getDefault())
             .title("Title")
             .content(content)
@@ -190,8 +190,7 @@ class PageReviewCustomServiceTest {
         final WikipediaSearchResult searchResult = WikipediaSearchResult.of(1, List.of(pageId));
         final WikipediaPage page = WikipediaPage
             .builder()
-            .lang(lang)
-            .id(pageId)
+            .id(WikipediaPageId.of(lang, pageId))
             .namespace(WikipediaNamespace.getDefault())
             .title("Title")
             .content(content)
@@ -242,8 +241,7 @@ class PageReviewCustomServiceTest {
         final WikipediaSearchResult searchResult = WikipediaSearchResult.of(2, List.of(pageId1, pageId2));
         final WikipediaPage page = WikipediaPage
             .builder()
-            .lang(lang)
-            .id(pageId2)
+            .id(WikipediaPageId.of(lang, pageId2))
             .title("Title")
             .namespace(WikipediaNamespace.getDefault())
             .content(content)
@@ -336,8 +334,7 @@ class PageReviewCustomServiceTest {
                 i,
                 WikipediaPage
                     .builder()
-                    .lang(lang)
-                    .id(i)
+                    .id(WikipediaPageId.of(lang, i))
                     .namespace(WikipediaNamespace.getDefault())
                     .title("Title")
                     .content(content)
@@ -434,7 +431,7 @@ class PageReviewCustomServiceTest {
         final String replacement = "R";
         final String suggestion = "S";
 
-        // 4 Wikipedia results all without repalcements
+        // 4 Wikipedia results all without replacements
 
         final String content = "A R";
         final Map<Integer, WikipediaPage> pages = new HashMap<>();
@@ -443,8 +440,7 @@ class PageReviewCustomServiceTest {
                 i,
                 WikipediaPage
                     .builder()
-                    .lang(lang)
-                    .id(i)
+                    .id(WikipediaPageId.of(lang, i))
                     .namespace(WikipediaNamespace.getDefault())
                     .title("Title")
                     .content(content)

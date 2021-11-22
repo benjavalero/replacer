@@ -11,4 +11,9 @@ public class WikipediaPageId {
 
     @NonNull
     Integer pageId;
+
+    @Override
+    public String toString() {
+        return String.format("%s - %d", lang, pageId);
+    }
 }

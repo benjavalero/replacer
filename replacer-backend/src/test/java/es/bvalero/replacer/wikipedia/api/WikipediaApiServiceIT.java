@@ -34,7 +34,7 @@ class WikipediaApiServiceIT {
             .getPageByTitle(WikipediaLanguage.SPANISH, title)
             .orElseThrow(ReplacerException::new);
         assertNotNull(page);
-        assertEquals(6219990, page.getId());
+        assertEquals(6219990, page.getId().getPageId());
         assertEquals(title, page.getTitle());
         assertEquals(WikipediaNamespace.USER, page.getNamespace());
         assertTrue(page.getLastUpdate().getYear() >= 2016);
@@ -50,21 +50,21 @@ class WikipediaApiServiceIT {
         );
         assertNotNull(pages);
         assertEquals(2, pages.size());
-        assertTrue(pages.stream().anyMatch(page -> page.getId() == 6219990));
+        assertTrue(pages.stream().anyMatch(page -> page.getId().getPageId() == 6219990));
         assertTrue(
             pages
                 .stream()
-                .filter(page -> page.getId() == 6219990)
+                .filter(page -> page.getId().getPageId() == 6219990)
                 .findAny()
                 .orElseThrow(ReplacerException::new)
                 .getContent()
                 .contains("Orihuela")
         );
-        assertTrue(pages.stream().anyMatch(page -> page.getId() == 6903884));
+        assertTrue(pages.stream().anyMatch(page -> page.getId().getPageId() == 6903884));
         assertTrue(
             pages
                 .stream()
-                .filter(page -> page.getId() == 6903884)
+                .filter(page -> page.getId().getPageId() == 6903884)
                 .findAny()
                 .orElseThrow(ReplacerException::new)
                 .getContent()
@@ -98,8 +98,8 @@ class WikipediaApiServiceIT {
 
         // Save the new content
         wikipediaService.savePageContent(
-            WikipediaLanguage.SPANISH,
-            page.getId(),
+            page.getId().getLang(),
+            page.getId().getPageId(),
             0,
             newContent,
             page.getQueryTimestamp(),
@@ -114,8 +114,8 @@ class WikipediaApiServiceIT {
             ReplacerException.class,
             () ->
                 wikipediaService.savePageContent(
-                    WikipediaLanguage.SPANISH,
-                    page.getId(),
+                    page.getId().getLang(),
+                    page.getId().getPageId(),
                     0,
                     conflictContent,
                     before,

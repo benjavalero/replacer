@@ -14,19 +14,16 @@ import org.springframework.lang.Nullable;
  *
  * Once instantiated it becomes immutable. Even when all attributes are mandatory,
  * we implement a builder factory not to have a constructor with too many arguments.
+ *
+ * Finally, we make the class non-final, so it can be inherited.
  */
 @NonFinal
 @Value
 @Builder
 public class WikipediaPage {
 
-    // TODO: Extract Page ID
-
     @NonNull
-    WikipediaLanguage lang;
-
-    @NonNull
-    Integer id;
+    WikipediaPageId id;
 
     @NonNull
     WikipediaNamespace namespace;
