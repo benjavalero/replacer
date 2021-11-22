@@ -333,7 +333,13 @@ class WikipediaApiServiceTest {
 
         int pageId = 6903884;
         int sectionId = 1;
-        WikipediaSection section = WikipediaSection.builder().index(sectionId).build();
+        WikipediaSection section = WikipediaSection
+            .builder()
+            .level(2)
+            .index(sectionId)
+            .byteOffset(0)
+            .anchor("X")
+            .build();
         String title = "Usuario:Benjavalero/Taller";
         WikipediaPage page = wikipediaService
             .getPageSection(WikipediaLanguage.getDefault(), pageId, section)
@@ -346,7 +352,7 @@ class WikipediaApiServiceTest {
         assertTrue(page.getLastUpdate().getYear() >= 2019);
         assertTrue(page.getContent().startsWith("=="));
         assertNotNull(page.getSection());
-        assertEquals(Integer.valueOf(sectionId), page.getSection().getIndex());
+        assertEquals(section, page.getSection());
     }
 
     @Test

@@ -58,9 +58,15 @@ class SectionReviewServiceTest {
             .replacements(Collections.singletonList(replacement))
             .build();
 
-        int sectionId = 3;
+        Integer sectionId = 3;
         int offset = 5;
-        WikipediaSection section = WikipediaSection.builder().level(2).index(sectionId).byteOffset(offset).build();
+        WikipediaSection section = WikipediaSection
+            .builder()
+            .level(2)
+            .index(sectionId)
+            .byteOffset(offset)
+            .anchor("X")
+            .build();
         when(wikipediaService.getPageSections(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(Collections.singletonList(section));
 
@@ -71,7 +77,7 @@ class SectionReviewServiceTest {
             .namespace(WikipediaNamespace.getDefault())
             .title("Title")
             .content(sectionContent)
-            .section(WikipediaSection.builder().index(sectionId).build())
+            .section(section)
             .lastUpdate(LocalDateTime.now())
             .build();
         when(wikipediaService.getPageSection(any(WikipediaLanguage.class), eq(pageId), eq(section)))
@@ -85,7 +91,7 @@ class SectionReviewServiceTest {
                 assertEquals(pageId, review.getPage().getId());
                 assertNotNull(review.getPage().getSection());
                 assertNotNull(review.getPage().getSection().getId());
-                assertEquals(Integer.valueOf(sectionId), review.getPage().getSection().getId());
+                assertEquals(sectionId, review.getPage().getSection().getId());
                 assertEquals(sectionContent, review.getPage().getContent());
                 assertEquals(1, review.getReplacements().size());
                 assertEquals(8 - offset, review.getReplacements().get(0).getStart());
