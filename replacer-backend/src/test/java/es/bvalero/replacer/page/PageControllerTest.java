@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
@@ -210,8 +211,7 @@ class PageControllerTest {
         verify(cosmeticFinderService).applyCosmeticChanges(finderPage);
         verify(wikipediaService)
             .savePageContent(
-                any(WikipediaLanguage.class),
-                eq(pageId),
+                eq(WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId)),
                 eq(section),
                 eq("C"),
                 eq(timestamp),
@@ -256,8 +256,7 @@ class PageControllerTest {
         verify(cosmeticFinderService, times(0)).applyCosmeticChanges(any(FinderPage.class));
         verify(wikipediaService, times(0))
             .savePageContent(
-                any(WikipediaLanguage.class),
-                eq(pageId),
+                eq(WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId)),
                 anyInt(),
                 anyString(),
                 any(LocalDateTime.class),

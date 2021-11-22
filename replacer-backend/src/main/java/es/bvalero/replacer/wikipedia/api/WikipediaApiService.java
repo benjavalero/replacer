@@ -93,9 +93,9 @@ class WikipediaApiService implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
-    public Optional<WikipediaPage> getPageById(WikipediaLanguage lang, int pageId) throws ReplacerException {
+    public Optional<WikipediaPage> getPageById(WikipediaPageId id) throws ReplacerException {
         // Return the only value that should be in the map
-        return getPagesByIds(Collections.singletonList(pageId), lang).stream().findAny();
+        return getPagesByIds(List.of(id.getPageId()), id.getLang()).stream().findAny();
     }
 
     @VisibleForTesting
@@ -165,12 +165,12 @@ class WikipediaApiService implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
-    public List<WikipediaSection> getPageSections(WikipediaLanguage lang, int pageId) throws ReplacerException {
+    public List<WikipediaSection> getPageSections(WikipediaPageId id) throws ReplacerException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.GET)
-            .lang(lang)
-            .params(buildPageSectionsRequestParams(pageId))
+            .lang(id.getLang())
+            .params(buildPageSectionsRequestParams(id.getPageId()))
             .build();
         WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
         return extractSectionsFromJson(apiResponse);
@@ -215,16 +215,16 @@ class WikipediaApiService implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
-    public Optional<WikipediaPageSection> getPageSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
+    public Optional<WikipediaPageSection> getPageSection(WikipediaPageId id, WikipediaSection section)
         throws ReplacerException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.GET)
-            .lang(lang)
-            .params(buildPageIdsAndSectionRequestParams(pageId, section.getIndex()))
+            .lang(id.getLang())
+            .params(buildPageIdsAndSectionRequestParams(id.getPageId(), section.getIndex()))
             .build();
         WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
-        List<WikipediaPage> pages = extractPagesFromJson(apiResponse, lang);
+        List<WikipediaPage> pages = extractPagesFromJson(apiResponse, id.getLang());
         return pages.stream().findAny().map(page -> WikipediaPageSection.of(page, section));
     }
 
@@ -312,23 +312,21 @@ class WikipediaApiService implements WikipediaService {
 
     @Override
     public void savePageContent(
-        WikipediaLanguage lang,
-        int pageId,
+        WikipediaPageId id,
         @Nullable Integer section,
         String pageContent,
         LocalDateTime queryTimestamp,
         String editSummary,
         AccessToken accessToken
     ) throws ReplacerException {
-        EditToken editToken = getEditToken(pageId, lang, accessToken);
+        EditToken editToken = getEditToken(id, accessToken);
         // Pre-check of edit conflicts
         if (queryTimestamp.compareTo(editToken.getTimestamp()) <= 0) {
             LOGGER.warn(
-                "Page edited at the same time: {} - {} - {} - {} - {}",
+                "Page edited at the same time: {} - {} - {} - {}",
                 queryTimestamp,
                 editToken.getTimestamp(),
-                lang,
-                pageId,
+                id,
                 pageContent
             );
             throw new ReplacerException(
@@ -339,9 +337,16 @@ class WikipediaApiService implements WikipediaService {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.POST)
-            .lang(lang)
+            .lang(id.getLang())
             .params(
-                buildSavePageContentRequestParams(pageId, pageContent, section, queryTimestamp, editSummary, editToken)
+                buildSavePageContentRequestParams(
+                    id.getPageId(),
+                    pageContent,
+                    section,
+                    queryTimestamp,
+                    editSummary,
+                    editToken
+                )
             )
             .accessToken(accessToken)
             .build();
@@ -377,12 +382,12 @@ class WikipediaApiService implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @VisibleForTesting
-    EditToken getEditToken(int pageId, WikipediaLanguage lang, AccessToken accessToken) throws ReplacerException {
+    EditToken getEditToken(WikipediaPageId id, AccessToken accessToken) throws ReplacerException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.POST)
-            .lang(lang)
-            .params(buildEditTokenRequestParams(pageId))
+            .lang(id.getLang())
+            .params(buildEditTokenRequestParams(id.getPageId()))
             .accessToken(accessToken)
             .build();
         WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);

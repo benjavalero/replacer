@@ -15,11 +15,11 @@ public interface WikipediaService {
 
     Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) throws ReplacerException;
 
-    Optional<WikipediaPage> getPageById(WikipediaLanguage lang, int pageId) throws ReplacerException;
+    Optional<WikipediaPage> getPageById(WikipediaPageId id) throws ReplacerException;
 
-    List<WikipediaSection> getPageSections(WikipediaLanguage lang, int pageId) throws ReplacerException;
+    List<WikipediaSection> getPageSections(WikipediaPageId id) throws ReplacerException;
 
-    Optional<WikipediaPageSection> getPageSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
+    Optional<WikipediaPageSection> getPageSection(WikipediaPageId id, WikipediaSection section)
         throws ReplacerException;
 
     WikipediaSearchResult searchByText(
@@ -31,8 +31,7 @@ public interface WikipediaService {
     ) throws ReplacerException;
 
     void savePageContent(
-        WikipediaLanguage lang,
-        int pageId,
+        WikipediaPageId id,
         @Nullable Integer section,
         String pageContent,
         LocalDateTime queryTimestamp,

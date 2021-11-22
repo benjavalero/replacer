@@ -48,7 +48,8 @@ class WikipediaApiServiceTest {
         assertTrue(response.isBatchcomplete());
 
         // We pass an empty access token to retrieve an anonymous edit token
-        EditToken editToken = wikipediaService.getEditToken(2209245, WikipediaLanguage.SPANISH, AccessToken.empty());
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, 2209245);
+        EditToken editToken = wikipediaService.getEditToken(pageId, AccessToken.empty());
         assertNotNull(editToken.getCsrfToken());
         assertEquals("+\\", editToken.getCsrfToken());
         assertEquals("2019-06-24T21:24:09Z", WikipediaDateUtils.formatWikipediaTimestamp(editToken.getTimestamp()));
@@ -83,13 +84,11 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        int pageId = 6219990;
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, 6219990);
         String title = "Usuario:Benjavalero";
-        WikipediaPage page = wikipediaService
-            .getPageById(WikipediaLanguage.SPANISH, pageId)
-            .orElseThrow(ReplacerException::new);
+        WikipediaPage page = wikipediaService.getPageById(pageId).orElseThrow(ReplacerException::new);
         assertNotNull(page);
-        assertEquals(pageId, page.getId().getPageId());
+        assertEquals(pageId, page.getId());
         assertEquals(title, page.getTitle());
         assertEquals(WikipediaNamespace.USER, page.getNamespace());
         assertTrue(page.getLastUpdate().getYear() >= 2016);
@@ -197,8 +196,7 @@ class WikipediaApiServiceTest {
             ReplacerException.class,
             () ->
                 wikipediaService.savePageContent(
-                    WikipediaLanguage.SPANISH,
-                    1,
+                    WikipediaPageId.of(WikipediaLanguage.SPANISH, 1),
                     0,
                     "",
                     currentTimestamp,
@@ -219,8 +217,7 @@ class WikipediaApiServiceTest {
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         LocalDateTime currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-25T21:24:09Z");
         wikipediaService.savePageContent(
-            WikipediaLanguage.SPANISH,
-            1,
+            WikipediaPageId.of(WikipediaLanguage.SPANISH, 1),
             null,
             "",
             currentTimestamp,
@@ -235,8 +232,7 @@ class WikipediaApiServiceTest {
         // We use a timestamp AFTER the timestamp of the last edition (from the edit token)
         currentTimestamp = WikipediaDateUtils.parseWikipediaTimestamp("2019-06-26T21:24:09Z");
         wikipediaService.savePageContent(
-            WikipediaLanguage.SPANISH,
-            1,
+            WikipediaPageId.of(WikipediaLanguage.SPANISH, 1),
             2,
             "",
             currentTimestamp,
@@ -270,7 +266,9 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        List<WikipediaSection> sections = wikipediaService.getPageSections(WikipediaLanguage.SPANISH, 6903884);
+        List<WikipediaSection> sections = wikipediaService.getPageSections(
+            WikipediaPageId.of(WikipediaLanguage.SPANISH, 6903884)
+        );
         assertNotNull(sections);
         assertEquals(3, sections.size());
 
@@ -318,7 +316,9 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        List<WikipediaSection> sections = wikipediaService.getPageSections(WikipediaLanguage.SPANISH, 6633556);
+        List<WikipediaSection> sections = wikipediaService.getPageSections(
+            WikipediaPageId.of(WikipediaLanguage.SPANISH, 6633556)
+        );
         assertNotNull(sections);
         assertTrue(sections.isEmpty());
     }
@@ -331,7 +331,7 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        int pageId = 6903884;
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 6903884);
         int sectionId = 1;
         WikipediaSection section = WikipediaSection
             .builder()
@@ -342,11 +342,11 @@ class WikipediaApiServiceTest {
             .build();
         String title = "Usuario:Benjavalero/Taller";
         WikipediaPageSection page = wikipediaService
-            .getPageSection(WikipediaLanguage.getDefault(), pageId, section)
+            .getPageSection(pageId, section)
             .orElseThrow(ReplacerException::new);
         assertNotNull(page);
         assertEquals(WikipediaLanguage.getDefault(), page.getId().getLang());
-        assertEquals(pageId, page.getId().getPageId());
+        assertEquals(pageId, page.getId());
         assertEquals(title, page.getTitle());
         assertEquals(WikipediaNamespace.USER, page.getNamespace());
         assertTrue(page.getLastUpdate().getYear() >= 2019);
@@ -365,6 +365,8 @@ class WikipediaApiServiceTest {
                 .orElse(0)
         );
         assertFalse(wikipediaServiceOffline.searchByText(WikipediaLanguage.getDefault(), "", false, 0, 100).isEmpty());
-        assertTrue(wikipediaServiceOffline.getPageSections(WikipediaLanguage.getDefault(), 1).isEmpty());
+        assertTrue(
+            wikipediaServiceOffline.getPageSections(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1)).isEmpty()
+        );
     }
 }

@@ -2,10 +2,7 @@ package es.bvalero.replacer.wikipedia.api;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import es.bvalero.replacer.common.domain.AccessToken;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaNamespace;
-import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -80,7 +77,8 @@ class WikipediaApiServiceIT {
     @Test
     void testGetEditToken() throws ReplacerException {
         // We pass an empty access token to retrieve an anonymous edit token
-        EditToken editToken = wikipediaService.getEditToken(6903884, WikipediaLanguage.SPANISH, AccessToken.empty());
+        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.SPANISH, 6903884);
+        EditToken editToken = wikipediaService.getEditToken(pageId, AccessToken.empty());
         assertNotNull(editToken);
         assertTrue(editToken.getCsrfToken().endsWith("+\\"));
         assertNotNull(editToken.getTimestamp());
@@ -98,8 +96,7 @@ class WikipediaApiServiceIT {
 
         // Save the new content
         wikipediaService.savePageContent(
-            page.getId().getLang(),
-            page.getId().getPageId(),
+            page.getId(),
             0,
             newContent,
             page.getQueryTimestamp(),
@@ -114,8 +111,7 @@ class WikipediaApiServiceIT {
             ReplacerException.class,
             () ->
                 wikipediaService.savePageContent(
-                    page.getId().getLang(),
-                    page.getId().getPageId(),
+                    page.getId(),
                     0,
                     conflictContent,
                     before,

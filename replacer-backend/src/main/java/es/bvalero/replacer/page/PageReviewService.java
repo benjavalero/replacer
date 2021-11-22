@@ -155,7 +155,8 @@ abstract class PageReviewService {
 
     private Optional<WikipediaPage> getPageFromWikipedia(int pageId, PageReviewOptions options) {
         try {
-            Optional<WikipediaPage> page = wikipediaService.getPageById(options.getLang(), pageId);
+            WikipediaPageId wikipediaPageId = WikipediaPageId.of(options.getLang(), pageId);
+            Optional<WikipediaPage> page = wikipediaService.getPageById(wikipediaPageId);
             if (page.isPresent()) {
                 if (validatePage(page.get())) {
                     LOGGER.debug(
@@ -167,7 +168,7 @@ abstract class PageReviewService {
                     return page;
                 }
             } else {
-                LOGGER.warn("No page found in Wikipedia for {} - {}", options.getLang(), pageId);
+                LOGGER.warn("No page found in Wikipedia for {}", wikipediaPageId);
             }
 
             // We get here if the page is not found or not processable

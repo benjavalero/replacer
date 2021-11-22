@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.domain.WikipediaPageSection;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.common.exception.ReplacerException;
@@ -29,8 +30,7 @@ class SectionReviewService {
         try {
             // Get the sections from the Wikipedia API (better than calculating them by ourselves)
             List<WikipediaSection> sections = wikipediaService.getPageSections(
-                review.getPage().getLang(),
-                review.getPage().getId()
+                WikipediaPageId.of(review.getPage().getLang(), review.getPage().getId())
             );
 
             // Find the smallest section containing all the replacements
@@ -41,8 +41,7 @@ class SectionReviewService {
             if (smallestSection.isPresent()) {
                 // Get the section from Wikipedia API (better than calculating it by ourselves)
                 Optional<WikipediaPageSection> pageSection = wikipediaService.getPageSection(
-                    review.getPage().getLang(),
-                    review.getPage().getId(),
+                    WikipediaPageId.of(review.getPage().getLang(), review.getPage().getId()),
                     smallestSection.get()
                 );
                 if (pageSection.isPresent()) {

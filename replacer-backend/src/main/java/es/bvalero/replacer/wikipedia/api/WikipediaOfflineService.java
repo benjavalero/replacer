@@ -47,19 +47,19 @@ class WikipediaOfflineService implements WikipediaService {
     }
 
     @Override
-    public Optional<WikipediaPage> getPageById(WikipediaLanguage lang, int pageId) throws ReplacerException {
-        return Optional.of(buildFakePage(pageId));
+    public Optional<WikipediaPage> getPageById(WikipediaPageId id) throws ReplacerException {
+        return Optional.of(buildFakePage(id.getPageId()));
     }
 
     @Override
-    public List<WikipediaSection> getPageSections(WikipediaLanguage lang, int pageId) {
+    public List<WikipediaSection> getPageSections(WikipediaPageId id) {
         return Collections.emptyList();
     }
 
     @Override
-    public Optional<WikipediaPageSection> getPageSection(WikipediaLanguage lang, int pageId, WikipediaSection section)
+    public Optional<WikipediaPageSection> getPageSection(WikipediaPageId id, WikipediaSection section)
         throws ReplacerException {
-        return Optional.of(WikipediaPageSection.of(buildFakePage(pageId), section));
+        return Optional.of(WikipediaPageSection.of(buildFakePage(id.getPageId()), section));
     }
 
     @Override
@@ -75,8 +75,7 @@ class WikipediaOfflineService implements WikipediaService {
 
     @Override
     public void savePageContent(
-        WikipediaLanguage lang,
-        int pageId,
+        WikipediaPageId id,
         @Nullable Integer section,
         String pageContent,
         LocalDateTime queryTimestamp,

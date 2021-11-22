@@ -4,6 +4,7 @@ import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.UserParameters;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
@@ -119,8 +120,7 @@ public class PageController {
                 boolean applyCosmetics = !textToSave.equals(page.getContent());
                 PageSection section = savePage.getPage().getSection();
                 wikipediaService.savePageContent(
-                    params.getLang(),
-                    pageId,
+                    WikipediaPageId.of(params.getLang(), pageId),
                     section == null ? null : section.getId(),
                     textToSave,
                     WikipediaDateUtils.parseWikipediaTimestamp(savePage.getPage().getQueryTimestamp()),

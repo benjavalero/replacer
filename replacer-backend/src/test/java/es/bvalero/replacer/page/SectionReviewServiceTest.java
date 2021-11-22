@@ -31,10 +31,12 @@ class SectionReviewServiceTest {
 
     @Test
     void testFindSectionReviewNoSections() throws ReplacerException {
-        when(wikipediaService.getPageSections(any(WikipediaLanguage.class), anyInt()))
-            .thenReturn(Collections.emptyList());
+        when(wikipediaService.getPageSections(any(WikipediaPageId.class))).thenReturn(Collections.emptyList());
 
-        PageReview review = PageReview.ofEmpty();
+        PageReview review = PageReview
+            .builder()
+            .page(PageDto.builder().lang(WikipediaLanguage.getDefault()).id(1).build())
+            .build();
         Optional<PageReview> sectionReview = sectionReviewService.findSectionReview(review);
 
         assertFalse(sectionReview.isPresent());
@@ -63,21 +65,21 @@ class SectionReviewServiceTest {
             .byteOffset(offset)
             .anchor("X")
             .build();
-        when(wikipediaService.getPageSections(any(WikipediaLanguage.class), anyInt()))
+        when(wikipediaService.getPageSections(any(WikipediaPageId.class)))
             .thenReturn(Collections.singletonList(section));
 
         String sectionContent = content.substring(offset, 10);
+        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
         WikipediaPageSection pageSection = WikipediaPageSection
             .builder()
-            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
+            .id(wikipediaPageId)
             .namespace(WikipediaNamespace.getDefault())
             .title("Title")
             .content(sectionContent)
             .section(section)
             .lastUpdate(LocalDateTime.now())
             .build();
-        when(wikipediaService.getPageSection(any(WikipediaLanguage.class), eq(pageId), eq(section)))
-            .thenReturn(Optional.of(pageSection));
+        when(wikipediaService.getPageSection(wikipediaPageId, section)).thenReturn(Optional.of(pageSection));
 
         Optional<PageReview> sectionReview = sectionReviewService.findSectionReview(pageReview);
 
