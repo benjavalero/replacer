@@ -3,7 +3,7 @@ package es.bvalero.replacer.dump;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
@@ -46,10 +46,10 @@ class DumpSaxHandler extends DefaultHandler {
     private long numPagesProcessed = 0L;
 
     @Getter
-    private Long start = null;
+    private LocalDateTime start = null;
 
     @Getter
-    private Long end = null;
+    private LocalDateTime end = null;
 
     DumpSaxHandler(WikipediaLanguage lang, DumpPageProcessor processor) {
         this.lang = lang;
@@ -60,14 +60,14 @@ class DumpSaxHandler extends DefaultHandler {
     public void startDocument() {
         // Reset indexing status
         this.running = true;
-        this.start = Instant.now().toEpochMilli();
+        this.start = LocalDateTime.now();
     }
 
     @Override
     public void endDocument() {
         // Finish indexing status
         this.running = false;
-        this.end = Instant.now().toEpochMilli();
+        this.end = LocalDateTime.now();
 
         this.dumpPageProcessor.finish(lang);
     }

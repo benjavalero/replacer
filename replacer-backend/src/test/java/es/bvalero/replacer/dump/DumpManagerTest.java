@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -70,6 +71,7 @@ class DumpManagerTest {
 
     @Test
     void testGetDumpIndexingStatus() {
+        LocalDateTime now = LocalDateTime.now();
         DumpIndexingStatus expected = DumpIndexingStatus
             .builder()
             .running(true)
@@ -77,8 +79,8 @@ class DumpManagerTest {
             .numPagesRead(1L)
             .numPagesProcessed(2L)
             .numPagesEstimated(3L)
-            .start(4L)
-            .end(5L)
+            .start(now)
+            .end(now.plusHours(1))
             .build();
 
         when(dumpParser.getDumpIndexingStatus()).thenReturn(expected);

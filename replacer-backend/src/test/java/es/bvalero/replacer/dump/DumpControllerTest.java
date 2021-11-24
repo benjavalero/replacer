@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import es.bvalero.replacer.wikipedia.WikipediaService;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,8 @@ class DumpControllerTest {
         long numPagesProcessed = 500;
         long numPagesEstimated = 200000;
         String dumpFileName = "xxx.xml.bz2";
-        long start = 1500;
-        long end = 2000;
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime end = start.plusHours(1);
         DumpIndexingStatus indexingStatus = new DumpIndexingStatus(
             running,
             numPagesRead,
@@ -60,8 +61,8 @@ class DumpControllerTest {
             .andExpect(jsonPath("$.numPagesProcessed", is(Long.valueOf(numPagesProcessed).intValue())))
             .andExpect(jsonPath("$.numPagesEstimated", is(Long.valueOf(numPagesEstimated).intValue())))
             .andExpect(jsonPath("$.dumpFileName", is(dumpFileName)))
-            .andExpect(jsonPath("$.start", is(Long.valueOf(start).intValue())))
-            .andExpect(jsonPath("$.end", is(Long.valueOf(end).intValue())));
+            .andExpect(jsonPath("$.start", is(DumpLocalDateTimeSerializer.convertLocalDateTimeToMilliseconds(start))))
+            .andExpect(jsonPath("$.end", is(DumpLocalDateTimeSerializer.convertLocalDateTimeToMilliseconds(end))));
 
         verify(wikipediaService).isAdminUser(anyString());
         verify(dumpManager).getDumpIndexingStatus();
