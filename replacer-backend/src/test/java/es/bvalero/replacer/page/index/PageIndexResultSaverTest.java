@@ -4,6 +4,7 @@ import static org.mockito.Mockito.anyCollection;
 import static org.mockito.Mockito.verify;
 
 import es.bvalero.replacer.page.repository.PageRepository;
+import es.bvalero.replacer.page.repository.ReplacementRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -14,6 +15,9 @@ class PageIndexResultSaverTest {
 
     @Mock
     private PageRepository pageRepository;
+
+    @Mock
+    private ReplacementRepository replacementRepository;
 
     @InjectMocks
     private PageIndexResultSaver pageIndexResultSaver;
@@ -30,8 +34,8 @@ class PageIndexResultSaverTest {
 
         verify(pageRepository).updatePageTitles(anyCollection());
         verify(pageRepository).insertPages(anyCollection());
-        verify(pageRepository).updateReplacements(anyCollection());
-        verify(pageRepository).insertReplacements(anyCollection());
-        verify(pageRepository).deleteReplacements(anyCollection());
+        verify(replacementRepository).updateReplacements(anyCollection());
+        verify(replacementRepository).insertReplacements(anyCollection());
+        verify(replacementRepository).deleteReplacements(anyCollection());
     }
 }

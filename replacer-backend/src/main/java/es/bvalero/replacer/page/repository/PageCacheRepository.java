@@ -87,19 +87,4 @@ class PageCacheRepository implements PageRepository {
     public void deletePages(Collection<PageModel> pages) {
         pageRepository.deletePages(pages);
     }
-
-    @Override
-    public void insertReplacements(Collection<ReplacementModel> replacements) {
-        pageRepository.insertReplacements(replacements);
-    }
-
-    @Override
-    public void updateReplacements(Collection<ReplacementModel> replacements) {
-        pageRepository.updateReplacements(replacements);
-    }
-
-    @Override
-    public void deleteReplacements(Collection<ReplacementModel> replacements) {
-        pageRepository.deleteReplacements(replacements);
-    }
 }

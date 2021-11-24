@@ -4,7 +4,6 @@ import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.util.*;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -88,31 +87,5 @@ class PageJdbcRepository implements PageRepository {
 
         String sqlPages = "DELETE FROM page WHERE lang = :lang AND article_id = :pageId";
         jdbcTemplate.batchUpdate(sqlPages, namedParameters);
-    }
-
-    @Override
-    public void insertReplacements(Collection<ReplacementModel> replacements) {
-        String sql =
-            "INSERT INTO replacement (article_id, lang, type, subtype, position, context, last_update, reviewer) " +
-            "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer)";
-        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
-        jdbcTemplate.batchUpdate(sql, namedParameters);
-    }
-
-    @Override
-    public void updateReplacements(Collection<ReplacementModel> replacements) {
-        String sql =
-            "UPDATE replacement SET position = :position, context = :context, last_update = :lastUpdate WHERE id = :id";
-        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
-        jdbcTemplate.batchUpdate(sql, namedParameters);
-    }
-
-    @Override
-    public void deleteReplacements(Collection<ReplacementModel> replacements) {
-        String sql = "DELETE FROM replacement WHERE id IN (:ids)";
-        Set<Long> ids = replacements.stream().map(ReplacementModel::getId).collect(Collectors.toSet());
-        assert ids.stream().allMatch(Objects::nonNull);
-        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
-        jdbcTemplate.update(sql, namedParameters);
     }
 }

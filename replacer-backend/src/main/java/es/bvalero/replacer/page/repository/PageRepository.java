@@ -23,13 +23,4 @@ public interface PageRepository {
     void insertPages(Collection<PageModel> pages);
 
     void deletePages(Collection<PageModel> pages);
-
-    /** Insert a collection of replacements */
-    void insertReplacements(Collection<ReplacementModel> replacements);
-
-    /** Update a collection of replacements */
-    void updateReplacements(Collection<ReplacementModel> replacements);
-
-    /** Delete a collection of replacements */
-    void deleteReplacements(Collection<ReplacementModel> replacements);
 }
