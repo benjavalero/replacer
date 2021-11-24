@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.page.repository.IndexablePage;
-import es.bvalero.replacer.page.repository.IndexableReplacement;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;

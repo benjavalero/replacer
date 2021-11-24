@@ -10,12 +10,8 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
-import es.bvalero.replacer.page.index.PageIndexHelper;
-import es.bvalero.replacer.page.index.PageIndexResult;
-import es.bvalero.replacer.page.index.PageIndexResultSaver;
-import es.bvalero.replacer.page.repository.IndexablePage;
-import es.bvalero.replacer.page.repository.IndexablePageRepository;
-import es.bvalero.replacer.page.repository.IndexableReplacement;
+import es.bvalero.replacer.page.index.*;
+import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -55,7 +51,7 @@ abstract class PageReviewService {
     private ReplacementService replacementService;
 
     @Autowired
-    private IndexablePageRepository indexablePageRepository;
+    private PageRepository pageRepository;
 
     @Autowired
     private PageIndexHelper pageIndexHelper;
@@ -269,7 +265,7 @@ abstract class PageReviewService {
     }
 
     private Optional<IndexablePage> findDbReplacements(WikipediaPageId pageId) {
-        return indexablePageRepository.findByPageId(pageId);
+        return pageRepository.findByPageId(pageId).map(IndexablePageMapper::fromModel);
     }
 
     @VisibleForTesting

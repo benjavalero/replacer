@@ -12,10 +12,10 @@ import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
+import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.PageIndexHelper;
 import es.bvalero.replacer.page.index.PageIndexResultSaver;
-import es.bvalero.replacer.page.repository.IndexablePage;
-import es.bvalero.replacer.page.repository.IndexablePageRepository;
+import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -75,7 +75,7 @@ class PageReviewTypeSubtypeServiceTest {
     private ReplacementService replacementService;
 
     @Mock
-    private IndexablePageRepository indexablePageRepository;
+    private PageRepository pageRepository;
 
     @Mock
     private WikipediaService wikipediaService;

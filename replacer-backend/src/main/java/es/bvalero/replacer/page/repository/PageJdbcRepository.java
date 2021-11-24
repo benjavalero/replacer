@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Loggable(Loggable.TRACE) // To warn about performance issues
 @Transactional
 @Repository
-@Qualifier("indexablePageJdbcRepository")
-class IndexablePageJdbcRepository implements IndexablePageRepository {
+@Qualifier("pageJdbcRepository")
+class PageJdbcRepository implements PageRepository {
 
     private static final String FROM_REPLACEMENT_JOIN_PAGE =
         "FROM replacement r JOIN page p ON r.lang = p.lang AND r.article_id = p.article_id ";
@@ -29,7 +29,7 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public Optional<IndexablePage> findByPageId(WikipediaPageId id) {
+    public Optional<PageModel> findByPageId(WikipediaPageId id) {
         String sql =
             "SELECT r.id, r.lang, r.article_id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
             FROM_REPLACEMENT_JOIN_PAGE +
@@ -37,21 +37,17 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", id.getLang().getCode())
             .addValue("pageId", id.getPageId());
-        List<IndexablePage> indexablePages = jdbcTemplate.query(
-            sql,
-            namedParameters,
-            new IndexablePageResultExtractor()
-        );
-        assert indexablePages != null;
-        if (indexablePages.isEmpty()) {
+        List<PageModel> pages = jdbcTemplate.query(sql, namedParameters, new PageResultExtractor());
+        assert pages != null;
+        if (pages.isEmpty()) {
             return Optional.empty();
         } else {
-            return Optional.of(indexablePages.get(0));
+            return Optional.of(pages.get(0));
         }
     }
 
     @Override
-    public List<IndexablePage> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
+    public List<PageModel> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
         String sql =
             "SELECT r.id, r.lang, r.article_id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
             FROM_REPLACEMENT_JOIN_PAGE +
@@ -60,7 +56,7 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
             .addValue("lang", lang.getCode())
             .addValue("minPageId", minPageId)
             .addValue("maxPageId", maxPageId);
-        return Objects.requireNonNull(jdbcTemplate.query(sql, namedParameters, new IndexablePageResultExtractor()));
+        return Objects.requireNonNull(jdbcTemplate.query(sql, namedParameters, new PageResultExtractor()));
     }
 
     @Override
@@ -69,21 +65,21 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     }
 
     @Override
-    public void updatePageTitles(Collection<IndexablePage> pages) {
+    public void updatePageTitles(Collection<PageModel> pages) {
         String sql = "UPDATE page SET title = :title WHERE lang = :lang AND article_id = :pageId";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override
-    public void insertPages(Collection<IndexablePage> pages) {
+    public void insertPages(Collection<PageModel> pages) {
         String sql = "INSERT INTO page (lang, article_id, title) VALUES (:lang, :pageId, :title)";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);
     }
 
     @Override
-    public void deletePages(Collection<IndexablePage> pages) {
+    public void deletePages(Collection<PageModel> pages) {
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
 
         // First delete the replacements
@@ -95,7 +91,7 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     }
 
     @Override
-    public void insertReplacements(Collection<IndexableReplacement> replacements) {
+    public void insertReplacements(Collection<ReplacementModel> replacements) {
         String sql =
             "INSERT INTO replacement (article_id, lang, type, subtype, position, context, last_update, reviewer) " +
             "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer)";
@@ -104,7 +100,7 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     }
 
     @Override
-    public void updateReplacements(Collection<IndexableReplacement> replacements) {
+    public void updateReplacements(Collection<ReplacementModel> replacements) {
         String sql =
             "UPDATE replacement SET position = :position, context = :context, last_update = :lastUpdate WHERE id = :id";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(replacements.toArray());
@@ -112,9 +108,9 @@ class IndexablePageJdbcRepository implements IndexablePageRepository {
     }
 
     @Override
-    public void deleteReplacements(Collection<IndexableReplacement> replacements) {
+    public void deleteReplacements(Collection<ReplacementModel> replacements) {
         String sql = "DELETE FROM replacement WHERE id IN (:ids)";
-        Set<Long> ids = replacements.stream().map(IndexableReplacement::getId).collect(Collectors.toSet());
+        Set<Long> ids = replacements.stream().map(ReplacementModel::getId).collect(Collectors.toSet());
         assert ids.stream().allMatch(Objects::nonNull);
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
         jdbcTemplate.update(sql, namedParameters);

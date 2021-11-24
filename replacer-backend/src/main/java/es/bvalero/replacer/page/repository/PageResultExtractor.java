@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page.repository;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -10,26 +9,28 @@ import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-class IndexablePageResultExtractor implements ResultSetExtractor<List<IndexablePage>> {
+class PageResultExtractor implements ResultSetExtractor<List<PageModel>> {
 
     @Override
-    public List<IndexablePage> extractData(ResultSet rs) throws SQLException, DataAccessException {
-        Map<WikipediaPageId, String> titleMap = new HashMap<>();
-        ListValuedMap<WikipediaPageId, IndexableReplacement> replacementMap = new ArrayListValuedHashMap<>();
+    public List<PageModel> extractData(ResultSet rs) throws SQLException, DataAccessException {
+        // We can assume the lang is the same for all the results
+        WikipediaLanguage lang = null;
+
+        Map<Integer, String> titleMap = new HashMap<>();
+        ListValuedMap<Integer, ReplacementModel> replacementMap = new ArrayListValuedHashMap<>();
 
         while (rs.next()) {
-            WikipediaPageId pageId = WikipediaPageId.of(
-                WikipediaLanguage.valueOf(rs.getString("LANG")),
-                rs.getInt("ARTICLE_ID")
-            );
+            lang = WikipediaLanguage.valueOf(rs.getString("LANG"));
+            Integer pageId = rs.getInt("ARTICLE_ID");
 
             titleMap.put(pageId, rs.getString("TITLE"));
             replacementMap.put(
                 pageId,
-                IndexableReplacement
+                ReplacementModel
                     .builder()
                     .id(rs.getLong("ID"))
-                    .indexablePageId(pageId)
+                    .lang(lang)
+                    .pageId(pageId)
                     .type(rs.getString("TYPE"))
                     .subtype(rs.getString("SUBTYPE"))
                     .position(rs.getInt("POSITION"))
@@ -43,12 +44,19 @@ class IndexablePageResultExtractor implements ResultSetExtractor<List<IndexableP
         if (titleMap.isEmpty()) {
             return Collections.emptyList();
         } else {
-            List<IndexablePage> pageList = new ArrayList<>(titleMap.size());
-            for (Map.Entry<WikipediaPageId, String> entry : titleMap.entrySet()) {
-                WikipediaPageId pageId = entry.getKey();
+            Objects.requireNonNull(lang);
+            List<PageModel> pageList = new ArrayList<>(titleMap.size());
+            for (Map.Entry<Integer, String> entry : titleMap.entrySet()) {
+                Integer pageId = entry.getKey();
                 String title = entry.getValue();
                 pageList.add(
-                    IndexablePage.builder().id(pageId).title(title).replacements(replacementMap.get(pageId)).build()
+                    PageModel
+                        .builder()
+                        .lang(lang)
+                        .pageId(pageId)
+                        .title(title)
+                        .replacements(replacementMap.get(pageId))
+                        .build()
                 );
             }
             return pageList;

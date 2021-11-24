@@ -1,7 +1,5 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.page.repository.IndexablePage;
-import es.bvalero.replacer.page.repository.IndexableReplacement;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.AccessLevel;

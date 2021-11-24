@@ -3,7 +3,7 @@ package es.bvalero.replacer.replacement;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.page.repository.IndexablePageRepository;
+import es.bvalero.replacer.page.repository.PageRepository;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class ReplacementService {
     private ReplacementDao replacementDao;
 
     @Autowired
-    private IndexablePageRepository indexablePageRepository;
+    private PageRepository pageRepository;
 
     @Autowired
     private ReplacementStatsDao replacementStatsDao;

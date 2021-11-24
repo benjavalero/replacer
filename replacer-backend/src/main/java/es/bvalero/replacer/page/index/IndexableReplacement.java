@@ -1,6 +1,5 @@
-package es.bvalero.replacer.page.repository;
+package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -50,16 +49,6 @@ public class IndexableReplacement {
     /* To mark the replacements already "touched" while comparing indexable pages */
     @With
     boolean touched;
-
-    /* Named parameters to make easier the JDBC queries */
-
-    WikipediaLanguage getLang() {
-        return this.indexablePageId.getLang();
-    }
-
-    Integer getPageId() {
-        return this.indexablePageId.getPageId();
-    }
 
     /* Other helper getters */
 

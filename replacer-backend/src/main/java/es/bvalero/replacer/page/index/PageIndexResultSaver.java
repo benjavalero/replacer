@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.page.repository.IndexablePageRepository;
+import es.bvalero.replacer.page.repository.PageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class PageIndexResultSaver {
 
     @Autowired
-    IndexablePageRepository indexablePageRepository;
+    PageRepository pageRepository;
 
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
@@ -42,12 +42,12 @@ public class PageIndexResultSaver {
     }
 
     private void saveBatchResult() {
-        indexablePageRepository.insertPages(batchResult.getCreatePages());
-        indexablePageRepository.updatePageTitles(batchResult.getUpdatePages());
-        indexablePageRepository.deletePages(batchResult.getDeletePages());
-        indexablePageRepository.insertReplacements(batchResult.getCreateReplacements());
-        indexablePageRepository.updateReplacements(batchResult.getUpdateReplacements());
-        indexablePageRepository.deleteReplacements(batchResult.getDeleteReplacements());
+        pageRepository.insertPages(IndexablePageMapper.toModel(batchResult.getCreatePages()));
+        pageRepository.updatePageTitles(IndexablePageMapper.toModel(batchResult.getUpdatePages()));
+        pageRepository.deletePages(IndexablePageMapper.toModel(batchResult.getDeletePages()));
+        pageRepository.insertReplacements(IndexableReplacementMapper.toModel(batchResult.getCreateReplacements()));
+        pageRepository.updateReplacements(IndexableReplacementMapper.toModel(batchResult.getUpdateReplacements()));
+        pageRepository.deleteReplacements(IndexableReplacementMapper.toModel(batchResult.getDeleteReplacements()));
 
         this.clearBatchResult();
     }

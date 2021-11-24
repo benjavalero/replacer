@@ -11,28 +11,28 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * Implementation of the indexable page repository which retrieves the pages and replacements in batches
+ * Implementation of the page repository which retrieves the pages and replacements in batches
  * and caches temporarily the results in order to reduce the calls to database while dump indexing.
  */
 @Component
-@Qualifier("indexablePageCacheRepository")
-class IndexablePageCacheRepository implements IndexablePageRepository {
+@Qualifier("pageCacheRepository")
+class PageCacheRepository implements PageRepository {
 
     @Autowired
-    @Qualifier("indexablePageJdbcRepository")
-    private IndexablePageRepository indexablePageRepository;
+    @Qualifier("pageJdbcRepository")
+    private PageRepository pageRepository;
 
     @Setter(AccessLevel.PACKAGE) // For testing
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
 
     // No need to store the lang. We can assume we are not indexing more than one language at a time.
-    private final Map<Integer, IndexablePage> pageMap = new HashMap<>(chunkSize);
+    private final Map<Integer, PageModel> pageMap = new HashMap<>(chunkSize);
 
     private int maxCachedId = 0;
 
     @Override
-    public Optional<IndexablePage> findByPageId(WikipediaPageId id) {
+    public Optional<PageModel> findByPageId(WikipediaPageId id) {
         // Load the cache the first time or when needed
         if (maxCachedId == 0 || id.getPageId() > maxCachedId) {
             clean();
@@ -49,8 +49,8 @@ class IndexablePageCacheRepository implements IndexablePageRepository {
     }
 
     @Override
-    public List<IndexablePage> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
-        return indexablePageRepository.findByPageIdInterval(lang, minPageId, maxPageId);
+    public List<PageModel> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
+        return pageRepository.findByPageIdInterval(lang, minPageId, maxPageId);
     }
 
     private void load(int minId, int maxId, WikipediaLanguage lang) {
@@ -74,32 +74,32 @@ class IndexablePageCacheRepository implements IndexablePageRepository {
     }
 
     @Override
-    public void updatePageTitles(Collection<IndexablePage> pages) {
-        indexablePageRepository.updatePageTitles(pages);
+    public void updatePageTitles(Collection<PageModel> pages) {
+        pageRepository.updatePageTitles(pages);
     }
 
     @Override
-    public void insertPages(Collection<IndexablePage> pages) {
-        indexablePageRepository.insertPages(pages);
+    public void insertPages(Collection<PageModel> pages) {
+        pageRepository.insertPages(pages);
     }
 
     @Override
-    public void deletePages(Collection<IndexablePage> pages) {
-        indexablePageRepository.deletePages(pages);
+    public void deletePages(Collection<PageModel> pages) {
+        pageRepository.deletePages(pages);
     }
 
     @Override
-    public void insertReplacements(Collection<IndexableReplacement> replacements) {
-        indexablePageRepository.insertReplacements(replacements);
+    public void insertReplacements(Collection<ReplacementModel> replacements) {
+        pageRepository.insertReplacements(replacements);
     }
 
     @Override
-    public void updateReplacements(Collection<IndexableReplacement> replacements) {
-        indexablePageRepository.updateReplacements(replacements);
+    public void updateReplacements(Collection<ReplacementModel> replacements) {
+        pageRepository.updateReplacements(replacements);
     }
 
     @Override
-    public void deleteReplacements(Collection<IndexableReplacement> replacements) {
-        indexablePageRepository.deleteReplacements(replacements);
+    public void deleteReplacements(Collection<ReplacementModel> replacements) {
+        pageRepository.deleteReplacements(replacements);
     }
 }

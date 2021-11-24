@@ -3,7 +3,7 @@ package es.bvalero.replacer.page.index;
 import static org.mockito.Mockito.anyCollection;
 import static org.mockito.Mockito.verify;
 
-import es.bvalero.replacer.page.repository.IndexablePageRepository;
+import es.bvalero.replacer.page.repository.PageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,7 +13,7 @@ import org.mockito.MockitoAnnotations;
 class PageIndexResultSaverTest {
 
     @Mock
-    private IndexablePageRepository indexablePageRepository;
+    private PageRepository pageRepository;
 
     @InjectMocks
     private PageIndexResultSaver pageIndexResultSaver;
@@ -28,10 +28,10 @@ class PageIndexResultSaverTest {
     void testSave() {
         pageIndexResultSaver.save(PageIndexResult.ofEmpty());
 
-        verify(indexablePageRepository).updatePageTitles(anyCollection());
-        verify(indexablePageRepository).insertPages(anyCollection());
-        verify(indexablePageRepository).updateReplacements(anyCollection());
-        verify(indexablePageRepository).insertReplacements(anyCollection());
-        verify(indexablePageRepository).deleteReplacements(anyCollection());
+        verify(pageRepository).updatePageTitles(anyCollection());
+        verify(pageRepository).insertPages(anyCollection());
+        verify(pageRepository).updateReplacements(anyCollection());
+        verify(pageRepository).insertReplacements(anyCollection());
+        verify(pageRepository).deleteReplacements(anyCollection());
     }
 }

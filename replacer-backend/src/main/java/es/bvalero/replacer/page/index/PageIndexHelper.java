@@ -1,8 +1,6 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.page.repository.IndexablePage;
-import es.bvalero.replacer.page.repository.IndexablePageRepository;
-import es.bvalero.replacer.page.repository.IndexableReplacement;
+import es.bvalero.replacer.page.repository.PageRepository;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class PageIndexHelper {
 
     @Autowired
-    private IndexablePageRepository indexablePageRepository;
+    private PageRepository pageRepository;
 
     /**
      * Compare the given found replacements in a page with the given ones in the database.

@@ -12,12 +12,13 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
+import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.PageIndexHelper;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexResultSaver;
-import es.bvalero.replacer.page.repository.IndexablePage;
-import es.bvalero.replacer.page.repository.IndexablePageRepository;
-import es.bvalero.replacer.page.repository.IndexableReplacement;
+import es.bvalero.replacer.page.repository.PageModel;
+import es.bvalero.replacer.page.repository.PageRepository;
+import es.bvalero.replacer.page.repository.ReplacementModel;
 import es.bvalero.replacer.page.validate.PageValidator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,7 +49,7 @@ class DumpPageProcessorTest {
     private PageValidator pageValidator;
 
     @Mock
-    private IndexablePageRepository indexablePageRepository;
+    private PageRepository pageRepository;
 
     @Mock
     private PageIndexResultSaver pageIndexResultSaver;
@@ -79,7 +80,7 @@ class DumpPageProcessorTest {
 
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
 
-        verify(indexablePageRepository).findByPageId(dumpPageId);
+        verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(replacementFinderService).find(any(FinderPage.class));
         verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class), isNull());
@@ -88,7 +89,7 @@ class DumpPageProcessorTest {
 
     @Test
     void testProcessNewPageWithReplacements() throws ReplacerException {
-        when(indexablePageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
+        when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
 
         Replacement replacement = Replacement
             .builder()
@@ -108,7 +109,7 @@ class DumpPageProcessorTest {
 
         assertEquals(DumpPageProcessorResult.PAGE_PROCESSED, result);
 
-        verify(indexablePageRepository).findByPageId(dumpPageId);
+        verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(replacementFinderService).find(any(FinderPage.class));
         verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class), isNull());
@@ -117,7 +118,7 @@ class DumpPageProcessorTest {
 
     @Test
     void testPageNotProcessable() throws ReplacerException {
-        when(indexablePageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
+        when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
 
         doThrow(ReplacerException.class).when(pageValidator).validateProcessable(any(WikipediaPage.class));
 
@@ -125,7 +126,7 @@ class DumpPageProcessorTest {
 
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSABLE, result);
 
-        verify(indexablePageRepository).findByPageId(dumpPageId);
+        verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexHelper, never()).indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
@@ -136,28 +137,30 @@ class DumpPageProcessorTest {
     void testPageNotProcessedByTimestamp() throws ReplacerException {
         // The page exists in DB but has been updated after the dump
         LocalDate updated = dumpPage.getLastUpdate().toLocalDate().plusDays(1);
-        IndexableReplacement dbReplacement = IndexableReplacement
+        ReplacementModel dbReplacement = ReplacementModel
             .builder()
-            .indexablePageId(dumpPageId)
+            .lang(dumpPageId.getLang())
+            .pageId(dumpPageId.getPageId())
             .type("")
             .subtype("")
             .position(0)
             .context("")
             .lastUpdate(updated)
             .build();
-        IndexablePage dbPage = IndexablePage
+        PageModel dbPage = PageModel
             .builder()
-            .id(dumpPageId)
+            .lang(dumpPageId.getLang())
+            .pageId(dumpPageId.getPageId())
             .title(dumpPage.getTitle()) // The title must match so the page is not processed
             .replacements(List.of(dbReplacement))
             .build();
-        when(indexablePageRepository.findByPageId(dumpPageId)).thenReturn(Optional.of(dbPage));
+        when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.of(dbPage));
 
         DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
 
-        verify(indexablePageRepository).findByPageId(dumpPageId);
+        verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexHelper, never()).indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
@@ -168,7 +171,7 @@ class DumpPageProcessorTest {
     void testFinish() {
         dumpPageProcessor.finish(WikipediaLanguage.getDefault());
 
-        verify(indexablePageRepository).resetCache();
+        verify(pageRepository).resetCache();
         verify(pageIndexResultSaver).forceSave();
     }
 }

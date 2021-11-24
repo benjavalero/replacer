@@ -1,6 +1,5 @@
-package es.bvalero.replacer.page.repository;
+package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.time.LocalDate;
 import java.util.List;
@@ -14,7 +13,6 @@ import org.springframework.lang.Nullable;
 @Builder
 public class IndexablePage {
 
-    // TODO: There should exist a FK in DB
     @NonNull
     WikipediaPageId id;
 
@@ -29,14 +27,4 @@ public class IndexablePage {
 
     @NonNull
     List<IndexableReplacement> replacements;
-
-    /* Named parameters to make easier the JDBC queries */
-
-    public WikipediaLanguage getLang() {
-        return this.id.getLang();
-    }
-
-    public Integer getPageId() {
-        return this.id.getPageId();
-    }
 }

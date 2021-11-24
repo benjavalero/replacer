@@ -8,12 +8,8 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.page.index.PageIndexHelper;
-import es.bvalero.replacer.page.index.PageIndexResult;
-import es.bvalero.replacer.page.index.PageIndexResultSaver;
-import es.bvalero.replacer.page.repository.IndexablePage;
-import es.bvalero.replacer.page.repository.IndexablePageRepository;
-import es.bvalero.replacer.page.repository.IndexableReplacement;
+import es.bvalero.replacer.page.index.*;
+import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -39,8 +35,8 @@ class DumpPageProcessor {
     private PageValidator pageValidator;
 
     @Autowired
-    @Qualifier("indexablePageCacheRepository")
-    private IndexablePageRepository indexablePageRepository;
+    @Qualifier("pageCacheRepository")
+    private PageRepository pageRepository;
 
     @Autowired
     private PageIndexResultSaver pageIndexResultSaver;
@@ -54,8 +50,10 @@ class DumpPageProcessor {
     @Loggable(prepend = true, value = Loggable.TRACE)
     DumpPageProcessorResult process(DumpPage dumpPage) {
         // In all cases we find the current status of the page in the DB
-        Optional<IndexablePage> dbPage = indexablePageRepository.findByPageId(
-            WikipediaPageId.of(dumpPage.getLang(), dumpPage.getId())
+        Optional<IndexablePage> dbPage = Optional.ofNullable(
+            IndexablePageMapper.fromModel(
+                pageRepository.findByPageId(WikipediaPageId.of(dumpPage.getLang(), dumpPage.getId())).orElse(null)
+            )
         );
 
         // Check if it is processable (by namespace)
@@ -163,6 +161,6 @@ class DumpPageProcessor {
 
     void finish(WikipediaLanguage lang) {
         pageIndexResultSaver.forceSave();
-        indexablePageRepository.resetCache();
+        pageRepository.resetCache();
     }
 }
