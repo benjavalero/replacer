@@ -69,7 +69,7 @@ class DumpSaxHandler extends DefaultHandler {
         this.running = false;
         this.end = LocalDateTime.now();
 
-        this.dumpPageProcessor.finish(lang);
+        this.dumpPageProcessor.finish();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
@@ -159,7 +158,7 @@ class DumpPageProcessor {
             .build();
     }
 
-    void finish(WikipediaLanguage lang) {
+    void finish() {
         pageIndexResultSaver.forceSave();
         pageRepository.resetCache();
     }

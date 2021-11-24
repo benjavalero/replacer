@@ -169,7 +169,7 @@ class DumpPageProcessorTest {
 
     @Test
     void testFinish() {
-        dumpPageProcessor.finish(WikipediaLanguage.getDefault());
+        dumpPageProcessor.finish();
 
         verify(pageRepository).resetCache();
         verify(pageIndexResultSaver).forceSave();
