@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,67 +32,6 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private PageDao pageDao;
-
-    ///// CRUD
-
-    @Override
-    public void insert(List<ReplacementEntity> entityList) {
-        this.insertUpdatePages(entityList);
-
-        final String sql =
-            "INSERT INTO replacement (article_id, lang, type, subtype, position, context, last_update, reviewer) " +
-            "VALUES (:pageId, :lang, :type, :subtype, :position, :context, :lastUpdate, :reviewer)";
-        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(entityList.toArray());
-        jdbcTemplate.batchUpdate(sql, namedParameters);
-    }
-
-    private void insertUpdatePages(List<ReplacementEntity> entityList) {
-        entityList
-            .stream()
-            .map(r -> PageEntity.of(r.getLang(), r.getPageId(), r.getTitle()))
-            .distinct()
-            .forEach(p -> pageDao.insertUpdatePage(p));
-    }
-
-    @Override
-    public void update(ReplacementEntity entity) {
-        final String sql =
-            "UPDATE replacement " +
-            "SET position=:position, context=:context, last_update=:lastUpdate " +
-            "WHERE id=:id";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(entity);
-        jdbcTemplate.update(sql, namedParameters);
-    }
-
-    @Override
-    public void update(List<ReplacementEntity> entityList) {
-        this.insertUpdatePages(entityList);
-
-        final String sql =
-            "UPDATE replacement " +
-            "SET position=:position, context=:context, last_update=:lastUpdate " +
-            "WHERE id=:id";
-        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(entityList.toArray());
-        jdbcTemplate.batchUpdate(sql, namedParameters);
-    }
-
-    @Override
-    public void updateDate(List<ReplacementEntity> entityList) {
-        final String sql = "UPDATE replacement SET last_update=:lastUpdate WHERE id=:id";
-        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(entityList.toArray());
-        jdbcTemplate.batchUpdate(sql, namedParameters);
-    }
-
-    @Override
-    public void delete(List<ReplacementEntity> entityList) {
-        String sql = "DELETE FROM replacement WHERE id IN (:ids)";
-        Set<Long> ids = entityList.stream().map(ReplacementEntity::getId).collect(Collectors.toSet());
-        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
-        jdbcTemplate.update(sql, namedParameters);
-    }
 
     ///// PAGE REVIEW
 

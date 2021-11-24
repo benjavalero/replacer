@@ -6,18 +6,6 @@ import java.util.Set;
 import org.springframework.data.domain.Pageable;
 
 public interface ReplacementDao {
-    ///// CRUD
-
-    void insert(List<ReplacementEntity> entityList);
-
-    void update(ReplacementEntity entity);
-
-    void update(List<ReplacementEntity> entityList);
-
-    void updateDate(List<ReplacementEntity> entityList);
-
-    void delete(List<ReplacementEntity> entityList);
-
     ///// PAGE REVIEW
 
     long findRandomIdToBeReviewed(WikipediaLanguage lang, long chunkSize);
