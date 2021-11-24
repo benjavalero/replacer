@@ -1,18 +1,17 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.page.repository.PageRepository;
 import java.util.*;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-/** Util class to compare two indexable pages and return the set of changes to apply in database */
+/**
+ * Helper class to compare two indexable pages and return the set of changes to apply in database.
+ *
+ * For the sake of the tests, we define it as a component, so it can be easily mocked.
+ */
 @Component
 public class PageIndexHelper {
-
-    @Autowired
-    private PageRepository pageRepository;
 
     /**
      * Compare the given found replacements in a page with the given ones in the database.
