@@ -61,9 +61,16 @@ class DumpPageProcessor {
             pageValidator.validateProcessable(wikipediaPage);
         } catch (ReplacerException e) {
             // If the page is not processable then it should not exist in DB
-            if (dbPage.isPresent()) {
-                LOGGER.error("Unexpected page in DB not processable: {} - {}", dumpPage.getLang(), dumpPage.getTitle());
-            }
+            dbPage.ifPresent(
+                dbIndexablePage -> {
+                    LOGGER.error(
+                        "Unexpected page in DB not processable: {} - {}",
+                        dumpPage.getLang(),
+                        dumpPage.getTitle()
+                    );
+                    pageIndexer.indexObsoletePage(dbIndexablePage, true);
+                }
+            );
             return DumpPageProcessorResult.PAGE_NOT_PROCESSABLE;
         }
 

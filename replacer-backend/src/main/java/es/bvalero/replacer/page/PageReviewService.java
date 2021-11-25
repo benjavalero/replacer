@@ -2,7 +2,6 @@ package es.bvalero.replacer.page;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.domain.WikipediaPageSection;
@@ -168,7 +167,7 @@ abstract class PageReviewService {
             }
 
             // We get here if the page is not found or not processable
-            indexObsoletePage(options.getLang(), pageId);
+            pageIndexer.indexObsoletePage(wikipediaPageId);
         } catch (ReplacerException e) {
             LOGGER.error("Error finding page in Wikipedia for {} - {}", options.getLang(), pageId, e);
         }
@@ -195,12 +194,6 @@ abstract class PageReviewService {
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .replacements(replacements.stream().map(r -> convertToIndexable(r, page)).collect(Collectors.toList()))
             .build();
-    }
-
-    private void indexObsoletePage(WikipediaLanguage lang, int pageId) {
-        // Force index to delete the page from database
-        findDbReplacements(WikipediaPageId.of(lang, pageId))
-            .ifPresent(dbPage -> pageIndexer.indexPageReplacements(null, dbPage));
     }
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
