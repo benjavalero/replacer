@@ -1,18 +1,22 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.page.repository.ReplacementModel;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 class IndexableReplacementMapper {
 
-    static List<ReplacementModel> toModel(Collection<IndexableReplacement> replacements) {
+    List<ReplacementModel> toModel(Collection<IndexableReplacement> replacements) {
         return replacements.stream().map(IndexableReplacementMapper::toModel).collect(Collectors.toUnmodifiableList());
     }
 
-    private static ReplacementModel toModel(IndexableReplacement replacement) {
+    private ReplacementModel toModel(IndexableReplacement replacement) {
         return ReplacementModel
             .builder()
             .id(replacement.getId())
@@ -27,14 +31,14 @@ class IndexableReplacementMapper {
             .build();
     }
 
-    static List<IndexableReplacement> fromModel(Collection<ReplacementModel> replacements) {
+    List<IndexableReplacement> fromModel(Collection<ReplacementModel> replacements) {
         return replacements
             .stream()
             .map(IndexableReplacementMapper::fromModel)
             .collect(Collectors.toUnmodifiableList());
     }
 
-    private static IndexableReplacement fromModel(ReplacementModel replacement) {
+    private IndexableReplacement fromModel(ReplacementModel replacement) {
         return IndexableReplacement
             .builder()
             .id(replacement.getId())
@@ -45,6 +49,18 @@ class IndexableReplacementMapper {
             .context(replacement.getContext())
             .lastUpdate(replacement.getLastUpdate())
             .reviewer(replacement.getReviewer())
+            .build();
+    }
+
+    IndexableReplacement fromDomain(Replacement replacement, WikipediaPage page) {
+        return IndexableReplacement
+            .builder()
+            .indexablePageId(page.getId())
+            .type(replacement.getType().getLabel())
+            .subtype(replacement.getSubtype())
+            .position(replacement.getStart())
+            .context(replacement.getContext(page.getContent()))
+            .lastUpdate(page.getLastUpdate().toLocalDate())
             .build();
     }
 }
