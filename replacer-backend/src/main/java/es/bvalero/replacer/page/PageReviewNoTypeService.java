@@ -1,9 +1,11 @@
 package es.bvalero.replacer.page;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.replacement.ReplacementService;
+import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +42,13 @@ class PageReviewNoTypeService extends PageReviewService {
     List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         List<Replacement> replacements = replacementFinderService.find(convertToFinderPage(page));
 
-        // We take profit and we update the database with the just calculated replacements (also when empty)
-        indexReplacements(page, replacements);
+        // We take profit, and we update the database with the just calculated replacements (also when empty).
+        try {
+            indexReplacements(page, replacements);
+        } catch (ReplacerException e) {
+            // Page not processable
+            return Collections.emptyList();
+        }
 
         return replacements;
     }

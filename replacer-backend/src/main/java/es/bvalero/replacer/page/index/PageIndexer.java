@@ -38,6 +38,23 @@ public class PageIndexer {
      * Throws a custom exception in case the page is not processable.
      */
     public boolean indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage) throws ReplacerException {
+        validatePage(page, dbPage);
+
+        List<Replacement> replacements = replacementFinderService.find(FinderPageMapper.fromDomain(page));
+        return indexPageReplacements(IndexablePageMapper.fromDomain(page, replacements), dbPage, true);
+    }
+
+    /** Index a page and its replacements. Details in database (if any) will be calculated. */
+    public void indexPageReplacements(WikipediaPage page, Collection<Replacement> replacements)
+        throws ReplacerException {
+        IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
+        IndexablePage dbPage = findIndexablePageInDb(page.getId()).orElse(null);
+
+        validatePage(page, dbPage);
+        indexPageReplacements(indexablePage, dbPage, false);
+    }
+
+    private void validatePage(WikipediaPage page, @Nullable IndexablePage dbPage) throws ReplacerException {
         // Check if it is processable (by namespace)
         // Redirection pages are now considered processable but discarded when finding immutables
         try {
@@ -55,16 +72,6 @@ public class PageIndexer {
             }
             throw e;
         }
-
-        List<Replacement> replacements = replacementFinderService.find(FinderPageMapper.fromDomain(page));
-        return indexPageReplacements(IndexablePageMapper.fromDomain(page, replacements), dbPage, true);
-    }
-
-    /** Index a page and its replacements. Details in database (if any) will be calculated. */
-    public void indexPageReplacements(WikipediaPage page, Collection<Replacement> replacements) {
-        IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
-        IndexablePage dbPage = findIndexablePageInDb(page.getId()).orElse(null);
-        indexPageReplacements(indexablePage, dbPage, false);
     }
 
     private Optional<IndexablePage> findIndexablePageInDb(WikipediaPageId pageId) {

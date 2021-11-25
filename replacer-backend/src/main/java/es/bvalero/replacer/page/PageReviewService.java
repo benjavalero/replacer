@@ -10,7 +10,6 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Collections;
@@ -53,9 +52,6 @@ abstract class PageReviewService {
 
     @Autowired
     private SectionReviewService sectionReviewService;
-
-    @Autowired
-    private PageValidator pageValidator;
 
     Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
         // Retrieve an ID of a potential page to be replaced
@@ -146,36 +142,16 @@ abstract class PageReviewService {
             WikipediaPageId wikipediaPageId = WikipediaPageId.of(options.getLang(), pageId);
             Optional<WikipediaPage> page = wikipediaService.getPageById(wikipediaPageId);
             if (page.isPresent()) {
-                if (validatePage(page.get())) {
-                    LOGGER.debug(
-                        "Found Wikipedia page: {} - {} => {}",
-                        options.getLang(),
-                        page.get().getId(),
-                        page.get().getTitle()
-                    );
-                    return page;
-                }
+                return page;
             } else {
                 LOGGER.warn("No page found in Wikipedia for {}", wikipediaPageId);
+                pageIndexer.indexObsoletePage(wikipediaPageId);
             }
-
-            // We get here if the page is not found or not processable
-            pageIndexer.indexObsoletePage(wikipediaPageId);
         } catch (ReplacerException e) {
             LOGGER.error("Error finding page in Wikipedia for {} - {}", options.getLang(), pageId, e);
         }
 
         return Optional.empty();
-    }
-
-    private boolean validatePage(WikipediaPage page) {
-        try {
-            pageValidator.validateProcessable(page);
-            return true;
-        } catch (ReplacerException e) {
-            LOGGER.warn("{} - {} - {}", e.getMessage(), page.getId(), page.getTitle());
-            return false;
-        }
     }
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
@@ -219,7 +195,7 @@ abstract class PageReviewService {
         return FinderPage.of(page.getId().getLang(), page.getContent(), page.getTitle());
     }
 
-    void indexReplacements(WikipediaPage page, List<Replacement> replacements) {
+    void indexReplacements(WikipediaPage page, List<Replacement> replacements) throws ReplacerException {
         LOGGER.trace("Update page replacements in database");
         pageIndexer.indexPageReplacements(page, replacements);
     }

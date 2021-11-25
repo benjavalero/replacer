@@ -13,7 +13,6 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -82,9 +81,6 @@ class PageReviewTypeSubtypeServiceTest {
 
     @Mock
     private SectionReviewService sectionReviewService;
-
-    @Mock
-    private PageValidator pageValidator;
 
     @InjectMocks
     private PageReviewTypeSubtypeService pageReviewTypeSubtypeService;
