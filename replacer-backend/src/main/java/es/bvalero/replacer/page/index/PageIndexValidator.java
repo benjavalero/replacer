@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.validate;
+package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * and thus they are not known until the application is running.
  */
 @Component
-public class PageValidator {
+public class PageIndexValidator {
 
     @Value("${replacer.processable.namespaces}")
     private Set<Integer> processableNamespaces;

@@ -7,7 +7,6 @@ import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.page.repository.PageRepository;
-import es.bvalero.replacer.page.validate.PageValidator;
 import java.time.LocalDate;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class PageIndexer {
 
     @Autowired
-    private PageValidator pageValidator;
+    private PageIndexValidator pageIndexValidator;
 
     @Autowired
     private PageRepository pageRepository;
@@ -58,7 +57,7 @@ public class PageIndexer {
         // Check if it is processable (by namespace)
         // Redirection pages are now considered processable but discarded when finding immutables
         try {
-            pageValidator.validateProcessable(page);
+            pageIndexValidator.validateProcessable(page);
         } catch (ReplacerException e) {
             // If the page is not processable then it should not exist in DB
             if (dbPage != null) {
