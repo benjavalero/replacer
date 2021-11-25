@@ -1,7 +1,12 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.finder.FinderPageMapper;
+import es.bvalero.replacer.finder.replacement.Replacement;
+import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.page.repository.PageRepository;
+import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -15,13 +20,21 @@ public class PageIndexer {
     private PageRepository pageRepository;
 
     @Autowired
+    private ReplacementFinderService replacementFinderService;
+
+    @Autowired
     private PageIndexResultSaver pageIndexResultSaver;
+
+    public boolean indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage) {
+        List<Replacement> replacements = replacementFinderService.find(FinderPageMapper.fromDomain(page));
+        return indexPageReplacements(IndexablePageMapper.fromDomain(page, replacements), dbPage, true);
+    }
 
     public void indexPageReplacements(@Nullable IndexablePage page, @Nullable IndexablePage dbPage) {
         indexPageReplacements(page, dbPage, false);
     }
 
-    public boolean indexPageReplacements(
+    private boolean indexPageReplacements(
         @Nullable IndexablePage page,
         @Nullable IndexablePage dbPage,
         boolean batchSave

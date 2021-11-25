@@ -2,21 +2,14 @@ package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.IndexablePageMapper;
-import es.bvalero.replacer.page.index.IndexableReplacement;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,33 +33,29 @@ class DumpPageProcessor {
     private PageRepository pageRepository;
 
     @Autowired
-    private ReplacementFinderService replacementFinderService;
-
-    @Autowired
     private PageIndexer pageIndexer;
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     DumpPageProcessorResult process(DumpPage dumpPage) {
+        WikipediaPage page = DumpPageMapper.toDomain(dumpPage);
+
         // In all cases we find the current status of the page in the DB
         Optional<IndexablePage> dbPage = Optional.ofNullable(
-            IndexablePageMapper.fromModel(
-                pageRepository.findByPageId(WikipediaPageId.of(dumpPage.getLang(), dumpPage.getId())).orElse(null)
-            )
+            IndexablePageMapper.fromModel(pageRepository.findByPageId(page.getId()).orElse(null))
         );
 
         // Check if it is processable (by namespace)
         // Redirection pages are now considered processable but discarded when finding immutables
-        WikipediaPage wikipediaPage = DumpPageMapper.toDomain(dumpPage);
         try {
-            pageValidator.validateProcessable(wikipediaPage);
+            pageValidator.validateProcessable(page);
         } catch (ReplacerException e) {
             // If the page is not processable then it should not exist in DB
             dbPage.ifPresent(
                 dbIndexablePage -> {
                     LOGGER.error(
                         "Unexpected page in DB not processable: {} - {}",
-                        dumpPage.getLang(),
-                        dumpPage.getTitle()
+                        page.getId().getLang(),
+                        page.getTitle()
                     );
                     pageIndexer.indexObsoletePage(dbIndexablePage, true);
                 }
@@ -76,7 +65,7 @@ class DumpPageProcessor {
 
         // Find the replacements to index and process the page
         try {
-            return processPage(dumpPage, dbPage.orElse(null));
+            return processPage(page, dbPage.orElse(null));
         } catch (Exception e) {
             // Just in case capture possible exceptions to continue processing other pages
             LOGGER.error("Page not processed: {}", dumpPage, e);
@@ -84,75 +73,42 @@ class DumpPageProcessor {
         }
     }
 
-    private DumpPageProcessorResult processPage(DumpPage dumpPage, @Nullable IndexablePage dbPage) {
+    private DumpPageProcessorResult processPage(WikipediaPage page, @Nullable IndexablePage dbPage) {
         // Check if the last process of the page is after the dump generation, so we can skip it.
         Optional<LocalDate> dbLastUpdate = dbPage == null
             ? Optional.empty()
             : Optional.ofNullable(dbPage.getLastUpdate());
         if (
             dbLastUpdate.isPresent() &&
-            isNotProcessableByTimestamp(dumpPage, dbLastUpdate.get()) &&
-            isNotProcessableByPageTitle(dumpPage, dbPage)
+            isNotProcessableByTimestamp(page, dbLastUpdate.get()) &&
+            isNotProcessableByPageTitle(page, dbPage)
         ) {
             LOGGER.trace(
                 "Page not processable by date: {}. Dump date: {}. DB date: {}",
-                dumpPage.getTitle(),
-                dumpPage.getLastUpdate(),
+                page.getTitle(),
+                page.getLastUpdate(),
                 dbLastUpdate
             );
             return DumpPageProcessorResult.PAGE_NOT_PROCESSED;
         }
 
-        // Find the replacements in the dump page content
-        List<Replacement> replacements = replacementFinderService.find(convertToFinder(dumpPage));
-
         // Index the found replacements against the ones in DB (if any)
-        boolean pageProcessed = pageIndexer.indexPageReplacements(
-            convertToIndexable(dumpPage, replacements),
-            dbPage,
-            true
-        );
+        boolean pageProcessed = pageIndexer.indexPageReplacements(page, dbPage);
 
         return pageProcessed ? DumpPageProcessorResult.PAGE_PROCESSED : DumpPageProcessorResult.PAGE_NOT_PROCESSED;
     }
 
-    private boolean isNotProcessableByTimestamp(DumpPage dumpPage, LocalDate dbDate) {
+    private boolean isNotProcessableByTimestamp(WikipediaPage page, LocalDate dbDate) {
         // If page modified in dump equals to the last indexing, reprocess always.
         // If page modified in dump after last indexing, reprocess always.
         // If page modified in dump before last indexing, do not reprocess.
-        return dumpPage.getLastUpdate().toLocalDate().isBefore(dbDate);
+        return page.getLastUpdate().toLocalDate().isBefore(dbDate);
     }
 
-    private boolean isNotProcessableByPageTitle(DumpPage dumpPage, @Nullable IndexablePage dbPage) {
+    private boolean isNotProcessableByPageTitle(WikipediaPage page, @Nullable IndexablePage dbPage) {
         // In case the page title has changed we force the page processing
         String dbPageTitle = dbPage == null ? null : dbPage.getTitle();
-        return dumpPage.getTitle().equals(dbPageTitle);
-    }
-
-    private FinderPage convertToFinder(DumpPage page) {
-        return FinderPage.of(page.getLang(), page.getContent(), page.getTitle());
-    }
-
-    private IndexablePage convertToIndexable(DumpPage dumpPage, List<Replacement> replacements) {
-        return IndexablePage
-            .builder()
-            .id(WikipediaPageId.of(dumpPage.getLang(), dumpPage.getId()))
-            .title(dumpPage.getTitle())
-            .lastUpdate(dumpPage.getLastUpdate().toLocalDate())
-            .replacements(replacements.stream().map(r -> convertToIndexable(r, dumpPage)).collect(Collectors.toList()))
-            .build();
-    }
-
-    private IndexableReplacement convertToIndexable(Replacement replacement, DumpPage page) {
-        return IndexableReplacement
-            .builder()
-            .indexablePageId(WikipediaPageId.of(page.getLang(), page.getId()))
-            .type(replacement.getType().getLabel())
-            .subtype(replacement.getSubtype())
-            .position(replacement.getStart())
-            .context(replacement.getContext(page.getContent()))
-            .lastUpdate(page.getLastUpdate().toLocalDate())
-            .build();
+        return page.getTitle().equals(dbPageTitle);
     }
 
     void finish() {

@@ -8,10 +8,6 @@ import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.page.repository.PageModel;
@@ -48,9 +44,6 @@ class DumpPageProcessorTest {
     private PageRepository pageRepository;
 
     @Mock
-    private ReplacementFinderService replacementFinderService;
-
-    @Mock
     private PageIndexer pageIndexer;
 
     @InjectMocks
@@ -66,7 +59,7 @@ class DumpPageProcessorTest {
     void testEmptyPageIndexResult() throws ReplacerException {
         // There is no need to mock the rest of calls
         // The DB page is null as we are not mocking the response from the findByPageId
-        when(pageIndexer.indexPageReplacements(any(IndexablePage.class), isNull(), eq(true))).thenReturn(false);
+        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull())).thenReturn(false);
 
         DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
@@ -74,25 +67,15 @@ class DumpPageProcessorTest {
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
-        verify(replacementFinderService).find(any(FinderPage.class));
-        verify(pageIndexer).indexPageReplacements(any(IndexablePage.class), isNull(), eq(true));
+        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull());
     }
 
     @Test
     void testProcessNewPageWithReplacements() throws ReplacerException {
         when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
 
-        Replacement replacement = Replacement
-            .builder()
-            .start(0)
-            .text("")
-            .type(ReplacementType.MISSPELLING_SIMPLE)
-            .subtype("")
-            .build();
-        when(replacementFinderService.find(any(FinderPage.class))).thenReturn(List.of(replacement));
-
         // No need in this test to build the index result as it would be in the reality with the replacements
-        when(pageIndexer.indexPageReplacements(any(IndexablePage.class), isNull(), eq(true))).thenReturn(true);
+        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull())).thenReturn(true);
 
         DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
@@ -100,8 +83,7 @@ class DumpPageProcessorTest {
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
-        verify(replacementFinderService).find(any(FinderPage.class));
-        verify(pageIndexer).indexPageReplacements(any(IndexablePage.class), isNull(), eq(true));
+        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull());
     }
 
     @Test
@@ -116,7 +98,6 @@ class DumpPageProcessorTest {
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
-        verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexer, never()).indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
     }
 
@@ -149,7 +130,6 @@ class DumpPageProcessorTest {
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
-        verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexer, never()).indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
     }
 
