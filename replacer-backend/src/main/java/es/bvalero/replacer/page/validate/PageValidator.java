@@ -2,7 +2,6 @@ package es.bvalero.replacer.page.validate;
 
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -30,13 +29,13 @@ public class PageValidator {
     }
 
     // Throw an exception instead of returning a boolean to capture the cause
-    public void validateProcessable(WikipediaPage page) throws ReplacerException {
+    public void validateProcessable(WikipediaPage page) throws PageNotProcessableException {
         validateProcessableByNamespace(page);
         // Validation by content to find redirections is not done here anymore
         // but as an immutable covering the whole content
     }
 
-    private void validateProcessableByNamespace(WikipediaPage page) throws ReplacerException {
+    private void validateProcessableByNamespace(WikipediaPage page) throws PageNotProcessableException {
         if (!processableWikipediaNamespaces.contains(page.getNamespace())) {
             throw new PageNotProcessableException("Page not processable by namespace: " + page.getNamespace());
         }

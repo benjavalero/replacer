@@ -7,7 +7,6 @@ import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.IndexablePageMapper;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.page.repository.PageRepository;
-import es.bvalero.replacer.page.validate.PageValidator;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ import org.springframework.stereotype.Component;
 class DumpPageProcessor {
 
     @Autowired
-    private PageValidator pageValidator;
-
-    @Autowired
     @Qualifier("pageCacheRepository")
     private PageRepository pageRepository;
 
@@ -43,25 +39,6 @@ class DumpPageProcessor {
             IndexablePageMapper.fromModel(pageRepository.findByPageId(page.getId()).orElse(null))
         );
 
-        // Check if it is processable (by namespace)
-        // Redirection pages are now considered processable but discarded when finding immutables
-        try {
-            pageValidator.validateProcessable(page);
-        } catch (ReplacerException e) {
-            // If the page is not processable then it should not exist in DB
-            dbPage.ifPresent(
-                dbIndexablePage -> {
-                    LOGGER.error(
-                        "Unexpected page in DB not processable: {} - {}",
-                        page.getId().getLang(),
-                        page.getTitle()
-                    );
-                    pageIndexer.indexObsoletePage(dbIndexablePage, true);
-                }
-            );
-            return DumpPageProcessorResult.PAGE_NOT_PROCESSABLE;
-        }
-
         // Find the replacements to index and process the page
         try {
             return processPage(page, dbPage.orElse(null));
@@ -74,7 +51,21 @@ class DumpPageProcessor {
 
     private DumpPageProcessorResult processPage(WikipediaPage page, @Nullable IndexablePage dbPage) {
         // Index the found replacements against the ones in DB (if any)
-        boolean pageProcessed = pageIndexer.indexPageReplacements(page, dbPage);
+        boolean pageProcessed;
+        try {
+            pageProcessed = pageIndexer.indexPageReplacements(page, dbPage);
+        } catch (ReplacerException e) {
+            // If the page is not processable then it should not exist in DB
+            if (dbPage != null) {
+                LOGGER.error(
+                    "Unexpected page in DB not processable: {} - {} - {}",
+                    page.getId().getLang(),
+                    page.getTitle(),
+                    dbPage.getTitle()
+                );
+            }
+            return DumpPageProcessorResult.PAGE_NOT_PROCESSABLE;
+        }
 
         return pageProcessed ? DumpPageProcessorResult.PAGE_PROCESSED : DumpPageProcessorResult.PAGE_NOT_PROCESSED;
     }

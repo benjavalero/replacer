@@ -13,7 +13,6 @@ import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.page.repository.PageModel;
 import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.repository.ReplacementModel;
-import es.bvalero.replacer.page.validate.PageValidator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,9 +35,6 @@ class DumpPageProcessorTest {
         .lastUpdate(LocalDateTime.now())
         .build();
     private final WikipediaPageId dumpPageId = WikipediaPageId.of(dumpPage.getLang(), dumpPage.getId());
-
-    @Mock
-    private PageValidator pageValidator;
 
     @Mock
     private PageRepository pageRepository;
@@ -67,7 +63,6 @@ class DumpPageProcessorTest {
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
 
         verify(pageRepository).findByPageId(dumpPageId);
-        verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
     }
 
@@ -83,7 +78,6 @@ class DumpPageProcessorTest {
         assertEquals(DumpPageProcessorResult.PAGE_PROCESSED, result);
 
         verify(pageRepository).findByPageId(dumpPageId);
-        verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
     }
 
@@ -91,15 +85,16 @@ class DumpPageProcessorTest {
     void testPageNotProcessable() throws ReplacerException {
         when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
 
-        doThrow(ReplacerException.class).when(pageValidator).validateProcessable(any(WikipediaPage.class));
+        doThrow(ReplacerException.class)
+            .when(pageIndexer)
+            .indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
 
         DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSABLE, result);
 
         verify(pageRepository).findByPageId(dumpPageId);
-        verify(pageValidator).validateProcessable(any(WikipediaPage.class));
-        verify(pageIndexer, never()).indexPageReplacements(any(WikipediaPage.class), any(IndexablePage.class));
+        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
     }
 
     @Test
@@ -130,7 +125,6 @@ class DumpPageProcessorTest {
         assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
 
         verify(pageRepository).findByPageId(dumpPageId);
-        verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), any(IndexablePage.class));
     }
 

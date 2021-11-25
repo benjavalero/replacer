@@ -2,19 +2,26 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.page.repository.PageRepository;
+import es.bvalero.replacer.page.validate.PageValidator;
 import java.time.LocalDate;
 import java.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /** Index a page: calculate its replacements and update the related replacements in DB accordingly */
+@Slf4j
 @Component
 public class PageIndexer {
+
+    @Autowired
+    private PageValidator pageValidator;
 
     @Autowired
     private PageRepository pageRepository;
@@ -28,8 +35,27 @@ public class PageIndexer {
     /**
      * Index a page against its details in database (if any). Current replacements will be calculated.
      * Returns if changes are performed in database due to the page indexing.
+     * Throws a custom exception in case the page is not processable.
      */
-    public boolean indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage) {
+    public boolean indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage) throws ReplacerException {
+        // Check if it is processable (by namespace)
+        // Redirection pages are now considered processable but discarded when finding immutables
+        try {
+            pageValidator.validateProcessable(page);
+        } catch (ReplacerException e) {
+            // If the page is not processable then it should not exist in DB
+            if (dbPage != null) {
+                LOGGER.error(
+                    "Unexpected page in DB not processable: {} - {} - {}",
+                    page.getId().getLang(),
+                    page.getTitle(),
+                    dbPage.getTitle()
+                );
+                indexObsoletePage(dbPage, true);
+            }
+            throw e;
+        }
+
         List<Replacement> replacements = replacementFinderService.find(FinderPageMapper.fromDomain(page));
         return indexPageReplacements(IndexablePageMapper.fromDomain(page, replacements), dbPage, true);
     }
@@ -95,7 +121,7 @@ public class PageIndexer {
         findIndexablePageInDb(pageId).ifPresent(page -> indexObsoletePage(page, false));
     }
 
-    public void indexObsoletePage(IndexablePage dbPage, boolean batchSave) {
+    private void indexObsoletePage(IndexablePage dbPage, boolean batchSave) {
         saveResult(PageIndexResult.builder().deletePages(Set.of(dbPage)).build(), batchSave);
     }
 
