@@ -7,7 +7,10 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.page.index.*;
+import es.bvalero.replacer.page.index.IndexablePage;
+import es.bvalero.replacer.page.index.IndexablePageMapper;
+import es.bvalero.replacer.page.index.IndexableReplacement;
+import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import java.time.LocalDate;
@@ -35,9 +38,6 @@ class DumpPageProcessor {
     @Autowired
     @Qualifier("pageCacheRepository")
     private PageRepository pageRepository;
-
-    @Autowired
-    private PageIndexResultSaver pageIndexResultSaver;
 
     @Autowired
     private ReplacementFinderService replacementFinderService;
@@ -100,18 +100,13 @@ class DumpPageProcessor {
         List<Replacement> replacements = replacementFinderService.find(convertToFinder(dumpPage));
 
         // Index the found replacements against the ones in DB (if any)
-        PageIndexResult pageIndexResult = pageIndexer.indexPageReplacements(
+        boolean pageProcessed = pageIndexer.indexPageReplacements(
             convertToIndexable(dumpPage, replacements),
-            dbPage
+            dbPage,
+            true
         );
-        LOGGER.trace("Replacements to update: {}", pageIndexResult.size());
 
-        if (pageIndexResult.isEmpty()) {
-            return DumpPageProcessorResult.PAGE_NOT_PROCESSED;
-        } else {
-            pageIndexResultSaver.saveBatch(pageIndexResult);
-            return DumpPageProcessorResult.PAGE_PROCESSED;
-        }
+        return pageProcessed ? DumpPageProcessorResult.PAGE_PROCESSED : DumpPageProcessorResult.PAGE_NOT_PROCESSED;
     }
 
     private boolean isNotProcessableByTimestamp(DumpPage dumpPage, LocalDate dbDate) {
@@ -154,7 +149,7 @@ class DumpPageProcessor {
     }
 
     void finish() {
-        pageIndexResultSaver.forceSave();
+        pageIndexer.forceSave();
         pageRepository.resetCache();
     }
 }

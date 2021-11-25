@@ -13,7 +13,6 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.page.index.PageIndexResultSaver;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
@@ -85,9 +84,6 @@ class PageReviewTypeSubtypeServiceTest {
 
     @Mock
     private PageIndexer pageIndexer;
-
-    @Mock
-    private PageIndexResultSaver pageIndexResultSaver;
 
     @Mock
     private SectionReviewService sectionReviewService;

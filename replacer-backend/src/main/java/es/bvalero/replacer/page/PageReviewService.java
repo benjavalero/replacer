@@ -10,7 +10,10 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
-import es.bvalero.replacer.page.index.*;
+import es.bvalero.replacer.page.index.IndexablePage;
+import es.bvalero.replacer.page.index.IndexablePageMapper;
+import es.bvalero.replacer.page.index.IndexableReplacement;
+import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
@@ -55,9 +58,6 @@ abstract class PageReviewService {
 
     @Autowired
     private PageIndexer pageIndexer;
-
-    @Autowired
-    private PageIndexResultSaver pageIndexResultSaver;
 
     @Autowired
     private SectionReviewService sectionReviewService;
@@ -248,8 +248,7 @@ abstract class PageReviewService {
         LOGGER.trace("Update page replacements in database");
         IndexablePage indexablePage = convertToIndexablePage(page, replacements);
         IndexablePage dbPage = findDbReplacements(indexablePage.getId()).orElse(null);
-        PageIndexResult toSave = pageIndexer.indexPageReplacements(indexablePage, dbPage);
-        pageIndexResultSaver.save(toSave);
+        pageIndexer.indexPageReplacements(indexablePage, dbPage);
     }
 
     private IndexableReplacement convertToIndexable(Replacement replacement, WikipediaPage page) {

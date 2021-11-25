@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PageIndexResultSaver {
+class PageIndexResultSaver {
 
     @Autowired
     PageRepository pageRepository;
@@ -22,13 +22,13 @@ public class PageIndexResultSaver {
     private final PageIndexResult batchResult = PageIndexResult.ofEmpty();
 
     /* Save in DB the result of a page indexing no matter the size of the batch */
-    public void save(PageIndexResult pageIndexResult) {
+    void save(PageIndexResult pageIndexResult) {
         this.addResultToBatch(pageIndexResult);
         this.saveBatchResult();
     }
 
     /* Save in DB the results of page indexing when the batch is large enough */
-    public void saveBatch(PageIndexResult pageIndexResult) {
+    void saveBatch(PageIndexResult pageIndexResult) {
         this.addResultToBatch(pageIndexResult);
         if (this.batchResult.size() >= chunkSize) {
             this.saveBatchResult();
@@ -36,7 +36,7 @@ public class PageIndexResultSaver {
     }
 
     /* Force saving what is left on the batch */
-    public void forceSave() {
+    void forceSave() {
         this.saveBatchResult();
     }
 

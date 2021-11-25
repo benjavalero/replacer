@@ -13,8 +13,6 @@ import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.page.index.PageIndexResult;
-import es.bvalero.replacer.page.index.PageIndexResultSaver;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.page.repository.PageModel;
 import es.bvalero.replacer.page.repository.PageRepository;
@@ -22,10 +20,8 @@ import es.bvalero.replacer.page.repository.ReplacementModel;
 import es.bvalero.replacer.page.validate.PageValidator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -52,9 +48,6 @@ class DumpPageProcessorTest {
     private PageRepository pageRepository;
 
     @Mock
-    private PageIndexResultSaver pageIndexResultSaver;
-
-    @Mock
     private ReplacementFinderService replacementFinderService;
 
     @Mock
@@ -73,8 +66,7 @@ class DumpPageProcessorTest {
     void testEmptyPageIndexResult() throws ReplacerException {
         // There is no need to mock the rest of calls
         // The DB page is null as we are not mocking the response from the findByPageId
-        when(pageIndexer.indexPageReplacements(any(IndexablePage.class), isNull()))
-            .thenReturn(PageIndexResult.ofEmpty());
+        when(pageIndexer.indexPageReplacements(any(IndexablePage.class), isNull(), eq(true))).thenReturn(false);
 
         DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
@@ -83,8 +75,7 @@ class DumpPageProcessorTest {
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(replacementFinderService).find(any(FinderPage.class));
-        verify(pageIndexer).indexPageReplacements(any(IndexablePage.class), isNull());
-        verify(pageIndexResultSaver, never()).saveBatch(any(PageIndexResult.class));
+        verify(pageIndexer).indexPageReplacements(any(IndexablePage.class), isNull(), eq(true));
     }
 
     @Test
@@ -101,9 +92,7 @@ class DumpPageProcessorTest {
         when(replacementFinderService.find(any(FinderPage.class))).thenReturn(List.of(replacement));
 
         // No need in this test to build the index result as it would be in the reality with the replacements
-        IndexablePage page = IndexablePage.builder().id(dumpPageId).replacements(Collections.emptyList()).build();
-        PageIndexResult pageIndexResult = PageIndexResult.builder().createPages(Set.of(page)).build();
-        when(pageIndexer.indexPageReplacements(any(IndexablePage.class), isNull())).thenReturn(pageIndexResult);
+        when(pageIndexer.indexPageReplacements(any(IndexablePage.class), isNull(), eq(true))).thenReturn(true);
 
         DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
@@ -112,8 +101,7 @@ class DumpPageProcessorTest {
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(replacementFinderService).find(any(FinderPage.class));
-        verify(pageIndexer).indexPageReplacements(any(IndexablePage.class), isNull());
-        verify(pageIndexResultSaver).saveBatch(pageIndexResult);
+        verify(pageIndexer).indexPageReplacements(any(IndexablePage.class), isNull(), eq(true));
     }
 
     @Test
@@ -130,7 +118,6 @@ class DumpPageProcessorTest {
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexer, never()).indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
-        verify(pageIndexResultSaver, never()).saveBatch(any(PageIndexResult.class));
     }
 
     @Test
@@ -164,7 +151,6 @@ class DumpPageProcessorTest {
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
         verify(replacementFinderService, never()).find(any(FinderPage.class));
         verify(pageIndexer, never()).indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
-        verify(pageIndexResultSaver, never()).saveBatch(any(PageIndexResult.class));
     }
 
     @Test
@@ -172,6 +158,6 @@ class DumpPageProcessorTest {
         dumpPageProcessor.finish();
 
         verify(pageRepository).resetCache();
-        verify(pageIndexResultSaver).forceSave();
+        verify(pageIndexer).forceSave();
     }
 }
