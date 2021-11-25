@@ -7,9 +7,9 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.PageIndexer;
+import es.bvalero.replacer.page.index.PageNotProcessableException;
 import es.bvalero.replacer.page.repository.PageModel;
 import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.repository.ReplacementModel;
@@ -52,7 +52,7 @@ class DumpPageProcessorTest {
     }
 
     @Test
-    void testEmptyPageIndexResult() throws ReplacerException {
+    void testEmptyPageIndexResult() throws PageNotProcessableException {
         // There is no need to mock the rest of calls
         // The DB page is null as we are not mocking the response from the findByPageId
         when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class)))
@@ -67,7 +67,7 @@ class DumpPageProcessorTest {
     }
 
     @Test
-    void testProcessNewPageWithReplacements() throws ReplacerException {
+    void testProcessNewPageWithReplacements() throws PageNotProcessableException {
         when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
 
         // No need in this test to build the index result as it would be in the reality with the replacements
@@ -82,10 +82,10 @@ class DumpPageProcessorTest {
     }
 
     @Test
-    void testPageNotProcessable() throws ReplacerException {
+    void testPageNotProcessable() throws PageNotProcessableException {
         when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
 
-        doThrow(ReplacerException.class)
+        doThrow(PageNotProcessableException.class)
             .when(pageIndexer)
             .indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
 
@@ -98,7 +98,7 @@ class DumpPageProcessorTest {
     }
 
     @Test
-    void testPageNotProcessedByTimestamp() throws ReplacerException {
+    void testPageNotProcessedByTimestamp() throws PageNotProcessableException {
         // The page exists in DB but has been updated after the dump
         LocalDate updated = dumpPage.getLastUpdate().toLocalDate().plusDays(1);
         ReplacementModel dbReplacement = ReplacementModel

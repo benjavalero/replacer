@@ -2,10 +2,10 @@ package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.IndexablePageMapper;
 import es.bvalero.replacer.page.index.PageIndexer;
+import es.bvalero.replacer.page.index.PageNotProcessableException;
 import es.bvalero.replacer.page.repository.PageRepository;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,7 @@ class DumpPageProcessor {
         boolean pageProcessed;
         try {
             pageProcessed = pageIndexer.indexPageReplacements(page, dbPage);
-        } catch (ReplacerException e) {
+        } catch (PageNotProcessableException e) {
             // If the page is not processable then it should not exist in DB
             if (dbPage != null) {
                 LOGGER.error(

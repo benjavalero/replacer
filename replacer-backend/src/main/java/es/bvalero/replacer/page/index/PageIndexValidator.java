@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * and thus they are not known until the application is running.
  */
 @Component
-public class PageIndexValidator {
+class PageIndexValidator {
 
     @Value("${replacer.processable.namespaces}")
     private Set<Integer> processableNamespaces;
@@ -25,11 +25,11 @@ public class PageIndexValidator {
     @PostConstruct
     public void init() {
         this.processableWikipediaNamespaces =
-            processableNamespaces.stream().map(WikipediaNamespace::valueOf).collect(Collectors.toSet());
+            processableNamespaces.stream().map(WikipediaNamespace::valueOf).collect(Collectors.toUnmodifiableSet());
     }
 
     // Throw an exception instead of returning a boolean to capture the cause
-    public void validateProcessable(WikipediaPage page) throws PageNotProcessableException {
+    void validateProcessable(WikipediaPage page) throws PageNotProcessableException {
         validateProcessableByNamespace(page);
         // Validation by content to find redirections is not done here anymore
         // but as an immutable covering the whole content

@@ -2,7 +2,6 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
@@ -36,7 +35,8 @@ public class PageIndexer {
      * Returns if changes are performed in database due to the page indexing.
      * Throws a custom exception in case the page is not processable.
      */
-    public boolean indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage) throws ReplacerException {
+    public boolean indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage)
+        throws PageNotProcessableException {
         validatePage(page, dbPage);
 
         List<Replacement> replacements = replacementFinderService.find(FinderPageMapper.fromDomain(page));
@@ -45,7 +45,7 @@ public class PageIndexer {
 
     /** Index a page and its replacements. Details in database (if any) will be calculated. */
     public void indexPageReplacements(WikipediaPage page, Collection<Replacement> replacements)
-        throws ReplacerException {
+        throws PageNotProcessableException {
         IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
         IndexablePage dbPage = findIndexablePageInDb(page.getId()).orElse(null);
 
@@ -53,12 +53,12 @@ public class PageIndexer {
         indexPageReplacements(indexablePage, dbPage, false);
     }
 
-    private void validatePage(WikipediaPage page, @Nullable IndexablePage dbPage) throws ReplacerException {
+    private void validatePage(WikipediaPage page, @Nullable IndexablePage dbPage) throws PageNotProcessableException {
         // Check if it is processable (by namespace)
         // Redirection pages are now considered processable but discarded when finding immutables
         try {
             pageIndexValidator.validateProcessable(page);
-        } catch (ReplacerException e) {
+        } catch (PageNotProcessableException e) {
             // If the page is not processable then it should not exist in DB
             if (dbPage != null) {
                 LOGGER.error(
