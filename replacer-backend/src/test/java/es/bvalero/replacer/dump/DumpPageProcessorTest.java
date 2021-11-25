@@ -59,7 +59,8 @@ class DumpPageProcessorTest {
     void testEmptyPageIndexResult() throws ReplacerException {
         // There is no need to mock the rest of calls
         // The DB page is null as we are not mocking the response from the findByPageId
-        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull())).thenReturn(false);
+        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class)))
+            .thenReturn(false);
 
         DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
@@ -67,7 +68,7 @@ class DumpPageProcessorTest {
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
-        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull());
+        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
     }
 
     @Test
@@ -75,7 +76,7 @@ class DumpPageProcessorTest {
         when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
 
         // No need in this test to build the index result as it would be in the reality with the replacements
-        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull())).thenReturn(true);
+        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class))).thenReturn(true);
 
         DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
 
@@ -83,7 +84,7 @@ class DumpPageProcessorTest {
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
-        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull());
+        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
     }
 
     @Test
@@ -98,7 +99,7 @@ class DumpPageProcessorTest {
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
-        verify(pageIndexer, never()).indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
+        verify(pageIndexer, never()).indexPageReplacements(any(WikipediaPage.class), any(IndexablePage.class));
     }
 
     @Test
@@ -130,7 +131,7 @@ class DumpPageProcessorTest {
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
-        verify(pageIndexer, never()).indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
+        verify(pageIndexer, never()).indexPageReplacements(any(WikipediaPage.class), any(IndexablePage.class));
     }
 
     @Test

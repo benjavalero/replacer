@@ -9,11 +9,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
-import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.page.index.IndexablePageMapper;
-import es.bvalero.replacer.page.index.IndexableReplacement;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -51,9 +47,6 @@ abstract class PageReviewService {
 
     @Autowired
     private ReplacementService replacementService;
-
-    @Autowired
-    private PageRepository pageRepository;
 
     @Autowired
     private PageIndexer pageIndexer;
@@ -185,17 +178,6 @@ abstract class PageReviewService {
         }
     }
 
-    @VisibleForTesting
-    IndexablePage convertToIndexablePage(WikipediaPage page, List<Replacement> replacements) {
-        return IndexablePage
-            .builder()
-            .id(page.getId())
-            .title(page.getTitle())
-            .lastUpdate(page.getLastUpdate().toLocalDate())
-            .replacements(replacements.stream().map(r -> convertToIndexable(r, page)).collect(Collectors.toList()))
-            .build();
-    }
-
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
         // Find the replacements in the page
         List<Replacement> replacements = findReplacements(page, options);
@@ -239,25 +221,7 @@ abstract class PageReviewService {
 
     void indexReplacements(WikipediaPage page, List<Replacement> replacements) {
         LOGGER.trace("Update page replacements in database");
-        IndexablePage indexablePage = convertToIndexablePage(page, replacements);
-        IndexablePage dbPage = findDbReplacements(indexablePage.getId()).orElse(null);
-        pageIndexer.indexPageReplacements(indexablePage, dbPage);
-    }
-
-    private IndexableReplacement convertToIndexable(Replacement replacement, WikipediaPage page) {
-        return IndexableReplacement
-            .builder()
-            .indexablePageId(page.getId())
-            .type(replacement.getType().getLabel())
-            .subtype(replacement.getSubtype())
-            .position(replacement.getStart())
-            .context(replacement.getContext(page.getContent()))
-            .lastUpdate(page.getLastUpdate().toLocalDate())
-            .build();
-    }
-
-    private Optional<IndexablePage> findDbReplacements(WikipediaPageId pageId) {
-        return pageRepository.findByPageId(pageId).map(IndexablePageMapper::fromModel);
+        pageIndexer.indexPageReplacements(page, replacements);
     }
 
     @VisibleForTesting

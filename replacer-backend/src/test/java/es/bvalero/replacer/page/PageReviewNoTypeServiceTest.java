@@ -13,7 +13,6 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -64,9 +63,6 @@ class PageReviewNoTypeServiceTest {
 
     @Mock
     private ReplacementService replacementService;
-
-    @Mock
-    private PageRepository pageRepository;
 
     @Mock
     private WikipediaService wikipediaService;
