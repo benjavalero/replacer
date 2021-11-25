@@ -6,10 +6,8 @@ import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.page.repository.PageRepository;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -27,7 +25,10 @@ public class PageIndexer {
     @Autowired
     private PageIndexResultSaver pageIndexResultSaver;
 
-    /** Index a page against its details in database (if any). Current replacements will be calculated. */
+    /**
+     * Index a page against its details in database (if any). Current replacements will be calculated.
+     * Returns if changes are performed in database due to the page indexing.
+     */
     public boolean indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage) {
         List<Replacement> replacements = replacementFinderService.find(FinderPageMapper.fromDomain(page));
         return indexPageReplacements(IndexablePageMapper.fromDomain(page, replacements), dbPage, true);
@@ -45,11 +46,38 @@ public class PageIndexer {
     }
 
     private boolean indexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage, boolean batchSave) {
+        // The page is not indexed in case the last-update in database is later than the last-update of the given page
+        if (isNotProcessable(page, dbPage)) {
+            return false;
+        }
+
         PageIndexResult result = PageIndexHelper.indexPageReplacements(page, dbPage);
         saveResult(result, batchSave);
 
         // Return if the page has been processed, i.e. modifications have been applied in database.
         return !result.isEmpty();
+    }
+
+    private boolean isNotProcessable(IndexablePage page, @Nullable IndexablePage dbPage) {
+        return isNotProcessableByTimestamp(page, dbPage) && isNotProcessableByPageTitle(page, dbPage);
+    }
+
+    private boolean isNotProcessableByTimestamp(IndexablePage page, @Nullable IndexablePage dbPage) {
+        // If page modified in dump equals to the last indexing, reprocess always.
+        // If page modified in dump after last indexing, reprocess always.
+        // If page modified in dump before last indexing, do not reprocess.
+        LocalDate dbDate = Optional.ofNullable(dbPage).map(IndexablePage::getLastUpdate).orElse(null);
+        if (page.getLastUpdate() == null || dbDate == null) {
+            return false;
+        } else {
+            return Objects.requireNonNull(page.getLastUpdate()).isBefore(dbDate);
+        }
+    }
+
+    private boolean isNotProcessableByPageTitle(IndexablePage page, @Nullable IndexablePage dbPage) {
+        // In case the page title has changed we force the page processing
+        String dbTitle = dbPage == null ? null : dbPage.getTitle();
+        return Objects.equals(page.getTitle(), dbTitle);
     }
 
     private void saveResult(PageIndexResult result, boolean batchSave) {

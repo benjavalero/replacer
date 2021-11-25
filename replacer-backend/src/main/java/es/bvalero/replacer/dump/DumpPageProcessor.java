@@ -8,7 +8,6 @@ import es.bvalero.replacer.page.index.IndexablePageMapper;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
-import java.time.LocalDate;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,41 +73,10 @@ class DumpPageProcessor {
     }
 
     private DumpPageProcessorResult processPage(WikipediaPage page, @Nullable IndexablePage dbPage) {
-        // Check if the last process of the page is after the dump generation, so we can skip it.
-        Optional<LocalDate> dbLastUpdate = dbPage == null
-            ? Optional.empty()
-            : Optional.ofNullable(dbPage.getLastUpdate());
-        if (
-            dbLastUpdate.isPresent() &&
-            isNotProcessableByTimestamp(page, dbLastUpdate.get()) &&
-            isNotProcessableByPageTitle(page, dbPage)
-        ) {
-            LOGGER.trace(
-                "Page not processable by date: {}. Dump date: {}. DB date: {}",
-                page.getTitle(),
-                page.getLastUpdate(),
-                dbLastUpdate
-            );
-            return DumpPageProcessorResult.PAGE_NOT_PROCESSED;
-        }
-
         // Index the found replacements against the ones in DB (if any)
         boolean pageProcessed = pageIndexer.indexPageReplacements(page, dbPage);
 
         return pageProcessed ? DumpPageProcessorResult.PAGE_PROCESSED : DumpPageProcessorResult.PAGE_NOT_PROCESSED;
-    }
-
-    private boolean isNotProcessableByTimestamp(WikipediaPage page, LocalDate dbDate) {
-        // If page modified in dump equals to the last indexing, reprocess always.
-        // If page modified in dump after last indexing, reprocess always.
-        // If page modified in dump before last indexing, do not reprocess.
-        return page.getLastUpdate().toLocalDate().isBefore(dbDate);
-    }
-
-    private boolean isNotProcessableByPageTitle(WikipediaPage page, @Nullable IndexablePage dbPage) {
-        // In case the page title has changed we force the page processing
-        String dbPageTitle = dbPage == null ? null : dbPage.getTitle();
-        return page.getTitle().equals(dbPageTitle);
     }
 
     void finish() {

@@ -131,7 +131,7 @@ class DumpPageProcessorTest {
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageValidator).validateProcessable(any(WikipediaPage.class));
-        verify(pageIndexer, never()).indexPageReplacements(any(WikipediaPage.class), any(IndexablePage.class));
+        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), any(IndexablePage.class));
     }
 
     @Test
