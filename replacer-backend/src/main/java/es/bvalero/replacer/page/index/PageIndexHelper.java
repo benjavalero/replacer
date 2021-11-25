@@ -2,23 +2,19 @@ package es.bvalero.replacer.page.index;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Component;
 
-/**
- * Helper class to compare two indexable pages and return the set of changes to apply in database.
- *
- * For the sake of the tests, we define it as a component, so it can be easily mocked.
- */
-@Component
-public class PageIndexHelper {
+/** Helper class to compare two indexable pages and return the set of changes to apply in database */
+@UtilityClass
+class PageIndexHelper {
 
     /**
      * Compare the given found replacements in a page with the given ones in the database.
      *
      * @return A list of replacements to be inserted, updated or deleted in database.
      */
-    public PageIndexResult indexPageReplacements(@Nullable IndexablePage page, @Nullable IndexablePage dbPage) {
+    PageIndexResult indexPageReplacements(@Nullable IndexablePage page, @Nullable IndexablePage dbPage) {
         if (Objects.isNull(page) && Objects.isNull(dbPage)) {
             throw new IllegalArgumentException();
         }

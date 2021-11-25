@@ -43,7 +43,7 @@ class DumpPageProcessor {
     private ReplacementFinderService replacementFinderService;
 
     @Autowired
-    private PageIndexHelper pageIndexHelper;
+    private PageIndexer pageIndexer;
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     DumpPageProcessorResult process(DumpPage dumpPage) {
@@ -100,7 +100,7 @@ class DumpPageProcessor {
         List<Replacement> replacements = replacementFinderService.find(convertToFinder(dumpPage));
 
         // Index the found replacements against the ones in DB (if any)
-        PageIndexResult pageIndexResult = pageIndexHelper.indexPageReplacements(
+        PageIndexResult pageIndexResult = pageIndexer.indexPageReplacements(
             convertToIndexable(dumpPage, replacements),
             dbPage
         );

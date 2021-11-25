@@ -13,8 +13,8 @@ import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.page.index.PageIndexHelper;
 import es.bvalero.replacer.page.index.PageIndexResultSaver;
+import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import es.bvalero.replacer.replacement.ReplacementService;
@@ -84,7 +84,7 @@ class PageReviewTypeSubtypeServiceTest {
     private ReplacementFinderService replacementFinderService;
 
     @Mock
-    private PageIndexHelper pageIndexHelper;
+    private PageIndexer pageIndexer;
 
     @Mock
     private PageIndexResultSaver pageIndexResultSaver;
@@ -127,7 +127,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options2);
 
-        verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class), isNull());
+        verify(pageIndexer).indexPageReplacements(any(IndexablePage.class), isNull());
 
         assertFalse(review.isPresent());
     }
@@ -154,7 +154,7 @@ class PageReviewTypeSubtypeServiceTest {
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
 
-        verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class), isNull());
+        verify(pageIndexer).indexPageReplacements(any(IndexablePage.class), isNull());
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId());

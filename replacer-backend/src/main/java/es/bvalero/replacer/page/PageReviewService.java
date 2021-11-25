@@ -54,7 +54,7 @@ abstract class PageReviewService {
     private PageRepository pageRepository;
 
     @Autowired
-    private PageIndexHelper pageIndexHelper;
+    private PageIndexer pageIndexer;
 
     @Autowired
     private PageIndexResultSaver pageIndexResultSaver;
@@ -200,7 +200,7 @@ abstract class PageReviewService {
     private void indexObsoletePage(WikipediaLanguage lang, int pageId) {
         // Force index to delete the page from database
         findDbReplacements(WikipediaPageId.of(lang, pageId))
-            .ifPresent(dbPage -> pageIndexHelper.indexPageReplacements(null, dbPage));
+            .ifPresent(dbPage -> pageIndexer.indexPageReplacements(null, dbPage));
     }
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
@@ -248,7 +248,7 @@ abstract class PageReviewService {
         LOGGER.trace("Update page replacements in database");
         IndexablePage indexablePage = convertToIndexablePage(page, replacements);
         IndexablePage dbPage = findDbReplacements(indexablePage.getId()).orElse(null);
-        PageIndexResult toSave = pageIndexHelper.indexPageReplacements(indexablePage, dbPage);
+        PageIndexResult toSave = pageIndexer.indexPageReplacements(indexablePage, dbPage);
         pageIndexResultSaver.save(toSave);
     }
 
