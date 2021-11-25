@@ -11,7 +11,6 @@ import es.bvalero.replacer.page.index.*;
 import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.validate.PageValidator;
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,11 +81,7 @@ class DumpPageProcessor {
         // Check if the last process of the page is after the dump generation, so we can skip it.
         Optional<LocalDate> dbLastUpdate = dbPage == null
             ? Optional.empty()
-            : dbPage
-                .getReplacements()
-                .stream()
-                .map(IndexableReplacement::getLastUpdate)
-                .max(Comparator.comparing(LocalDate::toEpochDay));
+            : Optional.ofNullable(dbPage.getLastUpdate());
         if (
             dbLastUpdate.isPresent() &&
             isNotProcessableByTimestamp(dumpPage, dbLastUpdate.get()) &&
