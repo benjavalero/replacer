@@ -32,6 +32,7 @@ class PageIndexHelperTest {
 
         PageIndexResult expected = PageIndexResult
             .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
             .createPages(Set.of(page))
             .createReplacements(Set.of(IndexableReplacement.ofDummy(page)))
             .build();
@@ -61,6 +62,7 @@ class PageIndexHelperTest {
 
         PageIndexResult expected = PageIndexResult
             .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
             .createPages(Set.of(page))
             .createReplacements(Set.of(rep1))
             .build();
@@ -88,7 +90,11 @@ class PageIndexHelperTest {
 
         PageIndexResult toIndex = PageIndexHelper.indexPageReplacements(null, dbPage);
 
-        PageIndexResult expected = PageIndexResult.builder().deletePages(Set.of(dbPage)).build();
+        PageIndexResult expected = PageIndexResult
+            .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
+            .deletePages(Set.of(dbPage))
+            .build();
 
         assertEquals(expected, toIndex);
     }
@@ -135,6 +141,7 @@ class PageIndexHelperTest {
 
         PageIndexResult expected = PageIndexResult
             .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
             .createReplacements(Set.of(IndexableReplacement.ofDummy(page)))
             .deleteReplacements(Set.of(rep2, rep3))
             .build();
@@ -156,6 +163,7 @@ class PageIndexHelperTest {
         // Save the dummy replacement
         PageIndexResult expected = PageIndexResult
             .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
             .createPages(Set.of(page))
             .createReplacements(Set.of(IndexableReplacement.ofDummy(page)))
             .build();
@@ -276,6 +284,7 @@ class PageIndexHelperTest {
 
         PageIndexResult expected = PageIndexResult
             .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
             .updateReplacements(Set.of(r3db.withLastUpdate(same)))
             .createReplacements(Set.of(r5))
             .deleteReplacements(Set.of(r6db, r8db))
@@ -374,6 +383,7 @@ class PageIndexHelperTest {
 
         PageIndexResult expected = PageIndexResult
             .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
             .updateReplacements(Set.of(r1db.withLastUpdate(same)))
             .createReplacements(Set.of(r3))
             .deleteReplacements(Set.of(r4db, r6db))
@@ -406,7 +416,11 @@ class PageIndexHelperTest {
 
         PageIndexResult toIndex = PageIndexHelper.indexPageReplacements(page, dbPage);
 
-        PageIndexResult expected = PageIndexResult.builder().deleteReplacements(Set.of(r1db)).build();
+        PageIndexResult expected = PageIndexResult
+            .builder()
+            .status(PageIndexStatus.PAGE_INDEXED)
+            .deleteReplacements(Set.of(r1db))
+            .build();
         assertEquals(expected, toIndex);
     }
 }

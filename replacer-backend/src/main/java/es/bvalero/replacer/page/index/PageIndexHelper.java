@@ -25,7 +25,8 @@ class PageIndexHelper {
 
         // Check obsolete page
         if (page == null) {
-            return PageIndexResult.builder().deletePages(Set.of(dbPage)).build();
+            pageIndexResult.add(PageIndexResult.builder().deletePages(Set.of(dbPage)).build());
+            return pageIndexResult;
         }
 
         // Ignore context when comparing replacements in case there are cases with the same context

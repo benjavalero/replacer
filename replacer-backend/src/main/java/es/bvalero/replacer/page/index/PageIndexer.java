@@ -42,18 +42,22 @@ public class PageIndexer {
         }
 
         List<Replacement> replacements = replacementFinderService.find(FinderPageMapper.fromDomain(page));
-        boolean pageIndexed = indexPageReplacements(IndexablePageMapper.fromDomain(page, replacements), dbPage, true);
-        return pageIndexed ? PageIndexStatus.PAGE_INDEXED : PageIndexStatus.PAGE_NOT_INDEXED;
+        PageIndexResult result = indexPageReplacements(
+            IndexablePageMapper.fromDomain(page, replacements),
+            dbPage,
+            true
+        );
+        return result.getStatus();
     }
 
     /** Index a page and its replacements. Details in database (if any) will be calculated. */
-    public void indexPageReplacements(WikipediaPage page, Collection<Replacement> replacements)
+    public PageIndexResult indexPageReplacements(WikipediaPage page, Collection<Replacement> replacements)
         throws NonIndexablePageException {
         IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
         IndexablePage dbPage = findIndexablePageInDb(page.getId()).orElse(null);
 
         validatePage(page, dbPage);
-        indexPageReplacements(indexablePage, dbPage, false);
+        return indexPageReplacements(indexablePage, dbPage, false);
     }
 
     private void validatePage(WikipediaPage page, @Nullable IndexablePage dbPage) throws NonIndexablePageException {
@@ -80,17 +84,21 @@ public class PageIndexer {
         return pageRepository.findByPageId(pageId).map(IndexablePageMapper::fromModel);
     }
 
-    private boolean indexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage, boolean batchSave) {
+    private PageIndexResult indexPageReplacements(
+        IndexablePage page,
+        @Nullable IndexablePage dbPage,
+        boolean batchSave
+    ) {
         // The page is not indexed in case the last-update in database is later than the last-update of the given page
         if (isNotIndexable(page, dbPage)) {
-            return false;
+            return PageIndexResult.ofEmpty();
         }
 
         PageIndexResult result = PageIndexHelper.indexPageReplacements(page, dbPage);
         saveResult(result, batchSave);
 
         // Return if the page has been indexed, i.e. modifications have been applied in database.
-        return result.isNotEmpty();
+        return result;
     }
 
     private boolean isNotIndexable(IndexablePage page, @Nullable IndexablePage dbPage) {

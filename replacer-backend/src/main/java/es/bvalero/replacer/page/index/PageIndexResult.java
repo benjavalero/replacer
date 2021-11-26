@@ -2,10 +2,8 @@ package es.bvalero.replacer.page.index;
 
 import java.util.HashSet;
 import java.util.Set;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
+import org.springframework.lang.NonNull;
 
 /**
  * Sub-domain object representing the result of indexing a page or several pages.
@@ -14,8 +12,14 @@ import lombok.Getter;
  */
 @Getter(AccessLevel.PACKAGE)
 @EqualsAndHashCode
-@Builder
-final class PageIndexResult {
+@Builder(access = AccessLevel.PACKAGE)
+public final class PageIndexResult {
+
+    /* Resulting status of the page indexing */
+
+    @NonNull
+    @Builder.Default
+    PageIndexStatus status = PageIndexStatus.PAGE_NOT_INDEXED;
 
     /* Changes to be applied in the database */
 
@@ -62,10 +66,14 @@ final class PageIndexResult {
         this.createReplacements.addAll(pageIndexResult.getCreateReplacements());
         this.updateReplacements.addAll(pageIndexResult.getUpdateReplacements());
         this.deleteReplacements.addAll(pageIndexResult.getDeleteReplacements());
+
+        if (isNotEmpty()) {
+            this.status = PageIndexStatus.PAGE_INDEXED;
+        }
     }
 
     static PageIndexResult ofEmpty() {
-        return PageIndexResult.builder().build();
+        return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXED).build();
     }
 
     void clear() {
@@ -75,5 +83,7 @@ final class PageIndexResult {
         this.createReplacements.clear();
         this.updateReplacements.clear();
         this.deleteReplacements.clear();
+
+        this.status = PageIndexStatus.PAGE_NOT_INDEXED;
     }
 }
