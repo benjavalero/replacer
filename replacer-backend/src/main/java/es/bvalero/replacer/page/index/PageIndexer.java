@@ -12,6 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +25,11 @@ public class PageIndexer {
     private PageIndexValidator pageIndexValidator;
 
     @Autowired
+    @Qualifier("pageCacheRepository")
+    private PageRepository pageCacheRepository;
+
+    @Autowired
+    @Qualifier("pageJdbcRepository")
     private PageRepository pageRepository;
 
     @Autowired
@@ -32,36 +38,29 @@ public class PageIndexer {
     @Autowired
     private PageIndexResultSaver pageIndexResultSaver;
 
-    /**
-     * Index a page against its details in database (if any). Current replacements will be calculated.
-     * Returns if changes are performed in database due to the page indexing.
-     */
-    public PageIndexResult indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage) {
-        try {
-            validatePage(page, dbPage);
-        } catch (NonIndexablePageException e) {
-            return PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE, Collections.emptyList());
-        }
-
-        Collection<es.bvalero.replacer.common.domain.Replacement> replacements = findPageReplacements(page);
-        return indexPageReplacements(IndexablePageMapper.fromDomain(page, replacements), dbPage, true)
-            .withReplacements(replacements);
+    /** Index a page. Replacements and details in database (if any) will be calculated. */
+    public PageIndexResult indexPageReplacements(WikipediaPage page) {
+        return indexPageReplacements(page, false);
     }
 
     /** Index a page. Replacements and details in database (if any) will be calculated. */
-    public PageIndexResult indexPageReplacements(WikipediaPage page) {
-        IndexablePage dbPage = findIndexablePageInDb(page.getId()).orElse(null);
+    public PageIndexResult indexPageReplacementsInBatch(WikipediaPage page) {
+        return indexPageReplacements(page, true);
+    }
+
+    private PageIndexResult indexPageReplacements(WikipediaPage page, boolean batchSave) {
+        IndexablePage dbPage = findIndexablePageInDb(page.getId(), batchSave).orElse(null);
 
         try {
             validatePage(page, dbPage);
         } catch (NonIndexablePageException e) {
-            return PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE, Collections.emptyList());
+            return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXABLE).build();
         }
 
         Collection<es.bvalero.replacer.common.domain.Replacement> replacements = findPageReplacements(page);
         IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
 
-        return indexPageReplacements(indexablePage, dbPage, false).withReplacements(replacements);
+        return indexPageReplacements(indexablePage, dbPage, batchSave).withReplacements(replacements);
     }
 
     private Collection<es.bvalero.replacer.common.domain.Replacement> findPageReplacements(WikipediaPage page) {
@@ -126,8 +125,9 @@ public class PageIndexer {
         }
     }
 
-    private Optional<IndexablePage> findIndexablePageInDb(WikipediaPageId pageId) {
-        return pageRepository.findByPageId(pageId).map(IndexablePageMapper::fromModel);
+    private Optional<IndexablePage> findIndexablePageInDb(WikipediaPageId pageId, boolean batchSave) {
+        PageRepository repository = batchSave ? pageCacheRepository : pageRepository;
+        return repository.findByPageId(pageId).map(IndexablePageMapper::fromModel);
     }
 
     private PageIndexResult indexPageReplacements(
@@ -181,7 +181,7 @@ public class PageIndexer {
 
     /** Index a page which should not be in database because it has been deleted or is not indexable anymore */
     public void indexObsoletePage(WikipediaPageId pageId) {
-        findIndexablePageInDb(pageId).ifPresent(page -> indexObsoletePage(page, false));
+        findIndexablePageInDb(pageId, false).ifPresent(page -> indexObsoletePage(page, false));
     }
 
     private void indexObsoletePage(IndexablePage dbPage, boolean batchSave) {
@@ -191,5 +191,6 @@ public class PageIndexer {
     /* Force saving what is left on the batch */
     public void forceSave() {
         pageIndexResultSaver.forceSave();
+        pageCacheRepository.resetCache();
     }
 }

@@ -6,19 +6,11 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.page.repository.PageModel;
-import es.bvalero.replacer.page.repository.PageRepository;
-import es.bvalero.replacer.page.repository.ReplacementModel;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -36,10 +28,6 @@ class DumpPageIndexerTest {
         .content("C")
         .lastUpdate(LocalDateTime.now())
         .build();
-    private final WikipediaPageId dumpPageId = WikipediaPageId.of(dumpPage.getLang(), dumpPage.getId());
-
-    @Mock
-    private PageRepository pageRepository;
 
     @Mock
     private PageIndexer pageIndexer;
@@ -57,87 +45,57 @@ class DumpPageIndexerTest {
     void testEmptyPageIndexResult() {
         // There is no need to mock the rest of calls
         // The DB page is null as we are not mocking the response from the findByPageId
-        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class)))
+        when(pageIndexer.indexPageReplacementsInBatch(any(WikipediaPage.class)))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXED, Collections.emptyList()));
 
         PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 
         assertEquals(PageIndexStatus.PAGE_NOT_INDEXED, result);
 
-        verify(pageRepository).findByPageId(dumpPageId);
-        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
+        verify(pageIndexer).indexPageReplacementsInBatch(any(WikipediaPage.class));
     }
 
     @Test
     void testIndexNewPageWithReplacements() {
-        when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
-
         // No need in this test to build the index result as it would be in the reality with the replacements
-        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class)))
+        when(pageIndexer.indexPageReplacementsInBatch(any(WikipediaPage.class)))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
 
         PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 
         assertEquals(PageIndexStatus.PAGE_INDEXED, result);
 
-        verify(pageRepository).findByPageId(dumpPageId);
-        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
+        verify(pageIndexer).indexPageReplacementsInBatch(any(WikipediaPage.class));
     }
 
     @Test
     void testPageNotIndexable() {
-        when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
-
-        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class)))
+        when(pageIndexer.indexPageReplacementsInBatch(any(WikipediaPage.class)))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE, Collections.emptyList()));
 
         PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 
         assertEquals(PageIndexStatus.PAGE_NOT_INDEXABLE, result);
 
-        verify(pageRepository).findByPageId(dumpPageId);
-        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
+        verify(pageIndexer).indexPageReplacementsInBatch(any(WikipediaPage.class));
     }
 
     @Test
     void testPageNotIndexedByTimestamp() {
-        // The page exists in DB but has been updated after the dump
-        LocalDate updated = dumpPage.getLastUpdate().toLocalDate().plusDays(1);
-        ReplacementModel dbReplacement = ReplacementModel
-            .builder()
-            .lang(dumpPageId.getLang())
-            .pageId(dumpPageId.getPageId())
-            .type("")
-            .subtype("")
-            .position(0)
-            .context("")
-            .lastUpdate(updated)
-            .build();
-        PageModel dbPage = PageModel
-            .builder()
-            .lang(dumpPageId.getLang())
-            .pageId(dumpPageId.getPageId())
-            .title(dumpPage.getTitle()) // The title must match so the page is not indexed
-            .replacements(List.of(dbReplacement))
-            .build();
-        when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.of(dbPage));
-
-        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), any(IndexablePage.class)))
+        when(pageIndexer.indexPageReplacementsInBatch(any(WikipediaPage.class)))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXED, Collections.emptyList()));
 
         PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 
         assertEquals(PageIndexStatus.PAGE_NOT_INDEXED, result);
 
-        verify(pageRepository).findByPageId(dumpPageId);
-        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), any(IndexablePage.class));
+        verify(pageIndexer).indexPageReplacementsInBatch(any(WikipediaPage.class));
     }
 
     @Test
     void testFinish() {
         dumpPageIndexer.finish();
 
-        verify(pageRepository).resetCache();
         verify(pageIndexer).forceSave();
     }
 }

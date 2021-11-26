@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
-import org.jetbrains.annotations.VisibleForTesting;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
 /**
@@ -88,7 +88,7 @@ public final class PageIndexResult {
         return PageIndexResult.builder().build();
     }
 
-    @VisibleForTesting
+    @TestOnly
     public static PageIndexResult ofEmpty(PageIndexStatus status, Collection<Replacement> replacements) {
         return PageIndexResult.builder().status(status).replacements(replacements).build();
     }
