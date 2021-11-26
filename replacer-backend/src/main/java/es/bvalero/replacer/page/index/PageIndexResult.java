@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**
- * Sub-domain object representing the result of indexing a page or several pages
+ * Sub-domain object representing the result of indexing a page or several pages.
  * We implement it as a mutable object (we can add items to the collections)
  * and with builder pattern for simplicity.
  */

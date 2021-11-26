@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * The indexing will be executed periodically in @{@link DumpScheduledTask},
  * or manually from @{@link DumpController}.
  * The dumps are parsed with @{@link DumpParser}.
- * Each page found in the dump is processed in @{@link DumpPageProcessor}.
+ * Each page found in the dump is indexed in @{@link DumpPageIndexer}.
  */
 @Slf4j
 @Component
@@ -28,13 +28,13 @@ class DumpManager {
     private DumpParser dumpParser;
 
     /**
-     * Find the latest dump files for each language and process them.
+     * Find the latest dump files for each language and index them.
      * In order to be asynchronous it must be public and called externally:
      * https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/scheduling/annotation/EnableAsync.html
      */
     @Loggable(value = Loggable.DEBUG)
     @Async
-    public void processLatestDumpFiles() {
+    public void indexLatestDumpFiles() {
         // Check just in case the handler is already running
         if (isDumpIndexingRunning()) {
             LOGGER.warn("Dump indexing is already running.");

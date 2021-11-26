@@ -56,9 +56,9 @@
             "description": "User allowed to perform administrative actions like manual indexing"
         },
         {
-            "name": "replacer.processable.namespaces",
+            "name": "replacer.indexable.namespaces",
             "type": "java.lang.String",
-            "description": "Comma-separate lists of the namespaces to be processed"
+            "description": "Comma-separate lists of the namespaces to be indexed"
         }
     ]
 }

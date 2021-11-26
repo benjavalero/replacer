@@ -20,7 +20,7 @@ import org.mockito.MockitoAnnotations;
 class DumpSaxParserTest {
 
     @Mock
-    private DumpPageProcessor dumpPageProcessor;
+    private DumpPageIndexer dumpPageIndexer;
 
     @Mock
     private Map<String, Long> numPagesEstimated;
@@ -53,19 +53,19 @@ class DumpSaxParserTest {
         assertNull(status.getStart());
         assertNull(status.getEnd());
         assertNull(status.getNumPagesRead());
-        assertNull(status.getNumPagesProcessed());
+        assertNull(status.getNumPagesIndexed());
 
-        when(dumpPageProcessor.process(any(DumpPage.class)))
-            .thenReturn(DumpPageProcessorResult.PAGE_PROCESSED)
-            .thenReturn(DumpPageProcessorResult.PAGE_NOT_PROCESSED)
-            .thenReturn(DumpPageProcessorResult.PAGE_PROCESSED)
-            .thenReturn(DumpPageProcessorResult.PAGE_NOT_PROCESSABLE);
+        when(dumpPageIndexer.index(any(DumpPage.class)))
+            .thenReturn(DumpPageIndexResult.PAGE_INDEXED)
+            .thenReturn(DumpPageIndexResult.PAGE_NOT_INDEXED)
+            .thenReturn(DumpPageIndexResult.PAGE_INDEXED)
+            .thenReturn(DumpPageIndexResult.PAGE_NOT_INDEXABLE);
 
         dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, dumpFile);
 
         assertFalse(dumpParser.getDumpIndexingStatus().isRunning());
-        verify(dumpPageProcessor, times(4)).process(any(DumpPage.class));
-        verify(dumpPageProcessor).finish();
+        verify(dumpPageIndexer, times(4)).index(any(DumpPage.class));
+        verify(dumpPageIndexer).finish();
 
         status = dumpParser.getDumpIndexingStatus();
         assertFalse(status.isRunning());
@@ -73,6 +73,6 @@ class DumpSaxParserTest {
         assertNotNull(status.getStart());
         assertNotNull(status.getEnd());
         assertEquals(3, status.getNumPagesRead());
-        assertEquals(2, status.getNumPagesProcessed());
+        assertEquals(2, status.getNumPagesIndexed());
     }
 }

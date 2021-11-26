@@ -18,15 +18,15 @@ class DumpIndexingStatus {
     @ApiModelProperty(value = "If the indexing is running", required = true, example = "false")
     boolean running;
 
-    @ApiModelProperty(value = "Number of processable pages read", example = "251934")
+    @ApiModelProperty(value = "Number of indexable pages read", example = "251934")
     @Nullable
     Long numPagesRead;
 
-    @ApiModelProperty(value = "Number of processable pages processed", example = "5016")
+    @ApiModelProperty(value = "Number of indexable pages indexed", example = "5016")
     @Nullable
-    Long numPagesProcessed;
+    Long numPagesIndexed;
 
-    @ApiModelProperty(value = "Estimated number of processable pages", example = "249805")
+    @ApiModelProperty(value = "Estimated number of indexable pages", example = "249805")
     @Nullable
     Long numPagesEstimated;
 

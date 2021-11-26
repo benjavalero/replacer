@@ -17,16 +17,16 @@ class PageIndexValidatorTest {
     private PageIndexValidator pageIndexValidator;
 
     @Test
-    void testIndexablePageIsProcessableByNamespace() throws ReplacerException {
-        WikipediaPage notProcessable = mock(WikipediaPage.class);
-        when(notProcessable.getNamespace()).thenReturn(WikipediaNamespace.WIKIPEDIA);
+    void testIndexablePageIsIndexableByNamespace() throws ReplacerException {
+        WikipediaPage notIndexable = mock(WikipediaPage.class);
+        when(notIndexable.getNamespace()).thenReturn(WikipediaNamespace.WIKIPEDIA);
         WikipediaPage articlePage = mock(WikipediaPage.class);
         when(articlePage.getNamespace()).thenReturn(WikipediaNamespace.ARTICLE);
         WikipediaPage annexPage = mock(WikipediaPage.class);
         when(annexPage.getNamespace()).thenReturn(WikipediaNamespace.ANNEX);
 
-        assertThrows(PageNotProcessableException.class, () -> pageIndexValidator.validateProcessable(notProcessable));
-        pageIndexValidator.validateProcessable(articlePage);
-        pageIndexValidator.validateProcessable(annexPage);
+        assertThrows(NonIndexablePageException.class, () -> pageIndexValidator.validateIndexable(notIndexable));
+        pageIndexValidator.validateIndexable(articlePage);
+        pageIndexValidator.validateIndexable(annexPage);
     }
 }

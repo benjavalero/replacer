@@ -4,8 +4,8 @@ import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.IndexablePageMapper;
+import es.bvalero.replacer.page.index.NonIndexablePageException;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.page.index.PageNotProcessableException;
 import es.bvalero.replacer.page.repository.PageRepository;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +15,13 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
- * Process a page found in a Wikipedia dump.
+ * Index a page found in a Wikipedia dump.
  * It involves checking if the page needs to be indexed, finding the replacements in the page text
  * and finally index the replacements in the repository.
  */
 @Slf4j
 @Component
-class DumpPageProcessor {
+class DumpPageIndexer {
 
     @Autowired
     @Qualifier("pageCacheRepository")
@@ -31,7 +31,7 @@ class DumpPageProcessor {
     private PageIndexer pageIndexer;
 
     @Loggable(prepend = true, value = Loggable.TRACE)
-    DumpPageProcessorResult process(DumpPage dumpPage) {
+    DumpPageIndexResult index(DumpPage dumpPage) {
         WikipediaPage page = DumpPageMapper.toDomain(dumpPage);
 
         // In all cases we find the current status of the page in the DB
@@ -39,35 +39,35 @@ class DumpPageProcessor {
             IndexablePageMapper.fromModel(pageRepository.findByPageId(page.getId()).orElse(null))
         );
 
-        // Find the replacements to index and process the page
+        // Find the replacements to index and index the page
         try {
-            return processPage(page, dbPage.orElse(null));
+            return indexPage(page, dbPage.orElse(null));
         } catch (Exception e) {
-            // Just in case capture possible exceptions to continue processing other pages
-            LOGGER.error("Page not processed: {}", dumpPage, e);
-            return DumpPageProcessorResult.PAGE_NOT_PROCESSED;
+            // Just in case capture possible exceptions to continue indexing other pages
+            LOGGER.error("Page not indexed: {}", dumpPage, e);
+            return DumpPageIndexResult.PAGE_NOT_INDEXED;
         }
     }
 
-    private DumpPageProcessorResult processPage(WikipediaPage page, @Nullable IndexablePage dbPage) {
+    private DumpPageIndexResult indexPage(WikipediaPage page, @Nullable IndexablePage dbPage) {
         // Index the found replacements against the ones in DB (if any)
-        boolean pageProcessed;
+        boolean pageIndexed;
         try {
-            pageProcessed = pageIndexer.indexPageReplacements(page, dbPage);
-        } catch (PageNotProcessableException e) {
-            // If the page is not processable then it should not exist in DB
+            pageIndexed = pageIndexer.indexPageReplacements(page, dbPage);
+        } catch (NonIndexablePageException e) {
+            // If the page is not indexable then it should not exist in DB
             if (dbPage != null) {
                 LOGGER.error(
-                    "Unexpected page in DB not processable: {} - {} - {}",
+                    "Unexpected page in DB not indexable: {} - {} - {}",
                     page.getId().getLang(),
                     page.getTitle(),
                     dbPage.getTitle()
                 );
             }
-            return DumpPageProcessorResult.PAGE_NOT_PROCESSABLE;
+            return DumpPageIndexResult.PAGE_NOT_INDEXABLE;
         }
 
-        return pageProcessed ? DumpPageProcessorResult.PAGE_PROCESSED : DumpPageProcessorResult.PAGE_NOT_PROCESSED;
+        return pageIndexed ? DumpPageIndexResult.PAGE_INDEXED : DumpPageIndexResult.PAGE_NOT_INDEXED;
     }
 
     void finish() {

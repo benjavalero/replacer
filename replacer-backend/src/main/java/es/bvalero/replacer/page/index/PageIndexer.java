@@ -33,10 +33,10 @@ public class PageIndexer {
     /**
      * Index a page against its details in database (if any). Current replacements will be calculated.
      * Returns if changes are performed in database due to the page indexing.
-     * Throws a custom exception in case the page is not processable.
+     * Throws a custom exception in case the page is not indexable.
      */
     public boolean indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage)
-        throws PageNotProcessableException {
+        throws NonIndexablePageException {
         validatePage(page, dbPage);
 
         List<Replacement> replacements = replacementFinderService.find(FinderPageMapper.fromDomain(page));
@@ -45,7 +45,7 @@ public class PageIndexer {
 
     /** Index a page and its replacements. Details in database (if any) will be calculated. */
     public void indexPageReplacements(WikipediaPage page, Collection<Replacement> replacements)
-        throws PageNotProcessableException {
+        throws NonIndexablePageException {
         IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
         IndexablePage dbPage = findIndexablePageInDb(page.getId()).orElse(null);
 
@@ -53,16 +53,16 @@ public class PageIndexer {
         indexPageReplacements(indexablePage, dbPage, false);
     }
 
-    private void validatePage(WikipediaPage page, @Nullable IndexablePage dbPage) throws PageNotProcessableException {
-        // Check if it is processable (by namespace)
-        // Redirection pages are now considered processable but discarded when finding immutables
+    private void validatePage(WikipediaPage page, @Nullable IndexablePage dbPage) throws NonIndexablePageException {
+        // Check if it is indexable (by namespace)
+        // Redirection pages are now considered indexable but discarded when finding immutables
         try {
-            pageIndexValidator.validateProcessable(page);
-        } catch (PageNotProcessableException e) {
-            // If the page is not processable then it should not exist in DB
+            pageIndexValidator.validateIndexable(page);
+        } catch (NonIndexablePageException e) {
+            // If the page is not indexable then it should not exist in DB
             if (dbPage != null) {
                 LOGGER.error(
-                    "Unexpected page in DB not processable: {} - {} - {}",
+                    "Unexpected page in DB not indexable: {} - {} - {}",
                     page.getId().getLang(),
                     page.getTitle(),
                     dbPage.getTitle()
@@ -79,25 +79,25 @@ public class PageIndexer {
 
     private boolean indexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage, boolean batchSave) {
         // The page is not indexed in case the last-update in database is later than the last-update of the given page
-        if (isNotProcessable(page, dbPage)) {
+        if (isNotIndexable(page, dbPage)) {
             return false;
         }
 
         PageIndexResult result = PageIndexHelper.indexPageReplacements(page, dbPage);
         saveResult(result, batchSave);
 
-        // Return if the page has been processed, i.e. modifications have been applied in database.
+        // Return if the page has been indexed, i.e. modifications have been applied in database.
         return !result.isEmpty();
     }
 
-    private boolean isNotProcessable(IndexablePage page, @Nullable IndexablePage dbPage) {
-        return isNotProcessableByTimestamp(page, dbPage) && isNotProcessableByPageTitle(page, dbPage);
+    private boolean isNotIndexable(IndexablePage page, @Nullable IndexablePage dbPage) {
+        return isNotIndexableByTimestamp(page, dbPage) && isNotIndexableByPageTitle(page, dbPage);
     }
 
-    private boolean isNotProcessableByTimestamp(IndexablePage page, @Nullable IndexablePage dbPage) {
-        // If page modified in dump equals to the last indexing, reprocess always.
-        // If page modified in dump after last indexing, reprocess always.
-        // If page modified in dump before last indexing, do not reprocess.
+    private boolean isNotIndexableByTimestamp(IndexablePage page, @Nullable IndexablePage dbPage) {
+        // If page modified in dump equals to the last indexing, always reindex.
+        // If page modified in dump after last indexing, always reindex.
+        // If page modified in dump before last indexing, do not index.
         LocalDate dbDate = Optional.ofNullable(dbPage).map(IndexablePage::getLastUpdate).orElse(null);
         if (page.getLastUpdate() == null || dbDate == null) {
             return false;
@@ -106,8 +106,8 @@ public class PageIndexer {
         }
     }
 
-    private boolean isNotProcessableByPageTitle(IndexablePage page, @Nullable IndexablePage dbPage) {
-        // In case the page title has changed we force the page processing
+    private boolean isNotIndexableByPageTitle(IndexablePage page, @Nullable IndexablePage dbPage) {
+        // In case the page title has changed we force the page indexing
         String dbTitle = dbPage == null ? null : dbPage.getTitle();
         return Objects.equals(page.getTitle(), dbTitle);
     }
@@ -122,7 +122,7 @@ public class PageIndexer {
         }
     }
 
-    /** Index a page which should not be in database because it has been deleted or is not processable anymore */
+    /** Index a page which should not be in database because it has been deleted or is not indexable anymore */
     public void indexObsoletePage(WikipediaPageId pageId) {
         findIndexablePageInDb(pageId).ifPresent(page -> indexObsoletePage(page, false));
     }

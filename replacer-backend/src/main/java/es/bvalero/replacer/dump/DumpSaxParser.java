@@ -20,13 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
-/** Service to read a Wikipedia dump with a SAX parser, extract the pages and process them. */
+/** Service to read a Wikipedia dump with a SAX parser, extract the pages and index them. */
 @Slf4j
 @Component
 class DumpSaxParser implements DumpParser {
 
     @Autowired
-    private DumpPageProcessor dumpPageProcessor;
+    private DumpPageIndexer dumpPageIndexer;
 
     @Resource
     private Map<String, Long> numPagesEstimated;
@@ -53,7 +53,7 @@ class DumpSaxParser implements DumpParser {
             saxParser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
 
             this.dumpFile = dumpFile;
-            this.dumpHandler = new DumpSaxHandler(lang, dumpPageProcessor);
+            this.dumpHandler = new DumpSaxHandler(lang, dumpPageIndexer);
             saxParser.parse(xmlInput, dumpHandler);
         } catch (IOException e) {
             throw new ReplacerException("Dump file not valid", e);
@@ -71,7 +71,7 @@ class DumpSaxParser implements DumpParser {
                 .builder()
                 .running(this.dumpHandler.isRunning())
                 .numPagesRead(this.dumpHandler.getNumPagesRead())
-                .numPagesProcessed(this.dumpHandler.getNumPagesProcessed())
+                .numPagesIndexed(this.dumpHandler.getNumPagesIndexed())
                 .numPagesEstimated(numPagesEstimated.get(this.dumpHandler.getLang().getCode()))
                 .dumpFileName(this.dumpFile.getFileName().toString())
                 .start(this.dumpHandler.getStart())

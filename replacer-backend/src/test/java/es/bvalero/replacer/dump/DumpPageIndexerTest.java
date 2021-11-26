@@ -8,8 +8,8 @@ import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.index.IndexablePage;
+import es.bvalero.replacer.page.index.NonIndexablePageException;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.page.index.PageNotProcessableException;
 import es.bvalero.replacer.page.repository.PageModel;
 import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.repository.ReplacementModel;
@@ -23,7 +23,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class DumpPageProcessorTest {
+class DumpPageIndexerTest {
 
     private final DumpPage dumpPage = DumpPage
         .builder()
@@ -43,62 +43,62 @@ class DumpPageProcessorTest {
     private PageIndexer pageIndexer;
 
     @InjectMocks
-    private DumpPageProcessor dumpPageProcessor;
+    private DumpPageIndexer dumpPageIndexer;
 
     @BeforeEach
     public void setUp() {
-        dumpPageProcessor = new DumpPageProcessor();
+        dumpPageIndexer = new DumpPageIndexer();
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    void testEmptyPageIndexResult() throws PageNotProcessableException {
+    void testEmptyPageIndexResult() throws NonIndexablePageException {
         // There is no need to mock the rest of calls
         // The DB page is null as we are not mocking the response from the findByPageId
         when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class)))
             .thenReturn(false);
 
-        DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
+        DumpPageIndexResult result = dumpPageIndexer.index(dumpPage);
 
-        assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
+        assertEquals(DumpPageIndexResult.PAGE_NOT_INDEXED, result);
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
     }
 
     @Test
-    void testProcessNewPageWithReplacements() throws PageNotProcessableException {
+    void testIndexNewPageWithReplacements() throws NonIndexablePageException {
         when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
 
         // No need in this test to build the index result as it would be in the reality with the replacements
         when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class))).thenReturn(true);
 
-        DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
+        DumpPageIndexResult result = dumpPageIndexer.index(dumpPage);
 
-        assertEquals(DumpPageProcessorResult.PAGE_PROCESSED, result);
+        assertEquals(DumpPageIndexResult.PAGE_INDEXED, result);
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
     }
 
     @Test
-    void testPageNotProcessable() throws PageNotProcessableException {
+    void testPageNotIndexable() throws NonIndexablePageException {
         when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
 
-        doThrow(PageNotProcessableException.class)
+        doThrow(NonIndexablePageException.class)
             .when(pageIndexer)
             .indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
 
-        DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
+        DumpPageIndexResult result = dumpPageIndexer.index(dumpPage);
 
-        assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSABLE, result);
+        assertEquals(DumpPageIndexResult.PAGE_NOT_INDEXABLE, result);
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
     }
 
     @Test
-    void testPageNotProcessedByTimestamp() throws PageNotProcessableException {
+    void testPageNotIndexedByTimestamp() throws NonIndexablePageException {
         // The page exists in DB but has been updated after the dump
         LocalDate updated = dumpPage.getLastUpdate().toLocalDate().plusDays(1);
         ReplacementModel dbReplacement = ReplacementModel
@@ -115,14 +115,14 @@ class DumpPageProcessorTest {
             .builder()
             .lang(dumpPageId.getLang())
             .pageId(dumpPageId.getPageId())
-            .title(dumpPage.getTitle()) // The title must match so the page is not processed
+            .title(dumpPage.getTitle()) // The title must match so the page is not indexed
             .replacements(List.of(dbReplacement))
             .build();
         when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.of(dbPage));
 
-        DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
+        DumpPageIndexResult result = dumpPageIndexer.index(dumpPage);
 
-        assertEquals(DumpPageProcessorResult.PAGE_NOT_PROCESSED, result);
+        assertEquals(DumpPageIndexResult.PAGE_NOT_INDEXED, result);
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), any(IndexablePage.class));
@@ -130,7 +130,7 @@ class DumpPageProcessorTest {
 
     @Test
     void testFinish() {
-        dumpPageProcessor.finish();
+        dumpPageIndexer.finish();
 
         verify(pageRepository).resetCache();
         verify(pageIndexer).forceSave();

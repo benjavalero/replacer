@@ -2,7 +2,7 @@ export interface DumpIndexing {
   // Fields coming from REST service
   running: boolean;
   numPagesRead?: number;
-  numPagesProcessed?: number;
+  numPagesIndexed?: number;
   numPagesEstimated?: number;
   dumpFileName?: string;
   start?: number;

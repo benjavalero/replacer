@@ -40,7 +40,7 @@ public class DumpController {
         @ApiParam(value = "Wikipedia user name", required = true, example = "Benjavalero") @RequestParam String user
     ) throws UnauthorizedException {
         validateAdminUser(user);
-        dumpManager.processLatestDumpFiles();
+        dumpManager.indexLatestDumpFiles();
     }
 
     private void validateAdminUser(String user) throws UnauthorizedException {

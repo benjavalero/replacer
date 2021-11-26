@@ -5,15 +5,14 @@ import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
 
-/** Helper class to compare two indexable pages and return the set of changes to apply in database */
+/**
+ * Helper class to compare an indexable and an indexed page
+ * and return a set of changes to align them.
+ */
 @UtilityClass
 class PageIndexHelper {
 
-    /**
-     * Compare the given found replacements in a page with the given ones in the database.
-     *
-     * @return A list of replacements to be inserted, updated or deleted in database.
-     */
+    // TODO: Check the nullable annotations
     PageIndexResult indexPageReplacements(@Nullable IndexablePage page, @Nullable IndexablePage dbPage) {
         if (Objects.isNull(page) && Objects.isNull(dbPage)) {
             throw new IllegalArgumentException();

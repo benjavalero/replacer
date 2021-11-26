@@ -18,6 +18,6 @@ public class DumpScheduledTask {
         fixedDelayString = "${replacer.dump.batch.delay}"
     )
     public void scheduledStartDumpIndexing() {
-        dumpManager.processLatestDumpFiles();
+        dumpManager.indexLatestDumpFiles();
     }
 }

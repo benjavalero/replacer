@@ -25,7 +25,7 @@ class DumpSaxHandler extends DefaultHandler {
     @Getter
     private final WikipediaLanguage lang;
 
-    private final DumpPageProcessor dumpPageProcessor;
+    private final DumpPageIndexer dumpPageIndexer;
 
     // Current page values
     private final StringBuilder currentChars = new StringBuilder(5000);
@@ -43,7 +43,7 @@ class DumpSaxHandler extends DefaultHandler {
     private long numPagesRead = 0L;
 
     @Getter
-    private long numPagesProcessed = 0L;
+    private long numPagesIndexed = 0L;
 
     @Getter
     private LocalDateTime start = null;
@@ -51,9 +51,9 @@ class DumpSaxHandler extends DefaultHandler {
     @Getter
     private LocalDateTime end = null;
 
-    DumpSaxHandler(WikipediaLanguage lang, DumpPageProcessor processor) {
+    DumpSaxHandler(WikipediaLanguage lang, DumpPageIndexer indexer) {
         this.lang = lang;
-        this.dumpPageProcessor = processor;
+        this.dumpPageIndexer = indexer;
     }
 
     @Override
@@ -69,7 +69,7 @@ class DumpSaxHandler extends DefaultHandler {
         this.running = false;
         this.end = LocalDateTime.now();
 
-        this.dumpPageProcessor.finish();
+        this.dumpPageIndexer.finish();
     }
 
     @Override
@@ -102,7 +102,7 @@ class DumpSaxHandler extends DefaultHandler {
                 }
                 break;
             case PAGE_TAG:
-                processPage();
+                indexPage();
 
                 // Reset current ID and Content to avoid duplicates
                 this.currentId = 0;
@@ -118,7 +118,7 @@ class DumpSaxHandler extends DefaultHandler {
         this.currentChars.append(ch, start, length);
     }
 
-    private void processPage() {
+    private void indexPage() {
         DumpPage dumpPage = DumpPage
             .builder()
             .lang(this.lang)
@@ -129,11 +129,11 @@ class DumpSaxHandler extends DefaultHandler {
             .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(this.currentTimestamp))
             .build();
 
-        DumpPageProcessorResult result = dumpPageProcessor.process(dumpPage);
-        if (!DumpPageProcessorResult.PAGE_NOT_PROCESSABLE.equals(result)) {
+        DumpPageIndexResult result = dumpPageIndexer.index(dumpPage);
+        if (!DumpPageIndexResult.PAGE_NOT_INDEXABLE.equals(result)) {
             this.incrementNumPagesRead();
-            if (DumpPageProcessorResult.PAGE_PROCESSED.equals(result)) {
-                this.incrementNumPagesProcessed();
+            if (DumpPageIndexResult.PAGE_INDEXED.equals(result)) {
+                this.incrementNumPagesIndexed();
             }
         }
     }
@@ -142,7 +142,7 @@ class DumpSaxHandler extends DefaultHandler {
         this.numPagesRead++;
     }
 
-    private void incrementNumPagesProcessed() {
-        this.numPagesProcessed++;
+    private void incrementNumPagesIndexed() {
+        this.numPagesIndexed++;
     }
 }

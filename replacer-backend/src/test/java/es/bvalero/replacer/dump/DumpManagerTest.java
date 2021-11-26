@@ -36,7 +36,7 @@ class DumpManagerTest {
         Path dumpPath = mock(Path.class);
         when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenReturn(dumpPath);
 
-        dumpManager.processLatestDumpFiles();
+        dumpManager.indexLatestDumpFiles();
 
         // 2 executions, one per language.
         verify(dumpFinder, times(2)).findLatestDumpFile(any(WikipediaLanguage.class));
@@ -51,7 +51,7 @@ class DumpManagerTest {
         when(dumpFinder.findLatestDumpFile(any(WikipediaLanguage.class))).thenReturn(dumpPath);
         doThrow(ReplacerException.class).when(dumpParser).parseDumpFile(any(WikipediaLanguage.class), any(Path.class));
 
-        dumpManager.processLatestDumpFiles();
+        dumpManager.indexLatestDumpFiles();
 
         // 2 executions, one per language.
         verify(dumpFinder, times(2)).findLatestDumpFile(any(WikipediaLanguage.class));
@@ -62,7 +62,7 @@ class DumpManagerTest {
     void testProcessLatestDumpFilesAlreadyRunning() throws ReplacerException {
         when(dumpParser.getDumpIndexingStatus()).thenReturn(DumpIndexingStatus.builder().running(true).build());
 
-        dumpManager.processLatestDumpFiles();
+        dumpManager.indexLatestDumpFiles();
 
         // 2 executions, one per language.
         verify(dumpFinder, never()).findLatestDumpFile(any(WikipediaLanguage.class));
@@ -77,7 +77,7 @@ class DumpManagerTest {
             .running(true)
             .dumpFileName("X")
             .numPagesRead(1L)
-            .numPagesProcessed(2L)
+            .numPagesIndexed(2L)
             .numPagesEstimated(3L)
             .start(now)
             .end(now.plusHours(1))

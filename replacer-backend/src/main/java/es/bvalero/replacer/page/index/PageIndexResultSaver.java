@@ -6,6 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * Save in database the results of page indexing.
+ * When batch-saving, the results will be saved if the result size is large enough.
+ */
 @Component
 class PageIndexResultSaver {
 
@@ -21,13 +25,13 @@ class PageIndexResultSaver {
     // Singleton field to add the items until the batch limit is reached
     private final PageIndexResult batchResult = PageIndexResult.ofEmpty();
 
-    /* Save in DB the result of a page indexing no matter the size of the batch */
+    /* Save in DB the result of a page indexing no matter the size of the result */
     void save(PageIndexResult pageIndexResult) {
         this.addResultToBatch(pageIndexResult);
         this.saveBatchResult();
     }
 
-    /* Save in DB the results of page indexing when the batch is large enough */
+    /* Save in DB the results of page indexing when the result size is large enough */
     void saveBatch(PageIndexResult pageIndexResult) {
         this.addResultToBatch(pageIndexResult);
         if (this.batchResult.size() >= chunkSize) {

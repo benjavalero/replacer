@@ -32,8 +32,8 @@ class WikipediaApiService implements WikipediaService {
     @Autowired
     private WikipediaApiRequestHelper wikipediaApiRequestHelper;
 
-    @Value("${replacer.processable.namespaces}")
-    private Set<Integer> processableNamespaces;
+    @Value("${replacer.indexable.namespaces}")
+    private Set<Integer> indexableNamespaces;
 
     @Value("${replacer.admin.user}")
     private String adminUser;
@@ -273,7 +273,7 @@ class WikipediaApiService implements WikipediaService {
         params.put("sroffset", Integer.toString(offset));
         params.put("srsort", "create_timestamp_asc"); // So the order is invariable after editing
         params.put("srsearch", buildSearchExpression(text, caseSensitive));
-        params.put("srnamespace", StringUtils.join(processableNamespaces, "|"));
+        params.put("srnamespace", StringUtils.join(indexableNamespaces, "|"));
         params.put("srwhat", "text");
         params.put("srinfo", "totalhits");
         params.put("srprop", "");
