@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
@@ -24,7 +23,7 @@ class PageIndexHelperTest {
         int pageId = new Random().nextInt();
         IndexablePage page = IndexablePage
             .builder()
-            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
+            .id(IndexablePageId.of(WikipediaLanguage.getDefault(), pageId))
             .replacements(Collections.emptyList())
             .lastUpdate(LocalDate.now())
             .build();
@@ -41,7 +40,7 @@ class PageIndexHelperTest {
 
     @Test
     void testIndexNewPage() {
-        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 100);
+        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 100);
         IndexableReplacement rep1 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
@@ -70,7 +69,7 @@ class PageIndexHelperTest {
 
     @Test
     void testIndexObsoletePage() {
-        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
+        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
         IndexableReplacement dbRep = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
@@ -96,7 +95,7 @@ class PageIndexHelperTest {
 
     @Test
     void testIndexObsoleteReplacements() {
-        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
+        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
@@ -145,7 +144,7 @@ class PageIndexHelperTest {
 
     @Test
     void testIndexPageWithoutReplacements() {
-        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 100);
+        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 100);
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)
@@ -179,7 +178,7 @@ class PageIndexHelperTest {
         // R8 : Only in DB reviewed by system => Delete
 
         // Replacements found to index
-        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
+        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
         IndexableReplacement r1 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
@@ -297,7 +296,7 @@ class PageIndexHelperTest {
         // R6 : Only in DB reviewed by system => Delete
 
         // Replacements found to index
-        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
+        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
         IndexableReplacement r1 = IndexableReplacement
             .builder()
             .indexablePageId(pageId)
@@ -387,7 +386,7 @@ class PageIndexHelperTest {
         LocalDate same = LocalDate.now();
         LocalDate before = same.minusDays(1);
 
-        WikipediaPageId pageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), 1);
+        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
         IndexablePage page = IndexablePage
             .builder()
             .id(pageId)

@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.time.LocalDate;
 import java.util.Objects;
 import lombok.Builder;
@@ -22,7 +21,7 @@ public class IndexableReplacement {
     Long id; // Nullable when still to be created in database
 
     @NonNull
-    WikipediaPageId indexablePageId;
+    IndexablePageId indexablePageId;
 
     @NonNull
     String type;

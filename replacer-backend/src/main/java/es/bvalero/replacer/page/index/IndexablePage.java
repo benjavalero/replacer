@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -16,7 +15,7 @@ import org.springframework.lang.Nullable;
 public class IndexablePage {
 
     @NonNull
-    WikipediaPageId id;
+    IndexablePageId id;
 
     // TODO: This should be non-null. To check and fix the cases in Production.
     @Nullable

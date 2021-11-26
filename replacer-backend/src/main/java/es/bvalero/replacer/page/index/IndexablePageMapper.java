@@ -28,6 +28,7 @@ public class IndexablePageMapper {
             .build();
     }
 
+    // TODO: Check if the nullable annotation is needed
     @Nullable
     public IndexablePage fromModel(@Nullable PageModel page) {
         if (Objects.isNull(page)) {
@@ -35,7 +36,7 @@ public class IndexablePageMapper {
         }
         return IndexablePage
             .builder()
-            .id(WikipediaPageId.of(page.getLang(), page.getPageId()))
+            .id(IndexablePageId.of(page.getLang(), page.getPageId()))
             .title(page.getTitle())
             .replacements(IndexableReplacementMapper.fromModel(page.getReplacements()))
             .build();
@@ -44,7 +45,7 @@ public class IndexablePageMapper {
     IndexablePage fromDomain(WikipediaPage page, Collection<Replacement> replacements) {
         return IndexablePage
             .builder()
-            .id(page.getId())
+            .id(fromDomain(page.getId()))
             .title(page.getTitle())
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .replacements(
@@ -54,5 +55,9 @@ public class IndexablePageMapper {
                     .collect(Collectors.toList())
             )
             .build();
+    }
+
+    IndexablePageId fromDomain(WikipediaPageId id) {
+        return IndexablePageId.of(id.getLang(), id.getPageId());
     }
 }
