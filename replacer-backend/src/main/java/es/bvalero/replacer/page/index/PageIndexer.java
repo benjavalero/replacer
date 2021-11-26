@@ -87,7 +87,7 @@ public class PageIndexer {
         saveResult(result, batchSave);
 
         // Return if the page has been indexed, i.e. modifications have been applied in database.
-        return !result.isEmpty();
+        return result.isNotEmpty();
     }
 
     private boolean isNotIndexable(IndexablePage page, @Nullable IndexablePage dbPage) {
@@ -113,7 +113,7 @@ public class PageIndexer {
     }
 
     private void saveResult(PageIndexResult result, boolean batchSave) {
-        if (!result.isEmpty()) {
+        if (result.isNotEmpty()) {
             if (batchSave) {
                 pageIndexResultSaver.saveBatch(result);
             } else {

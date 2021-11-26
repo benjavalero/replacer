@@ -15,7 +15,9 @@ import lombok.Getter;
 @Getter(AccessLevel.PACKAGE)
 @EqualsAndHashCode
 @Builder
-public final class PageIndexResult {
+final class PageIndexResult {
+
+    /* Changes to be applied in the database */
 
     // Pages to be created along with the related replacements
     @Builder.Default
@@ -38,7 +40,7 @@ public final class PageIndexResult {
     @Builder.Default
     Set<IndexableReplacement> deleteReplacements = new HashSet<>();
 
-    public int size() {
+    int size() {
         return (
             createPages.size() +
             updatePages.size() +
@@ -49,8 +51,8 @@ public final class PageIndexResult {
         );
     }
 
-    public boolean isEmpty() {
-        return this.size() == 0;
+    boolean isNotEmpty() {
+        return this.size() > 0;
     }
 
     void add(PageIndexResult pageIndexResult) {
@@ -62,7 +64,7 @@ public final class PageIndexResult {
         this.deleteReplacements.addAll(pageIndexResult.getDeleteReplacements());
     }
 
-    public static PageIndexResult ofEmpty() {
+    static PageIndexResult ofEmpty() {
         return PageIndexResult.builder().build();
     }
 
