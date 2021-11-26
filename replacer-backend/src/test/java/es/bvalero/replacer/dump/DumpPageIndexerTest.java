@@ -9,6 +9,7 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.index.IndexablePage;
 import es.bvalero.replacer.page.index.NonIndexablePageException;
+import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.page.repository.PageModel;
 import es.bvalero.replacer.page.repository.PageRepository;
@@ -58,9 +59,9 @@ class DumpPageIndexerTest {
         when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class)))
             .thenReturn(false);
 
-        DumpPageIndexResult result = dumpPageIndexer.index(dumpPage);
+        PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 
-        assertEquals(DumpPageIndexResult.PAGE_NOT_INDEXED, result);
+        assertEquals(PageIndexStatus.PAGE_NOT_INDEXED, result);
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
@@ -73,9 +74,9 @@ class DumpPageIndexerTest {
         // No need in this test to build the index result as it would be in the reality with the replacements
         when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class))).thenReturn(true);
 
-        DumpPageIndexResult result = dumpPageIndexer.index(dumpPage);
+        PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 
-        assertEquals(DumpPageIndexResult.PAGE_INDEXED, result);
+        assertEquals(PageIndexStatus.PAGE_INDEXED, result);
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
@@ -89,9 +90,9 @@ class DumpPageIndexerTest {
             .when(pageIndexer)
             .indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
 
-        DumpPageIndexResult result = dumpPageIndexer.index(dumpPage);
+        PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 
-        assertEquals(DumpPageIndexResult.PAGE_NOT_INDEXABLE, result);
+        assertEquals(PageIndexStatus.PAGE_NOT_INDEXABLE, result);
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class));
@@ -120,9 +121,9 @@ class DumpPageIndexerTest {
             .build();
         when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.of(dbPage));
 
-        DumpPageIndexResult result = dumpPageIndexer.index(dumpPage);
+        PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 
-        assertEquals(DumpPageIndexResult.PAGE_NOT_INDEXED, result);
+        assertEquals(PageIndexStatus.PAGE_NOT_INDEXED, result);
 
         verify(pageRepository).findByPageId(dumpPageId);
         verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class), any(IndexablePage.class));

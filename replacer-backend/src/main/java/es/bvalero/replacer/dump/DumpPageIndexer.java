@@ -2,10 +2,7 @@ package es.bvalero.replacer.dump;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.page.index.IndexablePage;
-import es.bvalero.replacer.page.index.IndexablePageMapper;
-import es.bvalero.replacer.page.index.NonIndexablePageException;
-import es.bvalero.replacer.page.index.PageIndexer;
+import es.bvalero.replacer.page.index.*;
 import es.bvalero.replacer.page.repository.PageRepository;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +28,7 @@ class DumpPageIndexer {
     private PageIndexer pageIndexer;
 
     @Loggable(prepend = true, value = Loggable.TRACE)
-    DumpPageIndexResult index(DumpPage dumpPage) {
+    PageIndexStatus index(DumpPage dumpPage) {
         WikipediaPage page = DumpPageMapper.toDomain(dumpPage);
 
         // In all cases we find the current status of the page in the DB
@@ -45,11 +42,11 @@ class DumpPageIndexer {
         } catch (Exception e) {
             // Just in case capture possible exceptions to continue indexing other pages
             LOGGER.error("Page not indexed: {}", dumpPage, e);
-            return DumpPageIndexResult.PAGE_NOT_INDEXED;
+            return PageIndexStatus.PAGE_NOT_INDEXED;
         }
     }
 
-    private DumpPageIndexResult indexPage(WikipediaPage page, @Nullable IndexablePage dbPage) {
+    private PageIndexStatus indexPage(WikipediaPage page, @Nullable IndexablePage dbPage) {
         // Index the found replacements against the ones in DB (if any)
         boolean pageIndexed;
         try {
@@ -64,10 +61,10 @@ class DumpPageIndexer {
                     dbPage.getTitle()
                 );
             }
-            return DumpPageIndexResult.PAGE_NOT_INDEXABLE;
+            return PageIndexStatus.PAGE_NOT_INDEXABLE;
         }
 
-        return pageIndexed ? DumpPageIndexResult.PAGE_INDEXED : DumpPageIndexResult.PAGE_NOT_INDEXED;
+        return pageIndexed ? PageIndexStatus.PAGE_INDEXED : PageIndexStatus.PAGE_NOT_INDEXED;
     }
 
     void finish() {

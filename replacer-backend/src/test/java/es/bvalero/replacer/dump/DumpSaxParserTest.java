@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.page.index.PageIndexStatus;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -56,10 +57,10 @@ class DumpSaxParserTest {
         assertNull(status.getNumPagesIndexed());
 
         when(dumpPageIndexer.index(any(DumpPage.class)))
-            .thenReturn(DumpPageIndexResult.PAGE_INDEXED)
-            .thenReturn(DumpPageIndexResult.PAGE_NOT_INDEXED)
-            .thenReturn(DumpPageIndexResult.PAGE_INDEXED)
-            .thenReturn(DumpPageIndexResult.PAGE_NOT_INDEXABLE);
+            .thenReturn(PageIndexStatus.PAGE_INDEXED)
+            .thenReturn(PageIndexStatus.PAGE_NOT_INDEXED)
+            .thenReturn(PageIndexStatus.PAGE_INDEXED)
+            .thenReturn(PageIndexStatus.PAGE_NOT_INDEXABLE);
 
         dumpParser.parseDumpFile(WikipediaLanguage.SPANISH, dumpFile);
 

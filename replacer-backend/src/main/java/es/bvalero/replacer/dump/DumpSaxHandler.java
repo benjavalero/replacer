@@ -2,6 +2,7 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
+import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -129,10 +130,10 @@ class DumpSaxHandler extends DefaultHandler {
             .lastUpdate(WikipediaDateUtils.parseWikipediaTimestamp(this.currentTimestamp))
             .build();
 
-        DumpPageIndexResult result = dumpPageIndexer.index(dumpPage);
-        if (!DumpPageIndexResult.PAGE_NOT_INDEXABLE.equals(result)) {
+        PageIndexStatus result = dumpPageIndexer.index(dumpPage);
+        if (!PageIndexStatus.PAGE_NOT_INDEXABLE.equals(result)) {
             this.incrementNumPagesRead();
-            if (DumpPageIndexResult.PAGE_INDEXED.equals(result)) {
+            if (PageIndexStatus.PAGE_INDEXED.equals(result)) {
                 this.incrementNumPagesIndexed();
             }
         }
