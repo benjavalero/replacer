@@ -33,7 +33,7 @@ public enum WikipediaNamespace {
 
     private static final Map<Integer, WikipediaNamespace> map = Arrays
         .stream(WikipediaNamespace.values())
-        .collect(Collectors.toMap(WikipediaNamespace::getValue, Function.identity()));
+        .collect(Collectors.toUnmodifiableMap(WikipediaNamespace::getValue, Function.identity()));
 
     private final int value;
 

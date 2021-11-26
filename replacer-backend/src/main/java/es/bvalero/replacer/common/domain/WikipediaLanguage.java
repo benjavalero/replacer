@@ -18,7 +18,7 @@ public enum WikipediaLanguage {
 
     private static final Map<String, WikipediaLanguage> map = Arrays
         .stream(WikipediaLanguage.values())
-        .collect(Collectors.toMap(WikipediaLanguage::getCode, Function.identity()));
+        .collect(Collectors.toUnmodifiableMap(WikipediaLanguage::getCode, Function.identity()));
 
     @JsonValue
     private final String code;
