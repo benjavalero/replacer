@@ -46,12 +46,15 @@ public class PageIndexer {
     }
 
     /** Index a page and its replacements. Details in database (if any) will be calculated. */
-    public PageIndexResult indexPageReplacements(WikipediaPage page, Collection<Replacement> replacements)
-        throws NonIndexablePageException {
+    public PageIndexResult indexPageReplacements(WikipediaPage page, Collection<Replacement> replacements) {
         IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
         IndexablePage dbPage = findIndexablePageInDb(page.getId()).orElse(null);
 
-        validatePage(page, dbPage);
+        try {
+            validatePage(page, dbPage);
+        } catch (NonIndexablePageException e) {
+            return PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE);
+        }
         return indexPageReplacements(indexablePage, dbPage, false);
     }
 

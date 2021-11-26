@@ -12,6 +12,8 @@ import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
+import es.bvalero.replacer.page.index.PageIndexResult;
+import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -128,9 +130,12 @@ class PageReviewNoTypeServiceTest {
         // The page contains replacements
         when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page))).thenReturn(replacements);
 
+        when(pageIndexer.indexPageReplacements(page, replacements))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        // verify(pageIndexHelper).indexPageReplacements(pageReviewNoTypeService.convertToIndexablePage(page, replacements));
+        verify(pageIndexer).indexPageReplacements(page, replacements);
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId());
@@ -153,9 +158,12 @@ class PageReviewNoTypeServiceTest {
         when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page)))
             .thenReturn(noPageReplacements);
 
+        when(pageIndexer.indexPageReplacements(page, noPageReplacements))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        // verify(pageIndexHelper).indexPageReplacements(pageReviewNoTypeService.convertToIndexablePage(page, Collections.emptyList()));
+        verify(pageIndexer).indexPageReplacements(page, noPageReplacements);
 
         assertFalse(review.isPresent());
     }
@@ -176,9 +184,12 @@ class PageReviewNoTypeServiceTest {
         when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page2)))
             .thenReturn(replacements);
 
+        when(pageIndexer.indexPageReplacements(page2, replacements))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        // verify(pageIndexHelper).indexPageReplacements(pageReviewNoTypeService.convertToIndexablePage(page2, replacements));
+        verify(pageIndexer).indexPageReplacements(page2, replacements);
 
         assertTrue(review.isPresent());
         assertEquals(randomId2, review.get().getPage().getId());

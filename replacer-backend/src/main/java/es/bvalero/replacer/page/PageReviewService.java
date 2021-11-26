@@ -9,7 +9,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
-import es.bvalero.replacer.page.index.NonIndexablePageException;
+import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -196,9 +196,9 @@ abstract class PageReviewService {
         return FinderPage.of(page.getId().getLang(), page.getContent(), page.getTitle());
     }
 
-    void indexReplacements(WikipediaPage page, List<Replacement> replacements) throws NonIndexablePageException {
+    PageIndexResult indexReplacements(WikipediaPage page, List<Replacement> replacements) {
         LOGGER.trace("Update page replacements in database");
-        pageIndexer.indexPageReplacements(page, replacements);
+        return pageIndexer.indexPageReplacements(page, replacements);
     }
 
     @VisibleForTesting

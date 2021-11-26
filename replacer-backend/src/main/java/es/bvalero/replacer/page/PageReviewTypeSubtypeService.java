@@ -4,7 +4,8 @@ import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.page.index.NonIndexablePageException;
+import es.bvalero.replacer.page.index.PageIndexResult;
+import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Collections;
 import java.util.List;
@@ -51,9 +52,8 @@ class PageReviewTypeSubtypeService extends PageReviewService {
         List<Replacement> replacements = replacementFinderService.find(convertToFinderPage(page));
 
         // We take profit, and we update the database with the just calculated replacements (also when empty).
-        try {
-            indexReplacements(page, replacements);
-        } catch (NonIndexablePageException e) {
+        PageIndexResult pageIndexResult = indexReplacements(page, replacements);
+        if (pageIndexResult.getStatus() == PageIndexStatus.PAGE_NOT_INDEXABLE) {
             // Page not indexable
             return Collections.emptyList();
         }

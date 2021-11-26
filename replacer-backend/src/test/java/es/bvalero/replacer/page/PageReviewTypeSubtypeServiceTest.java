@@ -12,6 +12,8 @@ import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
+import es.bvalero.replacer.page.index.PageIndexResult;
+import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -112,6 +114,9 @@ class PageReviewTypeSubtypeServiceTest {
         when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
 
+        when(pageIndexer.indexPageReplacements(page, replacements))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options2);
 
         verify(pageIndexer).indexPageReplacements(page, replacements);
@@ -138,6 +143,9 @@ class PageReviewTypeSubtypeServiceTest {
         // The page contains replacements
         when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
+
+        when(pageIndexer.indexPageReplacements(page, replacements))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
 
@@ -180,6 +188,9 @@ class PageReviewTypeSubtypeServiceTest {
         when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page2)))
             .thenReturn(replacements);
 
+        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), anyCollection()))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId());
@@ -202,6 +213,9 @@ class PageReviewTypeSubtypeServiceTest {
         // The page contains replacements
         when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
+
+        when(pageIndexer.indexPageReplacements(page, replacements))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
 
         // Load the cache in order to find the total results
         pageReviewTypeSubtypeService.loadCache(options);
@@ -233,6 +247,9 @@ class PageReviewTypeSubtypeServiceTest {
         // The page contains replacements
         when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
             .thenReturn(replacements);
+
+        when(pageIndexer.indexPageReplacements(page, replacements))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
 
         // The page has no sections
         when(sectionReviewService.findSectionReview(any(PageReview.class))).thenReturn(Optional.empty());
