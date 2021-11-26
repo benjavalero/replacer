@@ -34,20 +34,15 @@ public class PageIndexer {
      * Index a page against its details in database (if any). Current replacements will be calculated.
      * Returns if changes are performed in database due to the page indexing.
      */
-    public PageIndexStatus indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage) {
+    public PageIndexResult indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage) {
         try {
             validatePage(page, dbPage);
         } catch (NonIndexablePageException e) {
-            return PageIndexStatus.PAGE_NOT_INDEXABLE;
+            return PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE);
         }
 
         List<Replacement> replacements = replacementFinderService.find(FinderPageMapper.fromDomain(page));
-        PageIndexResult result = indexPageReplacements(
-            IndexablePageMapper.fromDomain(page, replacements),
-            dbPage,
-            true
-        );
-        return result.getStatus();
+        return indexPageReplacements(IndexablePageMapper.fromDomain(page, replacements), dbPage, true);
     }
 
     /** Index a page and its replacements. Details in database (if any) will be calculated. */

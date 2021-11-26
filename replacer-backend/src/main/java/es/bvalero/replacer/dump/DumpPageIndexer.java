@@ -37,7 +37,7 @@ class DumpPageIndexer {
 
         // Find the replacements to index and index the page
         try {
-            return pageIndexer.indexPageReplacements(page, dbPage.orElse(null));
+            return pageIndexer.indexPageReplacements(page, dbPage.orElse(null)).getStatus();
         } catch (Exception e) {
             // Just in case capture possible exceptions to continue indexing other pages
             LOGGER.error("Page not indexed: {}", dumpPage, e);

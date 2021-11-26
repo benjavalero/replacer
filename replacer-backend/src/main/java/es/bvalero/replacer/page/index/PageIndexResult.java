@@ -3,6 +3,7 @@ package es.bvalero.replacer.page.index;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
+import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.lang.NonNull;
 
 /**
@@ -18,6 +19,7 @@ public final class PageIndexResult {
     /* Resulting status of the page indexing */
 
     @NonNull
+    @Getter(AccessLevel.PUBLIC)
     @Builder.Default
     PageIndexStatus status = PageIndexStatus.PAGE_NOT_INDEXED;
 
@@ -73,7 +75,12 @@ public final class PageIndexResult {
     }
 
     static PageIndexResult ofEmpty() {
-        return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXED).build();
+        return PageIndexResult.builder().build();
+    }
+
+    @VisibleForTesting
+    public static PageIndexResult ofEmpty(PageIndexStatus status) {
+        return PageIndexResult.builder().status(status).build();
     }
 
     void clear() {
