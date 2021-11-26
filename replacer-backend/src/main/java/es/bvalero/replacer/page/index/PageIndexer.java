@@ -33,14 +33,17 @@ public class PageIndexer {
     /**
      * Index a page against its details in database (if any). Current replacements will be calculated.
      * Returns if changes are performed in database due to the page indexing.
-     * Throws a custom exception in case the page is not indexable.
      */
-    public boolean indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage)
-        throws NonIndexablePageException {
-        validatePage(page, dbPage);
+    public PageIndexStatus indexPageReplacements(WikipediaPage page, @Nullable IndexablePage dbPage) {
+        try {
+            validatePage(page, dbPage);
+        } catch (NonIndexablePageException e) {
+            return PageIndexStatus.PAGE_NOT_INDEXABLE;
+        }
 
         List<Replacement> replacements = replacementFinderService.find(FinderPageMapper.fromDomain(page));
-        return indexPageReplacements(IndexablePageMapper.fromDomain(page, replacements), dbPage, true);
+        boolean pageIndexed = indexPageReplacements(IndexablePageMapper.fromDomain(page, replacements), dbPage, true);
+        return pageIndexed ? PageIndexStatus.PAGE_INDEXED : PageIndexStatus.PAGE_NOT_INDEXED;
     }
 
     /** Index a page and its replacements. Details in database (if any) will be calculated. */

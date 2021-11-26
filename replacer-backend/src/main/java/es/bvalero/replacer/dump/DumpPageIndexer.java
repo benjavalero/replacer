@@ -8,7 +8,6 @@ import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,33 +37,12 @@ class DumpPageIndexer {
 
         // Find the replacements to index and index the page
         try {
-            return indexPage(page, dbPage.orElse(null));
+            return pageIndexer.indexPageReplacements(page, dbPage.orElse(null));
         } catch (Exception e) {
             // Just in case capture possible exceptions to continue indexing other pages
             LOGGER.error("Page not indexed: {}", dumpPage, e);
             return PageIndexStatus.PAGE_NOT_INDEXED;
         }
-    }
-
-    private PageIndexStatus indexPage(WikipediaPage page, @Nullable IndexablePage dbPage) {
-        // Index the found replacements against the ones in DB (if any)
-        boolean pageIndexed;
-        try {
-            pageIndexed = pageIndexer.indexPageReplacements(page, dbPage);
-        } catch (NonIndexablePageException e) {
-            // If the page is not indexable then it should not exist in DB
-            if (dbPage != null) {
-                LOGGER.error(
-                    "Unexpected page in DB not indexable: {} - {} - {}",
-                    page.getId().getLang(),
-                    page.getTitle(),
-                    dbPage.getTitle()
-                );
-            }
-            return PageIndexStatus.PAGE_NOT_INDEXABLE;
-        }
-
-        return pageIndexed ? PageIndexStatus.PAGE_INDEXED : PageIndexStatus.PAGE_NOT_INDEXED;
     }
 
     void finish() {
