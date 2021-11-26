@@ -89,8 +89,8 @@ public final class PageIndexResult {
     }
 
     @VisibleForTesting
-    public static PageIndexResult ofEmpty(PageIndexStatus status) {
-        return PageIndexResult.builder().status(status).build();
+    public static PageIndexResult ofEmpty(PageIndexStatus status, Collection<Replacement> replacements) {
+        return PageIndexResult.builder().status(status).replacements(replacements).build();
     }
 
     void clear() {

@@ -7,6 +7,7 @@ import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+// TODO: Move to domain package
 @Getter
 @AllArgsConstructor
 public enum ReplacementType {

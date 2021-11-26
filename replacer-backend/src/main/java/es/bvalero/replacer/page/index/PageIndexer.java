@@ -40,7 +40,7 @@ public class PageIndexer {
         try {
             validatePage(page, dbPage);
         } catch (NonIndexablePageException e) {
-            return PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE);
+            return PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE, Collections.emptyList());
         }
 
         Collection<es.bvalero.replacer.common.domain.Replacement> replacements = findPageReplacements(page);
@@ -49,14 +49,13 @@ public class PageIndexer {
     }
 
     /** Index a page. Replacements and details in database (if any) will be calculated. */
-    public PageIndexResult indexPageReplacements(WikipediaPage page, Collection<Replacement> notUsedReplacements) {
-        // TODO: Remove second argument
+    public PageIndexResult indexPageReplacements(WikipediaPage page) {
         IndexablePage dbPage = findIndexablePageInDb(page.getId()).orElse(null);
 
         try {
             validatePage(page, dbPage);
         } catch (NonIndexablePageException e) {
-            return PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE);
+            return PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE, Collections.emptyList());
         }
 
         Collection<es.bvalero.replacer.common.domain.Replacement> replacements = findPageReplacements(page);
@@ -70,7 +69,7 @@ public class PageIndexer {
     }
 
     // TODO: Temporary while refactoring
-    private Collection<es.bvalero.replacer.common.domain.Replacement> toDomain(
+    public static Collection<es.bvalero.replacer.common.domain.Replacement> toDomain(
         Collection<Replacement> replacements,
         WikipediaPage page
     ) {
@@ -78,7 +77,7 @@ public class PageIndexer {
     }
 
     // TODO: Temporary while refactoring
-    private es.bvalero.replacer.common.domain.Replacement toDomain(Replacement replacement, WikipediaPage page) {
+    private static es.bvalero.replacer.common.domain.Replacement toDomain(Replacement replacement, WikipediaPage page) {
         return es.bvalero.replacer.common.domain.Replacement
             .builder()
             .start(replacement.getStart())
@@ -91,14 +90,14 @@ public class PageIndexer {
     }
 
     // TODO: Temporary while refactoring
-    private Collection<es.bvalero.replacer.common.domain.ReplacementSuggestion> toDomainSuggestion(
+    private static Collection<es.bvalero.replacer.common.domain.ReplacementSuggestion> toDomainSuggestion(
         Collection<ReplacementSuggestion> suggestions
     ) {
-        return suggestions.stream().map(this::toDomainSuggestion).collect(Collectors.toUnmodifiableList());
+        return suggestions.stream().map(PageIndexer::toDomainSuggestion).collect(Collectors.toUnmodifiableList());
     }
 
     // TODO: Temporary while refactoring
-    private es.bvalero.replacer.common.domain.ReplacementSuggestion toDomainSuggestion(
+    private static es.bvalero.replacer.common.domain.ReplacementSuggestion toDomainSuggestion(
         ReplacementSuggestion suggestion
     ) {
         return es.bvalero.replacer.common.domain.ReplacementSuggestion.of(

@@ -1,11 +1,11 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.replacement.ReplacementService;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +16,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 class PageReviewNoTypeService extends PageReviewService {
-
-    @Autowired
-    private ReplacementFinderService replacementFinderService;
 
     @Autowired
     private ReplacementService replacementService;
@@ -40,17 +37,15 @@ class PageReviewNoTypeService extends PageReviewService {
     }
 
     @Override
-    List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
-        List<Replacement> replacements = replacementFinderService.find(convertToFinderPage(page));
-
+    Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We take profit, and we update the database with the just calculated replacements (also when empty).
-        PageIndexResult pageIndexResult = indexReplacements(page, replacements);
+        PageIndexResult pageIndexResult = indexReplacements(page);
         if (pageIndexResult.getStatus() == PageIndexStatus.PAGE_NOT_INDEXABLE) {
             // Page not indexable
             return Collections.emptyList();
         }
 
-        return replacements;
+        return pageIndexResult.getReplacements();
     }
 
     @Override

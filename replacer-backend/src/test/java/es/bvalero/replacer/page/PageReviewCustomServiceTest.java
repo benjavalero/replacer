@@ -122,6 +122,8 @@ class PageReviewCustomServiceTest {
         final Replacement customRep = Replacement
             .builder()
             .start(2)
+            .type(ReplacementType.CUSTOM)
+            .subtype("R")
             .text("R")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
             .build();
@@ -233,6 +235,8 @@ class PageReviewCustomServiceTest {
         final Replacement customRep = Replacement
             .builder()
             .start(2)
+            .type(ReplacementType.CUSTOM)
+            .subtype("R")
             .text("R")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
             .build();
@@ -324,6 +328,8 @@ class PageReviewCustomServiceTest {
         final Replacement customRep = Replacement
             .builder()
             .start(2)
+            .type(ReplacementType.CUSTOM)
+            .subtype("R")
             .text("R")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
             .build();

@@ -16,6 +16,7 @@ import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.repository.ReplacementModel;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +58,7 @@ class DumpPageIndexerTest {
         // There is no need to mock the rest of calls
         // The DB page is null as we are not mocking the response from the findByPageId
         when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class)))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXED));
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXED, Collections.emptyList()));
 
         PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 
@@ -73,7 +74,7 @@ class DumpPageIndexerTest {
 
         // No need in this test to build the index result as it would be in the reality with the replacements
         when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class)))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
 
         PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 
@@ -88,7 +89,7 @@ class DumpPageIndexerTest {
         when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.empty());
 
         when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), isNull(IndexablePage.class)))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE));
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE, Collections.emptyList()));
 
         PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 
@@ -122,7 +123,7 @@ class DumpPageIndexerTest {
         when(pageRepository.findByPageId(dumpPageId)).thenReturn(Optional.of(dbPage));
 
         when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), any(IndexablePage.class)))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXED));
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXED, Collections.emptyList()));
 
         PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 

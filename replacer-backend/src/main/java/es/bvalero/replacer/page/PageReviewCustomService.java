@@ -1,22 +1,20 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.listing.Misspelling;
-import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
+import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,11 +101,17 @@ class PageReviewCustomService extends PageReviewService {
     }
 
     @Override
-    List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
+    Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We do nothing in the database in case the list is empty
         // We want to review the page every time in case anything has changed
-        return IterableUtils.toList(
-            customReplacementFinderService.findCustomReplacements(convertToFinderPage(page), convertOptions(options))
+        return PageIndexer.toDomain(
+            IterableUtils.toList(
+                customReplacementFinderService.findCustomReplacements(
+                    convertToFinderPage(page),
+                    convertOptions(options)
+                )
+            ),
+            page
         );
     }
 

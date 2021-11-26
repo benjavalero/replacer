@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 
 import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.repository.ReplacementRepository;
+import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,7 +31,7 @@ class PageIndexResultSaverTest {
 
     @Test
     void testSave() {
-        pageIndexResultSaver.save(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+        pageIndexResultSaver.save(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
 
         verify(pageRepository).updatePageTitles(anyCollection());
         verify(pageRepository).insertPages(anyCollection());

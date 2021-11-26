@@ -2,20 +2,14 @@ package es.bvalero.replacer.page;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.common.domain.WikipediaPageSection;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
-import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
@@ -175,7 +169,7 @@ abstract class PageReviewService {
     }
 
     private List<Replacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
-        List<Replacement> replacements = findAllReplacements(page, options);
+        List<Replacement> replacements = new LinkedList<>(findAllReplacements(page, options));
 
         // Return the replacements sorted as they appear in the text
         // So there is no need to sort them in the frontend
@@ -190,15 +184,15 @@ abstract class PageReviewService {
         return replacements;
     }
 
-    abstract List<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
+    abstract Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
 
     protected FinderPage convertToFinderPage(WikipediaPage page) {
         return FinderPage.of(page.getId().getLang(), page.getContent(), page.getTitle());
     }
 
-    PageIndexResult indexReplacements(WikipediaPage page, List<Replacement> replacements) {
+    PageIndexResult indexReplacements(WikipediaPage page) {
         LOGGER.trace("Update page replacements in database");
-        return pageIndexer.indexPageReplacements(page, replacements);
+        return pageIndexer.indexPageReplacements(page);
     }
 
     @VisibleForTesting

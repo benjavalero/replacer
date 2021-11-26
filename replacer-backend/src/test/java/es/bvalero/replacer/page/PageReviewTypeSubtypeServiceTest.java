@@ -3,14 +3,8 @@ package es.bvalero.replacer.page;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaNamespace;
-import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
@@ -57,6 +51,7 @@ class PageReviewTypeSubtypeServiceTest {
         .type(ReplacementType.MISSPELLING_SIMPLE)
         .subtype("Y")
         .text("Y")
+        .context("Y")
         .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
@@ -74,9 +69,6 @@ class PageReviewTypeSubtypeServiceTest {
 
     @Mock
     private WikipediaService wikipediaService;
-
-    @Mock
-    private ReplacementFinderService replacementFinderService;
 
     @Mock
     private PageIndexer pageIndexer;
@@ -110,16 +102,12 @@ class PageReviewTypeSubtypeServiceTest {
         // The page exists in Wikipedia
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.of(page));
 
-        // The page contains replacements
-        when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
-            .thenReturn(replacements);
-
-        when(pageIndexer.indexPageReplacements(page, replacements))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+        when(pageIndexer.indexPageReplacements(page))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options2);
 
-        verify(pageIndexer).indexPageReplacements(page, replacements);
+        verify(pageIndexer).indexPageReplacements(page);
 
         assertFalse(review.isPresent());
     }
@@ -140,16 +128,12 @@ class PageReviewTypeSubtypeServiceTest {
         // The page exists in Wikipedia
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.of(page));
 
-        // The page contains replacements
-        when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
-            .thenReturn(replacements);
-
-        when(pageIndexer.indexPageReplacements(page, replacements))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+        when(pageIndexer.indexPageReplacements(page))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
 
-        verify(pageIndexer).indexPageReplacements(page, replacements);
+        verify(pageIndexer).indexPageReplacements(page);
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId());
@@ -182,14 +166,8 @@ class PageReviewTypeSubtypeServiceTest {
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.of(page));
         when(wikipediaService.getPageById(randomPageId2)).thenReturn(Optional.of(page2));
 
-        // The pages contains replacements
-        when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
-            .thenReturn(replacements);
-        when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page2)))
-            .thenReturn(replacements);
-
-        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class), anyCollection()))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class)))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.findRandomPageReview(options);
         assertTrue(review.isPresent());
@@ -210,12 +188,8 @@ class PageReviewTypeSubtypeServiceTest {
         // The page exists in Wikipedia
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.of(page));
 
-        // The page contains replacements
-        when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
-            .thenReturn(replacements);
-
-        when(pageIndexer.indexPageReplacements(page, replacements))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+        when(pageIndexer.indexPageReplacements(page))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         // Load the cache in order to find the total results
         pageReviewTypeSubtypeService.loadCache(options);
@@ -244,12 +218,8 @@ class PageReviewTypeSubtypeServiceTest {
         // The page exists in Wikipedia
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.of(page));
 
-        // The page contains replacements
-        when(replacementFinderService.find(pageReviewTypeSubtypeService.convertToFinderPage(page)))
-            .thenReturn(replacements);
-
-        when(pageIndexer.indexPageReplacements(page, replacements))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+        when(pageIndexer.indexPageReplacements(page))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         // The page has no sections
         when(sectionReviewService.findSectionReview(any(PageReview.class))).thenReturn(Optional.empty());

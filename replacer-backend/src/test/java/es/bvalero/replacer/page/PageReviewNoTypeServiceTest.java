@@ -3,14 +3,8 @@ package es.bvalero.replacer.page;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaNamespace;
-import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
@@ -57,6 +51,7 @@ class PageReviewNoTypeServiceTest {
         .text("Y")
         .type(ReplacementType.DATE)
         .subtype("Año con punto")
+        .context("Y")
         .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
@@ -70,9 +65,6 @@ class PageReviewNoTypeServiceTest {
 
     @Mock
     private PageIndexer pageIndexer;
-
-    @Mock
-    private ReplacementFinderService replacementFinderService;
 
     @Mock
     private SectionReviewService sectionReviewService;
@@ -127,15 +119,12 @@ class PageReviewNoTypeServiceTest {
         // The page exists in Wikipedia
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.of(page));
 
-        // The page contains replacements
-        when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page))).thenReturn(replacements);
-
-        when(pageIndexer.indexPageReplacements(page, replacements))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+        when(pageIndexer.indexPageReplacements(page))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexer).indexPageReplacements(page, replacements);
+        verify(pageIndexer).indexPageReplacements(page);
 
         assertTrue(review.isPresent());
         assertEquals(randomId, review.get().getPage().getId());
@@ -155,15 +144,12 @@ class PageReviewNoTypeServiceTest {
 
         // The page doesn't contain replacements
         List<Replacement> noPageReplacements = Collections.emptyList();
-        when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page)))
-            .thenReturn(noPageReplacements);
-
-        when(pageIndexer.indexPageReplacements(page, noPageReplacements))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+        when(pageIndexer.indexPageReplacements(page))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, noPageReplacements));
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexer).indexPageReplacements(page, noPageReplacements);
+        verify(pageIndexer).indexPageReplacements(page);
 
         assertFalse(review.isPresent());
     }
@@ -180,16 +166,12 @@ class PageReviewNoTypeServiceTest {
         when(wikipediaService.getPageById(randomPageId)).thenReturn(Optional.empty());
         when(wikipediaService.getPageById(randomPageId2)).thenReturn(Optional.of(page2));
 
-        // The page contains replacements
-        when(replacementFinderService.find(pageReviewNoTypeService.convertToFinderPage(page2)))
-            .thenReturn(replacements);
-
-        when(pageIndexer.indexPageReplacements(page2, replacements))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED));
+        when(pageIndexer.indexPageReplacements(page2))
+            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
 
-        verify(pageIndexer).indexPageReplacements(page2, replacements);
+        verify(pageIndexer).indexPageReplacements(page2);
 
         assertTrue(review.isPresent());
         assertEquals(randomId2, review.get().getPage().getId());
