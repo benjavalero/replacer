@@ -38,6 +38,7 @@ public interface FinderResult extends Comparable<FinderResult> {
         return this.getRange().containsRange(r.getRange());
     }
 
+    // TODO: Move to domain object
     default String getContext(String pageContent) {
         return FinderUtils.getContextAroundWord(pageContent, getStart(), getEnd(), 20);
     }

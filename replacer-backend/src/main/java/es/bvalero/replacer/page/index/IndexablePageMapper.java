@@ -1,8 +1,8 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.page.repository.PageModel;
 import java.util.Collection;
 import java.util.List;

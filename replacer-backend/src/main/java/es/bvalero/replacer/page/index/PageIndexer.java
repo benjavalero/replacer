@@ -5,9 +5,11 @@ import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
+import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.page.repository.PageRepository;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -41,13 +43,14 @@ public class PageIndexer {
             return PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE);
         }
 
-        List<Replacement> replacements = replacementFinderService.find(FinderPageMapper.fromDomain(page));
-        return indexPageReplacements(IndexablePageMapper.fromDomain(page, replacements), dbPage, true);
+        Collection<es.bvalero.replacer.common.domain.Replacement> replacements = findPageReplacements(page);
+        return indexPageReplacements(IndexablePageMapper.fromDomain(page, replacements), dbPage, true)
+            .withReplacements(replacements);
     }
 
-    /** Index a page and its replacements. Details in database (if any) will be calculated. */
-    public PageIndexResult indexPageReplacements(WikipediaPage page, Collection<Replacement> replacements) {
-        IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
+    /** Index a page. Replacements and details in database (if any) will be calculated. */
+    public PageIndexResult indexPageReplacements(WikipediaPage page, Collection<Replacement> notUsedReplacements) {
+        // TODO: Remove second argument
         IndexablePage dbPage = findIndexablePageInDb(page.getId()).orElse(null);
 
         try {
@@ -55,7 +58,53 @@ public class PageIndexer {
         } catch (NonIndexablePageException e) {
             return PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXABLE);
         }
-        return indexPageReplacements(indexablePage, dbPage, false);
+
+        Collection<es.bvalero.replacer.common.domain.Replacement> replacements = findPageReplacements(page);
+        IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
+
+        return indexPageReplacements(indexablePage, dbPage, false).withReplacements(replacements);
+    }
+
+    private Collection<es.bvalero.replacer.common.domain.Replacement> findPageReplacements(WikipediaPage page) {
+        return toDomain(replacementFinderService.find(FinderPageMapper.fromDomain(page)), page);
+    }
+
+    // TODO: Temporary while refactoring
+    private Collection<es.bvalero.replacer.common.domain.Replacement> toDomain(
+        Collection<Replacement> replacements,
+        WikipediaPage page
+    ) {
+        return replacements.stream().map(r -> toDomain(r, page)).collect(Collectors.toUnmodifiableList());
+    }
+
+    // TODO: Temporary while refactoring
+    private es.bvalero.replacer.common.domain.Replacement toDomain(Replacement replacement, WikipediaPage page) {
+        return es.bvalero.replacer.common.domain.Replacement
+            .builder()
+            .start(replacement.getStart())
+            .text(replacement.getText())
+            .type(replacement.getType())
+            .subtype(replacement.getSubtype())
+            .context(replacement.getContext(page.getContent()))
+            .suggestions(toDomainSuggestion(replacement.getSuggestions()))
+            .build();
+    }
+
+    // TODO: Temporary while refactoring
+    private Collection<es.bvalero.replacer.common.domain.ReplacementSuggestion> toDomainSuggestion(
+        Collection<ReplacementSuggestion> suggestions
+    ) {
+        return suggestions.stream().map(this::toDomainSuggestion).collect(Collectors.toUnmodifiableList());
+    }
+
+    // TODO: Temporary while refactoring
+    private es.bvalero.replacer.common.domain.ReplacementSuggestion toDomainSuggestion(
+        ReplacementSuggestion suggestion
+    ) {
+        return es.bvalero.replacer.common.domain.ReplacementSuggestion.of(
+            suggestion.getText(),
+            suggestion.getComment()
+        );
     }
 
     private void validatePage(WikipediaPage page, @Nullable IndexablePage dbPage) throws NonIndexablePageException {

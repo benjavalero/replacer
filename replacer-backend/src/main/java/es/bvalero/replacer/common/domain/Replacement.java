@@ -33,5 +33,8 @@ public class Replacement {
     String subtype;
 
     @NonNull
+    String context;
+
+    @NonNull
     Collection<ReplacementSuggestion> suggestions;
 }

@@ -1,5 +1,8 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.common.domain.Replacement;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
@@ -22,6 +25,13 @@ public final class PageIndexResult {
     @Getter(AccessLevel.PUBLIC)
     @Builder.Default
     PageIndexStatus status = PageIndexStatus.PAGE_NOT_INDEXED;
+
+    /* Replacements resolved from the page content */
+    @NonNull
+    @With
+    @Getter(AccessLevel.PUBLIC)
+    @Builder.Default
+    Collection<Replacement> replacements = Collections.emptyList();
 
     /* Changes to be applied in the database */
 
