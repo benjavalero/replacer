@@ -28,18 +28,22 @@ public abstract class PageBaseIndexer {
     private ReplacementFinderService replacementFinderService;
 
     public PageIndexResult indexPageReplacements(WikipediaPage page) {
-        IndexablePage dbPage = findIndexablePageInDb(page.getId()).orElse(null);
-
         try {
+            IndexablePage dbPage = findIndexablePageInDb(page.getId()).orElse(null);
+
             validatePage(page, dbPage);
+
+            Collection<es.bvalero.replacer.common.domain.Replacement> replacements = findPageReplacements(page);
+            IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
+
+            return indexPageReplacements(indexablePage, dbPage).withReplacements(replacements);
         } catch (NonIndexablePageException e) {
             return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXABLE).build();
+        } catch (Exception e) {
+            // Just in case capture possible exceptions to continue indexing other pages
+            LOGGER.error("Page not indexed: {}", page, e);
+            return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXED).build();
         }
-
-        Collection<es.bvalero.replacer.common.domain.Replacement> replacements = findPageReplacements(page);
-        IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
-
-        return indexPageReplacements(indexablePage, dbPage).withReplacements(replacements);
     }
 
     private Collection<es.bvalero.replacer.common.domain.Replacement> findPageReplacements(WikipediaPage page) {

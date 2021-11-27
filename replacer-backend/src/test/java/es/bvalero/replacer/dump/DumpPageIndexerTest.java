@@ -42,9 +42,7 @@ class DumpPageIndexerTest {
     }
 
     @Test
-    void testEmptyPageIndexResult() {
-        // There is no need to mock the rest of calls
-        // The DB page is null as we are not mocking the response from the findByPageId
+    void testPageNotIndexed() {
         when(pageIndexer.indexPageReplacements(any(WikipediaPage.class)))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXED, Collections.emptyList()));
 
@@ -56,8 +54,7 @@ class DumpPageIndexerTest {
     }
 
     @Test
-    void testIndexNewPageWithReplacements() {
-        // No need in this test to build the index result as it would be in the reality with the replacements
+    void testPageIndexed() {
         when(pageIndexer.indexPageReplacements(any(WikipediaPage.class)))
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
 
@@ -76,18 +73,6 @@ class DumpPageIndexerTest {
         PageIndexStatus result = dumpPageIndexer.index(dumpPage);
 
         assertEquals(PageIndexStatus.PAGE_NOT_INDEXABLE, result);
-
-        verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class));
-    }
-
-    @Test
-    void testPageNotIndexedByTimestamp() {
-        when(pageIndexer.indexPageReplacements(any(WikipediaPage.class)))
-            .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_NOT_INDEXED, Collections.emptyList()));
-
-        PageIndexStatus result = dumpPageIndexer.index(dumpPage);
-
-        assertEquals(PageIndexStatus.PAGE_NOT_INDEXED, result);
 
         verify(pageIndexer).indexPageReplacements(any(WikipediaPage.class));
     }
