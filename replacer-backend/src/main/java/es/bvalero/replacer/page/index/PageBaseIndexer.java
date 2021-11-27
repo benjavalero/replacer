@@ -84,8 +84,8 @@ public abstract class PageBaseIndexer {
     private boolean isPageNotIndexed(WikipediaPage page, @Nullable IndexablePage dbPage) {
         // Check if the page (indexable by namespace) will be indexed
         return (
-            pageIndexValidator.isNotIndexableByTimestamp(page, dbPage) &&
-            pageIndexValidator.isNotIndexableByPageTitle(page, dbPage)
+            !pageIndexValidator.isIndexableByTimestamp(page, dbPage) &&
+            !pageIndexValidator.isIndexableByPageTitle(page, dbPage)
         );
     }
 

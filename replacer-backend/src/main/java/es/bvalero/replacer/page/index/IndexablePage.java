@@ -6,10 +6,12 @@ import java.util.List;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Value;
+import lombok.experimental.NonFinal;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /** Sub-domain object representing a page (to be) indexed in the database */
+@NonFinal
 @Value
 @Builder
 class IndexablePage {

@@ -3,7 +3,6 @@ package es.bvalero.replacer.page.index;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -36,21 +35,21 @@ class PageIndexValidator {
         return indexableWikipediaNamespaces.contains(page.getNamespace());
     }
 
-    boolean isNotIndexableByTimestamp(WikipediaPage page, @Nullable IndexablePage dbPage) {
+    boolean isIndexableByTimestamp(WikipediaPage page, @Nullable IndexablePage dbPage) {
         // If page modified in dump equals to the last indexing, always reindex.
         // If page modified in dump after last indexing, always reindex.
         // If page modified in dump before last indexing, do not index.
         LocalDate dbDate = Optional.ofNullable(dbPage).map(IndexablePage::getLastUpdate).orElse(null);
         if (dbDate == null) {
-            return false;
+            return true;
         } else {
-            return page.getLastUpdate().toLocalDate().isBefore(dbDate);
+            return !page.getLastUpdate().toLocalDate().isBefore(dbDate);
         }
     }
 
-    boolean isNotIndexableByPageTitle(WikipediaPage page, @Nullable IndexablePage dbPage) {
+    boolean isIndexableByPageTitle(WikipediaPage page, @Nullable IndexablePage dbPage) {
         // In case the page title has changed we force the page indexing
         String dbTitle = dbPage == null ? null : dbPage.getTitle();
-        return Objects.equals(page.getTitle(), dbTitle);
+        return !page.getTitle().equals(dbTitle);
     }
 }
