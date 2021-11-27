@@ -5,10 +5,10 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.listing.Misspelling;
+import es.bvalero.replacer.finder.replacement.ReplacementMapper;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
-import es.bvalero.replacer.page.index.PageBaseIndexer;
 import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
@@ -104,7 +104,7 @@ class PageReviewCustomService extends PageReviewService {
     Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We do nothing in the database in case the list is empty
         // We want to review the page every time in case anything has changed
-        return PageBaseIndexer.toDomain(
+        return ReplacementMapper.toDomain(
             IterableUtils.toList(
                 customReplacementFinderService.findCustomReplacements(
                     convertToFinderPage(page),

@@ -1,19 +1,16 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.finder.FinderPageMapper;
-import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
-import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
+import es.bvalero.replacer.finder.replacement.ReplacementMapper;
 import es.bvalero.replacer.page.repository.PageModel;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -47,36 +44,7 @@ public abstract class PageBaseIndexer {
     }
 
     private Collection<es.bvalero.replacer.common.domain.Replacement> findPageReplacements(WikipediaPage page) {
-        return toDomain(replacementFinderService.find(FinderPageMapper.fromDomain(page)));
-    }
-
-    // TODO: Temporary while refactoring
-    public static Collection<es.bvalero.replacer.common.domain.Replacement> toDomain(
-        Collection<Replacement> replacements
-    ) {
-        return replacements.stream().map(PageBaseIndexer::toDomain).collect(Collectors.toUnmodifiableList());
-    }
-
-    // TODO: Temporary while refactoring
-    private static es.bvalero.replacer.common.domain.Replacement toDomain(Replacement replacement) {
-        return es.bvalero.replacer.common.domain.Replacement
-            .builder()
-            .start(replacement.getStart())
-            .text(replacement.getText())
-            .type(replacement.getType())
-            .subtype(replacement.getSubtype())
-            .suggestions(toDomainSuggestion(replacement.getSuggestions()))
-            .build();
-    }
-
-    // TODO: Temporary while refactoring
-    private static Collection<Suggestion> toDomainSuggestion(Collection<ReplacementSuggestion> suggestions) {
-        return suggestions.stream().map(PageBaseIndexer::toDomainSuggestion).collect(Collectors.toUnmodifiableList());
-    }
-
-    // TODO: Temporary while refactoring
-    private static Suggestion toDomainSuggestion(ReplacementSuggestion suggestion) {
-        return Suggestion.of(suggestion.getText(), suggestion.getComment());
+        return ReplacementMapper.toDomain(replacementFinderService.find(FinderPageMapper.fromDomain(page)));
     }
 
     private void validatePage(WikipediaPage page, @Nullable IndexablePage dbPage) throws NonIndexablePageException {
