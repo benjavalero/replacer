@@ -6,13 +6,11 @@ import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.repository.PageModel;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
-import org.springframework.lang.Nullable;
 
 @UtilityClass
-public class IndexablePageMapper {
+class IndexablePageMapper {
 
     List<PageModel> toModel(Collection<IndexablePage> pages) {
         return pages.stream().map(IndexablePageMapper::toModel).collect(Collectors.toUnmodifiableList());
@@ -28,12 +26,7 @@ public class IndexablePageMapper {
             .build();
     }
 
-    // TODO: Check if the nullable annotation is needed
-    @Nullable
-    public IndexablePage fromModel(@Nullable PageModel page) {
-        if (Objects.isNull(page)) {
-            return null;
-        }
+    IndexablePage fromModel(PageModel page) {
         return IndexablePage
             .builder()
             .id(IndexablePageId.of(page.getLang(), page.getPageId()))

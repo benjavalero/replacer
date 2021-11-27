@@ -10,10 +10,10 @@ import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-/** Domain object representing a replacement (to be) indexed in the database */
+/** Sub-domain object representing a replacement (to be) indexed in the database */
 @Value
 @Builder
-public class IndexableReplacement {
+class IndexableReplacement {
 
     private static final String REVIEWER_SYSTEM = "system";
 
@@ -51,28 +51,28 @@ public class IndexableReplacement {
 
     /* Other helper getters */
 
-    public boolean isToBeReviewed() {
+    boolean isToBeReviewed() {
         return this.reviewer == null;
     }
 
-    public boolean isSystemReviewed() {
+    boolean isSystemReviewed() {
         return REVIEWER_SYSTEM.equals(this.reviewer);
     }
 
     @TestOnly
-    public IndexableReplacement setSystemReviewed() {
+    IndexableReplacement setSystemReviewed() {
         return withReviewer(REVIEWER_SYSTEM);
     }
 
-    public boolean isOlderThan(IndexableReplacement replacement) {
+    boolean isOlderThan(IndexableReplacement replacement) {
         return isOlderThan(replacement.getLastUpdate());
     }
 
-    public boolean isOlderThan(LocalDate lastUpdate) {
+    boolean isOlderThan(LocalDate lastUpdate) {
         return this.lastUpdate.isBefore(lastUpdate);
     }
 
-    public static IndexableReplacement ofDummy(IndexablePage indexablePage) {
+    static IndexableReplacement ofDummy(IndexablePage indexablePage) {
         Objects.requireNonNull(indexablePage.getLastUpdate());
         return IndexableReplacement
             .builder()
@@ -86,7 +86,7 @@ public class IndexableReplacement {
             .build();
     }
 
-    public boolean isDummy() {
+    boolean isDummy() {
         return (
             StringUtils.isEmpty(this.type) &&
             StringUtils.isEmpty(this.subtype) &&

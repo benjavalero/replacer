@@ -9,10 +9,10 @@ import lombok.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-/** Domain object representing a page (to be) indexed in the database */
+/** Sub-domain object representing a page (to be) indexed in the database */
 @Value
 @Builder
-public class IndexablePage {
+class IndexablePage {
 
     @NonNull
     IndexablePageId id;
@@ -28,7 +28,7 @@ public class IndexablePage {
     List<IndexableReplacement> replacements;
 
     @Nullable
-    public LocalDate getLastUpdate() {
+    LocalDate getLastUpdate() {
         if (Objects.nonNull(this.lastUpdate)) {
             // The last-update date should exist when the page has been retrieved from Wikipedia or a dump
             return this.lastUpdate;
