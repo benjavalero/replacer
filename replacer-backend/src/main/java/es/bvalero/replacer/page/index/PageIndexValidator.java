@@ -2,10 +2,14 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,16 +32,25 @@ class PageIndexValidator {
             indexableNamespaces.stream().map(WikipediaNamespace::valueOf).collect(Collectors.toUnmodifiableSet());
     }
 
-    // Throw an exception instead of returning a boolean to capture the cause
-    void validateIndexable(WikipediaPage page) throws NonIndexablePageException {
-        validateIndexableByNamespace(page);
-        // Validation by content to find redirections is not done here anymore
-        // but as an immutable covering the whole content
+    boolean isPageIndexableByNamespace(WikipediaPage page) {
+        return indexableWikipediaNamespaces.contains(page.getNamespace());
     }
 
-    private void validateIndexableByNamespace(WikipediaPage page) throws NonIndexablePageException {
-        if (!indexableWikipediaNamespaces.contains(page.getNamespace())) {
-            throw new NonIndexablePageException("Page not indexable by namespace: " + page.getNamespace());
+    boolean isNotIndexableByTimestamp(WikipediaPage page, @Nullable IndexablePage dbPage) {
+        // If page modified in dump equals to the last indexing, always reindex.
+        // If page modified in dump after last indexing, always reindex.
+        // If page modified in dump before last indexing, do not index.
+        LocalDate dbDate = Optional.ofNullable(dbPage).map(IndexablePage::getLastUpdate).orElse(null);
+        if (dbDate == null) {
+            return false;
+        } else {
+            return page.getLastUpdate().toLocalDate().isBefore(dbDate);
         }
+    }
+
+    boolean isNotIndexableByPageTitle(WikipediaPage page, @Nullable IndexablePage dbPage) {
+        // In case the page title has changed we force the page indexing
+        String dbTitle = dbPage == null ? null : dbPage.getTitle();
+        return Objects.equals(page.getTitle(), dbTitle);
     }
 }

@@ -7,9 +7,7 @@ import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.finder.replacement.ReplacementFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementMapper;
 import es.bvalero.replacer.page.repository.PageModel;
-import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
@@ -60,10 +58,9 @@ public abstract class PageBaseIndexer {
     private boolean isPageNotIndexable(WikipediaPage page, @Nullable IndexablePage dbPage) {
         // Check if the page is indexable (by namespace)
         // Redirection pages are now considered indexable but discarded when finding immutables
-        try {
-            pageIndexValidator.validateIndexable(page);
-            return false;
-        } catch (NonIndexablePageException e) {
+        if (pageIndexValidator.isPageIndexableByNamespace(page)) {
+            return true;
+        } else {
             // If the page is not indexable then it should not exist in DB
             if (dbPage != null) {
                 LOGGER.error(
@@ -74,8 +71,8 @@ public abstract class PageBaseIndexer {
                 );
                 indexObsoletePage(dbPage);
             }
+            return false;
         }
-        return true;
     }
 
     private void indexObsoletePage(IndexablePage dbPage) {
@@ -86,25 +83,10 @@ public abstract class PageBaseIndexer {
 
     private boolean isPageNotIndexed(WikipediaPage page, @Nullable IndexablePage dbPage) {
         // Check if the page (indexable by namespace) will be indexed
-        return isNotIndexableByTimestamp(page, dbPage) && isNotIndexableByPageTitle(page, dbPage);
-    }
-
-    private boolean isNotIndexableByTimestamp(WikipediaPage page, @Nullable IndexablePage dbPage) {
-        // If page modified in dump equals to the last indexing, always reindex.
-        // If page modified in dump after last indexing, always reindex.
-        // If page modified in dump before last indexing, do not index.
-        LocalDate dbDate = Optional.ofNullable(dbPage).map(IndexablePage::getLastUpdate).orElse(null);
-        if (dbDate == null) {
-            return false;
-        } else {
-            return page.getLastUpdate().toLocalDate().isBefore(dbDate);
-        }
-    }
-
-    private boolean isNotIndexableByPageTitle(WikipediaPage page, @Nullable IndexablePage dbPage) {
-        // In case the page title has changed we force the page indexing
-        String dbTitle = dbPage == null ? null : dbPage.getTitle();
-        return Objects.equals(page.getTitle(), dbTitle);
+        return (
+            pageIndexValidator.isNotIndexableByTimestamp(page, dbPage) &&
+            pageIndexValidator.isNotIndexableByPageTitle(page, dbPage)
+        );
     }
 
     private Collection<Replacement> findPageReplacements(WikipediaPage page) {
