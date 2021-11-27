@@ -131,11 +131,16 @@ class DumpSaxHandler extends DefaultHandler {
             .build();
 
         PageIndexStatus result = dumpPageIndexer.index(dumpPage);
-        if (!PageIndexStatus.PAGE_NOT_INDEXABLE.equals(result)) {
-            this.incrementNumPagesRead();
-            if (PageIndexStatus.PAGE_INDEXED.equals(result)) {
+        switch (result) {
+            case PAGE_NOT_INDEXABLE:
+                break;
+            case PAGE_NOT_INDEXED:
+                this.incrementNumPagesRead();
+                break;
+            case PAGE_INDEXED:
+                this.incrementNumPagesRead();
                 this.incrementNumPagesIndexed();
-            }
+                break;
         }
     }
 

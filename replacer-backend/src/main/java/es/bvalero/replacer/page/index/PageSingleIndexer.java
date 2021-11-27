@@ -28,9 +28,7 @@ class PageSingleIndexer extends PageBaseIndexer implements PageIndexer {
 
     @Override
     void saveResult(PageIndexResult result) {
-        if (result.isNotEmpty()) {
-            pageIndexResultSaver.save(result);
-        }
+        pageIndexResultSaver.save(result);
     }
 
     @Override

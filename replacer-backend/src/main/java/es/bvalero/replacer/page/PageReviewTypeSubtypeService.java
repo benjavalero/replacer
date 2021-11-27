@@ -4,10 +4,8 @@ import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
-import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -47,11 +45,8 @@ class PageReviewTypeSubtypeService extends PageReviewService {
     @Override
     Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We take profit, and we update the database with the just calculated replacements (also when empty).
+        // If the page has not been indexed (or is not indexable) the collection of replacements will be empty
         PageIndexResult pageIndexResult = indexReplacements(page);
-        if (pageIndexResult.getStatus() == PageIndexStatus.PAGE_NOT_INDEXABLE) {
-            // Page not indexable
-            return Collections.emptyList();
-        }
 
         // To build the review we are only interested in the replacements of the given type and subtype
         // We can run the filter even with an empty list

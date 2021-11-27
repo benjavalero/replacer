@@ -26,9 +26,7 @@ class PageBatchIndexer extends PageBaseIndexer implements PageIndexer {
 
     @Override
     void saveResult(PageIndexResult result) {
-        if (result.isNotEmpty()) {
-            pageIndexResultSaver.saveBatch(result);
-        }
+        pageIndexResultSaver.saveBatch(result);
     }
 
     @Override

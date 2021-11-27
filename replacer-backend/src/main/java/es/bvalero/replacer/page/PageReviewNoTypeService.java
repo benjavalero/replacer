@@ -3,10 +3,8 @@ package es.bvalero.replacer.page;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
-import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +37,8 @@ class PageReviewNoTypeService extends PageReviewService {
     @Override
     Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We take profit, and we update the database with the just calculated replacements (also when empty).
+        // If the page has not been indexed (or is not indexable) the collection of replacements is empty
         PageIndexResult pageIndexResult = indexReplacements(page);
-        if (pageIndexResult.getStatus() == PageIndexStatus.PAGE_NOT_INDEXABLE) {
-            // Page not indexable
-            return Collections.emptyList();
-        }
 
         return pageIndexResult.getReplacements();
     }

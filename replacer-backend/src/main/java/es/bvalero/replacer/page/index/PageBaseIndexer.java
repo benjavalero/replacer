@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.index;
 
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.finder.FinderPageMapper;
@@ -26,16 +27,22 @@ public abstract class PageBaseIndexer {
 
     public PageIndexResult indexPageReplacements(WikipediaPage page) {
         try {
-            IndexablePage dbPage = findIndexablePageInDb(page.getId()).orElse(null);
+            IndexablePage dbPage = findIndexablePageInDb(page.getId());
 
-            validatePage(page, dbPage);
+            // Check if the page is indexable by itself
+            if (isPageNotIndexable(page, dbPage)) {
+                return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXABLE).build();
+            } else if (isPageNotIndexed(page, dbPage)) {
+                return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXED).build();
+            }
 
-            Collection<es.bvalero.replacer.common.domain.Replacement> replacements = findPageReplacements(page);
+            Collection<Replacement> replacements = findPageReplacements(page);
             IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
 
-            return indexPageReplacements(indexablePage, dbPage).withReplacements(replacements);
-        } catch (NonIndexablePageException e) {
-            return PageIndexResult.builder().status(PageIndexStatus.PAGE_NOT_INDEXABLE).build();
+            PageIndexResult result = PageIndexHelper.indexPageReplacements(indexablePage, dbPage);
+            saveResult(result);
+
+            return result.withReplacements(replacements);
         } catch (Exception e) {
             // Just in case capture possible exceptions to continue indexing other pages
             LOGGER.error("Page not indexed: {}", page, e);
@@ -43,15 +50,19 @@ public abstract class PageBaseIndexer {
         }
     }
 
-    private Collection<es.bvalero.replacer.common.domain.Replacement> findPageReplacements(WikipediaPage page) {
-        return ReplacementMapper.toDomain(replacementFinderService.find(FinderPageMapper.fromDomain(page)));
+    @Nullable
+    IndexablePage findIndexablePageInDb(WikipediaPageId pageId) {
+        return findByPageId(pageId).map(IndexablePageMapper::fromModel).orElse(null);
     }
 
-    private void validatePage(WikipediaPage page, @Nullable IndexablePage dbPage) throws NonIndexablePageException {
-        // Check if it is indexable (by namespace)
+    abstract Optional<PageModel> findByPageId(WikipediaPageId pageId);
+
+    private boolean isPageNotIndexable(WikipediaPage page, @Nullable IndexablePage dbPage) {
+        // Check if the page is indexable (by namespace)
         // Redirection pages are now considered indexable but discarded when finding immutables
         try {
             pageIndexValidator.validateIndexable(page);
+            return false;
         } catch (NonIndexablePageException e) {
             // If the page is not indexable then it should not exist in DB
             if (dbPage != null) {
@@ -63,58 +74,47 @@ public abstract class PageBaseIndexer {
                 );
                 indexObsoletePage(dbPage);
             }
-            throw e;
         }
+        return true;
     }
 
-    Optional<IndexablePage> findIndexablePageInDb(WikipediaPageId pageId) {
-        return findByPageId(pageId).map(IndexablePageMapper::fromModel);
+    private void indexObsoletePage(IndexablePage dbPage) {
+        saveResult(PageIndexResult.builder().deletePages(Set.of(dbPage)).build());
     }
 
-    abstract Optional<PageModel> findByPageId(WikipediaPageId pageId);
+    abstract void saveResult(PageIndexResult result);
 
-    private PageIndexResult indexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage) {
-        // The page is not indexed in case the last-update in database is later than the last-update of the given page
-        if (isNotIndexable(page, dbPage)) {
-            return PageIndexResult.ofEmpty();
-        }
-
-        PageIndexResult result = PageIndexHelper.indexPageReplacements(page, dbPage);
-        saveResult(result);
-
-        // Return if the page has been indexed, i.e. modifications have been applied in database.
-        return result;
-    }
-
-    private boolean isNotIndexable(IndexablePage page, @Nullable IndexablePage dbPage) {
+    private boolean isPageNotIndexed(WikipediaPage page, @Nullable IndexablePage dbPage) {
+        // Check if the page (indexable by namespace) will be indexed
         return isNotIndexableByTimestamp(page, dbPage) && isNotIndexableByPageTitle(page, dbPage);
     }
 
-    private boolean isNotIndexableByTimestamp(IndexablePage page, @Nullable IndexablePage dbPage) {
+    private boolean isNotIndexableByTimestamp(WikipediaPage page, @Nullable IndexablePage dbPage) {
         // If page modified in dump equals to the last indexing, always reindex.
         // If page modified in dump after last indexing, always reindex.
         // If page modified in dump before last indexing, do not index.
         LocalDate dbDate = Optional.ofNullable(dbPage).map(IndexablePage::getLastUpdate).orElse(null);
-        if (page.getLastUpdate() == null || dbDate == null) {
+        if (dbDate == null) {
             return false;
         } else {
-            return Objects.requireNonNull(page.getLastUpdate()).isBefore(dbDate);
+            return page.getLastUpdate().toLocalDate().isBefore(dbDate);
         }
     }
 
-    private boolean isNotIndexableByPageTitle(IndexablePage page, @Nullable IndexablePage dbPage) {
+    private boolean isNotIndexableByPageTitle(WikipediaPage page, @Nullable IndexablePage dbPage) {
         // In case the page title has changed we force the page indexing
         String dbTitle = dbPage == null ? null : dbPage.getTitle();
         return Objects.equals(page.getTitle(), dbTitle);
     }
 
-    abstract void saveResult(PageIndexResult result);
-
-    public void indexObsoletePage(WikipediaPageId pageId) {
-        findIndexablePageInDb(pageId).ifPresent(this::indexObsoletePage);
+    private Collection<Replacement> findPageReplacements(WikipediaPage page) {
+        return ReplacementMapper.toDomain(replacementFinderService.find(FinderPageMapper.fromDomain(page)));
     }
 
-    private void indexObsoletePage(IndexablePage dbPage) {
-        saveResult(PageIndexResult.builder().deletePages(Set.of(dbPage)).build());
+    public void indexObsoletePage(WikipediaPageId pageId) {
+        IndexablePage page = findIndexablePageInDb(pageId);
+        if (page != null) {
+            indexObsoletePage(page);
+        }
     }
 }
