@@ -219,7 +219,7 @@ abstract class PageReviewService {
         );
     }
 
-    private PageReplacementSuggestion convert(ReplacementSuggestion suggestion) {
+    private PageReplacementSuggestion convert(Suggestion suggestion) {
         return PageReplacementSuggestion.of(suggestion.getText(), suggestion.getComment());
     }
 

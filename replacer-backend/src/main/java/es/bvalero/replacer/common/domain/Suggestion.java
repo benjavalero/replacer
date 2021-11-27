@@ -7,7 +7,7 @@ import org.springframework.lang.Nullable;
 
 /** Domain object representing the suggestion for a replacement found in the content of a page */
 @Value(staticConstructor = "of")
-public class ReplacementSuggestion {
+public class Suggestion {
 
     @NonNull
     String text;
@@ -16,7 +16,7 @@ public class ReplacementSuggestion {
     String comment;
 
     @TestOnly
-    public static ReplacementSuggestion ofNoComment(String text) {
+    public static Suggestion ofNoComment(String text) {
         return of(text, null);
     }
 }

@@ -110,8 +110,7 @@ class PageReviewCustomService extends PageReviewService {
                     convertToFinderPage(page),
                     convertOptions(options)
                 )
-            ),
-            page
+            )
         );
     }
 

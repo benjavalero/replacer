@@ -9,6 +9,7 @@ public interface FinderResult extends Comparable<FinderResult> {
     String getText();
 
     @TestOnly
+    // TODO: Moved to IndexableReplacementMapper. Check if still needed.
     default int getEnd() {
         return this.getStart() + this.getText().length();
     }
@@ -38,7 +39,7 @@ public interface FinderResult extends Comparable<FinderResult> {
         return this.getRange().containsRange(r.getRange());
     }
 
-    // TODO: Move to domain object
+    // TODO: Moved to IndexableReplacementMapper. Check if still needed.
     default String getContext(String pageContent) {
         return FinderUtils.getContextAroundWord(pageContent, getStart(), getEnd(), 20);
     }

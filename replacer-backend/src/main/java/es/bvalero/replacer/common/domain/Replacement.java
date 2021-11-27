@@ -33,8 +33,9 @@ public class Replacement {
     String subtype;
 
     @NonNull
-    String context;
+    Collection<Suggestion> suggestions;
 
-    @NonNull
-    Collection<ReplacementSuggestion> suggestions;
+    public int getEnd() {
+        return this.getStart() + this.getText().length();
+    }
 }

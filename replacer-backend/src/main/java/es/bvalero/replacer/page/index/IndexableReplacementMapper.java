@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.page.repository.ReplacementModel;
 import java.util.Collection;
 import java.util.List;
@@ -58,8 +59,12 @@ class IndexableReplacementMapper {
             .type(replacement.getType().getLabel())
             .subtype(replacement.getSubtype())
             .position(replacement.getStart())
-            .context(replacement.getContext())
+            .context(getContext(replacement, page))
             .lastUpdate(page.getLastUpdate().toLocalDate())
             .build();
+    }
+
+    private String getContext(Replacement replacement, WikipediaPage page) {
+        return FinderUtils.getContextAroundWord(page.getContent(), replacement.getStart(), replacement.getEnd(), 20);
     }
 }

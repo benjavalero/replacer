@@ -51,8 +51,7 @@ class PageReviewNoTypeServiceTest {
         .text("Y")
         .type(ReplacementType.DATE)
         .subtype("Año con punto")
-        .context("Y")
-        .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
+        .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
     private final PageReviewOptions options = PageReviewOptions.ofNoType();

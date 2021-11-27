@@ -51,8 +51,7 @@ class PageReviewTypeSubtypeServiceTest {
         .type(ReplacementType.MISSPELLING_SIMPLE)
         .subtype("Y")
         .text("Y")
-        .context("Y")
-        .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
+        .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
     private final PageReviewOptions options = PageReviewOptions.ofTypeSubtype(
