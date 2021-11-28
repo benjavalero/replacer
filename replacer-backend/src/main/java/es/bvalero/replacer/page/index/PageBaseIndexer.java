@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 
 @Slf4j
-public abstract class PageBaseIndexer {
+abstract class PageBaseIndexer {
 
     @Autowired
     private PageIndexValidator pageIndexValidator;
@@ -62,7 +62,7 @@ public abstract class PageBaseIndexer {
         // Check if the page is indexable (by namespace)
         // Redirection pages are now considered indexable but discarded when finding immutables
         if (pageIndexValidator.isPageIndexableByNamespace(page)) {
-            return true;
+            return false;
         } else {
             // If the page is not indexable then it should not exist in DB
             if (dbPage != null) {
@@ -74,7 +74,7 @@ public abstract class PageBaseIndexer {
                 );
                 indexObsoletePage(dbPage);
             }
-            return false;
+            return true;
         }
     }
 
