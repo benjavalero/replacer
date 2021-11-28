@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page.index;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.LocalDate;
@@ -12,11 +11,6 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class PageIndexHelperTest {
-
-    @Test
-    void testNullPages() {
-        assertThrows(IllegalArgumentException.class, () -> PageIndexHelper.indexPageReplacements(null, null));
-    }
 
     @Test
     void testIndexNewPageReplacements() {
@@ -66,36 +60,6 @@ class PageIndexHelperTest {
             .createPages(Set.of(page))
             .createReplacements(Set.of(rep1))
             .build();
-        assertEquals(expected, toIndex);
-    }
-
-    @Test
-    void testIndexObsoletePage() {
-        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
-        IndexableReplacement dbRep = IndexableReplacement
-            .builder()
-            .indexablePageId(pageId)
-            .type("")
-            .subtype("")
-            .position(0)
-            .context("")
-            .lastUpdate(LocalDate.now())
-            .build();
-        IndexablePage dbPage = IndexablePage
-            .builder()
-            .id(pageId)
-            .replacements(List.of(dbRep))
-            .lastUpdate(LocalDate.now())
-            .build();
-
-        PageIndexResult toIndex = PageIndexHelper.indexPageReplacements(null, dbPage);
-
-        PageIndexResult expected = PageIndexResult
-            .builder()
-            .status(PageIndexStatus.PAGE_INDEXED)
-            .deletePages(Set.of(dbPage))
-            .build();
-
         assertEquals(expected, toIndex);
     }
 

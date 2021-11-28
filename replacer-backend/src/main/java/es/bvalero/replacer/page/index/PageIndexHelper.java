@@ -12,22 +12,11 @@ import org.springframework.lang.Nullable;
 @UtilityClass
 class PageIndexHelper {
 
-    // TODO: Check the nullable annotations
-    PageIndexResult indexPageReplacements(@Nullable IndexablePage page, @Nullable IndexablePage dbPage) {
-        if (Objects.isNull(page) && Objects.isNull(dbPage)) {
-            throw new IllegalArgumentException();
-        }
-
+    PageIndexResult indexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage) {
         PageIndexResult pageIndexResult = PageIndexResult.ofEmpty();
         Set<IndexableReplacement> dbReplacements = dbPage == null
             ? new HashSet<>() // The set must be mutable
             : new HashSet<>(dbPage.getReplacements());
-
-        // Check obsolete page
-        if (page == null) {
-            pageIndexResult.add(PageIndexResult.builder().deletePages(Set.of(dbPage)).build());
-            return pageIndexResult;
-        }
 
         // Ignore context when comparing replacements in case there are cases with the same context
         boolean ignoreContext =
