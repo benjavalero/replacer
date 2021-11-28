@@ -2,14 +2,15 @@ package es.bvalero.replacer.page.index;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Component;
 
 /**
- * Helper class to compare an indexable and an indexed page
- * and return a set of changes to align them.
+ * Helper class to compare an indexable and an indexed page and return a set of changes to align them.
+ *
+ * It could be a Utility class but we implement it as a Component to mock it more easily.
  */
-@UtilityClass
+@Component
 class PageIndexHelper {
 
     PageIndexResult indexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage) {

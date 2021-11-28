@@ -23,6 +23,9 @@ public abstract class PageBaseIndexer {
     @Autowired
     private ReplacementFinderService replacementFinderService;
 
+    @Autowired
+    private PageIndexHelper pageIndexHelper;
+
     public PageIndexResult indexPageReplacements(WikipediaPage page) {
         try {
             IndexablePage dbPage = findIndexablePageInDb(page.getId());
@@ -37,7 +40,7 @@ public abstract class PageBaseIndexer {
             Collection<Replacement> replacements = findPageReplacements(page);
             IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
 
-            PageIndexResult result = PageIndexHelper.indexPageReplacements(indexablePage, dbPage);
+            PageIndexResult result = pageIndexHelper.indexPageReplacements(indexablePage, dbPage);
             saveResult(result);
 
             return result.withReplacements(replacements);
