@@ -5,6 +5,7 @@ import java.util.Collection;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
+import lombok.With;
 
 /**
  * Domain object representing a replacement found in the content of a page.
@@ -20,6 +21,7 @@ import lombok.Value;
 @Builder
 public class Replacement {
 
+    @With
     @NonNull
     Integer start;
 

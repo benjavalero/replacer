@@ -197,7 +197,7 @@ class PageReviewTypeSubtypeServiceTest {
         // The page has sections
         PageReview sectionReview = pageReviewTypeSubtypeService.buildPageReview(page, replacements, options);
         sectionReview.getPage().setSection(PageSection.of(sectionId, ""));
-        when(pageReviewSectionFinder.findPageReviewSection(any(PageReview.class)))
+        when(pageReviewSectionFinder.findPageReviewSection(any(PageReview.class), eq(page), eq(replacements)))
             .thenReturn(Optional.of(sectionReview));
 
         Optional<PageReview> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
@@ -223,7 +223,8 @@ class PageReviewTypeSubtypeServiceTest {
             .thenReturn(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, replacements));
 
         // The page has no sections
-        when(pageReviewSectionFinder.findPageReviewSection(any(PageReview.class))).thenReturn(Optional.empty());
+        when(pageReviewSectionFinder.findPageReviewSection(any(PageReview.class), eq(page), eq(replacements)))
+            .thenReturn(Optional.empty());
 
         // Load the cache in order to find the total results
         pageReviewTypeSubtypeService.loadCache(options);

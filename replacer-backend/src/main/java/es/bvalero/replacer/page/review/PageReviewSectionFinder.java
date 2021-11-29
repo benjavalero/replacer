@@ -1,12 +1,12 @@
 package es.bvalero.replacer.page.review;
 
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.page.PageReplacement;
 import es.bvalero.replacer.page.PageReview;
 import es.bvalero.replacer.wikipedia.WikipediaService;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,33 +26,38 @@ public class PageReviewSectionFinder {
     private WikipediaService wikipediaService;
 
     /**
-     * @return The review of a section of the page, or empty if there is no such section.
+     * Find (if any) the smallest section in a page containing the given replacements.
+     *
+     * In case such a section is found, then return a review containing the page fragment corresponding to the section
+     * with the replacements translated accordingly.
      */
     // TODO: Public while refactoring
-    public Optional<PageReview> findPageReviewSection(PageReview review) {
+    public Optional<PageReview> findPageReviewSection(
+        PageReview review,
+        WikipediaPage page,
+        Collection<Replacement> replacements
+    ) {
         assert review.getPage().getSection() == null;
 
         try {
             // Get the sections from the Wikipedia API (better than calculating them by ourselves)
-            List<WikipediaSection> sections = wikipediaService.getPageSections(
-                WikipediaPageId.of(review.getPage().getLang(), review.getPage().getId())
-            );
+            List<WikipediaSection> sections = wikipediaService.getPageSections(page.getId());
 
             // Find the smallest section containing all the replacements
             Optional<WikipediaSection> smallestSection = getSmallestSectionContainingAllReplacements(
                 sections,
-                review.getReplacements()
+                replacements
             );
             if (smallestSection.isPresent()) {
                 // Get the section from Wikipedia API (better than calculating it by ourselves)
                 Optional<WikipediaPage> pageSection = wikipediaService.getPageSection(
-                    WikipediaPageId.of(review.getPage().getLang(), review.getPage().getId()),
+                    page.getId(),
                     smallestSection.get()
                 );
                 if (pageSection.isPresent()) {
                     // We need to modify the start position of the replacements according to the section start
-                    List<PageReplacement> sectionReplacements = translateReplacementsByOffset(
-                        review.getReplacements(),
+                    Collection<Replacement> sectionReplacements = translateReplacementsByOffset(
+                        replacements,
                         smallestSection.get().getByteOffset(),
                         pageSection.get()
                     );
@@ -73,18 +78,13 @@ public class PageReviewSectionFinder {
             LOGGER.warn("Error finding section", e);
         }
 
-        LOGGER.debug(
-            "No section found in page: {} - {} - {}",
-            review.getPage().getLang(),
-            review.getPage().getId(),
-            review.getPage().getTitle()
-        );
+        LOGGER.debug("No section found in page: {} - {}", page.getId(), page.getTitle());
         return Optional.empty();
     }
 
     private Optional<WikipediaSection> getSmallestSectionContainingAllReplacements(
         List<WikipediaSection> sections,
-        List<PageReplacement> replacements
+        Collection<Replacement> replacements
     ) {
         Collections.sort(sections); // Although in theory they are already sorted as returned from Wikipedia API
         WikipediaSection smallest = null;
@@ -107,18 +107,14 @@ public class PageReviewSectionFinder {
     }
 
     private boolean areAllReplacementsContainedInInterval(
-        List<PageReplacement> replacements,
+        Collection<Replacement> replacements,
         Integer start,
         @Nullable Integer end
     ) {
         return replacements.stream().allMatch(rep -> isReplacementContainedInInterval(rep, start, end));
     }
 
-    private boolean isReplacementContainedInInterval(
-        PageReplacement replacement,
-        Integer start,
-        @Nullable Integer end
-    ) {
+    private boolean isReplacementContainedInInterval(Replacement replacement, Integer start, @Nullable Integer end) {
         if (replacement.getStart() >= start) {
             if (end == null) {
                 return true;
@@ -130,15 +126,15 @@ public class PageReviewSectionFinder {
         }
     }
 
-    private List<PageReplacement> translateReplacementsByOffset(
-        List<PageReplacement> replacements,
+    private Collection<Replacement> translateReplacementsByOffset(
+        Collection<Replacement> replacements,
         int sectionOffset,
         WikipediaPage pageSection
     ) throws ReplacerException {
-        List<PageReplacement> translated = replacements
+        List<Replacement> translated = replacements
             .stream()
             .map(rep -> rep.withStart(rep.getStart() - sectionOffset))
-            .collect(Collectors.toList());
+            .collect(Collectors.toUnmodifiableList());
 
         // We need to check some rare cases where the byte-offset doesn't match with the section position,
         // usually because of emojis or other strange Unicode characters
@@ -155,7 +151,7 @@ public class PageReviewSectionFinder {
         return translated;
     }
 
-    private boolean validatePageReplacement(PageReplacement replacement, String text) {
+    private boolean validatePageReplacement(Replacement replacement, String text) {
         if (replacement.getEnd() > text.length()) {
             return false;
         }
@@ -165,7 +161,7 @@ public class PageReviewSectionFinder {
     private PageReview buildPageReview(
         WikipediaPage page,
         @Nullable WikipediaSection section,
-        List<PageReplacement> replacements,
+        Collection<Replacement> replacements,
         PageReview pageReview
     ) {
         return PageReview.of(page, section, replacements, pageReview.getSearch());

@@ -1,9 +1,11 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Collection;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
@@ -32,10 +34,15 @@ public class PageReview {
     public static PageReview of(
         WikipediaPage page,
         @Nullable WikipediaSection section,
-        List<PageReplacement> replacements,
+        Collection<Replacement> replacements,
         PageReviewSearch search
     ) {
-        return PageReview.builder().page(convert(page, section)).replacements(replacements).search(search).build();
+        return PageReview
+            .builder()
+            .page(convert(page, section))
+            .replacements(PageReviewService.convert(replacements))
+            .search(search)
+            .build();
     }
 
     private static PageDto convert(WikipediaPage page, @Nullable WikipediaSection section) {

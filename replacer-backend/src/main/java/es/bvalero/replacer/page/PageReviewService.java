@@ -160,7 +160,11 @@ abstract class PageReviewService {
             PageReview pageReview = buildPageReview(page, replacements, options);
 
             // Try to reduce the review size by returning just a section of the page
-            Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(pageReview);
+            Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(
+                pageReview,
+                page,
+                replacements
+            );
             if (sectionReview.isPresent()) {
                 return sectionReview;
             } else {
@@ -197,13 +201,8 @@ abstract class PageReviewService {
     }
 
     @VisibleForTesting
-    PageReview buildPageReview(WikipediaPage page, List<Replacement> replacements, PageReviewOptions options) {
-        return PageReview.of(
-            page,
-            null,
-            replacements.stream().map(this::convert).collect(Collectors.toList()),
-            convert(options)
-        );
+    PageReview buildPageReview(WikipediaPage page, Collection<Replacement> replacements, PageReviewOptions options) {
+        return PageReview.of(page, null, replacements, convert(options));
     }
 
     private long findTotalResultsFromCache(PageReviewOptions options) {
@@ -213,15 +212,20 @@ abstract class PageReviewService {
         return result != null ? result.getTotal() : 0L;
     }
 
-    private PageReplacement convert(Replacement replacement) {
+    // TODO: Move to a mapper
+    static List<PageReplacement> convert(Collection<Replacement> replacements) {
+        return replacements.stream().map(PageReviewService::convert).collect(Collectors.toUnmodifiableList());
+    }
+
+    private static PageReplacement convert(Replacement replacement) {
         return PageReplacement.of(
             replacement.getStart(),
             replacement.getText(),
-            replacement.getSuggestions().stream().map(this::convert).collect(Collectors.toList())
+            replacement.getSuggestions().stream().map(PageReviewService::convert).collect(Collectors.toList())
         );
     }
 
-    private PageReplacementSuggestion convert(Suggestion suggestion) {
+    private static PageReplacementSuggestion convert(Suggestion suggestion) {
         return PageReplacementSuggestion.of(suggestion.getText(), suggestion.getComment());
     }
 
