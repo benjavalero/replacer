@@ -9,6 +9,8 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
+import es.bvalero.replacer.page.review.PageReviewDto;
+import es.bvalero.replacer.page.review.PageReviewSearch;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import io.swagger.annotations.Api;
@@ -54,14 +56,16 @@ public class PageController {
 
     @ApiOperation(value = "Find a random page and the replacements to review", response = PageReview.class)
     @GetMapping(value = "/random")
-    public Optional<PageReview> findRandomPageWithReplacements(PageReviewOptions options) {
+    public Optional<PageReviewDto> findRandomPageWithReplacements(PageReviewOptions options) {
+        Optional<PageReview> review;
         if (StringUtils.isBlank(options.getType())) {
-            return pageReviewNoTypeService.findRandomPageReview(options);
+            review = pageReviewNoTypeService.findRandomPageReview(options);
         } else if (StringUtils.isBlank(options.getSuggestion())) {
-            return pageReviewTypeSubtypeService.findRandomPageReview(options);
+            review = pageReviewTypeSubtypeService.findRandomPageReview(options);
         } else {
-            return pageReviewCustomService.findRandomPageReview(options);
+            review = pageReviewCustomService.findRandomPageReview(options);
         }
+        return review.map(PageReviewMapper::toDto);
     }
 
     @ApiOperation(value = "Validate if the custom replacement is a known subtype")
@@ -80,17 +84,19 @@ public class PageController {
 
     @ApiOperation(value = "Find a page and the replacements to review", response = PageReview.class)
     @GetMapping(value = "/{id}")
-    public Optional<PageReview> findPageReviewById(
+    public Optional<PageReviewDto> findPageReviewById(
         @ApiParam(value = "Page ID", example = "6980716") @PathVariable("id") int pageId,
         PageReviewOptions options
     ) {
+        Optional<PageReview> review;
         if (StringUtils.isBlank(options.getType())) {
-            return pageReviewNoTypeService.getPageReview(pageId, options);
+            review = pageReviewNoTypeService.getPageReview(pageId, options);
         } else if (StringUtils.isBlank(options.getSuggestion())) {
-            return pageReviewTypeSubtypeService.getPageReview(pageId, options);
+            review = pageReviewTypeSubtypeService.getPageReview(pageId, options);
         } else {
-            return pageReviewCustomService.getPageReview(pageId, options);
+            review = pageReviewCustomService.getPageReview(pageId, options);
         }
+        return review.map(PageReviewMapper::toDto);
     }
 
     /* SAVE CHANGES */

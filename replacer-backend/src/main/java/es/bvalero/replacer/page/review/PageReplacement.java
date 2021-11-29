@@ -1,10 +1,12 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import lombok.Value;
 import lombok.With;
 
+@ApiModel(description = "Replacement to be reviewed")
 @Value(staticConstructor = "of")
 public class PageReplacement {
 

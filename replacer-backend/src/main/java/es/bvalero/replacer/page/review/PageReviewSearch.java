@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,8 +16,11 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-class PageReviewSearch {
+public class PageReviewSearch {
 
+    // TODO: Public while refactoring
+
+    // TODO: Move to PageReviewDto
     @ApiModelProperty(
         value = "Number of pending pages to review of the given type",
         required = true,

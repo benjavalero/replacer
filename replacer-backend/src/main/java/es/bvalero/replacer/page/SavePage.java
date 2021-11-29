@@ -1,5 +1,7 @@
 package es.bvalero.replacer.page;
 
+import es.bvalero.replacer.page.review.PageDto;
+import es.bvalero.replacer.page.review.PageReviewSearch;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

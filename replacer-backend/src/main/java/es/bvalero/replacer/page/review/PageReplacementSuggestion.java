@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
 import org.springframework.lang.Nullable;
 
+/** DTO containing a suggestion for a replacement to be reviewed in the front-end */
 @ApiModel(description = "Suggestion for a replacement")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
