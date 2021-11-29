@@ -1,9 +1,11 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.domain.WikipediaPageSection;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.page.PageReplacement;
+import es.bvalero.replacer.page.PageReview;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Collections;
 import java.util.List;
@@ -16,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-class SectionReviewService {
+public class SectionReviewService {
+
+    // TODO: Public while refactoring
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -24,7 +28,8 @@ class SectionReviewService {
     /**
      * @return The review of a section of the page, or empty if there is no such section.
      */
-    Optional<PageReview> findSectionReview(PageReview review) {
+    // TODO: Public while refactoring
+    public Optional<PageReview> findSectionReview(PageReview review) {
         assert review.getPage().getSection() == null;
 
         try {

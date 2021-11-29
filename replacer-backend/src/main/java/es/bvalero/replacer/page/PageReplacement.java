@@ -6,7 +6,9 @@ import lombok.Value;
 import lombok.With;
 
 @Value(staticConstructor = "of")
-class PageReplacement {
+public class PageReplacement {
+
+    // TODO: Public while refactoring
 
     @ApiModelProperty(value = "Position of the replacement in the content", required = true, example = "1776")
     @With
@@ -18,7 +20,8 @@ class PageReplacement {
     @ApiModelProperty(value = "List of suggestions to fix the replacement", required = true)
     List<PageReplacementSuggestion> suggestions;
 
-    int getEnd() {
+    // TODO: Public while refactoring
+    public int getEnd() {
         return this.start + this.text.length();
     }
 }

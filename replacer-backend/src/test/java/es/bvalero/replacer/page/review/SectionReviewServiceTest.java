@@ -1,10 +1,14 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.page.PageDto;
+import es.bvalero.replacer.page.PageReplacement;
+import es.bvalero.replacer.page.PageReplacementSuggestion;
+import es.bvalero.replacer.page.PageReview;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.Collections;

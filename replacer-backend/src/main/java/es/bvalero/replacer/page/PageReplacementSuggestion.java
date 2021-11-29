@@ -9,7 +9,9 @@ import org.springframework.lang.Nullable;
 @ApiModel(description = "Suggestion for a replacement")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
-class PageReplacementSuggestion {
+public class PageReplacementSuggestion {
+
+    // TODO: Public while refactoring
 
     @ApiModelProperty(value = "Fix proposed for a replacement", required = true, example = "aun")
     String text;

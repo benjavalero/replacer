@@ -7,6 +7,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexer;
+import es.bvalero.replacer.page.review.SectionReviewService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;

@@ -9,6 +9,7 @@ import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.index.PageIndexer;
+import es.bvalero.replacer.page.review.SectionReviewService;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;

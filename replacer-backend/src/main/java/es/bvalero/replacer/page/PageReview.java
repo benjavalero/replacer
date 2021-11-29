@@ -15,7 +15,9 @@ import org.springframework.lang.Nullable;
  */
 @Value
 @Builder
-class PageReview {
+public class PageReview {
+
+    // TODO: Public while refactoring
 
     @ApiModelProperty(required = true)
     PageDto page;
@@ -26,7 +28,12 @@ class PageReview {
     @ApiModelProperty(value = "Search options of the replacements to review", required = true)
     PageReviewSearch search;
 
-    static PageReview of(WikipediaPageSection page, List<PageReplacement> replacements, PageReviewSearch search) {
+    // TODO: Public while refactoring
+    public static PageReview of(
+        WikipediaPageSection page,
+        List<PageReplacement> replacements,
+        PageReviewSearch search
+    ) {
         return PageReview.builder().page(convert(page)).replacements(replacements).search(search).build();
     }
 

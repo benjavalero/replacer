@@ -17,7 +17,9 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-class PageDto {
+public class PageDto {
+
+    // TODO: Public while refactoring
 
     private static final int CONTENT_SIZE = 50;
 

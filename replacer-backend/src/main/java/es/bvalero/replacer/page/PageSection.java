@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class PageSection {
+public class PageSection {
+
+    // TODO: Public while refactoring
 
     @ApiModelProperty(value = "Section ID content", required = true, example = "1")
     Integer id;
