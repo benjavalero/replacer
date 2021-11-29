@@ -199,7 +199,8 @@ abstract class PageReviewService {
     @VisibleForTesting
     PageReview buildPageReview(WikipediaPage page, List<Replacement> replacements, PageReviewOptions options) {
         return PageReview.of(
-            WikipediaPageSection.of(page, null),
+            page,
+            null,
             replacements.stream().map(this::convert).collect(Collectors.toList()),
             convert(options)
         );

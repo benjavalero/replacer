@@ -74,13 +74,12 @@ class PageReviewSectionFinderTest {
 
         String sectionContent = content.substring(offset, 10);
         WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
-        WikipediaPageSection pageSection = WikipediaPageSection
+        WikipediaPage pageSection = WikipediaPage
             .builder()
             .id(wikipediaPageId)
             .namespace(WikipediaNamespace.getDefault())
             .title("Title")
             .content(sectionContent)
-            .section(section)
             .lastUpdate(LocalDateTime.now())
             .build();
         when(wikipediaService.getPageSection(wikipediaPageId, section)).thenReturn(Optional.of(pageSection));

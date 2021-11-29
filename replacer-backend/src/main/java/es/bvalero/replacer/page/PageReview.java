@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page;
 
-import es.bvalero.replacer.common.domain.WikipediaPageSection;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,21 +30,22 @@ public class PageReview {
 
     // TODO: Public while refactoring
     public static PageReview of(
-        WikipediaPageSection page,
+        WikipediaPage page,
+        @Nullable WikipediaSection section,
         List<PageReplacement> replacements,
         PageReviewSearch search
     ) {
-        return PageReview.builder().page(convert(page)).replacements(replacements).search(search).build();
+        return PageReview.builder().page(convert(page, section)).replacements(replacements).search(search).build();
     }
 
-    private static PageDto convert(WikipediaPageSection page) {
+    private static PageDto convert(WikipediaPage page, @Nullable WikipediaSection section) {
         return PageDto
             .builder()
             .lang(page.getId().getLang())
             .id(page.getId().getPageId())
             .title(page.getTitle())
             .content(page.getContent())
-            .section(convert(page.getSection()))
+            .section(convert(section))
             .queryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(page.getQueryTimestamp()))
             .build();
     }

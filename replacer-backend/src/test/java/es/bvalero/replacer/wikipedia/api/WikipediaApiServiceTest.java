@@ -341,9 +341,7 @@ class WikipediaApiServiceTest {
             .anchor("X")
             .build();
         String title = "Usuario:Benjavalero/Taller";
-        WikipediaPageSection page = wikipediaService
-            .getPageSection(pageId, section)
-            .orElseThrow(ReplacerException::new);
+        WikipediaPage page = wikipediaService.getPageSection(pageId, section).orElseThrow(ReplacerException::new);
         assertNotNull(page);
         assertEquals(WikipediaLanguage.getDefault(), page.getId().getLang());
         assertEquals(pageId, page.getId());
@@ -351,8 +349,6 @@ class WikipediaApiServiceTest {
         assertEquals(WikipediaNamespace.USER, page.getNamespace());
         assertTrue(page.getLastUpdate().getYear() >= 2019);
         assertTrue(page.getContent().startsWith("=="));
-        assertNotNull(page.getSection());
-        assertEquals(section, page.getSection());
     }
 
     @Test

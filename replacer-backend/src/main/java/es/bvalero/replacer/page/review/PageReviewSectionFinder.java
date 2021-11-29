@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.review;
 
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.common.domain.WikipediaPageSection;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.PageReplacement;
@@ -45,7 +45,7 @@ public class PageReviewSectionFinder {
             );
             if (smallestSection.isPresent()) {
                 // Get the section from Wikipedia API (better than calculating it by ourselves)
-                Optional<WikipediaPageSection> pageSection = wikipediaService.getPageSection(
+                Optional<WikipediaPage> pageSection = wikipediaService.getPageSection(
                     WikipediaPageId.of(review.getPage().getLang(), review.getPage().getId()),
                     smallestSection.get()
                 );
@@ -61,9 +61,11 @@ public class PageReviewSectionFinder {
                         "Found section for page {} - {} => {}",
                         pageSection.get().getId(),
                         pageSection.get().getTitle(),
-                        pageSection.get().getSection()
+                        smallestSection.get()
                     );
-                    return Optional.of(buildPageReview(pageSection.get(), sectionReplacements, review));
+                    return Optional.of(
+                        buildPageReview(pageSection.get(), smallestSection.get(), sectionReplacements, review)
+                    );
                 }
             }
         } catch (ReplacerException e) {
@@ -131,7 +133,7 @@ public class PageReviewSectionFinder {
     private List<PageReplacement> translateReplacementsByOffset(
         List<PageReplacement> replacements,
         int sectionOffset,
-        WikipediaPageSection pageSection
+        WikipediaPage pageSection
     ) throws ReplacerException {
         List<PageReplacement> translated = replacements
             .stream()
@@ -161,10 +163,11 @@ public class PageReviewSectionFinder {
     }
 
     private PageReview buildPageReview(
-        WikipediaPageSection page,
+        WikipediaPage page,
+        @Nullable WikipediaSection section,
         List<PageReplacement> replacements,
         PageReview pageReview
     ) {
-        return PageReview.of(page, replacements, pageReview.getSearch());
+        return PageReview.of(page, section, replacements, pageReview.getSearch());
     }
 }

@@ -19,8 +19,7 @@ public interface WikipediaService {
 
     List<WikipediaSection> getPageSections(WikipediaPageId id) throws ReplacerException;
 
-    Optional<WikipediaPageSection> getPageSection(WikipediaPageId id, WikipediaSection section)
-        throws ReplacerException;
+    Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section) throws ReplacerException;
 
     WikipediaSearchResult searchByText(
         WikipediaLanguage lang,

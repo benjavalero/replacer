@@ -57,9 +57,9 @@ class WikipediaOfflineService implements WikipediaService {
     }
 
     @Override
-    public Optional<WikipediaPageSection> getPageSection(WikipediaPageId id, WikipediaSection section)
+    public Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section)
         throws ReplacerException {
-        return Optional.of(WikipediaPageSection.of(buildFakePage(id.getPageId()), section));
+        return Optional.of(buildFakePage(id.getPageId()));
     }
 
     @Override
