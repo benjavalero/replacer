@@ -3,7 +3,9 @@ package es.bvalero.replacer.page.repository;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import java.util.*;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -36,17 +38,13 @@ class PageJdbcRepository implements PageRepository {
         SqlParameterSource namedParameters = new MapSqlParameterSource()
             .addValue("lang", id.getLang().getCode())
             .addValue("pageId", id.getPageId());
-        List<PageModel> pages = jdbcTemplate.query(sql, namedParameters, new PageResultExtractor());
+        Collection<PageModel> pages = jdbcTemplate.query(sql, namedParameters, new PageResultExtractor());
         assert pages != null;
-        if (pages.isEmpty()) {
-            return Optional.empty();
-        } else {
-            return Optional.of(pages.get(0));
-        }
+        return pages.stream().findAny();
     }
 
     @Override
-    public List<PageModel> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
+    public Collection<PageModel> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
         String sql =
             "SELECT r.id, r.lang, r.article_id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
             FROM_REPLACEMENT_JOIN_PAGE +

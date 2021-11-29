@@ -5,14 +5,13 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.page.repository.ReplacementModel;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class IndexableReplacementMapper {
 
-    List<ReplacementModel> toModel(Collection<IndexableReplacement> replacements) {
+    Collection<ReplacementModel> toModel(Collection<IndexableReplacement> replacements) {
         return replacements.stream().map(IndexableReplacementMapper::toModel).collect(Collectors.toUnmodifiableList());
     }
 
@@ -31,7 +30,7 @@ class IndexableReplacementMapper {
             .build();
     }
 
-    List<IndexableReplacement> fromModel(Collection<ReplacementModel> replacements) {
+    Collection<IndexableReplacement> fromModel(Collection<ReplacementModel> replacements) {
         return replacements
             .stream()
             .map(IndexableReplacementMapper::fromModel)

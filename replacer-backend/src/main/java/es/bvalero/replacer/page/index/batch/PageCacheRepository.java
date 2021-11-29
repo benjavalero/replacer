@@ -4,7 +4,10 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.repository.PageModel;
 import es.bvalero.replacer.page.repository.PageRepository;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +54,7 @@ class PageCacheRepository implements PageRepository {
     }
 
     @Override
-    public List<PageModel> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
+    public Collection<PageModel> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
         return pageRepository.findByPageIdInterval(lang, minPageId, maxPageId);
     }
 

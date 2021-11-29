@@ -72,7 +72,7 @@ class DumpFileSystemFinder implements DumpFinder {
             return listedFiles
                 .filter(folder -> DUMP_FOLDER_PATTERN.matcher(folder.getFileName().toString()).matches())
                 .sorted(Collections.reverseOrder())
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
         } catch (IOException e) {
             throw new ReplacerException("Error listing files in base folder", e);
         }

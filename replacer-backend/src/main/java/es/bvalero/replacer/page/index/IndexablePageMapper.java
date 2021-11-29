@@ -5,14 +5,13 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.page.repository.PageModel;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class IndexablePageMapper {
 
-    List<PageModel> toModel(Collection<IndexablePage> pages) {
+    Collection<PageModel> toModel(Collection<IndexablePage> pages) {
         return pages.stream().map(IndexablePageMapper::toModel).collect(Collectors.toUnmodifiableList());
     }
 

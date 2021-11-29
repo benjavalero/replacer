@@ -9,10 +9,10 @@ import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
-class PageResultExtractor implements ResultSetExtractor<List<PageModel>> {
+class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
 
     @Override
-    public List<PageModel> extractData(ResultSet rs) throws SQLException, DataAccessException {
+    public Collection<PageModel> extractData(ResultSet rs) throws SQLException, DataAccessException {
         // We can assume the lang is the same for all the results
         WikipediaLanguage lang = null;
 

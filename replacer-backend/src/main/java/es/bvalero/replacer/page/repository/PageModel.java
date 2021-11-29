@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.repository;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import java.util.List;
+import java.util.Collection;
 import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
@@ -24,5 +24,5 @@ public class PageModel {
     String title;
 
     @NonNull
-    List<ReplacementModel> replacements;
+    Collection<ReplacementModel> replacements;
 }
