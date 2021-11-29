@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-class PageReviewNoTypeService extends PageReviewService {
+public class PageReviewNoTypeService extends PageReviewService {
+
+    // TODO: Public while refactoring
 
     @Autowired
     private ReplacementService replacementService;

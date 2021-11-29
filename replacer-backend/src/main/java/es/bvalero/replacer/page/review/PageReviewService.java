@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -7,8 +7,6 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.page.review.PageReviewSearch;
-import es.bvalero.replacer.page.review.PageReviewSectionFinder;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
@@ -50,7 +48,8 @@ abstract class PageReviewService {
     @Autowired
     private PageReviewSectionFinder pageReviewSectionFinder;
 
-    Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
+    // TODO: Public while refactoring
+    public Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
         // Retrieve an ID of a potential page to be replaced
         Optional<Integer> randomPageId = findPageIdToReview(options);
         while (randomPageId.isPresent()) {
@@ -122,7 +121,8 @@ abstract class PageReviewService {
 
     abstract PageSearchResult findPageIdsToReview(PageReviewOptions options);
 
-    Optional<PageReview> getPageReview(int pageId, PageReviewOptions options) {
+    // TODO: Public while refactoring
+    public Optional<PageReview> getPageReview(int pageId, PageReviewOptions options) {
         Optional<PageReview> review = Optional.empty();
 
         // Load page from Wikipedia

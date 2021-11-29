@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -9,6 +9,7 @@ import es.bvalero.replacer.finder.replacement.ReplacementMapper;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
+import es.bvalero.replacer.page.MisspellingType;
 import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
@@ -22,7 +23,9 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-class PageReviewCustomService extends PageReviewService {
+public class PageReviewCustomService extends PageReviewService {
+
+    // TODO: Public while refactoring
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -149,7 +152,12 @@ class PageReviewCustomService extends PageReviewService {
             .build();
     }
 
-    MisspellingType validateCustomReplacement(WikipediaLanguage lang, String replacement, boolean caseSensitive) {
+    // TODO: Public while refactoring
+    public MisspellingType validateCustomReplacement(
+        WikipediaLanguage lang,
+        String replacement,
+        boolean caseSensitive
+    ) {
         Optional<Misspelling> misspelling = customReplacementFinderService.findExistingMisspelling(replacement, lang);
         if (misspelling.isEmpty()) {
             return MisspellingType.ofEmpty();

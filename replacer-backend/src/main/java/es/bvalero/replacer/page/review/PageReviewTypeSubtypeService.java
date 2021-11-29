@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.Replacement;
@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-class PageReviewTypeSubtypeService extends PageReviewService {
+public class PageReviewTypeSubtypeService extends PageReviewService {
+
+    // TODO: Public while refactoring
 
     @Autowired
     private ReplacementService replacementService;

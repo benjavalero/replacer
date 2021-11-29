@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -15,13 +15,14 @@ import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
-import es.bvalero.replacer.page.review.PageReviewSectionFinder;
+import es.bvalero.replacer.page.MisspellingType;
 import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -499,7 +500,7 @@ class PageReviewCustomServiceTest {
             .thenReturn(Optional.of(misspelling1));
         when(customReplacementFinderService.findExistingMisspelling("Accion", lang))
             .thenReturn(Optional.of(misspelling1));
-        assertEquals(
+        Assertions.assertEquals(
             MisspellingType.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "accion", true)
         );

@@ -6,7 +6,6 @@ import static org.mockito.Mockito.*;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.page.PageReview;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.Collection;

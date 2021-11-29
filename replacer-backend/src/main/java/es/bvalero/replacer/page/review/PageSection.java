@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,8 @@ public class PageSection {
     @ApiModelProperty(value = "Section title", required = true, example = "Biografía")
     String title;
 
-    static PageSection of(Integer id, String title) {
+    // TODO: Public while refactoring
+    public static PageSection of(Integer id, String title) {
         return new PageSection(id, title);
     }
 }

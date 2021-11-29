@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.page.PageReview;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.Collection;
 import java.util.Collections;

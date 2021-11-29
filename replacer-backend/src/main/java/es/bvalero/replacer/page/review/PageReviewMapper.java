@@ -1,13 +1,9 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
-import es.bvalero.replacer.page.review.PageDto;
-import es.bvalero.replacer.page.review.PageReplacement;
-import es.bvalero.replacer.page.review.PageReplacementSuggestion;
-import es.bvalero.replacer.page.review.PageReviewDto;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.util.Collection;
 import java.util.List;
@@ -16,9 +12,12 @@ import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
 
 @UtilityClass
-class PageReviewMapper {
+public class PageReviewMapper {
 
-    PageReviewDto toDto(PageReview review) {
+    // TODO: Public while refactoring
+
+    // TODO: Public while refactoring
+    public PageReviewDto toDto(PageReview review) {
         return PageReviewDto.of(
             toDto(review.getPage(), review.getSection()),
             toDto(review.getReplacements()),

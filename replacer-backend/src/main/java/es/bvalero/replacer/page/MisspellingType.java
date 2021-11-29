@@ -8,7 +8,9 @@ import org.springframework.lang.Nullable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
-class MisspellingType {
+public class MisspellingType {
+
+    // TODO: Public while refactoring
 
     @ApiModelProperty(value = "Known replacement type or empty", example = "Ortografía")
     @Nullable
@@ -18,7 +20,8 @@ class MisspellingType {
     @Nullable
     String subtype;
 
-    static MisspellingType ofEmpty() {
+    // TODO: Public while refactoring
+    public static MisspellingType ofEmpty() {
         return MisspellingType.of(null, null);
     }
 }

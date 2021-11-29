@@ -1,9 +1,8 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
-import es.bvalero.replacer.page.review.PageReviewSearch;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.Collection;

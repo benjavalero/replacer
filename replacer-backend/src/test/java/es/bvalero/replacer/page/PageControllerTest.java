@@ -12,8 +12,7 @@ import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.page.review.PageDto;
-import es.bvalero.replacer.page.review.PageReviewSearch;
+import es.bvalero.replacer.page.review.*;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -104,7 +103,7 @@ class PageControllerTest {
             .byteOffset(0)
             .anchor(anchor)
             .build();
-        PageReview review = new PageReview(wikipediaPage, wikipediaSection, replacements, search);
+        PageReview review = PageReview.of(wikipediaPage, wikipediaSection, replacements, search);
         PageReviewOptions options = PageReviewOptions.ofNoType();
         when(pageReviewNoTypeService.findRandomPageReview(options)).thenReturn(Optional.of(review));
 

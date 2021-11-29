@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.review;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -19,7 +19,9 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-class PageReviewOptions {
+public class PageReviewOptions {
+
+    // TODO: Public while refactoring
 
     @ApiParam(value = "Language", required = true)
     private WikipediaLanguage lang;
@@ -52,18 +54,21 @@ class PageReviewOptions {
         this.offset = this.offset == null ? 0 : this.offset + increment;
     }
 
+    // TODO: Public while refactoring
     @TestOnly
-    static PageReviewOptions ofNoType() {
+    public static PageReviewOptions ofNoType() {
         return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).build();
     }
 
+    // TODO: Public while refactoring
     @TestOnly
-    static PageReviewOptions ofTypeSubtype(String type, String subtype) {
+    public static PageReviewOptions ofTypeSubtype(String type, String subtype) {
         return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).type(type).subtype(subtype).build();
     }
 
+    // TODO: Public while refactoring
     @TestOnly
-    static PageReviewOptions ofCustom(
+    public static PageReviewOptions ofCustom(
         WikipediaLanguage lang,
         String replacement,
         String suggestion,
