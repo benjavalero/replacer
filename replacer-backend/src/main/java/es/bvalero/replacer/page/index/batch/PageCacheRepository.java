@@ -1,7 +1,9 @@
-package es.bvalero.replacer.page.repository;
+package es.bvalero.replacer.page.index.batch;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.page.repository.PageModel;
+import es.bvalero.replacer.page.repository.PageRepository;
 import java.util.*;
 import lombok.AccessLevel;
 import lombok.Setter;
@@ -67,8 +69,7 @@ class PageCacheRepository implements PageRepository {
         }
     }
 
-    @Override
-    public void resetCache() {
+    void resetCache() {
         this.clean();
         this.maxCachedId = 0;
     }

@@ -13,9 +13,6 @@ public interface PageRepository {
     /** Find pages, including all the replacements, by a range of page IDs. */
     List<PageModel> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId);
 
-    /** Reset the cache in case we are using the cache implementation */
-    void resetCache();
-
     /** Update the title for a collection of pages */
     void updatePageTitles(Collection<PageModel> pages);
 

@@ -59,11 +59,6 @@ class PageJdbcRepository implements PageRepository {
     }
 
     @Override
-    public void resetCache() {
-        throw new IllegalCallerException();
-    }
-
-    @Override
     public void updatePageTitles(Collection<PageModel> pages) {
         String sql = "UPDATE page SET title = :title WHERE lang = :lang AND article_id = :pageId";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());

@@ -51,7 +51,7 @@ class PageIndexerTest {
 
     @BeforeEach
     void setUp() {
-        pageIndexer = new PageSingleIndexer();
+        pageIndexer = new PageIndexer();
         MockitoAnnotations.initMocks(this);
     }
 

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.repository;
+package es.bvalero.replacer.page.index.batch;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -8,6 +8,9 @@ import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.page.repository.PageModel;
+import es.bvalero.replacer.page.repository.PageRepository;
+import es.bvalero.replacer.page.repository.ReplacementModel;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
