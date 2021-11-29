@@ -33,7 +33,7 @@ public class PageIndexer {
     private ReplacementFinderService replacementFinderService;
 
     @Autowired
-    private PageIndexHelper pageIndexHelper;
+    private IndexablePageComparator indexablePageComparator;
 
     @Autowired
     private PageIndexResultSaver pageIndexResultSaver;
@@ -53,7 +53,7 @@ public class PageIndexer {
             Collection<Replacement> replacements = findPageReplacements(page);
             IndexablePage indexablePage = IndexablePageMapper.fromDomain(page, replacements);
 
-            PageIndexResult result = pageIndexHelper.indexPageReplacements(indexablePage, dbPage);
+            PageIndexResult result = indexablePageComparator.indexPageReplacements(indexablePage, dbPage);
             saveResult(result);
 
             return result.withReplacements(replacements);

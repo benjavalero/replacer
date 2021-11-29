@@ -10,9 +10,9 @@ import java.util.Random;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
-class PageIndexHelperTest {
+class IndexablePageComparatorTest {
 
-    private final PageIndexHelper pageIndexHelper = new PageIndexHelper();
+    private final IndexablePageComparator indexablePageComparator = new IndexablePageComparator();
 
     @Test
     void testIndexNewPageReplacements() {
@@ -24,7 +24,7 @@ class PageIndexHelperTest {
             .lastUpdate(LocalDate.now())
             .build();
 
-        PageIndexResult result = pageIndexHelper.indexPageReplacements(page, null);
+        PageIndexResult result = indexablePageComparator.indexPageReplacements(page, null);
 
         PageIndexResult expected = PageIndexResult
             .builder()
@@ -54,7 +54,7 @@ class PageIndexHelperTest {
             .lastUpdate(LocalDate.now())
             .build();
 
-        PageIndexResult toIndex = pageIndexHelper.indexPageReplacements(page, null);
+        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, null);
 
         PageIndexResult expected = PageIndexResult
             .builder()
@@ -103,7 +103,7 @@ class PageIndexHelperTest {
             .lastUpdate(LocalDate.now())
             .build();
 
-        PageIndexResult toIndex = pageIndexHelper.indexPageReplacements(page, dbPage);
+        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
 
         PageIndexResult expected = PageIndexResult
             .builder()
@@ -124,7 +124,7 @@ class PageIndexHelperTest {
             .replacements(Collections.emptyList())
             .lastUpdate(LocalDate.now())
             .build();
-        PageIndexResult result = pageIndexHelper.indexPageReplacements(page, null);
+        PageIndexResult result = indexablePageComparator.indexPageReplacements(page, null);
 
         // Save the dummy replacement
         PageIndexResult expected = PageIndexResult
@@ -246,7 +246,7 @@ class PageIndexHelperTest {
             .lastUpdate(same)
             .build();
 
-        PageIndexResult toIndex = pageIndexHelper.indexPageReplacements(page, dbPage);
+        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
 
         PageIndexResult expected = PageIndexResult
             .builder()
@@ -345,7 +345,7 @@ class PageIndexHelperTest {
             .lastUpdate(before)
             .build();
 
-        PageIndexResult toIndex = pageIndexHelper.indexPageReplacements(page, dbPage);
+        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
 
         PageIndexResult expected = PageIndexResult
             .builder()
@@ -380,7 +380,7 @@ class PageIndexHelperTest {
             .lastUpdate(same)
             .build();
 
-        PageIndexResult toIndex = pageIndexHelper.indexPageReplacements(page, dbPage);
+        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
 
         PageIndexResult expected = PageIndexResult
             .builder()

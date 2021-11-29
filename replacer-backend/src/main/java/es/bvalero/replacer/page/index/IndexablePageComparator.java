@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 /**
  * Helper class to compare an indexable and an indexed page and return a set of changes to align them.
  *
- * It could be a Utility class but we implement it as a Component to mock it more easily.
+ * It could be a Utility class, but we implement it as a Component to mock it more easily.
  */
 @Component
-class PageIndexHelper {
+class IndexablePageComparator {
 
     PageIndexResult indexPageReplacements(IndexablePage page, @Nullable IndexablePage dbPage) {
         PageIndexResult pageIndexResult = PageIndexResult.ofEmpty();

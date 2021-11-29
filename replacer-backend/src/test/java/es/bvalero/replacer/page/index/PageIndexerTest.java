@@ -32,7 +32,7 @@ class PageIndexerTest {
     private ReplacementFinderService replacementFinderService;
 
     @Mock
-    private PageIndexHelper pageIndexHelper;
+    private IndexablePageComparator indexablePageComparator;
 
     @Mock
     private PageIndexResultSaver pageIndexResultSaver;
@@ -76,7 +76,7 @@ class PageIndexerTest {
         when(pageIndexValidator.isIndexableByPageTitle(page, null)).thenReturn(true);
 
         PageIndexResult mockResult = PageIndexResult.builder().status(PageIndexStatus.PAGE_INDEXED).build();
-        when(pageIndexHelper.indexPageReplacements(any(IndexablePage.class), isNull())).thenReturn(mockResult);
+        when(indexablePageComparator.indexPageReplacements(any(IndexablePage.class), isNull())).thenReturn(mockResult);
 
         PageIndexResult result = pageIndexer.indexPageReplacements(page);
 
@@ -86,7 +86,7 @@ class PageIndexerTest {
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(pageIndexValidator).isIndexableByPageTitle(page, null);
         verify(replacementFinderService).find(any(FinderPage.class));
-        verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class), isNull());
+        verify(indexablePageComparator).indexPageReplacements(any(IndexablePage.class), isNull());
     }
 
     @Test
@@ -96,7 +96,7 @@ class PageIndexerTest {
         when(pageIndexValidator.isIndexableByPageTitle(page, null)).thenReturn(false);
 
         PageIndexResult mockResult = PageIndexResult.builder().status(PageIndexStatus.PAGE_INDEXED).build();
-        when(pageIndexHelper.indexPageReplacements(any(IndexablePage.class), isNull())).thenReturn(mockResult);
+        when(indexablePageComparator.indexPageReplacements(any(IndexablePage.class), isNull())).thenReturn(mockResult);
 
         PageIndexResult result = pageIndexer.indexPageReplacements(page);
 
@@ -106,7 +106,7 @@ class PageIndexerTest {
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(pageIndexValidator, never()).isIndexableByPageTitle(page, null);
         verify(replacementFinderService).find(any(FinderPage.class));
-        verify(pageIndexHelper).indexPageReplacements(any(IndexablePage.class), isNull());
+        verify(indexablePageComparator).indexPageReplacements(any(IndexablePage.class), isNull());
     }
 
     @Test
@@ -123,7 +123,8 @@ class PageIndexerTest {
         verify(pageIndexValidator).isIndexableByTimestamp(page, null);
         verify(pageIndexValidator).isIndexableByPageTitle(page, null);
         verify(replacementFinderService, never()).find(any(FinderPage.class));
-        verify(pageIndexHelper, never()).indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
+        verify(indexablePageComparator, never())
+            .indexPageReplacements(any(IndexablePage.class), any(IndexablePage.class));
     }
 
     @Test
