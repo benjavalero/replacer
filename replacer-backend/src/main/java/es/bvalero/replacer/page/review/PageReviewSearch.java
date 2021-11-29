@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -26,7 +27,8 @@ public class PageReviewSearch {
         required = true,
         example = "1704147"
     )
-    private long numPending;
+    @Nullable // TODO: Check if this is nullable or not as we use this DTO as in and out
+    private Long numPending;
 
     @ApiModelProperty(value = "Replacement type", example = "Ortografía")
     @Nullable

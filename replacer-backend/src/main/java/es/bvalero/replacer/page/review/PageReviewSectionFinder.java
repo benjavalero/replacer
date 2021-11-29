@@ -37,7 +37,7 @@ public class PageReviewSectionFinder {
         WikipediaPage page,
         Collection<Replacement> replacements
     ) {
-        assert review.getPage().getSection() == null;
+        assert review.getSection() == null;
 
         try {
             // Get the sections from the Wikipedia API (better than calculating them by ourselves)

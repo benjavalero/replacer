@@ -8,14 +8,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.common.domain.AccessToken;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
+import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.review.PageDto;
-import es.bvalero.replacer.page.review.PageReplacement;
-import es.bvalero.replacer.page.review.PageReplacementSuggestion;
 import es.bvalero.replacer.page.review.PageReviewSearch;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -61,42 +58,67 @@ class PageControllerTest {
     @MockBean
     private PageListService pageListService;
 
+    private final int pageId = 3;
+    private final String title = "T";
+    private final String content = "C";
+    private final LocalDateTime queryTimestamp = LocalDateTime.now();
+    private final WikipediaPage wikipediaPage = WikipediaPage
+        .builder()
+        .id(WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId))
+        .namespace(WikipediaNamespace.getDefault())
+        .title(title)
+        .content(content)
+        .lastUpdate(LocalDateTime.now())
+        .queryTimestamp(queryTimestamp)
+        .build();
+    private final PageReview review = PageReview.of(
+        wikipediaPage,
+        null,
+        Collections.emptyList(),
+        new PageReviewSearch()
+    );
+
     @Test
     void testFindRandomPageWithReplacements() throws Exception {
-        int id = 3;
-        String title = "X";
-        String content = "Y";
+        // TODO: Check if all of this is needed
         Integer section = 2;
         String anchor = "S";
-        String queryTimestamp = "Z";
         int start = 5;
         String rep = "A";
-        PageReplacementSuggestion suggestion = PageReplacementSuggestion.of("a", "b");
-        PageReplacement replacement = PageReplacement.of(start, rep, Collections.singletonList(suggestion));
-        List<PageReplacement> replacements = Collections.singletonList(replacement);
+        Suggestion suggestion = Suggestion.of("a", "b");
+        Replacement replacement = Replacement
+            .builder()
+            .start(start)
+            .text(rep)
+            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .subtype(rep)
+            .suggestions(Collections.singletonList(suggestion))
+            .build();
+        List<Replacement> replacements = Collections.singletonList(replacement);
         long numPending = 7;
         PageReviewSearch search = PageReviewSearch.builder().numPending(numPending).build();
-        PageDto page = new PageDto(
-            WikipediaLanguage.SPANISH,
-            id,
-            title,
-            content,
-            PageSection.of(section, anchor),
-            queryTimestamp
-        );
-        PageReview review = new PageReview(page, replacements, search);
+        WikipediaSection wikipediaSection = WikipediaSection
+            .builder()
+            .level(2)
+            .index(section)
+            .byteOffset(0)
+            .anchor(anchor)
+            .build();
+        PageReview review = new PageReview(wikipediaPage, wikipediaSection, replacements, search);
         PageReviewOptions options = PageReviewOptions.ofNoType();
         when(pageReviewNoTypeService.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(get("/api/pages/random?lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.page.id", is(id)))
+            .andExpect(jsonPath("$.page.id", is(pageId)))
             .andExpect(jsonPath("$.page.title", is(title)))
             .andExpect(jsonPath("$.page.content", is(content)))
             .andExpect(jsonPath("$.page.section.id", is(section)))
             .andExpect(jsonPath("$.page.section.title", is(anchor)))
-            .andExpect(jsonPath("$.page.queryTimestamp", is(queryTimestamp)))
+            .andExpect(
+                jsonPath("$.page.queryTimestamp", is(WikipediaDateUtils.formatWikipediaTimestamp(queryTimestamp)))
+            )
             .andExpect(jsonPath("$.replacements[0].start", is(start)))
             .andExpect(jsonPath("$.replacements[0].text", is(rep)))
             .andExpect(jsonPath("$.replacements[0].suggestions[0].text", is("a")))
@@ -109,7 +131,7 @@ class PageControllerTest {
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofTypeSubtype("X", "Y");
-        when(pageReviewTypeSubtypeService.findRandomPageReview(options)).thenReturn(Optional.of(PageReview.ofEmpty()));
+        when(pageReviewTypeSubtypeService.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(get("/api/pages/random?type=X&subtype=Y&lang=es").contentType(MediaType.APPLICATION_JSON))
@@ -121,7 +143,7 @@ class PageControllerTest {
     @Test
     void testFindRandomPageByCustomReplacement() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", false);
-        when(pageReviewCustomService.findRandomPageReview(options)).thenReturn(Optional.of(PageReview.ofEmpty()));
+        when(pageReviewCustomService.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(
@@ -136,7 +158,7 @@ class PageControllerTest {
     @Test
     void testFindPageReviewById() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofNoType();
-        when(pageReviewNoTypeService.getPageReview(123, options)).thenReturn(Optional.of(PageReview.ofEmpty()));
+        when(pageReviewNoTypeService.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc.perform(get("/api/pages/123?lang=es").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 
@@ -146,7 +168,7 @@ class PageControllerTest {
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofTypeSubtype("X", "Y");
-        when(pageReviewTypeSubtypeService.getPageReview(123, options)).thenReturn(Optional.of(PageReview.ofEmpty()));
+        when(pageReviewTypeSubtypeService.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(get("/api/pages/123?type=X&subtype=Y&lang=es").contentType(MediaType.APPLICATION_JSON))
@@ -158,7 +180,7 @@ class PageControllerTest {
     @Test
     void testFindPageReviewByIdAndCustomReplacement() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", true);
-        when(pageReviewCustomService.getPageReview(123, options)).thenReturn(Optional.of(PageReview.ofEmpty()));
+        when(pageReviewCustomService.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(

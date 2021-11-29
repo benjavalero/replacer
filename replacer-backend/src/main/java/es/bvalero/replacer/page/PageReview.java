@@ -3,34 +3,37 @@ package es.bvalero.replacer.page;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
-import es.bvalero.replacer.page.review.PageDto;
-import es.bvalero.replacer.page.review.PageReplacement;
 import es.bvalero.replacer.page.review.PageReviewSearch;
-import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
-import org.jetbrains.annotations.TestOnly;
+import lombok.experimental.NonFinal;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-/**
- * Domain class of a page to review to be used in the front-end.
- */
+/** Sub-domain object representing a page to be reviewed in the front-end */
+@NonFinal
 @Value
-@Builder
+@Builder // TODO: Check
 public class PageReview {
 
     // TODO: Public while refactoring
 
-    @ApiModelProperty(required = true)
-    PageDto page;
+    @NonNull
+    WikipediaPage page;
+
+    @Nullable
+    WikipediaSection section;
 
     @ApiModelProperty(value = "List of replacements to review", required = true)
-    List<PageReplacement> replacements;
+    @NonNull
+    List<Replacement> replacements;
 
     @ApiModelProperty(value = "Search options of the replacements to review", required = true)
+    // TODO: Make NonNull or fill it in the controller
     PageReviewSearch search;
 
     // TODO: Public while refactoring
@@ -42,35 +45,10 @@ public class PageReview {
     ) {
         return PageReview
             .builder()
-            .page(convert(page, section))
-            .replacements(PageReviewService.convert(replacements))
+            .page(page)
+            .section(section)
+            .replacements(new ArrayList<>(replacements))
             .search(search)
             .build();
-    }
-
-    private static PageDto convert(WikipediaPage page, @Nullable WikipediaSection section) {
-        return PageDto
-            .builder()
-            .lang(page.getId().getLang())
-            .id(page.getId().getPageId())
-            .title(page.getTitle())
-            .content(page.getContent())
-            .section(convert(section))
-            .queryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(page.getQueryTimestamp()))
-            .build();
-    }
-
-    @Nullable
-    private static PageSection convert(@Nullable WikipediaSection section) {
-        if (section == null) {
-            return null;
-        } else {
-            return PageSection.of(section.getIndex(), section.getAnchor());
-        }
-    }
-
-    @TestOnly
-    static PageReview ofEmpty() {
-        return PageReview.builder().page(new PageDto()).build();
     }
 }

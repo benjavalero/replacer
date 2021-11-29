@@ -7,15 +7,12 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.page.review.PageReplacement;
-import es.bvalero.replacer.page.review.PageReplacementSuggestion;
 import es.bvalero.replacer.page.review.PageReviewSearch;
 import es.bvalero.replacer.page.review.PageReviewSectionFinder;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 
 @Slf4j
 abstract class PageReviewService {
@@ -160,7 +158,7 @@ abstract class PageReviewService {
         if (replacements.isEmpty()) {
             return Optional.empty();
         } else {
-            PageReview pageReview = buildPageReview(page, replacements, options);
+            PageReview pageReview = buildPageReview(page, null, replacements, options);
 
             // Try to reduce the review size by returning just a section of the page
             Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(
@@ -204,8 +202,13 @@ abstract class PageReviewService {
     }
 
     @VisibleForTesting
-    PageReview buildPageReview(WikipediaPage page, Collection<Replacement> replacements, PageReviewOptions options) {
-        return PageReview.of(page, null, replacements, convert(options));
+    PageReview buildPageReview(
+        WikipediaPage page,
+        @Nullable WikipediaSection section,
+        Collection<Replacement> replacements,
+        PageReviewOptions options
+    ) {
+        return PageReview.of(page, section, replacements, convert(options));
     }
 
     private long findTotalResultsFromCache(PageReviewOptions options) {
@@ -213,23 +216,6 @@ abstract class PageReviewService {
         // If a review is requested directly it is possible the cache doesn't exist
         PageSearchResult result = cachedPageIds.getIfPresent(key);
         return result != null ? result.getTotal() : 0L;
-    }
-
-    // TODO: Move to a mapper
-    static List<PageReplacement> convert(Collection<Replacement> replacements) {
-        return replacements.stream().map(PageReviewService::convert).collect(Collectors.toUnmodifiableList());
-    }
-
-    private static PageReplacement convert(Replacement replacement) {
-        return PageReplacement.of(
-            replacement.getStart(),
-            replacement.getText(),
-            replacement.getSuggestions().stream().map(PageReviewService::convert).collect(Collectors.toList())
-        );
-    }
-
-    private static PageReplacementSuggestion convert(Suggestion suggestion) {
-        return PageReplacementSuggestion.of(suggestion.getText(), suggestion.getComment());
     }
 
     private PageReviewSearch convert(PageReviewOptions options) {

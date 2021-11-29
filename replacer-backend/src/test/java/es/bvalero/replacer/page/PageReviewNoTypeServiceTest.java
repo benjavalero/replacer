@@ -127,7 +127,7 @@ class PageReviewNoTypeServiceTest {
         verify(pageIndexer).indexPageReplacements(page);
 
         assertTrue(review.isPresent());
-        assertEquals(randomId, review.get().getPage().getId());
+        assertEquals(randomId, review.get().getPage().getId().getPageId());
     }
 
     @Test
@@ -174,6 +174,6 @@ class PageReviewNoTypeServiceTest {
         verify(pageIndexer).indexPageReplacements(page2);
 
         assertTrue(review.isPresent());
-        assertEquals(randomId2, review.get().getPage().getId());
+        assertEquals(randomId2, review.get().getPage().getId().getPageId());
     }
 }

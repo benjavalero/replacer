@@ -156,8 +156,8 @@ class PageReviewCustomServiceTest {
         assertFalse(review1.isEmpty());
         review1.ifPresent(
             r -> {
-                assertEquals(lang, r.getPage().getLang());
-                assertEquals(pageId, r.getPage().getId());
+                assertEquals(lang, r.getPage().getId().getLang());
+                assertEquals(pageId, r.getPage().getId().getPageId());
                 assertEquals(content, r.getPage().getContent());
                 assertEquals(1, r.getSearch().getNumPending());
             }
@@ -269,8 +269,8 @@ class PageReviewCustomServiceTest {
         assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                assertEquals(lang, r.getPage().getLang());
-                assertEquals(pageId2, r.getPage().getId());
+                assertEquals(lang, r.getPage().getId().getLang());
+                assertEquals(pageId2, r.getPage().getId().getPageId());
                 assertEquals(content, r.getPage().getContent());
                 assertEquals(1, r.getSearch().getNumPending());
             }
@@ -378,7 +378,7 @@ class PageReviewCustomServiceTest {
         assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                assertEquals(1, r.getPage().getId());
+                assertEquals(1, r.getPage().getId().getPageId());
                 assertEquals(4, r.getSearch().getNumPending());
             }
         );
@@ -390,7 +390,7 @@ class PageReviewCustomServiceTest {
         assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                assertEquals(2, r.getPage().getId());
+                assertEquals(2, r.getPage().getId().getPageId());
                 assertEquals(3, r.getSearch().getNumPending());
             }
         );
@@ -402,7 +402,7 @@ class PageReviewCustomServiceTest {
         assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                assertEquals(3, r.getPage().getId());
+                assertEquals(3, r.getPage().getId().getPageId());
                 assertEquals(2, r.getSearch().getNumPending());
             }
         );
@@ -414,7 +414,7 @@ class PageReviewCustomServiceTest {
         assertFalse(review.isEmpty());
         review.ifPresent(
             r -> {
-                assertEquals(4, r.getPage().getId());
+                assertEquals(4, r.getPage().getId().getPageId());
                 assertEquals(1, r.getSearch().getNumPending());
             }
         );
