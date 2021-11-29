@@ -7,7 +7,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.page.review.SectionReviewService;
+import es.bvalero.replacer.page.review.PageReviewSectionFinder;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
@@ -47,7 +47,7 @@ abstract class PageReviewService {
     private PageIndexer pageIndexer;
 
     @Autowired
-    private SectionReviewService sectionReviewService;
+    private PageReviewSectionFinder pageReviewSectionFinder;
 
     Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
         // Retrieve an ID of a potential page to be replaced
@@ -160,7 +160,7 @@ abstract class PageReviewService {
             PageReview pageReview = buildPageReview(page, replacements, options);
 
             // Try to reduce the review size by returning just a section of the page
-            Optional<PageReview> sectionReview = sectionReviewService.findSectionReview(pageReview);
+            Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(pageReview);
             if (sectionReview.isPresent()) {
                 return sectionReview;
             } else {

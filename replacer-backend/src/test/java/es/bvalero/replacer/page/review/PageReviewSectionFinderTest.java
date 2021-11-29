@@ -19,17 +19,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class SectionReviewServiceTest {
+class PageReviewSectionFinderTest {
 
     @Mock
     private WikipediaService wikipediaService;
 
     @InjectMocks
-    private SectionReviewService sectionReviewService;
+    private PageReviewSectionFinder pageReviewSectionFinder;
 
     @BeforeEach
     public void setUp() {
-        sectionReviewService = new SectionReviewService();
+        pageReviewSectionFinder = new PageReviewSectionFinder();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -41,7 +41,7 @@ class SectionReviewServiceTest {
             .builder()
             .page(PageDto.builder().lang(WikipediaLanguage.getDefault()).id(1).build())
             .build();
-        Optional<PageReview> sectionReview = sectionReviewService.findSectionReview(review);
+        Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(review);
 
         assertFalse(sectionReview.isPresent());
     }
@@ -85,7 +85,7 @@ class SectionReviewServiceTest {
             .build();
         when(wikipediaService.getPageSection(wikipediaPageId, section)).thenReturn(Optional.of(pageSection));
 
-        Optional<PageReview> sectionReview = sectionReviewService.findSectionReview(pageReview);
+        Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(pageReview);
 
         assertTrue(sectionReview.isPresent());
         sectionReview.ifPresent(

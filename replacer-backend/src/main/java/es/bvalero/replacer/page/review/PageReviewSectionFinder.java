@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class SectionReviewService {
+public class PageReviewSectionFinder {
 
     // TODO: Public while refactoring
 
@@ -29,7 +29,7 @@ public class SectionReviewService {
      * @return The review of a section of the page, or empty if there is no such section.
      */
     // TODO: Public while refactoring
-    public Optional<PageReview> findSectionReview(PageReview review) {
+    public Optional<PageReview> findPageReviewSection(PageReview review) {
         assert review.getPage().getSection() == null;
 
         try {
