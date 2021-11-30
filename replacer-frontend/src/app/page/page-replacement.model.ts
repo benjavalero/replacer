@@ -1,14 +1,14 @@
-export interface PageReplacement {
+export interface ReviewReplacement {
   text: string;
   start: number;
-  suggestions: Suggestion[];
+  suggestions: ReviewSuggestion[];
 }
 
-export function getReplacementEnd(r: PageReplacement): number {
+export function getReplacementEnd(r: ReviewReplacement): number {
   return r.start + r.text.length;
 }
 
-export interface Suggestion {
+export interface ReviewSuggestion {
   text: string;
   comment?: string;
 }

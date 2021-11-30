@@ -1,5 +1,5 @@
 import { Language } from '../user/language-model';
-import { PageReplacement } from './page-replacement.model';
+import { ReviewReplacement } from './page-replacement.model';
 
 export class ReviewOptions {
   type: string | null;
@@ -16,22 +16,22 @@ export class ReviewOptions {
 }
 
 export interface PageReview {
-  page: PageDto;
-  replacements: PageReplacement[];
+  page: ReviewPage;
+  replacements: ReviewReplacement[];
   search: PageReviewSearch;
   numPending: number;
 }
 
-export interface PageDto {
+export interface ReviewPage {
   lang: Language;
   id: number;
   title: string;
   content: string;
-  section?: PageSection;
+  section?: ReviewSection;
   queryTimestamp: string;
 }
 
-interface PageSection {
+interface ReviewSection {
   id: number;
   title: string;
 }
@@ -44,12 +44,12 @@ export interface PageReviewSearch {
 }
 
 export class SavePage {
-  page: PageDto;
+  page: ReviewPage;
   search: PageReviewSearch;
   token: string;
   tokenSecret: string;
 
-  constructor(page: PageDto, search: PageReviewSearch, token: string, tokenSecret: string) {
+  constructor(page: ReviewPage, search: PageReviewSearch, token: string, tokenSecret: string) {
     this.page = page;
     this.search = search;
     this.token = token;

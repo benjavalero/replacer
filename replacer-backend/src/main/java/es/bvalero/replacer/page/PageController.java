@@ -74,7 +74,7 @@ public class PageController {
                 );
                 String textToSave = cosmeticFinderService.applyCosmeticChanges(page);
                 boolean applyCosmetics = !textToSave.equals(page.getContent());
-                PageSection section = savePage.getPage().getSection();
+                ReviewSection section = savePage.getPage().getSection();
                 wikipediaService.savePageContent(
                     WikipediaPageId.of(params.getLang(), pageId),
                     section == null ? null : section.getId(),

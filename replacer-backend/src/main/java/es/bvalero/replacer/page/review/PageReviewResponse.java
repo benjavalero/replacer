@@ -12,11 +12,11 @@ class PageReviewResponse {
 
     @ApiModelProperty(required = true)
     @NonNull
-    PageDto page;
+    ReviewPage page;
 
-    @ApiModelProperty(value = "List of replacements to review", required = true)
+    @ApiModelProperty(value = "Collection of replacements to review", required = true)
     @NonNull
-    Collection<PageReplacement> replacements;
+    Collection<ReviewReplacement> replacements;
 
     @ApiModelProperty(required = true)
     @NonNull

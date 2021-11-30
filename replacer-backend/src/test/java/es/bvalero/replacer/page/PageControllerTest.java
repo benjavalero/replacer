@@ -62,13 +62,13 @@ class PageControllerTest {
         String type = "T";
         String subtype = "S";
         SavePage savePage = new SavePage();
-        PageDto page = PageDto
+        ReviewPage page = ReviewPage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .id(pageId)
             .title(title)
             .content(content)
-            .section(PageSection.of(section, ""))
+            .section(ReviewSection.of(section, ""))
             .queryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp))
             .build();
         savePage.setPage(page);
@@ -117,12 +117,12 @@ class PageControllerTest {
         String type = "T";
         String subtype = "S";
         SavePage savePage = new SavePage();
-        PageDto page = PageDto
+        ReviewPage page = ReviewPage
             .builder()
             .lang(WikipediaLanguage.SPANISH)
             .id(pageId)
             .title(title)
-            .section(PageSection.of(section, ""))
+            .section(ReviewSection.of(section, ""))
             .queryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp))
             .build();
         savePage.setPage(page);

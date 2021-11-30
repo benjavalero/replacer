@@ -1,7 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditCustomSnippetComponent } from './edit-custom-snippet.component';
-import { FixedReplacement, getReplacementEnd, PageReplacement, Snippet, Suggestion } from './page-replacement.model';
+import {
+  FixedReplacement,
+  getReplacementEnd,
+  ReviewReplacement,
+  ReviewSuggestion,
+  Snippet
+} from './page-replacement.model';
 
 @Component({
   selector: 'app-edit-snippet',
@@ -12,13 +18,13 @@ import { FixedReplacement, getReplacementEnd, PageReplacement, Snippet, Suggesti
 export class EditSnippetComponent implements OnInit {
   @Input() index!: number;
   @Input() pageText!: string;
-  @Input() replacement!: PageReplacement;
+  @Input() replacement!: ReviewReplacement;
 
   // Limits on left and right to edit the snippet as we would clash with other replacements
   @Input() limitLeft!: number;
   @Input() limitRight!: number;
 
-  private suggestionSelectedValue!: Suggestion | null;
+  private suggestionSelectedValue!: ReviewSuggestion | null;
   customFix: Snippet | null;
 
   @Output() fixed: EventEmitter<FixedReplacement> = new EventEmitter();
@@ -44,7 +50,7 @@ export class EditSnippetComponent implements OnInit {
       }
       this.suggestionSelected = originalSuggested;
     } else {
-      const defaultSuggestion: Suggestion = { text: this.replacement.text, comment: 'no reemplazar' };
+      const defaultSuggestion: ReviewSuggestion = { text: this.replacement.text, comment: 'no reemplazar' };
       this.replacement.suggestions.unshift(defaultSuggestion);
       this.suggestionSelected = this.replacement.suggestions[0];
     }
@@ -58,11 +64,11 @@ export class EditSnippetComponent implements OnInit {
     return this.trimRight().text;
   }
 
-  get suggestionSelected(): Suggestion | null {
+  get suggestionSelected(): ReviewSuggestion | null {
     return this.suggestionSelectedValue;
   }
 
-  set suggestionSelected(suggestion: Suggestion | null) {
+  set suggestionSelected(suggestion: ReviewSuggestion | null) {
     this.suggestionSelectedValue = suggestion;
     this.customFix = null;
     const fixedReplacement = new FixedReplacement(

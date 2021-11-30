@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageSection {
+public class ReviewSection {
 
     // TODO: Public while refactoring
 
@@ -19,7 +19,7 @@ public class PageSection {
     String title;
 
     // TODO: Public while refactoring
-    public static PageSection of(Integer id, String title) {
-        return new PageSection(id, title);
+    public static ReviewSection of(Integer id, String title) {
+        return new ReviewSection(id, title);
     }
 }

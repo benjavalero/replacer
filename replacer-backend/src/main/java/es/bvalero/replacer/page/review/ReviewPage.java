@@ -18,7 +18,7 @@ import org.springframework.lang.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PageDto {
+public class ReviewPage {
 
     // TODO: Public while refactoring
 
@@ -46,7 +46,7 @@ public class PageDto {
 
     @ApiModelProperty
     @Nullable
-    private PageSection section;
+    private ReviewSection section;
 
     @ApiModelProperty(
         value = "Timestamp when the page content was retrieved from Wikipedia",

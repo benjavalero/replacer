@@ -7,10 +7,10 @@ import lombok.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@ApiModel(description = "Suggestion for a replacement")
+@ApiModel(description = "Suggestion for a replacement to review")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
-class PageReplacementSuggestion {
+class ReviewSuggestion {
 
     @ApiModelProperty(value = "Fix proposed for a replacement", required = true, example = "aun")
     @NonNull
