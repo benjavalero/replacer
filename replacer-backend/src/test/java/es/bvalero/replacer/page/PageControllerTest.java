@@ -26,6 +26,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = PageController.class)
 class PageControllerTest {
 
+    private static final String EMPTY_CONTENT = " ";
+
     @Autowired
     private MockMvc mvc;
 
@@ -84,7 +86,7 @@ class PageControllerTest {
 
         mvc
             .perform(
-                post("/api/pages/123?lang=es")
+                post("/api/pages/123?lang=es&user=")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(savePage))
             )
@@ -125,6 +127,7 @@ class PageControllerTest {
         reviewPage.setLang(WikipediaLanguage.SPANISH);
         reviewPage.setId(pageId);
         reviewPage.setTitle(title);
+        reviewPage.setContent(EMPTY_CONTENT);
         reviewPage.setSection(reviewSection);
         reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp));
         savePage.setPage(reviewPage);
@@ -137,7 +140,7 @@ class PageControllerTest {
 
         mvc
             .perform(
-                post("/api/pages/123?lang=es")
+                post("/api/pages/123?lang=es&user=")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(savePage))
             )

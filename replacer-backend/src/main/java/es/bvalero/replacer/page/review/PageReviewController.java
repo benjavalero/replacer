@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.Optional;
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,9 @@ public class PageReviewController {
 
     /* FIND RANDOM PAGES WITH REPLACEMENTS */
 
-    @ApiOperation(value = "Find a random page and the replacements to review", response = PageReview.class)
+    @ApiOperation(value = "Find a random page and the replacements to review", response = PageReviewResponse.class)
     @GetMapping(value = "/random")
-    public Optional<PageReviewResponse> findRandomPageWithReplacements(PageReviewOptions options) {
+    public Optional<PageReviewResponse> findRandomPageWithReplacements(@Valid PageReviewOptions options) {
         Optional<PageReview> review;
         if (StringUtils.isBlank(options.getType())) {
             review = pageReviewNoTypeService.findRandomPageReview(options);
@@ -45,7 +46,7 @@ public class PageReviewController {
     @ApiOperation(value = "Validate if the custom replacement is a known subtype")
     @GetMapping(value = "/validate", params = { "replacement", "cs" })
     public MisspellingType validateCustomReplacement(
-        UserParameters params,
+        @Valid UserParameters params,
         @ApiParam(value = "Replacement to validate", example = "aún") @RequestParam @Size(max = 100) String replacement,
         @ApiParam(value = "If the custom replacement is case-sensitive") @RequestParam(
             defaultValue = "false"
@@ -56,11 +57,11 @@ public class PageReviewController {
 
     /* FIND A PAGE REVIEW */
 
-    @ApiOperation(value = "Find a page and the replacements to review", response = PageReview.class)
+    @ApiOperation(value = "Find a page and the replacements to review", response = PageReviewResponse.class)
     @GetMapping(value = "/{id}")
     public Optional<PageReviewResponse> findPageReviewById(
         @ApiParam(value = "Page ID", example = "6980716") @PathVariable("id") int pageId,
-        PageReviewOptions options
+        @Valid PageReviewOptions options
     ) {
         Optional<PageReview> review;
         if (StringUtils.isBlank(options.getType())) {

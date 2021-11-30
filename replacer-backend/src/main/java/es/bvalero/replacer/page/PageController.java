@@ -15,6 +15,7 @@ import es.bvalero.replacer.wikipedia.WikipediaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -55,8 +56,8 @@ public class PageController {
     @PostMapping(value = "/{id}")
     public ResponseEntity<String> save(
         @PathVariable("id") int pageId,
-        UserParameters params,
-        @ApiParam(value = "Page to update and mark as reviewed") @RequestBody SavePage savePage
+        @Valid UserParameters params,
+        @ApiParam(value = "Page to update and mark as reviewed") @Valid @RequestBody SavePage savePage
     ) {
         if (!savePage.getPage().getLang().equals(params.getLang()) || savePage.getPage().getId() != pageId) {
             throw new IllegalArgumentException();
@@ -116,14 +117,13 @@ public class PageController {
     }
 
     private PageReviewOptions convert(PageReviewSearch search, WikipediaLanguage lang) {
-        return PageReviewOptions
-            .builder()
-            .lang(lang)
-            .type(search.getType())
-            .subtype(search.getSubtype())
-            .suggestion(search.getSuggestion())
-            .cs(search.getCs())
-            .build();
+        PageReviewOptions pageReviewOptions = new PageReviewOptions();
+        pageReviewOptions.setLang(lang);
+        pageReviewOptions.setType(search.getType());
+        pageReviewOptions.setSubtype(search.getSubtype());
+        pageReviewOptions.setSuggestion(search.getSuggestion());
+        pageReviewOptions.setCs(search.getCs());
+        return pageReviewOptions;
     }
 
     /* PAGE LIST FOR ROBOTS */

@@ -6,27 +6,25 @@ import es.bvalero.replacer.finder.replacement.ReplacementType;
 import io.swagger.annotations.ApiParam;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.Nullable;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder(access = AccessLevel.PRIVATE)
 public class PageReviewOptions {
 
-    // TODO: Public while refactoring
-
     @ApiParam(value = "Language", required = true)
+    @NotNull
     private WikipediaLanguage lang;
 
     @ApiParam(value = "Wikipedia user name", required = true, example = "Benjavalero")
+    @NotNull
     private String user;
 
     @ApiParam(value = "Replacement type", example = "Ortografía")
@@ -48,27 +46,30 @@ public class PageReviewOptions {
 
     @JsonIgnore
     @Nullable
-    Integer offset = null;
+    Integer offset = null; // TODO: Check what this is used for and maybe move to Custom Page Review
 
     void incrementOffset(int increment) {
         this.offset = this.offset == null ? 0 : this.offset + increment;
     }
 
-    // TODO: Public while refactoring
     @TestOnly
-    public static PageReviewOptions ofNoType() {
-        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).build();
+    static PageReviewOptions ofNoType() {
+        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).user("").build();
     }
 
-    // TODO: Public while refactoring
     @TestOnly
-    public static PageReviewOptions ofTypeSubtype(String type, String subtype) {
-        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).type(type).subtype(subtype).build();
+    static PageReviewOptions ofTypeSubtype(String type, String subtype) {
+        return PageReviewOptions
+            .builder()
+            .lang(WikipediaLanguage.getDefault())
+            .user("")
+            .type(type)
+            .subtype(subtype)
+            .build();
     }
 
-    // TODO: Public while refactoring
     @TestOnly
-    public static PageReviewOptions ofCustom(
+    static PageReviewOptions ofCustom(
         WikipediaLanguage lang,
         String replacement,
         String suggestion,
@@ -77,6 +78,7 @@ public class PageReviewOptions {
         return PageReviewOptions
             .builder()
             .lang(lang)
+            .user("")
             .type(ReplacementType.CUSTOM.getLabel())
             .subtype(replacement)
             .suggestion(suggestion)

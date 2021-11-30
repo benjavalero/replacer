@@ -93,7 +93,7 @@ class PageReviewControllerTest {
         when(pageReviewNoTypeService.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/pages/random?lang=es").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/random?lang=es&user=").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.page.id", is(pageId)))
             .andExpect(jsonPath("$.page.title", is(title)))
@@ -118,7 +118,7 @@ class PageReviewControllerTest {
         when(pageReviewTypeSubtypeService.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/pages/random?type=X&subtype=Y&lang=es").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/random?type=X&subtype=Y&lang=es&user=").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         verify(pageReviewTypeSubtypeService).findRandomPageReview(options);
@@ -131,7 +131,7 @@ class PageReviewControllerTest {
 
         mvc
             .perform(
-                get("/api/pages/random?type=Personalizado&subtype=X&cs=false&suggestion=Y&lang=es")
+                get("/api/pages/random?type=Personalizado&subtype=X&cs=false&suggestion=Y&lang=es&user=")
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -144,7 +144,9 @@ class PageReviewControllerTest {
         PageReviewOptions options = PageReviewOptions.ofNoType();
         when(pageReviewNoTypeService.getPageReview(123, options)).thenReturn(Optional.of(review));
 
-        mvc.perform(get("/api/pages/123?lang=es").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+        mvc
+            .perform(get("/api/pages/123?lang=es&user=").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
 
         verify(pageReviewNoTypeService).getPageReview(123, options);
     }
@@ -155,7 +157,7 @@ class PageReviewControllerTest {
         when(pageReviewTypeSubtypeService.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/pages/123?type=X&subtype=Y&lang=es").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/123?type=X&subtype=Y&lang=es&user=").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         verify(pageReviewTypeSubtypeService).getPageReview(123, options);
@@ -168,7 +170,7 @@ class PageReviewControllerTest {
 
         mvc
             .perform(
-                get("/api/pages/123?type=Personalizado&subtype=X&cs=true&suggestion=Y&lang=es")
+                get("/api/pages/123?type=Personalizado&subtype=X&cs=true&suggestion=Y&lang=es&user=")
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());

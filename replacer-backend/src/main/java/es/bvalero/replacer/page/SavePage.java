@@ -4,6 +4,7 @@ import es.bvalero.replacer.page.review.PageReviewSearch;
 import es.bvalero.replacer.page.review.ReviewPage;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import javax.validation.Valid;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,9 +14,11 @@ import lombok.Setter;
 class SavePage {
 
     @ApiModelProperty(value = "Page to review", required = true)
+    @Valid
     private ReviewPage page;
 
     @ApiModelProperty(value = "Search options of the replacements to review", required = true)
+    @Valid
     private PageReviewSearch search;
 
     @ApiModelProperty(required = true, example = "f8e520e8669a2d65e094d649a96427ff")
