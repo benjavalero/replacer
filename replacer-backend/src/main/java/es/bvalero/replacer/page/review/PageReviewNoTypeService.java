@@ -21,7 +21,7 @@ public class PageReviewNoTypeService extends PageReviewService {
     private ReplacementService replacementService;
 
     @Override
-    String buildReplacementCacheKey(PageReviewOptions options) {
+    String buildCacheKey(PageReviewOptions options) {
         return options.getLang().getCode();
     }
 

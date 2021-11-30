@@ -2,7 +2,9 @@ package es.bvalero.replacer.page.review;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
@@ -18,8 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 
+/** Template class to find a review. There are different implementations according to the different search options. */
 @Slf4j
 abstract class PageReviewService {
 
@@ -48,13 +50,19 @@ abstract class PageReviewService {
     @Autowired
     private PageReviewSectionFinder pageReviewSectionFinder;
 
+    /** Find a page/section review for the given search options (if any) */
     Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
-        // Retrieve an ID of a potential page to be replaced
+        // STEP 1: Find a candidate page to review
+        // We just need a page ID as the lang is already given in the options
         Optional<Integer> randomPageId = findPageIdToReview(options);
+
+        // STEP 2: Build if possible a review for the candidate page
         while (randomPageId.isPresent()) {
-            // Try to obtain the review from the found page
-            // If not, find a new random page ID
-            // We assume that in the review building, in case the page is not valid and review is eventually empty,
+            // It may happen the page must not be reviewed, e.g. no replacements are found
+            // for the given search options in the current page content.
+            // In such a case, we try to start again with a new candidate page.
+
+            // We assume that, while getting the review, in case the page is not valid and review is eventually empty,
             // the page will be marked somehow in order not to be retrieved again.
             Optional<PageReview> review = getPageReview(randomPageId.get(), options);
             if (review.isPresent()) {
@@ -64,16 +72,18 @@ abstract class PageReviewService {
             randomPageId = findPageIdToReview(options);
         }
 
-        // If we get here, there are no more pages to review
+        // If we get here, there are no more pages to review for the given options.
         return Optional.empty();
     }
 
-    ///// CACHE /////
+    ///// STEP 1 /////
+
+    // As it is quite common to keep on reviewing pages for the same search options,
+    // instead of finding candidates one by one, we find a list of them and cache them.
 
     private Optional<Integer> findPageIdToReview(PageReviewOptions options) {
-        // First we try to get the random replacement from the cache
         Optional<Integer> pageId;
-        String key = buildReplacementCacheKey(options);
+        String key = buildCacheKey(options);
         if (cacheContainsKey(key)) {
             pageId = popPageIdFromCache(key);
         } else if (loadCache(options)) {
@@ -85,7 +95,8 @@ abstract class PageReviewService {
         return pageId;
     }
 
-    abstract String buildReplacementCacheKey(PageReviewOptions options);
+    // TODO: We could use partially the toString method of PageReviewOptions to build the cache key
+    abstract String buildCacheKey(PageReviewOptions options);
 
     private boolean cacheContainsKey(String key) {
         PageSearchResult result = cachedPageIds.getIfPresent(key);
@@ -102,11 +113,12 @@ abstract class PageReviewService {
     boolean loadCache(PageReviewOptions options) {
         // In case the cached result list is empty but also the total then quit
         // Else reload the cached result list
-        String key = buildReplacementCacheKey(options);
+        String key = buildCacheKey(options);
         PageSearchResult result = cachedPageIds.getIfPresent(key);
         if (result != null && result.isEmptyTotal()) {
             String type = options.getType();
             String subtype = options.getSubtype();
+            // TODO: This should be done in the dedicated implementation
             if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype)) {
                 replacementService.reviewAsSystemBySubtype(options.getLang(), type, subtype);
             }
@@ -120,16 +132,15 @@ abstract class PageReviewService {
 
     abstract PageSearchResult findPageIdsToReview(PageReviewOptions options);
 
+    ///// STEP 2 /////
+
+    /** This step can be called independently in case we already know the ID of the page to review */
     Optional<PageReview> getPageReview(int pageId, PageReviewOptions options) {
-        Optional<PageReview> review = Optional.empty();
+        // STEP 2.1: Load the page from Wikipedia
+        Optional<WikipediaPage> wikipediaPage = getPageFromWikipedia(pageId, options);
 
-        // Load page from Wikipedia
-        Optional<WikipediaPage> page = getPageFromWikipedia(pageId, options);
-        if (page.isPresent()) {
-            review = buildPageReview(page.get(), options);
-        }
-
-        return review;
+        // STEP 2.2: Build the review for the page, or return an empty review in case the page doesn't exist.
+        return wikipediaPage.flatMap(page -> buildPageReview(page, options));
     }
 
     private Optional<WikipediaPage> getPageFromWikipedia(int pageId, PageReviewOptions options) {
@@ -150,23 +161,19 @@ abstract class PageReviewService {
     }
 
     private Optional<PageReview> buildPageReview(WikipediaPage page, PageReviewOptions options) {
-        // Find the replacements in the page
-        List<Replacement> replacements = findReplacements(page, options);
+        // STEP 2.2.1: Find the replacements in the page
+        Collection<Replacement> replacements = findReplacements(page, options);
 
         if (replacements.isEmpty()) {
             return Optional.empty();
-        } else {
-            long numPending = findTotalResultsFromCache(options) + 1; // Include the current one as pending
-            PageReview pageReview = PageReview.of(page, null, replacements, numPending);
-
-            // Try to reduce the review size by returning just a section of the page
-            Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(pageReview);
-            if (sectionReview.isPresent()) {
-                return sectionReview;
-            } else {
-                return Optional.of(pageReview);
-            }
         }
+
+        // STEP 2.2.2: Build an initial review for the complete page with the found replacements
+        long numPending = findTotalResultsFromCache(options) + 1; // Include the current one as pending
+        PageReview pageReview = PageReview.of(page, null, replacements, numPending);
+
+        // STEP 2.2.3: Try to reduce the review size by returning just a section of the page
+        return Optional.of(pageReviewSectionFinder.findPageReviewSection(pageReview).orElse(pageReview));
     }
 
     private List<Replacement> findReplacements(WikipediaPage page, PageReviewOptions options) {
@@ -187,17 +194,19 @@ abstract class PageReviewService {
 
     abstract Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
 
+    // TODO: Move to finder package
     protected FinderPage convertToFinderPage(WikipediaPage page) {
         return FinderPage.of(page.getId().getLang(), page.getContent(), page.getTitle());
     }
 
+    // Not used in the template but by some implementations
     PageIndexResult indexReplacements(WikipediaPage page) {
         LOGGER.trace("Update page replacements in database");
         return pageIndexer.indexPageReplacements(page);
     }
 
     private long findTotalResultsFromCache(PageReviewOptions options) {
-        String key = buildReplacementCacheKey(options);
+        String key = buildCacheKey(options);
         // If a review is requested directly it is possible the cache doesn't exist
         PageSearchResult result = cachedPageIds.getIfPresent(key);
         return result != null ? result.getTotal() : 0L;

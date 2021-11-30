@@ -23,7 +23,7 @@ public class PageReviewTypeSubtypeService extends PageReviewService {
     private ReplacementService replacementService;
 
     @Override
-    String buildReplacementCacheKey(PageReviewOptions options) {
+    String buildCacheKey(PageReviewOptions options) {
         return String.format("%s-%s-%s", options.getLang().getCode(), options.getType(), options.getSubtype());
     }
 

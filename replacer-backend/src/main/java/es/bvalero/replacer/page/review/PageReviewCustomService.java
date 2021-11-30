@@ -36,7 +36,7 @@ public class PageReviewCustomService extends PageReviewService {
     private CustomReplacementFinderService customReplacementFinderService;
 
     @Override
-    String buildReplacementCacheKey(PageReviewOptions options) {
+    String buildCacheKey(PageReviewOptions options) {
         return String.format("%s-%s", options.getLang().getCode(), options.getSubtype());
     }
 

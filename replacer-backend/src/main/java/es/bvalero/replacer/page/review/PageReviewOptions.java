@@ -86,6 +86,7 @@ public class PageReviewOptions {
             .build();
     }
 
+    // TODO: Take profit of this method and validate the consistency of the data with the 3 possible search types
     @Override
     public String toString() {
         List<String> list = new ArrayList<>();
