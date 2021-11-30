@@ -3,7 +3,7 @@ import { AlertService } from '../alert/alert.service';
 import { UserService } from '../user/user.service';
 import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
 import { PageReview, ReviewOptions } from './page-review.model';
-import { PageService } from './page.service';
+import { EMPTY_CONTENT, PageService } from './page.service';
 
 @Component({
   selector: 'app-edit-page',
@@ -89,7 +89,7 @@ export class EditPageComponent implements OnChanges {
 
   private saveWithNoChanges() {
     this.alertService.addInfoMessage(`Marcando como revisado sin guardar cambios en «${this.review.page.title}»…`);
-    this.saveContent(' ');
+    this.saveContent(EMPTY_CONTENT);
   }
 
   private saveContent(content: string) {

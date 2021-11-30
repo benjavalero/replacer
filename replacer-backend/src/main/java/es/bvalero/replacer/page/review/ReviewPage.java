@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -16,11 +14,9 @@ import org.springframework.lang.Nullable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class ReviewPage {
 
-    // TODO: Public while refactoring
+    // Public: it is an in/out DTO
 
     private static final int CONTENT_SIZE = 50;
 
@@ -41,7 +37,7 @@ public class ReviewPage {
         required = true,
         example = "== Biografía ==Hijo de humildes inmigrantes piamonteses [...]"
     )
-    @Nullable // TODO: Check if this is nullable or not as it is used as in and out
+    @NonNull
     private String content;
 
     @ApiModelProperty

@@ -62,16 +62,17 @@ class PageControllerTest {
         String type = "T";
         String subtype = "S";
         SavePage savePage = new SavePage();
-        ReviewPage page = ReviewPage
-            .builder()
-            .lang(WikipediaLanguage.SPANISH)
-            .id(pageId)
-            .title(title)
-            .content(content)
-            .section(ReviewSection.of(section, ""))
-            .queryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp))
-            .build();
-        savePage.setPage(page);
+        ReviewSection reviewSection = new ReviewSection();
+        reviewSection.setId(section);
+        reviewSection.setTitle("");
+        ReviewPage reviewPage = new ReviewPage();
+        reviewPage.setLang(WikipediaLanguage.SPANISH);
+        reviewPage.setId(pageId);
+        reviewPage.setTitle(title);
+        reviewPage.setContent(content);
+        reviewPage.setSection(reviewSection);
+        reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp));
+        savePage.setPage(reviewPage);
         PageReviewSearch search = new PageReviewSearch();
         search.setType(type);
         search.setSubtype(subtype);
@@ -117,15 +118,16 @@ class PageControllerTest {
         String type = "T";
         String subtype = "S";
         SavePage savePage = new SavePage();
-        ReviewPage page = ReviewPage
-            .builder()
-            .lang(WikipediaLanguage.SPANISH)
-            .id(pageId)
-            .title(title)
-            .section(ReviewSection.of(section, ""))
-            .queryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp))
-            .build();
-        savePage.setPage(page);
+        ReviewSection reviewSection = new ReviewSection();
+        reviewSection.setId(section);
+        reviewSection.setTitle("");
+        ReviewPage reviewPage = new ReviewPage();
+        reviewPage.setLang(WikipediaLanguage.SPANISH);
+        reviewPage.setId(pageId);
+        reviewPage.setTitle(title);
+        reviewPage.setSection(reviewSection);
+        reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp));
+        savePage.setPage(reviewPage);
         PageReviewSearch search = new PageReviewSearch();
         search.setType(type);
         search.setSubtype(subtype);

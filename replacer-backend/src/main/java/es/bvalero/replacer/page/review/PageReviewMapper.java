@@ -23,15 +23,14 @@ class PageReviewMapper {
     }
 
     private ReviewPage toDto(WikipediaPage page, @Nullable WikipediaSection section) {
-        return ReviewPage
-            .builder()
-            .lang(page.getId().getLang())
-            .id(page.getId().getPageId())
-            .title(page.getTitle())
-            .content(page.getContent())
-            .section(toDto(section))
-            .queryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(page.getQueryTimestamp()))
-            .build();
+        ReviewPage reviewPage = new ReviewPage();
+        reviewPage.setLang(page.getId().getLang());
+        reviewPage.setId(page.getId().getPageId());
+        reviewPage.setTitle(page.getTitle());
+        reviewPage.setContent(page.getContent());
+        reviewPage.setSection(toDto(section));
+        reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(page.getQueryTimestamp()));
+        return reviewPage;
     }
 
     @Nullable
@@ -39,7 +38,10 @@ class PageReviewMapper {
         if (section == null) {
             return null;
         } else {
-            return ReviewSection.of(section.getIndex(), section.getAnchor());
+            ReviewSection reviewSection = new ReviewSection();
+            reviewSection.setId(section.getIndex());
+            reviewSection.setTitle(section.getAnchor());
+            return reviewSection;
         }
     }
 

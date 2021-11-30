@@ -7,6 +7,8 @@ import { UserService } from '../user/user.service';
 import { PageReview, PageReviewSearch, ReviewOptions, ReviewPage, SavePage } from './page-review.model';
 import { ValidateType } from './validate-custom.model';
 
+export const EMPTY_CONTENT = ' ';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -54,7 +56,7 @@ export class PageService {
     let sleepTime = 0;
     const isBotUser = this.userService.isBotUser();
     const lastSave = localStorage.getItem(this.lastSaveKey);
-    if (!isBotUser && lastSave && page.content !== ' ') {
+    if (!isBotUser && lastSave && page.content !== EMPTY_CONTENT) {
       const minGap: number = (1000 * 60) / this.editionsPerMinute;
       const lastSaveDate: number = +lastSave;
       const gap: number = Date.now() - lastSaveDate;
@@ -71,7 +73,7 @@ export class PageService {
     );
 
     // Store the new last save date
-    if (page.content !== ' ') {
+    if (page.content !== EMPTY_CONTENT) {
       localStorage.setItem(this.lastSaveKey, String(Date.now()));
     }
 
