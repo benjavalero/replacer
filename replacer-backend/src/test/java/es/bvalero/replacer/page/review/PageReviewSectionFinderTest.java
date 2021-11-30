@@ -8,10 +8,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -39,7 +36,7 @@ class PageReviewSectionFinderTest {
 
         when(wikipediaService.getPageSections(any(WikipediaPageId.class))).thenReturn(Collections.emptyList());
 
-        PageReview review = PageReview.builder().page(page).replacements(replacements).numPending(1L).build();
+        PageReview review = PageReview.of(page, null, replacements, 1L);
         Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(review);
 
         assertFalse(sectionReview.isPresent());
@@ -68,12 +65,7 @@ class PageReviewSectionFinderTest {
             .lastUpdate(LocalDateTime.now())
             .build();
         Long numPending = 10L;
-        PageReview pageReview = PageReview
-            .builder()
-            .page(page)
-            .replacements(replacements)
-            .numPending(numPending)
-            .build();
+        PageReview pageReview = PageReview.of(page, null, replacements, numPending);
 
         Integer sectionId = 3;
         int offset = 5;
@@ -108,7 +100,7 @@ class PageReviewSectionFinderTest {
                 assertEquals(section, review.getSection());
                 assertEquals(sectionContent, review.getPage().getContent());
                 assertEquals(1, review.getReplacements().size());
-                assertEquals(8 - offset, review.getReplacements().get(0).getStart());
+                assertEquals(8 - offset, new ArrayList<>(review.getReplacements()).get(0).getStart());
                 assertEquals(numPending, review.getNumPending());
             }
         );

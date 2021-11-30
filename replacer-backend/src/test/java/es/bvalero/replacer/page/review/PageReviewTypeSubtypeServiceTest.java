@@ -201,7 +201,8 @@ class PageReviewTypeSubtypeServiceTest {
             .byteOffset(0)
             .anchor("")
             .build();
-        PageReview sectionReview = pageReviewTypeSubtypeService.buildPageReview(page, section, replacements, options);
+        Long numPending = 5L;
+        PageReview sectionReview = PageReview.of(page, section, replacements, numPending);
         when(pageReviewSectionFinder.findPageReviewSection(any(PageReview.class)))
             .thenReturn(Optional.of(sectionReview));
 
@@ -215,6 +216,7 @@ class PageReviewTypeSubtypeServiceTest {
                 assertNotNull(rev.getSection());
                 assertNotNull(rev.getSection().getIndex());
                 assertEquals(sectionId, rev.getSection().getIndex().intValue());
+                assertEquals(numPending, rev.getNumPending());
             }
         );
     }

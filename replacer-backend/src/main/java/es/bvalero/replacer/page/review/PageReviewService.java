@@ -156,7 +156,8 @@ abstract class PageReviewService {
         if (replacements.isEmpty()) {
             return Optional.empty();
         } else {
-            PageReview pageReview = buildPageReview(page, null, replacements, options);
+            long numPending = findTotalResultsFromCache(options) + 1; // Include the current one as pending
+            PageReview pageReview = PageReview.of(page, null, replacements, numPending);
 
             // Try to reduce the review size by returning just a section of the page
             Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(pageReview);
@@ -193,17 +194,6 @@ abstract class PageReviewService {
     PageIndexResult indexReplacements(WikipediaPage page) {
         LOGGER.trace("Update page replacements in database");
         return pageIndexer.indexPageReplacements(page);
-    }
-
-    @VisibleForTesting
-    PageReview buildPageReview(
-        WikipediaPage page,
-        @Nullable WikipediaSection section,
-        Collection<Replacement> replacements,
-        PageReviewOptions options
-    ) {
-        long numPending = findTotalResultsFromCache(options) + 1; // Include the current one as pending
-        return PageReview.of(page, section, replacements, numPending);
     }
 
     private long findTotalResultsFromCache(PageReviewOptions options) {
