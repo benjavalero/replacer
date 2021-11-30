@@ -13,11 +13,11 @@ import org.springframework.lang.Nullable;
 @UtilityClass
 class PageReviewMapper {
 
-    PageReviewResponse toDto(PageReview review) {
+    PageReviewResponse toDto(PageReview review, PageReviewOptions options) {
         return PageReviewResponse.of(
             toDto(review.getPage(), review.getSection()),
             toDto(review.getReplacements()),
-            toDto(review.getOptions()),
+            toDto(options),
             review.getNumPending()
         );
     }

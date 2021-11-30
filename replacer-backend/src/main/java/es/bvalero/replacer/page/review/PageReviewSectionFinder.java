@@ -69,7 +69,6 @@ class PageReviewSectionFinder {
                         pageSection.get(),
                         smallestSection.get(),
                         sectionReplacements,
-                        review.getOptions(),
                         review.getNumPending()
                     );
                     return Optional.of(sectionReview);

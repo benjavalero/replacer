@@ -55,13 +55,7 @@ class PageReviewControllerTest {
         .lastUpdate(LocalDateTime.now())
         .queryTimestamp(queryTimestamp)
         .build();
-    private final PageReview review = PageReview.of(
-        wikipediaPage,
-        null,
-        Collections.emptyList(),
-        new PageReviewOptions(),
-        100L
-    );
+    private final PageReview review = PageReview.of(wikipediaPage, null, Collections.emptyList(), 100L);
 
     @Test
     void testFindRandomPageWithReplacements() throws Exception {
@@ -89,7 +83,7 @@ class PageReviewControllerTest {
             .anchor(anchor)
             .build();
         PageReviewOptions options = PageReviewOptions.ofNoType();
-        PageReview review = PageReview.of(wikipediaPage, wikipediaSection, replacements, options, numPending);
+        PageReview review = PageReview.of(wikipediaPage, wikipediaSection, replacements, numPending);
         when(pageReviewNoTypeService.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc

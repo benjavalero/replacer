@@ -40,7 +40,7 @@ public class PageReviewController {
         } else {
             review = pageReviewCustomService.findRandomPageReview(options);
         }
-        return review.map(PageReviewMapper::toDto);
+        return review.map(r -> PageReviewMapper.toDto(r, options));
     }
 
     @ApiOperation(value = "Validate if the custom replacement is a known subtype")
@@ -71,6 +71,6 @@ public class PageReviewController {
         } else {
             review = pageReviewCustomService.getPageReview(pageId, options);
         }
-        return review.map(PageReviewMapper::toDto);
+        return review.map(r -> PageReviewMapper.toDto(r, options));
     }
 }

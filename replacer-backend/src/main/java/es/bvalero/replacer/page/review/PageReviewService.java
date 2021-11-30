@@ -203,7 +203,7 @@ abstract class PageReviewService {
         PageReviewOptions options
     ) {
         long numPending = findTotalResultsFromCache(options) + 1; // Include the current one as pending
-        return PageReview.of(page, section, replacements, options, numPending);
+        return PageReview.of(page, section, replacements, numPending);
     }
 
     private long findTotalResultsFromCache(PageReviewOptions options) {
