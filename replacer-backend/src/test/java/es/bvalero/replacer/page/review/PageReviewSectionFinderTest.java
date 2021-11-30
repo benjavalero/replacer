@@ -45,7 +45,7 @@ class PageReviewSectionFinderTest {
             .replacements(Collections.emptyList())
             .numPending(1L)
             .build();
-        Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(review, page, replacements);
+        Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(review);
 
         assertFalse(sectionReview.isPresent());
     }
@@ -99,11 +99,7 @@ class PageReviewSectionFinderTest {
             .build();
         when(wikipediaService.getPageSection(wikipediaPageId, section)).thenReturn(Optional.of(pageSection));
 
-        Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(
-            pageReview,
-            page,
-            replacements
-        );
+        Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(pageReview);
 
         assertTrue(sectionReview.isPresent());
         sectionReview.ifPresent(

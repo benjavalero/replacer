@@ -13,13 +13,11 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-@Service
-public class PageReviewSectionFinder {
-
-    // TODO: Public while refactoring
+@Component
+class PageReviewSectionFinder {
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -30,33 +28,28 @@ public class PageReviewSectionFinder {
      * In case such a section is found, then return a review containing the page fragment corresponding to the section
      * with the replacements translated accordingly.
      */
-    // TODO: Public while refactoring
-    public Optional<PageReview> findPageReviewSection(
-        PageReview review,
-        WikipediaPage page,
-        Collection<Replacement> replacements
-    ) {
+    Optional<PageReview> findPageReviewSection(PageReview review) {
         assert review.getSection() == null;
 
         try {
             // Get the sections from the Wikipedia API (better than calculating them by ourselves)
-            List<WikipediaSection> sections = wikipediaService.getPageSections(page.getId());
+            List<WikipediaSection> sections = wikipediaService.getPageSections(review.getPage().getId());
 
             // Find the smallest section containing all the replacements
             Optional<WikipediaSection> smallestSection = getSmallestSectionContainingAllReplacements(
                 sections,
-                replacements
+                review.getReplacements()
             );
             if (smallestSection.isPresent()) {
                 // Get the section from Wikipedia API (better than calculating it by ourselves)
                 Optional<WikipediaPage> pageSection = wikipediaService.getPageSection(
-                    page.getId(),
+                    review.getPage().getId(),
                     smallestSection.get()
                 );
                 if (pageSection.isPresent()) {
                     // We need to modify the start position of the replacements according to the section start
                     Collection<Replacement> sectionReplacements = translateReplacementsByOffset(
-                        replacements,
+                        review.getReplacements(),
                         smallestSection.get().getByteOffset(),
                         pageSection.get()
                     );
@@ -77,7 +70,7 @@ public class PageReviewSectionFinder {
             LOGGER.warn("Error finding section", e);
         }
 
-        LOGGER.debug("No section found in page: {} - {}", page.getId(), page.getTitle());
+        LOGGER.debug("No section found in page: {} - {}", review.getPage().getId(), review.getPage().getTitle());
         return Optional.empty();
     }
 

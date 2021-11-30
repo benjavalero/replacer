@@ -159,11 +159,7 @@ abstract class PageReviewService {
             PageReview pageReview = buildPageReview(page, null, replacements, options);
 
             // Try to reduce the review size by returning just a section of the page
-            Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(
-                pageReview,
-                page,
-                replacements
-            );
+            Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(pageReview);
             if (sectionReview.isPresent()) {
                 return sectionReview;
             } else {
