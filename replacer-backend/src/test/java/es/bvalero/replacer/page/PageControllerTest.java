@@ -72,7 +72,9 @@ class PageControllerTest {
             .queryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp))
             .build();
         savePage.setPage(page);
-        PageReviewSearch search = PageReviewSearch.builder().type(type).subtype(subtype).build();
+        PageReviewSearch search = new PageReviewSearch();
+        search.setType(type);
+        search.setSubtype(subtype);
         savePage.setSearch(search);
         savePage.setToken(token);
         savePage.setTokenSecret(tokenSecret);
@@ -124,7 +126,9 @@ class PageControllerTest {
             .queryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp))
             .build();
         savePage.setPage(page);
-        PageReviewSearch search = PageReviewSearch.builder().type(type).subtype(subtype).build();
+        PageReviewSearch search = new PageReviewSearch();
+        search.setType(type);
+        search.setSubtype(subtype);
         savePage.setSearch(search);
         savePage.setToken(token);
         savePage.setTokenSecret(tokenSecret);

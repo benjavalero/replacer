@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { UserService } from '../user/user.service';
-import { PageDto, PageReview, PageSearch, ReviewOptions, SavePage } from './page-review.model';
+import { PageDto, PageReview, PageReviewSearch, ReviewOptions, SavePage } from './page-review.model';
 import { ValidateType } from './validate-custom.model';
 
 @Injectable({
@@ -45,7 +45,7 @@ export class PageService {
     return this.httpClient.get<PageReview>(`${this.baseUrl}/${pageId}`, { params });
   }
 
-  savePage(page: PageDto, search: PageSearch): Observable<any> {
+  savePage(page: PageDto, search: PageReviewSearch): Observable<any> {
     if (!this.userService.isValidUser()) {
       return throwError('El usuario no está autenticado. Recargue la página para retomar la sesión.');
     }

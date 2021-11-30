@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -16,11 +14,9 @@ import org.springframework.lang.Nullable;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class PageReviewSearch {
 
-    // TODO: Public while refactoring
+    // Public: it is an in/out DTO
 
     @ApiModelProperty(value = "Replacement type", example = "Ortografía")
     @Nullable

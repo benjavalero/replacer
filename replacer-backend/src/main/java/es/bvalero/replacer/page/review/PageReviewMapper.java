@@ -63,16 +63,13 @@ public class PageReviewMapper {
     }
 
     private PageReviewSearch toDto(PageReviewOptions options) {
-        if (options.getType() == null) {
-            return PageReviewSearch.builder().build();
-        } else {
-            return PageReviewSearch
-                .builder()
-                .type(options.getType())
-                .subtype(options.getSubtype())
-                .suggestion(options.getSuggestion())
-                .cs(options.getCs())
-                .build();
+        PageReviewSearch search = new PageReviewSearch();
+        if (options.getType() != null) {
+            search.setType(options.getType());
+            search.setSubtype(options.getSubtype());
+            search.setSuggestion(options.getSuggestion());
+            search.setCs(options.getCs());
         }
+        return search;
     }
 }

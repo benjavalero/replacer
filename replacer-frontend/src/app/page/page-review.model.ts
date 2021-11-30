@@ -18,7 +18,7 @@ export class ReviewOptions {
 export interface PageReview {
   page: PageDto;
   replacements: PageReplacement[];
-  search: PageSearch;
+  search: PageReviewSearch;
   numPending: number;
 }
 
@@ -36,7 +36,7 @@ interface PageSection {
   title: string;
 }
 
-export interface PageSearch {
+export interface PageReviewSearch {
   type?: string;
   subtype?: string;
   suggestion?: string;
@@ -45,11 +45,11 @@ export interface PageSearch {
 
 export class SavePage {
   page: PageDto;
-  search: PageSearch;
+  search: PageReviewSearch;
   token: string;
   tokenSecret: string;
 
-  constructor(page: PageDto, search: PageSearch, token: string, tokenSecret: string) {
+  constructor(page: PageDto, search: PageReviewSearch, token: string, tokenSecret: string) {
     this.page = page;
     this.search = search;
     this.token = token;
