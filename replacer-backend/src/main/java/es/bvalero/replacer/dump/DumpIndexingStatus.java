@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 @ApiModel(description = "Response DTO containing the status of the current (or the last) dump indexing")
@@ -16,7 +17,8 @@ import org.springframework.lang.Nullable;
 class DumpIndexingStatus {
 
     @ApiModelProperty(value = "If the indexing is running", required = true, example = "false")
-    boolean running;
+    @NonNull
+    Boolean running;
 
     @ApiModelProperty(value = "Number of indexable pages read", example = "251934")
     @Nullable
@@ -45,6 +47,6 @@ class DumpIndexingStatus {
     LocalDateTime end;
 
     static DumpIndexingStatus ofEmpty() {
-        return DumpIndexingStatus.builder().build();
+        return DumpIndexingStatus.builder().running(false).build();
     }
 }

@@ -121,6 +121,13 @@ The backend uses some of the JetBrains (IntelliJ) annotations: `@TestOnly`, `@Vi
 
 On the other hand, all packages are annotated with Spring annotation `@NonNullApi` which forces all method parameters and return values to be non-null. When some parameter or return value is nullable, it will be annotated explicitly.
 
+Input DTOs are annotated with `@Data` and `@NoArgsConstructor` so they can be mapped by Jackson library.
+Non-null input fields will be annotated with `javax.validation.NotNull`. Request bodies (and nested DTOs) will be annotated with `@Valid`.
+
+Output DTOs are annotated with `@Value` and optionally with `@Builder` for simplicity in case they contain lots of fields. Non-null output fields will be annotated with `org.springframework.lang.NonNull`.
+
+In case a DTO is used for input and output, we will annotate it with a mix of the annotations above.
+
 ### Immutability
 
 In backend most domain objects are defined as immutables, with Lombok annotations, except the ones used as Spring request parameters.

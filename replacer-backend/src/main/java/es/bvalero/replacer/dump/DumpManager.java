@@ -56,6 +56,6 @@ class DumpManager {
     }
 
     private boolean isDumpIndexingRunning() {
-        return this.getDumpIndexingStatus().isRunning();
+        return this.getDumpIndexingStatus().getRunning();
     }
 }
