@@ -36,6 +36,7 @@ class PageReview {
     @NonNull
     Long numPending;
 
+    // TODO: Check if this is needed
     static PageReview of(
         WikipediaPage page,
         @Nullable WikipediaSection section,

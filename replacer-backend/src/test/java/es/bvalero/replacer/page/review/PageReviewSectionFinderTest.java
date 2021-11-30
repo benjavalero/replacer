@@ -35,16 +35,11 @@ class PageReviewSectionFinderTest {
     @Test
     void testFindSectionReviewNoSections() throws ReplacerException {
         WikipediaPage page = mock(WikipediaPage.class);
-        Collection<Replacement> replacements = Collections.emptyList();
+        List<Replacement> replacements = Collections.emptyList();
 
         when(wikipediaService.getPageSections(any(WikipediaPageId.class))).thenReturn(Collections.emptyList());
 
-        PageReview review = PageReview
-            .builder()
-            .page(page)
-            .replacements(Collections.emptyList())
-            .numPending(1L)
-            .build();
+        PageReview review = PageReview.builder().page(page).replacements(replacements).numPending(1L).build();
         Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(review);
 
         assertFalse(sectionReview.isPresent());
@@ -52,7 +47,6 @@ class PageReviewSectionFinderTest {
 
     @Test
     void testFindSectionReview() throws ReplacerException {
-        // TODO: Check if all of this is needed
         int pageId = 1;
         String content = "This is an sample content.";
         Suggestion suggestion = Suggestion.ofNoComment("a");
@@ -73,7 +67,13 @@ class PageReviewSectionFinderTest {
             .content(content)
             .lastUpdate(LocalDateTime.now())
             .build();
-        PageReview pageReview = PageReview.builder().page(page).replacements(replacements).numPending(1L).build();
+        Long numPending = 10L;
+        PageReview pageReview = PageReview
+            .builder()
+            .page(page)
+            .replacements(replacements)
+            .numPending(numPending)
+            .build();
 
         Integer sectionId = 3;
         int offset = 5;
@@ -84,33 +84,32 @@ class PageReviewSectionFinderTest {
             .byteOffset(offset)
             .anchor("X")
             .build();
-        when(wikipediaService.getPageSections(any(WikipediaPageId.class)))
-            .thenReturn(Collections.singletonList(section));
+        when(wikipediaService.getPageSections(page.getId())).thenReturn(Collections.singletonList(section));
 
         String sectionContent = content.substring(offset, 10);
-        WikipediaPageId wikipediaPageId = WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId);
         WikipediaPage pageSection = WikipediaPage
             .builder()
-            .id(wikipediaPageId)
-            .namespace(WikipediaNamespace.getDefault())
-            .title("Title")
+            .id(page.getId())
+            .namespace(page.getNamespace())
+            .title(page.getTitle())
             .content(sectionContent)
-            .lastUpdate(LocalDateTime.now())
+            .lastUpdate(page.getLastUpdate())
             .build();
-        when(wikipediaService.getPageSection(wikipediaPageId, section)).thenReturn(Optional.of(pageSection));
+        when(wikipediaService.getPageSection(page.getId(), section)).thenReturn(Optional.of(pageSection));
 
         Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(pageReview);
 
         assertTrue(sectionReview.isPresent());
         sectionReview.ifPresent(
             review -> {
-                assertEquals(pageId, review.getPage().getId().getPageId());
+                assertEquals(page.getId(), review.getPage().getId());
                 assertNotNull(review.getSection());
                 assertNotNull(review.getSection().getIndex());
-                assertEquals(sectionId, review.getSection().getIndex());
+                assertEquals(section, review.getSection());
                 assertEquals(sectionContent, review.getPage().getContent());
                 assertEquals(1, review.getReplacements().size());
                 assertEquals(8 - offset, review.getReplacements().get(0).getStart());
+                assertEquals(numPending, review.getNumPending());
             }
         );
     }

@@ -165,7 +165,7 @@ class WikipediaApiService implements WikipediaService {
 
     @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
-    public List<WikipediaSection> getPageSections(WikipediaPageId id) throws ReplacerException {
+    public Collection<WikipediaSection> getPageSections(WikipediaPageId id) throws ReplacerException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
             .verb(WikipediaApiRequestVerb.GET)
@@ -184,14 +184,14 @@ class WikipediaApiService implements WikipediaService {
         return params;
     }
 
-    private List<WikipediaSection> extractSectionsFromJson(WikipediaApiResponse response) {
+    private Collection<WikipediaSection> extractSectionsFromJson(WikipediaApiResponse response) {
         return response
             .getParse()
             .getSections()
             .stream()
             .filter(this::isSectionValid)
             .map(this::convert)
-            .collect(Collectors.toList());
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private boolean isSectionValid(WikipediaApiResponse.Section section) {

@@ -3,7 +3,7 @@ package es.bvalero.replacer.wikipedia;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 import org.springframework.lang.Nullable;
 
@@ -17,7 +17,7 @@ public interface WikipediaService {
 
     Optional<WikipediaPage> getPageById(WikipediaPageId id) throws ReplacerException;
 
-    List<WikipediaSection> getPageSections(WikipediaPageId id) throws ReplacerException;
+    Collection<WikipediaSection> getPageSections(WikipediaPageId id) throws ReplacerException;
 
     Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section) throws ReplacerException;
 

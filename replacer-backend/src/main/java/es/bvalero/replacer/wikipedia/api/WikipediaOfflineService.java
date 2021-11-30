@@ -5,6 +5,7 @@ import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +53,7 @@ class WikipediaOfflineService implements WikipediaService {
     }
 
     @Override
-    public List<WikipediaSection> getPageSections(WikipediaPageId id) {
+    public Collection<WikipediaSection> getPageSections(WikipediaPageId id) {
         return Collections.emptyList();
     }
 

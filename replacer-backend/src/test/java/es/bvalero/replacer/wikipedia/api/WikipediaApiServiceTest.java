@@ -9,6 +9,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -266,7 +267,7 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        List<WikipediaSection> sections = wikipediaService.getPageSections(
+        Collection<WikipediaSection> sections = wikipediaService.getPageSections(
             WikipediaPageId.of(WikipediaLanguage.SPANISH, 6903884)
         );
         assertNotNull(sections);
@@ -316,7 +317,7 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        List<WikipediaSection> sections = wikipediaService.getPageSections(
+        Collection<WikipediaSection> sections = wikipediaService.getPageSections(
             WikipediaPageId.of(WikipediaLanguage.SPANISH, 6633556)
         );
         assertNotNull(sections);
