@@ -30,7 +30,7 @@ public class PageReviewController {
 
     @ApiOperation(value = "Find a random page and the replacements to review", response = PageReview.class)
     @GetMapping(value = "/random")
-    public Optional<PageReviewDto> findRandomPageWithReplacements(PageReviewOptions options) {
+    public Optional<PageReviewResponse> findRandomPageWithReplacements(PageReviewOptions options) {
         Optional<PageReview> review;
         if (StringUtils.isBlank(options.getType())) {
             review = pageReviewNoTypeService.findRandomPageReview(options);
@@ -58,7 +58,7 @@ public class PageReviewController {
 
     @ApiOperation(value = "Find a page and the replacements to review", response = PageReview.class)
     @GetMapping(value = "/{id}")
-    public Optional<PageReviewDto> findPageReviewById(
+    public Optional<PageReviewResponse> findPageReviewById(
         @ApiParam(value = "Page ID", example = "6980716") @PathVariable("id") int pageId,
         PageReviewOptions options
     ) {

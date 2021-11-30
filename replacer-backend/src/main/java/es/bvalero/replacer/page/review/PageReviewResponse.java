@@ -8,7 +8,7 @@ import org.springframework.lang.NonNull;
 
 @ApiModel(description = "Page and replacements to review")
 @Value(staticConstructor = "of")
-class PageReviewDto {
+class PageReviewResponse {
 
     @ApiModelProperty(required = true)
     @NonNull

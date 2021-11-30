@@ -11,13 +11,10 @@ import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
 
 @UtilityClass
-public class PageReviewMapper {
+class PageReviewMapper {
 
-    // TODO: Public while refactoring
-
-    // TODO: Public while refactoring
-    public PageReviewDto toDto(PageReview review) {
-        return PageReviewDto.of(
+    PageReviewResponse toDto(PageReview review) {
+        return PageReviewResponse.of(
             toDto(review.getPage(), review.getSection()),
             toDto(review.getReplacements()),
             toDto(review.getOptions()),
