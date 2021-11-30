@@ -22,15 +22,6 @@ public class PageReviewSearch {
 
     // TODO: Public while refactoring
 
-    // TODO: Move to PageReviewDto
-    @ApiModelProperty(
-        value = "Number of pending pages to review of the given type",
-        required = true,
-        example = "1704147"
-    )
-    @Nullable // TODO: Check if this is nullable or not as we use this DTO as in and out
-    private Long numPending;
-
     @ApiModelProperty(value = "Replacement type", example = "Ortografía")
     @Nullable
     private String type;
@@ -50,8 +41,6 @@ public class PageReviewSearch {
     @Override
     public String toString() {
         List<String> list = new ArrayList<>();
-        assert numPending >= 0;
-        list.add(Long.toString(numPending));
 
         if (type == null) {
             list.add("NO TYPE");

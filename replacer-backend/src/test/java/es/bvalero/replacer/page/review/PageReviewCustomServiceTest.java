@@ -159,7 +159,7 @@ class PageReviewCustomServiceTest {
                 assertEquals(lang, r.getPage().getId().getLang());
                 assertEquals(pageId, r.getPage().getId().getPageId());
                 assertEquals(content, r.getPage().getContent());
-                assertEquals(1, r.getSearch().getNumPending());
+                assertEquals(1, r.getNumPending());
             }
         );
 
@@ -272,7 +272,7 @@ class PageReviewCustomServiceTest {
                 assertEquals(lang, r.getPage().getId().getLang());
                 assertEquals(pageId2, r.getPage().getId().getPageId());
                 assertEquals(content, r.getPage().getContent());
-                assertEquals(1, r.getSearch().getNumPending());
+                assertEquals(1, r.getNumPending());
             }
         );
 
@@ -379,7 +379,7 @@ class PageReviewCustomServiceTest {
         review.ifPresent(
             r -> {
                 assertEquals(1, r.getPage().getId().getPageId());
-                assertEquals(4, r.getSearch().getNumPending());
+                assertEquals(4, r.getNumPending());
             }
         );
         // Cache: 2, 3
@@ -391,7 +391,7 @@ class PageReviewCustomServiceTest {
         review.ifPresent(
             r -> {
                 assertEquals(2, r.getPage().getId().getPageId());
-                assertEquals(3, r.getSearch().getNumPending());
+                assertEquals(3, r.getNumPending());
             }
         );
         // Cache: 3
@@ -403,7 +403,7 @@ class PageReviewCustomServiceTest {
         review.ifPresent(
             r -> {
                 assertEquals(3, r.getPage().getId().getPageId());
-                assertEquals(2, r.getSearch().getNumPending());
+                assertEquals(2, r.getNumPending());
             }
         );
         // Cache: empty
@@ -415,7 +415,7 @@ class PageReviewCustomServiceTest {
         review.ifPresent(
             r -> {
                 assertEquals(4, r.getPage().getId().getPageId());
-                assertEquals(1, r.getSearch().getNumPending());
+                assertEquals(1, r.getNumPending());
             }
         );
         // Cache: empty

@@ -59,7 +59,8 @@ class PageReviewControllerTest {
         wikipediaPage,
         null,
         Collections.emptyList(),
-        new PageReviewSearch()
+        new PageReviewOptions(),
+        100L
     );
 
     @Test
@@ -80,7 +81,6 @@ class PageReviewControllerTest {
             .build();
         Collection<Replacement> replacements = Collections.singletonList(replacement);
         long numPending = 7;
-        PageReviewSearch search = PageReviewSearch.builder().numPending(numPending).build();
         WikipediaSection wikipediaSection = WikipediaSection
             .builder()
             .level(2)
@@ -88,8 +88,8 @@ class PageReviewControllerTest {
             .byteOffset(0)
             .anchor(anchor)
             .build();
-        PageReview review = PageReview.of(wikipediaPage, wikipediaSection, replacements, search);
         PageReviewOptions options = PageReviewOptions.ofNoType();
+        PageReview review = PageReview.of(wikipediaPage, wikipediaSection, replacements, options, numPending);
         when(pageReviewNoTypeService.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -107,7 +107,7 @@ class PageReviewControllerTest {
             .andExpect(jsonPath("$.replacements[0].text", is(rep)))
             .andExpect(jsonPath("$.replacements[0].suggestions[0].text", is("a")))
             .andExpect(jsonPath("$.replacements[0].suggestions[0].comment", is("b")))
-            .andExpect(jsonPath("$.search.numPending", is(Long.valueOf(numPending).intValue())));
+            .andExpect(jsonPath("$.numPending", is(Long.valueOf(numPending).intValue())));
 
         verify(pageReviewNoTypeService).findRandomPageReview(options);
     }

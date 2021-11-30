@@ -4,13 +4,13 @@
       <li class="breadcrumb-item">{{ review.search.type }}</li>
       <ng-template [ngIf]="!review.search.suggestion">
         <li class="breadcrumb-item">{{ review.search.subtype }}
-          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ review.search.numPending }}</span></span>
+          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ review.numPending }}</span></span>
         </li>
       </ng-template>
       <ng-template [ngIf]="review.search.suggestion">
         <li class="breadcrumb-item">{{ review.search.subtype }}</li>
         <li class="breadcrumb-item">{{ review.search.suggestion }}
-          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ review.search.numPending }}</span></span>
+          &nbsp;<span class="badge badge-light"><span class="align-middle">{{ review.numPending }}</span></span>
         </li>
       </ng-template>
     </ol>
@@ -35,7 +35,7 @@
   </button>
 
   <app-alert type="warning" [icon]="true" class="alert-small"
-    *ngIf="review.search.type === 'Personalizado' && review.search.numPending > 50">
+    *ngIf="review.search.type === 'Personalizado' && review.numPending > 50">
     <p>El reemplazo personalizado introducido tiene muchas ocurrencias. Se recomienda añadirlo a los <a
         href="https://es.wikipedia.org/wiki/Usuario:Benjavalero/Replacer#Tipos_de_reemplazos" target="_blank"
         rel="noopener noreferrer">listados generales</a> para un mantenimiento más óptimo.</p>

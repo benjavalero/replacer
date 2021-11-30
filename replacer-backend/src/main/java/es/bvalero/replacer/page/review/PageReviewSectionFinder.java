@@ -163,6 +163,6 @@ public class PageReviewSectionFinder {
         Collection<Replacement> replacements,
         PageReview pageReview
     ) {
-        return PageReview.of(page, section, replacements, pageReview.getSearch());
+        return PageReview.of(page, section, replacements, pageReview.getOptions(), pageReview.getNumPending());
     }
 }

@@ -19,6 +19,7 @@ export interface PageReview {
   page: PageDto;
   replacements: PageReplacement[];
   search: PageSearch;
+  numPending: number;
 }
 
 export interface PageDto {
@@ -36,7 +37,6 @@ interface PageSection {
 }
 
 export interface PageSearch {
-  numPending: number;
   type?: string;
   subtype?: string;
   suggestion?: string;

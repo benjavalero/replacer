@@ -21,4 +21,12 @@ class PageReviewDto {
     @ApiModelProperty(required = true)
     @NonNull
     PageReviewSearch search;
+
+    @ApiModelProperty(
+        value = "Number of pending pages to review of the given type",
+        required = true,
+        example = "1704147"
+    )
+    @NonNull
+    Long numPending;
 }

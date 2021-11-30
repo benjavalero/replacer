@@ -206,7 +206,8 @@ abstract class PageReviewService {
         Collection<Replacement> replacements,
         PageReviewOptions options
     ) {
-        return PageReview.of(page, section, replacements, convert(options));
+        long numPending = findTotalResultsFromCache(options) + 1; // Include the current one as pending
+        return PageReview.of(page, section, replacements, options, numPending);
     }
 
     private long findTotalResultsFromCache(PageReviewOptions options) {
@@ -214,22 +215,6 @@ abstract class PageReviewService {
         // If a review is requested directly it is possible the cache doesn't exist
         PageSearchResult result = cachedPageIds.getIfPresent(key);
         return result != null ? result.getTotal() : 0L;
-    }
-
-    private PageReviewSearch convert(PageReviewOptions options) {
-        long numPending = findTotalResultsFromCache(options) + 1; // Include the current one as pending
-        if (options.getType() == null) {
-            return PageReviewSearch.builder().numPending(numPending).build();
-        } else {
-            return PageReviewSearch
-                .builder()
-                .numPending(numPending)
-                .type(options.getType())
-                .subtype(options.getSubtype())
-                .suggestion(options.getSuggestion())
-                .cs(options.getCs())
-                .build();
-        }
     }
 
     abstract void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer);

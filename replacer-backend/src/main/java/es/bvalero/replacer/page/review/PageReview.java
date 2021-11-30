@@ -31,20 +31,25 @@ class PageReview {
 
     @ApiModelProperty(value = "Search options of the replacements to review", required = true)
     // TODO: Make NonNull or fill it in the controller
-    PageReviewSearch search;
+    PageReviewOptions options;
+
+    @NonNull
+    Long numPending;
 
     static PageReview of(
         WikipediaPage page,
         @Nullable WikipediaSection section,
         Collection<Replacement> replacements,
-        PageReviewSearch search
+        PageReviewOptions options,
+        Long numPending
     ) {
         return PageReview
             .builder()
             .page(page)
             .section(section)
             .replacements(new ArrayList<>(replacements))
-            .search(search)
+            .options(options)
+            .numPending(numPending)
             .build();
     }
 }

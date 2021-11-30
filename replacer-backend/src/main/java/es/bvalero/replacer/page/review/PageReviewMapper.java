@@ -20,7 +20,8 @@ public class PageReviewMapper {
         return PageReviewDto.of(
             toDto(review.getPage(), review.getSection()),
             toDto(review.getReplacements()),
-            review.getSearch()
+            toDto(review.getOptions()),
+            review.getNumPending()
         );
     }
 
@@ -59,5 +60,19 @@ public class PageReviewMapper {
 
     private PageReplacementSuggestion toDto(Suggestion suggestion) {
         return PageReplacementSuggestion.of(suggestion.getText(), suggestion.getComment());
+    }
+
+    private PageReviewSearch toDto(PageReviewOptions options) {
+        if (options.getType() == null) {
+            return PageReviewSearch.builder().build();
+        } else {
+            return PageReviewSearch
+                .builder()
+                .type(options.getType())
+                .subtype(options.getSubtype())
+                .suggestion(options.getSuggestion())
+                .cs(options.getCs())
+                .build();
+        }
     }
 }

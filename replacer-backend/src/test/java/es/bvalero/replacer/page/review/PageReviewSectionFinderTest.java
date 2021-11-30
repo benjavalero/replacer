@@ -39,7 +39,12 @@ class PageReviewSectionFinderTest {
 
         when(wikipediaService.getPageSections(any(WikipediaPageId.class))).thenReturn(Collections.emptyList());
 
-        PageReview review = PageReview.builder().page(page).replacements(Collections.emptyList()).build();
+        PageReview review = PageReview
+            .builder()
+            .page(page)
+            .replacements(Collections.emptyList())
+            .numPending(1L)
+            .build();
         Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(review, page, replacements);
 
         assertFalse(sectionReview.isPresent());
@@ -68,7 +73,7 @@ class PageReviewSectionFinderTest {
             .content(content)
             .lastUpdate(LocalDateTime.now())
             .build();
-        PageReview pageReview = PageReview.builder().page(page).replacements(replacements).build();
+        PageReview pageReview = PageReview.builder().page(page).replacements(replacements).numPending(1L).build();
 
         Integer sectionId = 3;
         int offset = 5;
