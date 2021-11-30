@@ -11,8 +11,8 @@ import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -78,7 +78,7 @@ class PageReviewControllerTest {
             .subtype(rep)
             .suggestions(Collections.singletonList(suggestion))
             .build();
-        List<Replacement> replacements = Collections.singletonList(replacement);
+        Collection<Replacement> replacements = Collections.singletonList(replacement);
         long numPending = 7;
         PageReviewSearch search = PageReviewSearch.builder().numPending(numPending).build();
         WikipediaSection wikipediaSection = WikipediaSection

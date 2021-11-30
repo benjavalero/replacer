@@ -2,15 +2,13 @@ package es.bvalero.replacer.page.review;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.List;
+import java.util.Collection;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
-@ApiModel(description = "Page and replacements to be reviewed")
+@ApiModel(description = "Page and replacements to review")
 @Value(staticConstructor = "of")
-public class PageReviewDto {
-
-    // TODO: Public while refactoring
+class PageReviewDto {
 
     @ApiModelProperty(required = true)
     @NonNull
@@ -18,9 +16,9 @@ public class PageReviewDto {
 
     @ApiModelProperty(value = "List of replacements to review", required = true)
     @NonNull
-    List<PageReplacement> replacements;
+    Collection<PageReplacement> replacements;
 
-    @ApiModelProperty(value = "Search options of the replacements to review", required = true)
+    @ApiModelProperty(required = true)
     @NonNull
     PageReviewSearch search;
 }

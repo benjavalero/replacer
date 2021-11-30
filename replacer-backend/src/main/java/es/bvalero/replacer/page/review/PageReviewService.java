@@ -48,8 +48,7 @@ abstract class PageReviewService {
     @Autowired
     private PageReviewSectionFinder pageReviewSectionFinder;
 
-    // TODO: Public while refactoring
-    public Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
+    Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
         // Retrieve an ID of a potential page to be replaced
         Optional<Integer> randomPageId = findPageIdToReview(options);
         while (randomPageId.isPresent()) {
@@ -121,8 +120,7 @@ abstract class PageReviewService {
 
     abstract PageSearchResult findPageIdsToReview(PageReviewOptions options);
 
-    // TODO: Public while refactoring
-    public Optional<PageReview> getPageReview(int pageId, PageReviewOptions options) {
+    Optional<PageReview> getPageReview(int pageId, PageReviewOptions options) {
         Optional<PageReview> review = Optional.empty();
 
         // Load page from Wikipedia

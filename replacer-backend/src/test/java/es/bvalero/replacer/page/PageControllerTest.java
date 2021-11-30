@@ -13,7 +13,6 @@ import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,26 +49,6 @@ class PageControllerTest {
 
     @MockBean
     private PageListService pageListService;
-
-    private final int pageId = 3;
-    private final String title = "T";
-    private final String content = "C";
-    private final LocalDateTime queryTimestamp = LocalDateTime.now();
-    private final WikipediaPage wikipediaPage = WikipediaPage
-        .builder()
-        .id(WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId))
-        .namespace(WikipediaNamespace.getDefault())
-        .title(title)
-        .content(content)
-        .lastUpdate(LocalDateTime.now())
-        .queryTimestamp(queryTimestamp)
-        .build();
-    private final PageReview review = PageReview.of(
-        wikipediaPage,
-        null,
-        Collections.emptyList(),
-        new PageReviewSearch()
-    );
 
     @Test
     void testSaveWithChanges() throws Exception {

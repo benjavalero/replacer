@@ -6,7 +6,6 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaSection;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
@@ -46,7 +45,7 @@ public class PageReviewMapper {
         }
     }
 
-    private List<PageReplacement> toDto(Collection<Replacement> replacements) {
+    private Collection<PageReplacement> toDto(Collection<Replacement> replacements) {
         return replacements.stream().map(PageReviewMapper::toDto).collect(Collectors.toUnmodifiableList());
     }
 

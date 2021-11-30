@@ -13,13 +13,11 @@ import lombok.experimental.NonFinal;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-/** Sub-domain object representing a page to be reviewed in the front-end */
+/** Sub-domain object representing a page to review in the front-end */
 @NonFinal
 @Value
 @Builder // TODO: Check
-public class PageReview {
-
-    // TODO: Public while refactoring
+class PageReview {
 
     @NonNull
     WikipediaPage page;
@@ -35,8 +33,7 @@ public class PageReview {
     // TODO: Make NonNull or fill it in the controller
     PageReviewSearch search;
 
-    // TODO: Public while refactoring
-    public static PageReview of(
+    static PageReview of(
         WikipediaPage page,
         @Nullable WikipediaSection section,
         Collection<Replacement> replacements,
