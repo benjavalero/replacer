@@ -88,6 +88,16 @@ public class PageReviewOptions {
             .build();
     }
 
+    public PageReviewOptionsType getOptionsType() {
+        if (StringUtils.isBlank(type)) {
+            return PageReviewOptionsType.NO_TYPE;
+        } else if (StringUtils.isBlank(suggestion)) {
+            return PageReviewOptionsType.TYPE_SUBTYPE;
+        } else {
+            return PageReviewOptionsType.CUSTOM;
+        }
+    }
+
     @Override
     public String toString() {
         return String.format("%s - %s - %s", user, lang.toString(), toStringSearchType());
@@ -95,31 +105,43 @@ public class PageReviewOptions {
 
     String toStringSearchType() {
         List<String> list = new ArrayList<>();
-        if (StringUtils.isBlank(type)) {
-            list.add("NO TYPE");
-        } else if (StringUtils.isBlank(suggestion)) {
-            list.add(type);
-            list.add(subtype);
-        } else {
-            list.add(type);
-            list.add(subtype);
-            list.add(suggestion);
-            list.add(Boolean.toString(Objects.requireNonNull(cs)));
+        switch (getOptionsType()) {
+            case NO_TYPE:
+                list.add("NO TYPE");
+                break;
+            case TYPE_SUBTYPE:
+                list.add(type);
+                list.add(subtype);
+                break;
+            case CUSTOM:
+                list.add(type);
+                list.add(subtype);
+                list.add(suggestion);
+                list.add(Boolean.toString(Objects.requireNonNull(cs)));
+                break;
         }
 
         return StringUtils.join(list, " - ");
     }
 
     boolean isValid() {
-        if (StringUtils.isBlank(type)) {
-            // No type
-            return type == null && subtype == null && suggestion == null && cs == null;
-        } else if (StringUtils.isBlank(suggestion)) {
-            // Type-subtype
-            return StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype) && cs == null;
-        } else {
-            // Custom
-            return ReplacementType.CUSTOM.getLabel().equals(type) && StringUtils.isNotBlank(subtype) && cs != null;
+        boolean isValid = false;
+        switch (getOptionsType()) {
+            case NO_TYPE:
+                isValid = type == null && subtype == null && suggestion == null && cs == null;
+                break;
+            case TYPE_SUBTYPE:
+                isValid =
+                    StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype) && suggestion == null && cs == null;
+                break;
+            case CUSTOM:
+                isValid =
+                    ReplacementType.CUSTOM.getLabel().equals(type) &&
+                    StringUtils.isNotBlank(subtype) &&
+                    StringUtils.isNotBlank(suggestion) &&
+                    cs != null;
+                break;
         }
+        return isValid;
     }
 }

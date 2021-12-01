@@ -1,9 +1,6 @@
 package es.bvalero.replacer.page.review;
 
-import es.bvalero.replacer.common.domain.Replacement;
-import es.bvalero.replacer.common.domain.Suggestion;
-import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.common.domain.WikipediaSection;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -11,7 +8,7 @@ import lombok.experimental.UtilityClass;
 import org.springframework.lang.Nullable;
 
 @UtilityClass
-class PageReviewMapper {
+public class PageReviewMapper {
 
     PageReviewResponse toDto(PageReview review, PageReviewOptions options) {
         return PageReviewResponse.of(
@@ -63,12 +60,22 @@ class PageReviewMapper {
 
     private PageReviewSearch toDto(PageReviewOptions options) {
         PageReviewSearch search = new PageReviewSearch();
-        if (options.getType() != null) {
+        if (options.getOptionsType() != PageReviewOptionsType.NO_TYPE) {
             search.setType(options.getType());
             search.setSubtype(options.getSubtype());
             search.setSuggestion(options.getSuggestion());
             search.setCs(options.getCs());
         }
         return search;
+    }
+
+    public PageReviewOptions fromDto(PageReviewSearch search, WikipediaLanguage lang) {
+        PageReviewOptions pageReviewOptions = new PageReviewOptions();
+        pageReviewOptions.setLang(lang);
+        pageReviewOptions.setType(search.getType());
+        pageReviewOptions.setSubtype(search.getSubtype());
+        pageReviewOptions.setSuggestion(search.getSuggestion());
+        pageReviewOptions.setCs(search.getCs());
+        return pageReviewOptions;
     }
 }

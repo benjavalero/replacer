@@ -8,7 +8,6 @@ import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
-import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.review.*;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -107,23 +106,18 @@ public class PageController {
     }
 
     private void markAsReviewed(int pageId, WikipediaLanguage lang, String reviewer, PageReviewSearch search) {
-        if (ReplacementType.CUSTOM.getLabel().equals(search.getType())) {
-            pageReviewCustomFinder.reviewPageReplacements(pageId, convert(search, lang), reviewer);
-        } else if (StringUtils.isNotBlank(search.getType())) {
-            pageReviewTypeSubtypeFinder.reviewPageReplacements(pageId, convert(search, lang), reviewer);
-        } else {
-            pageReviewNoTypeFinder.reviewPageReplacements(pageId, convert(search, lang), reviewer);
+        PageReviewOptions options = PageReviewMapper.fromDto(search, lang);
+        switch (options.getOptionsType()) {
+            case NO_TYPE:
+                pageReviewNoTypeFinder.reviewPageReplacements(pageId, options, reviewer);
+                break;
+            case TYPE_SUBTYPE:
+                pageReviewTypeSubtypeFinder.reviewPageReplacements(pageId, options, reviewer);
+                break;
+            case CUSTOM:
+                pageReviewCustomFinder.reviewPageReplacements(pageId, options, reviewer);
+                break;
         }
-    }
-
-    private PageReviewOptions convert(PageReviewSearch search, WikipediaLanguage lang) {
-        PageReviewOptions pageReviewOptions = new PageReviewOptions();
-        pageReviewOptions.setLang(lang);
-        pageReviewOptions.setType(search.getType());
-        pageReviewOptions.setSubtype(search.getSubtype());
-        pageReviewOptions.setSuggestion(search.getSuggestion());
-        pageReviewOptions.setCs(search.getCs());
-        return pageReviewOptions;
     }
 
     /* PAGE LIST FOR ROBOTS */

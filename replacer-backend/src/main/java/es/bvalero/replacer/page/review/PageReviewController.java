@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiParam;
 import java.util.Optional;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,13 +31,17 @@ public class PageReviewController {
     @ApiOperation(value = "Find a random page and the replacements to review", response = PageReviewResponse.class)
     @GetMapping(value = "/random")
     public Optional<PageReviewResponse> findRandomPageWithReplacements(@Valid PageReviewOptions options) {
-        Optional<PageReview> review;
-        if (StringUtils.isBlank(options.getType())) {
-            review = pageReviewNoTypeFinder.findRandomPageReview(options);
-        } else if (StringUtils.isBlank(options.getSuggestion())) {
-            review = pageReviewTypeSubtypeFinder.findRandomPageReview(options);
-        } else {
-            review = pageReviewCustomFinder.findRandomPageReview(options);
+        Optional<PageReview> review = Optional.empty();
+        switch (options.getOptionsType()) {
+            case NO_TYPE:
+                review = pageReviewNoTypeFinder.findRandomPageReview(options);
+                break;
+            case TYPE_SUBTYPE:
+                review = pageReviewTypeSubtypeFinder.findRandomPageReview(options);
+                break;
+            case CUSTOM:
+                review = pageReviewCustomFinder.findRandomPageReview(options);
+                break;
         }
         return review.map(r -> PageReviewMapper.toDto(r, options));
     }
@@ -63,13 +66,17 @@ public class PageReviewController {
         @ApiParam(value = "Page ID", example = "6980716") @PathVariable("id") int pageId,
         @Valid PageReviewOptions options
     ) {
-        Optional<PageReview> review;
-        if (StringUtils.isBlank(options.getType())) {
-            review = pageReviewNoTypeFinder.getPageReview(pageId, options);
-        } else if (StringUtils.isBlank(options.getSuggestion())) {
-            review = pageReviewTypeSubtypeFinder.getPageReview(pageId, options);
-        } else {
-            review = pageReviewCustomFinder.getPageReview(pageId, options);
+        Optional<PageReview> review = Optional.empty();
+        switch (options.getOptionsType()) {
+            case NO_TYPE:
+                review = pageReviewNoTypeFinder.getPageReview(pageId, options);
+                break;
+            case TYPE_SUBTYPE:
+                review = pageReviewTypeSubtypeFinder.getPageReview(pageId, options);
+                break;
+            case CUSTOM:
+                review = pageReviewCustomFinder.getPageReview(pageId, options);
+                break;
         }
         return review.map(r -> PageReviewMapper.toDto(r, options));
     }
