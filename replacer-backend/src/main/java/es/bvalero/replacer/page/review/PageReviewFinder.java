@@ -18,25 +18,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** Template class to find a review. There are different implementations according to the different search options. */
 @Slf4j
 abstract class PageReviewFinder {
-
-    // Maximum 500 as it is used as page size when searching in Wikipedia
-    @Getter(AccessLevel.PROTECTED)
-    @Setter(AccessLevel.PACKAGE) // For testing
-    private int cacheSize = 500;
-
-    // Cache the found pages candidates to be reviewed
-    // to find faster the next one after the user reviews one.
-    // This map can grow a lot. We use Caffeine cache to clean periodically the old or obsolete lists.
-    private final Cache<String, PageSearchResult> cachedPageIds = Caffeine
-        .newBuilder()
-        .expireAfterWrite(1, TimeUnit.DAYS)
-        .build();
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -49,6 +37,20 @@ abstract class PageReviewFinder {
 
     @Autowired
     private PageReviewSectionFinder pageReviewSectionFinder;
+
+    // Maximum 500 as it is used as page size when searching in Wikipedia
+    // For the sake of the tests, we implement it as a variable.
+    @Getter(AccessLevel.PROTECTED)
+    @Setter(onMethod_ = @TestOnly)
+    private int cacheSize = 500;
+
+    // Cache the found pages candidates to be reviewed
+    // to find faster the next one after the user reviews one.
+    // This map can grow a lot. We use Caffeine cache to clean periodically the old or obsolete lists.
+    private final Cache<String, PageSearchResult> cachedPageIds = Caffeine
+        .newBuilder()
+        .expireAfterWrite(1, TimeUnit.DAYS)
+        .build();
 
     /** Find a page/section review for the given search options (if any) */
     Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
