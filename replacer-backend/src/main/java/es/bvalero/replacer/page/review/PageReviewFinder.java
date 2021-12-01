@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /** Template class to find a review. There are different implementations according to the different search options. */
 @Slf4j
-abstract class PageReviewService {
+abstract class PageReviewFinder {
 
     // Maximum 500 as it is used as page size when searching in Wikipedia
     @Getter(AccessLevel.PROTECTED)
@@ -199,8 +199,8 @@ abstract class PageReviewService {
         return FinderPage.of(page.getId().getLang(), page.getContent(), page.getTitle());
     }
 
-    // Not used in the template but by some implementations
-    PageIndexResult indexReplacements(WikipediaPage page) {
+    // TODO: Not used in the template but by some implementations
+    protected PageIndexResult indexReplacements(WikipediaPage page) {
         LOGGER.trace("Update page replacements in database");
         return pageIndexer.indexPageReplacements(page);
     }
@@ -212,5 +212,7 @@ abstract class PageReviewService {
         return result != null ? result.getTotal() : 0L;
     }
 
+    // Not used in the template but called by the controller so it must be implemented
+    @SuppressWarnings("unused")
     abstract void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer);
 }

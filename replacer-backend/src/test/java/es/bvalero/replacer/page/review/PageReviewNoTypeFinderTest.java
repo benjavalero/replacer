@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 
-class PageReviewNoTypeServiceTest {
+class PageReviewNoTypeFinderTest {
 
     private final int randomId = 1;
     private final int randomId2 = 2;
@@ -69,11 +69,11 @@ class PageReviewNoTypeServiceTest {
     private PageReviewSectionFinder pageReviewSectionFinder;
 
     @InjectMocks
-    private PageReviewNoTypeService pageReviewNoTypeService;
+    private PageReviewNoTypeFinder pageReviewNoTypeService;
 
     @BeforeEach
     public void setUp() {
-        pageReviewNoTypeService = new PageReviewNoTypeService();
+        pageReviewNoTypeService = new PageReviewNoTypeFinder();
         MockitoAnnotations.initMocks(this);
     }
 

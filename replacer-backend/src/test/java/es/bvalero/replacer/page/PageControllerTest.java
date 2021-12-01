@@ -35,13 +35,13 @@ class PageControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private PageReviewNoTypeService pageReviewNoTypeService;
+    private PageReviewNoTypeFinder pageReviewNoTypeFinder;
 
     @MockBean
-    private PageReviewTypeSubtypeService pageReviewTypeSubtypeService;
+    private PageReviewTypeSubtypeFinder pageReviewTypeSubtypeFinder;
 
     @MockBean
-    private PageReviewCustomService pageReviewCustomService;
+    private PageReviewCustomFinder pageReviewCustomFinder;
 
     @MockBean
     private WikipediaService wikipediaService;

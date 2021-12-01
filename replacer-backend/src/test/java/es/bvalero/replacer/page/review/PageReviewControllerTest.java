@@ -34,13 +34,13 @@ class PageReviewControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private PageReviewNoTypeService pageReviewNoTypeService;
+    private PageReviewNoTypeFinder pageReviewNoTypeFinder;
 
     @MockBean
-    private PageReviewTypeSubtypeService pageReviewTypeSubtypeService;
+    private PageReviewTypeSubtypeFinder pageReviewTypeSubtypeFinder;
 
     @MockBean
-    private PageReviewCustomService pageReviewCustomService;
+    private PageReviewCustomFinder pageReviewCustomFinder;
 
     private final int pageId = 3;
     private final String title = "T";
@@ -84,7 +84,7 @@ class PageReviewControllerTest {
             .build();
         PageReviewOptions options = PageReviewOptions.ofNoType();
         PageReview review = PageReview.of(wikipediaPage, wikipediaSection, replacements, numPending);
-        when(pageReviewNoTypeService.findRandomPageReview(options)).thenReturn(Optional.of(review));
+        when(pageReviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(get("/api/pages/random?lang=es&user=").contentType(MediaType.APPLICATION_JSON))
@@ -103,25 +103,25 @@ class PageReviewControllerTest {
             .andExpect(jsonPath("$.replacements[0].suggestions[0].comment", is("b")))
             .andExpect(jsonPath("$.numPending", is(Long.valueOf(numPending).intValue())));
 
-        verify(pageReviewNoTypeService).findRandomPageReview(options);
+        verify(pageReviewNoTypeFinder).findRandomPageReview(options);
     }
 
     @Test
     void testFindRandomPageByTypeAndSubtype() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofTypeSubtype("X", "Y");
-        when(pageReviewTypeSubtypeService.findRandomPageReview(options)).thenReturn(Optional.of(review));
+        when(pageReviewTypeSubtypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(get("/api/pages/random?type=X&subtype=Y&lang=es&user=").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(pageReviewTypeSubtypeService).findRandomPageReview(options);
+        verify(pageReviewTypeSubtypeFinder).findRandomPageReview(options);
     }
 
     @Test
     void testFindRandomPageByCustomReplacement() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", false);
-        when(pageReviewCustomService.findRandomPageReview(options)).thenReturn(Optional.of(review));
+        when(pageReviewCustomFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(
@@ -130,37 +130,37 @@ class PageReviewControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(pageReviewCustomService).findRandomPageReview(options);
+        verify(pageReviewCustomFinder).findRandomPageReview(options);
     }
 
     @Test
     void testFindPageReviewById() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofNoType();
-        when(pageReviewNoTypeService.getPageReview(123, options)).thenReturn(Optional.of(review));
+        when(pageReviewNoTypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(get("/api/pages/123?lang=es&user=").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(pageReviewNoTypeService).getPageReview(123, options);
+        verify(pageReviewNoTypeFinder).getPageReview(123, options);
     }
 
     @Test
     void testFindPageReviewByIdByTypeAndSubtype() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofTypeSubtype("X", "Y");
-        when(pageReviewTypeSubtypeService.getPageReview(123, options)).thenReturn(Optional.of(review));
+        when(pageReviewTypeSubtypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(get("/api/pages/123?type=X&subtype=Y&lang=es&user=").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(pageReviewTypeSubtypeService).getPageReview(123, options);
+        verify(pageReviewTypeSubtypeFinder).getPageReview(123, options);
     }
 
     @Test
     void testFindPageReviewByIdAndCustomReplacement() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofCustom(WikipediaLanguage.SPANISH, "X", "Y", true);
-        when(pageReviewCustomService.getPageReview(123, options)).thenReturn(Optional.of(review));
+        when(pageReviewCustomFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
             .perform(
@@ -169,6 +169,6 @@ class PageReviewControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(pageReviewCustomService).getPageReview(123, options);
+        verify(pageReviewCustomFinder).getPageReview(123, options);
     }
 }

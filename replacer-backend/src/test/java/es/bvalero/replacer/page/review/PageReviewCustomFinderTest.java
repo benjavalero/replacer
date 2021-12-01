@@ -28,7 +28,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class PageReviewCustomServiceTest {
+class PageReviewCustomFinderTest {
 
     private static final int CACHE_SIZE = 3;
 
@@ -45,11 +45,11 @@ class PageReviewCustomServiceTest {
     private PageReviewSectionFinder pageReviewSectionFinder;
 
     @InjectMocks
-    private PageReviewCustomService pageReviewCustomService;
+    private PageReviewCustomFinder pageReviewCustomService;
 
     @BeforeEach
     public void setUp() {
-        pageReviewCustomService = new PageReviewCustomService();
+        pageReviewCustomService = new PageReviewCustomFinder();
         pageReviewCustomService.setCacheSize(CACHE_SIZE);
         MockitoAnnotations.initMocks(this);
     }

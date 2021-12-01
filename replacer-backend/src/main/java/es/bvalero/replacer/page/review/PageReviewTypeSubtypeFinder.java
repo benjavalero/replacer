@@ -1,6 +1,5 @@
 package es.bvalero.replacer.page.review;
 
-import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
@@ -8,17 +7,14 @@ import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Slf4j
-@Service
-public class PageReviewTypeSubtypeService extends PageReviewService {
+@Component
+public class PageReviewTypeSubtypeFinder extends PageReviewFinder {
 
-    // TODO: Public while refactoring
-
+    // TODO: Call directly to the repository
     @Autowired
     private ReplacementService replacementService;
 
@@ -66,7 +62,6 @@ public class PageReviewTypeSubtypeService extends PageReviewService {
         replacementService.reviewByPageId(options.getLang(), pageId, type, subtype, reviewer);
     }
 
-    @Loggable(prepend = true, value = Loggable.TRACE)
     private Collection<Replacement> filterReplacementsByTypeAndSubtype(
         Collection<Replacement> replacements,
         String type,

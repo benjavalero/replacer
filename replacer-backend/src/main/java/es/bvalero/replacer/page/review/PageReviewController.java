@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.*;
 public class PageReviewController {
 
     @Autowired
-    private PageReviewNoTypeService pageReviewNoTypeService;
+    private PageReviewNoTypeFinder pageReviewNoTypeFinder;
 
     @Autowired
-    private PageReviewTypeSubtypeService pageReviewTypeSubtypeService;
+    private PageReviewTypeSubtypeFinder pageReviewTypeSubtypeFinder;
 
     @Autowired
-    private PageReviewCustomService pageReviewCustomService;
+    private PageReviewCustomFinder pageReviewCustomFinder;
 
     /* FIND RANDOM PAGES WITH REPLACEMENTS */
 
@@ -34,11 +34,11 @@ public class PageReviewController {
     public Optional<PageReviewResponse> findRandomPageWithReplacements(@Valid PageReviewOptions options) {
         Optional<PageReview> review;
         if (StringUtils.isBlank(options.getType())) {
-            review = pageReviewNoTypeService.findRandomPageReview(options);
+            review = pageReviewNoTypeFinder.findRandomPageReview(options);
         } else if (StringUtils.isBlank(options.getSuggestion())) {
-            review = pageReviewTypeSubtypeService.findRandomPageReview(options);
+            review = pageReviewTypeSubtypeFinder.findRandomPageReview(options);
         } else {
-            review = pageReviewCustomService.findRandomPageReview(options);
+            review = pageReviewCustomFinder.findRandomPageReview(options);
         }
         return review.map(r -> PageReviewMapper.toDto(r, options));
     }
@@ -52,7 +52,7 @@ public class PageReviewController {
             defaultValue = "false"
         ) boolean cs
     ) {
-        return pageReviewCustomService.validateCustomReplacement(params.getLang(), replacement, cs);
+        return pageReviewCustomFinder.validateCustomReplacement(params.getLang(), replacement, cs);
     }
 
     /* FIND A PAGE REVIEW */
@@ -65,11 +65,11 @@ public class PageReviewController {
     ) {
         Optional<PageReview> review;
         if (StringUtils.isBlank(options.getType())) {
-            review = pageReviewNoTypeService.getPageReview(pageId, options);
+            review = pageReviewNoTypeFinder.getPageReview(pageId, options);
         } else if (StringUtils.isBlank(options.getSuggestion())) {
-            review = pageReviewTypeSubtypeService.getPageReview(pageId, options);
+            review = pageReviewTypeSubtypeFinder.getPageReview(pageId, options);
         } else {
-            review = pageReviewCustomService.getPageReview(pageId, options);
+            review = pageReviewCustomFinder.getPageReview(pageId, options);
         }
         return review.map(r -> PageReviewMapper.toDto(r, options));
     }

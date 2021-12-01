@@ -2,21 +2,17 @@ package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Collection;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Slf4j
-@Service
-public class PageReviewNoTypeService extends PageReviewService {
+@Component
+public class PageReviewNoTypeFinder extends PageReviewFinder {
 
-    // TODO: Public while refactoring
-
+    // TODO: Call directly to the repository
     @Autowired
     private ReplacementService replacementService;
 
@@ -40,9 +36,7 @@ public class PageReviewNoTypeService extends PageReviewService {
     Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options) {
         // We take profit, and we update the database with the just calculated replacements (also when empty).
         // If the page has not been indexed (or is not indexable) the collection of replacements is empty
-        PageIndexResult pageIndexResult = indexReplacements(page);
-
-        return pageIndexResult.getReplacements();
+        return indexReplacements(page).getReplacements();
     }
 
     @Override

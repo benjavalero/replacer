@@ -33,13 +33,13 @@ public class PageController {
     private static final String COSMETIC_CHANGES = "mejoras cosméticas";
 
     @Autowired
-    private PageReviewNoTypeService pageReviewNoTypeService;
+    private PageReviewNoTypeFinder pageReviewNoTypeFinder;
 
     @Autowired
-    private PageReviewTypeSubtypeService pageReviewTypeSubtypeService;
+    private PageReviewTypeSubtypeFinder pageReviewTypeSubtypeFinder;
 
     @Autowired
-    private PageReviewCustomService pageReviewCustomService;
+    private PageReviewCustomFinder pageReviewCustomFinder;
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -108,11 +108,11 @@ public class PageController {
 
     private void markAsReviewed(int pageId, WikipediaLanguage lang, String reviewer, PageReviewSearch search) {
         if (ReplacementType.CUSTOM.getLabel().equals(search.getType())) {
-            pageReviewCustomService.reviewPageReplacements(pageId, convert(search, lang), reviewer);
+            pageReviewCustomFinder.reviewPageReplacements(pageId, convert(search, lang), reviewer);
         } else if (StringUtils.isNotBlank(search.getType())) {
-            pageReviewTypeSubtypeService.reviewPageReplacements(pageId, convert(search, lang), reviewer);
+            pageReviewTypeSubtypeFinder.reviewPageReplacements(pageId, convert(search, lang), reviewer);
         } else {
-            pageReviewNoTypeService.reviewPageReplacements(pageId, convert(search, lang), reviewer);
+            pageReviewNoTypeFinder.reviewPageReplacements(pageId, convert(search, lang), reviewer);
         }
     }
 

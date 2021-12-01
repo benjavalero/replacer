@@ -18,17 +18,16 @@ import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-@Service
-public class PageReviewCustomService extends PageReviewService {
-
-    // TODO: Public while refactoring
+@Component
+public class PageReviewCustomFinder extends PageReviewFinder {
 
     @Autowired
     private WikipediaService wikipediaService;
 
+    // TODO: Call directly to the repository
     @Autowired
     private ReplacementService replacementService;
 
