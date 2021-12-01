@@ -101,12 +101,7 @@ public class PageReviewCustomFinder extends PageReviewFinder {
         // We do nothing in the database in case the list is empty
         // We want to review the page every time in case anything has changed
         return ReplacementMapper.toDomain(
-            IterableUtils.toList(
-                customReplacementFinderService.findCustomReplacements(
-                    convertToFinderPage(page),
-                    convertOptions(options)
-                )
-            )
+            IterableUtils.toList(customReplacementFinderService.findCustomReplacements(page, convertOptions(options)))
         );
     }
 

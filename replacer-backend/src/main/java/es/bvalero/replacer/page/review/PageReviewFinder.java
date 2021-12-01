@@ -6,7 +6,6 @@ import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.replacement.ReplacementService;
@@ -197,11 +196,6 @@ abstract class PageReviewFinder {
 
     abstract Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
 
-    // TODO: Move to finder package
-    protected FinderPage convertToFinderPage(WikipediaPage page) {
-        return FinderPage.of(page.getId().getLang(), page.getContent(), page.getTitle());
-    }
-
     // TODO: Not used in the template but by some implementations
     protected PageIndexResult indexReplacements(WikipediaPage page) {
         LOGGER.trace("Update page replacements in database");
@@ -215,7 +209,7 @@ abstract class PageReviewFinder {
         return result != null ? result.getTotal() : 0L;
     }
 
-    // Not used in the template but called by the controller so it must be implemented
+    // Not used in the template but called by the controller, so it must be implemented.
     @SuppressWarnings("unused")
     abstract void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer);
 }

@@ -8,7 +8,6 @@ import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
@@ -147,7 +146,7 @@ class PageReviewCustomFinderTest {
         )
             .thenReturn(Collections.emptyList());
         when(wikipediaService.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
-        when(customReplacementFinderService.findCustomReplacements(any(FinderPage.class), any(CustomOptions.class)))
+        when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
             .thenReturn(List.of(customRep));
 
         // First call
@@ -206,7 +205,7 @@ class PageReviewCustomFinderTest {
         )
             .thenReturn(Collections.emptyList());
         when(wikipediaService.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
-        when(customReplacementFinderService.findCustomReplacements(any(FinderPage.class), any(CustomOptions.class)))
+        when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
             .thenReturn(Collections.emptyList());
 
         // Only call
@@ -260,7 +259,7 @@ class PageReviewCustomFinderTest {
         )
             .thenReturn(List.of(pageId1));
         when(wikipediaService.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
-        when(customReplacementFinderService.findCustomReplacements(any(FinderPage.class), any(CustomOptions.class)))
+        when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
             .thenReturn(List.of(customRep));
 
         // Only call
@@ -368,7 +367,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(Optional.of(pages.get(3))) // Call 3
             .thenReturn(Optional.of(pages.get(4))); // Call 4
 
-        when(customReplacementFinderService.findCustomReplacements(any(FinderPage.class), any(CustomOptions.class)))
+        when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
             .thenReturn(List.of(customRep));
 
         // We cannot use the same options object for all calls as it is mutable (and mutated)
@@ -472,7 +471,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(Optional.of(pages.get(3))) // Call 3
             .thenReturn(Optional.of(pages.get(4))); // Call 4
 
-        when(customReplacementFinderService.findCustomReplacements(any(FinderPage.class), any(CustomOptions.class)))
+        when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
             .thenReturn(Collections.emptyList());
 
         // Only Call

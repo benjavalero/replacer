@@ -2,8 +2,10 @@ package es.bvalero.replacer.finder.replacement.custom;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.Finder;
 import es.bvalero.replacer.finder.FinderPage;
+import es.bvalero.replacer.finder.FinderPageMapper;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.replacement.ImmutableFilterFinderService;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -41,8 +43,9 @@ public class CustomReplacementFinderService extends ImmutableFilterFinderService
     }
 
     @Loggable(prepend = true, value = Loggable.TRACE, unit = TimeUnit.SECONDS)
-    public Iterable<Replacement> findCustomReplacements(FinderPage page, CustomOptions customOptions) {
+    public Iterable<Replacement> findCustomReplacements(WikipediaPage wikipediaPage, CustomOptions customOptions) {
         CustomReplacementFinder finder = CustomReplacementFinder.of(customOptions);
+        FinderPage page = FinderPageMapper.fromDomain(wikipediaPage);
         Iterable<Replacement> allResults = findIterable(page, Collections.singletonList(finder));
         return filterResults(page, allResults);
     }
