@@ -6,6 +6,7 @@ import es.bvalero.replacer.finder.replacement.ReplacementType;
 import io.swagger.annotations.ApiParam;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.*;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.Nullable;
 
+@PageReviewOptionsValid
 @Data
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -86,29 +88,38 @@ public class PageReviewOptions {
             .build();
     }
 
-    // TODO: Take profit of this method and validate the consistency of the data with the 3 possible search types
     @Override
     public String toString() {
-        List<String> list = new ArrayList<>();
-        list.add(user);
-        list.add(lang.toString());
+        return String.format("%s - %s - %s", user, lang.toString(), toStringSearchType());
+    }
 
+    String toStringSearchType() {
+        List<String> list = new ArrayList<>();
         if (StringUtils.isBlank(type)) {
             list.add("NO TYPE");
         } else if (StringUtils.isBlank(suggestion)) {
             list.add(type);
-            assert StringUtils.isNotBlank(subtype);
             list.add(subtype);
         } else {
-            assert ReplacementType.CUSTOM.getLabel().equals(type);
             list.add(type);
-            assert StringUtils.isNotBlank(subtype);
             list.add(subtype);
             list.add(suggestion);
-            assert cs != null;
-            list.add(Boolean.toString(cs));
+            list.add(Boolean.toString(Objects.requireNonNull(cs)));
         }
 
         return StringUtils.join(list, " - ");
+    }
+
+    boolean isValid() {
+        if (StringUtils.isBlank(type)) {
+            // No type
+            return type == null && subtype == null && suggestion == null && cs == null;
+        } else if (StringUtils.isBlank(suggestion)) {
+            // Type-subtype
+            return StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype) && cs == null;
+        } else {
+            // Custom
+            return ReplacementType.CUSTOM.getLabel().equals(type) && StringUtils.isNotBlank(subtype) && cs != null;
+        }
     }
 }

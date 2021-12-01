@@ -134,6 +134,18 @@ class PageReviewControllerTest {
     }
 
     @Test
+    void testFindPageReviewByIdWithWrongOptions() throws Exception {
+        PageReviewOptions options = PageReviewOptions.ofNoType();
+        when(pageReviewNoTypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
+
+        mvc
+            .perform(get("/api/pages/123?type=X&lang=es&user=").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
+
+        verify(pageReviewNoTypeFinder, never()).getPageReview(123, options);
+    }
+
+    @Test
     void testFindPageReviewById() throws Exception {
         PageReviewOptions options = PageReviewOptions.ofNoType();
         when(pageReviewNoTypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
