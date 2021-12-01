@@ -95,8 +95,9 @@ abstract class PageReviewFinder {
         return pageId;
     }
 
-    // TODO: We could use partially the toString method of PageReviewOptions to build the cache key
-    abstract String buildCacheKey(PageReviewOptions options);
+    private String buildCacheKey(PageReviewOptions options) {
+        return options.toStringSearchType();
+    }
 
     private boolean cacheContainsKey(String key) {
         PageSearchResult result = cachedPageIds.getIfPresent(key);

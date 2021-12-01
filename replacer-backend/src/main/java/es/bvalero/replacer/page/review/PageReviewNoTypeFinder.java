@@ -17,11 +17,6 @@ public class PageReviewNoTypeFinder extends PageReviewFinder {
     private ReplacementService replacementService;
 
     @Override
-    String buildCacheKey(PageReviewOptions options) {
-        return options.getLang().getCode();
-    }
-
-    @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         // Find a random page without filtering by type takes a lot
         // Instead find a random replacement and then the following pages

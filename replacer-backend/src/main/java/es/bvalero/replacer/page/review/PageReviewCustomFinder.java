@@ -35,11 +35,6 @@ public class PageReviewCustomFinder extends PageReviewFinder {
     private CustomReplacementFinderService customReplacementFinderService;
 
     @Override
-    String buildCacheKey(PageReviewOptions options) {
-        return String.format("%s-%s", options.getLang().getCode(), options.getSubtype());
-    }
-
-    @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         try {
             // Initialize search

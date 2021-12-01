@@ -19,11 +19,6 @@ public class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     private ReplacementService replacementService;
 
     @Override
-    String buildCacheKey(PageReviewOptions options) {
-        return String.format("%s-%s-%s", options.getLang().getCode(), options.getType(), options.getSubtype());
-    }
-
-    @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         PageRequest pagination = PageRequest.of(0, getCacheSize());
         String type = options.getType();
