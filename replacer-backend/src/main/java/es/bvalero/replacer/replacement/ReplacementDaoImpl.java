@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.namedparam.*;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
@@ -34,74 +33,6 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     ///// PAGE REVIEW
-
-    @Override
-    public long findRandomIdToBeReviewed(WikipediaLanguage lang, long chunkSize) {
-        String sql =
-            "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) FROM replacement " +
-            "WHERE lang = :lang AND reviewer IS NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("chunkSize", chunkSize)
-            .addValue(PARAM_LANG, lang.getCode());
-        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return result == null ? 0L : result;
-    }
-
-    // Not worth to DISTINCT as we add the results as a set later
-    @Override
-    public List<Integer> findPageIdsToBeReviewed(WikipediaLanguage lang, long start, Pageable pageable) {
-        String sql =
-            "SELECT article_id FROM replacement " +
-            "WHERE lang = :lang AND reviewer IS NULL AND id > :start " +
-            "ORDER BY id " +
-            "LIMIT " +
-            pageable.getPageSize() +
-            " " +
-            "OFFSET " +
-            pageable.getOffset();
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue("start", start);
-        return jdbcTemplate.queryForList(sql, namedParameters, Integer.class);
-    }
-
-    // When filtering by type/subtype ORDER BY RAND() still takes a while but it is admissible
-    // Not worth to DISTINCT as we add the results as a set later
-    @Override
-    public List<Integer> findRandomPageIdsToBeReviewedBySubtype(
-        WikipediaLanguage lang,
-        String type,
-        String subtype,
-        Pageable pageable
-    ) {
-        String sql =
-            "SELECT article_id FROM replacement " +
-            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL " +
-            "ORDER BY RAND() " +
-            "LIMIT " +
-            pageable.getPageSize() +
-            " " +
-            "OFFSET " +
-            pageable.getOffset();
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_TYPE, type)
-            .addValue(PARAM_SUBTYPE, subtype);
-        return jdbcTemplate.queryForList(sql, namedParameters, Integer.class);
-    }
-
-    @Override
-    public long countPagesToBeReviewedBySubtype(WikipediaLanguage lang, String type, String subtype) {
-        String sql =
-            "SELECT COUNT (DISTINCT article_id) FROM replacement " +
-            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_TYPE, type)
-            .addValue(PARAM_SUBTYPE, subtype);
-        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return result == null ? 0L : result;
-    }
 
     @Override
     public void reviewByPageId(

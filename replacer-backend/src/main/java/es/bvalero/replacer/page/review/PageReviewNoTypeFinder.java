@@ -2,15 +2,17 @@ package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.page.repository.PageReviewRepository;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Collection;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PageReviewNoTypeFinder extends PageReviewFinder {
+
+    @Autowired
+    private PageReviewRepository pageReviewRepository;
 
     // TODO: Call directly to the repository
     @Autowired
@@ -20,10 +22,8 @@ public class PageReviewNoTypeFinder extends PageReviewFinder {
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         // Find a random page without filtering by type takes a lot
         // Instead find a random replacement and then the following pages
-        PageRequest pagination = PageRequest.of(0, getCacheSize());
-        long randomStart = replacementService.findRandomIdToBeReviewed(options.getLang(), getCacheSize());
-        long totalResults = replacementService.countReplacementsNotReviewed(options.getLang());
-        List<Integer> pageIds = replacementService.findPageIdsToBeReviewed(options.getLang(), randomStart, pagination);
+        long totalResults = pageReviewRepository.countToReview(options.getLang());
+        Collection<Integer> pageIds = pageReviewRepository.findToReview(options.getLang(), getCacheSize());
         return PageSearchResult.of(totalResults, pageIds);
     }
 

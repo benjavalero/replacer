@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.domain.WikipediaPageId;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -21,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Repository
 @Qualifier("pageJdbcRepository")
-class PageJdbcRepository implements PageRepository {
+class PageJdbcRepository implements PageRepository, PageReviewRepository {
 
     private static final String FROM_REPLACEMENT_JOIN_PAGE =
         "FROM replacement r JOIN page p ON r.lang = p.lang AND r.article_id = p.article_id ";
@@ -79,5 +80,81 @@ class PageJdbcRepository implements PageRepository {
 
         String sqlPages = "DELETE FROM page WHERE lang = :lang AND article_id = :pageId";
         jdbcTemplate.batchUpdate(sqlPages, namedParameters);
+    }
+
+    @Override
+    public Collection<Integer> findToReview(WikipediaLanguage lang, int numResults) {
+        // Find a random page without filtering by type takes a lot
+        // Instead we find a random replacement and then the following pages
+        long randomStart = findReplacementToReview(lang, numResults);
+
+        // Not worth to DISTINCT. Instead, we return the results as a set to avoid duplicates.
+        String sql =
+            "SELECT article_id FROM replacement " +
+            "WHERE lang = :lang AND reviewer IS NULL AND id > :start " +
+            "ORDER BY id " +
+            "LIMIT " +
+            numResults;
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("lang", lang.getCode())
+            .addValue("start", randomStart);
+        return jdbcTemplate
+            .queryForList(sql, namedParameters, Integer.class)
+            .stream()
+            .collect(Collectors.toUnmodifiableSet());
+    }
+
+    private long findReplacementToReview(WikipediaLanguage lang, long chunkSize) {
+        String sql =
+            "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) FROM replacement " +
+            "WHERE lang = :lang AND reviewer IS NULL";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("chunkSize", chunkSize)
+            .addValue("lang", lang.getCode());
+        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+        return result == null ? 0L : result;
+    }
+
+    @Override
+    public long countToReview(WikipediaLanguage lang) {
+        // FIXME: This should be returning the count of pages to review and not the count of replacements
+        // To check how this would affect to performance
+        String sql = "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
+        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
+        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+        return result == null ? 0L : result;
+    }
+
+    @Override
+    public Collection<Integer> findToReviewByType(WikipediaLanguage lang, String type, String subtype, int numResults) {
+        // When filtering by type/subtype ORDER BY RAND() still takes a while, but it is admissible.
+        // Not worth to DISTINCT. Instead, we return the results as a set to avoid duplicates.
+        String sql =
+            "SELECT article_id FROM replacement " +
+            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL " +
+            "ORDER BY RAND() " +
+            "LIMIT " +
+            numResults;
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("lang", lang.getCode())
+            .addValue("type", type)
+            .addValue("subtype", subtype);
+        return jdbcTemplate
+            .queryForList(sql, namedParameters, Integer.class)
+            .stream()
+            .collect(Collectors.toUnmodifiableSet());
+    }
+
+    @Override
+    public long countToReviewByType(WikipediaLanguage lang, String type, String subtype) {
+        String sql =
+            "SELECT COUNT (DISTINCT article_id) FROM replacement " +
+            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("lang", lang.getCode())
+            .addValue("type", type)
+            .addValue("subtype", subtype);
+        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
+        return result == null ? 0L : result;
     }
 }

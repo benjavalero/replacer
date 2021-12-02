@@ -9,6 +9,7 @@ import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.index.PageIndexer;
+import es.bvalero.replacer.page.repository.PageReviewRepository;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.PageRequest;
 
 class PageReviewTypeSubtypeFinderTest {
 
@@ -64,6 +64,9 @@ class PageReviewTypeSubtypeFinderTest {
     );
 
     @Mock
+    private PageReviewRepository pageReviewRepository;
+
+    @Mock
     private ReplacementService replacementService;
 
     @Mock
@@ -87,14 +90,7 @@ class PageReviewTypeSubtypeFinderTest {
     @Test
     void testFindRandomPageToReviewTypeNotFiltered() throws ReplacerException {
         // 1 result in DB
-        when(
-            replacementService.findRandomPageIdsToBeReviewedBySubtype(
-                any(WikipediaLanguage.class),
-                anyString(),
-                anyString(),
-                any(PageRequest.class)
-            )
-        )
+        when(pageReviewRepository.findToReviewByType(any(WikipediaLanguage.class), anyString(), anyString(), anyInt()))
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
             .thenReturn(Collections.emptyList());
 
@@ -114,14 +110,7 @@ class PageReviewTypeSubtypeFinderTest {
     @Test
     void testFindRandomPageToReviewTypeFiltered() throws ReplacerException {
         // 1 result in DB
-        when(
-            replacementService.findRandomPageIdsToBeReviewedBySubtype(
-                any(WikipediaLanguage.class),
-                anyString(),
-                anyString(),
-                any(PageRequest.class)
-            )
-        )
+        when(pageReviewRepository.findToReviewByType(any(WikipediaLanguage.class), anyString(), anyString(), anyInt()))
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
 
         // The page exists in Wikipedia
@@ -145,20 +134,11 @@ class PageReviewTypeSubtypeFinderTest {
         // 3. Find a random page by type. In DB there is no page.
 
         // 2 results in DB by type, no results the second time.
-        when(
-            replacementService.findRandomPageIdsToBeReviewedBySubtype(
-                any(WikipediaLanguage.class),
-                anyString(),
-                anyString(),
-                any(PageRequest.class)
-            )
-        )
+        when(pageReviewRepository.findToReviewByType(any(WikipediaLanguage.class), anyString(), anyString(), anyInt()))
             .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)))
             .thenReturn(Collections.emptyList());
         // 1 result in DB by no type
-        when(
-            replacementService.findPageIdsToBeReviewed(any(WikipediaLanguage.class), anyLong(), any(PageRequest.class))
-        )
+        when(pageReviewRepository.findToReview(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(new ArrayList<>(Collections.singletonList(randomId2)));
 
         // The pages exist in Wikipedia

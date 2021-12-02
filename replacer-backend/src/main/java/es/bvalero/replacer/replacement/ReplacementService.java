@@ -3,11 +3,9 @@ package es.bvalero.replacer.replacement;
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.page.repository.PageRepository;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +14,6 @@ public class ReplacementService {
 
     @Autowired
     private ReplacementDao replacementDao;
-
-    @Autowired
-    private PageRepository pageRepository;
 
     @Autowired
     private ReplacementStatsDao replacementStatsDao;
@@ -33,27 +28,6 @@ public class ReplacementService {
     }
 
     ///// PAGE REVIEW
-
-    public long findRandomIdToBeReviewed(WikipediaLanguage lang, long chunkSize) {
-        return replacementDao.findRandomIdToBeReviewed(lang, chunkSize);
-    }
-
-    public List<Integer> findPageIdsToBeReviewed(WikipediaLanguage lang, long start, Pageable pageable) {
-        return replacementDao.findPageIdsToBeReviewed(lang, start, pageable);
-    }
-
-    public List<Integer> findRandomPageIdsToBeReviewedBySubtype(
-        WikipediaLanguage lang,
-        String type,
-        String subtype,
-        Pageable pageable
-    ) {
-        return replacementDao.findRandomPageIdsToBeReviewedBySubtype(lang, type, subtype, pageable);
-    }
-
-    public long countPagesToBeReviewedBySubtype(WikipediaLanguage lang, String type, String subtype) {
-        return replacementDao.countPagesToBeReviewedBySubtype(lang, type, subtype);
-    }
 
     @Loggable(value = Loggable.DEBUG, prepend = true)
     public List<Integer> findPageIdsReviewedByReplacement(WikipediaLanguage lang, String replacement, boolean cs) {

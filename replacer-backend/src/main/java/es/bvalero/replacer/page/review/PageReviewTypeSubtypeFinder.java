@@ -3,16 +3,19 @@ package es.bvalero.replacer.page.review;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
+import es.bvalero.replacer.page.repository.PageReviewRepository;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Collection;
-import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PageReviewTypeSubtypeFinder extends PageReviewFinder {
+
+    @Autowired
+    private PageReviewRepository pageReviewRepository;
 
     // TODO: Call directly to the repository
     @Autowired
@@ -20,18 +23,18 @@ public class PageReviewTypeSubtypeFinder extends PageReviewFinder {
 
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
-        PageRequest pagination = PageRequest.of(0, getCacheSize());
-        String type = options.getType();
-        String subtype = options.getSubtype();
-        assert type != null && subtype != null;
-        List<Integer> pageIds = replacementService.findRandomPageIdsToBeReviewedBySubtype(
+        Collection<Integer> pageIds = pageReviewRepository.findToReviewByType(
             options.getLang(),
-            type,
-            subtype,
-            pagination
+            Objects.requireNonNull(options.getType()),
+            Objects.requireNonNull(options.getSubtype()),
+            getCacheSize()
         );
 
-        long totalResults = replacementService.countPagesToBeReviewedBySubtype(options.getLang(), type, subtype);
+        long totalResults = pageReviewRepository.countToReviewByType(
+            options.getLang(),
+            options.getType(),
+            options.getSubtype()
+        );
         return PageSearchResult.of(totalResults, pageIds);
     }
 
@@ -43,30 +46,32 @@ public class PageReviewTypeSubtypeFinder extends PageReviewFinder {
 
         // To build the review we are only interested in the replacements of the given type and subtype
         // We can run the filter even with an empty list
-        String type = options.getType();
-        String subtype = options.getSubtype();
-        assert type != null && subtype != null;
-        return filterReplacementsByTypeAndSubtype(pageIndexResult.getReplacements(), type, subtype);
-    }
-
-    @Override
-    public void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer) {
-        String type = options.getType();
-        String subtype = options.getSubtype();
-        assert type != null && subtype != null;
-        replacementService.reviewByPageId(options.getLang(), pageId, type, subtype, reviewer);
+        return filterReplacementsByTypeAndSubtype(pageIndexResult.getReplacements(), options);
     }
 
     private Collection<Replacement> filterReplacementsByTypeAndSubtype(
         Collection<Replacement> replacements,
-        String type,
-        String subtype
+        PageReviewOptions options
     ) {
         return replacements
             .stream()
             .filter(
-                replacement -> replacement.getType().getLabel().equals(type) && replacement.getSubtype().equals(subtype)
+                replacement ->
+                    hasType(
+                        replacement,
+                        Objects.requireNonNull(options.getType()),
+                        Objects.requireNonNull(options.getSubtype())
+                    )
             )
-            .collect(Collectors.toList());
+            .collect(Collectors.toUnmodifiableList());
+    }
+
+    private boolean hasType(Replacement replacement, String type, String subtype) {
+        return replacement.getType().getLabel().equals(type) && replacement.getSubtype().equals(subtype);
+    }
+
+    @Override
+    public void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer) {
+        replacementService.reviewByPageId(options.getLang(), pageId, options.getType(), options.getSubtype(), reviewer);
     }
 }
