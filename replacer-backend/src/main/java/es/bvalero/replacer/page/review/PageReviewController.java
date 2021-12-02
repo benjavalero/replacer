@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.Optional;
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +25,6 @@ public class PageReviewController {
     @Autowired
     private PageReviewCustomFinder pageReviewCustomFinder;
 
-    /* FIND RANDOM PAGES WITH REPLACEMENTS */
-
     @ApiOperation(value = "Find a random page and the replacements to review", response = PageReviewResponse.class)
     @GetMapping(value = "/random")
     public Optional<PageReviewResponse> findRandomPageWithReplacements(@Valid PageReviewOptions options) {
@@ -45,20 +42,6 @@ public class PageReviewController {
         }
         return review.map(r -> PageReviewMapper.toDto(r, options));
     }
-
-    @ApiOperation(value = "Validate if the custom replacement is a known subtype")
-    @GetMapping(value = "/validate", params = { "replacement", "cs" })
-    public MisspellingType validateCustomReplacement(
-        @Valid UserParameters params,
-        @ApiParam(value = "Replacement to validate", example = "aún") @RequestParam @Size(max = 100) String replacement,
-        @ApiParam(value = "If the custom replacement is case-sensitive") @RequestParam(
-            defaultValue = "false"
-        ) boolean cs
-    ) {
-        return pageReviewCustomFinder.validateCustomReplacement(params.getLang(), replacement, cs);
-    }
-
-    /* FIND A PAGE REVIEW */
 
     @ApiOperation(value = "Find a page and the replacements to review", response = PageReviewResponse.class)
     @GetMapping(value = "/{id}")
@@ -79,5 +62,18 @@ public class PageReviewController {
                 break;
         }
         return review.map(r -> PageReviewMapper.toDto(r, options));
+    }
+
+    @ApiOperation(value = "Validate if the custom replacement is a known subtype")
+    @GetMapping(value = "/validate", params = { "replacement", "cs" })
+    public ReplacementValidationResponse validateCustomReplacement(
+        @Valid UserParameters params,
+        @Valid ReplacementValidationRequest validationRequest
+    ) {
+        return pageReviewCustomFinder.validateCustomReplacement(
+            params.getLang(),
+            validationRequest.getReplacement(),
+            validationRequest.isCs()
+        );
     }
 }

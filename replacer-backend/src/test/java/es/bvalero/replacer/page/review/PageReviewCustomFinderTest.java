@@ -499,19 +499,19 @@ class PageReviewCustomFinderTest {
         when(customReplacementFinderService.findExistingMisspelling("Accion", lang))
             .thenReturn(Optional.of(misspelling1));
         Assertions.assertEquals(
-            MisspellingType.ofEmpty(),
+            ReplacementValidationResponse.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "accion", true)
         );
         assertEquals(
-            MisspellingType.of(simple, "accion"),
+            ReplacementValidationResponse.of(simple, "accion"),
             pageReviewCustomService.validateCustomReplacement(lang, "accion", false)
         );
         assertEquals(
-            MisspellingType.ofEmpty(),
+            ReplacementValidationResponse.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "Accion", true)
         );
         assertEquals(
-            MisspellingType.of(simple, "accion"),
+            ReplacementValidationResponse.of(simple, "accion"),
             pageReviewCustomService.validateCustomReplacement(lang, "Accion", false)
         );
 
@@ -520,17 +520,20 @@ class PageReviewCustomFinderTest {
         when(customReplacementFinderService.findExistingMisspelling("Enero", lang))
             .thenReturn(Optional.of(misspelling2));
         when(customReplacementFinderService.findExistingMisspelling("enero", lang)).thenReturn(Optional.empty());
-        assertEquals(MisspellingType.ofEmpty(), pageReviewCustomService.validateCustomReplacement(lang, "enero", true));
         assertEquals(
-            MisspellingType.ofEmpty(),
+            ReplacementValidationResponse.ofEmpty(),
+            pageReviewCustomService.validateCustomReplacement(lang, "enero", true)
+        );
+        assertEquals(
+            ReplacementValidationResponse.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "enero", false)
         );
         assertEquals(
-            MisspellingType.of(simple, "Enero"),
+            ReplacementValidationResponse.of(simple, "Enero"),
             pageReviewCustomService.validateCustomReplacement(lang, "Enero", true)
         );
         assertEquals(
-            MisspellingType.ofEmpty(),
+            ReplacementValidationResponse.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "Enero", false)
         );
 
@@ -540,19 +543,19 @@ class PageReviewCustomFinderTest {
             .thenReturn(Optional.of(misspelling3));
         when(customReplacementFinderService.findExistingMisspelling("Madrid", lang)).thenReturn(Optional.empty());
         assertEquals(
-            MisspellingType.of(simple, "madrid"),
+            ReplacementValidationResponse.of(simple, "madrid"),
             pageReviewCustomService.validateCustomReplacement(lang, "madrid", true)
         );
         assertEquals(
-            MisspellingType.ofEmpty(),
+            ReplacementValidationResponse.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "madrid", false)
         );
         assertEquals(
-            MisspellingType.ofEmpty(),
+            ReplacementValidationResponse.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "Madrid", true)
         );
         assertEquals(
-            MisspellingType.ofEmpty(),
+            ReplacementValidationResponse.ofEmpty(),
             pageReviewCustomService.validateCustomReplacement(lang, "Madrid", false)
         );
     }

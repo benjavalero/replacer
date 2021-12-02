@@ -140,23 +140,28 @@ public class PageReviewCustomFinder extends PageReviewFinder {
             .build();
     }
 
-    // TODO: Public while refactoring
-    public MisspellingType validateCustomReplacement(
+    ReplacementValidationResponse validateCustomReplacement(
         WikipediaLanguage lang,
         String replacement,
         boolean caseSensitive
     ) {
         Optional<Misspelling> misspelling = customReplacementFinderService.findExistingMisspelling(replacement, lang);
         if (misspelling.isEmpty()) {
-            return MisspellingType.ofEmpty();
+            return ReplacementValidationResponse.ofEmpty();
         } else if (misspelling.get().isCaseSensitive()) {
             return caseSensitive && misspelling.get().getWord().equals(replacement)
-                ? MisspellingType.of(ReplacementType.ofMisspellingType(misspelling.get()), misspelling.get().getWord())
-                : MisspellingType.ofEmpty();
+                ? ReplacementValidationResponse.of(
+                    ReplacementType.ofMisspellingType(misspelling.get()),
+                    misspelling.get().getWord()
+                )
+                : ReplacementValidationResponse.ofEmpty();
         } else {
             return !caseSensitive && misspelling.get().getWord().equalsIgnoreCase(replacement)
-                ? MisspellingType.of(ReplacementType.ofMisspellingType(misspelling.get()), misspelling.get().getWord())
-                : MisspellingType.ofEmpty();
+                ? ReplacementValidationResponse.of(
+                    ReplacementType.ofMisspellingType(misspelling.get()),
+                    misspelling.get().getWord()
+                )
+                : ReplacementValidationResponse.ofEmpty();
         }
     }
 }
