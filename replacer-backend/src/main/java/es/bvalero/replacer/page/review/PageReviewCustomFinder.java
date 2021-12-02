@@ -35,7 +35,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         try {
             // Initialize search
-            options.incrementOffset(getCacheSize());
+            this.incrementOffset(getCacheSize());
 
             WikipediaSearchResult searchResult = findWikipediaResults(options);
             final long totalWikipediaResults = searchResult.getTotal();
@@ -63,9 +63,9 @@ class PageReviewCustomFinder extends PageReviewFinder {
                 }
 
                 if (pageIds.isEmpty()) {
-                    options.incrementOffset(getCacheSize());
-                    assert options.getOffset() != null;
-                    if (options.getOffset() >= totalWikipediaResults) {
+                    this.incrementOffset(getCacheSize());
+                    assert this.getOffset() != null;
+                    if (this.getOffset() >= totalWikipediaResults) {
                         LOGGER.debug("All results retrieved from Wikipedia are already reviewed");
                         return PageSearchResult.ofEmpty();
                     }
@@ -88,7 +88,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
     private WikipediaSearchResult findWikipediaResults(PageReviewOptions options) throws ReplacerException {
         String subtype = options.getSubtype();
         Boolean cs = options.getCs();
-        Integer offset = options.getOffset();
+        Integer offset = this.getOffset();
         assert subtype != null && cs != null && offset != null;
         return wikipediaService.searchByText(options.getLang(), subtype, cs, offset, getCacheSize());
     }

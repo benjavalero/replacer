@@ -51,8 +51,19 @@ abstract class PageReviewFinder {
         .expireAfterWrite(1, TimeUnit.DAYS)
         .build();
 
+    // Transient variable in order to keep the offset during different iterations while finding a review
+    @Getter(AccessLevel.PROTECTED)
+    private Integer offset;
+
+    protected void incrementOffset(int increment) {
+        this.offset = this.offset == null ? 0 : this.offset + increment;
+    }
+
     /** Find a page/section review for the given search options (if any) */
     Optional<PageReview> findRandomPageReview(PageReviewOptions options) {
+        // Restart offset
+        this.offset = null;
+
         // STEP 1: Find a candidate page to review
         // We just need a page ID as the lang is already given in the options
         Optional<Integer> randomPageId = findPageIdToReview(options);
