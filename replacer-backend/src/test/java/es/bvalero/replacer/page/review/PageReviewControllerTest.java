@@ -11,8 +11,7 @@ import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,44 +45,41 @@ class PageReviewControllerTest {
     private final String title = "T";
     private final String content = "C";
     private final LocalDateTime queryTimestamp = LocalDateTime.now();
-    private final WikipediaPage wikipediaPage = WikipediaPage
+    private final WikipediaPage page = WikipediaPage
         .builder()
-        .id(WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId))
+        .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
         .namespace(WikipediaNamespace.getDefault())
         .title(title)
         .content(content)
         .lastUpdate(LocalDateTime.now())
         .queryTimestamp(queryTimestamp)
         .build();
-    private final PageReview review = PageReview.of(wikipediaPage, null, Collections.emptyList(), 100L);
+    private final int sectionId = 2;
+    private final String anchor = "S";
+    private final WikipediaSection section = WikipediaSection
+        .builder()
+        .level(2)
+        .index(sectionId)
+        .byteOffset(0)
+        .anchor(anchor)
+        .build();
+    private final int start = 5;
+    private final String rep = "A";
+    private final Suggestion suggestion = Suggestion.of("a", "b");
+    private final Replacement replacement = Replacement
+        .builder()
+        .start(start)
+        .text(rep)
+        .type(ReplacementType.MISSPELLING_SIMPLE)
+        .subtype(rep)
+        .suggestions(List.of(suggestion))
+        .build();
+    private final long numPending = 100;
+    private final PageReview review = PageReview.of(page, section, List.of(replacement), numPending);
 
     @Test
     void testFindRandomPageWithReplacements() throws Exception {
-        // TODO: Check if all of this is needed
-        Integer section = 2;
-        String anchor = "S";
-        int start = 5;
-        String rep = "A";
-        Suggestion suggestion = Suggestion.of("a", "b");
-        Replacement replacement = Replacement
-            .builder()
-            .start(start)
-            .text(rep)
-            .type(ReplacementType.MISSPELLING_SIMPLE)
-            .subtype(rep)
-            .suggestions(Collections.singletonList(suggestion))
-            .build();
-        Collection<Replacement> replacements = Collections.singletonList(replacement);
-        long numPending = 7;
-        WikipediaSection wikipediaSection = WikipediaSection
-            .builder()
-            .level(2)
-            .index(section)
-            .byteOffset(0)
-            .anchor(anchor)
-            .build();
         PageReviewOptions options = PageReviewOptions.ofNoType();
-        PageReview review = PageReview.of(wikipediaPage, wikipediaSection, replacements, numPending);
         when(pageReviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
@@ -92,7 +88,7 @@ class PageReviewControllerTest {
             .andExpect(jsonPath("$.page.id", is(pageId)))
             .andExpect(jsonPath("$.page.title", is(title)))
             .andExpect(jsonPath("$.page.content", is(content)))
-            .andExpect(jsonPath("$.page.section.id", is(section)))
+            .andExpect(jsonPath("$.page.section.id", is(sectionId)))
             .andExpect(jsonPath("$.page.section.title", is(anchor)))
             .andExpect(
                 jsonPath("$.page.queryTimestamp", is(WikipediaDateUtils.formatWikipediaTimestamp(queryTimestamp)))
@@ -102,6 +98,18 @@ class PageReviewControllerTest {
             .andExpect(jsonPath("$.replacements[0].suggestions[0].text", is("a")))
             .andExpect(jsonPath("$.replacements[0].suggestions[0].comment", is("b")))
             .andExpect(jsonPath("$.numPending", is(Long.valueOf(numPending).intValue())));
+
+        verify(pageReviewNoTypeFinder).findRandomPageReview(options);
+    }
+
+    @Test
+    void testFindRandomPageByNoType() throws Exception {
+        PageReviewOptions options = PageReviewOptions.ofNoType();
+        when(pageReviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
+
+        mvc
+            .perform(get("/api/pages/random?lang=es&user=").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
 
         verify(pageReviewNoTypeFinder).findRandomPageReview(options);
     }
@@ -135,14 +143,11 @@ class PageReviewControllerTest {
 
     @Test
     void testFindPageReviewByIdWithWrongOptions() throws Exception {
-        PageReviewOptions options = PageReviewOptions.ofNoType();
-        when(pageReviewNoTypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
-
         mvc
             .perform(get("/api/pages/123?type=X&lang=es&user=").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
 
-        verify(pageReviewNoTypeFinder, never()).getPageReview(123, options);
+        verify(pageReviewNoTypeFinder, never()).getPageReview(anyInt(), any(PageReviewOptions.class));
     }
 
     @Test
@@ -182,5 +187,23 @@ class PageReviewControllerTest {
             .andExpect(status().isOk());
 
         verify(pageReviewCustomFinder).getPageReview(123, options);
+    }
+
+    @Test
+    void testValidateCustomReplacement() throws Exception {
+        final String replacement = "Africa";
+        when(pageReviewCustomFinder.validateCustomReplacement(WikipediaLanguage.SPANISH, replacement, true))
+            .thenReturn(ReplacementValidationResponse.of(ReplacementType.MISSPELLING_SIMPLE, replacement));
+
+        mvc
+            .perform(
+                get("/api/pages/validate?replacement=Africa&cs=true&lang=es&user=")
+                    .contentType(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.type", is(ReplacementType.MISSPELLING_SIMPLE.getLabel())))
+            .andExpect(jsonPath("$.subtype", is(replacement)));
+
+        verify(pageReviewCustomFinder).validateCustomReplacement(WikipediaLanguage.SPANISH, replacement, true);
     }
 }
