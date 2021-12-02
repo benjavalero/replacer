@@ -39,8 +39,7 @@ class PageJdbcRepository implements PageRepository {
             .addValue("lang", id.getLang().getCode())
             .addValue("pageId", id.getPageId());
         Collection<PageModel> pages = jdbcTemplate.query(sql, namedParameters, new PageResultExtractor());
-        assert pages != null;
-        return pages.stream().findAny();
+        return Objects.requireNonNull(pages).stream().findAny();
     }
 
     @Override
@@ -57,7 +56,7 @@ class PageJdbcRepository implements PageRepository {
     }
 
     @Override
-    public void updatePageTitles(Collection<PageModel> pages) {
+    public void updatePages(Collection<PageModel> pages) {
         String sql = "UPDATE page SET title = :title WHERE lang = :lang AND article_id = :pageId";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         jdbcTemplate.batchUpdate(sql, namedParameters);

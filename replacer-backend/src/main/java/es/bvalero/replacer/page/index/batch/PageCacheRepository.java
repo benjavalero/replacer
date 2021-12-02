@@ -78,8 +78,8 @@ class PageCacheRepository implements PageRepository {
     }
 
     @Override
-    public void updatePageTitles(Collection<PageModel> pages) {
-        pageRepository.updatePageTitles(pages);
+    public void updatePages(Collection<PageModel> pages) {
+        pageRepository.updatePages(pages);
     }
 
     @Override

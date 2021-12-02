@@ -12,11 +12,12 @@ public interface PageRepository {
     /** Find pages, including all the replacements, by a range of page IDs. */
     Collection<PageModel> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId);
 
-    /** Update the title for a collection of pages */
-    void updatePageTitles(Collection<PageModel> pages);
-
     /** Insert a collection of pages without inserting the replacements */
     void insertPages(Collection<PageModel> pages);
 
+    /** Update a collection of pages. Actually only the title is updated. */
+    void updatePages(Collection<PageModel> pages);
+
+    /** Delete a collection of pages and its related replacements */
     void deletePages(Collection<PageModel> pages);
 }

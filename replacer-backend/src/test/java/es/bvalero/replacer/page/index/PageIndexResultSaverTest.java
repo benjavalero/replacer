@@ -33,7 +33,7 @@ class PageIndexResultSaverTest {
     void testSave() {
         pageIndexResultSaver.save(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
 
-        verify(pageRepository).updatePageTitles(anyCollection());
+        verify(pageRepository).updatePages(anyCollection());
         verify(pageRepository).insertPages(anyCollection());
         verify(replacementRepository).updateReplacements(anyCollection());
         verify(replacementRepository).insertReplacements(anyCollection());

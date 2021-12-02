@@ -41,8 +41,10 @@ class ReplacementJdbcRepository implements ReplacementRepository {
     @Override
     public void deleteReplacements(Collection<ReplacementModel> replacements) {
         String sql = "DELETE FROM replacement WHERE id IN (:ids)";
-        Set<Long> ids = replacements.stream().map(ReplacementModel::getId).collect(Collectors.toSet());
-        assert ids.stream().allMatch(Objects::nonNull);
+        Set<Long> ids = replacements
+            .stream()
+            .map(r -> Objects.requireNonNull(r.getId()))
+            .collect(Collectors.toUnmodifiableSet());
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
         jdbcTemplate.update(sql, namedParameters);
     }

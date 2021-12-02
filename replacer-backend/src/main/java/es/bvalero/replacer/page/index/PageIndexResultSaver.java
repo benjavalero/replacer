@@ -38,7 +38,7 @@ public class PageIndexResultSaver {
 
     protected void saveBatchResult() {
         pageRepository.insertPages(IndexablePageMapper.toModel(batchResult.getCreatePages()));
-        pageRepository.updatePageTitles(IndexablePageMapper.toModel(batchResult.getUpdatePages()));
+        pageRepository.updatePages(IndexablePageMapper.toModel(batchResult.getUpdatePages()));
         pageRepository.deletePages(IndexablePageMapper.toModel(batchResult.getDeletePages()));
         replacementRepository.insertReplacements(
             IndexableReplacementMapper.toModel(batchResult.getCreateReplacements())
