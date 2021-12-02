@@ -8,7 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
-import es.bvalero.replacer.page.review.*;
+import es.bvalero.replacer.page.review.PageReviewSearch;
+import es.bvalero.replacer.page.review.ReviewPage;
+import es.bvalero.replacer.page.review.ReviewSection;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -35,13 +38,7 @@ class PageControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private PageReviewNoTypeFinder pageReviewNoTypeFinder;
-
-    @MockBean
-    private PageReviewTypeSubtypeFinder pageReviewTypeSubtypeFinder;
-
-    @MockBean
-    private PageReviewCustomFinder pageReviewCustomFinder;
+    private ReplacementService replacementService;
 
     @MockBean
     private WikipediaService wikipediaService;

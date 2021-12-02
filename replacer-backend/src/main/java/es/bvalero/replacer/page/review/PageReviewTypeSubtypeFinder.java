@@ -4,7 +4,6 @@ import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.repository.PageReviewRepository;
-import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -12,14 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PageReviewTypeSubtypeFinder extends PageReviewFinder {
+class PageReviewTypeSubtypeFinder extends PageReviewFinder {
 
     @Autowired
     private PageReviewRepository pageReviewRepository;
-
-    // TODO: Call directly to the repository
-    @Autowired
-    private ReplacementService replacementService;
 
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
@@ -68,10 +63,5 @@ public class PageReviewTypeSubtypeFinder extends PageReviewFinder {
 
     private boolean hasType(Replacement replacement, String type, String subtype) {
         return replacement.getType().getLabel().equals(type) && replacement.getSubtype().equals(subtype);
-    }
-
-    @Override
-    public void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer) {
-        replacementService.reviewByPageId(options.getLang(), pageId, options.getType(), options.getSubtype(), reviewer);
     }
 }

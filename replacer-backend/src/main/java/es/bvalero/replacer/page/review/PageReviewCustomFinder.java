@@ -9,11 +9,9 @@ import es.bvalero.replacer.finder.replacement.ReplacementMapper;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
-import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
-import java.time.LocalDate;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
@@ -22,12 +20,11 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class PageReviewCustomFinder extends PageReviewFinder {
+class PageReviewCustomFinder extends PageReviewFinder {
 
     @Autowired
     private WikipediaService wikipediaService;
 
-    // TODO: Call directly to the repository
     @Autowired
     private ReplacementService replacementService;
 
@@ -111,33 +108,6 @@ public class PageReviewCustomFinder extends PageReviewFinder {
         String suggestion = options.getSuggestion();
         assert subtype != null && cs != null && suggestion != null;
         return CustomOptions.of(subtype, cs, suggestion);
-    }
-
-    @Override
-    public void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer) {
-        // Custom replacements don't exist in the database to be reviewed
-        String subtype = options.getSubtype();
-        boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
-        assert subtype != null;
-        replacementService.insert(buildCustomReviewed(pageId, options.getLang(), subtype, cs, reviewer));
-    }
-
-    private CustomEntity buildCustomReviewed(
-        int pageId,
-        WikipediaLanguage lang,
-        String replacement,
-        boolean cs,
-        String reviewer
-    ) {
-        return CustomEntity
-            .builder()
-            .lang(lang.getCode())
-            .pageId(pageId)
-            .replacement(replacement)
-            .cs(cs)
-            .lastUpdate(LocalDate.now())
-            .reviewer(reviewer)
-            .build();
     }
 
     ReplacementValidationResponse validateCustomReplacement(

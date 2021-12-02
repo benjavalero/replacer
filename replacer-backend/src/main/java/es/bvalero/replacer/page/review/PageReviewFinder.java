@@ -208,8 +208,4 @@ abstract class PageReviewFinder {
         PageSearchResult result = cachedPageIds.getIfPresent(key);
         return result != null ? result.getTotal() : 0L;
     }
-
-    // Not used in the template but called by the controller, so it must be implemented.
-    @SuppressWarnings("unused")
-    abstract void reviewPageReplacements(int pageId, PageReviewOptions options, String reviewer);
 }

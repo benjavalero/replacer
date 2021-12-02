@@ -8,12 +8,18 @@ import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
-import es.bvalero.replacer.page.review.*;
+import es.bvalero.replacer.page.review.PageReviewMapper;
+import es.bvalero.replacer.page.review.PageReviewOptions;
+import es.bvalero.replacer.page.review.PageReviewSearch;
+import es.bvalero.replacer.page.review.ReviewSection;
+import es.bvalero.replacer.replacement.CustomEntity;
+import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import java.time.LocalDate;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +38,7 @@ public class PageController {
     private static final String COSMETIC_CHANGES = "mejoras cosméticas";
 
     @Autowired
-    private PageReviewNoTypeFinder pageReviewNoTypeFinder;
-
-    @Autowired
-    private PageReviewTypeSubtypeFinder pageReviewTypeSubtypeFinder;
-
-    @Autowired
-    private PageReviewCustomFinder pageReviewCustomFinder;
+    private ReplacementService replacementService;
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -109,15 +109,49 @@ public class PageController {
         PageReviewOptions options = PageReviewMapper.fromDto(search, lang);
         switch (options.getOptionsType()) {
             case NO_TYPE:
-                pageReviewNoTypeFinder.reviewPageReplacements(pageId, options, reviewer);
+                markAsReviewedNoType(pageId, options, reviewer);
                 break;
             case TYPE_SUBTYPE:
-                pageReviewTypeSubtypeFinder.reviewPageReplacements(pageId, options, reviewer);
+                markAsReviewedTypeSubtype(pageId, options, reviewer);
                 break;
             case CUSTOM:
-                pageReviewCustomFinder.reviewPageReplacements(pageId, options, reviewer);
+                markAsReviewedCustom(pageId, options, reviewer);
                 break;
         }
+    }
+
+    private void markAsReviewedNoType(int pageId, PageReviewOptions options, String reviewer) {
+        replacementService.reviewByPageId(options.getLang(), pageId, null, null, reviewer);
+    }
+
+    private void markAsReviewedTypeSubtype(int pageId, PageReviewOptions options, String reviewer) {
+        replacementService.reviewByPageId(options.getLang(), pageId, options.getType(), options.getSubtype(), reviewer);
+    }
+
+    private void markAsReviewedCustom(int pageId, PageReviewOptions options, String reviewer) {
+        // Custom replacements don't exist in the database to be reviewed
+        String subtype = options.getSubtype();
+        boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
+        assert subtype != null;
+        replacementService.insert(buildCustomReviewed(pageId, options.getLang(), subtype, cs, reviewer));
+    }
+
+    private CustomEntity buildCustomReviewed(
+        int pageId,
+        WikipediaLanguage lang,
+        String replacement,
+        boolean cs,
+        String reviewer
+    ) {
+        return CustomEntity
+            .builder()
+            .lang(lang.getCode())
+            .pageId(pageId)
+            .replacement(replacement)
+            .cs(cs)
+            .lastUpdate(LocalDate.now())
+            .reviewer(reviewer)
+            .build();
     }
 
     /* PAGE LIST FOR ROBOTS */
