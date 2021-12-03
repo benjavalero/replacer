@@ -40,8 +40,8 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
 
         long totalResults = pageReviewRepository.countToReviewByType(
             options.getLang(),
-            options.getType(),
-            options.getSubtype()
+            Objects.requireNonNull(options.getType()),
+            Objects.requireNonNull(options.getSubtype())
         );
         return PageSearchResult.of(totalResults, pageIds);
     }
