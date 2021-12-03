@@ -46,9 +46,6 @@ class PageControllerTest {
     @MockBean
     private CosmeticFinderService cosmeticFinderService;
 
-    @MockBean
-    private PageListService pageListService;
-
     @Test
     void testSaveWithChanges() throws Exception {
         int pageId = 123;
