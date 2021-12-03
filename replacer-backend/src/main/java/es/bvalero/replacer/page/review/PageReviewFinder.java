@@ -8,7 +8,6 @@ import es.bvalero.replacer.common.domain.WikipediaPageId;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.replacement.ReplacementService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +15,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +25,6 @@ abstract class PageReviewFinder {
 
     @Autowired
     private WikipediaService wikipediaService;
-
-    @Autowired
-    private ReplacementService replacementService;
 
     @Autowired
     private PageIndexer pageIndexer;
@@ -129,18 +124,18 @@ abstract class PageReviewFinder {
         String key = buildCacheKey(options);
         PageSearchResult result = cachedPageIds.getIfPresent(key);
         if (result != null && result.isEmptyTotal()) {
-            String type = options.getType();
-            String subtype = options.getSubtype();
-            // TODO: This should be done in the dedicated implementation
-            if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype)) {
-                replacementService.reviewAsSystemBySubtype(options.getLang(), type, subtype);
-            }
+            markAsReviewed(options);
             return false;
         } else {
             PageSearchResult pageIds = findPageIdsToReview(options);
             cachedPageIds.put(key, pageIds);
             return !pageIds.isEmpty();
         }
+    }
+
+    /** Mark as reviewed all existing replacements matching the given options */
+    protected void markAsReviewed(PageReviewOptions options) {
+        // By default, do nothing.
     }
 
     abstract PageSearchResult findPageIdsToReview(PageReviewOptions options);
@@ -207,7 +202,6 @@ abstract class PageReviewFinder {
 
     abstract Collection<Replacement> findAllReplacements(WikipediaPage page, PageReviewOptions options);
 
-    // TODO: Not used in the template but by some implementations
     protected PageIndexResult indexReplacements(WikipediaPage page) {
         LOGGER.trace("Update page replacements in database");
         return pageIndexer.indexPageReplacements(page);
