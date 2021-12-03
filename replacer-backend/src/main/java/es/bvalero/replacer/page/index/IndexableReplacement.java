@@ -1,5 +1,7 @@
 package es.bvalero.replacer.page.index;
 
+import static es.bvalero.replacer.page.repository.ReplacementRepository.REVIEWER_SYSTEM;
+
 import java.time.LocalDate;
 import java.util.Objects;
 import lombok.Builder;
@@ -14,8 +16,6 @@ import org.springframework.lang.Nullable;
 @Value
 @Builder
 class IndexableReplacement {
-
-    private static final String REVIEWER_SYSTEM = "system";
 
     @Nullable
     Long id; // Nullable when still to be created in database

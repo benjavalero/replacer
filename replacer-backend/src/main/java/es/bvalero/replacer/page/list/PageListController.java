@@ -39,12 +39,12 @@ public class PageListController {
 
     @ApiOperation(value = "Mark as reviewed by the system all pages pages containing the given replacement type")
     @PostMapping(value = "/review", params = { "type", "subtype" })
-    public void reviewAsSystemBySubtype(
+    public void reviewAsSystemByType(
         UserParameters params,
         @ApiParam(value = "Replacement type", example = "Ortografía") @RequestParam String type,
         @ApiParam(value = "Replacement subtype", example = "aún") @RequestParam String subtype
     ) {
         // Set as reviewed in the database
-        pageListService.reviewAsSystemBySubtype(params.getLang(), type, subtype);
+        pageListService.reviewAsSystemByType(params.getLang(), type, subtype);
     }
 }

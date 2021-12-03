@@ -21,6 +21,4 @@ interface ReplacementStatsDao {
         @Nullable String subtype,
         String reviewer
     );
-
-    void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype);
 }

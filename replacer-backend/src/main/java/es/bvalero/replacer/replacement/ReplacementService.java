@@ -68,10 +68,6 @@ public class ReplacementService {
         return replacementDao.findPageTitlesToReviewBySubtype(lang, type, subtype);
     }
 
-    public void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
-        replacementStatsDao.reviewAsSystemBySubtype(lang, type, subtype);
-    }
-
     ///// MISSPELLING MANAGER
 
     public void deleteToBeReviewedBySubtype(WikipediaLanguage lang, String type, Set<String> subtypes) {

@@ -122,20 +122,6 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
         return jdbcTemplate.queryForList(sql, namedParameters, String.class);
     }
 
-    @Override
-    public void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
-        String sql =
-            "UPDATE replacement SET reviewer=:system, last_update=:now " +
-            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_VALUE_SYSTEM, ReplacementEntity.REVIEWER_SYSTEM)
-            .addValue("now", LocalDate.now())
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_TYPE, type)
-            .addValue(PARAM_SUBTYPE, subtype);
-        jdbcTemplate.update(sql, namedParameters);
-    }
-
     ///// MISSPELLING MANAGER
 
     @Override

@@ -78,11 +78,13 @@ class ReplacementDaoProxy implements ReplacementStatsDao {
         this.replacementStatsDao.reviewByPageId(lang, pageId, type, subtype, reviewer);
     }
 
-    @Override
+    // TODO: Move this functionality to new ReplacementCacheRepository
+    /*
     public void reviewAsSystemBySubtype(WikipediaLanguage lang, String type, String subtype) {
         this.removeCachedReplacementCount(lang, type, subtype);
         this.replacementStatsDao.reviewAsSystemBySubtype(lang, type, subtype);
     }
+     */
 
     /* SCHEDULED UPDATE OF CACHE */
 

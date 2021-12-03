@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.page.repository.ReplacementRepository;
 import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,9 @@ class PageListServiceTest {
 
     @Mock
     private ReplacementService replacementService;
+
+    @Mock
+    private ReplacementRepository replacementRepository;
 
     @InjectMocks
     private PageListService pageListService;
