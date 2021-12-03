@@ -33,15 +33,27 @@ class PageListServiceTest {
     }
 
     @Test
-    void testFindPageList() {
+    void testFindPageTitlesToReviewByType() {
         // An array list to be able to sort
         List<String> list = Arrays.asList("Bo", "C", "Aá", "Bñ", null, "Ae");
         List<String> sorted = List.of("Aá", "Ae", "Bñ", "Bo", "C");
 
-        when(pageRepository.findPageTitlesToReviewByType(any(WikipediaLanguage.class), anyString(), anyString()))
-            .thenReturn(list);
+        when(pageRepository.findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), "X", "Y")).thenReturn(list);
 
-        Collection<String> result = pageListService.findPageTitlesToReviewByType(WikipediaLanguage.SPANISH, "X", "Y");
+        Collection<String> result = pageListService.findPageTitlesToReviewByType(
+            WikipediaLanguage.getDefault(),
+            "X",
+            "Y"
+        );
         assertEquals(sorted, result);
+
+        verify(pageRepository).findPageTitlesToReviewByType(WikipediaLanguage.getDefault(), "X", "Y");
+    }
+
+    @Test
+    void testReviewAsSystemByType() {
+        pageListService.reviewAsSystemByType(WikipediaLanguage.getDefault(), "X", "Y");
+
+        verify(replacementRepository).reviewAsSystemByType(WikipediaLanguage.getDefault(), "X", "Y");
     }
 }
