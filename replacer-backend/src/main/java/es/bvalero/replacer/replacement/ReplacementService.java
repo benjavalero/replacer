@@ -62,12 +62,6 @@ public class ReplacementService {
         return replacementStatsDao.countReplacementsGroupedByType(lang).getTypeCounts();
     }
 
-    ///// PAGE LISTS
-
-    public List<String> findPageTitlesToReviewBySubtype(WikipediaLanguage lang, String type, String subtype) {
-        return replacementDao.findPageTitlesToReviewBySubtype(lang, type, subtype);
-    }
-
     ///// MISSPELLING MANAGER
 
     public void deleteToBeReviewedBySubtype(WikipediaLanguage lang, String type, Set<String> subtypes) {

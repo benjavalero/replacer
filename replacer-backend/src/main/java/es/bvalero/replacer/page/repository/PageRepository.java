@@ -20,4 +20,6 @@ public interface PageRepository {
 
     /** Delete a collection of pages and its related replacements */
     void deletePages(Collection<PageModel> pages);
+
+    Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, String type, String subtype);
 }

@@ -157,4 +157,18 @@ class PageJdbcRepository implements PageRepository, PageReviewRepository {
         Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
         return result == null ? 0L : result;
     }
+
+    @Override
+    public Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, String type, String subtype) {
+        // TODO: Check if it is better to make a DISTINCT or retrieve them all and return a Set
+        String sql =
+            "SELECT DISTINCT(p.title) " +
+            FROM_REPLACEMENT_JOIN_PAGE +
+            "WHERE r.lang = :lang AND r.type = :type AND r.subtype = :subtype AND r.reviewer IS NULL";
+        SqlParameterSource namedParameters = new MapSqlParameterSource()
+            .addValue("lang", lang.getCode())
+            .addValue("type", type)
+            .addValue("subtype", subtype);
+        return jdbcTemplate.queryForList(sql, namedParameters, String.class);
+    }
 }

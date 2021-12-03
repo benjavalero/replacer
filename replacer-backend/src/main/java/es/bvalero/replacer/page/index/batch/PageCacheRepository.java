@@ -91,4 +91,9 @@ class PageCacheRepository implements PageRepository {
     public void deletePages(Collection<PageModel> pages) {
         pageRepository.deletePages(pages);
     }
+
+    @Override
+    public Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, String type, String subtype) {
+        return pageRepository.findPageTitlesToReviewByType(lang, type, subtype);
+    }
 }

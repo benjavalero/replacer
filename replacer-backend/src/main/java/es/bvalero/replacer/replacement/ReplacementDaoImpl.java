@@ -20,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
 
-    private static final String FROM_REPLACEMENT_JOIN_PAGE =
-        "FROM replacement r JOIN page p ON r.lang = p.lang AND r.article_id = p.article_id ";
     private static final String PARAM_PAGE_ID = "pageId";
     private static final String PARAM_LANG = "lang";
     private static final String PARAM_TYPE = "type";
@@ -105,21 +103,6 @@ class ReplacementDaoImpl implements ReplacementDao, ReplacementStatsDao {
             "GROUP BY lang, type, subtype";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue(PARAM_LANG, lang.getCode());
         return jdbcTemplate.query(sql, namedParameters, new TypeSubtypeCountRowMapper());
-    }
-
-    ///// PAGE LISTS
-
-    @Override
-    public List<String> findPageTitlesToReviewBySubtype(WikipediaLanguage lang, String type, String subtype) {
-        String sql =
-            "SELECT DISTINCT(p.title) " +
-            FROM_REPLACEMENT_JOIN_PAGE +
-            "WHERE r.lang = :lang AND r.type = :type AND r.subtype = :subtype AND r.reviewer IS NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue(PARAM_LANG, lang.getCode())
-            .addValue(PARAM_TYPE, type)
-            .addValue(PARAM_SUBTYPE, subtype);
-        return jdbcTemplate.queryForList(sql, namedParameters, String.class);
     }
 
     ///// MISSPELLING MANAGER

@@ -25,13 +25,13 @@ public class PageListController {
         value = "Produce a list in plain text with the titles of the pages containing the given replacement type to review"
     )
     @GetMapping(value = "", params = { "type", "subtype" }, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> findPageTitlesToReviewBySubtype(
+    public ResponseEntity<String> findPageTitlesToReviewByType(
         UserParameters params,
         @ApiParam(value = "Replacement type", example = "Ortografía") @RequestParam String type,
         @ApiParam(value = "Replacement subtype", example = "aún") @RequestParam String subtype
     ) {
         String titleList = StringUtils.join(
-            pageListService.findPageTitlesToReviewBySubtype(params.getLang(), type, subtype),
+            pageListService.findPageTitlesToReviewByType(params.getLang(), type, subtype),
             "\n"
         );
         return new ResponseEntity<>(titleList, HttpStatus.OK);

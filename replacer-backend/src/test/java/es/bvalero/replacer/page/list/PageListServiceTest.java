@@ -4,9 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.page.repository.PageRepository;
 import es.bvalero.replacer.page.repository.ReplacementRepository;
-import es.bvalero.replacer.replacement.ReplacementService;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ import org.mockito.MockitoAnnotations;
 class PageListServiceTest {
 
     @Mock
-    private ReplacementService replacementService;
+    private PageRepository pageRepository;
 
     @Mock
     private ReplacementRepository replacementRepository;
@@ -37,10 +38,10 @@ class PageListServiceTest {
         List<String> list = Arrays.asList("Bo", "C", "Aá", "Bñ", null, "Ae");
         List<String> sorted = List.of("Aá", "Ae", "Bñ", "Bo", "C");
 
-        when(replacementService.findPageTitlesToReviewBySubtype(any(WikipediaLanguage.class), anyString(), anyString()))
+        when(pageRepository.findPageTitlesToReviewByType(any(WikipediaLanguage.class), anyString(), anyString()))
             .thenReturn(list);
 
-        List<String> result = pageListService.findPageTitlesToReviewBySubtype(WikipediaLanguage.SPANISH, "X", "Y");
+        Collection<String> result = pageListService.findPageTitlesToReviewByType(WikipediaLanguage.SPANISH, "X", "Y");
         assertEquals(sorted, result);
     }
 }
