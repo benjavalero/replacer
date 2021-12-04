@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page.save;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.UserParameters;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
@@ -20,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.time.LocalDate;
+import java.util.Objects;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,11 +51,12 @@ public class PageSaveController {
     @PostMapping(value = "/{id}")
     public ResponseEntity<String> save(
         @PathVariable("id") int pageId,
-        @Valid UserParameters params,
-        @ApiParam(value = "Page to update and mark as reviewed") @Valid @RequestBody PageSaveRequest request
+        @ApiParam(value = "Language", required = true) @RequestParam WikipediaLanguage lang,
+        @ApiParam(value = "Wikipedia user name", required = true, example = "Benjavalero") @RequestParam String user,
+        @Valid @RequestBody PageSaveRequest request
     ) {
-        if (!request.getPage().getLang().equals(params.getLang()) || request.getPage().getId() != pageId) {
-            throw new IllegalArgumentException();
+        if (!Objects.equals(lang, request.getPage().getLang())) {
+            return new ResponseEntity<>("Language mismatch", HttpStatus.BAD_REQUEST);
         }
 
         boolean changed = StringUtils.isNotBlank(request.getPage().getContent());
@@ -63,16 +64,12 @@ public class PageSaveController {
             // Upload new content to Wikipedia
             try {
                 // Apply cosmetic changes
-                FinderPage page = FinderPage.of(
-                    params.getLang(),
-                    request.getPage().getContent(),
-                    request.getPage().getTitle()
-                );
+                FinderPage page = FinderPage.of(lang, request.getPage().getContent(), request.getPage().getTitle());
                 String textToSave = cosmeticFinderService.applyCosmeticChanges(page);
                 boolean applyCosmetics = !textToSave.equals(page.getContent());
                 ReviewSection section = request.getPage().getSection();
                 wikipediaService.savePageContent(
-                    WikipediaPageId.of(params.getLang(), pageId),
+                    WikipediaPageId.of(lang, pageId),
                     section == null ? null : section.getId(),
                     textToSave,
                     WikipediaDateUtils.parseWikipediaTimestamp(request.getPage().getQueryTimestamp()),
@@ -85,7 +82,7 @@ public class PageSaveController {
         }
 
         // Mark page as reviewed in the database
-        this.markAsReviewed(pageId, params.getLang(), params.getUser(), request.getSearch());
+        this.markAsReviewed(pageId, lang, user, request.getSearch());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
