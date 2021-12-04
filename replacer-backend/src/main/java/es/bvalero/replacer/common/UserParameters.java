@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserParameters {
 
+    // TODO: Obsolete
+
     @ApiParam(value = "Language", required = true)
     @NotNull
     private WikipediaLanguage lang;

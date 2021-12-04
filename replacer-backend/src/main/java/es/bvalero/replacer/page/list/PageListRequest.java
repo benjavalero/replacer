@@ -1,15 +1,14 @@
-package es.bvalero.replacer.page.review;
+package es.bvalero.replacer.page.list;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.annotations.ApiParam;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-class ReplacementValidationRequest {
+class PageListRequest {
 
     @ApiParam(value = "Language", required = true)
     @NotNull
@@ -19,11 +18,11 @@ class ReplacementValidationRequest {
     @NotNull
     private String user;
 
-    @ApiParam(value = "Replacement to validate", required = true, example = "aún")
-    @Size(max = 100)
+    @ApiParam(value = "Replacement type", example = "Ortografía")
     @NotNull
-    String replacement;
+    private String type;
 
-    @ApiParam(value = "If the custom replacement is case-sensitive")
-    boolean cs;
+    @ApiParam(value = "Replacement subtype", example = "aún")
+    @NotNull
+    private String subtype;
 }

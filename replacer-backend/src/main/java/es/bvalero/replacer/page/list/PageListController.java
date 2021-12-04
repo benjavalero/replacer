@@ -1,10 +1,9 @@
 package es.bvalero.replacer.page.list;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.UserParameters;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,13 +24,9 @@ public class PageListController {
         value = "Produce a list in plain text with the titles of the pages containing the given replacement type to review"
     )
     @GetMapping(value = "", params = { "type", "subtype" }, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> findPageTitlesToReviewByType(
-        UserParameters params,
-        @ApiParam(value = "Replacement type", example = "Ortografía") @RequestParam String type,
-        @ApiParam(value = "Replacement subtype", example = "aún") @RequestParam String subtype
-    ) {
+    public ResponseEntity<String> findPageTitlesToReviewByType(@Valid PageListRequest request) {
         String titleList = StringUtils.join(
-            pageListService.findPageTitlesToReviewByType(params.getLang(), type, subtype),
+            pageListService.findPageTitlesToReviewByType(request.getLang(), request.getType(), request.getSubtype()),
             "\n"
         );
         return new ResponseEntity<>(titleList, HttpStatus.OK);
@@ -39,12 +34,8 @@ public class PageListController {
 
     @ApiOperation(value = "Mark as reviewed by the system all pages pages containing the given replacement type")
     @PostMapping(value = "/review", params = { "type", "subtype" })
-    public void reviewAsSystemByType(
-        UserParameters params,
-        @ApiParam(value = "Replacement type", example = "Ortografía") @RequestParam String type,
-        @ApiParam(value = "Replacement subtype", example = "aún") @RequestParam String subtype
-    ) {
+    public void reviewAsSystemByType(@Valid PageListRequest request) {
         // Set as reviewed in the database
-        pageListService.reviewAsSystemByType(params.getLang(), type, subtype);
+        pageListService.reviewAsSystemByType(request.getLang(), request.getType(), request.getSubtype());
     }
 }

@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page.review;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.UserParameters;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -67,11 +66,10 @@ public class PageReviewController {
     @ApiOperation(value = "Validate if the custom replacement is a known subtype")
     @GetMapping(value = "/validate", params = { "replacement", "cs" })
     public ReplacementValidationResponse validateCustomReplacement(
-        @Valid UserParameters params,
         @Valid ReplacementValidationRequest validationRequest
     ) {
         return pageReviewCustomFinder.validateCustomReplacement(
-            params.getLang(),
+            validationRequest.getLang(),
             validationRequest.getReplacement(),
             validationRequest.isCs()
         );
