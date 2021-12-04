@@ -1,22 +1,17 @@
 package es.bvalero.replacer.page.save;
 
-import es.bvalero.replacer.common.domain.AccessToken;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
-import es.bvalero.replacer.page.review.PageReviewMapper;
 import es.bvalero.replacer.page.review.PageReviewOptions;
-import es.bvalero.replacer.page.review.PageReviewSearch;
-import es.bvalero.replacer.page.review.ReviewSection;
+import es.bvalero.replacer.page.review.PageReviewOptionsType;
 import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDate;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,48 +29,40 @@ class PageSaveService {
     @Autowired
     private CosmeticFinderService cosmeticFinderService;
 
-    void savePageContent(String user, PageSaveRequest request) throws ReplacerException {
-        // FIXME: Not use the request DTO
-        WikipediaLanguage lang = request.getPage().getLang();
-        int pageId = request.getPage().getId();
-
+    void savePageContent(
+        WikipediaPage page,
+        @Nullable Integer sectionId,
+        PageReviewOptions options,
+        AccessToken accessToken
+    ) throws ReplacerException {
         // Apply cosmetic changes
-        FinderPage page = FinderPage.of(
-            request.getPage().getLang(),
-            request.getPage().getContent(),
-            request.getPage().getTitle()
-        );
-        String textToSave = cosmeticFinderService.applyCosmeticChanges(page);
-        boolean applyCosmetics = !textToSave.equals(page.getContent());
-        ReviewSection section = request.getPage().getSection();
+        FinderPage finderPage = FinderPage.of(page.getId().getLang(), page.getContent(), page.getTitle());
+        String textToSave = cosmeticFinderService.applyCosmeticChanges(finderPage);
+        boolean applyCosmetics = !textToSave.equals(finderPage.getContent());
 
         // Upload new content to Wikipedia
         wikipediaService.savePageContent(
-            WikipediaPageId.of(lang, pageId),
-            section == null ? null : section.getId(),
+            page.getId(),
+            sectionId,
             textToSave,
-            WikipediaDateUtils.parseWikipediaTimestamp(request.getPage().getQueryTimestamp()),
-            buildEditSummary(request.getSearch(), applyCosmetics),
-            AccessToken.of(request.getToken(), request.getTokenSecret())
+            page.getQueryTimestamp(),
+            buildEditSummary(options, applyCosmetics),
+            accessToken
         );
 
         // Mark page as reviewed in the database
-        this.markAsReviewed(pageId, lang, user, request.getSearch());
+        this.markAsReviewed(page.getId().getPageId(), options);
     }
 
-    void savePageWithNoChanges(String user, PageSaveRequest request) {
-        // FIXME: Not use the request DTO
-        WikipediaLanguage lang = request.getPage().getLang();
-        int pageId = request.getPage().getId();
-
+    void savePageWithNoChanges(int pageId, PageReviewOptions options) {
         // Mark page as reviewed in the database
-        this.markAsReviewed(pageId, lang, user, request.getSearch());
+        this.markAsReviewed(pageId, options);
     }
 
-    private String buildEditSummary(PageReviewSearch search, boolean applyCosmetics) {
+    private String buildEditSummary(PageReviewOptions options, boolean applyCosmetics) {
         StringBuilder summary = new StringBuilder(EDIT_SUMMARY);
-        if (StringUtils.isNotBlank(search.getType()) && StringUtils.isNotBlank(search.getSubtype())) {
-            summary.append(": «").append(search.getSubtype()).append('»');
+        if (options.getOptionsType() == PageReviewOptionsType.TYPE_SUBTYPE) {
+            summary.append(": «").append(options.getSubtype()).append('»');
         }
         if (applyCosmetics) {
             summary.append(" + ").append(COSMETIC_CHANGES);
@@ -83,8 +70,8 @@ class PageSaveService {
         return summary.toString();
     }
 
-    private void markAsReviewed(int pageId, WikipediaLanguage lang, String reviewer, PageReviewSearch search) {
-        PageReviewOptions options = PageReviewMapper.fromDto(search, lang);
+    private void markAsReviewed(int pageId, PageReviewOptions options) {
+        String reviewer = options.getUser();
         switch (options.getOptionsType()) {
             case NO_TYPE:
                 markAsReviewedNoType(pageId, options, reviewer);

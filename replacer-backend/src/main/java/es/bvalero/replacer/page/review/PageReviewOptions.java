@@ -46,12 +46,12 @@ public class PageReviewOptions {
     private Boolean cs;
 
     @TestOnly
-    static PageReviewOptions ofNoType() {
+    public static PageReviewOptions ofNoType() {
         return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).user("").build();
     }
 
     @TestOnly
-    static PageReviewOptions ofTypeSubtype(String type, String subtype) {
+    public static PageReviewOptions ofTypeSubtype(String type, String subtype) {
         return PageReviewOptions
             .builder()
             .lang(WikipediaLanguage.getDefault())

@@ -6,7 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.page.review.PageReviewSearch;
 import es.bvalero.replacer.page.review.ReviewPage;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
@@ -63,7 +64,17 @@ class PageSaveControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(pageSaveService).savePageContent("", request);
+        WikipediaPage page = WikipediaPage
+            .builder()
+            .id(WikipediaPageId.of(WikipediaLanguage.SPANISH, pageId))
+            .namespace(WikipediaNamespace.getDefault())
+            .title(title)
+            .content(content)
+            .lastUpdate(timestamp)
+            .queryTimestamp(timestamp)
+            .build();
+        AccessToken accessToken = AccessToken.of(token, tokenSecret);
+        verify(pageSaveService).savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
     }
 
     @Test
@@ -94,6 +105,6 @@ class PageSaveControllerTest {
             )
             .andExpect(status().isOk());
 
-        verify(pageSaveService).savePageWithNoChanges("", request);
+        verify(pageSaveService).savePageWithNoChanges(pageId, PageReviewOptions.ofNoType());
     }
 }

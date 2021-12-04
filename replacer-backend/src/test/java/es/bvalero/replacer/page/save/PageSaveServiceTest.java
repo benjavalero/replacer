@@ -1,18 +1,13 @@
 package es.bvalero.replacer.page.save;
 
-import static es.bvalero.replacer.page.save.PageSaveController.EMPTY_CONTENT;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.common.domain.AccessToken;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaPageId;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
-import es.bvalero.replacer.page.review.PageReviewSearch;
-import es.bvalero.replacer.page.review.ReviewPage;
+import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -45,65 +40,42 @@ class PageSaveServiceTest {
     @Test
     void testSaveWithChanges() throws ReplacerException {
         int pageId = 123;
-        String title = "Q";
-        String content = "X";
         LocalDateTime timestamp = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
-        String token = "A";
-        String tokenSecret = "B";
-        PageSaveRequest request = new PageSaveRequest();
-        ReviewPage reviewPage = new ReviewPage();
-        reviewPage.setLang(WikipediaLanguage.SPANISH);
-        reviewPage.setId(pageId);
-        reviewPage.setTitle(title);
-        reviewPage.setContent(content);
-        reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp));
-        request.setPage(reviewPage);
-        PageReviewSearch search = new PageReviewSearch();
-        request.setSearch(search);
-        request.setToken(token);
-        request.setTokenSecret(tokenSecret);
+        WikipediaPage page = WikipediaPage
+            .builder()
+            .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
+            .namespace(WikipediaNamespace.getDefault()) // Not relevant for saving
+            .title("T")
+            .content("X")
+            .lastUpdate(timestamp)
+            .queryTimestamp(timestamp)
+            .build();
 
         String contentAfterCosmetics = "C";
         when(cosmeticFinderService.applyCosmeticChanges(any(FinderPage.class))).thenReturn(contentAfterCosmetics);
 
-        String user = "U";
-        pageSaveService.savePageContent(user, request);
+        AccessToken accessToken = AccessToken.of("A", "B");
+        pageSaveService.savePageContent(page, null, PageReviewOptions.ofNoType(), accessToken);
 
         verify(cosmeticFinderService).applyCosmeticChanges(any(FinderPage.class));
         verify(wikipediaService)
             .savePageContent(
-                eq(WikipediaPageId.of(reviewPage.getLang(), reviewPage.getId())),
+                eq(page.getId()),
                 isNull(),
                 eq(contentAfterCosmetics),
                 eq(timestamp),
                 anyString(),
-                eq(AccessToken.of(token, tokenSecret))
+                eq(accessToken)
             );
-        verify(replacementService).reviewByPageId(reviewPage.getLang(), reviewPage.getId(), null, null, user);
+        verify(replacementService).reviewByPageId(WikipediaLanguage.getDefault(), pageId, null, null, "");
     }
 
     @Test
     void testSaveWithNoChanges() throws ReplacerException {
         int pageId = 123;
-        String title = "Q";
-        LocalDateTime timestamp = LocalDateTime.now();
-        String token = "A";
-        String tokenSecret = "B";
-        PageSaveRequest request = new PageSaveRequest();
-        ReviewPage reviewPage = new ReviewPage();
-        reviewPage.setLang(WikipediaLanguage.SPANISH);
-        reviewPage.setId(pageId);
-        reviewPage.setTitle(title);
-        reviewPage.setContent(EMPTY_CONTENT);
-        reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp));
-        request.setPage(reviewPage);
-        PageReviewSearch search = new PageReviewSearch();
-        request.setSearch(search);
-        request.setToken(token);
-        request.setTokenSecret(tokenSecret);
-
-        String user = "U";
-        pageSaveService.savePageWithNoChanges(user, request);
+        String type = "T";
+        String subtype = "S";
+        pageSaveService.savePageWithNoChanges(pageId, PageReviewOptions.ofTypeSubtype(type, subtype));
 
         verify(cosmeticFinderService, never()).applyCosmeticChanges(any(FinderPage.class));
         verify(wikipediaService, never())
@@ -115,6 +87,6 @@ class PageSaveServiceTest {
                 anyString(),
                 any(AccessToken.class)
             );
-        verify(replacementService).reviewByPageId(reviewPage.getLang(), reviewPage.getId(), null, null, user);
+        verify(replacementService).reviewByPageId(WikipediaLanguage.getDefault(), pageId, type, subtype, "");
     }
 }

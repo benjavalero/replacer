@@ -69,9 +69,10 @@ public class PageReviewMapper {
         return search;
     }
 
-    public PageReviewOptions fromDto(PageReviewSearch search, WikipediaLanguage lang) {
+    public PageReviewOptions fromDto(PageReviewSearch search, WikipediaLanguage lang, String user) {
         PageReviewOptions pageReviewOptions = new PageReviewOptions();
         pageReviewOptions.setLang(lang);
+        pageReviewOptions.setUser(user);
         pageReviewOptions.setType(search.getType());
         pageReviewOptions.setSubtype(search.getSubtype());
         pageReviewOptions.setSuggestion(search.getSuggestion());

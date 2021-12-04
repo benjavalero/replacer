@@ -1,11 +1,16 @@
 package es.bvalero.replacer.page.save;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.page.review.PageReviewMapper;
+import es.bvalero.replacer.page.review.PageReviewOptions;
+import es.bvalero.replacer.page.review.ReviewSection;
+import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
@@ -46,10 +51,26 @@ public class PageSaveController {
         if (StringUtils.isBlank(content) && !EMPTY_CONTENT.equals(content)) {
             return new ResponseEntity<>("Non valid empty content", HttpStatus.BAD_REQUEST);
         }
+        PageReviewOptions options = PageReviewMapper.fromDto(request.getSearch(), lang, user);
         if (EMPTY_CONTENT.equals(content)) {
-            pageSaveService.savePageWithNoChanges(user, request);
+            pageSaveService.savePageWithNoChanges(pageId, options);
         } else {
-            pageSaveService.savePageContent(user, request);
+            ReviewSection section = request.getPage().getSection();
+            Integer sectionId = section == null ? null : section.getId();
+            LocalDateTime saveTimestamp = WikipediaDateUtils.parseWikipediaTimestamp(
+                request.getPage().getQueryTimestamp()
+            );
+            WikipediaPage page = WikipediaPage
+                .builder()
+                .id(WikipediaPageId.of(lang, pageId))
+                .namespace(WikipediaNamespace.getDefault()) // Not relevant for saving
+                .title(request.getPage().getTitle())
+                .content(request.getPage().getContent())
+                .lastUpdate(saveTimestamp)
+                .queryTimestamp(saveTimestamp)
+                .build();
+            AccessToken accessToken = AccessToken.of(request.getToken(), request.getTokenSecret());
+            pageSaveService.savePageContent(page, sectionId, options, accessToken);
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
