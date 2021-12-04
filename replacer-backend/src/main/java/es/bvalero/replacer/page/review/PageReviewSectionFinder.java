@@ -133,7 +133,7 @@ class PageReviewSectionFinder {
     private Collection<Replacement> translateReplacementsByOffset(
         Collection<Replacement> replacements,
         int sectionOffset
-    ) throws ReplacerException {
+    ) {
         return replacements
             .stream()
             .map(rep -> rep.withStart(rep.getStart() - sectionOffset))

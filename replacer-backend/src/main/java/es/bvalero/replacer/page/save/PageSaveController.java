@@ -30,8 +30,6 @@ public class PageSaveController {
     @Autowired
     private PageSaveService pageSaveService;
 
-    /* SAVE CHANGES */
-
     @ApiOperation(value = "Update page contents and mark as reviewed")
     @PostMapping(value = "/{id}")
     public ResponseEntity<String> save(
