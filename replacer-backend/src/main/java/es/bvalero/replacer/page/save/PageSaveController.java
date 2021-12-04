@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.save;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.UserParameters;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @Loggable(prepend = true, trim = false)
 @RestController
 @RequestMapping("api/pages")
-public class PageController {
+public class PageSaveController {
 
     private static final String EDIT_SUMMARY = "Reemplazos con [[Usuario:Benjavalero/Replacer|Replacer]]";
     private static final String COSMETIC_CHANGES = "mejoras cosméticas";
@@ -52,32 +52,32 @@ public class PageController {
     public ResponseEntity<String> save(
         @PathVariable("id") int pageId,
         @Valid UserParameters params,
-        @ApiParam(value = "Page to update and mark as reviewed") @Valid @RequestBody SavePage savePage
+        @ApiParam(value = "Page to update and mark as reviewed") @Valid @RequestBody PageSaveRequest request
     ) {
-        if (!savePage.getPage().getLang().equals(params.getLang()) || savePage.getPage().getId() != pageId) {
+        if (!request.getPage().getLang().equals(params.getLang()) || request.getPage().getId() != pageId) {
             throw new IllegalArgumentException();
         }
 
-        boolean changed = StringUtils.isNotBlank(savePage.getPage().getContent());
+        boolean changed = StringUtils.isNotBlank(request.getPage().getContent());
         if (changed) {
             // Upload new content to Wikipedia
             try {
                 // Apply cosmetic changes
                 FinderPage page = FinderPage.of(
                     params.getLang(),
-                    savePage.getPage().getContent(),
-                    savePage.getPage().getTitle()
+                    request.getPage().getContent(),
+                    request.getPage().getTitle()
                 );
                 String textToSave = cosmeticFinderService.applyCosmeticChanges(page);
                 boolean applyCosmetics = !textToSave.equals(page.getContent());
-                ReviewSection section = savePage.getPage().getSection();
+                ReviewSection section = request.getPage().getSection();
                 wikipediaService.savePageContent(
                     WikipediaPageId.of(params.getLang(), pageId),
                     section == null ? null : section.getId(),
                     textToSave,
-                    WikipediaDateUtils.parseWikipediaTimestamp(savePage.getPage().getQueryTimestamp()),
-                    buildEditSummary(savePage.getSearch(), applyCosmetics),
-                    AccessToken.of(savePage.getToken(), savePage.getTokenSecret())
+                    WikipediaDateUtils.parseWikipediaTimestamp(request.getPage().getQueryTimestamp()),
+                    buildEditSummary(request.getSearch(), applyCosmetics),
+                    AccessToken.of(request.getToken(), request.getTokenSecret())
                 );
             } catch (ReplacerException e) {
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -85,7 +85,7 @@ public class PageController {
         }
 
         // Mark page as reviewed in the database
-        this.markAsReviewed(pageId, params.getLang(), params.getUser(), savePage.getSearch());
+        this.markAsReviewed(pageId, params.getLang(), params.getUser(), request.getSearch());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

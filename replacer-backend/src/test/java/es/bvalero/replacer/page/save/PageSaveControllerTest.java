@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.save;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -26,8 +26,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = PageController.class)
-class PageControllerTest {
+@WebMvcTest(controllers = PageSaveController.class)
+class PageSaveControllerTest {
 
     private static final String EMPTY_CONTENT = " ";
 
@@ -57,7 +57,7 @@ class PageControllerTest {
         String tokenSecret = "B";
         String type = "T";
         String subtype = "S";
-        SavePage savePage = new SavePage();
+        PageSaveRequest request = new PageSaveRequest();
         ReviewSection reviewSection = new ReviewSection();
         reviewSection.setId(section);
         reviewSection.setTitle("");
@@ -68,13 +68,13 @@ class PageControllerTest {
         reviewPage.setContent(content);
         reviewPage.setSection(reviewSection);
         reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp));
-        savePage.setPage(reviewPage);
+        request.setPage(reviewPage);
         PageReviewSearch search = new PageReviewSearch();
         search.setType(type);
         search.setSubtype(subtype);
-        savePage.setSearch(search);
-        savePage.setToken(token);
-        savePage.setTokenSecret(tokenSecret);
+        request.setSearch(search);
+        request.setToken(token);
+        request.setTokenSecret(tokenSecret);
 
         when(cosmeticFinderService.applyCosmeticChanges(any(FinderPage.class))).thenReturn("C");
 
@@ -82,14 +82,14 @@ class PageControllerTest {
             .perform(
                 post("/api/pages/123?lang=es&user=")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(savePage))
+                    .content(objectMapper.writeValueAsString(request))
             )
             .andExpect(status().isOk());
 
         FinderPage finderPage = FinderPage.of(
             WikipediaLanguage.SPANISH,
-            savePage.getPage().getContent(),
-            savePage.getPage().getTitle()
+            request.getPage().getContent(),
+            request.getPage().getTitle()
         );
         verify(cosmeticFinderService).applyCosmeticChanges(finderPage);
         verify(wikipediaService)
@@ -113,7 +113,7 @@ class PageControllerTest {
         String tokenSecret = "B";
         String type = "T";
         String subtype = "S";
-        SavePage savePage = new SavePage();
+        PageSaveRequest request = new PageSaveRequest();
         ReviewSection reviewSection = new ReviewSection();
         reviewSection.setId(section);
         reviewSection.setTitle("");
@@ -124,19 +124,19 @@ class PageControllerTest {
         reviewPage.setContent(EMPTY_CONTENT);
         reviewPage.setSection(reviewSection);
         reviewPage.setQueryTimestamp(WikipediaDateUtils.formatWikipediaTimestamp(timestamp));
-        savePage.setPage(reviewPage);
+        request.setPage(reviewPage);
         PageReviewSearch search = new PageReviewSearch();
         search.setType(type);
         search.setSubtype(subtype);
-        savePage.setSearch(search);
-        savePage.setToken(token);
-        savePage.setTokenSecret(tokenSecret);
+        request.setSearch(search);
+        request.setToken(token);
+        request.setTokenSecret(tokenSecret);
 
         mvc
             .perform(
                 post("/api/pages/123?lang=es&user=")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(savePage))
+                    .content(objectMapper.writeValueAsString(request))
             )
             .andExpect(status().isOk());
 

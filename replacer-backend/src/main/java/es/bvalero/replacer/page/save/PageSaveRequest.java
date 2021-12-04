@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page;
+package es.bvalero.replacer.page.save;
 
 import es.bvalero.replacer.page.review.PageReviewSearch;
 import es.bvalero.replacer.page.review.ReviewPage;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @ApiModel(description = "Page to update and mark as reviewed. Empty contents is equivalent to review with no changes.")
 @Getter
 @Setter
-class SavePage {
+class PageSaveRequest {
 
     @ApiModelProperty(value = "Page to review", required = true)
     @Valid
