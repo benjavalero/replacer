@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.save;
 
+import static es.bvalero.replacer.page.save.PageSaveController.EMPTY_CONTENT;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.AccessToken;
@@ -22,8 +23,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 class PageSaveServiceTest {
-
-    private static final String EMPTY_CONTENT = " ";
 
     @Mock
     private ReplacementService replacementService;

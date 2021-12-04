@@ -1,5 +1,6 @@
 package es.bvalero.replacer.page.save;
 
+import static es.bvalero.replacer.page.save.PageSaveController.EMPTY_CONTENT;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,9 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(controllers = PageSaveController.class)
 class PageSaveControllerTest {
-
-    // TODO: Make a public constant
-    private static final String EMPTY_CONTENT = " ";
 
     @Autowired
     private MockMvc mvc;

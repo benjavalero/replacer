@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/pages")
 public class PageSaveController {
 
+    static final String EMPTY_CONTENT = " ";
+
     @Autowired
     private PageSaveService pageSaveService;
 
@@ -40,11 +42,14 @@ public class PageSaveController {
             return new ResponseEntity<>("Language mismatch", HttpStatus.BAD_REQUEST);
         }
 
-        boolean changed = StringUtils.isNotBlank(request.getPage().getContent());
-        if (changed) {
-            pageSaveService.savePageContent(user, request);
-        } else {
+        String content = request.getPage().getContent();
+        if (StringUtils.isBlank(content) && !EMPTY_CONTENT.equals(content)) {
+            return new ResponseEntity<>("Non valid empty content", HttpStatus.BAD_REQUEST);
+        }
+        if (EMPTY_CONTENT.equals(content)) {
             pageSaveService.savePageWithNoChanges(user, request);
+        } else {
+            pageSaveService.savePageContent(user, request);
         }
 
         return new ResponseEntity<>(HttpStatus.OK);
