@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.count;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

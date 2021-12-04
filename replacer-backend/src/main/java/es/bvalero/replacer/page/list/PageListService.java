@@ -2,8 +2,8 @@ package es.bvalero.replacer.page.list;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.util.FinderUtils;
+import es.bvalero.replacer.replacement.count.ReplacementCountRepository;
 import es.bvalero.replacer.repository.PageRepository;
-import es.bvalero.replacer.repository.ReplacementCountRepository;
 import java.text.Collator;
 import java.util.Collection;
 import java.util.Objects;

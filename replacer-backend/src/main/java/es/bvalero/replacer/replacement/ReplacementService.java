@@ -2,11 +2,9 @@ package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import java.util.List;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,16 +32,6 @@ public class ReplacementService {
         return customDao.findPageIdsReviewed(lang, replacement, cs);
     }
 
-    public void reviewByPageId(
-        WikipediaLanguage lang,
-        int pageId,
-        @Nullable String type,
-        @Nullable String subtype,
-        String reviewer
-    ) {
-        replacementStatsDao.reviewByPageId(lang, pageId, type, subtype, reviewer);
-    }
-
     ///// STATISTICS
 
     long countReplacementsReviewed(WikipediaLanguage lang) {
@@ -56,10 +44,6 @@ public class ReplacementService {
 
     List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
         return replacementStatsDao.countReplacementsGroupedByReviewer(lang);
-    }
-
-    List<TypeCount> countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException {
-        return replacementStatsDao.countReplacementsGroupedByType(lang).getTypeCounts();
     }
 
     ///// MISSPELLING MANAGER

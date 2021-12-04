@@ -8,6 +8,7 @@ import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.page.review.PageReviewOptionsType;
 import es.bvalero.replacer.replacement.CustomEntity;
 import es.bvalero.replacer.replacement.ReplacementService;
+import es.bvalero.replacer.replacement.count.ReplacementCountRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ class PageSaveService {
 
     @Autowired
     private ReplacementService replacementService;
+
+    @Autowired
+    private ReplacementCountRepository replacementCountRepository;
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -86,11 +90,17 @@ class PageSaveService {
     }
 
     private void markAsReviewedNoType(int pageId, PageReviewOptions options, String reviewer) {
-        replacementService.reviewByPageId(options.getLang(), pageId, null, null, reviewer);
+        replacementCountRepository.reviewByPageId(options.getLang(), pageId, null, null, reviewer);
     }
 
     private void markAsReviewedTypeSubtype(int pageId, PageReviewOptions options, String reviewer) {
-        replacementService.reviewByPageId(options.getLang(), pageId, options.getType(), options.getSubtype(), reviewer);
+        replacementCountRepository.reviewByPageId(
+            options.getLang(),
+            pageId,
+            options.getType(),
+            options.getSubtype(),
+            reviewer
+        );
     }
 
     private void markAsReviewedCustom(int pageId, PageReviewOptions options, String reviewer) {

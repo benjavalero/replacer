@@ -1,8 +1,6 @@
 package es.bvalero.replacer.repository;
 
 import com.jcabi.aspects.Loggable;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
@@ -20,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Repository
 @Qualifier("replacementJdbcRepository")
-class ReplacementJdbcRepository implements ReplacementRepository, ReplacementCountRepository {
+class ReplacementJdbcRepository implements ReplacementRepository {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -50,20 +48,6 @@ class ReplacementJdbcRepository implements ReplacementRepository, ReplacementCou
             .map(r -> Objects.requireNonNull(r.getId()))
             .collect(Collectors.toUnmodifiableSet());
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
-        jdbcTemplate.update(sql, namedParameters);
-    }
-
-    @Override
-    public void reviewAsSystemByType(WikipediaLanguage lang, String type, String subtype) {
-        String sql =
-            "UPDATE replacement SET reviewer=:system, last_update=:now " +
-            "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("system", REVIEWER_SYSTEM)
-            .addValue("now", LocalDate.now())
-            .addValue("lang", lang.getCode())
-            .addValue("type", type)
-            .addValue("subtype", subtype);
         jdbcTemplate.update(sql, namedParameters);
     }
 }

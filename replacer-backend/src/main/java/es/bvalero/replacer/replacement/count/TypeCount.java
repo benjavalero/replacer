@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.count;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,7 +9,7 @@ import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
 
 @Value(staticConstructor = "of")
-class TypeCount implements Comparable<TypeCount> {
+public class TypeCount implements Comparable<TypeCount> {
 
     @ApiModelProperty(value = "Replacement type", required = true, example = "Ortografía")
     @JsonProperty("t")
@@ -24,7 +24,7 @@ class TypeCount implements Comparable<TypeCount> {
         return new ArrayList<>(this.subtypeCounts.values());
     }
 
-    void add(SubtypeCount subtypeCount) {
+    public void add(SubtypeCount subtypeCount) {
         this.subtypeCounts.put(subtypeCount.getSubtype(), subtypeCount);
     }
 

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.count;
 
 import java.util.List;
 import java.util.Map;
@@ -8,7 +8,9 @@ import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.TestOnly;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-class LanguageCount {
+public class LanguageCount {
+
+    // TODO: Public while refactoring
 
     private final Map<String, TypeCount> typeCounts;
 
@@ -22,7 +24,7 @@ class LanguageCount {
         return new LanguageCount(typeCounts);
     }
 
-    List<TypeCount> getTypeCounts() {
+    public List<TypeCount> getTypeCounts() {
         return List.copyOf(this.typeCounts.values());
     }
 
