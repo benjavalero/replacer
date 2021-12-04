@@ -6,21 +6,23 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @ApiModel(description = "Page to update and mark as reviewed. Empty contents is equivalent to review with no changes.")
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
 class PageSaveRequest {
 
     @ApiModelProperty(value = "Page to review", required = true)
     @Valid
+    @NotNull
     private ReviewPage page;
 
     @ApiModelProperty(value = "Search options of the replacements to review", required = true)
     @Valid
+    @NotNull
     private PageReviewSearch search;
 
     @ApiModelProperty(required = true, example = "f8e520e8669a2d65e094d649a96427ff")
