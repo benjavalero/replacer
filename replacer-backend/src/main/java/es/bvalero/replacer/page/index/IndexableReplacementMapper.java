@@ -3,7 +3,7 @@ package es.bvalero.replacer.page.index;
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.page.repository.ReplacementModel;
+import es.bvalero.replacer.repository.ReplacementModel;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;

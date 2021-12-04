@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.page.repository.PageReviewRepository;
+import es.bvalero.replacer.repository.PageReviewRepository;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

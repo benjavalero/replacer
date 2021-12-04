@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.repository;
+package es.bvalero.replacer.repository;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;

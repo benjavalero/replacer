@@ -3,8 +3,8 @@ package es.bvalero.replacer.page.index;
 import static org.mockito.Mockito.anyCollection;
 import static org.mockito.Mockito.verify;
 
-import es.bvalero.replacer.page.repository.PageRepository;
-import es.bvalero.replacer.page.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.PageRepository;
+import es.bvalero.replacer.repository.ReplacementRepository;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

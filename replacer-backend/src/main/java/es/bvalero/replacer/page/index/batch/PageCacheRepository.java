@@ -2,8 +2,8 @@ package es.bvalero.replacer.page.index.batch;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPageId;
-import es.bvalero.replacer.page.repository.PageModel;
-import es.bvalero.replacer.page.repository.PageRepository;
+import es.bvalero.replacer.repository.PageModel;
+import es.bvalero.replacer.repository.PageRepository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.page.repository;
+package es.bvalero.replacer.repository;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;

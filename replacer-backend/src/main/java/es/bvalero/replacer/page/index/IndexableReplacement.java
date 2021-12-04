@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.index;
 
-import static es.bvalero.replacer.page.repository.ReplacementRepository.REVIEWER_SYSTEM;
+import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
 
 import java.time.LocalDate;
 import java.util.Objects;

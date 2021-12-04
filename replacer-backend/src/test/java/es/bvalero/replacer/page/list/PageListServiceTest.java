@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.page.repository.PageRepository;
-import es.bvalero.replacer.page.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.PageRepository;
+import es.bvalero.replacer.repository.ReplacementRepository;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;

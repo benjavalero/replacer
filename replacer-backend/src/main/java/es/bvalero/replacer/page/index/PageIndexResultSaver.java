@@ -1,7 +1,7 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.page.repository.PageRepository;
-import es.bvalero.replacer.page.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.PageRepository;
+import es.bvalero.replacer.repository.ReplacementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
