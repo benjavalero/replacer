@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.PageRepository;
-import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.ReplacementCountRepository;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +21,7 @@ class PageListServiceTest {
     private PageRepository pageRepository;
 
     @Mock
-    private ReplacementRepository replacementRepository;
+    private ReplacementCountRepository replacementCountRepository;
 
     @InjectMocks
     private PageListService pageListService;
@@ -54,6 +54,6 @@ class PageListServiceTest {
     void testReviewAsSystemByType() {
         pageListService.reviewAsSystemByType(WikipediaLanguage.getDefault(), "X", "Y");
 
-        verify(replacementRepository).reviewAsSystemByType(WikipediaLanguage.getDefault(), "X", "Y");
+        verify(replacementCountRepository).reviewAsSystemByType(WikipediaLanguage.getDefault(), "X", "Y");
     }
 }

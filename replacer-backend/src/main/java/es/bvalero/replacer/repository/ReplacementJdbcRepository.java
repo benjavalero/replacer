@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Repository
 @Qualifier("replacementJdbcRepository")
-class ReplacementJdbcRepository implements ReplacementRepository {
+class ReplacementJdbcRepository implements ReplacementRepository, ReplacementCountRepository {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
