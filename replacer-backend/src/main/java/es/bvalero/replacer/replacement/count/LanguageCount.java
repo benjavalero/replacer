@@ -1,6 +1,6 @@
 package es.bvalero.replacer.replacement.count;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import lombok.AccessLevel;
@@ -10,9 +10,10 @@ import org.jetbrains.annotations.TestOnly;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 class LanguageCount {
 
+    // Store internally the type counts in a sorted map
     private final Map<String, TypeCount> typeCounts;
 
-    static LanguageCount build(List<TypeSubtypeCount> counts) {
+    static LanguageCount build(Collection<TypeSubtypeCount> counts) {
         final Map<String, TypeCount> typeCounts = new TreeMap<>();
         for (TypeSubtypeCount count : counts) {
             String type = count.getType();
@@ -22,8 +23,8 @@ class LanguageCount {
         return new LanguageCount(typeCounts);
     }
 
-    List<TypeCount> getTypeCounts() {
-        return List.copyOf(this.typeCounts.values());
+    Collection<TypeCount> getTypeCounts() {
+        return this.typeCounts.values();
     }
 
     @TestOnly

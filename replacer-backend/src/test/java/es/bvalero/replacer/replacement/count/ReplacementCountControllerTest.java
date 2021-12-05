@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import java.util.Collection;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,12 +30,11 @@ class ReplacementCountControllerTest {
 
     @Test
     void testFindReplacementCount() throws Exception {
-        SubtypeCount subCount = SubtypeCount.of("Y", 100);
+        SubtypeCount subCount = SubtypeCount.of("Y", 100L);
         TypeCount count = TypeCount.of("X");
         count.add(subCount);
-        LanguageCount langCount = mock(LanguageCount.class);
-        when(langCount.getTypeCounts()).thenReturn(Collections.singletonList(count));
-        when(replacementCountService.countReplacementsGroupedByType(WikipediaLanguage.SPANISH)).thenReturn(langCount);
+        Collection<TypeCount> counts = Collections.singletonList(count);
+        when(replacementCountService.countReplacementsGroupedByType(WikipediaLanguage.SPANISH)).thenReturn(counts);
 
         mvc
             .perform(get("/api/replacement-types/count?lang=es").contentType(MediaType.APPLICATION_JSON))

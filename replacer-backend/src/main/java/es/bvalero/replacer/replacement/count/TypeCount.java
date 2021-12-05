@@ -2,9 +2,13 @@ package es.bvalero.replacer.replacement.count;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
 
@@ -13,15 +17,17 @@ class TypeCount implements Comparable<TypeCount> {
 
     @ApiModelProperty(value = "Replacement type", required = true, example = "Ortografía")
     @JsonProperty("t")
+    @NonNull
     String type;
 
+    // Store internally the subtype counts in a sorted map
     @Getter(AccessLevel.NONE)
     Map<String, SubtypeCount> subtypeCounts = new TreeMap<>();
 
     @ApiModelProperty(value = "List of subtype counts", required = true)
     @JsonProperty("l")
-    List<SubtypeCount> getSubtypeCounts() {
-        return new ArrayList<>(this.subtypeCounts.values());
+    Collection<SubtypeCount> getSubtypeCounts() {
+        return this.subtypeCounts.values();
     }
 
     void add(SubtypeCount subtypeCount) {

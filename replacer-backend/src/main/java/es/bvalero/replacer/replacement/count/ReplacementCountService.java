@@ -1,8 +1,8 @@
 package es.bvalero.replacer.replacement.count;
 
-import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,12 @@ public class ReplacementCountService {
     // We add synchronization just in case the list is requested while still loading on start.
     private Map<WikipediaLanguage, LanguageCount> replacementCount;
 
-    LanguageCount countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException {
+    Collection<TypeCount> countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException {
+        return this.getLanguageCount(lang).getTypeCounts();
+    }
+
+    @VisibleForTesting
+    LanguageCount getLanguageCount(WikipediaLanguage lang) throws ReplacerException {
         return this.getReplacementCount().get(lang);
     }
 
@@ -77,18 +82,22 @@ public class ReplacementCountService {
     }
 
     @Scheduled(fixedDelayString = "${replacer.page.stats.delay}")
-    public void scheduledUpdateReplacementCount() throws ReplacerException {
+    public void scheduledUpdateReplacementCount() {
         LOGGER.info("Scheduled replacement type counts update");
         this.loadReplacementTypeCounts();
     }
 
-    @Loggable(value = Loggable.TRACE)
-    private synchronized void loadReplacementTypeCounts() throws ReplacerException {
+    private synchronized void loadReplacementTypeCounts() {
         Map<WikipediaLanguage, LanguageCount> map = new EnumMap<>(WikipediaLanguage.class);
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
-            map.put(lang, replacementCountRepository.countReplacementsGroupedByType(lang));
+            map.put(lang, getReplacementsTypeCountsByLang(lang));
         }
         this.replacementCount = map;
         this.notifyAll();
+    }
+
+    private LanguageCount getReplacementsTypeCountsByLang(WikipediaLanguage lang) {
+        Collection<TypeSubtypeCount> typeSubtypeCounts = replacementCountRepository.countReplacementTypesByLang(lang);
+        return LanguageCount.build(typeSubtypeCounts);
     }
 }

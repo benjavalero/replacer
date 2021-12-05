@@ -5,7 +5,7 @@ import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYST
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +26,7 @@ class ReplacementCountJdbcRepository implements ReplacementCountRepository {
 
     @Override
     @Loggable(value = Loggable.TRACE, limit = 10, unit = TimeUnit.SECONDS)
-    public LanguageCount countReplacementsGroupedByType(WikipediaLanguage lang) {
-        return LanguageCount.build(countPagesGroupedByTypeAndSubtype(lang));
-    }
-
-    private List<TypeSubtypeCount> countPagesGroupedByTypeAndSubtype(WikipediaLanguage lang) {
+    public Collection<TypeSubtypeCount> countReplacementTypesByLang(WikipediaLanguage lang) {
         String sql =
             "SELECT type, subtype, COUNT(DISTINCT article_id) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NULL " +

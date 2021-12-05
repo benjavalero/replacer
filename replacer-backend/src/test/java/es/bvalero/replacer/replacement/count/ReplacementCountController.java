@@ -29,6 +29,6 @@ public class ReplacementCountController {
     public Collection<TypeCount> countReplacementsGroupedByType(
         @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang
     ) throws ReplacerException {
-        return replacementCountService.countReplacementsGroupedByType(lang).getTypeCounts();
+        return replacementCountService.countReplacementsGroupedByType(lang);
     }
 }
