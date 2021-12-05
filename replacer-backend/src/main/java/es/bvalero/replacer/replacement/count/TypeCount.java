@@ -9,7 +9,7 @@ import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
 
 @Value(staticConstructor = "of")
-public class TypeCount implements Comparable<TypeCount> {
+class TypeCount implements Comparable<TypeCount> {
 
     @ApiModelProperty(value = "Replacement type", required = true, example = "Ortografía")
     @JsonProperty("t")
@@ -24,7 +24,7 @@ public class TypeCount implements Comparable<TypeCount> {
         return new ArrayList<>(this.subtypeCounts.values());
     }
 
-    public void add(SubtypeCount subtypeCount) {
+    void add(SubtypeCount subtypeCount) {
         this.subtypeCounts.put(subtypeCount.getSubtype(), subtypeCount);
     }
 

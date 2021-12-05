@@ -8,9 +8,7 @@ import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.TestOnly;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class LanguageCount {
-
-    // TODO: Public while refactoring
+class LanguageCount {
 
     private final Map<String, TypeCount> typeCounts;
 
@@ -24,7 +22,7 @@ public class LanguageCount {
         return new LanguageCount(typeCounts);
     }
 
-    public List<TypeCount> getTypeCounts() {
+    List<TypeCount> getTypeCounts() {
         return List.copyOf(this.typeCounts.values());
     }
 

@@ -9,21 +9,19 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-/** Implementation of the replacement repository which maintains a cache of the replacement counts */
+/**
+ * Implementation of the replacement repository which maintains a cache of the replacement counts.
+ * This is the one public which must be used by other services or components.
+ */
 @Slf4j
-@Primary
 @Component
-@Qualifier("replacementCountCacheRepository")
-class ReplacementCountCacheRepository implements ReplacementCountRepository {
+public class ReplacementCountService {
 
     @Autowired
-    @Qualifier("replacementJdbcRepository")
     private ReplacementCountRepository replacementCountRepository;
 
     // Replacement count cache
@@ -32,12 +30,10 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
     // We add synchronization just in case the list is requested while still loading on start.
     private Map<WikipediaLanguage, LanguageCount> replacementCount;
 
-    @Override
-    public LanguageCount countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException {
+    LanguageCount countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException {
         return this.getReplacementCount().get(lang);
     }
 
-    @Override
     public void reviewAsSystemByType(WikipediaLanguage lang, String type, String subtype) {
         this.removeCachedReplacementCount(lang, type, subtype);
         replacementCountRepository.reviewAsSystemByType(lang, type, subtype);
@@ -48,7 +44,6 @@ class ReplacementCountCacheRepository implements ReplacementCountRepository {
         this.replacementCount.get(lang).removeTypeCount(type, subtype);
     }
 
-    @Override
     public void reviewByPageId(
         WikipediaLanguage lang,
         int pageId,

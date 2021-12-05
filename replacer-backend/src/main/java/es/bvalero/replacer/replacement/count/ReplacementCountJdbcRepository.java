@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Loggable(Loggable.TRACE) // To warn about performance issues
 @Transactional
 @Repository
-@Qualifier("replacementCountJdbcRepository")
 class ReplacementCountJdbcRepository implements ReplacementCountRepository {
 
     @Autowired

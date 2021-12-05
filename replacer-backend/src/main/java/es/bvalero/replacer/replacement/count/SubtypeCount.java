@@ -6,9 +6,7 @@ import lombok.Value;
 import lombok.With;
 
 @Value(staticConstructor = "of")
-public class SubtypeCount {
-
-    // TODO: Public while refactoring
+class SubtypeCount {
 
     @ApiModelProperty(value = "Replacement subtype", required = true, example = "habia")
     @JsonProperty("s")

@@ -2,9 +2,6 @@ package es.bvalero.replacer.replacement;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ReplacerException;
-import es.bvalero.replacer.replacement.count.ReplacementCountRepository;
-import es.bvalero.replacer.replacement.count.TypeCount;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,9 +20,6 @@ public class ReplacementController {
 
     @Autowired
     private ReplacementService replacementService;
-
-    @Autowired
-    private ReplacementCountRepository replacementCountRepository;
 
     @ApiOperation(value = "Count the number replacements")
     @GetMapping(value = "/replacements/count")
@@ -46,15 +40,5 @@ public class ReplacementController {
         @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang
     ) {
         return replacementService.countReplacementsGroupedByReviewer(lang);
-    }
-
-    @ApiOperation(
-        value = "List replacement types with the number of pages containing replacement of these types to review"
-    )
-    @GetMapping(value = "/replacement-types/count")
-    public List<TypeCount> countReplacementsGroupedByType(
-        @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang
-    ) throws ReplacerException {
-        return replacementCountRepository.countReplacementsGroupedByType(lang).getTypeCounts();
     }
 }

@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import org.springframework.lang.Nullable;
 
-public interface ReplacementCountRepository {
+interface ReplacementCountRepository {
     LanguageCount countReplacementsGroupedByType(WikipediaLanguage lang) throws ReplacerException;
 
     void reviewAsSystemByType(WikipediaLanguage lang, String type, String subtype);

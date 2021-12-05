@@ -9,7 +9,7 @@ import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.replacement.count.ReplacementCountRepository;
+import es.bvalero.replacer.replacement.count.ReplacementCountService;
 import es.bvalero.replacer.repository.PageReviewRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -67,7 +67,7 @@ class PageReviewTypeSubtypeFinderTest {
     private PageReviewRepository pageReviewRepository;
 
     @Mock
-    private ReplacementCountRepository replacementCountRepository;
+    private ReplacementCountService replacementCountService;
 
     @Mock
     private WikipediaService wikipediaService;

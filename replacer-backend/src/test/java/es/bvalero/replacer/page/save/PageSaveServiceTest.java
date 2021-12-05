@@ -8,7 +8,7 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.replacement.ReplacementService;
-import es.bvalero.replacer.replacement.count.ReplacementCountRepository;
+import es.bvalero.replacer.replacement.count.ReplacementCountService;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -24,7 +24,7 @@ class PageSaveServiceTest {
     private ReplacementService replacementService;
 
     @Mock
-    private ReplacementCountRepository replacementCountRepository;
+    private ReplacementCountService replacementCountService;
 
     @Mock
     private WikipediaService wikipediaService;
@@ -71,7 +71,7 @@ class PageSaveServiceTest {
                 anyString(),
                 eq(accessToken)
             );
-        verify(replacementCountRepository).reviewByPageId(WikipediaLanguage.getDefault(), pageId, null, null, "");
+        verify(replacementCountService).reviewByPageId(WikipediaLanguage.getDefault(), pageId, null, null, "");
     }
 
     @Test
@@ -91,6 +91,6 @@ class PageSaveServiceTest {
                 anyString(),
                 any(AccessToken.class)
             );
-        verify(replacementCountRepository).reviewByPageId(WikipediaLanguage.getDefault(), pageId, type, subtype, "");
+        verify(replacementCountService).reviewByPageId(WikipediaLanguage.getDefault(), pageId, type, subtype, "");
     }
 }

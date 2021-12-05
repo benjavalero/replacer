@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.replacement.count.ReplacementCountRepository;
+import es.bvalero.replacer.replacement.count.ReplacementCountService;
 import es.bvalero.replacer.repository.PageRepository;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,7 +21,7 @@ class PageListServiceTest {
     private PageRepository pageRepository;
 
     @Mock
-    private ReplacementCountRepository replacementCountRepository;
+    private ReplacementCountService replacementCountService;
 
     @InjectMocks
     private PageListService pageListService;
@@ -54,6 +54,6 @@ class PageListServiceTest {
     void testReviewAsSystemByType() {
         pageListService.reviewAsSystemByType(WikipediaLanguage.getDefault(), "X", "Y");
 
-        verify(replacementCountRepository).reviewAsSystemByType(WikipediaLanguage.getDefault(), "X", "Y");
+        verify(replacementCountService).reviewAsSystemByType(WikipediaLanguage.getDefault(), "X", "Y");
     }
 }

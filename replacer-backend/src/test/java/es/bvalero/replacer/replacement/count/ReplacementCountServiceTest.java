@@ -14,17 +14,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class ReplacementCountCacheTest {
+class ReplacementCountServiceTest {
 
     @Mock
     private ReplacementCountRepository replacementCountRepository;
 
     @InjectMocks
-    private ReplacementCountCacheRepository replacementCountCacheRepository;
+    private ReplacementCountService replacementCountService;
 
     @BeforeEach
     public void setUp() {
-        replacementCountCacheRepository = new ReplacementCountCacheRepository();
+        replacementCountService = new ReplacementCountService();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -37,9 +37,9 @@ class ReplacementCountCacheTest {
         List<TypeSubtypeCount> counts = Arrays.asList(count1, count2);
         when(replacementCountRepository.countReplacementsGroupedByType(lang)).thenReturn(LanguageCount.build(counts));
 
-        replacementCountCacheRepository.scheduledUpdateReplacementCount();
+        replacementCountService.scheduledUpdateReplacementCount();
 
-        LanguageCount langCount = replacementCountCacheRepository.countReplacementsGroupedByType(lang);
+        LanguageCount langCount = replacementCountService.countReplacementsGroupedByType(lang);
         assertEquals(1, langCount.size());
         assertTrue(langCount.contains("X"));
         assertEquals(2, langCount.get("X").size());
@@ -47,9 +47,9 @@ class ReplacementCountCacheTest {
         assertEquals(1L, langCount.get("X").get("Z").get().getCount());
 
         // Decrease a replacement count
-        replacementCountCacheRepository.decrementSubtypeCount(lang, "X", "Y");
+        replacementCountService.decrementSubtypeCount(lang, "X", "Y");
 
-        langCount = replacementCountCacheRepository.countReplacementsGroupedByType(lang);
+        langCount = replacementCountService.countReplacementsGroupedByType(lang);
         assertEquals(1, langCount.size());
         assertTrue(langCount.contains("X"));
         assertEquals(2, langCount.get("X").size());
@@ -57,9 +57,9 @@ class ReplacementCountCacheTest {
         assertEquals(1L, langCount.get("X").get("Z").get().getCount());
 
         // Decrease a replacement count emptying it
-        replacementCountCacheRepository.decrementSubtypeCount(lang, "X", "Z");
+        replacementCountService.decrementSubtypeCount(lang, "X", "Z");
 
-        langCount = replacementCountCacheRepository.countReplacementsGroupedByType(lang);
+        langCount = replacementCountService.countReplacementsGroupedByType(lang);
         assertEquals(1, langCount.size());
         assertTrue(langCount.contains("X"));
         assertEquals(1, langCount.get("X").size());
@@ -67,17 +67,17 @@ class ReplacementCountCacheTest {
         assertTrue(langCount.get("X").get("Z").isEmpty());
 
         // Remove a replacement count not existing in cache
-        replacementCountCacheRepository.removeCachedReplacementCount(lang, "A", "B");
+        replacementCountService.removeCachedReplacementCount(lang, "A", "B");
 
-        langCount = replacementCountCacheRepository.countReplacementsGroupedByType(lang);
+        langCount = replacementCountService.countReplacementsGroupedByType(lang);
         assertEquals(1, langCount.size());
         assertTrue(langCount.contains("X"));
         assertEquals(1, langCount.get("X").size());
 
         // Remove a replacement count existing in cache
-        replacementCountCacheRepository.removeCachedReplacementCount(lang, "X", "Y");
+        replacementCountService.removeCachedReplacementCount(lang, "X", "Y");
 
-        langCount = replacementCountCacheRepository.countReplacementsGroupedByType(lang);
+        langCount = replacementCountService.countReplacementsGroupedByType(lang);
         assertTrue(langCount.isEmpty());
     }
 }
