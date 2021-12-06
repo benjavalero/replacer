@@ -4,7 +4,7 @@ import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYST
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import java.util.List;
+import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Loggable(Loggable.TRACE) // To warn about performance issues
 @Repository
 @Transactional
-class ReplacementStatsDaoImpl implements ReplacementStatsDao {
+class ReplacementStatsJdbcRepository implements ReplacementStatsRepository {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -33,7 +33,6 @@ class ReplacementStatsDaoImpl implements ReplacementStatsDao {
         return result == null ? 0L : result;
     }
 
-    // This count is also used to guess the total for the review without type. Not worth to DISTINCT.
     @Override
     public long countReplacementsNotReviewed(WikipediaLanguage lang) {
         String sql = "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
@@ -43,7 +42,7 @@ class ReplacementStatsDaoImpl implements ReplacementStatsDao {
     }
 
     @Override
-    public List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
+    public Collection<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
         String sql =
             "SELECT reviewer, COUNT(*) AS num FROM replacement " +
             "WHERE lang = :lang AND reviewer IS NOT NULL AND reviewer <> :system " +

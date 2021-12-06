@@ -14,17 +14,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class ReplacementStatsDaoProxyTest {
+class ReplacementStatsRepositoryProxyTest {
 
     @Mock
-    private ReplacementStatsDao replacementStatsDao;
+    private ReplacementStatsRepository replacementStatsRepository;
 
     @InjectMocks
-    private ReplacementStatsDaoProxy replacementDaoProxy;
+    private ReplacementStatsRepositoryProxy replacementDaoProxy;
 
     @BeforeEach
     public void setUp() {
-        replacementDaoProxy = new ReplacementStatsDaoProxy();
+        replacementDaoProxy = new ReplacementStatsRepositoryProxy();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -32,7 +32,7 @@ class ReplacementStatsDaoProxyTest {
     void testCountReplacementsReviewed() {
         long count = new Random().nextLong();
 
-        when(replacementStatsDao.countReplacementsReviewed(any(WikipediaLanguage.class))).thenReturn(count);
+        when(replacementStatsRepository.countReplacementsReviewed(any(WikipediaLanguage.class))).thenReturn(count);
 
         assertEquals(count, replacementDaoProxy.countReplacementsReviewed(WikipediaLanguage.SPANISH));
     }
@@ -41,7 +41,7 @@ class ReplacementStatsDaoProxyTest {
     void testCountReplacementsToReview() {
         long count = new Random().nextLong();
 
-        when(replacementStatsDao.countReplacementsNotReviewed(any(WikipediaLanguage.class))).thenReturn(count);
+        when(replacementStatsRepository.countReplacementsNotReviewed(any(WikipediaLanguage.class))).thenReturn(count);
 
         assertEquals(count, replacementDaoProxy.countReplacementsNotReviewed(WikipediaLanguage.SPANISH));
     }
@@ -50,7 +50,8 @@ class ReplacementStatsDaoProxyTest {
     void testCountReplacementsGroupedByReviewer() {
         List<ReviewerCount> result = new ArrayList<>();
 
-        when(replacementStatsDao.countReplacementsGroupedByReviewer(any(WikipediaLanguage.class))).thenReturn(result);
+        when(replacementStatsRepository.countReplacementsGroupedByReviewer(any(WikipediaLanguage.class)))
+            .thenReturn(result);
 
         assertEquals(result, replacementDaoProxy.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH));
     }

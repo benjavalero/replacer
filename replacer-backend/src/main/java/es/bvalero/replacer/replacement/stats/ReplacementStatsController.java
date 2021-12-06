@@ -5,7 +5,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import java.util.List;
+import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +36,7 @@ public class ReplacementStatsController {
 
     @ApiOperation(value = "List users with the number of reviewed replacements")
     @GetMapping(value = "/users/count")
-    public List<ReviewerCount> countReplacementsGroupedByReviewer(
+    public Collection<ReviewerCount> countReplacementsGroupedByReviewer(
         @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang
     ) {
         return replacementStatsService.countReplacementsGroupedByReviewer(lang);

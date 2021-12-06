@@ -1,12 +1,12 @@
 package es.bvalero.replacer.replacement.stats;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import java.util.List;
+import java.util.Collection;
 
-interface ReplacementStatsDao {
+interface ReplacementStatsRepository {
     long countReplacementsReviewed(WikipediaLanguage lang);
 
     long countReplacementsNotReviewed(WikipediaLanguage lang);
 
-    List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang);
+    Collection<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang);
 }

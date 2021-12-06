@@ -1,8 +1,8 @@
 package es.bvalero.replacer.replacement.stats;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import java.util.Collection;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,47 +13,52 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Primary
 @Component
-class ReplacementStatsDaoProxy implements ReplacementStatsDao {
+class ReplacementStatsRepositoryProxy implements ReplacementStatsRepository {
 
     @Autowired
-    private ReplacementStatsDao replacementStatsDao;
+    private ReplacementStatsRepository replacementStatsRepository;
 
     // Statistics caches
-    // The queries in database can be heavy so we preload the counts on start and refresh them periodically.
+    // The queries in database can be heavy, so we preload the counts on start and refresh them periodically.
     // They are not used often so for the moment it is not worth to add synchronization.
     private final Map<WikipediaLanguage, Long> countReviewed = new EnumMap<>(WikipediaLanguage.class);
     private final Map<WikipediaLanguage, Long> countNotReviewed = new EnumMap<>(WikipediaLanguage.class);
-    private final Map<WikipediaLanguage, List<ReviewerCount>> countByReviewer = new EnumMap<>(WikipediaLanguage.class);
+    private final Map<WikipediaLanguage, Collection<ReviewerCount>> countByReviewer = new EnumMap<>(
+        WikipediaLanguage.class
+    );
 
     /* STATISTICS */
 
     @Override
     public long countReplacementsReviewed(WikipediaLanguage lang) {
-        return this.countReviewed.computeIfAbsent(lang, l -> this.replacementStatsDao.countReplacementsReviewed(l));
+        return this.countReviewed.computeIfAbsent(
+                lang,
+                l -> this.replacementStatsRepository.countReplacementsReviewed(l)
+            );
     }
 
     @Override
     public long countReplacementsNotReviewed(WikipediaLanguage lang) {
         return this.countNotReviewed.computeIfAbsent(
                 lang,
-                l -> this.replacementStatsDao.countReplacementsNotReviewed(l)
+                l -> this.replacementStatsRepository.countReplacementsNotReviewed(l)
             );
     }
 
     @Override
-    public List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
+    public Collection<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
         return this.countByReviewer.computeIfAbsent(
                 lang,
-                l -> this.replacementStatsDao.countReplacementsGroupedByReviewer(l)
+                l -> this.replacementStatsRepository.countReplacementsGroupedByReviewer(l)
             );
     }
 
     @Scheduled(fixedDelayString = "${replacer.page.stats.delay}")
     public void scheduledUpdateStatistics() {
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {
-            this.countReviewed.put(lang, this.replacementStatsDao.countReplacementsReviewed(lang));
-            this.countNotReviewed.put(lang, this.replacementStatsDao.countReplacementsNotReviewed(lang));
-            this.countByReviewer.put(lang, this.replacementStatsDao.countReplacementsGroupedByReviewer(lang));
+            this.countReviewed.put(lang, this.replacementStatsRepository.countReplacementsReviewed(lang));
+            this.countNotReviewed.put(lang, this.replacementStatsRepository.countReplacementsNotReviewed(lang));
+            this.countByReviewer.put(lang, this.replacementStatsRepository.countReplacementsGroupedByReviewer(lang));
         }
     }
 }
