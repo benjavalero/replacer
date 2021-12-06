@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.stats;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -18,45 +18,45 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = ReplacementController.class)
-class ReplacementControllerTest {
+@WebMvcTest(controllers = ReplacementStatsController.class)
+class ReplacementStatsControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private ReplacementService replacementService;
+    private ReplacementStatsService replacementStatsService;
 
     @Test
     void testCountReplacementsToReview() throws Exception {
         long count = 100;
-        when(replacementService.countReplacementsNotReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
+        when(replacementStatsService.countReplacementsNotReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
 
         mvc
             .perform(get("/api/replacements/count?reviewed=false&lang=es"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.count", is(Long.valueOf(count).intValue())));
 
-        verify(replacementService).countReplacementsNotReviewed(WikipediaLanguage.SPANISH);
+        verify(replacementStatsService).countReplacementsNotReviewed(WikipediaLanguage.SPANISH);
     }
 
     @Test
     void testCountReplacementsReviewed() throws Exception {
         long count = 100;
-        when(replacementService.countReplacementsReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
+        when(replacementStatsService.countReplacementsReviewed(WikipediaLanguage.SPANISH)).thenReturn(count);
 
         mvc
             .perform(get("/api/replacements/count?reviewed=true&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.count", is(Long.valueOf(count).intValue())));
 
-        verify(replacementService).countReplacementsReviewed(WikipediaLanguage.SPANISH);
+        verify(replacementStatsService).countReplacementsReviewed(WikipediaLanguage.SPANISH);
     }
 
     @Test
     void testCountReplacementsGroupedByReviewer() throws Exception {
         ReviewerCount count = ReviewerCount.of("X", 100);
-        when(replacementService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH))
+        when(replacementStatsService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH))
             .thenReturn(Collections.singletonList(count));
 
         mvc
@@ -65,6 +65,6 @@ class ReplacementControllerTest {
             .andExpect(jsonPath("$[0].reviewer", is("X")))
             .andExpect(jsonPath("$[0].count", is(100)));
 
-        verify(replacementService).countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH);
+        verify(replacementStatsService).countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH);
     }
 }

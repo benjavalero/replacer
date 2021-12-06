@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.stats;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.EnumMap;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Primary
 @Component
-class ReplacementDaoProxy implements ReplacementStatsDao {
+class ReplacementStatsDaoProxy implements ReplacementStatsDao {
 
     @Autowired
     private ReplacementStatsDao replacementStatsDao;

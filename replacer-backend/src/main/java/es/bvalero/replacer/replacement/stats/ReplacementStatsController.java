@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.stats;
 
 import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 @Loggable(skipResult = true)
 @RestController
 @RequestMapping("api")
-public class ReplacementController {
+public class ReplacementStatsController {
 
     @Autowired
-    private ReplacementService replacementService;
+    private ReplacementStatsService replacementStatsService;
 
     @ApiOperation(value = "Count the number replacements")
     @GetMapping(value = "/replacements/count")
@@ -29,8 +29,8 @@ public class ReplacementController {
     ) {
         return ReplacementCount.of(
             reviewed
-                ? replacementService.countReplacementsReviewed(lang)
-                : replacementService.countReplacementsNotReviewed(lang)
+                ? replacementStatsService.countReplacementsReviewed(lang)
+                : replacementStatsService.countReplacementsNotReviewed(lang)
         );
     }
 
@@ -39,6 +39,6 @@ public class ReplacementController {
     public List<ReviewerCount> countReplacementsGroupedByReviewer(
         @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang
     ) {
-        return replacementService.countReplacementsGroupedByReviewer(lang);
+        return replacementStatsService.countReplacementsGroupedByReviewer(lang);
     }
 }

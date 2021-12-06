@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.stats;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;

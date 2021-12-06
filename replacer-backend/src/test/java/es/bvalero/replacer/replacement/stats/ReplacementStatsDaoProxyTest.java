@@ -1,4 +1,4 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.replacement.stats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.any;
@@ -14,17 +14,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class ReplacementDaoProxyTest {
+class ReplacementStatsDaoProxyTest {
 
     @Mock
     private ReplacementStatsDao replacementStatsDao;
 
     @InjectMocks
-    private ReplacementDaoProxy replacementDaoProxy;
+    private ReplacementStatsDaoProxy replacementDaoProxy;
 
     @BeforeEach
     public void setUp() {
-        replacementDaoProxy = new ReplacementDaoProxy();
+        replacementDaoProxy = new ReplacementStatsDaoProxy();
         MockitoAnnotations.initMocks(this);
     }
 

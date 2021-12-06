@@ -14,9 +14,6 @@ public class ReplacementService {
     private ReplacementDao replacementDao;
 
     @Autowired
-    private ReplacementStatsDao replacementStatsDao;
-
-    @Autowired
     private CustomDao customDao;
 
     ///// CRUD
@@ -30,20 +27,6 @@ public class ReplacementService {
     @Loggable(value = Loggable.DEBUG, prepend = true)
     public List<Integer> findPageIdsReviewedByReplacement(WikipediaLanguage lang, String replacement, boolean cs) {
         return customDao.findPageIdsReviewed(lang, replacement, cs);
-    }
-
-    ///// STATISTICS
-
-    long countReplacementsReviewed(WikipediaLanguage lang) {
-        return replacementStatsDao.countReplacementsReviewed(lang);
-    }
-
-    public long countReplacementsNotReviewed(WikipediaLanguage lang) {
-        return replacementStatsDao.countReplacementsNotReviewed(lang);
-    }
-
-    List<ReviewerCount> countReplacementsGroupedByReviewer(WikipediaLanguage lang) {
-        return replacementStatsDao.countReplacementsGroupedByReviewer(lang);
     }
 
     ///// MISSPELLING MANAGER
