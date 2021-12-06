@@ -1,7 +1,8 @@
 package es.bvalero.replacer.replacement.stats;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,7 +56,7 @@ class ReplacementStatsControllerTest {
 
     @Test
     void testCountReplacementsGroupedByReviewer() throws Exception {
-        ReviewerCount count = ReviewerCount.of("X", 100);
+        ReviewerCount count = ReviewerCount.of("X", 100L);
         when(replacementStatsService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH))
             .thenReturn(Collections.singletonList(count));
 

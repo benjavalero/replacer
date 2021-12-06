@@ -14,17 +14,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class ReplacementStatsRepositoryProxyTest {
+class ReplacementStatsServiceTest {
 
     @Mock
     private ReplacementStatsRepository replacementStatsRepository;
 
     @InjectMocks
-    private ReplacementStatsRepositoryProxy replacementDaoProxy;
+    private ReplacementStatsService replacementDaoProxy;
 
     @BeforeEach
     public void setUp() {
-        replacementDaoProxy = new ReplacementStatsRepositoryProxy();
+        replacementDaoProxy = new ReplacementStatsService();
         MockitoAnnotations.initMocks(this);
     }
 
