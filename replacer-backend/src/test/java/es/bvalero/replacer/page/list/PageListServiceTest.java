@@ -1,11 +1,12 @@
 package es.bvalero.replacer.page.list;
 
+import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.replacement.count.ReplacementCountService;
 import es.bvalero.replacer.repository.PageRepository;
+import es.bvalero.replacer.repository.ReplacementRepository;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +22,7 @@ class PageListServiceTest {
     private PageRepository pageRepository;
 
     @Mock
-    private ReplacementCountService replacementCountService;
+    private ReplacementRepository replacementRepository;
 
     @InjectMocks
     private PageListService pageListService;
@@ -54,6 +55,6 @@ class PageListServiceTest {
     void testReviewAsSystemByType() {
         pageListService.reviewAsSystemByType(WikipediaLanguage.getDefault(), "X", "Y");
 
-        verify(replacementCountService).reviewAsSystemByType(WikipediaLanguage.getDefault(), "X", "Y");
+        verify(replacementRepository).updateReviewerByType(WikipediaLanguage.getDefault(), "X", "Y", REVIEWER_SYSTEM);
     }
 }

@@ -3,6 +3,7 @@ package es.bvalero.replacer.replacement.count;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.load.ObsoleteMisspellingListener;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
+import es.bvalero.replacer.repository.ReplacementRepository;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 class ObsoleteReplacementListener extends ObsoleteMisspellingListener {
 
     @Autowired
-    private ReplacementCountService replacementCountService;
+    private ReplacementRepository replacementRepository;
 
     @Override
     protected void processObsoleteReplacementTypes(
@@ -19,6 +20,6 @@ class ObsoleteReplacementListener extends ObsoleteMisspellingListener {
         ReplacementType type,
         Collection<String> subtypes
     ) {
-        replacementCountService.removeReplacementsByType(lang, type.getLabel(), subtypes);
+        replacementRepository.removeReplacementsByType(lang, type.getLabel(), subtypes);
     }
 }

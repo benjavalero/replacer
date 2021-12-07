@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReplacementCountController {
 
     @Autowired
-    private ReplacementCountService replacementCountService;
+    private ReplacementCacheRepository replacementCacheRepository;
 
     @ApiOperation(
         value = "List replacement types with the number of pages containing replacement of these types to review"
@@ -29,6 +29,8 @@ public class ReplacementCountController {
     public Collection<TypeCount> countReplacementsGroupedByType(
         @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang
     ) throws ReplacerException {
-        return replacementCountService.countReplacementsGroupedByType(lang);
+        // Repositories should never be called in a Controller
+        // In this case we make an exception as we are actually calling the cached implementation
+        return replacementCacheRepository.countReplacementsGroupedByType(lang);
     }
 }

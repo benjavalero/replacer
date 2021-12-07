@@ -26,7 +26,7 @@ class ReplacementCountControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private ReplacementCountService replacementCountService;
+    private ReplacementCacheRepository replacementCacheRepository;
 
     @Test
     void testFindReplacementCount() throws Exception {
@@ -34,7 +34,7 @@ class ReplacementCountControllerTest {
         TypeCount count = TypeCount.of("X");
         count.add(subCount);
         Collection<TypeCount> counts = Collections.singletonList(count);
-        when(replacementCountService.countReplacementsGroupedByType(WikipediaLanguage.SPANISH)).thenReturn(counts);
+        when(replacementCacheRepository.countReplacementsGroupedByType(WikipediaLanguage.SPANISH)).thenReturn(counts);
 
         mvc
             .perform(get("/api/replacement-types/count?lang=es").contentType(MediaType.APPLICATION_JSON))
@@ -43,6 +43,6 @@ class ReplacementCountControllerTest {
             .andExpect(jsonPath("$[0].l[0].s", is("Y")))
             .andExpect(jsonPath("$[0].l[0].c", is(100)));
 
-        verify(replacementCountService).countReplacementsGroupedByType(WikipediaLanguage.SPANISH);
+        verify(replacementCacheRepository).countReplacementsGroupedByType(WikipediaLanguage.SPANISH);
     }
 }

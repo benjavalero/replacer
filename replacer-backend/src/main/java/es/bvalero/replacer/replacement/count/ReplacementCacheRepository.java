@@ -1,9 +1,8 @@
 package es.bvalero.replacer.replacement.count;
 
-import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
-
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.repository.ReplacementModel;
 import es.bvalero.replacer.repository.ReplacementRepository;
 import es.bvalero.replacer.repository.TypeSubtypeCount;
 import java.util.Collection;
@@ -13,19 +12,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service to retrieve and cache the replacement counts by type.
+ * Implementation of the replacement repository which maintains a cache of the replacement counts.
  * This is the one public which must be used by other services or components.
  */
 @Slf4j
-@Component
-public class ReplacementCountService {
+@Primary
+@Transactional
+@Repository
+class ReplacementCacheRepository implements ReplacementRepository {
 
     @Autowired
+    @Qualifier("replacementJdbcRepository")
     private ReplacementRepository replacementRepository;
 
     // Replacement count cache
@@ -43,9 +48,10 @@ public class ReplacementCountService {
         return this.getReplacementCount().get(lang);
     }
 
-    public void reviewAsSystemByType(WikipediaLanguage lang, String type, String subtype) {
+    @Override
+    public void updateReviewerByType(WikipediaLanguage lang, String type, String subtype, String reviewer) {
         this.removeCachedReplacementCount(lang, type, subtype);
-        replacementRepository.updateReviewerByType(lang, type, subtype, REVIEWER_SYSTEM);
+        replacementRepository.updateReviewerByType(lang, type, subtype, reviewer);
     }
 
     @VisibleForTesting
@@ -53,7 +59,8 @@ public class ReplacementCountService {
         this.replacementCount.get(lang).removeTypeCount(type, subtype);
     }
 
-    public void reviewByPageId(
+    @Override
+    public void updateReviewerByPageAndType(
         WikipediaLanguage lang,
         int pageId,
         @Nullable String type,
@@ -71,7 +78,8 @@ public class ReplacementCountService {
         this.replacementCount.get(lang).decrementSubtypeCount(type, subtype);
     }
 
-    void removeReplacementsByType(WikipediaLanguage lang, String type, Collection<String> subtypes) {
+    @Override
+    public void removeReplacementsByType(WikipediaLanguage lang, String type, Collection<String> subtypes) {
         subtypes.forEach(subtype -> removeCachedReplacementCount(lang, type, subtype));
         this.replacementRepository.removeReplacementsByType(lang, type, subtypes);
     }
@@ -106,7 +114,49 @@ public class ReplacementCountService {
     }
 
     private LanguageCount getReplacementsTypeCountsByLang(WikipediaLanguage lang) {
-        Collection<TypeSubtypeCount> typeSubtypeCounts = replacementRepository.countReplacementsByType(lang);
+        Collection<TypeSubtypeCount> typeSubtypeCounts = countReplacementsByType(lang);
         return LanguageCount.build(typeSubtypeCounts);
+    }
+
+    /* NOT OVERWRITTEN */
+
+    @Override
+    public void addReplacements(Collection<ReplacementModel> replacements) {
+        replacementRepository.addReplacements(replacements);
+    }
+
+    @Override
+    public void updateReplacements(Collection<ReplacementModel> replacements) {
+        replacementRepository.updateReplacements(replacements);
+    }
+
+    @Override
+    public void removeReplacements(Collection<ReplacementModel> replacements) {
+        replacementRepository.removeReplacements(replacements);
+    }
+
+    @Override
+    public long countReplacementsReviewed(WikipediaLanguage lang) {
+        return replacementRepository.countReplacementsReviewed(lang);
+    }
+
+    @Override
+    public long countReplacementsNotReviewed(WikipediaLanguage lang) {
+        return replacementRepository.countReplacementsNotReviewed(lang);
+    }
+
+    @Override
+    public Map<String, Long> countReplacementsByReviewer(WikipediaLanguage lang) {
+        return replacementRepository.countReplacementsByReviewer(lang);
+    }
+
+    @Override
+    public Collection<TypeSubtypeCount> countReplacementsByType(WikipediaLanguage lang) {
+        return replacementRepository.countReplacementsByType(lang);
+    }
+
+    @Override
+    public long findReplacementToReview(WikipediaLanguage lang, long chunkSize) {
+        return replacementRepository.findReplacementToReview(lang, chunkSize);
     }
 }

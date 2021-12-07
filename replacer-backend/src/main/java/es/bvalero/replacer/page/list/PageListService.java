@@ -1,9 +1,11 @@
 package es.bvalero.replacer.page.list;
 
+import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
+
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.util.FinderUtils;
-import es.bvalero.replacer.replacement.count.ReplacementCountService;
 import es.bvalero.replacer.repository.PageRepository;
+import es.bvalero.replacer.repository.ReplacementRepository;
 import java.text.Collator;
 import java.util.Collection;
 import java.util.Objects;
@@ -18,7 +20,7 @@ class PageListService {
     private PageRepository pageRepository;
 
     @Autowired
-    private ReplacementCountService replacementCountService;
+    private ReplacementRepository replacementRepository;
 
     Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, String type, String subtype) {
         return pageRepository
@@ -31,6 +33,6 @@ class PageListService {
 
     void reviewAsSystemByType(WikipediaLanguage lang, String type, String subtype) {
         // These reviewed replacements will be cleaned up in the next dump indexing
-        replacementCountService.reviewAsSystemByType(lang, type, subtype);
+        replacementRepository.updateReviewerByType(lang, type, subtype, REVIEWER_SYSTEM);
     }
 }
