@@ -14,8 +14,8 @@ import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
-import es.bvalero.replacer.replacement.CustomEntity;
-import es.bvalero.replacer.replacement.ReplacementService;
+import es.bvalero.replacer.repository.CustomModel;
+import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ class PageReviewCustomFinderTest {
     private static final int CACHE_SIZE = 3;
 
     @Mock
-    private ReplacementService replacementService;
+    private CustomRepository customRepository;
 
     @Mock
     private WikipediaService wikipediaService;
@@ -70,9 +70,8 @@ class PageReviewCustomFinderTest {
         assertTrue(review.isEmpty());
 
         verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
-        verify(replacementService, never())
-            .findPageIdsReviewedByReplacement(any(WikipediaLanguage.class), anyString(), anyBoolean());
-        verify(replacementService, never()).insert(any(CustomEntity.class));
+        verify(customRepository, never()).findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean());
+        verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -90,9 +89,7 @@ class PageReviewCustomFinderTest {
         // Mocks
         when(wikipediaService.searchByText(any(WikipediaLanguage.class), anyString(), anyBoolean(), anyInt(), anyInt()))
             .thenReturn(searchResult);
-        when(
-            replacementService.findPageIdsReviewedByReplacement(any(WikipediaLanguage.class), anyString(), anyBoolean())
-        )
+        when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(List.of(pageId));
 
         // Only one call
@@ -102,8 +99,8 @@ class PageReviewCustomFinderTest {
 
         // Verifications
         verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
-        verify(replacementService).findPageIdsReviewedByReplacement(lang, replacement, true);
-        verify(replacementService, never()).insert(any(CustomEntity.class));
+        verify(customRepository).findPageIdsReviewed(lang, replacement, true);
+        verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -141,9 +138,7 @@ class PageReviewCustomFinderTest {
         // Mocks
         when(wikipediaService.searchByText(any(WikipediaLanguage.class), anyString(), anyBoolean(), anyInt(), anyInt()))
             .thenReturn(searchResult);
-        when(
-            replacementService.findPageIdsReviewedByReplacement(any(WikipediaLanguage.class), anyString(), anyBoolean())
-        )
+        when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
         when(wikipediaService.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
         when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
@@ -168,9 +163,9 @@ class PageReviewCustomFinderTest {
 
         // Verifications
         verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
-        verify(replacementService).findPageIdsReviewedByReplacement(lang, replacement, true);
+        verify(customRepository).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaService).getPageById(wikipediaPageId);
-        verify(replacementService, never()).insert(any(CustomEntity.class));
+        verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -200,9 +195,7 @@ class PageReviewCustomFinderTest {
         // Mocks
         when(wikipediaService.searchByText(any(WikipediaLanguage.class), anyString(), anyBoolean(), anyInt(), anyInt()))
             .thenReturn(searchResult);
-        when(
-            replacementService.findPageIdsReviewedByReplacement(any(WikipediaLanguage.class), anyString(), anyBoolean())
-        )
+        when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
         when(wikipediaService.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
         when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
@@ -215,9 +208,9 @@ class PageReviewCustomFinderTest {
 
         // Verifications
         verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
-        verify(replacementService).findPageIdsReviewedByReplacement(lang, replacement, true);
+        verify(customRepository).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaService).getPageById(wikipediaPageId);
-        verify(replacementService, never()).insert(any(CustomEntity.class));
+        verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -254,9 +247,7 @@ class PageReviewCustomFinderTest {
         // Mocks
         when(wikipediaService.searchByText(any(WikipediaLanguage.class), anyString(), anyBoolean(), anyInt(), anyInt()))
             .thenReturn(searchResult);
-        when(
-            replacementService.findPageIdsReviewedByReplacement(any(WikipediaLanguage.class), anyString(), anyBoolean())
-        )
+        when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(List.of(pageId1));
         when(wikipediaService.getPageById(any(WikipediaPageId.class))).thenReturn(Optional.of(page));
         when(customReplacementFinderService.findCustomReplacements(any(WikipediaPage.class), any(CustomOptions.class)))
@@ -277,9 +268,9 @@ class PageReviewCustomFinderTest {
 
         // Verifications
         verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
-        verify(replacementService).findPageIdsReviewedByReplacement(lang, replacement, true);
+        verify(customRepository).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaService).getPageById(wikipediaPageId2);
-        verify(replacementService, never()).insert(any(CustomEntity.class));
+        verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -296,9 +287,7 @@ class PageReviewCustomFinderTest {
         when(wikipediaService.searchByText(any(WikipediaLanguage.class), anyString(), anyBoolean(), anyInt(), anyInt()))
             .thenReturn(WikipediaSearchResult.of(4, List.of(12, 23, 34)))
             .thenReturn(WikipediaSearchResult.of(4, List.of(45)));
-        when(
-            replacementService.findPageIdsReviewedByReplacement(any(WikipediaLanguage.class), anyString(), anyBoolean())
-        )
+        when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(List.of(12, 23, 34, 45));
 
         // Only call
@@ -309,9 +298,9 @@ class PageReviewCustomFinderTest {
         // Verifications
         verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
         verify(wikipediaService).searchByText(lang, replacement, true, 3, CACHE_SIZE);
-        verify(replacementService).findPageIdsReviewedByReplacement(lang, replacement, true);
+        verify(customRepository).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaService, never()).getPageById(any(WikipediaPageId.class));
-        verify(replacementService, never()).insert(any(CustomEntity.class));
+        verify(customRepository, never()).addCustom(any(CustomModel.class));
     }
 
     @Test
@@ -354,9 +343,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(WikipediaSearchResult.of(2, List.of(2, 4))) // Call 4
             .thenReturn(WikipediaSearchResult.of(2, List.of(2, 4))); // Call 5
 
-        when(
-            replacementService.findPageIdsReviewedByReplacement(any(WikipediaLanguage.class), anyString(), anyBoolean())
-        )
+        when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList()) // Call 1
             .thenReturn(List.of(1, 2, 3)) // Call 4
             .thenReturn(List.of(1, 2, 3, 4)); // Call 5
@@ -426,7 +413,7 @@ class PageReviewCustomFinderTest {
 
         // Verifications
         verify(wikipediaService, times(2)).searchByText(lang, replacement, true, 0, CACHE_SIZE);
-        verify(replacementService, times(2)).findPageIdsReviewedByReplacement(lang, replacement, true);
+        verify(customRepository, times(2)).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaService, times(4)).getPageById(any(WikipediaPageId.class));
     }
 
@@ -460,9 +447,7 @@ class PageReviewCustomFinderTest {
             .thenReturn(WikipediaSearchResult.of(4, List.of(4)))
             .thenReturn(WikipediaSearchResult.of(4, Collections.emptyList()));
 
-        when(
-            replacementService.findPageIdsReviewedByReplacement(any(WikipediaLanguage.class), anyString(), anyBoolean())
-        )
+        when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());
 
         when(wikipediaService.getPageById(any(WikipediaPageId.class)))
@@ -483,7 +468,7 @@ class PageReviewCustomFinderTest {
         verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
         verify(wikipediaService).searchByText(lang, replacement, true, CACHE_SIZE, CACHE_SIZE);
         verify(wikipediaService).searchByText(lang, replacement, true, 2 * CACHE_SIZE, CACHE_SIZE);
-        verify(replacementService, times(2)).findPageIdsReviewedByReplacement(lang, replacement, true);
+        verify(customRepository, times(2)).findPageIdsReviewed(lang, replacement, true);
         verify(wikipediaService, times(4)).getPageById(any(WikipediaPageId.class));
     }
 

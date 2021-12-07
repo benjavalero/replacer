@@ -6,8 +6,8 @@ import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.page.review.PageReviewOptionsType;
-import es.bvalero.replacer.replacement.CustomEntity;
-import es.bvalero.replacer.replacement.ReplacementService;
+import es.bvalero.replacer.repository.CustomModel;
+import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDate;
@@ -22,10 +22,10 @@ class PageSaveService {
     private static final String COSMETIC_CHANGES = "mejoras cosméticas";
 
     @Autowired
-    private ReplacementService replacementService;
+    private ReplacementRepository replacementRepository;
 
     @Autowired
-    private ReplacementRepository replacementRepository;
+    private CustomRepository customRepository;
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -108,17 +108,17 @@ class PageSaveService {
         String subtype = options.getSubtype();
         boolean cs = options.getCs() != null && Boolean.TRUE.equals(options.getCs());
         assert subtype != null;
-        replacementService.insert(buildCustomReviewed(pageId, options.getLang(), subtype, cs, reviewer));
+        customRepository.addCustom(buildCustomReviewed(pageId, options.getLang(), subtype, cs, reviewer));
     }
 
-    private CustomEntity buildCustomReviewed(
+    private CustomModel buildCustomReviewed(
         int pageId,
         WikipediaLanguage lang,
         String replacement,
         boolean cs,
         String reviewer
     ) {
-        return CustomEntity
+        return CustomModel
             .builder()
             .lang(lang.getCode())
             .pageId(pageId)

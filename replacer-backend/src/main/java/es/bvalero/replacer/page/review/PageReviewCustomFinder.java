@@ -9,7 +9,7 @@ import es.bvalero.replacer.finder.replacement.ReplacementMapper;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
-import es.bvalero.replacer.replacement.ReplacementService;
+import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
@@ -23,10 +23,10 @@ import org.springframework.stereotype.Component;
 class PageReviewCustomFinder extends PageReviewFinder {
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private CustomRepository customRepository;
 
     @Autowired
-    private ReplacementService replacementService;
+    private WikipediaService wikipediaService;
 
     @Autowired
     private CustomReplacementFinderService customReplacementFinderService;
@@ -51,7 +51,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
             // Calculate this out of the loop only if needed the first time
             List<Integer> reviewedIds = new ArrayList<>();
             if (!pageIds.isEmpty()) {
-                reviewedIds.addAll(replacementService.findPageIdsReviewedByReplacement(options.getLang(), subtype, cs));
+                reviewedIds.addAll(customRepository.findPageIdsReviewed(options.getLang(), subtype, cs));
             }
 
             while (totalToReview >= 0) {

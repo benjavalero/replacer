@@ -7,7 +7,7 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.cosmetic.CosmeticFinderService;
 import es.bvalero.replacer.page.review.PageReviewOptions;
-import es.bvalero.replacer.replacement.ReplacementService;
+import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.repository.ReplacementRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -21,10 +21,10 @@ import org.mockito.MockitoAnnotations;
 class PageSaveServiceTest {
 
     @Mock
-    private ReplacementService replacementService;
+    private ReplacementRepository replacementRepository;
 
     @Mock
-    private ReplacementRepository replacementRepository;
+    private CustomRepository customRepository;
 
     @Mock
     private WikipediaService wikipediaService;
