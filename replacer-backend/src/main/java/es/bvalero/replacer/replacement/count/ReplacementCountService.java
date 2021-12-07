@@ -71,6 +71,11 @@ public class ReplacementCountService {
         this.replacementCount.get(lang).decrementSubtypeCount(type, subtype);
     }
 
+    void removeReplacementsByType(WikipediaLanguage lang, String type, Collection<String> subtypes) {
+        subtypes.forEach(subtype -> removeCachedReplacementCount(lang, type, subtype));
+        this.replacementRepository.removeReplacementsByType(lang, type, subtypes);
+    }
+
     /* SCHEDULED UPDATE OF CACHE */
 
     private synchronized Map<WikipediaLanguage, LanguageCount> getReplacementCount() throws ReplacerException {

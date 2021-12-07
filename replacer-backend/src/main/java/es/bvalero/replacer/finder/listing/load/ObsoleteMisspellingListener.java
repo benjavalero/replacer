@@ -1,33 +1,26 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.finder.listing.load;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.Misspelling;
-import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
-import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.repository.ReplacementRepository;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Slf4j
-@Component
-public class ObsoleteMisspellingListener implements PropertyChangeListener {
+public abstract class ObsoleteMisspellingListener implements PropertyChangeListener {
 
     @Autowired
     private SimpleMisspellingLoader simpleMisspellingLoader;
 
     @Autowired
     private ComposedMisspellingLoader composedMisspellingLoader;
-
-    @Autowired
-    private ReplacementRepository replacementRepository;
 
     @PostConstruct
     public void init() {
@@ -66,8 +59,14 @@ public class ObsoleteMisspellingListener implements PropertyChangeListener {
                     misspellingType,
                     oldWords
                 );
-                replacementRepository.removeReplacementsByType(lang, misspellingType.getLabel(), oldWords);
+                processObsoleteReplacementTypes(lang, misspellingType, oldWords);
             }
         }
     }
+
+    protected abstract void processObsoleteReplacementTypes(
+        WikipediaLanguage lang,
+        ReplacementType type,
+        Collection<String> subtypes
+    );
 }

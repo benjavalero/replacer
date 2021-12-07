@@ -1,41 +1,26 @@
-package es.bvalero.replacer.replacement;
+package es.bvalero.replacer.finder.listing.load;
 
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
-import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
-import es.bvalero.replacer.repository.ReplacementRepository;
 import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.collections4.multimap.HashSetValuedHashMap;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 
 class ObsoleteMisspellingListenerTest {
 
     private static final SetValuedMap<WikipediaLanguage, String> EMPTY_MAP = new HashSetValuedHashMap<>();
 
-    @Mock
-    private ReplacementRepository replacementRepository;
-
-    @InjectMocks
-    private ObsoleteMisspellingListener obsoleteMisspellingListener;
-
-    @BeforeEach
-    public void setUp() {
-        obsoleteMisspellingListener = new ObsoleteMisspellingListener();
-        MockitoAnnotations.initMocks(this);
-    }
-
     @Test
     void testDeleteObsoleteMisspellings() {
+        ObsoleteMisspellingListener obsoleteMisspellingListener = Mockito.spy(ObsoleteMisspellingListener.class);
+
         SimpleMisspelling misspelling1 = SimpleMisspelling.ofCaseInsensitive("A", "B");
         SimpleMisspelling misspelling2 = SimpleMisspelling.ofCaseInsensitive("B", "C");
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> map1 = new HashSetValuedHashMap<>();
@@ -46,8 +31,8 @@ class ObsoleteMisspellingListenerTest {
             new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, EMPTY_MAP, map1)
         );
 
-        verify(replacementRepository, times(0))
-            .removeReplacementsByType(any(WikipediaLanguage.class), anyString(), anySet());
+        verify(obsoleteMisspellingListener, times(0))
+            .processObsoleteReplacementTypes(any(WikipediaLanguage.class), any(ReplacementType.class), anySet());
 
         SimpleMisspelling misspelling3 = SimpleMisspelling.ofCaseInsensitive("C", "D");
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> map2 = new HashSetValuedHashMap<>();
@@ -58,10 +43,10 @@ class ObsoleteMisspellingListenerTest {
             new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, map1, map2)
         );
 
-        verify(replacementRepository)
-            .removeReplacementsByType(
+        verify(obsoleteMisspellingListener)
+            .processObsoleteReplacementTypes(
                 WikipediaLanguage.SPANISH,
-                ReplacementType.MISSPELLING_SIMPLE.getLabel(),
+                ReplacementType.MISSPELLING_SIMPLE,
                 Collections.singleton("A")
             );
     }
