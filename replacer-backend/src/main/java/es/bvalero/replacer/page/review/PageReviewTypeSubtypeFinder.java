@@ -66,13 +66,12 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     ) {
         return replacements
             .stream()
-            .filter(
-                replacement ->
-                    hasType(
-                        replacement,
-                        Objects.requireNonNull(options.getType()),
-                        Objects.requireNonNull(options.getSubtype())
-                    )
+            .filter(replacement ->
+                hasType(
+                    replacement,
+                    Objects.requireNonNull(options.getType()),
+                    Objects.requireNonNull(options.getSubtype())
+                )
             )
             .collect(Collectors.toUnmodifiableList());
     }

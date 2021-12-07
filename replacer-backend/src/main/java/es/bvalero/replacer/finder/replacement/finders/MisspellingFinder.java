@@ -49,18 +49,16 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     public Map<String, Misspelling> buildMisspellingMap(Set<Misspelling> misspellings) {
         // Build a map to quick access the misspellings by word
         Map<String, Misspelling> map = new HashMap<>(misspellings.size());
-        misspellings.forEach(
-            misspelling -> {
-                String word = misspelling.getWord();
-                if (misspelling.isCaseSensitive()) {
-                    map.put(word, misspelling);
-                } else {
-                    // If case-insensitive, we add to the map "word" and "Word".
-                    map.put(FinderUtils.setFirstLowerCase(word), misspelling);
-                    map.put(FinderUtils.setFirstUpperCase(word), misspelling);
-                }
+        misspellings.forEach(misspelling -> {
+            String word = misspelling.getWord();
+            if (misspelling.isCaseSensitive()) {
+                map.put(word, misspelling);
+            } else {
+                // If case-insensitive, we add to the map "word" and "Word".
+                map.put(FinderUtils.setFirstLowerCase(word), misspelling);
+                map.put(FinderUtils.setFirstUpperCase(word), misspelling);
             }
-        );
+        });
         return map;
     }
 

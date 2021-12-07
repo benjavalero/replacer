@@ -65,23 +65,21 @@ class LanguageCount {
             TypeCount typeCount = this.typeCounts.get(type);
             typeCount
                 .get(subtype)
-                .ifPresent(
-                    subtypeCount -> {
-                        long newCount = subtypeCount.getCount() - 1;
-                        if (newCount > 0) {
-                            // Update the subtype with the new count
-                            typeCount.add(subtypeCount.withCount(newCount));
-                        } else {
-                            // Remove the subtype count as in method "removeCachedReplacementCount"
-                            typeCount.remove(subtype);
+                .ifPresent(subtypeCount -> {
+                    long newCount = subtypeCount.getCount() - 1;
+                    if (newCount > 0) {
+                        // Update the subtype with the new count
+                        typeCount.add(subtypeCount.withCount(newCount));
+                    } else {
+                        // Remove the subtype count as in method "removeCachedReplacementCount"
+                        typeCount.remove(subtype);
 
-                            // Empty parent if children are empty
-                            if (typeCount.isEmpty()) {
-                                this.typeCounts.remove(type);
-                            }
+                        // Empty parent if children are empty
+                        if (typeCount.isEmpty()) {
+                            this.typeCounts.remove(type);
                         }
                     }
-                );
+                });
         }
     }
 }

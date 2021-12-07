@@ -92,17 +92,15 @@ class PageReviewSectionFinderTest {
         Optional<PageReview> sectionReview = pageReviewSectionFinder.findPageReviewSection(pageReview);
 
         assertTrue(sectionReview.isPresent());
-        sectionReview.ifPresent(
-            review -> {
-                assertEquals(page.getId(), review.getPage().getId());
-                assertNotNull(review.getSection());
-                assertNotNull(review.getSection().getIndex());
-                assertEquals(section, review.getSection());
-                assertEquals(sectionContent, review.getPage().getContent());
-                assertEquals(1, review.getReplacements().size());
-                assertEquals(8 - offset, new ArrayList<>(review.getReplacements()).get(0).getStart());
-                assertEquals(numPending, review.getNumPending());
-            }
-        );
+        sectionReview.ifPresent(review -> {
+            assertEquals(page.getId(), review.getPage().getId());
+            assertNotNull(review.getSection());
+            assertNotNull(review.getSection().getIndex());
+            assertEquals(section, review.getSection());
+            assertEquals(sectionContent, review.getPage().getContent());
+            assertEquals(1, review.getReplacements().size());
+            assertEquals(8 - offset, new ArrayList<>(review.getReplacements()).get(0).getStart());
+            assertEquals(numPending, review.getNumPending());
+        });
     }
 }

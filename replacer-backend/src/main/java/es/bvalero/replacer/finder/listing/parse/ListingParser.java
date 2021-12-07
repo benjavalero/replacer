@@ -27,18 +27,16 @@ interface ListingParser<T extends ListingItem> {
         // Ignore the lines not corresponding to item lines
         stream
             .filter(this::isItemLineValid)
-            .forEach(
-                strLine -> {
-                    T item = parseItemLine(trimItemLine(strLine));
-                    if (item != null) {
-                        if (itemKeys.add(item.getKey())) {
-                            itemSet.add(item);
-                        } else {
-                            LogHolder.LOGGER.warn("Duplicated item: {}", item.getKey());
-                        }
+            .forEach(strLine -> {
+                T item = parseItemLine(trimItemLine(strLine));
+                if (item != null) {
+                    if (itemKeys.add(item.getKey())) {
+                        itemSet.add(item);
+                    } else {
+                        LogHolder.LOGGER.warn("Duplicated item: {}", item.getKey());
                     }
                 }
-            );
+            });
 
         return itemSet;
     }

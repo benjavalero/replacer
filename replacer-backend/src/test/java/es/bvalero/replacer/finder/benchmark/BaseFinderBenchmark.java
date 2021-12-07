@@ -29,20 +29,18 @@ public abstract class BaseFinderBenchmark {
             System.out.println();
             System.out.println("FINDER\tTIME");
         }
-        sampleContents.forEach(
-            text -> {
-                for (BenchmarkFinder finder : finders) {
-                    long start = System.nanoTime();
-                    for (int i = 0; i < numIterations; i++) {
-                        finder.findMatches(text);
-                    }
-                    double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
-                    if (print) {
-                        System.out.println(finder.getClass().getSimpleName() + "\t" + end);
-                    }
+        sampleContents.forEach(text -> {
+            for (BenchmarkFinder finder : finders) {
+                long start = System.nanoTime();
+                for (int i = 0; i < numIterations; i++) {
+                    finder.findMatches(text);
+                }
+                double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
+                if (print) {
+                    System.out.println(finder.getClass().getSimpleName() + "\t" + end);
                 }
             }
-        );
+        });
     }
 
     protected List<String> findSampleContents() throws ReplacerException {

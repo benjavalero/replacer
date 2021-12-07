@@ -148,14 +148,12 @@ class PageReviewCustomFinderTest {
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review1 = pageReviewCustomService.findRandomPageReview(options);
         assertFalse(review1.isEmpty());
-        review1.ifPresent(
-            r -> {
-                assertEquals(lang, r.getPage().getId().getLang());
-                assertEquals(pageId, r.getPage().getId().getPageId());
-                assertEquals(content, r.getPage().getContent());
-                assertEquals(1, r.getNumPending());
-            }
-        );
+        review1.ifPresent(r -> {
+            assertEquals(lang, r.getPage().getId().getLang());
+            assertEquals(pageId, r.getPage().getId().getPageId());
+            assertEquals(content, r.getPage().getContent());
+            assertEquals(1, r.getNumPending());
+        });
 
         // Second call
         Optional<PageReview> review2 = pageReviewCustomService.findRandomPageReview(options);
@@ -257,14 +255,12 @@ class PageReviewCustomFinderTest {
         PageReviewOptions options = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options);
         assertFalse(review.isEmpty());
-        review.ifPresent(
-            r -> {
-                assertEquals(lang, r.getPage().getId().getLang());
-                assertEquals(pageId2, r.getPage().getId().getPageId());
-                assertEquals(content, r.getPage().getContent());
-                assertEquals(1, r.getNumPending());
-            }
-        );
+        review.ifPresent(r -> {
+            assertEquals(lang, r.getPage().getId().getLang());
+            assertEquals(pageId2, r.getPage().getId().getPageId());
+            assertEquals(content, r.getPage().getContent());
+            assertEquals(1, r.getNumPending());
+        });
 
         // Verifications
         verify(wikipediaService).searchByText(lang, replacement, true, 0, CACHE_SIZE);
@@ -362,48 +358,40 @@ class PageReviewCustomFinderTest {
         PageReviewOptions options1 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         Optional<PageReview> review = pageReviewCustomService.findRandomPageReview(options1);
         assertFalse(review.isEmpty());
-        review.ifPresent(
-            r -> {
-                assertEquals(1, r.getPage().getId().getPageId());
-                assertEquals(4, r.getNumPending());
-            }
-        );
+        review.ifPresent(r -> {
+            assertEquals(1, r.getPage().getId().getPageId());
+            assertEquals(4, r.getNumPending());
+        });
         // Cache: 2, 3
 
         // Call 2
         PageReviewOptions options2 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         review = pageReviewCustomService.findRandomPageReview(options2);
         assertFalse(review.isEmpty());
-        review.ifPresent(
-            r -> {
-                assertEquals(2, r.getPage().getId().getPageId());
-                assertEquals(3, r.getNumPending());
-            }
-        );
+        review.ifPresent(r -> {
+            assertEquals(2, r.getPage().getId().getPageId());
+            assertEquals(3, r.getNumPending());
+        });
         // Cache: 3
 
         // Call 3
         PageReviewOptions options3 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         review = pageReviewCustomService.findRandomPageReview(options3);
         assertFalse(review.isEmpty());
-        review.ifPresent(
-            r -> {
-                assertEquals(3, r.getPage().getId().getPageId());
-                assertEquals(2, r.getNumPending());
-            }
-        );
+        review.ifPresent(r -> {
+            assertEquals(3, r.getPage().getId().getPageId());
+            assertEquals(2, r.getNumPending());
+        });
         // Cache: empty
 
         // Call 4
         PageReviewOptions options4 = PageReviewOptions.ofCustom(lang, replacement, suggestion, true);
         review = pageReviewCustomService.findRandomPageReview(options4);
         assertFalse(review.isEmpty());
-        review.ifPresent(
-            r -> {
-                assertEquals(4, r.getPage().getId().getPageId());
-                assertEquals(1, r.getNumPending());
-            }
-        );
+        review.ifPresent(r -> {
+            assertEquals(4, r.getPage().getId().getPageId());
+            assertEquals(1, r.getNumPending());
+        });
         // Cache: empty
 
         // Call 5: To start again after message of no more results

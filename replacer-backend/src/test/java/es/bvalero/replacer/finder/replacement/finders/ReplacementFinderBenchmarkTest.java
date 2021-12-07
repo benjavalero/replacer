@@ -75,20 +75,18 @@ class ReplacementFinderBenchmarkTest extends BaseFinderBenchmark {
             System.out.println();
             System.out.println("FINDER\tTIME");
         }
-        sampleContents.forEach(
-            text -> {
-                for (ReplacementFinder finder : finders) {
-                    long start = System.nanoTime();
-                    for (int i = 0; i < numIterations; i++) {
-                        // Only transform the iterable without validating not to penalize the performance of the benchmark
-                        IterableUtils.toList(finder.find(FinderPage.of(text)));
-                    }
-                    double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
-                    if (print) {
-                        System.out.println(finder.getClass().getSimpleName() + "\t" + end);
-                    }
+        sampleContents.forEach(text -> {
+            for (ReplacementFinder finder : finders) {
+                long start = System.nanoTime();
+                for (int i = 0; i < numIterations; i++) {
+                    // Only transform the iterable without validating not to penalize the performance of the benchmark
+                    IterableUtils.toList(finder.find(FinderPage.of(text)));
+                }
+                double end = (double) (System.nanoTime() - start) / 1000.0; // In µs
+                if (print) {
+                    System.out.println(finder.getClass().getSimpleName() + "\t" + end);
                 }
             }
-        );
+        });
     }
 }

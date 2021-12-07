@@ -189,16 +189,14 @@ class PageReviewTypeSubtypeFinderTest {
         Optional<PageReview> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
 
         assertTrue(review.isPresent());
-        review.ifPresent(
-            rev -> {
-                assertEquals(randomId, rev.getPage().getId().getPageId());
-                assertEquals(replacements.size(), rev.getReplacements().size());
-                assertNotNull(rev.getSection());
-                assertNotNull(rev.getSection().getIndex());
-                assertEquals(sectionId, rev.getSection().getIndex().intValue());
-                assertEquals(numPending, rev.getNumPending());
-            }
-        );
+        review.ifPresent(rev -> {
+            assertEquals(randomId, rev.getPage().getId().getPageId());
+            assertEquals(replacements.size(), rev.getReplacements().size());
+            assertNotNull(rev.getSection());
+            assertNotNull(rev.getSection().getIndex());
+            assertEquals(sectionId, rev.getSection().getIndex().intValue());
+            assertEquals(numPending, rev.getNumPending());
+        });
     }
 
     @Test
@@ -218,12 +216,10 @@ class PageReviewTypeSubtypeFinderTest {
         Optional<PageReview> review = pageReviewTypeSubtypeService.getPageReview(randomId, options);
 
         assertTrue(review.isPresent());
-        review.ifPresent(
-            rev -> {
-                assertEquals(randomId, rev.getPage().getId().getPageId());
-                assertEquals(replacements.size(), rev.getReplacements().size());
-                assertNull(rev.getSection());
-            }
-        );
+        review.ifPresent(rev -> {
+            assertEquals(randomId, rev.getPage().getId().getPageId());
+            assertEquals(replacements.size(), rev.getReplacements().size());
+            assertNull(rev.getSection());
+        });
     }
 }

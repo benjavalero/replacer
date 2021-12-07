@@ -186,9 +186,8 @@ class IndexablePageComparator {
         boolean existReplacementsToReview = dbReplacements.stream().anyMatch(IndexableReplacement::isToBeReviewed);
         Optional<IndexableReplacement> dummy = dummies.isEmpty() ? Optional.empty() : Optional.of(dummies.get(0));
         if (existReplacementsToReview) {
-            dummy.ifPresent(
-                indexableReplacement ->
-                    result.add(PageIndexResult.builder().removeReplacements(Set.of(indexableReplacement)).build())
+            dummy.ifPresent(indexableReplacement ->
+                result.add(PageIndexResult.builder().removeReplacements(Set.of(indexableReplacement)).build())
             );
         } else {
             if (dummy.isPresent()) {
