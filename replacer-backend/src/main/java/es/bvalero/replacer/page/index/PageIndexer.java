@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Component;
 public class PageIndexer {
 
     @Autowired
-    @Qualifier("pageJdbcRepository")
     private PageRepository pageRepository;
 
     @Autowired
@@ -70,7 +68,7 @@ public class PageIndexer {
     }
 
     protected Optional<PageModel> findByPageId(WikipediaPageId pageId) {
-        return pageRepository.findByPageId(pageId);
+        return pageRepository.findPageById(pageId);
     }
 
     private boolean isPageNotIndexable(WikipediaPage page, @Nullable IndexablePage dbPage) {
@@ -94,7 +92,7 @@ public class PageIndexer {
     }
 
     private void indexObsoletePage(IndexablePage dbPage) {
-        saveResult(PageIndexResult.builder().deletePages(Set.of(dbPage)).build());
+        saveResult(PageIndexResult.builder().removePages(Set.of(dbPage)).build());
     }
 
     protected void saveResult(PageIndexResult result) {

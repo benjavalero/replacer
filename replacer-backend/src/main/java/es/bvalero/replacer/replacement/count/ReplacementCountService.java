@@ -1,7 +1,11 @@
 package es.bvalero.replacer.replacement.count;
 
+import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
+
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.TypeSubtypeCount;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
@@ -14,7 +18,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * Implementation of the replacement repository which maintains a cache of the replacement counts.
+ * Service to retrieve and cache the replacement counts by type.
  * This is the one public which must be used by other services or components.
  */
 @Slf4j
@@ -22,7 +26,7 @@ import org.springframework.stereotype.Component;
 public class ReplacementCountService {
 
     @Autowired
-    private ReplacementCountRepository replacementCountRepository;
+    private ReplacementRepository replacementRepository;
 
     // Replacement count cache
     // It's a heavy query in database (several seconds), so we load the counts on start and refresh them periodically.
@@ -41,7 +45,7 @@ public class ReplacementCountService {
 
     public void reviewAsSystemByType(WikipediaLanguage lang, String type, String subtype) {
         this.removeCachedReplacementCount(lang, type, subtype);
-        replacementCountRepository.reviewAsSystemByType(lang, type, subtype);
+        replacementRepository.updateReviewerByType(lang, type, subtype, REVIEWER_SYSTEM);
     }
 
     @VisibleForTesting
@@ -59,7 +63,7 @@ public class ReplacementCountService {
         if (StringUtils.isNotBlank(type) && StringUtils.isNotBlank(subtype)) {
             this.decrementSubtypeCount(lang, type, subtype);
         }
-        this.replacementCountRepository.reviewByPageId(lang, pageId, type, subtype, reviewer);
+        this.replacementRepository.updateReviewerByPageAndType(lang, pageId, type, subtype, reviewer);
     }
 
     @VisibleForTesting
@@ -97,7 +101,7 @@ public class ReplacementCountService {
     }
 
     private LanguageCount getReplacementsTypeCountsByLang(WikipediaLanguage lang) {
-        Collection<TypeSubtypeCount> typeSubtypeCounts = replacementCountRepository.countReplacementTypesByLang(lang);
+        Collection<TypeSubtypeCount> typeSubtypeCounts = replacementRepository.countReplacementsByType(lang);
         return LanguageCount.build(typeSubtypeCounts);
     }
 }

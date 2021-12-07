@@ -35,35 +35,35 @@ public final class PageIndexResult {
 
     /* Changes to be applied in the database */
 
-    // Pages to be created along with the related replacements
+    // Pages to be created. The related replacements must be added apart.
     @Builder.Default
-    Set<IndexablePage> createPages = new HashSet<>();
+    Set<IndexablePage> addPages = new HashSet<>();
 
     // The attributes of a page may vary with time. In particular, we are interested in update the titles.
     @Builder.Default
     Set<IndexablePage> updatePages = new HashSet<>();
 
     @Builder.Default
-    Set<IndexablePage> deletePages = new HashSet<>();
+    Set<IndexablePage> removePages = new HashSet<>();
 
     @Builder.Default
-    Set<IndexableReplacement> createReplacements = new HashSet<>();
+    Set<IndexableReplacement> addReplacements = new HashSet<>();
 
     // The attributes of a replacement may vary, e.g. the last update date, or the context/position.
     @Builder.Default
     Set<IndexableReplacement> updateReplacements = new HashSet<>();
 
     @Builder.Default
-    Set<IndexableReplacement> deleteReplacements = new HashSet<>();
+    Set<IndexableReplacement> removeReplacements = new HashSet<>();
 
     int size() {
         return (
-            createPages.size() +
+            addPages.size() +
             updatePages.size() +
-            deletePages.size() +
-            createReplacements.size() +
+            removePages.size() +
+            addReplacements.size() +
             updateReplacements.size() +
-            deleteReplacements.size()
+            removeReplacements.size()
         );
     }
 
@@ -72,12 +72,12 @@ public final class PageIndexResult {
     }
 
     void add(PageIndexResult pageIndexResult) {
-        this.createPages.addAll(pageIndexResult.getCreatePages());
+        this.addPages.addAll(pageIndexResult.getAddPages());
         this.updatePages.addAll(pageIndexResult.getUpdatePages());
-        this.deletePages.addAll(pageIndexResult.getDeletePages());
-        this.createReplacements.addAll(pageIndexResult.getCreateReplacements());
+        this.removePages.addAll(pageIndexResult.getRemovePages());
+        this.addReplacements.addAll(pageIndexResult.getAddReplacements());
         this.updateReplacements.addAll(pageIndexResult.getUpdateReplacements());
-        this.deleteReplacements.addAll(pageIndexResult.getDeleteReplacements());
+        this.removeReplacements.addAll(pageIndexResult.getRemoveReplacements());
 
         if (isNotEmpty()) {
             this.status = PageIndexStatus.PAGE_INDEXED;
@@ -94,12 +94,12 @@ public final class PageIndexResult {
     }
 
     void clear() {
-        this.createPages.clear();
+        this.addPages.clear();
         this.updatePages.clear();
-        this.deletePages.clear();
-        this.createReplacements.clear();
+        this.removePages.clear();
+        this.addReplacements.clear();
         this.updateReplacements.clear();
-        this.deleteReplacements.clear();
+        this.removeReplacements.clear();
 
         this.status = PageIndexStatus.PAGE_NOT_INDEXED;
     }

@@ -20,18 +20,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class PageCacheRepositoryTest {
+class PageIndexCacheHelperTest {
 
     @Mock
     private PageRepository pageRepository;
 
     @InjectMocks
-    private PageCacheRepository PageModelCacheRepository;
+    private PageIndexCacheHelper pageIndexCacheHelper;
 
     @BeforeEach
     public void setUp() {
-        PageModelCacheRepository = new PageCacheRepository();
-        PageModelCacheRepository.setChunkSize(1000);
+        pageIndexCacheHelper = new PageIndexCacheHelper();
+        pageIndexCacheHelper.setChunkSize(1000);
         MockitoAnnotations.initMocks(this);
     }
 
@@ -73,20 +73,20 @@ class PageCacheRepositoryTest {
             .pageId(pageId2)
             .replacements(List.of(replacement2))
             .build();
-        when(pageRepository.findByPageIdInterval(WikipediaLanguage.getDefault(), 1, 1000)).thenReturn(List.of(page1));
-        when(pageRepository.findByPageIdInterval(WikipediaLanguage.getDefault(), 1001, 2000))
+        when(pageRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1, 1000)).thenReturn(List.of(page1));
+        when(pageRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1001, 2000))
             .thenReturn(List.of(page2));
 
-        Optional<PageModel> PageModelDB = PageModelCacheRepository.findByPageId(
+        Optional<PageModel> PageModelDB = pageIndexCacheHelper.findPageById(
             WikipediaPageId.of(WikipediaLanguage.getDefault(), 1)
         );
         assertTrue(PageModelDB.isEmpty());
 
-        PageModelDB = PageModelCacheRepository.findByPageId(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1001));
+        PageModelDB = pageIndexCacheHelper.findPageById(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1001));
         assertEquals(page2, PageModelDB.orElse(null));
 
         // Check that the page 2 has been cleaned
-        verify(pageRepository).deletePages(anyCollection());
+        verify(pageRepository).removePages(anyCollection());
     }
 
     @Test
@@ -110,9 +110,9 @@ class PageCacheRepositoryTest {
             .pageId(pageId)
             .replacements(List.of(replacement))
             .build();
-        when(pageRepository.findByPageIdInterval(WikipediaLanguage.getDefault(), 1, 2000)).thenReturn(List.of(page));
+        when(pageRepository.findPagesByIdInterval(WikipediaLanguage.getDefault(), 1, 2000)).thenReturn(List.of(page));
 
-        Optional<PageModel> PageModelDB = PageModelCacheRepository.findByPageId(
+        Optional<PageModel> PageModelDB = pageIndexCacheHelper.findPageById(
             WikipediaPageId.of(WikipediaLanguage.getDefault(), 1001)
         );
         assertEquals(page, PageModelDB.orElse(null));

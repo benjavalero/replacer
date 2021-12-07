@@ -1,5 +1,6 @@
 package es.bvalero.replacer.replacement.count;
 
+import es.bvalero.replacer.repository.TypeSubtypeCount;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;

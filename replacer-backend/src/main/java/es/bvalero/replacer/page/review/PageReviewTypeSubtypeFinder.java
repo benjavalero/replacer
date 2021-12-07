@@ -4,7 +4,7 @@ import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.replacement.count.ReplacementCountService;
-import es.bvalero.replacer.repository.PageReviewRepository;
+import es.bvalero.replacer.repository.PageRepository;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 class PageReviewTypeSubtypeFinder extends PageReviewFinder {
 
     @Autowired
-    private PageReviewRepository pageReviewRepository;
+    private PageRepository pageRepository;
 
     @Autowired
     private ReplacementCountService replacementCountService;
@@ -31,14 +31,14 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
 
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
-        Collection<Integer> pageIds = pageReviewRepository.findToReviewByType(
+        Collection<Integer> pageIds = pageRepository.findPageIdsToReviewByType(
             options.getLang(),
             Objects.requireNonNull(options.getType()),
             Objects.requireNonNull(options.getSubtype()),
             getCacheSize()
         );
 
-        long totalResults = pageReviewRepository.countToReviewByType(
+        long totalResults = pageRepository.countPagesToReviewByType(
             options.getLang(),
             Objects.requireNonNull(options.getType()),
             Objects.requireNonNull(options.getSubtype())

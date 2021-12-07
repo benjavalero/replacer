@@ -1,10 +1,10 @@
-package es.bvalero.replacer.replacement.count;
+package es.bvalero.replacer.repository;
 
 import lombok.NonNull;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-class TypeSubtypeCount {
+public class TypeSubtypeCount {
 
     @NonNull
     String type;

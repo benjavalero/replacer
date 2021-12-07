@@ -29,8 +29,8 @@ class IndexablePageComparatorTest {
         PageIndexResult expected = PageIndexResult
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
-            .createPages(Set.of(page))
-            .createReplacements(Set.of(IndexableReplacement.ofDummy(page)))
+            .addPages(Set.of(page))
+            .addReplacements(Set.of(IndexableReplacement.ofDummy(page)))
             .build();
         assertEquals(expected, result);
     }
@@ -59,8 +59,8 @@ class IndexablePageComparatorTest {
         PageIndexResult expected = PageIndexResult
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
-            .createPages(Set.of(page))
-            .createReplacements(Set.of(rep1))
+            .addPages(Set.of(page))
+            .addReplacements(Set.of(rep1))
             .build();
         assertEquals(expected, toIndex);
     }
@@ -108,8 +108,8 @@ class IndexablePageComparatorTest {
         PageIndexResult expected = PageIndexResult
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
-            .createReplacements(Set.of(IndexableReplacement.ofDummy(page)))
-            .deleteReplacements(Set.of(rep2, rep3))
+            .addReplacements(Set.of(IndexableReplacement.ofDummy(page)))
+            .removeReplacements(Set.of(rep2, rep3))
             .build();
 
         assertEquals(expected, toIndex);
@@ -130,8 +130,8 @@ class IndexablePageComparatorTest {
         PageIndexResult expected = PageIndexResult
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
-            .createPages(Set.of(page))
-            .createReplacements(Set.of(IndexableReplacement.ofDummy(page)))
+            .addPages(Set.of(page))
+            .addReplacements(Set.of(IndexableReplacement.ofDummy(page)))
             .build();
 
         assertEquals(expected, result);
@@ -252,8 +252,8 @@ class IndexablePageComparatorTest {
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
             .updateReplacements(Set.of(r3db.withLastUpdate(same)))
-            .createReplacements(Set.of(r5))
-            .deleteReplacements(Set.of(r6db, r8db))
+            .addReplacements(Set.of(r5))
+            .removeReplacements(Set.of(r6db, r8db))
             .build();
         assertEquals(expected, toIndex);
     }
@@ -351,8 +351,8 @@ class IndexablePageComparatorTest {
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
             .updateReplacements(Set.of(r1db.withLastUpdate(same)))
-            .createReplacements(Set.of(r3))
-            .deleteReplacements(Set.of(r4db, r6db))
+            .addReplacements(Set.of(r3))
+            .removeReplacements(Set.of(r4db, r6db))
             .build();
         assertEquals(expected, toIndex);
     }
@@ -385,7 +385,7 @@ class IndexablePageComparatorTest {
         PageIndexResult expected = PageIndexResult
             .builder()
             .status(PageIndexStatus.PAGE_INDEXED)
-            .deleteReplacements(Set.of(r1db))
+            .removeReplacements(Set.of(r1db))
             .build();
         assertEquals(expected, toIndex);
     }

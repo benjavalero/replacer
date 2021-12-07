@@ -5,8 +5,10 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import java.util.ArrayList;
+import es.bvalero.replacer.repository.ReplacementRepository;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,14 +19,14 @@ import org.mockito.MockitoAnnotations;
 class ReplacementStatsServiceTest {
 
     @Mock
-    private ReplacementStatsRepository replacementStatsRepository;
+    private ReplacementRepository replacementRepository;
 
     @InjectMocks
-    private ReplacementStatsService replacementDaoProxy;
+    private ReplacementStatsService replacementStatsService;
 
     @BeforeEach
     public void setUp() {
-        replacementDaoProxy = new ReplacementStatsService();
+        replacementStatsService = new ReplacementStatsService();
         MockitoAnnotations.initMocks(this);
     }
 
@@ -32,27 +34,26 @@ class ReplacementStatsServiceTest {
     void testCountReplacementsReviewed() {
         long count = new Random().nextLong();
 
-        when(replacementStatsRepository.countReplacementsReviewed(any(WikipediaLanguage.class))).thenReturn(count);
+        when(replacementRepository.countReplacementsReviewed(any(WikipediaLanguage.class))).thenReturn(count);
 
-        assertEquals(count, replacementDaoProxy.countReplacementsReviewed(WikipediaLanguage.SPANISH));
+        assertEquals(count, replacementStatsService.countReplacementsReviewed(WikipediaLanguage.SPANISH));
     }
 
     @Test
     void testCountReplacementsToReview() {
         long count = new Random().nextLong();
 
-        when(replacementStatsRepository.countReplacementsNotReviewed(any(WikipediaLanguage.class))).thenReturn(count);
+        when(replacementRepository.countReplacementsNotReviewed(any(WikipediaLanguage.class))).thenReturn(count);
 
-        assertEquals(count, replacementDaoProxy.countReplacementsNotReviewed(WikipediaLanguage.SPANISH));
+        assertEquals(count, replacementStatsService.countReplacementsNotReviewed(WikipediaLanguage.SPANISH));
     }
 
     @Test
     void testCountReplacementsGroupedByReviewer() {
-        List<ReviewerCount> result = new ArrayList<>();
+        Map<String, Long> countMap = Map.of("A", 10L);
+        when(replacementRepository.countReplacementsByReviewer(any(WikipediaLanguage.class))).thenReturn(countMap);
 
-        when(replacementStatsRepository.countReplacementsGroupedByReviewer(any(WikipediaLanguage.class)))
-            .thenReturn(result);
-
-        assertEquals(result, replacementDaoProxy.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH));
+        Collection<ReviewerCount> expected = List.of(ReviewerCount.of("A", 10L));
+        assertEquals(expected, replacementStatsService.countReplacementsGroupedByReviewer(WikipediaLanguage.SPANISH));
     }
 }

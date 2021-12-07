@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.Replacement;
 import es.bvalero.replacer.common.domain.WikipediaPage;
-import es.bvalero.replacer.repository.PageReviewRepository;
+import es.bvalero.replacer.repository.PageRepository;
 import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 class PageReviewNoTypeFinder extends PageReviewFinder {
 
     @Autowired
-    private PageReviewRepository pageReviewRepository;
+    private PageRepository pageRepository;
 
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         // Find a random page without filtering by type takes a lot
         // Instead find a random replacement and then the following pages
-        long totalResults = pageReviewRepository.countToReview(options.getLang());
-        Collection<Integer> pageIds = pageReviewRepository.findToReview(options.getLang(), getCacheSize());
+        long totalResults = pageRepository.countPagesToReview(options.getLang());
+        Collection<Integer> pageIds = pageRepository.findPageIdsToReview(options.getLang(), getCacheSize());
         return PageSearchResult.of(totalResults, pageIds);
     }
 

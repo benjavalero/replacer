@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -21,17 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Loggable(Loggable.TRACE) // To warn about performance issues
 @Transactional
 @Repository
-@Qualifier("pageJdbcRepository")
-class PageJdbcRepository implements PageRepository, PageReviewRepository {
+class PageJdbcRepository implements PageRepository {
 
     private static final String FROM_REPLACEMENT_JOIN_PAGE =
         "FROM replacement r JOIN page p ON r.lang = p.lang AND r.article_id = p.article_id ";
 
     @Autowired
+    private ReplacementRepository replacementRepository;
+
+    @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public Optional<PageModel> findByPageId(WikipediaPageId id) {
+    public Optional<PageModel> findPageById(WikipediaPageId id) {
         String sql =
             "SELECT r.id, r.lang, r.article_id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
             FROM_REPLACEMENT_JOIN_PAGE +
@@ -44,7 +45,7 @@ class PageJdbcRepository implements PageRepository, PageReviewRepository {
     }
 
     @Override
-    public Collection<PageModel> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
+    public Collection<PageModel> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
         String sql =
             "SELECT r.id, r.lang, r.article_id, r.type, r.subtype, r.position, r.context, r.last_update, r.reviewer, p.title " +
             FROM_REPLACEMENT_JOIN_PAGE +
@@ -57,6 +58,13 @@ class PageJdbcRepository implements PageRepository, PageReviewRepository {
     }
 
     @Override
+    public void addPages(Collection<PageModel> pages) {
+        String sql = "INSERT INTO page (lang, article_id, title) VALUES (:lang, :pageId, :title)";
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
+        jdbcTemplate.batchUpdate(sql, namedParameters);
+    }
+
+    @Override
     public void updatePages(Collection<PageModel> pages) {
         String sql = "UPDATE page SET title = :title WHERE lang = :lang AND article_id = :pageId";
         SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
@@ -64,29 +72,24 @@ class PageJdbcRepository implements PageRepository, PageReviewRepository {
     }
 
     @Override
-    public void insertPages(Collection<PageModel> pages) {
-        String sql = "INSERT INTO page (lang, article_id, title) VALUES (:lang, :pageId, :title)";
-        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
-        jdbcTemplate.batchUpdate(sql, namedParameters);
-    }
-
-    @Override
-    public void deletePages(Collection<PageModel> pages) {
-        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
-
+    public void removePages(Collection<PageModel> pages) {
         // First delete the replacements
-        String sqlReplacements = "DELETE FROM replacement WHERE lang = :lang AND article_id = :pageId";
-        jdbcTemplate.batchUpdate(sqlReplacements, namedParameters);
+        Collection<ReplacementModel> replacements = pages
+            .stream()
+            .flatMap(page -> page.getReplacements().stream())
+            .collect(Collectors.toUnmodifiableList());
+        replacementRepository.removeReplacements(replacements);
 
+        SqlParameterSource[] namedParameters = SqlParameterSourceUtils.createBatch(pages.toArray());
         String sqlPages = "DELETE FROM page WHERE lang = :lang AND article_id = :pageId";
         jdbcTemplate.batchUpdate(sqlPages, namedParameters);
     }
 
     @Override
-    public Collection<Integer> findToReview(WikipediaLanguage lang, int numResults) {
+    public Collection<Integer> findPageIdsToReview(WikipediaLanguage lang, int numResults) {
         // Find a random page without filtering by type takes a lot
         // Instead we find a random replacement and then the following pages
-        long randomStart = findReplacementToReview(lang, numResults);
+        long randomStart = replacementRepository.findReplacementToReview(lang, numResults);
 
         // Not worth to DISTINCT. Instead, we return the results as a set to avoid duplicates.
         String sql =
@@ -104,19 +107,8 @@ class PageJdbcRepository implements PageRepository, PageReviewRepository {
             .collect(Collectors.toUnmodifiableSet());
     }
 
-    private long findReplacementToReview(WikipediaLanguage lang, long chunkSize) {
-        String sql =
-            "SELECT FLOOR(MIN(id) + (MAX(id) - MIN(id) + 1 - :chunkSize) * RAND()) FROM replacement " +
-            "WHERE lang = :lang AND reviewer IS NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("chunkSize", chunkSize)
-            .addValue("lang", lang.getCode());
-        Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return result == null ? 0L : result;
-    }
-
     @Override
-    public long countToReview(WikipediaLanguage lang) {
+    public long countPagesToReview(WikipediaLanguage lang) {
         // FIXME: This should be returning the count of pages to review and not the count of replacements
         // To check how this would affect to performance
         String sql = "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
@@ -126,7 +118,12 @@ class PageJdbcRepository implements PageRepository, PageReviewRepository {
     }
 
     @Override
-    public Collection<Integer> findToReviewByType(WikipediaLanguage lang, String type, String subtype, int numResults) {
+    public Collection<Integer> findPageIdsToReviewByType(
+        WikipediaLanguage lang,
+        String type,
+        String subtype,
+        int numResults
+    ) {
         // When filtering by type/subtype ORDER BY RAND() still takes a while, but it is admissible.
         // Not worth to DISTINCT. Instead, we return the results as a set to avoid duplicates.
         String sql =
@@ -146,7 +143,7 @@ class PageJdbcRepository implements PageRepository, PageReviewRepository {
     }
 
     @Override
-    public long countToReviewByType(WikipediaLanguage lang, String type, String subtype) {
+    public long countPagesToReviewByType(WikipediaLanguage lang, String type, String subtype) {
         String sql =
             "SELECT COUNT (DISTINCT article_id) FROM replacement " +
             "WHERE lang = :lang AND type = :type AND subtype = :subtype AND reviewer IS NULL";

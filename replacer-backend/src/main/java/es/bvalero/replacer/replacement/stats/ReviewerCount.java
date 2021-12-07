@@ -5,7 +5,7 @@ import lombok.NonNull;
 import lombok.Value;
 
 @Value(staticConstructor = "of")
-class ReviewerCount {
+class ReviewerCount implements Comparable<ReviewerCount> {
 
     @ApiModelProperty(value = "Wikipedia user name", required = true, example = "Benjavalero")
     @NonNull
@@ -14,4 +14,9 @@ class ReviewerCount {
     @ApiModelProperty(required = true, example = "1")
     @NonNull
     Long count;
+
+    @Override
+    public int compareTo(ReviewerCount count) {
+        return count.getCount().compareTo(this.count);
+    }
 }

@@ -8,26 +8,23 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import lombok.AccessLevel;
 import lombok.Setter;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * Implementation of the page repository which retrieves the pages and replacements in batches
- * and caches temporarily the results in order to reduce the calls to database while dump indexing.
+ * Helper component to retrieve the pages and replacements in batches
+ * and cache temporarily the results in order to reduce the calls to database while dump indexing.
  */
 @Component
-@Qualifier("pageCacheRepository")
-class PageCacheRepository implements PageRepository {
+class PageIndexCacheHelper {
 
     @Autowired
-    @Qualifier("pageJdbcRepository")
     private PageRepository pageRepository;
 
-    @Setter(AccessLevel.PACKAGE) // For testing
+    @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.dump.batch.chunk.size}")
     private int chunkSize;
 
@@ -36,8 +33,7 @@ class PageCacheRepository implements PageRepository {
 
     private int maxCachedId = 0;
 
-    @Override
-    public Optional<PageModel> findByPageId(WikipediaPageId id) {
+    Optional<PageModel> findPageById(WikipediaPageId id) {
         // Load the cache the first time or when needed
         if (maxCachedId == 0 || id.getPageId() > maxCachedId) {
             clean();
@@ -53,21 +49,20 @@ class PageCacheRepository implements PageRepository {
         return Optional.ofNullable(pageMap.remove(id.getPageId()));
     }
 
-    @Override
-    public Collection<PageModel> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
-        return pageRepository.findByPageIdInterval(lang, minPageId, maxPageId);
+    private Collection<PageModel> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId) {
+        return pageRepository.findPagesByIdInterval(lang, minPageId, maxPageId);
     }
 
     private void load(int minId, int maxId, WikipediaLanguage lang) {
         assert pageMap.isEmpty();
-        this.findByPageIdInterval(lang, minId, maxId).forEach(page -> pageMap.put(page.getPageId(), page));
+        this.findPagesByIdInterval(lang, minId, maxId).forEach(page -> pageMap.put(page.getPageId(), page));
     }
 
     private void clean() {
         // Clear the cache if obsolete (we assume the dump pages are in order)
         // The remaining cached pages are not in the dump, so we remove them from DB.
         if (!pageMap.isEmpty()) {
-            this.deletePages(pageMap.values());
+            this.removePages(pageMap.values());
             pageMap.clear();
         }
     }
@@ -77,23 +72,7 @@ class PageCacheRepository implements PageRepository {
         this.maxCachedId = 0;
     }
 
-    @Override
-    public void updatePages(Collection<PageModel> pages) {
-        pageRepository.updatePages(pages);
-    }
-
-    @Override
-    public void insertPages(Collection<PageModel> pages) {
-        pageRepository.insertPages(pages);
-    }
-
-    @Override
-    public void deletePages(Collection<PageModel> pages) {
-        pageRepository.deletePages(pages);
-    }
-
-    @Override
-    public Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, String type, String subtype) {
-        return pageRepository.findPageTitlesToReviewByType(lang, type, subtype);
+    private void removePages(Collection<PageModel> pages) {
+        pageRepository.removePages(pages);
     }
 }

@@ -6,6 +6,8 @@ import static org.mockito.Mockito.when;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.repository.ReplacementRepository;
+import es.bvalero.replacer.repository.TypeSubtypeCount;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +19,7 @@ import org.mockito.MockitoAnnotations;
 class ReplacementCountServiceTest {
 
     @Mock
-    private ReplacementCountRepository replacementCountRepository;
+    private ReplacementRepository replacementRepository;
 
     @InjectMocks
     private ReplacementCountService replacementCountService;
@@ -35,7 +37,7 @@ class ReplacementCountServiceTest {
         TypeSubtypeCount count1 = TypeSubtypeCount.of("X", "Y", 2L);
         TypeSubtypeCount count2 = TypeSubtypeCount.of("X", "Z", 1L);
         List<TypeSubtypeCount> counts = Arrays.asList(count1, count2);
-        when(replacementCountRepository.countReplacementTypesByLang(lang)).thenReturn(counts);
+        when(replacementRepository.countReplacementsByType(lang)).thenReturn(counts);
 
         replacementCountService.scheduledUpdateReplacementCount();
 

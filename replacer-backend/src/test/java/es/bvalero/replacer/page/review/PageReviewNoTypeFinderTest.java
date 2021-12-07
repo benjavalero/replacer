@@ -9,7 +9,7 @@ import es.bvalero.replacer.finder.replacement.ReplacementType;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.index.PageIndexer;
-import es.bvalero.replacer.repository.PageReviewRepository;
+import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -56,7 +56,7 @@ class PageReviewNoTypeFinderTest {
     private final PageReviewOptions options = PageReviewOptions.ofNoType();
 
     @Mock
-    private PageReviewRepository pageReviewRepository;
+    private PageRepository pageRepository;
 
     @Mock
     private WikipediaService wikipediaService;
@@ -79,7 +79,7 @@ class PageReviewNoTypeFinderTest {
     @Test
     void testFindRandomPageToReviewNoTypeNoResultInDb() {
         // No results in DB
-        when(pageReviewRepository.findToReview(any(WikipediaLanguage.class), anyInt()))
+        when(pageRepository.findPageIdsToReview(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(Collections.emptyList());
 
         Optional<PageReview> review = pageReviewNoTypeService.findRandomPageReview(options);
@@ -90,7 +90,7 @@ class PageReviewNoTypeFinderTest {
     @Test
     void testFindRandomPageToReviewNoTypeNotInWikipedia() throws ReplacerException {
         // 1 result in DB
-        when(pageReviewRepository.findToReview(any(WikipediaLanguage.class), anyInt()))
+        when(pageRepository.findPageIdsToReview(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
             .thenReturn(Collections.emptyList());
 
@@ -105,7 +105,7 @@ class PageReviewNoTypeFinderTest {
     @Test
     void testFindRandomPageToReviewNoTypeWithReplacements() throws ReplacerException {
         // 1 result in DB
-        when(pageReviewRepository.findToReview(any(WikipediaLanguage.class), anyInt()))
+        when(pageRepository.findPageIdsToReview(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
 
         // The page exists in Wikipedia
@@ -125,7 +125,7 @@ class PageReviewNoTypeFinderTest {
     @Test
     void testFindRandomPageToReviewNoTypeNoReplacements() throws ReplacerException {
         // 1 result in DB
-        when(pageReviewRepository.findToReview(any(WikipediaLanguage.class), anyInt()))
+        when(pageRepository.findPageIdsToReview(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
             .thenReturn(Collections.emptyList());
 
@@ -147,7 +147,7 @@ class PageReviewNoTypeFinderTest {
     @Test
     void testFindRandomPageToReviewNoTypeSecondResult() throws ReplacerException {
         // 2 results in DB
-        when(pageReviewRepository.findToReview(any(WikipediaLanguage.class), anyInt()))
+        when(pageRepository.findPageIdsToReview(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)));
 
         // Only the page 2 exists in Wikipedia

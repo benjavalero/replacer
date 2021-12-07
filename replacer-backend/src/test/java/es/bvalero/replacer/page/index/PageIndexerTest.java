@@ -135,7 +135,7 @@ class PageIndexerTest {
             .pageId(page.getId().getPageId())
             .replacements(Collections.emptyList())
             .build();
-        when(pageRepository.findByPageId(page.getId())).thenReturn(Optional.of(pageModel));
+        when(pageRepository.findPageById(page.getId())).thenReturn(Optional.of(pageModel));
 
         when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(false);
 
@@ -158,7 +158,7 @@ class PageIndexerTest {
             .pageId(page.getId().getPageId())
             .replacements(Collections.emptyList())
             .build();
-        when(pageRepository.findByPageId(page.getId())).thenReturn(Optional.of(pageModel));
+        when(pageRepository.findPageById(page.getId())).thenReturn(Optional.of(pageModel));
 
         pageIndexer.indexObsoletePage(page.getId());
 

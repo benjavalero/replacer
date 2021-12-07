@@ -37,17 +37,18 @@ public class PageIndexResultSaver {
     }
 
     protected void saveBatchResult() {
-        pageRepository.insertPages(IndexablePageMapper.toModel(batchResult.getCreatePages()));
+        // Pages must be added before adding the related replacements
+        // Pages are removed along with their replacements
+        // We assume the replacements removed correspond to not removed pages
+        pageRepository.addPages(IndexablePageMapper.toModel(batchResult.getAddPages()));
         pageRepository.updatePages(IndexablePageMapper.toModel(batchResult.getUpdatePages()));
-        pageRepository.deletePages(IndexablePageMapper.toModel(batchResult.getDeletePages()));
-        replacementRepository.insertReplacements(
-            IndexableReplacementMapper.toModel(batchResult.getCreateReplacements())
-        );
+        pageRepository.removePages(IndexablePageMapper.toModel(batchResult.getRemovePages()));
+        replacementRepository.addReplacements(IndexableReplacementMapper.toModel(batchResult.getAddReplacements()));
         replacementRepository.updateReplacements(
             IndexableReplacementMapper.toModel(batchResult.getUpdateReplacements())
         );
-        replacementRepository.deleteReplacements(
-            IndexableReplacementMapper.toModel(batchResult.getDeleteReplacements())
+        replacementRepository.removeReplacements(
+            IndexableReplacementMapper.toModel(batchResult.getRemoveReplacements())
         );
 
         this.clearBatchResult();

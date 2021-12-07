@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
+import es.bvalero.replacer.repository.ReplacementRepository;
 import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +23,7 @@ class ObsoleteMisspellingListenerTest {
     private static final SetValuedMap<WikipediaLanguage, String> EMPTY_MAP = new HashSetValuedHashMap<>();
 
     @Mock
-    private ReplacementService replacementService;
+    private ReplacementRepository replacementRepository;
 
     @InjectMocks
     private ObsoleteMisspellingListener obsoleteMisspellingListener;
@@ -45,8 +46,8 @@ class ObsoleteMisspellingListenerTest {
             new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, EMPTY_MAP, map1)
         );
 
-        verify(replacementService, times(0))
-            .deleteToBeReviewedBySubtype(any(WikipediaLanguage.class), anyString(), anySet());
+        verify(replacementRepository, times(0))
+            .removeReplacementsByType(any(WikipediaLanguage.class), anyString(), anySet());
 
         SimpleMisspelling misspelling3 = SimpleMisspelling.ofCaseInsensitive("C", "D");
         SetValuedMap<WikipediaLanguage, SimpleMisspelling> map2 = new HashSetValuedHashMap<>();
@@ -57,8 +58,8 @@ class ObsoleteMisspellingListenerTest {
             new PropertyChangeEvent(this, SimpleMisspellingLoader.PROPERTY_ITEMS, map1, map2)
         );
 
-        verify(replacementService)
-            .deleteToBeReviewedBySubtype(
+        verify(replacementRepository)
+            .removeReplacementsByType(
                 WikipediaLanguage.SPANISH,
                 ReplacementType.MISSPELLING_SIMPLE.getLabel(),
                 Collections.singleton("A")

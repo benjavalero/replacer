@@ -34,9 +34,9 @@ class PageIndexResultSaverTest {
         pageIndexResultSaver.save(PageIndexResult.ofEmpty(PageIndexStatus.PAGE_INDEXED, Collections.emptyList()));
 
         verify(pageRepository).updatePages(anyCollection());
-        verify(pageRepository).insertPages(anyCollection());
+        verify(pageRepository).addPages(anyCollection());
         verify(replacementRepository).updateReplacements(anyCollection());
-        verify(replacementRepository).insertReplacements(anyCollection());
-        verify(replacementRepository).deleteReplacements(anyCollection());
+        verify(replacementRepository).addReplacements(anyCollection());
+        verify(replacementRepository).removeReplacements(anyCollection());
     }
 }

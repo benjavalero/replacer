@@ -10,7 +10,7 @@ import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.index.PageIndexer;
 import es.bvalero.replacer.replacement.count.ReplacementCountService;
-import es.bvalero.replacer.repository.PageReviewRepository;
+import es.bvalero.replacer.repository.PageRepository;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -64,7 +64,7 @@ class PageReviewTypeSubtypeFinderTest {
     );
 
     @Mock
-    private PageReviewRepository pageReviewRepository;
+    private PageRepository pageRepository;
 
     @Mock
     private ReplacementCountService replacementCountService;
@@ -90,7 +90,7 @@ class PageReviewTypeSubtypeFinderTest {
     @Test
     void testFindRandomPageToReviewTypeNotFiltered() throws ReplacerException {
         // 1 result in DB
-        when(pageReviewRepository.findToReviewByType(any(WikipediaLanguage.class), anyString(), anyString(), anyInt()))
+        when(pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), anyString(), anyString(), anyInt()))
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)))
             .thenReturn(Collections.emptyList());
 
@@ -110,7 +110,7 @@ class PageReviewTypeSubtypeFinderTest {
     @Test
     void testFindRandomPageToReviewTypeFiltered() throws ReplacerException {
         // 1 result in DB
-        when(pageReviewRepository.findToReviewByType(any(WikipediaLanguage.class), anyString(), anyString(), anyInt()))
+        when(pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), anyString(), anyString(), anyInt()))
             .thenReturn(new ArrayList<>(Collections.singleton(randomId)));
 
         // The page exists in Wikipedia
@@ -134,11 +134,11 @@ class PageReviewTypeSubtypeFinderTest {
         // 3. Find a random page by type. In DB there is no page.
 
         // 2 results in DB by type, no results the second time.
-        when(pageReviewRepository.findToReviewByType(any(WikipediaLanguage.class), anyString(), anyString(), anyInt()))
+        when(pageRepository.findPageIdsToReviewByType(any(WikipediaLanguage.class), anyString(), anyString(), anyInt()))
             .thenReturn(new ArrayList<>(Arrays.asList(randomId, randomId2)))
             .thenReturn(Collections.emptyList());
         // 1 result in DB by no type
-        when(pageReviewRepository.findToReview(any(WikipediaLanguage.class), anyInt()))
+        when(pageRepository.findPageIdsToReview(any(WikipediaLanguage.class), anyInt()))
             .thenReturn(new ArrayList<>(Collections.singletonList(randomId2)));
 
         // The pages exist in Wikipedia

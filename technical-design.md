@@ -134,6 +134,13 @@ In backend most domain objects are defined as immutables, with Lombok annotation
 
 As a webapp, Replacer may be used by several users at a time. All data structures which may be accessed by several threads should be thread-safe.
 
+### Persistence
+
+Currently, Replacer uses its own classic SQL database hosted in Wikipedia servers. As performance is critical, especially when indexing, finally a classic JDBC approach is taken instead of using an ORM like JPA.
+
+As the database structure is quite simple, there is one repository per table, although these tables are of course linked.
+
+
 ## Logging
 
 Replacer uses Logback logging, the default in Spring Boot. To initialize the loggers, we use the Lombok annotation `@Slf4j` in each class.

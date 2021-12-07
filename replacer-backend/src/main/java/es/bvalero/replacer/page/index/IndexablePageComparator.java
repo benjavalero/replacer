@@ -29,7 +29,7 @@ class IndexablePageComparator {
 
         // Check new page
         if (dbPage == null) {
-            pageIndexResult.add(PageIndexResult.builder().createPages(Set.of(page)).build());
+            pageIndexResult.add(PageIndexResult.builder().addPages(Set.of(page)).build());
         } else {
             if (!Objects.equals(page.getTitle(), dbPage.getTitle())) {
                 // Just in case check the title as it might change with time
@@ -76,7 +76,7 @@ class IndexablePageComparator {
         } else {
             // New replacement
             dbPageReplacements.add(replacement.withTouched(true));
-            result = PageIndexResult.builder().createReplacements(Set.of(replacement)).build();
+            result = PageIndexResult.builder().addReplacements(Set.of(replacement)).build();
         }
         return result;
     }
@@ -153,7 +153,7 @@ class IndexablePageComparator {
             .filter(rep -> rep.isSystemReviewed() && !rep.isDummy())
             .collect(Collectors.toSet());
         systemReviewed.forEach(dbReplacements::remove);
-        result.add(PageIndexResult.builder().deleteReplacements(systemReviewed).build());
+        result.add(PageIndexResult.builder().removeReplacements(systemReviewed).build());
 
         // All remaining replacements to review and not checked so far are obsolete and thus to be deleted
         Set<IndexableReplacement> obsolete = dbReplacements
@@ -161,7 +161,7 @@ class IndexablePageComparator {
             .filter(rep -> rep.isToBeReviewed() && !rep.isTouched())
             .collect(Collectors.toSet());
         obsolete.forEach(dbReplacements::remove);
-        result.add(PageIndexResult.builder().deleteReplacements(obsolete).build());
+        result.add(PageIndexResult.builder().removeReplacements(obsolete).build());
 
         // We use a dummy replacement to store in some place the last update of the page
         // in case there are no replacements to review to store it instead.
@@ -177,7 +177,7 @@ class IndexablePageComparator {
         if (dummies.size() > 1) {
             Set<IndexableReplacement> obsoleteDummies = new HashSet<>(dummies.subList(1, dummies.size()));
             obsoleteDummies.forEach(dbReplacements::remove);
-            result.add(PageIndexResult.builder().deleteReplacements(obsoleteDummies).build());
+            result.add(PageIndexResult.builder().removeReplacements(obsoleteDummies).build());
         }
 
         // If there remain replacements to review there is no need of dummy replacement
@@ -188,7 +188,7 @@ class IndexablePageComparator {
         if (existReplacementsToReview) {
             dummy.ifPresent(
                 indexableReplacement ->
-                    result.add(PageIndexResult.builder().deleteReplacements(Set.of(indexableReplacement)).build())
+                    result.add(PageIndexResult.builder().removeReplacements(Set.of(indexableReplacement)).build())
             );
         } else {
             if (dummy.isPresent()) {
@@ -207,7 +207,7 @@ class IndexablePageComparator {
                 }
             } else {
                 result.add(
-                    PageIndexResult.builder().createReplacements(Set.of(IndexableReplacement.ofDummy(page))).build()
+                    PageIndexResult.builder().addReplacements(Set.of(IndexableReplacement.ofDummy(page))).build()
                 );
             }
         }

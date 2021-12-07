@@ -5,6 +5,7 @@ import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.replacement.ReplacementType;
+import es.bvalero.replacer.repository.ReplacementRepository;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Set;
@@ -26,7 +27,7 @@ public class ObsoleteMisspellingListener implements PropertyChangeListener {
     private ComposedMisspellingLoader composedMisspellingLoader;
 
     @Autowired
-    private ReplacementService replacementService;
+    private ReplacementRepository replacementRepository;
 
     @PostConstruct
     public void init() {
@@ -65,7 +66,7 @@ public class ObsoleteMisspellingListener implements PropertyChangeListener {
                     misspellingType,
                     oldWords
                 );
-                replacementService.deleteToBeReviewedBySubtype(lang, misspellingType.getLabel(), oldWords);
+                replacementRepository.removeReplacementsByType(lang, misspellingType.getLabel(), oldWords);
             }
         }
     }

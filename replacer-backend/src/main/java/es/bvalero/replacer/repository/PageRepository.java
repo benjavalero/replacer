@@ -7,19 +7,32 @@ import java.util.Optional;
 
 public interface PageRepository {
     /** Find a page including all the replacements */
-    Optional<PageModel> findByPageId(WikipediaPageId id);
+    Optional<PageModel> findPageById(WikipediaPageId id);
 
     /** Find pages, including all the replacements, by a range of page IDs. */
-    Collection<PageModel> findByPageIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId);
+    Collection<PageModel> findPagesByIdInterval(WikipediaLanguage lang, int minPageId, int maxPageId);
 
-    /** Insert a collection of pages without inserting the replacements */
-    void insertPages(Collection<PageModel> pages);
+    /** Add a collection of pages without adding the replacements */
+    void addPages(Collection<PageModel> pages);
 
     /** Update a collection of pages. Actually only the title is updated. */
     void updatePages(Collection<PageModel> pages);
 
-    /** Delete a collection of pages and its related replacements */
-    void deletePages(Collection<PageModel> pages);
+    /** Remove a collection of pages and its related replacements */
+    void removePages(Collection<PageModel> pages);
 
+    /** Find a random batch of pages to review and return the IDs */
+    Collection<Integer> findPageIdsToReview(WikipediaLanguage lang, int numResult);
+
+    /** Count the number of pages to review */
+    long countPagesToReview(WikipediaLanguage lang);
+
+    /** Find a random batch of pages to review for a given type and return the IDs */
+    Collection<Integer> findPageIdsToReviewByType(WikipediaLanguage lang, String type, String subtype, int numResult);
+
+    /** Count the number of pages to review by type */
+    long countPagesToReviewByType(WikipediaLanguage lang, String type, String subtype);
+
+    /** Find the pages to review by the given type and return the titles */
     Collection<String> findPageTitlesToReviewByType(WikipediaLanguage lang, String type, String subtype);
 }
