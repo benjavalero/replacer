@@ -19,10 +19,10 @@ import java.util.Map;
 import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
-import lombok.AccessLevel;
 import lombok.Setter;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MisspellingComposedFinder extends MisspellingFinder implements PropertyChangeListener {
 
-    @Setter(AccessLevel.PACKAGE) // For testing
+    @Setter(onMethod_ = @TestOnly)
     @Autowired
     private ComposedMisspellingLoader composedMisspellingLoader;
 

@@ -13,9 +13,9 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +42,7 @@ class DumpFileSystemFinder implements DumpFinder {
     private static final String DUMP_PATH_PROJECT_FORMAT = "%swiki";
     private static final String DUMP_FILE_NAME_FORMAT = "%s-%s-pages-articles.xml.bz2";
 
-    @Setter(AccessLevel.PACKAGE) // For testing
+    @Setter(onMethod_ = @TestOnly)
     @Value("${replacer.dump.path.base}")
     private String dumpPathBase;
 

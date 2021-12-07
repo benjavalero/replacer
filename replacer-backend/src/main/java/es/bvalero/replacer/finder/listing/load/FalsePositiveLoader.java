@@ -7,6 +7,7 @@ import es.bvalero.replacer.finder.listing.find.ListingFinder;
 import es.bvalero.replacer.finder.listing.parse.FalsePositiveParser;
 import java.util.Set;
 import lombok.Setter;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ public class FalsePositiveLoader extends ListingLoader<FalsePositive> {
     @Autowired
     private ListingFinder listingFinder;
 
-    @Setter // For testing
+    @Setter(onMethod_ = @TestOnly)
     @Autowired
     private FalsePositiveParser falsePositiveParser;
 
