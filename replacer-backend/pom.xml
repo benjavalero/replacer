@@ -79,11 +79,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.jcabi</groupId>
-            <artifactId>jcabi-aspects</artifactId>
-            <version>0.23.2</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.rozidan</groupId>
             <artifactId>logger-spring-boot</artifactId>
             <version>1.1.0</version>
@@ -290,58 +285,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <!-- https://github.com/mojohaus/aspectj-maven-plugin/issues/24 -->
-                <groupId>com.github.m50d</groupId>
-                <artifactId>aspectj-maven-plugin</artifactId>
-                <version>1.11.1</version>
-                <configuration>
-                    <complianceLevel>${java.version}</complianceLevel>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <showWeaveInfo>false</showWeaveInfo>
-                    <verbose>true</verbose>
-                    <Xlint>ignore</Xlint>
-                    <encoding>UTF-8</encoding>
-
-                    <!-- IMPORTANT-->
-                    <!-- https://stackoverflow.com/a/52869545/1264066 -->
-                    <excludes>
-                        <exclude>**/*.java</exclude>
-                    </excludes>
-                    <forceAjcCompile>true</forceAjcCompile>
-                    <sources/>
-                    <!-- IMPORTANT-->
-
-                    <aspectLibraries>
-                        <aspectLibrary>
-                            <groupId>com.jcabi</groupId>
-                            <artifactId>jcabi-aspects</artifactId>
-                        </aspectLibrary>
-                    </aspectLibraries>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>default-compile</id>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <weaveDirectories>
-                                <weaveDirectory>${project.build.directory}/classes</weaveDirectory>
-                            </weaveDirectories>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.aspectj</groupId>
-                        <artifactId>aspectjtools</artifactId>
-                        <version>${aspectj.version}</version>
-                    </dependency>
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>com.hubspot.maven.plugins</groupId>
