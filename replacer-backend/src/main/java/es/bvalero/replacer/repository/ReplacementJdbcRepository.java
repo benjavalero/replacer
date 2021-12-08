@@ -50,8 +50,10 @@ class ReplacementJdbcRepository implements ReplacementRepository {
             .stream()
             .map(r -> Objects.requireNonNull(r.getId()))
             .collect(Collectors.toUnmodifiableSet());
-        SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
-        jdbcTemplate.update(sql, namedParameters);
+        if (!ids.isEmpty()) {
+            SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("ids", ids);
+            jdbcTemplate.update(sql, namedParameters);
+        }
     }
 
     @Override
@@ -156,14 +158,18 @@ class ReplacementJdbcRepository implements ReplacementRepository {
 
     @Override
     public void removeReplacementsByType(WikipediaLanguage lang, String type, Collection<String> subtypes) {
-        String sql =
-            "DELETE FROM replacement " +
-            "WHERE lang = :lang AND type = :type AND subtype IN (:subtypes) AND reviewer IS NULL";
-        SqlParameterSource namedParameters = new MapSqlParameterSource()
-            .addValue("lang", lang.getCode())
-            .addValue("type", type)
-            .addValue("subtypes", subtypes);
-        jdbcTemplate.update(sql, namedParameters);
+        if (subtypes.isEmpty()) {
+            throw new IllegalArgumentException();
+        } else {
+            String sql =
+                "DELETE FROM replacement " +
+                "WHERE lang = :lang AND type = :type AND subtype IN (:subtypes) AND reviewer IS NULL";
+            SqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("lang", lang.getCode())
+                .addValue("type", type)
+                .addValue("subtypes", subtypes);
+            jdbcTemplate.update(sql, namedParameters);
+        }
     }
 
     @Override
