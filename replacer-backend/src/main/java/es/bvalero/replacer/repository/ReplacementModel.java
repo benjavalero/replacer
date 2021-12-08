@@ -29,8 +29,8 @@ public class ReplacementModel {
     @NonNull
     Integer position;
 
-    @NonNull
-    String context;
+    @Nullable
+    String context; // There are thousands of replacements reviewed before the context existed
 
     @NonNull
     LocalDate lastUpdate;

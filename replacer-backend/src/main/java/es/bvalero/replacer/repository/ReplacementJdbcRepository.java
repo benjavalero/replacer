@@ -65,7 +65,7 @@ class ReplacementJdbcRepository implements ReplacementRepository {
             .addValue("lang", lang.getCode())
             .addValue("system", REVIEWER_SYSTEM);
         Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return result == null ? 0L : result;
+        return Objects.requireNonNullElse(result, 0L);
     }
 
     @Override
@@ -73,7 +73,7 @@ class ReplacementJdbcRepository implements ReplacementRepository {
         String sql = "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return result == null ? 0L : result;
+        return Objects.requireNonNullElse(result, 0L);
     }
 
     @Override
@@ -181,6 +181,6 @@ class ReplacementJdbcRepository implements ReplacementRepository {
             .addValue("chunkSize", chunkSize)
             .addValue("lang", lang.getCode());
         Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return result == null ? 0L : result;
+        return Objects.requireNonNullElse(result, 0L);
     }
 }

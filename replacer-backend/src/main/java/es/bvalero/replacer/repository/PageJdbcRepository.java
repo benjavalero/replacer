@@ -116,7 +116,7 @@ class PageJdbcRepository implements PageRepository {
         String sql = "SELECT COUNT(*) FROM replacement WHERE lang = :lang AND reviewer IS NULL";
         SqlParameterSource namedParameters = new MapSqlParameterSource().addValue("lang", lang.getCode());
         Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return result == null ? 0L : result;
+        return Objects.requireNonNullElse(result, 0L);
     }
 
     @Override
@@ -154,7 +154,7 @@ class PageJdbcRepository implements PageRepository {
             .addValue("type", type)
             .addValue("subtype", subtype);
         Long result = jdbcTemplate.queryForObject(sql, namedParameters, Long.class);
-        return result == null ? 0L : result;
+        return Objects.requireNonNullElse(result, 0L);
     }
 
     @Override

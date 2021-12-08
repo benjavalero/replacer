@@ -6,6 +6,7 @@ import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.repository.ReplacementModel;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
 
@@ -39,6 +40,8 @@ class IndexableReplacementMapper {
     }
 
     private IndexableReplacement fromModel(ReplacementModel replacement) {
+        // The context in database can be null as there are thousands of reviewed cases before the context existed.
+        // As a trick we fake the context so the one in the IndexableReplacement can be still not-null.
         return IndexableReplacement
             .builder()
             .id(replacement.getId())
@@ -48,7 +51,7 @@ class IndexableReplacementMapper {
             .type(replacement.getType())
             .subtype(replacement.getSubtype())
             .position(replacement.getPosition())
-            .context(replacement.getContext())
+            .context(Objects.requireNonNullElse(replacement.getContext(), ""))
             .lastUpdate(replacement.getLastUpdate())
             .reviewer(replacement.getReviewer())
             .build();
