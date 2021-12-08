@@ -389,4 +389,33 @@ class IndexablePageComparatorTest {
             .build();
         assertEquals(expected, toIndex);
     }
+
+    @Test
+    void testIndexExistingPageWithNoChanges() {
+        LocalDate same = LocalDate.now();
+
+        // R1 : In DB not reviewed => Do nothing
+
+        // Replacements found to index
+        IndexablePageId pageId = IndexablePageId.of(WikipediaLanguage.getDefault(), 1);
+        IndexableReplacement r1 = IndexableReplacement
+            .builder()
+            .indexablePageId(pageId)
+            .type("1")
+            .subtype("1")
+            .position(1)
+            .context("")
+            .lastUpdate(same)
+            .build();
+        IndexablePage page = IndexablePage.builder().id(pageId).replacements(List.of(r1)).lastUpdate(same).build();
+
+        // Existing replacements in DB
+        IndexableReplacement r1db = r1.withTouched(false); // Trick to clone and match with the one found to index
+        IndexablePage dbPage = IndexablePage.builder().id(pageId).replacements(List.of(r1db)).lastUpdate(same).build();
+
+        PageIndexResult toIndex = indexablePageComparator.indexPageReplacements(page, dbPage);
+
+        PageIndexResult expected = PageIndexResult.ofEmpty();
+        assertEquals(expected, toIndex);
+    }
 }

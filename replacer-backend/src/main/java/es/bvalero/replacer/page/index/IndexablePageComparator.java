@@ -23,6 +23,12 @@ class IndexablePageComparator {
         boolean ignoreContext =
             existReplacementsWithSameContext(page.getReplacements()) ||
             existReplacementsWithSameContext(dbReplacements);
+
+        // We compare each replacement found in the page to index with the ones existing in database
+        // We add to the result the needed modifications to align the database with the actual replacements
+        // Meanwhile we also modify the set of DB replacements to eventually contain the final result
+        // All replacements modified in the DB set are marked as "touched".
+        // In case a replacement is kept as is, we also mark it as "touched".
         for (IndexableReplacement replacement : page.getReplacements()) {
             pageIndexResult.add(handleReplacement(replacement, dbReplacements, ignoreContext));
         }
@@ -47,11 +53,7 @@ class IndexablePageComparator {
         return replacements.size() != replacements.stream().map(IndexableReplacement::getContext).distinct().count();
     }
 
-    /**
-     * Check the given replacement with the ones in DB. Update the given DB list if needed.
-     *
-     * @return The updated replacement to be managed in DB if needed, or the new one to be created.
-     */
+    /* Check the given replacement with the ones in DB. Update the given DB list if needed. */
     private PageIndexResult handleReplacement(
         IndexableReplacement replacement,
         Set<IndexableReplacement> dbPageReplacements,
@@ -65,13 +67,13 @@ class IndexablePageComparator {
         );
         if (existing.isPresent()) {
             IndexableReplacement dbReplacement = existing.get();
-            IndexableReplacement handledReplacement = handleExistingReplacement(replacement, dbReplacement);
+            boolean handleReplacement = handleExistingReplacement(replacement, dbReplacement);
             dbPageReplacements.remove(dbReplacement);
-            if (handledReplacement.equals(dbReplacement)) {
-                result = PageIndexResult.ofEmpty();
+            dbPageReplacements.add(replacement.withTouched(true));
+            if (handleReplacement) {
+                result = PageIndexResult.builder().updateReplacements(Set.of(replacement)).build();
             } else {
-                dbPageReplacements.add(handledReplacement.withTouched(true));
-                result = PageIndexResult.builder().updateReplacements(Set.of(handledReplacement)).build();
+                result = PageIndexResult.ofEmpty();
             }
         } else {
             // New replacement
@@ -112,31 +114,16 @@ class IndexablePageComparator {
         }
     }
 
-    /**
-     * Check the given replacement with the counterpart in DB.
-     *
-     * @return The original DB replacement update plus the action to do.
-     */
-    private IndexableReplacement handleExistingReplacement(
-        IndexableReplacement replacement,
-        IndexableReplacement dbReplacement
-    ) {
-        // Check if the replacement must be updated in DB
-        if (
+    /* Compare the given replacement with the counterpart in DB and return if it must be updated */
+    private boolean handleExistingReplacement(IndexableReplacement replacement, IndexableReplacement dbReplacement) {
+        return (
             dbReplacement.isToBeReviewed() &&
             (
                 dbReplacement.isOlderThan(replacement) ||
                 !Objects.equals(replacement.getPosition(), dbReplacement.getPosition()) ||
                 !Objects.equals(replacement.getContext(), dbReplacement.getContext())
             )
-        ) {
-            return dbReplacement
-                .withPosition(replacement.getPosition())
-                .withContext(replacement.getContext())
-                .withLastUpdate(replacement.getLastUpdate());
-        } else {
-            return dbReplacement;
-        }
+        );
     }
 
     /**
