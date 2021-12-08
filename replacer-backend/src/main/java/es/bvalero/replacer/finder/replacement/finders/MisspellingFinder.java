@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
@@ -15,6 +15,7 @@ import java.util.regex.MatchResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.SetValuedMap;
 import org.jetbrains.annotations.VisibleForTesting;
+import org.springframework.boot.logging.LogLevel;
 
 /**
  * Abstract class for the common functionality of the misspelling finders.
@@ -35,7 +36,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         }
     }
 
-    @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)
+    @Loggable(value = LogLevel.DEBUG, skipArgs = true, skipResult = true)
     void buildMisspellingMaps(SetValuedMap<WikipediaLanguage, Misspelling> misspellings) {
         // Build a map to quick access the misspellings by word
         Map<WikipediaLanguage, Map<String, Misspelling>> map = new EnumMap<>(WikipediaLanguage.class);

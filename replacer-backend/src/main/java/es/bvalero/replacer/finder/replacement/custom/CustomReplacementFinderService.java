@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.Finder;
@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,7 +43,7 @@ public class CustomReplacementFinderService extends ImmutableFilterFinderService
         throw new IllegalCallerException();
     }
 
-    @Loggable(prepend = true, value = Loggable.TRACE, unit = TimeUnit.SECONDS)
+    @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 1, warnUnit = TimeUnit.SECONDS)
     public Iterable<Replacement> findCustomReplacements(WikipediaPage wikipediaPage, CustomOptions customOptions) {
         CustomReplacementFinder finder = CustomReplacementFinder.of(customOptions);
         FinderPage page = FinderPageMapper.fromDomain(wikipediaPage);

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.wikipedia.api;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.*;
@@ -12,12 +12,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.context.annotation.Profile;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 /** Wikipedia service implementation using classic Wikipedia API */
 @Slf4j
+@Loggable(LogLevel.TRACE)
 @Service
 @Profile("!offline")
 class WikipediaApiService implements WikipediaService {
@@ -58,7 +60,6 @@ class WikipediaApiService implements WikipediaService {
     }
 
     @VisibleForTesting
-    @Loggable(value = Loggable.DEBUG)
     WikipediaApiResponse.UserInfo getLoggedUserName(WikipediaLanguage lang, AccessToken accessToken)
         throws ReplacerException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
@@ -84,14 +85,12 @@ class WikipediaApiService implements WikipediaService {
         return response.getQuery().getUserinfo();
     }
 
-    @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
     public Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) throws ReplacerException {
         // Return the only value that should be in the map
         return getPagesByIds("titles", pageTitle, lang).stream().findAny();
     }
 
-    @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
     public Optional<WikipediaPage> getPageById(WikipediaPageId id) throws ReplacerException {
         // Return the only value that should be in the map
@@ -99,7 +98,6 @@ class WikipediaApiService implements WikipediaService {
     }
 
     @VisibleForTesting
-    @Loggable(prepend = true, value = Loggable.TRACE)
     List<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws ReplacerException {
         List<WikipediaPage> pages = new ArrayList<>(pageIds.size());
         // There is a maximum number of pages to request
@@ -163,7 +161,6 @@ class WikipediaApiService implements WikipediaService {
             .build();
     }
 
-    @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
     public Collection<WikipediaSection> getPageSections(WikipediaPageId id) throws ReplacerException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
@@ -213,7 +210,6 @@ class WikipediaApiService implements WikipediaService {
             .build();
     }
 
-    @Loggable(prepend = true, value = Loggable.TRACE)
     @Override
     public Optional<WikipediaPage> getPageSection(WikipediaPageId id, WikipediaSection section)
         throws ReplacerException {
@@ -235,7 +231,7 @@ class WikipediaApiService implements WikipediaService {
     }
 
     @Override
-    @Loggable(value = Loggable.DEBUG, prepend = true)
+    @Loggable(LogLevel.DEBUG)
     public WikipediaSearchResult searchByText(
         WikipediaLanguage lang,
         String text,
@@ -280,7 +276,6 @@ class WikipediaApiService implements WikipediaService {
         return params;
     }
 
-    @Loggable(value = Loggable.DEBUG)
     @VisibleForTesting
     String buildSearchExpression(String text, boolean caseSensitive) {
         // Search directly in the source is very expensive
@@ -291,6 +286,7 @@ class WikipediaApiService implements WikipediaService {
             // Case-sensitive search with a regex
             quoted = String.format("%s insource:/%s/", quoted, quoted);
         }
+        LOGGER.debug("Search expression: {} - {} ==> {}", text, caseSensitive, quoted);
         return quoted;
     }
 
@@ -380,7 +376,6 @@ class WikipediaApiService implements WikipediaService {
         return params;
     }
 
-    @Loggable(prepend = true, value = Loggable.TRACE)
     @VisibleForTesting
     EditToken getEditToken(WikipediaPageId id, AccessToken accessToken) throws ReplacerException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest

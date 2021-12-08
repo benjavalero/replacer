@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.immutable.finders;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RegExp;
 import dk.brics.automaton.RunAutomaton;
@@ -24,6 +24,7 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.SetValuedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -51,7 +52,7 @@ class FalsePositiveFinder implements ImmutableFinder, PropertyChangeListener {
         this.falsePositivesAutomata = buildFalsePositivesAutomata(falsePositives);
     }
 
-    @Loggable(value = Loggable.DEBUG, skipArgs = true, skipResult = true)
+    @Loggable(value = LogLevel.DEBUG, skipArgs = true, skipResult = true)
     private Map<WikipediaLanguage, RunAutomaton> buildFalsePositivesAutomata(
         SetValuedMap<WikipediaLanguage, FalsePositive> falsePositives
     ) {

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.replacement.stats;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

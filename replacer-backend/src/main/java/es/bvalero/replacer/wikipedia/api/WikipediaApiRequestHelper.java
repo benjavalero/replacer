@@ -2,12 +2,12 @@ package es.bvalero.replacer.wikipedia.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.rozidan.springboot.logger.Loggable;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth10aService;
-import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Component;
 
 /** Helper to perform Wikipedia API requests */
@@ -32,7 +33,7 @@ class WikipediaApiRequestHelper {
     @Autowired
     private ObjectMapper jsonMapper;
 
-    @Loggable(prepend = true, value = Loggable.TRACE)
+    @Loggable(LogLevel.TRACE)
     WikipediaApiResponse executeApiRequest(WikipediaApiRequest apiRequest) throws ReplacerException {
         // Add common parameters to receive a JSON response from Wikipedia API
         WikipediaApiRequest request = apiRequest

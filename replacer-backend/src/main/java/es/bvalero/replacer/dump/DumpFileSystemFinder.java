@@ -1,6 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import java.io.IOException;
@@ -17,6 +17,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Component;
 
 /**
@@ -46,7 +47,7 @@ class DumpFileSystemFinder implements DumpFinder {
     @Value("${replacer.dump.path.base}")
     private String dumpPathBase;
 
-    @Loggable(value = Loggable.DEBUG)
+    @Loggable(LogLevel.DEBUG)
     public Path findLatestDumpFile(WikipediaLanguage lang) throws ReplacerException {
         Path dumPath = Paths.get(dumpPathBase, getDumpPathProject(lang));
         LOGGER.trace("Dump path: {}", dumPath);

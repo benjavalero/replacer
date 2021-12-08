@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.list;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "pages")
-@Loggable(prepend = true, trim = false)
+@Loggable(skipResult = true)
 @RestController
 @RequestMapping("api/pages")
 public class PageListController {

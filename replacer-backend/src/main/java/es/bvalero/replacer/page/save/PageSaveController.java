@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.save;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.review.PageReviewMapper;
@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "pages")
-@Loggable(prepend = true, trim = false)
 @RestController
 @RequestMapping("api/pages")
 public class PageSaveController {
@@ -30,6 +29,7 @@ public class PageSaveController {
     @Autowired
     private PageSaveService pageSaveService;
 
+    @Loggable(skipResult = true)
     @ApiOperation(value = "Update page contents and mark as reviewed")
     @PostMapping(value = "/{id}")
     public ResponseEntity<String> save(

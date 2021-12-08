@@ -1,6 +1,5 @@
 package es.bvalero.replacer.dump;
 
-import com.jcabi.aspects.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.index.PageIndexStatus;
 import es.bvalero.replacer.page.index.batch.PageBatchIndexer;
@@ -16,7 +15,6 @@ class DumpPageIndexer {
     @Autowired
     private PageBatchIndexer pageIndexer;
 
-    @Loggable(prepend = true, value = Loggable.TRACE)
     PageIndexStatus index(DumpPage dumpPage) {
         WikipediaPage page = DumpPageMapper.toDomain(dumpPage);
         return pageIndexer.indexPageReplacements(page).getStatus();

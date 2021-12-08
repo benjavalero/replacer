@@ -1,6 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.exception.UnauthorizedException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import io.swagger.annotations.Api;
@@ -24,7 +24,7 @@ public class DumpController {
     private WikipediaService wikipediaService;
 
     @ApiOperation(value = "Find the status of the current (or the last) dump indexing")
-    @Loggable(value = Loggable.DEBUG, trim = false)
+    @Loggable(skipResult = true)
     @GetMapping(value = "")
     public DumpIndexingStatus getDumpIndexingStatus(
         @ApiParam(value = "Wikipedia user name", required = true, example = "Benjavalero") @RequestParam String user
@@ -34,7 +34,7 @@ public class DumpController {
     }
 
     @ApiOperation(value = "Start manually a dump indexing")
-    @Loggable(prepend = true)
+    @Loggable(entered = true, skipResult = true)
     @PostMapping(value = "")
     public void manualStartDumpIndexing(
         @ApiParam(value = "Wikipedia user name", required = true, example = "Benjavalero") @RequestParam String user

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.FinderResult;
 import es.bvalero.replacer.finder.FinderService;
@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.logging.LogLevel;
 
 /** Decorator to remove the found items contained in immutables */
 public abstract class ImmutableFilterFinderService<T extends FinderResult> implements FinderService<T> {
@@ -24,7 +25,7 @@ public abstract class ImmutableFilterFinderService<T extends FinderResult> imple
         this.immutableFinderService = immutableFinderService;
     }
 
-    @Loggable(prepend = true, value = Loggable.TRACE, unit = TimeUnit.SECONDS)
+    @Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 1, warnUnit = TimeUnit.SECONDS)
     @Override
     public Iterable<T> findIterable(FinderPage page) {
         // There will usually be much more immutables found than results.

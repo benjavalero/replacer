@@ -1,7 +1,8 @@
 package es.bvalero.replacer.dump;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ public class DumpScheduledTask {
     @Autowired
     private DumpManager dumpManager;
 
-    @Loggable(prepend = true)
+    @Loggable(value = LogLevel.DEBUG, entered = true, skipArgs = true, skipResult = true)
     @Scheduled(
         initialDelayString = "${replacer.dump.batch.delay.initial}",
         fixedDelayString = "${replacer.dump.batch.delay}"

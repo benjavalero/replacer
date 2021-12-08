@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.review;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "pages")
-@Loggable(prepend = true, trim = false)
+@Loggable(entered = true)
 @RestController
 @RequestMapping("api/pages")
 public class PageReviewController {

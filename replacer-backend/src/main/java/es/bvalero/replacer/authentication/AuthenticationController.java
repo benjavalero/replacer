@@ -1,6 +1,6 @@
 package es.bvalero.replacer.authentication;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 /** REST controller to perform authentication operations */
 @Api(tags = "authentication")
-@Loggable(prepend = true)
+@Loggable
 @RestController
 @RequestMapping("api/authentication")
 public class AuthenticationController {

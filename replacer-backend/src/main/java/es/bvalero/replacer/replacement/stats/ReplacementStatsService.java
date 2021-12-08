@@ -1,11 +1,13 @@
 package es.bvalero.replacer.replacement.stats;
 
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.repository.ReplacementRepository;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,7 @@ class ReplacementStatsService {
         return ReviewerCountMapper.fromModel(this.replacementRepository.countReplacementsByReviewer(lang));
     }
 
+    @Loggable(value = LogLevel.DEBUG, skipArgs = true, skipResult = true)
     @Scheduled(fixedDelayString = "${replacer.page.stats.delay}")
     public void scheduledUpdateStatistics() {
         for (WikipediaLanguage lang : WikipediaLanguage.values()) {

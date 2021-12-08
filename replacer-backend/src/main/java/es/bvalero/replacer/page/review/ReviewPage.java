@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
@@ -42,6 +43,7 @@ public class ReviewPage {
         required = true,
         example = "== Biografía ==Hijo de humildes inmigrantes piamonteses [...]"
     )
+    @ToString.Exclude
     @NonNull
     @NotNull
     private String content;
@@ -60,22 +62,8 @@ public class ReviewPage {
     @NotNull
     private String queryTimestamp;
 
-    @Override
-    public String toString() {
-        return (
-            "PageReview(lang=" +
-            this.getLang() +
-            ", id=" +
-            this.getId() +
-            ", title=" +
-            this.getTitle() +
-            ", content=" +
-            StringUtils.abbreviate(this.getContent(), CONTENT_SIZE) +
-            ", section=" +
-            this.getSection() +
-            ", queryTimestamp=" +
-            this.getQueryTimestamp() +
-            ")"
-        );
+    @ToString.Include
+    private String getAbbreviatedContent() {
+        return StringUtils.abbreviate(this.getContent(), CONTENT_SIZE);
     }
 }

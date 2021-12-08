@@ -1,5 +1,6 @@
 package es.bvalero.replacer.replacement.count;
 
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.repository.ReplacementModel;
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.Nullable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -98,9 +100,9 @@ class ReplacementCacheRepository implements ReplacementRepository {
         return this.replacementCount;
     }
 
+    @Loggable(value = LogLevel.DEBUG, skipArgs = true, skipResult = true)
     @Scheduled(fixedDelayString = "${replacer.page.stats.delay}")
     public void scheduledUpdateReplacementCount() {
-        LOGGER.info("Scheduled replacement type counts update");
         this.loadReplacementTypeCounts();
     }
 

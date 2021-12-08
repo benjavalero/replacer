@@ -41,7 +41,7 @@ abstract class ListingLoader<T extends ListingItem> {
     }
 
     public final void load() {
-        LOGGER.info("Load {} listings", getLabel());
+        LOGGER.debug("Load {} listings...", getLabel());
         setItems(findItemsForAllLanguages());
     }
 
@@ -66,7 +66,7 @@ abstract class ListingLoader<T extends ListingItem> {
 
     private String findListingContentByLang(WikipediaLanguage lang) {
         try {
-            LOGGER.debug("Find {} listings in {} Wikipedia", getLabel(), lang);
+            LOGGER.debug("Find {} listings in {} Wikipedia...", getLabel(), lang);
             return findListingByLang(lang);
         } catch (ReplacerException e) {
             LOGGER.error("Error finding {} items in {} Wikipedia", getLabel(), lang, e);

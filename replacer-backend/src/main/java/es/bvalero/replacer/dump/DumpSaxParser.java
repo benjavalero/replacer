@@ -1,6 +1,6 @@
 package es.bvalero.replacer.dump;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import java.io.IOException;
@@ -17,6 +17,7 @@ import javax.xml.parsers.SAXParserFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
@@ -42,7 +43,7 @@ class DumpSaxParser implements DumpParser {
     }
 
     @Override
-    @Loggable(prepend = true, value = Loggable.DEBUG)
+    @Loggable(value = LogLevel.DEBUG, entered = true, skipResult = true)
     public void parseDumpFile(WikipediaLanguage lang, Path dumpFile) throws ReplacerException {
         assert !getDumpIndexingStatus().getRunning();
 

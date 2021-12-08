@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 public class FileOfflineUtils {
 
     public String getFileContent(String fileName) throws ReplacerException {
-        LOGGER.debug("Load fake content from file: {}", fileName);
+        LOGGER.debug("Load fake content from file: {} ...", fileName);
         try {
             return Files.readString(
                 Paths.get(Objects.requireNonNull(FileOfflineUtils.class.getResource(fileName)).toURI())

@@ -1,6 +1,6 @@
 package es.bvalero.replacer.repository;
 
-import com.jcabi.aspects.Loggable;
+import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.LocalDate;
 import java.util.*;
@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -17,7 +18,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Loggable(Loggable.TRACE) // To warn about performance issues
+@Loggable(value = LogLevel.TRACE, skipResult = true, warnOver = 10, warnUnit = TimeUnit.SECONDS)
 @Transactional
 @Repository
 @Qualifier("replacementJdbcRepository")
@@ -100,7 +101,6 @@ class ReplacementJdbcRepository implements ReplacementRepository {
     }
 
     @Override
-    @Loggable(value = Loggable.TRACE, limit = 10, unit = TimeUnit.SECONDS)
     public Collection<TypeSubtypeCount> countReplacementsByType(WikipediaLanguage lang) {
         String sql =
             "SELECT type, subtype, COUNT(DISTINCT article_id) AS num FROM replacement " +

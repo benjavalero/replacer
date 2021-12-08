@@ -4,6 +4,7 @@ import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
 import lombok.Value;
 
 @ApiModel(description = "Response DTO containing the access token and the user details after authentication")
@@ -23,9 +24,11 @@ class AuthenticateResponse {
     boolean admin;
 
     @ApiModelProperty(required = true, example = "f8e520e8669a2d65e094d649a96427ff")
+    @ToString.Exclude
     String token;
 
     @ApiModelProperty(required = true, example = "36dd90e87c59acc138ee0c38487e975af6da141e")
+    @ToString.Exclude
     String tokenSecret;
 
     static AuthenticateResponse of(AccessToken accessToken, WikipediaUser wikipediaUser) {
