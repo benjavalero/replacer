@@ -131,7 +131,7 @@ class PageIndexerTest {
     void testObsoletePageNotIndexable() {
         PageModel pageModel = PageModel
             .builder()
-            .lang(page.getId().getLang())
+            .lang(page.getId().getLang().getCode())
             .pageId(page.getId().getPageId())
             .replacements(Collections.emptyList())
             .build();
@@ -154,7 +154,7 @@ class PageIndexerTest {
     void testIndexObsoletePage() {
         PageModel pageModel = PageModel
             .builder()
-            .lang(page.getId().getLang())
+            .lang(page.getId().getLang().getCode())
             .pageId(page.getId().getPageId())
             .replacements(Collections.emptyList())
             .build();

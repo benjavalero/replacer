@@ -1,6 +1,5 @@
 package es.bvalero.replacer.repository;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -14,13 +13,13 @@ class PageResultExtractor implements ResultSetExtractor<Collection<PageModel>> {
     @Override
     public Collection<PageModel> extractData(ResultSet rs) throws SQLException, DataAccessException {
         // We can assume the lang is the same for all the results
-        WikipediaLanguage lang = null;
+        String lang = null;
 
         Map<Integer, String> titleMap = new HashMap<>();
         ListValuedMap<Integer, ReplacementModel> replacementMap = new ArrayListValuedHashMap<>();
 
         while (rs.next()) {
-            lang = WikipediaLanguage.valueOf(rs.getString("LANG"));
+            lang = rs.getString("LANG");
             Integer pageId = rs.getInt("ARTICLE_ID");
 
             titleMap.put(pageId, rs.getString("TITLE"));

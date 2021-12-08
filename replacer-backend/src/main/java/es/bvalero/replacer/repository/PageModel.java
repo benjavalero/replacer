@@ -1,6 +1,5 @@
 package es.bvalero.replacer.repository;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.util.Collection;
 import lombok.Builder;
 import lombok.Value;
@@ -14,7 +13,7 @@ public class PageModel {
 
     // TODO: There should exist a FK in DB to the pair (lang, pageId)
     @NonNull
-    WikipediaLanguage lang;
+    String lang;
 
     @NonNull
     Integer pageId;

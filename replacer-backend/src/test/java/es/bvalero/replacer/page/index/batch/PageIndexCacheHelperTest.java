@@ -42,7 +42,7 @@ class PageIndexCacheHelperTest {
         Integer pageId1 = 2;
         ReplacementModel replacement1 = ReplacementModel
             .builder()
-            .lang(WikipediaLanguage.getDefault())
+            .lang(WikipediaLanguage.getDefault().getCode())
             .pageId(pageId1)
             .type("")
             .subtype("")
@@ -52,14 +52,14 @@ class PageIndexCacheHelperTest {
             .build();
         PageModel page1 = PageModel
             .builder()
-            .lang(WikipediaLanguage.getDefault())
+            .lang(WikipediaLanguage.getDefault().getCode())
             .pageId(pageId1)
             .replacements(List.of(replacement1))
             .build();
         Integer pageId2 = 1001;
         ReplacementModel replacement2 = ReplacementModel
             .builder()
-            .lang(WikipediaLanguage.getDefault())
+            .lang(WikipediaLanguage.getDefault().getCode())
             .pageId(pageId2)
             .type("")
             .subtype("")
@@ -69,7 +69,7 @@ class PageIndexCacheHelperTest {
             .build();
         PageModel page2 = PageModel
             .builder()
-            .lang(WikipediaLanguage.getDefault())
+            .lang(WikipediaLanguage.getDefault().getCode())
             .pageId(pageId2)
             .replacements(List.of(replacement2))
             .build();
@@ -96,7 +96,7 @@ class PageIndexCacheHelperTest {
         Integer pageId = 1001;
         ReplacementModel replacement = ReplacementModel
             .builder()
-            .lang(WikipediaLanguage.getDefault())
+            .lang(WikipediaLanguage.getDefault().getCode())
             .pageId(pageId)
             .type("")
             .subtype("")
@@ -106,7 +106,7 @@ class PageIndexCacheHelperTest {
             .build();
         PageModel page = PageModel
             .builder()
-            .lang(WikipediaLanguage.getDefault())
+            .lang(WikipediaLanguage.getDefault().getCode())
             .pageId(pageId)
             .replacements(List.of(replacement))
             .build();

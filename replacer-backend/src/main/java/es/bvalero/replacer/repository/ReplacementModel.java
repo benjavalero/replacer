@@ -1,6 +1,5 @@
 package es.bvalero.replacer.repository;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Value;
@@ -16,7 +15,7 @@ public class ReplacementModel {
     Long id; // Nullable when still to be created in database
 
     @NonNull
-    WikipediaLanguage lang;
+    String lang;
 
     @NonNull
     Integer pageId;

@@ -30,8 +30,8 @@ public enum WikipediaLanguage {
     }
 
     // We cannot override the static method "valueOf(String)"
-    // This is needed for WikipediaLanguageConverter
-    static WikipediaLanguage valueOfCode(String code) {
+    // This is needed for WikipediaLanguageConverter and mapping from database
+    public static WikipediaLanguage valueOfCode(String code) {
         if (map.containsKey(code)) {
             return map.get(code);
         } else {

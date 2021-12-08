@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.index;
 
 import es.bvalero.replacer.common.domain.Replacement;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.repository.ReplacementModel;
@@ -19,7 +20,7 @@ class IndexableReplacementMapper {
         return ReplacementModel
             .builder()
             .id(replacement.getId())
-            .lang(replacement.getIndexablePageId().getLang())
+            .lang(replacement.getIndexablePageId().getLang().getCode())
             .pageId(replacement.getIndexablePageId().getPageId())
             .type(replacement.getType())
             .subtype(replacement.getSubtype())
@@ -41,7 +42,9 @@ class IndexableReplacementMapper {
         return IndexableReplacement
             .builder()
             .id(replacement.getId())
-            .indexablePageId(IndexablePageId.of(replacement.getLang(), replacement.getPageId()))
+            .indexablePageId(
+                IndexablePageId.of(WikipediaLanguage.valueOfCode(replacement.getLang()), replacement.getPageId())
+            )
             .type(replacement.getType())
             .subtype(replacement.getSubtype())
             .position(replacement.getPosition())
