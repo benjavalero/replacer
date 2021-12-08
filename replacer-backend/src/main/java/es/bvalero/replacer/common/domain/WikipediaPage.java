@@ -37,4 +37,9 @@ public class WikipediaPage {
     @NonNull
     @Builder.Default
     LocalDateTime queryTimestamp = LocalDateTime.now(); // Store the timestamp when the page was queried
+
+    @Override
+    public String toString() {
+        return String.format("%s - %s", id, title);
+    }
 }
