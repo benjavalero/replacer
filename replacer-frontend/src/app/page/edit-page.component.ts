@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { AlertService } from '../alert/alert.service';
 import { UserService } from '../user/user.service';
 import { FixedReplacement, getReplacementEnd } from './page-replacement.model';
-import { PageReview, ReviewOptions } from './page-review.model';
+import { PageReviewResponse, ReviewOptions } from './page-review.model';
 import { EMPTY_CONTENT, PageService } from './page.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { EMPTY_CONTENT, PageService } from './page.service';
   styleUrls: []
 })
 export class EditPageComponent implements OnChanges {
-  @Input() review!: PageReview;
+  @Input() review!: PageReviewResponse;
 
   private readonly THRESHOLD = 200; // Maximum number of characters to display around the replacements
   private fixedReplacements!: FixedReplacement[];

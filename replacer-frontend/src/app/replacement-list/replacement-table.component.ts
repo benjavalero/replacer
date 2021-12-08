@@ -4,7 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../environments/environment';
 import { UserConfigService } from '../user/user-config.service';
 import { UserService } from '../user/user.service';
-import { ReplacementCount } from './replacement-list.model';
+import { SubtypeCount } from './replacement-list.model';
 import { ReplacementListService } from './replacement-list.service';
 import { ReviewSubtypeComponent } from './review-subtype.component';
 import { rotate, SortDirection } from './sort-direction.model';
@@ -19,9 +19,9 @@ export class ReplacementTableComponent implements OnChanges {
   private readonly MAX_SIZE = 3;
 
   @Input() type!: string;
-  @Input() replacementCounts: ReplacementCount[];
+  @Input() replacementCounts: SubtypeCount[];
 
-  filteredItems: ReplacementCount[];
+  filteredItems: SubtypeCount[];
 
   // Filters
   sortColumn: string;
@@ -109,10 +109,10 @@ export class ReplacementTableComponent implements OnChanges {
     return column === this.sortColumn ? this.sortDirection : '';
   }
 
-  private sortCounts(items: ReplacementCount[], column: string, direction: SortDirection): ReplacementCount[] {
+  private sortCounts(items: SubtypeCount[], column: string, direction: SortDirection): SubtypeCount[] {
     return [...items].sort((a, b) => {
-      const aValue: any = a[column as keyof ReplacementCount];
-      const bValue: any = b[column as keyof ReplacementCount];
+      const aValue: any = a[column as keyof SubtypeCount];
+      const bValue: any = b[column as keyof SubtypeCount];
       const res = column === 's' ? this.compareString(aValue, bValue) : this.compareNumber(aValue, bValue);
       return direction === 'asc' ? res : -res;
     });
@@ -132,12 +132,12 @@ export class ReplacementTableComponent implements OnChanges {
     return v1.localeCompare(v2, 'es', { sensitivity: 'base' });
   }
 
-  private filterCounts(items: ReplacementCount[], text: string): ReplacementCount[] {
+  private filterCounts(items: SubtypeCount[], text: string): SubtypeCount[] {
     const filterText = this.removeDiacritics(text);
     return items.filter((item) => this.removeDiacritics(item.s).includes(this.removeDiacritics(filterText)));
   }
 
-  private paginateCounts(items: ReplacementCount[], page: number, pageSize: number): ReplacementCount[] {
+  private paginateCounts(items: SubtypeCount[], page: number, pageSize: number): SubtypeCount[] {
     if (items.length <= pageSize) {
       return items;
     } else {

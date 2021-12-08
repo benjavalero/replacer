@@ -5,10 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AlertService } from '../alert/alert.service';
 import { ReplacementListService } from '../replacement-list/replacement-list.service';
-import { PageReview, ReviewOptions } from './page-review.model';
+import { PageReviewResponse, ReviewOptions } from './page-review.model';
 import { PageService } from './page.service';
 import { ValidateCustomComponent } from './validate-custom.component';
-import { ValidateType } from './validate-custom.model';
+import { ReplacementValidationResponse } from './validate-custom.model';
 
 @Component({
   selector: 'app-find-random',
@@ -18,7 +18,7 @@ import { ValidateType } from './validate-custom.model';
   styleUrls: []
 })
 export class FindRandomComponent implements OnInit {
-  review: PageReview | null;
+  review: PageReviewResponse | null;
 
   constructor(
     private alertService: AlertService,
@@ -65,7 +65,7 @@ export class FindRandomComponent implements OnInit {
     this.alertService.addInfoMessage(msg);
 
     this.pageService.findRandomPage(options).subscribe(
-      (review: PageReview) => {
+      (review: PageReviewResponse) => {
         if (review) {
           this.manageReview(review, options);
         } else {
@@ -86,7 +86,7 @@ export class FindRandomComponent implements OnInit {
 
   private findPageReview(pageId: number, options: ReviewOptions): void {
     this.pageService.findPageReviewById(pageId, options).subscribe(
-      (review: PageReview) => {
+      (review: PageReviewResponse) => {
         if (review) {
           this.manageReview(review, options);
         } else {
@@ -105,7 +105,7 @@ export class FindRandomComponent implements OnInit {
     );
   }
 
-  private manageReview(review: PageReview, options: ReviewOptions): void {
+  private manageReview(review: PageReviewResponse, options: ReviewOptions): void {
     this.alertService.clearAlertMessages();
 
     this.review = review;
@@ -151,16 +151,18 @@ export class FindRandomComponent implements OnInit {
 
   private validateCustomReplacement(options: ReviewOptions): void {
     const replacement = options.subtype!.trim();
-    this.pageService.validateCustomReplacement(replacement, options.cs!).subscribe((validateType: ValidateType) => {
-      if (validateType.type && validateType.subtype) {
-        this.openValidationModal$(validateType.type, validateType.subtype).then((result) => {
-          const knownTypeOptions = new ReviewOptions(validateType.type!, validateType.subtype!, null, null);
-          this.router.navigate([this.getReviewUrl(knownTypeOptions, null)]);
-        });
-      } else {
-        this.findRandomPage(options);
-      }
-    });
+    this.pageService
+      .validateCustomReplacement(replacement, options.cs!)
+      .subscribe((validateType: ReplacementValidationResponse) => {
+        if (validateType.type && validateType.subtype) {
+          this.openValidationModal$(validateType.type, validateType.subtype).then((result) => {
+            const knownTypeOptions = new ReviewOptions(validateType.type!, validateType.subtype!, null, null);
+            this.router.navigate([this.getReviewUrl(knownTypeOptions, null)]);
+          });
+        } else {
+          this.findRandomPage(options);
+        }
+      });
   }
 
   private openValidationModal$(type: string, subtype: string): Promise<any> {

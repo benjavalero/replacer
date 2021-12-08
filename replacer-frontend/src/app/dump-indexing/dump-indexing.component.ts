@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { interval, Observable, Subscription } from 'rxjs';
 import { sleep } from '../sleep';
-import { DumpIndexing } from './dump-indexing.model';
+import { DumpIndexingStatus } from './dump-indexing.model';
 import { DumpIndexingService } from './dump-indexing.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { DumpIndexingService } from './dump-indexing.service';
 })
 export class DumpIndexingComponent implements OnInit, OnDestroy {
   // Status Details
-  status$!: Observable<DumpIndexing | null>;
+  status$!: Observable<DumpIndexingStatus | null>;
 
   // Check the status
   subscription!: Subscription;

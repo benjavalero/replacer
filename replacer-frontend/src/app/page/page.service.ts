@@ -4,8 +4,8 @@ import { Observable, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { UserService } from '../user/user.service';
-import { PageReview, PageReviewSearch, ReviewOptions, ReviewPage, SavePage } from './page-review.model';
-import { ValidateType } from './validate-custom.model';
+import { PageReviewResponse, PageReviewSearch, PageSaveRequest, ReviewOptions, ReviewPage } from './page-review.model';
+import { ReplacementValidationResponse } from './validate-custom.model';
 
 export const EMPTY_CONTENT = ' ';
 
@@ -19,7 +19,7 @@ export class PageService {
 
   constructor(private httpClient: HttpClient, private userService: UserService) {}
 
-  findRandomPage(options: ReviewOptions): Observable<PageReview> {
+  findRandomPage(options: ReviewOptions): Observable<PageReviewResponse> {
     let params: HttpParams = new HttpParams();
     if (options.type && options.subtype) {
       params = params.append('type', options.type).append('subtype', options.subtype);
@@ -27,16 +27,16 @@ export class PageService {
         params = params.append('suggestion', options.suggestion).append('cs', String(options.cs));
       }
     }
-    return this.httpClient.get<PageReview>(`${this.baseUrl}/random`, { params });
+    return this.httpClient.get<PageReviewResponse>(`${this.baseUrl}/random`, { params });
   }
 
-  validateCustomReplacement(replacement: string, caseSensitive: boolean): Observable<ValidateType> {
+  validateCustomReplacement(replacement: string, caseSensitive: boolean): Observable<ReplacementValidationResponse> {
     let params: HttpParams = new HttpParams();
     params = params.append('replacement', replacement).append('cs', String(caseSensitive));
-    return this.httpClient.get<ValidateType>(`${this.baseUrl}/validate`, { params });
+    return this.httpClient.get<ReplacementValidationResponse>(`${this.baseUrl}/validate`, { params });
   }
 
-  findPageReviewById(pageId: number, options: ReviewOptions): Observable<PageReview> {
+  findPageReviewById(pageId: number, options: ReviewOptions): Observable<PageReviewResponse> {
     let params: HttpParams = new HttpParams();
     if (options.type && options.subtype) {
       params = params.append('type', options.type).append('subtype', options.subtype);
@@ -44,7 +44,7 @@ export class PageService {
         params = params.append('suggestion', options.suggestion).append('cs', String(options.cs));
       }
     }
-    return this.httpClient.get<PageReview>(`${this.baseUrl}/${pageId}`, { params });
+    return this.httpClient.get<PageReviewResponse>(`${this.baseUrl}/${pageId}`, { params });
   }
 
   savePage(page: ReviewPage, search: PageReviewSearch): Observable<any> {
@@ -65,7 +65,7 @@ export class PageService {
       }
     }
 
-    const savePage = new SavePage(
+    const savePage = new PageSaveRequest(
       page,
       search,
       this.userService.accessToken.token,

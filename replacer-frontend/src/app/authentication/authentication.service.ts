@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
-import { AuthenticateRequest, AuthenticateResponse, RequestToken } from './authentication.model';
+import { AuthenticateRequest, AuthenticateResponse, RequestTokenResponse } from './authentication.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class AuthenticationService {
 
   getAuthenticationUrl$(): Observable<string> {
     return this.getRequestToken$().pipe(
-      map((token: RequestToken) => {
+      map((token: RequestTokenResponse) => {
         // We keep the request token for further use on verification
         localStorage.setItem(this.requestTokenKey, JSON.stringify(token));
 
@@ -28,8 +28,8 @@ export class AuthenticationService {
     );
   }
 
-  private getRequestToken$(): Observable<RequestToken> {
-    return this.httpClient.get<RequestToken>(`${this.baseUrl}/request-token`);
+  private getRequestToken$(): Observable<RequestTokenResponse> {
+    return this.httpClient.get<RequestTokenResponse>(`${this.baseUrl}/request-token`);
   }
 
   loginUser$(oauthVerifier: string): Observable<User> {
@@ -48,7 +48,7 @@ export class AuthenticationService {
 
   private authenticate$(oauthVerifier: string): Observable<AuthenticateResponse> {
     // At this point we can assert that the request token exists
-    const requestToken: RequestToken = JSON.parse(localStorage.getItem(this.requestTokenKey)!);
+    const requestToken: RequestTokenResponse = JSON.parse(localStorage.getItem(this.requestTokenKey)!);
     const body = new AuthenticateRequest(requestToken, oauthVerifier);
     return this.httpClient.post<AuthenticateResponse>(`${this.baseUrl}/authenticate`, body);
   }

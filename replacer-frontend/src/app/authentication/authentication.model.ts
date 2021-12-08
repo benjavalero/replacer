@@ -1,4 +1,4 @@
-export interface RequestToken {
+export interface RequestTokenResponse {
   token: string;
   tokenSecret: string;
   authorizationUrl: string;
@@ -9,7 +9,7 @@ export class AuthenticateRequest {
   tokenSecret: string;
   oauthVerifier: string;
 
-  constructor(requestToken: RequestToken, oauthVerifier: string) {
+  constructor(requestToken: RequestTokenResponse, oauthVerifier: string) {
     this.token = requestToken.token;
     this.tokenSecret = requestToken.tokenSecret;
     this.oauthVerifier = oauthVerifier;

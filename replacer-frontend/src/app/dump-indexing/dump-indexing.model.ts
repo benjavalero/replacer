@@ -1,4 +1,4 @@
-export interface DumpIndexing {
+export interface DumpIndexingStatus {
   // Fields coming from REST service
   running: boolean;
   numPagesRead?: number;

@@ -15,7 +15,7 @@ export class ReviewOptions {
   }
 }
 
-export interface PageReview {
+export interface PageReviewResponse {
   page: ReviewPage;
   replacements: ReviewReplacement[];
   search: PageReviewSearch;
@@ -43,7 +43,7 @@ export interface PageReviewSearch {
   cs?: boolean;
 }
 
-export class SavePage {
+export class PageSaveRequest {
   page: ReviewPage;
   search: PageReviewSearch;
   token: string;
