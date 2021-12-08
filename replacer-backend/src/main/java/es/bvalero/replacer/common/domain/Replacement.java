@@ -2,6 +2,7 @@ package es.bvalero.replacer.common.domain;
 
 import es.bvalero.replacer.finder.replacement.ReplacementType;
 import java.util.Collection;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
@@ -19,7 +20,7 @@ import lombok.With;
  */
 @Value
 @Builder
-public class Replacement {
+public class Replacement implements Comparable<Replacement> {
 
     @With
     @NonNull
@@ -39,5 +40,11 @@ public class Replacement {
 
     public int getEnd() {
         return this.getStart() + this.getText().length();
+    }
+
+    @Override
+    public int compareTo(Replacement o) {
+        // Order descendant by start. If equals, the lower end.
+        return Objects.equals(o.getStart(), getStart()) ? getEnd() - o.getEnd() : o.getStart() - getStart();
     }
 }
