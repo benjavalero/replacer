@@ -1,8 +1,8 @@
 package es.bvalero.replacer.finder.listing.find;
 
-import es.bvalero.replacer.common.FileUtils;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.common.util.FileOfflineUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -16,9 +16,9 @@ public class ListingOfflineFinder implements ListingFinder {
     public String getSimpleMisspellingListing(WikipediaLanguage lang) throws ReplacerException {
         switch (lang) {
             case SPANISH:
-                return FileUtils.getFileContent("/offline/misspelling-list-es.txt");
+                return FileOfflineUtils.getFileContent("/offline/misspelling-list-es.txt");
             case GALICIAN:
-                return FileUtils.getFileContent("/offline/misspelling-list-gl.txt");
+                return FileOfflineUtils.getFileContent("/offline/misspelling-list-gl.txt");
             default:
                 throw new IllegalCallerException();
         }
@@ -28,9 +28,9 @@ public class ListingOfflineFinder implements ListingFinder {
     public String getFalsePositiveListing(WikipediaLanguage lang) throws ReplacerException {
         switch (lang) {
             case SPANISH:
-                return FileUtils.getFileContent("/offline/false-positives-es.txt");
+                return FileOfflineUtils.getFileContent("/offline/false-positives-es.txt");
             case GALICIAN:
-                return FileUtils.getFileContent("/offline/false-positives-gl.txt");
+                return FileOfflineUtils.getFileContent("/offline/false-positives-gl.txt");
             default:
                 throw new IllegalCallerException();
         }
@@ -40,9 +40,9 @@ public class ListingOfflineFinder implements ListingFinder {
     public String getComposedMisspellingListing(WikipediaLanguage lang) throws ReplacerException {
         switch (lang) {
             case SPANISH:
-                return FileUtils.getFileContent("/offline/composed-misspellings-es.txt");
+                return FileOfflineUtils.getFileContent("/offline/composed-misspellings-es.txt");
             case GALICIAN:
-                return FileUtils.getFileContent("/offline/composed-misspellings-gl.txt");
+                return FileOfflineUtils.getFileContent("/offline/composed-misspellings-gl.txt");
             default:
                 throw new IllegalCallerException();
         }

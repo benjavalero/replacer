@@ -2,18 +2,19 @@ package es.bvalero.replacer.wikipedia.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import es.bvalero.replacer.common.FileUtils;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.common.util.FileOfflineUtils;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.experimental.UtilityClass;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class WikipediaUtils {
 
-    public static List<String> findSampleContents() throws ReplacerException {
-        String jsonResponse = FileUtils.getFileContent("/es/bvalero/replacer/finder/benchmark/page-samples.json");
+    public List<String> findSampleContents() throws ReplacerException {
+        String jsonResponse = FileOfflineUtils.getFileContent(
+            "/es/bvalero/replacer/finder/benchmark/page-samples.json"
+        );
         try {
             ObjectMapper jsonMapper = new ObjectMapper();
             WikipediaApiResponse apiResponse = jsonMapper.readValue(jsonResponse, WikipediaApiResponse.class);

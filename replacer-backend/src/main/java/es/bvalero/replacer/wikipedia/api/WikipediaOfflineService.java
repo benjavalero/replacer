@@ -1,8 +1,8 @@
 package es.bvalero.replacer.wikipedia.api;
 
-import es.bvalero.replacer.common.FileUtils;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.common.util.FileOfflineUtils;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -41,7 +41,7 @@ class WikipediaOfflineService implements WikipediaService {
             .id(WikipediaPageId.of(WikipediaLanguage.getDefault(), pageId))
             .namespace(WikipediaNamespace.getDefault())
             .title("América del Norte")
-            .content(FileUtils.getFileContent("/offline/sample-page.txt"))
+            .content(FileOfflineUtils.getFileContent("/offline/sample-page.txt"))
             .lastUpdate(now)
             .queryTimestamp(now)
             .build();
