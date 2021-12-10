@@ -3,13 +3,13 @@ package es.bvalero.replacer.finder.replacement.finders;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.MisspellingSuggestion;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
-import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.*;
 import java.util.regex.MatchResult;
@@ -99,21 +99,21 @@ public abstract class MisspellingFinder implements ReplacementFinder {
     }
 
     // Transform the case of the suggestion, e.g. "Habia" -> "Había"
-    List<ReplacementSuggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
+    List<Suggestion> findSuggestions(String originalWord, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists
         Misspelling misspelling = findMisspellingByWord(originalWord, lang).orElseThrow(IllegalArgumentException::new);
         return applyMisspellingSuggestions(originalWord, misspelling);
     }
 
-    public static List<ReplacementSuggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
-        List<ReplacementSuggestion> suggestions = new LinkedList<>();
+    public static List<Suggestion> applyMisspellingSuggestions(String word, Misspelling misspelling) {
+        List<Suggestion> suggestions = new LinkedList<>();
         for (MisspellingSuggestion misspellingSuggestion : misspelling.getSuggestions()) {
-            ReplacementSuggestion suggestion = convertSuggestion(misspellingSuggestion);
+            Suggestion suggestion = convertSuggestion(misspellingSuggestion);
             if (misspelling.isCaseSensitive()) {
                 suggestions.add(suggestion);
             } else {
                 // Apply the case of the original word to the generic misspelling suggestion
-                suggestions.add(FinderUtils.startsWithUpperCase(word) ? suggestion.toUppercase() : suggestion);
+                suggestions.add(FinderUtils.startsWithUpperCase(word) ? toUppercase(suggestion) : suggestion);
             }
         }
 
@@ -123,19 +123,19 @@ public abstract class MisspellingFinder implements ReplacementFinder {
             misspelling.isCaseSensitive() &&
             FinderUtils.startsWithUpperCase(word) &&
             !FinderUtils.isUppercase(word) &&
-            suggestions.stream().map(ReplacementSuggestion::getText).noneMatch(word::equals)
+            suggestions.stream().map(Suggestion::getText).noneMatch(word::equals)
         ) {
             suggestions
                 .stream()
                 .filter(s -> FinderUtils.toLowerCase(word).equals(s.getText()))
                 .findAny()
-                .ifPresent(s -> suggestions.add(s.toUppercase()));
+                .ifPresent(s -> suggestions.add(toUppercase(s)));
         }
 
         // If any of the suggestions matches the original then move it as the first suggestion
         for (int i = 0; i < suggestions.size(); i++) {
             if (suggestions.get(i).getText().equals(word)) {
-                ReplacementSuggestion original = suggestions.remove(i);
+                Suggestion original = suggestions.remove(i);
                 suggestions.add(0, original);
                 break;
             }
@@ -144,7 +144,11 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         return suggestions;
     }
 
-    private static ReplacementSuggestion convertSuggestion(MisspellingSuggestion misspellingSuggestion) {
-        return ReplacementSuggestion.of(misspellingSuggestion.getText(), misspellingSuggestion.getComment());
+    private static Suggestion convertSuggestion(MisspellingSuggestion misspellingSuggestion) {
+        return Suggestion.of(misspellingSuggestion.getText(), misspellingSuggestion.getComment());
+    }
+
+    static Suggestion toUppercase(Suggestion suggestion) {
+        return Suggestion.of(FinderUtils.setFirstUpperCase(suggestion.getText()), suggestion.getComment());
     }
 }

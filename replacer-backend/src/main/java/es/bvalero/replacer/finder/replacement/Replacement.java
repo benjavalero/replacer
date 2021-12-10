@@ -1,6 +1,7 @@
 package es.bvalero.replacer.finder.replacement;
 
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.finder.FinderResult;
 import java.util.List;
 import lombok.Builder;
@@ -21,5 +22,5 @@ public class Replacement implements FinderResult {
     int start;
     String text;
     ReplacementType type;
-    List<ReplacementSuggestion> suggestions;
+    List<Suggestion> suggestions;
 }

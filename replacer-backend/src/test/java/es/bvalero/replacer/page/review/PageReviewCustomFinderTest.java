@@ -7,7 +7,6 @@ import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.replacement.custom.CustomOptions;
 import es.bvalero.replacer.finder.replacement.custom.CustomReplacementFinderService;
 import es.bvalero.replacer.repository.CustomModel;
@@ -117,7 +116,7 @@ class PageReviewCustomFinderTest {
             .start(2)
             .type(ReplacementType.of(ReplacementKind.CUSTOM, "R"))
             .text("R")
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
+            .suggestions(List.of(Suggestion.ofNoComment("Z")))
             .build();
         final WikipediaSearchResult searchResult = WikipediaSearchResult.of(1, List.of(pageId));
         final WikipediaPageId wikipediaPageId = WikipediaPageId.of(lang, pageId);
@@ -223,7 +222,7 @@ class PageReviewCustomFinderTest {
             .start(2)
             .type(ReplacementType.of(ReplacementKind.CUSTOM, "R"))
             .text("R")
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
+            .suggestions(List.of(Suggestion.ofNoComment("Z")))
             .build();
         final WikipediaSearchResult searchResult = WikipediaSearchResult.of(2, List.of(pageId1, pageId2));
         final WikipediaPageId wikipediaPageId2 = WikipediaPageId.of(lang, pageId2);
@@ -309,7 +308,7 @@ class PageReviewCustomFinderTest {
             .start(2)
             .type(ReplacementType.of(ReplacementKind.CUSTOM, "R"))
             .text("R")
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
+            .suggestions(List.of(Suggestion.ofNoComment("Z")))
             .build();
         final Map<Integer, WikipediaPage> pages = new HashMap<>();
         for (int i = 1; i <= 4; i++) {

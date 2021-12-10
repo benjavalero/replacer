@@ -5,11 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
 import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import java.beans.PropertyChangeEvent;
 import java.util.HashSet;
 import java.util.List;
@@ -68,7 +68,7 @@ class MisspellingComposedFinderTest {
             .start(2)
             .text("aún así")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_COMPOSED, "aún así"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("aun así")))
+            .suggestions(List.of(Suggestion.ofNoComment("aun así")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -88,7 +88,7 @@ class MisspellingComposedFinderTest {
             .start(2)
             .text("aún así")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_COMPOSED, "aún así"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("aun así")))
+            .suggestions(List.of(Suggestion.ofNoComment("aun así")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -107,7 +107,7 @@ class MisspellingComposedFinderTest {
             .start(4)
             .text("mas.")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_COMPOSED, "mas."))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("más.")))
+            .suggestions(List.of(Suggestion.ofNoComment("más.")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -126,7 +126,7 @@ class MisspellingComposedFinderTest {
             .start(4)
             .text("aun,")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_COMPOSED, "aun,"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("aún,")))
+            .suggestions(List.of(Suggestion.ofNoComment("aún,")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -145,7 +145,7 @@ class MisspellingComposedFinderTest {
             .start(3)
             .text("Rio 2016")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_COMPOSED, "Rio 2016"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("Río 2016")))
+            .suggestions(List.of(Suggestion.ofNoComment("Río 2016")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -159,13 +159,13 @@ class MisspellingComposedFinderTest {
 
         List<Replacement> results = misspellingComposedFinder.findList(text);
 
-        ReplacementSuggestion suggestion = ReplacementSuggestion.ofNoComment("parque nacional");
+        Suggestion suggestion = Suggestion.ofNoComment("parque nacional");
         Replacement expected = Replacement
             .builder()
             .start(0)
             .text("Parque Nacional")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_COMPOSED, "Parque Nacional"))
-            .suggestions(List.of(suggestion, suggestion.toUppercase()))
+            .suggestions(List.of(suggestion, MisspellingComposedFinder.toUppercase(suggestion)))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }

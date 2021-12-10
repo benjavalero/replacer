@@ -4,11 +4,11 @@ import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
-import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import es.bvalero.replacer.finder.util.AutomatonMatchFinder;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.*;
@@ -250,7 +250,7 @@ public class DateFinder implements ReplacementFinder {
         return WikipediaLanguage.SPANISH.equals(lang) ? date.replace("setiembre", "septiembre") : date;
     }
 
-    private List<ReplacementSuggestion> findSuggestions(String date) {
-        return Collections.singletonList(ReplacementSuggestion.ofNoComment(date));
+    private List<Suggestion> findSuggestions(String date) {
+        return Collections.singletonList(Suggestion.ofNoComment(date));
     }
 }

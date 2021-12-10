@@ -4,12 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.Suggestion;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import es.bvalero.replacer.finder.listing.load.SimpleMisspellingLoader;
 import es.bvalero.replacer.finder.listing.parse.SimpleMisspellingParser;
 import es.bvalero.replacer.finder.replacement.Replacement;
-import es.bvalero.replacer.finder.replacement.ReplacementSuggestion;
 import java.beans.PropertyChangeEvent;
 import java.util.HashSet;
 import java.util.List;
@@ -81,7 +81,7 @@ class MisspellingSimpleFinderTest {
             .start(4)
             .text("abadia")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "abadia"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("abadía")))
+            .suggestions(List.of(Suggestion.ofNoComment("abadía")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -101,14 +101,14 @@ class MisspellingSimpleFinderTest {
             .start(4)
             .text("abadia")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "abadia"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("abadía")))
+            .suggestions(List.of(Suggestion.ofNoComment("abadía")))
             .build();
         Replacement expected2 = Replacement
             .builder()
             .start(11)
             .text("online")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "online"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("en línea")))
+            .suggestions(List.of(Suggestion.ofNoComment("en línea")))
             .build();
         assertEquals(Set.of(expected1, expected2), new HashSet<>(results));
     }
@@ -127,7 +127,7 @@ class MisspellingSimpleFinderTest {
             .start(4)
             .text("Abadia")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "abadia"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("Abadía")))
+            .suggestions(List.of(Suggestion.ofNoComment("Abadía")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -146,7 +146,7 @@ class MisspellingSimpleFinderTest {
             .start(3)
             .text("Brazil")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Brazil"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("Brasil")))
+            .suggestions(List.of(Suggestion.ofNoComment("Brasil")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -160,13 +160,13 @@ class MisspellingSimpleFinderTest {
 
         List<Replacement> results = misspellingFinder.findList(text);
 
-        ReplacementSuggestion suggestion = ReplacementSuggestion.ofNoComment("enero");
+        Suggestion suggestion = Suggestion.ofNoComment("enero");
         Replacement expected = Replacement
             .builder()
             .start(3)
             .text("Enero")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Enero"))
-            .suggestions(List.of(suggestion.toUppercase(), suggestion))
+            .suggestions(List.of(MisspellingSimpleFinder.toUppercase(suggestion), suggestion))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -185,7 +185,7 @@ class MisspellingSimpleFinderTest {
             .start(3)
             .text("ves")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "ves"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("vez")))
+            .suggestions(List.of(Suggestion.ofNoComment("vez")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -204,7 +204,7 @@ class MisspellingSimpleFinderTest {
             .start(3)
             .text("angola")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "angola"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("Angola")))
+            .suggestions(List.of(Suggestion.ofNoComment("Angola")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -223,7 +223,7 @@ class MisspellingSimpleFinderTest {
             .start(3)
             .text("OVNI")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "OVNI"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("ovni")))
+            .suggestions(List.of(Suggestion.ofNoComment("ovni")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -242,7 +242,7 @@ class MisspellingSimpleFinderTest {
             .start(21)
             .text("Text")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "text"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("Texto")))
+            .suggestions(List.of(Suggestion.ofNoComment("Texto")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -263,9 +263,7 @@ class MisspellingSimpleFinderTest {
             .start(3)
             .text("entreno")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "entreno"))
-            .suggestions(
-                List.of(ReplacementSuggestion.of("entreno", "sustantivo"), ReplacementSuggestion.of("entrenó", "verbo"))
-            )
+            .suggestions(List.of(Suggestion.of("entreno", "sustantivo"), Suggestion.of("entrenó", "verbo")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -290,9 +288,7 @@ class MisspellingSimpleFinderTest {
             .start(3)
             .text("avion")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "avion"))
-            .suggestions(
-                List.of(ReplacementSuggestion.of("avión", "aeronave"), ReplacementSuggestion.of("Avión", "río"))
-            )
+            .suggestions(List.of(Suggestion.of("avión", "aeronave"), Suggestion.of("Avión", "río")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -311,9 +307,7 @@ class MisspellingSimpleFinderTest {
             .start(3)
             .text("Avion")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "avion"))
-            .suggestions(
-                List.of(ReplacementSuggestion.of("Avión", "aeronave"), ReplacementSuggestion.of("Avión", "río"))
-            )
+            .suggestions(List.of(Suggestion.of("Avión", "aeronave"), Suggestion.of("Avión", "río")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -336,11 +330,7 @@ class MisspellingSimpleFinderTest {
             .text("am")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "am"))
             .suggestions(
-                List.of(
-                    ReplacementSuggestion.of("am", "idioma"),
-                    ReplacementSuggestion.of("AM", "sigla"),
-                    ReplacementSuggestion.of("a. m.", "hora")
-                )
+                List.of(Suggestion.of("am", "idioma"), Suggestion.of("AM", "sigla"), Suggestion.of("a. m.", "hora"))
             )
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
@@ -360,7 +350,7 @@ class MisspellingSimpleFinderTest {
             .start(3)
             .text("Julio")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Julio"))
-            .suggestions(List.of(ReplacementSuggestion.of("Julio", "nombre"), ReplacementSuggestion.of("julio", "mes")))
+            .suggestions(List.of(Suggestion.of("Julio", "nombre"), Suggestion.of("julio", "mes")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }
@@ -381,7 +371,7 @@ class MisspellingSimpleFinderTest {
             .start(3)
             .text("brazil")
             .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Brazil"))
-            .suggestions(List.of(ReplacementSuggestion.ofNoComment("Brasil")))
+            .suggestions(List.of(Suggestion.ofNoComment("Brasil")))
             .build();
         assertEquals(Set.of(expected), new HashSet<>(results));
     }

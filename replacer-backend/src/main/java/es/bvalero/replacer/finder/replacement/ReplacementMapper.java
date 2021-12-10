@@ -1,7 +1,5 @@
 package es.bvalero.replacer.finder.replacement;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
-import es.bvalero.replacer.common.domain.Suggestion;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;
@@ -19,15 +17,7 @@ public class ReplacementMapper {
             .start(replacement.getStart())
             .text(replacement.getText())
             .type(replacement.getType())
-            .suggestions(toSuggestion(replacement.getSuggestions()))
+            .suggestions(replacement.getSuggestions())
             .build();
-    }
-
-    private Collection<Suggestion> toSuggestion(Collection<ReplacementSuggestion> suggestions) {
-        return suggestions.stream().map(ReplacementMapper::toSuggestion).collect(Collectors.toUnmodifiableList());
-    }
-
-    private Suggestion toSuggestion(ReplacementSuggestion suggestion) {
-        return Suggestion.of(suggestion.getText(), suggestion.getComment());
     }
 }
