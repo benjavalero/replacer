@@ -48,8 +48,7 @@ class PageReviewTypeSubtypeFinderTest {
     private final Replacement replacement = Replacement
         .builder()
         .start(offset)
-        .type(ReplacementKind.MISSPELLING_SIMPLE)
-        .subtype("Y")
+        .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "Y"))
         .text("Y")
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();

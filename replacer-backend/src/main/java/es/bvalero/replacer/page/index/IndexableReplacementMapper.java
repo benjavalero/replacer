@@ -1,8 +1,6 @@
 package es.bvalero.replacer.page.index;
 
-import es.bvalero.replacer.common.domain.Replacement;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import es.bvalero.replacer.repository.ReplacementModel;
 import java.util.Collection;
@@ -23,8 +21,8 @@ class IndexableReplacementMapper {
             .id(replacement.getId())
             .lang(replacement.getIndexablePageId().getLang().getCode())
             .pageId(replacement.getIndexablePageId().getPageId())
-            .type(replacement.getType())
-            .subtype(replacement.getSubtype())
+            .type(replacement.getType().getKind().getLabel())
+            .subtype(replacement.getType().getSubtype())
             .position(replacement.getPosition())
             .context(replacement.getContext())
             .lastUpdate(replacement.getLastUpdate())
@@ -48,8 +46,7 @@ class IndexableReplacementMapper {
             .indexablePageId(
                 IndexablePageId.of(WikipediaLanguage.valueOfCode(replacement.getLang()), replacement.getPageId())
             )
-            .type(replacement.getType())
-            .subtype(replacement.getSubtype())
+            .type(ReplacementType.of(ReplacementKind.valueOfLabel(replacement.getType()), replacement.getSubtype()))
             .position(replacement.getPosition())
             .context(Objects.requireNonNullElse(replacement.getContext(), ""))
             .lastUpdate(replacement.getLastUpdate())
@@ -61,8 +58,7 @@ class IndexableReplacementMapper {
         return IndexableReplacement
             .builder()
             .indexablePageId(IndexablePageMapper.fromDomain(page.getId()))
-            .type(replacement.getType().getLabel())
-            .subtype(replacement.getSubtype())
+            .type(replacement.getType())
             .position(replacement.getStart())
             .context(getContext(replacement, page))
             .lastUpdate(page.getLastUpdate().toLocalDate())

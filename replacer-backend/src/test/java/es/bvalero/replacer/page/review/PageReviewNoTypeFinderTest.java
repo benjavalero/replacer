@@ -48,8 +48,7 @@ class PageReviewNoTypeFinderTest {
         .builder()
         .start(offset)
         .text("Y")
-        .type(ReplacementKind.DATE)
-        .subtype("Año con punto")
+        .type(ReplacementType.of(ReplacementKind.DATE, "Año con punto"))
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);

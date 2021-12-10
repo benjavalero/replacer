@@ -22,8 +22,6 @@ import org.springframework.lang.NonNull;
 @Builder
 public class Replacement implements Comparable<Replacement> {
 
-    private static final int MAX_SUBTYPE_LENGTH = 100; // Constrained by the database
-
     @With
     @NonNull
     Integer start;
@@ -32,21 +30,12 @@ public class Replacement implements Comparable<Replacement> {
     String text;
 
     @NonNull
-    ReplacementKind type;
-
-    @NonNull
-    String subtype;
+    ReplacementType type;
 
     @NonNull
     Collection<Suggestion> suggestions;
 
-    private Replacement(
-        Integer start,
-        String text,
-        ReplacementKind type,
-        String subtype,
-        Collection<Suggestion> suggestions
-    ) {
+    private Replacement(Integer start, String text, ReplacementType type, Collection<Suggestion> suggestions) {
         // Validate start
         if (start < 0) {
             throw new IllegalArgumentException("Negative replacement start: " + start);
@@ -57,11 +46,6 @@ public class Replacement implements Comparable<Replacement> {
             throw new IllegalArgumentException("Blank replacement text: " + start);
         }
 
-        // Validate subtype
-        if (subtype.length() > MAX_SUBTYPE_LENGTH) {
-            throw new IllegalArgumentException("Too long replacement subtype: " + subtype);
-        }
-
         // There must exist at least a suggestion different from the found text
         if (suggestions.isEmpty() || suggestions.stream().allMatch(s -> s.getText().equals(text))) {
             throw new IllegalArgumentException("Invalid replacement suggestions");
@@ -70,7 +54,6 @@ public class Replacement implements Comparable<Replacement> {
         this.start = start;
         this.text = text;
         this.type = type;
-        this.subtype = subtype;
         this.suggestions = suggestions;
     }
 

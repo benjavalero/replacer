@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,10 +18,25 @@ public enum ReplacementKind {
     MISSPELLING_SIMPLE("Ortografía"),
     MISSPELLING_COMPOSED("Compuestos"),
     CUSTOM("Personalizado"),
-    DATE("Fechas");
+    DATE("Fechas"),
+    EMPTY("");
+
+    private static final Map<String, ReplacementKind> map = Arrays
+        .stream(ReplacementKind.values())
+        .collect(Collectors.toUnmodifiableMap(ReplacementKind::getLabel, Function.identity()));
 
     @JsonValue
     private final String label;
+
+    // We cannot override the static method "valueOf(String)"
+    // This is needed for mapping from database
+    public static ReplacementKind valueOfLabel(String label) {
+        if (map.containsKey(label)) {
+            return map.get(label);
+        } else {
+            throw new IllegalArgumentException("Wrong replacement kind label: " + label);
+        }
+    }
 
     @Override
     public String toString() {

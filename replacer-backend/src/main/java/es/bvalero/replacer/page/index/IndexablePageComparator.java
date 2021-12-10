@@ -98,8 +98,7 @@ class IndexablePageComparator {
     ) {
         if (
             Objects.equals(replacement.getIndexablePageId(), entity.getIndexablePageId()) &&
-            Objects.equals(replacement.getType(), entity.getType()) &&
-            Objects.equals(replacement.getSubtype(), entity.getSubtype())
+            Objects.equals(replacement.getType(), entity.getType())
         ) {
             if (ignoreContext) {
                 return Objects.equals(replacement.getPosition(), entity.getPosition());

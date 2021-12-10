@@ -1,7 +1,9 @@
 package es.bvalero.replacer.page.index;
 
+import static es.bvalero.replacer.common.domain.ReplacementType.EMPTY;
 import static es.bvalero.replacer.repository.ReplacementRepository.REVIEWER_SYSTEM;
 
+import es.bvalero.replacer.common.domain.ReplacementType;
 import java.time.LocalDate;
 import java.util.Objects;
 import lombok.Builder;
@@ -24,10 +26,7 @@ class IndexableReplacement {
     IndexablePageId indexablePageId;
 
     @NonNull
-    String type;
-
-    @NonNull
-    String subtype;
+    ReplacementType type;
 
     @With
     @NonNull
@@ -77,8 +76,7 @@ class IndexableReplacement {
         return IndexableReplacement
             .builder()
             .indexablePageId(indexablePage.getId())
-            .type("")
-            .subtype("")
+            .type(EMPTY)
             .position(0)
             .context("")
             .lastUpdate(indexablePage.getLastUpdate())
@@ -88,8 +86,7 @@ class IndexableReplacement {
 
     boolean isDummy() {
         return (
-            StringUtils.isEmpty(this.type) &&
-            StringUtils.isEmpty(this.subtype) &&
+            EMPTY.equals(this.type) &&
             this.position == 0 &&
             StringUtils.isEmpty(this.context) &&
             REVIEWER_SYSTEM.equals(this.reviewer)

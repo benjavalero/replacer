@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.replacement;
 
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.Suggestion;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -17,8 +18,7 @@ public class ReplacementMapper {
             .builder()
             .start(replacement.getStart())
             .text(replacement.getText())
-            .type(replacement.getType())
-            .subtype(replacement.getSubtype())
+            .type(ReplacementType.of(replacement.getType(), replacement.getSubtype()))
             .suggestions(toSuggestion(replacement.getSuggestions()))
             .build();
     }

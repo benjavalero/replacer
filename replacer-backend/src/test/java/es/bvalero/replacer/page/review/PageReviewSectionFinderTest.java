@@ -51,8 +51,7 @@ class PageReviewSectionFinderTest {
             .builder()
             .start(8)
             .text("an")
-            .type(ReplacementKind.MISSPELLING_SIMPLE)
-            .subtype("an")
+            .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, "an"))
             .suggestions(Collections.singletonList(suggestion))
             .build();
         List<Replacement> replacements = Collections.singletonList(replacement);

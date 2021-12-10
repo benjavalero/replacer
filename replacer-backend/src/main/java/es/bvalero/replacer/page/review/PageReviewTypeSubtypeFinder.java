@@ -77,6 +77,9 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     }
 
     private boolean hasType(Replacement replacement, String type, String subtype) {
-        return replacement.getType().getLabel().equals(type) && replacement.getSubtype().equals(subtype);
+        return (
+            replacement.getType().getKind().getLabel().equals(type) &&
+            replacement.getType().getSubtype().equals(subtype)
+        );
     }
 }

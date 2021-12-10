@@ -70,8 +70,7 @@ class PageReviewControllerTest {
         .builder()
         .start(start)
         .text(rep)
-        .type(ReplacementKind.MISSPELLING_SIMPLE)
-        .subtype(rep)
+        .type(ReplacementType.of(ReplacementKind.MISSPELLING_SIMPLE, rep))
         .suggestions(List.of(suggestion))
         .build();
     private final long numPending = 100;
