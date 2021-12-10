@@ -1,8 +1,11 @@
 package es.bvalero.replacer.authentication;
 
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,6 +17,10 @@ import org.jetbrains.annotations.TestOnly;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 class AuthenticateRequest {
+
+    @ApiParam(value = "Language of the Wikipedia in use", allowableValues = "es, gl", required = true, example = "es")
+    @NotNull
+    private WikipediaLanguage lang;
 
     @ApiModelProperty(required = true, example = "4360336e38cd5dc8e3f90ad797154275")
     @NotBlank
@@ -28,8 +35,8 @@ class AuthenticateRequest {
     private String oauthVerifier;
 
     @TestOnly
-    static AuthenticateRequest of(RequestToken requestToken, String oAuthVerifier) {
-        return new AuthenticateRequest(requestToken.getToken(), requestToken.getTokenSecret(), oAuthVerifier);
+    static AuthenticateRequest of(WikipediaLanguage lang, RequestToken requestToken, String oAuthVerifier) {
+        return new AuthenticateRequest(lang, requestToken.getToken(), requestToken.getTokenSecret(), oAuthVerifier);
     }
 
     RequestToken getRequestToken() {

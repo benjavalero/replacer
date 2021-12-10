@@ -10,14 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 class PageListRequest {
 
-    @ApiParam(value = "Language", required = true)
-    @NotNull
-    private WikipediaLanguage lang;
-
-    @ApiParam(value = "Wikipedia user name", required = true, example = "Benjavalero")
-    @NotNull
-    private String user;
-
     @ApiParam(value = "Replacement type", example = "Ortografía")
     @NotNull
     private String type;

@@ -1,11 +1,13 @@
 package es.bvalero.replacer.dump;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.exception.UnauthorizedException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,20 +28,17 @@ public class DumpController {
     @ApiOperation(value = "Find the status of the current (or the last) dump indexing")
     @Loggable(skipResult = true)
     @GetMapping(value = "")
-    public DumpIndexingStatus getDumpIndexingStatus(
-        @ApiParam(value = "Wikipedia user name", required = true, example = "Benjavalero") @RequestParam String user
-    ) throws UnauthorizedException {
-        validateAdminUser(user);
+    public DumpIndexingStatus getDumpIndexingStatus(@Valid CommonQueryParameters queryParameters)
+        throws UnauthorizedException {
+        validateAdminUser(queryParameters.getUser());
         return dumpManager.getDumpIndexingStatus();
     }
 
     @ApiOperation(value = "Start manually a dump indexing")
     @Loggable(entered = true, skipResult = true)
     @PostMapping(value = "")
-    public void manualStartDumpIndexing(
-        @ApiParam(value = "Wikipedia user name", required = true, example = "Benjavalero") @RequestParam String user
-    ) throws UnauthorizedException {
-        validateAdminUser(user);
+    public void manualStartDumpIndexing(@Valid CommonQueryParameters queryParameters) throws UnauthorizedException {
+        validateAdminUser(queryParameters.getUser());
         dumpManager.indexLatestDumpFiles();
     }
 

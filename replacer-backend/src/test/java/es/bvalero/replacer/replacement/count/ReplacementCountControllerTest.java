@@ -37,7 +37,7 @@ class ReplacementCountControllerTest {
         when(replacementCacheRepository.countReplacementsGroupedByType(WikipediaLanguage.SPANISH)).thenReturn(counts);
 
         mvc
-            .perform(get("/api/replacement-types/count?lang=es").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/replacement-types/count?lang=es&user=").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].t", is("X")))
             .andExpect(jsonPath("$[0].l[0].s", is("Y")))

@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -69,10 +70,10 @@ public class PageReviewMapper {
         return search;
     }
 
-    public PageReviewOptions fromDto(PageReviewSearch search, WikipediaLanguage lang, String user) {
+    public PageReviewOptions fromDto(PageReviewSearch search, CommonQueryParameters queryParameters) {
         PageReviewOptions pageReviewOptions = new PageReviewOptions();
-        pageReviewOptions.setLang(lang);
-        pageReviewOptions.setUser(user);
+        pageReviewOptions.setLang(queryParameters.getLang());
+        pageReviewOptions.setUser(queryParameters.getUser());
         pageReviewOptions.setType(search.getType());
         pageReviewOptions.setSubtype(search.getSubtype());
         pageReviewOptions.setSuggestion(search.getSuggestion());

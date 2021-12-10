@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.review;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -66,10 +67,11 @@ public class PageReviewController {
     @ApiOperation(value = "Validate if the custom replacement is a known subtype")
     @GetMapping(value = "/validate", params = { "replacement", "cs" })
     public ReplacementValidationResponse validateCustomReplacement(
+        @Valid CommonQueryParameters queryParameters,
         @Valid ReplacementValidationRequest validationRequest
     ) {
         return pageReviewCustomFinder.validateCustomReplacement(
-            validationRequest.getLang(),
+            queryParameters.getLang(),
             validationRequest.getReplacement(),
             validationRequest.isCs()
         );

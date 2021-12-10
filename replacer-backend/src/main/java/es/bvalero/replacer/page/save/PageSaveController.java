@@ -2,6 +2,7 @@ package es.bvalero.replacer.page.save;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.review.PageReviewMapper;
 import es.bvalero.replacer.page.review.PageReviewOptions;
@@ -9,7 +10,6 @@ import es.bvalero.replacer.page.review.ReviewSection;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.validation.Valid;
@@ -34,14 +34,13 @@ public class PageSaveController {
     @PostMapping(value = "/{id}")
     public ResponseEntity<String> save(
         @PathVariable("id") int pageId,
-        @ApiParam(value = "Language", required = true) @RequestParam WikipediaLanguage lang,
-        @ApiParam(value = "Wikipedia user name", required = true, example = "Benjavalero") @RequestParam String user,
+        @Valid CommonQueryParameters queryParameters,
         @Valid @RequestBody PageSaveRequest request
     ) throws ReplacerException {
         if (!Objects.equals(pageId, request.getPage().getId())) {
             return new ResponseEntity<>("Page ID mismatch", HttpStatus.BAD_REQUEST);
         }
-        if (!Objects.equals(lang, request.getPage().getLang())) {
+        if (!Objects.equals(queryParameters.getLang(), request.getPage().getLang())) {
             return new ResponseEntity<>("Language mismatch", HttpStatus.BAD_REQUEST);
         }
 
@@ -49,7 +48,7 @@ public class PageSaveController {
         if (StringUtils.isBlank(content) && !EMPTY_CONTENT.equals(content)) {
             return new ResponseEntity<>("Non valid empty content", HttpStatus.BAD_REQUEST);
         }
-        PageReviewOptions options = PageReviewMapper.fromDto(request.getSearch(), lang, user);
+        PageReviewOptions options = PageReviewMapper.fromDto(request.getSearch(), queryParameters);
         if (EMPTY_CONTENT.equals(content)) {
             pageSaveService.savePageWithNoChanges(pageId, options);
         } else {
@@ -60,7 +59,7 @@ public class PageSaveController {
             );
             WikipediaPage page = WikipediaPage
                 .builder()
-                .id(WikipediaPageId.of(lang, pageId))
+                .id(WikipediaPageId.of(queryParameters.getLang(), pageId))
                 .namespace(WikipediaNamespace.getDefault()) // Not relevant for saving
                 .title(request.getPage().getTitle())
                 .content(request.getPage().getContent())

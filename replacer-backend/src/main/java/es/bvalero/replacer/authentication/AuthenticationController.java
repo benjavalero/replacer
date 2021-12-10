@@ -2,13 +2,11 @@ package es.bvalero.replacer.authentication;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.AccessToken;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +24,8 @@ public class AuthenticationController {
     @Autowired
     private WikipediaService wikipediaService;
 
+    // Note these are the only REST endpoints which don't receive the common query parameters
+
     @ApiOperation(value = "Generate a request token, along with the authorization URL, to start authentication")
     @GetMapping(value = "/request-token")
     public RequestTokenResponse getRequestToken() throws ReplacerException {
@@ -36,14 +36,12 @@ public class AuthenticationController {
 
     @ApiOperation(value = "Verify the OAuth authentication and return the authenticated user details")
     @PostMapping(value = "/authenticate")
-    public AuthenticateResponse authenticate(
-        @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang,
-        @Valid @RequestBody AuthenticateRequest authenticateRequest
-    ) throws ReplacerException {
+    public AuthenticateResponse authenticate(@Valid @RequestBody AuthenticateRequest authenticateRequest)
+        throws ReplacerException {
         RequestToken requestToken = authenticateRequest.getRequestToken();
         String oAuthVerifier = authenticateRequest.getOauthVerifier();
         AccessToken accessToken = authenticationService.getAccessToken(requestToken, oAuthVerifier);
-        WikipediaUser wikipediaUser = wikipediaService.getAuthenticatedUser(lang, accessToken);
+        WikipediaUser wikipediaUser = wikipediaService.getAuthenticatedUser(authenticateRequest.getLang(), accessToken);
         return AuthenticateResponse.of(accessToken, wikipediaUser);
     }
 }

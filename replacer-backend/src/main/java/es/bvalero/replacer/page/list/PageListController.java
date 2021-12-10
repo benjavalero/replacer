@@ -1,6 +1,7 @@
 package es.bvalero.replacer.page.list;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import javax.validation.Valid;
@@ -24,9 +25,16 @@ public class PageListController {
         value = "Produce a list in plain text with the titles of the pages containing the given replacement type to review"
     )
     @GetMapping(value = "", params = { "type", "subtype" }, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> findPageTitlesToReviewByType(@Valid PageListRequest request) {
+    public ResponseEntity<String> findPageTitlesToReviewByType(
+        @Valid CommonQueryParameters queryParameters,
+        @Valid PageListRequest request
+    ) {
         String titleList = StringUtils.join(
-            pageListService.findPageTitlesToReviewByType(request.getLang(), request.getType(), request.getSubtype()),
+            pageListService.findPageTitlesToReviewByType(
+                queryParameters.getLang(),
+                request.getType(),
+                request.getSubtype()
+            ),
             "\n"
         );
         return new ResponseEntity<>(titleList, HttpStatus.OK);
@@ -34,8 +42,8 @@ public class PageListController {
 
     @ApiOperation(value = "Mark as reviewed by the system all pages pages containing the given replacement type")
     @PostMapping(value = "/review", params = { "type", "subtype" })
-    public void reviewAsSystemByType(@Valid PageListRequest request) {
+    public void reviewAsSystemByType(@Valid CommonQueryParameters queryParameters, @Valid PageListRequest request) {
         // Set as reviewed in the database
-        pageListService.reviewAsSystemByType(request.getLang(), request.getType(), request.getSubtype());
+        pageListService.reviewAsSystemByType(queryParameters.getLang(), request.getType(), request.getSubtype());
     }
 }

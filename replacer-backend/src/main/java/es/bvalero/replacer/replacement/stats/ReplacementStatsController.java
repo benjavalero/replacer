@@ -2,10 +2,12 @@ package es.bvalero.replacer.replacement.stats;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
+import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.Collection;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,9 +26,10 @@ public class ReplacementStatsController {
     @ApiOperation(value = "Count the number replacements")
     @GetMapping(value = "/replacements/count")
     public ReplacementCount countReplacementsReviewed(
-        @ApiParam(value = "Filter by reviewed/unreviewed replacements", required = true) @RequestParam boolean reviewed,
-        @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang
+        @Valid CommonQueryParameters queryParameters,
+        @ApiParam(value = "Filter by reviewed/unreviewed replacements", required = true) @RequestParam boolean reviewed
     ) {
+        WikipediaLanguage lang = queryParameters.getLang();
         return ReplacementCount.of(
             reviewed
                 ? replacementStatsService.countReplacementsReviewed(lang)
@@ -36,9 +39,7 @@ public class ReplacementStatsController {
 
     @ApiOperation(value = "List users with the number of reviewed replacements")
     @GetMapping(value = "/users/count")
-    public Collection<ReviewerCount> countReplacementsGroupedByReviewer(
-        @ApiParam(value = "Language", allowableValues = "es, gl", required = true) @RequestParam WikipediaLanguage lang
-    ) {
-        return replacementStatsService.countReplacementsGroupedByReviewer(lang);
+    public Collection<ReviewerCount> countReplacementsGroupedByReviewer(@Valid CommonQueryParameters queryParameters) {
+        return replacementStatsService.countReplacementsGroupedByReviewer(queryParameters.getLang());
     }
 }

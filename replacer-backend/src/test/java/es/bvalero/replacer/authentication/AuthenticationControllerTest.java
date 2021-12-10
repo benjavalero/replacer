@@ -80,9 +80,14 @@ class AuthenticationControllerTest {
         String oAuthVerifier = "V";
 
         when(authenticationService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
-        when(wikipediaService.getAuthenticatedUser(WikipediaLanguage.SPANISH, accessToken)).thenReturn(wikipediaUser);
+        when(wikipediaService.getAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+            .thenReturn(wikipediaUser);
 
-        AuthenticateRequest authenticateRequest = AuthenticateRequest.of(requestToken, oAuthVerifier);
+        AuthenticateRequest authenticateRequest = AuthenticateRequest.of(
+            WikipediaLanguage.getDefault(),
+            requestToken,
+            oAuthVerifier
+        );
         mvc
             .perform(
                 post("/api/authentication/authenticate?lang=es")
@@ -105,7 +110,11 @@ class AuthenticationControllerTest {
     void testAuthenticateEmptyVerifier() throws Exception {
         RequestToken requestToken = RequestToken.of("R", "S");
         String oAuthVerifier = "";
-        AuthenticateRequest authenticateRequest = AuthenticateRequest.of(requestToken, oAuthVerifier);
+        AuthenticateRequest authenticateRequest = AuthenticateRequest.of(
+            WikipediaLanguage.getDefault(),
+            requestToken,
+            oAuthVerifier
+        );
         mvc
             .perform(
                 post("/api/authentication/authenticate?lang=es")

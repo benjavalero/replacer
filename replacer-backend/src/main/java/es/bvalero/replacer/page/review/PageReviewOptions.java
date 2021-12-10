@@ -20,6 +20,9 @@ import org.springframework.lang.Nullable;
 @Builder(access = AccessLevel.PRIVATE)
 public class PageReviewOptions {
 
+    // TODO: Remove the lang and user common query parameters
+    // In fact we should split this object into a DTO and a Domain one
+
     @ApiParam(value = "Language", required = true)
     @NotNull
     private WikipediaLanguage lang;
