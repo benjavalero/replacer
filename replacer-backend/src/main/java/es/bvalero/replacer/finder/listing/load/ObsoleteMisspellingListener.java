@@ -51,7 +51,7 @@ public abstract class ObsoleteMisspellingListener implements PropertyChangeListe
                     .get(lang)
                     .stream()
                     .findAny()
-                    .map(ReplacementKind::ofMisspellingType)
+                    .map(Misspelling::getReplacementKind)
                     .orElseThrow(IllegalArgumentException::new);
                 LOGGER.warn(
                     "Deleting from database obsolete misspellings: {} - {} - {}",

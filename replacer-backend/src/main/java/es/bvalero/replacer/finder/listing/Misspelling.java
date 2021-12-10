@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.listing;
 
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.finder.util.FinderUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ public interface Misspelling extends ListingItem {
     boolean isCaseSensitive();
 
     List<MisspellingSuggestion> getSuggestions();
+
+    ReplacementKind getReplacementKind();
 
     default List<MisspellingSuggestion> parseComment(String comment) {
         List<MisspellingSuggestion> suggestionList = new ArrayList<>();

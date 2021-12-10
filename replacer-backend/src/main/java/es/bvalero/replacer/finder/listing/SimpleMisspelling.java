@@ -1,5 +1,6 @@
 package es.bvalero.replacer.finder.listing;
 
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import java.util.List;
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
@@ -44,5 +45,10 @@ public class SimpleMisspelling implements Misspelling {
     @Override
     public String getKey() {
         return this.word;
+    }
+
+    @Override
+    public ReplacementKind getReplacementKind() {
+        return ReplacementKind.MISSPELLING_SIMPLE;
     }
 }

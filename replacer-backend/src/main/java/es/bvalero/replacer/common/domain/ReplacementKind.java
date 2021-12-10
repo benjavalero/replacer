@@ -1,9 +1,6 @@
 package es.bvalero.replacer.common.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import es.bvalero.replacer.finder.listing.ComposedMisspelling;
-import es.bvalero.replacer.finder.listing.Misspelling;
-import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -41,16 +38,5 @@ public enum ReplacementKind {
     @Override
     public String toString() {
         return this.label;
-    }
-
-    // TODO: Move as domain should not be aware of Misspelling class
-    public static ReplacementKind ofMisspellingType(Misspelling misspelling) {
-        if (misspelling instanceof SimpleMisspelling) {
-            return MISSPELLING_SIMPLE;
-        } else if (misspelling instanceof ComposedMisspelling) {
-            return MISSPELLING_COMPOSED;
-        } else {
-            throw new IllegalArgumentException();
-        }
     }
 }

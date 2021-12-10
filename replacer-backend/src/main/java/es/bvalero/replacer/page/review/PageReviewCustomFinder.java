@@ -120,17 +120,11 @@ class PageReviewCustomFinder extends PageReviewFinder {
             return ReplacementValidationResponse.ofEmpty();
         } else if (misspelling.get().isCaseSensitive()) {
             return caseSensitive && misspelling.get().getWord().equals(replacement)
-                ? ReplacementValidationResponse.of(
-                    ReplacementKind.ofMisspellingType(misspelling.get()),
-                    misspelling.get().getWord()
-                )
+                ? ReplacementValidationResponse.of(misspelling.get().getReplacementKind(), misspelling.get().getWord())
                 : ReplacementValidationResponse.ofEmpty();
         } else {
             return !caseSensitive && misspelling.get().getWord().equalsIgnoreCase(replacement)
-                ? ReplacementValidationResponse.of(
-                    ReplacementKind.ofMisspellingType(misspelling.get()),
-                    misspelling.get().getWord()
-                )
+                ? ReplacementValidationResponse.of(misspelling.get().getReplacementKind(), misspelling.get().getWord())
                 : ReplacementValidationResponse.ofEmpty();
         }
     }
