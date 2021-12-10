@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
@@ -48,7 +48,7 @@ class PageReviewNoTypeFinderTest {
         .builder()
         .start(offset)
         .text("Y")
-        .type(ReplacementType.DATE)
+        .type(ReplacementKind.DATE)
         .subtype("Año con punto")
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();

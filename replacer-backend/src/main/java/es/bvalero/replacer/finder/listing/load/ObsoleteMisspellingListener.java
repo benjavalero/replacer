@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.listing.load;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import java.beans.PropertyChangeEvent;
@@ -47,11 +47,11 @@ public abstract class ObsoleteMisspellingListener implements PropertyChangeListe
             Set<String> newWords = newItems.get(lang).stream().map(Misspelling::getWord).collect(Collectors.toSet());
             oldWords.removeAll(newWords);
             if (!oldWords.isEmpty()) {
-                ReplacementType misspellingType = oldItems
+                ReplacementKind misspellingType = oldItems
                     .get(lang)
                     .stream()
                     .findAny()
-                    .map(ReplacementType::ofMisspellingType)
+                    .map(ReplacementKind::ofMisspellingType)
                     .orElseThrow(IllegalArgumentException::new);
                 LOGGER.warn(
                     "Deleting from database obsolete misspellings: {} - {} - {}",
@@ -66,7 +66,7 @@ public abstract class ObsoleteMisspellingListener implements PropertyChangeListe
 
     protected abstract void processObsoleteReplacementTypes(
         WikipediaLanguage lang,
-        ReplacementType type,
+        ReplacementKind type,
         Collection<String> subtypes
     );
 }

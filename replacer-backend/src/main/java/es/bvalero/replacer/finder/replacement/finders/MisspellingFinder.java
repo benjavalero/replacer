@@ -1,7 +1,7 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
@@ -86,7 +86,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
             .build();
     }
 
-    abstract ReplacementType getType();
+    abstract ReplacementKind getType();
 
     String getSubtype(String text, WikipediaLanguage lang) {
         // We are sure in this point that the Misspelling exists

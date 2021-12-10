@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
@@ -89,7 +89,7 @@ public class MisspellingSimpleFinder extends MisspellingFinder implements Proper
     }
 
     @Override
-    ReplacementType getType() {
-        return ReplacementType.MISSPELLING_SIMPLE;
+    ReplacementKind getType() {
+        return ReplacementKind.MISSPELLING_SIMPLE;
     }
 }

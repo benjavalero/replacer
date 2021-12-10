@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
 import es.bvalero.replacer.finder.listing.load.ComposedMisspellingLoader;
@@ -66,7 +66,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(2)
             .text("aún así")
-            .type(ReplacementType.MISSPELLING_COMPOSED)
+            .type(ReplacementKind.MISSPELLING_COMPOSED)
             .subtype("aún así")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("aun así")))
             .build();
@@ -87,7 +87,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(2)
             .text("aún así")
-            .type(ReplacementType.MISSPELLING_COMPOSED)
+            .type(ReplacementKind.MISSPELLING_COMPOSED)
             .subtype("aún así")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("aun así")))
             .build();
@@ -107,7 +107,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(4)
             .text("mas.")
-            .type(ReplacementType.MISSPELLING_COMPOSED)
+            .type(ReplacementKind.MISSPELLING_COMPOSED)
             .subtype("mas.")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("más.")))
             .build();
@@ -127,7 +127,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(4)
             .text("aun,")
-            .type(ReplacementType.MISSPELLING_COMPOSED)
+            .type(ReplacementKind.MISSPELLING_COMPOSED)
             .subtype("aun,")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("aún,")))
             .build();
@@ -147,7 +147,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(3)
             .text("Rio 2016")
-            .type(ReplacementType.MISSPELLING_COMPOSED)
+            .type(ReplacementKind.MISSPELLING_COMPOSED)
             .subtype("Rio 2016")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Río 2016")))
             .build();
@@ -168,7 +168,7 @@ class MisspellingComposedFinderTest {
             .builder()
             .start(0)
             .text("Parque Nacional")
-            .type(ReplacementType.MISSPELLING_COMPOSED)
+            .type(ReplacementKind.MISSPELLING_COMPOSED)
             .subtype("Parque Nacional")
             .suggestions(List.of(suggestion, suggestion.toUppercase()))
             .build();

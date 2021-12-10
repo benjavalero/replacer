@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
@@ -48,18 +48,18 @@ class PageReviewTypeSubtypeFinderTest {
     private final Replacement replacement = Replacement
         .builder()
         .start(offset)
-        .type(ReplacementType.MISSPELLING_SIMPLE)
+        .type(ReplacementKind.MISSPELLING_SIMPLE)
         .subtype("Y")
         .text("Y")
         .suggestions(List.of(Suggestion.ofNoComment("Z")))
         .build();
     private final List<Replacement> replacements = Collections.singletonList(replacement);
     private final PageReviewOptions options = PageReviewOptions.ofTypeSubtype(
-        ReplacementType.MISSPELLING_SIMPLE.getLabel(),
+        ReplacementKind.MISSPELLING_SIMPLE.getLabel(),
         "Y"
     );
     private final PageReviewOptions options2 = PageReviewOptions.ofTypeSubtype(
-        ReplacementType.MISSPELLING_COMPOSED.getLabel(),
+        ReplacementKind.MISSPELLING_COMPOSED.getLabel(),
         "B"
     );
 

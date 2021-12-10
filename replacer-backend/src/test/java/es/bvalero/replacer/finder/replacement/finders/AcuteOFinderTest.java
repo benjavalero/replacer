@@ -3,7 +3,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class AcuteOFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.get(0);
-        assertEquals(ReplacementType.MISSPELLING_COMPOSED, rep.getType());
+        assertEquals(ReplacementKind.MISSPELLING_COMPOSED, rep.getType());
         assertEquals(subtype, rep.getSubtype());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
         assertEquals(AcuteOFinder.FIX_ACUTE_O, rep.getSuggestions().get(0).getText());
@@ -47,7 +47,7 @@ class AcuteOFinderTest {
         assertEquals(1, replacements.size());
 
         Replacement rep = replacements.get(0);
-        assertEquals(ReplacementType.MISSPELLING_COMPOSED, rep.getType());
+        assertEquals(ReplacementKind.MISSPELLING_COMPOSED, rep.getType());
         assertEquals(AcuteOFinder.SUBTYPE_ACUTE_O_WORDS, rep.getSubtype());
         assertEquals(AcuteOFinder.ACUTE_O, rep.getText());
         assertEquals(7, rep.getStart());

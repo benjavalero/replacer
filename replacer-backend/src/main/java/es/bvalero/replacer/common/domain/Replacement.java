@@ -32,7 +32,7 @@ public class Replacement implements Comparable<Replacement> {
     String text;
 
     @NonNull
-    ReplacementType type;
+    ReplacementKind type;
 
     @NonNull
     String subtype;
@@ -43,7 +43,7 @@ public class Replacement implements Comparable<Replacement> {
     private Replacement(
         Integer start,
         String text,
-        ReplacementType type,
+        ReplacementKind type,
         String subtype,
         Collection<Suggestion> suggestions
     ) {

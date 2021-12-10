@@ -3,7 +3,7 @@ package es.bvalero.replacer.page.review;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
@@ -119,7 +119,7 @@ class PageReviewCustomFinderTest {
         final Replacement customRep = Replacement
             .builder()
             .start(2)
-            .type(ReplacementType.CUSTOM)
+            .type(ReplacementKind.CUSTOM)
             .subtype("R")
             .text("R")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
@@ -226,7 +226,7 @@ class PageReviewCustomFinderTest {
         final Replacement customRep = Replacement
             .builder()
             .start(2)
-            .type(ReplacementType.CUSTOM)
+            .type(ReplacementKind.CUSTOM)
             .subtype("R")
             .text("R")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
@@ -313,7 +313,7 @@ class PageReviewCustomFinderTest {
         final Replacement customRep = Replacement
             .builder()
             .start(2)
-            .type(ReplacementType.CUSTOM)
+            .type(ReplacementKind.CUSTOM)
             .subtype("R")
             .text("R")
             .suggestions(List.of(ReplacementSuggestion.ofNoComment("Z")))
@@ -463,7 +463,7 @@ class PageReviewCustomFinderTest {
     @Test
     void testValidateCustomReplacement() {
         final WikipediaLanguage lang = WikipediaLanguage.getDefault();
-        final ReplacementType simple = ReplacementType.MISSPELLING_SIMPLE;
+        final ReplacementKind simple = ReplacementKind.MISSPELLING_SIMPLE;
 
         // Case-insensitive: accion||acción
         SimpleMisspelling misspelling1 = SimpleMisspelling.of("accion", false, "acción");

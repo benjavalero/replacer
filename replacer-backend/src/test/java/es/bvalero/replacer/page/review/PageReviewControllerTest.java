@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -70,7 +70,7 @@ class PageReviewControllerTest {
         .builder()
         .start(start)
         .text(rep)
-        .type(ReplacementType.MISSPELLING_SIMPLE)
+        .type(ReplacementKind.MISSPELLING_SIMPLE)
         .subtype(rep)
         .suggestions(List.of(suggestion))
         .build();
@@ -193,7 +193,7 @@ class PageReviewControllerTest {
     void testValidateCustomReplacement() throws Exception {
         final String replacement = "Africa";
         when(pageReviewCustomFinder.validateCustomReplacement(WikipediaLanguage.SPANISH, replacement, true))
-            .thenReturn(ReplacementValidationResponse.of(ReplacementType.MISSPELLING_SIMPLE, replacement));
+            .thenReturn(ReplacementValidationResponse.of(ReplacementKind.MISSPELLING_SIMPLE, replacement));
 
         mvc
             .perform(
@@ -201,7 +201,7 @@ class PageReviewControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.type", is(ReplacementType.MISSPELLING_SIMPLE.getLabel())))
+            .andExpect(jsonPath("$.type", is(ReplacementKind.MISSPELLING_SIMPLE.getLabel())))
             .andExpect(jsonPath("$.subtype", is(replacement)));
 
         verify(pageReviewCustomFinder).validateCustomReplacement(WikipediaLanguage.SPANISH, replacement, true);

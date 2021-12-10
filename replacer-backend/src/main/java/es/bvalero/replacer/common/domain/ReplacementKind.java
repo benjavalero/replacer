@@ -7,10 +7,10 @@ import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/** Enumerates the base types of replacements supported in the application */
+/** Enumerates the kinds (or base types) of replacements supported in the application */
 @Getter
 @AllArgsConstructor
-public enum ReplacementType {
+public enum ReplacementKind {
     MISSPELLING_SIMPLE("Ortografía"),
     MISSPELLING_COMPOSED("Compuestos"),
     CUSTOM("Personalizado"),
@@ -25,7 +25,7 @@ public enum ReplacementType {
     }
 
     // TODO: Move as domain should not be aware of Misspelling class
-    public static ReplacementType ofMisspellingType(Misspelling misspelling) {
+    public static ReplacementKind ofMisspellingType(Misspelling misspelling) {
         if (misspelling instanceof SimpleMisspelling) {
             return MISSPELLING_SIMPLE;
         } else if (misspelling instanceof ComposedMisspelling) {

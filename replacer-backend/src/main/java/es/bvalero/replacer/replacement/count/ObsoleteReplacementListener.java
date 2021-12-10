@@ -1,6 +1,6 @@
 package es.bvalero.replacer.replacement.count;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.load.ObsoleteMisspellingListener;
 import es.bvalero.replacer.repository.ReplacementRepository;
@@ -17,7 +17,7 @@ class ObsoleteReplacementListener extends ObsoleteMisspellingListener {
     @Override
     protected void processObsoleteReplacementTypes(
         WikipediaLanguage lang,
-        ReplacementType type,
+        ReplacementKind type,
         Collection<String> subtypes
     ) {
         replacementRepository.removeReplacementsByType(lang, type.getLabel(), subtypes);

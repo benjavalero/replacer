@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement.custom;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
 import es.bvalero.replacer.finder.replacement.ReplacementFinder;
@@ -55,7 +55,7 @@ class CustomReplacementFinder implements ReplacementFinder {
         String text = matcher.group();
         return Replacement
             .builder()
-            .type(ReplacementType.CUSTOM)
+            .type(ReplacementKind.CUSTOM)
             .subtype(this.replacement)
             .start(start)
             .text(text)

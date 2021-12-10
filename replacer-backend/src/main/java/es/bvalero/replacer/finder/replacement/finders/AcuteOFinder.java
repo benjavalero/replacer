@@ -1,6 +1,6 @@
 package es.bvalero.replacer.finder.replacement.finders;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -70,7 +70,7 @@ public class AcuteOFinder implements ReplacementFinder {
     public Replacement convert(MatchResult match, FinderPage page) {
         return Replacement
             .builder()
-            .type(ReplacementType.MISSPELLING_COMPOSED)
+            .type(ReplacementKind.MISSPELLING_COMPOSED)
             .subtype(findSubtype(match.group()))
             .start(match.start() + match.group().indexOf(SEARCH_ACUTE_O) + 1)
             .text(ACUTE_O)

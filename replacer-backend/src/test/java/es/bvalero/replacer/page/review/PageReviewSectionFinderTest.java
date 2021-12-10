@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.time.LocalDateTime;
@@ -51,7 +51,7 @@ class PageReviewSectionFinderTest {
             .builder()
             .start(8)
             .text("an")
-            .type(ReplacementType.MISSPELLING_SIMPLE)
+            .type(ReplacementKind.MISSPELLING_SIMPLE)
             .subtype("an")
             .suggestions(Collections.singletonList(suggestion))
             .build();

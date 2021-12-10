@@ -1,6 +1,6 @@
 package es.bvalero.replacer.page.review;
 
-import es.bvalero.replacer.common.domain.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.annotations.ApiParam;
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public class PageReviewOptions {
             .builder()
             .lang(lang)
             .user("")
-            .type(ReplacementType.CUSTOM.getLabel())
+            .type(ReplacementKind.CUSTOM.getLabel())
             .subtype(replacement)
             .suggestion(suggestion)
             .cs(caseSensitive)
@@ -130,7 +130,7 @@ public class PageReviewOptions {
                 break;
             case CUSTOM:
                 isValid =
-                    ReplacementType.CUSTOM.getLabel().equals(type) &&
+                    ReplacementKind.CUSTOM.getLabel().equals(type) &&
                     StringUtils.isNotBlank(subtype) &&
                     StringUtils.isNotBlank(suggestion) &&
                     cs != null;
