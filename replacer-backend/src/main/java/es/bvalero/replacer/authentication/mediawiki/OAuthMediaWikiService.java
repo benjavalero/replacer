@@ -3,7 +3,7 @@ package es.bvalero.replacer.authentication.mediawiki;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
-import es.bvalero.replacer.authentication.AuthenticationService;
+import es.bvalero.replacer.authentication.OAuthService;
 import es.bvalero.replacer.authentication.RequestToken;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.exception.ReplacerException;
@@ -17,16 +17,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Profile("!offline")
-class AuthenticationMediaWikiService implements AuthenticationService {
+class OAuthMediaWikiService implements OAuthService {
 
     @Autowired
     @Qualifier("oAuthMediaWikiService")
-    private OAuth10aService oAuthMediaWikiService;
+    private OAuth10aService oAuth10aService;
 
     @Override
     public RequestToken getRequestToken() throws ReplacerException {
         try {
-            return convertRequestToken(oAuthMediaWikiService.getRequestToken());
+            return convertRequestToken(oAuth10aService.getRequestToken());
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             Thread.currentThread().interrupt();
@@ -42,7 +42,7 @@ class AuthenticationMediaWikiService implements AuthenticationService {
 
     @Override
     public String getAuthorizationUrl(RequestToken requestToken) {
-        return oAuthMediaWikiService.getAuthorizationUrl(convertToRequestToken(requestToken));
+        return oAuth10aService.getAuthorizationUrl(convertToRequestToken(requestToken));
     }
 
     @VisibleForTesting
@@ -54,7 +54,7 @@ class AuthenticationMediaWikiService implements AuthenticationService {
     public AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) throws ReplacerException {
         try {
             return convertAccessToken(
-                oAuthMediaWikiService.getAccessToken(convertToRequestToken(requestToken), oAuthVerifier)
+                oAuth10aService.getAccessToken(convertToRequestToken(requestToken), oAuthVerifier)
             );
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail

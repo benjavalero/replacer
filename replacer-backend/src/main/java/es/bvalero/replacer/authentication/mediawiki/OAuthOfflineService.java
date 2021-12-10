@@ -1,6 +1,6 @@
 package es.bvalero.replacer.authentication.mediawiki;
 
-import es.bvalero.replacer.authentication.AuthenticationService;
+import es.bvalero.replacer.authentication.OAuthService;
 import es.bvalero.replacer.authentication.RequestToken;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.wikipedia.WikipediaService;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Profile("offline")
-class AuthenticationOfflineService implements AuthenticationService {
+class OAuthOfflineService implements OAuthService {
 
     private static final String OFFLINE_REQUEST_TOKEN = "offline-request-token";
     private static final String OFFLINE_REQUEST_TOKEN_SECRET = "offline-request-token-secret";

@@ -36,7 +36,7 @@ class AuthenticationControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private AuthenticationService authenticationService;
+    private OAuthService oAuthService;
 
     @MockBean
     private WikipediaService wikipediaService;
@@ -45,8 +45,8 @@ class AuthenticationControllerTest {
     void testGetRequestToken() throws Exception {
         RequestToken requestToken = RequestToken.of("X", "Y");
         String authorizationUrl = "Z";
-        when(authenticationService.getRequestToken()).thenReturn(requestToken);
-        when(authenticationService.getAuthorizationUrl(requestToken)).thenReturn(authorizationUrl);
+        when(oAuthService.getRequestToken()).thenReturn(requestToken);
+        when(oAuthService.getAuthorizationUrl(requestToken)).thenReturn(authorizationUrl);
 
         mvc
             .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
@@ -55,20 +55,20 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.tokenSecret", is(requestToken.getTokenSecret())))
             .andExpect(jsonPath("$.authorizationUrl", is(authorizationUrl)));
 
-        verify(authenticationService).getRequestToken();
-        verify(authenticationService).getAuthorizationUrl(any(RequestToken.class));
+        verify(oAuthService).getRequestToken();
+        verify(oAuthService).getAuthorizationUrl(any(RequestToken.class));
     }
 
     @Test
     void testGetRequestTokenWithException() throws Exception {
-        when(authenticationService.getRequestToken()).thenThrow(new ReplacerException());
+        when(oAuthService.getRequestToken()).thenThrow(new ReplacerException());
 
         mvc
             .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isInternalServerError());
 
-        verify(authenticationService).getRequestToken();
-        verify(authenticationService, never()).getAuthorizationUrl(any(RequestToken.class));
+        verify(oAuthService).getRequestToken();
+        verify(oAuthService, never()).getAuthorizationUrl(any(RequestToken.class));
     }
 
     @Test
@@ -79,7 +79,7 @@ class AuthenticationControllerTest {
         WikipediaUser wikipediaUser = WikipediaUser.of(userName, List.of(WikipediaUserGroup.AUTOCONFIRMED), true);
         String oAuthVerifier = "V";
 
-        when(authenticationService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
+        when(oAuthService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
         when(wikipediaService.getAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
             .thenReturn(wikipediaUser);
 
@@ -102,7 +102,7 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.token", is(accessToken.getToken())))
             .andExpect(jsonPath("$.tokenSecret", is(accessToken.getTokenSecret())));
 
-        verify(authenticationService).getAccessToken(any(RequestToken.class), anyString());
+        verify(oAuthService).getAccessToken(any(RequestToken.class), anyString());
         verify(wikipediaService).getAuthenticatedUser(any(WikipediaLanguage.class), any(AccessToken.class));
     }
 
@@ -123,6 +123,6 @@ class AuthenticationControllerTest {
             )
             .andExpect(status().isBadRequest());
 
-        verify(authenticationService, never()).getAccessToken(any(RequestToken.class), anyString());
+        verify(oAuthService, never()).getAccessToken(any(RequestToken.class), anyString());
     }
 }

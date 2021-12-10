@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     @Autowired
-    private AuthenticationService authenticationService;
+    private OAuthService oAuthService;
 
     @Autowired
     private WikipediaService wikipediaService;
@@ -29,8 +29,8 @@ public class AuthenticationController {
     @ApiOperation(value = "Generate a request token, along with the authorization URL, to start authentication.")
     @GetMapping(value = "/request-token")
     public RequestTokenResponse getRequestToken() throws ReplacerException {
-        RequestToken requestToken = authenticationService.getRequestToken();
-        String authorizationUrl = authenticationService.getAuthorizationUrl(requestToken);
+        RequestToken requestToken = oAuthService.getRequestToken();
+        String authorizationUrl = oAuthService.getAuthorizationUrl(requestToken);
         return RequestTokenResponse.of(requestToken, authorizationUrl);
     }
 
@@ -40,7 +40,7 @@ public class AuthenticationController {
         throws ReplacerException {
         RequestToken requestToken = authenticateRequest.getRequestToken();
         String oAuthVerifier = authenticateRequest.getOauthVerifier();
-        AccessToken accessToken = authenticationService.getAccessToken(requestToken, oAuthVerifier);
+        AccessToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
         WikipediaUser wikipediaUser = wikipediaService.getAuthenticatedUser(authenticateRequest.getLang(), accessToken);
         return AuthenticateResponse.of(accessToken, wikipediaUser);
     }
