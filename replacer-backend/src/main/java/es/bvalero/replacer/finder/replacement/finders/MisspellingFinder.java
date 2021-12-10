@@ -2,6 +2,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.listing.Misspelling;
@@ -78,8 +79,7 @@ public abstract class MisspellingFinder implements ReplacementFinder {
         String text = matcher.group();
         return Replacement
             .builder()
-            .type(getType())
-            .subtype(getSubtype(text, page.getLang()))
+            .type(ReplacementType.of(getType(), getSubtype(text, page.getLang())))
             .start(start)
             .text(text)
             .suggestions(findSuggestions(text, page.getLang()))

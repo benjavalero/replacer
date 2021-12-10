@@ -18,7 +18,7 @@ public class ReplacementMapper {
             .builder()
             .start(replacement.getStart())
             .text(replacement.getText())
-            .type(ReplacementType.of(replacement.getType(), replacement.getSubtype()))
+            .type(replacement.getType())
             .suggestions(toSuggestion(replacement.getSuggestions()))
             .build();
     }

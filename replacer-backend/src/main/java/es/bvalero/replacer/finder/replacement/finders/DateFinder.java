@@ -3,6 +3,7 @@ package es.bvalero.replacer.finder.replacement.finders;
 import dk.brics.automaton.DatatypesAutomatonProvider;
 import dk.brics.automaton.RunAutomaton;
 import es.bvalero.replacer.common.domain.ReplacementKind;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.FinderPage;
 import es.bvalero.replacer.finder.replacement.Replacement;
@@ -181,8 +182,7 @@ public class DateFinder implements ReplacementFinder {
 
         return Replacement
             .builder()
-            .type(ReplacementKind.DATE)
-            .subtype(subtype)
+            .type(ReplacementType.of(ReplacementKind.DATE, subtype))
             .start(match.start())
             .text(date)
             .suggestions(findSuggestions(fixedDate))
@@ -227,8 +227,7 @@ public class DateFinder implements ReplacementFinder {
 
         return Replacement
             .builder()
-            .type(ReplacementKind.DATE)
-            .subtype(subtype)
+            .type(ReplacementType.of(ReplacementKind.DATE, subtype))
             .start(match.start())
             .text(date)
             .suggestions(findSuggestions(fixedDate))

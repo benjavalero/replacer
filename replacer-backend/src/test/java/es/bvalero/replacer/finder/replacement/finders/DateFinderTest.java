@@ -58,7 +58,7 @@ class DateFinderTest {
         assertEquals(1, replacements.size());
         assertEquals(date, replacements.get(0).getText());
         assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
-        assertEquals(subtype, replacements.get(0).getSubtype());
+        assertEquals(subtype, replacements.get(0).getType().getSubtype());
     }
 
     @ParameterizedTest
@@ -91,7 +91,7 @@ class DateFinderTest {
         assertEquals(1, replacements.size());
         assertEquals(date, replacements.get(0).getText());
         assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
-        assertEquals(subtype, replacements.get(0).getSubtype());
+        assertEquals(subtype, replacements.get(0).getType().getSubtype());
     }
 
     @ParameterizedTest
@@ -114,6 +114,6 @@ class DateFinderTest {
         assertEquals(1, replacements.size());
         assertEquals(date, replacements.get(0).getText());
         assertEquals(expected, replacements.get(0).getSuggestions().get(0).getText());
-        assertEquals(subtype, replacements.get(0).getSubtype());
+        assertEquals(subtype, replacements.get(0).getType().getSubtype());
     }
 }
