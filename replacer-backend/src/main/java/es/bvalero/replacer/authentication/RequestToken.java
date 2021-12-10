@@ -1,11 +1,15 @@
 package es.bvalero.replacer.authentication;
 
 import lombok.Value;
+import org.springframework.lang.NonNull;
 
-/** Sub-domain object representing an OAuth request token */
+/** Wikipedia OAuth request token */
 @Value(staticConstructor = "of")
 public class RequestToken {
 
+    @NonNull
     String token;
+
+    @NonNull
     String tokenSecret;
 }

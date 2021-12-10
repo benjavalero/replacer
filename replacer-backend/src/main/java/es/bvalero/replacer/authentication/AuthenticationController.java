@@ -26,7 +26,7 @@ public class AuthenticationController {
 
     // Note these are the only REST endpoints which don't receive the common query parameters
 
-    @ApiOperation(value = "Generate a request token, along with the authorization URL, to start authentication")
+    @ApiOperation(value = "Generate a request token, along with the authorization URL, to start authentication.")
     @GetMapping(value = "/request-token")
     public RequestTokenResponse getRequestToken() throws ReplacerException {
         RequestToken requestToken = authenticationService.getRequestToken();
