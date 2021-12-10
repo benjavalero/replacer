@@ -147,7 +147,6 @@ Currently, Replacer uses its own classic SQL database hosted in Wikipedia server
 
 As the database structure is quite simple, there is one repository per table, although these tables are of course linked.
 
-
 ## Logging
 
 Replacer uses Logback logging, the default in Spring Boot. To initialize the loggers, we use the Lombok annotation `@Slf4j` in each class.
@@ -156,4 +155,4 @@ A custom `logback-spring.xml` exists to simplify the log pattern, and include a 
 
 The default logging level is DEBUG, using INFO for calls in controllers and WARNING for suspicious replacements or immutables.
 
-Finally, we use the annotation `@Loggable` provided by dependency `jcabi-annotations`. It _wraps_ the annotated methods by aspects logging the start and the end of the method, displaying the elapsed time, warning about too long time, parameters, etc. In order to work, we need to _weave_ the compiled classes adding the annotated functionality by using the `aspectj-maven-plugin`. Note that Spring provides a limited AspectJ solution which adds the functionality in runtime, but as it works proxying the classes, it can only be applied in public methods and in calls from different classes.
+Finally, we use the annotation `@Loggable` provided by dependency `com.github.rozidan.logger-spring-boot`. It _wraps_ the annotated methods by aspects logging the start and the end of the method, displaying the elapsed time, warning about too long time, parameters, etc. Note that Spring provides a limited AspectJ solution: as it works proxying the classes, Spring adds the functionality in runtime and therefore it can only be applied in public methods and in calls from different classes.
