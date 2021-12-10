@@ -5,7 +5,7 @@ import lombok.ToString;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
-/** Domain object representing the hierarchy of a section in a Wikipedia page */
+/** Section in a Wikipedia page (but its content) */
 @Value
 @Builder
 public class WikipediaSection implements Comparable<WikipediaSection> {

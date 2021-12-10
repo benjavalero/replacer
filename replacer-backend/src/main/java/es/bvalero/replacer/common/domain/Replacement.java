@@ -6,10 +6,11 @@ import java.util.Objects;
 import lombok.Builder;
 import lombok.Value;
 import lombok.With;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 
 /**
- * Domain object representing a replacement found in the content of a page.
+ * Replacement found in the content of a page.
  *
  * A <strong>replacement</strong> is a potential issue to be checked and fixed (replaced). For instance,
  * the word "aproximated" is misspelled and therefore could be proposed to be replaced with "approximated".
@@ -21,6 +22,8 @@ import org.springframework.lang.NonNull;
 @Value
 @Builder
 public class Replacement implements Comparable<Replacement> {
+
+    private static final int MAX_SUBTYPE_LENGTH = 100; // Constrained by the database
 
     @With
     @NonNull
@@ -37,6 +40,40 @@ public class Replacement implements Comparable<Replacement> {
 
     @NonNull
     Collection<Suggestion> suggestions;
+
+    private Replacement(
+        Integer start,
+        String text,
+        ReplacementType type,
+        String subtype,
+        Collection<Suggestion> suggestions
+    ) {
+        // Validate start
+        if (start < 0) {
+            throw new IllegalArgumentException("Negative replacement start: " + start);
+        }
+
+        // Validate text
+        if (StringUtils.isBlank(text)) {
+            throw new IllegalArgumentException("Blank replacement text: " + start);
+        }
+
+        // Validate subtype
+        if (subtype.length() > MAX_SUBTYPE_LENGTH) {
+            throw new IllegalArgumentException("Too long replacement subtype: " + subtype);
+        }
+
+        // There must exist at least a suggestion different from the found text
+        if (suggestions.isEmpty() || suggestions.stream().allMatch(s -> s.getText().equals(text))) {
+            throw new IllegalArgumentException("Invalid replacement suggestions");
+        }
+
+        this.start = start;
+        this.text = text;
+        this.type = type;
+        this.subtype = subtype;
+        this.suggestions = suggestions;
+    }
 
     public int getEnd() {
         return this.getStart() + this.getText().length();

@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.TestOnly;
 
-/** Domain value object. It enumerates the Wikipedia languages supported by the application. */
+/** Enumerates the Wikipedia languages supported by the application */
 @Getter
 @AllArgsConstructor
 public enum WikipediaLanguage {

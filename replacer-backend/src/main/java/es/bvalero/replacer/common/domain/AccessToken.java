@@ -4,7 +4,7 @@ import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
-/** Domain object representing an OAuth access token */
+/** Wikipedia OAuth access token to log in the application and be able to apply changes in Wikipedia */
 @Value(staticConstructor = "of")
 public class AccessToken {
 

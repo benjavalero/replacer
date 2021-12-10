@@ -9,7 +9,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.TestOnly;
 
 /**
- * Domain value object. It enumerates all the namespaces used in Wikipedia pages.
+ * Enumerates all the namespaces used in Wikipedia pages.
  *
  * Even when just some of them are supported/indexed, we need to include all of them
  * as they can be found on pages retrieved from Wikipedia or dumps.

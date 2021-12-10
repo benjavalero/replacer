@@ -21,7 +21,7 @@ public class ReviewPage {
 
     // Public: it is an in/out DTO
 
-    private static final int CONTENT_SIZE = 50;
+    private static final int SHORT_CONTENT_LENGTH = 50;
 
     @ApiModelProperty(value = "Language", allowableValues = "es, gl", required = true)
     @NonNull
@@ -63,7 +63,7 @@ public class ReviewPage {
     private String queryTimestamp;
 
     @ToString.Include
-    private String getAbbreviatedContent() {
-        return StringUtils.abbreviate(this.getContent(), CONTENT_SIZE);
+    private String shortContent() {
+        return StringUtils.abbreviate(this.getContent(), SHORT_CONTENT_LENGTH);
     }
 }

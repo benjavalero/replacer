@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,7 @@ public class PageReviewSearch {
     private String type;
 
     @ApiModelProperty(value = "Replacement subtype", example = "aún")
+    @Size(max = 100)
     @Nullable
     private String subtype;
 

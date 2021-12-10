@@ -3,6 +3,7 @@ package es.bvalero.replacer.common.dto;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.annotations.ApiParam;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ public class CommonQueryParameters {
     private WikipediaLanguage lang;
 
     @ApiParam(value = "Name of the user in Wikipedia", required = true, example = "Benjavalero")
+    @Size(max = 100)
     @NotNull
     private String user;
 }

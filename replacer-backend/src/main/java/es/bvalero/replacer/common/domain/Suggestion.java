@@ -1,11 +1,12 @@
 package es.bvalero.replacer.common.domain;
 
 import lombok.Value;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-/** Domain object representing the suggestion for a replacement found in the content of a page */
+/** Suggestion for a replacement found in the content of a page */
 @Value(staticConstructor = "of")
 public class Suggestion {
 
@@ -14,6 +15,15 @@ public class Suggestion {
 
     @Nullable
     String comment;
+
+    public Suggestion(String text, @Nullable String comment) {
+        if (StringUtils.isBlank(text)) {
+            throw new IllegalArgumentException("Blank suggestion text");
+        }
+
+        this.text = text;
+        this.comment = comment;
+    }
 
     @TestOnly
     public static Suggestion ofNoComment(String text) {
