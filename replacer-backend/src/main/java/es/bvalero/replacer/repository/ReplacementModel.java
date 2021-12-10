@@ -29,6 +29,7 @@ public class ReplacementModel {
     @NonNull
     Integer position;
 
+    // TODO: Fix the data somehow in database and make the field (and the column) non-nullable
     @Nullable
     String context; // There are thousands of replacements reviewed before the context existed
 
