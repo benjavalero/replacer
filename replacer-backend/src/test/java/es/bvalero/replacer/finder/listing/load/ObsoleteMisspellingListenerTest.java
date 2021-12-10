@@ -2,9 +2,9 @@ package es.bvalero.replacer.finder.listing.load;
 
 import static org.mockito.Mockito.*;
 
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.finder.listing.SimpleMisspelling;
-import es.bvalero.replacer.finder.replacement.ReplacementType;
 import java.beans.PropertyChangeEvent;
 import java.util.Collections;
 import java.util.List;

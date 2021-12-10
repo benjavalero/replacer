@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.*;
-import es.bvalero.replacer.finder.replacement.ReplacementType;
+import es.bvalero.replacer.common.domain.ReplacementType;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.time.LocalDateTime;
 import java.util.List;

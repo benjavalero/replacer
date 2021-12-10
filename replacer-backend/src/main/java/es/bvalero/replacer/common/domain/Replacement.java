@@ -1,6 +1,5 @@
 package es.bvalero.replacer.common.domain;
 
-import es.bvalero.replacer.finder.replacement.ReplacementType;
 import java.util.Collection;
 import java.util.Objects;
 import lombok.Builder;

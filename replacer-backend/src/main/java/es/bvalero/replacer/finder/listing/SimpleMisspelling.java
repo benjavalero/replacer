@@ -1,6 +1,5 @@
 package es.bvalero.replacer.finder.listing;
 
-import es.bvalero.replacer.finder.replacement.ReplacementType;
 import java.util.List;
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;

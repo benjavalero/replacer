@@ -1,4 +1,4 @@
-package es.bvalero.replacer.finder.replacement;
+package es.bvalero.replacer.common.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import es.bvalero.replacer.finder.listing.ComposedMisspelling;
@@ -7,7 +7,7 @@ import es.bvalero.replacer.finder.listing.SimpleMisspelling;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-// TODO: Move to domain package
+/** Enumerates the base types of replacements supported in the application */
 @Getter
 @AllArgsConstructor
 public enum ReplacementType {
@@ -24,6 +24,7 @@ public enum ReplacementType {
         return this.label;
     }
 
+    // TODO: Move as domain should not be aware of Misspelling class
     public static ReplacementType ofMisspellingType(Misspelling misspelling) {
         if (misspelling instanceof SimpleMisspelling) {
             return MISSPELLING_SIMPLE;
