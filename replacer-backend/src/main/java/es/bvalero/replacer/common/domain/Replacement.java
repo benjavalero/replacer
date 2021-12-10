@@ -4,9 +4,9 @@ import es.bvalero.replacer.finder.replacement.ReplacementType;
 import java.util.Collection;
 import java.util.Objects;
 import lombok.Builder;
-import lombok.NonNull;
 import lombok.Value;
 import lombok.With;
+import org.springframework.lang.NonNull;
 
 /**
  * Domain object representing a replacement found in the content of a page.

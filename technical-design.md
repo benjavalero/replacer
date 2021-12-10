@@ -121,18 +121,25 @@ The backend uses some of the JetBrains (IntelliJ) annotations: `@TestOnly`, `@Vi
 
 On the other hand, all packages are annotated with Spring annotation `@NonNullApi` which forces all method parameters and return values to be non-null. When some parameter or return value is nullable, it will be annotated explicitly.
 
-Input DTOs are annotated with `@Data` and `@NoArgsConstructor` so they can be mapped by Jackson library.
-Non-null input fields will be annotated with `javax.validation.NotNull`. Request bodies (and nested DTOs) will be annotated with `@Valid`.
+### Immutability
 
-Output DTOs are annotated with `@Value` and optionally with `@Builder` for simplicity in case they contain lots of fields. Non-null output fields will be annotated with `org.springframework.lang.NonNull`.
+All Domain Objects should be immutable, and all data structures which may be accessed by several threads should be thread-safe. To achieve object immutability, we annotate them with `@Value` and optionally with `@Builder` for simplicity in case they contain lots of fields. All of this can also be applied to Output DTOs.
+ 
+On the other hand, Input DTOs are annotated with `@Data` and `@NoArgsConstructor` so they can be mapped by Jackson library.
 
 In case a DTO is used for input and output, we will annotate it with a mix of the annotations above.
 
-### Immutability
+### Validation
 
-In backend most domain objects are defined as immutables, with Lombok annotations, except the ones used as Spring request parameters.
+All Domain Objects should always be valid. The simplest validation is about the nullable and non-nullable fields (most of them). Non-nullable fields will be annotated with `org.springframework.lang.NonNull` (we could use the Lombok one but we prefer this one for consistency). Lombok will find this annotation and generate null-checks which will throw an `IllegalArgumentException`. Nullable fields can be then annotated with `org.springframework.lang.Nullable`.
 
-As a webapp, Replacer may be used by several users at a time. All data structures which may be accessed by several threads should be thread-safe.
+To perform more complicated validations, like data integrity, we will generate a constructor for all fields (which will be eventually called with `@Value` and `@Builder` annotations) which will throw an `IllegalArgumentException` if validation fails.
+
+Again, all of this can also be applied to Output DTOs.
+
+_Note_: if an `IllegalArgumentException` is eventually thrown in a REST Controller it will result in an HTTP status "400 - Bad Request".
+
+On the other hand, simple validations on Input DTOs will be annotated with the standard Java `javax.validation.NotNull`, `@Size`, etc. Request bodies (and nested DTOs) will be annotated with `@Valid`. Complex validations will be avoided in these cases, as they will be performed in the domain objects.
 
 ### Persistence
 

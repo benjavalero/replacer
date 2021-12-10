@@ -8,9 +8,9 @@ import java.util.Optional;
 import java.util.TreeMap;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Value;
 import org.jetbrains.annotations.TestOnly;
+import org.springframework.lang.NonNull;
 
 @Value(staticConstructor = "of")
 class TypeCount implements Comparable<TypeCount> {

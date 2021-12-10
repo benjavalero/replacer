@@ -1,8 +1,8 @@
 package es.bvalero.replacer.replacement.stats;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.NonNull;
 import lombok.Value;
+import org.springframework.lang.NonNull;
 
 @Value(staticConstructor = "of")
 class ReplacementCount {
