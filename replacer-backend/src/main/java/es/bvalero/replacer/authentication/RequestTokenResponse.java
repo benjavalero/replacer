@@ -6,7 +6,7 @@ import lombok.Value;
 import org.springframework.lang.NonNull;
 
 @ApiModel(description = "Request token, along with the authorization URL, to start authentication.")
-@Value
+@Value(staticConstructor = "of")
 class RequestTokenResponse {
 
     @ApiModelProperty(required = true, example = "b3cecd4b16ecde45d9fd1a0ce68a4091")
@@ -23,8 +23,4 @@ class RequestTokenResponse {
     )
     @NonNull
     String authorizationUrl;
-
-    static RequestTokenResponse of(RequestToken requestToken, String authorizationUrl) {
-        return new RequestTokenResponse(requestToken.getToken(), requestToken.getTokenSecret(), authorizationUrl);
-    }
 }

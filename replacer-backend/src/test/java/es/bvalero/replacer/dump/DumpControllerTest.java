@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import es.bvalero.replacer.wikipedia.WikipediaService;
+import es.bvalero.replacer.authentication.UserAuthenticator;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,7 +30,7 @@ class DumpControllerTest {
     private DumpManager dumpManager;
 
     @MockBean
-    private WikipediaService wikipediaService;
+    private UserAuthenticator userAuthenticator;
 
     @Test
     void testGetDumpIndexingStatus() throws Exception {
@@ -50,7 +50,7 @@ class DumpControllerTest {
             start,
             end
         );
-        when(wikipediaService.isAdminUser(anyString())).thenReturn(true);
+        when(userAuthenticator.isAdminUser(anyString())).thenReturn(true);
         when(dumpManager.getDumpIndexingStatus()).thenReturn(indexingStatus);
 
         mvc
@@ -64,43 +64,43 @@ class DumpControllerTest {
             .andExpect(jsonPath("$.start", is(DumpLocalDateTimeSerializer.convertLocalDateTimeToMilliseconds(start))))
             .andExpect(jsonPath("$.end", is(DumpLocalDateTimeSerializer.convertLocalDateTimeToMilliseconds(end))));
 
-        verify(wikipediaService).isAdminUser(anyString());
+        verify(userAuthenticator).isAdminUser(anyString());
         verify(dumpManager).getDumpIndexingStatus();
     }
 
     @Test
     void testGetDumpIndexingStatusNotAdmin() throws Exception {
-        when(wikipediaService.isAdminUser(anyString())).thenReturn(false);
+        when(userAuthenticator.isAdminUser(anyString())).thenReturn(false);
 
         mvc
             .perform(get("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
 
-        verify(wikipediaService).isAdminUser(anyString());
+        verify(userAuthenticator).isAdminUser(anyString());
         verify(dumpManager, never()).indexLatestDumpFiles();
     }
 
     @Test
     void testPostStart() throws Exception {
-        when(wikipediaService.isAdminUser(anyString())).thenReturn(true);
+        when(userAuthenticator.isAdminUser(anyString())).thenReturn(true);
 
         mvc
             .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
-        verify(wikipediaService).isAdminUser(anyString());
+        verify(userAuthenticator).isAdminUser(anyString());
         verify(dumpManager).indexLatestDumpFiles();
     }
 
     @Test
     void testPostStartNotAdmin() throws Exception {
-        when(wikipediaService.isAdminUser(anyString())).thenReturn(false);
+        when(userAuthenticator.isAdminUser(anyString())).thenReturn(false);
 
         mvc
             .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized());
 
-        verify(wikipediaService).isAdminUser(anyString());
+        verify(userAuthenticator).isAdminUser(anyString());
         verify(dumpManager, never()).indexLatestDumpFiles();
     }
 }

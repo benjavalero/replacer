@@ -1,12 +1,11 @@
 package es.bvalero.replacer.dump;
 
 import com.github.rozidan.springboot.logger.Loggable;
+import es.bvalero.replacer.authentication.UserAuthenticator;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
 import es.bvalero.replacer.common.exception.UnauthorizedException;
-import es.bvalero.replacer.wikipedia.WikipediaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class DumpController {
     private DumpManager dumpManager;
 
     @Autowired
-    private WikipediaService wikipediaService;
+    private UserAuthenticator userAuthenticator;
 
     @ApiOperation(value = "Find the status of the current (or the last) dump indexing")
     @Loggable(skipResult = true)
@@ -43,7 +42,7 @@ public class DumpController {
     }
 
     private void validateAdminUser(String user) throws UnauthorizedException {
-        if (!wikipediaService.isAdminUser(user)) {
+        if (!userAuthenticator.isAdminUser(user)) {
             LOGGER.error("Unauthorized user: {}", user);
             throw new UnauthorizedException();
         }

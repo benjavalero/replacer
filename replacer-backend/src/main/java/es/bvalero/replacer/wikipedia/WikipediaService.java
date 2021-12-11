@@ -11,8 +11,6 @@ import org.springframework.lang.Nullable;
 public interface WikipediaService {
     WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) throws ReplacerException;
 
-    boolean isAdminUser(String username);
-
     Optional<WikipediaPage> getPageByTitle(WikipediaLanguage lang, String pageTitle) throws ReplacerException;
 
     Optional<WikipediaPage> getPageById(WikipediaPageId id) throws ReplacerException;

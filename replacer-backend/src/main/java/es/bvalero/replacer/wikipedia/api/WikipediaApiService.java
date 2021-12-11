@@ -37,9 +37,6 @@ class WikipediaApiService implements WikipediaService {
     @Value("${replacer.indexable.namespaces}")
     private Set<Integer> indexableNamespaces;
 
-    @Value("${replacer.admin.user}")
-    private String adminUser;
-
     @Override
     public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken)
         throws ReplacerException {
@@ -49,14 +46,8 @@ class WikipediaApiService implements WikipediaService {
     private WikipediaUser convertUserInfo(WikipediaApiResponse.UserInfo userInfo) {
         return WikipediaUser.of(
             userInfo.getName(),
-            userInfo.getGroups().stream().map(WikipediaUserGroup::valueOfLabel).collect(Collectors.toList()),
-            isAdminUser(userInfo.getName())
+            userInfo.getGroups().stream().map(WikipediaUserGroup::valueOfLabel).collect(Collectors.toList())
         );
-    }
-
-    @Override
-    public boolean isAdminUser(String username) {
-        return this.adminUser.equals(username);
     }
 
     @VisibleForTesting

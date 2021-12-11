@@ -9,7 +9,6 @@ import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
@@ -45,8 +44,7 @@ class OAuthMediaWikiService implements OAuthService {
         return oAuth10aService.getAuthorizationUrl(convertToRequestToken(requestToken));
     }
 
-    @VisibleForTesting
-    OAuth1RequestToken convertToRequestToken(RequestToken authenticationToken) {
+    private OAuth1RequestToken convertToRequestToken(RequestToken authenticationToken) {
         return new OAuth1RequestToken(authenticationToken.getToken(), authenticationToken.getTokenSecret());
     }
 

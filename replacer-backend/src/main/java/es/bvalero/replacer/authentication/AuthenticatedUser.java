@@ -1,44 +1,41 @@
 package es.bvalero.replacer.authentication;
 
-import es.bvalero.replacer.common.domain.AccessToken;
-import es.bvalero.replacer.wikipedia.WikipediaUser;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
+import lombok.Builder;
 import lombok.ToString;
 import lombok.Value;
+import org.springframework.lang.NonNull;
 
-@ApiModel(description = "Response DTO containing the access token and the user details after authentication")
+@ApiModel(description = "Authenticated user")
 @Value
-class AuthenticateResponse {
+@Builder
+class AuthenticatedUser {
 
-    @ApiModelProperty(value = "Wikipedia user name", required = true, example = "Benjavalero")
+    @ApiParam(value = "Name of the user in Wikipedia", required = true, example = "Benjavalero")
+    @NonNull
     String name;
 
     @ApiModelProperty(value = "If the user the rights to use the tool", required = true, example = "true")
-    boolean hasRights;
+    @NonNull
+    Boolean hasRights;
 
     @ApiModelProperty(value = "If the user is a bot", required = true, example = "true")
-    boolean bot;
+    @NonNull
+    Boolean bot;
 
     @ApiModelProperty(value = "If the user is administrator of Replacer", required = true, example = "false")
-    boolean admin;
+    @NonNull
+    Boolean admin;
 
     @ApiModelProperty(required = true, example = "f8e520e8669a2d65e094d649a96427ff")
     @ToString.Exclude
+    @NonNull
     String token;
 
     @ApiModelProperty(required = true, example = "36dd90e87c59acc138ee0c38487e975af6da141e")
     @ToString.Exclude
+    @NonNull
     String tokenSecret;
-
-    static AuthenticateResponse of(AccessToken accessToken, WikipediaUser wikipediaUser) {
-        return new AuthenticateResponse(
-            wikipediaUser.getName(),
-            wikipediaUser.hasRights(),
-            wikipediaUser.isBot(),
-            wikipediaUser.isAdmin(),
-            accessToken.getToken(),
-            accessToken.getTokenSecret()
-        );
-    }
 }

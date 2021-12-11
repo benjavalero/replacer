@@ -3,8 +3,6 @@ package es.bvalero.replacer.authentication.mediawiki;
 import es.bvalero.replacer.authentication.OAuthService;
 import es.bvalero.replacer.authentication.RequestToken;
 import es.bvalero.replacer.common.domain.AccessToken;
-import es.bvalero.replacer.wikipedia.WikipediaService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +15,6 @@ class OAuthOfflineService implements OAuthService {
     private static final String AUTHORIZATION_URL = "/?oauth_verifier=x";
     private static final String OFFLINE_ACCESS_TOKEN = "offline-access-token";
     private static final String OFFLINE_ACCESS_TOKEN_SECRET = "offline-access-token-secret";
-
-    @Autowired
-    private WikipediaService wikipediaService;
 
     @Override
     public RequestToken getRequestToken() {

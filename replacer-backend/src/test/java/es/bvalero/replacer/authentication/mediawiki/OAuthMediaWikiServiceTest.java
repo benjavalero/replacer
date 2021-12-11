@@ -51,6 +51,18 @@ class OAuthMediaWikiServiceTest {
     }
 
     @Test
+    void testGetAuthorizationUrl() {
+        RequestToken requestToken = RequestToken.of("A", "B");
+        OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken("A", "B");
+        String authorizationUrl = "Z";
+        when(oAuth10aService.getAuthorizationUrl(oAuth1RequestToken)).thenReturn(authorizationUrl);
+
+        assertEquals(authorizationUrl, oAuthMediaWikiService.getAuthorizationUrl(requestToken));
+
+        verify(oAuth10aService).getAuthorizationUrl(oAuth1RequestToken);
+    }
+
+    @Test
     void testGetAccessToken() throws IOException, ExecutionException, InterruptedException, ReplacerException {
         RequestToken requestToken = RequestToken.of("R", "S");
         String oAuthVerifier = "V";
@@ -63,6 +75,8 @@ class OAuthMediaWikiServiceTest {
         AccessToken actual = oAuthMediaWikiService.getAccessToken(requestToken, oAuthVerifier);
 
         assertEquals(expected, actual);
+
+        verify(oAuth10aService).getAccessToken(oAuth1RequestToken, oAuthVerifier);
     }
 
     @Test
@@ -70,7 +84,8 @@ class OAuthMediaWikiServiceTest {
         RequestToken requestToken = RequestToken.of("R", "S");
         String oAuthVerifier = "V";
 
-        when(oAuth10aService.getAccessToken(any(OAuth1RequestToken.class), anyString())).thenThrow(new IOException());
+        OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken("R", "S");
+        when(oAuth10aService.getAccessToken(oAuth1RequestToken, oAuthVerifier)).thenThrow(new IOException());
 
         assertThrows(ReplacerException.class, () -> oAuthMediaWikiService.getAccessToken(requestToken, oAuthVerifier));
     }
