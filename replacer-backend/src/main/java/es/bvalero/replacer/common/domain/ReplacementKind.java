@@ -18,6 +18,8 @@ public enum ReplacementKind {
     DATE("Fechas"),
     EMPTY("");
 
+    // TODO: Remove EMPTY when dummy replacements are removed from application
+
     private static final Map<String, ReplacementKind> map = Arrays
         .stream(ReplacementKind.values())
         .collect(Collectors.toUnmodifiableMap(ReplacementKind::getLabel, Function.identity()));

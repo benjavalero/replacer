@@ -2,8 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
@@ -13,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-@ApiModel(value = "Page", description = "Page to review")
+@Schema(description = "Page to review")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @NoArgsConstructor
@@ -23,23 +22,23 @@ public class ReviewPage {
 
     private static final int SHORT_CONTENT_LENGTH = 50;
 
-    @ApiModelProperty(value = "Language", allowableValues = "es, gl", required = true)
+    @Schema(description = "Language of the Wikipedia in use", required = true)
     @NonNull
     @NotNull
     private WikipediaLanguage lang;
 
-    @ApiModelProperty(value = "Page ID", required = true, example = "6980716")
+    @Schema(description = "Page ID", required = true, example = "6980716")
     @NonNull
     @NotNull
     private Integer id;
 
-    @ApiModelProperty(value = "Page title", required = true, example = "Artemio Zeno")
+    @Schema(description = "Page title", required = true, example = "Artemio Zeno")
     @NonNull
     @NotNull
     private String title;
 
-    @ApiModelProperty(
-        value = "Page (or section) content",
+    @Schema(
+        description = "Page (or section) content",
         required = true,
         example = "== Biografía ==Hijo de humildes inmigrantes piamonteses [...]"
     )
@@ -48,13 +47,13 @@ public class ReviewPage {
     @NotNull
     private String content;
 
-    @ApiModelProperty
+    @Schema
     @Valid
     @Nullable
     private ReviewSection section;
 
-    @ApiModelProperty(
-        value = "Timestamp when the page content was retrieved from Wikipedia",
+    @Schema(
+        description = "Timestamp when the page content was retrieved from Wikipedia",
         required = true,
         example = "2021-03-21T15:06:49Z"
     )

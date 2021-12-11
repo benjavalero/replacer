@@ -8,8 +8,9 @@ import es.bvalero.replacer.page.review.PageReviewMapper;
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.page.review.ReviewSection;
 import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.validation.Valid;
@@ -19,7 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = "pages")
+@Tag(name = "Pages")
 @RestController
 @RequestMapping("api/pages")
 public class PageSaveController {
@@ -30,10 +31,10 @@ public class PageSaveController {
     private PageSaveService pageSaveService;
 
     @Loggable(skipResult = true)
-    @ApiOperation(value = "Update page contents and mark as reviewed")
+    @Operation(summary = "Update page contents and mark as reviewed")
     @PostMapping(value = "/{id}")
     public ResponseEntity<String> save(
-        @PathVariable("id") int pageId,
+        @Parameter(description = "Page ID", example = "1") @PathVariable("id") int pageId,
         @Valid CommonQueryParameters queryParameters,
         @Valid @RequestBody PageSaveRequest request
     ) throws ReplacerException {

@@ -2,19 +2,20 @@ package es.bvalero.replacer.page.review;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import es.bvalero.replacer.common.domain.ReplacementKind;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Value;
 import org.springframework.lang.Nullable;
 
+@Schema
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Value(staticConstructor = "of")
 class ReplacementValidationResponse {
 
-    @ApiModelProperty(value = "Known replacement type or empty", example = "Ortografía")
+    @Schema(description = "Known replacement type or empty", example = "Ortografía")
     @Nullable
     ReplacementKind type;
 
-    @ApiModelProperty(value = "Known replacement subtype or empty", example = "aún")
+    @Schema(description = "Known replacement subtype or empty", example = "aún")
     @Nullable
     String subtype;
 

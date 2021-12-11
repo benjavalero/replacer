@@ -14,7 +14,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-/** Sub-domain object representing a replacement (to be) indexed in the database */
+/** Replacement (to be) indexed in the database */
 @Value
 @Builder
 class IndexableReplacement {

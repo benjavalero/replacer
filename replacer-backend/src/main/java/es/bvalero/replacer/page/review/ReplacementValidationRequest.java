@@ -1,20 +1,22 @@
 package es.bvalero.replacer.page.review;
 
-import io.swagger.annotations.ApiParam;
-import javax.validation.constraints.NotNull;
+import io.swagger.v3.oas.annotations.Parameter;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
 
+@ParameterObject
 @Data
 @NoArgsConstructor
 class ReplacementValidationRequest {
 
-    @ApiParam(value = "Replacement to validate", required = true, example = "aún")
+    @Parameter(description = "Replacement to validate", required = true, example = "aún")
     @Size(max = 100)
-    @NotNull
+    @NotBlank
     String replacement;
 
-    @ApiParam(value = "If the custom replacement is case-sensitive")
+    @Parameter(description = "If the custom replacement is case-sensitive", required = true, example = "false")
     boolean cs;
 }

@@ -5,9 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * In the frontend all internal redirects are managed by Angular.
- * However if we put directly an URL in the browser the request is handled by SpringBoot.
+ * However, if we put directly a URL in the browser the request is handled by SpringBoot.
  * Using this trick we can redirect all requests to Angular.
  * This is checked after the other controllers so the REST controllers are not broken.
+ *
+ * Note this doesn't work with SpringBoot 2.6.
  */
 @Controller
 public class ForwardController {

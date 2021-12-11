@@ -82,7 +82,7 @@ class PageReviewControllerTest {
         when(pageReviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/pages/random?lang=es&user=").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/random?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.page.id", is(pageId)))
             .andExpect(jsonPath("$.page.title", is(title)))
@@ -107,7 +107,7 @@ class PageReviewControllerTest {
         when(pageReviewNoTypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/pages/random?lang=es&user=").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/random?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         verify(pageReviewNoTypeFinder).findRandomPageReview(options);
@@ -119,7 +119,7 @@ class PageReviewControllerTest {
         when(pageReviewTypeSubtypeFinder.findRandomPageReview(options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/pages/random?type=X&subtype=Y&lang=es&user=").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/random?type=X&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         verify(pageReviewTypeSubtypeFinder).findRandomPageReview(options);
@@ -132,7 +132,7 @@ class PageReviewControllerTest {
 
         mvc
             .perform(
-                get("/api/pages/random?type=Personalizado&subtype=X&cs=false&suggestion=Y&lang=es&user=")
+                get("/api/pages/random?type=Personalizado&subtype=X&cs=false&suggestion=Y&lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -143,7 +143,7 @@ class PageReviewControllerTest {
     @Test
     void testFindPageReviewByIdWithWrongOptions() throws Exception {
         mvc
-            .perform(get("/api/pages/123?type=X&lang=es&user=").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/123?type=X&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isBadRequest());
 
         verify(pageReviewNoTypeFinder, never()).getPageReview(anyInt(), any(PageReviewOptions.class));
@@ -155,7 +155,7 @@ class PageReviewControllerTest {
         when(pageReviewNoTypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/pages/123?lang=es&user=").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/123?lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         verify(pageReviewNoTypeFinder).getPageReview(123, options);
@@ -167,7 +167,7 @@ class PageReviewControllerTest {
         when(pageReviewTypeSubtypeFinder.getPageReview(123, options)).thenReturn(Optional.of(review));
 
         mvc
-            .perform(get("/api/pages/123?type=X&subtype=Y&lang=es&user=").contentType(MediaType.APPLICATION_JSON))
+            .perform(get("/api/pages/123?type=X&subtype=Y&lang=es&user=A").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         verify(pageReviewTypeSubtypeFinder).getPageReview(123, options);
@@ -180,7 +180,7 @@ class PageReviewControllerTest {
 
         mvc
             .perform(
-                get("/api/pages/123?type=Personalizado&subtype=X&cs=true&suggestion=Y&lang=es&user=")
+                get("/api/pages/123?type=Personalizado&subtype=X&cs=true&suggestion=Y&lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());
@@ -196,7 +196,7 @@ class PageReviewControllerTest {
 
         mvc
             .perform(
-                get("/api/pages/validate?replacement=Africa&cs=true&lang=es&user=")
+                get("/api/pages/validate?replacement=Africa&cs=true&lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk())

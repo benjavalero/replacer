@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
-/** Sub-domain object representing a Wikipedia page extracted from a dump XML file */
+/** Wikipedia page extracted from a dump XML file */
 @Value
 @Builder
 class DumpPage {

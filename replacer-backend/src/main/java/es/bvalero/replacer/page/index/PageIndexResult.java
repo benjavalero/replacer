@@ -10,7 +10,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
 /**
- * Sub-domain object representing the result of indexing a page or several pages.
+ * Result of indexing a page or several pages.
  * We implement it as a mutable object (we can add items to the collections)
  * and with builder pattern for simplicity.
  */

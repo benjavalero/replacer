@@ -30,7 +30,7 @@ class PageListControllerTest {
     void testFindPageTitlesToReviewByType() throws Exception {
         mvc
             .perform(
-                get("/api/pages?type=Ortografía&subtype=Africa&lang=es&user=").contentType(MediaType.TEXT_PLAIN_VALUE)
+                get("/api/pages?type=Ortografía&subtype=Africa&lang=es&user=A").contentType(MediaType.TEXT_PLAIN_VALUE)
             )
             .andExpect(status().isOk());
 
@@ -46,7 +46,7 @@ class PageListControllerTest {
     void testReviewAsSystemByType() throws Exception {
         mvc
             .perform(
-                post("/api/pages/review?type=Ortografía&subtype=Africa&lang=es&user=")
+                post("/api/pages/review?type=Ortografía&subtype=Africa&lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
             )
             .andExpect(status().isOk());

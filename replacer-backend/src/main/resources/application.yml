@@ -28,6 +28,11 @@ replacer:
   admin.user: Benjavalero
   indexable.namespaces: 0,104
 
+# localhost:8080/swagger-ui.html
+springdoc:
+  pathsToMatch: /api/**
+  default-produces-media-type: application/json
+
 ---
 
 # Profile for Production

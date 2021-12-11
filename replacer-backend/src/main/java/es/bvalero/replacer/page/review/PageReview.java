@@ -8,7 +8,7 @@ import lombok.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-/** Sub-domain object representing a page to review in the front-end */
+/** Page to review in the front-end */
 @Value(staticConstructor = "of")
 class PageReview {
 

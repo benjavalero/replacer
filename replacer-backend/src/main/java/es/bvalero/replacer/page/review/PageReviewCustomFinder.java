@@ -115,6 +115,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
         String replacement,
         boolean caseSensitive
     ) {
+        // TODO: Return a ReplacementType and convert to DTO in the Controller
         Optional<Misspelling> misspelling = customReplacementFinderService.findExistingMisspelling(replacement, lang);
         if (misspelling.isEmpty()) {
             return ReplacementValidationResponse.ofEmpty();

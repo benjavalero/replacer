@@ -58,7 +58,7 @@ class PageSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/pages/123?lang=es&user=")
+                post("/api/pages/123?lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )
@@ -99,7 +99,7 @@ class PageSaveControllerTest {
 
         mvc
             .perform(
-                post("/api/pages/123?lang=es&user=")
+                post("/api/pages/123?lang=es&user=A")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
             )

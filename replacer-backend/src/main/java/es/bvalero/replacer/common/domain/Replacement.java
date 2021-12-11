@@ -35,7 +35,7 @@ public class Replacement implements Comparable<Replacement> {
     @NonNull
     Collection<Suggestion> suggestions;
 
-    private Replacement(Integer start, String text, ReplacementType type, Collection<Suggestion> suggestions) {
+    Replacement(Integer start, String text, ReplacementType type, Collection<Suggestion> suggestions) {
         // Validate start
         if (start < 0) {
             throw new IllegalArgumentException("Negative replacement start: " + start);

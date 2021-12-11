@@ -1,18 +1,22 @@
 package es.bvalero.replacer.page.review;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.TestOnly;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.lang.Nullable;
 
+@ParameterObject
 @PageReviewOptionsValid
 @Data
 @NoArgsConstructor
@@ -21,36 +25,37 @@ import org.springframework.lang.Nullable;
 public class PageReviewOptions {
 
     // TODO: Remove the lang and user common query parameters
-    // In fact we should split this object into a DTO and a Domain one
+    // In fact we should split this object into a DTO and a Domain one and validate the Domain one
 
-    @ApiParam(value = "Language", required = true)
+    @Parameter(description = "Language of the Wikipedia in use", required = true, example = "es")
     @NotNull
     private WikipediaLanguage lang;
 
-    @ApiParam(value = "Wikipedia user name", required = true, example = "Benjavalero")
-    @NotNull
+    @Parameter(description = "Name of the user in Wikipedia", required = true, example = "Benjavalero")
+    @Size(max = 100)
+    @NotBlank
     private String user;
 
-    @ApiParam(value = "Replacement type", example = "Ortografía")
+    @Parameter(description = "Replacement type", example = "Ortografía")
     @Nullable
     private String type; // TODO: ReplacementType
 
     @Size(max = 100)
-    @ApiParam(value = "Replacement subtype", example = "aún")
+    @Parameter(description = "Replacement subtype", example = "aún")
     @Nullable
     private String subtype;
 
-    @ApiParam(value = "Custom replacement suggestion", example = "todavía")
+    @Parameter(description = "Custom replacement suggestion", example = "todavía")
     @Nullable
     private String suggestion;
 
-    @ApiParam(value = "If the custom replacement is case-sensitive")
+    @Parameter(description = "If the custom replacement is case-sensitive", example = "false")
     @Nullable
     private Boolean cs;
 
     @TestOnly
     public static PageReviewOptions ofNoType() {
-        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).user("").build();
+        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).user("A").build();
     }
 
     @TestOnly
@@ -58,7 +63,7 @@ public class PageReviewOptions {
         return PageReviewOptions
             .builder()
             .lang(WikipediaLanguage.getDefault())
-            .user("")
+            .user("A")
             .type(type)
             .subtype(subtype)
             .build();
@@ -74,7 +79,7 @@ public class PageReviewOptions {
         return PageReviewOptions
             .builder()
             .lang(lang)
-            .user("")
+            .user("A")
             .type(ReplacementKind.CUSTOM.getLabel())
             .subtype(replacement)
             .suggestion(suggestion)
@@ -82,6 +87,7 @@ public class PageReviewOptions {
             .build();
     }
 
+    @JsonIgnore
     public PageReviewOptionsType getOptionsType() {
         if (StringUtils.isBlank(type)) {
             return PageReviewOptionsType.NO_TYPE;

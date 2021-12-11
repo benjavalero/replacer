@@ -1,13 +1,14 @@
 package es.bvalero.replacer.replacement.stats;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
+@Schema
 @Value(staticConstructor = "of")
 class ReplacementCount {
 
-    @ApiModelProperty(required = true)
+    @Schema(required = true, example = "1")
     @NonNull
     Long count;
 }

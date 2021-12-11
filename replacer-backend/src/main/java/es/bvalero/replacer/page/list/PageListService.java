@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 class PageListService {
 
+    // TODO: Replace the type-subtype arguments by the domain ReplacementType
+
     @Autowired
     private PageRepository pageRepository;
 

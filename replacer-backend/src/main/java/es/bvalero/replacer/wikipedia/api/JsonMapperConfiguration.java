@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 class JsonMapperConfiguration {
 
+    // TODO: Move to general configuration
+
     @Bean
     public ObjectMapper jsonMapper() {
         ObjectMapper mapper = new ObjectMapper();

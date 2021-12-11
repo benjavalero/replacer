@@ -1,20 +1,21 @@
 package es.bvalero.replacer.page.list;
 
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import io.swagger.annotations.ApiParam;
-import javax.validation.constraints.NotNull;
+import io.swagger.v3.oas.annotations.Parameter;
+import javax.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
 
+@ParameterObject
 @Data
 @NoArgsConstructor
 class PageListRequest {
 
-    @ApiParam(value = "Replacement type", example = "Ortografía")
-    @NotNull
+    @Parameter(description = "Replacement kind", example = "Ortografía")
+    @NotBlank
     private String type;
 
-    @ApiParam(value = "Replacement subtype", example = "aún")
-    @NotNull
+    @Parameter(description = "Replacement subtype", example = "aún")
+    @NotBlank
     private String subtype;
 }

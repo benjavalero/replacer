@@ -1,6 +1,7 @@
 package es.bvalero.replacer.common.domain;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
@@ -10,6 +11,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.TestOnly;
 
 /** Enumerates the Wikipedia languages supported by the application */
+@Schema(enumAsRef = true)
 @Getter
 @AllArgsConstructor
 public enum WikipediaLanguage {

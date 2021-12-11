@@ -4,15 +4,15 @@ import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /** REST controller to perform authentication operations */
-@Api(tags = "authentication")
+@Tag(name = "Authentication")
 @Loggable
 @RestController
 @RequestMapping("api/authentication")
@@ -26,7 +26,7 @@ public class AuthenticationController {
 
     // Note these are the only REST endpoints which don't receive the common query parameters
 
-    @ApiOperation(value = "Generate a request token, along with the authorization URL, to start authentication.")
+    @Operation(summary = "Generate a request token, along with the authorization URL, to start authentication.")
     @GetMapping(value = "/request-token")
     public RequestTokenResponse getRequestToken() throws ReplacerException {
         RequestToken requestToken = oAuthService.getRequestToken();
@@ -34,12 +34,11 @@ public class AuthenticationController {
         return RequestTokenResponse.of(requestToken.getToken(), requestToken.getTokenSecret(), authorizationUrl);
     }
 
-    @ApiOperation(value = "Verify the OAuth authentication and return the authenticated user details")
+    @Operation(summary = "Verify the OAuth authentication and return the authenticated user details")
     @PostMapping(value = "/authenticate")
     public AuthenticatedUser authenticateUser(
-        @ApiParam(
-            value = "Language of the Wikipedia in use",
-            allowableValues = "es, gl",
+        @Parameter(
+            description = "Language of the Wikipedia in use",
             required = true,
             example = "es"
         ) @RequestParam WikipediaLanguage lang,
