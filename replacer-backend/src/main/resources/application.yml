@@ -32,7 +32,7 @@ replacer:
 
 # Profile for Production
 spring:
-  profiles: default
+  config.activate.on-profile: default
   datasource:
     url: jdbc:mariadb://tools-db:3306/s52978__replacer?rewriteBatchedStatements=true
     username: s52978
@@ -55,7 +55,7 @@ replacer:
 ---
 
 spring:
-  profiles: backend
+  config.activate.on-profile: backend
 
 server:
   # Port to deploy only the backend and use the frontend deployed independently
@@ -65,7 +65,7 @@ server:
 
 # Local access to production database via SSH tunnel
 spring:
-  profiles: db-prod
+  config.activate.on-profile: db-prod
   datasource:
     url: jdbc:mariadb://localhost:3306/s52978__replacer?rewriteBatchedStatements=true
     username: s52978
@@ -77,7 +77,7 @@ spring:
 
 # Local persistent database
 spring:
-  profiles: db-local
+  config.activate.on-profile: db-local
   datasource:
     url: jdbc:h2:./replacer-h2;MODE=MySQL
     username: sa
@@ -92,7 +92,7 @@ replacer.page.stats.delay: 600000 # Every 10 minutes
 
 # Local in-memory database and mocked calls to Wikipedia API
 spring:
-  profiles: offline
+  config.activate.on-profile: offline
   datasource:
     platform: h2
 
