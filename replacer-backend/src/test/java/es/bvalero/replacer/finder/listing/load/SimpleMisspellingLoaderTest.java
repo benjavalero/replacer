@@ -26,7 +26,7 @@ class SimpleMisspellingLoaderTest {
     @BeforeEach
     public void setUp() {
         simpleMisspellingLoader = new SimpleMisspellingLoader();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

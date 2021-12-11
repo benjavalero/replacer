@@ -27,7 +27,7 @@ class ReplacementStatsServiceTest {
     @BeforeEach
     public void setUp() {
         replacementStatsService = new ReplacementStatsService();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

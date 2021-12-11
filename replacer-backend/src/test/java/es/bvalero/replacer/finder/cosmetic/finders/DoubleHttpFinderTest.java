@@ -25,7 +25,7 @@ class DoubleHttpFinderTest {
     @BeforeEach
     public void setUp() {
         doubleHttpFinder = new DoubleHttpFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

@@ -45,7 +45,7 @@ class PageReviewCustomFinderTest {
     public void setUp() {
         pageReviewCustomService = new PageReviewCustomFinder();
         pageReviewCustomService.setCacheSize(CACHE_SIZE);
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

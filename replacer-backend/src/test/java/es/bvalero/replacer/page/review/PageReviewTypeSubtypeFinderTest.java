@@ -83,7 +83,7 @@ class PageReviewTypeSubtypeFinderTest {
     @BeforeEach
     public void setUp() {
         pageReviewTypeSubtypeService = new PageReviewTypeSubtypeFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

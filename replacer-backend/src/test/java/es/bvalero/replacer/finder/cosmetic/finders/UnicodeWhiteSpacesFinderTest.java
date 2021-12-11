@@ -25,7 +25,7 @@ class UnicodeWhiteSpacesFinderTest {
     @BeforeEach
     public void setUp() {
         unicodeWhiteSpaceFinder = new UnicodeWhiteSpaceFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

@@ -26,7 +26,7 @@ class ComposedMisspellingLoaderTest {
     @BeforeEach
     public void setUp() {
         composedMisspellingLoader = new ComposedMisspellingLoader();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

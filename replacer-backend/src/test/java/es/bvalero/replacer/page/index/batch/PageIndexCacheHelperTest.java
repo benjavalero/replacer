@@ -32,7 +32,7 @@ class PageIndexCacheHelperTest {
     public void setUp() {
         pageIndexCacheHelper = new PageIndexCacheHelper();
         pageIndexCacheHelper.setChunkSize(1000);
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

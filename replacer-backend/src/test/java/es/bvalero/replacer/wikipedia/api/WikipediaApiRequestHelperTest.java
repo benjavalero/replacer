@@ -31,7 +31,7 @@ class WikipediaApiRequestHelperTest {
     @BeforeEach
     public void setUp() {
         wikipediaApiRequestHelper = new WikipediaApiRequestHelper();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

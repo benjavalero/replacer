@@ -25,7 +25,7 @@ class DefaultSortSpecialCharactersFinderTest {
     @BeforeEach
     public void setUp() {
         defaultSortSpecialCharactersFinder = new DefaultSortSpecialCharactersFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

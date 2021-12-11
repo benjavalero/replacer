@@ -24,7 +24,7 @@ class ListBreakFinderTest {
     @BeforeEach
     public void setUp() {
         listBreakFinder = new ListBreakFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

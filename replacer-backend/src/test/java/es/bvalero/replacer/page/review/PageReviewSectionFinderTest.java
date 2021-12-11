@@ -26,7 +26,7 @@ class PageReviewSectionFinderTest {
     @BeforeEach
     public void setUp() {
         pageReviewSectionFinder = new PageReviewSectionFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

@@ -30,7 +30,7 @@ class ReplacementFinderServiceTest {
     @BeforeEach
     public void setUp() {
         replacementFinderService = new ReplacementFinderService();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

@@ -25,7 +25,7 @@ class SameLinkFinderTest {
     @BeforeEach
     public void setUp() {
         sameLinkFinder = new SameLinkFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

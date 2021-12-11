@@ -30,7 +30,7 @@ class PageListServiceTest {
     @BeforeEach
     public void setUp() {
         pageListService = new PageListService();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

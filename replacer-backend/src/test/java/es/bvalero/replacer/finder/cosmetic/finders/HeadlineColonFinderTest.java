@@ -25,7 +25,7 @@ class HeadlineColonFinderTest {
     @BeforeEach
     public void setUp() {
         headlineColonFinder = new HeadlineColonFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

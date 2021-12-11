@@ -38,7 +38,7 @@ class DumpPageIndexerTest {
     @BeforeEach
     public void setUp() {
         dumpPageIndexer = new DumpPageIndexer();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

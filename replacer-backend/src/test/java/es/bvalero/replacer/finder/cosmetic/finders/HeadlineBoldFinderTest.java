@@ -25,7 +25,7 @@ class HeadlineBoldFinderTest {
     @BeforeEach
     public void setUp() {
         headlineBoldFinder = new HeadlineBoldFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

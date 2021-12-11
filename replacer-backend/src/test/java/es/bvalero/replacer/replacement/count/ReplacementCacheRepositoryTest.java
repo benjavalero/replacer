@@ -27,7 +27,7 @@ class ReplacementCacheRepositoryTest {
     @BeforeEach
     public void setUp() {
         replacementCacheRepository = new ReplacementCacheRepository();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

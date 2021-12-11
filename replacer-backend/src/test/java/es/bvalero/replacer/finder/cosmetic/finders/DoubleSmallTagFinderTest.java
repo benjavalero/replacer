@@ -25,7 +25,7 @@ class DoubleSmallTagFinderTest {
     @BeforeEach
     public void setUp() {
         doubleSmallTagFinder = new DoubleSmallTagFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

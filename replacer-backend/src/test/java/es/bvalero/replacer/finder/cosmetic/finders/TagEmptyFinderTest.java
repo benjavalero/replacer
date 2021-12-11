@@ -24,7 +24,7 @@ class TagEmptyFinderTest {
     @BeforeEach
     public void setUp() {
         tagEmptyFinder = new TagEmptyFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

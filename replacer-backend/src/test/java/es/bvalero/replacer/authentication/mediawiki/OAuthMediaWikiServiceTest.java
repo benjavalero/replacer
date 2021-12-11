@@ -28,7 +28,7 @@ class OAuthMediaWikiServiceTest {
     @BeforeEach
     public void setUp() {
         oAuthMediaWikiService = new OAuthMediaWikiService();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

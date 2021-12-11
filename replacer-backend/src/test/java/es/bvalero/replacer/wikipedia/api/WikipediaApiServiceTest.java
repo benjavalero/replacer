@@ -36,7 +36,7 @@ class WikipediaApiServiceTest {
     void setUp() {
         wikipediaService = new WikipediaApiService();
         wikipediaServiceOffline = new WikipediaOfflineService();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

@@ -28,7 +28,7 @@ class CustomReplacementFinderServiceTest {
     @BeforeEach
     public void setUp() {
         customReplacementFinderService = new CustomReplacementFinderService();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

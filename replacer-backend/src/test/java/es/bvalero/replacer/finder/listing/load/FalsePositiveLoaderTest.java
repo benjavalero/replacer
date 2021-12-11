@@ -26,7 +26,7 @@ class FalsePositiveLoaderTest {
     @BeforeEach
     public void setUp() {
         falsePositiveLoader = new FalsePositiveLoader();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

@@ -25,7 +25,7 @@ class SmallTagUnnecessaryFinderTest {
     @BeforeEach
     public void setUp() {
         smallTagUnnecessaryFinder = new SmallTagUnnecessaryFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

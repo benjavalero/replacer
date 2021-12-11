@@ -23,7 +23,7 @@ class CosmeticFinderServiceTest {
     @BeforeEach
     public void setUp() {
         cosmeticFinderService = new CosmeticFinderService();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

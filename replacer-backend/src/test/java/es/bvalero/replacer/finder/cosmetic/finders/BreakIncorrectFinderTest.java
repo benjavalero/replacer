@@ -25,7 +25,7 @@ class BreakIncorrectFinderTest {
     @BeforeEach
     public void setUp() {
         breakIncorrectFinder = new BreakIncorrectFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @ParameterizedTest

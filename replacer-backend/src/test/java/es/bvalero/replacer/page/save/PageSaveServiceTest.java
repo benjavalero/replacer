@@ -38,7 +38,7 @@ class PageSaveServiceTest {
     @BeforeEach
     public void setUp() {
         pageSaveService = new PageSaveService();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

@@ -72,7 +72,7 @@ class PageReviewNoTypeFinderTest {
     @BeforeEach
     public void setUp() {
         pageReviewNoTypeService = new PageReviewNoTypeFinder();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

@@ -26,7 +26,7 @@ class PageIndexResultSaverTest {
     @BeforeEach
     void setUp() {
         pageIndexResultSaver = new PageIndexResultSaver();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

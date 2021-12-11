@@ -28,7 +28,7 @@ class UserAuthenticatorTest {
     @BeforeEach
     public void setUp() {
         userAuthenticator = new UserAuthenticator();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
