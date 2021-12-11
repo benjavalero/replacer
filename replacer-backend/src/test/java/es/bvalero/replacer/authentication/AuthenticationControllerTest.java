@@ -87,7 +87,6 @@ class AuthenticationControllerTest {
             .thenReturn(authenticatedUser);
 
         AuthenticateRequest authenticateRequest = new AuthenticateRequest();
-        authenticateRequest.setLang(WikipediaLanguage.getDefault());
         authenticateRequest.setToken(requestToken.getToken());
         authenticateRequest.setTokenSecret(requestToken.getTokenSecret());
         authenticateRequest.setOauthVerifier(oAuthVerifier);
@@ -106,7 +105,7 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.tokenSecret", is(accessToken.getTokenSecret())));
 
         verify(oAuthService).getAccessToken(requestToken, oAuthVerifier);
-        verify(userAuthenticator).getAuthenticatedUser(authenticateRequest.getLang(), accessToken);
+        verify(userAuthenticator).getAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken);
     }
 
     @Test
@@ -115,7 +114,6 @@ class AuthenticationControllerTest {
         String oAuthVerifier = "";
 
         AuthenticateRequest authenticateRequest = new AuthenticateRequest();
-        authenticateRequest.setLang(WikipediaLanguage.getDefault());
         authenticateRequest.setToken(requestToken.getToken());
         authenticateRequest.setTokenSecret(requestToken.getTokenSecret());
         authenticateRequest.setOauthVerifier(oAuthVerifier);

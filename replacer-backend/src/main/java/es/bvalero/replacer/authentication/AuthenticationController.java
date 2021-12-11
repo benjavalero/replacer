@@ -2,9 +2,11 @@ package es.bvalero.replacer.authentication;
 
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.common.domain.AccessToken;
+import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,14 +36,21 @@ public class AuthenticationController {
 
     @ApiOperation(value = "Verify the OAuth authentication and return the authenticated user details")
     @PostMapping(value = "/authenticate")
-    public AuthenticatedUser authenticateUser(@Valid @RequestBody AuthenticateRequest authenticateRequest)
-        throws ReplacerException {
+    public AuthenticatedUser authenticateUser(
+        @ApiParam(
+            value = "Language of the Wikipedia in use",
+            allowableValues = "es, gl",
+            required = true,
+            example = "es"
+        ) @RequestParam WikipediaLanguage lang,
+        @Valid @RequestBody AuthenticateRequest authenticateRequest
+    ) throws ReplacerException {
         RequestToken requestToken = RequestToken.of(
             authenticateRequest.getToken(),
             authenticateRequest.getTokenSecret()
         );
         String oAuthVerifier = authenticateRequest.getOauthVerifier();
         AccessToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
-        return userAuthenticator.getAuthenticatedUser(authenticateRequest.getLang(), accessToken);
+        return userAuthenticator.getAuthenticatedUser(lang, accessToken);
     }
 }
