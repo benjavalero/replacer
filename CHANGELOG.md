@@ -1,5 +1,8 @@
 # Versions
 
+## 2.13.0 (12 Dic 2021)
+- Internal refactoring. Upgrade to SpringBoot 2.5.
+
 ## 2.12.1 (3 Nov 2021)
 - Ignore words immediately preceded by a dot
 
