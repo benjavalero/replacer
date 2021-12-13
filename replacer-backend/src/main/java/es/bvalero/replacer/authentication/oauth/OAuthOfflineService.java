@@ -1,7 +1,5 @@
-package es.bvalero.replacer.authentication.mediawiki;
+package es.bvalero.replacer.authentication.oauth;
 
-import es.bvalero.replacer.authentication.OAuthService;
-import es.bvalero.replacer.authentication.RequestToken;
 import es.bvalero.replacer.common.domain.AccessToken;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;

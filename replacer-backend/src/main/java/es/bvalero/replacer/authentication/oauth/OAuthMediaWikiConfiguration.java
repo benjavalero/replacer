@@ -1,4 +1,4 @@
-package es.bvalero.replacer.authentication.mediawiki;
+package es.bvalero.replacer.authentication.oauth;
 
 import com.github.scribejava.apis.MediaWikiApi;
 import com.github.scribejava.core.builder.ServiceBuilder;

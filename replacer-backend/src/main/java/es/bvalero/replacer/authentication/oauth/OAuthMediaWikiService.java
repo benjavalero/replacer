@@ -1,10 +1,8 @@
-package es.bvalero.replacer.authentication.mediawiki;
+package es.bvalero.replacer.authentication.oauth;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
-import es.bvalero.replacer.authentication.OAuthService;
-import es.bvalero.replacer.authentication.RequestToken;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import java.io.IOException;

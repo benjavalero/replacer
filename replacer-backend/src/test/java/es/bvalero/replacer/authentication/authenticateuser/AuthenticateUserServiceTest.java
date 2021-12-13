@@ -1,9 +1,12 @@
-package es.bvalero.replacer.authentication;
+package es.bvalero.replacer.authentication.authenticateuser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import es.bvalero.replacer.authentication.oauth.OAuthService;
+import es.bvalero.replacer.authentication.oauth.RequestToken;
+import es.bvalero.replacer.authentication.useradmin.CheckUserAdminService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
@@ -17,35 +20,46 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class UserAuthenticatorTest {
+class AuthenticateUserServiceTest {
+
+    @Mock
+    private OAuthService oAuthService;
 
     @Mock
     private WikipediaService wikipediaService;
 
+    @Mock
+    private CheckUserAdminService checkUserAdminService;
+
     @InjectMocks
-    private UserAuthenticator userAuthenticator;
+    private AuthenticateUserService authenticateUserService;
 
     @BeforeEach
     public void setUp() {
-        userAuthenticator = new UserAuthenticator();
+        authenticateUserService = new AuthenticateUserService();
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
     void testGetAuthenticatedUser() throws ReplacerException {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
+        RequestToken requestToken = RequestToken.of("R", "S");
+        String oAuthVerifier = "Z";
+
         AccessToken accessToken = AccessToken.of("A", "B");
+        when(oAuthService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
 
         WikipediaUser wikipediaUser = WikipediaUser.of("C", List.of(WikipediaUserGroup.AUTOCONFIRMED));
         when(wikipediaService.getAuthenticatedUser(lang, accessToken)).thenReturn(wikipediaUser);
 
-        userAuthenticator.setAdminUser("C");
+        String username = "C";
+        when(checkUserAdminService.isAdminUser(username)).thenReturn(true);
 
-        AuthenticatedUser actual = userAuthenticator.getAuthenticatedUser(lang, accessToken);
+        AuthenticatedUser actual = authenticateUserService.authenticateUser(lang, requestToken, oAuthVerifier);
 
         AuthenticatedUser expected = AuthenticatedUser
             .builder()
-            .name("C")
+            .name(username)
             .hasRights(true)
             .bot(false)
             .admin(true)
@@ -54,6 +68,8 @@ class UserAuthenticatorTest {
             .build();
         assertEquals(expected, actual);
 
+        verify(oAuthService).getAccessToken(requestToken, oAuthVerifier);
         verify(wikipediaService).getAuthenticatedUser(lang, accessToken);
+        verify(checkUserAdminService).isAdminUser(username);
     }
 }

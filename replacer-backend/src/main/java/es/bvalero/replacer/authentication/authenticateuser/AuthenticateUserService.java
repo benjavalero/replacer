@@ -1,35 +1,43 @@
-package es.bvalero.replacer.authentication;
+package es.bvalero.replacer.authentication.authenticateuser;
 
+import es.bvalero.replacer.authentication.oauth.OAuthService;
+import es.bvalero.replacer.authentication.oauth.RequestToken;
+import es.bvalero.replacer.authentication.useradmin.CheckUserAdminService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
-import lombok.Setter;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class UserAuthenticator {
+@Service
+public class AuthenticateUserService {
+
+    @Autowired
+    private OAuthService oAuthService;
 
     @Autowired
     private WikipediaService wikipediaService;
 
-    @Setter(onMethod_ = @TestOnly)
-    @Value("${replacer.admin.user}")
-    private String adminUser;
+    @Autowired
+    private CheckUserAdminService checkUserAdminService;
 
-    AuthenticatedUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken) throws ReplacerException {
+    public AuthenticatedUser authenticateUser(WikipediaLanguage lang, RequestToken requestToken, String oAuthVerifier)
+        throws ReplacerException {
+        AccessToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
         WikipediaUser wikipediaUser = wikipediaService.getAuthenticatedUser(lang, accessToken);
+        return toDto(wikipediaUser, accessToken);
+    }
+
+    private AuthenticatedUser toDto(WikipediaUser wikipediaUser, AccessToken accessToken) {
         return AuthenticatedUser
             .builder()
             .name(wikipediaUser.getName())
             .hasRights(hasRights(wikipediaUser))
             .bot(isBot(wikipediaUser))
-            .admin(isAdminUser(wikipediaUser.getName()))
+            .admin(checkUserAdminService.isAdminUser(wikipediaUser.getName()))
             .token(accessToken.getToken())
             .tokenSecret(accessToken.getTokenSecret())
             .build();
@@ -41,9 +49,5 @@ public class UserAuthenticator {
 
     private boolean isBot(WikipediaUser wikipediaUser) {
         return wikipediaUser.getGroups().contains(WikipediaUserGroup.BOT);
-    }
-
-    public boolean isAdminUser(String username) {
-        return this.adminUser.equals(username);
     }
 }

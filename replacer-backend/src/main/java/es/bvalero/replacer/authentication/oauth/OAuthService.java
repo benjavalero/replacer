@@ -1,4 +1,4 @@
-package es.bvalero.replacer.authentication;
+package es.bvalero.replacer.authentication.oauth;
 
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.exception.ReplacerException;

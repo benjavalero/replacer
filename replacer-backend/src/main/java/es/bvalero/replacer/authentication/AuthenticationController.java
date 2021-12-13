@@ -1,7 +1,11 @@
 package es.bvalero.replacer.authentication;
 
 import com.github.rozidan.springboot.logger.Loggable;
-import es.bvalero.replacer.common.domain.AccessToken;
+import es.bvalero.replacer.authentication.authenticateuser.AuthenticateUserService;
+import es.bvalero.replacer.authentication.authenticateuser.AuthenticatedUser;
+import es.bvalero.replacer.authentication.oauth.RequestToken;
+import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenResponse;
+import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenService;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,19 +23,17 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     @Autowired
-    private OAuthService oAuthService;
+    private GetRequestTokenService getRequestTokenService;
 
     @Autowired
-    private UserAuthenticator userAuthenticator;
+    private AuthenticateUserService authenticateUserService;
 
     // Note these are the only REST endpoints which don't receive the common query parameters
 
     @Operation(summary = "Generate a request token, along with the authorization URL, to start authentication.")
     @GetMapping(value = "/request-token")
-    public RequestTokenResponse getRequestToken() throws ReplacerException {
-        RequestToken requestToken = oAuthService.getRequestToken();
-        String authorizationUrl = oAuthService.getAuthorizationUrl(requestToken);
-        return RequestTokenResponse.of(requestToken.getToken(), requestToken.getTokenSecret(), authorizationUrl);
+    public GetRequestTokenResponse getRequestToken() throws ReplacerException {
+        return getRequestTokenService.get();
     }
 
     @Operation(summary = "Verify the OAuth authentication and return the authenticated user details")
@@ -48,8 +50,6 @@ public class AuthenticationController {
             authenticateRequest.getToken(),
             authenticateRequest.getTokenSecret()
         );
-        String oAuthVerifier = authenticateRequest.getOauthVerifier();
-        AccessToken accessToken = oAuthService.getAccessToken(requestToken, oAuthVerifier);
-        return userAuthenticator.getAuthenticatedUser(lang, accessToken);
+        return authenticateUserService.authenticateUser(lang, requestToken, authenticateRequest.getOauthVerifier());
     }
 }

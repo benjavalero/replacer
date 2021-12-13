@@ -1,11 +1,12 @@
-package es.bvalero.replacer.authentication;
+package es.bvalero.replacer.authentication.requesttoken;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Value;
 import org.springframework.lang.NonNull;
 
+@Schema
 @Value(staticConstructor = "of")
-class RequestTokenResponse {
+public class GetRequestTokenResponse {
 
     @Schema(required = true, example = "b3cecd4b16ecde45d9fd1a0ce68a4091")
     @NonNull

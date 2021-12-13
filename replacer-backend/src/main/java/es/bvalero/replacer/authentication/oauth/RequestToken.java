@@ -1,4 +1,4 @@
-package es.bvalero.replacer.authentication;
+package es.bvalero.replacer.authentication.oauth;
 
 import lombok.Value;
 import org.springframework.lang.NonNull;

@@ -1,4 +1,4 @@
-package es.bvalero.replacer.authentication;
+package es.bvalero.replacer.authentication.authenticateuser;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import org.springframework.lang.NonNull;
 @Schema(description = "Authenticated user with access token")
 @Value
 @Builder
-class AuthenticatedUser {
+public class AuthenticatedUser {
 
     @Schema(description = "Name of the user in Wikipedia", required = true, example = "Benjavalero")
     @NonNull

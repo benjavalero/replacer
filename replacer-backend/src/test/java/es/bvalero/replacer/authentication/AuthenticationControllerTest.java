@@ -9,6 +9,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import es.bvalero.replacer.authentication.authenticateuser.AuthenticateUserService;
+import es.bvalero.replacer.authentication.authenticateuser.AuthenticatedUser;
+import es.bvalero.replacer.authentication.oauth.RequestToken;
+import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenResponse;
+import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
@@ -32,39 +37,35 @@ class AuthenticationControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private OAuthService oAuthService;
+    private GetRequestTokenService getRequestTokenService;
 
     @MockBean
-    private UserAuthenticator userAuthenticator;
+    private AuthenticateUserService authenticateUserService;
 
     @Test
     void testGetRequestToken() throws Exception {
-        RequestToken requestToken = RequestToken.of("X", "Y");
-        String authorizationUrl = "Z";
-        when(oAuthService.getRequestToken()).thenReturn(requestToken);
-        when(oAuthService.getAuthorizationUrl(requestToken)).thenReturn(authorizationUrl);
+        GetRequestTokenResponse response = GetRequestTokenResponse.of("R", "S", "Z");
+        when(getRequestTokenService.get()).thenReturn(response);
 
         mvc
             .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.token", is(requestToken.getToken())))
-            .andExpect(jsonPath("$.tokenSecret", is(requestToken.getTokenSecret())))
-            .andExpect(jsonPath("$.authorizationUrl", is(authorizationUrl)));
+            .andExpect(jsonPath("$.token", is(response.getToken())))
+            .andExpect(jsonPath("$.tokenSecret", is(response.getTokenSecret())))
+            .andExpect(jsonPath("$.authorizationUrl", is(response.getAuthorizationUrl())));
 
-        verify(oAuthService).getRequestToken();
-        verify(oAuthService).getAuthorizationUrl(requestToken);
+        verify(getRequestTokenService).get();
     }
 
     @Test
     void testGetRequestTokenWithException() throws Exception {
-        when(oAuthService.getRequestToken()).thenThrow(new ReplacerException());
+        when(getRequestTokenService.get()).thenThrow(new ReplacerException());
 
         mvc
             .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isInternalServerError());
 
-        verify(oAuthService).getRequestToken();
-        verify(oAuthService, never()).getAuthorizationUrl(any(RequestToken.class));
+        verify(getRequestTokenService).get();
     }
 
     @Test
@@ -72,7 +73,6 @@ class AuthenticationControllerTest {
         RequestToken requestToken = RequestToken.of("R", "S");
         AccessToken accessToken = AccessToken.of("A", "B");
         String oAuthVerifier = "V";
-        when(oAuthService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
 
         AuthenticatedUser authenticatedUser = AuthenticatedUser
             .builder()
@@ -83,7 +83,7 @@ class AuthenticationControllerTest {
             .token(accessToken.getToken())
             .tokenSecret(accessToken.getTokenSecret())
             .build();
-        when(userAuthenticator.getAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken))
+        when(authenticateUserService.authenticateUser(WikipediaLanguage.getDefault(), requestToken, oAuthVerifier))
             .thenReturn(authenticatedUser);
 
         AuthenticateRequest authenticateRequest = new AuthenticateRequest();
@@ -104,8 +104,7 @@ class AuthenticationControllerTest {
             .andExpect(jsonPath("$.token", is(accessToken.getToken())))
             .andExpect(jsonPath("$.tokenSecret", is(accessToken.getTokenSecret())));
 
-        verify(oAuthService).getAccessToken(requestToken, oAuthVerifier);
-        verify(userAuthenticator).getAuthenticatedUser(WikipediaLanguage.getDefault(), accessToken);
+        verify(authenticateUserService).authenticateUser(WikipediaLanguage.getDefault(), requestToken, oAuthVerifier);
     }
 
     @Test
@@ -125,7 +124,7 @@ class AuthenticationControllerTest {
             )
             .andExpect(status().isBadRequest());
 
-        verify(oAuthService, never()).getAccessToken(any(RequestToken.class), anyString());
-        verify(userAuthenticator, never()).getAuthenticatedUser(any(WikipediaLanguage.class), any(AccessToken.class));
+        verify(authenticateUserService, never())
+            .authenticateUser(any(WikipediaLanguage.class), any(RequestToken.class), anyString());
     }
 }
