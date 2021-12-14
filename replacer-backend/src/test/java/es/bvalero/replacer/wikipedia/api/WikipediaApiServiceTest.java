@@ -9,7 +9,6 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -105,8 +104,8 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        List<WikipediaPage> pages = wikipediaService.getPagesByIds(
-            Arrays.asList(6219990, 6903884),
+        Collection<WikipediaPage> pages = wikipediaService.getPagesByIds(
+            List.of(6219990, 6903884),
             WikipediaLanguage.SPANISH
         );
         assertNotNull(pages);

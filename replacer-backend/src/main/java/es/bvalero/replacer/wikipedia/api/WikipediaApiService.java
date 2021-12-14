@@ -97,7 +97,7 @@ class WikipediaApiService implements WikipediaService {
     }
 
     @VisibleForTesting
-    List<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws ReplacerException {
+    Collection<WikipediaPage> getPagesByIds(List<Integer> pageIds, WikipediaLanguage lang) throws ReplacerException {
         List<WikipediaPage> pages = new ArrayList<>(pageIds.size());
         // There is a maximum number of pages to request
         // We split the request in several sub-lists
@@ -113,7 +113,7 @@ class WikipediaApiService implements WikipediaService {
         return pages;
     }
 
-    private List<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue, WikipediaLanguage lang)
+    private Collection<WikipediaPage> getPagesByIds(String pagesParam, String pagesValue, WikipediaLanguage lang)
         throws ReplacerException {
         WikipediaApiRequest apiRequest = WikipediaApiRequest
             .builder()
@@ -136,7 +136,7 @@ class WikipediaApiService implements WikipediaService {
         return params;
     }
 
-    private List<WikipediaPage> extractPagesFromJson(WikipediaApiResponse response, WikipediaLanguage lang) {
+    private Collection<WikipediaPage> extractPagesFromJson(WikipediaApiResponse response, WikipediaLanguage lang) {
         // Query timestamp
         String queryTimestamp = response.getCurtimestamp();
         return response
@@ -145,7 +145,7 @@ class WikipediaApiService implements WikipediaService {
             .stream()
             .filter(page -> !page.isMissing())
             .map(page -> convert(page, lang, queryTimestamp))
-            .collect(Collectors.toList());
+            .collect(Collectors.toUnmodifiableList());
     }
 
     private WikipediaPage convert(WikipediaApiResponse.Page page, WikipediaLanguage lang, String queryTimestamp) {
@@ -219,7 +219,7 @@ class WikipediaApiService implements WikipediaService {
             .params(buildPageIdsAndSectionRequestParams(id.getPageId(), section.getIndex()))
             .build();
         WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
-        List<WikipediaPage> pages = extractPagesFromJson(apiResponse, id.getLang());
+        Collection<WikipediaPage> pages = extractPagesFromJson(apiResponse, id.getLang());
         return pages.stream().findAny();
     }
 
@@ -290,7 +290,7 @@ class WikipediaApiService implements WikipediaService {
     }
 
     private WikipediaSearchResult extractPageIdsFromSearchJson(WikipediaApiResponse response) {
-        List<Integer> pageIds = response
+        Collection<Integer> pageIds = response
             .getQuery()
             .getSearch()
             .stream()
