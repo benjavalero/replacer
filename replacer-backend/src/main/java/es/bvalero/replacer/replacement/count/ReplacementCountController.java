@@ -29,6 +29,6 @@ public class ReplacementCountController {
         throws ReplacerException {
         // Repositories should never be called in a Controller
         // In this case we make an exception as we are actually calling the cached implementation
-        return replacementCacheRepository.countReplacementsGroupedByType(queryParameters.getLang());
+        return replacementCacheRepository.countReplacementsGroupedByType(queryParameters.getWikipediaLanguage());
     }
 }

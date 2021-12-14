@@ -1,7 +1,6 @@
 package es.bvalero.replacer.page.review;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -22,10 +21,15 @@ public class ReviewPage {
 
     private static final int SHORT_CONTENT_LENGTH = 50;
 
-    @Schema(description = "Language of the Wikipedia in use", required = true)
+    @Schema(
+        description = "Language of the Wikipedia in use",
+        type = "string",
+        allowableValues = { "es", "gl" },
+        required = true
+    )
     @NonNull
     @NotNull
-    private WikipediaLanguage lang;
+    private String lang;
 
     @Schema(description = "Page ID", required = true, example = "6980716")
     @NonNull

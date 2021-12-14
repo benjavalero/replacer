@@ -31,7 +31,7 @@ public class PageListController {
     ) {
         String titleList = StringUtils.join(
             pageListService.findPageTitlesToReviewByType(
-                queryParameters.getLang(),
+                queryParameters.getWikipediaLanguage(),
                 request.getType(),
                 request.getSubtype()
             ),
@@ -44,6 +44,10 @@ public class PageListController {
     @PostMapping(value = "/review")
     public void reviewAsSystemByType(@Valid CommonQueryParameters queryParameters, @Valid PageListRequest request) {
         // Set as reviewed in the database
-        pageListService.reviewAsSystemByType(queryParameters.getLang(), request.getType(), request.getSubtype());
+        pageListService.reviewAsSystemByType(
+            queryParameters.getWikipediaLanguage(),
+            request.getType(),
+            request.getSubtype()
+        );
     }
 }

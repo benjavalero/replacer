@@ -71,7 +71,7 @@ public class PageReviewController {
         @Valid ReplacementValidationRequest validationRequest
     ) {
         return pageReviewCustomFinder.validateCustomReplacement(
-            queryParameters.getLang(),
+            queryParameters.getWikipediaLanguage(),
             validationRequest.getReplacement(),
             validationRequest.isCs()
         );

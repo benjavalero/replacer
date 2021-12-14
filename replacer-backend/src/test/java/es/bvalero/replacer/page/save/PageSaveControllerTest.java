@@ -45,7 +45,7 @@ class PageSaveControllerTest {
         String tokenSecret = "B";
         PageSaveRequest request = new PageSaveRequest();
         ReviewPage reviewPage = new ReviewPage();
-        reviewPage.setLang(WikipediaLanguage.SPANISH);
+        reviewPage.setLang(WikipediaLanguage.SPANISH.getCode());
         reviewPage.setId(pageId);
         reviewPage.setTitle(title);
         reviewPage.setContent(content);
@@ -86,7 +86,7 @@ class PageSaveControllerTest {
         String tokenSecret = "B";
         PageSaveRequest request = new PageSaveRequest();
         ReviewPage reviewPage = new ReviewPage();
-        reviewPage.setLang(WikipediaLanguage.SPANISH);
+        reviewPage.setLang(WikipediaLanguage.SPANISH.getCode());
         reviewPage.setId(pageId);
         reviewPage.setTitle(title);
         reviewPage.setContent(EMPTY_CONTENT);

@@ -51,7 +51,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
             // Calculate this out of the loop only if needed the first time
             List<Integer> reviewedIds = new ArrayList<>();
             if (!pageIds.isEmpty()) {
-                reviewedIds.addAll(customRepository.findPageIdsReviewed(options.getLang(), subtype, cs));
+                reviewedIds.addAll(customRepository.findPageIdsReviewed(options.getWikipediaLanguage(), subtype, cs));
             }
 
             while (totalToReview >= 0) {
@@ -90,7 +90,7 @@ class PageReviewCustomFinder extends PageReviewFinder {
         Boolean cs = options.getCs();
         Integer offset = this.getOffset();
         assert subtype != null && cs != null && offset != null;
-        return wikipediaService.searchByText(options.getLang(), subtype, cs, offset, getCacheSize());
+        return wikipediaService.searchByText(options.getWikipediaLanguage(), subtype, cs, offset, getCacheSize());
     }
 
     @Override

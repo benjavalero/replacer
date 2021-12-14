@@ -22,7 +22,7 @@ public class PageReviewMapper {
 
     private ReviewPage toDto(WikipediaPage page, @Nullable WikipediaSection section) {
         ReviewPage reviewPage = new ReviewPage();
-        reviewPage.setLang(page.getId().getLang());
+        reviewPage.setLang(page.getId().getLang().getCode());
         reviewPage.setId(page.getId().getPageId());
         reviewPage.setTitle(page.getTitle());
         reviewPage.setContent(page.getContent());

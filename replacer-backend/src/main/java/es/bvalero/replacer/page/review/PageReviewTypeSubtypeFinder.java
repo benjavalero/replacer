@@ -25,7 +25,7 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     @Override
     protected void markAsReviewed(PageReviewOptions options) {
         replacementRepository.updateReviewerByType(
-            options.getLang(),
+            options.getWikipediaLanguage(),
             Objects.requireNonNull(options.getType()),
             Objects.requireNonNull(options.getSubtype()),
             REVIEWER_SYSTEM
@@ -35,14 +35,14 @@ class PageReviewTypeSubtypeFinder extends PageReviewFinder {
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
         Collection<Integer> pageIds = pageRepository.findPageIdsToReviewByType(
-            options.getLang(),
+            options.getWikipediaLanguage(),
             Objects.requireNonNull(options.getType()),
             Objects.requireNonNull(options.getSubtype()),
             getCacheSize()
         );
 
         long totalResults = pageRepository.countPagesToReviewByType(
-            options.getLang(),
+            options.getWikipediaLanguage(),
             Objects.requireNonNull(options.getType()),
             Objects.requireNonNull(options.getSubtype())
         );

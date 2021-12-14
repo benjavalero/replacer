@@ -10,6 +10,7 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,15 +42,19 @@ public class AuthenticationController {
     public AuthenticatedUser authenticateUser(
         @Parameter(
             description = "Language of the Wikipedia in use",
-            required = true,
-            example = "es"
-        ) @RequestParam WikipediaLanguage lang,
+            schema = @Schema(type = "string", allowableValues = { "es", "gl" }),
+            required = true
+        ) @RequestParam String lang,
         @Valid @RequestBody AuthenticateRequest authenticateRequest
     ) throws ReplacerException {
         RequestToken requestToken = RequestToken.of(
             authenticateRequest.getToken(),
             authenticateRequest.getTokenSecret()
         );
-        return authenticateUserService.authenticateUser(lang, requestToken, authenticateRequest.getOauthVerifier());
+        return authenticateUserService.authenticateUser(
+            WikipediaLanguage.valueOfCode(lang),
+            requestToken,
+            authenticateRequest.getOauthVerifier()
+        );
     }
 }

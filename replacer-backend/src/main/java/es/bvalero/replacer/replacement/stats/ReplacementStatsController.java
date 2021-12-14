@@ -33,7 +33,7 @@ public class ReplacementStatsController {
             example = "true"
         ) @RequestParam boolean reviewed
     ) {
-        WikipediaLanguage lang = queryParameters.getLang();
+        WikipediaLanguage lang = queryParameters.getWikipediaLanguage();
         return ReplacementCount.of(
             reviewed
                 ? replacementStatsService.countReplacementsReviewed(lang)
@@ -44,6 +44,6 @@ public class ReplacementStatsController {
     @Operation(summary = "List users with the number of reviewed replacements")
     @GetMapping(value = "/users/count")
     public Collection<ReviewerCount> countReplacementsGroupedByReviewer(@Valid CommonQueryParameters queryParameters) {
-        return replacementStatsService.countReplacementsGroupedByReviewer(queryParameters.getLang());
+        return replacementStatsService.countReplacementsGroupedByReviewer(queryParameters.getWikipediaLanguage());
     }
 }

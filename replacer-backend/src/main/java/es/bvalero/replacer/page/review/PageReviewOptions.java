@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.bvalero.replacer.common.domain.ReplacementKind;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,9 +28,13 @@ public class PageReviewOptions {
     // TODO: Remove the lang and user common query parameters
     // In fact we should split this object into a DTO and a Domain one and validate the Domain one
 
-    @Parameter(description = "Language of the Wikipedia in use", required = true, example = "es")
+    @Parameter(
+        description = "Language of the Wikipedia in use",
+        schema = @Schema(type = "string", allowableValues = { "es", "gl" }),
+        required = true
+    )
     @NotNull
-    private WikipediaLanguage lang;
+    private String lang;
 
     @Parameter(description = "Name of the user in Wikipedia", required = true, example = "Benjavalero")
     @Size(max = 100)
@@ -53,16 +58,20 @@ public class PageReviewOptions {
     @Nullable
     private Boolean cs;
 
+    public WikipediaLanguage getWikipediaLanguage() {
+        return WikipediaLanguage.valueOfCode(lang);
+    }
+
     @TestOnly
     public static PageReviewOptions ofNoType() {
-        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault()).user("A").build();
+        return PageReviewOptions.builder().lang(WikipediaLanguage.getDefault().getCode()).user("A").build();
     }
 
     @TestOnly
     public static PageReviewOptions ofTypeSubtype(String type, String subtype) {
         return PageReviewOptions
             .builder()
-            .lang(WikipediaLanguage.getDefault())
+            .lang(WikipediaLanguage.getDefault().getCode())
             .user("A")
             .type(type)
             .subtype(subtype)
@@ -78,7 +87,7 @@ public class PageReviewOptions {
     ) {
         return PageReviewOptions
             .builder()
-            .lang(lang)
+            .lang(lang.getCode())
             .user("A")
             .type(ReplacementKind.CUSTOM.getLabel())
             .subtype(replacement)
@@ -100,7 +109,7 @@ public class PageReviewOptions {
 
     @Override
     public String toString() {
-        return String.format("%s - %s - %s", user, lang.toString(), toStringSearchType());
+        return String.format("%s - %s - %s", user, lang, toStringSearchType());
     }
 
     String toStringSearchType() {

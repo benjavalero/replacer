@@ -60,7 +60,7 @@ public class PageSaveController {
             );
             WikipediaPage page = WikipediaPage
                 .builder()
-                .id(WikipediaPageId.of(queryParameters.getLang(), pageId))
+                .id(WikipediaPageId.of(queryParameters.getWikipediaLanguage(), pageId))
                 .namespace(WikipediaNamespace.getDefault()) // Not relevant for saving
                 .title(request.getPage().getTitle())
                 .content(request.getPage().getContent())

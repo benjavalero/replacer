@@ -153,7 +153,7 @@ abstract class PageReviewFinder {
 
     private Optional<WikipediaPage> getPageFromWikipedia(int pageId, PageReviewOptions options) {
         try {
-            WikipediaPageId wikipediaPageId = WikipediaPageId.of(options.getLang(), pageId);
+            WikipediaPageId wikipediaPageId = WikipediaPageId.of(options.getWikipediaLanguage(), pageId);
             Optional<WikipediaPage> page = wikipediaService.getPageById(wikipediaPageId);
             if (page.isPresent()) {
                 return page;
