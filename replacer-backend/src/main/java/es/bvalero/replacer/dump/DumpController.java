@@ -3,7 +3,7 @@ package es.bvalero.replacer.dump;
 import com.github.rozidan.springboot.logger.Loggable;
 import es.bvalero.replacer.authentication.useradmin.CheckUserAdminService;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
-import es.bvalero.replacer.common.exception.UnauthorizedException;
+import es.bvalero.replacer.common.exception.ForbiddenException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
@@ -28,7 +28,7 @@ public class DumpController {
     @Loggable(skipResult = true)
     @GetMapping(value = "")
     public DumpIndexingStatus getDumpIndexingStatus(@Valid CommonQueryParameters queryParameters)
-        throws UnauthorizedException {
+        throws ForbiddenException {
         validateAdminUser(queryParameters.getUser());
         return dumpManager.getDumpIndexingStatus();
     }
@@ -36,15 +36,15 @@ public class DumpController {
     @Operation(summary = "Start manually a dump indexing")
     @Loggable(entered = true, skipResult = true)
     @PostMapping(value = "")
-    public void manualStartDumpIndexing(@Valid CommonQueryParameters queryParameters) throws UnauthorizedException {
+    public void manualStartDumpIndexing(@Valid CommonQueryParameters queryParameters) throws ForbiddenException {
         validateAdminUser(queryParameters.getUser());
         dumpManager.indexLatestDumpFiles();
     }
 
-    private void validateAdminUser(String user) throws UnauthorizedException {
+    private void validateAdminUser(String user) throws ForbiddenException {
         if (!checkUserAdminService.isAdminUser(user)) {
             LOGGER.error("Unauthorized user: {}", user);
-            throw new UnauthorizedException();
+            throw new ForbiddenException();
         }
     }
 }

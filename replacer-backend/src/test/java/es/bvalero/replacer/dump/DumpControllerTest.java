@@ -74,7 +74,7 @@ class DumpControllerTest {
 
         mvc
             .perform(get("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isUnauthorized());
+            .andExpect(status().isForbidden());
 
         verify(checkUserAdminService).isAdminUser(anyString());
         verify(dumpManager, never()).indexLatestDumpFiles();
@@ -98,7 +98,7 @@ class DumpControllerTest {
 
         mvc
             .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isUnauthorized());
+            .andExpect(status().isForbidden());
 
         verify(checkUserAdminService).isAdminUser(anyString());
         verify(dumpManager, never()).indexLatestDumpFiles();
