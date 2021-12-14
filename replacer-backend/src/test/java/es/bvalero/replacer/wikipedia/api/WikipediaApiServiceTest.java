@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.wikipedia.*;
 import java.time.LocalDateTime;
 import java.util.Arrays;

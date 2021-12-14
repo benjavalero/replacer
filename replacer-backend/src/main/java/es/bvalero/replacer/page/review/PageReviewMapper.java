@@ -2,7 +2,7 @@ package es.bvalero.replacer.page.review;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.dto.CommonQueryParameters;
-import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
+import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.experimental.UtilityClass;

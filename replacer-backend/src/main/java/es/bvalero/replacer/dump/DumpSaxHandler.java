@@ -2,8 +2,8 @@ package es.bvalero.replacer.dump;
 
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.domain.WikipediaNamespace;
+import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.index.PageIndexStatus;
-import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import org.xml.sax.Attributes;

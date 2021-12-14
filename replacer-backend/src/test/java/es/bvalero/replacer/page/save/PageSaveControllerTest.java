@@ -7,10 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import es.bvalero.replacer.common.domain.*;
+import es.bvalero.replacer.common.util.WikipediaDateUtils;
 import es.bvalero.replacer.page.review.PageReviewOptions;
 import es.bvalero.replacer.page.review.PageReviewSearch;
 import es.bvalero.replacer.page.review.ReviewPage;
-import es.bvalero.replacer.wikipedia.WikipediaDateUtils;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import org.junit.jupiter.api.Test;
