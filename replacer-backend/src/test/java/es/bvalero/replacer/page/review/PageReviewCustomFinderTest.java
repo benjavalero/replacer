@@ -79,7 +79,7 @@ class PageReviewCustomFinderTest {
         // ==> Return an empty review
 
         final int pageId = 123;
-        final WikipediaSearchResult searchResult = WikipediaSearchResult.of(1, List.of(pageId));
+        final WikipediaSearchResult searchResult = WikipediaSearchResult.builder().total(1).pageId(pageId).build();
 
         // Mocks
         when(wikipediaService.searchByText(any(WikipediaLanguage.class), anyString(), anyBoolean(), anyInt(), anyInt()))
@@ -118,7 +118,7 @@ class PageReviewCustomFinderTest {
             .text("R")
             .suggestions(List.of(Suggestion.ofNoComment("Z")))
             .build();
-        final WikipediaSearchResult searchResult = WikipediaSearchResult.of(1, List.of(pageId));
+        final WikipediaSearchResult searchResult = WikipediaSearchResult.builder().total(1).pageId(pageId).build();
         final WikipediaPageId wikipediaPageId = WikipediaPageId.of(lang, pageId);
         final WikipediaPage page = WikipediaPage
             .builder()
@@ -173,7 +173,7 @@ class PageReviewCustomFinderTest {
 
         final int pageId = 123;
         final String content = "A R";
-        final WikipediaSearchResult searchResult = WikipediaSearchResult.of(1, List.of(pageId));
+        final WikipediaSearchResult searchResult = WikipediaSearchResult.builder().total(1).pageId(pageId).build();
         final WikipediaPageId wikipediaPageId = WikipediaPageId.of(lang, pageId);
         final WikipediaPage page = WikipediaPage
             .builder()
@@ -224,7 +224,12 @@ class PageReviewCustomFinderTest {
             .text("R")
             .suggestions(List.of(Suggestion.ofNoComment("Z")))
             .build();
-        final WikipediaSearchResult searchResult = WikipediaSearchResult.of(2, List.of(pageId1, pageId2));
+        final WikipediaSearchResult searchResult = WikipediaSearchResult
+            .builder()
+            .total(2)
+            .pageId(pageId1)
+            .pageId(pageId2)
+            .build();
         final WikipediaPageId wikipediaPageId2 = WikipediaPageId.of(lang, pageId2);
         final WikipediaPage page = WikipediaPage
             .builder()
@@ -274,8 +279,8 @@ class PageReviewCustomFinderTest {
 
         // Mocks
         when(wikipediaService.searchByText(any(WikipediaLanguage.class), anyString(), anyBoolean(), anyInt(), anyInt()))
-            .thenReturn(WikipediaSearchResult.of(4, List.of(12, 23, 34)))
-            .thenReturn(WikipediaSearchResult.of(4, List.of(45)));
+            .thenReturn(WikipediaSearchResult.builder().total(4).pageId(12).pageId(23).pageId(34).build())
+            .thenReturn(WikipediaSearchResult.builder().total(4).pageId(45).build());
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(List.of(12, 23, 34, 45));
 
@@ -327,9 +332,9 @@ class PageReviewCustomFinderTest {
 
         // Mocks
         when(wikipediaService.searchByText(any(WikipediaLanguage.class), anyString(), anyBoolean(), anyInt(), anyInt()))
-            .thenReturn(WikipediaSearchResult.of(4, List.of(1, 2, 3))) // Call 1
-            .thenReturn(WikipediaSearchResult.of(2, List.of(2, 4))) // Call 4
-            .thenReturn(WikipediaSearchResult.of(2, List.of(2, 4))); // Call 5
+            .thenReturn(WikipediaSearchResult.builder().total(4).pageId(1).pageId(2).pageId(3).build()) // Call 1
+            .thenReturn(WikipediaSearchResult.builder().total(2).pageId(2).pageId(4).build()) // Call 4
+            .thenReturn(WikipediaSearchResult.builder().total(2).pageId(2).pageId(4).build()); // Call 5
 
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList()) // Call 1
@@ -423,9 +428,9 @@ class PageReviewCustomFinderTest {
 
         // Mocks
         when(wikipediaService.searchByText(any(WikipediaLanguage.class), anyString(), anyBoolean(), anyInt(), anyInt()))
-            .thenReturn(WikipediaSearchResult.of(4, List.of(1, 2, 3)))
-            .thenReturn(WikipediaSearchResult.of(4, List.of(4)))
-            .thenReturn(WikipediaSearchResult.of(4, Collections.emptyList()));
+            .thenReturn(WikipediaSearchResult.builder().total(4).pageId(1).pageId(2).pageId(3).build())
+            .thenReturn(WikipediaSearchResult.builder().total(4).pageId(4).build())
+            .thenReturn(WikipediaSearchResult.builder().total(4).build());
 
         when(customRepository.findPageIdsReviewed(any(WikipediaLanguage.class), anyString(), anyBoolean()))
             .thenReturn(Collections.emptyList());

@@ -65,7 +65,7 @@ class WikipediaOfflineService implements WikipediaService {
         int offset,
         int limit
     ) {
-        return WikipediaSearchResult.of(1, Collections.singletonList(1));
+        return WikipediaSearchResult.builder().total(1).pageId(1).build();
     }
 
     @Override

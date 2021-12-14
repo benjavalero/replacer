@@ -295,14 +295,18 @@ class WikipediaApiService implements WikipediaService {
             .getSearch()
             .stream()
             .map(WikipediaApiResponse.Page::getPageid)
-            .collect(Collectors.toList());
+            .collect(Collectors.toUnmodifiableList());
 
         // Check nullity of IDs just in case to try to reproduce a strange bug
         if (pageIds.stream().anyMatch(Objects::isNull)) {
             throw new IllegalArgumentException("Null page ID in API response: " + response);
         }
 
-        return WikipediaSearchResult.of(response.getQuery().getSearchinfo().getTotalhits(), pageIds);
+        return WikipediaSearchResult
+            .builder()
+            .total(response.getQuery().getSearchinfo().getTotalhits())
+            .pageIds(pageIds)
+            .build();
     }
 
     @Override

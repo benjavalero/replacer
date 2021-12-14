@@ -1,28 +1,27 @@
 package es.bvalero.replacer.wikipedia;
 
-import java.util.Collections;
 import java.util.List;
-import lombok.ToString;
-import lombok.Value;
+import lombok.*;
 import org.jetbrains.annotations.TestOnly;
 import org.springframework.lang.NonNull;
 
-@Value(staticConstructor = "of")
+@Value
+@Builder
 public class WikipediaSearchResult {
 
     @NonNull
     Integer total;
 
     @ToString.Exclude
-    @NonNull
+    @Singular
     List<Integer> pageIds;
 
     public static WikipediaSearchResult ofEmpty() {
-        return WikipediaSearchResult.of(0, Collections.emptyList());
+        return WikipediaSearchResult.builder().total(0).build();
     }
 
     @TestOnly
     public boolean isEmpty() {
-        return this.getPageIds().isEmpty();
+        return pageIds.isEmpty();
     }
 }
