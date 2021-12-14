@@ -14,7 +14,6 @@ import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
 import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -50,7 +49,7 @@ class AuthenticateUserServiceTest {
         AccessToken accessToken = AccessToken.of("A", "B");
         when(oAuthService.getAccessToken(requestToken, oAuthVerifier)).thenReturn(accessToken);
 
-        WikipediaUser wikipediaUser = WikipediaUser.of("C", List.of(WikipediaUserGroup.AUTOCONFIRMED));
+        WikipediaUser wikipediaUser = WikipediaUser.builder().name("C").group(WikipediaUserGroup.AUTOCONFIRMED).build();
         when(wikipediaService.getAuthenticatedUser(lang, accessToken)).thenReturn(wikipediaUser);
 
         String username = "C";

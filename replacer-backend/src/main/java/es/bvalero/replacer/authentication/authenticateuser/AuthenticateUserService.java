@@ -9,7 +9,6 @@ import es.bvalero.replacer.common.domain.WikipediaLanguage;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import es.bvalero.replacer.wikipedia.WikipediaUser;
-import es.bvalero.replacer.wikipedia.WikipediaUserGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,19 +42,11 @@ public class AuthenticateUserService {
         return AuthenticatedUser
             .builder()
             .name(wikipediaUser.getName())
-            .hasRights(hasRights(wikipediaUser))
-            .bot(isBot(wikipediaUser))
+            .hasRights(wikipediaUser.hasRights())
+            .bot(wikipediaUser.isBot())
             .admin(checkUserAdminService.isAdminUser(wikipediaUser.getName()))
             .token(accessToken.getToken())
             .tokenSecret(accessToken.getTokenSecret())
             .build();
-    }
-
-    private boolean hasRights(WikipediaUser wikipediaUser) {
-        return wikipediaUser.getGroups().contains(WikipediaUserGroup.AUTOCONFIRMED);
-    }
-
-    private boolean isBot(WikipediaUser wikipediaUser) {
-        return wikipediaUser.getGroups().contains(WikipediaUserGroup.BOT);
     }
 }

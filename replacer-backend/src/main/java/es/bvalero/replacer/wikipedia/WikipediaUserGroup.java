@@ -22,11 +22,10 @@ public enum WikipediaUserGroup {
 
     // We cannot override the static method "valueOf(String)"
     public static WikipediaUserGroup valueOfLabel(String group) {
-        return map.get(group);
-    }
-
-    @Override
-    public String toString() {
-        return this.group;
+        if (map.containsKey(group)) {
+            return map.get(group);
+        } else {
+            throw new IllegalArgumentException("Wrong group label: " + group);
+        }
     }
 }

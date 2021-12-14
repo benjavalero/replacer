@@ -44,10 +44,17 @@ class WikipediaApiService implements WikipediaService {
     }
 
     private WikipediaUser convertUserInfo(WikipediaApiResponse.UserInfo userInfo) {
-        return WikipediaUser.of(
-            userInfo.getName(),
-            userInfo.getGroups().stream().map(WikipediaUserGroup::valueOfLabel).collect(Collectors.toList())
-        );
+        return WikipediaUser
+            .builder()
+            .name(userInfo.getName())
+            .groups(
+                userInfo
+                    .getGroups()
+                    .stream()
+                    .map(WikipediaUserGroup::valueOfLabel)
+                    .collect(Collectors.toUnmodifiableSet())
+            )
+            .build();
     }
 
     @VisibleForTesting
