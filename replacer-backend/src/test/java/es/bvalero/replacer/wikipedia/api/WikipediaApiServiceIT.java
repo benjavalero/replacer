@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
+import es.bvalero.replacer.config.JsonMapperConfiguration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
