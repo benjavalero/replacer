@@ -1,9 +1,6 @@
 package es.bvalero.replacer.page.review;
 
-import es.bvalero.replacer.common.domain.Replacement;
-import es.bvalero.replacer.common.domain.ReplacementKind;
-import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.domain.WikipediaPage;
+import es.bvalero.replacer.common.domain.*;
 import es.bvalero.replacer.common.exception.ReplacerException;
 import es.bvalero.replacer.finder.listing.Misspelling;
 import es.bvalero.replacer.finder.replacement.ReplacementMapper;
@@ -13,9 +10,13 @@ import es.bvalero.replacer.repository.CustomRepository;
 import es.bvalero.replacer.wikipedia.WikipediaSearchResult;
 import es.bvalero.replacer.wikipedia.WikipediaService;
 import java.util.*;
+import java.util.stream.Collectors;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.IterableUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -30,6 +31,10 @@ class PageReviewCustomFinder extends PageReviewFinder {
 
     @Autowired
     private CustomReplacementFinderService customReplacementFinderService;
+
+    @Setter(onMethod_ = @TestOnly)
+    @Value("${replacer.indexable.namespaces}")
+    private Set<Integer> indexableNamespaces;
 
     @Override
     PageSearchResult findPageIdsToReview(PageReviewOptions options) {
@@ -90,7 +95,14 @@ class PageReviewCustomFinder extends PageReviewFinder {
         Boolean cs = options.getCs();
         Integer offset = this.getOffset();
         assert subtype != null && cs != null && offset != null;
-        return wikipediaService.searchByText(options.getWikipediaLanguage(), subtype, cs, offset, getCacheSize());
+        return wikipediaService.searchByText(
+            options.getWikipediaLanguage(),
+            indexableNamespaces.stream().map(WikipediaNamespace::valueOf).collect(Collectors.toUnmodifiableSet()),
+            subtype,
+            cs,
+            offset,
+            getCacheSize()
+        );
     }
 
     @Override

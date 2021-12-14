@@ -60,6 +60,7 @@ class WikipediaOfflineService implements WikipediaService {
     @Override
     public WikipediaSearchResult searchByText(
         WikipediaLanguage lang,
+        Collection<WikipediaNamespace> namespaces,
         String text,
         boolean caseSensitive,
         int offset,

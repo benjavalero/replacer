@@ -151,7 +151,14 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        WikipediaSearchResult pageIds = wikipediaService.searchByText(WikipediaLanguage.SPANISH, "", false, 0, 100);
+        WikipediaSearchResult pageIds = wikipediaService.searchByText(
+            WikipediaLanguage.SPANISH,
+            List.of(WikipediaNamespace.getDefault()),
+            "",
+            false,
+            0,
+            100
+        );
         assertEquals(10, pageIds.getTotal());
     }
 
@@ -162,7 +169,14 @@ class WikipediaApiServiceTest {
         WikipediaApiResponse response = jsonMapper.readValue(textResponse, WikipediaApiResponse.class);
         when(wikipediaApiRequestHelper.executeApiRequest(any(WikipediaApiRequest.class))).thenReturn(response);
 
-        WikipediaSearchResult pageIds = wikipediaService.searchByText(WikipediaLanguage.SPANISH, "", false, 0, 100);
+        WikipediaSearchResult pageIds = wikipediaService.searchByText(
+            WikipediaLanguage.SPANISH,
+            List.of(WikipediaNamespace.getDefault()),
+            "",
+            false,
+            0,
+            100
+        );
         assertTrue(pageIds.isEmpty());
     }
 
@@ -361,7 +375,18 @@ class WikipediaApiServiceTest {
                 .map(page -> page.getId().getPageId())
                 .orElse(0)
         );
-        assertFalse(wikipediaServiceOffline.searchByText(WikipediaLanguage.getDefault(), "", false, 0, 100).isEmpty());
+        assertFalse(
+            wikipediaServiceOffline
+                .searchByText(
+                    WikipediaLanguage.getDefault(),
+                    List.of(WikipediaNamespace.getDefault()),
+                    "",
+                    false,
+                    0,
+                    100
+                )
+                .isEmpty()
+        );
         assertTrue(
             wikipediaServiceOffline.getPageSections(WikipediaPageId.of(WikipediaLanguage.getDefault(), 1)).isEmpty()
         );

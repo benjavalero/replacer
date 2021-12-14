@@ -21,6 +21,7 @@ public interface WikipediaService {
 
     WikipediaSearchResult searchByText(
         WikipediaLanguage lang,
+        Collection<WikipediaNamespace> namespaces,
         String text,
         boolean caseSensitive,
         int offset,

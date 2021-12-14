@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.VisibleForTesting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.context.annotation.Profile;
 import org.springframework.lang.Nullable;
@@ -34,9 +33,6 @@ class WikipediaApiService implements WikipediaService {
 
     @Autowired
     private WikipediaApiRequestHelper wikipediaApiRequestHelper;
-
-    @Value("${replacer.indexable.namespaces}")
-    private Set<Integer> indexableNamespaces;
 
     @Override
     public WikipediaUser getAuthenticatedUser(WikipediaLanguage lang, AccessToken accessToken)
@@ -233,6 +229,7 @@ class WikipediaApiService implements WikipediaService {
     @Loggable(LogLevel.DEBUG)
     public WikipediaSearchResult searchByText(
         WikipediaLanguage lang,
+        Collection<WikipediaNamespace> namespaces,
         String text,
         boolean caseSensitive,
         int offset,
@@ -248,13 +245,14 @@ class WikipediaApiService implements WikipediaService {
             .builder()
             .verb(WikipediaApiRequestVerb.GET)
             .lang(lang)
-            .params(buildPageIdsByStringMatchRequestParams(text, caseSensitive, offset, limit))
+            .params(buildPageIdsByStringMatchRequestParams(namespaces, text, caseSensitive, offset, limit))
             .build();
         WikipediaApiResponse apiResponse = wikipediaApiRequestHelper.executeApiRequest(apiRequest);
         return extractPageIdsFromSearchJson(apiResponse);
     }
 
     private Map<String, String> buildPageIdsByStringMatchRequestParams(
+        Collection<WikipediaNamespace> namespaces,
         String text,
         boolean caseSensitive,
         int offset,
@@ -268,7 +266,7 @@ class WikipediaApiService implements WikipediaService {
         params.put("sroffset", Integer.toString(offset));
         params.put("srsort", "create_timestamp_asc"); // So the order is invariable after editing
         params.put("srsearch", buildSearchExpression(text, caseSensitive));
-        params.put("srnamespace", StringUtils.join(indexableNamespaces, "|"));
+        params.put("srnamespace", StringUtils.join(namespaces, "|"));
         params.put("srwhat", "text");
         params.put("srinfo", "totalhits");
         params.put("srprop", "");
