@@ -6,8 +6,8 @@ import static org.mockito.Mockito.*;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
+import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.common.domain.AccessToken;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ class OAuthMediaWikiServiceTest {
     }
 
     @Test
-    void testGetRequestToken() throws IOException, ExecutionException, InterruptedException, ReplacerException {
+    void testGetRequestToken() throws IOException, ExecutionException, InterruptedException, AuthenticationException {
         OAuth1RequestToken requestToken = new OAuth1RequestToken("A", "B");
         when(oAuth10aService.getRequestToken()).thenReturn(requestToken);
 
@@ -46,7 +46,7 @@ class OAuthMediaWikiServiceTest {
     void testGetRequestTokenWithException() throws IOException, ExecutionException, InterruptedException {
         when(oAuth10aService.getRequestToken()).thenThrow(new IOException());
 
-        assertThrows(ReplacerException.class, () -> oAuthMediaWikiService.getRequestToken());
+        assertThrows(AuthenticationException.class, () -> oAuthMediaWikiService.getRequestToken());
     }
 
     @Test
@@ -62,7 +62,7 @@ class OAuthMediaWikiServiceTest {
     }
 
     @Test
-    void testGetAccessToken() throws IOException, ExecutionException, InterruptedException, ReplacerException {
+    void testGetAccessToken() throws IOException, ExecutionException, InterruptedException, AuthenticationException {
         RequestToken requestToken = RequestToken.of("R", "S");
         String oAuthVerifier = "V";
 
@@ -86,6 +86,9 @@ class OAuthMediaWikiServiceTest {
         OAuth1RequestToken oAuth1RequestToken = new OAuth1RequestToken("R", "S");
         when(oAuth10aService.getAccessToken(oAuth1RequestToken, oAuthVerifier)).thenThrow(new IOException());
 
-        assertThrows(ReplacerException.class, () -> oAuthMediaWikiService.getAccessToken(requestToken, oAuthVerifier));
+        assertThrows(
+            AuthenticationException.class,
+            () -> oAuthMediaWikiService.getAccessToken(requestToken, oAuthVerifier)
+        );
     }
 }

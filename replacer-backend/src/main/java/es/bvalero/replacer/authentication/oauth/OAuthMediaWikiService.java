@@ -3,15 +3,17 @@ package es.bvalero.replacer.authentication.oauth;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
+import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.common.domain.AccessToken;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @Profile("!offline")
 class OAuthMediaWikiService implements OAuthService {
@@ -21,15 +23,17 @@ class OAuthMediaWikiService implements OAuthService {
     private OAuth10aService oAuth10aService;
 
     @Override
-    public RequestToken getRequestToken() throws ReplacerException {
+    public RequestToken getRequestToken() throws AuthenticationException {
         try {
             return convertRequestToken(oAuth10aService.getRequestToken());
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             Thread.currentThread().interrupt();
-            throw new ReplacerException(e);
+            LOGGER.error("Error getting the request token", e);
+            throw new AuthenticationException();
         } catch (ExecutionException | IOException e) {
-            throw new ReplacerException(e);
+            LOGGER.error("Error getting the request token", e);
+            throw new AuthenticationException();
         }
     }
 
@@ -47,7 +51,7 @@ class OAuthMediaWikiService implements OAuthService {
     }
 
     @Override
-    public AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) throws ReplacerException {
+    public AccessToken getAccessToken(RequestToken requestToken, String oAuthVerifier) throws AuthenticationException {
         try {
             return convertAccessToken(
                 oAuth10aService.getAccessToken(convertToRequestToken(requestToken), oAuthVerifier)
@@ -55,9 +59,11 @@ class OAuthMediaWikiService implements OAuthService {
         } catch (InterruptedException e) {
             // This cannot be unit-tested because the mocked InterruptedException make other tests fail
             Thread.currentThread().interrupt();
-            throw new ReplacerException(e);
+            LOGGER.error("Error getting the access token", e);
+            throw new AuthenticationException();
         } catch (ExecutionException | IOException e) {
-            throw new ReplacerException(e);
+            LOGGER.error("Error getting the access token", e);
+            throw new AuthenticationException();
         }
     }
 

@@ -16,7 +16,6 @@ import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenResponse;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenService;
 import es.bvalero.replacer.common.domain.AccessToken;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,11 +58,11 @@ class AuthenticationControllerTest {
 
     @Test
     void testGetRequestTokenWithException() throws Exception {
-        when(getRequestTokenService.get()).thenThrow(new ReplacerException());
+        when(getRequestTokenService.get()).thenThrow(new AuthenticationException());
 
         mvc
             .perform(get("/api/authentication/request-token").contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isInternalServerError());
+            .andExpect(status().isUnauthorized());
 
         verify(getRequestTokenService).get();
     }

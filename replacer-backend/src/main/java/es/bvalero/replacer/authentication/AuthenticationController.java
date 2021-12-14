@@ -7,7 +7,6 @@ import es.bvalero.replacer.authentication.oauth.RequestToken;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenResponse;
 import es.bvalero.replacer.authentication.requesttoken.GetRequestTokenService;
 import es.bvalero.replacer.common.domain.WikipediaLanguage;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,7 +32,7 @@ public class AuthenticationController {
 
     @Operation(summary = "Generate a request token, along with the authorization URL, to start authentication.")
     @GetMapping(value = "/request-token")
-    public GetRequestTokenResponse getRequestToken() throws ReplacerException {
+    public GetRequestTokenResponse getRequestToken() throws AuthenticationException {
         return getRequestTokenService.get();
     }
 
@@ -46,7 +45,7 @@ public class AuthenticationController {
             required = true
         ) @RequestParam String lang,
         @Valid @RequestBody AuthenticateRequest authenticateRequest
-    ) throws ReplacerException {
+    ) throws AuthenticationException {
         RequestToken requestToken = RequestToken.of(
             authenticateRequest.getToken(),
             authenticateRequest.getTokenSecret()

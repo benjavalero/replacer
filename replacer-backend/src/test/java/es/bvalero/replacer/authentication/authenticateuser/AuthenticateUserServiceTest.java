@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.authentication.oauth.OAuthService;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
 import es.bvalero.replacer.authentication.useradmin.CheckUserAdminService;
@@ -41,7 +42,7 @@ class AuthenticateUserServiceTest {
     }
 
     @Test
-    void testGetAuthenticatedUser() throws ReplacerException {
+    void testGetAuthenticatedUser() throws AuthenticationException, ReplacerException {
         WikipediaLanguage lang = WikipediaLanguage.getDefault();
         RequestToken requestToken = RequestToken.of("R", "S");
         String oAuthVerifier = "Z";

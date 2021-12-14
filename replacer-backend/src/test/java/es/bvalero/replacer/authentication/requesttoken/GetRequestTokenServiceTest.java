@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import es.bvalero.replacer.authentication.AuthenticationException;
 import es.bvalero.replacer.authentication.oauth.OAuthService;
 import es.bvalero.replacer.authentication.oauth.RequestToken;
-import es.bvalero.replacer.common.exception.ReplacerException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ class GetRequestTokenServiceTest {
     }
 
     @Test
-    void testGetRequestToken() throws ReplacerException {
+    void testGetRequestToken() throws AuthenticationException {
         RequestToken requestToken = RequestToken.of("R", "S");
         when(oAuthService.getRequestToken()).thenReturn(requestToken);
         String authorizationUrl = "Z";
