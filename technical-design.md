@@ -61,7 +61,7 @@ On an indexation, all dump pages are read but not all of them are taken into acc
 
 ## Code Conventions
 
-The tool is composed by two independent modules, both in the same repository: the frontend ( Angular), and the backend (Java with SpringBoot). Most of the tips below refer to the Java backend.
+The tool is composed by two independent modules, both in the same repository: the frontend (Angular), and the backend (Java with SpringBoot). Most of the tips below refer to the Java backend.
 
 ### Code Organization
 
@@ -70,6 +70,7 @@ Files are usually suffixed: service, controller, entity, etc.
 For the moment the size of the project is not so big that it is worth to divide the backend in several submodules.
 Besides, the backend is quite coupled to Spring Boot framework, making more difficult to use Java 9 modules.
 Instead, packages are meant to be as independent as possible, organizing the code by feature and following the principles of Clean Architecture.
+In particular, services are created for each use case.
 
 In backend, we have the following packages:
 
