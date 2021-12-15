@@ -279,7 +279,11 @@ class WikipediaApiService implements WikipediaService {
         params.put("sroffset", Integer.toString(offset));
         params.put("srsort", "create_timestamp_asc"); // So the order is invariable after editing
         params.put("srsearch", buildSearchExpression(text, caseSensitive));
-        params.put("srnamespace", StringUtils.join(namespaces, "|"));
+        Collection<Integer> namespaceIds = namespaces
+            .stream()
+            .map(WikipediaNamespace::getValue)
+            .collect(Collectors.toUnmodifiableSet());
+        params.put("srnamespace", StringUtils.join(namespaceIds, "|"));
         params.put("srwhat", "text");
         params.put("srinfo", "totalhits");
         params.put("srprop", "");
