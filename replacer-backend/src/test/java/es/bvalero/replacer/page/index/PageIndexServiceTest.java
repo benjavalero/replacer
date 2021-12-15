@@ -20,7 +20,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-class PageIndexerTest {
+class PageIndexServiceTest {
 
     @Mock
     private PageRepository pageRepository;
@@ -38,7 +38,7 @@ class PageIndexerTest {
     private PageIndexResultSaver pageIndexResultSaver;
 
     @InjectMocks
-    private PageIndexer pageIndexer;
+    private PageIndexService pageIndexService;
 
     private final WikipediaPage page = WikipediaPage
         .builder()
@@ -51,7 +51,7 @@ class PageIndexerTest {
 
     @BeforeEach
     void setUp() {
-        pageIndexer = new PageIndexer();
+        pageIndexService = new PageIndexService();
         MockitoAnnotations.openMocks(this);
     }
 
@@ -59,7 +59,7 @@ class PageIndexerTest {
     void testPageNotIndexable() {
         when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(false);
 
-        PageIndexResult result = pageIndexer.indexPageReplacements(page);
+        PageIndexResult result = pageIndexService.indexPageReplacements(page);
 
         assertEquals(PageIndexStatus.PAGE_NOT_INDEXABLE, result.getStatus());
 
@@ -78,7 +78,7 @@ class PageIndexerTest {
         PageIndexResult mockResult = PageIndexResult.builder().status(PageIndexStatus.PAGE_INDEXED).build();
         when(indexablePageComparator.indexPageReplacements(any(IndexablePage.class), isNull())).thenReturn(mockResult);
 
-        PageIndexResult result = pageIndexer.indexPageReplacements(page);
+        PageIndexResult result = pageIndexService.indexPageReplacements(page);
 
         assertEquals(PageIndexStatus.PAGE_INDEXED, result.getStatus());
 
@@ -98,7 +98,7 @@ class PageIndexerTest {
         PageIndexResult mockResult = PageIndexResult.builder().status(PageIndexStatus.PAGE_INDEXED).build();
         when(indexablePageComparator.indexPageReplacements(any(IndexablePage.class), isNull())).thenReturn(mockResult);
 
-        PageIndexResult result = pageIndexer.indexPageReplacements(page);
+        PageIndexResult result = pageIndexService.indexPageReplacements(page);
 
         assertEquals(PageIndexStatus.PAGE_INDEXED, result.getStatus());
 
@@ -115,7 +115,7 @@ class PageIndexerTest {
         when(pageIndexValidator.isIndexableByTimestamp(page, null)).thenReturn(false);
         when(pageIndexValidator.isIndexableByPageTitle(page, null)).thenReturn(false);
 
-        PageIndexResult result = pageIndexer.indexPageReplacements(page);
+        PageIndexResult result = pageIndexService.indexPageReplacements(page);
 
         assertEquals(PageIndexStatus.PAGE_NOT_INDEXED, result.getStatus());
 
@@ -139,7 +139,7 @@ class PageIndexerTest {
 
         when(pageIndexValidator.isPageIndexableByNamespace(page)).thenReturn(false);
 
-        PageIndexResult result = pageIndexer.indexPageReplacements(page);
+        PageIndexResult result = pageIndexService.indexPageReplacements(page);
 
         assertEquals(PageIndexStatus.PAGE_NOT_INDEXABLE, result.getStatus());
 
@@ -160,7 +160,7 @@ class PageIndexerTest {
             .build();
         when(pageRepository.findPageById(page.getId())).thenReturn(Optional.of(pageModel));
 
-        pageIndexer.indexObsoletePage(page.getId());
+        pageIndexService.indexObsoletePage(page.getId());
 
         verify(pageIndexResultSaver).save(any(PageIndexResult.class));
     }

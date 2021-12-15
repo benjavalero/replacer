@@ -8,7 +8,7 @@ import es.bvalero.replacer.common.domain.WikipediaNamespace;
 import es.bvalero.replacer.common.domain.WikipediaPage;
 import es.bvalero.replacer.page.index.PageIndexResult;
 import es.bvalero.replacer.page.index.PageIndexStatus;
-import es.bvalero.replacer.page.index.batch.PageBatchIndexer;
+import es.bvalero.replacer.page.index.PageIndexer;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ class DumpPageIndexerTest {
         .build();
 
     @Mock
-    private PageBatchIndexer pageIndexer;
+    private PageIndexer pageIndexer;
 
     @InjectMocks
     private DumpPageIndexer dumpPageIndexer;
