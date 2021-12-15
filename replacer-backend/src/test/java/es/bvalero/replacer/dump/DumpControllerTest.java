@@ -86,7 +86,7 @@ class DumpControllerTest {
 
         mvc
             .perform(post("/api/dump-indexing?user=x&lang=es").contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+            .andExpect(status().isAccepted());
 
         verify(checkUserAdminService).isAdminUser(anyString());
         verify(dumpManager).indexLatestDumpFiles();

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 /** REST controller to perform actions related to the dump indexing process */
@@ -35,6 +36,7 @@ public class DumpController {
 
     @Operation(summary = "Start manually a dump indexing")
     @Loggable(entered = true, skipResult = true)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping(value = "")
     public void manualStartDumpIndexing(@Valid CommonQueryParameters queryParameters) throws ForbiddenException {
         validateAdminUser(queryParameters.getUser());
